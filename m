@@ -2,107 +2,147 @@ Return-Path: <SRS0=8hmg=W5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DATE_IN_FUTURE_Q_PLUS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570C0C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22217C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A29B217D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04CD8217D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  2 Sep 2019 10:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731083AbfIBKGS (ORCPT
+        id S1731160AbfIBKGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 06:06:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:51404 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729854AbfIBKGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 06:06:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2569328;
-        Mon,  2 Sep 2019 03:06:15 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C8E73F246;
-        Mon,  2 Sep 2019 03:06:14 -0700 (PDT)
-Date:   Mon, 2 Sep 2019 11:06:11 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Don't rely on jiffies while holding
- spinlock
-Message-ID: <20190902100611.GB14841@e121166-lin.cambridge.arm.com>
-References: <20190901142303.27815-1-repk@triplefau.lt>
+        Mon, 2 Sep 2019 06:06:21 -0400
+Received: from aclms1.advantech.com.tw ([61.58.41.199]:19842 "EHLO
+        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729854AbfIBKGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 06:06:20 -0400
+Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Td9ff90b8f0ac14014b177c@ACLMS1.advantech.com.tw>;
+ Mon, 2 Sep 2019 18:06:17 +0800
+From:   <Amy.Shih@advantech.com.tw>
+To:     <she90122@gmail.com>
+CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
+        <bichan.lu@advantech.com.tw>, <jia.sui@advantech.com.cn>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [v6,1/1] hwmon: (nct7904) Fix incorrect temperature limitation register setting of LTD.
+Date:   Mon, 18 Jun 2085 15:57:19 +0000
+Message-ID: <20850618155720.24857-1-Amy.Shih@advantech.com.tw>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190901142303.27815-1-repk@triplefau.lt>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [172.17.10.63]
+X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
+ taipei08.ADVANTECH.CORP (172.20.0.235)
+X-StopIT: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 04:23:03PM +0200, Remi Pommarel wrote:
-> advk_pcie_wait_pio() can be called while holding a spinlock (from
-> pci_bus_read_config_dword()), then depends on jiffies in order to
-> timeout while polling on PIO state registers. In the case the PIO
-> transaction failed, the timeout will never happen and will also cause
-> the cpu to stall.
-> 
-> This decrements a variable and wait instead of using jiffies.
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  drivers/pci/controller/pci-aardvark.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+From: "amy.shih" <amy.shih@advantech.com.tw>
 
-Thomas, I would like to merge this patch and a couple of
-others from Remi, may I ask you please to review them ?
+According to kernel hwmon sysfs-interface documentation, temperature
+critical max value, typically greater than corresponding temp_max values.
+Thus, reads the LTD_HV_HL (LTD HIGH VALUE HIGH LIMITATION) and LTD_LV_HL
+(LTD LOW VALUE HIGH LIMITATION) for case hwmon_temp_crit and
+hwmon_temp_crit_hyst. Reads the LTD_HV_LL (HIGH VALUE LOW LIMITATION)
+and LTD_LV_LL (LOW VALUE LOW LIMITATION) for case hwmon_temp_max
+and hwmon_temp_max_hyst.
 
-https://patchwork.ozlabs.org/user/todo/linux-pci/?series=&submitter=67495&state=&q=&archive=
+Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+---
 
-Thanks,
-Lorenzo
+Changes in v6:
+- Fix incorrect temperature limitation register setting of LTD.
+Changes in v5:
+- Squashed subsequent fixes of three patches into one patch.
+Changes in v4:
+- Fix the incorrect return value of case hwmon_fan_min in function "nct7904_write_fan".
+- Fix the confused calculation of case hwmon_fan_min in function
+Changes in v3:
+- Squashed subsequent fixes of patches into one patch.
 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index fc0fe4d4de49..1fa6d04ad7aa 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -175,7 +175,8 @@
->  	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
->  	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
->  
-> -#define PIO_TIMEOUT_MS			1
-> +#define PIO_RETRY_CNT			10
-> +#define PIO_RETRY_DELAY			100 /* 100 us*/
->  
->  #define LINK_WAIT_MAX_RETRIES		10
->  #define LINK_WAIT_USLEEP_MIN		90000
-> @@ -383,17 +384,16 @@ static void advk_pcie_check_pio_status(struct advk_pcie *pcie)
->  static int advk_pcie_wait_pio(struct advk_pcie *pcie)
->  {
->  	struct device *dev = &pcie->pdev->dev;
-> -	unsigned long timeout;
-> +	size_t i;
->  
-> -	timeout = jiffies + msecs_to_jiffies(PIO_TIMEOUT_MS);
-> -
-> -	while (time_before(jiffies, timeout)) {
-> +	for (i = 0; i < PIO_RETRY_CNT; ++i) {
->  		u32 start, isr;
->  
->  		start = advk_readl(pcie, PIO_START);
->  		isr = advk_readl(pcie, PIO_ISR);
->  		if (!start && isr)
->  			return 0;
-> +		udelay(PIO_RETRY_DELAY);
->  	}
->  
->  	dev_err(dev, "config read/write timed out\n");
-> -- 
-> 2.20.1
-> 
+-- Fix bad fallthrough in various switch statements.
+-- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
+-- Fix incorrect register setting of voltage.
+-- Fix incorrect register bit mapping of temperature alarm.
+-- Fix wrong return code 0x1fff in function nct7904_write_fan.
+-- Delete wrong comment in function nct7904_write_in.
+-- Fix wrong attribute names for temperature.
+-- Fix wrong registers setting for temperature.
+
+Changes in v2:
+- Fix bad fallthrough in various switch statements.
+- Fix the wrong declared of tmp as u8 in nct7904_write_in, declared tmp to int.
+---
+ drivers/hwmon/nct7904.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+index 76372f20d71a..ce688ab4fce2 100644
+--- a/drivers/hwmon/nct7904.c
++++ b/drivers/hwmon/nct7904.c
+@@ -398,22 +398,22 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+ 		}
+ 		return 0;
+ 	case hwmon_temp_max:
+-		reg1 = LTD_HV_HL_REG;
++		reg1 = LTD_HV_LL_REG;
+ 		reg2 = TEMP_CH1_W_REG;
+ 		reg3 = DTS_T_CPU1_W_REG;
+ 		break;
+ 	case hwmon_temp_max_hyst:
+-		reg1 = LTD_LV_HL_REG;
++		reg1 = LTD_LV_LL_REG;
+ 		reg2 = TEMP_CH1_WH_REG;
+ 		reg3 = DTS_T_CPU1_WH_REG;
+ 		break;
+ 	case hwmon_temp_crit:
+-		reg1 = LTD_HV_LL_REG;
++		reg1 = LTD_HV_HL_REG;
+ 		reg2 = TEMP_CH1_C_REG;
+ 		reg3 = DTS_T_CPU1_C_REG;
+ 		break;
+ 	case hwmon_temp_crit_hyst:
+-		reg1 = LTD_LV_LL_REG;
++		reg1 = LTD_LV_HL_REG;
+ 		reg2 = TEMP_CH1_CH_REG;
+ 		reg3 = DTS_T_CPU1_CH_REG;
+ 		break;
+@@ -507,22 +507,22 @@ static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
+ 
+ 	switch (attr) {
+ 	case hwmon_temp_max:
+-		reg1 = LTD_HV_HL_REG;
++		reg1 = LTD_HV_LL_REG;
+ 		reg2 = TEMP_CH1_W_REG;
+ 		reg3 = DTS_T_CPU1_W_REG;
+ 		break;
+ 	case hwmon_temp_max_hyst:
+-		reg1 = LTD_LV_HL_REG;
++		reg1 = LTD_LV_LL_REG;
+ 		reg2 = TEMP_CH1_WH_REG;
+ 		reg3 = DTS_T_CPU1_WH_REG;
+ 		break;
+ 	case hwmon_temp_crit:
+-		reg1 = LTD_HV_LL_REG;
++		reg1 = LTD_HV_HL_REG;
+ 		reg2 = TEMP_CH1_C_REG;
+ 		reg3 = DTS_T_CPU1_C_REG;
+ 		break;
+ 	case hwmon_temp_crit_hyst:
+-		reg1 = LTD_LV_LL_REG;
++		reg1 = LTD_LV_HL_REG;
+ 		reg2 = TEMP_CH1_CH_REG;
+ 		reg3 = DTS_T_CPU1_CH_REG;
+ 		break;
+-- 
+2.17.1
+
