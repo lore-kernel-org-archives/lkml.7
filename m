@@ -2,34 +2,46 @@ Return-Path: <SRS0=x0+x=RM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DATE_IN_PAST_96_XX,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E45FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB663C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE61D20851
-	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A694320851
+	for <linux-kernel@archiver.kernel.org>; Sat,  9 Mar 2019 03:21:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sdf.org header.i=@sdf.org header.b="HSl6NL/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfCIDUt (ORCPT
+        id S1726601AbfCIDUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 8 Mar 2019 22:20:49 -0500
+        Fri, 8 Mar 2019 22:20:54 -0500
 Received: from mx.sdf.org ([205.166.94.20]:51593 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfCIDUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 8 Mar 2019 22:20:48 -0500
+        id S1726352AbfCIDUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 8 Mar 2019 22:20:49 -0500
 X-Greylist: delayed 471 seconds by postgrey-1.27 at vger.kernel.org; Fri, 08 Mar 2019 22:20:48 EST
 Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x293CLHx021640
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x293Cs94014204
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Sat, 9 Mar 2019 03:12:22 GMT
+        Sat, 9 Mar 2019 03:12:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdf.org; s=default;
+        t=1552101180; bh=brF9XphpbSn9Mfx8cikRhp0K28ZygSdXB66FqcMQuEg=;
+        h=In-Reply-To:References:From:Date:Subject:To:Cc;
+        b=HSl6NL/dkhLhRRXphh5mT3OeX38FC6w7bpj+Vvp9hZe+pYkKPT05VFC8HfnO5tWyS
+         JF0KBmECxwe0V2oU0/k/6LSTLNShY45Ms2rgR3X9LR86ppMKtPMCzxx3svoxvA9rIO
+         zRIl2PTeGk5C8DREGbHHgjCgpW4Nl/p1sqRJF7gQ=
 Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x293CKEm004086;
-        Sat, 9 Mar 2019 03:12:20 GMT
-Message-Id: <cover.1552097842.git.lkml@sdf.org>
+        by sdf.org (8.15.2/8.12.8/Submit) id x293Cs1C027088;
+        Sat, 9 Mar 2019 03:12:54 GMT
+Message-Id: <a98fba2d48042fa5a2defca4ef694a35ee227510.1552097842.git.lkml@sdf.org>
+In-Reply-To: <cover.1552097842.git.lkml@sdf.org>
+References: <cover.1552097842.git.lkml@sdf.org>
 From:   George Spelvin <lkml@sdf.org>
-Date:   Sat, 9 Mar 2019 02:17:22 +0000
-Subject: [PATCH 0/5] lib/sort & lib/list_sort: faster and smaller
+Date:   Thu, 21 Feb 2019 08:21:42 +0000
+Subject: [PATCH 3/5] lib/sort: Avoid indirect calls to built-in swap
 To:     linux-kernel@vger.kernel.org
 Cc:     George Spelvin <lkml@sdf.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -45,80 +57,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because CONFIG_RETPOLINE has made indirect calls much more expensive,
-I thought I'd try to reduce the number made by the library sort
-functions.
+Similar to what's being done in the net code, this takes advantage of
+the fact that most invocations use only a few common swap functions, and
+replaces indirect calls to them with (highly predictable) conditional
+branches.  (The downside, of course, is that if you *do* use a custom
+swap function, there are a few additional (highly predictable) conditional
+branches on the code path.)
 
-The first three patches apply to lib/sort.c.
+This actually *shrinks* the x86-64 code, because it inlines the various
+swap functions inside do_swap, eliding function prologues & epilogues.
 
-Patch #1 is a simple optimization.  The built-in swap has rarely-used
-special cases for aligned 4- and 8-byte objects.  But that case almost
-never happens; most calls to sort() work on larger structures, which
-fall back to the byte-at-a-time loop.  This generalizes them to aligned
-*multiples* of 4 and 8 bytes.  (If nothing else, it saves an awful lot
-of energy by not thrashing the store buffers as much.)
+x86-64 code size 770 -> 709 bytes (-61)
 
-(Issue for disussion: should the special-case swap loops be reduced to
-two, an aligned-word and generic byte verison?)
+Signed-off-by: George Spelvin <lkml@sdf.org>
+---
+ lib/sort.c | 45 ++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 36 insertions(+), 9 deletions(-)
 
-Patch #2 grabs a juicy piece of low-hanging fruit.  I agree that
-nice simple solid heapsort is preferable to more complex algorithms
-(sorry, Andrey), but it's possible to implement heapsort with 40% fewer
-comparisons than the way it's been done up to now.  And with some care,
-the code ends up smaller, as well.  This is the "big win" patch.
-
-Patch #3 adds the same sort of indirect call bypass that has been added
-to the net code of late.  The great majority of the callers use the
-builtin swap functions, so replace the indirect call to sort_func with a
-(highly preditable) series of if() statements.  Rather surprisingly,
-this decreased code size, as the swap functions were inlined and their
-prologue & epilogue code eliminated.
-
-lib/list_sort.c is a bit trickier, as merge sort is already close to
-optimal, and we don't want to introduce triumphs of theory over
-practicality like the Ford-Johnson merge-insertion sort.
-
-Patch #4, without changing the algorithm, chops 32% off the code size and
-removes the part[MAX_LIST_LENGTH+1] pointer array (and the corresponding
-upper limit on efficiently sortable input size).
-
-Patch #5 improves the algorithm.  The previous code is already optimal
-for power-of-two (or slightly smaller) size inputs, but when the input
-size is just over a power of 2, there's a very unbalanced final merge.
-
-There are, in the literature, several algorithms which solve this, but
-they all depend on the "breadth-first" merge order which was replaced
-by commit 835cc0c8477f with a more cache-friendly "depth-first" order.
-Some hard thinking came up with a depth-first algorithm which defers
-merges as little as possible while avoiding bad merges.  This saves
-0.2*n compares, averaged over all sizes.
-
-The code size increase is minimal (80 bytes on x86-64, reducing the net
-savings to 24%), but the comments expanded significantly to document
-the clever algorithm.
-
-
-TESTING NOTES: I have some ugly user-space benchmarking code
-which I used for testing before moving this code into the kernel.
-Shout if you want a copy.
-
-I'm running this code right now, with CONFIG_TEST_SORT and
-CONFIG_TEST_LIST_SORT, but I confess I haven't rebooted since
-the last round of minor edits to quell checkpatch.  I figure there
-will be at least one round of comments and final testing.
-
-George Spelvin (5):
-  lib/sort: Make swap functions more generic
-  lib/sort: Use more efficient bottom-up heapsort variant
-  lib/sort: Avoid indirect calls to built-in swap
-  lib/list_sort: Simplify and remove MAX_LIST_LENGTH_BITS
-  lib/list_sort: Optimize number of calls to comparison function
-
- include/linux/list_sort.h |   1 +
- lib/list_sort.c           | 225 ++++++++++++++++++++++++----------
- lib/sort.c                | 250 ++++++++++++++++++++++++++++++--------
- 3 files changed, 365 insertions(+), 111 deletions(-)
-
+diff --git a/lib/sort.c b/lib/sort.c
+index 2aef4631e7d3..226a8c7e4b9a 100644
+--- a/lib/sort.c
++++ b/lib/sort.c
+@@ -117,6 +117,33 @@ static void generic_swap(void *a, void *b, int size)
+ 	} while (n);
+ }
+ 
++typedef void (*swap_func_t)(void *a, void *b, int size);
++
++/*
++ * The values are arbitrary as long as they can't be confused with
++ * a pointer, but small integers make for the smallest compare
++ * instructions.
++ */
++#define U64_SWAP (swap_func_t)0
++#define U32_SWAP (swap_func_t)1
++#define GENERIC_SWAP (swap_func_t)2
++
++/*
++ * The function pointer is last to make tail calls most efficient if the
++ * compiler decides not to inline this function.
++ */
++static void do_swap(void *a, void *b, int size, swap_func_t swap_func)
++{
++	if (swap_func == U64_SWAP)
++		u64_swap(a, b, size);
++	else if (swap_func == U32_SWAP)
++		u32_swap(a, b, size);
++	else if (swap_func == GENERIC_SWAP)
++		generic_swap(a, b, size);
++	else
++		swap_func(a, b, size);
++}
++
+ /**
+  * parent - given the offset of the child, find the offset of the parent.
+  * @i: the offset of the heap element whose parent is sought.  Non-zero.
+@@ -151,10 +178,10 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
+  * @cmp_func: pointer to comparison function
+  * @swap_func: pointer to swap function or NULL
+  *
+- * This function does a heapsort on the given array.  You may provide a
+- * swap_func function if you need to do something more than a memory copy
+- * (e.g. fix up pointers or auxiliary data), but the built-in swap isn't
+- * usually a bottleneck.
++ * This function does a heapsort on the given array.  You may provide
++ * a swap_func function if you need to do something more than a memory
++ * copy (e.g. fix up pointers or auxiliary data), but the built-in swap
++ * avoids a slow retpoline and so is significantly faster.
+  *
+  * Sorting time is O(n log n) both on average and worst-case. While
+  * qsort is about 20% faster on average, it suffers from exploitable
+@@ -174,11 +201,11 @@ void sort(void *base, size_t num, size_t size,
+ 
+ 	if (!swap_func) {
+ 		if (alignment_ok(base, size, 8))
+-			swap_func = u64_swap;
++			swap_func = U64_SWAP;
+ 		else if (alignment_ok(base, size, 4))
+-			swap_func = u32_swap;
++			swap_func = U32_SWAP;
+ 		else
+-			swap_func = generic_swap;
++			swap_func = GENERIC_SWAP;
+ 	}
+ 
+ 	/*
+@@ -194,7 +221,7 @@ void sort(void *base, size_t num, size_t size,
+ 		if (a)			/* Building heap: sift down --a */
+ 			a -= size;
+ 		else if (n -= size)	/* Sorting: Extract root to --n */
+-			swap_func(base, base + n, size);
++			do_swap(base, base + n, size, swap_func);
+ 		else			/* Sort complete */
+ 			break;
+ 
+@@ -221,7 +248,7 @@ void sort(void *base, size_t num, size_t size,
+ 		c = b;			/* Where "a" belongs */
+ 		while (b != a) {	/* Shift it into place */
+ 			b = parent(b, lsbit, size);
+-			swap_func(base + b, base + c, size);
++			do_swap(base + b, base + c, size, swap_func);
+ 		}
+ 	}
+ }
 -- 
 2.20.1
 
