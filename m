@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-4.9 required=3.0 tests=DATE_IN_PAST_96_XX,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236A9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBA7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010C120842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281C920842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbfCESJO (ORCPT
+        id S1731014AbfCESJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 13:09:14 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.2]:11250 "EHLO
+        Tue, 5 Mar 2019 13:09:24 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.1]:20553 "EHLO
         mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730854AbfCESIc (ORCPT
+        by vger.kernel.org with ESMTP id S1730853AbfCESIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 13:08:32 -0500
+        Tue, 5 Mar 2019 13:08:31 -0500
 Received: from [46.226.52.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-a.eu-west-1.aws.symcld.net id 96/2D-18573-C1BBE7C5; Tue, 05 Mar 2019 18:08:28 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRWlGSWpSXmKPExsVy8IPnUV2Z3XU
-  xBkcX8VpMffiEzeLblQ4mi8u75rA5MHvsnHWX3WPTqk42j8+b5AKYo1gz85LyKxJYMy7N6Gcs
-  mM9bMf3NfPYGxuncXYxcHEIC6xglljXMYO9i5ARyKiT2P2pmBrF5BZIl/i7eARbnFHCUONi7j
-  hWixkGi8fZfNhCbTcBQYt6b94wgNouAqsTi1hksILawgJfEjx/9YHNEBDwkWrdvALOZBWIlzs
-  9bygIxX1Di5MwnLBBxCYmDL14A1XAAzdeSWH4sEiQsIWAvMf39VbCwhIC+ROOxWIiwocT3Wd9
-  YIGxzidurH7BOYBSchWToLCRDFzAyrWK0SCrKTM8oyU3MzNE1NDDQNTQ00jW0NNY1MjbRS6zS
-  TdRLLdUtTy0u0TXUSywv1iuuzE3OSdHLSy3ZxAgM8JSCg692MO5akX6IUZKDSUmUt3NXXYwQX
-  1J+SmVGYnFGfFFpTmrxIUYZDg4lCV4HkJxgUWp6akVaZg4w1mDSEhw8SiK85SBp3uKCxNzizH
-  SI1ClGXY7TCx/OZRZiycvPS5US5z21E6hIAKQoozQPbgQs7i8xykoJ8zIyMDAI8RSkFuVmlqD
-  Kv2IU52BUEuatBlnFk5lXArfpFdARTEBHfL5cDXJESSJCSqqBMb9z+b9npvHKx7/a/zn3NH6l
-  FEuB7KSZTAufLPU1vaFn6yTOMGfZo+M77/zosZMUWFJuqbXbpkd/+qtOxc8W8vqfgySFxAWXc
-  Mq+0eC1n9F0tzp/U1XQgYpm47rHC+9emLmhyNHvuvSFWZO73ZbsEf7fuXKl6trXG/7ZbfPX/r
-  yCO6v0ajCTjhJLcUaioRZzUXEiAI0B9Rr2AgAA
+        by server-1.bemta.az-a.eu-west-1.aws.symcld.net id B1/C0-19701-B1BBE7C5; Tue, 05 Mar 2019 18:08:27 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIIsWRWlGSWpSXmKPExsVy8IPnUV3p3XU
+  xBhOnSFlMffiEzeLblQ4mi8u75rA5MHvsnHWX3WPTqk42j8+b5AKYo1gz85LyKxJYMxqPLWIv
+  mMVbcXrNeZYGxlXcXYxcHEIC6xglvr97x9zFyAnkVEjMf3yavYuRg4NXIFli20sfkDCngKPEw
+  d51rBAlDhKNt/+ygdhsAoYS8968ZwSxWQRUJXoffmMCsYUFPCW2fDrDAmKLCHhItG7fADaeWS
+  BW4vy8pWBxXgFBiZMzn7BAxCUkDr54wQyyVkhAS2L5sUiQsISAvcT091fBwhIC+hKNx2IhwoY
+  S32d9Y4GwzSVur37AOoFRcBaSobOQDF3AyLSK0TypKDM9oyQ3MTNH19DAQNfQ0EjX0NJY18xM
+  L7FKN1EvtVS3PLW4RNdQL7G8WK+4Mjc5J0UvL7VkEyMwuFMKDjrtYFy3Iv0QoyQHk5Iob19XX
+  YwQX1J+SmVGYnFGfFFpTmrxIUYZDg4lCV6HXUA5waLU9NSKtMwcYJzBpCU4eJREeMV3AqV5iw
+  sSc4sz0yFSpxh1OU4vfDiXWYglLz8vVUqc9xRIkQBIUUZpHtwIWMxfYpSVEuZlZGBgEOIpSC3
+  KzSxBlX/FKM7BqCTMywIyhSczrwRu0yugI5iAjvh8uRrkiJJEhJRUA6PJm6kTHQqP2U/4sXXz
+  9zjlyBB33j/cYX8+h55Rbvxi3Zh/XvabRsK35ODjfbfnP1jG6lhZsX/lpI3/xOfNqZbPPeWdm
+  H37LvfvlXlvuQI2npWaeeek6qQLN5yS+I8XzDroz1scsnf/owvqn99xfiiVaUkPmuTHlpgfmh
+  o3p1pK3+vDXXHlh7uVWIozEg21mIuKEwFyanO79AIAAA==
 X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-20.tower-262.messagelabs.com!1551809306!2441267!9
+X-Msg-Ref: server-20.tower-262.messagelabs.com!1551809306!2441267!5
 X-Originating-IP: [193.240.73.197]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.31.5; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 30236 invoked from network); 5 Mar 2019 18:08:28 -0000
+Received: (qmail 30170 invoked from network); 5 Mar 2019 18:08:27 -0000
 Received: from unknown (HELO sw-ex-cashub01.diasemi.com) (193.240.73.197)
-  by server-20.tower-262.messagelabs.com with AES128-SHA256 encrypted SMTP; 5 Mar 2019 18:08:28 -0000
+  by server-20.tower-262.messagelabs.com with AES128-SHA256 encrypted SMTP; 5 Mar 2019 18:08:27 -0000
 Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
  SW-EX-CASHUB01.diasemi.com (10.20.16.140) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 5 Mar 2019 18:08:26 +0000
+ 14.3.408.0; Tue, 5 Mar 2019 18:08:25 +0000
 Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22547)      id
- 3AC633FC12; Tue,  5 Mar 2019 18:08:25 +0000 (GMT)
-Message-ID: <2f9f4986527b5c9784b4ad19f0b07543be6f97d5.1551808797.git.stwiss.opensource@diasemi.com>
+ 308E13FBED; Tue,  5 Mar 2019 18:08:25 +0000 (GMT)
+Message-ID: <e58744917ebcc6189bb004c067313795ab308f9a.1551808797.git.stwiss.opensource@diasemi.com>
 In-Reply-To: <cover.1551808797.git.stwiss.opensource@diasemi.com>
 References: <cover.1551808797.git.stwiss.opensource@diasemi.com>
 From:   Steve Twiss <stwiss.opensource@diasemi.com>
-Date:   Tue, 26 Feb 2019 15:42:50 +0000
-Subject: [PATCH 08/13] regulator: pv88060: Fix notifier mutex lock warning
+Date:   Tue, 26 Feb 2019 15:27:57 +0000
+Subject: [PATCH 04/13] regulator: da9211: Fix notifier mutex lock warning
 To:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>
 CC:     Support Opensource <support.opensource@diasemi.com>,
@@ -80,41 +80,39 @@ in a kernel WARN_ON_ONCE() which will dump a backtrace for the
 regulator_notifier_call_chain() when that function call is first made.
 The mutex can be controlled using the regulator_lock/unlock() API.
 
-Fixes: f307a7e9b7af ("regulator: pv88060: new regulator driver")
+Fixes: 1028a37daa14 ("regulator: da9211: new regulator driver")
 Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 ---
- drivers/regulator/pv88060-regulator.c | 4 ++++
+ drivers/regulator/da9211-regulator.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/drivers/regulator/pv88060-regulator.c b/drivers/regulator/pv88060-regulator.c
-index a944605..000c349 100644
---- a/drivers/regulator/pv88060-regulator.c
-+++ b/drivers/regulator/pv88060-regulator.c
-@@ -276,9 +276,11 @@ static irqreturn_t pv88060_irq_handler(int irq, void *data)
- 	if (reg_val & PV88060_E_VDD_FLT) {
- 		for (i = 0; i < PV88060_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+				regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_UNDER_VOLTAGE,
- 					NULL);
-+				regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
+index 109ee12..4d7fe48 100644
+--- a/drivers/regulator/da9211-regulator.c
++++ b/drivers/regulator/da9211-regulator.c
+@@ -322,8 +322,10 @@ static irqreturn_t da9211_irq_handler(int irq, void *data)
+ 		goto error_i2c;
  
-@@ -293,9 +295,11 @@ static irqreturn_t pv88060_irq_handler(int irq, void *data)
- 	if (reg_val & PV88060_E_OVER_TEMP) {
- 		for (i = 0; i < PV88060_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+				regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_OVER_TEMP,
- 					NULL);
-+				regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+ 	if (reg_val & DA9211_E_OV_CURR_A) {
++	        regulator_lock(chip->rdev[0]);
+ 		regulator_notifier_call_chain(chip->rdev[0],
+ 			REGULATOR_EVENT_OVER_CURRENT, NULL);
++	        regulator_unlock(chip->rdev[0]);
  
+ 		err = regmap_write(chip->regmap, DA9211_REG_EVENT_B,
+ 			DA9211_E_OV_CURR_A);
+@@ -334,8 +336,10 @@ static irqreturn_t da9211_irq_handler(int irq, void *data)
+ 	}
+ 
+ 	if (reg_val & DA9211_E_OV_CURR_B) {
++	        regulator_lock(chip->rdev[1]);
+ 		regulator_notifier_call_chain(chip->rdev[1],
+ 			REGULATOR_EVENT_OVER_CURRENT, NULL);
++	        regulator_unlock(chip->rdev[1]);
+ 
+ 		err = regmap_write(chip->regmap, DA9211_REG_EVENT_B,
+ 			DA9211_E_OV_CURR_B);
 -- 
 1.9.3
 
