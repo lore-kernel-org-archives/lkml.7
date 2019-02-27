@@ -2,114 +2,116 @@ Return-Path: <SRS0=HyMZ=RC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18839C00319
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D5CC00319
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CF3218A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B942171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vz6Gts0A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730551AbfB0Xwv (ORCPT
+        id S1730498AbfB0Xy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 18:52:51 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46167 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729918AbfB0Xwv (ORCPT
+        Wed, 27 Feb 2019 18:54:57 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:60472 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728397AbfB0Xy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 18:52:51 -0500
-Received: by mail-qt1-f196.google.com with SMTP id z25so21446726qti.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 15:52:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=477+SFDfE0ZoYOb3guhbOjb9WVbbi2f4zeBLAL1clJ0=;
-        b=Nc6wGiL/ymLewt55qwyZYjUowTaUlDDHLowLu8SrVyr4j7dMFnF07WR7LommQvg+wh
-         dbtzX3kbSTOLxNiHvhhk73+87u+7yVSVDIa4Gqf3kTLGxHYrvmp2iHoy8m9dluns82AQ
-         tjnMIqa6MNSg63nWWMyeWoETUZosEwPpq7QlWYffQyJM40fsyyqbRdEsFDEeANKGOk4r
-         C1VDt/SNcbWtcnghOrmsh+m2sGtPBliwK6eOJ8Eos/vV2ByTx3cDeXLvcEqXU8hIWqgO
-         Ev7c85siUDxZDPqq9AAG74p///3zHuyYbGCZCqvkX+Iz3DTZx3QpKKyneK27x9HIUhbD
-         7Qxg==
-X-Gm-Message-State: APjAAAX33Ks1IneB5wwwA14seOnIP5oRmxmX9vhC1i4rnrO40EAM3wKM
-        VCBI75o4h42XpinchMhS+1gpJw==
-X-Google-Smtp-Source: APXvYqxqqO+SwdGRwFcJnzd3JKyqOvRvs5BLqRHEBADhz+tYfoycgKk42qQ6DgB6YUOQYuWLJTmyCA==
-X-Received: by 2002:a0c:95dd:: with SMTP id t29mr4177370qvt.174.1551311569950;
-        Wed, 27 Feb 2019 15:52:49 -0800 (PST)
-Received: from ?IPv6:2601:602:9800:dae6:8083:e891:a0d6:f666? ([2601:602:9800:dae6:8083:e891:a0d6:f666])
-        by smtp.gmail.com with ESMTPSA id a3sm12856551qta.21.2019.02.27.15.52.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Feb 2019 15:52:48 -0800 (PST)
-Subject: Re: [PATCH v2] drm/vgem: fix use-after-free when
- drm_gem_handle_create() fails
-To:     Eric Biggers <ebiggers@kernel.org>, dri-devel@lists.freedesktop.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        linux-kernel@vger.kernel.org,
-        syzbot+e73f2fb5ed5a5df36d33@syzkaller.appspotmail.com,
-        Daniel Vetter <daniel.vetter@ffwll.ch>, stable@vger.kernel.org
-References: <20190226213053.GC218103@gmail.com>
- <20190226214451.195123-1-ebiggers@kernel.org>
-From:   Laura Abbott <labbott@redhat.com>
-Message-ID: <2ba38b28-89a3-3ae7-6f13-af298165cfd8@redhat.com>
-Date:   Wed, 27 Feb 2019 15:52:43 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 27 Feb 2019 18:54:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1551311691; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cJ6fULrEGLrLtO/O+I4SpN9dM7a0vaIBbaxUxFE0zew=;
+        b=vz6Gts0AlF1ZMxzNvwztMEwxrlMYtUm8vCZGrHH2K38uvYsNaQEwsGoASa1KbumPTB+Z6A
+        88PY/c9CQ9QkAnmFVsij8HjTByhDB1NR1aR4C+wZhWzvjIocvGJMOFJt+2Di8Cg69huwZl
+        zA1bw5utq6/tPI8K1f1TGueCFOzSWK4=
+Date:   Wed, 27 Feb 2019 20:54:28 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v8 05/26] clocksource: Add driver for the Ingenic JZ47xx
+ OST
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Ezequiel Garcia <ezequiel@collabora.co.uk>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me,
+        Maarten ter Huurne <maarten@treewalker.org>
+Message-Id: <1551311669.21164.1@crapouillou.net>
+In-Reply-To: <155111793658.191923.2540746255375959460@swboyd.mtv.corp.google.com>
+References: <20181212220922.18759-1-paul@crapouillou.net>
+        <CA+7wUsxNN2SL9_7tDh0DiBAgdUwxd_osgmi=09HP7110Tm0DYQ@mail.gmail.com>
+        <128675a5-7ede-4114-a649-89a536346dc8@roeck-us.net>
+        <1548264353.3173.1@crapouillou.net> <20190123180155.GB9781@roeck-us.net>
+        <154835808767.136743.14531363127962557756@swboyd.mtv.corp.google.com>
+        <1548362788.3881.0@crapouillou.net>
+        <154836998080.136743.17683029101430122926@swboyd.mtv.corp.google.com>
+        <1548370388.3881.2@crapouillou.net> <1550891845.20534.1@crapouillou.net>
+        <155111793658.191923.2540746255375959460@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190226214451.195123-1-ebiggers@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/19 1:44 PM, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> If drm_gem_handle_create() fails in vgem_gem_create(), then the
-> drm_vgem_gem_object is freed twice: once when the reference is dropped
-> by drm_gem_object_put_unlocked(), and again by __vgem_gem_destroy().
-> 
-> This was hit by syzkaller using fault injection.
-> 
-> Fix it by skipping the second free.
-> 
-> Reported-by: syzbot+e73f2fb5ed5a5df36d33@syzkaller.appspotmail.com
-> Fixes: af33a9190d02 ("drm/vgem: Enable dmabuf import interfaces")
-> Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->   drivers/gpu/drm/vgem/vgem_drv.c | 6 +-----
->   1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-> index 5930facd6d2d8..11a8f99ba18c5 100644
-> --- a/drivers/gpu/drm/vgem/vgem_drv.c
-> +++ b/drivers/gpu/drm/vgem/vgem_drv.c
-> @@ -191,13 +191,9 @@ static struct drm_gem_object *vgem_gem_create(struct drm_device *dev,
->   	ret = drm_gem_handle_create(file, &obj->base, handle);
->   	drm_gem_object_put_unlocked(&obj->base);
->   	if (ret)
-> -		goto err;
-> +		return ERR_PTR(ret);
->   
->   	return &obj->base;
-> -
-> -err:
-> -	__vgem_gem_destroy(obj);
-> -	return ERR_PTR(ret);
->   }
->   
->   static int vgem_gem_dumb_create(struct drm_file *file, struct drm_device *dev,
-> 
+Hi,
 
+Le lun. 25 f=E9vr. 2019 =E0 15:05, Stephen Boyd <sboyd@kernel.org> a=20
+=E9crit :
+> Quoting Paul Cercueil (2019-02-22 19:17:25)
+>>  Hi,
+>>=20
+>>  Anything new on this? It still happens on 5.0-rc7.
+>>  It probes with late_initcall, and not with device_initcall.
+>>  I have no clue what's going on.
+>>=20
+>=20
+> I'm not sure what's going on either. You'll probably have to debug=20
+> when
+> the device is created and when it is probed by enabling the debug
+> printing in the driver core or by adding in extra debug prints to=20
+> narrow
+> down the problem. For example, add a '#define DEBUG 1' at the top of
+> drivers/base/dd.c and see if that helps give some info on what's going
+> on with the drivers and devices.
 
-Acked-by: Laura Abbott <labbott@redhat.com>
+The doc of __platform_driver_probe says:
+"Use this instead of platform_driver_register() when you know the device
+is not hotpluggable and has already been registered".
+
+When the parent device and child device are both probed with
+builtin_platform_driver_probe(), and the parent calls
+devm_of_platform_populate(), it is not certain that the parent's
+probe will happen before the child's, and if it does not, the child
+device has not been registered and its probe is not allowed to defer.
+So it turned out not to be a core bug, rather a misuse of the API.
+
+So I will keep the builtin_platform_driver_probe() in the child, and=20
+use a
+subsys_initcall() in the parent. That works fine.
+
+Regards,
+-Paul
+=
+
