@@ -2,79 +2,108 @@ Return-Path: <SRS0=HyMZ=RC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7870C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7731DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC07218AC
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B14F2133D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbfB0XUR (ORCPT
+        id S1730371AbfB0X3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 18:20:17 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:36064 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728397AbfB0XUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 18:20:16 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 75E4D30BADAC;
-        Wed, 27 Feb 2019 23:20:16 +0000 (UTC)
-Received: from [10.10.121.150] (ovpn-121-150.rdu2.redhat.com [10.10.121.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AD8C4610A3;
-        Wed, 27 Feb 2019 23:20:15 +0000 (UTC)
-Subject: Re: [PATCH] x86/stacktrace: export save_stack_trace_tsk_reliable
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        x86@kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-References: <20190227211748.9545-1-joe.lawrence@redhat.com>
- <alpine.DEB.2.21.1902272219160.1644@nanos.tec.linutronix.de>
- <07491738-dfdb-deb4-7e25-f1c173dda773@redhat.com>
-Message-ID: <873cd5ca-1f88-499e-e8ed-9a93f42d8239@redhat.com>
-Date:   Wed, 27 Feb 2019 18:20:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <07491738-dfdb-deb4-7e25-f1c173dda773@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 27 Feb 2019 23:20:16 +0000 (UTC)
+        Wed, 27 Feb 2019 18:29:00 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39374 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728397AbfB0X3A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 18:29:00 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1RNJZi3088255
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 18:28:55 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qx1qhe4an-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 18:28:55 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 27 Feb 2019 23:28:53 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 27 Feb 2019 23:28:50 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1RNSnQ058195990
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 Feb 2019 23:28:49 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5008D4278B;
+        Wed, 27 Feb 2019 23:28:49 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3EE3842790;
+        Wed, 27 Feb 2019 23:28:48 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.106.105])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Feb 2019 23:28:48 +0000 (GMT)
+Subject: Re: [PATCH v5 04/10] crypto: akcipher - new verify API for public
+ key algorithms
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Vitaly Chikunov <vt@altlinux.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        David Howells <dhowells@redhat.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 27 Feb 2019 18:28:37 -0500
+In-Reply-To: <20190224060828.2527-5-vt@altlinux.org>
+References: <20190224060828.2527-1-vt@altlinux.org>
+         <20190224060828.2527-5-vt@altlinux.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19022723-0020-0000-0000-0000031C18FD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19022723-0021-0000-0000-0000216D87D5
+Message-Id: <1551310117.10911.108.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-27_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902270151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/19 5:25 PM, Joe Lawrence wrote:
-> On 2/27/19 4:31 PM, Thomas Gleixner wrote:
->> On Wed, 27 Feb 2019, Joe Lawrence wrote:
->>
->>> The ppc64le implementation of save_stack_trace_tsk_reliable() is
->>> exported, so do the same with x86.
->>
->> And what's the in tree module user of this? I can't find one and just
->> because PPC has an export with no user is not a convincing argument to add
->> another one. The proper solution is to remove the unused PPC export.
->>
+Hi Vitaly,
+
+On Sun, 2019-02-24 at 09:08 +0300, Vitaly Chikunov wrote:
+> Previous akcipher .verify() just `decrypts' (using RSA encrypt which is
+> using public key) signature to uncover message hash, which was then
+> compared in upper level public_key_verify_signature() with the expected
+> hash value, which itself was never passed into verify().
 > 
-> Good point.
+> This approach was incompatible with EC-DSA family of algorithms,
+> because, to verify a signature EC-DSA algorithm also needs a hash value
+> as input; then it's used (together with a signature divided into halves
+> `r||s') to produce a witness value, which is then compared with `r' to
+> determine if the signature is correct. Thus, for EC-DSA, nor
+> requirements of .verify() itself, nor its output expectations in
+> public_key_verify_signature() wasn't sufficient.
 > 
-> For that matter, I do see in-tree modules making use of
-> save_stack_trace, but who is calling save_stack_trace_tsk (exported by
-> most arches) and save_stack_trace_regs (exported by openrisc, powerpc,
-> s390)?
+> Make improved .verify() call which gets hash value as input and produce
+> complete signature check without any output besides status.
+> 
+> Now for the top level verification only crypto_akcipher_verify() needs
+> to be called.
 
-Well, at least for save_stack_trace_tsk there is the out-of-tree kpatch 
-core module[1].  (Kpatch drops that call if the kernel provides 
-livepatch functionality.)
+All but this patch apply.  Which branch is this patch based against?
 
-[1] https://github.com/dynup/kpatch/blob/master/kmod/core/core.c#L275
+Mimi
 
--- Joe
