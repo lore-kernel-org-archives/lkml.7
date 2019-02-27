@@ -2,116 +2,143 @@ Return-Path: <SRS0=HyMZ=RC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D5CC00319
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF274C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B942171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vz6Gts0A"
+	by mail.kernel.org (Postfix) with ESMTP id 87EF02171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551311702;
+	bh=470P0LyzcUsOcAmdiOvsS2DZ2zLBHxBaH5W9jzH71gM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nFz65AalFEqspjF2Ptksy041P7r6SMTJR6G2lvGp94bGzxuCBzxVA16X53ECOApwV
+	 F6OBGmUk1HF7SpntUJg11uNvk09cVuAO0dJ5qQvyCZFRBkr8LgEFNhnE9WJ1+xa3D3
+	 QX5pmQJbNn77j/QNaUApiufVoDmYoPKhjrqdNQVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfB0Xy5 (ORCPT
+        id S1730590AbfB0XzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 18:54:57 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:60472 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728397AbfB0Xy4 (ORCPT
+        Wed, 27 Feb 2019 18:55:01 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40160 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728397AbfB0Xy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 18:54:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1551311691; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cJ6fULrEGLrLtO/O+I4SpN9dM7a0vaIBbaxUxFE0zew=;
-        b=vz6Gts0AlF1ZMxzNvwztMEwxrlMYtUm8vCZGrHH2K38uvYsNaQEwsGoASa1KbumPTB+Z6A
-        88PY/c9CQ9QkAnmFVsij8HjTByhDB1NR1aR4C+wZhWzvjIocvGJMOFJt+2Di8Cg69huwZl
-        zA1bw5utq6/tPI8K1f1TGueCFOzSWK4=
-Date:   Wed, 27 Feb 2019 20:54:28 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v8 05/26] clocksource: Add driver for the Ingenic JZ47xx
- OST
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ezequiel Garcia <ezequiel@collabora.co.uk>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        linux-pwm@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me,
-        Maarten ter Huurne <maarten@treewalker.org>
-Message-Id: <1551311669.21164.1@crapouillou.net>
-In-Reply-To: <155111793658.191923.2540746255375959460@swboyd.mtv.corp.google.com>
-References: <20181212220922.18759-1-paul@crapouillou.net>
-        <CA+7wUsxNN2SL9_7tDh0DiBAgdUwxd_osgmi=09HP7110Tm0DYQ@mail.gmail.com>
-        <128675a5-7ede-4114-a649-89a536346dc8@roeck-us.net>
-        <1548264353.3173.1@crapouillou.net> <20190123180155.GB9781@roeck-us.net>
-        <154835808767.136743.14531363127962557756@swboyd.mtv.corp.google.com>
-        <1548362788.3881.0@crapouillou.net>
-        <154836998080.136743.17683029101430122926@swboyd.mtv.corp.google.com>
-        <1548370388.3881.2@crapouillou.net> <1550891845.20534.1@crapouillou.net>
-        <155111793658.191923.2540746255375959460@swboyd.mtv.corp.google.com>
+        Wed, 27 Feb 2019 18:54:58 -0500
+Received: by mail-oi1-f193.google.com with SMTP id x187so15026493oia.7;
+        Wed, 27 Feb 2019 15:54:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dRnsnvc++2BSVesveEuIM74VIJT7QPyOQhMUfCmmHZY=;
+        b=T8stCLHwdkgEYKVqddDS9BUFCfBuL8679hfyvAeMcLJI1UYH4tgHycz4ubtVWkFpuw
+         W9oUBlgu+ALt2H1z8O4If78WUbT32+VwnkcPjhfXyo1i9oGJ2O2n76Zd5+iT8Q044/xJ
+         RP2JHs+ohxJ4C0gAS0/B78g5uOvJ46CqgUHmnfxfoRbteA6MwnUe+l+I88Gi4jn7o1lQ
+         OHXjKuaomYi/e84rm1GFEgxll9wEwbqtcUDC4yG5iht27vDCj7RE/TzCsiMQFhn5KuZj
+         FGaaz+WDZrflCEDtAt6CPcLVXlcGGzX3e9lYhZk5OUQiOR7ZlKpXtQYvk4pgM1gvoO1r
+         1cpg==
+X-Gm-Message-State: AHQUAubwARNEB3hs5w8oZZcihQfK/1+/EfViRxVIgVuOqfPtJDRrSKKX
+        ismei8ie1EJzfFd2VxqraQ==
+X-Google-Smtp-Source: AHgI3IYrRgjOuoVpR9oqaxXEGpn240Nus78kidoUe/69C7ZUJ2UIoyAbqGKGHDKPxKNVMMbsUw4qAg==
+X-Received: by 2002:aca:4d53:: with SMTP id a80mr1279553oib.154.1551311696690;
+        Wed, 27 Feb 2019 15:54:56 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m65sm2043571oia.15.2019.02.27.15.54.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Feb 2019 15:54:55 -0800 (PST)
+Date:   Wed, 27 Feb 2019 17:54:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V10 1/4] dt-bindings: fsl: scu: add thermal binding
+Message-ID: <20190227235455.GA15211@bogus>
+References: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551256894-21954-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Feb 27, 2019 at 08:46:21AM +0000, Anson Huang wrote:
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> system controller, the system controller is in charge of system
+> power, clock and thermal sensors etc. management, Linux kernel
+> has to communicate with system controller via MU (message unit)
+> IPC to get temperature from thermal sensors, this patch adds
+> binding doc for i.MX system controller thermal driver.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V9:
+> 	- change #thermal-sensor-cells value in example to 1, since there are other
+> 	  thermal sensors inside system controller, it is just because there are still
+> 	  some issue, so system controller does NOT expose them for now, they could
+> 	  be exposed later, so it should be 1 from HW perspective.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt   | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> index 72d481c..855270b 100644
+> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -122,6 +122,21 @@ RTC bindings based on SCU Message Protocol
+>  Required properties:
+>  - compatible: should be "fsl,imx8qxp-sc-rtc";
+>  
+> +Thermal bindings based on SCU Message Protocol
+> +------------------------------------------------------------
+> +
+> +Required properties:
+> +- compatible:			Should be :
+> +				  "fsl,imx8qxp-sc-thermal"
+> +				followed by "fsl,imx-sc-thermal";
+> +
+> +- #thermal-sensor-cells:	See Documentation/devicetree/bindings/thermal/thermal.txt
+> +				for a description.
+> +
+> +- imx,sensor-resource-id: 	A single integer for single thermal zone's resource ID or
+> +				an array of integers to specify each thermal zone's sensor
+> +				resource ID.
 
-Le lun. 25 f=E9vr. 2019 =E0 15:05, Stephen Boyd <sboyd@kernel.org> a=20
-=E9crit :
-> Quoting Paul Cercueil (2019-02-22 19:17:25)
->>  Hi,
->>=20
->>  Anything new on this? It still happens on 5.0-rc7.
->>  It probes with late_initcall, and not with device_initcall.
->>  I have no clue what's going on.
->>=20
->=20
-> I'm not sure what's going on either. You'll probably have to debug=20
-> when
-> the device is created and when it is probed by enabling the debug
-> printing in the driver core or by adding in extra debug prints to=20
-> narrow
-> down the problem. For example, add a '#define DEBUG 1' at the top of
-> drivers/base/dd.c and see if that helps give some info on what's going
-> on with the drivers and devices.
+Can't you put the resource ids in the thermal-sensor cells? Why do you 
+need to list them here?
 
-The doc of __platform_driver_probe says:
-"Use this instead of platform_driver_register() when you know the device
-is not hotpluggable and has already been registered".
-
-When the parent device and child device are both probed with
-builtin_platform_driver_probe(), and the parent calls
-devm_of_platform_populate(), it is not certain that the parent's
-probe will happen before the child's, and if it does not, the child
-device has not been registered and its probe is not allowed to defer.
-So it turned out not to be a core bug, rather a misuse of the API.
-
-So I will keep the builtin_platform_driver_probe() in the child, and=20
-use a
-subsys_initcall() in the parent. That works fine.
-
-Regards,
--Paul
-=
-
+Rob
