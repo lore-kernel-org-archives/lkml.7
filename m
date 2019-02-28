@@ -2,147 +2,237 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C56C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC30C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25213218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D622C218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jgmmlbRY"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="Ig13ZI79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732388AbfB1Sv3 (ORCPT
+        id S1732742AbfB1Szg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:51:29 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35134 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbfB1Sv3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:51:29 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p19so10178730plo.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 10:51:28 -0800 (PST)
+        Thu, 28 Feb 2019 13:55:36 -0500
+Received: from mail-eopbgr810112.outbound.protection.outlook.com ([40.107.81.112]:42176
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727649AbfB1Szg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:55:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V3WCfld6VGlFUzrYb6K+01b/si8ybvGNt+u8JPbK3d0=;
-        b=jgmmlbRYnFGZKW4/fw45YyX0glSTiz7z1ONodAoiHBLvEUq+iPMZHW6njHTlfVGXMD
-         bLxzw9sgHFRW3cjasNFcCeSodhduFBtrovkM0QjTmr+8qJ1jYrZZMEiwCyv5dfYq2TvG
-         5ideK6lwsKlX3IVSf/Rd2xjDvvH2iJLbe0DpViLR6x7E5PoR2KPsmZ5ILvQcmBhZoKru
-         DBHmoEgeGvodBM6pE7j8Szj08X8Cfa3e2jzBy0WIb0mgbKv0/JNMQB+BCJ8s+EwDeHSv
-         LHREjjYXotYdDpuWiF2GmwyqVM0Nrut/1fSSbENGEvBC04OBaDuxoGSNDvVCBJYEe7Ny
-         Y9AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V3WCfld6VGlFUzrYb6K+01b/si8ybvGNt+u8JPbK3d0=;
-        b=OXAmyIurWpIOJ3wkLZc7MKGoJSraBbYTjpf5SJOdyMDUCzzgY5oHvfJGEAJSTR1Wou
-         L8Z2JakbsyKHKisva1HHoa2Z+L5oPi976Kknq1cxO+F0Dv8Z1XOnmkHUElNk5Sg3Od3R
-         lazoGcw8kXQAzPeflDpieHJ4J6TtQjeGECS+LJqgQAThR0VQC1EddG1QY7/qo/XGoJe3
-         PDKDhDig+VC+Rp2W74lDqNj3M0Fa4YCBkeAM1D/9+8wN+odOpU5o9VSnVj3isjFKBbr+
-         CgZcFZXqqljciWTL8H2YKubBUyZrBC+Tzwd47pP6MXTrk23FeLvwyiUp5oTPkniCAeCf
-         0Whg==
-X-Gm-Message-State: APjAAAUzmYI3PufF8gcZM2dpDiuxBAtXYzSK69Z0e9a6iTQNfpmPXHcA
-        U3T4NuPKlp4Q1WQqkYUMICZSopxlZaqv3YmGmrXlXg==
-X-Google-Smtp-Source: APXvYqz6bcusX1/60rvdZpekr2aq1ji5EftAaMrW4Wk10ZkqN4DBKzwb/69C7gDI9xqjP4WcWbDmEf7gB6NXE5S1H8g=
-X-Received: by 2002:a17:902:e85:: with SMTP id 5mr866072plx.13.1551379888235;
- Thu, 28 Feb 2019 10:51:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20190226040345.202047-1-ndesaulniers@google.com>
- <CAKv+Gu-5DvWZL6ogLVNDEvgKe6TENX+5sF1U7QxiyYC8Wx0nXw@mail.gmail.com>
- <CAKwvOdmzb1WF6NU5LYWGXK_O2cbqwMjbWGAa5xk5x+EMz7A1yw@mail.gmail.com> <b3bf85a9-85de-3800-787e-2b00d3edd939@arm.com>
-In-Reply-To: <b3bf85a9-85de-3800-787e-2b00d3edd939@arm.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 28 Feb 2019 10:51:17 -0800
-Message-ID: <CAKwvOdm=y-5XHt1V-99Cu+kMVy9Ah6KdE4h2gY+bHgr4eem15A@mail.gmail.com>
-Subject: Re: [PATCH] lib/raid6: use vdupq_n_u8 to avoid endianness warnings
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1G86G/5c/y6+uynIof6ueotd56OFKyafnMLXtDoktH0=;
+ b=Ig13ZI79xC3LA3Rhapevy/kU+Gsq5UQFhJBBK/hDQoXyNBijlQRTamsdOhTNnncBjRquZ8cXfUTa7gop4evcWaRCBS/BrOv8oWIpHm/F0nSG++Mp2/ubBNLYXFsPTDBS57gkcB5vdTFc+8OIUOD/1Eco7IkVQCSFBPz/OXOA70s=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1359.namprd22.prod.outlook.com (10.174.162.149) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.16; Thu, 28 Feb 2019 18:55:28 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::7d5e:f3b0:4a5:4636]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::7d5e:f3b0:4a5:4636%9]) with mapi id 15.20.1643.019; Thu, 28 Feb 2019
+ 18:55:28 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Steven Price <steven.price@arm.com>
+CC:     Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v3 11/34] mips: mm: Add p?d_large() definitions
+Thread-Topic: [PATCH v3 11/34] mips: mm: Add p?d_large() definitions
+Thread-Index: AQHUzr7i/d0uU6ROnE+g9kAjsVHJ0KX0eXKAgACmggCAAHDjAA==
+Date:   Thu, 28 Feb 2019 18:55:28 +0000
+Message-ID: <20190228185526.hdryn2zsfign7vht@pburton-laptop>
+References: <20190227170608.27963-1-steven.price@arm.com>
+ <20190227170608.27963-12-steven.price@arm.com>
+ <20190228021526.bb6m3my46ohb4o6h@pburton-laptop>
+ <74944d83-f3c0-ff02-590e-b7e5abcea485@arm.com>
+In-Reply-To: <74944d83-f3c0-ff02-590e-b7e5abcea485@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR21CA0024.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::34) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.99.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 550c1196-5533-4a3f-2915-08d69dae4e26
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR2201MB1359;
+x-ms-traffictypediagnostic: MWHPR2201MB1359:
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;MWHPR2201MB1359;23:APQz/DE9p4wWq6b0dZpgpoDdUz3tcNtWFG4R3?=
+ =?iso-8859-1?Q?c0SV6754VZ1bgIRlfhf/JpFe0B9xDmVvJ980SCtXoIn6GsCluDx4ng/vga?=
+ =?iso-8859-1?Q?Z6MBuXYzMolQlFMMjV4s8HWnG/isT/TcSlu1ATdYhqUB6Lhehb/EQfc11b?=
+ =?iso-8859-1?Q?KppF3LNFiXAvVEXwcK1SkCfE5aXXcU2Eox6OzxgEGmFDp8rCcla5Bbti0Z?=
+ =?iso-8859-1?Q?eUSKhtccHf50S4STr25a/mvb/Ec24qt437bV9E7jrDqDJzLkPGWpyuaUxq?=
+ =?iso-8859-1?Q?LlG1DvGqxIdUt3hqaAy8wUsLB2H6zOBaqfN1qdiI4wDfHjs0HtDxf73v0u?=
+ =?iso-8859-1?Q?0+8CtFQHSf/nUW3GuUz/q3Pf/BvfjxSSQWMvQcg1Hm/Z26oJDWdiojK2G/?=
+ =?iso-8859-1?Q?5PUozKEd+mJiNVmxeu6qyUi2eOFabVK0Wu1C+XI9KFf2dz01RhhU4QyZpJ?=
+ =?iso-8859-1?Q?0QLyXgkgfQocjWq419QWEB3kvYrBquiFweQVgTRNKKYNIFQtJnS3b32KK+?=
+ =?iso-8859-1?Q?EUVBa5X0YQJwLmz74Q+IcDDfs+zkrhaOKpxgF6v8WDrjJsHwgxMT6fFOv1?=
+ =?iso-8859-1?Q?m1jb83oDEn3+RuWvfmUH3it2kpOaqsqzRff3yfIRYKYLinkv+mqfnOsj9f?=
+ =?iso-8859-1?Q?Ci3okklujtmg0fjSvs8pVzdnmH/yjVOjhY90gH4KUvFlZXOQ07Lqr1qDKi?=
+ =?iso-8859-1?Q?UczI/luYgvGcFvySRa/35dWfe4JaSkMz74M5xq1S2yMudANxIG4ekmGLex?=
+ =?iso-8859-1?Q?rvBoYMIGN3UDHbEC+6cwdklNER7AoS2M8GHJTxZ6/wYqyaoYZ3q+iiqBGp?=
+ =?iso-8859-1?Q?JDTtv3SSnhQ3131Y7tHvdL5CDAgf2EjSX9GFDuu2tnVHWW1a2Xbs6gxKvH?=
+ =?iso-8859-1?Q?CFA9t2GTka3a6xkYIEgdZEO7snoaTJr46x8Q2QYjWpQvaJVtvZ8q4pYzE3?=
+ =?iso-8859-1?Q?66VBzV+0d+ONOOI98vtBY2KflW4E+vbBZ1pRphFAZ6fMD0nDl+6Y4ikWrz?=
+ =?iso-8859-1?Q?HSvE9s/rHwDmZi5qkTdDPHFiTxoZsT2j0wU2bIHDSfNmupgg1w9/RgQhe9?=
+ =?iso-8859-1?Q?eHTJPAbWR7SSLbbDx1+rWnv+XQ0xSQWsBkhPNfrXSax/n0fZSWAUN4Oz04?=
+ =?iso-8859-1?Q?wwtzWYWA+P0V/X5UWKVBNbFdc0+K0/HUY94/UeRae+7S+c5MzjPquc5/RZ?=
+ =?iso-8859-1?Q?Y1s4qdv/RuJHkcGKGWVwti841wULQV/1f1b3EwjTq27dNswehDoKLpyltj?=
+ =?iso-8859-1?Q?NuliAZXR3L8V3iHUoDTWhKP5EAeynilGhHdrVvp3ifuKBtHasnjEu5S3r9?=
+ =?iso-8859-1?Q?wvQSPI01GQn2YHziU1Qj0dCaa0gEWf1cPDv6Xz2JV0xjCI6A2hHvtfdLH9?=
+ =?iso-8859-1?Q?zfICz2vkZSEV4jxvkuJWxvt0BeHyn1mf4rRFoCrZObypXQLPJxE4H9XylU?=
+ =?iso-8859-1?Q?Cc1VrDz9NxASPKqti2h0ZI/zQQCUiY5JmnOkN?=
+x-microsoft-antispam-prvs: <MWHPR2201MB1359F18426AD3A01B32E4F36C1750@MWHPR2201MB1359.namprd22.prod.outlook.com>
+x-forefront-prvs: 0962D394D2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(136003)(376002)(366004)(396003)(39850400004)(51914003)(199004)(189003)(186003)(6246003)(6486002)(486006)(11346002)(106356001)(446003)(476003)(42882007)(52116002)(53546011)(305945005)(6506007)(386003)(66066001)(93886005)(7416002)(6916009)(256004)(229853002)(478600001)(6436002)(102836004)(33716001)(76176011)(53936002)(9686003)(14444005)(6512007)(4326008)(81156014)(81166006)(25786009)(71190400001)(6116002)(8676002)(71200400001)(5660300002)(97736004)(3846002)(2906002)(1076003)(44832011)(68736007)(316002)(26005)(14454004)(8936002)(54906003)(99286004)(7736002)(105586002)(58126008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1359;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sQdOpLduEp5xt+4qfJPbXOED9r3yioy1Wm4u843ee1EHOpDndmuGOWtHeeEtfv7fmvwKXnrqYQ/WdZPeolaf87flYadfVSP0Q02VGgzMHyl0kRAOREUwzDb7DHDhSE2MJ+atyIHKdNIRJ984narfxtSwpjcYIrzJ6J0lMFwHJNAwnTn3Idkyz5nDJP/hzUBnuV3sLFcaGf9QVMr9H4ql6tzAhAkRY+x2XgCCbVYVmDHBAy2B7By8rTX5T+JkwV2mSn8ZIeepb/MPFnunBlvSZ91Q6DsXQBgpl39gRSNh4h3oPrpxRaie9ioPH/gaMTRYwvro7ji8pnMi9Wm/+F9GVMo6yOyTJcisaR0x3TD8dpWuaErqJ+/ZEilf5J+MFevYHeLLbG+C4ldpsP80HzkUOwSKiJiUYPD3YpLV6RmHfNE=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <FFBA1DC130D1404CBBCECA4240085204@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 550c1196-5533-4a3f-2915-08d69dae4e26
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 18:55:27.9917
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1359
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 10:00 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 26/02/2019 20:44, Nick Desaulniers wrote:
-> > On Mon, Feb 25, 2019 at 11:19 PM Ard Biesheuvel
-> > <ard.biesheuvel@linaro.org> wrote:
-> >>
-> >> On Tue, 26 Feb 2019 at 05:03, <ndesaulniers@google.com> wrote:
-> >>>
-> >>> Clang warns: vector initializers are not compatible with NEON intrinsics
-> >>> in big endian mode [-Wnonportable-vector-initialization]
-> >>>
-> >>> While this is usually the case, it's not an issue for this case since
-> >>> we're initializing the uint8x16_t (16x uint8_t's) with the same value.
-> >>>
-> >>> Instead, use vdupq_n_u8 which both compilers lower into a single movi
-> >>> instruction: https://godbolt.org/z/vBrgzt
-> >>>
-> >>> This avoids the static storage for a constant value.
-> >>>
-> >>> Link: https://github.com/ClangBuiltLinux/linux/issues/214
-> >>> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> >>> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> >>
-> >> Much better, thanks,
-> >>
-> >> Did you double check that the intrinsic exists on 32-bit ARM as well?
-> >> I assume it does, but please make sure if you haven't yet.
-> >
-> > Thanks for the review!
-> > Looking through Clang's generated arm_neon.h, vdupq_n_u8 seems to have
-> > 2 definitions predicated on __LITTLE_ENDIAN__ (not __arch64__ or
-> > __ARM_ARCH >= 8 like some of the other types and functions).
-> >
-> > So NEON got some additions in v8?  Is there a doc that lists them?
-> > http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0491g/BABDBBJB.html
-> > is where I found vdupq_n_u8, but it doesn't seem to mention
-> > compatibility (so I assume it's been around since the introduction of
-> > NEON?).
->
-> FWIW the most recent 'proper' spec document I know of is this one:
->
-> http://infocenter.arm.com/help/topic/com.arm.doc.ihi0073b/index.html
+Hi Steven,
 
-Bookmarked, thanks!
-Ard, page 171 mentions armv7, armv8 for supported architectures for vdupq_n_u8.
+On Thu, Feb 28, 2019 at 12:11:24PM +0000, Steven Price wrote:
+> On 28/02/2019 02:15, Paul Burton wrote:
+> > On Wed, Feb 27, 2019 at 05:05:45PM +0000, Steven Price wrote:
+> >> For mips, we don't support large pages on 32 bit so add stubs returnin=
+g 0.
+> >=20
+> > So far so good :)
+> >=20
+> >> For 64 bit look for _PAGE_HUGE flag being set. This means exposing the
+> >> flag when !CONFIG_MIPS_HUGE_TLB_SUPPORT.
+> >=20
+> > Here I have to ask why? We could just return 0 like the mips32 case whe=
+n
+> > CONFIG_MIPS_HUGE_TLB_SUPPORT=3Dn, let the compiler optimize the whole
+> > thing out and avoid redundant work at runtime.
+> >=20
+> > This could be unified too in asm/pgtable.h - checking for
+> > CONFIG_MIPS_HUGE_TLB_SUPPORT should be sufficient to cover the mips32
+> > case along with the subset of mips64 configurations without huge pages.
+>=20
+> The intention here is to define a new set of macros/functions which will
+> always tell us whether we're at the leaf of a page table walk, whether
+> or not huge pages are compiled into the kernel. Basically this allows
+> the page walking code to be used on page tables other than user space,
+> for instance the kernel page tables (which e.g. might use a large
+> mapping for linear memory even if huge pages are not compiled in) or
+> page tables from firmware (e.g. EFI on arm64).
+>=20
+> I'm not familiar enough with mips to know how it handles things like the
+> linear map so I don't know how relevant that is, but I'm trying to
+> introduce a new set of functions which differ from the existing
+> p?d_huge() macros by not depending on whether these mappings could exist
+> for a user space VMA (i.e. not depending on HUGETLB support and existing
+> for all levels that architecturally they can occur at).
 
->
->
-> Apparently we have a more interactive playground on the new site, too:
->
-> https://developer.arm.com/technologies/neon/intrinsics
+Thanks for the explanation - the background helps.
 
-Also bookmarked! I'm also super happy to see this; I'm familiar with
-Intel's equivalent:
-https://software.intel.com/sites/landingpage/IntrinsicsGuide/
+Right now for MIPS, with one exception, there'll be no difference
+between a page being huge or large. So for the vast majority of kernels
+with CONFIG_MIPS_HUGE_TLB_SUPPORT=3Dn we should just return 0.
 
-Interactive sites like these are quite useful.  Reading a post
-recently: https://www.sigarch.org/simd-instructions-considered-harmful/
+The one exception I mentioned is old SGI IP27 support, which allows the
+kernel to be mapped through the TLB & does that using 2x 16MB pages when
+CONFIG_MAPPED_KERNEL=3Dy. However even there your patch as-is won't pick
+up on that for 2 reasons:
 
-"The IA-32 instruction set has grown from 80 to around 1400
-instructions since 1978, largely fueled by SIMD."
+  1) The pages in question don't appear to actually be recorded in the
+     page tables - they're just written straight into the TLB as wired
+     entries (ie. entries that will never be evicted).
 
-reminded me how useful and almost necessary the interactive sites are
-for navigating the large swathes of SIMD extensions.  (no comment on
-the title of that article)
+  2) Even if they were in the page tables the _PAGE_HUGE bit isn't set.
 
--- 
+Since those pages aren't recorded in the page tables anyway we'd either
+need to:
+
+  a) Add them to the page tables, and set the _PAGE_HUGE bit.
+
+  b) Ignore them if the code you're working on won't be operating on the
+     memory mapping the kernel.
+
+For other platforms the kernel is run from unmapped memory, and for all
+cases including IP27 the kernel will use unmapped memory to access
+lowmem or peripherals when possible. That is, MIPS has virtual address
+regions ((c)kseg[01] or xkphys) which are architecturally defined as
+linear maps to physical memory & so VA->PA translation doesn't use the
+TLB at all.
+
+So my thought would be that for almost everything we could just do:
+
+  #define pmd_large(pmd)	pmd_huge(pmd)
+  #define pud_large(pmd)	pud_huge(pmd)
+
+And whether we need to do anything about IP27 depends on whether a) or
+b) is chosen above.
+
+Or alternatively you could do something like:
+
+  #ifdef _PAGE_HUGE
+
+  static inline int pmd_large(pmd_t pmd)
+  {
+  	return (pmd_val(pmd) & _PAGE_HUGE) !=3D 0;
+  }
+
+  static inline int pud_large(pud_t pud)
+  {
+  	return (pud_val(pud) & _PAGE_HUGE) !=3D 0;
+  }
+
+  #else
+  # define pmd_large(pmd)	0
+  # define pud_large(pud)	0
+  #endif
+
+That would cover everything except for the IP27, but would make it pick
+up the IP27 kernel pages automatically if someone later defines
+_PAGE_HUGE for IP27 CONFIG_MAPPED_KERNEL=3Dy & makes use of it for those
+pages.
+
 Thanks,
-~Nick Desaulniers
+    Paul
