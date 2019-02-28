@@ -2,113 +2,178 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509D1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28C1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2801D218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97EFC2184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731852AbfB1Ifv (ORCPT
+        id S1731986AbfB1IhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:35:51 -0500
-Received: from relay.sw.ru ([185.231.240.75]:57915 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731828AbfB1Ift (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:35:49 -0500
-Received: from [172.16.25.12] (helo=i7.sw.ru)
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1gzHAJ-0008R2-PM; Thu, 28 Feb 2019 11:35:39 +0300
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH v2 1/4] mm/workingset: remove unused @mapping argument in workingset_eviction()
-Date:   Thu, 28 Feb 2019 11:33:26 +0300
-Message-Id: <20190228083329.31892-1-aryabinin@virtuozzo.com>
-X-Mailer: git-send-email 2.19.2
+        Thu, 28 Feb 2019 03:37:13 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45512 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730860AbfB1IhN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 03:37:13 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S8b4k0058393
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 03:37:12 -0500
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxb1r3dt4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 03:37:05 -0500
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Thu, 28 Feb 2019 08:35:36 -0000
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Feb 2019 08:35:33 -0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1S8ZWVs60686428
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Feb 2019 08:35:32 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 475717805E;
+        Thu, 28 Feb 2019 08:35:32 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D9267805C;
+        Thu, 28 Feb 2019 08:35:29 +0000 (GMT)
+Received: from skywalker.in.ibm.com (unknown [9.124.31.233])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Feb 2019 08:35:29 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     akpm@linux-foundation.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jan Kara <jack@suse.cz>, mpe@ellerman.id.au,
+        Ross Zwisler <zwisler@kernel.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH 1/2] fs/dax: deposit pagetable even when installing zero page
+Date:   Thu, 28 Feb 2019 14:05:21 +0530
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19022808-0016-0000-0000-0000098A1A3A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010678; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01167493; UDB=6.00609930; IPR=6.00948107;
+ MB=3.00025776; MTD=3.00000008; XFM=3.00000015; UTC=2019-02-28 08:35:35
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19022808-0017-0000-0000-0000424C085D
+Message-Id: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902280061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-workingset_eviction() doesn't use and never did use the @mapping argument.
-Remove it.
+Architectures like ppc64 use the deposited page table to store hardware
+page table slot information. Make sure we deposit a page table when
+using zero page at the pmd level for hash.
 
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Rik van Riel <riel@surriel.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mel Gorman <mgorman@techsingularity.net>
+Without this we hit
+
+Unable to handle kernel paging request for data at address 0x00000000
+Faulting instruction address: 0xc000000000082a74
+Oops: Kernel access of bad area, sig: 11 [#1]
+....
+
+NIP [c000000000082a74] __hash_page_thp+0x224/0x5b0
+LR [c0000000000829a4] __hash_page_thp+0x154/0x5b0
+Call Trace:
+ hash_page_mm+0x43c/0x740
+ do_hash_page+0x2c/0x3c
+ copy_from_iter_flushcache+0xa4/0x4a0
+ pmem_copy_from_iter+0x2c/0x50 [nd_pmem]
+ dax_copy_from_iter+0x40/0x70
+ dax_iomap_actor+0x134/0x360
+ iomap_apply+0xfc/0x1b0
+ dax_iomap_rw+0xac/0x130
+ ext4_file_write_iter+0x254/0x460 [ext4]
+ __vfs_write+0x120/0x1e0
+ vfs_write+0xd8/0x220
+ SyS_write+0x6c/0x110
+ system_call+0x3c/0x130
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
+TODO:
+* Add fixes tag 
 
-Changes since v1:
- - s/@mapping/@page->mapping in comment
- - Acks
+ fs/dax.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
- include/linux/swap.h | 2 +-
- mm/vmscan.c          | 2 +-
- mm/workingset.c      | 5 ++---
- 3 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 649529be91f2..fc50e21b3b88 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -307,7 +307,7 @@ struct vma_swap_readahead {
- };
+diff --git a/fs/dax.c b/fs/dax.c
+index 6959837cc465..01bfb2ac34f9 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -33,6 +33,7 @@
+ #include <linux/sizes.h>
+ #include <linux/mmu_notifier.h>
+ #include <linux/iomap.h>
++#include <asm/pgalloc.h>
+ #include "internal.h"
  
- /* linux/mm/workingset.c */
--void *workingset_eviction(struct address_space *mapping, struct page *page);
-+void *workingset_eviction(struct page *page);
- void workingset_refault(struct page *page, void *shadow);
- void workingset_activation(struct page *page);
- 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index ac4806f0f332..a9852ed7b97f 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -952,7 +952,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
- 		 */
- 		if (reclaimed && page_is_file_cache(page) &&
- 		    !mapping_exiting(mapping) && !dax_mapping(mapping))
--			shadow = workingset_eviction(mapping, page);
-+			shadow = workingset_eviction(page);
- 		__delete_from_page_cache(page, shadow);
- 		xa_unlock_irqrestore(&mapping->i_pages, flags);
- 
-diff --git a/mm/workingset.c b/mm/workingset.c
-index dcb994f2acc2..0bedf67502d5 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -215,13 +215,12 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
- 
- /**
-  * workingset_eviction - note the eviction of a page from memory
-- * @mapping: address space the page was backing
-  * @page: the page being evicted
-  *
-- * Returns a shadow entry to be stored in @mapping->i_pages in place
-+ * Returns a shadow entry to be stored in @page->mapping->i_pages in place
-  * of the evicted @page so that a later refault can be detected.
-  */
--void *workingset_eviction(struct address_space *mapping, struct page *page)
-+void *workingset_eviction(struct page *page)
+ #define CREATE_TRACE_POINTS
+@@ -1410,7 +1411,9 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
  {
- 	struct pglist_data *pgdat = page_pgdat(page);
- 	struct mem_cgroup *memcg = page_memcg(page);
+ 	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
+ 	unsigned long pmd_addr = vmf->address & PMD_MASK;
++	struct vm_area_struct *vma = vmf->vma;
+ 	struct inode *inode = mapping->host;
++	pgtable_t pgtable = NULL;
+ 	struct page *zero_page;
+ 	spinlock_t *ptl;
+ 	pmd_t pmd_entry;
+@@ -1425,12 +1428,22 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
+ 	*entry = dax_insert_entry(xas, mapping, vmf, *entry, pfn,
+ 			DAX_PMD | DAX_ZERO_PAGE, false);
+ 
++	if (arch_needs_pgtable_deposit()) {
++		pgtable = pte_alloc_one(vma->vm_mm);
++		if (!pgtable)
++			return VM_FAULT_OOM;
++	}
++
+ 	ptl = pmd_lock(vmf->vma->vm_mm, vmf->pmd);
+ 	if (!pmd_none(*(vmf->pmd))) {
+ 		spin_unlock(ptl);
+ 		goto fallback;
+ 	}
+ 
++	if (pgtable) {
++		pgtable_trans_huge_deposit(vma->vm_mm, vmf->pmd, pgtable);
++		mm_inc_nr_ptes(vma->vm_mm);
++	}
+ 	pmd_entry = mk_pmd(zero_page, vmf->vma->vm_page_prot);
+ 	pmd_entry = pmd_mkhuge(pmd_entry);
+ 	set_pmd_at(vmf->vma->vm_mm, pmd_addr, vmf->pmd, pmd_entry);
+@@ -1439,6 +1452,8 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
+ 	return VM_FAULT_NOPAGE;
+ 
+ fallback:
++	if (pgtable)
++		pte_free(vma->vm_mm, pgtable);
+ 	trace_dax_pmd_load_hole_fallback(inode, vmf, zero_page, *entry);
+ 	return VM_FAULT_FALLBACK;
+ }
 -- 
-2.19.2
+2.20.1
 
