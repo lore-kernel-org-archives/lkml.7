@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CEEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619B9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36F620C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313D9218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366963;
-	bh=7AESMj3mCPlEuU7Z020bBSWSN0/P5vTVrmZdNx0vjBw=;
+	s=default; t=1551366967;
+	bh=S9OIPByfbOaatdZWya9AuIpGTzXYusXmEoKeC0lguXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fdGLhiDrQ7V5iSUJ6EX/CCW+prO7SfrTE+rP8A0sOSl+4g235cgWs9wF5wlRzzvu+
-	 SW5yhXpS7bV+hMM2oDiC4OrmjKENkTTiZ2iQERXLPKz8Ck7NvTwZGE2un+/uJbLbO/
-	 vbr1GeCZCi9sgONkutmJHJPaQnqWgHEYoMcnikpo=
+	b=aOmvGWj4gWwY9LiN7gPK0Y0bWAME9noAfNdGhKoqPxh+nPGWGFfuwewKvLre8BNer
+	 kB4bx6a4zVEs8RvVxtJLjf+mehWBZH/MCamIZ9wHME0QauKmxW7NouU3Ymc3kpy5sO
+	 8hV/kVEJbG/ufi9Ih3WbXphkPpITMU4jPv/cq9LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388965AbfB1PQC (ORCPT
+        id S2388952AbfB1PQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:16:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52010 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:16:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388533AbfB1PP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:59 -0500
+        id S2388223AbfB1PPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 090AF218D9;
-        Thu, 28 Feb 2019 15:15:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90CC0218D3;
+        Thu, 28 Feb 2019 15:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366958;
-        bh=7AESMj3mCPlEuU7Z020bBSWSN0/P5vTVrmZdNx0vjBw=;
+        s=default; t=1551366954;
+        bh=S9OIPByfbOaatdZWya9AuIpGTzXYusXmEoKeC0lguXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRU+4CbdH5uaDWt5hJ8xrqQDd3F4YU1gbHR7vHj184bqUfel6dxK2y1IaS7c3mk5P
-         f+GGMYhBMB7KhWDscSBuWOiMdgHus+/L4GbOZyMMDO6L8S41yMtqqqR6URXUpXqGL9
-         r0r28pjoXMbXB8ll90e7yDS3dqMl5nF8VLzGiQ/U=
+        b=YeNcoYJodLUo7JZgLwAHcoV3tIKEg1p2L3ylGXGAGFIkxdJXVc+HMvWIdhsey7iW4
+         soApKEl57e0jlC0C5xhtRM6oHAPmvZguyBXyfo9BZ4imyozhEXW4fyrjbrwvqkoZ3V
+         dtwWHL7MI8GNx0LbrOnt+x+Vw0xyQdRvXmN2Wk/8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Clifton <nickc@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 15/19] perf symbols: Filter out hidden symbols from labels
-Date:   Thu, 28 Feb 2019 10:15:11 -0500
-Message-Id: <20190228151517.12705-15-sashal@kernel.org>
+Cc:     Martynas Pumputis <martynas@weave.works>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 13/19] netfilter: nf_nat: skip nat clash resolution for same-origin entries
+Date:   Thu, 28 Feb 2019 10:15:09 -0500
+Message-Id: <20190228151517.12705-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
 References: <20190228151517.12705-1-sashal@kernel.org>
@@ -64,94 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Martynas Pumputis <martynas@weave.works>
 
-[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
+[ Upstream commit 4e35c1cb9460240e983a01745b5f29fe3a4d8e39 ]
 
-When perf is built with the annobin plugin (RHEL8 build) extra symbols
-are added to its binary:
+It is possible that two concurrent packets originating from the same
+socket of a connection-less protocol (e.g. UDP) can end up having
+different IP_CT_DIR_REPLY tuples which results in one of the packets
+being dropped.
 
-  # nm perf | grep annobin | head -10
-  0000000000241100 t .annobin_annotate.c
-  0000000000326490 t .annobin_annotate.c
-  0000000000249255 t .annobin_annotate.c_end
-  00000000003283a8 t .annobin_annotate.c_end
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
-  00000000001bc400 t .annobin_annotate.c_end.unlikely
-  00000000001bce18 t .annobin_annotate.c.hot
-  00000000001bce18 t .annobin_annotate.c.hot
-  ...
+To illustrate this, consider the following simplified scenario:
 
-Those symbols have no use for report or annotation and should be
-skipped.  Moreover they interfere with the DWARF unwind test on the PPC
-arch, where they are mixed with checked symbols and then the test fails:
+1. Packet A and B are sent at the same time from two different threads
+   by same UDP socket.  No matching conntrack entry exists yet.
+   Both packets cause allocation of a new conntrack entry.
+2. get_unique_tuple gets called for A.  No clashing entry found.
+   conntrack entry for A is added to main conntrack table.
+3. get_unique_tuple is called for B and will find that the reply
+   tuple of B is already taken by A.
+   It will allocate a new UDP source port for B to resolve the clash.
+4. conntrack entry for B cannot be added to main conntrack table
+   because its ORIGINAL direction is clashing with A and the REPLY
+   directions of A and B are not the same anymore due to UDP source
+   port reallocation done in step 3.
 
-  # perf test dwarf -v
-  59: Test dwarf unwind                                     :
-  --- start ---
-  test child forked, pid 8515
-  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
-  ...
-  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
-  unwind: failed with 'no error'
+This patch modifies nf_conntrack_tuple_taken so it doesn't consider
+colliding reply tuples if the IP_CT_DIR_ORIGINAL tuples are equal.
 
-The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
+[ Florian: simplify patch to not use .allow_clash setting
+  and always ignore identical flows ]
 
-  # readelf -s ./perf | grep annobin | head -1
-    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
-
-They can still pass the check for the label symbol. Adding check for
-HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
-out such symbols.
-
->   Just to be awkward, if you are going to ignore STV_HIDDEN
->   symbols then you should probably also ignore STV_INTERNAL ones
->   as well...  Annobin does not generate them, but you never know,
->   one day some other tool might create some.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Clifton <nickc@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Martynas Pumputis <martynas@weave.works>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/symbol-elf.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/netfilter/nf_conntrack_core.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index adbc6c02c3aaa..20ba5a9aeae40 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -85,6 +85,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
- 	return GELF_ST_TYPE(sym->st_info);
- }
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 19b3f4fbea520..df1d5618b008f 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -855,6 +855,22 @@ nf_conntrack_tuple_taken(const struct nf_conntrack_tuple *tuple,
+ 		}
  
-+static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
-+{
-+	return GELF_ST_VISIBILITY(sym->st_other);
-+}
+ 		if (nf_ct_key_equal(h, tuple, zone, net)) {
++			/* Tuple is taken already, so caller will need to find
++			 * a new source port to use.
++			 *
++			 * Only exception:
++			 * If the *original tuples* are identical, then both
++			 * conntracks refer to the same flow.
++			 * This is a rare situation, it can occur e.g. when
++			 * more than one UDP packet is sent from same socket
++			 * in different threads.
++			 *
++			 * Let nf_ct_resolve_clash() deal with this later.
++			 */
++			if (nf_ct_tuple_equal(&ignored_conntrack->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
++					      &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple))
++				continue;
 +
- #ifndef STT_GNU_IFUNC
- #define STT_GNU_IFUNC 10
- #endif
-@@ -109,7 +114,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
- 	return elf_sym__type(sym) == STT_NOTYPE &&
- 		sym->st_name != 0 &&
- 		sym->st_shndx != SHN_UNDEF &&
--		sym->st_shndx != SHN_ABS;
-+		sym->st_shndx != SHN_ABS &&
-+		elf_sym__visibility(sym) != STV_HIDDEN &&
-+		elf_sym__visibility(sym) != STV_INTERNAL;
- }
- 
- static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
+ 			NF_CT_STAT_INC_ATOMIC(net, found);
+ 			rcu_read_unlock();
+ 			return 1;
 -- 
 2.19.1
 
