@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B307C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCD3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11066218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFF12184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366934;
-	bh=6BRDg+X4Yvl+FBpth0LCv74V41DNzX9MVlyneSEaR+0=;
+	s=default; t=1551366940;
+	bh=FXLKFSA/VdXiYEG3KbX150uebKRr6XvbVooFfrxv4wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tklyEKm2c3A5LCFeFhLrJ5l+pY57BqaX7Fo/Pk8D6/RJpi3cFpopzUR/n6ej6an/I
-	 V7FnCqcuSquXTmp9k1JRX7R2amHd/YVSjQTAekfCmyNb3Qo6Axh8072hlCUFpA71D2
-	 ANF3TWfi3RXEz6ocna83LUd+5n5PxfIf7XtGPIl4=
+	b=vH2kFSpOB4ndEJNWi5xZZC6mJk4pjR4sWyhJaQdTyMFnVgj8w+XHrlRbiKTAJxnmY
+	 rLosOQcEZIf2L/RHQYaLnmSy6Bsh7vTIm1kcbllGMli0DmPJiKArENoWIwvCegcTLb
+	 Qxaos0TN6HgS6uWdt4m9+u5G7dKfsIbRl6cTQxmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388876AbfB1PPc (ORCPT
+        id S2388906AbfB1PPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:15:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51014 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:15:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388843AbfB1PPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:25 -0500
+        id S2388268AbfB1PPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6842C218D3;
-        Thu, 28 Feb 2019 15:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1102E218D3;
+        Thu, 28 Feb 2019 15:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366925;
-        bh=6BRDg+X4Yvl+FBpth0LCv74V41DNzX9MVlyneSEaR+0=;
+        s=default; t=1551366930;
+        bh=FXLKFSA/VdXiYEG3KbX150uebKRr6XvbVooFfrxv4wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TIUxvhJaekTPhIWuk6Vxz8/exijLH2ic2awHemRDMmpbwYXFtdgXKMBOKip2dLuV1
-         jDztmKasmLus+/4xv2wHcWvVR1VvxABAInrJZwAhIUHwtiJkfnUtM6TXQeA0jSU3J2
-         jxIw2gljd/D0e7s9MnkojZueNeVg6ANs9Vqj/wig=
+        b=X3SeYCVQbTag3nzdGJkraQ5LhTbbxFWQkTbzJHGOYJCfkWnEawuO18nZTEx0vEzcp
+         lbrk5WfvS3XMDx5h2g8m6IM2ZK0g28OaGMkn0ckG/JTjSXEW2uz2KuuR0go51FOaOg
+         DU4fZxPMfGbA3az73D21KFMnobe1Xj8CNhnbBxAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 05/19] irqchip/mmp: Only touch the PJ4 IRQ & FIQ bits on enable/disable
-Date:   Thu, 28 Feb 2019 10:15:01 -0500
-Message-Id: <20190228151517.12705-5-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/19] dmaengine: dmatest: Abort test in case of mapping error
+Date:   Thu, 28 Feb 2019 10:15:06 -0500
+Message-Id: <20190228151517.12705-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
 References: <20190228151517.12705-1-sashal@kernel.org>
@@ -58,55 +58,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 2380a22b60ce6f995eac806e69c66e397b59d045 ]
+[ Upstream commit 6454368a804c4955ccd116236037536f81e5b1f1 ]
 
-Resetting bit 4 disables the interrupt delivery to the "secure
-processor" core. This breaks the keyboard on a OLPC XO 1.75 laptop,
-where the firmware running on the "secure processor" bit-bangs the
-PS/2 protocol over the GPIO lines.
+In case of mapping error the DMA addresses are invalid and continuing
+will screw system memory or potentially something else.
 
-It is not clear what the rest of the bits are and Marvell was unhelpful
-when asked for documentation. Aside from the SP bit, there are probably
-priority bits.
+[  222.480310] dmatest: dma0chan7-copy0: summary 1 tests, 3 failures 6 iops 349 KB/s (0)
+...
+[  240.912725] check: Corrupted low memory at 00000000c7c75ac9 (2940 phys) = 5656000000000000
+[  240.921998] check: Corrupted low memory at 000000005715a1cd (2948 phys) = 279f2aca5595ab2b
+[  240.931280] check: Corrupted low memory at 000000002f4024c0 (2950 phys) = 5e5624f349e793cf
+...
 
-Leaving the unknown bits as the firmware set them up seems to be a wiser
-course of action compared to just turning them off.
+Abort any test if mapping failed.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-[maz: fixed-up subject and commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: 4076e755dbec ("dmatest: convert to dmaengine_unmap_data")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mmp.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/dma/dmatest.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index 013fc9659a842..2fe2bcb63a711 100644
---- a/drivers/irqchip/irq-mmp.c
-+++ b/drivers/irqchip/irq-mmp.c
-@@ -34,6 +34,9 @@
- #define SEL_INT_PENDING		(1 << 6)
- #define SEL_INT_NUM_MASK	0x3f
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index ebe72a4665875..7dd46cf5ed845 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -583,11 +583,9 @@ static int dmatest_func(void *data)
+ 			srcs[i] = um->addr[i] + src_off;
+ 			ret = dma_mapping_error(dev->dev, um->addr[i]);
+ 			if (ret) {
+-				dmaengine_unmap_put(um);
+ 				result("src mapping error", total_tests,
+ 				       src_off, dst_off, len, ret);
+-				failed_tests++;
+-				continue;
++				goto error_unmap_continue;
+ 			}
+ 			um->to_cnt++;
+ 		}
+@@ -602,11 +600,9 @@ static int dmatest_func(void *data)
+ 					       DMA_BIDIRECTIONAL);
+ 			ret = dma_mapping_error(dev->dev, dsts[i]);
+ 			if (ret) {
+-				dmaengine_unmap_put(um);
+ 				result("dst mapping error", total_tests,
+ 				       src_off, dst_off, len, ret);
+-				failed_tests++;
+-				continue;
++				goto error_unmap_continue;
+ 			}
+ 			um->bidi_cnt++;
+ 		}
+@@ -643,12 +639,10 @@ static int dmatest_func(void *data)
+ 		}
  
-+#define MMP2_ICU_INT_ROUTE_PJ4_IRQ	(1 << 5)
-+#define MMP2_ICU_INT_ROUTE_PJ4_FIQ	(1 << 6)
+ 		if (!tx) {
+-			dmaengine_unmap_put(um);
+ 			result("prep error", total_tests, src_off,
+ 			       dst_off, len, ret);
+ 			msleep(100);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 
+ 		done->done = false;
+@@ -657,12 +651,10 @@ static int dmatest_func(void *data)
+ 		cookie = tx->tx_submit(tx);
+ 
+ 		if (dma_submit_error(cookie)) {
+-			dmaengine_unmap_put(um);
+ 			result("submit error", total_tests, src_off,
+ 			       dst_off, len, ret);
+ 			msleep(100);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 		dma_async_issue_pending(chan);
+ 
+@@ -675,16 +667,14 @@ static int dmatest_func(void *data)
+ 			dmaengine_unmap_put(um);
+ 			result("test timed out", total_tests, src_off, dst_off,
+ 			       len, 0);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		} else if (status != DMA_COMPLETE) {
+ 			dmaengine_unmap_put(um);
+ 			result(status == DMA_ERROR ?
+ 			       "completion error status" :
+ 			       "completion busy status", total_tests, src_off,
+ 			       dst_off, len, ret);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 
+ 		dmaengine_unmap_put(um);
+@@ -727,6 +717,12 @@ static int dmatest_func(void *data)
+ 			verbose_result("test passed", total_tests, src_off,
+ 				       dst_off, len, 0);
+ 		}
 +
- struct icu_chip_data {
- 	int			nr_irqs;
- 	unsigned int		virq_base;
-@@ -190,7 +193,8 @@ static struct mmp_intc_conf mmp_conf = {
- static struct mmp_intc_conf mmp2_conf = {
- 	.conf_enable	= 0x20,
- 	.conf_disable	= 0x0,
--	.conf_mask	= 0x7f,
-+	.conf_mask	= MMP2_ICU_INT_ROUTE_PJ4_IRQ |
-+			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
- };
- 
- static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
++		continue;
++
++error_unmap_continue:
++		dmaengine_unmap_put(um);
++		failed_tests++;
+ 	}
+ 	ktime = ktime_sub(ktime_get(), ktime);
+ 	ktime = ktime_sub(ktime, comparetime);
 -- 
 2.19.1
 
