@@ -2,309 +2,256 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95CAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4E1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742872171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xt6KpU1G"
+	by mail.kernel.org (Postfix) with ESMTP id EDC3B20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732552AbfB1N7h (ORCPT
+        id S1732591AbfB1N7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:59:37 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41262 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732416AbfB1N7e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:59:34 -0500
-Received: by mail-lj1-f195.google.com with SMTP id z25so17199938ljk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:59:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FA47iBYE1/jKqUXLlbljtr1jgxnROrzBgQH0oOLCPjk=;
-        b=xt6KpU1G9lmV1j8e10sBfnzKKNq34qFfGySFP/7hgcLyp1k0oI7awNlqSc5ZB4hBPm
-         9kKDXb6ErSS26McY9/gBlFxZRRVJElzgwdWOrvx3xkARZgCxFraDG3kVhxkOGXsWybqf
-         fOZnbwG/oWpxQyIfumUSqnR1Ed7wzOnxrL9TGRCNR8TwaxM/yWXwnS6NkisSdGEYUJyp
-         OcJmBpQX6yNWydSWVEQOVgrPQ3Qn/5v/OR5WT4R+hJ+jjoH40dd2yrjG664sI3Mn0IwU
-         wR0wxJITZUUQym0Y31vITo/WBeUIpGs9HQG1COvZN4D8FMucqACS2juk7vR8NmXsV55j
-         QbAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=FA47iBYE1/jKqUXLlbljtr1jgxnROrzBgQH0oOLCPjk=;
-        b=tUr+CksW8gNzwv5vGyTBwtT+rHW0tq/QDKtY7l0KEi5SZwq6Q9j+MBFjN2osA7CZSn
-         owXl9sEp7tLVV0ERJf9y/q4Z2mRL9I+4+SPdZ7l3LRusJvCY891akanK+A6wdmESMGab
-         cELt8i8UoWvxu44kNEHchTngxIFmVc+qdnIf8oWPk0B1xxothTDs+zwizvvpihxP82e6
-         +7WAJqD4QJCvhJE/v1raFRZ9g50wkUw0rgzQQr4jheppLE6WhBUy8je8hb83LM3lXZ7w
-         SZ2uIZ/3cAgvzsXLkc6nHCwaI0p+le72YHOWbus3hSM2WmP39eRThplvHpRLqmltc0UN
-         bfaQ==
-X-Gm-Message-State: AHQUAub+PPNvYh269TmwkPvYU4cfu3uUwmJSgDcdqWCI3xzVhvIeVacX
-        APDtWpoGMcvDZHZsy7vjSyAzfQ==
-X-Google-Smtp-Source: AHgI3Ia5N0tWMr+1rxIh3kePdQxvG+xtPG7wKv9iWaNFa1EY39c1DCNuTvsuCpd2X+rYVZhocWIphA==
-X-Received: by 2002:a2e:81c1:: with SMTP id s1mr4438726ljg.29.1551362371517;
-        Thu, 28 Feb 2019 05:59:31 -0800 (PST)
-Received: from uffe-XPS-13-9360.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id v20sm4090265ljv.83.2019.02.28.05.59.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 05:59:30 -0800 (PST)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>
-Subject: [PATCH 4/7] ARM/ARM64: cpuidle: Let back-end init ops take the driver as input
-Date:   Thu, 28 Feb 2019 14:59:16 +0100
-Message-Id: <20190228135919.3747-5-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190228135919.3747-1-ulf.hansson@linaro.org>
-References: <20190228135919.3747-1-ulf.hansson@linaro.org>
+        Thu, 28 Feb 2019 08:59:42 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4188 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732542AbfB1N7k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 08:59:40 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 310ECE70C07C5277A66F;
+        Thu, 28 Feb 2019 21:59:36 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
+ 21:59:28 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <joe@perches.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH 2/2] appletalk: Fix use-after-free in atalk_proc_exit
+Date:   Thu, 28 Feb 2019 21:56:27 +0800
+Message-ID: <20190228135627.30408-3-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190228135627.30408-1-yuehaibing@huawei.com>
+References: <20190228135627.30408-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To allow arch back-end init ops to operate on the cpuidle driver for the
-corresponding CPU, let's pass along a pointer to the struct cpuidle_driver*
-and forward it the relevant layers of callbacks for ARM/ARM64.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Following changes for the PSCI firmware driver starts making use of this.
+KASAN report this:
 
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+BUG: KASAN: use-after-free in pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
+Read of size 8 at addr ffff8881f41fe5b0 by task syz-executor.0/2806
+
+CPU: 0 PID: 2806 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
+ remove_proc_entry+0xe8/0x420 fs/proc/generic.c:667
+ atalk_proc_exit+0x18/0x820 [appletalk]
+ atalk_exit+0xf/0x5a [appletalk]
+ __do_sys_delete_module kernel/module.c:1018 [inline]
+ __se_sys_delete_module kernel/module.c:961 [inline]
+ __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb2de6b9c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200001c0
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb2de6ba6bc
+R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
+
+Allocated by task 2806:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
+ slab_post_alloc_hook mm/slab.h:444 [inline]
+ slab_alloc_node mm/slub.c:2739 [inline]
+ slab_alloc mm/slub.c:2747 [inline]
+ kmem_cache_alloc+0xcf/0x250 mm/slub.c:2752
+ kmem_cache_zalloc include/linux/slab.h:730 [inline]
+ __proc_create+0x30f/0xa20 fs/proc/generic.c:408
+ proc_mkdir_data+0x47/0x190 fs/proc/generic.c:469
+ 0xffffffffc10c01bb
+ 0xffffffffc10c0166
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 2806:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
+ slab_free_hook mm/slub.c:1409 [inline]
+ slab_free_freelist_hook mm/slub.c:1436 [inline]
+ slab_free mm/slub.c:2986 [inline]
+ kmem_cache_free+0xa6/0x2a0 mm/slub.c:3002
+ pde_put+0x6e/0x80 fs/proc/generic.c:647
+ remove_proc_entry+0x1d3/0x420 fs/proc/generic.c:684
+ 0xffffffffc10c031c
+ 0xffffffffc10c0166
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881f41fe500
+ which belongs to the cache proc_dir_entry of size 256
+The buggy address is located 176 bytes inside of
+ 256-byte region [ffff8881f41fe500, ffff8881f41fe600)
+The buggy address belongs to the page:
+page:ffffea0007d07f80 count:1 mapcount:0 mapping:ffff8881f6e69a00 index:0x0
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6e69a00
+raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881f41fe480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8881f41fe500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881f41fe580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                     ^
+ ffff8881f41fe600: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+ ffff8881f41fe680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+It should check the return value of atalk_proc_init fails,
+otherwise atalk_exit will trgger use-after-free in pde_subdir_find
+while unload the module.This patch fix error cleanup path of atalk_init
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/arm/include/asm/cpuidle.h   | 4 ++--
- arch/arm/kernel/cpuidle.c        | 5 +++--
- arch/arm64/include/asm/cpu_ops.h | 4 +++-
- arch/arm64/include/asm/cpuidle.h | 6 ++++--
- arch/arm64/kernel/cpuidle.c      | 6 +++---
- drivers/cpuidle/cpuidle-arm.c    | 2 +-
- drivers/firmware/psci/psci.c     | 7 ++++---
- drivers/soc/qcom/spm.c           | 3 ++-
- include/linux/psci.h             | 4 +++-
- 9 files changed, 25 insertions(+), 16 deletions(-)
+ include/linux/atalk.h            |  2 +-
+ net/appletalk/atalk_proc.c       |  2 +-
+ net/appletalk/ddp.c              | 37 +++++++++++++++++++++++++++++++------
+ net/appletalk/sysctl_net_atalk.c |  5 ++++-
+ 4 files changed, 37 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/include/asm/cpuidle.h b/arch/arm/include/asm/cpuidle.h
-index 6b2ff7243b4b..bee0a7847733 100644
---- a/arch/arm/include/asm/cpuidle.h
-+++ b/arch/arm/include/asm/cpuidle.h
-@@ -32,7 +32,7 @@ struct device_node;
+diff --git a/include/linux/atalk.h b/include/linux/atalk.h
+index 23f8055..5a90f28 100644
+--- a/include/linux/atalk.h
++++ b/include/linux/atalk.h
+@@ -158,7 +158,7 @@ extern int sysctl_aarp_retransmit_limit;
+ extern int sysctl_aarp_resolve_time;
  
- struct cpuidle_ops {
- 	int (*suspend)(unsigned long arg);
--	int (*init)(struct device_node *, int cpu);
-+	int (*init)(struct cpuidle_driver *, struct device_node *, int cpu);
- };
- 
- struct of_cpuidle_method {
-@@ -47,6 +47,6 @@ struct of_cpuidle_method {
- 
- extern int arm_cpuidle_suspend(int index);
- 
--extern int arm_cpuidle_init(int cpu);
-+extern int arm_cpuidle_init(struct cpuidle_driver *drv, int cpu);
- 
- #endif
-diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
-index fda5579123a8..43778c9b373d 100644
---- a/arch/arm/kernel/cpuidle.c
-+++ b/arch/arm/kernel/cpuidle.c
-@@ -122,6 +122,7 @@ static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
- 
- /**
-  * arm_cpuidle_init() - Initialize cpuidle_ops for a specific cpu
-+ * @drv: the drv to be initialized
-  * @cpu: the cpu to be initialized
-  *
-  * Initialize the cpuidle ops with the device for the cpu and then call
-@@ -137,7 +138,7 @@ static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
-  *  -ENXIO if the HW reports a failure or a misconfiguration,
-  *  -ENOMEM if the HW report an memory allocation failure 
-  */
--int __init arm_cpuidle_init(int cpu)
-+int __init arm_cpuidle_init(struct cpuidle_driver *drv, int cpu)
- {
- 	struct device_node *cpu_node = of_cpu_device_node_get(cpu);
- 	int ret;
-@@ -147,7 +148,7 @@ int __init arm_cpuidle_init(int cpu)
- 
- 	ret = arm_cpuidle_read_ops(cpu_node, cpu);
- 	if (!ret)
--		ret = cpuidle_ops[cpu].init(cpu_node, cpu);
-+		ret = cpuidle_ops[cpu].init(drv, cpu_node, cpu);
- 
- 	of_node_put(cpu_node);
- 
-diff --git a/arch/arm64/include/asm/cpu_ops.h b/arch/arm64/include/asm/cpu_ops.h
-index 8f03446cf89f..8db870c29f1b 100644
---- a/arch/arm64/include/asm/cpu_ops.h
-+++ b/arch/arm64/include/asm/cpu_ops.h
-@@ -19,6 +19,8 @@
- #include <linux/init.h>
- #include <linux/threads.h>
- 
-+struct cpuidle_driver;
-+
- /**
-  * struct cpu_operations - Callback operations for hotplugging CPUs.
-  *
-@@ -58,7 +60,7 @@ struct cpu_operations {
- 	int		(*cpu_kill)(unsigned int cpu);
- #endif
- #ifdef CONFIG_CPU_IDLE
--	int		(*cpu_init_idle)(unsigned int);
-+	int		(*cpu_init_idle)(struct cpuidle_driver *, unsigned int);
- 	int		(*cpu_suspend)(unsigned long);
- #endif
- };
-diff --git a/arch/arm64/include/asm/cpuidle.h b/arch/arm64/include/asm/cpuidle.h
-index 3c5ddb429ea2..3fd3efb61649 100644
---- a/arch/arm64/include/asm/cpuidle.h
-+++ b/arch/arm64/include/asm/cpuidle.h
-@@ -4,11 +4,13 @@
- 
- #include <asm/proc-fns.h>
- 
-+struct cpuidle_driver;
-+
- #ifdef CONFIG_CPU_IDLE
--extern int arm_cpuidle_init(unsigned int cpu);
-+extern int arm_cpuidle_init(struct cpuidle_driver *drv, unsigned int cpu);
- extern int arm_cpuidle_suspend(int index);
+ #ifdef CONFIG_SYSCTL
+-extern void atalk_register_sysctl(void);
++extern int atalk_register_sysctl(void);
+ extern void atalk_unregister_sysctl(void);
  #else
--static inline int arm_cpuidle_init(unsigned int cpu)
-+static inline int arm_cpuidle_init(struct cpuidle_driver *drv, unsigned int cpu)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/arch/arm64/kernel/cpuidle.c b/arch/arm64/kernel/cpuidle.c
-index f2d13810daa8..aaf9dc5cb87a 100644
---- a/arch/arm64/kernel/cpuidle.c
-+++ b/arch/arm64/kernel/cpuidle.c
-@@ -18,13 +18,13 @@
- #include <asm/cpuidle.h>
- #include <asm/cpu_ops.h>
- 
--int arm_cpuidle_init(unsigned int cpu)
-+int arm_cpuidle_init(struct cpuidle_driver *drv, unsigned int cpu)
- {
- 	int ret = -EOPNOTSUPP;
- 
- 	if (cpu_ops[cpu] && cpu_ops[cpu]->cpu_suspend &&
- 			cpu_ops[cpu]->cpu_init_idle)
--		ret = cpu_ops[cpu]->cpu_init_idle(cpu);
-+		ret = cpu_ops[cpu]->cpu_init_idle(drv, cpu);
- 
- 	return ret;
- }
-@@ -51,7 +51,7 @@ int arm_cpuidle_suspend(int index)
- 
- int acpi_processor_ffh_lpi_probe(unsigned int cpu)
- {
--	return arm_cpuidle_init(cpu);
-+	return arm_cpuidle_init(NULL, cpu);
+ #define atalk_register_sysctl()		do { } while(0)
+diff --git a/net/appletalk/atalk_proc.c b/net/appletalk/atalk_proc.c
+index bd8734e..77f203f 100644
+--- a/net/appletalk/atalk_proc.c
++++ b/net/appletalk/atalk_proc.c
+@@ -237,7 +237,7 @@ int __init atalk_proc_init(void)
+ 	return -ENOMEM;
  }
  
- int acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
-diff --git a/drivers/cpuidle/cpuidle-arm.c b/drivers/cpuidle/cpuidle-arm.c
-index 3a407a3ef22b..39413973b21d 100644
---- a/drivers/cpuidle/cpuidle-arm.c
-+++ b/drivers/cpuidle/cpuidle-arm.c
-@@ -106,7 +106,7 @@ static int __init arm_idle_init_cpu(int cpu)
- 	 * Call arch CPU operations in order to initialize
- 	 * idle states suspend back-end specific data
- 	 */
--	ret = arm_cpuidle_init(cpu);
-+	ret = arm_cpuidle_init(drv, cpu);
- 
- 	/*
- 	 * Allow the initialization to continue for other CPUs, if the reported
-diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-index 9788bfc1cf8b..d50b46a0528f 100644
---- a/drivers/firmware/psci/psci.c
-+++ b/drivers/firmware/psci/psci.c
-@@ -287,7 +287,8 @@ static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
- 	return 0;
+-void __exit atalk_proc_exit(void)
++void atalk_proc_exit(void)
+ {
+ 	remove_proc_subtree("atalk", init_net.proc_net);
  }
- 
--static int psci_dt_cpu_init_idle(struct device_node *cpu_node, int cpu)
-+static int psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
-+			struct device_node *cpu_node, int cpu)
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index 9b6bc5a..795fbc6 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1910,12 +1910,16 @@ static const char atalk_err_snap[] __initconst =
+ /* Called by proto.c on kernel start up */
+ static int __init atalk_init(void)
  {
- 	int i, ret = 0, count = 0;
- 	u32 *psci_states;
-@@ -375,7 +376,7 @@ static int __maybe_unused psci_acpi_cpu_init_idle(unsigned int cpu)
- }
- #endif
+-	int rc = proto_register(&ddp_proto, 0);
++	int rc;
  
--int psci_cpu_init_idle(unsigned int cpu)
-+int psci_cpu_init_idle(struct cpuidle_driver *drv, unsigned int cpu)
- {
- 	struct device_node *cpu_node;
- 	int ret;
-@@ -394,7 +395,7 @@ int psci_cpu_init_idle(unsigned int cpu)
- 	if (!cpu_node)
- 		return -ENODEV;
+-	if (rc != 0)
++	rc = proto_register(&ddp_proto, 0);
++	if (rc)
+ 		goto out;
  
--	ret = psci_dt_cpu_init_idle(cpu_node, cpu);
-+	ret = psci_dt_cpu_init_idle(drv, cpu_node, cpu);
- 
- 	of_node_put(cpu_node);
- 
-diff --git a/drivers/soc/qcom/spm.c b/drivers/soc/qcom/spm.c
-index 53807e839664..6e967f0a8608 100644
---- a/drivers/soc/qcom/spm.c
-+++ b/drivers/soc/qcom/spm.c
-@@ -208,7 +208,8 @@ static const struct of_device_id qcom_idle_state_match[] __initconst = {
- 	{ },
- };
- 
--static int __init qcom_cpuidle_init(struct device_node *cpu_node, int cpu)
-+static int __init qcom_cpuidle_init(struct cpuidle_driver *drv,
-+			struct device_node *cpu_node, int cpu)
- {
- 	const struct of_device_id *match_id;
- 	struct device_node *state_node;
-diff --git a/include/linux/psci.h b/include/linux/psci.h
-index 8b1b3b5935ab..4f29a3bff379 100644
---- a/include/linux/psci.h
-+++ b/include/linux/psci.h
-@@ -20,9 +20,11 @@
- #define PSCI_POWER_STATE_TYPE_STANDBY		0
- #define PSCI_POWER_STATE_TYPE_POWER_DOWN	1
- 
-+struct cpuidle_driver;
+-	(void)sock_register(&atalk_family_ops);
++	rc = sock_register(&atalk_family_ops);
++	if (rc)
++		goto out_proto;
 +
- bool psci_tos_resident_on(int cpu);
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+ 	if (!ddp_dl)
+ 		printk(atalk_err_snap);
+@@ -1923,12 +1927,33 @@ static int __init atalk_init(void)
+ 	dev_add_pack(&ltalk_packet_type);
+ 	dev_add_pack(&ppptalk_packet_type);
  
--int psci_cpu_init_idle(unsigned int cpu);
-+int psci_cpu_init_idle(struct cpuidle_driver *drv, unsigned int cpu);
- int psci_cpu_suspend_enter(unsigned long index);
+-	register_netdevice_notifier(&ddp_notifier);
++	rc = register_netdevice_notifier(&ddp_notifier);
++	if (rc)
++		goto out_sock;
++
+ 	aarp_proto_init();
+-	atalk_proc_init();
+-	atalk_register_sysctl();
++	rc = atalk_proc_init();
++	if (rc)
++		goto out_aarp;
++
++	rc = atalk_register_sysctl();
++	if (rc)
++		goto out_proc;
+ out:
+ 	return rc;
++out_proc:
++	atalk_proc_exit();
++out_aarp:
++	aarp_cleanup_module();
++	unregister_netdevice_notifier(&ddp_notifier);
++out_sock:
++	dev_remove_pack(&ppptalk_packet_type);
++	dev_remove_pack(&ltalk_packet_type);
++	unregister_snap_client(ddp_dl);
++	sock_unregister(PF_APPLETALK);
++out_proto:
++	proto_unregister(&ddp_proto);
++	goto out;
+ }
+ module_init(atalk_init);
  
- enum psci_conduit {
+diff --git a/net/appletalk/sysctl_net_atalk.c b/net/appletalk/sysctl_net_atalk.c
+index c744a85..d945b7c 100644
+--- a/net/appletalk/sysctl_net_atalk.c
++++ b/net/appletalk/sysctl_net_atalk.c
+@@ -45,9 +45,12 @@ static struct ctl_table atalk_table[] = {
+ 
+ static struct ctl_table_header *atalk_table_header;
+ 
+-void atalk_register_sysctl(void)
++int __init atalk_register_sysctl(void)
+ {
+ 	atalk_table_header = register_net_sysctl(&init_net, "net/appletalk", atalk_table);
++	if (!atalk_table_header)
++		return -ENOMEM;
++	return 0;
+ }
+ 
+ void atalk_unregister_sysctl(void)
 -- 
-2.17.1
+2.7.0
+
 
