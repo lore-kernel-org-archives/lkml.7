@@ -4,81 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D6CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D84FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2472171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60FB2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551338901;
-	bh=4TT7ey46HF4S36pvNj5XW0jgXOhQ/HEp/vPsQOJnExM=;
+	s=default; t=1551339083;
+	bh=T0kefpK1SXg0Tqa407ozfnt8aOG7HIYzamw7cVd5aeE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R06wkiNMpJgfHOv5jz4Iw4V3oQpiyOvvpmNdTCvv3IA4JYCTQcLMA0D7rlCLvhwa3
-	 YeNpbDjIHuY/O5DsT7dv0azlBupd/TD6EbNnxfUVPEWXAN0VNAkoV3r+uRSw0MAK39
-	 EtmNtS52d7NDhf6Q2OXzezpujuwcPLmse9ZZXCck=
+	b=qIQngsgw3U4+SOz2aeSfdGuWYDOFKDlG053CSsE5dCDHKiS7HGDsyNYrmsv2G3Gz0
+	 FSaahB6/iW+gPvXPYNl6b/SBkV1hggX+k37LuEqOfLHYj5LrdjXh+/mk1ZPccOKd+v
+	 Qn+A/hven1RrzXEJFASCW9pKRtN4iYcx9ggt2G5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731628AbfB1H2T (ORCPT
+        id S1731682AbfB1HbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:28:19 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54784 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730263AbfB1H2T (ORCPT
+        Thu, 28 Feb 2019 02:31:21 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35864 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfB1HbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:28:19 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a62so8196166wmh.4;
-        Wed, 27 Feb 2019 23:28:16 -0800 (PST)
+        Thu, 28 Feb 2019 02:31:21 -0500
+Received: by mail-wr1-f65.google.com with SMTP id o17so20740788wrw.3;
+        Wed, 27 Feb 2019 23:31:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=4LIRyTw78t/w4KjR7B1HFKexn77bP27Fx0yC3PljeZ4=;
-        b=lOAdXl0iHRfbtmZs4mPA7yTlEPxZ1QWKqKwGRMcD8y7sG8Si5hwx2Qr9i3pCI/NEe0
-         K13/jQyvNytm+2xINxXZXB+WUkUBkY+pAXLasqQq+DgsJVOWB2+F7vAfx07Tg6RARdv0
-         /mAMHVcHiFs3Oj8HZoWDK0UPdAhekZnlcbw5ROprlIFdK1OGlyRrAwHjvMaQyo0X3tP5
-         gDw+4/b53OTcvssNba6teVi2Br1dipWLsIPQWE1ueUMl5B+Cpzpdoi/inCxWtI4hR9DL
-         uVD3gybTWwgPeQZHhpiXrVTYnc/RIwjcgeg9z1lDkXWsY+CCSCRMZ0ItQ78kMu3QI117
-         TUkQ==
+        bh=MF4gAj0sBkuzUrHhhpvnk7fe23FwqTfpdVDmiLeRl4E=;
+        b=pdzkeqSPMnd+C8at5/MvLBT7BxWxfhIFl63NWYixkzRWxZpkKHiYF6ORGJx7Osdi9V
+         2UI1t/gh8GSa47SIyDbtL9B1jil5C/sxJW/o9wdNwhHedjB8JORhC0zzR4HjAUDuScyn
+         Nsg1K+jKimj9XuD/tnCAf1We5TDGRHKBbGTGpYv9BI1Ecz061HZlzAZsErKF32gQ9t4d
+         5+Gdyc2b8MZgtkr+ltUHWOM1zVj47PTqVTezIULViJuNL9YxBTXWAfEhm0dhy4K3CrKT
+         SPJYcFw8r+ZXwUPWRJ7y11C2S/208vPjnv25WnPtRbHipnCht5A8X3JQW4lbWTxRtvOT
+         FdYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4LIRyTw78t/w4KjR7B1HFKexn77bP27Fx0yC3PljeZ4=;
-        b=d4DCVXqM2mJOtSvxra8pRytAadLOXhrvXNuXkjD8goKFmK36rmJJZejRtUQ/+RPpdx
-         OcU7TrhocvK0sVIp38RW7piGE7qQTXAcQY9NR+GPgOmp4cuLeqRvLPiRS2XjTSsM3gpL
-         SakK4ulzNEZ81IsBynSzUUTebOFEc5vUtR6oKBJpyoE+n9eL2eQoiCUgTgHtbZiS1MZH
-         7aXV0ZzL/k7asmwUkM5GrFLQPiJO9JNQJXVb9OUhj/EUV2ojmOaHKs+ml+Stx5RvgFt/
-         5pMdLAuNIyN83rjksANG20+v+W1AI/EF5Y8upT+Cvq5tgadEzwRJW1+lXXXlnzcxWTcn
-         80mg==
-X-Gm-Message-State: AHQUAuZkxBI+6XU8WEOmUQjBqkEBzCiyGtZk7gepZO3LDSE+4HcPhsgH
-        wQSqKCcHJyZoarGMm4vrApKS5Oyr
-X-Google-Smtp-Source: APXvYqxIpJTa729OndJv2PEJ0Xc9yrwtfkhZPl3LbARSouEf1hX0XTJlDxzr5nfBomjLdL1IUmwgRw==
-X-Received: by 2002:a7b:cb48:: with SMTP id v8mr1796698wmj.138.1551338895479;
-        Wed, 27 Feb 2019 23:28:15 -0800 (PST)
+        bh=MF4gAj0sBkuzUrHhhpvnk7fe23FwqTfpdVDmiLeRl4E=;
+        b=LZvAQWOfTxVUB8CFSa8JmjPih9rbfOVBOujHTmGb8lNfKYHcwFov8cCAAgqfc39H25
+         hcs406dv91jL91qRCToXjdm0UiDP+tG67JJ26N15aav04HDJcHNmTfC6+L3742ZjQR2w
+         nKw7WeTqpRyL+VAGDCahs983NHEgCuO7t3lMGa28M+zxBV8zxpc6f+M4moJVwiVnyXUj
+         lleXJPUXbGgNCkRW3F6vbYFwXlRdkycFDt0ibRZZ6m3phz3eRT61iO2p/EUsiV1/Ohvz
+         jwzcNGF7LbPKd0JiG+fy7thr28AjNP9UFBfGUplygnBwllppQfcsL/sxwVD07Chw+OIN
+         eO4g==
+X-Gm-Message-State: APjAAAVmcCPHl0DWnixRG6B9W2PLAAZx4hZ623k97wBUXcnAXYQluGbT
+        BhJhJVROOO/3uWS3a7Xfsto=
+X-Google-Smtp-Source: APXvYqyhA0l6Wm9qqaW531yQVXCnMWzYohJI2DxQXhGbKifVE04ksOjN+hmwduccKkhrg2wjj17TOQ==
+X-Received: by 2002:a5d:4e52:: with SMTP id r18mr4931461wrt.7.1551339078449;
+        Wed, 27 Feb 2019 23:31:18 -0800 (PST)
 Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y1sm13086605wrh.65.2019.02.27.23.28.14
+        by smtp.gmail.com with ESMTPSA id d9sm19745117wrn.72.2019.02.27.23.31.16
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Feb 2019 23:28:14 -0800 (PST)
-Date:   Thu, 28 Feb 2019 08:28:12 +0100
+        Wed, 27 Feb 2019 23:31:17 -0800 (PST)
+Date:   Thu, 28 Feb 2019 08:31:15 +0100
 From:   Ingo Molnar <mingo@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        He Kuang <hekuang@huawei.com>,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL 00/17] perf/core improvements and fixes
-Message-ID: <20190228072812.GA59852@gmail.com>
-References: <20190221012549.4069-1-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Mansour Alharthi <malharthi9@gatech.edu>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
+        Tony Jones <tonyj@suse.de>, Wei Li <liwei391@huawei.com>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Message-ID: <20190228073115.GB59852@gmail.com>
+References: <20190225212035.24781-1-acme@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190221012549.4069-1-acme@kernel.org>
+In-Reply-To: <20190225212035.24781-1-acme@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -90,142 +93,163 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 > Hi Ingo,
 > 
-> 	Please consider pulling,
+> 	Please consider pulling, this is on top of my previous pull
+> request, perf-core-for-mingo-5.1-20190220.
 > 
 > - Arnaldo
 > 
 > Test results at the end of this message, as usual.
 > 
-> The following changes since commit 43f4e6279f05eefac058a3524e184cecae463bfe:
+> The following changes since commit b4409ae112caa6315f6ee678e953b9fc93e6919c:
 > 
->   Merge tag 'perf-core-for-mingo-5.1-20190214' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2019-02-15 10:19:11 +0100)
+>   perf tools: Make rm_rf() remove single file (2019-02-20 17:09:28 -0300)
 > 
 > are available in the Git repository at:
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.1-20190220
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.1-20190225
 > 
-> for you to fetch changes up to b4409ae112caa6315f6ee678e953b9fc93e6919c:
+> for you to fetch changes up to de667cce7f4f96b6e22da8fd9c065b961f355080:
 > 
->   perf tools: Make rm_rf() remove single file (2019-02-20 17:09:28 -0300)
+>   perf script python: Add Python3 support to syscall-counts-by-pid.py (2019-02-25 17:17:13 -0300)
 > 
 > ----------------------------------------------------------------
 > perf/core improvements and fixes:
 > 
-> perf report:
+> perf annotate:
 > 
->   He Kuang:
+>   Wei Li:
 > 
->   - Don't shadow inlined symbol with different addr range.
+>   - Fix getting source line failure.
 > 
 > perf script:
 > 
->   Jiri Olsa:
+>   Andi Kleen:
 > 
->   - Allow +- operator to ask for -F to add/remove fields to
->     the default set, for instance to ask for the removal of the
->     'cpu' field in tracepoint events, adding 'period' to that
->     kind of events, etc.
+>   - Handle missing fields with -F +...
 > 
-> perf test:
-> 
->   Thomas Richter:
-> 
->   - Fix scheduler tracepoint signedness of COMM fields failure of
->     'evsel-tp-sched' test on s390 and other arches.
-> 
->   Tommi Rantala:
-> 
->   - Skip trace+probe_vfs_getname.sh when 'perf trace' is not built.
-> 
-> perf trace:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Add initial BPF map dumper, initially just for the current, minimal
->     needs of the augmented_raw_syscalls BPF example used to collect
->     pointer args payloads that uses BPF maps for pid and syscall filtering,
->     but will in time have features similar to 'perf stat' --interval-print,
->     --interval-clear, ways to signal from a BPF event that a specific
->     map (or range of that map) should be printed, optionally as a
->     histogram, etc.
-> 
-> General:
+> perf data:
 > 
 >   Jiri Olsa:
 > 
->   - Add cpu and numa topologies classes for further reuse, fixing some
->     issues in the process.
+>   - Prep work to support per-cpu files in a directory.
 > 
->   - Fixup some warnings and debug levels.
+> Intel PT:
 > 
->   - Make rm_rf() remove single file, not just directories.
+>   Adrian Hunter:
 > 
-> Documentation:
+>   - Improve thread_stack__no_call_return()
 > 
->   Jonas Rabenstein:
+>   - Hide x86 retpolines in thread stacks.
 > 
->   - Fix HEADER_CMDLINE description in perf.data documentation.
+>   - exported SQL viewer refactorings, new 'top calls' report.
 > 
->   - Fix documentation of the Flags section in perf.data.
+>   Alexander Shishkin:
+> 
+>   - Copy parent's address filter offsets on clone.
+> 
+>   - Fix address filters for vmas with non-zero offset. Applies to
+>     ARM's CoreSight as well.
+> 
+> python scripts:
+> 
+>   Tony Jones:
+> 
+>   - Python3 support for several 'perf script' python scripts.
 > 
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
 > ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (2):
->       perf bpf: Add bpf_map dumper
->       perf trace: Allow dumping a BPF map after setting up BPF events
+> Adrian Hunter (13):
+>       perf thread-stack: Improve thread_stack__no_call_return()
+>       perf thread-stack: Hide x86 retpolines
+>       perf scripts python: exported-sql-viewer.py: Fix missing shebang
+>       perf scripts python: exported-sql-viewer.py: Remove leftover debugging prints
+>       perf scripts python: exported-sql-viewer.py: Hide Call Graph option if no calls table
+>       perf scripts python: exported-sql-viewer.py: Move column headers
+>       perf scripts python: exported-sql-viewer.py: Factor out ReportDialogBase
+>       perf scripts python: exported-sql-viewer.py: Factor out ReportVars
+>       perf scripts python: exported-sql-viewer.py: Move report name into ReportVars
+>       perf scripts python: exported-sql-viewer.py: Create new dialog data item classes
+>       perf scripts python: exported-sql-viewer.py: Remove SQLTableDialogDataItem
+>       perf scripts python: exported-sql-viewer.py: Remove no selection error
+>       perf scripts python: exported-sql-viewer.py: Add top calls report
 > 
-> He Kuang (1):
->       perf report: Don't shadow inlined symbol with different addr range
+> Alexander Shishkin (2):
+>       perf: Copy parent's address filter offsets on clone
+>       perf, pt, coresight: Fix address filters for vmas with non-zero offset
 > 
-> Jiri Olsa (10):
->       perf header: Fix wrong node write in NUMA_TOPOLOGY feature
->       perf tools: Add cpu_topology object
->       perf tools: Add numa_topology object
->       perf tools: Use sysfs__mountpoint() when reading cpu topology
->       perf session: Don't report zero period samples for slave events
->       perf evsel: Force sample_type for slave events
->       perf script: Allow +- operator for type specific fields option
->       perf bpf-event: Add missing new line into pr_debug call
->       perf cpumap: Increase debug level for cpu_map__snprint verbose output
->       perf tools: Make rm_rf() remove single file
+> Andi Kleen (2):
+>       perf script: Handle missing fields with -F +..
+>       perf tools: Add perf_exe() helper to find perf binary
 > 
-> Jonas Rabenstein (2):
->       perf doc: Fix HEADER_CMDLINE description in perf.data documentation
->       perf doc: Fix documentation of the Flags section in perf.data
+> Jiri Olsa (9):
+>       perf data: Move size to struct perf_data_file
+>       perf data: Add global path holder
+>       perf tools: Add depth checking to rm_rf
+>       perf tools: Add pattern name checking to rm_rf
+>       perf tools: Add rm_rf_perf_data function
+>       perf data: Make check_backup work over directories
+>       perf data: Fail check_backup in case of error
+>       perf data: Add perf_data__(create_dir|close_dir) functions
+>       perf data: Add perf_data__open_dir_data function
 > 
-> Thomas Richter (1):
->       perf test: Fix failure of 'evsel-tp-sched' test on s390
+> Tony Jones (10):
+>       perf script python: Add Python3 support to netdev-times.py
+>       perf script python: Add Python3 support to failed-syscalls-by-pid.py
+>       perf script python: Add Python3 support to mem-phys-addr.py
+>       perf script python: Add Python3 support to net_dropmonitor.py
+>       perf script python: Add Python3 support to powerpc-hcalls.py
+>       perf script python: Add Python3 support to sctop.py
+>       perf script python: Add Python3 support to stackcollapse.py
+>       perf script python: Add Python3 support to stat-cpi.py
+>       perf script python: Add Python3 support to syscall-counts.py
+>       perf script python: Add Python3 support to syscall-counts-by-pid.py
 > 
-> Tommi Rantala (1):
->       perf tests shell: Skip trace+probe_vfs_getname.sh if built without trace support
+> Wei Li (1):
+>       perf annotate: Fix getting source line failure
 > 
->  tools/perf/Documentation/perf-script.txt           |   6 +
->  tools/perf/Documentation/perf-trace.txt            |   8 +
->  tools/perf/Documentation/perf.data-file-format.txt |  11 +-
->  tools/perf/builtin-script.c                        |   8 +
->  tools/perf/builtin-trace.c                         |  19 ++
->  tools/perf/tests/evsel-tp-sched.c                  |   6 +-
->  tools/perf/tests/shell/lib/probe.sh                |   5 +
->  tools/perf/tests/shell/trace+probe_vfs_getname.sh  |   1 +
->  tools/perf/util/Build                              |   2 +
->  tools/perf/util/bpf-event.c                        |   2 +-
->  tools/perf/util/bpf_map.c                          |  72 ++++++
->  tools/perf/util/bpf_map.h                          |  22 ++
->  tools/perf/util/cpumap.c                           |   2 +-
->  tools/perf/util/cputopo.c                          | 277 +++++++++++++++++++++
->  tools/perf/util/cputopo.h                          |  33 +++
->  tools/perf/util/evsel.c                            |   8 +
->  tools/perf/util/header.c                           | 269 +++-----------------
->  tools/perf/util/session.c                          |   7 +
->  tools/perf/util/sort.c                             |  10 +-
->  tools/perf/util/srcline.c                          |   2 +-
->  tools/perf/util/util.c                             |  16 +-
->  21 files changed, 530 insertions(+), 256 deletions(-)
->  create mode 100644 tools/perf/util/bpf_map.c
->  create mode 100644 tools/perf/util/bpf_map.h
->  create mode 100644 tools/perf/util/cputopo.c
->  create mode 100644 tools/perf/util/cputopo.h
+>  arch/x86/events/intel/pt.c                         |   9 +-
+>  drivers/hwtracing/coresight/coresight-etm-perf.c   |   7 +-
+>  include/linux/perf_event.h                         |   7 +-
+>  kernel/events/core.c                               |  90 ++--
+>  tools/perf/builtin-annotate.c                      |   4 +-
+>  tools/perf/builtin-buildid-cache.c                 |   4 +-
+>  tools/perf/builtin-buildid-list.c                  |   8 +-
+>  tools/perf/builtin-c2c.c                           |   4 +-
+>  tools/perf/builtin-diff.c                          |  12 +-
+>  tools/perf/builtin-evlist.c                        |   4 +-
+>  tools/perf/builtin-inject.c                        |  10 +-
+>  tools/perf/builtin-kmem.c                          |   2 +-
+>  tools/perf/builtin-kvm.c                           |   8 +-
+>  tools/perf/builtin-lock.c                          |   8 +-
+>  tools/perf/builtin-mem.c                           |   8 +-
+>  tools/perf/builtin-record.c                        |  11 +-
+>  tools/perf/builtin-report.c                        |   6 +-
+>  tools/perf/builtin-sched.c                         |  16 +-
+>  tools/perf/builtin-script.c                        |  22 +-
+>  tools/perf/builtin-stat.c                          |   6 +-
+>  tools/perf/builtin-timechart.c                     |   8 +-
+>  tools/perf/builtin-trace.c                         |   8 +-
+>  tools/perf/scripts/python/exported-sql-viewer.py   | 510 ++++++++++++++-------
+>  .../perf/scripts/python/failed-syscalls-by-pid.py  |  21 +-
+>  tools/perf/scripts/python/mem-phys-addr.py         |  24 +-
+>  tools/perf/scripts/python/net_dropmonitor.py       |  10 +-
+>  tools/perf/scripts/python/netdev-times.py          |  82 ++--
+>  tools/perf/scripts/python/powerpc-hcalls.py        |  18 +-
+>  tools/perf/scripts/python/sctop.py                 |  24 +-
+>  tools/perf/scripts/python/stackcollapse.py         |   7 +-
+>  tools/perf/scripts/python/stat-cpi.py              |  10 +-
+>  tools/perf/scripts/python/syscall-counts-by-pid.py |  22 +-
+>  tools/perf/scripts/python/syscall-counts.py        |  18 +-
+>  tools/perf/util/annotate.c                         |   4 +-
+>  tools/perf/util/data-convert-bt.c                  |   4 +-
+>  tools/perf/util/data.c                             | 175 ++++++-
+>  tools/perf/util/data.h                             |  16 +-
+>  tools/perf/util/header.c                           |  12 +-
+>  tools/perf/util/thread-stack.c                     | 161 ++++++-
+>  tools/perf/util/util.c                             |  65 ++-
+>  tools/perf/util/util.h                             |   3 +
+>  41 files changed, 1019 insertions(+), 429 deletions(-)
 
 Pulled, thanks a lot Arnaldo!
 
