@@ -2,303 +2,136 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79516C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865CDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF232133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:36:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KpT1/YQw"
+	by mail.kernel.org (Postfix) with ESMTP id 550E92133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387779AbfB1Pgb (ORCPT
+        id S2387935AbfB1Pgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:36:31 -0500
-Received: from mail-eopbgr730088.outbound.protection.outlook.com ([40.107.73.88]:33173
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731311AbfB1PgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:36:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7xLFMZ+xtqx7NjQFhpnyz6mqgFEFbwC71FTNwOpfbCE=;
- b=KpT1/YQwnvoFahpky64zd6fDJqG57crF5Zd7JFIq9GWGzfYr/GlnwgkzYBMJD8qo+JW+5h0bhmCN0NZkm7XyanycvtGOWabOXNBhMB3lNDF9gEZCtAldPc1n92u99E8G4LCn2vU4mR42Mx7URIpsxPUh1Zrx5fdlMKF34OfsFmM=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2765.namprd12.prod.outlook.com (52.135.107.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.16; Thu, 28 Feb 2019 15:36:13 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d49d:a1ee:9bcf:20e2]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d49d:a1ee:9bcf:20e2%5]) with mapi id 15.20.1665.015; Thu, 28 Feb 2019
- 15:36:13 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>
-Subject: [PATCH v3 5/6] EDAC/amd64: Support more than two Controllers for Chip
- Select handling
-Thread-Topic: [PATCH v3 5/6] EDAC/amd64: Support more than two Controllers for
- Chip Select handling
-Thread-Index: AQHUz3tViAf3NMp+7U2DyJB/VC55Fg==
-Date:   Thu, 28 Feb 2019 15:36:11 +0000
-Message-ID: <20190228153558.127292-5-Yazen.Ghannam@amd.com>
-References: <20190228153558.127292-1-Yazen.Ghannam@amd.com>
-In-Reply-To: <20190228153558.127292-1-Yazen.Ghannam@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR06CA0028.namprd06.prod.outlook.com
- (2603:10b6:805:8e::41) To SN6PR12MB2639.namprd12.prod.outlook.com
- (2603:10b6:805:6f::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6808a772-df03-450a-8632-08d69d9277a0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2765;
-x-ms-traffictypediagnostic: SN6PR12MB2765:
-x-ms-exchange-purlcount: 1
-x-microsoft-exchange-diagnostics: 1;SN6PR12MB2765;20:5wTNPDoMCOQcjY548ajm3mDbf71sc2pm6oMEL4g39xtyALozABUkUI2D1LyO2BbdNeoW7rw4lei/5VM7jIzcALkTYdiLgr+Xn8eyW767d06HXaDzfeaN+Aym/opd2xXnmf8C4u/SRFYfb6knfNjvlofKlr5Qx/Y37U6dGHjAB3g9jG7kY7xpHIGAUhilZgdQ342Abblgo7wZ6SZSnlTPUZx7eZgqhmL/EV0f++lKPmOak/yNAF1WWRSoxxHsdJ2C
-x-microsoft-antispam-prvs: <SN6PR12MB2765266BF9F3E2CFF525F134F8750@SN6PR12MB2765.namprd12.prod.outlook.com>
-x-forefront-prvs: 0962D394D2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(39860400002)(346002)(376002)(396003)(199004)(189003)(3846002)(106356001)(2906002)(102836004)(26005)(25786009)(186003)(446003)(97736004)(316002)(68736007)(105586002)(6116002)(50226002)(4326008)(2351001)(7736002)(2501003)(81166006)(53936002)(81156014)(52116002)(305945005)(256004)(6486002)(99286004)(6436002)(76176011)(5640700003)(66066001)(71200400001)(71190400001)(5660300002)(8936002)(36756003)(2616005)(486006)(14444005)(11346002)(476003)(478600001)(966005)(54906003)(6506007)(6306002)(14454004)(1076003)(72206003)(386003)(8676002)(86362001)(6916009)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2765;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: K4UeJPLsZeL+XrJzxRH090ohMDKrPvD6DO78noeWbbXHh1nk1EiXyxv2C72k5v2jPTLWb7oncvwsGJBEpbZLyjySSN73mY3ndHy9afZHQgwDnaxqhnVatxcnBH9vWSGzBqytxc6nWg1EwFJIQ62BYEoZmEj+kOEnzl+IsVIZsOGETeo0Qo8UtItysG783U8tXMhUTS2+rB9XrtMFxo1Xmk8h+ezPM/VaOuDUnYytqPdGYy2tyTSPsZXMlo7XPURv5UtSqA3zAuMGFSqf+A/GdG0wcuu5L5odbvLmAge594UNX878CkT5LBH4p+clwvwLoY5tdZ4AqbZV+OAihwlbffoW3R5pPZwToQrdr8/wUfP6zFNkzgfAZ0F6jo9JheDzkNbwPxmmhuAU5SF/NxzCVtOnDIlHO3pmd0RL4dYRoLg=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 Feb 2019 10:36:35 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42984 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731311AbfB1Pgc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:36:32 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SFa6Id128283
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 10:36:31 -0500
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxfs50fa7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 10:36:30 -0500
+Received: from localhost
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Thu, 28 Feb 2019 15:36:20 -0000
+Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Feb 2019 15:36:17 -0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SFaCRJ30212326
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Feb 2019 15:36:12 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D6AFBE056;
+        Thu, 28 Feb 2019 15:36:12 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 99FDFBE04F;
+        Thu, 28 Feb 2019 15:36:10 +0000 (GMT)
+Received: from [9.85.128.205] (unknown [9.85.128.205])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Feb 2019 15:36:10 +0000 (GMT)
+Subject: Re: [PATCH v4 1/7] s390: ap: kvm: add PQAP interception for AQIC
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        pmorel@linux.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
+ <1550849400-27152-2-git-send-email-pmorel@linux.ibm.com>
+ <babf7884-35f1-2f2e-34dc-96d9190fd15b@linux.ibm.com>
+ <e7ba5cb0-b254-7f73-bc59-ca2456ce7951@linux.ibm.com>
+ <9f1d9241-39b9-adbc-d0e9-cb702e609cbc@linux.ibm.com>
+ <4dc59125-7f96-cba8-651b-382ed8f8bff8@linux.ibm.com>
+ <8526f468-9a4d-68d2-3868-0dad5ce16f46@linux.ibm.com>
+ <6058a017-6404-af3c-62ef-2452214ac97c@de.ibm.com>
+ <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Thu, 28 Feb 2019 10:36:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6808a772-df03-450a-8632-08d69d9277a0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 15:36:12.0751
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2765
+In-Reply-To: <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19022815-0036-0000-0000-00000A928850
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010679; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01167633; UDB=6.00610014; IPR=6.00948247;
+ MB=3.00025780; MTD=3.00000008; XFM=3.00000015; UTC=2019-02-28 15:36:19
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19022815-0037-0000-0000-00004AE135E1
+Message-Id: <0051da1a-1834-8bb0-b277-ae434cb7d755@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=970 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902280105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yazen Ghannam <yazen.ghannam@amd.com>
+On 2/28/19 6:03 AM, Christian Borntraeger wrote:
+> 
+> 
+> On 28.02.2019 10:42, Christian Borntraeger wrote:
+> [...]
+>>> Okay, let's go back to the genesis of this discussion; namely, my
+>>> suggestion about moving the fc == 0x03 check into the hook code. If
+>>> the vfio_ap module is not loaded, there will be no hook code. In that
+>>> case, the check for the hook will fail and ultimately response code
+>>> 0x01 will be set in the status word (which may not be the right thing
+>>> to do?). You have not stated a single good reason for keeping this
+>>> check, but I'm done with this silly argument. It certainly doesn't
+>>> hurt anything.
+>>
+>> The instruction handler must handle the basic checks for the
+>> instruction itself as outlined above.
+>>
+>> Do we want to allow QEMU to fully emulate everything (the  ECA_APIE case being off)?
+>> The we should pass along everything to QEMU, but this is already done with the
+>> ECA_APIE check, correct?
+>>
+>> Do we agree that when we are beyond the ECA_APIE check, that we do not emulate
+>> in QEMU and we have enabled the AP instructions interpretion?
+>> If yes then this has some implication:
+>>
+>> 1. ECA is on and we should only get PQAP interception for specific FC (namely 3).
+>> 2. What we certainly should check is the facility bit of the guest (65) and reject fc==3
+>> right away with a specification exception. I do not want the hook to mess with
+>> the kvm cpu model. @Pierre would be good to actually check test_kvm_facility(vcpu->kvm, 65))
+>> 3. What shall we do when fc == 0x3? We can certainly do the check here OR in the
+>> hook. As long as we have only fc==3 this does not matter.
+>>
+>> Correct?
+> 
+> Thinking more about that, I think we should inject a specification exception for all
+> unknown FCc != 0x3. That would also qualify for keeping it in the instruction handler.
 
-The struct chip_select array that's used for saving Chip Select bases
-and masks is fixed at length of two. There should be one struct
-chip_select for each controller, so this array should be increased to
-support systems that may have more than two controllers.
+Sure, let's do it.
 
-Increase the size of the struct chip_select array to eight, which is the
-largest number of controllers per die currently supported on AMD
-systems.
-
-Also, carve out the Family 17h+ reading of the bases/masks into a
-separate function. This effectively reverts the original bases/masks
-reading code to before Family 17h support was added.
-
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
-Link:
-https://lkml.kernel.org/r/20190226172532.12924-5-Yazen.Ghannam@amd.com
-
-v2->v3:
-* Reword commit message a bit.
-
-v1->v2:
-* No change.
-
- drivers/edac/amd64_edac.c | 113 ++++++++++++++++++++------------------
- drivers/edac/amd64_edac.h |   5 +-
- 2 files changed, 62 insertions(+), 56 deletions(-)
-
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 2da69010ea8e..c05995685cfa 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -911,89 +911,94 @@ static void prep_chip_selects(struct amd64_pvt *pvt)
- 	} else if (pvt->fam =3D=3D 0x15 && pvt->model =3D=3D 0x30) {
- 		pvt->csels[0].b_cnt =3D pvt->csels[1].b_cnt =3D 4;
- 		pvt->csels[0].m_cnt =3D pvt->csels[1].m_cnt =3D 2;
-+	} else if (pvt->fam >=3D 0x17) {
-+		int umc;
-+
-+		for_each_umc(umc) {
-+			pvt->csels[umc].b_cnt =3D 8;
-+			pvt->csels[umc].m_cnt =3D 4;
-+		}
-+
- 	} else {
- 		pvt->csels[0].b_cnt =3D pvt->csels[1].b_cnt =3D 8;
- 		pvt->csels[0].m_cnt =3D pvt->csels[1].m_cnt =3D 4;
- 	}
- }
-=20
-+static void read_umc_base_mask(struct amd64_pvt *pvt)
-+{
-+	int cs, umc;
-+
-+	for_each_umc(umc) {
-+		u32 umc_base_reg =3D get_umc_base(umc) + UMCCH_BASE_ADDR;
-+		u32 umc_mask_reg =3D get_umc_base(umc) + UMCCH_ADDR_MASK;
-+
-+		for_each_chip_select(cs, 0, pvt) {
-+			u32 *base =3D &pvt->csels[umc].csbases[cs];
-+			u32 *mask =3D &pvt->csels[umc].csmasks[cs];
-+
-+			u32 base_reg =3D umc_base_reg + (cs * 4);
-+			u32 mask_reg =3D umc_mask_reg + ((cs >> 1) * 4);
-+
-+			if (!amd_smn_read(pvt->mc_node_id, base_reg, base))
-+				edac_dbg(0, "  DCSB%d[%d]=3D0x%08x reg: 0x%x\n",
-+					 umc, cs, *base, base_reg);
-+
-+			if (!amd_smn_read(pvt->mc_node_id, mask_reg, mask))
-+				edac_dbg(0, "    DCSM%d[%d]=3D0x%08x reg: 0x%x\n",
-+					 umc, cs, *mask, mask_reg);
-+		}
-+	}
-+}
-+
- /*
-  * Function 2 Offset F10_DCSB0; read in the DCS Base and DCS Mask register=
-s
-  */
- static void read_dct_base_mask(struct amd64_pvt *pvt)
- {
--	int base_reg0, base_reg1, mask_reg0, mask_reg1, cs;
-+	int cs;
-=20
- 	prep_chip_selects(pvt);
-=20
--	if (pvt->umc) {
--		base_reg0 =3D get_umc_base(0) + UMCCH_BASE_ADDR;
--		base_reg1 =3D get_umc_base(1) + UMCCH_BASE_ADDR;
--		mask_reg0 =3D get_umc_base(0) + UMCCH_ADDR_MASK;
--		mask_reg1 =3D get_umc_base(1) + UMCCH_ADDR_MASK;
--	} else {
--		base_reg0 =3D DCSB0;
--		base_reg1 =3D DCSB1;
--		mask_reg0 =3D DCSM0;
--		mask_reg1 =3D DCSM1;
--	}
-+	if (pvt->umc)
-+		return read_umc_base_mask(pvt);
-=20
- 	for_each_chip_select(cs, 0, pvt) {
--		int reg0   =3D base_reg0 + (cs * 4);
--		int reg1   =3D base_reg1 + (cs * 4);
-+		int reg0   =3D DCSB0 + (cs * 4);
-+		int reg1   =3D DCSB1 + (cs * 4);
- 		u32 *base0 =3D &pvt->csels[0].csbases[cs];
- 		u32 *base1 =3D &pvt->csels[1].csbases[cs];
-=20
--		if (pvt->umc) {
--			if (!amd_smn_read(pvt->mc_node_id, reg0, base0))
--				edac_dbg(0, "  DCSB0[%d]=3D0x%08x reg: 0x%x\n",
--					 cs, *base0, reg0);
-+		if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, base0))
-+			edac_dbg(0, "  DCSB0[%d]=3D0x%08x reg: F2x%x\n",
-+				 cs, *base0, reg0);
-=20
--			if (!amd_smn_read(pvt->mc_node_id, reg1, base1))
--				edac_dbg(0, "  DCSB1[%d]=3D0x%08x reg: 0x%x\n",
--					 cs, *base1, reg1);
--		} else {
--			if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, base0))
--				edac_dbg(0, "  DCSB0[%d]=3D0x%08x reg: F2x%x\n",
--					 cs, *base0, reg0);
--
--			if (pvt->fam =3D=3D 0xf)
--				continue;
-+		if (pvt->fam =3D=3D 0xf)
-+			continue;
-=20
--			if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, base1))
--				edac_dbg(0, "  DCSB1[%d]=3D0x%08x reg: F2x%x\n",
--					 cs, *base1, (pvt->fam =3D=3D 0x10) ? reg1
--								: reg0);
--		}
-+		if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, base1))
-+			edac_dbg(0, "  DCSB1[%d]=3D0x%08x reg: F2x%x\n",
-+				 cs, *base1, (pvt->fam =3D=3D 0x10) ? reg1
-+							: reg0);
- 	}
-=20
- 	for_each_chip_select_mask(cs, 0, pvt) {
--		int reg0   =3D mask_reg0 + (cs * 4);
--		int reg1   =3D mask_reg1 + (cs * 4);
-+		int reg0   =3D DCSM0 + (cs * 4);
-+		int reg1   =3D DCSM1 + (cs * 4);
- 		u32 *mask0 =3D &pvt->csels[0].csmasks[cs];
- 		u32 *mask1 =3D &pvt->csels[1].csmasks[cs];
-=20
--		if (pvt->umc) {
--			if (!amd_smn_read(pvt->mc_node_id, reg0, mask0))
--				edac_dbg(0, "    DCSM0[%d]=3D0x%08x reg: 0x%x\n",
--					 cs, *mask0, reg0);
--
--			if (!amd_smn_read(pvt->mc_node_id, reg1, mask1))
--				edac_dbg(0, "    DCSM1[%d]=3D0x%08x reg: 0x%x\n",
--					 cs, *mask1, reg1);
--		} else {
--			if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, mask0))
--				edac_dbg(0, "    DCSM0[%d]=3D0x%08x reg: F2x%x\n",
--					 cs, *mask0, reg0);
-+		if (!amd64_read_dct_pci_cfg(pvt, 0, reg0, mask0))
-+			edac_dbg(0, "    DCSM0[%d]=3D0x%08x reg: F2x%x\n",
-+				 cs, *mask0, reg0);
-=20
--			if (pvt->fam =3D=3D 0xf)
--				continue;
-+		if (pvt->fam =3D=3D 0xf)
-+			continue;
-=20
--			if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, mask1))
--				edac_dbg(0, "    DCSM1[%d]=3D0x%08x reg: F2x%x\n",
--					 cs, *mask1, (pvt->fam =3D=3D 0x10) ? reg1
--								: reg0);
--		}
-+		if (!amd64_read_dct_pci_cfg(pvt, 1, reg0, mask1))
-+			edac_dbg(0, "    DCSM1[%d]=3D0x%08x reg: F2x%x\n",
-+				 cs, *mask1, (pvt->fam =3D=3D 0x10) ? reg1
-+							: reg0);
- 	}
- }
-=20
-diff --git a/drivers/edac/amd64_edac.h b/drivers/edac/amd64_edac.h
-index 44d81eccfe0a..2191ddfb066f 100644
---- a/drivers/edac/amd64_edac.h
-+++ b/drivers/edac/amd64_edac.h
-@@ -96,6 +96,7 @@
- /* Hardware limit on ChipSelect rows per MC and processors per system */
- #define NUM_CHIPSELECTS			8
- #define DRAM_RANGES			8
-+#define NUM_CONTROLLERS			8
-=20
- #define ON true
- #define OFF false
-@@ -357,8 +358,8 @@ struct amd64_pvt {
- 	u32 dbam0;		/* DRAM Base Address Mapping reg for DCT0 */
- 	u32 dbam1;		/* DRAM Base Address Mapping reg for DCT1 */
-=20
--	/* one for each DCT */
--	struct chip_select csels[2];
-+	/* one for each DCT/UMC */
-+	struct chip_select csels[NUM_CONTROLLERS];
-=20
- 	/* DRAM base and limit pairs F1x[78,70,68,60,58,50,48,40] */
- 	struct dram_range ranges[DRAM_RANGES];
---=20
-2.17.1
+> 
 
