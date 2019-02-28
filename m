@@ -2,194 +2,182 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA4C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F90C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6A920863
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7771A218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATfioEUc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tDnVbm4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbfB1CfJ (ORCPT
+        id S1730817AbfB1CfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:35:09 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37209 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730712AbfB1CfI (ORCPT
+        Wed, 27 Feb 2019 21:35:16 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56166 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730660AbfB1CfO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:35:08 -0500
-Received: by mail-pg1-f196.google.com with SMTP id q206so8921081pgq.4;
-        Wed, 27 Feb 2019 18:35:07 -0800 (PST)
+        Wed, 27 Feb 2019 21:35:14 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q187so7778907wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 18:35:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pEwYiWVACEY9e8hOcJJc5+iyihWPSZqoyGMirWvaC0Y=;
-        b=ATfioEUckM5ED/fzsne0fT/o3LTViNnrIoxcgmTMLqYmr7n9wPXYAGHrXJ1IJBO3f2
-         twtCltaQB7bH1VCHnpA2h5qEmAcVqQEKhouFfwL2PJ1wLTGqfloNZJhNC28sZgaE9Kjr
-         iQGH1Mr+7Pmy3br6IK5LzAs2dd43gCJ9t50VYayWMLbyWrah3a7aSFLynEqCAJh/xly9
-         qmPdGKuv6TIrOqKUv+gt5IviRxln6MHcAzt55nSCS6i1v3BFgplhX5/pcuVxtpmEiPSi
-         0noPQ/3psuj1Xl7oBRJz2ST3+lbxe11iTxBAQpLYeKCVwDnVLuucq4kIU3hb0pXnTQCs
-         6LlQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ufkKUPGhZtWYHIJ6EOYJ6kb2NVVZjZEaho4MM+K7NWI=;
+        b=tDnVbm4HvO3FzrHbC7LasjxcUW4swbWM/0dFf/YIza0j8A98CKnryjcI2dx/gsAFGU
+         e7R2VbgARmaJu3gupfYP3JPDh2Nq45XChLjKWuTlcDOuBxH9OOjwhdbqCUFNlu4ZSTot
+         aPSfsyyYHPoKvbcp/rV7+K0zTtWRWzVMpMLZVsrUSpUrO7uieMyfcK+C3565P8XM5Myv
+         Mg3rMpMpnO/YzzPBm/Z/uHKYM/Uh23WiAnBnlrlHC3JLuV8AqMswO5bDYlypd/Hg2B5R
+         b84Qie2nwD+mKPbFvOsi2+4vI86bmVZYKlUAHDVXoR118o/ZT43V8cS3B/qQeKGGTZEu
+         q2fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pEwYiWVACEY9e8hOcJJc5+iyihWPSZqoyGMirWvaC0Y=;
-        b=FioIKq8SFGlrz9gYWdZh2oVE29pYDrzo0oTyyecU9u+d6mpW6h7lpQaWu16xaSBcUh
-         Lq+Ac9dqE+P0xLf6n6BRxLrfjyHMefte8KA9XY92G5UKf0rAq2n0sEaFFZiDny6y2cQv
-         0Zjd3XZm/Zln9hZdRtAcJ8IZnL6TMlgkIEjSxQOL5RKgD26zyDc+lIrSysocYWkro7fp
-         dR8Jc/ak11K+WK1eytLB+elwiULup8nkDSwUs6pOJRq0zU4v7hsbs8gh5mGYcniylVfU
-         YNrKuaxHjao9zEQn6TwwGRqcXi0kDiisVObQidewi2DZAvypdxH3yLQTpatsBfcmuIlL
-         94mQ==
-X-Gm-Message-State: AHQUAuZe+1oHrjqxvyE9SM7ihFmzvWldwRph7uG4tXbzXax1UWp4sFtW
-        QPxML18rFCD6gy1e5dfz8W6RPKvl1zjXbw==
-X-Google-Smtp-Source: AHgI3IZ7Zepvoi0fMcTS3tQ0DqQ/IKKSxihFXwIVNn7DLgjhwaOYZ+7sXtxhrAgxvU4HR6xjUYXs7g==
-X-Received: by 2002:a62:bd13:: with SMTP id a19mr4927433pff.222.1551321307378;
-        Wed, 27 Feb 2019 18:35:07 -0800 (PST)
-Received: from maya190131 ([52.247.237.14])
-        by smtp.gmail.com with ESMTPSA id b26sm22168181pfo.33.2019.02.27.18.35.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Feb 2019 18:35:06 -0800 (PST)
-Date:   Thu, 28 Feb 2019 02:35:06 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, kys@microsoft.com,
-        sthemmin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
-        jasowang@redhat.com, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, haiyangz@microsoft.com,
-        vkuznets@redhat.com, marcelo.cerri@canonical.com,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH v4 1/2] PCI: hv: Replace hv_vp_set with hv_vpset
-Message-ID: <6a86e6e6d299dcfa71bf9ba97c60def73c0547e1.1551319643.git.m.maya.nakamura@gmail.com>
-References: <cover.1551319643.git.m.maya.nakamura@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ufkKUPGhZtWYHIJ6EOYJ6kb2NVVZjZEaho4MM+K7NWI=;
+        b=uLE3eH6E8qcn5V7nuk87E56znbMxdRiNpJHg3LJ7ewY6w8hAZTWlab5DaixhlGwaX1
+         QXHb9SONJYni85O0UE1KKhEzDh8s1mC3WIIznZYrESG6Z81Qh1TtADvd28L0qfHMXooA
+         b9uMSl0m4xIHAp4YTp5raEVUT3NaVpR0PzNC1o4mPsogneQ5Rmmo8ueuf+buCHYx1COa
+         JtUs84B0cg9rDjAkVNy9hpFlh1fR2rHmXnSCiDJq6DvUTA5eTrjN/CBqU1SN8AGWrnL7
+         CjHtkIqRu9foBQ29YTekTpOufzaPoDL+gqszg7OnddFnW7saPC2KPX8BT2C2/m+a1Zdz
+         42XQ==
+X-Gm-Message-State: APjAAAU3tZ1R7kLzLypuuMFClCQlRE2tixwXOJx6AUH7b5sbg97tx5uY
+        A7kh6yKM5lASfEeqYBlIIgmh4zq2l2ho9A/4gCA=
+X-Google-Smtp-Source: AHgI3Ib0D9K/DpKWlCEtPKIBG0TyWE8D/x/8S7IL/BPRw5zFE2SUYgpUyy26Mg1/OuWy9E2fu2e+nutX3QK7484j12c=
+X-Received: by 2002:a1c:670a:: with SMTP id b10mr1326650wmc.82.1551321312283;
+ Wed, 27 Feb 2019 18:35:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1551319643.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20181210234201.4850-1-natechancellor@gmail.com> <20190222124845.GA18614@archlinux-ryzen>
+In-Reply-To: <20190222124845.GA18614@archlinux-ryzen>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 27 Feb 2019 21:34:59 -0500
+Message-ID: <CADnq5_NC_3zeMN2EE5T-eQy2JY1cAxHxdcGsUiP-vs-Du0Q=Eg@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: Pass app_tf by value rather than by reference
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove a duplicate definition of VP set (hv_vp_set) and use the common
-definition (hv_vpset) that is used in other places.
+Applied.  Sorry for the delay.
 
-Change the order of the members in struct hv_pcibus_device so that the
-declaration of retarget_msi_interrupt_params is the last member. Struct
-hv_vpset, which contains a flexible array, is nested two levels deep in
-struct hv_pcibus_device via retarget_msi_interrupt_params.
+Alex
 
-Add a comment that retarget_msi_interrupt_params should be the last
-member of struct hv_pcibus_device.
-
-Based on Vitaly's finding, add __aligned(8) to struct
-retarget_msi_interrupt because Hyper-V requires that hypercall arguments
-be aligned on an 8 byte boundary.
-
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
----
-Changes in v4:
-- Add __aligned(8) to struct retarget_msi_interrupt.
-- Update the commit message.
-
-Change in v3:
-- Correct the v2 change log.
-
-Change in v2:
-- Update the commit message.
-
- drivers/pci/controller/pci-hyperv.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9ba4d12c179c..d71695db1ba0 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -393,12 +393,6 @@ struct hv_interrupt_entry {
- 
- #define HV_VP_SET_BANK_COUNT_MAX	5 /* current implementation limit */
- 
--struct hv_vp_set {
--	u64	format;			/* 0 (HvGenericSetSparse4k) */
--	u64	valid_banks;
--	u64	masks[HV_VP_SET_BANK_COUNT_MAX];
--};
--
- /*
-  * flags for hv_device_interrupt_target.flags
-  */
-@@ -410,7 +404,7 @@ struct hv_device_interrupt_target {
- 	u32	flags;
- 	union {
- 		u64		 vp_mask;
--		struct hv_vp_set vp_set;
-+		struct hv_vpset vp_set;
- 	};
- };
- 
-@@ -420,7 +414,7 @@ struct retarget_msi_interrupt {
- 	struct hv_interrupt_entry int_entry;
- 	u64	reserved2;
- 	struct hv_device_interrupt_target int_target;
--} __packed;
-+} __packed __aligned(8);
- 
- /*
-  * Driver specific state.
-@@ -460,12 +454,16 @@ struct hv_pcibus_device {
- 	struct msi_controller msi_chip;
- 	struct irq_domain *irq_domain;
- 
--	/* hypercall arg, must not cross page boundary */
--	struct retarget_msi_interrupt retarget_msi_interrupt_params;
--
- 	spinlock_t retarget_msi_interrupt_lock;
- 
- 	struct workqueue_struct *wq;
-+
-+	/* hypercall arg, must not cross page boundary */
-+	struct retarget_msi_interrupt retarget_msi_interrupt_params;
-+
-+	/*
-+	 * Don't put anything here: retarget_msi_interrupt_params must be last
-+	 */
- };
- 
- /*
-@@ -955,12 +953,13 @@ static void hv_irq_unmask(struct irq_data *data)
- 		 */
- 		params->int_target.flags |=
- 			HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
--		params->int_target.vp_set.valid_banks =
-+		params->int_target.vp_set.valid_bank_mask =
- 			(1ull << HV_VP_SET_BANK_COUNT_MAX) - 1;
- 
- 		/*
- 		 * var-sized hypercall, var-size starts after vp_mask (thus
--		 * vp_set.format does not count, but vp_set.valid_banks does).
-+		 * vp_set.format does not count, but vp_set.valid_bank_mask
-+		 * does).
- 		 */
- 		var_size = 1 + HV_VP_SET_BANK_COUNT_MAX;
- 
-@@ -974,7 +973,7 @@ static void hv_irq_unmask(struct irq_data *data)
- 				goto exit_unlock;
- 			}
- 
--			params->int_target.vp_set.masks[cpu_vmbus / 64] |=
-+			params->int_target.vp_set.bank_contents[cpu_vmbus / 64]	|=
- 				(1ULL << (cpu_vmbus & 63));
- 		}
- 	} else {
--- 
-2.17.1
-
+On Fri, Feb 22, 2019 at 10:36 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Mon, Dec 10, 2018 at 04:42:01PM -0700, Nathan Chancellor wrote:
+> > Clang warns when an expression that equals zero is used as a null
+> > pointer constant (in lieu of NULL):
+> >
+> > drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:4435:3:
+> > warning: expression which evaluates to zero treated as a null pointer
+> > constant of type 'const enum color_transfer_func *'
+> > [-Wnon-literal-null-conversion]
+> >                 TRANSFER_FUNC_UNKNOWN,
+> >                 ^~~~~~~~~~~~~~~~~~~~~
+> > 1 warning generated.
+> >
+> > This warning is caused by commit bb47de736661 ("drm/amdgpu: Set FreeSync
+> > state using drm VRR properties") and it could be solved by using NULL
+> > instead of TRANSFER_FUNC_UNKNOWN or casting TRANSFER_FUNC_UNKNOWN as a
+> > pointer. However, after looking into it, there doesn't appear to be a
+> > good reason to pass app_tf by reference as it is never mutated along the
+> > way. This is the only code path in which app_tf is used:
+> >
+> > mod_freesync_build_vrr_infopacket ->
+> >     build_vrr_infopacket_v2 ->
+> >         build_vrr_infopacket_fs2_data
+> >
+> > Neither mod_freesync_build_vrr_infopacket or build_vrr_infopacket_v2
+> > modify app_tf's value and build_vrr_infopacket_fs2_data expects just
+> > the value so we can avoid dereferencing anything by just passing in
+> > app_tf's value to mod_freesync_build_vrr_infopacket and
+> > build_vrr_infopacket_v2.
+> >
+> > There is no functional change because build_vrr_infopacket_fs2_data
+> > doesn't do anything if TRANSFER_FUNC_UNKNOWN is passed to it, the same
+> > as not calling build_vrr_infopacket_fs2_data at all like before this
+> > change when NULL was used for app_tf.
+> >
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >  drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 7 +++----
+> >  drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h  | 2 +-
+> >  2 files changed, 4 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+> > index 620a171620ee..520665a9d81a 100644
+> > --- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+> > +++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+> > @@ -656,7 +656,7 @@ static void build_vrr_infopacket_v1(enum signal_type signal,
+> >
+> >  static void build_vrr_infopacket_v2(enum signal_type signal,
+> >               const struct mod_vrr_params *vrr,
+> > -             const enum color_transfer_func *app_tf,
+> > +             enum color_transfer_func app_tf,
+> >               struct dc_info_packet *infopacket)
+> >  {
+> >       unsigned int payload_size = 0;
+> > @@ -664,8 +664,7 @@ static void build_vrr_infopacket_v2(enum signal_type signal,
+> >       build_vrr_infopacket_header_v2(signal, infopacket, &payload_size);
+> >       build_vrr_infopacket_data(vrr, infopacket);
+> >
+> > -     if (app_tf != NULL)
+> > -             build_vrr_infopacket_fs2_data(*app_tf, infopacket);
+> > +     build_vrr_infopacket_fs2_data(app_tf, infopacket);
+> >
+> >       build_vrr_infopacket_checksum(&payload_size, infopacket);
+> >
+> > @@ -676,7 +675,7 @@ void mod_freesync_build_vrr_infopacket(struct mod_freesync *mod_freesync,
+> >               const struct dc_stream_state *stream,
+> >               const struct mod_vrr_params *vrr,
+> >               enum vrr_packet_type packet_type,
+> > -             const enum color_transfer_func *app_tf,
+> > +             enum color_transfer_func app_tf,
+> >               struct dc_info_packet *infopacket)
+> >  {
+> >       /* SPD info packet for FreeSync */
+> > diff --git a/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h b/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h
+> > index 949a8b62aa98..063af6258fd9 100644
+> > --- a/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h
+> > +++ b/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h
+> > @@ -145,7 +145,7 @@ void mod_freesync_build_vrr_infopacket(struct mod_freesync *mod_freesync,
+> >               const struct dc_stream_state *stream,
+> >               const struct mod_vrr_params *vrr,
+> >               enum vrr_packet_type packet_type,
+> > -             const enum color_transfer_func *app_tf,
+> > +             enum color_transfer_func app_tf,
+> >               struct dc_info_packet *infopacket);
+> >
+> >  void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
+> > --
+> > 2.20.0
+> >
+>
+> Gentle ping on this patch, it would be nice to get this fixed and into
+> 5.1!
+>
+> Thanks,
+> Nathan
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
