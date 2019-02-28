@@ -2,88 +2,90 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C996C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EE2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3324E218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12CE218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551368718;
+	bh=Ydlgv1/bff/mSevUXLvGNXBcCLd3Pdau1gdmz5r23FM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yCDsyESsFbpJdmlDNmeXaKpcpKiJOEVkRzf/vIJS5i9wHFmLcTq1Qg5x68i3A+x1i
+	 /a0OsH18GXL793jWnqU+6Koq/9+v1KbKqrYwcZL6O7dvW6wWQoKPz6ofDeBvDBarY/
+	 WHCpAi9bN824Ygdr1foWA9qpu9igH/3UPwQr32sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733111AbfB1Pof (ORCPT
+        id S1732525AbfB1PpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:44:35 -0500
-Received: from mga03.intel.com ([134.134.136.65]:2666 "EHLO mga03.intel.com"
+        Thu, 28 Feb 2019 10:45:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732736AbfB1Poe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:44:34 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 07:44:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,423,1544515200"; 
-   d="scan'208";a="142411180"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga001.jf.intel.com with ESMTP; 28 Feb 2019 07:44:33 -0800
-Date:   Thu, 28 Feb 2019 07:44:33 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v3 0/2] x86/fault: Further improve #PF oops messages
-Message-ID: <20190228154433.GB6166@linux.intel.com>
-References: <20181221213657.27628-1-sean.j.christopherson@intel.com>
+        id S1726269AbfB1PpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:45:16 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A43C218AE;
+        Thu, 28 Feb 2019 15:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551368715;
+        bh=Ydlgv1/bff/mSevUXLvGNXBcCLd3Pdau1gdmz5r23FM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cWAoikD7kg5yMucDCVwxzJBeOoHS9h/sXmVFivUTpJVwFv6lcCsNkJqIDj/LWKl8L
+         erMNTmz2y3HRmsPqHWPXc8G1lrxDe0hCEGhErpnqWDzr3jxhokXWiuegE6NfImPGji
+         zyM8cQQqqK2wxxKYjjqfBkdhhuJoKUVoucEXoRc0=
+Date:   Thu, 28 Feb 2019 16:45:13 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        paulmck@linux.vnet.ibm.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190228154513.GA12050@kroah.com>
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+ <20190228173444.54403795211d80ba540b61cb@kernel.org>
+ <20190228150054.GB156098@google.com>
+ <20190228153026.GG8481@kroah.com>
+ <20190228153741.GA168373@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20181221213657.27628-1-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190228153741.GA168373@google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-High latency ping.  These still apply as-is.
+On Thu, Feb 28, 2019 at 10:37:41AM -0500, Joel Fernandes wrote:
+> In any case, it is not practical to provide headers for every kernel version on
+> the system image and maintain them, it will take up too much space and has to
+> be periodically packaged. Not to mention that there will be kernel versions
+> that are booting Android that simply don't have anyone maintaining headers
+> for. So the proposed solution is an easier path.
 
-On Fri, Dec 21, 2018 at 01:36:55PM -0800, Sean Christopherson wrote:
-> Rework the messages printed for #PF oopses to display more detailed
-> information about the fault in human readable form and to avoid
-> conflicting messages and/or statements that may not always be accurate.
-> 
-> v3:
->   - Prepend a patch to reword the initial BUG message
->   - Add sample output in the changelogs
->   - Swap the order of the #PF lines.  For most cases the three main lines
->     show up in reverse fir-tree ordering and the cause of the fault is
->     easy to pick out since it's the last thing highlighted by pr_alert
->     (excepting when dumping the IDT, GDT, etc...).
-> 
-> v2:
->   - Explicitly call out protection keys violations
->   - "Slightly" reword the changelog
-> 
-> v1: https://lkml.kernel.org/r/20181207195223.23968-1-sean.j.christopherson@intel.com
-> v2: https://lkml.kernel.org/r/20181207184423.1962-1-sean.j.christopherson@intel.com
-> 
-> Sean Christopherson (2):
->   x86/fault: Reword initial BUG message for unhandled page faults
->   x86/fault: Decode and print #PF oops in human readable form
-> 
->  arch/x86/mm/fault.c | 51 +++++++++++++++------------------------------
->  1 file changed, 17 insertions(+), 34 deletions(-)
-> 
-> -- 
-> 2.19.2
-> 
+I totally agree with this, and with your proposed patches, just wanting
+to clear up some potential anti-GPL-FUD before it got spread any further :)
+
+thanks,
+
+greg k-h
