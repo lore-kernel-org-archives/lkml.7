@@ -2,116 +2,74 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708E1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F411C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1C520857
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551374108;
-	bh=uL9YPdf1xRccz4bGe+o/hwx0QUTBjTL0NzHICcfSr5o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rI5CC+UnpcM+ogvC3KuRfCxytrnImOxzpAcxsE7kZGFxyecbVqosMTd0zpE6V/Ru
-	 c1oPu0vfNx5YnIhzDZI1jjq3MlXNFVSHgQCBFoATnNvpn9LYUVHUACzyAOQT7zS9Iq
-	 v5hlNl6McQ31hWNvG90PbM5xbHkMh0NZqKgPnF4g=
+	by mail.kernel.org (Postfix) with ESMTP id 2799B20857
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388175AbfB1RPG (ORCPT
+        id S2388194AbfB1RPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:15:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388135AbfB1RPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:15:02 -0500
-Received: from lerouge.home (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5682B218AE;
-        Thu, 28 Feb 2019 17:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551374101;
-        bh=uL9YPdf1xRccz4bGe+o/hwx0QUTBjTL0NzHICcfSr5o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NN4qV7yi8KePPAj7bnlD+Fc/ZPuErcUVfJqynC43mvp22V2ZTfQTyHYBYm198sLfo
-         vgxbsmjOuEgZFW/13uCnSx/mRNaLqJ8taCGzIVOSb/0irDtNFKVDpr1N6Ug5JGETxG
-         /WPXbTqIiUF8+RJYM5mba0U/CRw0hvxGzGGCszr8=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 37/37] net: Make softirq vector masking finegrained on release_sock()
-Date:   Thu, 28 Feb 2019 18:12:42 +0100
-Message-Id: <20190228171242.32144-38-frederic@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190228171242.32144-1-frederic@kernel.org>
-References: <20190228171242.32144-1-frederic@kernel.org>
+        Thu, 28 Feb 2019 12:15:13 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51756 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732899AbfB1RPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:15:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2818EBD;
+        Thu, 28 Feb 2019 09:15:10 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D9673F720;
+        Thu, 28 Feb 2019 09:15:09 -0800 (PST)
+Date:   Thu, 28 Feb 2019 17:15:07 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     James Morse <james.morse@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Zhang Lei <zhang.lei@jp.fujitsu.com>
+Subject: Re: [PATCH v5] arm64: Add workaround for Fujitsu A64FX erratum 010001
+Message-ID: <20190228171506.GC226495@arrakis.emea.arm.com>
+References: <20190226184341.26083-1-james.morse@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190226184341.26083-1-james.morse@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a usage example of spin_lock_bh_mask(). NET_RX, TIMER and
-TASKLET are the three softirqs that have been reported by lockdep to
-be used for this socket lock, at least on my own usecases.
+On Tue, Feb 26, 2019 at 06:43:41PM +0000, James Morse wrote:
+> From: Zhang Lei <zhang.lei@jp.fujitsu.com>
+> 
+> On the Fujitsu-A64FX cores ver(1.0, 1.1), memory access may cause
+> an undefined fault (Data abort, DFSC=0b111111). This fault occurs under
+> a specific hardware condition when a load/store instruction performs an
+> address translation. Any load/store instruction, except non-fault access
+> including Armv8 and SVE might cause this undefined fault.
+> 
+> The TCR_ELx.NFD1 bit is used by the kernel when CONFIG_RANDOMIZE_BASE
+> is enabled to mitigate timing attacks against KASLR where the kernel
+> address space could be probed using the FFR and suppressed fault on
+> SVE loads.
+> 
+> Since this erratum causes spurious exceptions, which may corrupt
+> the exception registers, we clear the TCR_ELx.NFDx=1 bits when
+> booting on an affected CPU.
+> 
+> Signed-off-by: Zhang Lei <zhang.lei@jp.fujitsu.com>
+> [Generated MIDR value/mask for __cpu_setup(), removed spurious-fault handler
+>  and always disabled the NFDx bits on affected CPUs]
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Tested-by: zhang.lei <zhang.lei@jp.fujitsu.com>
 
-Reviewed-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Pavan Kondeti <pkondeti@codeaurora.org>
-Cc: Paul E . McKenney <paulmck@linux.vnet.ibm.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- net/core/sock.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Queued for 5.1. Thanks.
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 6aa2e7e0b4fb..d6c7dca82ad9 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2795,7 +2795,11 @@ EXPORT_SYMBOL(lock_sock_nested);
- 
- void release_sock(struct sock *sk)
- {
--	spin_lock_bh(&sk->sk_lock.slock);
-+	unsigned int bh;
-+
-+	bh = spin_lock_bh_mask(&sk->sk_lock.slock,
-+			       BIT(NET_RX_SOFTIRQ) | BIT(TIMER_SOFTIRQ) |
-+			       BIT(HRTIMER_SOFTIRQ) | BIT(TASKLET_SOFTIRQ));
- 	if (sk->sk_backlog.tail)
- 		__release_sock(sk);
- 
-@@ -2808,7 +2812,7 @@ void release_sock(struct sock *sk)
- 	sock_release_ownership(sk);
- 	if (waitqueue_active(&sk->sk_lock.wq))
- 		wake_up(&sk->sk_lock.wq);
--	spin_unlock_bh(&sk->sk_lock.slock);
-+	spin_unlock_bh_mask(&sk->sk_lock.slock, bh);
- }
- EXPORT_SYMBOL(release_sock);
- 
 -- 
-2.21.0
-
+Catalin
