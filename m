@@ -2,96 +2,91 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0E0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3435FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733DA2184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DA72184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:29:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fhr+0yZc";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oz1NRYmc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbfB1I2G (ORCPT
+        id S1731529AbfB1I3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:28:06 -0500
-Received: from vmicros1.altlinux.org ([194.107.17.57]:51748 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730832AbfB1I2G (ORCPT
+        Thu, 28 Feb 2019 03:29:34 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:38278 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbfB1I3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:28:06 -0500
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id D68AC72CC53;
-        Thu, 28 Feb 2019 11:28:02 +0300 (MSK)
-Received: from altlinux.org (sole.flsd.net [185.75.180.6])
-        by imap.altlinux.org (Postfix) with ESMTPSA id A23974A4AE7;
-        Thu, 28 Feb 2019 11:28:02 +0300 (MSK)
-Date:   Thu, 28 Feb 2019 11:28:01 +0300
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] X.509: Parse public key parameters from x509 for
- akcipher
-Message-ID: <20190228082801.2aofw23r2shzwy4n@altlinux.org>
-Mail-Followup-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190106133608.820-1-vt@altlinux.org>
- <20190106133608.820-2-vt@altlinux.org>
- <20190209214240.56gq7ivn3pw3bssf@altlinux.org>
- <20190210184628.yupsxgjlaicwbxg6@altlinux.org>
- <20190219043732.x3sbwzqlz4ikntxo@gondor.apana.org.au>
- <20190224064840.hii4ccjksjdnewae@altlinux.org>
- <20190228061444.3escryzoit3idtwg@gondor.apana.org.au>
- <20190228070449.gjwoq4c2b3x5grie@altlinux.org>
- <20190228075141.s6mftb44yuylbzys@gondor.apana.org.au>
+        Thu, 28 Feb 2019 03:29:34 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3763B60E5C; Thu, 28 Feb 2019 08:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551342573;
+        bh=u3Bpu7zTFE5/HPBkm+B3fFKG4yyZbDXswKYFM+/sHrE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=fhr+0yZcJiIWL8T/sh5MHCPkBRfo6SmxUYtqfOmxqTAdqLUvEPbUW4CqqWzoEXiL6
+         7mIasrfq0c3XpKGCSzUX5A8K4GwIyGMULO1HIlPOL3M9+mHv4+IDOuJalq7SXDfd3/
+         O0RXnX4zrJJ702ayOzDGI67lz9Zb/0PA/7MWmKT8=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0E0DF60909;
+        Thu, 28 Feb 2019 08:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551342572;
+        bh=u3Bpu7zTFE5/HPBkm+B3fFKG4yyZbDXswKYFM+/sHrE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=oz1NRYmcqOGnlj3lYzYhVtMxbXU/FDYBUsyguojIo33PoTyuJepJE9RRBRtoqslkP
+         4w8bzadCf2c2Qfe3r8waC/PM6NKAD2/M6dvA8NHFvn6EMTmqu5DAEtM2SKt8w4he1H
+         okMIHT9Lh2gypfvc7ACyD3lJkCWmodlux0b+DWCw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0E0DF60909
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <20190228075141.s6mftb44yuylbzys@gondor.apana.org.au>
-User-Agent: NeoMutt/20171215-106-ac61c7
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] rsi: fix missing null pointer check from a failed
+ ieee80211_probereq_get call
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190221123549.7294-1-colin.king@canonical.com>
+References: <20190221123549.7294-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190228082933.3763B60E5C@smtp.codeaurora.org>
+Date:   Thu, 28 Feb 2019 08:29:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 03:51:41PM +0800, Herbert Xu wrote:
-> On Thu, Feb 28, 2019 at 10:04:49AM +0300, Vitaly Chikunov wrote:
-> > 
-> > It seems that you insist on set_params to be removed and both key and
-> > params to be passed into set_{pub,priv}_key. This means reworking all
-> > existing RSA drivers and callers, right? Can you please confirm that
-> > huge rework to avoid misunderstanding?
+Colin King <colin.king@canonical.com> wrote:
+
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> I don't understand why we even need to touch the existing RSA
-> drivers.  Nothing needs to change as far as they're concerned.
+> The call to ieee80211_probereq_get can return NULL if a skb allocation
+> fails, so add a null pointer check and free an earlier skb on the error
+> exit return path.
 > 
-> Only the new algorithms would need to decode the extra parameters
-> in the key stream.
+> Fixes: 7fdcb8e12660 ("rsi: add support for hardware scan offload")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-        int (*set_pub_key)(struct crypto_akcipher *tfm, const void *key,
-                           unsigned int keylen);
-        int (*set_priv_key)(struct crypto_akcipher *tfm, const void *key,
-                            unsigned int keylen);
+Patch applied to wireless-drivers-next.git, thanks.
 
-So you want `keylen' not to cover parameters data, but parameters
-actually present in key after `keylen' bytes (in come packed format)?
-(And if there is no parameters appended, there is still appended some
-marker, like 0, to signify that there is no parameters.)
+74ee436f9581 rsi: fix missing null pointer check from a failed ieee80211_probereq_get call
 
-This looks a bit counter-intuitive usage of arguments (as argument
-signifying length does not cover all arguments data), is this ok to you?
+-- 
+https://patchwork.kernel.org/patch/10824023/
 
-
-More intuitive would be to add at least paramlen argument to signify how
-much data is appended. Or (if we add argument anyway) additional
-const void *params, unsigned int paramlen - which callers who don't
-have params will pass NULL, and RSA drivers just ignore.
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
