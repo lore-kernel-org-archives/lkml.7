@@ -2,138 +2,112 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D70C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3D4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75BB620C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B4520C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LtFNceci";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AC1UzdEB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfWwrqtQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbfB1Xta (ORCPT
+        id S1729120AbfB1Xtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:49:30 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:59130 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfB1Xt3 (ORCPT
+        Thu, 28 Feb 2019 18:49:52 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38743 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfB1Xtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:49:29 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9735F60E5C; Thu, 28 Feb 2019 23:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551397768;
-        bh=1Z/n+pqjJ0cvMY7P/tIrTBaNTOTvLfuaAaYwTvQxo+s=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=LtFNceciwSTW2se/jz/oQ7ANdUnaBd/QcSKgtrm45Q7Ib0xgVk8+N8bMn8US+zFZW
-         PXz9lmRi1AJ+qYIYF2N//l/UMf/Kh7Wi2IxihtUFZGbYOke/8MpastLZscMykg4gID
-         d/sCRBlnXTxGsG52ehKHYMwmPmn29Tw1uu9tvvWY=
-Received: from lmark-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: lmark@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0679C60A00;
-        Thu, 28 Feb 2019 23:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551397767;
-        bh=1Z/n+pqjJ0cvMY7P/tIrTBaNTOTvLfuaAaYwTvQxo+s=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=AC1UzdEBIlxg8lEGs5pC4ikVj9qvEYph3JdtC4qvZq9uCCddn4WwhYqDOWlf56XBF
-         Gvd0THYT+3crxUm3v41IstJO8cot+jfNrcajEExVxwRj4KHgWbGe8+Dq4Fnw7MFLtW
-         u4B0jPwT63Yf4wYo6sHqNJrYQbje9PQrLhLLEiU0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0679C60A00
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=lmark@codeaurora.org
-Date:   Thu, 28 Feb 2019 15:49:26 -0800 (PST)
-From:   Liam Mark <lmark@codeaurora.org>
-X-X-Sender: lmark@lmark-linux.qualcomm.com
-To:     Sumit Semwal <sumit.semwal@linaro.org>,
-        =?ISO-8859-15?Q?=D8rjan_Eide?= <Orjan.Eide@arm.com>
-cc:     Brian Starkey <Brian.Starkey@arm.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "tkjos@android.com" <tkjos@android.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "arve@android.com" <arve@android.com>,
-        "joel@joelfernandes.org" <joel@joelfernandes.org>, nd <nd@arm.com>,
-        "maco@android.com" <maco@android.com>,
-        "christian@brauner.io" <christian@brauner.io>
-Subject: Re: [Linaro-mm-sig] [PATCH 2/4] staging: android: ion: Restrict
- cache maintenance to dma mapped memory
-In-Reply-To: <20190206154021.GC3768@e106893-lin.trondheim.arm.com>
-Message-ID: <alpine.DEB.2.10.1902281541260.16374@lmark-linux.qualcomm.com>
-References: <1547836667-13695-1-git-send-email-lmark@codeaurora.org> <1547836667-13695-3-git-send-email-lmark@codeaurora.org> <69b18f39-8ce0-3c4d-3528-dfab8399f24f@ti.com> <alpine.DEB.2.10.1901181316380.9328@lmark-linux.qualcomm.com>
- <alpine.DEB.2.10.1901291544001.19412@lmark-linux.qualcomm.com> <20190130113122.fipxgcmgrqggozcm@DESKTOP-E1NTVVP.localdomain> <20190206154021.GC3768@e106893-lin.trondheim.arm.com>
-User-Agent: Alpine 2.10 (DEB 1266 2009-07-14)
-MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="-2046127808-1661773238-1551397767=:16374"
+        Thu, 28 Feb 2019 18:49:51 -0500
+Received: by mail-pg1-f196.google.com with SMTP id m2so10488631pgl.5;
+        Thu, 28 Feb 2019 15:49:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cfeWYDhvrY7EVRmRpIjDOElTmvmNnMw6E+QdE24yh/E=;
+        b=nfWwrqtQvbDAzHdIGV8h5jIBUStU7xeay5fYDOjqTpEfu+1jqv96nKnrcfv+3yEESP
+         07Wylj6B/lu3d/qIc5hZBt+7ItmK1jqlhE0hgcEDGMR+3EZdY3j6ThjxdnUu2xnVxE0F
+         DD0d69gUVH0BdArMD52BHlrxWBxW6CQUshG7e/f0BB4CdjBF796O5QGTXAAl5/e7owVq
+         wqbgEL8Hmna0xbBid1bmmZkU5/2ovviz9EHpif/0z7RDn0JKS13mIn5ZWeEO6y+ynZ4i
+         5iUGkupQ6yPziOSQgUy98VM+Oz8v3dhwOaH7BpOL67WY0zgZVynrrKNxI3BLURJjTja7
+         zVOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cfeWYDhvrY7EVRmRpIjDOElTmvmNnMw6E+QdE24yh/E=;
+        b=HXeKIMrz7O5rJlQ+832ssR9ePUvuMgs5O6MWhth0mpMEqfq5qSQXgq/vbJcqig154q
+         qDjWzqNMqbEHSsZ4dswQ1FB1pui/KH5gPCz4jq4KMk7CzUNA/I974LJuUMMsznyr9DhM
+         mE4RwYUXCGVZuYYL1swDEsMD75ZlC1a2ssK+blCVMolXTiRDnWZi4hIu9UU14n7/6WwV
+         pv9LAEbT6rVv3cPf0UwFJ05b5ktJFUmnXl3H9wsgX5zPlHJF+jn8CPuU5gK/jS0Jm0zJ
+         rVZ4n4VjREVxuRZ7r0RefiBs8i1l+JsqUlIg3PZrYhUBEHjiomMAADsI4TB/BaJE+Zwo
+         mFFw==
+X-Gm-Message-State: APjAAAXeKE2xXr54l6Fa9oRBezMbFVIH9lRnM/pGg0plG4xlPOSXKo87
+        /bEcnIwu/OHfuGJ6KfAE5KOfRCEp
+X-Google-Smtp-Source: APXvYqyia1iF62CPcghu/mkR16mwEx6Z7AVmgtfWvmUYfidbGZThkkVd6pUd0Ji9mDsEoplReIAvuw==
+X-Received: by 2002:a63:e310:: with SMTP id f16mr1746826pgh.93.1551397789653;
+        Thu, 28 Feb 2019 15:49:49 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id q207sm24090667pgq.88.2019.02.28.15.49.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 15:49:48 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: dsa: Do not configure VLAN ID 0
+Date:   Thu, 28 Feb 2019 15:49:36 -0800
+Message-Id: <20190228234936.1593-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Because we skip the prepare phase, we would not get a chance to have the
+port_vlan_prepare() callback return -EOPNOTSUPP and tell us about that.
+This causes problems with mv88e6xxx which specifically checks for VLAN
+ID = 0. Turns out we do not actually need to program that VLAN ID since
+it should be the default one for switches anyway.
 
----2046127808-1661773238-1551397767=:16374
-Content-Type: TEXT/PLAIN; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Reported-by: Heiner Kallweit <hkallweit1@gmail.com>
+Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ net/dsa/slave.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-+ Sumit
+diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+index 1808a2cd6872..ec54d579645a 100644
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -996,6 +996,9 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
+ 	struct bridge_vlan_info info;
+ 	int ret;
+ 
++	if (vid == 0)
++		return 0;
++
+ 	/* Check for a possible bridge VLAN entry now since there is no
+ 	 * need to emulate the switchdev prepare + commit phase.
+ 	 */
+@@ -1029,6 +1032,9 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
+ 	struct bridge_vlan_info info;
+ 	int ret;
+ 
++	if (vid == 0)
++		return 0;
++
+ 	/* Check for a possible bridge VLAN entry now since there is no
+ 	 * need to emulate the switchdev prepare + commit phase.
+ 	 */
+-- 
+2.17.1
 
-Hi Sumit,
-
-Do you have any thoughts on this patch? 
-
-It fixes a potential crash in on older kernel and I think limiting 
-begin/end_cpu_access to only apply cache maintenance when the buffer is 
-dma mapped makes sense from a logical perspective and performance 
-perspective.
-
-
-
-On Wed, 6 Feb 2019, Ørjan Eide wrote:
-
-> 
-> I've run some testing, and this patch does indeed fix the crash in
-> dma_sync_sg_for_cpu when it tried to use the 0 dma_address from the sg
-> list.
-> 
-> Tested-by: Ørjan Eide <orjan.eide@arm.com>
-> 
-> I tested this on an older kernel, v4.14, since the dma-mapping code
-> moved, in v4.19, to ignore the dma_address and instead use sg_phys() to
-> get a valid address from the page, which is always valid in the ion sg
-> lists. While this wouldn't crash on newer kernels, it's still good to
-> avoid the unnecessary work when no CMO is needed.
-> 
-
-Isn't a fix like this also required from a stability perspective for 
-future kernels? I understand from your analysis below that the crash has 
-been fixed after 4.19 by using sg_phys to get the address but aren't we 
-breaking the DMA API contract by calling dma_sync_* without first dma 
-mapping the memory, if so then we have no guarantee that future 
-implementations of functions like dma_direct_sync_sg_for_cpu will properly 
-handle calls to dma_sync_* if the memory is not dma mapped.
-
-> Is this patch a candidate for the relevant stable kernels, those that 
-> have this bug exposed to user space via Ion and DMA_BUF_IOCTL_SYNC?
-> 
-
-My belief is that is relevant for older kernels otherwise an unprivileged 
-malicious userspace application may be able to crash the system if they 
-can call DMA_BUF_IOCTL_SYNC at the right time.
-
-BTW thanks Ørjan testing and anaalsyis you have carried out on this 
-change.
-
-Liam
-
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
----2046127808-1661773238-1551397767=:16374--
