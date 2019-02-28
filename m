@@ -2,275 +2,108 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A36C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9470C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2216F21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA75C21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:23:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k/dlvZl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732384AbfB1KXI (ORCPT
+        id S1732406AbfB1KXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:23:08 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:56073 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbfB1KXI (ORCPT
+        Thu, 28 Feb 2019 05:23:55 -0500
+Received: from mail-it1-f196.google.com ([209.85.166.196]:36873 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732289AbfB1KXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:23:08 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1SAM96U2997259
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 28 Feb 2019 02:22:09 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1SAM82f2997256;
-        Thu, 28 Feb 2019 02:22:08 -0800
-Date:   Thu, 28 Feb 2019 02:22:08 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Julia Cartwright <tipbot@zytor.com>
-Message-ID: <tip-fe99a4f4d6022ec92f9b52a5528cb9b77513e7d1@git.kernel.org>
-Cc:     s.trumtrar@pengutronix.de, tglx@linutronix.de, linux@roeck-us.net,
-        tim@krieglstein.org, hpa@zytor.com, mingo@kernel.org,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org,
-        pmladek@suse.com, julia@ni.com
-Reply-To: s.trumtrar@pengutronix.de, tim@krieglstein.org,
-          linux@roeck-us.net, tglx@linutronix.de, bigeasy@linutronix.de,
-          linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
-          julia@ni.com, pmladek@suse.com
-In-Reply-To: <20190212162554.19779-1-bigeasy@linutronix.de>
-References: <20190212162554.19779-1-bigeasy@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] kthread: Convert worker lock to raw spinlock
-Git-Commit-ID: fe99a4f4d6022ec92f9b52a5528cb9b77513e7d1
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 28 Feb 2019 05:23:54 -0500
+Received: by mail-it1-f196.google.com with SMTP id z124so14883715itc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 02:23:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bcuts4AkJqYSdvRXdxZeMi1+ECwAYy2h1Q+wc2Bf0ls=;
+        b=k/dlvZl7i9q0BdVNxxiLDQijx2RYemN0CkjktCRxIXSXzCpA3TzfP7eqNoBEJkqmdG
+         imYy1bDkCs1YwAkh1A/7O/TVUIbcfLzp9bEvT6lB138zvQdXbdGcuchVy5uDIkKQY5S2
+         JLJasNpXp3QVGiOf+C1mylp+dluxXYXS9NpuUed3Zf+8JoQA4MkVaQwuV690IStVxw+S
+         6cicrW0k/cbb0KI0G1iO84IPsFTU1uCJE+lXUlr6bJyOtDcYnhLN/I0k/kIGDfEqi7eG
+         giHHuKEmtSux29sfVYQglEdch4cmrz7Mh/r6XwPYy4teakuRZHoGVyEbfC7ZAfXx0Qit
+         6veQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bcuts4AkJqYSdvRXdxZeMi1+ECwAYy2h1Q+wc2Bf0ls=;
+        b=gcmkM1W4ZrGTZuoPFY6EsR4yBh9AmPS7LZUNj+UoC8BHy2wQjWNahI6JVCMTa1bijA
+         HH0DX3592EDAqrzDskudI2p0diJ7woo0MhCh5x7+hv9nGgGAKN41yKPruhj7XeMLsas1
+         e4oXvBEf9ggyNMwhEcdTGedz1IhU3U6/vJuogqEzixqTivbCGuZbqgar6mG/XlS3NY6W
+         7TLUybEp18ytw9kOWGVWKxwMc6FX7ZaOMrM1c4rH8in90fj+eFrrPbcqw8AqCN3r3Ici
+         r0tTbnPOzspKEcEPm7513LTVQH2vKIcNEaEhocmnCjRKve/SRDjOoV59vin8E6ZR/wPW
+         8Gqw==
+X-Gm-Message-State: AHQUAua7sh8+BVY5v2/zTbokz5fbYuzjSObZUg5iqPnkQ75Zqu40AkYG
+        e1Plbrd2l9L/vYBDFDmkf2ittDGW/3ZIsmbUoFw7GA==
+X-Google-Smtp-Source: APXvYqw3u13iOiwETRy3MtMJhTJYr6q4C5ylkodLhBWL7iyrQtpvhPqLAN2E2/LD2nM65AcTgv6V1rf5jnPR9T5rkkQ=
+X-Received: by 2002:a24:c8:: with SMTP id 191mr2245990ita.166.1551349433764;
+ Thu, 28 Feb 2019 02:23:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <0000000000001c63c80582e32294@google.com> <8d94063c-e10c-c470-8ce0-1f86c517b1b4@i-love.sakura.ne.jp>
+ <CACT4Y+ZqjoXftDAby9s-YUrOv8txBFqKukRcxP6ty3LLKz_+Hw@mail.gmail.com> <722a3390-3112-0067-282c-b94a8be53aa0@i-love.sakura.ne.jp>
+In-Reply-To: <722a3390-3112-0067-282c-b94a8be53aa0@i-love.sakura.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 28 Feb 2019 11:23:42 +0100
+Message-ID: <CACT4Y+aXA4fh9Z=vKKVi-vids4O_npkUDqccD1eUS+gNV7WyGA@mail.gmail.com>
+Subject: Re: kernel panic: MAC Initialization failed.
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     syzbot <syzbot+e1b8084e532b6ee7afab@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        James Morris <jmorris@namei.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  fe99a4f4d6022ec92f9b52a5528cb9b77513e7d1
-Gitweb:     https://git.kernel.org/tip/fe99a4f4d6022ec92f9b52a5528cb9b77513e7d1
-Author:     Julia Cartwright <julia@ni.com>
-AuthorDate: Tue, 12 Feb 2019 17:25:53 +0100
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 28 Feb 2019 11:18:38 +0100
+On Thu, Feb 28, 2019 at 11:20 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2019/02/28 15:51, Dmitry Vyukov wrote:
+> > On Wed, Feb 27, 2019 at 11:37 PM Tetsuo Handa
+> >>
+> >> Thank you. The LSM stacking seems to be working as expected.
+> >> But this one should not be considered as a bug.
+> >>
+> >> If something went wrong before loading access control rules,
+> >> it is pointless to continue. Thus, stopping with kernel panic.
+> >
+> > Hi Tetsuo,
+> >
+> > What misconfiguration you mean?
+>
+> To use security modules, access control rules need to be loaded. Regarding
+> TOMOYO, access control rules can be loaded from the kernel itself (built-in)
+> and/or from /etc/tomoyo/ directory via /sbin/tomoyo-init (run-time).
+>
+> Since the kernel is built without built-in policy and /sbin/tomoyo-init does
+> not exist, memory allocation failure is handled as a fatal problem.
+>
+> But if syzbot cannot test other paths due to hitting this path, we need to somehow
+> avoid panic(). Can you add tomoyo-tools package into your rootfs images? It is
+> explained at https://tomoyo.osdn.jp/2.6/chapter-3.html .
 
-kthread: Convert worker lock to raw spinlock
 
-In order to enable the queuing of kthread work items from hardirq context
-even when PREEMPT_RT_FULL is enabled, convert the worker spin_lock to a
-raw_spin_lock.
-
-This is only acceptable to do because the work performed under the lock is
-well-bounded and minimal.
-
-Reported-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Reported-by: Tim Sander <tim@krieglstein.org>
-Signed-off-by: Julia Cartwright <julia@ni.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Link: https://lkml.kernel.org/r/20190212162554.19779-1-bigeasy@linutronix.de
-
----
- include/linux/kthread.h |  4 ++--
- kernel/kthread.c        | 42 +++++++++++++++++++++---------------------
- 2 files changed, 23 insertions(+), 23 deletions(-)
-
-diff --git a/include/linux/kthread.h b/include/linux/kthread.h
-index c1961761311d..6b8c064f0cbc 100644
---- a/include/linux/kthread.h
-+++ b/include/linux/kthread.h
-@@ -85,7 +85,7 @@ enum {
- 
- struct kthread_worker {
- 	unsigned int		flags;
--	spinlock_t		lock;
-+	raw_spinlock_t		lock;
- 	struct list_head	work_list;
- 	struct list_head	delayed_work_list;
- 	struct task_struct	*task;
-@@ -106,7 +106,7 @@ struct kthread_delayed_work {
- };
- 
- #define KTHREAD_WORKER_INIT(worker)	{				\
--	.lock = __SPIN_LOCK_UNLOCKED((worker).lock),			\
-+	.lock = __RAW_SPIN_LOCK_UNLOCKED((worker).lock),		\
- 	.work_list = LIST_HEAD_INIT((worker).work_list),		\
- 	.delayed_work_list = LIST_HEAD_INIT((worker).delayed_work_list),\
- 	}
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 087d18d771b5..5641b55783a6 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -599,7 +599,7 @@ void __kthread_init_worker(struct kthread_worker *worker,
- 				struct lock_class_key *key)
- {
- 	memset(worker, 0, sizeof(struct kthread_worker));
--	spin_lock_init(&worker->lock);
-+	raw_spin_lock_init(&worker->lock);
- 	lockdep_set_class_and_name(&worker->lock, key, name);
- 	INIT_LIST_HEAD(&worker->work_list);
- 	INIT_LIST_HEAD(&worker->delayed_work_list);
-@@ -641,21 +641,21 @@ repeat:
- 
- 	if (kthread_should_stop()) {
- 		__set_current_state(TASK_RUNNING);
--		spin_lock_irq(&worker->lock);
-+		raw_spin_lock_irq(&worker->lock);
- 		worker->task = NULL;
--		spin_unlock_irq(&worker->lock);
-+		raw_spin_unlock_irq(&worker->lock);
- 		return 0;
- 	}
- 
- 	work = NULL;
--	spin_lock_irq(&worker->lock);
-+	raw_spin_lock_irq(&worker->lock);
- 	if (!list_empty(&worker->work_list)) {
- 		work = list_first_entry(&worker->work_list,
- 					struct kthread_work, node);
- 		list_del_init(&work->node);
- 	}
- 	worker->current_work = work;
--	spin_unlock_irq(&worker->lock);
-+	raw_spin_unlock_irq(&worker->lock);
- 
- 	if (work) {
- 		__set_current_state(TASK_RUNNING);
-@@ -812,12 +812,12 @@ bool kthread_queue_work(struct kthread_worker *worker,
- 	bool ret = false;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&worker->lock, flags);
-+	raw_spin_lock_irqsave(&worker->lock, flags);
- 	if (!queuing_blocked(worker, work)) {
- 		kthread_insert_work(worker, work, &worker->work_list);
- 		ret = true;
- 	}
--	spin_unlock_irqrestore(&worker->lock, flags);
-+	raw_spin_unlock_irqrestore(&worker->lock, flags);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kthread_queue_work);
-@@ -843,7 +843,7 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
- 	if (WARN_ON_ONCE(!worker))
- 		return;
- 
--	spin_lock(&worker->lock);
-+	raw_spin_lock(&worker->lock);
- 	/* Work must not be used with >1 worker, see kthread_queue_work(). */
- 	WARN_ON_ONCE(work->worker != worker);
- 
-@@ -852,7 +852,7 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
- 	list_del_init(&work->node);
- 	kthread_insert_work(worker, work, &worker->work_list);
- 
--	spin_unlock(&worker->lock);
-+	raw_spin_unlock(&worker->lock);
- }
- EXPORT_SYMBOL(kthread_delayed_work_timer_fn);
- 
-@@ -908,14 +908,14 @@ bool kthread_queue_delayed_work(struct kthread_worker *worker,
- 	unsigned long flags;
- 	bool ret = false;
- 
--	spin_lock_irqsave(&worker->lock, flags);
-+	raw_spin_lock_irqsave(&worker->lock, flags);
- 
- 	if (!queuing_blocked(worker, work)) {
- 		__kthread_queue_delayed_work(worker, dwork, delay);
- 		ret = true;
- 	}
- 
--	spin_unlock_irqrestore(&worker->lock, flags);
-+	raw_spin_unlock_irqrestore(&worker->lock, flags);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kthread_queue_delayed_work);
-@@ -951,7 +951,7 @@ void kthread_flush_work(struct kthread_work *work)
- 	if (!worker)
- 		return;
- 
--	spin_lock_irq(&worker->lock);
-+	raw_spin_lock_irq(&worker->lock);
- 	/* Work must not be used with >1 worker, see kthread_queue_work(). */
- 	WARN_ON_ONCE(work->worker != worker);
- 
-@@ -963,7 +963,7 @@ void kthread_flush_work(struct kthread_work *work)
- 	else
- 		noop = true;
- 
--	spin_unlock_irq(&worker->lock);
-+	raw_spin_unlock_irq(&worker->lock);
- 
- 	if (!noop)
- 		wait_for_completion(&fwork.done);
-@@ -996,9 +996,9 @@ static bool __kthread_cancel_work(struct kthread_work *work, bool is_dwork,
- 		 * any queuing is blocked by setting the canceling counter.
- 		 */
- 		work->canceling++;
--		spin_unlock_irqrestore(&worker->lock, *flags);
-+		raw_spin_unlock_irqrestore(&worker->lock, *flags);
- 		del_timer_sync(&dwork->timer);
--		spin_lock_irqsave(&worker->lock, *flags);
-+		raw_spin_lock_irqsave(&worker->lock, *flags);
- 		work->canceling--;
- 	}
- 
-@@ -1045,7 +1045,7 @@ bool kthread_mod_delayed_work(struct kthread_worker *worker,
- 	unsigned long flags;
- 	int ret = false;
- 
--	spin_lock_irqsave(&worker->lock, flags);
-+	raw_spin_lock_irqsave(&worker->lock, flags);
- 
- 	/* Do not bother with canceling when never queued. */
- 	if (!work->worker)
-@@ -1062,7 +1062,7 @@ bool kthread_mod_delayed_work(struct kthread_worker *worker,
- fast_queue:
- 	__kthread_queue_delayed_work(worker, dwork, delay);
- out:
--	spin_unlock_irqrestore(&worker->lock, flags);
-+	raw_spin_unlock_irqrestore(&worker->lock, flags);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kthread_mod_delayed_work);
-@@ -1076,7 +1076,7 @@ static bool __kthread_cancel_work_sync(struct kthread_work *work, bool is_dwork)
- 	if (!worker)
- 		goto out;
- 
--	spin_lock_irqsave(&worker->lock, flags);
-+	raw_spin_lock_irqsave(&worker->lock, flags);
- 	/* Work must not be used with >1 worker, see kthread_queue_work(). */
- 	WARN_ON_ONCE(work->worker != worker);
- 
-@@ -1090,13 +1090,13 @@ static bool __kthread_cancel_work_sync(struct kthread_work *work, bool is_dwork)
- 	 * In the meantime, block any queuing by setting the canceling counter.
- 	 */
- 	work->canceling++;
--	spin_unlock_irqrestore(&worker->lock, flags);
-+	raw_spin_unlock_irqrestore(&worker->lock, flags);
- 	kthread_flush_work(work);
--	spin_lock_irqsave(&worker->lock, flags);
-+	raw_spin_lock_irqsave(&worker->lock, flags);
- 	work->canceling--;
- 
- out_fast:
--	spin_unlock_irqrestore(&worker->lock, flags);
-+	raw_spin_unlock_irqrestore(&worker->lock, flags);
- out:
- 	return ret;
- }
+Is installing the package everything that needs to be done? It's not a
+standard package, right?
+What does it do? Frequently there is like 3 DVD's of some software,
+but everything that needs to be done is a single system call? What
+exactly from kernel perspective we need to do?
