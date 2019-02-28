@@ -2,155 +2,200 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44127C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20E2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10206218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F73020863
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QpIWPMKv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrRyDgaH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730877AbfB1Cfm (ORCPT
+        id S1730740AbfB1Chh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:35:42 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39893 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730648AbfB1Cfl (ORCPT
+        Wed, 27 Feb 2019 21:37:37 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32891 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730577AbfB1Chh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:35:41 -0500
-Received: by mail-lf1-f66.google.com with SMTP id r123so5667855lff.6
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 18:35:39 -0800 (PST)
+        Wed, 27 Feb 2019 21:37:37 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i19so8967902pfd.0;
+        Wed, 27 Feb 2019 18:37:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EyqFOT7Inb7ltcsQAxtq2y609tKCB1dTKtt4XzU9cmo=;
-        b=QpIWPMKvdXGzSz9fQZzVo3Fg8yZ75XyjkJzUB7aRlL4Bgly15JHZRf03PoDNEQeleX
-         vTwDW7mtYYjRVJWogD8umPTbo9TShmKQZUpl5LZO2xpNgLQhw627MFSW7FxVr4z+2gve
-         Gu9PicSY725DMThFkRGABZ+8V8NDzHsuKg7lk=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GMkiTJqCagvIb09Uuj0om9cKdwSMRHgaoyAla48hwtI=;
+        b=BrRyDgaHMCwNrmaP7YdtrJyv+ED/eFNi2H8hHdzCpy8TXH+EFjQti4yrEXLzaa/kgO
+         zol90yhw2YoKLBFFhyBYJiObcLulVOS0bU+QlC9uLPuKhwyuGFzXd8pYtZoCrL+YYT3g
+         3M+Nwb4BZfEGB0tRCIwWS62HB0PvAibOgH4n3oOEEdCPpvGZ3KbbO14YblZ8J3xrWqB2
+         jG5OyGPR8VHro3RGslAM0noqN5X9FOB9t8sqEm7t7xoJd6CjQFHYen3cDd05+0Yqsrmz
+         Ym7usp7DCmtwY0szZRDjHuksXJCcULOrGjSmo4aJa4LPPov6/nkbYTmcLXPDPKkNlQ6E
+         ozRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EyqFOT7Inb7ltcsQAxtq2y609tKCB1dTKtt4XzU9cmo=;
-        b=HNwttG+UMsPz1FVCivSLSK+qtXcjAoRB7s5wMLH/VG3mrE0Q/oyJjdnCeXfCZ7JP5q
-         tpYWEDDOMjyvqF04r4Z4RDy9DYla+BbmUlDkKJ0qHXHz7vXBduAFVxgkjc5u2zBjHEXp
-         faN67zGUDrCk2JTHqLTNxqO0LqcZzMqFf9AKCEtezUy+l2am5PHJRHfPsJQUgZKxkN70
-         OIbruZ5M+7Mt9G4OBVOIPn5qU/TGLW8vOJVmImCvOHNlFeZo9gXLVa+hUkw3SzTGxnt0
-         ootX0xjt3HO6SZqtOvKctUbjc5LLI6EJEzvIpDpADMnmjxI5YxwdXPcRHD9KfF26Om8O
-         7W+g==
-X-Gm-Message-State: AHQUAubSOXDKMJsFolwmh+mNa4oyD6pxarijFug1S1xFjchJ3mF9Y2MY
-        xYQPpIVzhWfPtnhyFBpv0AmapG3vktc=
-X-Google-Smtp-Source: AHgI3IZhojw98Ud0MqIOf7eEgDZDBAdgYdGr+J5zUFstQ31G2XiDaJoQgZptkqLY9CkUMX4+Kh5DJw==
-X-Received: by 2002:a19:2891:: with SMTP id o139mr171747lfo.135.1551321338602;
-        Wed, 27 Feb 2019 18:35:38 -0800 (PST)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id c190sm3329264lfg.84.2019.02.27.18.35.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Feb 2019 18:35:38 -0800 (PST)
-Received: by mail-lf1-f41.google.com with SMTP id u21so14067762lfu.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 18:35:38 -0800 (PST)
-X-Received: by 2002:a19:c98b:: with SMTP id z133mr2657642lff.88.1551320973346;
- Wed, 27 Feb 2019 18:29:33 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GMkiTJqCagvIb09Uuj0om9cKdwSMRHgaoyAla48hwtI=;
+        b=opensy8QrkRut0v3rZGCk+yF+ugknXfAAexvjzGeBLBM/Zr6NhO15AwVX/L+y+dTHP
+         I9rTgf0P/ZiZfu3v26KLvFRESDOlzifPNqOcymEGUjQ6W2BMmbHXnLHCpYQHCAZU7wSa
+         Z0ow2ObGq2ZI4REK5Se4K95jiYGklppQl7FfHPp0bnW60fIpBqhQdgMlsVN9pR8W1CLu
+         cevRVLELTK5F8bF8UxDeiWGv9OSnhvaVc2Pq5nN1VP3/sMKvReqx72tvyH+qqkZ3FUbC
+         3OFx0LhybwpHT7BBoNGflMZNnmM4OQoudyPxKE2oZGUiNmdG0nBamwYJnYzxegtyw/dd
+         mNpg==
+X-Gm-Message-State: AHQUAubNn/sRi9SBNxLCzij9acMvP01X4RELRSY6UJ9ey3yH/cq4izLL
+        LO/byOS7IQR0aOpdPIqz7VUBWLJaaDNdpQ==
+X-Google-Smtp-Source: AHgI3IYy7y4L8ixGsjO+JTDm16UPBOPuXokGs4m2MR2lpBWNGQ1vznGEBUOewMcfo+pF0843rKMKfA==
+X-Received: by 2002:a63:1cd:: with SMTP id 196mr6219091pgb.58.1551321455915;
+        Wed, 27 Feb 2019 18:37:35 -0800 (PST)
+Received: from maya190131 ([52.247.237.14])
+        by smtp.gmail.com with ESMTPSA id f87sm11741316pff.38.2019.02.27.18.37.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Feb 2019 18:37:35 -0800 (PST)
+Date:   Thu, 28 Feb 2019 02:37:34 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, kys@microsoft.com,
+        sthemmin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
+        jasowang@redhat.com, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Cc:     linux-kernel@vger.kernel.org, haiyangz@microsoft.com,
+        vkuznets@redhat.com, marcelo.cerri@canonical.com,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH v4 2/2] PCI: hv: Refactor hv_irq_unmask() to use
+ cpumask_to_vpset()
+Message-ID: <d691069ffe6e41b04cb4dff0dfabd1755afa500f.1551319643.git.m.maya.nakamura@gmail.com>
+References: <cover.1551319643.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-References: <20190224140426.3267-1-marc.zyngier@arm.com> <20190226232822.GA174696@google.com>
- <d67512fe-42b4-513f-d27a-fed85c19e9c2@arm.com> <CAKv+Gu_fZK7dUqrrVPCejAZNWyUeMUX2ojQ=vQ3hiMkGF6e6tw@mail.gmail.com>
- <20190227205754.GF174696@google.com> <CAJZ5v0gZFDdtbKQ6y52x+X8yoiPhP6BhGYZO=R_varx2nwuv5g@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gZFDdtbKQ6y52x+X8yoiPhP6BhGYZO=R_varx2nwuv5g@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Wed, 27 Feb 2019 18:29:21 -0800
-X-Gmail-Original-Message-ID: <CA+ASDXNT9Taqfoz7R1Z926Vi1fMNNLYg5vqcZTw2m6JvXk+75w@mail.gmail.com>
-Message-ID: <CA+ASDXNT9Taqfoz7R1Z926Vi1fMNNLYg5vqcZTw2m6JvXk+75w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] mwifiex PCI/wake-up interrupt fixes
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        "<linux-wireless@vger.kernel.org>" <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1551319643.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+Remove the duplicate implementation of cpumask_to_vpset() and use the
+shared implementation. Export hv_max_vp_index, which is required by
+cpumask_to_vpset().
 
-On Wed, Feb 27, 2019 at 3:04 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> On Wed, Feb 27, 2019 at 9:58 PM Brian Norris <briannorris@chromium.org> wrote:
-> > On Wed, Feb 27, 2019 at 11:16:12AM +0100, Ard Biesheuvel wrote:
-> > > So I'd argue that we should add an optional 'wake-gpio' DT property
-> > > instead to the generic PCI device binding, and leave the interrupt
-> > > binding and discovery alone.
-> >
-> > So I think Mark Rutland already shot that one down; it's conceptually an
-> > interrupt from the device's perspective.
+Apply changes to hv_irq_unmask() based on feedback.
 
-Perhaps I shouldn't speak for Mark, but I am basically quoting him off IRC.
+Based on Vitaly's finding, use GFP_ATOMIC instead of GFP_KERNEL for
+alloc_cpumask_var() because hv_irq_unmask() runs while a spinlock is
+held.
 
-> Which device are you talking about?  The one that signals wakeup?  If
-> so, then I beg to differ.
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+---
+Changes in v4:
+ - Replace GFP_KERNEL with GFP_ATOMIC for alloc_cpumask_var().
+ - Update the commit message.
 
-Yes, the endpoint device.
+Changes in v3:
+ - Modify to catch all failures from cpumask_to_vpset().
+ - Correct the v2 change log about the commit message.
 
-> On ACPI platforms WAKE# is represented as an ACPI GPE that is signaled
-> through SCI and handled at a different level (on HW-reduced ACPI it
-> actually can be a GPIO interrupt, but it still is handled with the
-> help of AML).  The driver of the device signaling wakeup need not even
-> be aware that WAKE# has been asserted.
+Changes in v2:
+ - Remove unnecessary nr_bank initialization.
+ - Delete two unnecessary dev_err()'s.
+ - Unlock before returning.
+ - Update the commit message.
 
-Frankly, ACPI is not relevant to how we represent WAKE# in DT, IMO.
-Also, we're talking about the *device*, not the driver. When talking
-about Device Tree, that distinction is relevant.
+ arch/x86/hyperv/hv_init.c           |  1 +
+ drivers/pci/controller/pci-hyperv.c | 38 +++++++++++++----------------
+ 2 files changed, 18 insertions(+), 21 deletions(-)
 
-So while the driver need not be aware (and I agree! it only needs to
-care about enabling/disabling wake), *something* should be aware, and
-the signal that "something" should be receiving is simply "did WAKE
-happen"? That sounds basically like the device is signalling an
-interrupt to me.
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 7abb09e2eeb8..7f2eed1fc81b 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -96,6 +96,7 @@ void  __percpu **hyperv_pcpu_input_arg;
+ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
+ 
+ u32 hv_max_vp_index;
++EXPORT_SYMBOL_GPL(hv_max_vp_index);
+ 
+ static int hv_cpu_init(unsigned int cpu)
+ {
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index d71695db1ba0..95441a35eceb 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -391,8 +391,6 @@ struct hv_interrupt_entry {
+ 	u32	data;
+ };
+ 
+-#define HV_VP_SET_BANK_COUNT_MAX	5 /* current implementation limit */
+-
+ /*
+  * flags for hv_device_interrupt_target.flags
+  */
+@@ -908,12 +906,12 @@ static void hv_irq_unmask(struct irq_data *data)
+ 	struct retarget_msi_interrupt *params;
+ 	struct hv_pcibus_device *hbus;
+ 	struct cpumask *dest;
++	cpumask_var_t tmp;
+ 	struct pci_bus *pbus;
+ 	struct pci_dev *pdev;
+ 	unsigned long flags;
+ 	u32 var_size = 0;
+-	int cpu_vmbus;
+-	int cpu;
++	int cpu, nr_bank;
+ 	u64 res;
+ 
+ 	dest = irq_data_get_effective_affinity_mask(data);
+@@ -953,29 +951,27 @@ static void hv_irq_unmask(struct irq_data *data)
+ 		 */
+ 		params->int_target.flags |=
+ 			HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
+-		params->int_target.vp_set.valid_bank_mask =
+-			(1ull << HV_VP_SET_BANK_COUNT_MAX) - 1;
++
++		if (!alloc_cpumask_var(&tmp, GFP_ATOMIC)) {
++			res = 1;
++			goto exit_unlock;
++		}
++
++		cpumask_and(tmp, dest, cpu_online_mask);
++		nr_bank = cpumask_to_vpset(&params->int_target.vp_set, tmp);
++		free_cpumask_var(tmp);
++
++		if (nr_bank <= 0) {
++			res = 1;
++			goto exit_unlock;
++		}
+ 
+ 		/*
+ 		 * var-sized hypercall, var-size starts after vp_mask (thus
+ 		 * vp_set.format does not count, but vp_set.valid_bank_mask
+ 		 * does).
+ 		 */
+-		var_size = 1 + HV_VP_SET_BANK_COUNT_MAX;
+-
+-		for_each_cpu_and(cpu, dest, cpu_online_mask) {
+-			cpu_vmbus = hv_cpu_number_to_vp_number(cpu);
+-
+-			if (cpu_vmbus >= HV_VP_SET_BANK_COUNT_MAX * 64) {
+-				dev_err(&hbus->hdev->device,
+-					"too high CPU %d", cpu_vmbus);
+-				res = 1;
+-				goto exit_unlock;
+-			}
+-
+-			params->int_target.vp_set.bank_contents[cpu_vmbus / 64]	|=
+-				(1ULL << (cpu_vmbus & 63));
+-		}
++		var_size = 1 + nr_bank;
+ 	} else {
+ 		for_each_cpu_and(cpu, dest, cpu_online_mask) {
+ 			params->int_target.vp_mask |=
+-- 
+2.17.1
 
-Maybe this goes back to some confusion we had elsewhere: what is the
-meaning of "interrupt" in device tree?
-
-> > We just need to figure out a good way of representing it that doesn't stomp on the existing INTx
-> > definitions.
->
-> WAKE# is a signal that is converted into an interrupt, but that
-> interrupt may arrive at some place your driver has nothing to do with.
-
-I could agree with that, perhaps. But that's also what Device Tree is
-all about, really. We describe the relation between devices. So some
-other <foo> handles events that are triggered by <bar>, so we use a
-phandle to relate <bar> to <foo>.
-
-> It generally doesn't make sense to represent it as an interrupt for
-> the target device.
-
-What would you suggest then? I'm not clearly understanding how you
-think we should (a) describe (in DT) and (b) implement this WAKE#
-handling.
-
-Brian
