@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37642C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5589DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0484214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25491218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366749;
-	bh=Ks6MaHWkc3RoIrf2XMcqOkDWiGiynDOijhhRQnn31zg=;
+	s=default; t=1551366752;
+	bh=/giQ7jO9MGgkwh2PuQ3dZC6xA91qL9z+pMyIheIWzjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1IBoj/RIB381o43eIi7IIKPC7D802TL6QJh4eIOFvrAgOZ6PDDmxBqDFZepLwnnnE
-	 2uBB0ZWww79Nxth4RWMt4YDoLB53nMNoFw9nOLUEt88pSuFf30NjTuiyplGTNl2tLW
-	 XfDgRPiTMEUXVVgWKfqc9GyWcCDd3/LCck8z+gGs=
+	b=qwFkj0EaMjfRG+79GnMgiu83klsTh+vLcdvbaMDxFattMHx6nle+HmoKle0G74aRJ
+	 nHVX/m+WLf0soZSRfAHI5KCH2vPmAkOVByrk/FWcIbczOgrCkh5GZvvPb1QKf6XjKT
+	 mRpI9e92ihQpJtDKoLW9BcoRCiQNRjJu886BE5Ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388273AbfB1PM1 (ORCPT
+        id S2388288AbfB1PMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:12:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45756 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:12:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388223AbfB1PMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:12:19 -0500
+        id S2388242AbfB1PMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:12:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1067218D8;
-        Thu, 28 Feb 2019 15:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D99F218C3;
+        Thu, 28 Feb 2019 15:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366738;
-        bh=Ks6MaHWkc3RoIrf2XMcqOkDWiGiynDOijhhRQnn31zg=;
+        s=default; t=1551366742;
+        bh=/giQ7jO9MGgkwh2PuQ3dZC6xA91qL9z+pMyIheIWzjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZGmEYtzrFIITfmjGvgPMwoycmFZ/yUC6/w4p/AGlyYcJDYXi9hid9C6MeFA31GAf
-         HLr1Ffe7PHcA3ooODcNMYGWnzuEXNLRQV54LHU3KUMW0CBT55Y+XUfoRLXw69g4/9X
-         spha5l42h4Bau7+ZFNMSqOIai2ec9MnBr2mWgC1c=
+        b=MsT5YJJ473zVyqqUCv+Omxps/pzNd4eO1kfVI1oNG73YD5fDO2YJDxn5HmnBD1Deu
+         M+zQkF6F7mgC4qD7cCS7+Z9z15VPj9jS7oV7KtkuLEUEDCjve0S4uCeV4mPEfeSwE9
+         EzwK5lU3fJmSy8CQENGNfDqBe44JuaEZhHqxX8aU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin KaFai Lau <kafai@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 38/64] bpf: Fix syscall's stackmap lookup potential deadlock
-Date:   Thu, 28 Feb 2019 10:10:39 -0500
-Message-Id: <20190228151105.11277-38-sashal@kernel.org>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 41/64] vsock/virtio: fix kernel panic after device hot-unplug
+Date:   Thu, 28 Feb 2019 10:10:42 -0500
+Message-Id: <20190228151105.11277-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -59,80 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit 7c4cd051add3d00bbff008a133c936c515eaa8fe ]
+[ Upstream commit 22b5c0b63f32568e130fa2df4ba23efce3eb495b ]
 
-The map_lookup_elem used to not acquiring spinlock
-in order to optimize the reader.
+virtio_vsock_remove() invokes the vsock_core_exit() also if there
+are opened sockets for the AF_VSOCK protocol family. In this way
+the vsock "transport" pointer is set to NULL, triggering the
+kernel panic at the first socket activity.
 
-It was true until commit 557c0c6e7df8 ("bpf: convert stackmap to pre-allocation")
-The syscall's map_lookup_elem(stackmap) calls bpf_stackmap_copy().
-bpf_stackmap_copy() may find the elem no longer needed after the copy is done.
-If that is the case, pcpu_freelist_push() saves this elem for reuse later.
-This push requires a spinlock.
+This patch move the vsock_core_init()/vsock_core_exit() in the
+virtio_vsock respectively in module_init and module_exit functions,
+that cannot be invoked until there are open sockets.
 
-If a tracing bpf_prog got run in the middle of the syscall's
-map_lookup_elem(stackmap) and this tracing bpf_prog is calling
-bpf_get_stackid(stackmap) which also requires the same pcpu_freelist's
-spinlock, it may end up with a dead lock situation as reported by
-Eric Dumazet in https://patchwork.ozlabs.org/patch/1030266/
-
-The situation is the same as the syscall's map_update_elem() which
-needs to acquire the pcpu_freelist's spinlock and could race
-with tracing bpf_prog.  Hence, this patch fixes it by protecting
-bpf_stackmap_copy() with this_cpu_inc(bpf_prog_active)
-to prevent tracing bpf_prog from running.
-
-A later syscall's map_lookup_elem commit f1a2e44a3aec ("bpf: add queue and stack maps")
-also acquires a spinlock and races with tracing bpf_prog similarly.
-Hence, this patch is forward looking and protects the majority
-of the map lookups.  bpf_map_offload_lookup_elem() is the exception
-since it is for network bpf_prog only (i.e. never called by tracing
-bpf_prog).
-
-Fixes: 557c0c6e7df8 ("bpf: convert stackmap to pre-allocation")
-Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1609699
+Reported-by: Yan Fu <yafu@redhat.com>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/syscall.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ net/vmw_vsock/virtio_transport.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 382c09dddf93b..cc40b8be1171d 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -701,8 +701,13 @@ static int map_lookup_elem(union bpf_attr *attr)
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+index 5d3cce9e8744d..9dae54698737c 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -75,6 +75,9 @@ static u32 virtio_transport_get_local_cid(void)
+ {
+ 	struct virtio_vsock *vsock = virtio_vsock_get();
  
- 	if (bpf_map_is_dev_bound(map)) {
- 		err = bpf_map_offload_lookup_elem(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
--		   map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
-+		goto done;
-+	}
++	if (!vsock)
++		return VMADDR_CID_ANY;
 +
-+	preempt_disable();
-+	this_cpu_inc(bpf_prog_active);
-+	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
-+	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
- 		err = bpf_percpu_hash_copy(map, key, value);
- 	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
- 		err = bpf_percpu_array_copy(map, key, value);
-@@ -722,7 +727,10 @@ static int map_lookup_elem(union bpf_attr *attr)
- 		rcu_read_unlock();
- 		err = ptr ? 0 : -ENOENT;
- 	}
-+	this_cpu_dec(bpf_prog_active);
-+	preempt_enable();
+ 	return vsock->guest_cid;
+ }
  
-+done:
- 	if (err)
- 		goto free_value;
+@@ -584,10 +587,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
  
+ 	virtio_vsock_update_guest_cid(vsock);
+ 
+-	ret = vsock_core_init(&virtio_transport.transport);
+-	if (ret < 0)
+-		goto out_vqs;
+-
+ 	vsock->rx_buf_nr = 0;
+ 	vsock->rx_buf_max_nr = 0;
+ 	atomic_set(&vsock->queued_replies, 0);
+@@ -618,8 +617,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+ 	return 0;
+ 
+-out_vqs:
+-	vsock->vdev->config->del_vqs(vsock->vdev);
+ out:
+ 	kfree(vsock);
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+@@ -669,7 +666,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+ 
+ 	mutex_lock(&the_virtio_vsock_mutex);
+ 	the_virtio_vsock = NULL;
+-	vsock_core_exit();
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+ 
+ 	vdev->config->del_vqs(vdev);
+@@ -702,14 +698,28 @@ static int __init virtio_vsock_init(void)
+ 	virtio_vsock_workqueue = alloc_workqueue("virtio_vsock", 0, 0);
+ 	if (!virtio_vsock_workqueue)
+ 		return -ENOMEM;
++
+ 	ret = register_virtio_driver(&virtio_vsock_driver);
+ 	if (ret)
+-		destroy_workqueue(virtio_vsock_workqueue);
++		goto out_wq;
++
++	ret = vsock_core_init(&virtio_transport.transport);
++	if (ret)
++		goto out_vdr;
++
++	return 0;
++
++out_vdr:
++	unregister_virtio_driver(&virtio_vsock_driver);
++out_wq:
++	destroy_workqueue(virtio_vsock_workqueue);
+ 	return ret;
++
+ }
+ 
+ static void __exit virtio_vsock_exit(void)
+ {
++	vsock_core_exit();
+ 	unregister_virtio_driver(&virtio_vsock_driver);
+ 	destroy_workqueue(virtio_vsock_workqueue);
+ }
 -- 
 2.19.1
 
