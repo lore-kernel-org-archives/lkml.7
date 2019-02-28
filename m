@@ -2,127 +2,104 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BEDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD4AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0162084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467212084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eMTreho7"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CD2TxwtF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfB1WLB (ORCPT
+        id S1728600AbfB1WLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 17:11:01 -0500
-Received: from ozlabs.org ([203.11.71.1]:44021 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725918AbfB1WLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 17:11:01 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 449RZl1qNrz9s21;
-        Fri,  1 Mar 2019 09:10:55 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1551391857;
-        bh=JfhMBRYTeiYsngjhcj/mj4LC3XudjTO9u5KUgjYOuFY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eMTreho7AZjveAZj+eyfLHKAhqgHx5Q5kzAvMEHmnde5xYmKT1eitgIIXy3cGfYSN
-         KeDczTj7M2pwNziQqtXna4DKMMxU0lhZRKvcLSY8V7m9agFHPArzL6xK5/KK+86Rvp
-         a4V5YgLF3RDuWxPxDbPsLCRQ5tW3cFf/tdm+R0+a6hnGxpcYKszdGMc9zzwsxTil4l
-         l0gZTUZKzMkkyy83cbEJS8/zXfsbgHEinvHdMc5sb72H+aYHxYaZZaU/9am56p2sEo
-         CP9H9vRtc7OsAs2Zxd77NrFDkR2fLfU5UCJI04YS3fxVe11A7CB6u3Yh3assLNozU2
-         H7VMTVWj4TedQ==
-Date:   Fri, 1 Mar 2019 09:10:36 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: linux-next: manual merge of the arm-soc tree with the arm64 tree
-Message-ID: <20190301091036.3e97bb49@canb.auug.org.au>
+        Thu, 28 Feb 2019 17:11:38 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17552 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfB1WLi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 17:11:38 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c785c990000>; Thu, 28 Feb 2019 14:11:37 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 28 Feb 2019 14:11:37 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 28 Feb 2019 14:11:37 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Feb
+ 2019 22:11:37 +0000
+Subject: Re: [PATCH v2 2/4] mm: remove zone_lru_lock() function access
+ ->lru_lock directly
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Rik van Riel <riel@surriel.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+References: <20190228083329.31892-1-aryabinin@virtuozzo.com>
+ <20190228083329.31892-2-aryabinin@virtuozzo.com>
+ <44ffadb4-4235-76c9-332f-680dda5da521@nvidia.com>
+ <67a79bb9-12b5-e668-abb1-ef91a9cbfea8@suse.cz>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <1f978daf-a037-e7e8-079f-80b421e663e1@nvidia.com>
+Date:   Thu, 28 Feb 2019 14:11:36 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/lVj6wEX+FD+wCcNo7a/JAd4"; protocol="application/pgp-signature"
+In-Reply-To: <67a79bb9-12b5-e668-abb1-ef91a9cbfea8@suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1551391897; bh=lp0YkothahhdP4oQqOkXRwHxr5NEdq2Tk+d6kbvXpvs=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CD2TxwtFekB+bBed5i0C1P4DuD2v5dgZN5qqtiUld50Q948O/cWRv7yuw5gs/TDEQ
+         FR9v7o8SGJLGMEzBTYMb4VC1rjPp+RfJztcpEXyfH7kqwO2HurvKBogeltDkmhKdyV
+         jSVGop4Ot6AWpm3d23F7Luig9XGcMjxBRgPac0ciDvobI8UI7gU8vqQoWxtvdTjZNn
+         /uXzPbJqd8HuQYuqMhLg2j9AmqQVDYadRch9zSM2P/VIzyK0ZSKQ/omIEN6VJ6YEz5
+         zbNC7GfJBfL7wTVavZe7xcODbD3Pe7sDxcfcQwTIdN/CMX5jcUeyM372zo+/Fkjkpw
+         21BdF8AWj+V1w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lVj6wEX+FD+wCcNo7a/JAd4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2/28/19 1:56 PM, Vlastimil Babka wrote:
+> On 2/28/2019 10:44 PM, John Hubbard wrote:
+>> Instead of removing that function, let's change it, and add another
+>> (since you have two cases: either a page* or a pgdat* is available),
+>> and move it to where it can compile, like this:
+>>
+>>
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 80bb6408fe73..cea3437f5d68 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -1167,6 +1167,16 @@ static inline pg_data_t *page_pgdat(const struct page *page)
+>>         return NODE_DATA(page_to_nid(page));
+>>  }
+>>  
+>> +static inline spinlock_t *zone_lru_lock(pg_data_t *pgdat)
+> 
+> In that case it should now be named node_lru_lock(). zone_lru_lock() was a
+> wrapper introduced to make the conversion of per-zone to per-node lru_lock smoother.
+> 
 
-Hi all,
+Sounds good to me.
 
-Today's linux-next merge of the arm-soc tree got a conflict in:
-
-  arch/arm64/Kconfig.platforms
-
-between commit:
-
-  a29c78234942 ("arm64: Kconfig.platforms: fix warning unmet direct depende=
-ncies")
-
-from the arm64 tree and commits:
-
-  67b9282387c5 ("arm64: imx8mq: select GPCv2 irqchip driver")
-  84a2ab25b12d ("arm64: imx8mq: select PM support")
-
-from the arm-soc tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/Kconfig.platforms
-index d4faca775d9c,c5f6a57f16b8..000000000000
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@@ -145,7 -151,11 +151,11 @@@ config ARCH_MVEB
-  config ARCH_MXC
-  	bool "ARMv8 based NXP i.MX SoC family"
-  	select ARM64_ERRATUM_843419
- -	select ARM64_ERRATUM_845719
- +	select ARM64_ERRATUM_845719 if COMPAT
-+ 	select IMX_GPCV2
-+ 	select IMX_GPCV2_PM_DOMAINS
-+ 	select PM
-+ 	select PM_GENERIC_DOMAINS
-  	help
-  	  This enables support for the ARMv8 based SoCs in the
-  	  NXP i.MX family.
-
---Sig_/lVj6wEX+FD+wCcNo7a/JAd4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx4XFwACgkQAVBC80lX
-0Gznfgf8DIjovuZDGFZh8hmY2fdHQaQlzKcNA5XA8IkH1VgWOiUJ/jC1S7LrMdfK
-zaAnMCoSrzrie9q0DTdzmXWGNJ1DWoGaz2oueMSdsM/BLaGMJl6c6pCGSEyBaQmI
-1Qm9R+RDv0XT+4zZwUDXb16zJeuMSEj+wsIohh9Y03RVDbwEn/FYZWxRLqB8IgWs
-LNoaMajIk6m5zUTOAJ9NpG1xG8n4eSW2Hj2xqVILF/TRhtdDC5jD6qf+TqZ1/pzT
-gAU33Q+HKpS6WF5OopqZlqmzGG3+xQSjG+aj3cxQoO+xu0Hj7rVuxXZ3lOtai+iG
-2X0iX+vV4EkEXke6vTtkc7AiV2jXvg==
-=p2P5
------END PGP SIGNATURE-----
-
---Sig_/lVj6wEX+FD+wCcNo7a/JAd4--
+thanks,
+-- 
+John Hubbard
+NVIDIA
