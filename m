@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF14CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5CAC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7F520C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0719B20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367545;
-	bh=PLagiQe7k14T8vKSg65U3wFzS/VDCFNuNLdpQTW7bwQ=;
+	s=default; t=1551367553;
+	bh=p/xBKNBBZIxW8er1ymUGAgDsWJ4N8dOLTY6vkEwEl+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wga34Lt7k3ERLwulxDti8MKV2Owgn/lSXQ8HKdBUBGHxGk+I9ABrSzv5ybfhg8Iai
-	 1+WTDeUZJWes+BWJvjuBQ/pZ4fv8QdDnJ1m4f5rFVk78YDFbd2bSEnF3O0oBslhG+5
-	 vrpT5k2dBLp248FtS1re3wtGSzWwP8cbTy+LjUUU=
+	b=boS2+nk3J9xPKjcqvhtVZVWmIZtx4VkH7G/BeZm0X4Xwuv7bN90gq2WjRarmO4Co6
+	 /HPX6rl1lYpdyIhjuEzcKE1ETbViMOuQE/w0Dv49QDhF//EA57+WHVV8IpRFEpAC0e
+	 ky8yU2sVv59E4uX+a0goeS6DomiryCy5on1bZBWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388561AbfB1PZn (ORCPT
+        id S2388866AbfB1PZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:25:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45178 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:25:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388105AbfB1PLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:53 -0500
+        id S2388096AbfB1PLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74077218AE;
-        Thu, 28 Feb 2019 15:11:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ADD52171F;
+        Thu, 28 Feb 2019 15:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366713;
-        bh=PLagiQe7k14T8vKSg65U3wFzS/VDCFNuNLdpQTW7bwQ=;
+        s=default; t=1551366712;
+        bh=p/xBKNBBZIxW8er1ymUGAgDsWJ4N8dOLTY6vkEwEl+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UqEJPw6exBa2P1PqZEiYrAe9A4GpopaJeVQjL3jWMc1x+VN+W29gBt1DdjhER250R
-         2IdL7wmdtWcktMwbgH0TvFchsLMrz/4p5aXxIhSunujuIpfxRkigYrrg4GNIt9ohAJ
-         gCKRCDTmwwKaXxSEg2v1XwajHB2znXwDH55nWDqg=
+        b=Vn3H8rmMdsbokIJ1VFO0VlRcCa89SocBME1fvebyb6IBraRtVdlNBNJAvf24ghaeR
+         0fU4U8PY5pT25jL67FWjIH+cPH/eVf9P36zAFbry2PK4tdG3mawfmuI9i+PDfiyLrD
+         JWcRFiKRgoB02CcH0t5+q/K74jHL8E0cjxJRzyHI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 25/64] drm/radeon: check if device is root before getting pci speed caps
-Date:   Thu, 28 Feb 2019 10:10:26 -0500
-Message-Id: <20190228151105.11277-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 24/64] drm/amdgpu: Add missing power attribute to APU check
+Date:   Thu, 28 Feb 2019 10:10:25 -0500
+Message-Id: <20190228151105.11277-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -60,67 +60,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit afeff4c16edaa6275b903f82b0561406259aa3a3 ]
+[ Upstream commit dc14eb12f6bb3e779c5461429c1889a339c67aab ]
 
-Check if the device is root rather before attempting to see what
-speeds the pcie port supports.  Fixes a crash with pci passthrough
-in a VM.
+Add missing power_average to visible check for power
+attributes for APUs.  Was missed before.
 
-Bug: https://bugs.freedesktop.org/show_bug.cgi?id=109366
 Reviewed-by: Evan Quan <evan.quan@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/ci_dpm.c | 5 +++--
- drivers/gpu/drm/radeon/si_dpm.c | 5 +++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
-index d587779a80b4d..a97294ac96d59 100644
---- a/drivers/gpu/drm/radeon/ci_dpm.c
-+++ b/drivers/gpu/drm/radeon/ci_dpm.c
-@@ -5676,7 +5676,7 @@ int ci_dpm_init(struct radeon_device *rdev)
- 	u16 data_offset, size;
- 	u8 frev, crev;
- 	struct ci_power_info *pi;
--	enum pci_bus_speed speed_cap;
-+	enum pci_bus_speed speed_cap = PCI_SPEED_UNKNOWN;
- 	struct pci_dev *root = rdev->pdev->bus->self;
- 	int ret;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+index 7b4e657a95c70..c3df75a9f65d9 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+@@ -1443,7 +1443,8 @@ static umode_t hwmon_attributes_visible(struct kobject *kobj,
+ 		effective_mode &= ~S_IWUSR;
  
-@@ -5685,7 +5685,8 @@ int ci_dpm_init(struct radeon_device *rdev)
- 		return -ENOMEM;
- 	rdev->pm.dpm.priv = pi;
- 
--	speed_cap = pcie_get_speed_cap(root);
-+	if (!pci_is_root_bus(rdev->pdev->bus))
-+		speed_cap = pcie_get_speed_cap(root);
- 	if (speed_cap == PCI_SPEED_UNKNOWN) {
- 		pi->sys_pcie_mask = 0;
- 	} else {
-diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
-index 8fb60b3af0158..0a785ef0ab660 100644
---- a/drivers/gpu/drm/radeon/si_dpm.c
-+++ b/drivers/gpu/drm/radeon/si_dpm.c
-@@ -6899,7 +6899,7 @@ int si_dpm_init(struct radeon_device *rdev)
- 	struct ni_power_info *ni_pi;
- 	struct si_power_info *si_pi;
- 	struct atom_clock_dividers dividers;
--	enum pci_bus_speed speed_cap;
-+	enum pci_bus_speed speed_cap = PCI_SPEED_UNKNOWN;
- 	struct pci_dev *root = rdev->pdev->bus->self;
- 	int ret;
- 
-@@ -6911,7 +6911,8 @@ int si_dpm_init(struct radeon_device *rdev)
- 	eg_pi = &ni_pi->eg;
- 	pi = &eg_pi->rv7xx;
- 
--	speed_cap = pcie_get_speed_cap(root);
-+	if (!pci_is_root_bus(rdev->pdev->bus))
-+		speed_cap = pcie_get_speed_cap(root);
- 	if (speed_cap == PCI_SPEED_UNKNOWN) {
- 		si_pi->sys_pcie_mask = 0;
- 	} else {
+ 	if ((adev->flags & AMD_IS_APU) &&
+-	    (attr == &sensor_dev_attr_power1_cap_max.dev_attr.attr ||
++	    (attr == &sensor_dev_attr_power1_average.dev_attr.attr ||
++	     attr == &sensor_dev_attr_power1_cap_max.dev_attr.attr ||
+ 	     attr == &sensor_dev_attr_power1_cap_min.dev_attr.attr||
+ 	     attr == &sensor_dev_attr_power1_cap.dev_attr.attr))
+ 		return 0;
 -- 
 2.19.1
 
