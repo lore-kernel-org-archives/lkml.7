@@ -2,1037 +2,280 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D27C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968F8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7FD20851
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:52:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d4fYRlDr"
+	by mail.kernel.org (Postfix) with ESMTP id 544B2218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfB1Dws (ORCPT
+        id S1730631AbfB1EF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 22:52:48 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46824 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730410AbfB1Dwr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 22:52:47 -0500
-Received: by mail-oi1-f193.google.com with SMTP id j135so15411184oib.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 19:52:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5AnAw5+JNWdb4sh8EoCKt7nr2eeu1R7kwFMdN0+t65M=;
-        b=d4fYRlDrQ90OMMadoHc2FMg0owXcP59AAt/RtTVewBs4qtL7iVbT+zw05uKPAwU8Su
-         YyqOClKRy3Ajh4sg8RGGHOCK6dxX27RoJKYAvGoxpzx7fB9Rky2c8W5QSb73KGdCIbm5
-         9jvUdRzjOpAe9AzM+jOaim6LjbEgqbydmwYhkhV4/q00efuv3Tbp5Pn9kuWIhchauYhy
-         csPZbihrLGyGfmfdHUPxfbXd6TIqAoXCWy+7JfX9OLdnc8mB7XyAjLezA+dcLG8wGhqv
-         1C/H05h9oInvnmD1z5GyiV6Q60ydNiOLLeufCW9bWMQXLku2BCqBt4kTS6TKGSmZe1fY
-         Pa+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5AnAw5+JNWdb4sh8EoCKt7nr2eeu1R7kwFMdN0+t65M=;
-        b=ZfEeB0u5+hIdC5yHdHvskOBS1fWmHMHlIJW4PKwl0uP7b3nPhY1iLaL7MMPXfzt+0r
-         gcIPI1nNLIOTXQPilQpX+dzeEfNWEtJBIHtKfijbvXtp1bE+fFKG9D/FKbGZyrvh9gwf
-         3WZGeeVPLja0lgJdD1j0qFeoETGGT+4UhIH7Sqn7rtnjZy5vZyEQB+K1EiRHF44avRWs
-         jv9KIWv8FQ5atwpVPu6sfjyC0xsLZ9aEJvAlYmlVzttx1aLF3g9h3nnBD1xHLWfolYjw
-         0Sm3DwkfyzLxkzJnwtcdiGYsRcW8CswQzjZb33uSH5Eh4SIVMbkpvKfWKt6PVdcqbEh6
-         kA7w==
-X-Gm-Message-State: AHQUAuZDNC0HCkcsOGq+wAOZOiKrT3gx1jNau84d4QQYICzZ/flE4Dr5
-        YVoi60AWN4+7GAsppvUBuXfSrav5DImDb5R8XJogSw==
-X-Google-Smtp-Source: APXvYqwsO8nrsqyob7IX65Ezv8RKGRyjxSU9LXlEQcaeyp1i6tl/EHxeB66tMPEjUrO15sAu+dLVBi8JV0Pl/5WYkwU=
-X-Received: by 2002:aca:7503:: with SMTP id q3mr1691672oic.76.1551325965974;
- Wed, 27 Feb 2019 19:52:45 -0800 (PST)
+        Wed, 27 Feb 2019 23:05:59 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:46328 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730131AbfB1EF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 23:05:59 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 175A830BF18C;
+        Thu, 28 Feb 2019 04:05:58 +0000 (UTC)
+Received: from treble (ovpn-120-232.rdu2.redhat.com [10.10.120.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AE359183D9;
+        Thu, 28 Feb 2019 04:05:55 +0000 (UTC)
+Date:   Wed, 27 Feb 2019 22:05:53 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Joao Moreira <jmoreira@suse.de>, live-patching@vger.kernel.org,
+        pmladek@suse.cz, jikos@suse.cz, nstange@suse.de,
+        khlebnikov@yandex-team.ru, jeyu@kernel.org, matz@suse.de,
+        linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v2 6/8] modpost: Add modinfo flag to livepatch modules
+Message-ID: <20190228040553.oenweqfivepfrhkv@treble>
+References: <20190130165446.19479-1-jmoreira@suse.de>
+ <20190130165446.19479-7-jmoreira@suse.de>
+ <alpine.LSU.2.21.1902201648310.26855@pobox.suse.cz>
 MIME-Version: 1.0
-References: <20181128193636.254378-1-brendanhiggins@google.com>
- <20181128193636.254378-19-brendanhiggins@google.com> <990bfc7d-dc5e-d8d3-c151-9b321ff2ac10@gmail.com>
- <CAFd5g45tOGgf_sKGYRC=fpnTBKGaG=8frbQdgZ3ZTkQFyTfP5A@mail.gmail.com>
- <88fe0546-7850-5bb4-9673-b1aef2dccb3e@gmail.com> <CAFd5g444f-FBq4x3U7BL-EY+bFxP0rsJhJ14=mjOi89PhMkURg@mail.gmail.com>
- <0e311e88-c4d4-e98d-1720-53a04bd526fc@gmail.com> <CAFd5g44NTZoSAJPMvXP2xvJgn7m5QoV-KJu2AMrr67+eL+CKrQ@mail.gmail.com>
- <d9f7e000-4cac-a35a-3ff9-60130e12ebea@gmail.com> <72cd1c5b-6f68-73ad-c8fd-f3a3268a0529@gmail.com>
-In-Reply-To: <72cd1c5b-6f68-73ad-c8fd-f3a3268a0529@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 27 Feb 2019 19:52:34 -0800
-Message-ID: <CAFd5g46UU9wk+F6A5wnKYYtYKmmtv__SaY8eg6v-T9xUjsoxhA@mail.gmail.com>
-Subject: Re: [RFC v3 18/19] of: unittest: split out a couple of test cases
- from unittest
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, shuah@kernel.org,
-        Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>, brakmo@fb.com,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Knut Omang <knut.omang@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.1902201648310.26855@pobox.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 28 Feb 2019 04:05:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 20, 2019 at 12:45 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 2/18/19 2:25 PM, Frank Rowand wrote:
-> > On 2/15/19 2:56 AM, Brendan Higgins wrote:
-> >> On Thu, Feb 14, 2019 at 6:05 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>>
-> >>> On 2/14/19 4:56 PM, Brendan Higgins wrote:
-> >>>> On Thu, Feb 14, 2019 at 3:57 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>>>>
-> >>>>> On 12/5/18 3:54 PM, Brendan Higgins wrote:
-> >>>>>> On Tue, Dec 4, 2018 at 2:58 AM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>>>>>>
->
-> < snip >
->
-> >
-> > It makes it harder for me to read the source of the tests and
-> > understand the order they will execute.  It also makes it harder
-> > for me to read through the actual tests (in this example the
-> > tests that are currently grouped in of_unittest_find_node_by_name())
-> > because of all the extra function headers injected into the
-> > existing single function to break it apart into many smaller
-> > functions.
->
-> < snip >
->
-> >>>> This is not something I feel particularly strongly about, it is just
-> >>>> pretty atypical from my experience to have so many unrelated test
-> >>>> cases in a single file.
-> >>>>
-> >>>> Maybe you would prefer that I break up the test cases first, and then
-> >>>> we split up the file as appropriate?
-> >>>
-> >>> I prefer that the test cases not be broken up arbitrarily.  There _may_
->
-> I expect that I created confusion by putting this in a reply to patch 18/19.
-> It is actually a comment about patch 19/19.  Sorry about that.
->
-
-No worries.
-
->
-> >>
-> >> I wasn't trying to break them up arbitrarily. I thought I was doing it
-> >> according to a pattern (breaking up the file, that is), but maybe I
-> >> just hadn't looked at enough examples.
-> >
-> > This goes back to the kunit model of putting each test into a separate
-> > function that can be a KUNIT_CASE().  That is a model that I do not agree
-> > with for devicetree.
->
-> So now that I am actually talking about patch 19/19, let me give a concrete
-> example.  I will cut and paste (after my comments), the beginning portion
-> of base-test.c, after applying patch 19/19 (the "base version".  Then I
-> will cut and paste my alternative version which does not break the tests
-> down into individual functions (the "frank version").
-
-Awesome, thanks for putting the comparison together!
-
->
-> I will also reply to this email with the base version and the frank version
-> as attachments, which will make it easier to save as separate versions
-> for easier viewing.  I'm not sure if an email with attachments will make
-> it through the list servers, but I am cautiously optimistic.
->
-> I am using v4 of the patch series because I never got v3 to cleanly apply
-> and it is not a constructive use of my time to do so since I have v4 applied.
->
-> One of the points I was trying to make is that readability suffers from the
-> approach taken by patches 18/19 and 19/19.
-
-I understood that point.
-
->
-> The base version contains the extra text of a function header for each
-> unit test.  This is visual noise and makes the file larger.  It is also
-> one more possible location of an error (although not likely).
-
-I don't see how it is much more visual noise than a comment.
-Admittedly, a space versus an underscore might be nice, but I think it
-is also more likely that a function name is more likely to be kept up
-to date than a comment even if they are both informational. It also
-forces the user to actually name all the tests. Even then, I am not
-married to doing it this exact way. The thing I really care about is
-isolating the code in each test case so that it can be executed
-separately.
-
-A side thought, when I was proofreading this, it occurred to me that
-you might not like the function name over comment partly because you
-think about them differently. You aren't used to seeing a function
-used to frame things or communicate information in this way. Is this
-true? Admittedly, I have gotten used to a lot of unit test frameworks
-that break up test cases by function, so I wondering if part of the
-difference in comfortability with this framing might come from the
-fact that I am really used to seeing it this way and you are not? If
-this is the case, maybe it would be better if we had something like:
-
-KUNIT_DECLARE_CASE(case_id, "Test case description")
-{
-        KUNIT_EXPECT_EQ(kunit, ...);
-        ...
-}
-
-Just a thought.
-
->
-> The frank version has converted each of the new function headers into
-> a comment, using the function name with '_' converted to ' '.  The
-> comments are more readable than the function headers.  Note that I added
-> an extra blank line before each comment, which violates the kernel
-> coding standards, but I feel this makes the code more readable.
-
-I agree that the extra space is an improvement, but I think any
-sufficient visual separation would work.
-
->
-> The base version needs to declare each of the individual test functions
-> in of_test_find_node_by_name_cases[]. It is possible that a test function
-> could be left out of of_test_find_node_by_name_cases[], in error.  This
-> will result in a compile warning (I think warning instead of error, but
-> I have not verified that) so the error might be caught or it might be
-> overlooked.
-
-It's a warning, but that can be fixed.
-
->
-> In the base version, the order of execution of the test code requires
-> bouncing back and forth between the test functions and the coding of
-> of_test_find_node_by_name_cases[].
-
-You shouldn't need to bounce back and forth because the order in which
-the tests run shouldn't matter.
-
->
-> In the frank version the order of execution of the test code is obvious.
-
-So I know we were arguing before over whether order *does* matter in
-some of the other test cases (none in the example that you or I
-posted), but wouldn't it be better if the order of execution didn't
-matter? If you don't allow a user to depend on the execution of test
-cases, then arguably these test case dependencies would never form and
-the order wouldn't matter.
->
-> It is possible that a test function could be left out of
-> of_test_find_node_by_name_cases[], in error.  This will result in a compile
-> warning (I think warning instead of error, but I have not verified that)
-> so it might be caught or it might be overlooked.
->
-> The base version is 265 lines.  The frank version is 208 lines, 57 lines
-> less.  Less is better.
-
-I agree that less is better, but there are different kinds of less to
-consider. I prefer less logic in a function to fewer lines overall.
-
-It seems we are in agreement that test cases should be small and
-simple, so I won't dwell on that point any longer. I agree that the
-test cases themselves when taken in isolation in base version and
-frank version are equally simple (obviously, they are the same).
-
-If I am correct, we are only debating whether it is best to put each
-test case in its own function or not. That being said, I honestly
-still think my version (base version) is easier to understand. The
-reason I think mine is easier to read is entirely because of the code
-isolation provided by each test case running it its own function. I
-can look at a test case by itself and know that it doesn't depend on
-anything that happened in a preceding test case. It is true that I
-have to look in different places in the file, but I think that is more
-than made up for by the fact that in order to understand a test case,
-I only have to look at two functions: init, and the test case itself
-(well, also exit if you care about how things are cleaned up). I don't
-have to look through every single test case that proceeds it.
-
-It might not be immediately obvious what isolation my version provides
-over your version at first glance, and that is exactly the point. We
-know that they are the same because you pulled the test cases out of
-my version, but what about the other test suite in 19/19,
-of_test_dynamic? If you notice, I did not just break each test case by
-wrapping it in a function; that didn't work because there was a
-dependency between some of the test cases. I removed that dependency,
-so that each test case is actually isolated:
-
-## ============== single function (18/19) version ===========
-static void of_unittest_dynamic(struct kunit *test)
-{
-        struct device_node *np;
-        struct property *prop;
-
-        np = of_find_node_by_path("/testcase-data");
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
-
-        /* Array of 4 properties for the purpose of testing */
-        prop = kcalloc(4, sizeof(*prop), GFP_KERNEL);
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, prop);
-
-        /* Add a new property - should pass*/
-        prop->name = "new-property";
-        prop->value = "new-property-data";
-        prop->length = strlen(prop->value) + 1;
-        KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop), 0,
-                            "Adding a new property failed\n");
-
-        /* Try to add an existing property - should fail */
-        prop++;
-        prop->name = "new-property";
-        prop->value = "new-property-data-should-fail";
-        prop->length = strlen(prop->value) + 1;
-        KUNIT_EXPECT_NE_MSG(test, of_add_property(np, prop), 0,
-                            "Adding an existing property should have failed\n");
-
-        /* Try to modify an existing property - should pass */
-        prop->value = "modify-property-data-should-pass";
-        prop->length = strlen(prop->value) + 1;
-        KUNIT_EXPECT_EQ_MSG(
-                test, of_update_property(np, prop), 0,
-                "Updating an existing property should have passed\n");
-
-        /* Try to modify non-existent property - should pass*/
-        prop++;
-        prop->name = "modify-property";
-        prop->value = "modify-missing-property-data-should-pass";
-        prop->length = strlen(prop->value) + 1;
-        KUNIT_EXPECT_EQ_MSG(test, of_update_property(np, prop), 0,
-                            "Updating a missing property should have passed\n");
-
-        /* Remove property - should pass */
-        KUNIT_EXPECT_EQ_MSG(test, of_remove_property(np, prop), 0,
-                            "Removing a property should have passed\n");
-
-        /* Adding very large property - should pass */
-        prop++;
-        prop->name = "large-property-PAGE_SIZEx8";
-        prop->length = PAGE_SIZE * 8;
-        prop->value = kzalloc(prop->length, GFP_KERNEL);
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, prop->value);
-        KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop), 0,
-                            "Adding a large property should have passed\n");
-}
-
-## ============== multi function (19/19) version ===========
-struct of_test_dynamic_context {
-        struct device_node *np;
-        struct property *prop0;
-        struct property *prop1;
-};
-
-static void of_test_dynamic_basic(struct kunit *test)
-{
-        struct of_test_dynamic_context *ctx = test->priv;
-        struct device_node *np = ctx->np;
-        struct property *prop0 = ctx->prop0;
-
-        /* Add a new property - should pass*/
-        prop0->name = "new-property";
-        prop0->value = "new-property-data";
-        prop0->length = strlen(prop0->value) + 1;
-        KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop0), 0,
-                            "Adding a new property failed\n");
-
-        /* Test that we can remove a property */
-        KUNIT_EXPECT_EQ(test, of_remove_property(np, prop0), 0);
-}
-
-static void of_test_dynamic_add_existing_property(struct kunit *test)
-{
-        struct of_test_dynamic_context *ctx = test->priv;
-        struct device_node *np = ctx->np;
-        struct property *prop0 = ctx->prop0, *prop1 = ctx->prop1;
-
-        /* Add a new property - should pass*/
-        prop0->name = "new-property";
-        prop0->value = "new-property-data";
-        prop0->length = strlen(prop0->value) + 1;
-        KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop0), 0,
-                            "Adding a new property failed\n");
-
-        /* Try to add an existing property - should fail */
-        prop1->name = "new-property";
-        prop1->value = "new-property-data-should-fail";
-        prop1->length = strlen(prop1->value) + 1;
-        KUNIT_EXPECT_NE_MSG(test, of_add_property(np, prop1), 0,
-                            "Adding an existing property should have failed\n");
-}
-
-static void of_test_dynamic_modify_existing_property(struct kunit *test)
-{
-        struct of_test_dynamic_context *ctx = test->priv;
-        struct device_node *np = ctx->np;
-        struct property *prop0 = ctx->prop0, *prop1 = ctx->prop1;
-
-        /* Add a new property - should pass*/
-        prop0->name = "new-property";
-        prop0->value = "new-property-data";
-        prop0->length = strlen(prop0->value) + 1;
-        KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop0), 0,
-                            "Adding a new property failed\n");
-
-        /* Try to modify an existing property - should pass */
-        prop1->name = "new-property";
-        prop1->value = "modify-property-data-should-pass";
-        prop1->length = strlen(prop1->value) + 1;
-        KUNIT_EXPECT_EQ_MSG(test, of_update_property(np, prop1), 0,
-                            "Updating an existing property should have
-passed\n");
-}
-
-static void of_test_dynamic_modify_non_existent_property(struct kunit *test)
-{
-        struct of_test_dynamic_context *ctx = test->priv;
-        struct device_node *np = ctx->np;
-        struct property *prop0 = ctx->prop0;
-
-        /* Try to modify non-existent property - should pass*/
-        prop0->name = "modify-property";
-        prop0->value = "modify-missing-property-data-should-pass";
-        prop0->length = strlen(prop0->value) + 1;
-        KUNIT_EXPECT_EQ_MSG(test, of_update_property(np, prop0), 0,
-                            "Updating a missing property should have passed\n");
-}
-
-static void of_test_dynamic_large_property(struct kunit *test)
-{
-        struct of_test_dynamic_context *ctx = test->priv;
-        struct device_node *np = ctx->np;
-        struct property *prop0 = ctx->prop0;
-
-        /* Adding very large property - should pass */
-        prop0->name = "large-property-PAGE_SIZEx8";
-        prop0->length = PAGE_SIZE * 8;
-        prop0->value = kunit_kzalloc(test, prop0->length, GFP_KERNEL);
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, prop0->value);
-
-        KUNIT_EXPECT_EQ_MSG(test, of_add_property(np, prop0), 0,
-                            "Adding a large property should have passed\n");
-}
-
-static int of_test_dynamic_init(struct kunit *test)
-{
-        struct of_test_dynamic_context *ctx;
-
-        KUNIT_ASSERT_EQ(test, 0, unittest_data_add());
-
-        if (!of_aliases)
-                of_aliases = of_find_node_by_path("/aliases");
-
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, of_find_node_by_path(
-                        "/testcase-data/phandle-tests/consumer-a"));
-
-        ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
-        test->priv = ctx;
-
-        ctx->np = of_find_node_by_path("/testcase-data");
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->np);
-
-        ctx->prop0 = kunit_kzalloc(test, sizeof(*ctx->prop0), GFP_KERNEL);
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->prop0);
-
-        ctx->prop1 = kunit_kzalloc(test, sizeof(*ctx->prop1), GFP_KERNEL);
-        KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->prop1);
-
-        return 0;
-}
-
-static void of_test_dynamic_exit(struct kunit *test)
-{
-        struct of_test_dynamic_context *ctx = test->priv;
-        struct device_node *np = ctx->np;
-
-        of_remove_property(np, ctx->prop0);
-        of_remove_property(np, ctx->prop1);
-        of_node_put(np);
-}
-
-static struct kunit_case of_test_dynamic_cases[] = {
-        KUNIT_CASE(of_test_dynamic_basic),
-        KUNIT_CASE(of_test_dynamic_add_existing_property),
-        KUNIT_CASE(of_test_dynamic_modify_existing_property),
-        KUNIT_CASE(of_test_dynamic_modify_non_existent_property),
-        KUNIT_CASE(of_test_dynamic_large_property),
-        {},
-};
-
-static struct kunit_module of_test_dynamic_module = {
-        .name = "of-dynamic-test",
-        .init = of_test_dynamic_init,
-        .exit = of_test_dynamic_exit,
-        .test_cases = of_test_dynamic_cases,
-};
-module_test(of_test_dynamic_module);
-
-Compare the test cases for adding of_test_dynamic_basic,
-of_test_dynamic_add_existing_property,
-of_test_dynamic_modify_existing_property, and
-of_test_dynamic_modify_non_existent_property to the originals. My
-version is much longer overall, but I think is still much easier to
-understand. I can say from when I was trying to split this up in the
-first place, it was not obvious what properties were expected to be
-populated as a precondition for a given test case (except the first
-one of course). Whereas, in my version, it is immediately obvious what
-the preconditions are for a test case. I think you can apply this same
-logic to the examples you provided, in frank version, I don't
-immediately know if one test cases does something that is a
-precondition for another test case.
-
-My version also makes it easier to run a test case entirely by itself
-which is really valuable for debugging purposes. A common thing that
-happens when you have lots of unit tests is something breaks and lots
-of tests fail. If the test cases are good, there should be just a
-couple (ideally one) test cases that directly assert the violated
-property; those are the test cases you actually want to focus on, the
-rest are noise for the purposes of that breakage. In my version, it is
-much easier to turn off the test cases that you don't care about and
-then focus in on the ones that exercise the violated property.
-
-Now I know that, hermeticity especially, but other features as well
-(test suite summary, error on unused test case function, etc) are not
-actually in KUnit as it is under consideration here. Maybe it would be
-best to save these last two patches (18/19, and 19/19) until I have
-these other features checked in and reconsider them then?
-
->
-> ## ==========  base version  ====================================
->
-> // SPDX-License-Identifier: GPL-2.0
-> /*
->  * Unit tests for functions defined in base.c.
->  */
-> #include <linux/of.h>
->
-> #include <kunit/test.h>
->
-> #include "test-common.h"
->
-> static void of_test_find_node_by_name_basic(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *name;
->
->         np = of_find_node_by_path("/testcase-data");
->         name = kasprintf(GFP_KERNEL, "%pOF", np);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "/testcase-data", name,
->                                "find /testcase-data failed\n");
->         of_node_put(np);
->         kfree(name);
-> }
->
-> static void of_test_find_node_by_name_trailing_slash(struct kunit *test)
-> {
->         /* Test if trailing '/' works */
->         KUNIT_EXPECT_EQ_MSG(test, of_find_node_by_path("/testcase-data/"), NULL,
->                             "trailing '/' on /testcase-data/ should fail\n");
->
-> }
->
-> static void of_test_find_node_by_name_multiple_components(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *name;
->
->         np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         name = kasprintf(GFP_KERNEL, "%pOF", np);
->         KUNIT_EXPECT_STREQ_MSG(
->                 test, "/testcase-data/phandle-tests/consumer-a", name,
->                 "find /testcase-data/phandle-tests/consumer-a failed\n");
->         of_node_put(np);
->         kfree(name);
-> }
->
-> static void of_test_find_node_by_name_with_alias(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *name;
->
->         np = of_find_node_by_path("testcase-alias");
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         name = kasprintf(GFP_KERNEL, "%pOF", np);
->         KUNIT_EXPECT_STREQ_MSG(test, "/testcase-data", name,
->                                "find testcase-alias failed\n");
->         of_node_put(np);
->         kfree(name);
-> }
->
-> static void of_test_find_node_by_name_with_alias_and_slash(struct kunit *test)
-> {
->         /* Test if trailing '/' works on aliases */
->         KUNIT_EXPECT_EQ_MSG(test, of_find_node_by_path("testcase-alias/"), NULL,
->                            "trailing '/' on testcase-alias/ should fail\n");
-> }
->
-> /*
->  * TODO(brendanhiggins@google.com): This looks like a duplicate of
->  * of_test_find_node_by_name_multiple_components
->  */
-> static void of_test_find_node_by_name_multiple_components_2(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *name;
->
->         np = of_find_node_by_path("testcase-alias/phandle-tests/consumer-a");
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         name = kasprintf(GFP_KERNEL, "%pOF", np);
->         KUNIT_EXPECT_STREQ_MSG(
->                 test, "/testcase-data/phandle-tests/consumer-a", name,
->                 "find testcase-alias/phandle-tests/consumer-a failed\n");
->         of_node_put(np);
->         kfree(name);
-> }
->
-> static void of_test_find_node_by_name_missing_path(struct kunit *test)
-> {
->         struct device_node *np;
->
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 np = of_find_node_by_path("/testcase-data/missing-path"), NULL,
->                 "non-existent path returned node %pOF\n", np);
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_missing_alias(struct kunit *test)
-> {
->         struct device_node *np;
->
->         KUNIT_EXPECT_EQ_MSG(
->                 test, np = of_find_node_by_path("missing-alias"), NULL,
->                 "non-existent alias returned node %pOF\n", np);
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_missing_alias_with_relative_path(
->                 struct kunit *test)
-> {
->         struct device_node *np;
->
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 np = of_find_node_by_path("testcase-alias/missing-path"), NULL,
->                 "non-existent alias with relative path returned node %pOF\n",
->                 np);
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_with_option(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *options;
->
->         np = of_find_node_opts_by_path("/testcase-data:testoption", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "testoption", options,
->                                "option path test failed\n");
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_with_option_and_slash(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *options;
->
->         np = of_find_node_opts_by_path("/testcase-data:test/option", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "test/option", options,
->                                "option path test, subcase #1 failed\n");
->         of_node_put(np);
->
->         np = of_find_node_opts_by_path("/testcase-data/testcase-device1:test/option", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "test/option", options,
->                                "option path test, subcase #2 failed\n");
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_with_null_option(struct kunit *test)
-> {
->         struct device_node *np;
->
->         np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
->         KUNIT_EXPECT_NOT_ERR_OR_NULL_MSG(test, np,
->                                          "NULL option path test failed\n");
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_with_option_alias(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *options;
->
->         np = of_find_node_opts_by_path("testcase-alias:testaliasoption",
->                                        &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "testaliasoption", options,
->                                "option alias path test failed\n");
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_with_option_alias_and_slash(
->                 struct kunit *test)
-> {
->         struct device_node *np;
->         const char *options;
->
->         np = of_find_node_opts_by_path("testcase-alias:test/alias/option",
->                                        &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "test/alias/option", options,
->                                "option alias path test, subcase #1 failed\n");
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_with_null_option_alias(struct kunit *test)
-> {
->         struct device_node *np;
->
->         np = of_find_node_opts_by_path("testcase-alias:testaliasoption", NULL);
->         KUNIT_EXPECT_NOT_ERR_OR_NULL_MSG(
->                         test, np, "NULL option alias path test failed\n");
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_option_clearing(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *options;
->
->         options = "testoption";
->         np = of_find_node_opts_by_path("testcase-alias", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_EQ_MSG(test, options, NULL,
->                             "option clearing test failed\n");
->         of_node_put(np);
-> }
->
-> static void of_test_find_node_by_name_option_clearing_root(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *options;
->
->         options = "testoption";
->         np = of_find_node_opts_by_path("/", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_EQ_MSG(test, options, NULL,
->                             "option clearing root node test failed\n");
->         of_node_put(np);
-> }
->
-> static int of_test_find_node_by_name_init(struct kunit *test)
-> {
->         /* adding data for unittest */
->         KUNIT_ASSERT_EQ(test, 0, unittest_data_add());
->
->         if (!of_aliases)
->                 of_aliases = of_find_node_by_path("/aliases");
->
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, of_find_node_by_path(
->                         "/testcase-data/phandle-tests/consumer-a"));
->
->         return 0;
-> }
->
-> static struct kunit_case of_test_find_node_by_name_cases[] = {
->         KUNIT_CASE(of_test_find_node_by_name_basic),
->         KUNIT_CASE(of_test_find_node_by_name_trailing_slash),
->         KUNIT_CASE(of_test_find_node_by_name_multiple_components),
->         KUNIT_CASE(of_test_find_node_by_name_with_alias),
->         KUNIT_CASE(of_test_find_node_by_name_with_alias_and_slash),
->         KUNIT_CASE(of_test_find_node_by_name_multiple_components_2),
->         KUNIT_CASE(of_test_find_node_by_name_missing_path),
->         KUNIT_CASE(of_test_find_node_by_name_missing_alias),
->         KUNIT_CASE(of_test_find_node_by_name_missing_alias_with_relative_path),
->         KUNIT_CASE(of_test_find_node_by_name_with_option),
->         KUNIT_CASE(of_test_find_node_by_name_with_option_and_slash),
->         KUNIT_CASE(of_test_find_node_by_name_with_null_option),
->         KUNIT_CASE(of_test_find_node_by_name_with_option_alias),
->         KUNIT_CASE(of_test_find_node_by_name_with_option_alias_and_slash),
->         KUNIT_CASE(of_test_find_node_by_name_with_null_option_alias),
->         KUNIT_CASE(of_test_find_node_by_name_option_clearing),
->         KUNIT_CASE(of_test_find_node_by_name_option_clearing_root),
->         {},
-> };
->
-> static struct kunit_module of_test_find_node_by_name_module = {
->         .name = "of-test-find-node-by-name",
->         .init = of_test_find_node_by_name_init,
->         .test_cases = of_test_find_node_by_name_cases,
-> };
-> module_test(of_test_find_node_by_name_module);
->
->
-> ## ==========  frank version  ===================================
->
->         // SPDX-License-Identifier: GPL-2.0
-> /*
->  * Unit tests for functions defined in base.c.
->  */
-> #include <linux/of.h>
->
-> #include <kunit/test.h>
->
-> #include "test-common.h"
->
-> static void of_unittest_find_node_by_name(struct kunit *test)
-> {
->         struct device_node *np;
->         const char *options, *name;
->
->
->         // find node by name basic
->
->         np = of_find_node_by_path("/testcase-data");
->         name = kasprintf(GFP_KERNEL, "%pOF", np);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "/testcase-data", name,
->                                "find /testcase-data failed\n");
->         of_node_put(np);
->         kfree(name);
->
->
->         // find node by name trailing slash
->
->         /* Test if trailing '/' works */
->         KUNIT_EXPECT_EQ_MSG(test, of_find_node_by_path("/testcase-data/"), NULL,
->                             "trailing '/' on /testcase-data/ should fail\n");
->
->
->         // find node by name multiple components
->
->         np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         name = kasprintf(GFP_KERNEL, "%pOF", np);
->         KUNIT_EXPECT_STREQ_MSG(
->                 test, "/testcase-data/phandle-tests/consumer-a", name,
->                 "find /testcase-data/phandle-tests/consumer-a failed\n");
->         of_node_put(np);
->         kfree(name);
->
->
->         // find node by name with alias
->
->         np = of_find_node_by_path("testcase-alias");
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         name = kasprintf(GFP_KERNEL, "%pOF", np);
->         KUNIT_EXPECT_STREQ_MSG(test, "/testcase-data", name,
->                                "find testcase-alias failed\n");
->         of_node_put(np);
->         kfree(name);
->
->
->         // find node by name with alias and slash
->
->         /* Test if trailing '/' works on aliases */
->         KUNIT_EXPECT_EQ_MSG(test, of_find_node_by_path("testcase-alias/"), NULL,
->                             "trailing '/' on testcase-alias/ should fail\n");
->
->
->         // find node by name multiple components 2
->
->         np = of_find_node_by_path("testcase-alias/phandle-tests/consumer-a");
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         name = kasprintf(GFP_KERNEL, "%pOF", np);
->         KUNIT_EXPECT_STREQ_MSG(
->                 test, "/testcase-data/phandle-tests/consumer-a", name,
->                 "find testcase-alias/phandle-tests/consumer-a failed\n");
->         of_node_put(np);
->         kfree(name);
->
->
->         // find node by name missing path
->
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 np = of_find_node_by_path("/testcase-data/missing-path"), NULL,
->                 "non-existent path returned node %pOF\n", np);
->         of_node_put(np);
->
->
->         // find node by name missing alias
->
->         KUNIT_EXPECT_EQ_MSG(
->                 test, np = of_find_node_by_path("missing-alias"), NULL,
->                 "non-existent alias returned node %pOF\n", np);
->         of_node_put(np);
->
->
->         //  find node by name missing alias with relative path
->
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 np = of_find_node_by_path("testcase-alias/missing-path"), NULL,
->                 "non-existent alias with relative path returned node %pOF\n",
->                 np);
->         of_node_put(np);
->
->
->         // find node by name with option
->
->         np = of_find_node_opts_by_path("/testcase-data:testoption", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "testoption", options,
->                                "option path test failed\n");
->         of_node_put(np);
->
->
->         // find node by name with option and slash
->
->         np = of_find_node_opts_by_path("/testcase-data:test/option", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "test/option", options,
->                                "option path test, subcase #1 failed\n");
->         of_node_put(np);
->
->         np = of_find_node_opts_by_path("/testcase-data/testcase-device1:test/option", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "test/option", options,
->                                "option path test, subcase #2 failed\n");
->         of_node_put(np);
->
->
->         // find node by name with null option
->
->         np = of_find_node_opts_by_path("/testcase-data:testoption", NULL);
->         KUNIT_EXPECT_NOT_ERR_OR_NULL_MSG(test, np,
->                                          "NULL option path test failed\n");
->         of_node_put(np);
->
->
->         // find node by name with option alias
->
->         np = of_find_node_opts_by_path("testcase-alias:testaliasoption",
->                                        &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "testaliasoption", options,
->                                "option alias path test failed\n");
->         of_node_put(np);
->
->
->         // find node by name with option alias and slash
->
->         np = of_find_node_opts_by_path("testcase-alias:test/alias/option",
->                                        &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_STREQ_MSG(test, "test/alias/option", options,
->                                "option alias path test, subcase #1 failed\n");
->         of_node_put(np);
->
->
->         // find node by name with null option alias
->
->         np = of_find_node_opts_by_path("testcase-alias:testaliasoption", NULL);
->         KUNIT_EXPECT_NOT_ERR_OR_NULL_MSG(
->                         test, np, "NULL option alias path test failed\n");
->         of_node_put(np);
->
->
->         // find node by name option clearing
->
->         options = "testoption";
->         np = of_find_node_opts_by_path("testcase-alias", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_EQ_MSG(test, options, NULL,
->                             "option clearing test failed\n");
->         of_node_put(np);
->
->
->         // find node by name option clearing root
->
->         options = "testoption";
->         np = of_find_node_opts_by_path("/", &options);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->         KUNIT_EXPECT_EQ_MSG(test, options, NULL,
->                             "option clearing root node test failed\n");
->         of_node_put(np);
-> }
->
-> static int of_test_init(struct kunit *test)
-> {
->         /* adding data for unittest */
->         KUNIT_ASSERT_EQ(test, 0, unittest_data_add());
->
->         if (!of_aliases)
->                 of_aliases = of_find_node_by_path("/aliases");
->
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, of_find_node_by_path(
->                         "/testcase-data/phandle-tests/consumer-a"));
->
->         return 0;
-> }
->
-> static struct kunit_case of_test_cases[] = {
->         KUNIT_CASE(of_unittest_find_node_by_name),
->         {},
-> };
->
-> static struct kunit_module of_test_module = {
->         .name = "of-base-test",
->         .init = of_test_init,
->         .test_cases = of_test_cases,
-> };
-> module_test(of_test_module);
->
->
-> >
-> >
-> >>> be cases where the devicetree unittests are currently not well grouped
-> >>> and may benefit from change, but if so that should be handled independently
-> >>> of any transformation into a KUnit framework.
-> >>
-> >> I agree. I did this because I wanted to illustrate what I thought real
-> >> world KUnit unit tests should look like (I also wanted to be able to
-> >> show off KUnit test features that help you write these kinds of
-> >> tests); I was not necessarily intending that all the of: unittest
-> >> patches would get merged in with the whole RFC. I was mostly trying to
-> >> create cause for discussion (which it seems like I succeeded at ;-) ).
-> >>
-> >> So fair enough, I will propose these patches separately and later
-> >> (except of course this one that splits up the file). Do you want the
-> >> initial transformation to the KUnit framework in the main KUnit
-> >> patchset, or do you want that to be done separately? If I recall, Rob
-> >> suggested this as a good initial example that other people could refer
-> >> to, and some people seemed to think that I needed one to help guide
-> >> the discussion and provide direction for early users. I don't
-> >> necessarily think that means the initial real world example needs to
-> >> be a part of the initial patchset though.
-
-I really appreciate you taking the time to discuss these difficult points :-)
-
-If the way I want to express test cases here is really that difficult
-to read, then it means that I have some work to do to make it better,
-because I plan on constructing other test cases in a very similar way.
-So, if you think that these test cases have real readability issues,
-then there is something I either need to improve with the framework,
-or the documentation.
-
-So if you would rather discuss these patches later once I added those
-features that would make the notion of hermeticity stronger, or would
-make summaries better, or anything else I mentioned, that's fine with
-me, but if you think there is something fundamentally wrong with my
-approach, I would rather figured out the right way to handle it sooner
-rather than later.
-
-Looking forward to hear what you think!
-
-Cheers
+On Wed, Feb 20, 2019 at 04:50:08PM +0100, Miroslav Benes wrote:
+> Adding CCs...
+
+Where was this posted?  I don't see it on lkml.  It would be good to be
+able to see the whole series for review.
+
+> 
+> On Wed, 30 Jan 2019, Joao Moreira wrote:
+> 
+> > From: Miroslav Benes <mbenes@suse.cz>
+> > 
+> > Currently, livepatch infrastructure in the kernel relies on
+> > MODULE_INFO(livepatch, "Y") statement in a livepatch module. Then the
+> > kernel module loader knows a module is indeed livepatch module and can
+> > behave accordingly.
+> > 
+> > klp-convert, on the other hand relies on LIVEPATCH_* statement in the
+> > module's Makefile for exactly the same reason.
+> > 
+> > Remove dependency on modinfo and generate MODULE_INFO flag
+> > automatically in modpost when LIVEPATCH_* is defined in the module's
+> > Makefile. Generate a list of all built livepatch modules based on
+> > the .livepatch file and store it in (MODVERDIR)/livepatchmods. Give
+> > this list as an argument for modpost which will use it to identify
+> > livepatch modules.
+> > 
+> > As MODULE_INFO is no longer needed, remove it.
+> > 
+> > [jmoreira:
+> > * fix modpost.c (add_livepatch_flag) to update module structure with
+> > livepatch flag and prevent modpost from breaking due to unresolved
+> > symbols]
+> > 
+> > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> > Signed-off-by: Joao Moreira <jmoreira@suse.de>
+> > ---
+> >  samples/livepatch/livepatch-sample.c |  1 -
+> >  scripts/Makefile.modpost             |  8 +++-
+> >  scripts/mod/modpost.c                | 84 +++++++++++++++++++++++++++++++++---
+> >  3 files changed, 85 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/samples/livepatch/livepatch-sample.c b/samples/livepatch/livepatch-sample.c
+> > index 2d554dd930e2..20a5891ebf7b 100644
+> > --- a/samples/livepatch/livepatch-sample.c
+> > +++ b/samples/livepatch/livepatch-sample.c
+> > @@ -90,4 +90,3 @@ static void livepatch_exit(void)
+> >  module_init(livepatch_init);
+> >  module_exit(livepatch_exit);
+> >  MODULE_LICENSE("GPL");
+> > -MODULE_INFO(livepatch, "Y");
+> 
+> Again, we shoud do the same for the other samples we have in 
+> samples/livepatch/ directory.
+> 
+> > diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+> > index da779a185218..0149a72ea7ae 100644
+> > --- a/scripts/Makefile.modpost
+> > +++ b/scripts/Makefile.modpost
+> > @@ -65,6 +65,11 @@ MODLISTCMD := find $(MODVERDIR) -name '*.mod' | xargs -r grep -h '\.ko$$' | sort
+> >  __modules := $(shell $(MODLISTCMD))
+> >  modules   := $(patsubst %.o,%.ko, $(wildcard $(__modules:.ko=.o)))
+> >  
+> > +# find all .livepatch files listed in $(MODVERDIR)/
+> > +ifdef CONFIG_LIVEPATCH
+> > +$(shell find $(MODVERDIR) -name '*.livepatch' | xargs -r -I{} basename {} .livepatch > $(MODVERDIR)/livepatchmods)
+> > +endif
+> > +
+> >  # Stop after building .o files if NOFINAL is set. Makes compile tests quicker
+> >  _modpost: $(if $(KBUILD_MODPOST_NOFINAL), $(modules:.ko:.o),$(modules))
+> >  
+> > @@ -79,7 +84,8 @@ modpost = scripts/mod/modpost                    \
+> >   $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
+> >   $(if $(CONFIG_DEBUG_SECTION_MISMATCH),,-S)      \
+> >   $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
+> > - $(if $(KBUILD_EXTMOD)$(KBUILD_MODPOST_WARN),-w)
+> > + $(if $(KBUILD_EXTMOD)$(KBUILD_MODPOST_WARN),-w) \
+> > + $(if $(CONFIG_LIVEPATCH),-l $(MODVERDIR)/livepatchmods)
+> >  
+> >  MODPOST_OPT=$(subst -i,-n,$(filter -i,$(MAKEFLAGS)))
+> >  
+> > diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> > index 1dfc34d8b668..2fd1d409ca5a 100644
+> > --- a/scripts/mod/modpost.c
+> > +++ b/scripts/mod/modpost.c
+> > @@ -1979,10 +1979,6 @@ static void read_symbols(const char *modname)
+> >  		license = get_next_modinfo(&info, "license", license);
+> >  	}
+> >  
+> > -	/* Livepatch modules have unresolved symbols resolved by klp-convert */
+> > -	if (get_modinfo(info.modinfo, info.modinfo_len, "livepatch"))
+> > -		mod->livepatch = 1;
+> > -
+> >  	for (sym = info.symtab_start; sym < info.symtab_stop; sym++) {
+> >  		symname = remove_dot(info.strtab + sym->st_name);
+> >  
+> > @@ -2421,6 +2417,76 @@ static void write_dump(const char *fname)
+> >  	free(buf.p);
+> >  }
+> >  
+> > +struct livepatch_mod_list {
+> > +	struct livepatch_mod_list *next;
+> > +	char *livepatch_mod;
+> > +};
+> > +
+> > +static struct livepatch_mod_list *load_livepatch_mods(const char *fname)
+> > +{
+> > +	struct livepatch_mod_list *list_iter, *list_start = NULL;
+> > +	unsigned long size, pos = 0;
+> > +	void *file = grab_file(fname, &size);
+> > +	char *line;
+> > +
+> > +	if (!file)
+> > +		return NULL;
+> > +
+> > +	while ((line = get_next_line(&pos, file, size))) {
+> > +		list_iter = NOFAIL(malloc(sizeof(*list_iter)));
+> > +		list_iter->next = list_start;
+> > +		list_iter->livepatch_mod = NOFAIL(strdup(line));
+> > +		list_start = list_iter;
+> > +	}
+> > +	release_file(file, size);
+> > +
+> > +	return list_start;
+> > +}
+> > +
+> > +static void free_livepatch_mods(struct livepatch_mod_list *list_start)
+> > +{
+> > +	struct livepatch_mod_list *list_iter;
+> > +
+> > +	while (list_start) {
+> > +		list_iter = list_start->next;
+> > +		free(list_start->livepatch_mod);
+> > +		free(list_start);
+> > +		list_start = list_iter;
+> > +	}
+> > +}
+> > +
+> > +static int is_livepatch_mod(const char *modname,
+> > +		struct livepatch_mod_list *list)
+> > +{
+> > +	const char *myname;
+> > +
+> > +	if (!list)
+> > +		return 0;
+> > +
+> > +	myname = strrchr(modname, '/');
+> > +	if (myname)
+> > +		myname++;
+> > +	else
+> > +		myname = modname;
+> > +
+> > +	while (list) {
+> > +		if (!strcmp(myname, list->livepatch_mod))
+> > +			return 1;
+> > +		list = list->next;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> > +static void add_livepatch_flag(struct buffer *b, struct module *mod,
+> > +		struct livepatch_mod_list *list)
+> > +{
+> > +	if (is_livepatch_mod(mod->name, list)) {
+> > +		buf_printf(b, "\nMODULE_INFO(livepatch, \"Y\");\n");
+> > +		mod->livepatch = 1;
+> > +	}
+> > +}
+> > +
+> > +
+> >  struct ext_sym_list {
+> >  	struct ext_sym_list *next;
+> >  	const char *file;
+> > @@ -2436,8 +2502,9 @@ int main(int argc, char **argv)
+> >  	int err;
+> >  	struct ext_sym_list *extsym_iter;
+> >  	struct ext_sym_list *extsym_start = NULL;
+> > +	struct livepatch_mod_list *livepatch_mods = NULL;
+> >  
+> > -	while ((opt = getopt(argc, argv, "i:I:e:mnsST:o:awE")) != -1) {
+> > +	while ((opt = getopt(argc, argv, "i:I:e:l:mnsST:o:awM:K:E")) != -1) {
+> >  		switch (opt) {
+> >  		case 'i':
+> >  			kernel_read = optarg;
+> > @@ -2454,6 +2521,9 @@ int main(int argc, char **argv)
+> >  			extsym_iter->file = optarg;
+> >  			extsym_start = extsym_iter;
+> >  			break;
+> > +		case 'l':
+> > +			livepatch_mods = load_livepatch_mods(optarg);
+> > +			break;
+> >  		case 'm':
+> >  			modversions = 1;
+> >  			break;
+> > @@ -2514,15 +2584,16 @@ int main(int argc, char **argv)
+> >  		buf.pos = 0;
+> >  
+> >  		err |= check_modname_len(mod);
+> > -		err |= check_exports(mod);
+> >  		add_header(&buf, mod);
+> >  		add_intree_flag(&buf, !external_module);
+> >  		add_retpoline(&buf);
+> >  		add_staging_flag(&buf, mod->name);
+> > +		add_livepatch_flag(&buf, mod, livepatch_mods);
+> >  		err |= add_versions(&buf, mod);
+> >  		add_depends(&buf, mod);
+> >  		add_moddevtable(&buf, mod);
+> >  		add_srcversion(&buf, mod);
+> > +		err |= check_exports(mod);
+> >  
+> >  		sprintf(fname, "%s.mod.c", mod->name);
+> >  		write_if_changed(&buf, fname);
+> > @@ -2541,6 +2612,7 @@ int main(int argc, char **argv)
+> >  			      "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
+> >  		}
+> >  	}
+> > +	free_livepatch_mods(livepatch_mods);
+> >  	free(buf.p);
+> >  
+> >  	return err;
+> > -- 
+> > 2.16.4
+> > 
+> 
+> Miroslav
+
+-- 
+Josh
