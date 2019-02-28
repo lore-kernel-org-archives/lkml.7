@@ -2,123 +2,107 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C07C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046F8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC00214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551313827;
-	bh=LOqqCQ7NKkR3oxRK57vodNSABl9xELGeja6ILnAf8bE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UmNYdZYmSEZP1gNeR0doisH9H+W5COmU68+KHQz2xYGn9TCnw/KWko2zNlfpGbDX6
-	 GybyWqFczWumBS4Zh4P5M+Ko4/UnStdsg5JU1i56PEMnGGYgswEampowGfk42T18KP
-	 HTqkLgECp29Sz17CQPOmSf4JYkTHLo6tCDNJ7/mE=
+	by mail.kernel.org (Postfix) with ESMTP id C94C3214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbfB1Aa0 (ORCPT
+        id S1730323AbfB1Afc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 19:30:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60110 "EHLO mail.kernel.org"
+        Wed, 27 Feb 2019 19:35:32 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:39892 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729432AbfB1AaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 19:30:25 -0500
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729432AbfB1Afb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 19:35:31 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35307218D8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 00:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551313824;
-        bh=LOqqCQ7NKkR3oxRK57vodNSABl9xELGeja6ILnAf8bE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W6HqekqK+rGnoSSLZlSrV/K3JYDu6pgp1cyVpBKH7Sbk5svNXZIXzCxULCUktda86
-         33u+Udm1wtvIp8L+ykVrSrDQxcnLUYQROIb+SuahUjH+buZscO2oZ/U8a6E56Uv1V2
-         CnO+wBgcS7C6BDugn7y+sPI/VYm7D4UW7gm+R5js=
-Received: by mail-wm1-f49.google.com with SMTP id y15so7283161wma.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 16:30:24 -0800 (PST)
-X-Gm-Message-State: AHQUAuafMS5kMlgvaC8uXXDwVeQRw6+s7cGPcAoxT3eOCnR2AqEGgmJJ
-        T6RopelSy4tqr6cLrFWw+eVb81d1vVpOk/7IWjqg4A==
-X-Google-Smtp-Source: AHgI3IY5cd78I+SyqI4VOhGOiobZIXmqbv8GUC8Lp5UW7PTUd+emReFpC57e8ZxuEogfdEWs8QqVbkYeLR4tSVhRqk8=
-X-Received: by 2002:a1c:a885:: with SMTP id r127mr1153544wme.74.1551313822592;
- Wed, 27 Feb 2019 16:30:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20190225124330.613028745@infradead.org> <20190225125232.107098740@infradead.org>
- <20190225161124.cq6c45r3wlwktyuz@treble> <20190227122059.GO32494@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190227122059.GO32494@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 27 Feb 2019 16:30:08 -0800
-X-Gmail-Original-Message-ID: <CALCETrUHyUA=1BOK=pL1O6M2B4E9JZv7F3eP7rHbeEysvgZPEQ@mail.gmail.com>
-Message-ID: <CALCETrUHyUA=1BOK=pL1O6M2B4E9JZv7F3eP7rHbeEysvgZPEQ@mail.gmail.com>
-Subject: Re: [PATCH 4/6] objtool: Replace STACK_FRAME_NON_STANDARD annotation
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        by mx1.redhat.com (Postfix) with ESMTPS id 5F8C9C0240;
+        Thu, 28 Feb 2019 00:35:31 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-40.pek2.redhat.com [10.72.12.40])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ECD6C619D2;
+        Thu, 28 Feb 2019 00:35:25 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
+Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, keescook@chromium.org, thgarnie@google.com,
+        Baoquan He <bhe@redhat.com>
+Subject: [PATCH v2 0/2] x86/mm/KASLR: Change the granularity of randomization to PUD size in 5-level
+Date:   Thu, 28 Feb 2019 08:35:20 +0800
+Message-Id: <20190228003522.9957-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 28 Feb 2019 00:35:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 4:21 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Feb 25, 2019 at 10:11:24AM -0600, Josh Poimboeuf wrote:
-> > On Mon, Feb 25, 2019 at 01:43:34PM +0100, Peter Zijlstra wrote:
->
-> > > -#define STACK_FRAME_NON_STANDARD(func) \
-> > > -   static void __used __section(.discard.func_stack_frame_non_standard) \
-> > > -           *__func_stack_frame_non_standard_##func = func
-> > > +#define STACK_FRAME_NON_STANDARD(func)                                     \
-> > > +   asm (".pushsection .discard.nonstd_frame_strtab, \"S\", @3\n\t" \
-> > > +        "999: .ascii \"" #func "\"\n\t"                            \
-> > > +        "     .byte 0\n\t"                                         \
-> > > +        ".popsection\n\t"                                          \
-> > > +        ".pushsection .discard.nonstd_frame\n\t"                   \
-> > > +        ".long 999b - .\n\t"                                       \
-> > > +        ".popsection\n\t")
-> > > +
-> >
-> > I don't think this will work in the case where GCC does an IPA
-> > optimization and renames the function (e.g., renames func to
-> > func.isra.1234), right?  That might be a deal breaker...
->
-> Or; as has been found by 0day; the whole function gets inlined and
-> the symbol no longer exists at all.
->
-> That's curable with a noinline, but all things considered, I think we
-> should go back to the old horrible scheme. Andy?
+This is v2 post. v1 can be found here:
+http://lkml.kernel.org/r/20190224132231.4878-1-bhe@redhat.com
 
-Ugh, I guess.  I'm wondering just how atrocious the generated code is.
+Background:
+***
+Earlier, during a series of KASLR patch reviewing, Ingo got the current
+memory region KASLR only has granularity of randomization in PUD size in
+4-level paging mode, and P4D size in 5-level paging mode, He suggested
+me to try to change both of them to be PMD size at granularity:
 
-Just as a thought experiment, here are some other options:
+  http://lkml.kernel.org/r/20180912100135.GB3333@gmail.com
 
-1. Make a tiny GCC plugin that parses a special attribute on function
-declarations and emits a record that describes that attribute into the
-object file for each referenced symbol that comes from that
-declaration.  (I know nothing about GCC internals, so I don't know how
-hard this would be.)
+Later, I changed code to support PMD level of randomization for both
+4-level and 5-level.
 
-2. Fiddle with the function names.  Turn a function called foo() into
-__uaccess_safe_foo() and also emit a weak alias from that to foo.
-This is probably every bit as bad as taking the address.
+  https://github.com/baoquan-he/linux/commits/mm-kaslr-2m-aligned
 
-3. Take advantage of the fact that only static functions are (for now)
-subject to this IPA stuff.  So take the address of a static function
-or just declare that calling a static function is uaccess safe.
+The test passed on my KVM guest with 1 GB RAM, but failed when I
+increased the RAM to 4 GB, and failed either on larger RAM.
 
---Andy
+After analyzing, it's because that 1 GB page mapping need be mapped at 1
+GB aligned physical address for intel CPU. The 2 MB level of randomization
+will break it and cause error. Please check below table in intel IA32 manual.
+
+  Table 4-15. Format of an IA-32e Page-Directory-Pointer-Table Entry (PDPTE) that Maps a 1-GByte Page
+
+So PMD level of randomization for mm KASLR is not doable.
+
+However, during investigation and testing above code, it turns out that the
+current code is misleading to build identity mapping for the real mode
+trampoline in case KASLR enabled. From code, only a small area (which is
+smaller than 1 MB) need be identity mapped. Please check below patch which
+is from above mm-kaslr-2m-aligned patch series. it only builds up 2 MB
+identity maping for real mode trampoline, and test passed on machines
+with 32 GB RAM of 4-level and on KVM guest of 5-level. 
+
+https://github.com/baoquan-he/linux/commit/e120e67fbf9a5aa818d20084d8dea5b4a27ecf97
+
+Result:
+Make a patchset to:
+  1)change code to only build 1 GB of area for real mode trampoline,
+    namely only copy one PUD entry where physical address 0 resides;
+
+  2)improve the randomization granularity of 5-level from P4D size to PUD size.
+
+Changelog:
+v1->v2:
+  Improve patch according to Kirill's suggestions:
+    *)Add more information to code comment for better understanding;
+    *)Improve code to save one low memory page in 4-level;
+
+Baoquan He (2):
+  x86/mm/KASLR: Only build one PUD entry of area for real mode
+    trampoline
+  x86/mm/KASLR: Change the granularity of randomization to PUD size in
+    5-level
+
+ arch/x86/mm/kaslr.c | 92 ++++++++++++++++++++-------------------------
+ 1 file changed, 40 insertions(+), 52 deletions(-)
+
+-- 
+2.17.2
+
