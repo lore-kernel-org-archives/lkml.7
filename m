@@ -2,109 +2,113 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB199C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E73C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819B4214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:37:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tLGPic+z"
+	by mail.kernel.org (Postfix) with ESMTP id 943C5214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551354058;
+	bh=zorMPTfb1TPeO4nwA4T4qEy8dDYyeF8JQMspHx5/z3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d3Sl84a5hsoKta6ZyyNgb+vBShApM/QJJNMnlhBp48gLh6eI84m53BZKmDcXQilv0
+	 9DtX6KALoB+56OSO+6VW76YCnOGRO1ih+imqrTtGfauBuOdyfvAw1wNkGuc/TAq6KE
+	 ENe3NOezXvlwS0nsLKGhvP/PRFzPg/CZHFs9+0UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732595AbfB1Lhk (ORCPT
+        id S1732600AbfB1Lk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 06:37:40 -0500
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:38085 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732576AbfB1Lhj (ORCPT
+        Thu, 28 Feb 2019 06:40:57 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49356 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731013AbfB1Lk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 06:37:39 -0500
-Received: by mail-qt1-f202.google.com with SMTP id 35so18302319qtq.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 03:37:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:cc;
-        bh=P9AOSoYowIslO+pnAMhidstJ6sO3eTHSC856Ya9OGrA=;
-        b=tLGPic+zVtJmMW0cpqjQHiDmayJcNYM1hNKUasQ9X/KuPVcRVqMHGX2dkFWpaj6Kqq
-         ZDH0bpul1mTPNtgqOy67gKLPxgkZSnBZG4KQ7PivLO/nodtYA8pdkbRY17jTuBH9oPzo
-         1YcKJAeR+HyuBEr37ypdo0BEKAz64oTzZ5a6v1adWv8im1QUwWzAI1pI6MdhyTZERr2m
-         MKBb8fYOVPClE3MU5P2Qvdg1ycGBgzrlP0ITcNQmYaiFOsoXA8hB/34jiRC0l34oCi8x
-         JJXKmU5/Lr4IXu5Jya3elFrXQqdSlwfrZ0YZOohxkuPuC0E6idfpldYT50HBiuPfBJh9
-         m6Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
-        bh=P9AOSoYowIslO+pnAMhidstJ6sO3eTHSC856Ya9OGrA=;
-        b=KMAf+WreKV8R7lnC8HTD7qD4e+Mnzk5Sf5oA64Tan9hg+6JjZHqx8NgYPwqiY9E2fs
-         ZvaMxUbFqwHaPDtVGOt0YVcT9SmQXeAJ5Yhmro6gyMwBbtUvhU/jDs7kQxFfu+fEy5d5
-         CWJBTeTNVQwfwJR+DTICi4cFD1ADCh1hzhW9f2BNfoa/6QKz39yofDaTtUJEdFqYQMgN
-         wI6/MCcawwGHR7DdFcLgNV5CUrwTeaTCC6dB6zJC+3kEfLOTW3sQsho4cw+W3uamOTA1
-         FFI/qx6ZcgDTH3aTI81GBY3rJB9HXQ1kIYXS/srirePN/VPb8rZ7RBjMcUvHcBLEUb/M
-         wUNw==
-X-Gm-Message-State: APjAAAXqWmPyxsdLA7t8jHF28+iz46JZqosE3ILXTxBgkXMnEZfmLhBC
-        jwkzWkOv0704Zc/a1LyX37nw6VVoL7seFQ==
-X-Google-Smtp-Source: APXvYqx1rTOm0C/0ZVXv1bPJsQbs1e7E+4y7YhXrNuKYHcdQujJV1L13fNtB0nJsZnc4owuYqfiCYf/tqLBATg==
-X-Received: by 2002:a0c:869d:: with SMTP id 29mr3796631qvf.34.1551353858270;
- Thu, 28 Feb 2019 03:37:38 -0800 (PST)
-Date:   Thu, 28 Feb 2019 11:36:52 +0000
-Message-Id: <20190228113652.55552-1-maennich@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.rc2.261.ga7da99ff1b-goog
-Subject: [PATCH] sctp: chunk.c: correct format string for size_t in printk
-From:   Matthias Maennich <maennich@google.com>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 28 Feb 2019 06:40:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LLiNH4oIr4+JwdwcpJ+DDQQsoNcU24lAEfaNV3Etzf0=; b=um/mSy8gXDP3Bi4q2X0zs4/KY
+        ovato2EYhXlJMgy405qMYClvzMZQTbCYqXAEuDVJMe+82ZwPbq8e0YvsQFKn4K7yDGLBtGYSYgh1c
+        monHmeuu0SplBQmXvsXqnWw9fME5DAZ8LRFcsLSX5TlsludkIncTDtx+bH16GH22hAlH8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1gzK3E-0005kG-Dr; Thu, 28 Feb 2019 11:40:32 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 74BA21126E9D; Thu, 28 Feb 2019 11:40:26 +0000 (GMT)
+Date:   Thu, 28 Feb 2019 11:40:26 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Guenter Roeck <linux@roeck-us.net>,
+        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com,
+        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, wim@linux-watchdog.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, bogdan-petru.chircu-mare@nxp.com
+Subject: Re: [PATCH v10 0/9] support ROHM BD70528 PMIC
+Message-ID: <20190228114026.GA6802@sirena.org.uk>
+References: <cover.1550148989.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190228070450.GB3773@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+In-Reply-To: <20190228070450.GB3773@localhost.localdomain>
+X-Cookie: You must be present to win.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to Documentation/core-api/printk-formats.rst, size_t should be
-printed with %zu, rather than %Zu.
 
-In addition, using %Zu triggers a warning on clang (-Wformat-extra-args):
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-net/sctp/chunk.c:196:25: warning: data argument not used by format string [-Wformat-extra-args]
-                                    __func__, asoc, max_data);
-                                    ~~~~~~~~~~~~~~~~^~~~~~~~~
-./include/linux/printk.h:440:49: note: expanded from macro 'pr_warn_ratelimited'
-        printk_ratelimited(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
-./include/linux/printk.h:424:17: note: expanded from macro 'printk_ratelimited'
-                printk(fmt, ##__VA_ARGS__);                             \
-                       ~~~    ^
+On Thu, Feb 28, 2019 at 09:04:50AM +0200, Matti Vaittinen wrote:
+> On Thu, Feb 14, 2019 at 03:02:37PM +0200, Matti Vaittinen wrote:
 
-Fixes: 5b5e0928f742 ("lib/vsprintf.c: remove %Z support")
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-Signed-off-by: Matthias Maennich <maennich@google.com>
----
- net/sctp/chunk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>> Patch series introducing support for ROHM BD70528 PMIC
+>=20
+> I was wondering if there is anything that could be done to allow the MFD
+> part of this series to end up in upstream without having to wait the
+> regmap-irq changes
+> (https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git/commi=
+t/?h=3Dtopic/irq)
+>  to be merged from Linus' tree to MFD tree? If I see it correctly, the
+> regmap-irq (main-irq-reg support) changes are not targeted to linux 5.1.
+> To me it looks like getting them to MFD via Linus' tree will take a while.
 
-diff --git a/net/sctp/chunk.c b/net/sctp/chunk.c
-index 64bef313d436..5cb7c1ff97e9 100644
---- a/net/sctp/chunk.c
-+++ b/net/sctp/chunk.c
-@@ -192,7 +192,7 @@ struct sctp_datamsg *sctp_datamsg_from_user(struct sctp_association *asoc,
- 	if (unlikely(!max_data)) {
- 		max_data = sctp_min_frag_point(sctp_sk(asoc->base.sk),
- 					       sctp_datachk_len(&asoc->stream));
--		pr_warn_ratelimited("%s: asoc:%p frag_point is zero, forcing max_data to default minimum (%Zu)",
-+		pr_warn_ratelimited("%s: asoc:%p frag_point is zero, forcing max_data to default minimum (%zu)",
- 				    __func__, asoc, max_data);
- 	}
- 
--- 
-2.21.0.rc2.261.ga7da99ff1b-goog
+They're targeted for v5.1 and I sent a pull request to Lee for that
+branch IIRC.
 
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlx3yKcACgkQJNaLcl1U
+h9D7LQgAgBAtFp4ti3bwtZh4iVfn9N4nYX2Sy8YynfGs/Nfwxm+m+KAl+IiOOo6C
+S1kWALtElOcido6myPacabi0EAyre1Q+Ne7tqUITOb4HQL0dGDpi/a1llthziX7d
+ZG6Slh0JGjOlPVZ8dMyxqXzySEjtwbKUMY4FqMd9LpkQ64FCmo5WdI9R6dnu0BZn
+DJjdUbHmqAbgNoxJ9M/U6mqDTXEviO2eqPhUCAnISc6GvabHA7UdRUxIzi770HjM
+Zi+AFlBE8mWAGvzn3C5u0h+4dnZxCMxMpSpyGokXkL25v5MzHB7lXOpi7a37Zpvo
+VBkTW0n5LezH7ejhsiqf90PtqfUptQ==
+=/nOu
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
