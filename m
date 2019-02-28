@@ -2,178 +2,178 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2158C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3771AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DC2218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:57:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="yM+bROJd"
+	by mail.kernel.org (Postfix) with ESMTP id F2CD5218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551337261;
+	bh=yyQcFj3sPSjnhQ8FdsAqF++MUk31qhk3E5aeMX1n1+4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=feby7nWf3jrbWZAw//yrXXmZjRLn3iDMbPPBYDneb3VXR+gljrxkGB6vGeml0bycc
+	 m3rcLYYMTWLJriCLN+hYnaPEk5Z/2uZNLG+TsvASoaM5hTI2ixs3TMkJPOI/nBOHjt
+	 3qd4ryZDS8LoCBmPSnjp39zE0DatmEfzwFrcNr6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfB1G53 (ORCPT
+        id S1731211AbfB1HA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 01:57:29 -0500
-Received: from mail-eopbgr30041.outbound.protection.outlook.com ([40.107.3.41]:50120
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726080AbfB1G5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 01:57:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dVpTT9N9BfpSTzNQ/mYWPhgkmWRlQmUXbSnjcUBNarE=;
- b=yM+bROJdPcuG2/yes7zxF+3VMyIJrTO6yyA+IN8lnIdYFQAgezwRPXZXpa/9BykAJFZNAcJNMj79PfaW54fUHaRIbFSO2I3XvbF/6xzwM1cB36oKRTCTIIp5MH5GEkpy12AqcviYe02Cof/TPr56Vft4B/eyBh7kQumr1KuOYA0=
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.138.152) by
- DB7PR04MB5322.eurprd04.prod.outlook.com (20.176.236.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.18; Thu, 28 Feb 2019 06:57:18 +0000
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::2083:76ce:c2b6:6a39]) by DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::2083:76ce:c2b6:6a39%4]) with mapi id 15.20.1643.022; Thu, 28 Feb 2019
- 06:57:18 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     "mkl@pengutronix.de" <mkl@pengutronix.de>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "wg@grandegger.com" <wg@grandegger.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: [PATCH 2/2] can: flexcan: add ISO CAN FD feature support
-Thread-Topic: [PATCH 2/2] can: flexcan: add ISO CAN FD feature support
-Thread-Index: AQHUzzLYpxYA2O6KK0+nwrwDzpVlbA==
-Date:   Thu, 28 Feb 2019 06:57:18 +0000
-Message-ID: <20190228065506.3488-3-qiangqing.zhang@nxp.com>
-References: <20190228065506.3488-1-qiangqing.zhang@nxp.com>
-In-Reply-To: <20190228065506.3488-1-qiangqing.zhang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-clientproxiedby: SG2PR03CA0106.apcprd03.prod.outlook.com
- (2603:1096:4:7c::34) To DB7PR04MB4618.eurprd04.prod.outlook.com
- (2603:10a6:5:36::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiangqing.zhang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e0107d85-60ec-47f8-61bc-08d69d49fa88
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB7PR04MB5322;
-x-ms-traffictypediagnostic: DB7PR04MB5322:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;DB7PR04MB5322;23:LUHY0vFmI2qkrfb3giihKWwdynRhmNECW/7GI9m?=
- =?iso-8859-1?Q?dCILb06L+QstKQL+jRm5ZDatkJE0pl7UfI2/mkGRLVG7R3GeeihnKujFFa?=
- =?iso-8859-1?Q?AKS5QSQUhotZQgQYnH9VexRyGcOVQQ3BVY4Ar1mzpBSWbMzzbPZiTWlr62?=
- =?iso-8859-1?Q?zMleO2CENK42XTM8iwg7RSdcLZfNHrbHKLca2kttaLY5ydrlA6PnPV/Fvg?=
- =?iso-8859-1?Q?uPBfvbJ7WkO/zdZk58/bAS+ACTf8C9YFpwTkPpvyRSmWG8SCIB1SeYyvUk?=
- =?iso-8859-1?Q?inLxopeDs4wwgxl5usPCgs2PfGoekXGrHU/4X4aRDH7/nKurnCDJgNa6qo?=
- =?iso-8859-1?Q?+ImjEFy3wESdaH8KLr9bmnImQ2c5iKLzdNJScmT2ZRYiget977qE4XIvIY?=
- =?iso-8859-1?Q?Abd68dwaorgCosV7WbN+yPhTSgN3E/TjAo86EFVvYO+zNZMP9WzmhKDwxw?=
- =?iso-8859-1?Q?eHdr9FzrU809gjGFiPnD2FZkvAKrxZWXTqPXeYDPeWuQ0qyj+J0whozFh3?=
- =?iso-8859-1?Q?KqpjO49JBxCva5lm9LKVtmJxENjCZsbaBVLzKJnjl/FYcYE2DKDzyfY3OX?=
- =?iso-8859-1?Q?bq5R8WbDIgEgs2uMBjsRWRr/gtLYil0f54AsAofUW+5L3bc5SDWt+/vDU+?=
- =?iso-8859-1?Q?f9zjtbGdg87kzlIg3R4kuzSxHU76D+x0je3jqp2rt0igegLKOfs+RQTzK+?=
- =?iso-8859-1?Q?RSzlvzFZnBQTJC3cWT/ji4rTN2LcdVQH3ooi1x+RiZU41WT9nD1Z7A5DgV?=
- =?iso-8859-1?Q?M8at9MdQirrDYZ8D6AUvSz4AbUZc037azt1QmuDXluIQnrKpHPdofDrffR?=
- =?iso-8859-1?Q?JsyGwboUx/YzC//7KG79GP6vS5tkbYCRitJagZf5/rj1jcEGyGFS+3e5jD?=
- =?iso-8859-1?Q?miMbUH6AN536hGOroewIxXPqBhzhFVAhaY3kW52H7ysZWmzh8ZsMM8PK3s?=
- =?iso-8859-1?Q?VF72JYwOD8TbnH4hCFgOIuC8VKzl6CCqaaKshYm67yOOOyNfL/9nSs199m?=
- =?iso-8859-1?Q?xZaqZpbUpbeZb6sypbmYfZ3lghuNCJo7G+PMFKy1HIyA3JUXNxN6eUItic?=
- =?iso-8859-1?Q?izAEKcw18zC6+5PPoUz1uIRTbPtAEKFd2LEiyivXq8JI2rp41EKN9dUPZl?=
- =?iso-8859-1?Q?21wKfy9BrKxPVZevelop0MDJvo8US1TMnfG6VuvxeDX08oTW2WchW6rnx1?=
- =?iso-8859-1?Q?MTkzLQbWI3PM0SJMdIgKvMmy0tjhSElmnK3eFx23GEK7TL+8P9LIZ8Idvw?=
- =?iso-8859-1?Q?5PjLQ3dHwdVXiQGrPxxRHRpVhVWJC5O+1HfvY48qSeufBChXyersO4YShi?=
- =?iso-8859-1?Q?uk=3D?=
-x-microsoft-antispam-prvs: <DB7PR04MB53229C20A04CF58929FFB498E6750@DB7PR04MB5322.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0962D394D2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(39860400002)(396003)(136003)(189003)(199004)(6512007)(53936002)(105586002)(14454004)(25786009)(478600001)(81156014)(81166006)(6486002)(36756003)(52116002)(6436002)(6116002)(3846002)(66066001)(76176011)(99286004)(7736002)(8676002)(186003)(305945005)(71200400001)(2616005)(11346002)(476003)(446003)(2906002)(71190400001)(2501003)(486006)(256004)(14444005)(1076003)(5660300002)(26005)(86362001)(316002)(102836004)(110136005)(4326008)(106356001)(8936002)(54906003)(50226002)(6506007)(386003)(97736004)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5322;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: n8sBcjVhjHc8bHIEysHI/39mIzAqbyoBRteDFnKDXhkZTA5h3aDWcyUSwLjAdLJRKLpX4dLjSOQJ2nmGchA4ZSQhlHetCnBX3G1BFJSAF/BeFizGwlPYWmct2SOAVNZZYaZMsfNb9lTG+MHO+L0VBRVdhP8I2alc7bi+tYGCQ0q/CakTY7U2/A3A8U0KbGobDJhlT9FaRc4l3/xC+UdrOcZsxb/OWDd28yof9jqLVKg2ygd5j2rWZ1w/Tg9w4WjWkr3NVeiJzAOfkxxGSE/gHa8wKdV2ILXPxUhyisSEXtTgXU4/Cw9yfimJ/I0OFi36kYS3ZeERwe6shiASEAIsBFx1ryOBRX0hDPWhWkkrYshhWnYmHnRkPrpw3ky947jMPHh4VpbDbp0mzsHkGrmisK9Ss1jJHB4bvYZnl3r4Rj0=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0107d85-60ec-47f8-61bc-08d69d49fa88
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 06:57:15.3179
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5322
+        Thu, 28 Feb 2019 02:00:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731142AbfB1HA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 02:00:59 -0500
+Received: from devbox (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84A3E21850;
+        Thu, 28 Feb 2019 07:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551337258;
+        bh=yyQcFj3sPSjnhQ8FdsAqF++MUk31qhk3E5aeMX1n1+4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qmtYNWNMK53vziV0Ht6YIHtv+aC1bL4jKntiQo3hjRjrXd+Mu3ACgzYn4C4VA/5x4
+         qtdnTtYfa595BuYfKKHzHnAvD4hORfmpVg9Jv8CsvxshjlMcU86/5zf81cyMM6VIUK
+         dpCabzIcNUQPhAPTCbrFVJ1YWuGZcsmQe9dzCgWU=
+Date:   Thu, 28 Feb 2019 16:00:55 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 5/5] tracing/probe: Support user-space dereference
+Message-Id: <20190228160055.92841d1b482be8c10a50b24b@kernel.org>
+In-Reply-To: <20190227213132.50f3cef1@vmware.local.home>
+References: <155127853496.32576.3705994926675037747.stgit@devbox>
+        <155127868250.32576.2419537726154240743.stgit@devbox>
+        <20190227213132.50f3cef1@vmware.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ISO CAN FD is introduced to increase the failture detection capability
-than non-ISO CAN FD. The non-ISO CAN FD is still supported by FlexCAN so
-that it can be used mainly during an intermediate phase, for evaluation
-and development purposes.
+Hi Steve,
 
-Therefore, it is strongly recommended to configure FlexCAN to the ISO
-CAN FD protocol by setting the ISOCANFDEN field in the CTRL2 register.
+Thank you for the review.
 
-Test Command:
-ISO FD MODE:
-ip link set can0 type can bitrate 1000000 dbitrate 4000000 fd on
-fd-non-iso off
+On Wed, 27 Feb 2019 21:31:32 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-non-ISO FD MODE:
-ip link set can0 type can bitrate 1000000 dbitrate 4000000 fd on
-fd-non-iso on
+> On Wed, 27 Feb 2019 23:44:42 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> >  
+> > +.. _user_mem_access:
+> > +User Memory Access
+> > +------------------
+> > +Kprobe events supports user-space memory access. For that purpose, you can use
+> > +either user-space dereference syntax or 'ustring' type.
+> > +
+> > +user-space dereference syntax allows you to access a field of a data structure
+> 
+>   "The user-space"
+> 
+> > +n user-space. This is done by "u" prefix with dereference syntax. For example,
+> 
+>  in user-space?   "This is done by adding the "u" prefix to the dereference syntax"
 
-NOTE: if you only set "fd on", driver will use ISO FD MODE by default.
+Oops, it maybe a typo. yes "in user-space".
+OK, I'll fix that.
 
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
----
- drivers/net/can/flexcan.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> 
+> > ++u4(%si) means read a user memory from the user-space address %si+4. You can
+> 
+>  "means it will read memory from the address in the register %si offset
+>  by 4, and that memory is expected to be in user-space."
 
-diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
-index 4ba35f9eb515..25e077a68db9 100644
---- a/drivers/net/can/flexcan.c
-+++ b/drivers/net/can/flexcan.c
-@@ -91,6 +91,7 @@
- #define FLEXCAN_CTRL2_MRP		BIT(18)
- #define FLEXCAN_CTRL2_RRS		BIT(17)
- #define FLEXCAN_CTRL2_EACEN		BIT(16)
-+#define FLEXCAN_CTRL2_ISOCANFDEN	BIT(12)
-=20
- /* FLEXCAN memory error control register (MECR) bits */
- #define FLEXCAN_MECR_ECRWRDIS		BIT(31)
-@@ -1227,6 +1228,12 @@ static int flexcan_chip_start(struct net_device *dev=
-)
- 		priv->write(reg_fdctrl, &regs->fdctrl);
- 		reg_mcr =3D priv->read(&regs->mcr);
- 		priv->write(reg_mcr | FLEXCAN_MCR_FDEN, &regs->mcr);
-+
-+		reg_ctrl2 =3D flexcan_read(&regs->ctrl2);
-+		if (!(priv->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO))
-+			flexcan_write(reg_ctrl2 | FLEXCAN_CTRL2_ISOCANFDEN, &regs->ctrl2);
-+		else
-+			flexcan_write(reg_ctrl2 & ~FLEXCAN_CTRL2_ISOCANFDEN, &regs->ctrl2);
- 	}
-=20
- 	if ((priv->can.ctrlmode_supported & CAN_CTRLMODE_FD) &&
-@@ -1729,7 +1736,7 @@ static int flexcan_probe(struct platform_device *pdev=
-)
- 	if (priv->devtype_data->quirks & FLEXCAN_QUIRK_TIMESTAMP_SUPPORT_FD) {
- 		if (priv->devtype_data->quirks & FLEXCAN_QUIRK_USE_OFF_TIMESTAMP) {
- 			priv->offload.is_canfd =3D true;
--			priv->can.ctrlmode_supported |=3D CAN_CTRLMODE_FD;
-+			priv->can.ctrlmode_supported |=3D CAN_CTRLMODE_FD | CAN_CTRLMODE_FD_NON=
-_ISO;
- 			priv->can.bittiming_const =3D &flexcan_fd_bittiming_const;
- 			priv->can.data_bittiming_const =3D &flexcan_fd_data_bittiming_const;
- 		} else {
---=20
-2.17.1
+OK,
 
+> 
+> 
+> > +use this for string too, e.g. +u0(%si):string means that the read a user space
+> 
+> 	"for strings too"
+
+OK,
+
+> 
+> > +string from the address where %si register points. 'ustring' is a kind of
+> > +short-cut. You can use +0(%si):ustring instead of that.
+> 
+> "+u0(%si):string will read a string from the address in the register
+>  %si that is expected to be in user-space. 'ustring' is a shortcut way
+>  off performing the same task. That is, +0(%si):ustring is equivalent
+>  to +u0(%si):string."
+
+Would you mean "of performing"?
+
+> 
+> 
+> > +
+> > +Note that kprobe-event provides user-memory access syntax, but it
+> > doesn't +use it transparently. This means if you use normal
+> > dereference or string type +for user memory, it might fail, and
+> > always fails on some arch. So user has to +check if the targe data is
+> > in kernel or in user space carefully. 
+> >  Per-Probe Event Filtering
+> >  -------------------------
+> > diff --git a/Documentation/trace/uprobetracer.rst
+> > b/Documentation/trace/uprobetracer.rst index
+> > 4c3bfde2ba47..6144423b2368 100644 ---
+> > a/Documentation/trace/uprobetracer.rst +++
+> > b/Documentation/trace/uprobetracer.rst @@ -42,16 +42,17 @@ Synopsis
+> > of uprobe_tracer @+OFFSET	: Fetch memory at OFFSET (OFFSET
+> > from same file as PATH) $stackN	: Fetch Nth entry of stack (N
+> > >= 0) $stack	: Fetch stack address.
+> > -   $retval	: Fetch return value.(*)
+> > +   $retval	: Fetch return value.(\*1)
+> >     $comm	: Fetch current task comm.
+> > -   +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(**)
+> > +   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS
+> > address.(\*2)(\*3) NAME=FETCHARG     : Set NAME as the argument name
+> > of FETCHARG. FETCHARG:TYPE     : Set TYPE as the type of FETCHARG.
+> > Currently, basic types (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal
+> > types (x8/x16/x32/x64), "string" and bitfield are supported.
+> >  
+> > -  (*) only for return probe.
+> > -  (**) this is useful for fetching a field of data structures.
+> > +  (\*1) only for return probe.
+> > +  (\*2) this is useful for fetching a field of data structures.
+> > +  (\*3) Unlike kprobe event, "u" prefix will be just ignored.
+> 
+> 					"will just be ignored."
+
+OK. 
+
+Thank you!
+
+> 
+> >  
+> >  Types
+> >  -----
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 4cacbb0e1538..5408a82a015d 100644
+> 
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
