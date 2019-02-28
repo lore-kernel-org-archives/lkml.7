@@ -6,47 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D784C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42450C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A46206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7B9206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367191;
-	bh=zdw0Kec8AgJnAEpXTFodoUgi2s1gRzsL904grXhqGgY=;
+	s=default; t=1551367199;
+	bh=3Un7C7N5r4mmx8QY/Kwmwx0ob8XiTzIft+G35h6KIts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AHetJuaZB75lvXW+Vb9D3tq41T9FrxUevJ+iSj/CnUmUFsH5TUf283GZ8J01NnGdz
-	 J3yhxw/jjO6xgKmqLByH7kc7mcn4ZTKYtXdhDXhmOihO9vY6coWsC3vNyh2LHNDnVw
-	 N3MLulCF4B5tidCAqvZDQ8+kp9Wz6tvqAsQQYWxo=
+	b=Z2l+qw1S6M66OFt68rbyoxl4fYMs0fxFfKSSGewwqEsqy2C4aLLLmy6qkFF5WpEGI
+	 fn1GKbYiUCGttzxWexTLOIKAPzh8+vxRFMYw61emWEfwEeRvPkSJQAVg8Cm8DnIyDz
+	 vZAAzmsKY3LKpbokmIkuZxi0feZH8l3X2zOV+NDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388818AbfB1PTt (ORCPT
+        id S2388929AbfB1PT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:19:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50615 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:19:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388787AbfB1PPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:13 -0500
+        id S2388123AbfB1PPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C39B21900;
-        Thu, 28 Feb 2019 15:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AB48218D3;
+        Thu, 28 Feb 2019 15:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366913;
-        bh=zdw0Kec8AgJnAEpXTFodoUgi2s1gRzsL904grXhqGgY=;
+        s=default; t=1551366909;
+        bh=3Un7C7N5r4mmx8QY/Kwmwx0ob8XiTzIft+G35h6KIts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6SXow+sLeUXRB49j6PI8yQpX4x0JaIFaEdOJqqz8vBMHgyOS93G4FeKY5FaZE+12
-         tp33ctAeE/C/lWxm2qSz/JSP0yDD+SGVC3RyRD7IdEJ4d5xNNoIegaxvv/dsHrWJPX
-         vqvU4JxVZagtgnm2g1Hnt0/muK6wyG60ukudNbXA=
+        b=M8/AsU+HNJWBSj2LnucnowmGkzCBk8z3AjYirerVyLC0HuhWHcbKjbkZQ1kFh0TEH
+         qxw+rbvgEAzIceLW23WbsEMD8EXTVAtiaOuATq7AUaTWBYy1KLr7myqeHBBZlejC4i
+         sLy0taaNvKrZ4SOhxCLYip3aQdkeW/2PdzFbVBd4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 35/36] qed: Fix EQ full firmware assert.
-Date:   Thu, 28 Feb 2019 10:13:36 -0500
-Message-Id: <20190228151337.12176-35-sashal@kernel.org>
+Cc:     Jun-Ru Chang <jrjang@realtek.com>, Tony Wu <tonywu@realtek.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
+        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 32/36] MIPS: Remove function size check in get_frame_info()
+Date:   Thu, 28 Feb 2019 10:13:33 -0500
+Message-Id: <20190228151337.12176-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
 References: <20190228151337.12176-1-sashal@kernel.org>
@@ -58,84 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Jun-Ru Chang <jrjang@realtek.com>
 
-[ Upstream commit 660492bcf4a7561b5fdc13be0ae0b0c0a8c120be ]
+[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
 
-When slowpath messages are sent with high rate, the resulting
-events can lead to a FW assert in case they are not handled fast
-enough (Event Queue Full assert). Attempt to send queued slowpath
-messages only after the newly evacuated entries in the EQ ring
-are indicated to FW.
+Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
+microMIPS function size.") introduces additional function size
+check for microMIPS by only checking insn between ip and ip + func_size.
+However, func_size in get_frame_info() is always 0 if KALLSYMS is not
+enabled. This causes get_frame_info() to return immediately without
+calculating correct frame_size, which in turn causes "Can't analyze
+schedule() prologue" warning messages at boot time.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch removes func_size check, and let the frame_size check run
+up to 128 insns for both MIPS and microMIPS.
+
+Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
+Signed-off-by: Tony Wu <tonywu@realtek.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <macro@mips.com>
+Cc: <yamada.masahiro@socionext.com>
+Cc: <peterz@infradead.org>
+Cc: <mingo@kernel.org>
+Cc: <linux-mips@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_sp.h  |  1 +
- drivers/net/ethernet/qlogic/qed/qed_spq.c | 15 +++++++--------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ arch/mips/kernel/process.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sp.h b/drivers/net/ethernet/qlogic/qed/qed_sp.h
-index 01a213d4ee9c5..e7192f3babc28 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sp.h
-@@ -380,6 +380,7 @@ void qed_consq_setup(struct qed_hwfn *p_hwfn);
-  * @param p_hwfn
-  */
- void qed_consq_free(struct qed_hwfn *p_hwfn);
-+int qed_spq_pend_post(struct qed_hwfn *p_hwfn);
- 
- /**
-  * @file
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_spq.c b/drivers/net/ethernet/qlogic/qed/qed_spq.c
-index 467755b6dd0be..01f8e2b5cb6c3 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_spq.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_spq.c
-@@ -404,6 +404,11 @@ int qed_eq_completion(struct qed_hwfn *p_hwfn, void *cookie)
- 
- 	qed_eq_prod_update(p_hwfn, qed_chain_get_prod_idx(p_chain));
- 
-+	/* Attempt to post pending requests */
-+	spin_lock_bh(&p_hwfn->p_spq->lock);
-+	rc = qed_spq_pend_post(p_hwfn);
-+	spin_unlock_bh(&p_hwfn->p_spq->lock);
-+
- 	return rc;
- }
- 
-@@ -747,7 +752,7 @@ static int qed_spq_post_list(struct qed_hwfn *p_hwfn,
- 	return 0;
- }
- 
--static int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
-+int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index e8b166e9146a3..ea563bfea0e10 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -370,7 +370,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip, int *frame_size)
+ static int get_frame_info(struct mips_frame_info *info)
  {
- 	struct qed_spq *p_spq = p_hwfn->p_spq;
- 	struct qed_spq_entry *p_ent = NULL;
-@@ -879,7 +884,6 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
- 	struct qed_spq_entry	*p_ent = NULL;
- 	struct qed_spq_entry	*tmp;
- 	struct qed_spq_entry	*found = NULL;
--	int			rc;
+ 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
+-	union mips_instruction insn, *ip, *ip_end;
++	union mips_instruction insn, *ip;
+ 	const unsigned int max_insns = 128;
+ 	unsigned int last_insn_size = 0;
+ 	unsigned int i;
+@@ -383,10 +383,9 @@ static int get_frame_info(struct mips_frame_info *info)
+ 	if (!ip)
+ 		goto err;
  
- 	if (!p_hwfn)
- 		return -EINVAL;
-@@ -937,12 +941,7 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
- 		 */
- 		qed_spq_return_entry(p_hwfn, found);
- 
--	/* Attempt to post pending requests */
--	spin_lock_bh(&p_spq->lock);
--	rc = qed_spq_pend_post(p_hwfn);
--	spin_unlock_bh(&p_spq->lock);
+-	ip_end = (void *)ip + info->func_size;
 -
--	return rc;
-+	return 0;
- }
- 
- int qed_consq_alloc(struct qed_hwfn *p_hwfn)
+-	for (i = 0; i < max_insns && ip < ip_end; i++) {
++	for (i = 0; i < max_insns; i++) {
+ 		ip = (void *)ip + last_insn_size;
++
+ 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
+ 			insn.word = ip->halfword[0] << 16;
+ 			last_insn_size = 2;
 -- 
 2.19.1
 
