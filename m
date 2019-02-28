@@ -2,126 +2,96 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3045DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AC2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 085962084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500A1218E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731660AbfB1HTP (ORCPT
+        id S1731267AbfB1HZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:19:15 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41060 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730951AbfB1HTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:19:14 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 74B4952B9E1B217665E6;
-        Thu, 28 Feb 2019 15:19:12 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
- 15:19:04 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] xfrm: policy: Fix out-of-bound array accesses in __xfrm_policy_unlink
-Date:   Thu, 28 Feb 2019 15:18:59 +0800
-Message-ID: <20190228071859.17768-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 28 Feb 2019 02:25:44 -0500
+Received: from mga06.intel.com ([134.134.136.31]:6405 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730951AbfB1HZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 02:25:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2019 23:20:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,422,1544515200"; 
+   d="scan'208";a="127860960"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.56]) ([10.237.72.56])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Feb 2019 23:20:38 -0800
+Subject: Re: [bug report][stable] perf probe: failed to add events
+To:     Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        luto@kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Xu Yu <xuyu@linux.alibaba.com>, peterz@infradead.org,
+        mingo@redhat.com
+References: <1a4240a8-288b-45d0-073d-d5cb8f0c63eb@linux.alibaba.com>
+ <20190226090505.GA24409@kroah.com>
+ <c7ccd9cb-3a66-98a9-faa1-7ee5ed20ff88@linux.alibaba.com>
+ <20190226130802.GA10343@kroah.com> <20190226142009.GC26786@kernel.org>
+ <3b233ff2-e87a-1c61-d516-6c4cdecb4f01@intel.com>
+ <8e798942-0e71-c88f-866f-88e55177e286@linux.alibaba.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <fea29ce5-b410-27cc-045e-feeecbc4a7f5@intel.com>
+Date:   Thu, 28 Feb 2019 09:19:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <8e798942-0e71-c88f-866f-88e55177e286@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On 28/02/19 4:07 AM, Joseph Qi wrote:
+> Hi Adrian,
+> 
+> On 19/2/27 20:39, Adrian Hunter wrote:
+>> Seems to be fixed by this:
+>>
+>> From: Adrian Hunter <adrian.hunter@intel.com>
+>> Date: Wed, 27 Feb 2019 05:35:25 +0200
+>> Subject: [PATCH] perf probe: Fix getting the kernel map
+>>
+>> Since commit 4d99e4136580 ("perf machine: Workaround missing maps for x86
+>> PTI entry trampolines"), perf tools has been creating more than one kernel
+>> map, however 'perf probe' assumed there could be only one.
+>>
+>> Fix by using machine__kernel_map() to get the main kernel map.
+>>
+>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>> Fixes: 4d99e4136580 ("perf machine: Workaround missing maps for x86 PTI entry trampolines")
+> 
+> Below is my investigation result before, FYI.
+> the first bad commit (v4.18 ~ v4.19):
+> d83212d5dd67 kallsyms, x86: Export addresses of PTI entry trampolines
 
-UBSAN report this:
+Yes we should add a fixes tag for that also.
 
-UBSAN: Undefined behaviour in net/xfrm/xfrm_policy.c:1289:24
-index 6 is out of range for type 'unsigned int [6]'
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.4.162-514.55.6.9.x86_64+ #13
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
- 0000000000000000 1466cf39b41b23c9 ffff8801f6b07a58 ffffffff81cb35f4
- 0000000041b58ab3 ffffffff83230f9c ffffffff81cb34e0 ffff8801f6b07a80
- ffff8801f6b07a20 1466cf39b41b23c9 ffffffff851706e0 ffff8801f6b07ae8
-Call Trace:
- <IRQ>  [<ffffffff81cb35f4>] __dump_stack lib/dump_stack.c:15 [inline]
- <IRQ>  [<ffffffff81cb35f4>] dump_stack+0x114/0x1a0 lib/dump_stack.c:51
- [<ffffffff81d94225>] ubsan_epilogue+0x12/0x8f lib/ubsan.c:164
- [<ffffffff81d954db>] __ubsan_handle_out_of_bounds+0x16e/0x1b2 lib/ubsan.c:382
- [<ffffffff82a25acd>] __xfrm_policy_unlink+0x3dd/0x5b0 net/xfrm/xfrm_policy.c:1289
- [<ffffffff82a2e572>] xfrm_policy_delete+0x52/0xb0 net/xfrm/xfrm_policy.c:1309
- [<ffffffff82a3319b>] xfrm_policy_timer+0x30b/0x590 net/xfrm/xfrm_policy.c:243
- [<ffffffff813d3927>] call_timer_fn+0x237/0x990 kernel/time/timer.c:1144
- [<ffffffff813d8e7e>] __run_timers kernel/time/timer.c:1218 [inline]
- [<ffffffff813d8e7e>] run_timer_softirq+0x6ce/0xb80 kernel/time/timer.c:1401
- [<ffffffff8120d6f9>] __do_softirq+0x299/0xe10 kernel/softirq.c:273
- [<ffffffff8120e676>] invoke_softirq kernel/softirq.c:350 [inline]
- [<ffffffff8120e676>] irq_exit+0x216/0x2c0 kernel/softirq.c:391
- [<ffffffff82c5edab>] exiting_irq arch/x86/include/asm/apic.h:652 [inline]
- [<ffffffff82c5edab>] smp_apic_timer_interrupt+0x8b/0xc0 arch/x86/kernel/apic/apic.c:926
- [<ffffffff82c5c985>] apic_timer_interrupt+0xa5/0xb0 arch/x86/entry/entry_64.S:735
- <EOI>  [<ffffffff81188096>] ? native_safe_halt+0x6/0x10 arch/x86/include/asm/irqflags.h:52
- [<ffffffff810834d7>] arch_safe_halt arch/x86/include/asm/paravirt.h:111 [inline]
- [<ffffffff810834d7>] default_idle+0x27/0x430 arch/x86/kernel/process.c:446
- [<ffffffff81085f05>] arch_cpu_idle+0x15/0x20 arch/x86/kernel/process.c:437
- [<ffffffff8132abc3>] default_idle_call+0x53/0x90 kernel/sched/idle.c:92
- [<ffffffff8132b32d>] cpuidle_idle_call kernel/sched/idle.c:156 [inline]
- [<ffffffff8132b32d>] cpu_idle_loop kernel/sched/idle.c:251 [inline]
- [<ffffffff8132b32d>] cpu_startup_entry+0x60d/0x9a0 kernel/sched/idle.c:299
- [<ffffffff8113e119>] start_secondary+0x3c9/0x560 arch/x86/kernel/smpboot.c:245
-
-The issue is triggered as this:
-
-xfrm_add_policy
-    -->verify_newpolicy_info  //check the index provided by user with XFRM_POLICY_MAX
-			      //In my case, the index is 0x6E6BB6, so it pass the check.
-    -->xfrm_policy_construct  //copy the user's policy and set xfrm_policy_timer
-    -->xfrm_policy_insert
-	--> __xfrm_policy_link //use the orgin dir, in my case is 2
-	--> xfrm_gen_index   //generate policy index, there is 0x6E6BB6
-
-then xfrm_policy_timer be fired
-
-xfrm_policy_timer
-   --> xfrm_policy_id2dir  //get dir from (policy index & 7), in my case is 6
-   --> xfrm_policy_delete
-      --> __xfrm_policy_unlink //access policy_count[dir], trigger out of range access
-
-Add xfrm_policy_id2dir check in verify_newpolicy_info, make sure the computed dir is
-valid, to fix the issue.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e682adf021be ("xfrm: Try to honor policy index if it's supplied by user")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/xfrm/xfrm_user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index a131f9f..8d4d52f 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -1424,7 +1424,7 @@ static int verify_newpolicy_info(struct xfrm_userpolicy_info *p)
- 	ret = verify_policy_dir(p->dir);
- 	if (ret)
- 		return ret;
--	if (p->index && ((p->index & XFRM_POLICY_MAX) != p->dir))
-+	if (p->index && (xfrm_policy_id2dir(p->index) != p->dir))
- 		return -EINVAL;
- 
- 	return 0;
--- 
-2.7.0
-
+> revert this commit on 4.19.0, it works.
+> the first good commit again (v4.19 ~ v4.20):
+> bf904d2762ee x86/pti/64: Remove the SYSCALL64 entry trampoline
+> backported this commit as well as the related commit 98f05b5138f0 on
+> v4.19.24, it works.
+> 
+> And I've tested your fix on v4.19.24, it also works.
+> Tested-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> 
 
