@@ -2,125 +2,151 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1F2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC219C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AC12184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551372620;
-	bh=Vh8L6gwhuROEB9QufXXrQ6XmpuPT92PVCVh0mUQZ0Sc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BfmH5XSniSbpvwgpQ8QRI75w8HNVHn2aDG92t+8n7eGE9X1RmadydV/EzA0vB0ePK
-	 tis5ekbdWFdMW3ODs1MHFjpLhN7tj18osfxKpDbLYE0n8aAJFKYiuxyA4jk3wMKlUx
-	 xNl/YxlY7PYjKubLF2vTCdlOeHcctAATzUE1hUco=
+	by mail.kernel.org (Postfix) with ESMTP id 825E42184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733183AbfB1QuS (ORCPT
+        id S1733199AbfB1Qva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 11:50:18 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35688 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbfB1QuS (ORCPT
+        Thu, 28 Feb 2019 11:51:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34646 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727861AbfB1Qv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 11:50:18 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m73so10213284lfa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 08:50:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3piHqZNEcy9SKWLEwBV/mKkW8cAFlGizlOArQiazQDo=;
-        b=KIW7QzHN+HY8Jbx2K5sP+q/zoQeDeSZRCuE+HK+eNScSNhobsuoZ/pD4HIc+NS3xHX
-         tGyHcpuJYwQ4pwRDiNV8V2MVug2HPxnzTHsvBkH59+TJIlafXOIzvHyR9r2K7uQG6CYa
-         HSTo+/U2VMHZBqebtKRCazaLovlkPjEaqVGlM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3piHqZNEcy9SKWLEwBV/mKkW8cAFlGizlOArQiazQDo=;
-        b=lfPG4zECMDujGOHDJTUCSPvJ3ViHs54WBchSZyjwqxs4rbLD1/tsTv0wTi5HBILnCO
-         BSVVQG4bfqVPNTvH62OACJ4HeyjV0v9zXzQAEo2HtWrl4f/pDPiZS1s0Cm/kRYr50/5D
-         HC6eLDi8hQ5T/RUOdGFU95hXNwWSO2vE6YwQ5JpXWHYWeALryrL7pD9GvJQzxamK55gx
-         FU/4PyZajLSgJDOuLtL29iVpLbhJk1IPgO9CjUhuFKiGGFBTRjRrDPJnSYaE8ws9ZuNH
-         BEIAU01JYKf1tpiyd7e0/r10uI46Q3MkDaElp/XfcLSImNA2q+pOKZnqUa2AVEOl8e25
-         A68Q==
-X-Gm-Message-State: APjAAAUQ0L2Kb1YM0e6bg2SGZOd/jZmN1eaal7bwMXW76r5GxJ4Btj11
-        u1h07os9jX/fen3a/6Df5xPO58ZrHKU=
-X-Google-Smtp-Source: APXvYqyZuf0tK4/uXPMJxU74HR1blYTCKvt1G+uTyNWcLW41p+ldjogjHK+jTPrqMUYMIE4Qm6Cx3Q==
-X-Received: by 2002:a19:48c3:: with SMTP id v186mr270618lfa.40.1551372615324;
-        Thu, 28 Feb 2019 08:50:15 -0800 (PST)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id o67sm4762313lfe.40.2019.02.28.08.50.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 08:50:14 -0800 (PST)
-Received: by mail-lf1-f50.google.com with SMTP id j1so15756311lfb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 08:50:14 -0800 (PST)
-X-Received: by 2002:a19:3f44:: with SMTP id m65mr248529lfa.136.1551372613604;
- Thu, 28 Feb 2019 08:50:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20190228145450.289603901@infradead.org> <20190228150152.540038736@infradead.org>
-In-Reply-To: <20190228150152.540038736@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 Feb 2019 08:49:57 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgsSXxL5c2Lbmbai=bcCgN0G=jPO+gWhQ3a+wx-LTaFkQ@mail.gmail.com>
-Message-ID: <CAHk-=wgsSXxL5c2Lbmbai=bcCgN0G=jPO+gWhQ3a+wx-LTaFkQ@mail.gmail.com>
-Subject: Re: [PATCH 6/8] i915,uaccess: Fix redundant CLAC
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
+        Thu, 28 Feb 2019 11:51:29 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SGorpe096602
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 11:51:27 -0500
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2qxk4e92yt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 11:51:27 -0500
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 28 Feb 2019 16:51:26 -0000
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Feb 2019 16:51:22 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SGpLdY23920872
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Feb 2019 16:51:22 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D9754B2064;
+        Thu, 28 Feb 2019 16:51:21 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BADABB205F;
+        Thu, 28 Feb 2019 16:51:21 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Feb 2019 16:51:21 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id A6E5A16C4295; Thu, 28 Feb 2019 08:51:22 -0800 (PST)
+Date:   Thu, 28 Feb 2019 08:51:22 -0800
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Content-Type: text/plain; charset="UTF-8"
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Documentation/locking/lockdep: Drop last two chars of
+ sample states
+Reply-To: paulmck@linux.ibm.com
+References: <20190228105731.1092-1-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228105731.1092-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19022816-0068-0000-0000-0000039BC920
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010680; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01167658; UDB=6.00610029; IPR=6.00948272;
+ MB=3.00025782; MTD=3.00000008; XFM=3.00000015; UTC=2019-02-28 16:51:26
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19022816-0069-0000-0000-000047A8C9B6
+Message-Id: <20190228165122.GT4072@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902280115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 7:05 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x3c: redundant UACCESS disable
-> drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x66: redundant UACCESS disable
->
-> AKA. you don't need user_access_end() if user_access_begin() fails.
+On Thu, Feb 28, 2019 at 11:57:31AM +0100, Geert Uytterhoeven wrote:
+> Since the removal of FS_RECLAIM annotations, lockdep states contain six
+> characters, not four.
 
-NOOO!
+Does the above want to instead say "four characters, not six"?
 
-This is complete garbage, and will end up running with AC set forever after.
+							Thanx, Paul
 
-PeterZ, you need to remove that "redundant UACCESS disable" check, or
-make it a whole lot smarter. Because as it is, it's horribly horribly
-wrong.
+> Fixes: e5684bbfc3f03480 ("Documentation/locking/lockdep: Update info about states")
+> Fixes: d92a8cfcb37ecd13 ("locking/lockdep: Rework FS_RECLAIM annotation")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/RCU/lockdep-splat.txt      | 6 +++---
+>  Documentation/locking/lockdep-design.txt | 4 ++--
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/RCU/lockdep-splat.txt b/Documentation/RCU/lockdep-splat.txt
+> index 238e9f61352f6187..9423b633526d14df 100644
+> --- a/Documentation/RCU/lockdep-splat.txt
+> +++ b/Documentation/RCU/lockdep-splat.txt
+> @@ -24,11 +24,11 @@ other info that might help us debug this:
+>  
+>  rcu_scheduler_active = 1, debug_locks = 0
+>  3 locks held by scsi_scan_6/1552:
+> - #0:  (&shost->scan_mutex){+.+.+.}, at: [<ffffffff8145efca>]
+> + #0:  (&shost->scan_mutex){+.+.}, at: [<ffffffff8145efca>]
+>  scsi_scan_host_selected+0x5a/0x150
+> - #1:  (&eq->sysfs_lock){+.+...}, at: [<ffffffff812a5032>]
+> + #1:  (&eq->sysfs_lock){+.+.}, at: [<ffffffff812a5032>]
+>  elevator_exit+0x22/0x60
+> - #2:  (&(&q->__queue_lock)->rlock){-.-...}, at: [<ffffffff812b6233>]
+> + #2:  (&(&q->__queue_lock)->rlock){-.-.}, at: [<ffffffff812b6233>]
+>  cfq_exit_queue+0x43/0x190
+>  
+>  stack backtrace:
+> diff --git a/Documentation/locking/lockdep-design.txt b/Documentation/locking/lockdep-design.txt
+> index 49f58a07ee7b19c8..39fae143c9cbf5ff 100644
+> --- a/Documentation/locking/lockdep-design.txt
+> +++ b/Documentation/locking/lockdep-design.txt
+> @@ -45,10 +45,10 @@ When locking rules are violated, these state bits are presented in the
+>  locking error messages, inside curlies. A contrived example:
+>  
+>     modprobe/2287 is trying to acquire lock:
+> -    (&sio_locks[i].lock){-.-...}, at: [<c02867fd>] mutex_lock+0x21/0x24
+> +    (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
+>  
+>     but task is already holding lock:
+> -    (&sio_locks[i].lock){-.-...}, at: [<c02867fd>] mutex_lock+0x21/0x24
+> +    (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
+>  
+>  
+>  The bit position indicates STATE, STATE-read, for each of the states listed
+> -- 
+> 2.17.1
+> 
 
-We absolutely _have_ to have that "user_access_end()" there.
-
-Yes, it is redundant (but harmlessly so) if no fault occurs.
-
-But if a fault occurs, that "user_access_end()" is what clears AC on
-the faulting path. That's absolutely required, because we don't clear
-it on return from exception (and we shouldn't - one common pattern for
-user space exceptions is "try to do a big access, if that fails go
-back to using small accesses until it fails again").
-
-Your reachability clearly doesn't take exception handling into account.
-
-That patch must die, and your incorrect reachability model must be fixed.
-
-Right now the objtool rules seem to be worse than not using objtool,
-if it causes these kinds of false positives.
-
-              Linus
