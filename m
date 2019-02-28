@@ -7,115 +7,237 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF5EC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCCDC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7B6214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC515214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gRwCSl3H"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sy4MZQR4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbfB1GvT (ORCPT
+        id S1731139AbfB1GxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 01:51:19 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35711 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725967AbfB1GvT (ORCPT
+        Thu, 28 Feb 2019 01:53:23 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:54850 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725967AbfB1GxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 01:51:19 -0500
-Received: by mail-io1-f67.google.com with SMTP id x4so15804498ion.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 22:51:18 -0800 (PST)
+        Thu, 28 Feb 2019 01:53:22 -0500
+Received: by mail-it1-f195.google.com with SMTP id w18so13182396itj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 22:53:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mNpIrDMVV6VCXM5MciohqYyD1qSVDJXm+0gVrNZiczA=;
-        b=gRwCSl3H6+hvxDN+wp8sksTxqSI3HzzzS06qU4b8vDZj4A89DMPoYy91Rxxy596YUz
-         56LmfW4lM9XwB6S08VthLQFaOZ0/fAQ2f2J5lVqZ9qRKKU7xbFyH/w9hhcwn9hxTlyMy
-         jOFoWnz6x8cvjURyBAnl4mNVMg/F4qObGbJAHR9O6kaliLl1RFygzm18shGBryDj07Z2
-         nr4pzu2+eByrSCcxjWFUbas0QyKNeQ7rwqTVaVOcqKXTAwmANMpLJQvugQkOWEOtSAV1
-         Dk4+b3i82t6VoFT29OFVNBM0OfQcUzj3pAJv30PTepnfUC6BTALzKd7+smFCO82qdqNp
-         J6pQ==
+        bh=i3/s5PglH9gxlcaNlP0KMkiKMOrsgOYVB0VY1Idim6o=;
+        b=Sy4MZQR4I3yEsBHIGkZYvkvGNPVTMOo746qBMr47WiM0SQaS5ZGjVBU5kDcWtdDUlY
+         GNLEbIBLx77WiwJedTtLEoGIN0QkcHAA1nCedJheS82cBft4I0hZI17zv+1kFHVYHvQ8
+         3j7yjg5cCWUa+lxdwL2T1ELacXUU9b/dyNvO9DUvF9emkMkYiSSIlq0i+mx+ZLGstEi/
+         42bI1e+vKARUZUWd3CtsmQ70y+ADNA+9axkptKPra+n65i8/6SiArpczqHxWWW/zK2GJ
+         uRr6g2litZZ2DAcBCanIpRsBpmEMwdIvuj8PtWI+uj245jRnF2VHDfJPpAuJRFzA8DPC
+         WARw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mNpIrDMVV6VCXM5MciohqYyD1qSVDJXm+0gVrNZiczA=;
-        b=IF2yPqZGlQTFqYLOCoNlXGTPLkpC3D3veS4zImNhfy0cn6kfSt5rCxTqnLR0M0Phku
-         zrK7h5bwDrvfIu0oQCy9FwXvBjBDu93vZ9KT7lCPPeKDjYvt9F8wzhlFLLw5F5Oj7041
-         WpibtiHWPy4uMiBXmdiZLBiTbxPbTC6l+8uviJbD5gXX3CbOZkwfhoIgLovQjOCk4z77
-         TezvMsajTRgyy+Ig8Ql3B2/RJQz7g9JXpj0oUfgpWu7B6GgodG2MnPDKy1uarWWMF6Ik
-         VBgO5nZXhsc7wXpLOZeuINmKYR8HYx2laIJ8+Ra+za22GlrMsqF47yhC8JcXRYV+yS3M
-         u/Vg==
-X-Gm-Message-State: APjAAAVpxeqJbrLkzOeKuuKIVauLS2dnWRO5qS0aU77B/YjgUPp3su16
-        oU1JLuTV898UEi0KwcxRZt5xhmimTr4l7Tv3dsu4bA==
-X-Google-Smtp-Source: APXvYqzy7llLJMUvrJjkrAMx2UBpa+k+RhXI8MmdOMmfD47A+k92qdgT9mbXDxsTVr4N8kKLkhXQwTNMcpKuJ9Psfrg=
-X-Received: by 2002:a5d:84c3:: with SMTP id z3mr4392528ior.11.1551336678106;
- Wed, 27 Feb 2019 22:51:18 -0800 (PST)
+        bh=i3/s5PglH9gxlcaNlP0KMkiKMOrsgOYVB0VY1Idim6o=;
+        b=KFfzTboGJv4mQcIL+Q6JKVjqD2g9dhoNuM1CLgqZom18l2HwIUX+ThbBY/oqqmPnRL
+         YrI7F6smo4OQ4vP2FlP6CZNoK8RY0/kn/8Rl64D3aE/tITmTnXuLfu57qY2S61pmL4jl
+         /juVYgIoLdQIRPxW0FKORECzW8+Mk/YNgzFNlFfJWwuqrrMublO5bBxBrQBUc4qfvWjc
+         r9Xgg7bvIJV/37NpxVRqe1qO+KfFSOuIr6/Yq85xUkd8tZ2cehPEF2nsbvXEMpb3MKiS
+         lXybufwA9Gd6S4Heq/KAGIANdr7mYPhqvl2jivOXxbjDwiX4FAVJWGyS0gJjcFianVtk
+         R8aQ==
+X-Gm-Message-State: AHQUAuYMmyrObtX5UlF1W47mI2qgsMu05GSD0t5v3+vZm/zR16lbPxcl
+        uKVi5pNsjZwnosx7m6ykbnLQbR81Ja/LP/XQ9mTBSQ==
+X-Google-Smtp-Source: AHgI3IYkgWOQOJZ0I9PrRVK8rb84Y2Q584t96OHyX+QdRL8KN7SjW2cOx0P5+eNWrJqzUGIlGq6bcnoN8mFyvD3aL1o=
+X-Received: by 2002:a02:4985:: with SMTP id p5mr3640499jad.35.1551336801199;
+ Wed, 27 Feb 2019 22:53:21 -0800 (PST)
 MIME-Version: 1.0
-References: <0000000000001c63c80582e32294@google.com> <8d94063c-e10c-c470-8ce0-1f86c517b1b4@i-love.sakura.ne.jp>
-In-Reply-To: <8d94063c-e10c-c470-8ce0-1f86c517b1b4@i-love.sakura.ne.jp>
+References: <0000000000006a12bd0581ca4145@google.com> <20190213122331.632a4eb1a12b738ef9633855@linux-foundation.org>
+ <20190226182129.GA218103@gmail.com> <20190227205323.GA186986@gmail.com>
+In-Reply-To: <20190227205323.GA186986@gmail.com>
 From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 28 Feb 2019 07:51:06 +0100
-Message-ID: <CACT4Y+ZqjoXftDAby9s-YUrOv8txBFqKukRcxP6ty3LLKz_+Hw@mail.gmail.com>
-Subject: Re: kernel panic: MAC Initialization failed.
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     syzbot <syzbot+e1b8084e532b6ee7afab@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        James Morris <jmorris@namei.org>,
+Date:   Thu, 28 Feb 2019 07:53:09 +0100
+Message-ID: <CACT4Y+ZK5MrJ3GZ-sxihNpRaun4aMOxkRqmLqQJxYEgD2cnfZQ@mail.gmail.com>
+Subject: Re: BUG: Bad page state (5)
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>, takedakn@nttdata.co.jp
+        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        nborisov@suse.com, Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Mike Kravetz <kravetz@us.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 11:37 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
+On Wed, Feb 27, 2019 at 9:53 PM Eric Biggers <ebiggers@kernel.org> wrote:
 >
-> On 2019/02/28 2:02, syzbot wrote:
-> > Hello,
+> On Tue, Feb 26, 2019 at 10:21:30AM -0800, Eric Biggers wrote:
+> > On Wed, Feb 13, 2019 at 12:23:31PM -0800, Andrew Morton wrote:
+> > > On Wed, 13 Feb 2019 09:56:04 -0800 syzbot <syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com> wrote:
+> > >
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    c4f3ef3eb53f Add linux-next specific files for 20190213
+> > > > git tree:       linux-next
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1130a124c00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=9ec67976eb2df882
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=2cd2887ea471ed6e6995
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ecdaa8c00000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ebe178c00000
+> > > >
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com
+> > >
+> > > It looks like a a memfd page was freed with a non-NULL ->mapping.
+> > >
+> > > Joel touched the memfd code with "mm/memfd: add an F_SEAL_FUTURE_WRITE
+> > > seal to memfd" but it would be surprising if syzbot tickled that code?
+> > >
+> > >
+> > > > BUG: Bad page state in process udevd  pfn:472f0
+> > > > name:"memfd:"
+> > > > page:ffffea00011cbc00 count:0 mapcount:0 mapping:ffff88800df2ad40 index:0xf
+> > > > shmem_aops
+> > > > flags: 0x1fffc000008000c(uptodate|dirty|swapbacked)
+> > > > raw: 01fffc000008000c ffffea0000ac4f08 ffff8880a85af890 ffff88800df2ad40
+> > > > raw: 000000000000000f 0000000000000000 00000000ffffffff 0000000000000000
+> > > > page dumped because: non-NULL mapping
+> > > > Modules linked in:
+> > > > CPU: 1 PID: 7586 Comm: udevd Not tainted 5.0.0-rc6-next-20190213 #34
+> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > > Google 01/01/2011
+> > > > Call Trace:
+> > > >   __dump_stack lib/dump_stack.c:77 [inline]
+> > > >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> > > >   bad_page.cold+0xda/0xff mm/page_alloc.c:586
+> > > >   free_pages_check_bad+0x142/0x1a0 mm/page_alloc.c:1014
+> > > >   free_pages_check mm/page_alloc.c:1023 [inline]
+> > > >   free_pages_prepare mm/page_alloc.c:1113 [inline]
+> > > >   free_pcp_prepare mm/page_alloc.c:1138 [inline]
+> > > >   free_unref_page_prepare mm/page_alloc.c:2991 [inline]
+> > > >   free_unref_page_list+0x31d/0xc40 mm/page_alloc.c:3060
+> > > > name:"memfd:"
+> > > >   release_pages+0x60d/0x1940 mm/swap.c:791
+> > > >   pagevec_lru_move_fn+0x218/0x2a0 mm/swap.c:213
+> > > >   __pagevec_lru_add mm/swap.c:917 [inline]
+> > > >   lru_add_drain_cpu+0x2f7/0x520 mm/swap.c:581
+> > > >   lru_add_drain+0x20/0x60 mm/swap.c:652
+> > > >   exit_mmap+0x290/0x530 mm/mmap.c:3134
+> > > >   __mmput kernel/fork.c:1047 [inline]
+> > > >   mmput+0x15f/0x4c0 kernel/fork.c:1068
+> > > >   exec_mmap fs/exec.c:1046 [inline]
+> > > >   flush_old_exec+0x8d9/0x1c20 fs/exec.c:1279
+> > > >   load_elf_binary+0x9bc/0x53f0 fs/binfmt_elf.c:864
+> > > >   search_binary_handler fs/exec.c:1656 [inline]
+> > > >   search_binary_handler+0x17f/0x570 fs/exec.c:1634
+> > > >   exec_binprm fs/exec.c:1698 [inline]
+> > > >   __do_execve_file.isra.0+0x1394/0x23f0 fs/exec.c:1818
+> > > >   do_execveat_common fs/exec.c:1865 [inline]
+> > > >   do_execve fs/exec.c:1882 [inline]
+> > > >   __do_sys_execve fs/exec.c:1958 [inline]
+> > > >   __se_sys_execve fs/exec.c:1953 [inline]
+> > > >   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
+> > > >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+> > > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > > RIP: 0033:0x7fc7001ba207
+> > > > Code: Bad RIP value.
+> > > > RSP: 002b:00007ffe06aa13b8 EFLAGS: 00000206 ORIG_RAX: 000000000000003b
+> > > > RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fc7001ba207
+> > > > RDX: 0000000001fd5fd0 RSI: 00007ffe06aa14b0 RDI: 00007ffe06aa24c0
+> > > > RBP: 0000000000625500 R08: 0000000000001c49 R09: 0000000000001c49
+> > > > R10: 0000000000000000 R11: 0000000000000206 R12: 0000000001fd5fd0
+> > > > R13: 0000000000000007 R14: 0000000001fc6250 R15: 0000000000000005
+> > > > BUG: Bad page state in process udevd  pfn:2b13c
+> > > > page:ffffea0000ac4f00 count:0 mapcount:0 mapping:ffff88800df2ad40 index:0xe
+> > > > shmem_aops
+> > > > flags: 0x1fffc000008000c(uptodate|dirty|swapbacked)
+> > > > raw: 01fffc000008000c ffff8880a85af890 ffff8880a85af890 ffff88800df2ad40
+> > > > raw: 000000000000000e 0000000000000000 00000000ffffffff 0000000000000000
+> > > > page dumped because: non-NULL mapping
+> > > > Modules linked in:
+> > > > CPU: 1 PID: 7586 Comm: udevd Tainted: G    B
+> > > > 5.0.0-rc6-next-20190213 #34
+> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > > Google 01/01/2011
+> > > > Call Trace:
+> > > >   __dump_stack lib/dump_stack.c:77 [inline]
+> > > >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> > > >   bad_page.cold+0xda/0xff mm/page_alloc.c:586
+> > > > name:"memfd:"
+> > > >   free_pages_check_bad+0x142/0x1a0 mm/page_alloc.c:1014
+> > > >   free_pages_check mm/page_alloc.c:1023 [inline]
+> > > >   free_pages_prepare mm/page_alloc.c:1113 [inline]
+> > > >   free_pcp_prepare mm/page_alloc.c:1138 [inline]
+> > > >   free_unref_page_prepare mm/page_alloc.c:2991 [inline]
+> > > >   free_unref_page_list+0x31d/0xc40 mm/page_alloc.c:3060
+> > > >   release_pages+0x60d/0x1940 mm/swap.c:791
+> > > >   pagevec_lru_move_fn+0x218/0x2a0 mm/swap.c:213
+> > > >   __pagevec_lru_add mm/swap.c:917 [inline]
+> > > >   lru_add_drain_cpu+0x2f7/0x520 mm/swap.c:581
+> > > >   lru_add_drain+0x20/0x60 mm/swap.c:652
+> > > >   exit_mmap+0x290/0x530 mm/mmap.c:3134
+> > > >   __mmput kernel/fork.c:1047 [inline]
+> > > >   mmput+0x15f/0x4c0 kernel/fork.c:1068
+> > > >   exec_mmap fs/exec.c:1046 [inline]
+> > > >   flush_old_exec+0x8d9/0x1c20 fs/exec.c:1279
+> > > >   load_elf_binary+0x9bc/0x53f0 fs/binfmt_elf.c:864
+> > > >   search_binary_handler fs/exec.c:1656 [inline]
+> > > >   search_binary_handler+0x17f/0x570 fs/exec.c:1634
+> > > >   exec_binprm fs/exec.c:1698 [inline]
+> > > >   __do_execve_file.isra.0+0x1394/0x23f0 fs/exec.c:1818
+> > > >   do_execveat_common fs/exec.c:1865 [inline]
+> > > >   do_execve fs/exec.c:1882 [inline]
+> > > >   __do_sys_execve fs/exec.c:1958 [inline]
+> > > >   __se_sys_execve fs/exec.c:1953 [inline]
+> > > >   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
+> > > >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+> > > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > > RIP: 0033:0x7fc7001ba207
+> > > > Code: Bad RIP value.
+> > > > RSP: 002b:00007ffe06aa13b8 EFLAGS: 00000206 ORIG_RAX: 000000000000003b
+> > > > RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fc7001ba207
+> > > > RDX: 0000000001fd5fd0 RSI: 00007ffe06aa14b0 RDI: 00007ffe06aa24c0
+> > > > RBP: 0000000000625500 R08: 0000000000001c49 R09: 0000000000001c49
+> > > > R10: 0000000000000000 R11: 0000000000000206 R12: 0000000001fd5fd0
+> > > > R13: 0000000000000007 R14: 0000000001fc6250 R15: 0000000000000005
+> > > >
+> > > >
+> > > > ---
+> > > > This bug is generated by a bot. It may contain errors.
+> > > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > > >
+> > > > syzbot will keep track of this bug report. See:
+> > > > https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
+> > > > syzbot.
+> > > > syzbot can test patches for this bug, for details see:
+> > > > https://goo.gl/tpsmEJ#testing-patches
+> > >
 > >
-> > syzbot found the following crash on:
+> > It's apparently the bug in the io_uring patchset I reported yesterday (well, I
+> > stole it from another open syzbot bug...) and Jens is already planning to fix:
+> > https://marc.info/?l=linux-api&m=155115288114046&w=2.  Reproducer is similar,
+> > and the crash bisects down to the same commit from the io_uring patchset:
+> > "block: implement bio helper to add iter bvec pages to bio".
 > >
-> > HEAD commit:    7b827ff9af88 Add linux-next specific files for 20190227
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=15336f14c00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5fa6b8975759dcc5
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=e1b8084e532b6ee7afab
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ee708ac00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16954084c00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+e1b8084e532b6ee7afab@syzkaller.appspotmail.com
 >
-> Thank you. The LSM stacking seems to be working as expected.
-> But this one should not be considered as a bug.
->
-> If something went wrong before loading access control rules,
-> it is pointless to continue. Thus, stopping with kernel panic.
-
-Hi Tetsuo,
-
-What misconfiguration you mean?
-
-
-
-> If this path is trivially triggered enough to prevent testing, syzbot can
-> load access control rules from /etc/tomoyo/ directory of the filesystem
-> image and make tomoyo_policy_loaded = true by executing /sbin/init .
->
-> Hmm, maybe we need to think about automated testing environments where
-> neither built-in access control rules nor run-time access control rules
-> can be provided ... ?
+> Fixed in next-20190227.  The fix was folded into "block: implement bio helper to
+> add iter bvec pages to bio".  Telling syzbot to invalidate this bug report:
 >
 > #syz invalid
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/8d94063c-e10c-c470-8ce0-1f86c517b1b4%40i-love.sakura.ne.jp.
-> For more options, visit https://groups.google.com/d/optout.
+
+Was this discovered separately? We could also add Reported-by (or
+Tested-by) tag to the commit.
