@@ -6,130 +6,94 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B989C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0224C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32196218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA1E2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbfB1JZJ (ORCPT
+        id S1731373AbfB1J1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:25:09 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44774 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfB1JZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:25:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25AFDEBD;
-        Thu, 28 Feb 2019 01:25:08 -0800 (PST)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F2663F738;
-        Thu, 28 Feb 2019 01:25:04 -0800 (PST)
-Subject: Re: [PATCH v6 4/6] arm64/kvm: add a userspace option to enable
- pointer authentication
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-References: <1550568271-5319-1-git-send-email-amit.kachhap@arm.com>
- <1550568271-5319-5-git-send-email-amit.kachhap@arm.com>
- <20190221123416.GD33673@lakrids.cambridge.arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <eab4eb68-826e-84af-6e7a-088f45cec22d@arm.com>
-Date:   Thu, 28 Feb 2019 14:55:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Feb 2019 04:27:12 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46400 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725978AbfB1J1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 04:27:12 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 40C8CE9A20594D511267;
+        Thu, 28 Feb 2019 17:27:10 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
+ 17:27:01 +0800
+Subject: Re: [PATCH] staging: rtl8712: assign initial value to a static
+ variable in r8712_efuse_pg_packet_write()
+To:     Greg KH <greg@kroah.com>
+References: <20190227033322.127177-1-maowenan@huawei.com>
+ <20190228080454.GA8210@kroah.com>
+CC:     <Larry.Finger@lwfinger.net>, <florian.c.schilhabel@googlemail.com>,
+        <straube.linux@gmail.com>, <kernel-janitors@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <a7826f72-adb1-a7be-4397-64cd79d6ec67@huawei.com>
+Date:   Thu, 28 Feb 2019 17:26:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190221123416.GD33673@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190228080454.GA8210@kroah.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 2/21/19 6:04 PM, Mark Rutland wrote:
-> On Tue, Feb 19, 2019 at 02:54:29PM +0530, Amit Daniel Kachhap wrote:
->> This feature will allow the KVM guest to allow the handling of
->> pointer authentication instructions or to treat them as undefined
->> if not set. It uses the existing vcpu API KVM_ARM_VCPU_INIT to
->> supply this parameter instead of creating a new API.
+
+On 2019/2/28 16:04, Greg KH wrote:
+> On Wed, Feb 27, 2019 at 11:33:22AM +0800, Mao Wenan wrote:
+>> repeat_times is a static variable, but each time when it enters
+>> r8712_efuse_pg_packet_write(), it is set to zero,
+>> this value is not consistent with last calling, so next behavior
+>> is not our expect.
 >>
->> A new register is not created to pass this parameter via
->> SET/GET_ONE_REG interface as just a flag (KVM_ARM_VCPU_PTRAUTH)
->> supplied is enough to enable this feature.
->>
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Christoffer Dall <christoffer.dall@arm.com>
->> Cc: kvmarm@lists.cs.columbia.edu
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 >> ---
->>   Documentation/arm64/pointer-authentication.txt |  9 +++++----
->>   Documentation/virtual/kvm/api.txt              |  4 ++++
->>   arch/arm64/include/asm/kvm_host.h              |  3 ++-
->>   arch/arm64/include/uapi/asm/kvm.h              |  1 +
->>   arch/arm64/kvm/handle_exit.c                   |  2 +-
->>   arch/arm64/kvm/hyp/ptrauth-sr.c                | 16 +++++++++++++++-
->>   arch/arm64/kvm/reset.c                         |  3 +++
->>   arch/arm64/kvm/sys_regs.c                      | 26 +++++++++++++-------------
->>   include/uapi/linux/kvm.h                       |  1 +
->>   9 files changed, 45 insertions(+), 20 deletions(-)
+>>  drivers/staging/rtl8712/rtl8712_efuse.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
 >>
->> diff --git a/Documentation/arm64/pointer-authentication.txt b/Documentation/arm64/pointer-authentication.txt
->> index a25cd21..0529a7d 100644
->> --- a/Documentation/arm64/pointer-authentication.txt
->> +++ b/Documentation/arm64/pointer-authentication.txt
->> @@ -82,7 +82,8 @@ pointers).
->>   Virtualization
->>   --------------
->>   
->> -Pointer authentication is not currently supported in KVM guests. KVM
->> -will mask the feature bits from ID_AA64ISAR1_EL1, and attempted use of
->> -the feature will result in an UNDEFINED exception being injected into
->> -the guest.
->> +Pointer authentication is enabled in KVM guest when virtual machine is
->> +created by passing a flag (KVM_ARM_VCPU_PTRAUTH) requesting this feature
->> +to be enabled. Without this flag, pointer authentication is not enabled
->> +in KVM guests and attempted use of the feature will result in an UNDEFINED
->> +exception being injected into the guest.
->> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
->> index 356156f..1e646fb 100644
->> --- a/Documentation/virtual/kvm/api.txt
->> +++ b/Documentation/virtual/kvm/api.txt
->> @@ -2642,6 +2642,10 @@ Possible features:
->>   	  Depends on KVM_CAP_ARM_PSCI_0_2.
->>   	- KVM_ARM_VCPU_PMU_V3: Emulate PMUv3 for the CPU.
->>   	  Depends on KVM_CAP_ARM_PMU_V3.
->> +	- KVM_ARM_VCPU_PTRAUTH: Emulate Pointer authentication for the CPU.
->> +	  Depends on KVM_CAP_ARM_PTRAUTH and only on arm64 architecture. If
->> +	  set, then the KVM guest allows the execution of pointer authentication
->> +	  instructions. Otherwise, KVM treats these instructions as undefined.
+>> diff --git a/drivers/staging/rtl8712/rtl8712_efuse.c b/drivers/staging/rtl8712/rtl8712_efuse.c
+>> index 8bc45ffd3029..3e8421255170 100644
+>> --- a/drivers/staging/rtl8712/rtl8712_efuse.c
+>> +++ b/drivers/staging/rtl8712/rtl8712_efuse.c
+>> @@ -358,7 +358,7 @@ u8 r8712_efuse_pg_packet_write(struct _adapter *padapter, const u8 offset,
+>>  	u8 pg_header = 0;
+>>  	u16 efuse_addr = 0, curr_size = 0;
+>>  	u8 efuse_data, target_word_cnts = 0;
+>> -	static int repeat_times;
+>> +	static int repeat_times = 0;
+>>  	int sub_repeat;
+>>  	u8 bResult = true;
+>>  
+>> @@ -368,7 +368,6 @@ u8 r8712_efuse_pg_packet_write(struct _adapter *padapter, const u8 offset,
+>>  		return false;
+>>  	pg_header = MAKE_EFUSE_HEADER(offset, word_en);
+>>  	target_word_cnts = calculate_word_cnts(word_en);
+>> -	repeat_times = 0;
+>>  	efuse_addr = 0;
+>>  	while (efuse_addr < efuse_available_max_size) {
+>>  		curr_size = r8712_efuse_get_current_size(padapter);
 > 
-> I think that we should have separate flags for address auth and generic
-> auth, to match the ID register split.
+> This patch does not apply to my tree at all.
 > 
-> For now, we can have KVM only support the case where both are set, but
-> it gives us freedom to support either in isolation if we have to in
-> future, without an ABI break.
-yes agree with you about having two address and generic ptrauth flags. 
-Will add in next iteration.
+> And are you sure this is correct?
 
-Thanks,
-Amit D
+sorry, my base tree is wrong, this fix is invalid.
+
 > 
-> Thanks,
-> Mark.
+> greg k-h
 > 
+> .
+> 
+
