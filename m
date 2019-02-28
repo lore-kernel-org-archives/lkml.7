@@ -2,150 +2,119 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D65C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949E8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED5620C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:08:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FP1DmMvr"
+	by mail.kernel.org (Postfix) with ESMTP id 6FED120C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732711AbfB1TIF (ORCPT
+        id S1731523AbfB1TKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 14:08:05 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34368 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfB1TIF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 14:08:05 -0500
-Received: by mail-qk1-f196.google.com with SMTP id a15so12766390qkc.1;
-        Thu, 28 Feb 2019 11:08:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gY/eN3dNE9VGGR0tbNCSzKwh5eQv624Pzq8V/GLMbAQ=;
-        b=FP1DmMvr3kdvlxEtRpCks7bIbGwY49+Gr64xd3JpJzFWhEJhBHikc9ntXsj4GWVfkU
-         7HfxMZ6Kwjp6nhzS8UQubTzjOoc2epxgxtIomDOHF/Fc2jnxlQhQ19cTs39TgWNqJB4p
-         gfV4wIKmFryv+t37mmirWqWZ2LYfPCVOAvcn2hOiCMhJuqTo2dFGnRSZR9y8AcjcBckA
-         h2AJXPS8duJgTDs33+JtgHK2o0hXL0KcK3qg9SwfYnYLtbnSrDkMzHrgxlmNLZ5Xhwe4
-         F8IM4YbUREEs8JJj/WHq1lSvb/nAmlw7/saVEO7nqtlVuS12RD1s8Crq0FwKpWvM6Xhg
-         V/tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gY/eN3dNE9VGGR0tbNCSzKwh5eQv624Pzq8V/GLMbAQ=;
-        b=NIWtYVGH4iLbvWfkKasK1KGCG8qlXKWbEsbTKcxhFpH2XNkPRpjD6rc4cEBzCK+9zt
-         NBzsIvHtKwiWko9YWFYweYXJxCJmshT8rKtd3nV+tugU48A/QHBwxg21zeKazAthGDEF
-         4Xq+BhMFytLrK1mogK2zoSQvhclAoKf0K+hGX8E5OHXKoKf1bsDQFvKw9E82dDtmDNe2
-         9Dd8X2VGgWxS7nQ8eCIq2Z1vrA/2eve1ij5TJqP9wilJqQz92YHKyi3YZsy/2wlDSmgh
-         vvjTw/IxdkT60I1l7WgSSlqxQRLQCN56glSEUenoVUhjeZkxU4RunXYB4jXOr3FCGOaH
-         rlqw==
-X-Gm-Message-State: APjAAAX4Qo1JlpVUjPhuIUiU//QXWbZJPGk33Aqun1JQqT+w86NPVUpf
-        472lJ5LJYJ4iWMpclb8hfaY=
-X-Google-Smtp-Source: APXvYqxER8xTvd9KBPkmtpXAy0XRLgzO22qmZgz8H1zpICv0TTrm3zDGJ9uh8TNYH+a0UJP9LRX/2Q==
-X-Received: by 2002:a05:620a:123b:: with SMTP id v27mr779308qkj.29.1551380883726;
-        Thu, 28 Feb 2019 11:08:03 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id l24sm13331678qtf.27.2019.02.28.11.08.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 11:08:02 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 710414039C; Thu, 28 Feb 2019 16:07:59 -0300 (-03)
-Date:   Thu, 28 Feb 2019 16:07:59 -0300
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org,
-        Mathias Krause <minipli@googlemail.com>,
-        linux-trace-devel@vger.kernel.org,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Michael Sartain <mikesart@fastmail.com>
-Subject: Re: [PATCH] tools lib traceevent: Fix buffer overflow in arg_eval
-Message-ID: <20190228190759.GL9508@kernel.org>
-References: <20190228015532.8941-1-tonyj@suse.de>
- <20190227221250.74996869@vmware.local.home>
- <20190228190123.GK9508@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228190123.GK9508@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 28 Feb 2019 14:10:20 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33994 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726214AbfB1TKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 14:10:19 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3751E30BDECB;
+        Thu, 28 Feb 2019 19:10:19 +0000 (UTC)
+Received: from llong.com (ovpn-121-201.rdu2.redhat.com [10.10.121.201])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 869AB60BE0;
+        Thu, 28 Feb 2019 19:10:14 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH-tip v3 00/11] locking/rwsem: Rwsem rearchitecture part 1
+Date:   Thu, 28 Feb 2019 14:09:30 -0500
+Message-Id: <1551380981-3113-1-git-send-email-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 28 Feb 2019 19:10:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Feb 28, 2019 at 04:01:23PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Feb 27, 2019 at 10:12:50PM -0500, Steven Rostedt escreveu:
-> > On Wed, 27 Feb 2019 17:55:32 -0800
-> > Tony Jones <tonyj@suse.de> wrote:
-> > 
-> > > Fix buffer overflow observed when running perf test.
-> > > 
-> > > The overflow is when trying to evaluate "1ULL << (64 - 1)" which
-> > > is resulting in -9223372036854775808 which overflows the 20 character
-> > > buffer.
-> > > 
-> > > If is possible this bug has been reported before but I still don't
-> > > see any fix checked in:
-> > > 
-> > > See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
-> > > 
-> > > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > Cc: linux-perf-users@vger.kernel.org
-> > > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > > Signed-off-by: Tony Jones <tonyj@suse.de>
-> > 
-> > Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > 
-> > I have to say I've let this slide and it is not the first time a patch
-> > went out with this fix. But this one has the correct fix because we
-> > should use a buffer with a multiple of 4. Anyway, Tony I believe was
-> > the first to report this anyway.
-> > 
-> > For reference we have:
-> > 
-> > I first heard about Tony's complaint on a post to linux-perf-users on Jan 18.
-> > 
-> > But then we had after that:
-> > 
-> >  Michael Sartain reported it on 1/24 (and fixed by Tzvetomir)
-> >  https://lore.kernel.org/linux-trace-devel/20190125102014.19600-1-tstoyanov@vmware.com/
-> >  
-> > It was later fixed again by Mathias Krause
-> >  https://lore.kernel.org/linux-trace-devel/20190223122404.21137-1-minipli@googlemail.com/
-> > 
-> > But since Tony was first to report it, and we discussed that it should
-> > be 24 bytes, I would say this is the patch to take.
-> > 
-> > Again, sorry for not getting this acknowledged earlier and everyone doing
-> > the same thing multiple times. :-/
-> > 
-> > Arnaldo, please take this patch. But also add:
-> > 
-> > Reported-by: Michael Sartain <mikesart@fastmail.com>
-> > Reported-by: Mathias Krause <minipli@googlemail.com>
-> 
-> Will do.
-> 
-> Thanks for the credit research,
+ v3:
+  - Add patch 11 to move count and owner together as suggested by Linus.
+  - Reword the commit log of patch 2 to clarify the intent of that patch.
 
-Some more research, an approximation, adding:
+ v2:
+  - Sync up to v4 of the part 0 patch.
+  - Remove the rwsem.h->rwsem-xadd.h renaming patch & change patches
+    to modify rwsem.h instead of rwsem-xadd.h.
+  - Add a new patch to micro-optimize rwsem_try_read_lock_unqueued().
 
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
+This is part 1 of a 3-part (0/1/2) series to rearchitect the internal
+operation of rwsem. This depends on the v4 part 0 patches sent out
+previously
 
-That is the 'git blame' entry for when that line was added with sizeof
-== 20
+https://lore.kernel.org/lkml/1550095217-12047-1-git-send-email-longman@redhat.com
 
-- Arnaldo
+This part lays the foundation for part 2 without making any functional
+changes. This part includes the following changes:
+
+ 1) Move code around and micro-optimize rwsem_try_read_lock_unqueued()
+    (patches 1-4).
+ 2) Enhance the DEBUG_RWSEMS_WARN_ON() macro to provide more information
+    and add additional checks (patches 5 & 6).
+ 3) Make the core qspinlock_stat.h code generic (lock event counting)
+    so that it can be used by all the architectures as well as other
+    locking subsystems such as rwsem (patches 7-10). Lock event
+    counting help us visualize how frequently a code path is being
+    used as well as spotting abnormal behavior due to bugs in the code
+    without noticeably affecting kernel performance and hence behavior.
+
+Both (2) and (3) are useful debugging aids.
+
+Waiman Long (11):
+  locking/rwsem: Relocate rwsem_down_read_failed()
+  locking/rwsem: Move owner setting code from rwsem.c to rwsem.h
+  locking/rwsem: Move rwsem internal function declarations to
+    rwsem-xadd.h
+  locking/rwsem: Micro-optimize rwsem_try_read_lock_unqueued()
+  locking/rwsem: Add debug check for __down_read*()
+  locking/rwsem: Enhance DEBUG_RWSEMS_WARN_ON() macro
+  locking/qspinlock_stat: Introduce a generic lockevent counting APIs
+  locking/lock_events: Make lock_events available for all archs & other
+    locks
+  locking/lock_events: Don't show pvqspinlock events on bare metal
+  locking/rwsem: Enable lock event counting
+  locking/rwsem: Optimize rwsem structure for uncontended lock
+    acquisition
+
+ arch/Kconfig                        |   9 ++
+ arch/x86/Kconfig                    |   8 --
+ include/linux/rwsem.h               |  28 +++--
+ kernel/locking/Makefile             |   1 +
+ kernel/locking/lock_events.c        | 179 ++++++++++++++++++++++++++
+ kernel/locking/lock_events.h        |  59 +++++++++
+ kernel/locking/lock_events_list.h   |  67 ++++++++++
+ kernel/locking/qspinlock.c          |   8 +-
+ kernel/locking/qspinlock_paravirt.h |  19 +--
+ kernel/locking/qspinlock_stat.h     | 242 +++++++-----------------------------
+ kernel/locking/rwsem-xadd.c         | 204 +++++++++++++++---------------
+ kernel/locking/rwsem.c              |  25 +---
+ kernel/locking/rwsem.h              |  47 ++++++-
+ 13 files changed, 538 insertions(+), 358 deletions(-)
+ create mode 100644 kernel/locking/lock_events.c
+ create mode 100644 kernel/locking/lock_events.h
+ create mode 100644 kernel/locking/lock_events_list.h
+
+-- 
+1.8.3.1
+
