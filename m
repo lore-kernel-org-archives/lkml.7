@@ -2,184 +2,199 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D22BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394DCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169D72133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6892133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:43:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uxf6n/uY"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="djRCHGM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733088AbfB1Om7 (ORCPT
+        id S1733107AbfB1OnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:42:59 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52752 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733037AbfB1Om6 (ORCPT
+        Thu, 28 Feb 2019 09:43:10 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43309 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732525AbfB1OnK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 09:42:58 -0500
-Received: by mail-wm1-f67.google.com with SMTP id m1so9528333wml.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 06:42:56 -0800 (PST)
+        Thu, 28 Feb 2019 09:43:10 -0500
+Received: by mail-qk1-f195.google.com with SMTP id f196so12181680qke.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 06:43:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HEKavsr7Wivp3v6OO/OCHNUie7WSq3IqNLQ25tj7Z7g=;
-        b=Uxf6n/uYkVdlTWsS9ydzYR1d3zD+Q25w9qSnP7tJtbhT3NXh5o+OoCczcE39yaTEO9
-         q47kMRWP2iw0urXokWdFXLsyOG1WhmDsQRybIOc/XVIOAktFJ6XoO0Mo64Vnbjtw4FS5
-         aOoMy2/3oon2UwXUEUoepyc2pnywYlFi8F/GIKhRmgACNFUE4NhPUOQ5Pk7jw0MZoB9/
-         7YU5fJVekdKHF+ZW2VCU9mUlxHLoDfdWz07ML5kX1E6nieFsLfQT2Uzp5N0q6aeQGwok
-         BPzL/zQRHzFvFNNT8O6OYCbNmuR0+L+JsyI0lediF8h2I+K8OhJKhn+bNLfI5g6PMR5M
-         YMxQ==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cTzZ+jBzhBKBC9koFTOHSqdF0r4IeCtKb9o43A56W24=;
+        b=djRCHGM6xyWnb/rZILutRNlrFznsNd950mQxPIraDc4N4MkApJvlbLRBnCz2g0/MwO
+         5o9VePwH7b8jQ0xHUA0TBsWkNHT38WBB13ymW02g7CTuQx6/Dr8Y5fcRwAv8XCILRKsc
+         2dAaY+obDktQlvE0FY7Lg89JoXLrZ+LVAlMoA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HEKavsr7Wivp3v6OO/OCHNUie7WSq3IqNLQ25tj7Z7g=;
-        b=AhQr3ZnMFOFmZ2ZgAr2VoPl049VlOLLir2XuJRvfQiD9716Ij++CHwpqPz3HJ3JjkM
-         7EZr425tLxDAfnbaTPiJ9Poky1WFwlaXqhH3bfHH97l7EZzbnCISpRPfzYbIq0LeQqA5
-         nNgeuTQf5bsHYlsGremMHPM6Jto/1gpTCa+9K6xMSMw2m9HlpRRQeFJsncBxgVL1lOCP
-         /CDG1lAGffXyr1did71xCKfhX+/9bNGpyZ9XA0TJP8v8k4r63O5ia5+eYmbrvMJvgJ73
-         ENBy7M/iRi9/1Z2WJ8kbjyY3cGbX1XfP7fiKmMuRdILX/5eiu3ctPrrdoWI9eRg3nkR/
-         9L+Q==
-X-Gm-Message-State: AHQUAuZBaXz4SwwyUqxlswC9h+28zXvLXM6TwdkZJQWfzVBprcqNUSD9
-        X9KWnmOfQaS8DP0rnJhzJTveu7yM1xw=
-X-Google-Smtp-Source: APXvYqys7tuozFVrXcNNqbe1Q8uhy8U9QSMzMXm4VDWBgXNK1kLI7BrHQuQWPM/msTfxOcs8FwI7Mw==
-X-Received: by 2002:a1c:4155:: with SMTP id o82mr33038wma.122.1551364975703;
-        Thu, 28 Feb 2019 06:42:55 -0800 (PST)
-Received: from [192.168.0.41] (244.150.136.77.rev.sfr.net. [77.136.150.244])
-        by smtp.googlemail.com with ESMTPSA id v6sm9179108wme.24.2019.02.28.06.42.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 06:42:54 -0800 (PST)
-Subject: Re: [PATCH 3/7] drivers: firmware: psci: Split
- psci_dt_cpu_init_idle()
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Lina Iyer <ilina@codeaurora.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190228135919.3747-1-ulf.hansson@linaro.org>
- <20190228135919.3747-4-ulf.hansson@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <02a96f2c-dde1-73be-683d-b51d8c6b1b03@linaro.org>
-Date:   Thu, 28 Feb 2019 15:42:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cTzZ+jBzhBKBC9koFTOHSqdF0r4IeCtKb9o43A56W24=;
+        b=MsfVFeQdM1LfikG7avQzdHHa8YsqUCe7pazax5r6jwUgo+8s/YvLRiiARakLY1CYH7
+         UQD9jBjC1GwYfr3baKQk/wARaaBAuGcVg1ipyJMsJYoHHzDlOLI8CYPuNrosmGwTtdc5
+         bdRX8OuTo2XNuOWvY5pQSOpmratsKvi/d7Lmcr0l4Xp5b1krzugmEfAlJHiGJn34/BRi
+         6UB7RxPyJNfuqoKrLiisBKrwQAGFPE6UVNbT5gp8m1GoHYb1Qv7dHgyIO1iZXuRTYexE
+         mWhVTs8qT7zWwIFuymnhAwO25yf4fLo9KW0FAbOrt6q1Te82EfVFGyy9+QgaYKsW00pE
+         ghFA==
+X-Gm-Message-State: APjAAAXq6tbEQhN+YPzLbKv4SwJ855ZLNdYxJYWXd1p91rnXOesFwlZQ
+        6hTar8wW4KwQOtTLYmlTgZk/Dw==
+X-Google-Smtp-Source: AHgI3IZ1fOakwHf4jD1MpkjQ+dO10XDpEzQo3NIp9jX1THaPYqECh+SOlPkRotJLPId0Xzkv/UoR5A==
+X-Received: by 2002:a05:620a:146a:: with SMTP id j10mr6329700qkl.243.1551364988377;
+        Thu, 28 Feb 2019 06:43:08 -0800 (PST)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id j9sm9920854qtb.30.2019.02.28.06.43.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 06:43:07 -0800 (PST)
+Date:   Thu, 28 Feb 2019 09:43:06 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        qais.yousef@arm.com, Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190228144306.GA138215@google.com>
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+ <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190228135919.3747-4-ulf.hansson@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 14:59, Ulf Hansson wrote:
-> Let's split the psci_dt_cpu_init_idle() function into two functions. This
-> makes the code clearer and provides better re-usability.
+On Thu, Feb 28, 2019 at 11:17:51AM +0900, Masahiro Yamada wrote:
+> Hi Joel,
 > 
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-but one question below.
-
-
-> ---
->  drivers/firmware/psci/psci.c | 42 ++++++++++++++++++++----------------
->  1 file changed, 23 insertions(+), 19 deletions(-)
 > 
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index c80ec1d03274..9788bfc1cf8b 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -270,9 +270,26 @@ static int __init psci_features(u32 psci_func_id)
->  #ifdef CONFIG_CPU_IDLE
->  static DEFINE_PER_CPU_READ_MOSTLY(u32 *, psci_power_state);
->  
-> +static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
-> +{
-> +	int err = of_property_read_u32(np, "arm,psci-suspend-param", state);
-> +
-> +	if (err) {
-> +		pr_warn("%pOF missing arm,psci-suspend-param property\n", np);
-> +		return err;
-> +	}
-> +
-> +	if (!psci_power_state_is_valid(*state)) {
-> +		pr_warn("Invalid PSCI power state %#x\n", *state);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int psci_dt_cpu_init_idle(struct device_node *cpu_node, int cpu)
->  {
-> -	int i, ret, count = 0;
-> +	int i, ret = 0, count = 0;
-
-Why do you need to intialize the ret variable? If the count is zero we
-go directly to return 0, otherwise we enter in the loop and ret is
-affected with the new function call.
-
->  	u32 *psci_states;
->  	struct device_node *state_node;
->  
-> @@ -291,29 +308,16 @@ static int psci_dt_cpu_init_idle(struct device_node *cpu_node, int cpu)
->  		return -ENOMEM;
->  
->  	for (i = 0; i < count; i++) {
-> -		u32 state;
-> -
->  		state_node = of_parse_phandle(cpu_node, "cpu-idle-states", i);
-> +		ret = psci_dt_parse_state_node(state_node, &psci_states[i]);
-> +		of_node_put(state_node);
->  
-> -		ret = of_property_read_u32(state_node,
-> -					   "arm,psci-suspend-param",
-> -					   &state);
-> -		if (ret) {
-> -			pr_warn(" * %pOF missing arm,psci-suspend-param property\n",
-> -				state_node);
-> -			of_node_put(state_node);
-> +		if (ret)
->  			goto free_mem;
-> -		}
->  
-> -		of_node_put(state_node);
-> -		pr_debug("psci-power-state %#x index %d\n", state, i);
-> -		if (!psci_power_state_is_valid(state)) {
-> -			pr_warn("Invalid PSCI power state %#x\n", state);
-> -			ret = -EINVAL;
-> -			goto free_mem;
-> -		}
-> -		psci_states[i] = state;
-> +		pr_debug("psci-power-state %#x index %d\n", psci_states[i], i);
->  	}
-> +
->  	/* Idle states parsed correctly, initialize per-cpu pointer */
->  	per_cpu(psci_power_state, cpu) = psci_states;
->  	return 0;
+> On Thu, Feb 28, 2019 at 4:40 AM Joel Fernandes (Google)
+> <joel@joelfernandes.org> wrote:
+> >
+> > Introduce in-kernel headers and other artifacts which are made available
+> > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> > it possible to build kernel modules, run eBPF programs, and other
+> > tracing programs that need to extend the kernel for tracing purposes
+> > without any dependency on the file system having headers and build
+> > artifacts.
+> >
+> > On Android and embedded systems, it is common to switch kernels but not
+> > have kernel headers available on the file system. Raw kernel headers
+> > also cannot be copied into the filesystem like they can be on other
+> > distros, due to licensing and other issues. There's no linux-headers
+> > package on Android. Further once a different kernel is booted, any
+> > headers stored on the file system will no longer be useful. By storing
+> > the headers as a compressed archive within the kernel, we can avoid these
+> > issues that have been a hindrance for a long time.
+> >
+> > The feature is also buildable as a module just in case the user desires
+> > it not being part of the kernel image. This makes it possible to load
+> > and unload the headers on demand. A tracing program, or a kernel module
+> > builder can load the module, do its operations, and then unload the
+> > module to save kernel memory. The total memory needed is 3.8MB.
+> >
+> > The code to read the headers is based on /proc/config.gz code and uses
+> > the same technique to embed the headers.
+> 
+> 
+> 
+> Please let me ask a question about the actual use-case.
+> 
+> 
+> To build embedded systems including Android,
+> I use an x86 build machine.
+> 
+> In other words, I cross-compile vmlinux and in-tree modules.
+> So,
+> 
+>   target-arch: arm64
+>   host-arch:   x86
+> 
+> 
+> 
+> > To build a module, the below steps have been tested on an x86 machine:
+> > modprobe kheaders
+> > rm -rf $HOME/headers
+> > mkdir -p $HOME/headers
+> > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> > cd my-kernel-module
+> > make -C $HOME/headers M=$(pwd) modules
+> > rmmod kheaders
+> 
+> I am guessing the user will run these commands
+> on the target system.
+> In other words, external modules are native-compiled.
+> So,
+> 
+>   target-arch: arm64
+>   host-arch:   arm64
+> 
+> 
+> Is this correct?
+> 
+> 
+> If I understood the assumed use-case correctly,
+> kheaders.tar.xw will contain host-programs compiled for x86,
+> which will not work on the target system.
 > 
 
+You are right, the above commands in the commit message work only if the
+host/target are same arch due to scripts.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+However we can build with arm64 device connected to a host, like this (which
+I tested):
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+adb shell modprobe kheaders; adb pull /proc/kheaders.tar.xz
+rm -rf $HOME/headers; mkdir -p $HOME/headers
+tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+cd my-kernel-module
+make -C $HOME/headers M=$(pwd) ARCH=arm64 CROSS_COMPILE=aarch64- modules
+adb push test.ko /data/; adb shell rmmod kheaders
+
+The other way we can make this work is using x86 usermode emulation inside a
+chroot on the Android device which will make the earlier commands work. One
+thing to note is that Android also runs on x86 hardware so the commands in
+the commit message will work even for x86 Android targets already.
+
+Also note that this the "module building" part is really only one of the
+usecases. eBPF is another which needs the headers - and the headers are vast
+majority of the archive. Headers take 3.1MB out of 3.6MB of the archive on
+arm64 builds.
+
+How do you want to proceed here, should I mention these points in the commit
+message?
+
+thanks,
+
+ - Joel
 
