@@ -2,104 +2,138 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5B9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C25C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4477920857
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A378420857
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551374159;
+	bh=sozJU/5OlzrK/deFVRBigGuvn3Yn9Yat/RlMQ7ceFSA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=P+R0rROesfW8tUTryiuBKJKz3IfvLkjCXt1gP0gNKqRUoY/2/vAM1La1kEDs9vKxf
+	 q+Vlq4gtcibnuZ+W3qnyE70VV2CLY6LeDmB4Z9KbPJHj2SIBSRa2sTC9QC3jadaw8L
+	 BIQvXK5/PTfSxrfAJLLo49Ilr0EIc5GevM1tB8pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387739AbfB1RNh convert rfc822-to-8bit (ORCPT
+        id S2388229AbfB1RP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:13:37 -0500
-Received: from smtp.asem.it ([151.1.184.197]:54367 "EHLO smtp.asem.it"
+        Thu, 28 Feb 2019 12:15:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387689AbfB1RNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:13:32 -0500
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 5.5.0)
-        with ESMTP id SG003723839.MSG 
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 18:13:28 +0100S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Thu, 28
- Feb 2019 18:13:27 +0100
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1261.035; Thu, 28 Feb 2019 18:13:27 +0100
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        id S2387738AbfB1RNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:13:37 -0500
+Received: from lerouge.home (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D99BE218D8;
+        Thu, 28 Feb 2019 17:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551374016;
+        bh=sozJU/5OlzrK/deFVRBigGuvn3Yn9Yat/RlMQ7ceFSA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WWGFW4dlNAunUxQ24fb1LqJiGASnNRuKOgj7s610PqCc9HEvYUuQVZdtqa8bHmrs/
+         PFnRp7AmihbREqdvCmtihC8Y3Fierx5SCgvz9sOclv3+EjmIKy0JgZhXxNrsZxLR+n
+         lnpJLhM94q616k8ESpiQir6BDOZpniUmlMaqC0+A=
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
         "David S . Miller" <davem@davemloft.net>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] net: e1000e: add MAC address kernel cmd line parameter
-Thread-Topic: [PATCH v3] net: e1000e: add MAC address kernel cmd line
- parameter
-Thread-Index: AQHUz2za8U5Pv4cZVkOebP6EQ2CVPqX1RhaAgAAUBLD///4SgIAAFXBw
-Date:   Thu, 28 Feb 2019 17:13:27 +0000
-Message-ID: <6a7a37813e71420b929c769dd1e77664@asem.it>
-References: <1551361135-404-1-git-send-email-f.suligoi@asem.it>
- <1551361951-1595-1-git-send-email-f.suligoi@asem.it>
- <20190228153245.GA17912@lunn.ch> <b12067de92864d5db83bd3da9456e2fe@asem.it>
- <20190228163729.GB17912@lunn.ch>
-In-Reply-To: <20190228163729.GB17912@lunn.ch>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.161]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: [PATCH 13/37] softirq: Macrofy softirq vectors
+Date:   Thu, 28 Feb 2019 18:12:18 +0100
+Message-Id: <20190228171242.32144-14-frederic@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190228171242.32144-1-frederic@kernel.org>
+References: <20190228171242.32144-1-frederic@kernel.org>
 MIME-Version: 1.0
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A0B020E.5C7816B8.0036,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Hi Andrew,
-> >
-> > we produce a lot of boards and we have to change the MAC address,
-> > from u-boot, for every board.  So I must save in the u-boot
-> > environment (SPI NOR flash) the MAC address for every board.
-> 
-> Hi Flavio
-> 
-> u-boot should be able to write the MAC address in the correct part of
-> device tree. Boards have been doing this a long time.
-> 
-> Module parameters are considered bad. You should only do it if you
-> have no other option. Here you do have another options, so it is going
-> to be a hard sell getting David to access your patch.
-> 
-> You will have more success by adding a call to
-> eth_platform_get_mac_address() to the e1000e driver.
+Define the softirq vectors through macros so that we can later include
+them in the automated definition of lockdep usage states.
 
-You have right, and thanks for your suggestions, 
-but with a kernel parameter I can use the same method
-for any board where the NVM is missed, independently of any architecture
-(with or without the device tree presence - ARM or x86 or others).
+Reviewed-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Pavan Kondeti <pkondeti@codeaurora.org>
+Cc: Paul E . McKenney <paulmck@linux.vnet.ibm.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+---
+ include/linux/interrupt.h      | 17 ++++-------------
+ include/linux/softirq_vector.h | 12 ++++++++++++
+ 2 files changed, 16 insertions(+), 13 deletions(-)
+ create mode 100644 include/linux/softirq_vector.h
 
-In fact slso the drivers/net/ethernet/freescale/fec_main.c provides
-a kernel parameter for the MAC address, in fec_get_mac:
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index c672f34235e7..e871f361f1f1 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -474,21 +474,12 @@ extern bool force_irqthreads;
+    tasklets are more than enough. F.e. all serial device BHs et
+    al. should be converted to tasklets, not to softirqs.
+  */
+-
+ enum
+ {
+-	HI_SOFTIRQ=0,
+-	TIMER_SOFTIRQ,
+-	NET_TX_SOFTIRQ,
+-	NET_RX_SOFTIRQ,
+-	BLOCK_SOFTIRQ,
+-	IRQ_POLL_SOFTIRQ,
+-	TASKLET_SOFTIRQ,
+-	SCHED_SOFTIRQ,
+-	HRTIMER_SOFTIRQ, /* Unused, but kept as tools rely on the
+-			    numbering. Sigh! */
+-	RCU_SOFTIRQ,    /* Preferable RCU should always be the last softirq */
+-
++#define SOFTIRQ_VECTOR(__SVEC) \
++	__SVEC##_SOFTIRQ,
++#include <linux/softirq_vector.h>
++#undef SOFTIRQ_VECTOR
+ 	NR_SOFTIRQS
+ };
+ 
+diff --git a/include/linux/softirq_vector.h b/include/linux/softirq_vector.h
+new file mode 100644
+index 000000000000..c0308cbc916f
+--- /dev/null
++++ b/include/linux/softirq_vector.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++SOFTIRQ_VECTOR(HI)
++SOFTIRQ_VECTOR(TIMER)
++SOFTIRQ_VECTOR(NET_TX)
++SOFTIRQ_VECTOR(NET_RX)
++SOFTIRQ_VECTOR(BLOCK)
++SOFTIRQ_VECTOR(IRQ_POLL)
++SOFTIRQ_VECTOR(TASKLET)
++SOFTIRQ_VECTOR(SCHED)
++SOFTIRQ_VECTOR(HRTIMER)
++SOFTIRQ_VECTOR(RCU)    /* Preferable RCU should always be the last softirq */
+-- 
+2.21.0
 
-	/*
-	 * try to get mac address in following order:
-	 *
-	 * 1) module parameter via kernel command line in form
-	 *    fec.macaddr=0x00,0x04,0x9f,0x01,0x30,0xe0
-	 */
-	iap = macaddr;
-
-Thanks,
-
-Flavio
-
->    Andrew
