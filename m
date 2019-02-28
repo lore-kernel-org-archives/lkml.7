@@ -3,69 +3,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352D8C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884D6C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4D020842
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551C420842
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbfB1Gar (ORCPT
+        id S1730917AbfB1GcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 01:30:47 -0500
-Received: from orcrist.hmeau.com ([104.223.48.154]:39856 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfB1Gar (ORCPT
+        Thu, 28 Feb 2019 01:32:00 -0500
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:57815 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfB1GcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 01:30:47 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1gzFDP-0005mh-6c; Thu, 28 Feb 2019 14:30:43 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1gzFDN-0001eM-9O; Thu, 28 Feb 2019 14:30:41 +0800
-Date:   Thu, 28 Feb 2019 14:30:41 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: af_alg - use struct_size() in sock_kfree_s()
-Message-ID: <20190228063041.mmuimz5s726lhfso@gondor.apana.org.au>
-References: <20190221180423.GA5689@embeddedor>
+        Thu, 28 Feb 2019 01:32:00 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id DC724100D940C;
+        Thu, 28 Feb 2019 07:31:57 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 81416D6B92; Thu, 28 Feb 2019 07:31:57 +0100 (CET)
+Date:   Thu, 28 Feb 2019 07:31:57 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Cc:     bhelgaas@google.com, austin_bolen@dell.com,
+        alex_gagniuc@dellteam.com, keith.busch@intel.com,
+        Shyam_Iyer@Dell.com, okaya@kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Oza Pawandeep <poza@codeaurora.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Young <youngcdev@gmail.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: portdrv: Report degraded links via link
+ bandwidth notification
+Message-ID: <20190228063157.rl2lywgian2ij5m4@wunner.de>
+References: <20190227205840.26898-1-mr.nuke.me@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190221180423.GA5689@embeddedor>
+In-Reply-To: <20190227205840.26898-1-mr.nuke.me@gmail.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 21, 2019 at 12:04:23PM -0600, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
+On Wed, Feb 27, 2019 at 02:58:17PM -0600, Alexandru Gagniuc wrote:
+> A warning is generated when a PCIe device is probed with a degraded
+> link, but there was no similar mechanism to warn when the link becomes
+> degraded after probing. The Link Bandwidth Notification provides this
+> mechanism.
 > 
-> So, change the following form:
+> Use the link bandwidth notification interrupt to detect bandwidth
+> changes, and rescan the bandwidth, looking for the weakest point. This
+> is the same logic used in probe().
 > 
-> sizeof(*sgl) + sizeof(sgl->sg[0]) * (MAX_SGL_ENTS + 1)
-> 
-> to :
-> 
-> struct_size(sgl, sg, MAX_SGL_ENTS + 1)
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  crypto/af_alg.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
