@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B058C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8AFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4FB20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441BE20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732856AbfB1NZ1 (ORCPT
+        id S1730850AbfB1NZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:25:27 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46781 "EHLO
+        Thu, 28 Feb 2019 08:25:32 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:55253 "EHLO
         relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732669AbfB1NZ0 (ORCPT
+        with ESMTP id S1732834AbfB1NZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:25:26 -0500
+        Thu, 28 Feb 2019 08:25:27 -0500
 X-Originating-IP: 90.88.147.150
 Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 0CCC724000E;
-        Thu, 28 Feb 2019 13:25:20 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E1417240019;
+        Thu, 28 Feb 2019 13:25:23 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, linux@armlinux.org.uk
 Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
@@ -33,9 +33,9 @@ Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
         nadavh@marvell.com, stefanc@marvell.com, ymarkman@marvell.com,
         mw@semihalf.com
-Subject: [PATCH net-next 08/15] net: mvpp2: some AN fields require the link to be down when updated
-Date:   Thu, 28 Feb 2019 14:21:21 +0100
-Message-Id: <20190228132128.30154-9-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next 09/15] net: mvpp2: always disable both MACs when disabling a port
+Date:   Thu, 28 Feb 2019 14:21:22 +0100
+Message-Id: <20190228132128.30154-10-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190228132128.30154-1-antoine.tenart@bootlin.com>
 References: <20190228132128.30154-1-antoine.tenart@bootlin.com>
@@ -46,44 +46,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GMAC configuration helper modifies values in the auto-negotiation
-register. Some of its values require the port to be forced down when
-modifying their values. This patches fixes the check made on the bit to
-be updated in this register, so that the port is forced down when
-needed. This fix cases where some of those parameters were updated, but
-not taken into account, such as when using RGMII interfaces.
+This patch modifies the port_disable() helper to always disable both the
+GMAC and the XLG MAC when called. At boot time we do not know of a port
+was enabled in the firmware/bootloader, and if so what mode was used
+(hence which of the two MACs was used).
 
-Fixes: d14e078f23cc ("net: marvell: mvpp2: only reprogram what is necessary on mac_config")
+This also help in implementing a logic where all blocks are disabled
+when not used, and only enabled regarding the current mode used on a
+given port.
+
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 9c6200a59910..11284918d907 100644
+index 11284918d907..b27966355df9 100644
 --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
 +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -4627,9 +4627,19 @@ static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
- 		}
+@@ -1214,11 +1214,11 @@ static void mvpp2_port_disable(struct mvpp2_port *port)
+ 		/* Disable & reset should be done separately */
+ 		val &= ~MVPP22_XLG_CTRL0_MAC_RESET_DIS;
+ 		writel(val, port->base + MVPP22_XLG_CTRL0_REG);
+-	} else {
+-		val = readl(port->base + MVPP2_GMAC_CTRL_0_REG);
+-		val &= ~(MVPP2_GMAC_PORT_EN_MASK);
+-		writel(val, port->base + MVPP2_GMAC_CTRL_0_REG);
  	}
- 
-+/* Some fields of the auto-negotiation register require the port to be down when
-+ * their value is updated.
-+ */
-+#define MVPP2_GMAC_AN_PORT_DOWN_MASK	\
-+		(MVPP2_GMAC_IN_BAND_AUTONEG | \
-+		 MVPP2_GMAC_IN_BAND_AUTONEG_BYPASS | \
-+		 MVPP2_GMAC_CONFIG_MII_SPEED | MVPP2_GMAC_CONFIG_GMII_SPEED | \
-+		 MVPP2_GMAC_AN_SPEED_EN | MVPP2_GMAC_CONFIG_FULL_DUPLEX | \
-+		 MVPP2_GMAC_AN_DUPLEX_EN)
 +
- 	if ((old_ctrl0 ^ ctrl0) & MVPP2_GMAC_PORT_TYPE_MASK ||
- 	    (old_ctrl2 ^ ctrl2) & MVPP2_GMAC_INBAND_AN_MASK ||
--	    (old_an ^ an) & MVPP2_GMAC_IN_BAND_AUTONEG) {
-+	    (old_an ^ an) & MVPP2_GMAC_AN_PORT_DOWN_MASK) {
- 		/* Force link down */
- 		old_an &= ~MVPP2_GMAC_FORCE_LINK_PASS;
- 		old_an |= MVPP2_GMAC_FORCE_LINK_DOWN;
++	val = readl(port->base + MVPP2_GMAC_CTRL_0_REG);
++	val &= ~(MVPP2_GMAC_PORT_EN_MASK);
++	writel(val, port->base + MVPP2_GMAC_CTRL_0_REG);
+ }
+ 
+ /* Set IEEE 802.3x Flow Control Xon Packet Transmission Mode */
 -- 
 2.20.1
 
