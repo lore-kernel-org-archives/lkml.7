@@ -2,145 +2,195 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CF3C10F06
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1D6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA842186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A501D21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:29:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GpfUFdX6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NK1YD1H4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730710AbfB1EYO (ORCPT
+        id S1730650AbfB1E3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 23:24:14 -0500
-Received: from mail-it1-f195.google.com ([209.85.166.195]:36107 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727672AbfB1EYN (ORCPT
+        Wed, 27 Feb 2019 23:29:33 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43452 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727672AbfB1E3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 23:24:13 -0500
-Received: by mail-it1-f195.google.com with SMTP id v83so13725138itf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 20:24:12 -0800 (PST)
+        Wed, 27 Feb 2019 23:29:32 -0500
+Received: by mail-ed1-f66.google.com with SMTP id m35so15792940ede.10;
+        Wed, 27 Feb 2019 20:29:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=81eof6++k5NBO6d1q02mkQrIOj5UeKpK1uU8m3BZpcw=;
-        b=GpfUFdX6xkKIM4OzgVvxStDKXt7KDFzJ7x6K2SJF3U8KTH5P5JsxGhVu/sSpieuMVJ
-         tiPHlyw3/NjbrRiFlKjqzuK43N2joNLu2bOJst9e43H8RKYGctS2P61lDAH62pfuKfNX
-         R+bX0xynCynM9OdKvTpKznv/h3SZtkyo5YfEZklAubs3CRLwbvZUoYvXXz68eWBigIRd
-         /gqbjS+42h92BpnFpHPZSCRR7sgBdWXcCGe0GpR5KmHsiZdzw4nhnutD6XbBkqHdLNMN
-         gwJ4FuYtDfx+XCwnpcKvSQ9Kp7j6MVGUtGKsobwiSq1VeGxhhLIGZFC18DOVaDJSXmsz
-         7L3g==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mDW6NM6Ay5+ptuK38VCGhQL31XE3tVIbHibnWz7mRyo=;
+        b=NK1YD1H45Cj5yjVJj1xy1Qa4CmxMijmZiPywTmDpa7CfNVMl9QKNZNPN0qkpgGPdus
+         DHIDPD8fNioi/yQdYFtz6ZeXxIhswfRG8PWSZznbbPdvvx9yPVEp3bgpu1UgTxU6fmFS
+         lwBZ68O5Skx6SiaGd4h1NBmO7FUqfd0AaaxOxW2opA7pbaLBLUvOTqTsAECnSRgGGuy9
+         MwdaSgKdIbGnen6Q/r8XodIxM4WwujUUZIETPzmEenwGXB7pDqA3b9FMCAuxbKD6lrxN
+         9ARcqu+HHo7ZbACzbYWAyPl0JVIIJKAGx4BQD2pdSuNiIr1LDZMud+sYB4yFw/+hy6Fy
+         m35g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=81eof6++k5NBO6d1q02mkQrIOj5UeKpK1uU8m3BZpcw=;
-        b=T9Kcbk4SPpeaZ3RzvLUS6UzFkkCn977D+RSIRFq6JRw25qtZXQ/3ildfar8MhLd1M9
-         9E7bf29mvAzdkXxOP+hWaGwBR4szzqVuoaEPHTmaEkrrBv9HNM2q3dqXvpVDiphsnwAB
-         ms3VC/kqjhhXsHNuGpl6P7qLg5bUwGzFq7i8lUb3Rz7FcyG/Rbnw6nILBXilG5rh9hZP
-         UgOeejr1DxVLwGMPVr+jcSkY4ON6Iqkl+W4yG8b9d2Lp5nfFmkuvpBObHPPe7nULAWPA
-         bzJwez9ryDKvzzD1feluFWXWjU5pRbClfUQPDwLPFicCYv2NpdifoG4WLd/oiaJRls9A
-         dAAQ==
-X-Gm-Message-State: AHQUAuYbeeRKqv9+tPNBNAUFOK1GUjAhlY9qhi16OK74tG3OH679bpIb
-        i4bqp/sBgyfmvohUklGEs0AZV0yfqXzP2kzs6iFO/+C64xo=
-X-Google-Smtp-Source: AHgI3IYRuBoKgRSl2tlKNOVsudrmQogt8629tvAKSf3jTukDkUhZSP9p94zwVTIh3L312BdBybu9cNqQsetznCcpixU=
-X-Received: by 2002:a24:54c5:: with SMTP id t188mr1766210ita.58.1551327852353;
- Wed, 27 Feb 2019 20:24:12 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=mDW6NM6Ay5+ptuK38VCGhQL31XE3tVIbHibnWz7mRyo=;
+        b=oe9u4fsdgQ9nXgCBk4iYLMFkE0ApIdAXa8Ti1ZZ0PBRfaQ4GIFKicyVDX+8LxIkeXt
+         ws2GIdgLwRMXUpeBAYeg9pwFKQSAXdX88ExItmGmOaTdo4WAzsMduNVxPuFCdT78qv5m
+         dJpKduTcG3vTyQqZGzY5TfxUxVrt3ket2GPvzU2n7TbZK5nTnbh1c3Yx0X1H1U7UWG3f
+         mn2vY6RX5LbK79FKAb1IYQ3zeaCFa9Mwu4EI/QrP36WFV8wLwZh3e7vV49VJxUeYcN4T
+         835SgSm3fAOWRn8TLveKPXwcalnk7gK3EWovtkuDQFYksY3g2UQjz3hN1HtZ+HSC6s1n
+         uszg==
+X-Gm-Message-State: AHQUAuYQsZPfzabau/jytSJYEaAYpHVNBjvPhm38AzPC3f2Ho9NE755X
+        anah3TTffBgbitjv5O+nFDE=
+X-Google-Smtp-Source: AHgI3IYMXXZ6BeDrtXyJedsuPpeoyDWNydeC6qavQ9YVE6UQQCcFNmemV6069SFd4YorKrWlcHvcMQ==
+X-Received: by 2002:a17:906:1d4c:: with SMTP id o12mr3828657ejh.234.1551328170146;
+        Wed, 27 Feb 2019 20:29:30 -0800 (PST)
+Received: from [10.230.1.150] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id d17sm3000732ejm.35.2019.02.27.20.29.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Feb 2019 20:29:29 -0800 (PST)
+Subject: Re: [PATCH net-next 4/6] ethernet: eth: add default vid len for all
+ ehternet kind devices
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, davem@davemloft.net,
+        grygorii.strashko@ti.com
+Cc:     linux-omap@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiri@mellanox.com,
+        ilias.apalodimas@linaro.org
+References: <20190226184556.16082-1-ivan.khoronzhuk@linaro.org>
+ <20190226184556.16082-5-ivan.khoronzhuk@linaro.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ w0j9Sw==
+Message-ID: <30890ef3-7da8-8399-7388-cc22e000a67f@gmail.com>
+Date:   Wed, 27 Feb 2019 20:29:20 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-References: <1551253922-3307-1-git-send-email-wangxiongfeng2@huawei.com>
-In-Reply-To: <1551253922-3307-1-git-send-email-wangxiongfeng2@huawei.com>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Wed, 27 Feb 2019 20:24:01 -0800
-Message-ID: <CABeXuvoJ3oKRp0z=CO_8kPhZ+-AHGwTaDBqzK2FuC_v5t6kU=A@mail.gmail.com>
-Subject: Re: [PATCH v2] posix-cpu-timers: Avoid undefined behaviour in timespec64_to_ns()
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190226184556.16082-5-ivan.khoronzhuk@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 11:52 PM Xiongfeng Wang
-<wangxiongfeng2@huawei.com> wrote:
->
-> When I ran Syzkaller testsuite, I got the following call trace.
-> ================================================================================
-> UBSAN: Undefined behaviour in ./include/linux/time64.h:120:27
-> signed integer overflow:
-> 8243129037239968815 * 1000000000 cannot be represented in type 'long long int'
-> CPU: 5 PID: 28854 Comm: syz-executor.1 Not tainted 4.19.24 #4
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0xca/0x13e lib/dump_stack.c:113
->  ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
->  handle_overflow+0x193/0x1e2 lib/ubsan.c:190
->  timespec64_to_ns include/linux/time64.h:120 [inline]
->  posix_cpu_timer_set+0x95a/0xb70 kernel/time/posix-cpu-timers.c:687
->  do_timer_settime+0x198/0x2a0 kernel/time/posix-timers.c:892
->  __do_sys_timer_settime kernel/time/posix-timers.c:918 [inline]
->  __se_sys_timer_settime kernel/time/posix-timers.c:904 [inline]
->  __x64_sys_timer_settime+0x18d/0x260 kernel/time/posix-timers.c:904
->  do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x462eb9
-> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f14e4127c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000df
-> RAX: ffffffffffffffda RBX: 000000000073bfa0 RCX: 0000000000462eb9
-> RDX: 0000000020000080 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f14e41286bc
-> R13: 00000000004c54cc R14: 0000000000704278 R15: 00000000ffffffff
-> ================================================================================
->
-> It is because 'it_interval.tv_sec' is larger than 'KTIME_SEC_MAX' and
-> 'it_interval.tv_sec * NSEC_PER_SEC' overflows in 'timespec64_to_ns()'.
->
-> This patch use 'timespec64_valid_restrict()' to check whether
-> 'it_interval.tv_sec' is larger than 'KTIME_SEC_MAX'.
->
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+
+
+On 2/26/2019 10:45 AM, Ivan Khoronzhuk wrote:
+> IVDF - individual virtual device filtering. Allows to set per vlan
+> l2 address filters on end real network device (for unicast and for
+> multicast) and drop redundant not expected packet income.
+> 
+> If CONFIG_VLAN_8021Q_IVDF is enabled the following changes are
+> applied, and only for ethernet network devices.
+> 
+> By default every ethernet netdev needs vid len = 2 bytes to be able to
+> hold up to 4096 vids. So set it for every eth device to be correct,
+> except vlan devs.
+> 
+> In order to shrink all addresses of devices above vlan, the vid_len
+> for vlan dev = 0, as result all suckers sync their addresses to common
+> base not taking in to account vid part (vid_len of "to" devices is
+> important only). And only vlan device is the source of addresses with
+> actual its vid set, propagating it to parent devices while rx_mode().
+> 
+> Also, don't bother those ethernet devices that at this moment are not
+> moved to vlan addressing scheme, so while end ethernet device is
+> created - set vid_len to 0, thus, while syncing, its address space is
+> concatenated to one dimensional like usual, and who needs IVDF - set
+> it to NET_8021Q_VID_TSIZE.
+> 
+> There is another decision - is to inherit vid_len or some feature flag
+> from end root device in order to all upper devices have vlan extended
+> address space only if exact end real device have such capability. But
+> I didn't, because it requires more changes and probably I'm not
+> familiar with all places where it should be inherited, I would
+> appreciate if someone can guid where it's applicable, then it could
+> become a little bit more limited.
+
+I would think that a call to vlan_dev_ivdf_set() would be enough to
+indicate that the underlying network device driver supports IVDF and
+wants to make use of it. The infrastructure itself that you added costs
+little memory, it is once the call to vlan_dev_ivdf_set() is made that
+the memory consumption increases which is fine, since we want to make
+use of that feature.
+
+While I appreciate the thoughts given to making this a configurable
+option, I feel that enabling it unconditionally and having the
+underlying driver decide would be more manageable.
+
+We have had that conversation before, but let me ask again when we call
+dev_{uc,mc}_sync() and ultimately the network device's
+ndo_set_rx_mode(), by the time the ndo_set_rx_mode() function is called,
+we lost track of the call chain, like which virtual device was it
+originating from. If we somehow added a notification information about
+the network device stack (and we could use netdevice notifiers for
+that), then maybe we don't really need to add all of this code and we
+can just derive the necessary bits of information we want by checking:
+is this a VLAN network device? It is, okay what's your VLAN ID, etc.?
+
+Either approach would get us our cookie anyway :)
+
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 > ---
->  kernel/time/posix-timers.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-> index 0e84bb7..97b773c 100644
-> --- a/kernel/time/posix-timers.c
-> +++ b/kernel/time/posix-timers.c
-> @@ -853,8 +853,8 @@ static int do_timer_settime(timer_t timer_id, int flags,
->         unsigned long flag;
->         int error = 0;
->
-> -       if (!timespec64_valid(&new_spec64->it_interval) ||
-> -           !timespec64_valid(&new_spec64->it_value))
-> +       if (!timespec64_valid_strict(&new_spec64->it_interval) ||
-> +           !timespec64_valid_strict(&new_spec64->it_value))
->                 return -EINVAL;
->
->         if (old_spec64)
 
-sys_timer_settime() is a POSIX interface:
-http://pubs.opengroup.org/onlinepubs/7908799/xsh/timer_settime.html
+[snip]
 
-The timer_settime() function will fail if:
+> @@ -404,8 +405,13 @@ EXPORT_SYMBOL(ether_setup);
+>  struct net_device *alloc_etherdev_mqs(int sizeof_priv, unsigned int txqs,
+>  				      unsigned int rxqs)
+>  {
+> -	return alloc_netdev_mqs(sizeof_priv, "eth%d", NET_NAME_UNKNOWN,
+> -				ether_setup, txqs, rxqs);
+> +	struct net_device *dev;
+> +
+> +	dev = alloc_netdev_mqs(sizeof_priv, "eth%d", NET_NAME_UNKNOWN,
+> +			       ether_setup, txqs, rxqs);
 
-[EINVAL] The timerid argument does not correspond to an id returned by
-timer_create() but not yet deleted by timer_delete().
-
-[EINVAL] A value structure specified a nanosecond value less than zero
-or greater than or equal to 1000 million.
-
-So we cannot return EINVAL here if we want to maintain POSIX compatibility.
-Maybe we should check for limit and saturate here at the syscall interface?
-
--Deepa
+You need to check the return value of alloc_netdev_mqs() now, otherwise
+you could be doing a NPD in the call right under. Since that is the
+default though, do you really need to call vlan_dev_ivdf_set() below?
+-- 
+Florian
