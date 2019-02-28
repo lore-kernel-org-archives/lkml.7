@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FAFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C26C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5E7218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FAA12133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:13:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HzIVR3i8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mQlkbUme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388035AbfB1XMz (ORCPT
+        id S1732090AbfB1XNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:12:55 -0500
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:50541 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387939AbfB1XMw (ORCPT
+        Thu, 28 Feb 2019 18:13:00 -0500
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:50358 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388023AbfB1XMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:12:52 -0500
-Received: by mail-vk1-f202.google.com with SMTP id v123so11228237vkv.17
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:12:51 -0800 (PST)
+        Thu, 28 Feb 2019 18:12:54 -0500
+Received: by mail-qk1-f201.google.com with SMTP id d134so17178408qkc.17
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:12:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Z211FiTElcD3CjDX6rl7HqMiBwionirC+FEZdLCWzco=;
-        b=HzIVR3i8V/+98alctTtA7gEK4hLlZxu2Z5vBER34X6K1Ynqobi7o0Nmru4vCoXuERU
-         Z8/v+mXxw+eOl0qxEVdS1sLwPAyUrWXR2MBX377cOjr8lqmPnLWFcrALX5dmzvEszAsq
-         OQUINSsez5jKlD5cszNoUeRFbEfmqxcAB3z/1tAa6v7i9iToKStcvl5LKpRbGlEgT3CC
-         MPvV8kXEKrq7oz4JgbnJziyLBr6ltu4D3Q98NnU57HoxAl1rtpx4IflpsbcI33y483Hm
-         3QJVsFQ/tZtZAz9HB1JxcaQ5JzWBD2zf7eTMRfGycacEjGOg2WFPfjaeioTVPh58HuHX
-         MNSA==
+        bh=IP8fctA6K8NN5G061Fb911uxfYbe+tQq7t68cSfEm4c=;
+        b=mQlkbUme7tUstIHNnk9Zjy+vZsDymO3M/+KQz36FFl4PseyptXPSkOtBCU+VpzfEzc
+         w3Im01jnFe+xZbYmKjScHPbl0D5aFAz9aJX9QND+3DJ+4w2AyWglVW9aSPYzyZWM4Xov
+         VNMUMd1Hty/C/yllcYOxa1rarjilo90btm0agwUTN1xuIFhQmzbKupvAihcV0+yUYUmP
+         5SRr3bC9Lxy14IGMFYgXruziHJfDmPzF+qG4swTP01x4n/j6MX/s8cEo5REfTmpcTorT
+         i380vbq3qlJJdw2Ya002CR0tq2AQicmhOuN88v8S4QRFAmpsoW5lTOuK+Et7XBt2D3XH
+         dQDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Z211FiTElcD3CjDX6rl7HqMiBwionirC+FEZdLCWzco=;
-        b=fHkCLawWi0AGyoVkjCxpVqZwdFV6xeToATLc/EawRkUfXEUwKgoML6njjV7ccXMIg4
-         QWNmv7mY6tQZHbGU3QGN3wyCVg71LnIhsnq3KL1Cs+zwCp0qZfEZDsyIvD2fBH3gu0/J
-         C2BEZz7q/sPnTtT7TxKpq6joJJOok1UytO69NUeWvyGT3eNYQAouyqKSx9R0eNTsn2Yz
-         CrIiEkS2+VTBAbt6k2gO9ZSDURHDlVTY5e/It+G4jpx6AVtoOetA0NQuGXmaUYFVZD6O
-         pXM+5knP9HyCrks77opQG2g+P370OeNuWINtJos6XjIs201XLPS3lW+EkQTb7523YpkP
-         ybJg==
-X-Gm-Message-State: APjAAAXiRRDTspyZdhUfWbuNeURZXttIqBC8qcRVp7VrmqYJRE1oBMg1
-        AvMwvASJJ+rppx+N2x1kplMR7yOSrrGXCMAS7up+Tg==
-X-Google-Smtp-Source: APXvYqymJnMwoBdBo2NT2lteH4kP+TDr8bkEoN35nObwRtoOLjzs9jvV7ELP34iPO+nsEkvESt5zhCKSvCh4McMdH2Lxcg==
-X-Received: by 2002:a1f:94c6:: with SMTP id w189mr1463770vkd.6.1551395571429;
- Thu, 28 Feb 2019 15:12:51 -0800 (PST)
-Date:   Thu, 28 Feb 2019 15:11:54 -0800
+        bh=IP8fctA6K8NN5G061Fb911uxfYbe+tQq7t68cSfEm4c=;
+        b=otL5+4ZlQkHLOn8g1HvIbjS9aCQEN0Ej5jGui9JNQY2wdzOJC9ftBRVg/fa+RB+ULf
+         pRDCPVBqcbpGko8c6bvb7ZMMNNElyGd5HmbuOJb5cdOShAKnr/78gp7r6RTNN73KgxFA
+         XYuK3OgvcT96XTQDIIsyYYI8ASA6zyu8gb0p7Rhj/jhJDY+Eznjt8yadEcCiAtGAz/+2
+         baajN+eptl9lTvboznd4yYujYdInaepdhgntIc5SnDjlkJlvp98sbWq0uWab9L1DEYK2
+         cBm56q7IGeAQa/q2/sM+RP0fPYVyEKUYqj/vwM+ejG0BFl1AriCpYypaYFuYp8RzSUj1
+         rNVQ==
+X-Gm-Message-State: APjAAAXOv2LsdZT8sZF0+cwFscAQ9EZOAsM3Vw9LeIEhZ2xd2nZSWByG
+        oE6nDlap6t5Og0bkRm8La4IG4tNt5iHe7soS6xwoCA==
+X-Google-Smtp-Source: APXvYqy6lnQP7cNTqUdwNAkXY6NJVBfXyJNp6Vjb7dh42LsutuwHpIVZFbrkYoaWwoRivdgkehMjZnjCLN5L07N/suMS5g==
+X-Received: by 2002:ac8:1973:: with SMTP id g48mr1130734qtk.58.1551395574099;
+ Thu, 28 Feb 2019 15:12:54 -0800 (PST)
+Date:   Thu, 28 Feb 2019 15:11:55 -0800
 In-Reply-To: <20190228231203.212359-1-matthewgarrett@google.com>
-Message-Id: <20190228231203.212359-18-matthewgarrett@google.com>
+Message-Id: <20190228231203.212359-19-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
  <20190228231203.212359-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH 18/27] Prohibit PCMCIA CIS storage when the kernel is locked down
+Subject: [PATCH 19/27] Lock down TIOCSSERIAL
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
@@ -72,30 +72,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-Prohibit replacement of the PCMCIA Card Information Structure when the
-kernel is locked down.
+Lock down TIOCSSERIAL as that can be used to change the ioport and irq
+settings on a serial port.  This only appears to be an issue for the serial
+drivers that use the core serial code.  All other drivers seem to either
+ignore attempts to change port/irq or give an error.
 
-Suggested-by: Dominik Brodowski <linux@dominikbrodowski.net>
+Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: linux-pcmcia@lists.infradead.org
+cc: Jiri Slaby <jslaby@suse.com>
 ---
- drivers/pcmcia/cistpl.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/serial/serial_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/pcmcia/cistpl.c b/drivers/pcmcia/cistpl.c
-index ac0672b8dfca..8adf092d0e18 100644
---- a/drivers/pcmcia/cistpl.c
-+++ b/drivers/pcmcia/cistpl.c
-@@ -1578,6 +1578,9 @@ static ssize_t pccard_store_cis(struct file *filp, struct kobject *kobj,
- 	struct pcmcia_socket *s;
- 	int error;
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 556f50aa1b58..627e859ae25a 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -852,6 +852,12 @@ static int uart_set_info(struct tty_struct *tty, struct tty_port *port,
+ 	new_flags = (__force upf_t)new_info->flags;
+ 	old_custom_divisor = uport->custom_divisor;
  
-+	if (kernel_is_locked_down("Direct PCMCIA CIS storage"))
-+		return -EPERM;
++	if ((change_port || change_irq) &&
++	    kernel_is_locked_down("Using TIOCSSERIAL to change device addresses, irqs and dma channels")) {
++		retval = -EPERM;
++		goto exit;
++	}
 +
- 	s = to_socket(container_of(kobj, struct device, kobj));
- 
- 	if (off)
+ 	if (!capable(CAP_SYS_ADMIN)) {
+ 		retval = -EPERM;
+ 		if (change_irq || change_port ||
 -- 
 2.21.0.352.gf09ad66450-goog
 
