@@ -2,43 +2,43 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D008EC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0ABFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A016A218D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865A6218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551374020;
-	bh=t+maIdQ6fHd8yF0I6oJpTh3qypSjh7KVPJ08lKgrqCs=;
+	s=default; t=1551374025;
+	bh=J1C0/ZovwK47jMHOGxAHC/b8yMuCckICOmDBcLPLBYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I//G4/KJx8szU3XFyUXxM9XldzlvLSIvHpXpd3awindWZRhKEqrfvjnt8lXkGR8Yx
-	 Bc8B+2qFEeKhC8in2drg+KdLPRK1nv3x5Q5v6dgxNn8a1GdmHMmc45K6dGGpQ+istI
-	 gIA6ZM/yGyZnRPgKHeMWA77duc5m9q9wYVuLmlNE=
+	b=SuUVbSBuJy9VOOtyKNG/suxGEV5iFgsB263PtL4nc318wBT4CtlLSf3TPL1irFqaG
+	 2DgC2ZHqovwjFk0Ee61d/D+qih87hXy42BcP3g5rFPz/vXRgLsaN89X91lAGg54r7M
+	 2T2mmJOkjqlIcp7OCGKZXNnqISW4zfmbt9vCwSvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387767AbfB1RNj (ORCPT
+        id S2387792AbfB1RNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:13:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58322 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 12:13:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387713AbfB1RNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:13:34 -0500
+        id S2387713AbfB1RNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:13:41 -0500
 Received: from lerouge.home (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F2B6218D0;
-        Thu, 28 Feb 2019 17:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 512F5218AE;
+        Thu, 28 Feb 2019 17:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551374013;
-        bh=t+maIdQ6fHd8yF0I6oJpTh3qypSjh7KVPJ08lKgrqCs=;
+        s=default; t=1551374020;
+        bh=J1C0/ZovwK47jMHOGxAHC/b8yMuCckICOmDBcLPLBYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DBYDrh+abUyKg9zy+R4a6DniYyH/gNavzcqEntpRp3xy06KydZV7qFWFXdOZUmL/q
-         xlMsK55bWmvVtJ8Bub5NnwaI+z6/1+PS6k7Jx722p2JkZP4lVEUtRRks/gJHjhhyP7
-         gNcLSAXyAvtwqsoF9p/O2pZPgMx6KKxF3dlIbwZA=
+        b=Ae17PENdOmPPWoG3fWkuJ+T/QLGZ2qt8i+fuMVhiz1kDNIyT/E4iL0wxYcYhJccLh
+         IBVJ4S2XSkffO/2kAgHYegXZ6NXqphXiwaguM53S6iYYRAGVoIbIQey0k0BkrSF/5+
+         19prOmzRFS3gX5eDQq9QEplbFs+604ktDeRANOY8=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
@@ -53,9 +53,9 @@ Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Pavan Kondeti <pkondeti@codeaurora.org>,
         Ingo Molnar <mingo@kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 12/37] locking/lockdep: Report all usages on mark_lock() verbosity mode
-Date:   Thu, 28 Feb 2019 18:12:17 +0100
-Message-Id: <20190228171242.32144-13-frederic@kernel.org>
+Subject: [PATCH 14/37] locking/lockdep: Define per vector softirq lock usage states
+Date:   Thu, 28 Feb 2019 18:12:19 +0100
+Message-Id: <20190228171242.32144-15-frederic@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190228171242.32144-1-frederic@kernel.org>
 References: <20190228171242.32144-1-frederic@kernel.org>
@@ -66,10 +66,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since mark_lock() may now be passed more than one usage at once, make
-sure to expand the lock usage structure in order to report all of them
-while in verbose mode logging.
+Now that the code is mostly ready to play at this finegrained level,
+reuse the macrofied vector list to define the usual 4 lock usage states
+for each softirq vectors. This way we can perform the validations
+independently for each of them.
 
+The new usage mask layout becomes:
+
+                              TIMER_SOFTIRQ
+            LOCK_USED             bits       HARDIRQ bits
+                \                   |            |
+                 \                  |            |
+                  0   0000  [...]  0000  0000  0000
+                        |                  |
+                        |                  |
+                   RCU_SOFTIRQ        HI_SOFTIRQ bits
+                      bits
+
+Reviewed-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Cc: Joel Fernandes <joel@joelfernandes.org>
@@ -82,26 +96,95 @@ Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- kernel/locking/lockdep.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/locking/lockdep_internals.h | 43 +++++++++++++++++++++++++++---
+ kernel/locking/lockdep_states.h    |  4 ++-
+ 2 files changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index a369e7de3ade..a99fd5fade54 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3217,7 +3217,11 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
- 	 * We must printk outside of the graph_lock:
- 	 */
- 	if (ret == 2) {
--		printk("\nmarked lock as {%s}:\n", usage_str[new_usage->bit]);
-+		int bit;
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index e714c823f594..4b0c03f0f7ce 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -22,9 +22,15 @@ enum lock_usage_bit {
+ 	LOCK_USAGE_STATES
+ };
+ 
+-#define LOCK_USAGE_READ_MASK 1
+-#define LOCK_USAGE_DIR_MASK  2
+-#define LOCK_USAGE_STATE_MASK (~(LOCK_USAGE_READ_MASK | LOCK_USAGE_DIR_MASK))
++#define LOCK_USAGE_READ_MASK		1
++#define LOCK_USAGE_DIR_MASK 		2
++#define LOCK_USAGE_STATE_MASK		(~(LOCK_USAGE_READ_MASK | LOCK_USAGE_DIR_MASK))
 +
-+		for_each_bit_nr(new_mask, bit)
-+			printk("\nmarked lock as {%s}:\n", usage_str[bit]);
++/* Base softirq bits that get shifted by the index in stuct lock_usage::vector */
++#define LOCK_USED_IN_SOFTIRQ		LOCK_USED_IN_HI_SOFTIRQ
++#define LOCK_USED_IN_SOFTIRQ_READ	LOCK_USED_IN_HI_SOFTIRQ_READ
++#define LOCK_ENABLED_SOFTIRQ		LOCK_ENABLED_HI_SOFTIRQ
++#define LOCK_ENABLED_SOFTIRQ_READ	LOCK_ENABLED_HI_SOFTIRQ_READ
+ 
+ struct lock_usage {
+ 	enum lock_usage_bit bit;
+@@ -35,7 +41,7 @@ struct lock_usage {
+ /*
+  * Usage-state bitmasks:
+  */
+-#define __LOCKF(__STATE)	LOCKF_##__STATE = (1 << LOCK_##__STATE),
++#define __LOCKF(__STATE)	LOCKF_##__STATE = (1ULL << LOCK_##__STATE),
+ 
+ enum {
+ #define LOCKDEP_STATE(__STATE)						\
+@@ -48,11 +54,40 @@ enum {
+ 	__LOCKF(USED)
+ };
+ 
++#define LOCKF_ENABLED_SOFTIRQ \
++	(LOCKF_ENABLED_HI_SOFTIRQ | LOCKF_ENABLED_TIMER_SOFTIRQ | \
++	LOCKF_ENABLED_NET_TX_SOFTIRQ | LOCKF_ENABLED_NET_RX_SOFTIRQ | \
++	LOCKF_ENABLED_BLOCK_SOFTIRQ | LOCKF_ENABLED_IRQ_POLL_SOFTIRQ | \
++	LOCKF_ENABLED_TASKLET_SOFTIRQ | LOCKF_ENABLED_SCHED_SOFTIRQ | \
++	 LOCKF_ENABLED_HRTIMER_SOFTIRQ | LOCKF_ENABLED_RCU_SOFTIRQ)
+ #define LOCKF_ENABLED_IRQ (LOCKF_ENABLED_HARDIRQ | LOCKF_ENABLED_SOFTIRQ)
 +
- 		print_lock(this);
- 		print_irqtrace_events(curr);
- 		dump_stack();
++
++#define LOCKF_USED_IN_SOFTIRQ \
++	(LOCKF_USED_IN_HI_SOFTIRQ | LOCKF_USED_IN_TIMER_SOFTIRQ | \
++	LOCKF_USED_IN_NET_TX_SOFTIRQ | LOCKF_USED_IN_NET_RX_SOFTIRQ | \
++	LOCKF_USED_IN_BLOCK_SOFTIRQ | LOCKF_USED_IN_IRQ_POLL_SOFTIRQ | \
++	LOCKF_USED_IN_TASKLET_SOFTIRQ | LOCKF_USED_IN_SCHED_SOFTIRQ | \
++	 LOCKF_USED_IN_HRTIMER_SOFTIRQ | LOCKF_USED_IN_RCU_SOFTIRQ)
+ #define LOCKF_USED_IN_IRQ (LOCKF_USED_IN_HARDIRQ | LOCKF_USED_IN_SOFTIRQ)
+ 
++
++#define LOCKF_ENABLED_SOFTIRQ_READ \
++	(LOCKF_ENABLED_HI_SOFTIRQ_READ | LOCKF_ENABLED_TIMER_SOFTIRQ_READ | \
++	LOCKF_ENABLED_NET_TX_SOFTIRQ_READ | LOCKF_ENABLED_NET_RX_SOFTIRQ_READ | \
++	LOCKF_ENABLED_BLOCK_SOFTIRQ_READ | LOCKF_ENABLED_IRQ_POLL_SOFTIRQ_READ | \
++	LOCKF_ENABLED_TASKLET_SOFTIRQ_READ | LOCKF_ENABLED_SCHED_SOFTIRQ_READ | \
++	 LOCKF_ENABLED_HRTIMER_SOFTIRQ_READ | LOCKF_ENABLED_RCU_SOFTIRQ_READ)
+ #define LOCKF_ENABLED_IRQ_READ \
+ 		(LOCKF_ENABLED_HARDIRQ_READ | LOCKF_ENABLED_SOFTIRQ_READ)
++
++
++#define LOCKF_USED_IN_SOFTIRQ_READ \
++	(LOCKF_USED_IN_HI_SOFTIRQ_READ | LOCKF_USED_IN_TIMER_SOFTIRQ_READ | \
++	LOCKF_USED_IN_NET_TX_SOFTIRQ_READ | LOCKF_USED_IN_NET_RX_SOFTIRQ_READ | \
++	LOCKF_USED_IN_BLOCK_SOFTIRQ_READ | LOCKF_USED_IN_IRQ_POLL_SOFTIRQ_READ | \
++	LOCKF_USED_IN_TASKLET_SOFTIRQ_READ | LOCKF_USED_IN_SCHED_SOFTIRQ_READ | \
++	 LOCKF_USED_IN_HRTIMER_SOFTIRQ_READ | LOCKF_USED_IN_RCU_SOFTIRQ_READ)
+ #define LOCKF_USED_IN_IRQ_READ \
+ 		(LOCKF_USED_IN_HARDIRQ_READ | LOCKF_USED_IN_SOFTIRQ_READ)
+ 
+diff --git a/kernel/locking/lockdep_states.h b/kernel/locking/lockdep_states.h
+index 35ca09f2ed0b..34ff569d2024 100644
+--- a/kernel/locking/lockdep_states.h
++++ b/kernel/locking/lockdep_states.h
+@@ -5,4 +5,6 @@
+  * you add one, or come up with a nice dynamic solution.
+  */
+ LOCKDEP_STATE(HARDIRQ)
+-LOCKDEP_STATE(SOFTIRQ)
++#define SOFTIRQ_VECTOR(__SVEC) LOCKDEP_STATE(__SVEC##_SOFTIRQ)
++#include <linux/softirq_vector.h>
++#undef SOFTIRQ_VECTOR
 -- 
 2.21.0
 
