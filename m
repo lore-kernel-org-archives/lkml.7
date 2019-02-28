@@ -2,175 +2,79 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2D4C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7B0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 932D42184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518222184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:05:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="fcfxUFrx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wt5uLC8+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387411AbfB1PA6 (ORCPT
+        id S1731405AbfB1PFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:00:58 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41134 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730851AbfB1PA5 (ORCPT
+        Thu, 28 Feb 2019 10:05:20 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44056 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfB1PFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:00:57 -0500
-Received: by mail-qt1-f195.google.com with SMTP id v10so23787332qtp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 07:00:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=URNHzscQ4qPaUJmS41Sp3RUkVJopCE5QU3VQWfAy40E=;
-        b=fcfxUFrx/N1MBaUtE/U8RR6YEfsLOEuRvK0zDOUeqgKoBrzdNIbhG3iljCtSo5q0H4
-         wtSf8W1cB213EF+MPYb4NjJNFK54xv3wB/SUj/5zMKCrB/qT/SZOZlVkq9vUie6/s170
-         /v+3IvK5wB4f59ckQzb7Qk3SZuyczvveHohZk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=URNHzscQ4qPaUJmS41Sp3RUkVJopCE5QU3VQWfAy40E=;
-        b=Ep/MqAFeqDw/qfaMNDEuvC5A5wFeKd4BkhqKhGuC6j3mTeQm5x8iNf9NUCO7FW/VR7
-         r3HwhKPXZM3xv1uPNBwEl9Kodsw7As0Q9m6WkE3RC0hlCCQX9vN8507dfA3beMgFCMX2
-         WMRCPr3xjYKZpRKUhQPfIBsUhmnPjykS2874HKaaEqIA3hOqyzvGA/3vREJOcjfxXKuY
-         QXge2GULN/qN2KFzKtYMstALAI8abpp6h97as/A2xizAvZ0EqXNIKKIlPH6orD4rU6qs
-         2N+Rp9p6S/snsWUiuBmPMZLZVdGiwYCgYEt4TKDxFwCz6DXnWQzdnATcBfBRTJzA8HCX
-         3yyg==
-X-Gm-Message-State: APjAAAVYTs6qmoucSJNYdKPVU1ZYnYy+LIy3rjDvB7edzFxh5LeuJQuI
-        PuJIkB/C31YOD7EnM6OXFSfnTw==
-X-Google-Smtp-Source: APXvYqzKilytzk378eGD4qTDx1kWARmEnreULgNUEcUhQHobD7w7yarR03QQ7RdG9yyz3WUGj/Fiag==
-X-Received: by 2002:a0c:9acb:: with SMTP id k11mr6562969qvf.197.1551366056148;
-        Thu, 28 Feb 2019 07:00:56 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id s76sm6597265qki.42.2019.02.28.07.00.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 07:00:55 -0800 (PST)
-Date:   Thu, 28 Feb 2019 10:00:54 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190228150054.GB156098@google.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <20190228173444.54403795211d80ba540b61cb@kernel.org>
+        Thu, 28 Feb 2019 10:05:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=RU2d1ob/JIs4GVG9mvliFQ/ZOQlLqtQdpEyhadDL6NQ=; b=Wt5uLC8+PhwFdCU4Ja8Ge+EbOD
+        DaxGqLReHMBhOTWChXqH2DFJ8OUvG03Vco4ArceOwFs4746LIr6k8RK7Fz7oBtj0uCjRmwU/OLvhn
+        hWLgoxNUVj06mJvB2u3fxihGSWbgEJpCEfSCxu4crJDOba1g6hyjNBgbm31W1Ef8yHECAMqcW5BYL
+        HjTekaJJVjz8z3fgZvIowwHAaZWz7zc9iPVTLTnW0h7GZ0zZh1qJ/TjSnNjPoZEPpOR66FFSCPEZI
+        5+FOaQzr4oAO6M2ccj20Dc0joS1F7GChCoDgvWpe8jD+qW4+kxGkhE8Wi5lyhYrmBFizwDvt20OM6
+        5R6kAcHw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gzNFH-0002NJ-BD; Thu, 28 Feb 2019 15:05:11 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id CDB6A202C2DA9; Thu, 28 Feb 2019 16:05:08 +0100 (CET)
+Message-Id: <20190228150152.261568194@infradead.org>
+User-Agent: quilt/0.65
+Date:   Thu, 28 Feb 2019 15:54:53 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
+        julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
+        mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
+        valentin.schneider@arm.com, brgerst@gmail.com, jpoimboe@redhat.com,
+        luto@kernel.org, bp@alien8.de, dvlasenk@redhat.com
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org
+Subject: [PATCH 3/8] objtool: Set insn->func for alternatives
+References: <20190228145450.289603901@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228173444.54403795211d80ba540b61cb@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 05:34:44PM +0900, Masami Hiramatsu wrote:
-> Hi Joel,
-> 
-> On Wed, 27 Feb 2019 14:37:47 -0500
-> "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
-> 
-> > Introduce in-kernel headers and other artifacts which are made available
-> > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> > it possible to build kernel modules, run eBPF programs, and other
-> > tracing programs that need to extend the kernel for tracing purposes
-> > without any dependency on the file system having headers and build
-> > artifacts.
-> > 
-> > On Android and embedded systems, it is common to switch kernels but not
-> > have kernel headers available on the file system. Raw kernel headers
-> > also cannot be copied into the filesystem like they can be on other
-> > distros, due to licensing and other issues. There's no linux-headers
-> > package on Android. Further once a different kernel is booted, any
-> > headers stored on the file system will no longer be useful. By storing
-> > the headers as a compressed archive within the kernel, we can avoid these
-> > issues that have been a hindrance for a long time.
-> 
-> Hmm, isn't it easier to add kernel-headers package on Android?
+Make sure we set the function association for alternative function
+sequences; they are after all still part of the function.
 
-I have already been down that road. In the Android ecosystem, the Android
-teams only provide a "userspace system image" which goes on the system
-partition of the flash (and a couple other images are also provided but
-system is the main one). The system image cannot contain GPL source code. It
-is also not possible to put kernel headers for every kernel version on the
-system images that ship and is not practical. Android boots on 1000s of forked
-kernels. It does not make sense to provide headers on the system image for
-every kernel version and I already had many discussions on the subject with
-the teams, it is something that is just not done. Now for kernel modules,
-there's another image called the "vendor image" which is flashed onto the
-vendor parition, this is where kernel modules go.  This vendor image is not
-provided by Google for non-Pixel devices. So we have no control over what
-goes there BUT we do know that kernel modules that are enabled will go there,
-and we do have control over enforcing that certain kernel modules should be
-built and available as they are mandatory for Android to function properly.
-We would also possibly make it a built-in option as well. Anyway my point is
-keeping it in the kernel is really the easiest and the smartest choice IMO.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ tools/objtool/check.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-> > The feature is also buildable as a module just in case the user desires
-> > it not being part of the kernel image. This makes it possible to load
-> > and unload the headers on demand. A tracing program, or a kernel module
-> > builder can load the module, do its operations, and then unload the
-> > module to save kernel memory. The total memory needed is 3.8MB.
-> 
-> But it also requires to install build environment (tools etc.)
-> on the target system...
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -695,6 +695,7 @@ static int handle_group_alt(struct objto
+ 		last_new_insn = insn;
+ 
+ 		insn->ignore = orig_insn->ignore_alts;
++		insn->func = orig_insn->func;
+ 
+ 		if (insn->type != INSN_JUMP_CONDITIONAL &&
+ 		    insn->type != INSN_JUMP_UNCONDITIONAL)
 
-Yes, that's true. Check the other thread with Masahiro that we are discussing
-this point on and let us continue discussing there:
-https://lore.kernel.org/patchwork/patch/1046307/#1238223
-https://lore.kernel.org/patchwork/patch/1046307/#1238491
-
-> > The code to read the headers is based on /proc/config.gz code and uses
-> > the same technique to embed the headers.
-> > 
-> > To build a module, the below steps have been tested on an x86 machine:
-> > modprobe kheaders
-> > rm -rf $HOME/headers
-> > mkdir -p $HOME/headers
-> > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> > cd my-kernel-module
-> > make -C $HOME/headers M=$(pwd) modules
-> > rmmod kheaders
-> 
-> It seems a bit complex, but no difference from compared with carrying
-> kheaders.tar.gz. I think we would better have a psudo filesystem
-> which can mount this compressed header file directly :) Then it becomes
-> simpler, like
-> 
-> modprobe headerfs
-> mkdir $HOME/headers
-> mount -t headerfs $HOME/headers
-> 
-> And this doesn't consume any disk-space.
-
-I felt using a compressed tar is really the easiest way because of all the
-tools are already available. There isn't a compressed in-ram filesystem right
-now that I'm aware off that can achieve the kind of high compression ratio
-this patchset does.
-
-thanks,
-
- - Joel
 
