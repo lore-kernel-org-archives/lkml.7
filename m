@@ -4,55 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CBCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145BCC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645A0206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E3B218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366634;
-	bh=JY1IqUWUWA5mDCz21P4mUjQzRecXSFSjcltyPM6JetM=;
+	s=default; t=1551366638;
+	bh=Av3a3IAN4rmto2utxL6rx/qCigNtcxZolloQ7KdIf2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XMbtcYbiC70drJSxfBlKZKr7sYU7k1vEuaDQd5oGy4LDP6IPv5rJ4x7RsJfbsFA6u
-	 iPpPNPurfB//eWya90Jn7322x946vEGVZXlKHKCd1Q6i9fF7zGG8lJze4O+YIW93MT
-	 3CdkS+aDRYkFeWjxRjYIvxf51DOPoG76dK7dtJn8=
+	b=mhGnicgU+L8OvKuPDf2JLey9EpMbNAQkNqqvJrKRuRODvV1tmJcaMV2JZFBSEauko
+	 Ze+tu85VF3/7zei2bhEYUybLv2NKIlLndsOPicvubarplNamuOI6Gi25SfEefvzFW5
+	 WFElNjgFO9YgiakqLyU3wB0wJa4B02bLFj+EAXI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387751AbfB1PKc (ORCPT
+        id S2387734AbfB1PKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:10:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387738AbfB1PKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Feb 2019 10:10:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387713AbfB1PK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:10:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 508D9206B8;
-        Thu, 28 Feb 2019 15:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C372E218AE;
+        Thu, 28 Feb 2019 15:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366629;
-        bh=JY1IqUWUWA5mDCz21P4mUjQzRecXSFSjcltyPM6JetM=;
+        s=default; t=1551366625;
+        bh=Av3a3IAN4rmto2utxL6rx/qCigNtcxZolloQ7KdIf2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzWkUG45p/1qlIN12fwupwNxc6zKo/+vr68GE5GtR4YAS0xTGSUFjYxlJYlLDsVL+
-         uqS4w3ChxSnVNAFwXHB5cfL1gdihdBL77z2aldKpD98t3gT8V3zIUROI/ywsxiNbTM
-         5O3kz+pb4XxMf2ilCWn4sAL2JFZELAiQXYh1E6qY=
+        b=Se91fjwV+1HVzt0o6Nan0KpCylc6XIoTBQJ32oQxrXNo5Qj3+TQBIxBeZn4eqDx1o
+         Cou8ZRn1p8UDmhj8NltZ5/DoDAwK+DWcuqBhmLUxmOWI/vhyS7N0/w4shbyuAcvPna
+         y3ON0AUFvMP4huhcr6uXEZXn0L0IZ5gwWI0VGLBw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Clifton <nickc@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 65/81] perf symbols: Filter out hidden symbols from labels
-Date:   Thu, 28 Feb 2019 10:07:57 -0500
-Message-Id: <20190228150813.10256-65-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 63/81] s390/qeth: cancel close_dev work before removing a card
+Date:   Thu, 28 Feb 2019 10:07:55 -0500
+Message-Id: <20190228150813.10256-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -64,94 +57,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
+[ Upstream commit c2780c1a3fb724560b1d44f7976e0de17bf153c7 ]
 
-When perf is built with the annobin plugin (RHEL8 build) extra symbols
-are added to its binary:
+A card's close_dev work is scheduled on a driver-wide workqueue. If the
+card is removed and freed while the work is still active, this causes a
+use-after-free.
+So make sure that the work is completed before freeing the card.
 
-  # nm perf | grep annobin | head -10
-  0000000000241100 t .annobin_annotate.c
-  0000000000326490 t .annobin_annotate.c
-  0000000000249255 t .annobin_annotate.c_end
-  00000000003283a8 t .annobin_annotate.c_end
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
-  00000000001bc400 t .annobin_annotate.c_end.unlikely
-  00000000001bce18 t .annobin_annotate.c.hot
-  00000000001bce18 t .annobin_annotate.c.hot
-  ...
-
-Those symbols have no use for report or annotation and should be
-skipped.  Moreover they interfere with the DWARF unwind test on the PPC
-arch, where they are mixed with checked symbols and then the test fails:
-
-  # perf test dwarf -v
-  59: Test dwarf unwind                                     :
-  --- start ---
-  test child forked, pid 8515
-  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
-  ...
-  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
-  unwind: failed with 'no error'
-
-The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
-
-  # readelf -s ./perf | grep annobin | head -1
-    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
-
-They can still pass the check for the label symbol. Adding check for
-HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
-out such symbols.
-
->   Just to be awkward, if you are going to ignore STV_HIDDEN
->   symbols then you should probably also ignore STV_INTERNAL ones
->   as well...  Annobin does not generate them, but you never know,
->   one day some other tool might create some.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Clifton <nickc@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 0f54761d167f ("qeth: Support VEPA mode")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/symbol-elf.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/s390/net/qeth_core.h    | 1 +
+ drivers/s390/net/qeth_l2_main.c | 2 ++
+ drivers/s390/net/qeth_l3_main.c | 1 +
+ 3 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 66a84d5846c88..03cb8c6d620aa 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -87,6 +87,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
- 	return GELF_ST_TYPE(sym->st_info);
- }
+diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
+index 99af1a0a33147..8999be74c5451 100644
+--- a/drivers/s390/net/qeth_core.h
++++ b/drivers/s390/net/qeth_core.h
+@@ -22,6 +22,7 @@
+ #include <linux/hashtable.h>
+ #include <linux/ip.h>
+ #include <linux/refcount.h>
++#include <linux/workqueue.h>
  
-+static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
-+{
-+	return GELF_ST_VISIBILITY(sym->st_other);
-+}
+ #include <net/ipv6.h>
+ #include <net/if_inet6.h>
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index 8d3601891c62d..49fa09c67d49f 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -823,6 +823,8 @@ static void qeth_l2_remove_device(struct ccwgroup_device *cgdev)
+ 
+ 	if (cgdev->state == CCWGROUP_ONLINE)
+ 		qeth_l2_set_offline(cgdev);
 +
- #ifndef STT_GNU_IFUNC
- #define STT_GNU_IFUNC 10
- #endif
-@@ -111,7 +116,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
- 	return elf_sym__type(sym) == STT_NOTYPE &&
- 		sym->st_name != 0 &&
- 		sym->st_shndx != SHN_UNDEF &&
--		sym->st_shndx != SHN_ABS;
-+		sym->st_shndx != SHN_ABS &&
-+		elf_sym__visibility(sym) != STV_HIDDEN &&
-+		elf_sym__visibility(sym) != STV_INTERNAL;
++	cancel_work_sync(&card->close_dev_work);
+ 	if (qeth_netdev_is_registered(card->dev))
+ 		unregister_netdev(card->dev);
  }
+diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+index f08b745c20073..d1bf55b5c8e1b 100644
+--- a/drivers/s390/net/qeth_l3_main.c
++++ b/drivers/s390/net/qeth_l3_main.c
+@@ -2428,6 +2428,7 @@ static void qeth_l3_remove_device(struct ccwgroup_device *cgdev)
+ 	if (cgdev->state == CCWGROUP_ONLINE)
+ 		qeth_l3_set_offline(cgdev);
  
- static bool elf_sym__filter(GElf_Sym *sym)
++	cancel_work_sync(&card->close_dev_work);
+ 	if (qeth_netdev_is_registered(card->dev))
+ 		unregister_netdev(card->dev);
+ 	qeth_l3_clear_ip_htable(card, 0);
 -- 
 2.19.1
 
