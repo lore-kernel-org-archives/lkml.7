@@ -2,105 +2,171 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07075C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305BFC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09952171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07002171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o1SZRd5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731236AbfB1KgB (ORCPT
+        id S1731427AbfB1Kge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:36:01 -0500
-Received: from Galois.linutronix.de ([146.0.238.70]:54694 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbfB1KgA (ORCPT
+        Thu, 28 Feb 2019 05:36:34 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44760 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfB1Kgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:36:00 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1gzJ2i-0001zT-D5; Thu, 28 Feb 2019 11:35:56 +0100
-Date:   Thu, 28 Feb 2019 11:35:56 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] posix-cpu-timers: Avoid undefined behaviour in
- timespec64_to_ns()
-In-Reply-To: <CAK8P3a0ip8+UaqnjGsC8GVY8CSEtccB4uUB-b5Zk1nrVqcY0eQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1902281123550.1821@nanos.tec.linutronix.de>
-References: <1551253922-3307-1-git-send-email-wangxiongfeng2@huawei.com> <CABeXuvoJ3oKRp0z=CO_8kPhZ+-AHGwTaDBqzK2FuC_v5t6kU=A@mail.gmail.com> <CAK8P3a0ip8+UaqnjGsC8GVY8CSEtccB4uUB-b5Zk1nrVqcY0eQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 28 Feb 2019 05:36:33 -0500
+Received: by mail-io1-f67.google.com with SMTP id y13so16159990iop.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 02:36:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TG2Sh1vGe2zW5taB3axe7bGfGTyXgNIoMQVtjw+a9WY=;
+        b=o1SZRd5sZ8ky1TT+/5Jt3JkN+1k53KLcPjsze1Lmt8u2VAV9gOe6cLCsUWT/2K4qmM
+         MUqj6NvOSkm/LX+4vD0olqSKueBXd6sCHV/WWilxgUPXoruRxYgj5BqbcFtWSRi4kRub
+         CYh5Z/qGHS09JmsDSPCk+eH9IEJEu2ayjwr1+s/pRwNxIJndRvfjwCCuVbxvBsWLHkfk
+         /x9gwBzJdQxO9R1S5dv5BL8cz056A13vI0vFtNAofSxZDoc2MTTivBw7W98C9YXjWanf
+         ud91l2aE0QBSHwKM6B5My497y57XUBCOoEWEyR4dDfBigPVFBu732pJPg2goN6ihiKcy
+         pCWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TG2Sh1vGe2zW5taB3axe7bGfGTyXgNIoMQVtjw+a9WY=;
+        b=BrTGY9o6c4I4E8S8ZH5SgfpNFfJanbKQGmuucsPRLuxy/5Pd91xegmonG9SzwSM6b4
+         rG8pVuH3lPuLdNO68b1UCpZ5B8xhSd+P4SeienpdtI/NVXlIacvBUaV8L8XjWFhZerRC
+         2OO/atcy+/kKZv/7juoLH0gpfeAbCK83UAfFIity0UzXrNUl3hINhiXptF77spvSRyqF
+         ynloGKzC6FM+pDeXbBaA2erOcN8LgMSdSzHFX6TuYnG7B7rcyNp1niOpSJZOtQxeBX+T
+         BK+T8J2gPxWqutJCLnZy4R0BYGqd3j/4aKealerK26R63bMzvhlnJ1Ureh+9LIPd+Qlk
+         BiFQ==
+X-Gm-Message-State: APjAAAUEoHaKmhouPSsPswzyWaWyVJc/Ul9QGtdd+Utm4/rXV/nAZ+EQ
+        Ngj0N5+fJHHMnzec6WfwMbHf2g8NnesZlcpfktkxyw==
+X-Google-Smtp-Source: APXvYqyCef3EvphHHF9vAB7qSxnCUEYiQjXURkJ14X72OX5R2/TA3iQPQfPmXT9wQONnsVjUMNv0KPfur/S61vXwYiQ=
+X-Received: by 2002:a5d:84c3:: with SMTP id z3mr4811563ior.11.1551350192504;
+ Thu, 28 Feb 2019 02:36:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <00000000000024b3aa0582f1cde7@google.com>
+In-Reply-To: <00000000000024b3aa0582f1cde7@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 28 Feb 2019 11:36:21 +0100
+Message-ID: <CACT4Y+byrcaasUaEJj=hcemEEBBkon=VC24gPwGXHzfeRP0E3w@mail.gmail.com>
+Subject: Re: BUG: Bad page state (6)
+To:     syzbot <syzbot+6f5a9b79b75b66078bf0@syzkaller.appspotmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Eric Biggers <ebiggers@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, arunks@codeaurora.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Lance Roy <ldr709@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        nborisov@suse.com, Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>, yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019, Arnd Bergmann wrote:
-> On Thu, Feb 28, 2019 at 5:25 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> >
-> > On Tue, Feb 26, 2019 at 11:52 PM Xiongfeng Wang
-> > <wangxiongfeng2@huawei.com> wrote:
-> > >
-> > > +++ b/kernel/time/posix-timers.c
-> > > @@ -853,8 +853,8 @@ static int do_timer_settime(timer_t timer_id, int flags,
-> > >         unsigned long flag;
-> > >         int error = 0;
-> > >
-> > > -       if (!timespec64_valid(&new_spec64->it_interval) ||
-> > > -           !timespec64_valid(&new_spec64->it_value))
-> > > +       if (!timespec64_valid_strict(&new_spec64->it_interval) ||
-> > > +           !timespec64_valid_strict(&new_spec64->it_value))
-> > >                 return -EINVAL;
-> > >
-> > >         if (old_spec64)
-> >
-> > sys_timer_settime() is a POSIX interface:
-> > http://pubs.opengroup.org/onlinepubs/7908799/xsh/timer_settime.html
-> >
-> > The timer_settime() function will fail if:
-> >
-> > [EINVAL] The timerid argument does not correspond to an id returned by
-> > timer_create() but not yet deleted by timer_delete().
-> >
-> > [EINVAL] A value structure specified a nanosecond value less than zero
-> > or greater than or equal to 1000 million.
-> >
-> > So we cannot return EINVAL here if we want to maintain POSIX compatibility.
-> > Maybe we should check for limit and saturate here at the syscall interface?
-> 
-> I think returning EINVAL here is better than silently truncating, we
-> just need to
-> document it in the Linux man page.
-> Note that truncation would set the time to just before the overflow,
-> it bad things
-> start to happen the instant after it returns from the kernel. This is possibly
-> worse than setting a random value that may or may not crash the system.
+On Thu, Feb 28, 2019 at 11:32 AM syzbot
+<syzbot+6f5a9b79b75b66078bf0@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    42fd8df9d1d9 Add linux-next specific files for 20190228
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=179ba9e0c00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c0f38652d28b522f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6f5a9b79b75b66078bf0
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ed6bd0c00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10690c8ac00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+6f5a9b79b75b66078bf0@syzkaller.appspotmail.com
 
-Not necessarily. On the hrtimer based side, we clamp the values to
-KTIME_MAX. That means in theory the overflow could happen when the timer
-expires and the interval is added. There are two things which prevent that:
++Jens, Eric,
 
-1) The timer expires in about 292 years from now, which I really can't be
-   worried about
+Looks similar to:
+https://groups.google.com/forum/#!msg/syzkaller-bugs/E3v3XQweVBw/6BPrkIYJIgAJ
+Perhaps the fixing commit is not in the build yet?
 
-2) The rearming code prevents the overflow into undefined space as well.
 
-So, it's not unreasonable to do clamping as long as the handed in value is
-at least formally correct.
-
-Of course we need to look at the posix-cpu-timer side of affairs to ensure
-that the limits are handled correctly.
-
-Thanks,
-
-	tglx
-
+> BUG: Bad page state in process syz-executor193  pfn:9225a
+> page:ffffea0002489680 count:0 mapcount:0 mapping:ffff88808652fd80 index:0x81
+> shmem_aops
+> name:"memfd:cgroup2"
+> flags: 0x1fffc000008000e(referenced|uptodate|dirty|swapbacked)
+> raw: 01fffc000008000e ffff88809277fac0 ffff88809277fac0 ffff88808652fd80
+> raw: 0000000000000081 0000000000000000 00000000ffffffff 0000000000000000
+> page dumped because: non-NULL mapping
+> Modules linked in:
+> CPU: 0 PID: 7659 Comm: syz-executor193 Not tainted 5.0.0-rc8-next-20190228
+> #45
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>   bad_page.cold+0xda/0xff mm/page_alloc.c:586
+>   free_pages_check_bad+0x142/0x1a0 mm/page_alloc.c:1013
+>   free_pages_check mm/page_alloc.c:1022 [inline]
+>   free_pages_prepare mm/page_alloc.c:1112 [inline]
+>   free_pcp_prepare mm/page_alloc.c:1137 [inline]
+>   free_unref_page_prepare mm/page_alloc.c:3001 [inline]
+>   free_unref_page_list+0x31d/0xc40 mm/page_alloc.c:3070
+>   release_pages+0x60d/0x1940 mm/swap.c:794
+>   pagevec_lru_move_fn+0x218/0x2a0 mm/swap.c:213
+>   activate_page_drain mm/swap.c:297 [inline]
+>   lru_add_drain_cpu+0x3b1/0x520 mm/swap.c:596
+>   lru_add_drain+0x20/0x60 mm/swap.c:647
+>   exit_mmap+0x290/0x530 mm/mmap.c:3134
+>   __mmput kernel/fork.c:1047 [inline]
+>   mmput+0x15f/0x4c0 kernel/fork.c:1068
+>   exit_mm kernel/exit.c:546 [inline]
+>   do_exit+0x816/0x2fa0 kernel/exit.c:863
+>   do_group_exit+0x135/0x370 kernel/exit.c:980
+>   __do_sys_exit_group kernel/exit.c:991 [inline]
+>   __se_sys_exit_group kernel/exit.c:989 [inline]
+>   __x64_sys_exit_group+0x44/0x50 kernel/exit.c:989
+>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x442a58
+> Code: 00 00 be 3c 00 00 00 eb 19 66 0f 1f 84 00 00 00 00 00 48 89 d7 89 f0
+> 0f 05 48 3d 00 f0 ff ff 77 21 f4 48 89 d7 44 89 c0 0f 05 <48> 3d 00 f0 ff
+> ff 76 e0 f7 d8 64 41 89 01 eb d8 0f 1f 84 00 00 00
+> RSP: 002b:00007ffe99e2faf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000442a58
+> RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+> RBP: 00000000004c2468 R08: 00000000000000e7 R09: ffffffffffffffd0
+> R10: 0000000002000005 R11: 0000000000000246 R12: 0000000000000001
+> R13: 00000000006d4180 R14: 0000000000000000 R15: 0000000000000000
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
+> syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000024b3aa0582f1cde7%40google.com.
+> For more options, visit https://groups.google.com/d/optout.
