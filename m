@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47494C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9769DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111DB20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649252133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551368020;
-	bh=ijbjMLRe+w4UWOtXWDVFVeE0V7LUSD9GaXfUEK+wurg=;
+	s=default; t=1551368032;
+	bh=2QvFP32Ga8j3xHaC7/6eUD4L8ANF7U/SBoGPBU2EqNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z7hJsYXpbuM8JvH3CnsEGZwA+wfbCJerUKlMpOk3f+ExuwGq/JO27ATlnr3lpVNNo
-	 oWYu5m63EfKQhaUg0aaWnu3N45BUiDf6YywF/ueRVybRVc49nKoJVc0BfGwIYF+ztC
-	 Y/seefZ0mO2fo0UFyfjwzy4IuwO5u6cw53tkNw5Q=
+	b=YpVrJipQqBWq5NTPXOg3BcQWlx7U8AHsBzBAXt4grS5jS+50oPPtM/7lVQ07Mfc6Z
+	 U+0hlj3zkOOMy/WqgT14BtZI3TfY5cEPyFGbGA+lL5DkzsiMpeRE5OdsyixwlJ0Cov
+	 /y+ehRo+2uSxScXMy6zV111OceaxT4aATL5lNVJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389195AbfB1Pdj (ORCPT
+        id S2389200AbfB1Pdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:33:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41014 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:33:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733008AbfB1PIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:08:41 -0500
+        id S1732791AbfB1PIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:08:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24DF7218C3;
-        Thu, 28 Feb 2019 15:08:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2524F2184A;
+        Thu, 28 Feb 2019 15:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366520;
-        bh=ijbjMLRe+w4UWOtXWDVFVeE0V7LUSD9GaXfUEK+wurg=;
+        s=default; t=1551366515;
+        bh=2QvFP32Ga8j3xHaC7/6eUD4L8ANF7U/SBoGPBU2EqNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cGl5C5kegwyHtC06+sVvJ+ghFQF9UMznk/RIh8vjz9nsJx2xzgef+boXjpII8Ox9P
-         W/YZ80gwbNRume0n7J6eg+QKR7VNOaTDvQvD978KdlZEINYsssF4OwUirsen9wOWeV
-         TYYfe4FpJTPnffIlyG5YXnHl5AbwhAUXvCxSYk7s=
+        b=tjFlJbQ1wfDu4lIApae8e9ovzJO1fh3deXQyFtUZM/STA87B5qC7EJzNu0+aR/Jkd
+         jHHr0EhIiD79CVCW3ug/tj6/lMMn46ZZKjKnGDwLKBR2VCshnezSdu5MRa+2kuf1W6
+         b/lcMSP0E+maoBRn2rLLcQ3+TNPaAaoEmD3C2Rhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Abeni <pabeni@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 16/81] bpftool: fix percpu maps updating
-Date:   Thu, 28 Feb 2019 10:07:08 -0500
-Message-Id: <20190228150813.10256-16-sashal@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 14/81] wlcore: sdio: Fixup power on/off sequence
+Date:   Thu, 28 Feb 2019 10:07:06 -0500
+Message-Id: <20190228150813.10256-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -58,65 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit b0ca5ecb8e2279d706261f525f1bd0ba9e3fe800 ]
+[ Upstream commit 13e62626c578d9889ebbda7c521be5adff9bef8e ]
 
-When updating a percpu map, bpftool currently copies the provided
-value only into the first per CPU copy of the specified value,
-all others instances are left zeroed.
+During "wlan-up", we are programming the FW into the WiFi-chip. However,
+re-programming the FW doesn't work, unless a power cycle of the WiFi-chip
+is made in-between the programmings.
 
-This change explicitly copies the user-provided bytes to all the
-per CPU instances, keeping the sub-command syntax unchanged.
+To conform to this requirement and to fix the regression in a simple way,
+let's start by allowing that the SDIO card (WiFi-chip) may stay powered on
+(runtime resumed) when wl12xx_sdio_power_off() returns. The intent with the
+current code is to treat this scenario as an error, but unfortunate this
+doesn't work as expected, so let's fix this.
 
-v2 -> v3:
- - drop unused argument, as per Quentin's suggestion
-v1 -> v2:
- - rename the helper as per Quentin's suggestion
+The other part is to guarantee that a power cycle of the SDIO card has been
+completed when wl12xx_sdio_power_on() returns, as to allow the FW
+programming to succeed. However, relying solely on runtime PM to deal with
+this isn't sufficient. For example, userspace may prevent runtime suspend
+via sysfs for the device that represents the SDIO card, leading to that the
+mmc core also keeps it powered on. For this reason, let's instead do a
+brute force power cycle in wl12xx_sdio_power_on().
 
-Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 728a9dc61f13 ("wlcore: sdio: Fix flakey SDIO runtime PM handling")
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Tested-by: Tony Lindgren <tony@atomide.com>
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/map.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/net/wireless/ti/wlcore/sdio.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-index 9988d5c126b62..94094168c4a61 100644
---- a/tools/bpf/bpftool/map.c
-+++ b/tools/bpf/bpftool/map.c
-@@ -439,6 +439,20 @@ static char **parse_bytes(char **argv, const char *name, unsigned char *val,
- 	return argv + i;
+diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
+index bd10165d7eec5..4d4b077011497 100644
+--- a/drivers/net/wireless/ti/wlcore/sdio.c
++++ b/drivers/net/wireless/ti/wlcore/sdio.c
+@@ -164,6 +164,12 @@ static int wl12xx_sdio_power_on(struct wl12xx_sdio_glue *glue)
+ 	}
+ 
+ 	sdio_claim_host(func);
++	/*
++	 * To guarantee that the SDIO card is power cycled, as required to make
++	 * the FW programming to succeed, let's do a brute force HW reset.
++	 */
++	mmc_hw_reset(card->host);
++
+ 	sdio_enable_func(func);
+ 	sdio_release_host(func);
+ 
+@@ -174,20 +180,13 @@ static int wl12xx_sdio_power_off(struct wl12xx_sdio_glue *glue)
+ {
+ 	struct sdio_func *func = dev_to_sdio_func(glue->dev);
+ 	struct mmc_card *card = func->card;
+-	int error;
+ 
+ 	sdio_claim_host(func);
+ 	sdio_disable_func(func);
+ 	sdio_release_host(func);
+ 
+ 	/* Let runtime PM know the card is powered off */
+-	error = pm_runtime_put(&card->dev);
+-	if (error < 0 && error != -EBUSY) {
+-		dev_err(&card->dev, "%s failed: %i\n", __func__, error);
+-
+-		return error;
+-	}
+-
++	pm_runtime_put(&card->dev);
+ 	return 0;
  }
  
-+/* on per cpu maps we must copy the provided value on all value instances */
-+static void fill_per_cpu_value(struct bpf_map_info *info, void *value)
-+{
-+	unsigned int i, n, step;
-+
-+	if (!map_is_per_cpu(info->type))
-+		return;
-+
-+	n = get_possible_cpus();
-+	step = round_up(info->value_size, 8);
-+	for (i = 1; i < n; i++)
-+		memcpy(value + i * step, value, info->value_size);
-+}
-+
- static int parse_elem(char **argv, struct bpf_map_info *info,
- 		      void *key, void *value, __u32 key_size, __u32 value_size,
- 		      __u32 *flags, __u32 **value_fd)
-@@ -518,6 +532,8 @@ static int parse_elem(char **argv, struct bpf_map_info *info,
- 			argv = parse_bytes(argv, "value", value, value_size);
- 			if (!argv)
- 				return -1;
-+
-+			fill_per_cpu_value(info, value);
- 		}
- 
- 		return parse_elem(argv, info, key, NULL, key_size, value_size,
 -- 
 2.19.1
 
