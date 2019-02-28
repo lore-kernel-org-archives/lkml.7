@@ -2,282 +2,303 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C197CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F388FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AEB2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBDB214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ORrmTwJv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZz8gwzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbfB1A3R (ORCPT
+        id S1730598AbfB1A3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 19:29:17 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35378 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729918AbfB1A3Q (ORCPT
+        Wed, 27 Feb 2019 19:29:32 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37469 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729432AbfB1A3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 19:29:16 -0500
-Received: by mail-oi1-f195.google.com with SMTP id u128so15110502oie.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 16:29:15 -0800 (PST)
+        Wed, 27 Feb 2019 19:29:31 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s22so8821851pfh.4;
+        Wed, 27 Feb 2019 16:29:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aA1okxN3VYgeeIBcSGMu8jaBIK0XtHcLi6+3USeFW+A=;
-        b=ORrmTwJvTMgsR8FYdU1wEZ3l8+Wveyndp4sN/o/MaFCQjZnfhvcTkm/4Ovc7izoOJP
-         gMwAbb3UxekOkTekdxI5NUaZnNA4Rq1wqVLxGwLfIPOqMdUYYng6XjdtZsJXRiFLvetI
-         YjC+76SPdiLz+WW1Q+UhMw2nnqhdKgH6GSialuXtLAIfu1ojl4pMDPNhzSNtzU/qLCtm
-         W/GTRsSJKtNLXCRvmjh+EhfDbPLkT8L4x/8DEm4HKlv04LHd1yL8u6+EK++B+8lVzoLo
-         IcgcQ0nuIhh9iMxOqTC7dHYyBywcEhWRc650HAsVSOXulyPegqEx5+4DWotdtjpP4/+R
-         vAZA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=EVF8TFklj6ku/SWCRFvN/VHaP/kvLrKr8It+KHGLIuE=;
+        b=VZz8gwzp+jpZgsquSGWjD03qxBlj242+yQvW+ZBvEHaHOaH7nXa2L7Cdqse686+NX3
+         a4I7m91pkpJawf1jx33uIPsrrPwQrhsNzR4iUfVhNEe3A4Oq7hTnklevnNSMXRCB38kK
+         DIUeUablNA1k3auZVTn/zRFyfyGKhz7AwzMOlBzKhLm9RZQHOsk1II1cAPLiA1S3/x0q
+         pilRAq3zc1iFHmCIctFXne8kRUTNLywpe/oSQ0yRyawIADurO9ak3uquaf1Ml5IdvNo2
+         vez0mf9rd3fnUd5BUNxYH/152SNvtC/gFmhif1cJkwPiSO5oBppRqbJ8aZ5GAup99DoD
+         NJCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aA1okxN3VYgeeIBcSGMu8jaBIK0XtHcLi6+3USeFW+A=;
-        b=IRQqJGxF0xLKGjGtSvC8reuWWE/Gfmw4H0eMszUs+erTBYJM97/2WrJ3/tL60Rn1Mc
-         WIu7X1hLHe/bp+raJB5b5CKVZFxYU58lgo0zxWoPMadRCS8ORuLvtGsUe7Exmgce606S
-         SQtyY65x5R+d8R3KMg4skwMD27ik3AfMzLFYFNypLcTj3qnEaFOfM4V1sP5Us/0DSh2x
-         TMMU8XgD/nXlyaI/fo75kROXvCbGhKzjDSeowBi125HslWLE2SVA138esM8L41OQNefs
-         rkesax7/9GECf+MIUJSHmDZt8JDOKaCKFVKUJcE+p93S1/p64qDuSs4W0EtsdAP/c9/5
-         C5Mg==
-X-Gm-Message-State: APjAAAWKkow48R2T9RpJe587OJ/BjEQdIIn7RzE27vK6PTWtGIZ849tE
-        llwZb7GnTbYUatqXFt4bmbf7wDrS4a6jEHwBJiIAxw==
-X-Google-Smtp-Source: AHgI3IYRAqoHrQDFS7w8zHS6g8e+FoihRMVgcEFw+Kd4imISrcRCGvr1GHy19lC0FGWoV9IAuwyqMpBbzs8jF+nu7iE=
-X-Received: by 2002:aca:4e50:: with SMTP id c77mr1386753oib.100.1551313755043;
- Wed, 27 Feb 2019 16:29:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20181128193636.254378-1-brendanhiggins@google.com>
- <20181128193636.254378-18-brendanhiggins@google.com> <CAL_Jsq+09Kx7yMBC_Jw45QGmk6U_fp4N6HOZDwYrM4tWw+_dOA@mail.gmail.com>
- <CAFd5g46NehKo=TT4reQ8r74bDTG9BkR=ELg+Q3n5YooUxFwBmA@mail.gmail.com> <1d72f04e-08ba-e3dd-c8c0-512946126113@gmail.com>
-In-Reply-To: <1d72f04e-08ba-e3dd-c8c0-512946126113@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 27 Feb 2019 16:29:04 -0800
-Message-ID: <CAFd5g45GjG871ynfMADN+4zmecfARCk2ribY7MsMSc4=QkNqgQ@mail.gmail.com>
-Subject: Re: [RFC v3 17/19] of: unittest: migrate tests to run on KUnit
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>, shuah@kernel.org,
-        Joel Stanley <joel@jms.id.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>, brakmo@fb.com,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-um@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Knut Omang <knut.omang@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EVF8TFklj6ku/SWCRFvN/VHaP/kvLrKr8It+KHGLIuE=;
+        b=d/G/ptcbWqKH9GhqaPmjrG5qQ/w0zIfa8xcyUrg2gJqCDFuXzVXXXNS/8kKpQiLmRb
+         0uZY0/nZCyqrDIGWlwMqZxhrmCg2HgbmRSRduuCsgJQXbaZhk6pEM9r66IagK/mKRUxo
+         DqkgUVfvqssZwsSWCipvPLoRMZ6yn/UwaeRCvfGVxkG5+o7ey8C8RtW060KIid67wd7v
+         O9Mc8vDBDHgGpMPtnNoKVzrZqDTax3z+D5fomAhHBZZvGHDrOzlZ7E/j8bT6Xzko8tLd
+         cNo+FeKH8PfeiaFN09MxVRzFKgaMxxCFwQR6B/IN+Zs9nVzCNfSgfO3E7XdwrCB/aBat
+         AJxA==
+X-Gm-Message-State: AHQUAubfIpWgd4HdRjju0wNDEDvP4lB1wDuciAc1JZDj2HQXCoc5zJ5Q
+        xaE472P8acmD0nMENYiYhLQtkHWt
+X-Google-Smtp-Source: AHgI3IazGWbUTHegBCHj0gTMDfpJkmYBc4h2emK1qRPaqS+3FG4seK6r6Zgm3rk80bjgLwUohwyNuQ==
+X-Received: by 2002:a62:bd09:: with SMTP id a9mr4452818pff.61.1551313769907;
+        Wed, 27 Feb 2019 16:29:29 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id f125sm4688022pfc.91.2019.02.27.16.29.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Feb 2019 16:29:29 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ido Schimmel <idosch@mellanox.com>,
+        linux-kernel@vger.kernel.org (open list),
+        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
+        bridge@lists.linux-foundation.org (moderated list:ETHERNET BRIDGE),
+        jiri@mellanox.com, andrew@lunn.ch, vivien.didelot@gmail.com
+Subject: [PATCH net-next] switchdev: Remove unused transaction item queue
+Date:   Wed, 27 Feb 2019 16:29:16 -0800
+Message-Id: <20190228002916.24904-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 2:56 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 2/12/19 5:44 PM, Brendan Higgins wrote:
-> > On Wed, Nov 28, 2018 at 12:56 PM Rob Herring <robh@kernel.org> wrote:
-> >>
-> >> On Wed, Nov 28, 2018 at 1:38 PM Brendan Higgins
-> >> <brendanhiggins@google.com> wrote:
-<snip>
-> >>> ---
-> >>>  drivers/of/Kconfig    |    1 +
-> >>>  drivers/of/unittest.c | 1405 ++++++++++++++++++++++-------------------
-> >>>  2 files changed, 752 insertions(+), 654 deletions(-)
-> >>>
-> > <snip>
-> >>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> >>> index 41b49716ac75f..a5ef44730ffdb 100644
-> >>> --- a/drivers/of/unittest.c
-> >>> +++ b/drivers/of/unittest.c
-<snip>
-> >>> +
-> >>> +       KUNIT_EXPECT_EQ(test,
-> >>> +                       of_property_match_string(np,
-> >>> +                                                "phandle-list-names",
-> >>> +                                                "first"),
-> >>> +                       0);
-> >>> +       KUNIT_EXPECT_EQ(test,
-> >>> +                       of_property_match_string(np,
-> >>> +                                                "phandle-list-names",
-> >>> +                                                "second"),
-> >>> +                       1);
-> >>
-> >> Fewer lines on these would be better even if we go over 80 chars.
->
-> Agreed.  unittest.c already is a greater than 80 char file in general, and
-> is a file that benefits from that.
->
+There are no more in tree users of the
+switchdev_trans_item_{dequeue,enqueue} or switchdev_trans_item structure
+in the kernel since commit 00fc0c51e35b ("rocker: Change world_ops API
+and implementation to be switchdev independant").
 
-Noted.
+Remove this unused code and update the documentation accordingly since.
 
->
-> > On the of_property_match_string(...), I have no opinion. I will do
-> > whatever you like best.
-> >
-> > Nevertheless, as far as the KUNIT_EXPECT_*(...), I do have an opinion: I am
-> > trying to establish a good, readable convention. Given an expect statement
-> > structured as
-> > ```
-> > KUNIT_EXPECT_*(
-> >     test,
-> >     expect_arg_0, ..., expect_arg_n,
-> >     fmt_str, fmt_arg_0, ..., fmt_arg_n)
-> > ```
-> > where `test` is the `struct kunit` context argument, `expect_arg_{0, ..., n}`
-> > are the arguments the expectations is being made about (so in the above example,
-> > `of_property_match_string(...)` and `1`), and `fmt_*` is the optional format
-> > string that comes at the end of some expectations.
-> >
-> > The pattern I had been trying to promote is the following:
-> >
-> > 1) If everything fits on 1 line, do that.
-> > 2) If you must make a line split, prefer to keep `test` on its own line,
-> > `expect_arg_{0, ..., n}` should be kept together, if possible, and the format
-> > string should follow the conventions already most commonly used with format
-> > strings.
-> > 3) If you must split up `expect_arg_{0, ..., n}` each argument should get its
-> > own line and should not share a line with either `test` or any `fmt_*`.
-> >
-> > The reason I care about this so much is because expectations should be
-> > extremely easy to read; they are the most important part of a unit
-> > test because they tell you what the test is verifying. I am not
-> > married to the formatting I proposed above, but I want something that
-> > will be extremely easy to identify the arguments that the expectation
-> > is on. Maybe that means that I need to add some syntactic fluff to
-> > make it clearer, I don't know, but this is definitely something we
-> > need to get right, especially in the earliest examples.
->
-> I will probably raise the ire of the kernel formatting rule makers by offering
-> what I think is a _much_ more readable format __for this specific case__.
-> In other words for drivers/of/unittest.c.
->
-> If you can not make your mail window _very_ wide, or if this email has been
-> line wrapped, this example will not be clear.
->
-> Two possible formats:
->
->
-> ### -----  version 1, as created by the patch series
->
-> static void of_unittest_property_string(struct kunit *test)
-> {
->         const char *strings[4];
->         struct device_node *np;
->         int rc;
->
->         np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->
->         KUNIT_EXPECT_EQ(
->                 test,
->                 of_property_match_string(np, "phandle-list-names", "first"),
->                 0);
->         KUNIT_EXPECT_EQ(
->                 test,
->                 of_property_match_string(np, "phandle-list-names", "second"),
->                 1);
->         KUNIT_EXPECT_EQ(
->                 test,
->                 of_property_match_string(np, "phandle-list-names", "third"),
->                 2);
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 of_property_match_string(np, "phandle-list-names", "fourth"),
->                 -ENODATA,
->                 "unmatched string");
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 of_property_match_string(np, "missing-property", "blah"),
->                 -EINVAL,
->                 "missing property");
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 of_property_match_string(np, "empty-property", "blah"),
->                 -ENODATA,
->                 "empty property");
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 of_property_match_string(np, "unterminated-string", "blah"),
->                 -EILSEQ,
->                 "unterminated string");
->
->         /* of_property_count_strings() tests */
->         KUNIT_EXPECT_EQ(test,
->                         of_property_count_strings(np, "string-property"), 1);
->         KUNIT_EXPECT_EQ(test,
->                         of_property_count_strings(np, "phandle-list-names"), 3);
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 of_property_count_strings(np, "unterminated-string"), -EILSEQ,
->                 "unterminated string");
->         KUNIT_EXPECT_EQ_MSG(
->                 test,
->                 of_property_count_strings(np, "unterminated-string-list"),
->                 -EILSEQ,
->                 "unterminated string array");
->
->
->
->
-> ### -----  version 2, modified to use really long lines
->
-> static void of_unittest_property_string(struct kunit *test)
-> {
->         const char *strings[4];
->         struct device_node *np;
->         int rc;
->
->         np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, np);
->
->         KUNIT_EXPECT_EQ(    test, of_property_match_string(np, "phandle-list-names", "first"),  0);
->         KUNIT_EXPECT_EQ(    test, of_property_match_string(np, "phandle-list-names", "second"), 1);
->         KUNIT_EXPECT_EQ(    test, of_property_match_string(np, "phandle-list-names", "third"),  2);
->         KUNIT_EXPECT_EQ_MSG(test, of_property_match_string(np, "phandle-list-names", "fourth"), -ENODATA, "unmatched string");
->         KUNIT_EXPECT_EQ_MSG(test, of_property_match_string(np, "missing-property", "blah"),     -EINVAL, "missing property");
->         KUNIT_EXPECT_EQ_MSG(test, of_property_match_string(np, "empty-property", "blah"),       -ENODATA, "empty property");
->         KUNIT_EXPECT_EQ_MSG(test, of_property_match_string(np, "unterminated-string", "blah"),  -EILSEQ, "unterminated string");
->
->         /* of_property_count_strings() tests */
->         KUNIT_EXPECT_EQ(    test, of_property_count_strings(np, "string-property"),             1);
->         KUNIT_EXPECT_EQ(    test, of_property_count_strings(np, "phandle-list-names"),          3);
->         KUNIT_EXPECT_EQ_MSG(test, of_property_count_strings(np, "unterminated-string"),         -EILSEQ, "unterminated string");
->         KUNIT_EXPECT_EQ_MSG(test, of_property_count_strings(np, "unterminated-string-list"),    -EILSEQ, "unterminated string array");
->
->
->         ------------------------  ------------------------------------------------------------- --------------------------------------
->              ^                         ^                                                             ^
->              |                         |                                                             |
->              |                         |                                                             |
->             mostly boilerplate        what is being tested                                          expected result, error message
->             (can vary in relop
->              and _MSG or not)
->
-> In my opinion, the second version is much more readable.  It is easy to see the
-> differences in the boilerplate.  It is easy to see what is being tested, and how
-> the arguments of the tested function vary for each test.  It is easy to see the
-> expected result and error message.  The entire block fits into a single short
-> window (though much wider).
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ Documentation/networking/switchdev.txt |  19 -----
+ include/net/switchdev.h                |  12 ---
+ net/switchdev/switchdev.c              | 100 +------------------------
+ 3 files changed, 2 insertions(+), 129 deletions(-)
 
-I have no opinion on the over 80 char thing, so as long as everyone
-else is okay with it, I have no complaints.
+diff --git a/Documentation/networking/switchdev.txt b/Documentation/networking/switchdev.txt
+index 633dd1fd81b7..86174ce8cd13 100644
+--- a/Documentation/networking/switchdev.txt
++++ b/Documentation/networking/switchdev.txt
+@@ -371,22 +371,3 @@ The driver can monitor for updates to arp_tbl using the netevent notifier
+ NETEVENT_NEIGH_UPDATE.  The device can be programmed with resolved nexthops
+ for the routes as arp_tbl updates.  The driver implements ndo_neigh_destroy
+ to know when arp_tbl neighbor entries are purged from the port.
+-
+-Transaction item queue
+-^^^^^^^^^^^^^^^^^^^^^^
+-
+-For switchdev ops attr_set and obj_add, there is a 2 phase transaction model
+-used. First phase is to "prepare" anything needed, including various checks,
+-memory allocation, etc. The goal is to handle the stuff that is not unlikely
+-to fail here. The second phase is to "commit" the actual changes.
+-
+-Switchdev provides an infrastructure for sharing items (for example memory
+-allocations) between the two phases.
+-
+-The object created by a driver in "prepare" phase and it is queued up by:
+-switchdev_trans_item_enqueue()
+-During the "commit" phase, the driver gets the object by:
+-switchdev_trans_item_dequeue()
+-
+-If a transaction is aborted during "prepare" phase, switchdev code will handle
+-cleanup of the queued-up objects.
+diff --git a/include/net/switchdev.h b/include/net/switchdev.h
+index e4f751e19ecf..0ebd67ae7012 100644
+--- a/include/net/switchdev.h
++++ b/include/net/switchdev.h
+@@ -20,14 +20,7 @@
+ #define SWITCHDEV_F_SKIP_EOPNOTSUPP	BIT(1)
+ #define SWITCHDEV_F_DEFER		BIT(2)
+ 
+-struct switchdev_trans_item {
+-	struct list_head list;
+-	void *data;
+-	void (*destructor)(const void *data);
+-};
+-
+ struct switchdev_trans {
+-	struct list_head item_list;
+ 	bool ph_prepare;
+ };
+ 
+@@ -105,11 +98,6 @@ struct switchdev_obj_port_mdb {
+ #define SWITCHDEV_OBJ_PORT_MDB(OBJ) \
+ 	container_of((OBJ), struct switchdev_obj_port_mdb, obj)
+ 
+-void switchdev_trans_item_enqueue(struct switchdev_trans *trans,
+-				  void *data, void (*destructor)(void const *),
+-				  struct switchdev_trans_item *tritem);
+-void *switchdev_trans_item_dequeue(struct switchdev_trans *trans);
+-
+ typedef int switchdev_obj_dump_cb_t(struct switchdev_obj *obj);
+ 
+ enum switchdev_notifier_type {
+diff --git a/net/switchdev/switchdev.c b/net/switchdev/switchdev.c
+index d81cfcee9ad9..90ba4a1f0a6d 100644
+--- a/net/switchdev/switchdev.c
++++ b/net/switchdev/switchdev.c
+@@ -23,78 +23,6 @@
+ #include <linux/rtnetlink.h>
+ #include <net/switchdev.h>
+ 
+-/**
+- *	switchdev_trans_item_enqueue - Enqueue data item to transaction queue
+- *
+- *	@trans: transaction
+- *	@data: pointer to data being queued
+- *	@destructor: data destructor
+- *	@tritem: transaction item being queued
+- *
+- *	Enqeueue data item to transaction queue. tritem is typically placed in
+- *	cointainter pointed at by data pointer. Destructor is called on
+- *	transaction abort and after successful commit phase in case
+- *	the caller did not dequeue the item before.
+- */
+-void switchdev_trans_item_enqueue(struct switchdev_trans *trans,
+-				  void *data, void (*destructor)(void const *),
+-				  struct switchdev_trans_item *tritem)
+-{
+-	tritem->data = data;
+-	tritem->destructor = destructor;
+-	list_add_tail(&tritem->list, &trans->item_list);
+-}
+-EXPORT_SYMBOL_GPL(switchdev_trans_item_enqueue);
+-
+-static struct switchdev_trans_item *
+-__switchdev_trans_item_dequeue(struct switchdev_trans *trans)
+-{
+-	struct switchdev_trans_item *tritem;
+-
+-	if (list_empty(&trans->item_list))
+-		return NULL;
+-	tritem = list_first_entry(&trans->item_list,
+-				  struct switchdev_trans_item, list);
+-	list_del(&tritem->list);
+-	return tritem;
+-}
+-
+-/**
+- *	switchdev_trans_item_dequeue - Dequeue data item from transaction queue
+- *
+- *	@trans: transaction
+- */
+-void *switchdev_trans_item_dequeue(struct switchdev_trans *trans)
+-{
+-	struct switchdev_trans_item *tritem;
+-
+-	tritem = __switchdev_trans_item_dequeue(trans);
+-	BUG_ON(!tritem);
+-	return tritem->data;
+-}
+-EXPORT_SYMBOL_GPL(switchdev_trans_item_dequeue);
+-
+-static void switchdev_trans_init(struct switchdev_trans *trans)
+-{
+-	INIT_LIST_HEAD(&trans->item_list);
+-}
+-
+-static void switchdev_trans_items_destroy(struct switchdev_trans *trans)
+-{
+-	struct switchdev_trans_item *tritem;
+-
+-	while ((tritem = __switchdev_trans_item_dequeue(trans)))
+-		tritem->destructor(tritem->data);
+-}
+-
+-static void switchdev_trans_items_warn_destroy(struct net_device *dev,
+-					       struct switchdev_trans *trans)
+-{
+-	WARN(!list_empty(&trans->item_list), "%s: transaction item queue is not empty.\n",
+-	     dev->name);
+-	switchdev_trans_items_destroy(trans);
+-}
+-
+ static LIST_HEAD(deferred);
+ static DEFINE_SPINLOCK(deferred_lock);
+ 
+@@ -208,8 +136,6 @@ static int switchdev_port_attr_set_now(struct net_device *dev,
+ 	struct switchdev_trans trans;
+ 	int err;
+ 
+-	switchdev_trans_init(&trans);
+-
+ 	/* Phase I: prepare for attr set. Driver/device should fail
+ 	 * here if there are going to be issues in the commit phase,
+ 	 * such as lack of resources or support.  The driver/device
+@@ -220,17 +146,8 @@ static int switchdev_port_attr_set_now(struct net_device *dev,
+ 	trans.ph_prepare = true;
+ 	err = switchdev_port_attr_notify(SWITCHDEV_PORT_ATTR_SET, dev, attr,
+ 					 &trans);
+-	if (err) {
+-		/* Prepare phase failed: abort the transaction.  Any
+-		 * resources reserved in the prepare phase are
+-		 * released.
+-		 */
+-
+-		if (err != -EOPNOTSUPP)
+-			switchdev_trans_items_destroy(&trans);
+-
++	if (err)
+ 		return err;
+-	}
+ 
+ 	/* Phase II: commit attr set.  This cannot fail as a fault
+ 	 * of driver/device.  If it does, it's a bug in the driver/device
+@@ -242,7 +159,6 @@ static int switchdev_port_attr_set_now(struct net_device *dev,
+ 					 &trans);
+ 	WARN(err, "%s: Commit of attribute (id=%d) failed.\n",
+ 	     dev->name, attr->id);
+-	switchdev_trans_items_warn_destroy(dev, &trans);
+ 
+ 	return err;
+ }
+@@ -341,8 +257,6 @@ static int switchdev_port_obj_add_now(struct net_device *dev,
+ 
+ 	ASSERT_RTNL();
+ 
+-	switchdev_trans_init(&trans);
+-
+ 	/* Phase I: prepare for obj add. Driver/device should fail
+ 	 * here if there are going to be issues in the commit phase,
+ 	 * such as lack of resources or support.  The driver/device
+@@ -353,17 +267,8 @@ static int switchdev_port_obj_add_now(struct net_device *dev,
+ 	trans.ph_prepare = true;
+ 	err = switchdev_port_obj_notify(SWITCHDEV_PORT_OBJ_ADD,
+ 					dev, obj, &trans, extack);
+-	if (err) {
+-		/* Prepare phase failed: abort the transaction.  Any
+-		 * resources reserved in the prepare phase are
+-		 * released.
+-		 */
+-
+-		if (err != -EOPNOTSUPP)
+-			switchdev_trans_items_destroy(&trans);
+-
++	if (err)
+ 		return err;
+-	}
+ 
+ 	/* Phase II: commit obj add.  This cannot fail as a fault
+ 	 * of driver/device.  If it does, it's a bug in the driver/device
+@@ -374,7 +279,6 @@ static int switchdev_port_obj_add_now(struct net_device *dev,
+ 	err = switchdev_port_obj_notify(SWITCHDEV_PORT_OBJ_ADD,
+ 					dev, obj, &trans, extack);
+ 	WARN(err, "%s: Commit of object (id=%d) failed.\n", dev->name, obj->id);
+-	switchdev_trans_items_warn_destroy(dev, &trans);
+ 
+ 	return err;
+ }
+-- 
+2.17.1
 
-Cheers
