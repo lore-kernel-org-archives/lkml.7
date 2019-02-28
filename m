@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F4AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57900C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D012184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F34B2184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366503;
-	bh=sNqcpBrNbYAymDMCfOq+RbDaqf4p0AlS67Z91fAN9IU=;
+	s=default; t=1551366506;
+	bh=6JOlrSoCtIOY1Lh7kM727lF8OSXKGL8M/SH78SuWTV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AEXcklcM+gRHkilgSj8D0dQg7GfV7e0LOOlZuthiBrqbvz3YGfEdVtPmYECzaqmrb
-	 yVybLGMetrvyq9iH9qQZ6PsYOGdezMrTD8/eKzVNUI/f7u7Nl2CEynl4Sw2o9g29vE
-	 wO0BQFLs7IqGPvfoXENtLFOWQIkP4wuNLOsw8gaY=
+	b=J6ZW8YwTopRMzm4EHXbGbOWwirjcJNcpTOmdnBi1hI7Ry1WdC1KevOkCpuArVhtH3
+	 15Ffbwyssz+aUPxR3Nj2dwqusu0olAJOcrYod8diunt5wJW6N+ZRUDqO1ei7SaOABi
+	 ZNUxgAIlns7tFb71Sl1yxYYTw+gb1L804yUQsDbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731169AbfB1PIW (ORCPT
+        id S1732703AbfB1PIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:08:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40328 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:08:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731275AbfB1PIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:08:18 -0500
+        id S1731657AbfB1PIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:08:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63542218B0;
-        Thu, 28 Feb 2019 15:08:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5123D218CD;
+        Thu, 28 Feb 2019 15:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366498;
-        bh=sNqcpBrNbYAymDMCfOq+RbDaqf4p0AlS67Z91fAN9IU=;
+        s=default; t=1551366497;
+        bh=6JOlrSoCtIOY1Lh7kM727lF8OSXKGL8M/SH78SuWTV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xxo0G97Q9/+Sp/T4C0xGSYDz9i2QVWkxAp79M1ZR2C8LZA+tF97v6ps84ztMzIJeM
-         Y/vtQi8vNUA4bKQmnubozQDTsg5UWXeJ/k+Il1B8lBWexgwPenf50Wu3n219OHuo+R
-         n/h4ZDkiUvT3b2kZV1UVyb4tfiKSbM9iOOhdw3Es=
+        b=rjiLVu5+cC6xhJgT7DTzGdbjt2zK6xni9/CABtd8u5invyPu2r6NyeReRKPyIQVTF
+         pydMZx4TzDU6a9EHxfwzlQqB6uobHrkq8gnDQPqOXbV2JD5ucFyYgqKJLyDsUEBmoc
+         7V3T4/+EOMzJu9uQ3sWtNZ8sQoQ166qTxDKQX8TM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Sebastian Reichel <sre@kernel.org>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 03/81] ARM: dts: sun8i: h3: Add ethernet0 alias to Beelink X2
-Date:   Thu, 28 Feb 2019 10:06:55 -0500
-Message-Id: <20190228150813.10256-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 02/81] ARM: dts: omap4-droid4: Fix typo in cpcap IRQ flags
+Date:   Thu, 28 Feb 2019 10:06:54 -0500
+Message-Id: <20190228150813.10256-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -57,38 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit cc4bddade114b696ab27c1a77cfc7040151306da ]
+[ Upstream commit ef4a55b9197a8f844ea0663138e902dcce3e2f36 ]
 
-Because "ethernet0" alias is missing, U-Boot doesn't generate board
-specific MAC address. Effect of this is random MAC address every boot
-and thus new IP address is assigned to the board.
+We're now getting the following error:
 
-Fix this by adding alias.
+genirq: Setting trigger mode 1 for irq 230 failed
+(regmap_irq_set_type+0x0/0x15c)
+cpcap-usb-phy cpcap-usb-phy.0: could not get irq dp: -524
 
-Fixes: 7389172fc3ed ("ARM: dts: sun8i: h3: Enable dwmac-sun8i on the Beelink X2")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-[Maxime: Removed unneeded comment]
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Tested-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 2 +-
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 5d23667dc2d2e..25540b7694d59 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -53,7 +53,7 @@
- 
- 	aliases {
- 		serial0 = &uart0;
--		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
-+		ethernet0 = &emac;
- 		ethernet1 = &sdiowifi;
- 	};
- 
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+index ddc7a7bb33c0d..f57acf8f66b95 100644
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -105,7 +105,7 @@
+ 			interrupts-extended = <
+ 				&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
+ 				&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
+-				&cpcap 48 1
++				&cpcap 48 0
+ 			>;
+ 			interrupt-names =
+ 				"id_ground", "id_float", "se0conn", "vbusvld",
 -- 
 2.19.1
 
