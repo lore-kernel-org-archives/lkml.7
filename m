@@ -2,145 +2,170 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513A6C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E40C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE0B2184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:45:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="sKjZahpq"
+	by mail.kernel.org (Postfix) with ESMTP id 2231E2184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732965AbfB1Qpp (ORCPT
+        id S1733028AbfB1QsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 11:45:45 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46062 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfB1Qpp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 11:45:45 -0500
-Received: by mail-oi1-f196.google.com with SMTP id t82so16973435oie.12
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 08:45:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GvhxX4m4DDgRvunBUbdiOHoUSvWB/Hk337al+7FlQLk=;
-        b=sKjZahpqLoNNijSf1ASjSZV8KHb1T2pBvfJ8ZXu7oVWb4/P10/h8rJerPiBktmGf/z
-         7NfEcLHD3p4zXo1ZmYr7MImWVn17oPPpOlQMe5LErUC9EIoXIaD6FTjJG9UM2GfOXNM6
-         vFmRb4RxT+LbMnU5VU60eP+/722YCg4aFyiYs2S7A5jngKXOVsjRxC/1KNPMaKM71nT+
-         mfcvH8LyhTwrnmpC0N1p7puJbqW752XYw6l//tQW8kvsUZvrKsKBNgyLyLfx5OOWa61R
-         /c9koXc2E95zIEqo1Rbs06GS9SjZecXBT62GCD3n2g4xiAbfmeAMn/h9gUzD/D/+BwdJ
-         wirw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GvhxX4m4DDgRvunBUbdiOHoUSvWB/Hk337al+7FlQLk=;
-        b=VPLLHoDh/WxVwrDYmSR+SS3GhFYHcS+mQn8xDMZWF0FmFAu1/d4u1qxfzMfnmKCtNr
-         SQr1+cdQSI1heHC036xUtushhY3FBBq4oIu5JUYTWNijnYerclatoGrUvEOf9hKPs0Hx
-         QytvUEF3vXsg75aflKgJe6ZuZf4xL0d6GIhe8yeASIoy3H/cFkf7wa8EuE73M2K1kQ75
-         1RElko1gvbR0O7o5PUcQeSQdwXpk896fDiVKaBh+LnrZeEI/6msqcBl/rm6CE6dsca7n
-         DJXMjGUP+6qtW4HTXPbgnEBarP4e14jMZHsVotKGYtRnlydcNT7geA5I7BwePdTUjmxL
-         edEw==
-X-Gm-Message-State: AHQUAuYj5iCu/DDqE09jmZk3C++HKVwH0Xb86/M7OGRdcMTnRsYOD3dZ
-        rm+H/Px1ToeFf7Ff3dIj8+fZj97C0HMh9lLDWtY1Nw==
-X-Google-Smtp-Source: AHgI3Ialxeei+TqZP4it7v2/IHqhibSwTNUvWajfoBg7rMbaO6RwmNOzFKIZGvWfOT0mpIi9Wh7jEeFSztTtzScKpmE=
-X-Received: by 2002:aca:32c3:: with SMTP id y186mr388997oiy.118.1551372344134;
- Thu, 28 Feb 2019 08:45:44 -0800 (PST)
+        Thu, 28 Feb 2019 11:48:09 -0500
+Received: from foss.arm.com ([217.140.101.70]:51462 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726717AbfB1QsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 11:48:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BC6EEBD;
+        Thu, 28 Feb 2019 08:48:08 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF7463F720;
+        Thu, 28 Feb 2019 08:48:03 -0800 (PST)
+Date:   Thu, 28 Feb 2019 16:48:01 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        mhiramat@kernel.org, paulmck@linux.vnet.ibm.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190228164801.iahwphx5o2zeks4n@e107158-lin.cambridge.arm.com>
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+ <20190228135343.23kzkilig3bsioov@e107158-lin.cambridge.arm.com>
+ <20190228144759.GA156098@google.com>
+ <b100f0a2-7966-b6a2-dcd5-ca11abe57ead@arm.com>
 MIME-Version: 1.0
-References: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com>
- <20190228083522.8189-2-aneesh.kumar@linux.ibm.com> <CAOSf1CHjkyX2NTex7dc1AEHXSDcWA_UGYX8NoSyHpb5s_RkwXQ@mail.gmail.com>
-In-Reply-To: <CAOSf1CHjkyX2NTex7dc1AEHXSDcWA_UGYX8NoSyHpb5s_RkwXQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 28 Feb 2019 08:45:32 -0800
-Message-ID: <CAPcyv4jhEvijybSVsy+wmvgqfvyxfePQ3PUqy1hhmVmPtJTyqQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm/dax: Don't enable huge dax mapping by default
-To:     Oliver <oohall@gmail.com>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jan Kara <jack@suse.cz>, Michael Ellerman <mpe@ellerman.id.au>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b100f0a2-7966-b6a2-dcd5-ca11abe57ead@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 1:40 AM Oliver <oohall@gmail.com> wrote:
->
-> On Thu, Feb 28, 2019 at 7:35 PM Aneesh Kumar K.V
-> <aneesh.kumar@linux.ibm.com> wrote:
-> >
-> > Add a flag to indicate the ability to do huge page dax mapping. On architecture
-> > like ppc64, the hypervisor can disable huge page support in the guest. In
-> > such a case, we should not enable huge page dax mapping. This patch adds
-> > a flag which the architecture code will update to indicate huge page
-> > dax mapping support.
->
-> *groan*
->
-> > Architectures mostly do transparent_hugepage_flag = 0; if they can't
-> > do hugepages. That also takes care of disabling dax hugepage mapping
-> > with this change.
-> >
-> > Without this patch we get the below error with kvm on ppc64.
-> >
-> > [  118.849975] lpar: Failed hash pte insert with error -4
-> >
-> > NOTE: The patch also use
-> >
-> > echo never > /sys/kernel/mm/transparent_hugepage/enabled
-> > to disable dax huge page mapping.
-> >
-> > Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> > ---
-> > TODO:
-> > * Add Fixes: tag
-> >
-> >  include/linux/huge_mm.h | 4 +++-
-> >  mm/huge_memory.c        | 4 ++++
-> >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> > index 381e872bfde0..01ad5258545e 100644
-> > --- a/include/linux/huge_mm.h
-> > +++ b/include/linux/huge_mm.h
-> > @@ -53,6 +53,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
-> >                         pud_t *pud, pfn_t pfn, bool write);
-> >  enum transparent_hugepage_flag {
-> >         TRANSPARENT_HUGEPAGE_FLAG,
-> > +       TRANSPARENT_HUGEPAGE_DAX_FLAG,
-> >         TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
-> >         TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG,
-> >         TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG,
-> > @@ -111,7 +112,8 @@ static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
-> >         if (transparent_hugepage_flags & (1 << TRANSPARENT_HUGEPAGE_FLAG))
-> >                 return true;
-> >
-> > -       if (vma_is_dax(vma))
-> > +       if (vma_is_dax(vma) &&
-> > +           (transparent_hugepage_flags & (1 << TRANSPARENT_HUGEPAGE_DAX_FLAG)))
-> >                 return true;
->
-> Forcing PTE sized faults should be fine for fsdax, but it'll break
-> devdax. The devdax driver requires the fault size be >= the namespace
-> alignment since devdax tries to guarantee hugepage mappings will be
-> used and PMD alignment is the default. We can probably have devdax
-> fall back to the largest size the hypervisor has made available, but
-> it does run contrary to the design. Ah well, I suppose it's better off
-> being degraded rather than unusable.
+On 02/28/19 17:04, Dietmar Eggemann wrote:
+> Hi Joel,
+> 
+> On 2/28/19 3:47 PM, Joel Fernandes wrote:
+> > On Thu, Feb 28, 2019 at 01:53:43PM +0000, Qais Yousef wrote:
+> > > Hi Joel
+> > > 
+> > > On 02/27/19 14:37, Joel Fernandes (Google) wrote:
+> 
+> [...]
+> 
+> > Ah good catch, I made this change for "file_list=${@:2}" in my tree but
+> > forgot to push it. Below is the updated patch. Sorry and I'll refresh the
+> > series with the change after we finish the discussion in the other thread.
+> > Meanwhile the updated patch is as follows...
+> > 
+> > ---8<-----------------------
+> > 
+> > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > Subject: [PATCH v3.1] Provide in-kernel headers for making it easy to extend the kernel
+> > 
+> > Introduce in-kernel headers and other artifacts which are made available
+> > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> > it possible to build kernel modules, run eBPF programs, and other
+> > tracing programs that need to extend the kernel for tracing purposes
+> > without any dependency on the file system having headers and build
+> > artifacts.
+> > 
+> > On Android and embedded systems, it is common to switch kernels but not
+> > have kernel headers available on the file system. Raw kernel headers
+> > also cannot be copied into the filesystem like they can be on other
+> > distros, due to licensing and other issues. There's no linux-headers
+> > package on Android. Further once a different kernel is booted, any
+> > headers stored on the file system will no longer be useful. By storing
+> > the headers as a compressed archive within the kernel, we can avoid these
+> > issues that have been a hindrance for a long time.
+> > 
+> > The feature is also buildable as a module just in case the user desires
+> > it not being part of the kernel image. This makes it possible to load
+> > and unload the headers on demand. A tracing program, or a kernel module
+> > builder can load the module, do its operations, and then unload the
+> > module to save kernel memory. The total memory needed is 3.8MB.
+> > 
+> > The code to read the headers is based on /proc/config.gz code and uses
+> > the same technique to embed the headers.
+> 
+> This version gives me the header files on a v5.0-rc8 kernel on my arm64 box
+> but does not compile anymore on v4.20:
+> 
+> kernel/kheaders.c:25:22: error: expected identifier or ‘(’ before string
+> constant
+>  #define KH_MAGIC_END "IKHD_ED"
+>                       ^
+> kernel/kheaders_data.h:1:1: note: in expansion of macro ‘KH_MAGIC_END’
+>  KH_MAGIC_END;
+>  ^~~~~~~~~~~~
+> kernel/kheaders.c: In function ‘ikheaders_read_current’:
+> kernel/kheaders.c:38:12: error: ‘kernel_headers_data’ undeclared (first use
+> in this function); did you mean ‘kernel_headers_data_size’?
+>             kernel_headers_data + KH_MAGIC_SIZE,
+>             ^~~~~~~~~~~~~~~~~~~
+>             kernel_headers_data_size
+> kernel/kheaders.c:38:12: note: each undeclared identifier is reported only
+> once for each function it appears in
+> kernel/kheaders.c: In function ‘ikheaders_init’:
+> kernel/kheaders.c:31:10: error: ‘kernel_headers_data’ undeclared (first use
+> in this function); did you mean ‘kernel_headers_data_size’?
+>   (sizeof(kernel_headers_data) - 1 - KH_MAGIC_SIZE * 2)
+>           ^
+> kernel/kheaders.c:57:23: note: in expansion of macro
+> ‘kernel_headers_data_size’
+>   proc_set_size(entry, kernel_headers_data_size);
+>                        ^~~~~~~~~~~~~~~~~~~~~~~~
+> kernel/kheaders.c: In function ‘ikheaders_read_current’:
+> kernel/kheaders.c:40:1: warning: control reaches end of non-void function
+> [-Wreturn-type]
+>  }
+> 
+> 
+> The reason for me to stay on v4.20 is that with v5.0-rc8 I don't have ebpf
+> 'raw tracepoint' support any more on my arm64 board. But this issue is not
+> related to your patch though.
 
-Given this is an explicit setting I think device-dax should explicitly
-fail to enable in the presence of this flag to preserve the
-application visible behavior.
+And this is caused by a38d1107f937 (bpf: support raw tracepoints in modules)
+which renamed bpf_find_raw_tracepoint() which bcc-tools relies on to detect if
+raw tracepoints are supported..
 
-I.e. if device-dax was enabled after this setting was made then I
-think future faults should fail as well.
+https://github.com/iovisor/bcc/blob/master/src/python/bcc/__init__.py#L860
+
+Speaking of fragile depedencies :-)
+
+I guess the check can be extended to check for both symbols - but it'll stay
+fragile. Not sure if they can do better.
+
+I filed a bug
+
+https://github.com/iovisor/bcc/issues/2240
+
+--
+Qais Yousef
+
+> 
+> Another point which supports the functionality your patch provides is the
+> fact that maintainers don't want to see new TRACE_EVENTs in their code. So
+> here your patch comes handy when using ebpf for tracing in embedded
+> environments.
