@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CC6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1289BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0462206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B7A206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367368;
-	bh=sdiwkTeTTIPxYCLbHnYiJgnhQBHdrvTuU5MHAmYAKFQ=;
+	s=default; t=1551367375;
+	bh=bWPKhC7q7ypPgE6XejJ/ld10wXw4hYITBfmiQe/tMPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zlsz0kgSCDuU38U75SI73/yQc1BzZKwFswa/gHJBqPonbMAmPgPD29cfai9syXOPO
-	 FitUPNItxKqedR6JNJKq1V9mLduhYGJaGAvJEizv000T4ZRfiWQe0x0SHACoJGM/RI
-	 L1tWjmBN5dhxk8OuS61QPJtdcoPAyI+tVgKiBqBA=
+	b=w5KmPUJHwSAqP6Ge17Z3ZBFbPKTGGTJByQlzJ9DVJwLHitVQbVf/VaVUAcaJQptCK
+	 tsKd42AGUR+1dvfQprPbtYF1Xj3FQ8JI1uqAWaqv/p6FXLmI9cQfTxWTbtaTy9TDjY
+	 8rwwitPw+ghlVXBOwfOruj+9Tx9xXFQMkDzPlJZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388844AbfB1PWr (ORCPT
+        id S2388476AbfB1PNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:22:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:13:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388477AbfB1PNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:13:34 -0500
+        id S2387954AbfB1PN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:13:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F02A5218E0;
-        Thu, 28 Feb 2019 15:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CC31218C3;
+        Thu, 28 Feb 2019 15:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366813;
-        bh=sdiwkTeTTIPxYCLbHnYiJgnhQBHdrvTuU5MHAmYAKFQ=;
+        s=default; t=1551366806;
+        bh=bWPKhC7q7ypPgE6XejJ/ld10wXw4hYITBfmiQe/tMPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=msQ0dw5rNcskAXps/idu2DzYCFK/feEm5pxnqh0q1ZnPkaslKE8Mr+MhIPW3/Ze/i
-         RB3/lKUX+i6ZN48gPha7euiz5G6LzZGZBm9BKemmcfoPrXSKLmWmr9eRVhHP64X6Jp
-         enTsDC4b5t17umZGfmhdk1B/7uvG3G57RH1yABoU=
+        b=qq9j5y9yQ0jKy5F4pcekKyuXnatuyXVEKXKU6QouL8qXBILTIsHkY+jvzbAKNW18p
+         2QHE4JWFZgpwZn1H3Zm0sD0PtTxpQNFwRfUkNQlecvAGVLCO/0Cn/EwlSyye6zLvWO
+         coB1IOq4Glc5vAxO7gdfENjbE6EVVHnWNev74ecw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 63/64] qede: Fix system crash on configuring channels.
-Date:   Thu, 28 Feb 2019 10:11:04 -0500
-Message-Id: <20190228151105.11277-63-sashal@kernel.org>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 58/64] nvme: lock NS list changes while handling command effects
+Date:   Thu, 28 Feb 2019 10:10:59 -0500
+Message-Id: <20190228151105.11277-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -58,95 +58,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit 0aa4febb420d91df5b56b1864a2465765da85f4b ]
+[ Upstream commit e7ad43c3eda6a1690c4c3c341f95dc1c6898da83 ]
 
-Under heavy traffic load, when changing number of channels via
-ethtool (ethtool -L) which will cause interface to be reloaded,
-it was observed that some packets gets transmitted on old TX
-channel/queue id which doesn't really exist after the channel
-configuration leads to system crash.
+If a controller supports the NS Change Notification, the namespace
+scan_work is automatically triggered after attaching a new namespace.
 
-Add a safeguard in the driver by validating queue id through
-ndo_select_queue() which is called before the ndo_start_xmit().
+Occasionally the namespace scan_work may append the new namespace to the
+list before the admin command effects handling is completed. The effects
+handling unfreezes namespaces, but if it unfreezes the newly attached
+namespace, its request_queue freeze depth will be off and we'll hit the
+warning in blk_mq_unfreeze_queue().
 
-Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+On the next namespace add, we will fail to freeze that queue due to the
+previous bad accounting and deadlock waiting for frozen.
+
+Fix that by preventing scan work from altering the namespace list while
+command effects handling needs to pair freeze with unfreeze.
+
+Reported-by: Wen Xiong <wenxiong@us.ibm.com>
+Tested-by: Wen Xiong <wenxiong@us.ibm.com>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h      |  3 +++
- drivers/net/ethernet/qlogic/qede/qede_fp.c   | 13 +++++++++++++
- drivers/net/ethernet/qlogic/qede/qede_main.c |  3 +++
- 3 files changed, 19 insertions(+)
+ drivers/nvme/host/core.c | 8 +++++++-
+ drivers/nvme/host/nvme.h | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index 6a4d266fb8e21..d242a57240691 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -489,6 +489,9 @@ struct qede_reload_args {
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index e0d2b74739018..2cdb3032ca0fc 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1182,6 +1182,7 @@ static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	 * effects say only one namespace is affected.
+ 	 */
+ 	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
++		mutex_lock(&ctrl->scan_lock);
+ 		nvme_start_freeze(ctrl);
+ 		nvme_wait_freeze(ctrl);
+ 	}
+@@ -1210,8 +1211,10 @@ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
+ 	 */
+ 	if (effects & NVME_CMD_EFFECTS_LBCC)
+ 		nvme_update_formats(ctrl);
+-	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK))
++	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
+ 		nvme_unfreeze(ctrl);
++		mutex_unlock(&ctrl->scan_lock);
++	}
+ 	if (effects & NVME_CMD_EFFECTS_CCC)
+ 		nvme_init_identify(ctrl);
+ 	if (effects & (NVME_CMD_EFFECTS_NIC | NVME_CMD_EFFECTS_NCC))
+@@ -3292,6 +3295,7 @@ static void nvme_scan_work(struct work_struct *work)
+ 	if (nvme_identify_ctrl(ctrl, &id))
+ 		return;
  
- /* Datapath functions definition */
- netdev_tx_t qede_start_xmit(struct sk_buff *skb, struct net_device *ndev);
-+u16 qede_select_queue(struct net_device *dev, struct sk_buff *skb,
-+		      struct net_device *sb_dev,
-+		      select_queue_fallback_t fallback);
- netdev_features_t qede_features_check(struct sk_buff *skb,
- 				      struct net_device *dev,
- 				      netdev_features_t features);
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_fp.c b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-index 1a78027de071f..a96da16f34049 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_fp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-@@ -1695,6 +1695,19 @@ netdev_tx_t qede_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	return NETDEV_TX_OK;
- }
++	mutex_lock(&ctrl->scan_lock);
+ 	nn = le32_to_cpu(id->nn);
+ 	if (ctrl->vs >= NVME_VS(1, 1, 0) &&
+ 	    !(ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)) {
+@@ -3300,6 +3304,7 @@ static void nvme_scan_work(struct work_struct *work)
+ 	}
+ 	nvme_scan_ns_sequential(ctrl, nn);
+ out_free_id:
++	mutex_unlock(&ctrl->scan_lock);
+ 	kfree(id);
+ 	down_write(&ctrl->namespaces_rwsem);
+ 	list_sort(NULL, &ctrl->namespaces, ns_cmp);
+@@ -3535,6 +3540,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
  
-+u16 qede_select_queue(struct net_device *dev, struct sk_buff *skb,
-+		      struct net_device *sb_dev,
-+		      select_queue_fallback_t fallback)
-+{
-+	struct qede_dev *edev = netdev_priv(dev);
-+	int total_txq;
-+
-+	total_txq = QEDE_TSS_COUNT(edev) * edev->dev_info.num_tc;
-+
-+	return QEDE_TSS_COUNT(edev) ?
-+		fallback(dev, skb, NULL) % total_txq :  0;
-+}
-+
- /* 8B udp header + 8B base tunnel header + 32B option length */
- #define QEDE_MAX_TUN_HDR_LEN 48
- 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 46d0f2eaa0c09..f3d9c40c41159 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -631,6 +631,7 @@ static const struct net_device_ops qede_netdev_ops = {
- 	.ndo_open = qede_open,
- 	.ndo_stop = qede_close,
- 	.ndo_start_xmit = qede_start_xmit,
-+	.ndo_select_queue = qede_select_queue,
- 	.ndo_set_rx_mode = qede_set_rx_mode,
- 	.ndo_set_mac_address = qede_set_mac_addr,
- 	.ndo_validate_addr = eth_validate_addr,
-@@ -666,6 +667,7 @@ static const struct net_device_ops qede_netdev_vf_ops = {
- 	.ndo_open = qede_open,
- 	.ndo_stop = qede_close,
- 	.ndo_start_xmit = qede_start_xmit,
-+	.ndo_select_queue = qede_select_queue,
- 	.ndo_set_rx_mode = qede_set_rx_mode,
- 	.ndo_set_mac_address = qede_set_mac_addr,
- 	.ndo_validate_addr = eth_validate_addr,
-@@ -684,6 +686,7 @@ static const struct net_device_ops qede_netdev_vf_xdp_ops = {
- 	.ndo_open = qede_open,
- 	.ndo_stop = qede_close,
- 	.ndo_start_xmit = qede_start_xmit,
-+	.ndo_select_queue = qede_select_queue,
- 	.ndo_set_rx_mode = qede_set_rx_mode,
- 	.ndo_set_mac_address = qede_set_mac_addr,
- 	.ndo_validate_addr = eth_validate_addr,
+ 	ctrl->state = NVME_CTRL_NEW;
+ 	spin_lock_init(&ctrl->lock);
++	mutex_init(&ctrl->scan_lock);
+ 	INIT_LIST_HEAD(&ctrl->namespaces);
+ 	init_rwsem(&ctrl->namespaces_rwsem);
+ 	ctrl->dev = dev;
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 60220de2db52b..e82cdaec81c9c 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -148,6 +148,7 @@ struct nvme_ctrl {
+ 	enum nvme_ctrl_state state;
+ 	bool identified;
+ 	spinlock_t lock;
++	struct mutex scan_lock;
+ 	const struct nvme_ctrl_ops *ops;
+ 	struct request_queue *admin_q;
+ 	struct request_queue *connect_q;
 -- 
 2.19.1
 
