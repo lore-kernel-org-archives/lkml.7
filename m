@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5D9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6082FC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA4F218D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2477B218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366676;
-	bh=9joVAj/0WTn8QSlAe1Drta3KhVXhfkyRjGafH5IwVmc=;
+	s=default; t=1551366680;
+	bh=34dAHLmsVT7El8v0rSwtE6rlcyWfPIp/xWRZCbafj30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ys6jCTjl0wSmR35qA/cEZEeNicLQKW2TcvdsiS7wMSiivmtY2IW2Me8kVdSI9c5oN
-	 CDmdyFh3xg037O0uw29Ll+vzIPoXpu8JTkZ+YNub2xcltjG74B5NyndYoOEFAtweEZ
-	 D1CPrkx1QuJE+SN+Nq7PjUoyCbFIq6JU9HKomRpw=
+	b=CDqsqqYww/N1rlkjZ0joruN4GgETDFnL/iHMZZJGf3l2b5XL5LR5xS9sC4YYzMoom
+	 YzTPIF8FapuRMmo6ErtAvaD51Rkh+OSW1ihHdAQA2NfZiEvFBVwJV+DHSfmms3e8E6
+	 CmKZTh6yPH1ifzw9K7Ocu68yLqQ1HOcnPScWBOmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387933AbfB1PLP (ORCPT
+        id S1732584AbfB1PLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:11:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44240 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:11:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733110AbfB1PLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:12 -0500
+        id S1732403AbfB1PLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 260AD218E2;
-        Thu, 28 Feb 2019 15:11:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EC05218E0;
+        Thu, 28 Feb 2019 15:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366671;
-        bh=9joVAj/0WTn8QSlAe1Drta3KhVXhfkyRjGafH5IwVmc=;
+        s=default; t=1551366674;
+        bh=34dAHLmsVT7El8v0rSwtE6rlcyWfPIp/xWRZCbafj30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zCZnU1kGghlSyTl/+JKEFXs1PZE+AQnMxtDRqdtr689q22APH+4Ak40vBl42in/FG
-         ktbm9VYYLy9XaoB2YmQgvl2UVAleZR610KamIFgjY5nurBItjHjxrBbyGWNMz8k67B
-         bgdh0Jpv6FJ9F9Zp7ZW1Rp3TnOlWv41NAuOncenI=
+        b=m6zlDfBxrlW8B9jQANitYwGDBfUQLYm2T7QBUVK601pV+TuQM7VHLt6Frks+p911I
+         BglI/RzM8ST/FqK12US6RH5ieP+c9tmhv9LhVju0GMKc3rsBKCmT4eVJquEjwWXfIH
+         RDoOMJ8iDKAe26vHlpI1NI67J87imXvvjy/8CjlA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 05/64] ARM: dts: meson8b: odroidc1: mark the SD card detection GPIO active-low
-Date:   Thu, 28 Feb 2019 10:10:06 -0500
-Message-Id: <20190228151105.11277-5-sashal@kernel.org>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 07/64] ARM: dts: imx6sx: correct backward compatible of gpt
+Date:   Thu, 28 Feb 2019 10:10:08 -0500
+Message-Id: <20190228151105.11277-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -58,46 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Anson Huang <anson.huang@nxp.com>
 
-[ Upstream commit 3fb348e030319f20ebbde082a449d4bf8a96f2fd ]
+[ Upstream commit ba0f4560526ba19300c07ed5a3c1df7592815dc6 ]
 
-After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
-tree") SD cards are not detected anymore.
+i.MX6SX has same GPT type as i.MX6DL, in GPT driver, it uses
+below TIMER_OF_DECLARE, so the backward compatible should be
+"fsl,imx6dl-gpt", correct it.
 
-The CD GPIO is "active low" on Odroid-C1. The MMC dt-bindings specify:
-"[...] using the "cd-inverted" property means, that the CD line is active
-high, i.e. it is high, when a card is inserted".
+TIMER_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
 
-Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
-drop the "cd-inverted" property. This makes the definition consistent
-with the existing dt-bindings and fixes the check whether an SD card is
-inserted.
-
-Fixes: e03efbce6bebf5 ("ARM: dts: meson8b-odroidc1: add microSD support")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8b-odroidc1.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6sx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index 9e48936e2d8d7..8fdeeffecbdbc 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -171,8 +171,7 @@
- 		cap-sd-highspeed;
- 		disable-wp;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 844caa39364ff..50083cecc6c97 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -462,7 +462,7 @@
+ 			};
  
--		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
--		cd-inverted;
-+		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
- 
- 		vmmc-supply = <&tflash_vdd>;
- 		vqmmc-supply = <&tf_io>;
+ 			gpt: gpt@2098000 {
+-				compatible = "fsl,imx6sx-gpt", "fsl,imx31-gpt";
++				compatible = "fsl,imx6sx-gpt", "fsl,imx6dl-gpt";
+ 				reg = <0x02098000 0x4000>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
 -- 
 2.19.1
 
