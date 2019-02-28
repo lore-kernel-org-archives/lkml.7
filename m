@@ -2,161 +2,141 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09191C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3948C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF232171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:09:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=criteo.com header.i=@criteo.com header.b="bZzbpj2H"
+	by mail.kernel.org (Postfix) with ESMTP id BF54A2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbfB1NJh (ORCPT
+        id S1731740AbfB1NKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:09:37 -0500
-Received: from mx08-00287e01.pphosted.com ([62.209.51.156]:13086 "EHLO
-        mx07-00287e01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726003AbfB1NJh (ORCPT
+        Thu, 28 Feb 2019 08:10:43 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53252 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727717AbfB1NKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:09:37 -0500
-Received: from pps.filterd (m0111316.ppops.net [127.0.0.1])
-        by mx07-00287e01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SD1J4o007254;
-        Thu, 28 Feb 2019 14:09:20 +0100
-Received: from eur02-am5-obe.outbound.protection.outlook.com (mail-am5eur02lp2059.outbound.protection.outlook.com [104.47.4.59])
-        by mx07-00287e01.pphosted.com with ESMTP id 2qtw1ywhmw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Feb 2019 14:09:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=criteo.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nhmhszxIdTgktboNca/CNxUX7eYs+7oXVPKjirH0Pqw=;
- b=bZzbpj2H4xCoa7+Hex9yS3R2AyWXChQWEE8CYe9xm6+23/wthitr3OqDICZw0Z7IUW1vX83vWPEsCcEAAtaknl/tj4+jrH4F6rBQ0aCGbbPCmgjLhv7y8i+b5crrdI4Xau5EyrYQ4kPKDX+n3Ko/8qJ+cgjKsvlHYlScmQwFLuY=
-Received: from VI1PR04MB5629.eurprd04.prod.outlook.com (20.178.125.158) by
- VI1PR04MB5759.eurprd04.prod.outlook.com (20.178.127.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.16; Thu, 28 Feb 2019 13:09:18 +0000
-Received: from VI1PR04MB5629.eurprd04.prod.outlook.com
- ([fe80::4574:93ab:72b8:d1ec]) by VI1PR04MB5629.eurprd04.prod.outlook.com
- ([fe80::4574:93ab:72b8:d1ec%3]) with mapi id 15.20.1665.015; Thu, 28 Feb 2019
- 13:09:18 +0000
-From:   Erwan Velu <e.velu@criteo.com>
-To:     Erwan Velu <erwanaliasr1@gmail.com>
-CC:     Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
-        <esc.storagedev@microsemi.com>,
-        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
-        <linux-scsi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: smartpqi_init: Reporting 'logical unit failure'
-Thread-Topic: [PATCH] scsi: smartpqi_init: Reporting 'logical unit failure'
-Thread-Index: AQHUzrnze9rjAoGyP0WDHT7LWV0vu6X1MCqA
-Date:   Thu, 28 Feb 2019 13:09:18 +0000
-Message-ID: <7ef24085-2cc1-6271-1b16-cbfa4b0d80f5@criteo.com>
-References: <20190227163133.26283-1-e.velu@criteo.com>
-In-Reply-To: <20190227163133.26283-1-e.velu@criteo.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0037.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1::25) To VI1PR04MB5629.eurprd04.prod.outlook.com
- (2603:10a6:803:de::30)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [91.199.242.236]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0e4a342f-fefa-4cab-8513-08d69d7df275
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB5759;
-x-ms-traffictypediagnostic: VI1PR04MB5759:
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtWSTFQUjA0TUI1NzU5OzIzOjk5Z0VMeC9BWjMyOWJKVTFhcU1YVEVCaVBE?=
- =?utf-8?B?UTBRRENmMEJMMVFkdnZnZzdEZklGZUNqSXhWc1p4RldoM1JORXJxMWVva2pn?=
- =?utf-8?B?Z1Vrb3hTcFcyRldxRW9ZQTBmZlRYN0VMVmx0RFBMNXlVYUl1amlDaVA0VWZF?=
- =?utf-8?B?U2d5UHJjQXFGNkVCUlpnWjRmL3g5czgrcFBwdnkrVloraHZKRlhPUitoamZK?=
- =?utf-8?B?ck1jQm53WGlkZ085VnBUTVJ6U3VkMzh4TjBUK054MjFGMHBpVmsveTlkTW80?=
- =?utf-8?B?cUJOUzRROUYyMFNoWEdKM1dGaklBTC9wcGVKWEVJelRvYS9UcUNiRHRQNFpq?=
- =?utf-8?B?bEFwVlBGQ3kwQVhiVmdiL3dGVEFVei84cHk4ZWlLUVJPdUY4N3lteXczMnJO?=
- =?utf-8?B?amNoYXNNTEI2SUxRUGprWVUrT1E4bVhEV1ByenFlbk1KTG5RNTd1R1QvdWh3?=
- =?utf-8?B?MHlIWERFWHl5a3JEV2JFUTUxRUIvYmlWZmdkQitjMks1cWZTTFlUcWYvUWh6?=
- =?utf-8?B?ZmlBRW1nUEgvNXhKVVB4N1RMNHZyZk1KQXVzbnAzcHVTTnRJK1laZjNFREU5?=
- =?utf-8?B?NnVrdkk2TVdJTnlVQmdxOE5FeWFvT2Q1b1Z4RWowVUVwZks1NU1LUVdMazRE?=
- =?utf-8?B?Uy83M3NGRm1BUW9QRjhiTWIvelhYU053ekNocGlkTXZXcVAzS0VZSlprWTds?=
- =?utf-8?B?eHhiMlRqdytvQjE3MlUvZ2dJZ1pWRHZQRngzOEtGUkxLNjY2aGU4UXJiYS8w?=
- =?utf-8?B?OVBBNTZwQ29lR0hhZG9Pa1gveHZNL0JOV0VtdTFpS2Z2Q0FzK3JXS09RejJK?=
- =?utf-8?B?U3dqelowYTVSSElYTjNDazR3SnNFMDJQSFRxby9VTHI2SHVCd3N1TDNaVG94?=
- =?utf-8?B?OWpLUGx6c2R5RmtFWjNja0FpcTBPYkRsT3RxdzRUWmZtNHJYRlVPV1lqWThE?=
- =?utf-8?B?VGlyUjdEM2pCcE1Tb3N2bm45YkFkUE4yTkM2Q0VkZVFxQTVsMWVicm91MWtW?=
- =?utf-8?B?SlF0OWJxNitBVkFaenJONXpsQlRwR1Z5OVVMUXlFb2VnNi90U2dzRlJobTFp?=
- =?utf-8?B?YVBtYitFWjV2dC9ZZHRoN2l1WmxjZTZQVk5QZnFzZ1dmZFdMMkxsWm5YQzh3?=
- =?utf-8?B?UmtDNEUydVp6aFdIU3gvYVZzNWpjNzlZNzFiUHM4Tk5lTkZ1bm5nUklPb0Vn?=
- =?utf-8?B?b3dEbUFhWWY0L0xlWHBKOW1PTWkraXBoQ1FPS2dsNGkzc3RBT0MyZWVwWXI1?=
- =?utf-8?B?Ny8zRk5VU2EyNHRZdkhFTjhPVmpTWXdab3JkOVVpWmF4Qy9Jd0thblZYV0I1?=
- =?utf-8?B?SXI1L2s1aEJrYTl2Z3VCOFZ4UlpQWW9VSmNaQ056NjVlbHJKQlJCU216dmRB?=
- =?utf-8?B?K0JsV3FrNitPMUNKTHQzVW9CcWVXUThUYjZxQmIvT3pDZWRQdTFRaC9oVlhj?=
- =?utf-8?B?c3UvSzI2U2VDckxhTGhlOFZxeTVxcmRndW9MM0xBV3loR3VCUi9iREp3MmV1?=
- =?utf-8?B?c1dkTkdYSWNIak5QdGpERGRHQTRzOC9EZWEwbDAyb1JDTkFiZkpTbXRVcDdk?=
- =?utf-8?B?V0xJTFdFbVNDeTRSQ3F1MVM2M05HeDJ1ZFZiY1NjS3FkVXNBL3VFL2VOSG5Q?=
- =?utf-8?B?bmUzV3kwRGpkWXl6dS93M0luN0tvRTZiQW5jN3N6UEU3ZnJzOUMweHFydnZK?=
- =?utf-8?B?WE9Kck8xN3dYNkJCZnNRTTQ1VVZVWVgzRC9adjlWUENDdUtqQ1VLU2duS1hr?=
- =?utf-8?Q?2rikEi56JiQ7R/DUVotFBqFS3DrNM8fVKXxeM=3D?=
-x-microsoft-antispam-prvs: <VI1PR04MB5759569F0562B284F76BDEEFF2750@VI1PR04MB5759.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0962D394D2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(346002)(376002)(39860400002)(199004)(189003)(316002)(106356001)(1411001)(386003)(4326008)(6506007)(5660300002)(446003)(186003)(36756003)(11346002)(76176011)(102836004)(26005)(6486002)(66066001)(2906002)(478600001)(25786009)(31696002)(229853002)(97736004)(68736007)(8936002)(14454004)(66574012)(54906003)(256004)(105586002)(8676002)(81156014)(6246003)(71200400001)(31686004)(53936002)(52116002)(71190400001)(86362001)(81166006)(6116002)(6436002)(476003)(99286004)(305945005)(14444005)(6916009)(6512007)(2616005)(3846002)(486006)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR04MB5759;H:VI1PR04MB5629.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: criteo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lW5Cdbc2IpyltvaduxjzPFT/i7ePYluok+5/qcff1L9QhqUqv/7V4pk/ugZk4vRIK9qolzS3+kXzCxPfG/6LWnmOTnuIUMN5uDp1vGGWsgsGDLJEgA9vwZk369bhKYWz7bS7C6tM0T5RANJI+LfWpfexCV5E07GeZOgVgPkOhmiXMZGKgyAuLrDBLnh92LifLzSeAkn+6fSBn/WiLU6/3OsobNfbvmm1yOxTzuWy81gcYl3OWvBj5a3ZWQFTATE4KvV0i5ej47qvr9qDQWEILQnlvPzYVnokhUHdbu+wGnmOP+oRGW0EvWwYABb1brEuO3tNDt5R2H2nzs0EbqsVJqzHznr3VSEKtCjAK4MKvLRmUawZY2ZoYBtYhWFl3OP52afXAqOaAOh8jFT8nBfUek0oN89dT0pW5bKq9+nESyI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <909447F61EE9B64F9E2A79900F90B9A6@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 28 Feb 2019 08:10:42 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SD1Tuo127060
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 08:10:41 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxfhktdh3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 08:10:40 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 28 Feb 2019 13:10:38 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Feb 2019 13:10:34 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SDAXgk17891404
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 Feb 2019 13:10:33 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3F185A4057;
+        Thu, 28 Feb 2019 13:10:33 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2356A4055;
+        Thu, 28 Feb 2019 13:10:32 +0000 (GMT)
+Received: from [9.152.224.140] (unknown [9.152.224.140])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Feb 2019 13:10:32 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v4 1/7] s390: ap: kvm: add PQAP interception for AQIC
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
+ <1550849400-27152-2-git-send-email-pmorel@linux.ibm.com>
+ <babf7884-35f1-2f2e-34dc-96d9190fd15b@linux.ibm.com>
+ <e7ba5cb0-b254-7f73-bc59-ca2456ce7951@linux.ibm.com>
+ <9f1d9241-39b9-adbc-d0e9-cb702e609cbc@linux.ibm.com>
+ <4dc59125-7f96-cba8-651b-382ed8f8bff8@linux.ibm.com>
+ <8526f468-9a4d-68d2-3868-0dad5ce16f46@linux.ibm.com>
+ <6058a017-6404-af3c-62ef-2452214ac97c@de.ibm.com>
+ <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Thu, 28 Feb 2019 14:10:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: criteo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e4a342f-fefa-4cab-8513-08d69d7df275
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 13:09:18.5305
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2a35d8fd-574d-48e3-927c-8c398e225a01
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5759
+In-Reply-To: <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19022813-0016-0000-0000-0000025C07A5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19022813-0017-0000-0000-000032B67534
+Message-Id: <dc483b20-8ade-2d5f-6a76-a2c5d2e72c57@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=866 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902280091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGV5LA0KDQpUaGF0IG1ha2VzIG1lIHdvbmRlciB3aHkgdGhlIDB4M2UgLyAweDIgaXNuJ3QgaGFu
-ZGxlZCBoZXJlIGFrYQ0KDQozRS8wMiBEWlRQUk9NQUVCS1ZGIFRJTUVPVVQgT04gTE9HSUNBTCBV
-TklUIElzIGl0IHBvc3NpYmxlIHRoZSANCmNvbnRyb2xsZXIgc2VuZCB0byB0aGUga2VybmVsIHRo
-aXMga2luZCBvZiBtZXNzYWdlLCBpZiBzbyBzaG91bGRuJ3Qgd2UgDQpoYW5kbGUgaXQgaGVyZSA/
-IEVyd2FuLA0KDQpMZSAyNy8wMi8yMDE5IMOgIDE3OjMxLCBFcndhbiBWZWx1IGEgw6ljcml0wqA6
-DQoNCj4gV2hlbiB0aGlzIEhBUkRXQVJFX0VSUk9SLzB4M2UvMHgxIGNhc2UgaXMgdHJpZ2dlcmVk
-LCB0aGUgbG9naWNhbCB2b2x1bWUgaXMgb2ZmbGluZWQuDQo+IFdoZW4gcmVhZGluZyB0aGUga2Vy
-bmVsIGxvZywgdGhlIGNhdXNlIHdoeSB0aGUgZGV2aWNlIGdvdCBvZmZsaW5lZCBpc24ndCByZXBv
-cnRlZCB0byB0aGUgdXNlci4NCj4gVGhpcyBzaXR1YXRpb24gbWFrZXMgZGlmZmljdWx0IGZvciBh
-ZG1pbnMgdG8gZXN0aW1hdGUgX3doeV8gdGhlIHZvbHVtZSBnb3Qgb2ZmbGluZWQuDQo+IFJlYWRp
-bmcgdGhpcyBwYXJ0IG9mIHRoZSBjb2RlIG1ha2VzIGNsZWFyIHRoaXMgaXMgYmVjYXVzZSBkcml2
-ZXIgcmVjZWl2ZWQgYSBIQVJEV0FSRV9FUlJPUi8weDNlLzB4MSB3aGljaCBpcyBhICdsb2dpY2Fs
-IHVuaXQgZmFpbHVyZScuDQo+DQo+IFRoaXMgcGF0Y2ggaXMganVzdCBhYm91dCByZXBvcnRpbmcg
-dGhhdCBmYWN0IHRvIGhlbHAgYWRtaW5zIG1ha2luZyBhIHJlbGF0aW9uc2hpcCBiZXR3ZWVuIHRo
-aXMgZXZlbnQgYW5kIHRoZSBvZmZsaW5pbmcuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEVyd2FuIFZl
-bHUgPGUudmVsdUBjcml0ZW8uY29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL3Njc2kvc21hcnRwcWkv
-c21hcnRwcWlfaW5pdC5jIHwgNSArKysrKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlv
-bnMoKykNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS9zbWFydHBxaS9zbWFydHBxaV9p
-bml0LmMgYi9kcml2ZXJzL3Njc2kvc21hcnRwcWkvc21hcnRwcWlfaW5pdC5jDQo+IGluZGV4IGY1
-NjRhZjg5NDllOC4uODlmMzdkNzY3MzVjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3Njc2kvc21h
-cnRwcWkvc21hcnRwcWlfaW5pdC5jDQo+ICsrKyBiL2RyaXZlcnMvc2NzaS9zbWFydHBxaS9zbWFy
-dHBxaV9pbml0LmMNCj4gQEAgLTI3NjQsNiArMjc2NCwxMiBAQCBzdGF0aWMgdm9pZCBwcWlfcHJv
-Y2Vzc19yYWlkX2lvX2Vycm9yKHN0cnVjdCBwcWlfaW9fcmVxdWVzdCAqaW9fcmVxdWVzdCkNCj4g
-ICAJCQkJc3NoZHIuc2Vuc2Vfa2V5ID09IEhBUkRXQVJFX0VSUk9SICYmDQo+ICAgCQkJCXNzaGRy
-LmFzYyA9PSAweDNlICYmDQo+ICAgCQkJCXNzaGRyLmFzY3EgPT0gMHgxKSB7DQo+ICsJCQlzdHJ1
-Y3QgcHFpX2N0cmxfaW5mbyAqY3RybF9pbmZvID0gc2hvc3RfdG9faGJhKHNjbWQtPmRldmljZS0+
-aG9zdCk7DQo+ICsJCQlzdHJ1Y3QgcHFpX3Njc2lfZGV2ICpkZXZpY2UgPSBzY21kLT5kZXZpY2Ut
-Pmhvc3RkYXRhOw0KPiArDQo+ICsJCQlkZXZfZXJyKCZjdHJsX2luZm8tPnBjaV9kZXYtPmRldiwg
-InJlY2VpdmVkICdsb2dpY2FsIHVuaXQgZmFpbHVyZScgZnJvbSBjb250cm9sbGVyIGZvciBzY3Np
-ICVkOiVkOiVkOiVkXG4iLA0KPiArCQkJCQkJCWN0cmxfaW5mby0+c2NzaV9ob3N0LT5ob3N0X25v
-LCBkZXZpY2UtPmJ1cywNCj4gKwkJCQkJCQlkZXZpY2UtPnRhcmdldCwgZGV2aWNlLT5sdW4pOw0K
-PiAgIAkJCXBxaV90YWtlX2RldmljZV9vZmZsaW5lKHNjbWQtPmRldmljZSwgIlJBSUQiKTsNCj4g
-ICAJCQlob3N0X2J5dGUgPSBESURfTk9fQ09OTkVDVDsNCj4gICAJCX0NCg==
+On 28/02/2019 12:03, Christian Borntraeger wrote:
+> 
+> 
+> On 28.02.2019 10:42, Christian Borntraeger wrote:
+> [...]
+>>> Okay, let's go back to the genesis of this discussion; namely, my
+>>> suggestion about moving the fc == 0x03 check into the hook code. If
+>>> the vfio_ap module is not loaded, there will be no hook code. In that
+>>> case, the check for the hook will fail and ultimately response code
+>>> 0x01 will be set in the status word (which may not be the right thing
+>>> to do?). You have not stated a single good reason for keeping this
+>>> check, but I'm done with this silly argument. It certainly doesn't
+>>> hurt anything.
+>>
+>> The instruction handler must handle the basic checks for the
+>> instruction itself as outlined above.
+>>
+>> Do we want to allow QEMU to fully emulate everything (the  ECA_APIE case being off)?
+>> The we should pass along everything to QEMU, but this is already done with the
+>> ECA_APIE check, correct?
+>>
+>> Do we agree that when we are beyond the ECA_APIE check, that we do not emulate
+>> in QEMU and we have enabled the AP instructions interpretion?
+>> If yes then this has some implication:
+>>
+>> 1. ECA is on and we should only get PQAP interception for specific FC (namely 3).
+>> 2. What we certainly should check is the facility bit of the guest (65) and reject fc==3
+>> right away with a specification exception. I do not want the hook to mess with
+>> the kvm cpu model. @Pierre would be good to actually check test_kvm_facility(vcpu->kvm, 65))
+>> 3. What shall we do when fc == 0x3? We can certainly do the check here OR in the
+>> hook. As long as we have only fc==3 this does not matter.
+>>
+>> Correct?
+> 
+> Thinking more about that, I think we should inject a specification exception for all
+> unknown FCc != 0x3. That would also qualify for keeping it in the instruction handler.
+> 
+
+May be return a privileged operation exception if issued from guest's 
+program state, but generally I agree with the idea of handling all PQAP 
+functions here.
+
+Regards,
+Pierre
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
