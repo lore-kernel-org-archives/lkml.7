@@ -7,60 +7,59 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189F6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB9AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30E72133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E7A2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YuQBXUQb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rqy8vjp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387937AbfB1XMu (ORCPT
+        id S1732300AbfB1XOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:12:50 -0500
-Received: from mail-io1-f74.google.com ([209.85.166.74]:50342 "EHLO
-        mail-io1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387911AbfB1XMr (ORCPT
+        Thu, 28 Feb 2019 18:14:21 -0500
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:52338 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387733AbfB1XMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:12:47 -0500
-Received: by mail-io1-f74.google.com with SMTP id d7so16724884ios.17
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:12:46 -0800 (PST)
+        Thu, 28 Feb 2019 18:12:31 -0500
+Received: by mail-qk1-f201.google.com with SMTP id k21so12225435qkg.19
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:12:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=lPxhHuM5mKH0BPh+9uIH/O2ZNSFUoc0j+pAFXqN/7ag=;
-        b=YuQBXUQbPIWoFplIAUppYybOIHWam8OtfTUAEL8bWFQuH+gK2Lg+nhgjgeyFIg2APu
-         TTsAV6Y4XCcERjl0cOTXY3F0VQ2dTEB6bqnuC/JnNexIojSPRlpvVlXsDf0bVCtPRVA7
-         yA2PxzrOGbz8bmR43HPwD1Bwp0zb9EagvFpRZS02lKXbannLoupS2Xn7Ze03YF5yOD+s
-         UnTk4Q6ltWm5xg8SYuv56VVEqetoFmedWsteo7Yue+vOt3YMnj49JzcOC0xXxyE87ZE0
-         LF4vT+KZK9iqZSukgefDut2lWdcm4jIqnlIRtwYZhHrH6/16pJu/FioGP5KT7tQKjwIu
-         D+9Q==
+        bh=F6zxXD+nTPfsZfQbyiR2ANcc9A38R04iH+muysUyqZY=;
+        b=rqy8vjp1yaqAU5BNxNa+MvsSVvcaRzr5lInb84HYbk4bKsE1qZ5Kdhh6iwvWec6VQI
+         Np0PGekQ4lc9JNlPa7Kxi8g+sTyR9WDN0BAB8LElq4VRXg9ZSpNOYJGbXDOvllPDroQN
+         2j/vGXeZFSbT3AqFzebVnIlnUd30MR+dw+CcWu+lHBkdhWoN9G+2jK/jxwszpTlaMq7b
+         ScY+uB4+r5cbc4LO3RDnYKxygYSd7sH/q5w5hlbyufWWwC06HjE/XFwuCWyA4ATNAV7N
+         Xz45Z+siZGWFacREImKXDG2LLH2L8raULbzyeoCyNOUfh6xq5Qa6YtY8SD3ll41nWY2V
+         FJGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=lPxhHuM5mKH0BPh+9uIH/O2ZNSFUoc0j+pAFXqN/7ag=;
-        b=RGswkcYodMVPXUnlZWfRHAmYJG+srzsGFavg/3yQJSmx0vy9ri4yybLbQmYcC0Rv1M
-         NDPuxR2Dv+1EQJXYiO+uxPJatwwHoAAwoB+ssjA4OdLYFzXO+/dExH/ZjQiMO1qIIbky
-         6FfW1WX/LmAQXM6OEX0bQkUC/fjB4ziHETC005O8X/ak7k/qzjB44XvLYLLFKZh0Z8la
-         2NSE+Jn1MUY8CK+tbLIULNvKsMJlFWeHWeFxLcx1beHWyH3pX2wlDtnD2lzqQvaPKjbC
-         5Ye8H+4NNk/88JPIT6nLldywiVdnvN6H3CGGkwGBSY1MJwlOhYUj2qq8rxYD8vUJwhd6
-         ezOA==
-X-Gm-Message-State: APjAAAWVhG8Jdeth5u6eOhiIIz5+UNgQuhjzcRQdLy0U0AC0ytjKFQo7
-        exPSeP9Cqx4WzwYKO9JlL4RcxaCN7XFYSeecFfVDHw==
-X-Google-Smtp-Source: APXvYqw/dP5WRuat6ZNl267sXVMJqXcQjrhZTwUPtbCyU8pLXCcB0hj52Wg3y81HpdKwFbntVrWw0q+IOZp1vztH68w+oQ==
-X-Received: by 2002:a24:1a17:: with SMTP id 23mr1520953iti.9.1551395566409;
- Thu, 28 Feb 2019 15:12:46 -0800 (PST)
-Date:   Thu, 28 Feb 2019 15:11:52 -0800
+        bh=F6zxXD+nTPfsZfQbyiR2ANcc9A38R04iH+muysUyqZY=;
+        b=NN8Evj6Z6ADC902AtivOuUpGZosY7EwMLKK1NDrK9uoxNW9ih99d7ZwiN/2E+5ocFk
+         l0vs+ZEMd/yRY03od+OasTzZaMYwOvXK25A8o53KCg5yTxjGWnTNxPgktOCOsAzqvm/i
+         OzA41mNG11dIQ0x3rYqfU3u8eOoWvC+9vwW5tKNEcpoAVqKQOM5ZwNi+ZaOKFtp8J7Yt
+         gUQwJgCfsJ7c3vw7dOQ/BtZ/E/NOonGol1XlbMJs6nvHkD2Wt3b8BOx90KsirdsHBKJp
+         3EX6Cm2w+DNOX5nsrHVKjusiUoe8iYvsFgOvHUh0YxwPBz5HzYic8DDjOfjv9DG9VXnz
+         Y9Bw==
+X-Gm-Message-State: APjAAAWTwp4DN+BEIU/SkLtlUmCXAtPZcnByOtG4erfpt9ZYGQxEjIWB
+        g+swpsZH6y/+1xhSxg3TfrzLw3uX/EvV/WmlSqbWEA==
+X-Google-Smtp-Source: APXvYqzQpfa57TSK8bbnGQUeo2CjRL0Deo0vZcTr3Ki5Q9LwxiBCVwYNCWwOLgKVHp85Cd+X48GXglBT5kx+zg6IcAYxFw==
+X-Received: by 2002:ac8:1b68:: with SMTP id p37mr1177129qtk.50.1551395550264;
+ Thu, 28 Feb 2019 15:12:30 -0800 (PST)
+Date:   Thu, 28 Feb 2019 15:11:46 -0800
 In-Reply-To: <20190228231203.212359-1-matthewgarrett@google.com>
-Message-Id: <20190228231203.212359-16-matthewgarrett@google.com>
+Message-Id: <20190228231203.212359-10-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
  <20190228231203.212359-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH 16/27] acpi: Disable ACPI table override if the kernel is
- locked down
+Subject: [PATCH 10/27] uswsusp: Disable when the kernel is locked down
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
@@ -71,42 +70,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linn Crosetto <linn@hpe.com>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
 
-From the kernel documentation (initrd_table_override.txt):
+uswsusp allows a user process to dump and then restore kernel state, which
+makes it possible to modify the running kernel.  Disable this if the kernel
+is locked down.
 
-  If the ACPI_INITRD_TABLE_OVERRIDE compile option is true, it is possible
-  to override nearly any ACPI table provided by the BIOS with an
-  instrumented, modified one.
-
-When securelevel is set, the kernel should disallow any unauthenticated
-changes to kernel space.  ACPI tables contain code invoked by the kernel,
-so do not allow ACPI tables to be overridden if the kernel is locked down.
-
-Signed-off-by: Linn Crosetto <linn@hpe.com>
+Signed-off-by: Matthew Garrett <mjg59@srcf.ucam.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
 Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
-cc: linux-acpi@vger.kernel.org
+Reviewed-by: James Morris <james.l.morris@oracle.com>
+cc: linux-pm@vger.kernel.org
 ---
- drivers/acpi/tables.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/power/user.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index 48eabb6c2d4f..f3b4117cd8f3 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -531,6 +531,11 @@ void __init acpi_table_upgrade(void)
- 	if (table_nr == 0)
- 		return;
+diff --git a/kernel/power/user.c b/kernel/power/user.c
+index 2d8b60a3c86b..0305d513c274 100644
+--- a/kernel/power/user.c
++++ b/kernel/power/user.c
+@@ -52,6 +52,9 @@ static int snapshot_open(struct inode *inode, struct file *filp)
+ 	if (!hibernation_available())
+ 		return -EPERM;
  
-+	if (kernel_is_locked_down("ACPI table override")) {
-+		pr_notice("kernel is locked down, ignoring table override\n");
-+		return;
-+	}
++	if (kernel_is_locked_down("/dev/snapshot"))
++		return -EPERM;
 +
- 	acpi_tables_addr =
- 		memblock_find_in_range(0, ACPI_TABLE_UPGRADE_MAX_PHYS,
- 				       all_tables_size, PAGE_SIZE);
+ 	lock_system_sleep();
+ 
+ 	if (!atomic_add_unless(&snapshot_device_available, -1, 0)) {
 -- 
 2.21.0.352.gf09ad66450-goog
 
