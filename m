@@ -2,294 +2,117 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F07C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0183C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA329218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551369861;
-	bh=Z5ga+B2KEl8AyZcpOnfmbw6TPyGKVbXH8zrvkH6poNw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BRBlMxfuiLEWP7G/dpAs9be/3tnTLOJ9wyCohQeb9C0Sz7CJ2iLpQWF8b8lUbNtvX
-	 z612gzFZk20Ddh6uwc+vWYoFLZRNeiB9A5pimYCSYM12/5FTFBnmGeRbfYd+pChB5e
-	 CiKHFWSAN7DdSk367FvutD97+gGVdXf9zFHaCZoQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9A40F218D0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732548AbfB1QEU (ORCPT
+        id S1732750AbfB1QEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 11:04:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50112 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 11:04:25 -0500
+Received: from mga01.intel.com ([192.55.52.88]:39233 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbfB1QEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 11:04:20 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0BD62184A;
-        Thu, 28 Feb 2019 16:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551369859;
-        bh=Z5ga+B2KEl8AyZcpOnfmbw6TPyGKVbXH8zrvkH6poNw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IG7sVzLF2g242gZ8uhUgEfzEGNo8gwOofd0G/dG78hYU1J/tcWS/4bQX70H0FZaKX
-         7ci6XDPUrJIQCxdbnCVfbsVQjqeAPOSxkg8dd+w4JMNotAezpdZ88BfXOayI9MUZnO
-         Y/3E4A6lNsxj8HiBYu+3kcyjvy9m2VFCOy534l3A=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: [PATCH v5 3/6] uaccess: Add non-pagefault user-space read functions
-Date:   Fri,  1 Mar 2019 01:03:54 +0900
-Message-Id: <155136983467.2968.13980231890937828195.stgit@devbox>
-X-Mailer: git-send-email 2.13.6
-In-Reply-To: <155136974478.2968.3105123100519786079.stgit@devbox>
-References: <155136974478.2968.3105123100519786079.stgit@devbox>
-User-Agent: StGit/0.17.1-dirty
+        id S1731142AbfB1QEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 11:04:24 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 08:04:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,423,1544515200"; 
+   d="scan'208";a="127973776"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga008.fm.intel.com with ESMTP; 28 Feb 2019 08:04:22 -0800
+Date:   Thu, 28 Feb 2019 08:04:22 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: Re: [PATCH v3 2/8] KVM:CPUID: Define CET CPUID bits and CR4.CET
+ master enable bit.
+Message-ID: <20190228160422.GE6166@linux.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-3-weijiang.yang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190225132716.6982-3-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add probe_user_read(), strncpy_from_unsafe_user() and
-strnlen_unsafe_user() which allows caller to access user-space
-in IRQ context.
+On Mon, Feb 25, 2019 at 09:27:10PM +0800, Yang Weijiang wrote:
+> Guest queries CET SHSTK and IBT support by CPUID.(EAX=0x7,ECX=0),
+> in return, ECX[bit 7] corresponds to SHSTK feature, and EDX[bit 20]
+> corresponds to IBT feature.
+> CR4.CET[bit 23] is CET master enable bit, it controls CET feature
+> availability in guest OS.
+> 
+> Note: Although SHSTK or IBT can be enabled independently,
+>       either of the features is controlled by CR4.CET.
 
-Current probe_kernel_read() and strncpy_from_unsafe() are
-not available for user-space memory, because it sets
-KERNEL_DS while accessing data. On some arch, user address
-space and kernel address space can be co-exist, but others
-can not. In that case, setting KERNEL_DS means given
-address is treated as a kernel address space.
-Also strnlen_user() is only available from user context since
-it can sleep if pagefault is enabled.
+This patch effectively allows the guest to set CR4, it should be the
+last patch in the series to actually "enable" CET in the guest, i.e.
+once KVM actually virtualizes CET.
 
-To access user-space memory without pagefault, we need
-these new functions which sets USER_DS while accessing
-the data.
+> 
+> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 3 ++-
+>  arch/x86/kvm/cpuid.c            | 4 ++--
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 55e51ff7e421..df002936088f 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -90,7 +90,8 @@
+>  			  | X86_CR4_PGE | X86_CR4_PCE | X86_CR4_OSFXSR | X86_CR4_PCIDE \
+>  			  | X86_CR4_OSXSAVE | X86_CR4_SMEP | X86_CR4_FSGSBASE \
+>  			  | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_VMXE \
+> -			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP))
+> +			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP \
+> +			  | X86_CR4_CET))
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
-  Changes in v5:
-   - Simplify probe_user_read() (Thanks, Peter!)
-   - Add strnlen_unsafe_user()
-  Changes in v3:
-   - Use user_access_ok() for probe_user_read().
-  Changes in v2:
-   - Simplify strncpy_from_unsafe_user() using strncpy_from_user()
-     according to Linus's suggestion.
-   - Simplify probe_user_read() not using intermediate function.
----
- include/linux/uaccess.h |   14 +++++
- mm/maccess.c            |  122 +++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 130 insertions(+), 6 deletions(-)
+This macro doesn't define CR4 bits, it defines which bits should be
+treated as reserved when the guest writes CR4.
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 1afd9dfabe67..5be7f9adb418 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -258,6 +258,17 @@ extern long probe_kernel_read(void *dst, const void *src, size_t size);
- extern long __probe_kernel_read(void *dst, const void *src, size_t size);
- 
- /*
-+ * probe_user_read(): safely attempt to read from a location in user space
-+ * @dst: pointer to the buffer that shall take the data
-+ * @src: address to read from
-+ * @size: size of the data chunk
-+ *
-+ * Safely read from address @src to the buffer at @dst.  If a kernel fault
-+ * happens, handle that and return -EFAULT.
-+ */
-+extern long probe_user_read(void *dst, const void __user *src, size_t size);
-+
-+/*
-  * probe_kernel_write(): safely attempt to write to a location
-  * @dst: address to write to
-  * @src: pointer to the data that shall be written
-@@ -270,6 +281,9 @@ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
- extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
- 
- extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
-+extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
-+				     long count);
-+extern long strnlen_unsafe_user(const void __user *unsafe_addr, long count);
- 
- /**
-  * probe_kernel_address(): safely attempt to read from a location
-diff --git a/mm/maccess.c b/mm/maccess.c
-index ec00be51a24f..d1b2ec78d9ef 100644
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -5,8 +5,20 @@
- #include <linux/mm.h>
- #include <linux/uaccess.h>
- 
-+static __always_inline long
-+probe_read_common(void *dst, const void __user *src, size_t size)
-+{
-+	long ret;
-+
-+	pagefault_disable();
-+	ret = __copy_from_user_inatomic(dst, src, size);
-+	pagefault_enable();
-+
-+	return ret ? -EFAULT : 0;
-+}
-+
- /**
-- * probe_kernel_read(): safely attempt to read from a location
-+ * probe_kernel_read(): safely attempt to read from a kernel-space location
-  * @dst: pointer to the buffer that shall take the data
-  * @src: address to read from
-  * @size: size of the data chunk
-@@ -29,17 +41,45 @@ long __probe_kernel_read(void *dst, const void *src, size_t size)
- 	mm_segment_t old_fs = get_fs();
- 
- 	set_fs(KERNEL_DS);
--	pagefault_disable();
--	ret = __copy_from_user_inatomic(dst,
--			(__force const void __user *)src, size);
--	pagefault_enable();
-+	ret = probe_read_common(dst, (__force const void __user *)src, size);
- 	set_fs(old_fs);
- 
--	return ret ? -EFAULT : 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(probe_kernel_read);
- 
- /**
-+ * probe_user_read(): safely attempt to read from a user-space location
-+ * @dst: pointer to the buffer that shall take the data
-+ * @src: address to read from. This must be a user address.
-+ * @size: size of the data chunk
-+ *
-+ * Safely read from user address @src to the buffer at @dst. If a kernel fault
-+ * happens, handle that and return -EFAULT.
-+ */
-+
-+long __weak probe_user_read(void *dst, const void __user *src, size_t size)
-+    __attribute__((alias("__probe_user_read")));
-+
-+long __probe_user_read(void *dst, const void __user *src, size_t size)
-+{
-+	long ret = -EFAULT;
-+	mm_segment_t old_fs = get_fs();
-+
-+	/*
-+	 * Since this can be called in IRQ context, we carefully set the
-+	 * USER_DS and use user_access_ok() which checks segment setting
-+	 * instead of task context.
-+	 */
-+	set_fs(USER_DS);
-+	if (user_access_ok(src, size))
-+		ret = probe_read_common(dst, src, size);
-+	set_fs(old_fs);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(probe_user_read);
-+
-+/**
-  * probe_kernel_write(): safely attempt to write to a location
-  * @dst: address to write to
-  * @src: pointer to the data that shall be written
-@@ -66,6 +106,7 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
- }
- EXPORT_SYMBOL_GPL(probe_kernel_write);
- 
-+
- /**
-  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
-  * @dst:   Destination address, in kernel space.  This buffer must be at
-@@ -105,3 +146,72 @@ long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
- 
- 	return ret ? -EFAULT : src - unsafe_addr;
- }
-+
-+/**
-+ * strncpy_from_unsafe_user: - Copy a NUL terminated string from unsafe user
-+ *				address.
-+ * @dst:   Destination address, in kernel space.  This buffer must be at
-+ *         least @count bytes long.
-+ * @unsafe_addr: Unsafe user address.
-+ * @count: Maximum number of bytes to copy, including the trailing NUL.
-+ *
-+ * Copies a NUL-terminated string from unsafe user address to kernel buffer.
-+ *
-+ * On success, returns the length of the string INCLUDING the trailing NUL.
-+ *
-+ * If access fails, returns -EFAULT (some data may have been copied
-+ * and the trailing NUL added).
-+ *
-+ * If @count is smaller than the length of the string, copies @count-1 bytes,
-+ * sets the last byte of @dst buffer to NUL and returns @count.
-+ */
-+long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
-+			      long count)
-+{
-+	mm_segment_t old_fs = get_fs();
-+	long ret;
-+
-+	if (unlikely(count <= 0))
-+		return 0;
-+
-+	set_fs(USER_DS);
-+	pagefault_disable();
-+	ret = strncpy_from_user(dst, unsafe_addr, count);
-+	pagefault_enable();
-+	set_fs(old_fs);
-+	if (ret >= count) {
-+		ret = count;
-+		dst[ret - 1] = '\0';
-+	} else if (ret > 0)
-+		ret++;
-+	return ret;
-+}
-+
-+/**
-+ * strnlen_unsafe_user: - Get the size of a user string INCLUDING final NUL.
-+ * @unsafe_addr: The string to measure.
-+ * @count: Maximum count (including NUL character)
-+ *
-+ * Get the size of a NUL-terminated string in user space without pagefault.
-+ *
-+ * Returns the size of the string INCLUDING the terminating NUL.
-+ *
-+ * If the string is too long, returns a number larger than @count. User
-+ * has to check the return value against "> count".
-+ * On exception (or invalid count), returns 0.
-+ *
-+ * Unlike strnlen_user, this can be used from IRQ handler etc. because
-+ * it disables pagefaults.
-+ */
-+long strnlen_unsafe_user(const void __user *unsafe_addr, long count)
-+{
-+	mm_segment_t old_fs = get_fs();
-+	int ret;
-+
-+	set_fs(USER_DS);
-+	pagefault_disable();
-+	ret = strnlen_user(unsafe_addr, count);
-+	pagefault_enable();
-+	set_fs(old_fs);
-+	return ret;
-+}
+>  
+>  #define CR8_RESERVED_BITS (~(unsigned long)X86_CR8_TPR)
+>  
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 7bcfa61375c0..cb1aece25b17 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -406,12 +406,12 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+>  		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ |
+>  		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+>  		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+> -		F(CLDEMOTE);
+> +		F(CLDEMOTE) | F(SHSTK);
+>  
+>  	/* cpuid 7.0.edx*/
+>  	const u32 kvm_cpuid_7_0_edx_x86_features =
+>  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
+> -		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES);
+> +		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(IBT);
 
+Again, these masks don't "define" the feature bits, rather they specify
+which feature bits can be exposed to the guest.
+
+>  
+>  	/* all calls to cpuid_count() should be made on the same cpu */
+>  	get_cpu();
+> -- 
+> 2.17.1
+> 
