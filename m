@@ -2,120 +2,123 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A20DC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B26C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7409220863
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA53A2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbfB1DMy (ORCPT
+        id S1730587AbfB1DSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 22:12:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730131AbfB1DMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 22:12:53 -0500
-Received: from vmware.local.home (unknown [208.91.3.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEDC3218AE;
-        Thu, 28 Feb 2019 03:12:52 +0000 (UTC)
-Date:   Wed, 27 Feb 2019 22:12:50 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tony Jones <tonyj@suse.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org,
-        Mathias Krause <minipli@googlemail.com>,
-        linux-trace-devel@vger.kernel.org,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Michael Sartain <mikesart@fastmail.com>
-Subject: Re: [PATCH] tools lib traceevent: Fix buffer overflow in arg_eval
-Message-ID: <20190227221250.74996869@vmware.local.home>
-In-Reply-To: <20190228015532.8941-1-tonyj@suse.de>
-References: <20190228015532.8941-1-tonyj@suse.de>
-X-Mailer: Claws Mail 3.15.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 27 Feb 2019 22:18:30 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4181 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730131AbfB1DS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 22:18:29 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3048ED77087345A0078C;
+        Thu, 28 Feb 2019 11:18:27 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
+ 11:18:21 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] xfrm: policy: Fix possible user after free in __xfrm_policy_unlink
+Date:   Thu, 28 Feb 2019 11:16:23 +0800
+Message-ID: <20190228031623.22184-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Feb 2019 17:55:32 -0800
-Tony Jones <tonyj@suse.de> wrote:
+From: YueHaibing <yuehaibing@huawei.com>
 
-> Fix buffer overflow observed when running perf test.
-> 
-> The overflow is when trying to evaluate "1ULL << (64 - 1)" which
-> is resulting in -9223372036854775808 which overflows the 20 character
-> buffer.
-> 
-> If is possible this bug has been reported before but I still don't
-> see any fix checked in:
-> 
-> See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
-> 
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Tony Jones <tonyj@suse.de>
+UBSAN report this:
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+UBSAN: Undefined behaviour in net/xfrm/xfrm_policy.c:1289:24
+index 6 is out of range for type 'unsigned int [6]'
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.4.162-514.55.6.9.x86_64+ #13
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+ 0000000000000000 1466cf39b41b23c9 ffff8801f6b07a58 ffffffff81cb35f4
+ 0000000041b58ab3 ffffffff83230f9c ffffffff81cb34e0 ffff8801f6b07a80
+ ffff8801f6b07a20 1466cf39b41b23c9 ffffffff851706e0 ffff8801f6b07ae8
+Call Trace:
+ <IRQ>  [<ffffffff81cb35f4>] __dump_stack lib/dump_stack.c:15 [inline]
+ <IRQ>  [<ffffffff81cb35f4>] dump_stack+0x114/0x1a0 lib/dump_stack.c:51
+ [<ffffffff81d94225>] ubsan_epilogue+0x12/0x8f lib/ubsan.c:164
+ [<ffffffff81d954db>] __ubsan_handle_out_of_bounds+0x16e/0x1b2 lib/ubsan.c:382
+ [<ffffffff82a25acd>] __xfrm_policy_unlink+0x3dd/0x5b0 net/xfrm/xfrm_policy.c:1289
+ [<ffffffff82a2e572>] xfrm_policy_delete+0x52/0xb0 net/xfrm/xfrm_policy.c:1309
+ [<ffffffff82a3319b>] xfrm_policy_timer+0x30b/0x590 net/xfrm/xfrm_policy.c:243
+ [<ffffffff813d3927>] call_timer_fn+0x237/0x990 kernel/time/timer.c:1144
+ [<ffffffff813d8e7e>] __run_timers kernel/time/timer.c:1218 [inline]
+ [<ffffffff813d8e7e>] run_timer_softirq+0x6ce/0xb80 kernel/time/timer.c:1401
+ [<ffffffff8120d6f9>] __do_softirq+0x299/0xe10 kernel/softirq.c:273
+ [<ffffffff8120e676>] invoke_softirq kernel/softirq.c:350 [inline]
+ [<ffffffff8120e676>] irq_exit+0x216/0x2c0 kernel/softirq.c:391
+ [<ffffffff82c5edab>] exiting_irq arch/x86/include/asm/apic.h:652 [inline]
+ [<ffffffff82c5edab>] smp_apic_timer_interrupt+0x8b/0xc0 arch/x86/kernel/apic/apic.c:926
+ [<ffffffff82c5c985>] apic_timer_interrupt+0xa5/0xb0 arch/x86/entry/entry_64.S:735
+ <EOI>  [<ffffffff81188096>] ? native_safe_halt+0x6/0x10 arch/x86/include/asm/irqflags.h:52
+ [<ffffffff810834d7>] arch_safe_halt arch/x86/include/asm/paravirt.h:111 [inline]
+ [<ffffffff810834d7>] default_idle+0x27/0x430 arch/x86/kernel/process.c:446
+ [<ffffffff81085f05>] arch_cpu_idle+0x15/0x20 arch/x86/kernel/process.c:437
+ [<ffffffff8132abc3>] default_idle_call+0x53/0x90 kernel/sched/idle.c:92
+ [<ffffffff8132b32d>] cpuidle_idle_call kernel/sched/idle.c:156 [inline]
+ [<ffffffff8132b32d>] cpu_idle_loop kernel/sched/idle.c:251 [inline]
+ [<ffffffff8132b32d>] cpu_startup_entry+0x60d/0x9a0 kernel/sched/idle.c:299
+ [<ffffffff8113e119>] start_secondary+0x3c9/0x560 arch/x86/kernel/smpboot.c:245
 
-I have to say I've let this slide and it is not the first time a patch
-went out with this fix. But this one has the correct fix because we
-should use a buffer with a multiple of 4. Anyway, Tony I believe was
-the first to report this anyway.
+The issue is triggered as this:
 
-For reference we have:
+xfrm_add_policy
+    -->verify_newpolicy_info  //check the index provided by user with XFRM_POLICY_MAX
+			      //In my case, the index is 0x6E6BB6, so it pass the check.
+    -->xfrm_policy_construct  //copy the user's policy and set xfrm_policy_timer
+    -->xfrm_policy_insert
+	--> __xfrm_policy_link //use the orgin dir, in my case is 2
+	--> xfrm_gen_index   //generate policy index, there is 0x6E6BB6
 
-I first heard about Tony's complaint on a post to linux-perf-users on Jan 18.
+then xfrm_policy_timer be fired
 
-But then we had after that:
+xfrm_policy_timer
+   --> xfrm_policy_id2dir  //get dir from (policy index & 7), in my case is 6
+   --> xfrm_policy_delete
+      --> __xfrm_policy_unlink //access policy_count[dir], trigger out of range access
 
- Michael Sartain reported it on 1/24 (and fixed by Tzvetomir)
- https://lore.kernel.org/linux-trace-devel/20190125102014.19600-1-tstoyanov@vmware.com/
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e682adf021be ("xfrm: Try to honor policy index if it's supplied by user")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/xfrm/xfrm_policy.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index 8d1a898..b27eb742 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -316,6 +316,8 @@ static void xfrm_policy_timer(struct timer_list *t)
+ 		goto out;
  
-It was later fixed again by Mathias Krause
- https://lore.kernel.org/linux-trace-devel/20190223122404.21137-1-minipli@googlemail.com/
+ 	dir = xfrm_policy_id2dir(xp->index);
++	if (dir >= XFRM_POLICY_MAX * 2)
++		dir = dir & XFRM_POLICY_MAX;
+ 
+ 	if (xp->lft.hard_add_expires_seconds) {
+ 		time64_t tmo = xp->lft.hard_add_expires_seconds +
+-- 
+2.7.0
 
-But since Tony was first to report it, and we discussed that it should
-be 24 bytes, I would say this is the patch to take.
-
-Again, sorry for not getting this acknowledged earlier and everyone doing
-the same thing multiple times. :-/
-
-Arnaldo, please take this patch. But also add:
-
-Reported-by: Michael Sartain <mikesart@fastmail.com>
-Reported-by: Mathias Krause <minipli@googlemail.com>
-
-Thanks,
-
--- Steve
-
-
-> ---
->  tools/lib/traceevent/event-parse.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/lib/traceevent/event-parse.c
-> b/tools/lib/traceevent/event-parse.c index abd4fa5d3088..87494c7c619d
-> 100644 --- a/tools/lib/traceevent/event-parse.c
-> +++ b/tools/lib/traceevent/event-parse.c
-> @@ -2457,7 +2457,7 @@ static int arg_num_eval(struct tep_print_arg
-> *arg, long long *val) static char *arg_eval (struct tep_print_arg
-> *arg) {
->  	long long val;
-> -	static char buf[20];
-> +	static char buf[24];
->  
->  	switch (arg->type) {
->  	case TEP_PRINT_ATOM:
 
