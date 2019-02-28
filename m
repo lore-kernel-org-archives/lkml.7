@@ -2,152 +2,139 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560A7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4435C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CD02171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48132184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:00:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhfeQSB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733308AbfB1PAT (ORCPT
+        id S2387409AbfB1PA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:00:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56254 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733253AbfB1PAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:00:04 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 35B55AE30;
-        Thu, 28 Feb 2019 15:00:03 +0000 (UTC)
-Subject: Re: [PATCH 1/3] mm: refactor __vunmap() to avoid duplicated call to
- find_vm_area()
-To:     Roman Gushchin <guroan@gmail.com>, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, kernel-team@fb.com,
-        Roman Gushchin <guro@fb.com>
-References: <20190225203037.1317-1-guro@fb.com>
- <20190225203037.1317-2-guro@fb.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <dfc87917-c206-ccd1-64f0-c45b86f52cda@suse.cz>
-Date:   Thu, 28 Feb 2019 16:00:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Feb 2019 10:00:29 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46779 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbfB1O77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 09:59:59 -0500
+Received: by mail-lj1-f194.google.com with SMTP id v16so17377553ljg.13;
+        Thu, 28 Feb 2019 06:59:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GNbW3l3o/P4hn2mX7vFhF+9pskSRu4PZ9nUssgs6kiU=;
+        b=jhfeQSB4Cggj9LKy4w4SMTQS+85TdmOI0gM1XhQcyPy6eZLeywevuea0IOjumWpkbs
+         m5Ld9pLBgF11k2dCbcDMTY4deiczOU/ZQOo9xQXRjO5YqJEXCkUzUqPJ+SPL99MpJ7Eo
+         RGWQyQJh+zKBNEiSj3T6YV3Jio6iJ1ElsiUDqLeVF7kESNz+57doduOi6UwDeDiwS7gY
+         vEyv5MSMo+bROPNH8aMiMJY60X+r+QttrlQ3nUeRDKV6mqvteD2AY/V2gSGjI5zDJr/p
+         69QPxeKynPYpAm+GRp3w8/UrZ3zsgtJSKf7Kfb/A/rMtueiCk2XeJLnZJ5kv84C28XvM
+         CLoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GNbW3l3o/P4hn2mX7vFhF+9pskSRu4PZ9nUssgs6kiU=;
+        b=Fwvt/xEAWHWTNRIZnrdELdYJf6i5hOka/m5CJwomDo2xmZnKsZw0Bt1kFu/RBdG1Dg
+         tdS7/F40vXKa1Q/+FO/166pxoKA6uB1basks5MnRWSZxWX77k6LeMIoO40vzeKMl6Bbi
+         bwAEwshIkI3Bp900rKtc6p8wq+NIVOwzd9zHqKkZnB8PiGYbH/tgt1kiMghDfUyj0QRb
+         0IoXhmdfl+u6L0R+A7uJnpey93d1GnSP8dIRa0lbxV60RtAO7UVpDfQm9d4rTXIqsbrn
+         31UXz+iJTdGDtz8hz46aBZ49hfR5k6RW1xEpmlKizR1AgrOCJww9+s+hvYIUkxPmceAL
+         Os6g==
+X-Gm-Message-State: AHQUAubR4bdiN3IyAyuZ8lgqGaHvzoTcZZY2aGDJqaU2XGdX98ErzxVA
+        u9hhlJShvvZ7iSmUpsXRQBg=
+X-Google-Smtp-Source: AHgI3IaipTqldr6WDy2H2RuYtOvqiyhOkgtq64yAIJpOfGESvH5tCebXZjiCx5bj+7VOo5f5UYvGDg==
+X-Received: by 2002:a2e:934a:: with SMTP id m10mr4969641ljh.164.1551365997108;
+        Thu, 28 Feb 2019 06:59:57 -0800 (PST)
+Received: from localhost.localdomain (ppp91-79-175-49.pppoe.mtu-net.ru. [91.79.175.49])
+        by smtp.gmail.com with ESMTPSA id z20sm4728309lff.87.2019.02.28.06.59.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 06:59:56 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Russell King <linux@armlinux.org.uk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Robert Yang <decatf@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 3/7] ARM: trusted_foundations: Provide information about whether firmware is registered
+Date:   Thu, 28 Feb 2019 17:59:33 +0300
+Message-Id: <20190228145937.27725-4-digetx@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190228145937.27725-1-digetx@gmail.com>
+References: <20190228145937.27725-1-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190225203037.1317-2-guro@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/25/19 9:30 PM, Roman Gushchin wrote:
-> __vunmap() calls find_vm_area() twice without an obvious reason:
-> first directly to get the area pointer, second indirectly by calling
-> remove_vm_area(), which is again searching for the area.
-> 
-> To remove this redundancy, let's split remove_vm_area() into
-> __remove_vm_area(struct vmap_area *), which performs the actual area
-> removal, and remove_vm_area(const void *addr) wrapper, which can
-> be used everywhere, where it has been used before.
-> 
-> On my test setup, I've got 5-10% speed up on vfree()'ing 1000000
-> of 4-pages vmalloc blocks.
-> 
-> Perf report before:
->   22.64%  cat      [kernel.vmlinux]  [k] free_pcppages_bulk
->   10.30%  cat      [kernel.vmlinux]  [k] __vunmap
->    9.80%  cat      [kernel.vmlinux]  [k] find_vmap_area
->    8.11%  cat      [kernel.vmlinux]  [k] vunmap_page_range
->    4.20%  cat      [kernel.vmlinux]  [k] __slab_free
->    3.56%  cat      [kernel.vmlinux]  [k] __list_del_entry_valid
->    3.46%  cat      [kernel.vmlinux]  [k] smp_call_function_many
->    3.33%  cat      [kernel.vmlinux]  [k] kfree
->    3.32%  cat      [kernel.vmlinux]  [k] free_unref_page
-> 
-> Perf report after:
->   23.01%  cat      [kernel.kallsyms]  [k] free_pcppages_bulk
->    9.46%  cat      [kernel.kallsyms]  [k] __vunmap
->    9.15%  cat      [kernel.kallsyms]  [k] vunmap_page_range
->    6.17%  cat      [kernel.kallsyms]  [k] __slab_free
->    5.61%  cat      [kernel.kallsyms]  [k] kfree
->    4.86%  cat      [kernel.kallsyms]  [k] bad_range
->    4.67%  cat      [kernel.kallsyms]  [k] free_unref_page_commit
->    4.24%  cat      [kernel.kallsyms]  [k] __list_del_entry_valid
->    3.68%  cat      [kernel.kallsyms]  [k] free_unref_page
->    3.65%  cat      [kernel.kallsyms]  [k] __list_add_valid
->    3.19%  cat      [kernel.kallsyms]  [k] __purge_vmap_area_lazy
->    3.10%  cat      [kernel.kallsyms]  [k] find_vmap_area
->    3.05%  cat      [kernel.kallsyms]  [k] rcu_cblist_dequeue
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
+Add a helper that provides information about whether Trusted Foundations
+firmware operations have been registered.
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Tested-by: Robert Yang <decatf@gmail.com>
+Tested-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ arch/arm/firmware/trusted_foundations.c    | 5 +++++
+ arch/arm/include/asm/trusted_foundations.h | 7 +++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/arch/arm/firmware/trusted_foundations.c b/arch/arm/firmware/trusted_foundations.c
+index 720904a43c00..bb2ee73d9e02 100644
+--- a/arch/arm/firmware/trusted_foundations.c
++++ b/arch/arm/firmware/trusted_foundations.c
+@@ -167,3 +167,8 @@ void of_register_trusted_foundations(void)
+ 		panic("Trusted Foundation: missing version-minor property\n");
+ 	register_trusted_foundations(&pdata);
+ }
++
++bool trusted_foundations_registered(void)
++{
++	return firmware_ops == &trusted_foundations_ops;
++}
+diff --git a/arch/arm/include/asm/trusted_foundations.h b/arch/arm/include/asm/trusted_foundations.h
+index 650cca7435f4..ff6e4cb4ca9d 100644
+--- a/arch/arm/include/asm/trusted_foundations.h
++++ b/arch/arm/include/asm/trusted_foundations.h
+@@ -31,6 +31,7 @@
+ #include <linux/of.h>
+ #include <linux/cpu.h>
+ #include <linux/smp.h>
++#include <linux/types.h>
+ 
+ #include <asm/hardware/cache-l2x0.h>
+ #include <asm/outercache.h>
+@@ -50,6 +51,7 @@ struct trusted_foundations_platform_data {
+ 
+ void register_trusted_foundations(struct trusted_foundations_platform_data *pd);
+ void of_register_trusted_foundations(void);
++bool trusted_foundations_registered(void);
+ 
+ #else /* CONFIG_TRUSTED_FOUNDATIONS */
+ static inline void tf_dummy_write_sec(unsigned long val, unsigned int reg)
+@@ -86,6 +88,11 @@ static inline void of_register_trusted_foundations(void)
+ 	if (of_find_compatible_node(NULL, NULL, "tlm,trusted-foundations"))
+ 		register_trusted_foundations(NULL);
+ }
++
++static inline bool trusted_foundations_registered(void)
++{
++	return false;
++}
+ #endif /* CONFIG_TRUSTED_FOUNDATIONS */
+ 
+ #endif
+-- 
+2.20.1
+
