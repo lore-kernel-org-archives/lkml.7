@@ -6,57 +6,57 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65688C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E381C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278B52083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59799218A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551320341;
-	bh=6WFkylJOI/KsLhpKXyqFgjGOO/DhoHhfxhzZOIibr24=;
+	s=default; t=1551320345;
+	bh=Sz4VBTWOB/fhxS0/qgx185PytnpjpUSI96PiVXr3Zgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y030Sfx7aL+fWiJf9i/WXbgaAbHMBfviE/kc9IH26v7e5Sy5XmOocrrUSdhp0bVPk
-	 csqldNj92SBGtXAY9r3EqqVIuo0IFGEacm3TI323x4pIBTn0g9iqJtTXcNWMLXZU/9
-	 p7F/3rVjR56YAVR4mhsXxSg2tFnqgZWGg8bpvA4w=
+	b=JsyoiNBuLPzlAssaYKcd9WnnrH7D1TVafiQB6WjvDwA0mibgBF5bs7II8FYBCDDzW
+	 mqMN2E6+TkPe/Fy4qfLnivV++Byg1A259xGCPQymM5yogenpAMPPsJtMPXeKYzj63L
+	 0ZyMkosnbw4jhb7c8Ksfvf5QvQt+541KR9Qm3CkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730787AbfB1CTA (ORCPT
+        id S1730821AbfB1CTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:19:00 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43202 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730741AbfB1CS5 (ORCPT
+        Wed, 27 Feb 2019 21:19:04 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35780 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730741AbfB1CTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:18:57 -0500
-Received: by mail-qk1-f193.google.com with SMTP id f196so11185131qke.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 18:18:56 -0800 (PST)
+        Wed, 27 Feb 2019 21:19:01 -0500
+Received: by mail-qt1-f193.google.com with SMTP id p48so21848780qtk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 18:19:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=oDNiSsuPdsF/XOcfjzvj8LVYLn1xaHI/O2WR5uD3c+0=;
-        b=plmR7D0mWyqZgPkNBXgRaCR5DxU6zKYqq7GTXR9ky6KHjDPJeKR2gJNFCQrNBKKTSx
-         UoK15f+v3kyzMEpWN0Nkwziw71OcvIgDHMfFZbqIBvH1RJXVglA+wKkDZ0y+aExWoRUo
-         LGheV03RXAD5T2kPYBFma6E8q5qcMF6OpX7IB9+t2RdE3/mXt6kJJs2w6GstP+vXX6u4
-         qXTtkXTPprw6+YIh0KN1KLsSIE+Xj8yLstUxENYsNz7M/3WvvK98UAziTVTdkPCCTz0i
-         rHhUUdgpVchbF6rJOugW+iY5Ay8/wTAvPDGdTS+/pZJJlkLK9l4Y0tKJ8S4QXKzUe9Tn
-         TOaQ==
-X-Gm-Message-State: AHQUAublzfNOlYfkayRWlQHhFTQSwtgx+rzCi8OXO6eT+JhbGBS64WGr
-        kZFBn5yj17h9LEeft854Y6w=
-X-Google-Smtp-Source: APXvYqyYBVI/T7ds+Dzo/USUVcDodJI0nlbspO0X1XTek/TSd9ZKWp/VHGFig0uB1cuf3Gy8qdZb3A==
-X-Received: by 2002:a37:c097:: with SMTP id v23mr4655782qkv.62.1551320335886;
-        Wed, 27 Feb 2019 18:18:55 -0800 (PST)
+        bh=g2ENlk1zX6grjv7br7W/r2m1obArXEgzzB0drAyc/OA=;
+        b=b/Vk7NUxts8I9+HAZjRI8tuLrJavLlK0JkMlWXgZelaDz1Q81knR6lPpEktoU92qWF
+         1qU2e6YZjDWkiep3+6vvE5s6gyZg+BZ8GAjB4QPPtgVurnHPpekqOxNdGILJUT4qOLvv
+         d0UA5hIsv+Txh/OaCr/QH/WQlISVQrnEdlIE7KD7ujSmTw53oM062fTn6T6mqedK5EN/
+         L3U+1XfHNKpaNG3CuEvz2KS68/OharD6fPmWuTHBwejhTN5vRo8dtF6twExUpmaEFUfK
+         bilvWQcgD8l34OMbnw4+SLzoqevkGiD/cX+1TpwU5p8vNgrEq7eq1P7eOrirEVAvILxu
+         cBAA==
+X-Gm-Message-State: AHQUAuZplB65OKEugWPoJWaVvl7VBMoRxqhJwUYvPmiPEQ5MfSO0eRdl
+        UkTmidFK6lEJp+ktUYABu7Y=
+X-Google-Smtp-Source: AHgI3IbHe/rxuVJiXM41Enka/t5RwmbfAtxTtVZrOy0xH8T/DXgOeiB+iYMvA8kh0Qu3zNT+r1GO5A==
+X-Received: by 2002:ac8:1a56:: with SMTP id q22mr4290404qtk.59.1551320340377;
+        Wed, 27 Feb 2019 18:19:00 -0800 (PST)
 Received: from localhost.localdomain (cpe-98-13-254-243.nyc.res.rr.com. [98.13.254.243])
-        by smtp.gmail.com with ESMTPSA id y21sm12048357qth.90.2019.02.27.18.18.54
+        by smtp.gmail.com with ESMTPSA id y21sm12048357qth.90.2019.02.27.18.18.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 27 Feb 2019 18:18:55 -0800 (PST)
+        Wed, 27 Feb 2019 18:18:59 -0800 (PST)
 From:   Dennis Zhou <dennis@kernel.org>
 To:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
         Christoph Lameter <cl@linux.com>
 Cc:     Vlad Buslov <vladbu@mellanox.com>, kernel-team@fb.com,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/12] percpu: remember largest area skipped during allocation
-Date:   Wed, 27 Feb 2019 21:18:35 -0500
-Message-Id: <20190228021839.55779-9-dennis@kernel.org>
+Subject: [PATCH 11/12] percpu: convert chunk hints to be based on pcpu_block_md
+Date:   Wed, 27 Feb 2019 21:18:38 -0500
+Message-Id: <20190228021839.55779-12-dennis@kernel.org>
 X-Mailer: git-send-email 2.13.5
 In-Reply-To: <20190228021839.55779-1-dennis@kernel.org>
 References: <20190228021839.55779-1-dennis@kernel.org>
@@ -65,158 +65,313 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Percpu allocations attempt to do first fit by scanning forward from the
-first_free of a block. However, fragmentation from allocation requests
-can cause holes not seen by block hint update functions. To address
-this, create a local version of bitmap_find_next_zero_area_off() that
-remembers the largest area skipped over. The caveat is that it only sees
-regions skipped over due to not fitting, not regions skipped due to
-alignment. Prior to updating the scan_hint, a scan backwards is done to
-try and recover free bits skipped due to alignment. While this can cause
-scanning to miss earlier possible free areas, smaller allocations will
-eventually fill those holes.
+As mentioned in the last patch, a chunk's hints are no different than a
+block just responsible for more bits. This converts chunk level hints to
+use a pcpu_block_md to maintain them. This lets us reuse the same hint
+helper functions as a block. The left_free and right_free are unused by
+the chunk's pcpu_block_md.
 
 Signed-off-by: Dennis Zhou <dennis@kernel.org>
 ---
- mm/percpu.c | 101 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 99 insertions(+), 2 deletions(-)
+ mm/percpu-internal.h |   5 +-
+ mm/percpu-stats.c    |   5 +-
+ mm/percpu.c          | 120 +++++++++++++++++++------------------------
+ 3 files changed, 57 insertions(+), 73 deletions(-)
 
+diff --git a/mm/percpu-internal.h b/mm/percpu-internal.h
+index 119bd1119aa7..0468ba500bd4 100644
+--- a/mm/percpu-internal.h
++++ b/mm/percpu-internal.h
+@@ -39,9 +39,7 @@ struct pcpu_chunk {
+ 
+ 	struct list_head	list;		/* linked to pcpu_slot lists */
+ 	int			free_bytes;	/* free bytes in the chunk */
+-	int			contig_bits;	/* max contiguous size hint */
+-	int			contig_bits_start; /* contig_bits starting
+-						      offset */
++	struct pcpu_block_md	chunk_md;
+ 	void			*base_addr;	/* base address of this chunk */
+ 
+ 	unsigned long		*alloc_map;	/* allocation map */
+@@ -49,7 +47,6 @@ struct pcpu_chunk {
+ 	struct pcpu_block_md	*md_blocks;	/* metadata blocks */
+ 
+ 	void			*data;		/* chunk data */
+-	int			first_bit;	/* no free below this */
+ 	bool			immutable;	/* no [de]population allowed */
+ 	int			start_offset;	/* the overlap with the previous
+ 						   region to have a page aligned
+diff --git a/mm/percpu-stats.c b/mm/percpu-stats.c
+index b5fdd43b60c9..ef5034a0464e 100644
+--- a/mm/percpu-stats.c
++++ b/mm/percpu-stats.c
+@@ -53,6 +53,7 @@ static int find_max_nr_alloc(void)
+ static void chunk_map_stats(struct seq_file *m, struct pcpu_chunk *chunk,
+ 			    int *buffer)
+ {
++	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+ 	int i, last_alloc, as_len, start, end;
+ 	int *alloc_sizes, *p;
+ 	/* statistics */
+@@ -121,9 +122,9 @@ static void chunk_map_stats(struct seq_file *m, struct pcpu_chunk *chunk,
+ 	P("nr_alloc", chunk->nr_alloc);
+ 	P("max_alloc_size", chunk->max_alloc_size);
+ 	P("empty_pop_pages", chunk->nr_empty_pop_pages);
+-	P("first_bit", chunk->first_bit);
++	P("first_bit", chunk_md->first_free);
+ 	P("free_bytes", chunk->free_bytes);
+-	P("contig_bytes", chunk->contig_bits * PCPU_MIN_ALLOC_SIZE);
++	P("contig_bytes", chunk_md->contig_hint * PCPU_MIN_ALLOC_SIZE);
+ 	P("sum_frag", sum_frag);
+ 	P("max_frag", max_frag);
+ 	P("cur_min_alloc", cur_min_alloc);
 diff --git a/mm/percpu.c b/mm/percpu.c
-index df1aacf58ac8..dac18968d79f 100644
+index 7cdf14c242de..197479f2c489 100644
 --- a/mm/percpu.c
 +++ b/mm/percpu.c
-@@ -716,6 +716,43 @@ static void pcpu_block_update(struct pcpu_block_md *block, int start, int end)
- 	}
+@@ -233,10 +233,13 @@ static int pcpu_size_to_slot(int size)
+ 
+ static int pcpu_chunk_slot(const struct pcpu_chunk *chunk)
+ {
+-	if (chunk->free_bytes < PCPU_MIN_ALLOC_SIZE || chunk->contig_bits == 0)
++	const struct pcpu_block_md *chunk_md = &chunk->chunk_md;
++
++	if (chunk->free_bytes < PCPU_MIN_ALLOC_SIZE ||
++	    chunk_md->contig_hint == 0)
+ 		return 0;
+ 
+-	return pcpu_size_to_slot(chunk->contig_bits * PCPU_MIN_ALLOC_SIZE);
++	return pcpu_size_to_slot(chunk_md->contig_hint * PCPU_MIN_ALLOC_SIZE);
  }
  
-+/*
-+ * pcpu_block_update_scan - update a block given a free area from a scan
+ /* set the pointer to a chunk in a page struct */
+@@ -592,54 +595,6 @@ static inline bool pcpu_region_overlap(int a, int b, int x, int y)
+ 	return false;
+ }
+ 
+-/**
+- * pcpu_chunk_update - updates the chunk metadata given a free area
+- * @chunk: chunk of interest
+- * @bit_off: chunk offset
+- * @bits: size of free area
+- *
+- * This updates the chunk's contig hint and starting offset given a free area.
+- * Choose the best starting offset if the contig hint is equal.
+- */
+-static void pcpu_chunk_update(struct pcpu_chunk *chunk, int bit_off, int bits)
+-{
+-	if (bits > chunk->contig_bits) {
+-		chunk->contig_bits_start = bit_off;
+-		chunk->contig_bits = bits;
+-	} else if (bits == chunk->contig_bits && chunk->contig_bits_start &&
+-		   (!bit_off ||
+-		    __ffs(bit_off) > __ffs(chunk->contig_bits_start))) {
+-		/* use the start with the best alignment */
+-		chunk->contig_bits_start = bit_off;
+-	}
+-}
+-
+-/**
+- * pcpu_chunk_refresh_hint - updates metadata about a chunk
+- * @chunk: chunk of interest
+- *
+- * Iterates over the metadata blocks to find the largest contig area.
+- * It also counts the populated pages and uses the delta to update the
+- * global count.
+- *
+- * Updates:
+- *      chunk->contig_bits
+- *      chunk->contig_bits_start
+- */
+-static void pcpu_chunk_refresh_hint(struct pcpu_chunk *chunk)
+-{
+-	int bit_off, bits;
+-
+-	/* clear metadata */
+-	chunk->contig_bits = 0;
+-
+-	bit_off = chunk->first_bit;
+-	bits = 0;
+-	pcpu_for_each_md_free_region(chunk, bit_off, bits) {
+-		pcpu_chunk_update(chunk, bit_off, bits);
+-	}
+-}
+-
+ /**
+  * pcpu_block_update - updates a block given a free area
+  * @block: block of interest
+@@ -753,6 +708,29 @@ static void pcpu_block_update_scan(struct pcpu_chunk *chunk, int bit_off,
+ 	pcpu_block_update(block, s_off, e_off);
+ }
+ 
++/**
++ * pcpu_chunk_refresh_hint - updates metadata about a chunk
 + * @chunk: chunk of interest
-+ * @bit_off: chunk offset
-+ * @bits: size of free area
 + *
-+ * Finding the final allocation spot first goes through pcpu_find_block_fit()
-+ * to find a block that can hold the allocation and then pcpu_alloc_area()
-+ * where a scan is used.  When allocations require specific alignments,
-+ * we can inadvertently create holes which will not be seen in the alloc
-+ * or free paths.
-+ *
-+ * This takes a given free area hole and updates a block as it may change the
-+ * scan_hint.  We need to scan backwards to ensure we don't miss free bits
-+ * from alignment.
++ * Iterates over the metadata blocks to find the largest contig area.
++ * It also counts the populated pages and uses the delta to update the
++ * global count.
 + */
-+static void pcpu_block_update_scan(struct pcpu_chunk *chunk, int bit_off,
-+				   int bits)
++static void pcpu_chunk_refresh_hint(struct pcpu_chunk *chunk)
 +{
-+	int s_off = pcpu_off_to_block_off(bit_off);
-+	int e_off = s_off + bits;
-+	int s_index, l_bit;
-+	struct pcpu_block_md *block;
++	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
++	int bit_off, bits;
 +
-+	if (e_off > PCPU_BITMAP_BLOCK_BITS)
-+		return;
++	/* clear metadata */
++	chunk_md->contig_hint = 0;
 +
-+	s_index = pcpu_off_to_block_index(bit_off);
-+	block = chunk->md_blocks + s_index;
-+
-+	/* scan backwards in case of alignment skipping free bits */
-+	l_bit = find_last_bit(pcpu_index_alloc_map(chunk, s_index), s_off);
-+	s_off = (s_off == l_bit) ? 0 : l_bit + 1;
-+
-+	pcpu_block_update(block, s_off, e_off);
++	bit_off = chunk_md->first_free;
++	bits = 0;
++	pcpu_for_each_md_free_region(chunk, bit_off, bits) {
++		pcpu_block_update(chunk_md, bit_off, bit_off + bits);
++	}
 +}
 +
  /**
   * pcpu_block_refresh_hint
   * @chunk: chunk of interest
-@@ -1064,6 +1101,62 @@ static int pcpu_find_block_fit(struct pcpu_chunk *chunk, int alloc_bits,
- 	return bit_off;
+@@ -800,6 +778,7 @@ static void pcpu_block_refresh_hint(struct pcpu_chunk *chunk, int index)
+ static void pcpu_block_update_hint_alloc(struct pcpu_chunk *chunk, int bit_off,
+ 					 int bits)
+ {
++	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+ 	int nr_empty_pages = 0;
+ 	struct pcpu_block_md *s_block, *e_block, *block;
+ 	int s_index, e_index;	/* block indexes of the freed allocation */
+@@ -910,8 +889,9 @@ static void pcpu_block_update_hint_alloc(struct pcpu_chunk *chunk, int bit_off,
+ 	 * contig hint is broken.  Otherwise, it means a smaller space
+ 	 * was used and therefore the chunk contig hint is still correct.
+ 	 */
+-	if (pcpu_region_overlap(chunk->contig_bits_start,
+-				chunk->contig_bits_start + chunk->contig_bits,
++	if (pcpu_region_overlap(chunk_md->contig_hint_start,
++				chunk_md->contig_hint_start +
++				chunk_md->contig_hint,
+ 				bit_off,
+ 				bit_off + bits))
+ 		pcpu_chunk_refresh_hint(chunk);
+@@ -930,9 +910,10 @@ static void pcpu_block_update_hint_alloc(struct pcpu_chunk *chunk, int bit_off,
+  *
+  * A chunk update is triggered if a page becomes free, a block becomes free,
+  * or the free spans across blocks.  This tradeoff is to minimize iterating
+- * over the block metadata to update chunk->contig_bits.  chunk->contig_bits
+- * may be off by up to a page, but it will never be more than the available
+- * space.  If the contig hint is contained in one block, it will be accurate.
++ * over the block metadata to update chunk_md->contig_hint.
++ * chunk_md->contig_hint may be off by up to a page, but it will never be more
++ * than the available space.  If the contig hint is contained in one block, it
++ * will be accurate.
+  */
+ static void pcpu_block_update_hint_free(struct pcpu_chunk *chunk, int bit_off,
+ 					int bits)
+@@ -1026,8 +1007,9 @@ static void pcpu_block_update_hint_free(struct pcpu_chunk *chunk, int bit_off,
+ 	if (((end - start) >= PCPU_BITMAP_BLOCK_BITS) || s_index != e_index)
+ 		pcpu_chunk_refresh_hint(chunk);
+ 	else
+-		pcpu_chunk_update(chunk, pcpu_block_off_to_off(s_index, start),
+-				  end - start);
++		pcpu_block_update(&chunk->chunk_md,
++				  pcpu_block_off_to_off(s_index, start),
++				  end);
  }
  
-+/*
-+ * pcpu_find_zero_area - modified from bitmap_find_next_zero_area_off
-+ * @map: the address to base the search on
-+ * @size: the bitmap size in bits
-+ * @start: the bitnumber to start searching at
-+ * @nr: the number of zeroed bits we're looking for
-+ * @align_mask: alignment mask for zero area
-+ * @largest_off: offset of the largest area skipped
-+ * @largest_bits: size of the largest area skipped
-+ *
-+ * The @align_mask should be one less than a power of 2.
-+ *
-+ * This is a modified version of bitmap_find_next_zero_area_off() to remember
-+ * the largest area that was skipped.  This is imperfect, but in general is
-+ * good enough.  The largest remembered region is the largest failed region
-+ * seen.  This does not include anything we possibly skipped due to alignment.
-+ * pcpu_block_update_scan() does scan backwards to try and recover what was
-+ * lost to alignment.  While this can cause scanning to miss earlier possible
-+ * free areas, smaller allocations will eventually fill those holes.
-+ */
-+static unsigned long pcpu_find_zero_area(unsigned long *map,
-+					 unsigned long size,
-+					 unsigned long start,
-+					 unsigned long nr,
-+					 unsigned long align_mask,
-+					 unsigned long *largest_off,
-+					 unsigned long *largest_bits)
-+{
-+	unsigned long index, end, i, area_off, area_bits;
-+again:
-+	index = find_next_zero_bit(map, size, start);
-+
-+	/* Align allocation */
-+	index = __ALIGN_MASK(index, align_mask);
-+	area_off = index;
-+
-+	end = index + nr;
-+	if (end > size)
-+		return end;
-+	i = find_next_bit(map, end, index);
-+	if (i < end) {
-+		area_bits = i - area_off;
-+		/* remember largest unused area with best alignment */
-+		if (area_bits > *largest_bits ||
-+		    (area_bits == *largest_bits && *largest_off &&
-+		     (!area_off || __ffs(area_off) > __ffs(*largest_off)))) {
-+			*largest_off = area_off;
-+			*largest_bits = area_bits;
-+		}
-+
-+		start = i + 1;
-+		goto again;
-+	}
-+	return index;
-+}
-+
  /**
-  * pcpu_alloc_area - allocates an area from a pcpu_chunk
-  * @chunk: chunk of interest
-@@ -1087,6 +1180,7 @@ static int pcpu_alloc_area(struct pcpu_chunk *chunk, int alloc_bits,
- 			   size_t align, int start)
+@@ -1082,6 +1064,7 @@ static bool pcpu_is_populated(struct pcpu_chunk *chunk, int bit_off, int bits,
+ static int pcpu_find_block_fit(struct pcpu_chunk *chunk, int alloc_bits,
+ 			       size_t align, bool pop_only)
  {
- 	size_t align_mask = (align) ? (align - 1) : 0;
-+	unsigned long area_off = 0, area_bits = 0;
- 	int bit_off, end, oslot;
++	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+ 	int bit_off, bits, next_off;
  
- 	lockdep_assert_held(&pcpu_lock);
-@@ -1098,11 +1192,14 @@ static int pcpu_alloc_area(struct pcpu_chunk *chunk, int alloc_bits,
+ 	/*
+@@ -1090,12 +1073,12 @@ static int pcpu_find_block_fit(struct pcpu_chunk *chunk, int alloc_bits,
+ 	 * cannot fit in the global hint, there is memory pressure and creating
+ 	 * a new chunk would happen soon.
  	 */
- 	end = min_t(int, start + alloc_bits + PCPU_BITMAP_BLOCK_BITS,
- 		    pcpu_chunk_map_bits(chunk));
--	bit_off = bitmap_find_next_zero_area(chunk->alloc_map, end, start,
--					     alloc_bits, align_mask);
-+	bit_off = pcpu_find_zero_area(chunk->alloc_map, end, start, alloc_bits,
-+				      align_mask, &area_off, &area_bits);
- 	if (bit_off >= end)
+-	bit_off = ALIGN(chunk->contig_bits_start, align) -
+-		  chunk->contig_bits_start;
+-	if (bit_off + alloc_bits > chunk->contig_bits)
++	bit_off = ALIGN(chunk_md->contig_hint_start, align) -
++		  chunk_md->contig_hint_start;
++	if (bit_off + alloc_bits > chunk_md->contig_hint)
  		return -1;
  
-+	if (area_bits)
-+		pcpu_block_update_scan(chunk, area_off, area_bits);
-+
- 	/* update alloc map */
- 	bitmap_set(chunk->alloc_map, bit_off, alloc_bits);
+-	bit_off = chunk->first_bit;
++	bit_off = chunk_md->first_free;
+ 	bits = 0;
+ 	pcpu_for_each_fit_region(chunk, alloc_bits, align, bit_off, bits) {
+ 		if (!pop_only || pcpu_is_populated(chunk, bit_off, bits,
+@@ -1190,6 +1173,7 @@ static unsigned long pcpu_find_zero_area(unsigned long *map,
+ static int pcpu_alloc_area(struct pcpu_chunk *chunk, int alloc_bits,
+ 			   size_t align, int start)
+ {
++	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+ 	size_t align_mask = (align) ? (align - 1) : 0;
+ 	unsigned long area_off = 0, area_bits = 0;
+ 	int bit_off, end, oslot;
+@@ -1222,8 +1206,8 @@ static int pcpu_alloc_area(struct pcpu_chunk *chunk, int alloc_bits,
+ 	chunk->free_bytes -= alloc_bits * PCPU_MIN_ALLOC_SIZE;
  
+ 	/* update first free bit */
+-	if (bit_off == chunk->first_bit)
+-		chunk->first_bit = find_next_zero_bit(
++	if (bit_off == chunk_md->first_free)
++		chunk_md->first_free = find_next_zero_bit(
+ 					chunk->alloc_map,
+ 					pcpu_chunk_map_bits(chunk),
+ 					bit_off + alloc_bits);
+@@ -1245,6 +1229,7 @@ static int pcpu_alloc_area(struct pcpu_chunk *chunk, int alloc_bits,
+  */
+ static void pcpu_free_area(struct pcpu_chunk *chunk, int off)
+ {
++	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+ 	int bit_off, bits, end, oslot;
+ 
+ 	lockdep_assert_held(&pcpu_lock);
+@@ -1264,7 +1249,7 @@ static void pcpu_free_area(struct pcpu_chunk *chunk, int off)
+ 	chunk->free_bytes += bits * PCPU_MIN_ALLOC_SIZE;
+ 
+ 	/* update first free bit */
+-	chunk->first_bit = min(chunk->first_bit, bit_off);
++	chunk_md->first_free = min(chunk_md->first_free, bit_off);
+ 
+ 	pcpu_block_update_hint_free(chunk, bit_off, bits);
+ 
+@@ -1285,6 +1270,9 @@ static void pcpu_init_md_blocks(struct pcpu_chunk *chunk)
+ {
+ 	struct pcpu_block_md *md_block;
+ 
++	/* init the chunk's block */
++	pcpu_init_md_block(&chunk->chunk_md, pcpu_chunk_map_bits(chunk));
++
+ 	for (md_block = chunk->md_blocks;
+ 	     md_block != chunk->md_blocks + pcpu_chunk_nr_blocks(chunk);
+ 	     md_block++)
+@@ -1352,7 +1340,6 @@ static struct pcpu_chunk * __init pcpu_alloc_first_chunk(unsigned long tmp_addr,
+ 	chunk->nr_populated = chunk->nr_pages;
+ 	chunk->nr_empty_pop_pages = chunk->nr_pages;
+ 
+-	chunk->contig_bits = map_size / PCPU_MIN_ALLOC_SIZE;
+ 	chunk->free_bytes = map_size;
+ 
+ 	if (chunk->start_offset) {
+@@ -1362,7 +1349,7 @@ static struct pcpu_chunk * __init pcpu_alloc_first_chunk(unsigned long tmp_addr,
+ 		set_bit(0, chunk->bound_map);
+ 		set_bit(offset_bits, chunk->bound_map);
+ 
+-		chunk->first_bit = offset_bits;
++		chunk->chunk_md.first_free = offset_bits;
+ 
+ 		pcpu_block_update_hint_alloc(chunk, 0, offset_bits);
+ 	}
+@@ -1415,7 +1402,6 @@ static struct pcpu_chunk *pcpu_alloc_chunk(gfp_t gfp)
+ 	pcpu_init_md_blocks(chunk);
+ 
+ 	/* init metadata */
+-	chunk->contig_bits = region_bits;
+ 	chunk->free_bytes = chunk->nr_pages * PAGE_SIZE;
+ 
+ 	return chunk;
 -- 
 2.17.1
 
