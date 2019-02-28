@@ -3,136 +3,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE52C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75334C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022C62083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A512083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732010AbfB1Nun (ORCPT
+        id S1731608AbfB1Nwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:50:43 -0500
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:57400 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbfB1Num (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:50:42 -0500
-Received: from relay12.mail.gandi.net (unknown [217.70.178.232])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id BF2983A966C;
-        Thu, 28 Feb 2019 13:25:43 +0000 (UTC)
-Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id D9ADD20000F;
-        Thu, 28 Feb 2019 13:25:38 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, linux@armlinux.org.uk
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
-        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
-        nadavh@marvell.com, stefanc@marvell.com, ymarkman@marvell.com,
-        mw@semihalf.com
-Subject: [PATCH net-next 07/15] net: mvpp2: fix the computation of the RXQs
-Date:   Thu, 28 Feb 2019 14:21:20 +0100
-Message-Id: <20190228132128.30154-8-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190228132128.30154-1-antoine.tenart@bootlin.com>
-References: <20190228132128.30154-1-antoine.tenart@bootlin.com>
+        Thu, 28 Feb 2019 08:52:39 -0500
+Received: from smtp.asem.it ([151.1.184.197]:49741 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726003AbfB1Nwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 08:52:38 -0500
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG003723177.MSG 
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 14:52:33 +0100S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Thu, 28
+ Feb 2019 14:52:32 +0100
+Received: from flavio-x.asem.intra (172.16.17.161) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
+ Transport; Thu, 28 Feb 2019 14:52:32 +0100
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH v3] net: e1000e: add MAC address kernel cmd line parameter
+Date:   Thu, 28 Feb 2019 14:52:31 +0100
+Message-ID: <1551361951-1595-1-git-send-email-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1551361135-404-1-git-send-email-f.suligoi@asem.it>
+References: <1551361135-404-1-git-send-email-f.suligoi@asem.it>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A0B0208.5C77E7A1.0031,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch fixes the computation of RXQs being used by the PPv2 driver,
-which is set depending on the PPv2 engine version and the queue mode
-used. There are three cases:
+Sometimes, in some embedded systems boards (i.e. ARM boards),
+the NVM eeprom is not mounted, to save cost and space.
 
-- PPv2.1: 1 RXQ per CPU.
-- PPV2.2 with MVPP2_QDIST_MULTI_MODE: 1 RXQ per CPU.
-- PPv2.2 with MVPP2_QDIST_SINGLE_MODE: 1 RXQ is shared between the CPUs.
+In this case it is necessary to bypass the NVM management
+and directly force the MAC address using a kernel command-line
+parameter (macaddr).
 
-The PPv2 engine supports a maximum of 32 queues per port. This patch
-adds a check so that we do not overstep this maximum.
-
-It appeared the calculation was broken for PPv2.1 engines since
-f8c6ba8424b0, as PPv2.1 ports ended up with a single RXQ while they
-needed 4. This patch fixes it.
-
-Fixes: f8c6ba8424b0 ("net: mvpp2: use only one rx queue per port per CPU")
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  4 ++--
- .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 23 ++++++++++++-------
- 2 files changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-index 17ff330cce5f..687e011de5ef 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-@@ -549,8 +549,8 @@
- #define MVPP2_MAX_TSO_SEGS		300
- #define MVPP2_MAX_SKB_DESCS		(MVPP2_MAX_TSO_SEGS * 2 + MAX_SKB_FRAGS)
+v3: - move patch changelog in the right place
+v2: - e1000_probe: remove wrong newline in the middle of the local variable list
+v1: - written
+
+ drivers/net/ethernet/intel/e1000e/netdev.c | 49 +++++++++++++++++++-----------
+ 1 file changed, 32 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 189f231..34ab560 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -39,6 +39,10 @@ static int debug = -1;
+ module_param(debug, int, 0);
+ MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
  
--/* Default number of RXQs in use */
--#define MVPP2_DEFAULT_RXQ		1
-+/* Max number of RXQs per port */
-+#define MVPP2_PORT_MAX_RXQ		32
++static unsigned char macaddr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
++module_param_array(macaddr, byte, NULL, 0);
++MODULE_PARM_DESC(macaddr, "e1000e Ethernet MAC address");
++
+ static const struct e1000_info *e1000_info_tbl[] = {
+ 	[board_82571]		= &e1000_82571_info,
+ 	[board_82572]		= &e1000_82572_info,
+@@ -7232,27 +7236,38 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	 */
+ 	adapter->hw.mac.ops.reset_hw(&adapter->hw);
  
- /* Max number of Rx descriptors */
- #define MVPP2_MAX_RXD_MAX		1024
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 24cee6cbe309..9c6200a59910 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -4062,8 +4062,8 @@ static int mvpp2_multi_queue_vectors_init(struct mvpp2_port *port,
- 			snprintf(irqname, sizeof(irqname), "hif%d", i);
- 
- 		if (queue_mode == MVPP2_QDIST_MULTI_MODE) {
--			v->first_rxq = i * MVPP2_DEFAULT_RXQ;
--			v->nrxqs = MVPP2_DEFAULT_RXQ;
-+			v->first_rxq = i;
-+			v->nrxqs = 1;
- 		} else if (queue_mode == MVPP2_QDIST_SINGLE_MODE &&
- 			   i == (port->nqvecs - 1)) {
- 			v->first_rxq = 0;
-@@ -4156,8 +4156,7 @@ static int mvpp2_port_init(struct mvpp2_port *port)
- 	    MVPP2_MAX_PORTS * priv->max_port_rxqs)
- 		return -EINVAL;
- 
--	if (port->nrxqs % MVPP2_DEFAULT_RXQ ||
--	    port->nrxqs > priv->max_port_rxqs || port->ntxqs > MVPP2_MAX_TXQ)
-+	if (port->nrxqs > priv->max_port_rxqs || port->ntxqs > MVPP2_MAX_TXQ)
- 		return -EINVAL;
- 
- 	/* Disable port */
-@@ -4778,10 +4777,18 @@ static int mvpp2_port_probe(struct platform_device *pdev,
- 	}
- 
- 	ntxqs = MVPP2_MAX_TXQ;
--	if (priv->hw_version == MVPP22 && queue_mode == MVPP2_QDIST_MULTI_MODE)
--		nrxqs = MVPP2_DEFAULT_RXQ * num_possible_cpus();
--	else
--		nrxqs = MVPP2_DEFAULT_RXQ;
-+	if (priv->hw_version == MVPP22 && queue_mode == MVPP2_QDIST_SINGLE_MODE) {
-+		nrxqs = 1;
+-	/* systems with ASPM and others may see the checksum fail on the first
+-	 * attempt. Let's give it a few tries
+-	 */
+-	for (i = 0;; i++) {
+-		if (e1000_validate_nvm_checksum(&adapter->hw) >= 0)
+-			break;
+-		if (i == 2) {
+-			dev_err(&pdev->dev, "The NVM Checksum Is Not Valid\n");
+-			err = -EIO;
+-			goto err_eeprom;
++	/* If the MAC address is supplied by the bootloader, use it! */
++	if (!is_multicast_ether_addr(macaddr)) {
++		dev_info(&pdev->dev,
++			 "MAC address from kernel command line argument\n");
++		memcpy(adapter->hw.mac.addr, macaddr, netdev->addr_len);
++		memcpy(netdev->dev_addr,     macaddr, netdev->addr_len);
 +	} else {
-+		/* According to the PPv2.2 datasheet and our experiments on
-+		 * PPv2.1, RX queues have an allocation granularity of 4 (when
-+		 * more than a single one on PPv2.2).
-+		 * Round up to nearest multiple of 4.
++		/* systems with ASPM and others may see the checksum fail on
++		 * the first attempt. Let's give it a few tries
 +		 */
-+		nrxqs = (num_possible_cpus() + 3) & ~0x3;
-+		if (nrxqs > MVPP2_PORT_MAX_RXQ)
-+			nrxqs = MVPP2_PORT_MAX_RXQ;
++		dev_info(&pdev->dev, "MAC address from NVM\n");
++		for (i = 0;; i++) {
++			if (e1000_validate_nvm_checksum(&adapter->hw) >= 0)
++				break;
++			if (i == 2) {
++				dev_err(&pdev->dev,
++					"The NVM Checksum Is Not Valid\n");
++				err = -EIO;
++				goto err_eeprom;
++			}
+ 		}
+-	}
+ 
+-	e1000_eeprom_checks(adapter);
++		e1000_eeprom_checks(adapter);
+ 
+-	/* copy the MAC address */
+-	if (e1000e_read_mac_addr(&adapter->hw))
+-		dev_err(&pdev->dev,
+-			"NVM Read Error while reading MAC address\n");
++		/* copy the MAC address */
++		if (e1000e_read_mac_addr(&adapter->hw))
++			dev_err(&pdev->dev,
++				"NVM Read Error while reading MAC address\n");
+ 
+-	memcpy(netdev->dev_addr, adapter->hw.mac.addr, netdev->addr_len);
++		memcpy(netdev->dev_addr, adapter->hw.mac.addr,
++		       netdev->addr_len);
 +	}
  
- 	dev = alloc_etherdev_mqs(sizeof(*port), ntxqs, nrxqs);
- 	if (!dev)
+ 	if (!is_valid_ether_addr(netdev->dev_addr)) {
+ 		dev_err(&pdev->dev, "Invalid MAC Address: %pM\n",
 -- 
-2.20.1
+2.7.4
 
