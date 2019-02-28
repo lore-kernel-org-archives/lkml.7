@@ -2,141 +2,151 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3948C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF34C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF54A2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF132171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:11:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eFp1quFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731740AbfB1NKn (ORCPT
+        id S1732023AbfB1NLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:10:43 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53252 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727717AbfB1NKm (ORCPT
+        Thu, 28 Feb 2019 08:11:15 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:47952 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727717AbfB1NLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:10:42 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SD1Tuo127060
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 08:10:41 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxfhktdh3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 08:10:40 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 28 Feb 2019 13:10:38 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Feb 2019 13:10:34 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SDAXgk17891404
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Feb 2019 13:10:33 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3F185A4057;
-        Thu, 28 Feb 2019 13:10:33 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2356A4055;
-        Thu, 28 Feb 2019 13:10:32 +0000 (GMT)
-Received: from [9.152.224.140] (unknown [9.152.224.140])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Feb 2019 13:10:32 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v4 1/7] s390: ap: kvm: add PQAP interception for AQIC
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
- <1550849400-27152-2-git-send-email-pmorel@linux.ibm.com>
- <babf7884-35f1-2f2e-34dc-96d9190fd15b@linux.ibm.com>
- <e7ba5cb0-b254-7f73-bc59-ca2456ce7951@linux.ibm.com>
- <9f1d9241-39b9-adbc-d0e9-cb702e609cbc@linux.ibm.com>
- <4dc59125-7f96-cba8-651b-382ed8f8bff8@linux.ibm.com>
- <8526f468-9a4d-68d2-3868-0dad5ce16f46@linux.ibm.com>
- <6058a017-6404-af3c-62ef-2452214ac97c@de.ibm.com>
- <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Thu, 28 Feb 2019 14:10:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Feb 2019 08:11:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1dCsrev92yUWlX4d+Ar1uRdwfi+4D5obO9jb8ZJ/b+U=; b=eFp1quFw5OgV4mP9xZ5WPursg
+        peLdyjIrJzawQ6eUs188NJ9RykVtb+UT9TYFA9Ew/TDUEkZmdJIWyJ12pAbRKcLRGHsvqxnxS5DWf
+        2BCF7r/VVPnEIcWy74d2bz0sewEFC0QsX4mWmA/zNeXYUvsB2OLY/8HTSH8Hrx1y5s+5/mfQ3Sjqf
+        cp+1gQdd3U3wD5eGrlWFFOFFhEkdg0x1EWToMQnnwVdRozv2gJKcSbFPbJJ+PufcFCABUqhro7SPJ
+        yk0pgx899ZnsAaZjtHBjYIHLbVX6HBLEnoLeLi0oATG+FEPjm1VRvleWfxsTz/YMjl9FElDsK+2WQ
+        2UsPe3KFg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:54870)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1gzLSn-0000VK-Ue; Thu, 28 Feb 2019 13:11:02 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1gzLSl-0007QC-8b; Thu, 28 Feb 2019 13:10:59 +0000
+Date:   Thu, 28 Feb 2019 13:10:59 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: hdmi-codec: modifying params in hw_params() callback
+Message-ID: <20190228131059.i4nffuylja5p6tjv@shell.armlinux.org.uk>
+References: <20190228121516.swd3vweisgcxlvld@shell.armlinux.org.uk>
+ <421c1217-6ff6-6ca2-8169-db026284fb29@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19022813-0016-0000-0000-0000025C07A5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19022813-0017-0000-0000-000032B67534
-Message-Id: <dc483b20-8ade-2d5f-6a76-a2c5d2e72c57@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=866 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280091
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <421c1217-6ff6-6ca2-8169-db026284fb29@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 12:03, Christian Borntraeger wrote:
+On Thu, Feb 28, 2019 at 02:54:29PM +0200, Jyri Sarha wrote:
+> On 28/02/2019 14:15, Russell King - ARM Linux admin wrote:
+> > Hi all,
+> > 
+> > While looking at hdmi-codec issues, I spotted this code:
+> > 
+> > static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
+> >                                 struct snd_pcm_hw_params *params,
+> >                                 struct snd_soc_dai *dai)
+> > {
+> > ...
+> >         if (params_width(params) > 24)
+> >                 params->msbits = 24;
+> > 
+> > params->msbits is a parameter that is negotiated and refined by
+> > libasound, and is part of the ALSA constraint system.  The "Writing an
+> > ALSA driver" documentation says about the hw_params callback:
+> > 
+> > "This is called when the hardware parameter (``hw_params``) is set up
+> >  by the application, that is, once when the buffer size, the period
+> >  size, the format, etc. are defined for the pcm substream."
+> > 
+> > which suggests we should only be reading the parameters, not writing
+> > to them.
+> > 
+> > What's more is that the msbits is a parameter that is refined with
+> > userspace, so surely the above should be a declared constraint?
+> > 
 > 
-> 
-> On 28.02.2019 10:42, Christian Borntraeger wrote:
-> [...]
->>> Okay, let's go back to the genesis of this discussion; namely, my
->>> suggestion about moving the fc == 0x03 check into the hook code. If
->>> the vfio_ap module is not loaded, there will be no hook code. In that
->>> case, the check for the hook will fail and ultimately response code
->>> 0x01 will be set in the status word (which may not be the right thing
->>> to do?). You have not stated a single good reason for keeping this
->>> check, but I'm done with this silly argument. It certainly doesn't
->>> hurt anything.
->>
->> The instruction handler must handle the basic checks for the
->> instruction itself as outlined above.
->>
->> Do we want to allow QEMU to fully emulate everything (the  ECA_APIE case being off)?
->> The we should pass along everything to QEMU, but this is already done with the
->> ECA_APIE check, correct?
->>
->> Do we agree that when we are beyond the ECA_APIE check, that we do not emulate
->> in QEMU and we have enabled the AP instructions interpretion?
->> If yes then this has some implication:
->>
->> 1. ECA is on and we should only get PQAP interception for specific FC (namely 3).
->> 2. What we certainly should check is the facility bit of the guest (65) and reject fc==3
->> right away with a specification exception. I do not want the hook to mess with
->> the kvm cpu model. @Pierre would be good to actually check test_kvm_facility(vcpu->kvm, 65))
->> 3. What shall we do when fc == 0x3? We can certainly do the check here OR in the
->> hook. As long as we have only fc==3 this does not matter.
->>
->> Correct?
-> 
-> Thinking more about that, I think we should inject a specification exception for all
-> unknown FCc != 0x3. That would also qualify for keeping it in the instruction handler.
-> 
+> Certainly not a constraint. While HDMI can only pass up to 24-bit per
+> sample audio the most (or at least the two I have worked with) encoders
+> can take 32-bit wide (and probably wider) samples trough i2s. So the
+> system can play 32-bit samples, just the 4 LSB is ignored.
 
-May be return a privileged operation exception if issued from guest's 
-program state, but generally I agree with the idea of handling all PQAP 
-functions here.
+You have not explained why "not a constraint".  From the explanation
+that Mark gave me on IRC, msbits is the number of bits that the codec
+respects, whereas the sample bits is the number of bits in the sample.
+If sample bits - msbits != 0, then that is the number of bits ignored.
+Mark basically described it as "feel free to send me more than 24 bits
+but I'm ignoring the LSBs".
 
-Regards,
-Pierre
+If the msbits is limited to 24, then userspace gets to know about that
+limitation when negotiating with ALSA if it is a constraint.  If it
+isn't a constraint, userspace has no way to know.
+
+> Actually there is very little difference between the case of playing
+> 32-bit stereo audio with matching i2s bclk ratio, and playing 24-bit
+> stereo audio with 64-bit bclk ratio. Especially when the 4 LSB is anyway
+> ignored like in HDMI audio case.
+
+You mean 8 LSB throughout the above two paragraphs.
+
+> > Digging a bit deeper, ASoC passes a private copy of the params to each
+> > codec - a copy is made, then fixups for TDM slots are applied, followed
+> > by any topology fixups by the DAI link (be_hw_params_fixup) before the
+> > codec driver's hw_params() callback is made.  Afterwards, ASoC reads
+> > back the rate, channels and physical (memory) width and stores them
+> > in the codec's DAI structure.  The msbits are not read.
+> > 
+> > hdmi-codec also seems to do nothing with the msbits parameter other
+> > than the above code.
+> > 
+> > So, all in all, it seems that the above code limiting msbits is
+> > redundant - nothing will read this modified value.  Can we kill it?
+> > 
+> 
+> It certainly looks that way, so yes. In any case struct
+> snd_soc_dai_driver .playback.sig_bits = 24 should be all that is needed.
+
+This sets a constraint to limit msbits to 24 for any sample width
+in core ASoC code, doing exactly what you said "certainly not" to
+above.
+
+It also means that the quoted code in hdmi-codec's hw_params() is
+redundant for another reason.
+
+See the description of:
+snd_pcm_hw_constraint_msbits() in sound/core/pcm_lib.c,
+soc_pcm_set_msb() and soc_pcm_apply_msb() in sound/soc/soc-pcm.c.
+
+Can you please clarify, because there seems to be some confusion.
+
+Thanks.
 
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
