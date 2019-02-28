@@ -6,79 +6,84 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D567C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18D2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D122A2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B465B2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725995AbfB1FC6 (ORCPT
+        id S1726158AbfB1FER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 00:02:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49598 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725862AbfB1FC6 (ORCPT
+        Thu, 28 Feb 2019 00:04:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53110 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725862AbfB1FEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 00:02:58 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S4x9gm039337
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 00:02:56 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2qx8w08jmt-1
+        Thu, 28 Feb 2019 00:04:16 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S53iov103154
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 00:04:07 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qx4q1sspb-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 00:02:56 -0500
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 00:04:07 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
-        Thu, 28 Feb 2019 05:02:54 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 28 Feb 2019 05:04:04 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Feb 2019 05:02:51 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1S52oV428180604
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Feb 2019 05:02:50 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49E4352069;
-        Thu, 28 Feb 2019 05:02:50 +0000 (GMT)
+        Thu, 28 Feb 2019 05:04:02 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1S541Mt17236026
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 Feb 2019 05:04:01 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 672F7AE058;
+        Thu, 28 Feb 2019 05:04:01 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 16B3FAE045;
+        Thu, 28 Feb 2019 05:04:01 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9F4925204E;
-        Thu, 28 Feb 2019 05:02:49 +0000 (GMT)
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Feb 2019 05:04:01 +0000 (GMT)
 Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 701F2A0264;
-        Thu, 28 Feb 2019 16:02:48 +1100 (AEDT)
-Subject: Re: [PATCH 2/5] ocxl: Clean up printf formats
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id BD9DAA025F;
+        Thu, 28 Feb 2019 16:03:59 +1100 (AEDT)
+Subject: Re: [PATCH 3/5] ocxl: read_pasid never returns an error, so make it
+ void
 To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+Cc:     Greg Kurz <groug@kaod.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 References: <20190227045741.21412-1-alastair@au1.ibm.com>
- <20190227045741.21412-3-alastair@au1.ibm.com>
+ <20190227045741.21412-4-alastair@au1.ibm.com>
 From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Date:   Thu, 28 Feb 2019 16:02:48 +1100
+Date:   Thu, 28 Feb 2019 16:03:59 +1100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190227045741.21412-3-alastair@au1.ibm.com>
+In-Reply-To: <20190227045741.21412-4-alastair@au1.ibm.com>
 Content-Language: en-AU
 X-TM-AS-GCONF: 00
-x-cbid: 19022805-0008-0000-0000-000002C5D74A
+x-cbid: 19022805-0028-0000-0000-0000034DF377
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19022805-0009-0000-0000-000022322742
-Message-Id: <54602f3f-6ad8-e90b-3a69-48914bf86d61@au1.ibm.com>
+x-cbparentid: 19022805-0029-0000-0000-0000240C4D35
+Message-Id: <2f9993e1-eaad-263f-27eb-99175a34ff1f@au1.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_02:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280033
+ mlxlogscore=893 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902280034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -87,99 +92,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On 27/2/19 3:57 pm, Alastair D'Silva wrote:
 > From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> Use %# instead of using a literal '0x'
+> No need for a return value in read_pasid as it only returns 0.
 > 
 > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-
-Not hugely fussed either way, but today I learned about %#...
+> Reviewed-by: Greg Kurz <groug@kaod.org>
 
 Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 
 > ---
->   drivers/misc/ocxl/config.c  |  6 +++---
->   drivers/misc/ocxl/context.c |  2 +-
->   drivers/misc/ocxl/trace.h   | 10 +++++-----
->   3 files changed, 9 insertions(+), 9 deletions(-)
+>   drivers/misc/ocxl/config.c | 9 ++-------
+>   1 file changed, 2 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index 8f2c5d8bd2ee..0ee7856b033d 100644
+> index 0ee7856b033d..026ac2ac4f9c 100644
 > --- a/drivers/misc/ocxl/config.c
 > +++ b/drivers/misc/ocxl/config.c
-> @@ -178,9 +178,9 @@ static int read_dvsec_vendor(struct pci_dev *dev)
->   	pci_read_config_dword(dev, pos + OCXL_DVSEC_VENDOR_DLX_VERS, &dlx);
->   
->   	dev_dbg(&dev->dev, "Vendor specific DVSEC:\n");
-> -	dev_dbg(&dev->dev, "  CFG version = 0x%x\n", cfg);
-> -	dev_dbg(&dev->dev, "  TLX version = 0x%x\n", tlx);
-> -	dev_dbg(&dev->dev, "  DLX version = 0x%x\n", dlx);
-> +	dev_dbg(&dev->dev, "  CFG version = %#x\n", cfg);
-> +	dev_dbg(&dev->dev, "  TLX version = %#x\n", tlx);
-> +	dev_dbg(&dev->dev, "  DLX version = %#x\n", dlx);
+> @@ -68,7 +68,7 @@ static int find_dvsec_afu_ctrl(struct pci_dev *dev, u8 afu_idx)
 >   	return 0;
 >   }
 >   
-> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-> index c10a940e3b38..3498a0199bde 100644
-> --- a/drivers/misc/ocxl/context.c
-> +++ b/drivers/misc/ocxl/context.c
-> @@ -134,7 +134,7 @@ static vm_fault_t ocxl_mmap_fault(struct vm_fault *vmf)
->   	vm_fault_t ret;
+> -static int read_pasid(struct pci_dev *dev, struct ocxl_fn_config *fn)
+> +static void read_pasid(struct pci_dev *dev, struct ocxl_fn_config *fn)
+>   {
+>   	u16 val;
+>   	int pos;
+> @@ -89,7 +89,6 @@ static int read_pasid(struct pci_dev *dev, struct ocxl_fn_config *fn)
+>   out:
+>   	dev_dbg(&dev->dev, "PASID capability:\n");
+>   	dev_dbg(&dev->dev, "  Max PASID log = %d\n", fn->max_pasid_log);
+> -	return 0;
+>   }
 >   
->   	offset = vmf->pgoff << PAGE_SHIFT;
-> -	pr_debug("%s: pasid %d address 0x%lx offset 0x%llx\n", __func__,
-> +	pr_debug("%s: pasid %d address %#lx offset %#llx\n", __func__,
->   		ctx->pasid, vmf->address, offset);
+>   static int read_dvsec_tl(struct pci_dev *dev, struct ocxl_fn_config *fn)
+> @@ -205,11 +204,7 @@ int ocxl_config_read_function(struct pci_dev *dev, struct ocxl_fn_config *fn)
+>   {
+>   	int rc;
 >   
->   	if (offset < ctx->afu->irq_base_offset)
-> diff --git a/drivers/misc/ocxl/trace.h b/drivers/misc/ocxl/trace.h
-> index bcb7ff330c1e..8d2f53812edd 100644
-> --- a/drivers/misc/ocxl/trace.h
-> +++ b/drivers/misc/ocxl/trace.h
-> @@ -28,7 +28,7 @@ DECLARE_EVENT_CLASS(ocxl_context,
->   		__entry->tidr = tidr;
->   	),
+> -	rc = read_pasid(dev, fn);
+> -	if (rc) {
+> -		dev_err(&dev->dev, "Invalid PASID configuration: %d\n", rc);
+> -		return -ENODEV;
+> -	}
+> +	read_pasid(dev, fn);
 >   
-> -	TP_printk("linux pid=%d spa=0x%p pasid=0x%x pidr=0x%x tidr=0x%x",
-> +	TP_printk("linux pid=%d spa=%p pasid=%#x pidr=%#x tidr=%#x",
->   		__entry->pid,
->   		__entry->spa,
->   		__entry->pasid,
-> @@ -61,7 +61,7 @@ TRACE_EVENT(ocxl_terminate_pasid,
->   		__entry->rc = rc;
->   	),
->   
-> -	TP_printk("pasid=0x%x rc=%d",
-> +	TP_printk("pasid=%#x rc=%d",
->   		__entry->pasid,
->   		__entry->rc
->   	)
-> @@ -87,7 +87,7 @@ DECLARE_EVENT_CLASS(ocxl_fault_handler,
->   		__entry->tfc = tfc;
->   	),
->   
-> -	TP_printk("spa=%p pe=0x%llx dsisr=0x%llx dar=0x%llx tfc=0x%llx",
-> +	TP_printk("spa=%p pe=%#llx dsisr=%#llx dar=%#llx tfc=%#llx",
->   		__entry->spa,
->   		__entry->pe,
->   		__entry->dsisr,
-> @@ -127,7 +127,7 @@ TRACE_EVENT(ocxl_afu_irq_alloc,
->   		__entry->irq_offset = irq_offset;
->   	),
->   
-> -	TP_printk("pasid=0x%x irq_id=%d virq=%u hw_irq=%d irq_offset=0x%llx",
-> +	TP_printk("pasid=%#x irq_id=%d virq=%u hw_irq=%d irq_offset=0x%llx",
->   		__entry->pasid,
->   		__entry->irq_id,
->   		__entry->virq,
-> @@ -150,7 +150,7 @@ TRACE_EVENT(ocxl_afu_irq_free,
->   		__entry->irq_id = irq_id;
->   	),
->   
-> -	TP_printk("pasid=0x%x irq_id=%d",
-> +	TP_printk("pasid=%#x irq_id=%d",
->   		__entry->pasid,
->   		__entry->irq_id
->   	)
+>   	rc = read_dvsec_tl(dev, fn);
+>   	if (rc) {
 > 
 
 -- 
