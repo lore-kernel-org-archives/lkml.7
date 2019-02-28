@@ -2,151 +2,110 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF34C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581A3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF132171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23889206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:12:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eFp1quFw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tBdU7GTQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732023AbfB1NLP (ORCPT
+        id S1731161AbfB1NMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:11:15 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:47952 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbfB1NLO (ORCPT
+        Thu, 28 Feb 2019 08:12:36 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38071 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727717AbfB1NMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:11:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1dCsrev92yUWlX4d+Ar1uRdwfi+4D5obO9jb8ZJ/b+U=; b=eFp1quFw5OgV4mP9xZ5WPursg
-        peLdyjIrJzawQ6eUs188NJ9RykVtb+UT9TYFA9Ew/TDUEkZmdJIWyJ12pAbRKcLRGHsvqxnxS5DWf
-        2BCF7r/VVPnEIcWy74d2bz0sewEFC0QsX4mWmA/zNeXYUvsB2OLY/8HTSH8Hrx1y5s+5/mfQ3Sjqf
-        cp+1gQdd3U3wD5eGrlWFFOFFhEkdg0x1EWToMQnnwVdRozv2gJKcSbFPbJJ+PufcFCABUqhro7SPJ
-        yk0pgx899ZnsAaZjtHBjYIHLbVX6HBLEnoLeLi0oATG+FEPjm1VRvleWfxsTz/YMjl9FElDsK+2WQ
-        2UsPe3KFg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:54870)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1gzLSn-0000VK-Ue; Thu, 28 Feb 2019 13:11:02 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1gzLSl-0007QC-8b; Thu, 28 Feb 2019 13:10:59 +0000
-Date:   Thu, 28 Feb 2019 13:10:59 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: hdmi-codec: modifying params in hw_params() callback
-Message-ID: <20190228131059.i4nffuylja5p6tjv@shell.armlinux.org.uk>
-References: <20190228121516.swd3vweisgcxlvld@shell.armlinux.org.uk>
- <421c1217-6ff6-6ca2-8169-db026284fb29@ti.com>
+        Thu, 28 Feb 2019 08:12:36 -0500
+Received: by mail-it1-f195.google.com with SMTP id l66so15536282itg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:12:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=xKipXMEM/SXog4j6oVyeMsM28FN3V+TT0xo7uw044oI=;
+        b=tBdU7GTQwlO9vhl3VjDtsoRyjOCVh2ajdEnI5XczrFDpoYTDhgJkOpyEKYtIfxMJFW
+         C7ceRhIkgdFqC0SbO8mD7iD6Gp937qBoWdivKurFMMwZ1xwIaNZtUWH0UT7R1g9G0f+G
+         9HRvHtIhSpYiTMZzEBOnNE5NKxBVvEdAgnkNVnCRZCdhQpboHko+vPB6et3XNkTg4zWk
+         m8ncopuI/yQbP7n7xmDE/YFr5TCIWWLOoSU6r6wKbGpnRln4wz/wjhNbWgAoUEAnfu0P
+         35xzckg7NZwuzUeFj9Cb8mX3lFUyd7UftP9WWqhLtt6jwXa4m9R/bDPXqV0G0/ZgWs97
+         O40A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=xKipXMEM/SXog4j6oVyeMsM28FN3V+TT0xo7uw044oI=;
+        b=BJANMPix/3ACSdcQCex2785dkLBXNWpOk3akqyVB4EptktUdjekX1oYd42rUrGZvVk
+         8h64o2rQYz2zfB3sbqyymVTJJ6G/lQTrI1yYm4h7aMb+xXWjuHaOqz2bm0lu4tbUWW3o
+         cC3Ho5dvD+u4i/EuQDd8edw9SypQ8fLbSy7LjW82XmGcoLQ/Hpw6zHo+Zu7jdo9VNwQf
+         sCz8zenWb/TfNpObzt3upEwRlaFn+myKEwmXdLwu4si0y+PkYdTDPQPIf/2ZXHLct8Y1
+         vqesoGYVs3gRRYfc3NRZAMYzcShfW467tnBXAvmDkWQR0EgVS5P6TXXzA9b5iTtAlZ8k
+         BJ3g==
+X-Gm-Message-State: AHQUAuaT5LkDtWgFaypZyXlQQZQU66FQ9vXbFl2J/wLh5UpgYSpqLWxQ
+        s6araG+t9ltssT2ZZs3LK0+dVIpZvcWxiIk0gI26vA==
+X-Google-Smtp-Source: AHgI3IYhN1Tf9wSbp+kmMAUmWHkKJ3H1RY41+OBtG6UuvutXEBBYmSvt4CQ42BeAN2dCVTl7/jh9+S+Mie6BS6p4/D0=
+X-Received: by 2002:a05:6638:2a1:: with SMTP id d1mr4544444jaq.2.1551359555232;
+ Thu, 28 Feb 2019 05:12:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <421c1217-6ff6-6ca2-8169-db026284fb29@ti.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Thu, 28 Feb 2019 14:12:24 +0100
+Message-ID: <CAHUa44FUFCW82U3+a+t1M0u6va+D3PuGGBU8cPb_D055hzu3DQ@mail.gmail.com>
+Subject: [GIT PULL] tee subsys for v5.1
+To:     arm-soc <arm@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 02:54:29PM +0200, Jyri Sarha wrote:
-> On 28/02/2019 14:15, Russell King - ARM Linux admin wrote:
-> > Hi all,
-> > 
-> > While looking at hdmi-codec issues, I spotted this code:
-> > 
-> > static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
-> >                                 struct snd_pcm_hw_params *params,
-> >                                 struct snd_soc_dai *dai)
-> > {
-> > ...
-> >         if (params_width(params) > 24)
-> >                 params->msbits = 24;
-> > 
-> > params->msbits is a parameter that is negotiated and refined by
-> > libasound, and is part of the ALSA constraint system.  The "Writing an
-> > ALSA driver" documentation says about the hw_params callback:
-> > 
-> > "This is called when the hardware parameter (``hw_params``) is set up
-> >  by the application, that is, once when the buffer size, the period
-> >  size, the format, etc. are defined for the pcm substream."
-> > 
-> > which suggests we should only be reading the parameters, not writing
-> > to them.
-> > 
-> > What's more is that the msbits is a parameter that is refined with
-> > userspace, so surely the above should be a declared constraint?
-> > 
-> 
-> Certainly not a constraint. While HDMI can only pass up to 24-bit per
-> sample audio the most (or at least the two I have worked with) encoders
-> can take 32-bit wide (and probably wider) samples trough i2s. So the
-> system can play 32-bit samples, just the 4 LSB is ignored.
+Hello arm-soc maintainers,
 
-You have not explained why "not a constraint".  From the explanation
-that Mark gave me on IRC, msbits is the number of bits that the codec
-respects, whereas the sample bits is the number of bits in the sample.
-If sample bits - msbits != 0, then that is the number of bits ignored.
-Mark basically described it as "feel free to send me more than 24 bits
-but I'm ignoring the LSBs".
+Please pull these small TEE subsystem updates. The license for two .h
+files in OP-TEE driver is clarified with a dual license. The kernel
+space tee client interface is complemented with cancellation support.
 
-If the msbits is limited to 24, then userspace gets to know about that
-limitation when negotiating with ALSA if it is a constraint.  If it
-isn't a constraint, userspace has no way to know.
+I've based this pull request on the last pull request I did (now in
+the drivers/tee branch) in order to avoid a conflict with "tee: add
+cancellation support to client interface".
 
-> Actually there is very little difference between the case of playing
-> 32-bit stereo audio with matching i2s bclk ratio, and playing 24-bit
-> stereo audio with 64-bit bclk ratio. Especially when the 4 LSB is anyway
-> ignored like in HDMI audio case.
+Thanks,
+Jens
 
-You mean 8 LSB throughout the above two paragraphs.
+The following changes since commit 5fe8b1cc6a03c46b3061e808256d39dcebd0d0f0:
 
-> > Digging a bit deeper, ASoC passes a private copy of the params to each
-> > codec - a copy is made, then fixups for TDM slots are applied, followed
-> > by any topology fixups by the DAI link (be_hw_params_fixup) before the
-> > codec driver's hw_params() callback is made.  Afterwards, ASoC reads
-> > back the rate, channels and physical (memory) width and stores them
-> > in the codec's DAI structure.  The msbits are not read.
-> > 
-> > hdmi-codec also seems to do nothing with the msbits parameter other
-> > than the above code.
-> > 
-> > So, all in all, it seems that the above code limiting msbits is
-> > redundant - nothing will read this modified value.  Can we kill it?
-> > 
-> 
-> It certainly looks that way, so yes. In any case struct
-> snd_soc_dai_driver .playback.sig_bits = 24 should be all that is needed.
+  hwrng: add OP-TEE based rng driver (2019-02-01 15:12:46 +0100)
 
-This sets a constraint to limit msbits to 24 for any sample width
-in core ASoC code, doing exactly what you said "certainly not" to
-above.
+are available in the Git repository at:
 
-It also means that the quoted code in hdmi-codec's hw_params() is
-redundant for another reason.
+  https://git.linaro.org/people/jens.wiklander/linux-tee.git
+tags/tee-misc-for-v5.1
 
-See the description of:
-snd_pcm_hw_constraint_msbits() in sound/core/pcm_lib.c,
-soc_pcm_set_msb() and soc_pcm_apply_msb() in sound/soc/soc-pcm.c.
+for you to fetch changes up to 32356d309c22a9497e612ed437d66407e15935f3:
 
-Can you please clarify, because there seems to be some confusion.
+  tee: optee: update optee_msg.h and optee_smc.h to dual license
+(2019-02-28 13:49:29 +0100)
 
-Thanks.
+----------------------------------------------------------------
+OP-TEE driver
+- dual license for optee_msg.h and optee_smc.h
+Generic
+- add cancellation support to client interface
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+----------------------------------------------------------------
+Igor Opaniuk (1):
+      tee: add cancellation support to client interface
+
+Jerome Forissier (1):
+      tee: optee: update optee_msg.h and optee_smc.h to dual license
+
+ drivers/tee/optee/optee_msg.h | 26 ++------------------------
+ drivers/tee/optee/optee_smc.h | 26 ++------------------------
+ drivers/tee/tee_core.c        |  9 +++++++++
+ include/linux/tee_drv.h       | 12 ++++++++++++
+ 4 files changed, 25 insertions(+), 48 deletions(-)
