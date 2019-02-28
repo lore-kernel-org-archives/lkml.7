@@ -2,95 +2,101 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F52FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62176C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D4E2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:08:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iD84Zm1T"
+	by mail.kernel.org (Postfix) with ESMTP id 2B6D5205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbfB1FIx (ORCPT
+        id S1730766AbfB1FNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 00:08:53 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:48266 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725899AbfB1FGx (ORCPT
+        Thu, 28 Feb 2019 00:13:42 -0500
+Received: from mx137-tc.baidu.com ([61.135.168.137]:33502 "EHLO
+        tc-sys-mailedm05.tc.baidu.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725899AbfB1FNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 00:06:53 -0500
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S53Kde016111
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 21:06:52 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=tFVVChH7wjw/HyGjWwqnrnZMAP7HYyt8faJwZcmAEfc=;
- b=iD84Zm1TwWdjW8OrJmthymi8mnw+F0WfQwblCE0cvmgk4dfpImG67SYMD4ZHxFAtPu5h
- RMtRUqVrXCaJ7Wg/B08BwNciE8Uthqa726E8gkO5YKoy1fMsB3TpmdqXbkUYoI73OxXs
- ot5ADM8F5oZ6b130XkR7+fK6Mq9KV6HzPu0= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2qx7ej08sp-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 21:06:52 -0800
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1531.3;
- Wed, 27 Feb 2019 21:06:50 -0800
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 2575962E2B4A; Wed, 27 Feb 2019 21:06:49 -0800 (PST)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v5 perf,bpf 01/15] perf, bpf: consider events with attr.bpf_event as side-band events
-Date:   Wed, 27 Feb 2019 21:06:29 -0800
-Message-ID: <20190228050643.958685-2-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190228050643.958685-1-songliubraving@fb.com>
-References: <20190228050643.958685-1-songliubraving@fb.com>
-X-FB-Internal: Safe
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_02:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+        Thu, 28 Feb 2019 00:13:41 -0500
+Received: from localhost (cp01-cos-dev01.cp01.baidu.com [10.92.119.46])
+        by tc-sys-mailedm05.tc.baidu.com (Postfix) with ESMTP id F3AF31EBA004;
+        Thu, 28 Feb 2019 13:13:26 +0800 (CST)
+From:   Li RongQing <lirongqing@baidu.com>
+To:     netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sboyd@kernel.org, tglx@linutronix.de, john.stultz@linaro.org
+Subject: [PATCH][v2] time: Introduce jiffies64_to_msecs()
+Date:   Thu, 28 Feb 2019 13:13:26 +0800
+Message-Id: <1551330806-12502-1-git-send-email-lirongqing@baidu.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Events with bpf_event should be considered as side-band event, as they
-carry information about BPF programs.
+there is a similar helper in net/netfilter/nf_tables_api.c,
+this maybe become a common request someday, so move it to
+time.c
 
-Fixes: 6ee52e2a3fe4 ("perf, bpf: Introduce PERF_RECORD_BPF_EVENT")
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
 ---
- kernel/events/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ v1-->v2: using jiffies64_to_msecs in nf_tables_api.c
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 795bfab6f8a3..6a17584810ca 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4238,7 +4238,8 @@ static bool is_sb_event(struct perf_event *event)
- 	if (attr->mmap || attr->mmap_data || attr->mmap2 ||
- 	    attr->comm || attr->comm_exec ||
- 	    attr->task || attr->ksymbol ||
--	    attr->context_switch)
-+	    attr->context_switch ||
-+	    attr->bpf_event)
- 		return true;
- 	return false;
+ include/linux/jiffies.h       |  1 +
+ kernel/time/time.c            | 10 ++++++++++
+ net/netfilter/nf_tables_api.c |  4 +---
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
+index fa928242567d..1b6d31da7cbc 100644
+--- a/include/linux/jiffies.h
++++ b/include/linux/jiffies.h
+@@ -297,6 +297,7 @@ static inline u64 jiffies_to_nsecs(const unsigned long j)
  }
+ 
+ extern u64 jiffies64_to_nsecs(u64 j);
++extern u64 jiffies64_to_msecs(u64 j);
+ 
+ extern unsigned long __msecs_to_jiffies(const unsigned int m);
+ #if HZ <= MSEC_PER_SEC && !(MSEC_PER_SEC % HZ)
+diff --git a/kernel/time/time.c b/kernel/time/time.c
+index 2edb5088a70b..0083eb711fb7 100644
+--- a/kernel/time/time.c
++++ b/kernel/time/time.c
+@@ -719,6 +719,16 @@ u64 jiffies64_to_nsecs(u64 j)
+ }
+ EXPORT_SYMBOL(jiffies64_to_nsecs);
+ 
++u64 jiffies64_to_msecs(const u64 j)
++{
++#if HZ <= MSEC_PER_SEC && !(MSEC_PER_SEC % HZ)
++	return (MSEC_PER_SEC / HZ) * j;
++#else
++	return div_u64(j * HZ_TO_MSEC_NUM, HZ_TO_MSEC_DEN);
++#endif
++}
++EXPORT_SYMBOL(jiffies64_to_msecs);
++
+ /**
+  * nsecs_to_jiffies64 - Convert nsecs in u64 to jiffies64
+  *
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index e1a88ba2249e..8763b2798788 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -3184,9 +3184,7 @@ static int nf_msecs_to_jiffies64(const struct nlattr *nla, u64 *result)
+ 
+ static __be64 nf_jiffies64_to_msecs(u64 input)
+ {
+-	u64 ms = jiffies64_to_nsecs(input);
+-
+-	return cpu_to_be64(div_u64(ms, NSEC_PER_MSEC));
++	return cpu_to_be64(jiffies64_to_msecs(input));
+ }
+ 
+ static int nf_tables_fill_set(struct sk_buff *skb, const struct nft_ctx *ctx,
 -- 
-2.17.1
+2.16.2
 
