@@ -2,127 +2,160 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCE8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E54EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372F12171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78072171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:33:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tDAzVIu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732546AbfB1MdF (ORCPT
+        id S1732565AbfB1MdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 07:33:05 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55172 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726534AbfB1MdF (ORCPT
+        Thu, 28 Feb 2019 07:33:22 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34937 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfB1MdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 07:33:05 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SCTqoF116389
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 07:33:04 -0500
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxdymd9a8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 07:33:03 -0500
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Thu, 28 Feb 2019 12:33:02 -0000
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Feb 2019 12:32:58 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SCWvhx21299350
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Feb 2019 12:32:58 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA460B2064;
-        Thu, 28 Feb 2019 12:32:57 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 84842B206A;
-        Thu, 28 Feb 2019 12:32:54 +0000 (GMT)
-Received: from [9.199.36.171] (unknown [9.199.36.171])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Feb 2019 12:32:54 +0000 (GMT)
-Subject: Re: [PATCH 2/2] mm/dax: Don't enable huge dax mapping by default
-To:     Jan Kara <jack@suse.cz>
-Cc:     akpm@linux-foundation.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        mpe@ellerman.id.au, Ross Zwisler <zwisler@kernel.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com>
- <20190228083522.8189-2-aneesh.kumar@linux.ibm.com>
- <20190228094011.GB22210@quack2.suse.cz>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Date:   Thu, 28 Feb 2019 18:02:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Feb 2019 07:33:22 -0500
+Received: by mail-qt1-f193.google.com with SMTP id p48so23231630qtk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:33:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UCpcITDh37pB7hTzOvWzBVVS5sQcqpETOzj+ndabSAI=;
+        b=tDAzVIu7UPnEItgZdOmZpDqdR14vcPQpq1hQQ+ltLmGXMW4uzgwvJ6Srn8oua14ZIm
+         uqriMOcao0NTyRGv48KhV4ltBJjAd6hd6M3TNsDUjj0XTpvHxW5YCRd/6WDCNxu/BqBj
+         FrgSif8Czyb5kuQCVs12hW5vjqESkTsROafbojk0oRHoGcUnK2cXGw4uBF/8N5fKMrRo
+         aScRaDuhNg6HEpqkjpSTRSw7ga1jkmkRq4/y6MSz48sZBbfH8eOlcAO8Nu3yenifT+SY
+         VucASk1oZb19A6aKs/3IDNQbMqWfIBDVMJfP5Th4zoHQgN2l5aaxbrURBiIlij3i8fcy
+         KsHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UCpcITDh37pB7hTzOvWzBVVS5sQcqpETOzj+ndabSAI=;
+        b=k7dJOtI39T1o2cj93+Byd5HSo1U/4L0xXqjxutujtJEHhmsKqqngyq/mWJwLYY/dUS
+         8G19vWNQfu2Kn+I0rH7rRu+Y4QVNkn0RUKXUn4NkU0LZil/nkyQqetMUSai0/Jd12taA
+         9K/zLv7Kj/29kPrkKXwJfSN1AFjnf/mlRhz0i64WOCJk+MoGwCzfuQ1o9JaQNQ5RBhX1
+         DD/0vc4PO0XcdUP+OxDTbmFhYacWxFQgwPzzXRLyItbFtYJCyvR5HU6JkLtTHdu1vM7N
+         swZtU8jmyYZW1rP7SZ7eRut3uOnpPggxYQOGXJ/Kx8lXkd2R8UMsPOqunm7Ca2BmPXEi
+         xRuw==
+X-Gm-Message-State: APjAAAVdJM8if3zAZ/poBwisp19MjeZunkGP6OznckSVbzoDpN/Eo1e1
+        oBQRbHLW79hY2+a54DRZMW8lCgbZPCKzTSNqErw=
+X-Google-Smtp-Source: APXvYqzgWyKlCUTixfA3FK9+IfuD5TXPoPz/A7qrcbGrGVWzrjcSUSQiYMk8mbtKXySJf8C4tNIspT8cca5zLzIqZls=
+X-Received: by 2002:a0c:95c9:: with SMTP id t9mr6246378qvt.220.1551357200496;
+ Thu, 28 Feb 2019 04:33:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190228094011.GB22210@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19022812-0072-0000-0000-000004017CE6
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010679; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01167572; UDB=6.00609977; IPR=6.00948186;
- MB=3.00025780; MTD=3.00000008; XFM=3.00000015; UTC=2019-02-28 12:33:02
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19022812-0073-0000-0000-00004B54013E
-Message-Id: <2452a0b6-a90e-52b8-cb9f-0b5a7fafbe64@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=985 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280087
+References: <1550999629-31791-1-git-send-email-rushikesh.s.kadam@intel.com>
+In-Reply-To: <1550999629-31791-1-git-send-email-rushikesh.s.kadam@intel.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 28 Feb 2019 13:33:09 +0100
+Message-ID: <CAFqH_53uR6fJepJ7s9gYBFSE=0oviaFOgn=h0KcEjKwiTu+Btw@mail.gmail.com>
+Subject: Re: [PATCH] cros_ec: instantiate properly Intel ISH MCU device
+To:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Gwendal Grignou <gwendal@google.com>,
+        Jett Rink <jettrink@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/19 3:10 PM, Jan Kara wrote:
-> On Thu 28-02-19 14:05:22, Aneesh Kumar K.V wrote:
->> Add a flag to indicate the ability to do huge page dax mapping. On architecture
->> like ppc64, the hypervisor can disable huge page support in the guest. In
->> such a case, we should not enable huge page dax mapping. This patch adds
->> a flag which the architecture code will update to indicate huge page
->> dax mapping support.
->>
->> Architectures mostly do transparent_hugepage_flag = 0; if they can't
->> do hugepages. That also takes care of disabling dax hugepage mapping
->> with this change.
->>
->> Without this patch we get the below error with kvm on ppc64.
->>
->> [  118.849975] lpar: Failed hash pte insert with error -4
->>
->> NOTE: The patch also use
->>
->> echo never > /sys/kernel/mm/transparent_hugepage/enabled
->> to disable dax huge page mapping.
->>
->> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> 
-> Added Dan to CC for opinion. I kind of fail to see why you don't use
-> TRANSPARENT_HUGEPAGE_FLAG for this. I know that technically DAX huge pages
-> and normal THPs are different things but so far we've tried to avoid making
-> that distinction visible to userspace.
+Hi,
 
+Based on the discussion we had, only some few comments.
 
-I would also like to use the same flag. Was not sure whether it was ok. 
-In fact that is one of the reason I hooked this to 
-/sys/kernel/mm/transparent_hugepage/enabled. If we are ok with using 
-same flag, we can kill the vma_is_dax() check completely.
+Missatge de Rushikesh S Kadam <rushikesh.s.kadam@intel.com> del dia
+dg., 24 de febr. 2019 a les 10:15:
+>
+> Intel Integrated Sensor Hub (ISH) is also a MCU running EC
+> having feature bit EC_FEATURE_ISH. Instantiate it as a special
+> CrOS EC device with device name 'cros_ish'.
+>
+> Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+> ---
+>  drivers/mfd/cros_ec_dev.c            | 10 ++++++++++
+>  include/linux/mfd/cros_ec.h          |  1 +
+>  include/linux/mfd/cros_ec_commands.h |  2 ++
 
+Better if you use the "mfd: cros_ec:" prefix in the next version so
+it's clear that this should go through the MFD tree.
 
--aneesh
+>  3 files changed, 13 insertions(+)
+>
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index 2d0fee4..be499b8 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -414,6 +414,16 @@ static int ec_device_probe(struct platform_device *pdev)
+>         device_initialize(&ec->class_dev);
+>         cdev_init(&ec->cdev, &fops);
+>
+> +       /* check whether this is actually a Intel ISH rather than an EC */
 
+"Check whether this is actually an Integrated Sensor Hub (ISH) rather
+than an EC"?
+
+> +       if (cros_ec_check_features(ec, EC_FEATURE_ISH)) {
+> +               dev_info(dev, "Intel ISH MCU detected.\n");
+
+ dev_info(dev, "CrOS ISH MCU detected.\n"); ?
+
+> +               /*
+> +                * Help userspace differentiating ECs from ISH MCU,
+> +                * regardless of the probing order.
+> +                */
+> +               ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
+> +       }
+> +
+>         /*
+>          * Add the class device
+>          * Link to the character device for creating the /dev entry
+> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+> index de8b588..00c5765 100644
+> --- a/include/linux/mfd/cros_ec.h
+> +++ b/include/linux/mfd/cros_ec.h
+> @@ -24,6 +24,7 @@
+>
+>  #define CROS_EC_DEV_NAME "cros_ec"
+>  #define CROS_EC_DEV_PD_NAME "cros_pd"
+> +#define CROS_EC_DEV_ISH_NAME "cros_ish"
+>
+>  /*
+>   * The EC is unresponsive for a time after a reboot command.  Add a
+> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
+> index fc91082..9276c3c 100644
+> --- a/include/linux/mfd/cros_ec_commands.h
+> +++ b/include/linux/mfd/cros_ec_commands.h
+> @@ -856,6 +856,8 @@ enum ec_feature_code {
+>         EC_FEATURE_RTC = 27,
+>         /* EC supports CEC commands */
+>         EC_FEATURE_CEC = 35,
+> +       /* The MCU is an Intel Integrated Sensor Hub */
+> +       EC_FEATURE_ISH = 40,
+
+Just a note that we will have a trivial conflict to solve with
+https://lkml.org/lkml/2019/2/27/723
+
+>  };
+>
+>  #define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
+> --
+> 1.9.1
+>
+
+Best regards,
+Enric
