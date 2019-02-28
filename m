@@ -6,47 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AA4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D43C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20BC4218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA08218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366856;
-	bh=R4Ibw4xwOaOwUXtb89iDuGlYMo8gQCFV4j1HHjQffYs=;
+	s=default; t=1551366858;
+	bh=Qf41FU4ZnYBsUeVlYgl8dl1q98AeXfui78CUWkw5Dak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tX1PF5E+nCcLR1pU5SWBlkUcgF0R+faG1VW6bZXDZWytIYFfoMUNMInif6qHvwxus
-	 SpEXb8mi2DEejfFgmPGjHo7sPh2st2tkOrHQ2H0a7Z+NpQ0eT5APnBuo47ZJp+xxf4
-	 Kgm8pOZ7kJUPq6pUZmgUVsqysAsgcEqMvLAPPzF0=
+	b=twfQtT4G1R9vhWO1CnwSi6CwQtKrYaL3WJzKTqAXzpfvGF+CSCAsl+lYZC9Pq4I4c
+	 A68luAQ3ieTnVeBOCzUOEfmm6E0THdKfblCIdn/10BtUnsG0uwRpbNdLw7MXnbPjsr
+	 /O/X6xNzAGWP+IQ7ZlizkfVKnDWyurgb67noaEtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388253AbfB1POP (ORCPT
+        id S2388655AbfB1POR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:14:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48644 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:14:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388621AbfB1POJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:14:09 -0500
+        id S2388624AbfB1POL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:14:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AED220C01;
-        Thu, 28 Feb 2019 15:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 445F1218D8;
+        Thu, 28 Feb 2019 15:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366848;
-        bh=R4Ibw4xwOaOwUXtb89iDuGlYMo8gQCFV4j1HHjQffYs=;
+        s=default; t=1551366851;
+        bh=Qf41FU4ZnYBsUeVlYgl8dl1q98AeXfui78CUWkw5Dak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhfVoGMzxzk7m4137IdcQnthBnQf1xT3yy0tyBn7LpTwio1lkM72FVxPbv5omqT2N
-         Nf7nNLKIpj5gca7jInk7hE7b83cW17yJ7Ar9IdrH7IUWA7L1EbPxyLBrEJYSOvYGiH
-         M5jmtNT0cOJhl1QafA8JkeUmyOBnvd7xkEAK9cCQ=
+        b=bXg4s51JwJxTngahLA4GsmYiIWgvrNPv5Z2PVMQ0d6aMwTa+3EDji1mMnbCLjpGZE
+         eXymKBnXjvmy8codx8C7CT0SET4/ly0ZsWGRISGdWqXnv9wusDSCiWKTRxoNjiaKsR
+         qNgM7l5X0gvdFij1qGtVlOl8UTifLIdV+Ako1R3o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 16/36] relay: check return of create_buf_file() properly
-Date:   Thu, 28 Feb 2019 10:13:17 -0500
-Message-Id: <20190228151337.12176-16-sashal@kernel.org>
+Cc:     Martynas Pumputis <m@lambda.lt>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 18/36] bpf, selftests: fix handling of sparse CPU allocations
+Date:   Thu, 28 Feb 2019 10:13:19 -0500
+Message-Id: <20190228151337.12176-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
 References: <20190228151337.12176-1-sashal@kernel.org>
@@ -58,52 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Martynas Pumputis <m@lambda.lt>
 
-[ Upstream commit 2c1cf00eeacb784781cf1c9896b8af001246d339 ]
+[ Upstream commit 1bb54c4071f585ebef56ce8fdfe6026fa2cbcddd ]
 
-If create_buf_file() returns an error, don't try to reference it later
-as a valid dentry pointer.
+Previously, bpf_num_possible_cpus() had a bug when calculating a
+number of possible CPUs in the case of sparse CPU allocations, as
+it was considering only the first range or element of
+/sys/devices/system/cpu/possible.
 
-This problem was exposed when debugfs started to return errors instead
-of just NULL for some calls when they do not succeed properly.
+E.g. in the case of "0,2-3" (CPU 1 is not available), the function
+returned 1 instead of 3.
 
-Also, the check for WARN_ON(dentry) was just wrong :)
+This patch fixes the function by making it parse all CPU ranges and
+elements.
 
-Reported-by: Kees Cook <keescook@chromium.org>
-Reported-and-tested-by: syzbot+16c3a70e1e9b29346c43@syzkaller.appspotmail.com
-Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Rientjes <rientjes@google.com>
-Fixes: ff9fb72bc077 ("debugfs: return error values, not NULL")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Martynas Pumputis <m@lambda.lt>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/relay.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/bpf_util.h | 30 +++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/relay.c b/kernel/relay.c
-index 1537158c67b38..61d37e6da22dd 100644
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -427,6 +427,8 @@ static struct dentry *relay_create_buf_file(struct rchan *chan,
- 	dentry = chan->cb->create_buf_file(tmpname, chan->parent,
- 					   S_IRUSR, buf,
- 					   &chan->is_global);
-+	if (IS_ERR(dentry))
-+		dentry = NULL;
+diff --git a/tools/testing/selftests/bpf/bpf_util.h b/tools/testing/selftests/bpf/bpf_util.h
+index d0811b3d6a6f1..4bf7203649344 100644
+--- a/tools/testing/selftests/bpf/bpf_util.h
++++ b/tools/testing/selftests/bpf/bpf_util.h
+@@ -13,7 +13,7 @@ static inline unsigned int bpf_num_possible_cpus(void)
+ 	unsigned int start, end, possible_cpus = 0;
+ 	char buff[128];
+ 	FILE *fp;
+-	int n;
++	int len, n, i, j = 0;
  
- 	kfree(tmpname);
- 
-@@ -460,7 +462,7 @@ static struct rchan_buf *relay_open_buf(struct rchan *chan, unsigned int cpu)
- 		dentry = chan->cb->create_buf_file(NULL, NULL,
- 						   S_IRUSR, buf,
- 						   &chan->is_global);
--		if (WARN_ON(dentry))
-+		if (IS_ERR_OR_NULL(dentry))
- 			goto free_buf;
+ 	fp = fopen(fcpu, "r");
+ 	if (!fp) {
+@@ -21,17 +21,27 @@ static inline unsigned int bpf_num_possible_cpus(void)
+ 		exit(1);
  	}
  
+-	while (fgets(buff, sizeof(buff), fp)) {
+-		n = sscanf(buff, "%u-%u", &start, &end);
+-		if (n == 0) {
+-			printf("Failed to retrieve # possible CPUs!\n");
+-			exit(1);
+-		} else if (n == 1) {
+-			end = start;
++	if (!fgets(buff, sizeof(buff), fp)) {
++		printf("Failed to read %s!\n", fcpu);
++		exit(1);
++	}
++
++	len = strlen(buff);
++	for (i = 0; i <= len; i++) {
++		if (buff[i] == ',' || buff[i] == '\0') {
++			buff[i] = '\0';
++			n = sscanf(&buff[j], "%u-%u", &start, &end);
++			if (n <= 0) {
++				printf("Failed to retrieve # possible CPUs!\n");
++				exit(1);
++			} else if (n == 1) {
++				end = start;
++			}
++			possible_cpus += end - start + 1;
++			j = i + 1;
+ 		}
+-		possible_cpus = start == 0 ? end + 1 : 0;
+-		break;
+ 	}
++
+ 	fclose(fp);
+ 
+ 	return possible_cpus;
 -- 
 2.19.1
 
