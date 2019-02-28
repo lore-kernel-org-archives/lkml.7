@@ -2,80 +2,130 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B12C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FD1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB9521850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6901821850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732467AbfB1K5z (ORCPT
+        id S1731775AbfB1K6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:57:55 -0500
-Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:26391 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732416AbfB1K5w (ORCPT
+        Thu, 28 Feb 2019 05:58:49 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:22499 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727086AbfB1K6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:57:52 -0500
-Received: from ATCSQR.andestech.com (localhost [127.0.0.2] (may be forged))
-        by ATCSQR.andestech.com with ESMTP id x1SAVfOQ086906
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 18:31:41 +0800 (GMT-8)
-        (envelope-from vincentc@andestech.com)
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id x1SAV8eA086824;
-        Thu, 28 Feb 2019 18:31:08 +0800 (GMT-8)
-        (envelope-from vincentc@andestech.com)
-Received: from atcsqa06.andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Thu, 28 Feb 2019
- 18:31:42 +0800
-From:   Vincent Chen <vincentc@andestech.com>
-To:     <palmer@sifive.com>, <aou@eecs.berkeley.edu>,
-        <ebiederm@xmission.com>, <jimw@sifive.com>, <arnd@arndb.de>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC:     <deanbo422@gmail.com>, <vincentc@andestech.com>
-Subject: [PATCH 2/3] riscv: Support BUG() in kernel module
-Date:   Thu, 28 Feb 2019 18:31:30 +0800
-Message-ID: <1551349891-22683-3-git-send-email-vincentc@andestech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551349891-22683-1-git-send-email-vincentc@andestech.com>
-References: <1551349891-22683-1-git-send-email-vincentc@andestech.com>
+        Thu, 28 Feb 2019 05:58:48 -0500
+Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x1SAwX8G023314;
+        Thu, 28 Feb 2019 19:58:33 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp);
+ Thu, 28 Feb 2019 19:58:33 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x1SAwWTQ023309
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 28 Feb 2019 19:58:32 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: kernel panic: MAC Initialization failed.
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+e1b8084e532b6ee7afab@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        James Morris <jmorris@namei.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>
+References: <0000000000001c63c80582e32294@google.com>
+ <8d94063c-e10c-c470-8ce0-1f86c517b1b4@i-love.sakura.ne.jp>
+ <CACT4Y+ZqjoXftDAby9s-YUrOv8txBFqKukRcxP6ty3LLKz_+Hw@mail.gmail.com>
+ <722a3390-3112-0067-282c-b94a8be53aa0@i-love.sakura.ne.jp>
+ <CACT4Y+aXA4fh9Z=vKKVi-vids4O_npkUDqccD1eUS+gNV7WyGA@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <ebfd7dae-d90a-059c-8ace-643c2228e7d0@i-love.sakura.ne.jp>
+Date:   Thu, 28 Feb 2019 19:58:29 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com x1SAV8eA086824
+In-Reply-To: <CACT4Y+aXA4fh9Z=vKKVi-vids4O_npkUDqccD1eUS+gNV7WyGA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel module is loaded into vmalloc region which is located below
-to the PAGE_OFFSET. Hence the condition, pc < PAGE_OFFSET, in the
-is_valid_bugaddr() will filter out all trap exceptions triggered
-by kernel module. To support BUG() in kernel module, the condition is
-changed to pc < VMALLOC_START.
+On 2019/02/28 19:23, Dmitry Vyukov wrote:
+> On Thu, Feb 28, 2019 at 11:20 AM Tetsuo Handa
+> <penguin-kernel@i-love.sakura.ne.jp> wrote:
+>>
+>> On 2019/02/28 15:51, Dmitry Vyukov wrote:
+>>> On Wed, Feb 27, 2019 at 11:37 PM Tetsuo Handa
+>>>>
+>>>> Thank you. The LSM stacking seems to be working as expected.
+>>>> But this one should not be considered as a bug.
+>>>>
+>>>> If something went wrong before loading access control rules,
+>>>> it is pointless to continue. Thus, stopping with kernel panic.
+>>>
+>>> Hi Tetsuo,
+>>>
+>>> What misconfiguration you mean?
+>>
+>> To use security modules, access control rules need to be loaded. Regarding
+>> TOMOYO, access control rules can be loaded from the kernel itself (built-in)
+>> and/or from /etc/tomoyo/ directory via /sbin/tomoyo-init (run-time).
+>>
+>> Since the kernel is built without built-in policy and /sbin/tomoyo-init does
+>> not exist, memory allocation failure is handled as a fatal problem.
+>>
+>> But if syzbot cannot test other paths due to hitting this path, we need to somehow
+>> avoid panic(). Can you add tomoyo-tools package into your rootfs images? It is
+>> explained at https://tomoyo.osdn.jp/2.6/chapter-3.html .
+> 
+> 
+> Is installing the package everything that needs to be done? It's not a
+> standard package, right?
+> What does it do? Frequently there is like 3 DVD's of some software,
+> but everything that needs to be done is a single system call? What
+> exactly from kernel perspective we need to do?
+> 
 
-Signed-off-by: Vincent Chen <vincentc@andestech.com>
----
- arch/riscv/kernel/traps.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ From kernel perspective, just building the kernels with
+CONFIG_SECURITY_TOMOYO_OMIT_USERSPACE_LOADER=y after doing
 
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index deae0e5..dee0e5e 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -144,7 +144,7 @@ int is_valid_bugaddr(unsigned long pc)
- {
- 	bug_insn_t insn;
+echo 'PROFILE_VERSION=20150505' > security/tomoyo/policy/profile.conf
+echo '0-CONFIG={ mode=learning grant_log=no reject_log=yes }' >> security/tomoyo/policy/profile.conf
+
+ from the kernel source tree is needed.
+
+But the problem is that since syzbot is automated, there is no chance to
+edit the content of security/tomoyo/policy/ directory when building the
+kernels. Therefore, I expected that we can add tomoyo-tools package and
+/etc/tomoyo/ directory generated by executing /usr/lib/tomoyo/init_policy
+into the rootfs images. tomoyo-tools package is easy to install because of
+little dependency (e.g. glibc and ncurses).
+
+Maybe disabling panic() if CONFIG_FAULT_INJECTION=y is simpler...
+
+diff --git a/security/tomoyo/memory.c b/security/tomoyo/memory.c
+index 2e7fcfa..2b2d5898 100644
+--- a/security/tomoyo/memory.c
++++ b/security/tomoyo/memory.c
+@@ -24,7 +24,7 @@ void tomoyo_warn_oom(const char *function)
+ 		pr_warn("ERROR: Out of memory at %s.\n", function);
+ 		tomoyo_last_pid = pid;
+ 	}
+-	if (!tomoyo_policy_loaded)
++	if (!IS_ENABLED(CONFIG_FAULT_INJECTION) && !tomoyo_policy_loaded)
+ 		panic("MAC Initialization failed.\n");
+ }
  
--	if (pc < PAGE_OFFSET)
-+	if (pc < VMALLOC_START)
- 		return 0;
- 	if (probe_kernel_address((bug_insn_t *)pc, insn))
- 		return 0;
--- 
-1.7.1
-
