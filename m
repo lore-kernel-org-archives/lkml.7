@@ -2,112 +2,169 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94181C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD342C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61FC52171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:34:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tt/IhnnT"
+	by mail.kernel.org (Postfix) with ESMTP id A58602171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732106AbfB1Jel (ORCPT
+        id S1732170AbfB1JfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:34:41 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43548 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbfB1Jel (ORCPT
+        Thu, 28 Feb 2019 04:35:21 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34815 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbfB1JfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:34:41 -0500
-Received: by mail-io1-f68.google.com with SMTP id y6so16037790ioq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 01:34:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=nKotgps3dNTeWXxoCTNOk7PR/4UzeovGKyvC/PglSYo=;
-        b=tt/IhnnTtsSLg0QDVee45lFT4pOMGGRtyYA91xKR+yZG0pyHzwmqrTUl1SJUqRy5eC
-         myKCzvorwfSAtK8grZBNp/lsZo7RrBw73llQFYdEk7ocYMVbyb2z/pDkTBx1a0DY6O6D
-         hxJrBDnOvEnpD5bPTej+t0zX2r7Vx8c6WpV+L/8p1hXwUKQZNYOFNlvnfQ8A5uhoEHst
-         MYxWXPJVNH/2M/o0+/Py3VkmQahNM8NYgVElp4DMicR9tC9mHNRahWgV3fWMhZyVjlaU
-         MJ5/D9MY4HkarSBGhDtiTJoltVP7atDpycM+eaTQ8vzijqon0xZyGAQhCoyg9I9N2x+D
-         iSZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=nKotgps3dNTeWXxoCTNOk7PR/4UzeovGKyvC/PglSYo=;
-        b=ZZM0MSNOQaLfq8XK42qKVHOWAhp7mzrRa9LJwXYSjH99ouy1PUor9IMjHZz5l93F19
-         Wxed/h0Kxuz7omAJbjUCC2BvCqejBNLLhshHdz2XVV4bq2x17mmoimdfcZjHfw4CSpW7
-         9pRd22lIDpNN2m9g6dF/jm9rHZrho+PU5VZnBwpMcT5GTfZjhMWtG6omWzYw7d/MCTHY
-         WM8y1NFd1ZmdTLxZ4p6p+KH8Y4Vj2v1qSeSZ2/Etq89i/ZbwL4lFEZL4fJAuc+AtwRSG
-         tR4zrmpG796KPYuCkUGqodd9Wq8j3aXUxUwtcI2E2UWR/hZcvISfecDwYMi2aD4zMONn
-         tUSA==
-X-Gm-Message-State: APjAAAUb3XM9Mx6sTdvNFzc64/IKGF16VNwEXttYGgqqfyzuDWAtQ1oh
-        VCI7VdpKTwCTjeleqgJ9sYHWVzylmhnMwHy25Y314w==
-X-Google-Smtp-Source: APXvYqz27RCLQermokAxQHX6FmAP6sl1nzwe0aHtdTeEjKFi/mMldbYViDLGXx4chOWAcNw5veVsYxl/dbfawUJf6Zw=
-X-Received: by 2002:a5d:84c3:: with SMTP id z3mr4692780ior.11.1551346480461;
- Thu, 28 Feb 2019 01:34:40 -0800 (PST)
+        Thu, 28 Feb 2019 04:35:21 -0500
+X-Originating-IP: 90.88.147.150
+Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id E43B7FF810;
+        Thu, 28 Feb 2019 09:35:16 +0000 (UTC)
+Date:   Thu, 28 Feb 2019 10:35:16 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Gerhard Wiesinger <lists@wiesinger.com>
+Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
+Subject: Re: Banana Pi-R1 stabil
+Message-ID: <20190228093516.abual3564dkvx6un@flea>
+References: <7b20af72-76ea-a7b1-9939-ca378dc0ed83@wiesinger.com>
+ <20190227092023.nvr34byfjranujfm@flea>
+ <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
 MIME-Version: 1.0
-References: <0000000000009a01370582c6772a@google.com> <20190226151738.GA6430@mit.edu>
- <CACT4Y+acnJnZ4rN3Ta-6ftFv4A=1q7hsVQSVJeh9PGCK0e4BbA@mail.gmail.com> <20190227215755.GD10828@mit.edu>
-In-Reply-To: <20190227215755.GD10828@mit.edu>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 28 Feb 2019 10:34:29 +0100
-Message-ID: <CACT4Y+Z=7+UZk9cxOaGC9B-=U=YsKj9AWyOYZKBGpZZSPdU9mg@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in ext4_file_write_iter
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+7d19c5fe6a3f1161abb7@syzkaller.appspotmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="y46btgmwon2ggfsd"
+Content-Disposition: inline
+In-Reply-To: <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 10:58 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> On Wed, Feb 27, 2019 at 10:58:50AM +0100, Dmitry Vyukov wrote:
-> > Peter, Ingo, do you have any updates on the
-> > perf_event_open/sched_setattr stalls? This bug cause assorted hangs
-> > throughout kernel and so is nasty.
-> >
-> > syzkaller tries to remove all syscalls from reproducers one-by-one.
-> > Somehow without sched_setattr the hang did not reproduce (a bunch of
-> > repros have perf_event_open+sched_setattr so somehow they seem to be
-> > related)
->
-> FWIW, at least for me, the repro.c with sched_setattr commented out
-> (see the repro.c attached to a message[1] earlier in the thread) it
-> was reproducing reliably on a 2 CPU, 2 GB memory KVM using the
-> ext4.git tree (dev branch, 5.0-rc3 plus ext4 commits for the next
-> merge window) using a Debian stable-based VM[2].
->
-> [1] https://groups.google.com/d/msg/syzkaller-bugs/ByPpM3WZw1s/li7SsaEyAgAJ
-> [2] https://mirrors.edge.kernel.org/pub/linux/kernel/people/tytso/kvm-xfstests/root_fs.img.amd64
->
-> > But even with perfect repros machines still won't be
-> > able to tell in all cases that even though the hang happened in ext4
-> > code, the root cause is actually another scheduler-related system
-> > call. So thanks for looking into this.
->
-> To be clear, there was *not* a scheduler-related system call in the
-> repro.c I was playing with (see [2]); just perf_event_open(2) and
-> sendfile(2).
 
-Let me correct the statement then:
+--y46btgmwon2ggfsd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But even with perfect repros machines still won't be able to tell in
-all cases that even though the hang happened in ext4 code, the root
-cause is actually another perf-related system call. So thanks for
-looking into this.
+On Wed, Feb 27, 2019 at 07:58:14PM +0100, Gerhard Wiesinger wrote:
+> On 27.02.2019 10:20, Maxime Ripard wrote:
+> > On Sun, Feb 24, 2019 at 09:04:57AM +0100, Gerhard Wiesinger wrote:
+> > > Hello,
+> > >=20
+> > > I've 3 Banana Pi R1, one running with self compiled kernel
+> > > 4.7.4-200.BPiR1.fc24.armv7hl and old Fedora 25 which is VERY STABLE, =
+the 2
+> > > others are running with Fedora 29 latest, kernel 4.20.10-200.fc29.arm=
+v7hl. I
+> > > tried a lot of kernels between of around 4.11
+> > > (kernel-4.11.10-200.fc25.armv7hl) until 4.20.10 but all had crashes w=
+ithout
+> > > any output on the serial console or kernel panics after a short time =
+of
+> > > period (minutes, hours, max. days)
+> > >=20
+> > > Latest known working and stable self compiled kernel: kernel
+> > > 4.7.4-200.BPiR1.fc24.armv7hl:
+> > >=20
+> > > https://www.wiesinger.com/opensource/fedora/kernel/BananaPi-R1/
+> > >=20
+> > > With 4.8.x the DSA b53 switch infrastructure has been introduced which
+> > > didn't work (until ca8931948344c485569b04821d1f6bcebccd376b and kernel
+> > > 4.18.x):
+> > >=20
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree=
+/drivers/net/dsa/b53?h=3Dv4.20.12
+> > >=20
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/=
+drivers/net/dsa/b53?h=3Dv4.20.12
+> > >=20
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/comm=
+it/drivers/net/dsa/b53?h=3Dv4.20.12&id=3Dca8931948344c485569b04821d1f6bcebc=
+cd376b
+> > >=20
+> > > I has been fixed with kernel 4.18.x:
+> > >=20
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/=
+drivers/net/dsa/b53?h=3Dlinux-4.18.y
+> > >=20
+> > >=20
+> > > So current status is, that kernel crashes regularly, see some samples=
+ below.
+> > > It is typically a "Unable to handle kernel paging request at virtual =
+addres"
+> > >=20
+> > > Another interesting thing: A Banana Pro works well (which has also an
+> > > Allwinner A20 in the same revision) running same Fedora 29 and latest
+> > > kernels (e.g. kernel 4.20.10-200.fc29.armv7hl.).
+> > >=20
+> > > Since it happens on 2 different devices and with different power supp=
+lies
+> > > (all with enough power) and also the same type which works well on the
+> > > working old kernel) a hardware issue is very unlikely.
+> > >=20
+> > > I guess it has something to do with virtual memory.
+> > >=20
+> > > Any ideas?
+> > > [47322.960193] Unable to handle kernel paging request at virtual addr=
+es 5675d0
+> > That line is a bit suspicious
+> >=20
+> > Anyway, cpufreq is known to cause those kind of errors when the
+> > voltage / frequency association is not correct.
+> >=20
+> > Given the stack trace and that the BananaPro doesn't have cpufreq
+> > enabled, my first guess would be that it's what's happening. Could you
+> > try using the performance governor and see if it's more stable?
+> >=20
+> > If it is, then using this:
+> > https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-stress-test
+> >=20
+> > will help you find the offending voltage-frequency couple.
+>
+> For me it looks like they have all the same config regarding cpu governor
+> (Banana Pro, old kernel stable one, new kernel unstable ones)
+
+The Banana Pro doesn't have a regulator set up, so it will only change
+the frequency, not the voltage.
+
+> They all have the ondemand governor set:
+>=20
+> I set on the 2 unstable "new kernel Banana Pi R1":
+>=20
+> # Set to max performance
+> echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+> echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+
+What are the results?
+
+> Running some stress tests are ok (I did that already in the past, but
+> without setting maximum performance governor).
+
+Which stress tests have you been running?
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--y46btgmwon2ggfsd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXHerVAAKCRDj7w1vZxhR
+xRwDAQCGdTiXZQdCkQJEFPhFXYILEbJ90fTxJZTyeqNeGi1PigEA4VqTGGg8x+U1
+8jWECOpya2M6Za6558+iRGJQTIVx8wA=
+=cnxS
+-----END PGP SIGNATURE-----
+
+--y46btgmwon2ggfsd--
