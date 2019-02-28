@@ -2,84 +2,99 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9920C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39B8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B135C21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA52F218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732378AbfB1KUQ (ORCPT
+        id S1732387AbfB1KVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:20:16 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58871 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732204AbfB1KUP (ORCPT
+        Thu, 28 Feb 2019 05:21:31 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:12134 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732285AbfB1KVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:20:15 -0500
-Received: from fsav304.sakura.ne.jp (fsav304.sakura.ne.jp [153.120.85.135])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x1SAJwuC096766;
-        Thu, 28 Feb 2019 19:19:58 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav304.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp);
- Thu, 28 Feb 2019 19:19:58 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x1SAJwBr096742
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 28 Feb 2019 19:19:58 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: kernel panic: MAC Initialization failed.
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+e1b8084e532b6ee7afab@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        James Morris <jmorris@namei.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>, takedakn@nttdata.co.jp
-References: <0000000000001c63c80582e32294@google.com>
- <8d94063c-e10c-c470-8ce0-1f86c517b1b4@i-love.sakura.ne.jp>
- <CACT4Y+ZqjoXftDAby9s-YUrOv8txBFqKukRcxP6ty3LLKz_+Hw@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <722a3390-3112-0067-282c-b94a8be53aa0@i-love.sakura.ne.jp>
-Date:   Thu, 28 Feb 2019 19:19:55 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Feb 2019 05:21:30 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SADefN026455;
+        Thu, 28 Feb 2019 11:20:27 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2qtv6d4sqa-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 28 Feb 2019 11:20:27 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 67E7531;
+        Thu, 28 Feb 2019 10:20:08 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4F4BE4E52;
+        Thu, 28 Feb 2019 10:20:08 +0000 (GMT)
+Received: from localhost (10.75.127.48) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 28 Feb 2019 11:20:07
+ +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <srinivas.kandagatla@linaro.org>, <robh+dt@kernel.org>,
+        <alexandre.torgue@st.com>
+CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <fabrice.gasnier@st.com>, <lionel.debieve@st.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 6/6] ARM: dts: stm32: Add romem and temperature calibration on stm32f429
+Date:   Thu, 28 Feb 2019 11:19:56 +0100
+Message-ID: <1551349196-8956-7-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
+References: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+ZqjoXftDAby9s-YUrOv8txBFqKukRcxP6ty3LLKz_+Hw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/02/28 15:51, Dmitry Vyukov wrote:
-> On Wed, Feb 27, 2019 at 11:37 PM Tetsuo Handa
->>
->> Thank you. The LSM stacking seems to be working as expected.
->> But this one should not be considered as a bug.
->>
->> If something went wrong before loading access control rules,
->> it is pointless to continue. Thus, stopping with kernel panic.
-> 
-> Hi Tetsuo,
-> 
-> What misconfiguration you mean?
+Add & enable stm32 factory-programmed memory. Describe temperature sensor
+calibration cells.
 
-To use security modules, access control rules need to be loaded. Regarding
-TOMOYO, access control rules can be loaded from the kernel itself (built-in)
-and/or from /etc/tomoyo/ directory via /sbin/tomoyo-init (run-time).
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Since the kernel is built without built-in policy and /sbin/tomoyo-init does
-not exist, memory allocation failure is handled as a fatal problem.
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 8d6f028..8055c98 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -78,6 +78,19 @@
+ 	};
+ 
+ 	soc {
++		romem: nvmem@1fff7800 {
++			compatible = "st,stm32f4-otp";
++			reg = <0x1fff7800 0x400>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ts_cal1: calib@22c {
++				reg = <0x22c 0x2>;
++			};
++			ts_cal2: calib@22e {
++				reg = <0x22e 0x2>;
++			};
++		};
++
+ 		timer2: timer@40000000 {
+ 			compatible = "st,stm32-timer";
+ 			reg = <0x40000000 0x400>;
+-- 
+2.7.4
 
-But if syzbot cannot test other paths due to hitting this path, we need to somehow
-avoid panic(). Can you add tomoyo-tools package into your rootfs images? It is
-explained at https://tomoyo.osdn.jp/2.6/chapter-3.html .
