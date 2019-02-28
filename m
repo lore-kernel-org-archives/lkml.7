@@ -2,112 +2,110 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55379C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AAEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA292184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB92218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:57:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQYF78lr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733135AbfB1QzY (ORCPT
+        id S1732360AbfB1Q5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 11:55:24 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39292 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730732AbfB1QzX (ORCPT
+        Thu, 28 Feb 2019 11:57:51 -0500
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39271 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725918AbfB1Q5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 11:55:23 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SGokB6032747
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 11:55:22 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2qxg4r3bkh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 11:55:22 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Thu, 28 Feb 2019 16:55:20 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Feb 2019 16:55:16 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SGtF4p53477624
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Feb 2019 16:55:15 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B17E11C058;
-        Thu, 28 Feb 2019 16:55:15 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB4C611C054;
-        Thu, 28 Feb 2019 16:55:14 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.99.237])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Feb 2019 16:55:14 +0000 (GMT)
-Date:   Thu, 28 Feb 2019 17:55:13 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v4 4/7] vfio: ap: register IOMMU VFIO notifier
-In-Reply-To: <f13769d5-26a4-c1fa-0858-e4a1acef7bb9@linux.ibm.com>
-References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
-        <1550849400-27152-5-git-send-email-pmorel@linux.ibm.com>
-        <d90f4746-887f-2d9c-df37-c834f22e85fd@de.ibm.com>
-        <f13769d5-26a4-c1fa-0858-e4a1acef7bb9@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Thu, 28 Feb 2019 11:57:50 -0500
+Received: by mail-it1-f193.google.com with SMTP id l15so16717036iti.4;
+        Thu, 28 Feb 2019 08:57:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=x41NJ0M0ISDzhYINLlifVt4BbR61KBJ/mAc80ss8IoM=;
+        b=YQYF78lrGPsYxhuaUpB/soQHL/mxFq2aawL35kg/ylxXrIsnF0lkwu8PtkUsJDnkYX
+         epMQfletN5eMwfcyTjmgk5FwavCEPA50EHT8CG7+IpzCmvn4sf5Z5IHzLyGLHc0VDYAT
+         cP7yIENl0F92W2IynViWQQ8ZT0D3IiHKf4Bb0Yel20An49MgbdzNHw/LXlsx67gsx803
+         tmSt2j/3MaDsXQLBu4ynLhRxNE7/mX8LpoEAZpWHeXaA3ZPWq1jLK/jekQKF58T775Gz
+         VTglJ6VJk8Jo+XQ+VcEuX7J/zyElRUbIcvthqztCt5g0BvIWLG+QREz4+e1b4lTHAC5d
+         rvZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=x41NJ0M0ISDzhYINLlifVt4BbR61KBJ/mAc80ss8IoM=;
+        b=tinJAM9sJBHA7CST/8wC5pEJLacOQx85ykTOmKSZs1lnU1YseHweNl/2E2Znn4LGoT
+         F4uA1BOzb7KEkDvar5aAT88SK8nxb/6+Bmyg7GDasrrqp6lCcVHGLE+k4erDaGNS/X4t
+         2kgbAOdMxr2ESKLB8aTNZDuJ6AcGF1BoFuwgQwdtTsPgsUHXwsjF3LM+8LcxL7g9xw5Q
+         5DqWyn4a8PYtvdu5PH6P7Iwd2NzhIUEvw8Ie6dSrbn1YCuihdztJ/701XqEiEjtAIip0
+         WyJm5JYEf4MIqr/LDFStxt8mW7Z8B6tXRiwvegcEcKMvoFoBvHL0KYRM47B1bjdY/NoW
+         GbhQ==
+X-Gm-Message-State: APjAAAW2iqC9Mr84/YcOKubiGqOwtE4O9cmebC2BSrEw6kJ0gxBvZLhP
+        iLW8oA7DI3RImyJLWIXmkw==
+X-Google-Smtp-Source: APXvYqwo2t7j0cyTmH9GrD8qumynxckpywfk+/YGLiq3e+IDJb974ksOHYq2DsGzUBKDqdrSFWn9fg==
+X-Received: by 2002:a02:7e87:: with SMTP id g7mr295jae.92.1551373069987;
+        Thu, 28 Feb 2019 08:57:49 -0800 (PST)
+Received: from r (CPE1cabc0918a93-CM1cabc0918a90.cpe.net.cable.rogers.com. [99.229.26.117])
+        by smtp.gmail.com with ESMTPSA id v8sm7226147iop.42.2019.02.28.08.57.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 08:57:49 -0800 (PST)
+Date:   Thu, 28 Feb 2019 11:57:30 -0500
+From:   Robert Yang <decatf@gmail.com>
+To:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: [PATCH] mfd: tps65910: Properly disable the power on state
+Message-ID: <20190228165730.GA14387@r>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19022816-0012-0000-0000-000002FB6416
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19022816-0013-0000-0000-000021331107
-Message-Id: <20190228175513.06504ae6@oc2783563651>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=803 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019 09:48:39 +0100
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+In the tps65910/1 datasheets under "Device POWER ON Disable Conditions".
+There are four conditions which can disable power on:
+Long press interrupt (PWRON_LP_IT) OR thermal trip OR DEV_OFF bit OR
+DEV_OFF_RST bit.
 
-> On 28/02/2019 09:23, Christian Borntraeger wrote:
-> > On 22.02.2019 16:29, Pierre Morel wrote:
-> >> To be able to use the VFIO interface to facilitate the
-> >> mediated device memory pining/unpining we need to register
-> >> a notifier for IOMMU.
-> > 
-> > You might want to add that while we start to pin one guest page for the
-> > interrupt indicator byte in the next patch, this is still ok with ballooning
-> > as this page will never be used by the guest virtio-balloon driver. So the
-> > pinned page will never be freed. And even a broken guest does so, that would
-> > not impact the host as the original page is still in control by vfio.
-> > 
-> 
-> Thanks, I ll do.
-> 
+The Ouya game console has TPS65911. Before this patch the device will not
+power off through the pm_power_off call. The power light stays on and the
+device heatsink is warm. Long pressing the power button can power off the
+device. After this patch the device powers off correctly when calling power
+off through userspace software.
 
-I recall a comment in qemu that says vfio-ap does not pin any pages.
-That one needs to be fixed up as well.
+Signed-off-by: Robert Yang <decatf@gmail.com>
+---
+ drivers/mfd/tps65910.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Regards,
-Halil
-
-[..]
+diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
+index aa3d472a10ff..c067dcacbe61 100644
+--- a/drivers/mfd/tps65910.c
++++ b/drivers/mfd/tps65910.c
+@@ -445,8 +445,12 @@ static void tps65910_power_off(void)
+ 			DEVCTRL_PWR_OFF_MASK) < 0)
+ 		return;
+ 
+-	tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
+-			DEVCTRL_DEV_ON_MASK);
++	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
++			DEVCTRL_DEV_ON_MASK) < 0)
++		return;
++
++	tps65910_reg_set_bits(tps65910, TPS65910_DEVCTRL,
++		DEVCTRL_DEV_OFF_MASK);
+ }
+ 
+ static int tps65910_i2c_probe(struct i2c_client *i2c,
+-- 
+2.17.1
 
