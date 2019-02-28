@@ -2,102 +2,109 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C6BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D261C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF63218CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:00:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJU1fydQ"
+	by mail.kernel.org (Postfix) with ESMTP id 167DB218CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:00:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551384020;
+	bh=zW61m0+J9CynTM7mvwP9OrGq6ZS5vWwO6gG9+Sk+gqI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=l2XypgdQv2GIALCleXFwniYKTwTNeZ7xqXpp1h7xvbaCPzpuwXcawQ/lVOckA0jPB
+	 neHLy9UiDPJbl3XZ+CyeRryOzSsutDlCoowejZgw6b2+1gQdsiFiM6g/Vs2EuN49Qu
+	 m55QvdEloTElqM9niZnFTTGidMg1bbpt4Qa/GyKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388137AbfB1UAJ (ORCPT
+        id S2388164AbfB1UAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 15:00:09 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39226 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfB1UAJ (ORCPT
+        Thu, 28 Feb 2019 15:00:18 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:55332 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfB1UAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 15:00:09 -0500
-Received: by mail-ed1-f65.google.com with SMTP id p27so18055272edc.6;
-        Thu, 28 Feb 2019 12:00:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=P5d0IpC9+OQBZ06GUKeAyQaVv2n5VwfxrOk9sixHGqU=;
-        b=sJU1fydQkoQZM04SXg/BtMFnBqkRmYRczKTqJ2EGbtlUv3NIcA3eiI7IKjs2rznhOu
-         kWAVaZSM3924lCvXIAQLHsIGVrGR04MpQ0F98pDeOWKYvOzZvoozMEa1y35hFwrPMY+n
-         RVkn2LTL8NH7AC9fiQ5XdTJRwOWw89onTuqod0VsRZxgStRaCKejt1JA2aalCgwhS+gq
-         7qQkNLCYsrLKK7SA86/2hVKjf2WD1V0nAZVX+iacIUMR8vPtyoaYyeXFg73VaO0zhnnn
-         V1sXuR00sY6CW1ClXdvdKH7qcWi0fjXFY/CznnMZ/pzwWZqLjN819vowq1ZhuDYuqLKl
-         vUjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=P5d0IpC9+OQBZ06GUKeAyQaVv2n5VwfxrOk9sixHGqU=;
-        b=ISi0rmffyh4JMLMYbXpcnD3hVKcrCslgRKfAq18+JKGPT5ScizzGDLESNa25N+cyt3
-         TW5hX1udiMtmxITXP2QJimQvXnfoL7Bk2QuV/HA0F94UjoOvpJwu8d4VP9Vltn9XfmGF
-         ZsRGskx08sq4JbYu9P0xAsT7ND0jnvkGvJ8FihgwoNVsV8/Ry1afWsmp/m3+NXXm+nau
-         9xdzEnMviYp8up1c/kyrVml8SjxEL+K3DBKY6BzCTK7fdEp9lrYeOuFpfkDYkyma+Io1
-         3KfJp+yuJyw4+9IoooieE+eMn7mQJORJxjvUyI/WuIVsjKYC6pO0eJOn9qlf4XG02D7U
-         1IlQ==
-X-Gm-Message-State: APjAAAUaTV0AxlvaBgnvYy83SltDvMyoSEZseSB4rFgFiopnu14Yj3+R
-        +4kDfKxmetk0BZKJ+AX9DBI=
-X-Google-Smtp-Source: APXvYqzknvkeUltcg0gERi7w7C7/3SB/m8QZdIrEvcp2GXO6OIJeFBO5Y1cy5mETwhXYTLi+gFF5HA==
-X-Received: by 2002:a17:906:2643:: with SMTP id i3mr379149ejc.157.1551384007112;
-        Thu, 28 Feb 2019 12:00:07 -0800 (PST)
-Received: from localhost.localdomain (xd520f248.cust.hiper.dk. [213.32.242.72])
-        by smtp.gmail.com with ESMTPSA id r1sm1353743eds.39.2019.02.28.12.00.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 12:00:06 -0800 (PST)
-From:   Tomas Bortoli <tomasbortoli@gmail.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     davem@davemloft.net, linux-bluetooth@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller@googlegroups.com, Tomas Bortoli <tomasbortoli@gmail.com>
-Subject: [PATCH] net/bluetooth: Fix bound check in event handling
-Date:   Thu, 28 Feb 2019 20:59:39 +0100
-Message-Id: <20190228195939.30685-1-tomasbortoli@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 28 Feb 2019 15:00:17 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 013AFB1EB;
+        Thu, 28 Feb 2019 20:00:15 +0000 (UTC)
+Date:   Thu, 28 Feb 2019 12:00:14 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH v5] panic: Avoid the extra noise dmesg
+Message-Id: <20190228120014.19c0ab9227809341c1d5acc6@linux-foundation.org>
+In-Reply-To: <20190222060959.pe3u4yvcjw6yj347@shbuild888>
+References: <1550815226-34194-1-git-send-email-feng.tang@intel.com>
+        <20190222060959.pe3u4yvcjw6yj347@shbuild888>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hci_inquiry_result_with_rssi_evt() can perform out of bound reads
-on skb->data as a bound check is missing.
+On Fri, 22 Feb 2019 14:09:59 +0800 Feng Tang <feng.tang@intel.com> wrote:
 
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+cec7a50c412a2c03f8f5@syzkaller.appspotmail.com
-Reported-by: syzbot+660883c56e2fa65d4497@syzkaller.appspotmail.com
----
-Syzkaler reports:
-https://syzkaller.appspot.com/bug?id=d708485af9edc3af35f3b4d554e827c6c8bf6b0f
-https://syzkaller.appspot.com/bug?id=3acd1155d48a5acc5d76711568b04926945a6885
+> When kernel panic happens, it will first print the panic call stack,
+> then the ending msg like:
+> 
+> [   35.743249] ---[ end Kernel panic - not syncing: Fatal exception
+> [   35.749975] ------------[ cut here ]------------
+> 
+> The above message are very useful for debugging.
+> 
+> But if system is configured to not reboot on panic, say the "panic_timeout"
+> parameter equals 0, it will likely print out many noisy message like
+> WARN() call stack for each and every CPU except the panic one, messages
+> like below:
+> 
+> 	WARNING: CPU: 1 PID: 280 at kernel/sched/core.c:1198 set_task_cpu+0x183/0x190
+> 	Call Trace:
+> 	<IRQ>
+> 	try_to_wake_up
+> 	default_wake_function
+> 	autoremove_wake_function
+> 	__wake_up_common
+> 	__wake_up_common_lock
+> 	__wake_up
+> 	wake_up_klogd_work_func
+> 	irq_work_run_list
+> 	irq_work_tick
+> 	update_process_times
+> 	tick_sched_timer
+> 	__hrtimer_run_queues
+> 	hrtimer_interrupt
+> 	smp_apic_timer_interrupt
+> 	apic_timer_interrupt
 
- net/bluetooth/hci_event.c | 4 ++++
- 1 file changed, 4 insertions(+)
+It's a fairly ugly-looking patch but I am inclined to agree.
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index ac2826ce162b..aa953d23bb72 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3983,6 +3983,10 @@ static void hci_inquiry_result_with_rssi_evt(struct hci_dev *hdev,
- 		for (; num_rsp; num_rsp--, info++) {
- 			u32 flags;
- 
-+			if ((void *)(info + sizeof(info)) >
-+			   (void *)(skb->data + skb->len))
-+				break;
-+
- 			bacpy(&data.bdaddr, &info->bdaddr);
- 			data.pscan_rep_mode	= info->pscan_rep_mode;
- 			data.pscan_period_mode	= info->pscan_period_mode;
--- 
-2.11.0
+The panicing CPU is spinning and blinking a LED and all CPUs have
+interrupts enabled and the system is known to be in a messed up state. 
+All sorts of kernel code could emit all sorts of output in such
+circumstances.  So a global printk-killing knob seems appropriate.
+
+Thoughts:
+
+- why do the suppression in vprintk_emit()?  Doing it right at entry
+  to printk() seems cleaner, more explicit?
+
+- Other code sites may wish to suppress all printks.  Perhaps
+  `panic_suppress_printk' should just be called `suppress_printk'?
+
 
