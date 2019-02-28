@@ -2,134 +2,108 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B715C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3E1C00319
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E728F218A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861F820863
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:32:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vCbDcmF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730785AbfB1Cbh (ORCPT
+        id S1730810AbfB1CcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:31:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730663AbfB1Cbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:31:37 -0500
-Received: from vmware.local.home (unknown [208.91.3.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5486220863;
-        Thu, 28 Feb 2019 02:31:35 +0000 (UTC)
-Date:   Wed, 27 Feb 2019 21:31:32 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v3 5/5] tracing/probe: Support user-space dereference
-Message-ID: <20190227213132.50f3cef1@vmware.local.home>
-In-Reply-To: <155127868250.32576.2419537726154240743.stgit@devbox>
-References: <155127853496.32576.3705994926675037747.stgit@devbox>
-        <155127868250.32576.2419537726154240743.stgit@devbox>
-X-Mailer: Claws Mail 3.15.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 27 Feb 2019 21:32:03 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45113 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730341AbfB1CcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 21:32:02 -0500
+Received: by mail-pl1-f196.google.com with SMTP id r14so8948222pls.12;
+        Wed, 27 Feb 2019 18:32:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=9fb7ulQzUjFrkS4BsHjJTXR9fBvG6ZDDHxB1iOz56mc=;
+        b=vCbDcmF64enXQA3g6wu0hTdSeF0EeQQRnBEZ80nu+CphWXhJSZzIWSBfYUXF+nA1Oq
+         t+rUp24De3z+CWNY25Zd9wIO4O5mnA0OXlOwFlCwHdZDBK7kquEh36g4hlI3W+VMlkW9
+         S/Dc2Xfz7F9SnjVGirXYMgzvrdrNFX/kiEfzZvkm9//y66amQqCU6CN/buubDmqOQUGQ
+         Lu+al7FkSkn+6MIvLLuCUEY5+mNOi1rQusz4ESR0fMUdQu8isXEoZ5LGqtfEuPq1o7oh
+         5e5qxziau9rqZBhjQlYpjJP/Zj3dFFaIIpOxmHBINSfWSjt++131XXT+r2pymXT/KhnY
+         SlrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=9fb7ulQzUjFrkS4BsHjJTXR9fBvG6ZDDHxB1iOz56mc=;
+        b=YBCL33vt0bfrHrF31dAB3og55f48Cg7L07u3afO3/0M5aB67n4db244Pk+s58oCYnN
+         EXaL3l9cso/7l5dgNVN/U6d368QtHoUR9daOcg6DEScKcxF1apckpysumGAohOoIopGZ
+         y342clxsNB5WhMvU6I5OqQeko/GmEnj58dnIBNmA9FlCxWv2KrSH4IH+ArdpF+dy8UOo
+         +/36HGRnPRIqunHFLDcl1A5ieoYEFZVJgqNQfWJT7IjgLycwTy+7FdILOliY9qjH2bZA
+         tleYKZC9SX6Dj0oLsM+9eeBInb9NvdjtXPTuos6mqxX9RVowkAUdPpxueLpfAk1vXZK8
+         A0zg==
+X-Gm-Message-State: AHQUAuZnHnzvqoIOYJzS8BT79JKanu4c7ErSUFoQ6R1zALPAnnKsRT+F
+        aR+o0TukiUcHyCe4qp7doflr8VfpQfp3+w==
+X-Google-Smtp-Source: AHgI3IaCy2JPUgJYk96eaieQgS9nGzkn3Bx4ZYHnRiAdKogQgJLOZ3UzwTCbdlhfIPtmPanarYvoSg==
+X-Received: by 2002:a17:902:5992:: with SMTP id p18mr5477363pli.231.1551321121917;
+        Wed, 27 Feb 2019 18:32:01 -0800 (PST)
+Received: from maya190131 ([52.247.237.14])
+        by smtp.gmail.com with ESMTPSA id d86sm10043549pfm.18.2019.02.27.18.32.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Feb 2019 18:32:01 -0800 (PST)
+Date:   Thu, 28 Feb 2019 02:32:00 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, kys@microsoft.com,
+        sthemmin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
+        jasowang@redhat.com, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Cc:     linux-kernel@vger.kernel.org, haiyangz@microsoft.com,
+        vkuznets@redhat.com, marcelo.cerri@canonical.com,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH v4 0/2] PCI: hv: Refactor hv_irq_unmask() to use hv_vpset and
+ cpumask_to_vpset()
+Message-ID: <cover.1551319643.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Feb 2019 23:44:42 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+This patchset removes a duplicate definition of VP set (hv_vp_set) and
+uses the common definition (hv_vpset) that is used in other places. It
+changes the order of the members in struct hv_pcibus_device due to
+flexible array in hv_vpset.
 
->  
-> +.. _user_mem_access:
-> +User Memory Access
-> +------------------
-> +Kprobe events supports user-space memory access. For that purpose, you can use
-> +either user-space dereference syntax or 'ustring' type.
-> +
-> +user-space dereference syntax allows you to access a field of a data structure
+It also removes the duplicate implementation of cpumask_to_vpset(), uses
+the shared implementation, and exports hv_max_vp_index, which is
+required by cpumask_to_vpset().
 
-  "The user-space"
+Based on Vitaly's findings, two changes were applied: replace GFP_KERNEL
+with GFP_ATOMIC for alloc_cpumask_var() because hv_irq_unmask() runs
+while a spinlock is held, and add __aligned(8) to struct
+retarget_msi_interrupt because Hyper-V requires that hypercall arguments
+be aligned on an 8 byte boundary.
 
-> +n user-space. This is done by "u" prefix with dereference syntax. For example,
+Vitaly, thank you for finding the issues, and Lorenzo and Michael, thank
+you for your guidance and support!
 
- in user-space?   "This is done by adding the "u" prefix to the dereference syntax"
+Maya Nakamura (2):
+  PCI: hv: Replace hv_vp_set with hv_vpset
+  PCI: hv: Refactor hv_irq_unmask() to use cpumask_to_vpset()
 
+ arch/x86/hyperv/hv_init.c           |  1 +
+ drivers/pci/controller/pci-hyperv.c | 61 +++++++++++++----------------
+ 2 files changed, 29 insertions(+), 33 deletions(-)
 
-> ++u4(%si) means read a user memory from the user-space address %si+4. You can
+-- 
+2.17.1
 
- "means it will read memory from the address in the register %si offset
- by 4, and that memory is expected to be in user-space."
-
-
-> +use this for string too, e.g. +u0(%si):string means that the read a user space
-
-	"for strings too"
-
-> +string from the address where %si register points. 'ustring' is a kind of
-> +short-cut. You can use +0(%si):ustring instead of that.
-
-"+u0(%si):string will read a string from the address in the register
- %si that is expected to be in user-space. 'ustring' is a shortcut way
- off performing the same task. That is, +0(%si):ustring is equivalent
- to +u0(%si):string."
-
-
-> +
-> +Note that kprobe-event provides user-memory access syntax, but it
-> doesn't +use it transparently. This means if you use normal
-> dereference or string type +for user memory, it might fail, and
-> always fails on some arch. So user has to +check if the targe data is
-> in kernel or in user space carefully. 
->  Per-Probe Event Filtering
->  -------------------------
-> diff --git a/Documentation/trace/uprobetracer.rst
-> b/Documentation/trace/uprobetracer.rst index
-> 4c3bfde2ba47..6144423b2368 100644 ---
-> a/Documentation/trace/uprobetracer.rst +++
-> b/Documentation/trace/uprobetracer.rst @@ -42,16 +42,17 @@ Synopsis
-> of uprobe_tracer @+OFFSET	: Fetch memory at OFFSET (OFFSET
-> from same file as PATH) $stackN	: Fetch Nth entry of stack (N
-> >= 0) $stack	: Fetch stack address.
-> -   $retval	: Fetch return value.(*)
-> +   $retval	: Fetch return value.(\*1)
->     $comm	: Fetch current task comm.
-> -   +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(**)
-> +   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS
-> address.(\*2)(\*3) NAME=FETCHARG     : Set NAME as the argument name
-> of FETCHARG. FETCHARG:TYPE     : Set TYPE as the type of FETCHARG.
-> Currently, basic types (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal
-> types (x8/x16/x32/x64), "string" and bitfield are supported.
->  
-> -  (*) only for return probe.
-> -  (**) this is useful for fetching a field of data structures.
-> +  (\*1) only for return probe.
-> +  (\*2) this is useful for fetching a field of data structures.
-> +  (\*3) Unlike kprobe event, "u" prefix will be just ignored.
-
-					"will just be ignored."
-
->  
->  Types
->  -----
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 4cacbb0e1538..5408a82a015d 100644
-
-
--- Steve
