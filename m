@@ -2,85 +2,153 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC230C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FC4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E452083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D442184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:01:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G+FamryI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbfB1F40 (ORCPT
+        id S1730648AbfB1GBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 00:56:26 -0500
-Received: from orcrist.hmeau.com ([104.223.48.154]:38862 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfB1F40 (ORCPT
+        Thu, 28 Feb 2019 01:01:45 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37264 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfB1GBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 00:56:26 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1gzEg9-0005Da-Nz; Thu, 28 Feb 2019 13:56:21 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1gzEg6-0007dP-Dy; Thu, 28 Feb 2019 13:56:18 +0800
-Date:   Thu, 28 Feb 2019 13:56:18 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT] Crypto Fixes for 5.0
-Message-ID: <20190228055618.ix3iqmcuwlok5zjo@gondor.apana.org.au>
-References: <20180105073808.GA14405@gondor.apana.org.au>
- <20180212031702.GA26153@gondor.apana.org.au>
- <20180428080517.haxgpvqrwgotakyo@gondor.apana.org.au>
- <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
- <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
- <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
- <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
- <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
- <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
- <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
+        Thu, 28 Feb 2019 01:01:44 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s22so9193442pfh.4;
+        Wed, 27 Feb 2019 22:01:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7SwTKAKFXS/JY2dv0YPxKSX37TBfcurhbF9H3u11S98=;
+        b=G+FamryIeKgf9smikTY9LAoZIqwXoTMV9hOeDTOeLAuAQ0diFI3areFYlgOlcy7y0i
+         YsWFgq4oppiiXf0gEDFZLCXPMUkx3a7jzaYXQ2tu9dD2v+CTCWVEkhqyztI/qNlUv4rC
+         K9rNt1Rdbo7Tdoho3LLnEpZ8jFy3Nlw4ZkptlkGKM0mCxZxTCRU9kUfkEDlMzEuje1I8
+         J+wDD+C7eaiJ5Wezckem/Btm2RvQrxPwfDRJjHJQoJn1Bc6OUHBJZJyOr4Rg2YkBUpxe
+         C1RsNVFwWnTqOMFkYr0aasIdc+RSIOmROUKb5soETKyjD79+JSemAaNQinyvtsURDZbT
+         oTfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7SwTKAKFXS/JY2dv0YPxKSX37TBfcurhbF9H3u11S98=;
+        b=QVStc5QFc8bCaL4TqgMWQPeRTFGGsjmVjI8IkiotQDmxpvG+AbvdwlbUW9H60DRKMP
+         SUd7DIAg67xWvGWbGs/yaHrt4efhxq8c/nYz1Il+/tJz0Z2XegDhE8vll71Fg7Ps75vO
+         kI2f/0nQfmcMBQAvYu4TnvQ99Qnw8yTEoscKRpwtIGjjoD+RdUfslQIDp56GEJ8sSJ2g
+         tzCzduRPuAqP/Vn/W8c362JpQYbGIZ7AlUc+fUCBlxi+yvAgui6yBg3elB8wK/PszaVB
+         fk9N5eu6EMDruaCxp0wImpPM6AxVaZY7XiNUznS6IykYbYweWICPnVd2WRRJI8fsQgfj
+         +9rg==
+X-Gm-Message-State: AHQUAuY0GD1UJCdCHj85GX120RshjaKIDJPt8R6Rjvv2hdyPkHeFfnqF
+        89/byE8YcSXUTW8R6Lmpknr8baX+avxsHiW7Gjk=
+X-Google-Smtp-Source: AHgI3IbMSgpMyiUpW20h/uPqOvTeYryT/O29oVhhJJpfIJDcYawVIO1XAC2xV5Spl6eb8x54+TVEXkJ6oGlQN/eE3sA=
+X-Received: by 2002:a63:1053:: with SMTP id 19mr6849396pgq.55.1551333703503;
+ Wed, 27 Feb 2019 22:01:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190227202202.21817-1-louis@kragniz.eu> <20190227222515.32579-1-louis@kragniz.eu>
+In-Reply-To: <20190227222515.32579-1-louis@kragniz.eu>
+From:   Steve French <smfrench@gmail.com>
+Date:   Thu, 28 Feb 2019 00:01:31 -0600
+Message-ID: <CAH2r5mtjgBX-Nd=Xr1gy8s0aHaCaae_jRCh6raHmR1HniMpKxg@mail.gmail.com>
+Subject: Re: [PATCH v2] cifs: use correct format characters
+To:     Louis Taylor <louis@kragniz.eu>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com, ndesaulniers@google.com,
+        jflat@chromium.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus: 
+merged into cifs-2.6.git for-next
 
-This push fixes a compiler warning introduced by a previous fix,
-as well as two crash bugs on ARM.
+On Wed, Feb 27, 2019 at 4:27 PM Louis Taylor <louis@kragniz.eu> wrote:
+>
+> When compiling with -Wformat, clang emits the following warnings:
+>
+> fs/cifs/smb1ops.c:312:20: warning: format specifies type 'unsigned
+> short' but the argument has type 'unsigned int' [-Wformat]
+>                          tgt_total_cnt, total_in_tgt);
+>                                         ^~~~~~~~~~~~
+>
+> fs/cifs/cifs_dfs_ref.c:289:4: warning: format specifies type 'short'
+> but the argument has type 'int' [-Wformat]
+>                  ref->flags, ref->server_type);
+>                  ^~~~~~~~~~
+>
+> fs/cifs/cifs_dfs_ref.c:289:16: warning: format specifies type 'short'
+> but the argument has type 'int' [-Wformat]
+>                  ref->flags, ref->server_type);
+>                              ^~~~~~~~~~~~~~~~
+>
+> fs/cifs/cifs_dfs_ref.c:291:4: warning: format specifies type 'short'
+> but the argument has type 'int' [-Wformat]
+>                  ref->ref_flag, ref->path_consumed);
+>                  ^~~~~~~~~~~~~
+>
+> fs/cifs/cifs_dfs_ref.c:291:19: warning: format specifies type 'short'
+> but the argument has type 'int' [-Wformat]
+>                  ref->ref_flag, ref->path_consumed);
+>                                 ^~~~~~~~~~~~~~~~~~
+> The types of these arguments are unconditionally defined, so this patch
+> updates the format character to the correct ones for ints and unsigned
+> ints.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/378
+> Signed-off-by: Louis Taylor <louis@kragniz.eu>
+> ---
+>  fs/cifs/cifs_dfs_ref.c | 4 ++--
+>  fs/cifs/smb1ops.c      | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
+> index d9b99abe1243..5d83c924cc47 100644
+> --- a/fs/cifs/cifs_dfs_ref.c
+> +++ b/fs/cifs/cifs_dfs_ref.c
+> @@ -285,9 +285,9 @@ static void dump_referral(const struct dfs_info3_param *ref)
+>  {
+>         cifs_dbg(FYI, "DFS: ref path: %s\n", ref->path_name);
+>         cifs_dbg(FYI, "DFS: node path: %s\n", ref->node_name);
+> -       cifs_dbg(FYI, "DFS: fl: %hd, srv_type: %hd\n",
+> +       cifs_dbg(FYI, "DFS: fl: %d, srv_type: %d\n",
+>                  ref->flags, ref->server_type);
+> -       cifs_dbg(FYI, "DFS: ref_flags: %hd, path_consumed: %hd\n",
+> +       cifs_dbg(FYI, "DFS: ref_flags: %d, path_consumed: %d\n",
+>                  ref->ref_flag, ref->path_consumed);
+>  }
+>
+> diff --git a/fs/cifs/smb1ops.c b/fs/cifs/smb1ops.c
+> index 32a6c020478f..20a88776f04d 100644
+> --- a/fs/cifs/smb1ops.c
+> +++ b/fs/cifs/smb1ops.c
+> @@ -308,7 +308,7 @@ coalesce_t2(char *second_buf, struct smb_hdr *target_hdr)
+>         remaining = tgt_total_cnt - total_in_tgt;
+>
+>         if (remaining < 0) {
+> -               cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%hu\n",
+> +               cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%u\n",
+>                          tgt_total_cnt, total_in_tgt);
+>                 return -EPROTO;
+>         }
+> --
+> 2.20.1
+>
 
 
-Please pull from
-
-git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-
-
-Ard Biesheuvel (2):
-      crypto: sha256/arm - fix crash bug in Thumb2 build
-      crypto: sha512/arm - fix crash bug in Thumb2 build
-
-Gilad Ben-Yossef (1):
-      crypto: ccree - add missing inline qualifier
-
- arch/arm/crypto/sha256-armv4.pl       | 3 ++-
- arch/arm/crypto/sha256-core.S_shipped | 3 ++-
- arch/arm/crypto/sha512-armv4.pl       | 3 ++-
- arch/arm/crypto/sha512-core.S_shipped | 3 ++-
- drivers/crypto/ccree/cc_pm.h          | 2 +-
- 5 files changed, 9 insertions(+), 5 deletions(-)
-
-Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks,
+
+Steve
