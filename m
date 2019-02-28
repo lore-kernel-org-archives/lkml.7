@@ -2,107 +2,76 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CC0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512F0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B19218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329C0218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388105AbfB1Sfz (ORCPT
+        id S2388877AbfB1Sgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:35:55 -0500
-Received: from mga12.intel.com ([192.55.52.136]:17104 "EHLO mga12.intel.com"
+        Thu, 28 Feb 2019 13:36:48 -0500
+Received: from mga07.intel.com ([134.134.136.100]:65001 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbfB1Sfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:35:53 -0500
+        id S2388052AbfB1Sfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:35:55 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 10:35:53 -0800
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 10:35:54 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,423,1544515200"; 
-   d="scan'208";a="125955617"
+   d="scan'208";a="142459008"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Feb 2019 10:35:53 -0800
+  by orsmga001.jf.intel.com with ESMTP; 28 Feb 2019 10:35:53 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 05C5C300309; Thu, 28 Feb 2019 10:35:53 -0800 (PST)
+        id 5267B300512; Thu, 28 Feb 2019 10:35:53 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Support sample context in perf report
-Date:   Thu, 28 Feb 2019 10:35:39 -0800
-Message-Id: <20190228183550.14126-1-andi@firstfloor.org>
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v3 11/11] perf tools: Add some new tips describing the new options
+Date:   Thu, 28 Feb 2019 10:35:50 -0800
+Message-Id: <20190228183550.14126-12-andi@firstfloor.org>
 X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190228183550.14126-1-andi@firstfloor.org>
+References: <20190228183550.14126-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Changes: 
-v3:
-Fix compile problem on Fedora.
-Rebase on latest tip. Now hopefully no missing patches.]
+From: Andi Kleen <ak@linux.intel.com>
 
-We currently have two ways to look at sample data in perf:
-either use perf report to aggregate everything, or use
-perf script to look at all individual samples.
+And one old option.
 
-Both ways are useful. Of course aggregation is useful
-to quickly find the most expensive part of the code.
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/Documentation/tips.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-But sometimes a single sample is not good enough to
-determine the problem and we need to look at context, either
-through branch contexts, or other previous samples (e.g. for
-correlating different micro architecture events or computing
-metrics)
-
-This can be done through perf script today, but it can
-be rather cumbersome to find the right samples to look
-at.
-
-Another problem with perf report is that it aggregates
-the whole measurement period. But many real workloads
-have phases where they behave quite differently, and it is
-often not useful to combine them into a single histogram.
-
-While this can be worked around with the --time option
-to report, it can be quite cumbersome.
-
-This patch kit attempts to address some of these
-problems in perf report by making it time aware.
-
-- It adds a new time sort key that allows perf report
-to separate samples from different regions. The time
-regions can be defined with a new --time-quantum option.
-
-- Then it extends the perf script support in the
-tui record browser to allow browsing samples for 
-different time regions from within a perf report
-session.
-
-- Extends the report browser script display
-to automatically select sensible defaults
-based on what was recorded. For example it will
-automatically show branch contexts with -b.
-
-- Support browsing the context of individual samples.
-perf report can save a limited number of random samples
-per histogram entry with the new --samples option.
-Then the browser allows directly jumping to any
-of the saved samples and browsing the context on the current
-thread or CPU.
-
-There could be probably be done more to make
-perf report even better for such use cases (e.g. a real
-time line display), but this basic support is good
-enough for many useful usages.
-
-Also available in
-git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git perf/streams-3
-
+diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
+index 849599f39c5e..4ec8107ed512 100644
+--- a/tools/perf/Documentation/tips.txt
++++ b/tools/perf/Documentation/tips.txt
+@@ -15,6 +15,7 @@ To see callchains in a more compact form: perf report -g folded
+ Show individual samples with: perf script
+ Limit to show entries above 5% only: perf report --percent-limit 5
+ Profiling branch (mis)predictions with: perf record -b / perf report
++To show assembler sample contexts use perf record -b / perf script -F +brstackinsn --xed
+ Treat branches as callchains: perf report --branch-history
+ To count events in every 1000 msec: perf stat -I 1000
+ Print event counts in CSV format with: perf stat -x,
+@@ -34,3 +35,5 @@ Show current config key-value pairs: perf config --list
+ Show user configuration overrides: perf config --user --list
+ To add Node.js USDT(User-Level Statically Defined Tracing): perf buildid-cache --add `which node`
+ To report cacheline events from previous recording: perf c2c report
++To browse sample contexts use perf report --sample 10 and select in context menu
++To separate samples by time use perf report --sort time,overhead,sym
+-- 
+2.17.2
 
