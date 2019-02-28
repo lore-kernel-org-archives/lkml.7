@@ -2,72 +2,102 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F7BC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBBFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724AD2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551355879;
-	bh=NNB+ICy5nu42vZ7DV7/pZOmKkiSUJcQ+BvVwd6BAGts=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CZOyvBR4FkzVsiiwVJp/WvK7pyJERD+rFwiwsvFXzp880aKpIlZ9Ljsjr1uxlT0cP
-	 W6dOa4t25q4bMfUIUhpVhdx8aV4ueNSeU6XlRjZXa88RkcpBYpywBvYuH9Jgjt2oJ+
-	 R5WLUEUIFgFGET3ii5fFYP5A8oMUPUiF19OAXeQM=
+	by mail.kernel.org (Postfix) with ESMTP id 3720E2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731386AbfB1MLR (ORCPT
+        id S1731457AbfB1MLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 07:11:17 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50272 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726534AbfB1MLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 07:11:17 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4E220AF8D;
-        Thu, 28 Feb 2019 12:11:16 +0000 (UTC)
-Date:   Thu, 28 Feb 2019 13:11:15 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, david@redhat.com,
-        mike.kravetz@oracle.com
-Subject: Re: [RFC PATCH] mm,memory_hotplug: Unlock 1GB-hugetlb on x86_64
-Message-ID: <20190228121115.GA10588@dhcp22.suse.cz>
-References: <20190221094212.16906-1-osalvador@suse.de>
- <20190228092154.GV10588@dhcp22.suse.cz>
- <20190228094104.wbeaowsx25ckpcc7@d104.suse.de>
- <20190228095535.GX10588@dhcp22.suse.cz>
- <20190228101949.qnnzgdhyn6deevnm@d104.suse.de>
+        Thu, 28 Feb 2019 07:11:30 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46646 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbfB1MLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 07:11:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCD4B80D;
+        Thu, 28 Feb 2019 04:11:29 -0800 (PST)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 559843F575;
+        Thu, 28 Feb 2019 04:11:26 -0800 (PST)
+Subject: Re: [PATCH v3 11/34] mips: mm: Add p?d_large() definitions
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Morse <james.morse@arm.com>
+References: <20190227170608.27963-1-steven.price@arm.com>
+ <20190227170608.27963-12-steven.price@arm.com>
+ <20190228021526.bb6m3my46ohb4o6h@pburton-laptop>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <74944d83-f3c0-ff02-590e-b7e5abcea485@arm.com>
+Date:   Thu, 28 Feb 2019 12:11:24 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228101949.qnnzgdhyn6deevnm@d104.suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190228021526.bb6m3my46ohb4o6h@pburton-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28-02-19 11:19:52, Oscar Salvador wrote:
-> On Thu, Feb 28, 2019 at 10:55:35AM +0100, Michal Hocko wrote:
-> > You seemed to miss my point or I am wrong here. If scan_movable_pages
-> > skips over a hugetlb page then there is nothing to migrate it and it
-> > will stay in the pfn range and the range will not become idle.
+On 28/02/2019 02:15, Paul Burton wrote:
+> Hi Steven,
 > 
-> I might be misunterstanding you, but I am not sure I get you.
+> On Wed, Feb 27, 2019 at 05:05:45PM +0000, Steven Price wrote:
+>> For mips, we don't support large pages on 32 bit so add stubs returning 0.
 > 
-> scan_movable_pages() can either skip or not a hugetlb page.
-> In case it does, pfn will be incremented to skip the whole hugetlb
-> range.
-> If that happens, pfn will hold the next non-hugetlb page.
+> So far so good :)
+> 
+>> For 64 bit look for _PAGE_HUGE flag being set. This means exposing the
+>> flag when !CONFIG_MIPS_HUGE_TLB_SUPPORT.
+> 
+> Here I have to ask why? We could just return 0 like the mips32 case when
+> CONFIG_MIPS_HUGE_TLB_SUPPORT=n, let the compiler optimize the whole
+> thing out and avoid redundant work at runtime.
+> 
+> This could be unified too in asm/pgtable.h - checking for
+> CONFIG_MIPS_HUGE_TLB_SUPPORT should be sufficient to cover the mips32
+> case along with the subset of mips64 configurations without huge pages.
 
-And as a result the previous hugetlb page doesn't get migrated right?
-What does that mean? Well, the page is still in use and we cannot
-proceed with offlining because the full range is not isolated right?
--- 
-Michal Hocko
-SUSE Labs
+The intention here is to define a new set of macros/functions which will
+always tell us whether we're at the leaf of a page table walk, whether
+or not huge pages are compiled into the kernel. Basically this allows
+the page walking code to be used on page tables other than user space,
+for instance the kernel page tables (which e.g. might use a large
+mapping for linear memory even if huge pages are not compiled in) or
+page tables from firmware (e.g. EFI on arm64).
+
+I'm not familiar enough with mips to know how it handles things like the
+linear map so I don't know how relevant that is, but I'm trying to
+introduce a new set of functions which differ from the existing
+p?d_huge() macros by not depending on whether these mappings could exist
+for a user space VMA (i.e. not depending on HUGETLB support and existing
+for all levels that architecturally they can occur at).
+
+Steve
