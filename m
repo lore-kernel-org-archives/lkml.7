@@ -2,158 +2,149 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26898C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF82CC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8BDA218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ebrIHz0R"
+	by mail.kernel.org (Postfix) with ESMTP id 91F9C218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:40:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732610AbfB1QkO (ORCPT
+        id S1732767AbfB1Qk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 11:40:14 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36271 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfB1QkO (ORCPT
+        Thu, 28 Feb 2019 11:40:56 -0500
+Received: from mailproxy03.manitu.net ([217.11.48.67]:53598 "EHLO
+        mailproxy03.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfB1Qkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 11:40:14 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j125so9607867wmj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 08:40:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KuDoYcExCy3hvAzLNoi6TJv4ojVwDHwabAUo6j+cvEw=;
-        b=ebrIHz0RQwKW6xHNRE/oOZcCZIWtPxExTPZhtDDE6RI8+/+HlESyKHS10SlKRxmUjx
-         UNibpJgsDpxdlAGFjqDRI6H+xn5bsjPeBAN/D6zM1xvZoc+66Qu7MbPcTU7y1p48k1Zc
-         9nTvGJbgN0W6n8vvvmjkmI8WqqUEksOJioBfI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KuDoYcExCy3hvAzLNoi6TJv4ojVwDHwabAUo6j+cvEw=;
-        b=Ca27bY72v8nkw9YrduM+ghlQRbCD6TSbl4NSOS0ObsgOH+qM/qg8VZTBMJfDO67A/x
-         8WMX/R4CmovPH4TeikbCaEyzax4rzjO1w1X8bThiyULvT3zdr4XV1Ge5uhKtXF/TOmAw
-         qihGgzgZE2RnIqG/d0tMAOYvecsFAmZsGyLv1wtjKUd090zizx5fNJ+qH3a2I5P2EUyq
-         ZMezcWoIOicy50oUGJRLy8RbGNdukPJx9tpQIbBqCbNM+K2qufebNCXaKbuJuvZHnXRG
-         w1iBkwPkvXJrGflBOLXMj1fxAZs29HJpopwDPsRB2x+SCM3h1xtDdZcpaIkCBZiQxcNd
-         N1ow==
-X-Gm-Message-State: APjAAAWbeHAB0ncmVJGqixhdymcKYpWPh5WTXM5FgW3ls3TgMbyYmh57
-        +PESuxEsb3+b2KM7cKDD6lF3xVM0JTzUEdPs4H9jqA==
-X-Google-Smtp-Source: APXvYqxaoeAV0c6/rMfYf1AwFx6LX0voFaEDbttj9b4HqSVBxUQyamfxFYleGqOBJEeqRzRmjn+sz095ZD2+tlrlpSE=
-X-Received: by 2002:a7b:cbd1:: with SMTP id n17mr365771wmi.21.1551372011893;
- Thu, 28 Feb 2019 08:40:11 -0800 (PST)
+        Thu, 28 Feb 2019 11:40:55 -0500
+Received: from [192.168.178.20] (aftr-88-217-180-92.dynamic.mnet-online.de [88.217.180.92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: wg@grandegger.com)
+        by mailproxy03.manitu.net (Postfix) with ESMTPSA id 2AA69D41CA9;
+        Thu, 28 Feb 2019 17:44:01 +0100 (CET)
+From:   Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH v5 0/5] M_CAN Framework re-write
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
+        davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190214182754.30721-1-dmurphy@ti.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8QEfHnPzgykCs2DOOQ==
+Message-ID: <10baf726-7783-1783-caaa-d7b78be2d9a0@grandegger.com>
+Date:   Thu, 28 Feb 2019 17:40:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <1550680435-9706-1-git-send-email-srinath.mannam@broadcom.com>
- <1550680435-9706-3-git-send-email-srinath.mannam@broadcom.com> <20190228161303.GA23441@e107981-ln.cambridge.arm.com>
-In-Reply-To: <20190228161303.GA23441@e107981-ln.cambridge.arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Thu, 28 Feb 2019 22:10:00 +0530
-Message-ID: <CABe79T7DCodtvWsEpA3kS=W+GubF4tyb_C=F9OWXguKOUsgufw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] PCI: iproc: Add outbound configuration for 32-bit
- I/O region
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abhishek Shah <abhishek.shah@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190214182754.30721-1-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+Hello,
 
-Thanks for the review.. Please see my comments below in line..
+Am 14.02.19 um 19:27 schrieb Dan Murphy:
+> Hello
+> 
+> OK I did not give up on this patch series just got a little preoccupied with
+> some other kernel work.  But here is the update per the comments.
+> 
+> It should be understood I broke these out for reviewability.
+> For instance the first patch does not compile on its own as including this
+> patch should not change the current functionality and it pulls all the io-mapped
+> code from the m_can base file to a platfrom file.
 
-Regards,
-Srinath.
-On Thu, Feb 28, 2019 at 9:43 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Wed, Feb 20, 2019 at 10:03:55PM +0530, Srinath Mannam wrote:
-> > In the present driver outbound window configuration is done to map above
-> > 32-bit address I/O regions with corresponding PCI memory range given in
-> > ranges DT property.
-> >
-> > This patch add outbound window configuration to map below 32-bit I/O range
-> > with corresponding PCI memory, which helps to access I/O region in IA32
->
-> I think you mean ARM 32-bit here, not IA32.
-Yes ARM 32 bit.. Thank you.
->
-> > and one to one mapping of I/O region to PCI memory.
-> >
-> > Ex:
-> > 1. ranges DT property given for current driver is,
-> >     ranges = <0x83000000 0x0 0x40000000 0x4 0x00000000 0 0x40000000>;
-> >     I/O region address is 0x400000000
-> > 2. ranges DT property can be given after this patch,
-> >     ranges = <0x83000000 0x0 0x42000000 0x0 0x42000000 0 0x2000000>;
-> >     I/O region address is 0x42000000
-> >
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-> > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-> > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> > Reviewed-by: Vikram Prakash <vikram.prakash@broadcom.com>
->
-> I asked you before, please point me at mailing list discussions where
-> these review tags were given, v1 was already carrying them but that's
-> not how the process works, they have to be given on mailing lists.
-Sorry I missed your comment. These tags are our internal review list.
-Many Thanks for sharing knowledge.
-I will follow the process from next time onward. I will modify and
-send next patch set.
->
-> Lorenzo
->
-> > ---
-> >  drivers/pci/controller/pcie-iproc.c | 21 +++++++++++++++++++--
-> >  1 file changed, 19 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > index b882255..080f142 100644
-> > --- a/drivers/pci/controller/pcie-iproc.c
-> > +++ b/drivers/pci/controller/pcie-iproc.c
-> > @@ -955,8 +955,25 @@ static int iproc_pcie_setup_ob(struct iproc_pcie *pcie, u64 axi_addr,
-> >                       resource_size_t window_size =
-> >                               ob_map->window_sizes[size_idx] * SZ_1M;
-> >
-> > -                     if (size < window_size)
-> > -                             continue;
-> > +                     /*
-> > +                      * Keep iterating until we reach the last window and
-> > +                      * with the minimal window size at index zero. In this
-> > +                      * case, we take a compromise by mapping it using the
-> > +                      * minimum window size that can be supported
-> > +                      */
-> > +                     if (size < window_size) {
-> > +                             if (size_idx > 0 || window_idx > 0)
-> > +                                     continue;
-> > +
-> > +                             /*
-> > +                              * For the corner case of reaching the minimal
-> > +                              * window size that can be supported on the
-> > +                              * last window
-> > +                              */
-> > +                             axi_addr = ALIGN_DOWN(axi_addr, window_size);
-> > +                             pci_addr = ALIGN_DOWN(pci_addr, window_size);
-> > +                             size = window_size;
-> > +                     }
-> >
-> >                       if (!IS_ALIGNED(axi_addr, window_size) ||
-> >                           !IS_ALIGNED(pci_addr, window_size)) {
-> > --
-> > 2.7.4
-> >
+For git bisection, the code must compile!
+
+> The next patch "Migrate the m_can code to use the framework"
+> is the change to the kernel for the io-mapped conversion from a flat file to use
+> the framework.  Finally the rename patch just renames the m_can_priv to 
+> m_can_classdev.  I broke this change out specifically for readability of the
+> migration patch per comments on the code.
+> 
+> AFAIC the first 3 patches can all be squashed into a single patch.  Or the
+> first 2 patches in the series can be re-arranged but then m_can functionality is
+> affected in the migration patch.
+
+For the reason above, I would squash patch 1 and 2.
+
+> 
+> Again the first 3 patches here are all just for readability and review purposes.>
+> Dan
+> 
+> Dan Murphy (5):
+>   can: m_can: Create a m_can platform framework
+>   can: m_can: Migrate the m_can code to use the framework
+>   can: m_can: Rename m_can_priv to m_can_classdev
+>   dt-bindings: can: tcan4x5x: Add DT bindings for TCAN4x5X driver
+>   can: tcan4x5x: Add tcan4x5x driver to the kernel
+> 
+>  .../devicetree/bindings/net/can/tcan4x5x.txt  |  37 +
+>  drivers/net/can/m_can/Kconfig                 |  14 +-
+>  drivers/net/can/m_can/Makefile                |   2 +
+>  drivers/net/can/m_can/m_can.c                 | 788 +++++++++---------
+>  drivers/net/can/m_can/m_can.h                 | 159 ++++
+>  drivers/net/can/m_can/m_can_platform.c        | 198 +++++
+>  drivers/net/can/m_can/tcan4x5x.c              | 531 ++++++++++++
+>  7 files changed, 1320 insertions(+), 409 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+>  create mode 100644 drivers/net/can/m_can/m_can.h
+>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
+>  create mode 100644 drivers/net/can/m_can/tcan4x5x.c
+
+There are plenty of coding-style errors, e.g. white-space, indention,
+line too long, etc. Please use "checkpatch" to find and fix.
+
+Wolfgang.
+
+
+
