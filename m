@@ -6,47 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B259C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56E9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C4A218D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1CF2218E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366982;
-	bh=K/d3FheziLK/V2zp+t1N3kyeIvkPghGLD/RSwmU7qNk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=VKoeKniidKB1ayWlZclUPjwIIcwse/tmtZST1kHy7iLt1l6MnuoB1avKsWU0hDCdb
-	 vCvB3tTAZKZ9HIhX3zr/00zRcAXJKbyxO+tHKJRT0Gwi6195hEg1HA5sm590V+z/4e
-	 mceAwMY8tLu5deWs5IPBDRD2dnx0GNsdPAerrzFE=
+	s=default; t=1551366984;
+	bh=HD0ZgtkClz+U54CZRrOFB8omyqUPYJImcmwtLfKc3cs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vD0phGo3phRbXprdxI7tAcn7rgBlsrplSZ6Pjgv4aWKgXxLc+iQBQVTJcC/C2mHD0
+	 XwogeoustocqtuJbsJJ8BZuhym2QonFG1cbA8BuDCFLxwIeyGt6T/97Shd/wVlElGn
+	 UpaIAQbZV1pzCu0E6KYIzS4+on8N65Vqt9Z6HqdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389009AbfB1PQT (ORCPT
+        id S2389024AbfB1PQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:16:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52488 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:16:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388974AbfB1PQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:16:16 -0500
+        id S2389005AbfB1PQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:16:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B62220C01;
-        Thu, 28 Feb 2019 15:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C677218EA;
+        Thu, 28 Feb 2019 15:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366975;
-        bh=K/d3FheziLK/V2zp+t1N3kyeIvkPghGLD/RSwmU7qNk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=B9G7PICdBlaqJ6/1w/o/rBG8s838FzI8GqF2k9w4Pnfri+dt76aGGVJw/VNSnR0Gt
-         mT6KPK/Cn3qldG26kZWdkPLPANNVV7DoavxEhszIOvEKqqezVecTjgY+VkwlcxZBWM
-         RKzGsUl9vLLutZZt+0flKru6/aBVODf6972tCB/o=
+        s=default; t=1551366979;
+        bh=HD0ZgtkClz+U54CZRrOFB8omyqUPYJImcmwtLfKc3cs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q+KP9Nwvu7Ey1a4530Y3m6zf/J+rPXqHWb/fFAJ3oQKaxR/NuevT56WyxM1JB7r3R
+         qfQtuMmwWCT/Vcf4aXsNespW5ghrQBnAn+mxCSIThohl8rn4fRs1gw0BeXDno31jCA
+         SOLMQdhzHrWV3X4YmRHSN5EFasiQ3a7XPfB+oObo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Hao <peng.hao2@zte.com.cn>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 1/8] ARM: pxa: ssp: unneeded to free devm_ allocated data
-Date:   Thu, 28 Feb 2019 10:16:05 -0500
-Message-Id: <20190228151614.13022-1-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 4/8] dmaengine: dmatest: Abort test in case of mapping error
+Date:   Thu, 28 Feb 2019 10:16:08 -0500
+Message-Id: <20190228151614.13022-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151614.13022-1-sashal@kernel.org>
+References: <20190228151614.13022-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -55,42 +58,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Hao <peng.hao2@zte.com.cn>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit ba16adeb346387eb2d1ada69003588be96f098fa ]
+[ Upstream commit 6454368a804c4955ccd116236037536f81e5b1f1 ]
 
-devm_ allocated data will be automatically freed. The free
-of devm_ allocated data is invalid.
+In case of mapping error the DMA addresses are invalid and continuing
+will screw system memory or potentially something else.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-[title's prefix changed]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+[  222.480310] dmatest: dma0chan7-copy0: summary 1 tests, 3 failures 6 iops 349 KB/s (0)
+...
+[  240.912725] check: Corrupted low memory at 00000000c7c75ac9 (2940 phys) = 5656000000000000
+[  240.921998] check: Corrupted low memory at 000000005715a1cd (2948 phys) = 279f2aca5595ab2b
+[  240.931280] check: Corrupted low memory at 000000002f4024c0 (2950 phys) = 5e5624f349e793cf
+...
+
+Abort any test if mapping failed.
+
+Fixes: 4076e755dbec ("dmatest: convert to dmaengine_unmap_data")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-pxa/ssp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/dma/dmatest.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
-index daa1a65f2eb79..6748827c2ec8b 100644
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -238,8 +238,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	if (ssp == NULL)
- 		return -ENODEV;
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 6796eb1a8a4cb..884aecebb249b 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -563,11 +563,9 @@ static int dmatest_func(void *data)
+ 			srcs[i] = um->addr[i] + src_off;
+ 			ret = dma_mapping_error(dev->dev, um->addr[i]);
+ 			if (ret) {
+-				dmaengine_unmap_put(um);
+ 				result("src mapping error", total_tests,
+ 				       src_off, dst_off, len, ret);
+-				failed_tests++;
+-				continue;
++				goto error_unmap_continue;
+ 			}
+ 			um->to_cnt++;
+ 		}
+@@ -582,11 +580,9 @@ static int dmatest_func(void *data)
+ 					       DMA_BIDIRECTIONAL);
+ 			ret = dma_mapping_error(dev->dev, dsts[i]);
+ 			if (ret) {
+-				dmaengine_unmap_put(um);
+ 				result("dst mapping error", total_tests,
+ 				       src_off, dst_off, len, ret);
+-				failed_tests++;
+-				continue;
++				goto error_unmap_continue;
+ 			}
+ 			um->bidi_cnt++;
+ 		}
+@@ -611,12 +607,10 @@ static int dmatest_func(void *data)
+ 		}
  
--	iounmap(ssp->mmio_base);
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	release_mem_region(res->start, resource_size(res));
+ 		if (!tx) {
+-			dmaengine_unmap_put(um);
+ 			result("prep error", total_tests, src_off,
+ 			       dst_off, len, ret);
+ 			msleep(100);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
  
-@@ -249,7 +247,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
+ 		done->done = false;
+@@ -625,12 +619,10 @@ static int dmatest_func(void *data)
+ 		cookie = tx->tx_submit(tx);
  
--	kfree(ssp);
- 	return 0;
- }
+ 		if (dma_submit_error(cookie)) {
+-			dmaengine_unmap_put(um);
+ 			result("submit error", total_tests, src_off,
+ 			       dst_off, len, ret);
+ 			msleep(100);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 		dma_async_issue_pending(chan);
+ 
+@@ -643,16 +635,14 @@ static int dmatest_func(void *data)
+ 			dmaengine_unmap_put(um);
+ 			result("test timed out", total_tests, src_off, dst_off,
+ 			       len, 0);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		} else if (status != DMA_COMPLETE) {
+ 			dmaengine_unmap_put(um);
+ 			result(status == DMA_ERROR ?
+ 			       "completion error status" :
+ 			       "completion busy status", total_tests, src_off,
+ 			       dst_off, len, ret);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 
+ 		dmaengine_unmap_put(um);
+@@ -691,6 +681,12 @@ static int dmatest_func(void *data)
+ 			verbose_result("test passed", total_tests, src_off,
+ 				       dst_off, len, 0);
+ 		}
++
++		continue;
++
++error_unmap_continue:
++		dmaengine_unmap_put(um);
++		failed_tests++;
+ 	}
+ 	runtime = ktime_us_delta(ktime_get(), ktime);
  
 -- 
 2.19.1
