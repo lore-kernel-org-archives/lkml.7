@@ -2,152 +2,97 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E36C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC95C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C556206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0452133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551368075;
-	bh=ftXPPQJsRKWtxHialoCsdMGo2gpEfIYT3UMYjQZT1vw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=03Allp4ykx48/hdxOzxjN1/lxDdlAhFaDQC29rFZ3GT5LOqoYWqp14fdQgAxWVR7L
-	 qeHg2LbTBghkgEq2STdOOQ4rm3qXbI4FUcI6rM9UBK/CHxqIyBdgcplx6XqxDh+r05
-	 CwUCayPg0dzXjuCLiDaMnjKv6gKqsduln4GQeCg0=
+	s=default; t=1551368083;
+	bh=fJK6iMzVu0kVdh0LvvygSDe9BB+1XB4OIFTMCsjXWH8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=TwKkf/k5TBTNL6XpgQP5MLHi4M9RGNVSDQ5EwRrYOcpRGtg6CxVBZ3pbeFe6v3I3O
+	 OBpclqbinPq+ULif96HX0Wj9dTEVjGK7KTtJHcTmAcODiBStftB+6ldYXWG6/dScU+
+	 0y6bS0bH2ROY9LVy2giKLN64c+Ayp+DsOuj/jemE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732940AbfB1Ped (ORCPT
+        id S2387761AbfB1Pem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:34:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40534 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:34:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732718AbfB1PI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:08:26 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1732065AbfB1Pek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:34:40 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 365B6218B0;
-        Thu, 28 Feb 2019 15:08:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3B59206DD;
+        Thu, 28 Feb 2019 15:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366505;
-        bh=ftXPPQJsRKWtxHialoCsdMGo2gpEfIYT3UMYjQZT1vw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTIJ8rFb5KnWJ9E7+g2r0e8V4nNF6O4SfTsnUVom1Q1MjGpsjwzEjzybd/h9yvJW7
-         7SfK7qdk01vGjmkAfLAJYBzQka3ggU9kQfMQ1cBKHtDOUnkkA28o/3mSL4OnQ/kWcH
-         QHh2EqeD4HdpAhityH+wXXHtzXvucIgWAvecfhTg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 08/81] signal: Make siginmask safe when passed a signal of 0
-Date:   Thu, 28 Feb 2019 10:07:00 -0500
-Message-Id: <20190228150813.10256-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
-References: <20190228150813.10256-1-sashal@kernel.org>
+        s=default; t=1551368080;
+        bh=fJK6iMzVu0kVdh0LvvygSDe9BB+1XB4OIFTMCsjXWH8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MrnjIUGhQYCBUFZqVBISbCFt65iTZqGIvbTw3c1L4+4MNWQ/HRV/cMgRORfqfU5I+
+         iOuBiWw3zVaPVKBp/q+bGN5EgQj2XvjbRlN/fILpHE78hr3Uv0Z/Y50jqNR68wFV+O
+         2y8KUMiFis5q+NpiIJsGfP6smlGrxo38yMniKptw=
+Date:   Thu, 28 Feb 2019 16:34:37 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Eric Biggers <ebiggers@kernel.org>, kvm@vger.kernel.org,
+        syzbot <syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        penguin-kernel@i-love.sakura.ne.jp,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: [PATCH] kvm: properly check debugfs dentry before using it
+Message-ID: <20190228153437.GI8481@kroah.com>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+debugfs can now report an error code if something went wrong instead of
+just NULL.  So if the return value is to be used as a "real" dentry, it
+needs to be checked if it is an error before dereferencing it.
 
-[ Upstream commit ee17e5d6201c66492a0e8053190fca2ed2b8457d ]
-
-Eric Biggers reported:
-> The following commit, which went into v4.20, introduced undefined behavior when
-> sys_rt_sigqueueinfo() is called with sig=0:
->
-> commit 4ce5f9c9e7546915c559ffae594e6d73f918db00
-> Author: Eric W. Biederman <ebiederm@xmission.com>
-> Date:   Tue Sep 25 12:59:31 2018 +0200
->
->     signal: Use a smaller struct siginfo in the kernel
->
-> In sig_specific_sicodes(), used from known_siginfo_layout(), the expression
-> '1ULL << ((sig)-1)' is undefined as it evaluates to 1ULL << 4294967295.
->
-> Reproducer:
->
-> #include <signal.h>
-> #include <sys/syscall.h>
-> #include <unistd.h>
->
-> int main(void)
-> {
-> 	siginfo_t si = { .si_code = 1 };
-> 	syscall(__NR_rt_sigqueueinfo, 0, 0, &si);
-> }
->
-> UBSAN report for v5.0-rc1:
->
-> UBSAN: Undefined behaviour in kernel/signal.c:2946:7
-> shift exponent 4294967295 is too large for 64-bit type 'long unsigned int'
-> CPU: 2 PID: 346 Comm: syz_signal Not tainted 5.0.0-rc1 #25
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x70/0xa5 lib/dump_stack.c:113
->  ubsan_epilogue+0xd/0x40 lib/ubsan.c:159
->  __ubsan_handle_shift_out_of_bounds+0x12c/0x170 lib/ubsan.c:425
->  known_siginfo_layout+0xae/0xe0 kernel/signal.c:2946
->  post_copy_siginfo_from_user kernel/signal.c:3009 [inline]
->  __copy_siginfo_from_user+0x35/0x60 kernel/signal.c:3035
->  __do_sys_rt_sigqueueinfo kernel/signal.c:3553 [inline]
->  __se_sys_rt_sigqueueinfo kernel/signal.c:3549 [inline]
->  __x64_sys_rt_sigqueueinfo+0x31/0x70 kernel/signal.c:3549
->  do_syscall_64+0x4c/0x1b0 arch/x86/entry/common.c:290
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x433639
-> Code: c4 18 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 27 00 00 c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007fffcb289fc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000081
-> RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000433639
-> RDX: 00007fffcb289fd0 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 00000000006b2018 R08: 000000000000004d R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401560
-> R13: 00000000004015f0 R14: 0000000000000000 R15: 0000000000000000
-
-I have looked at the other callers of siginmask and they all appear to
-in locations where sig can not be zero.
-
-I have looked at the code generation of adding an extra test against
-zero and gcc was able with a simple decrement instruction to combine
-the two tests together. So the at most adding this test cost a single
-cpu cycle.  In practice that decrement instruction was already present
-as part of the mask comparison, so the only change was when the
-instruction was executed.
-
-So given that it is cheap, and obviously correct to update siginmask
-to verify the signal is not zero.  Fix this issue there to avoid any
-future problems.
+This is now happening because of ff9fb72bc077 ("debugfs: return error
+values, not NULL").  syzbot has found a way to trigger multiple debugfs
+files attempting to be created, which fails, and then the error code
+gets passed to dentry_path_raw() which obviously does not like it.
 
 Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 4ce5f9c9e754 ("signal: Use a smaller struct siginfo in the kernel")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: kvm@vger.kernel.org
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/signal.h | 2 +-
+
+Linus, this should go in before 5.0-final is out, as it resolves a
+problem found by syzbot.  Paolo has given his ack for me to send this
+directly to you.  If you want this in [GIT PULL] format, I can do that
+as well.
+
+ virt/kvm/kvm_main.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/signal.h b/include/linux/signal.h
-index f428e86f48007..b5d99482d3fe1 100644
---- a/include/linux/signal.h
-+++ b/include/linux/signal.h
-@@ -388,7 +388,7 @@ extern bool unhandled_signal(struct task_struct *tsk, int sig);
- #endif
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4044,7 +4044,7 @@ static void kvm_uevent_notify_change(uns
+ 	}
+ 	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
  
- #define siginmask(sig, mask) \
--	((sig) < SIGRTMIN && (rt_sigmask(sig) & (mask)))
-+	((sig) > 0 && (sig) < SIGRTMIN && (rt_sigmask(sig) & (mask)))
+-	if (kvm->debugfs_dentry) {
++	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
+ 		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
  
- #define SIG_KERNEL_ONLY_MASK (\
- 	rt_sigmask(SIGKILL)   |  rt_sigmask(SIGSTOP))
--- 
-2.19.1
-
+ 		if (p) {
