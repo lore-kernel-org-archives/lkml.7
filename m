@@ -2,64 +2,87 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19F6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF22C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876402184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED88218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:21:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551345718;
+	bh=QjAB/Z/ufkhaxSELAqlor+8zUpr73uzeNhJiNCfbfhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UHvcZz9yTY0TutOl819lQ82G7qLJuAHoWDcMNqSgxHbZFC81xZJgMQFWyE17N8BEj
+	 c7VI855Sg6+sIVR91/VJ7USYzHwtp5+OumTcO/NaNZb6csHKPrl/3rCLAYD6kd5sF8
+	 TwAXMbxId/dWS6uAJfxaSCvZ1KpyOzNJA1+/tyPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbfB1JVR (ORCPT
+        id S1732152AbfB1JV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:21:17 -0500
-Received: from ozlabs.org ([203.11.71.1]:41657 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfB1JVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:21:16 -0500
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4496Vf0vRHz9s9T; Thu, 28 Feb 2019 20:21:13 +1100 (AEDT)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 27da80719ef132cf8c80eb406d5aeb37dddf78cc
-X-Patchwork-Hint: ignore
-In-Reply-To: <dccb392cd3e2b1825608576ecf2487cc5d84466d.1551205086.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Diana Craciun <diana.craciun@nxp.com>
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: powerpc/fsl: Fix the flush of branch predictor.
-Message-Id: <4496Vf0vRHz9s9T@ozlabs.org>
-Date:   Thu, 28 Feb 2019 20:21:13 +1100 (AEDT)
+        Thu, 28 Feb 2019 04:21:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52888 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725978AbfB1JV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 04:21:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2EA8BAC5A;
+        Thu, 28 Feb 2019 09:21:55 +0000 (UTC)
+Date:   Thu, 28 Feb 2019 10:21:54 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, david@redhat.com,
+        mike.kravetz@oracle.com
+Subject: Re: [RFC PATCH] mm,memory_hotplug: Unlock 1GB-hugetlb on x86_64
+Message-ID: <20190228092154.GV10588@dhcp22.suse.cz>
+References: <20190221094212.16906-1-osalvador@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190221094212.16906-1-osalvador@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-02-26 at 18:18:48 UTC, Christophe Leroy wrote:
-> The commit identified below adds MC_BTB_FLUSH macro only when
-> CONFIG_PPC_FSL_BOOK3E is defined. This results in the following error
-> on some configs (seen several times with kisskb randconfig_defconfig)
-> 
-> arch/powerpc/kernel/exceptions-64e.S:576: Error: Unrecognized opcode: `mc_btb_flush'
-> make[3]: *** [scripts/Makefile.build:367: arch/powerpc/kernel/exceptions-64e.o] Error 1
-> make[2]: *** [scripts/Makefile.build:492: arch/powerpc/kernel] Error 2
-> make[1]: *** [Makefile:1043: arch/powerpc] Error 2
-> make: *** [Makefile:152: sub-make] Error 2
-> 
-> This patch adds a blank definition of MC_BTB_FLUSH for other cases.
-> 
-> Fixes: 10c5e83afd4a ("powerpc/fsl: Flush the branch predictor at each kernel entry (64bit)")
-> Cc: Diana Craciun <diana.craciun@nxp.com>
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Reviewed-by: Daniel Axtens <dja@axtens.net>
-> Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
+On Thu 21-02-19 10:42:12, Oscar Salvador wrote:
+[...]
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index d5f7afda67db..04f6695b648c 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1337,8 +1337,7 @@ static unsigned long scan_movable_pages(unsigned long start, unsigned long end)
+>  		if (!PageHuge(page))
+>  			continue;
+>  		head = compound_head(page);
+> -		if (hugepage_migration_supported(page_hstate(head)) &&
+> -		    page_huge_active(head))
+> +		if (page_huge_active(head))
+>  			return pfn;
+>  		skip = (1 << compound_order(head)) - (page - head);
+>  		pfn += skip - 1;
 
-Applied to powerpc next, thanks.
+Is this part correct? Say we have a gigantic page which is migrateable.
+Now scan_movable_pages would skip it and we will not migrate it, no?
 
-https://git.kernel.org/powerpc/c/27da80719ef132cf8c80eb406d5aeb37
+> @@ -1378,10 +1377,6 @@ do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
+>  
+>  		if (PageHuge(page)) {
+>  			struct page *head = compound_head(page);
+> -			if (compound_order(head) > PFN_SECTION_SHIFT) {
+> -				ret = -EBUSY;
+> -				break;
+> -			}
+>  			pfn = page_to_pfn(head) + (1<<compound_order(head)) - 1;
+>  			isolate_huge_page(head, &source);
+>  			continue;
 
-cheers
+I think it would be much easier to have only this check removed in this
+patch. Because it is obviously bogus and wrong as well. The other check
+might be considered in a separate patch.
+-- 
+Michal Hocko
+SUSE Labs
