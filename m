@@ -2,114 +2,105 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665CEC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07075C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 412442171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09952171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731410AbfB1Kdl (ORCPT
+        id S1731236AbfB1KgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:33:41 -0500
-Received: from vmicros1.altlinux.org ([194.107.17.57]:54348 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbfB1Kdl (ORCPT
+        Thu, 28 Feb 2019 05:36:01 -0500
+Received: from Galois.linutronix.de ([146.0.238.70]:54694 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbfB1KgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:33:41 -0500
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 5E13F72CC53;
-        Thu, 28 Feb 2019 13:33:38 +0300 (MSK)
-Received: from altlinux.org (sole.flsd.net [185.75.180.6])
-        by imap.altlinux.org (Postfix) with ESMTPSA id 30C434A4AE7;
-        Thu, 28 Feb 2019 13:33:38 +0300 (MSK)
-Date:   Thu, 28 Feb 2019 13:33:37 +0300
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] X.509: Parse public key parameters from x509 for
- akcipher
-Message-ID: <20190228103337.sbjujn27qkkgxqt2@altlinux.org>
-Mail-Followup-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190106133608.820-2-vt@altlinux.org>
- <20190209214240.56gq7ivn3pw3bssf@altlinux.org>
- <20190210184628.yupsxgjlaicwbxg6@altlinux.org>
- <20190219043732.x3sbwzqlz4ikntxo@gondor.apana.org.au>
- <20190224064840.hii4ccjksjdnewae@altlinux.org>
- <20190228061444.3escryzoit3idtwg@gondor.apana.org.au>
- <20190228070449.gjwoq4c2b3x5grie@altlinux.org>
- <20190228075141.s6mftb44yuylbzys@gondor.apana.org.au>
- <20190228082801.2aofw23r2shzwy4n@altlinux.org>
- <20190228090125.6n62v4oxpwl5yzv4@gondor.apana.org.au>
+        Thu, 28 Feb 2019 05:36:00 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1gzJ2i-0001zT-D5; Thu, 28 Feb 2019 11:35:56 +0100
+Date:   Thu, 28 Feb 2019 11:35:56 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] posix-cpu-timers: Avoid undefined behaviour in
+ timespec64_to_ns()
+In-Reply-To: <CAK8P3a0ip8+UaqnjGsC8GVY8CSEtccB4uUB-b5Zk1nrVqcY0eQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1902281123550.1821@nanos.tec.linutronix.de>
+References: <1551253922-3307-1-git-send-email-wangxiongfeng2@huawei.com> <CABeXuvoJ3oKRp0z=CO_8kPhZ+-AHGwTaDBqzK2FuC_v5t6kU=A@mail.gmail.com> <CAK8P3a0ip8+UaqnjGsC8GVY8CSEtccB4uUB-b5Zk1nrVqcY0eQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <20190228090125.6n62v4oxpwl5yzv4@gondor.apana.org.au>
-User-Agent: NeoMutt/20171215-106-ac61c7
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 05:01:25PM +0800, Herbert Xu wrote:
-> On Thu, Feb 28, 2019 at 11:28:01AM +0300, Vitaly Chikunov wrote:
-> > On Thu, Feb 28, 2019 at 03:51:41PM +0800, Herbert Xu wrote:
-> > > On Thu, Feb 28, 2019 at 10:04:49AM +0300, Vitaly Chikunov wrote:
-> > > > 
-> > > > It seems that you insist on set_params to be removed and both key and
-> > > > params to be passed into set_{pub,priv}_key. This means reworking all
-> > > > existing RSA drivers and callers, right? Can you please confirm that
-> > > > huge rework to avoid misunderstanding?
-> > > 
-> > > I don't understand why we even need to touch the existing RSA
-> > > drivers.  Nothing needs to change as far as they're concerned.
-> > > 
-> > > Only the new algorithms would need to decode the extra parameters
-> > > in the key stream.
-> > 
-> >         int (*set_pub_key)(struct crypto_akcipher *tfm, const void *key,
-> >                            unsigned int keylen);
-> >         int (*set_priv_key)(struct crypto_akcipher *tfm, const void *key,
-> >                             unsigned int keylen);
-> > 
-> > So you want `keylen' not to cover parameters data, but parameters
-> > actually present in key after `keylen' bytes (in come packed format)?
-> > (And if there is no parameters appended, there is still appended some
-> > marker, like 0, to signify that there is no parameters.)
-> > 
-> > This looks a bit counter-intuitive usage of arguments (as argument
-> > signifying length does not cover all arguments data), is this ok to you?
+On Thu, 28 Feb 2019, Arnd Bergmann wrote:
+> On Thu, Feb 28, 2019 at 5:25 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> >
+> > On Tue, Feb 26, 2019 at 11:52 PM Xiongfeng Wang
+> > <wangxiongfeng2@huawei.com> wrote:
+> > >
+> > > +++ b/kernel/time/posix-timers.c
+> > > @@ -853,8 +853,8 @@ static int do_timer_settime(timer_t timer_id, int flags,
+> > >         unsigned long flag;
+> > >         int error = 0;
+> > >
+> > > -       if (!timespec64_valid(&new_spec64->it_interval) ||
+> > > -           !timespec64_valid(&new_spec64->it_value))
+> > > +       if (!timespec64_valid_strict(&new_spec64->it_interval) ||
+> > > +           !timespec64_valid_strict(&new_spec64->it_value))
+> > >                 return -EINVAL;
+> > >
+> > >         if (old_spec64)
+> >
+> > sys_timer_settime() is a POSIX interface:
+> > http://pubs.opengroup.org/onlinepubs/7908799/xsh/timer_settime.html
+> >
+> > The timer_settime() function will fail if:
+> >
+> > [EINVAL] The timerid argument does not correspond to an id returned by
+> > timer_create() but not yet deleted by timer_delete().
+> >
+> > [EINVAL] A value structure specified a nanosecond value less than zero
+> > or greater than or equal to 1000 million.
+> >
+> > So we cannot return EINVAL here if we want to maintain POSIX compatibility.
+> > Maybe we should check for limit and saturate here at the syscall interface?
 > 
-> This is how we handle things in DH as well as other places such
-> as authenc.
+> I think returning EINVAL here is better than silently truncating, we
+> just need to
+> document it in the Linux man page.
+> Note that truncation would set the time to just before the overflow,
+> it bad things
+> start to happen the instant after it returns from the kernel. This is possibly
+> worse than setting a random value that may or may not crash the system.
 
-dh.c (set_secret) is getting buf, len arguments and then parameters are
-unpacked from that buffer. I think you want me to do this.
+Not necessarily. On the hrtimer based side, we clamp the values to
+KTIME_MAX. That means in theory the overflow could happen when the timer
+expires and the interval is added. There are two things which prevent that:
 
-To make the same for set_{pub,priv}_key it will require patching RSA
-drivers anyway, since length of the key is stored just once as keylen
-argument.
+1) The timer expires in about 292 years from now, which I really can't be
+   worried about
 
-Drivers will be changed to interpret key, keylen as buf, len and actual
-keylen will be stored into the buf, and will be unpacked from there.
+2) The rearming code prevents the overflow into undefined space as well.
+
+So, it's not unreasonable to do clamping as long as the handed in value is
+at least formally correct.
+
+Of course we need to look at the posix-cpu-timer side of affairs to ensure
+that the limits are handled correctly.
 
 Thanks,
 
-> 
-> Cheers,
-> -- 
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+	tglx
+
