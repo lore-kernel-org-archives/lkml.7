@@ -2,138 +2,123 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A52C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FD5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3DF2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17382171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:05:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="P84r7zWC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yHwraVvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbfB1IEz (ORCPT
+        id S1731936AbfB1IFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:04:55 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:34927 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730263AbfB1IEy (ORCPT
+        Thu, 28 Feb 2019 03:05:00 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:44561 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730263AbfB1IFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:04:54 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S84iQR2954821
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 28 Feb 2019 00:04:44 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S84hAH2954817;
-        Thu, 28 Feb 2019 00:04:43 -0800
-Date:   Thu, 28 Feb 2019 00:04:43 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-4b6ac811bce46c83811b83cdf87b41251596b9fc@git.kernel.org>
-Cc:     tglx@linutronix.de, acme@redhat.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, ak@linux.intel.com, mingo@kernel.org,
-        eranian@google.com, namhyung@kernel.org, jolsa@kernel.org
-Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org,
-          ak@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
-          eranian@google.com, tglx@linutronix.de, hpa@zytor.com,
-          acme@redhat.com
-In-Reply-To: <20190224153722.27020-2-andi@firstfloor.org>
-References: <20190224153722.27020-2-andi@firstfloor.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf script: Handle missing fields with -F +..
-Git-Commit-ID: 4b6ac811bce46c83811b83cdf87b41251596b9fc
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 28 Feb 2019 03:05:00 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id BACA82436D;
+        Thu, 28 Feb 2019 03:04:58 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 28 Feb 2019 03:04:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=7ldWtmcG/d5iBw1BFnyPdc4WH1C
+        DB0IBi9Fuwrv8RZA=; b=P84r7zWChz+ZPRISmUbsdiFvqQYE9WbiP0+/jlhraOY
+        zPcmLvkm0SJihaQjcpzjl0tXMFMHTDptudVhnOmp4/tmrGcjqm7wKXb0fVwUZCvE
+        oSejRx2womTwJ+hX3dwOBxlUlYBdtawJFZe5XJe5AzoJ9DYX9H1FbvyXbwbFcuVC
+        dVl/cbTlgAzUJvzIvnJS3tbLO868nZfKXj6vH7m72q3FyhJoKzi1hDyYREVLrYVT
+        c+rN077oHwNdu81xwgevS/GsxXKBEMFtq0PWKhhxkeJu4S+/CWIiHvZ9K8DSNmyx
+        93mMuJE54f5HJ5RCgXvJXqhPM8N4uX7cMy3Isy1ul4w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=7ldWtm
+        cG/d5iBw1BFnyPdc4WH1CDB0IBi9Fuwrv8RZA=; b=yHwraVvEg6uVeJe/0Mq1GN
+        mB/kUHmVZQs9wkAW1TjlpiZzpK34FrxnwGMrXeFHdruj8L0HS86eifbzkJq3IhtG
+        oYuK3d3EuelCl4Z6fur2PPwDBypblQ75ttTyFy2tz/++0EhIc/MdwV+mFeWo34It
+        spIyrCMI8vf+WNg2a5B9ZRyJ03AUxJA3eSSli7zgeZ/P2LKQiyg4HDXHaFMq7t2o
+        rSH76My3iKLSm8Sfm8BmqWr9+aW35w/37IdV6MmU9ozVbMuOeM+Q+vjnjHDl9whT
+        HRDL5Qf6zgTdaxIboKiqSwVLiwu84nHcpPpiGWmAc9vI2PHlqgHhfge0bdjrwXwQ
+        ==
+X-ME-Sender: <xms:KJZ3XA7chSQi1viF3tQ1HhtqSzWqdXuJpYvjHVs5Zm97oxRIc0GxSQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrvddvgdduudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:KZZ3XL-49dBa5239c4epTQaO-sKapslf8BLHzldkJPvz2QpyHjs9DA>
+    <xmx:KZZ3XOhe6xJ0WfpspKqr5oIW91gX__XAlGo8Gv12YVIf26INtnGa_Q>
+    <xmx:KZZ3XNRLx-iXj1E-c9XnsF7BoXkaIjUI0GM4EwGL9_S_AeApRlPe6w>
+    <xmx:KpZ3XFPzNK0mh80o1Cri_jvx5Pn2MTWZf2l9oQMMD3TgS-zbT4Zz9w>
+Received: from localhost (5356596b.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6E173E4546;
+        Thu, 28 Feb 2019 03:04:56 -0500 (EST)
+Date:   Thu, 28 Feb 2019 09:04:54 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        straube.linux@gmail.com, kernel-janitors@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8712: assign initial value to a static
+ variable in r8712_efuse_pg_packet_write()
+Message-ID: <20190228080454.GA8210@kroah.com>
+References: <20190227033322.127177-1-maowenan@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190227033322.127177-1-maowenan@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  4b6ac811bce46c83811b83cdf87b41251596b9fc
-Gitweb:     https://git.kernel.org/tip/4b6ac811bce46c83811b83cdf87b41251596b9fc
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Sun, 24 Feb 2019 07:37:12 -0800
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 25 Feb 2019 10:58:07 -0300
+On Wed, Feb 27, 2019 at 11:33:22AM +0800, Mao Wenan wrote:
+> repeat_times is a static variable, but each time when it enters
+> r8712_efuse_pg_packet_write(), it is set to zero,
+> this value is not consistent with last calling, so next behavior
+> is not our expect.
+> 
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  drivers/staging/rtl8712/rtl8712_efuse.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8712/rtl8712_efuse.c b/drivers/staging/rtl8712/rtl8712_efuse.c
+> index 8bc45ffd3029..3e8421255170 100644
+> --- a/drivers/staging/rtl8712/rtl8712_efuse.c
+> +++ b/drivers/staging/rtl8712/rtl8712_efuse.c
+> @@ -358,7 +358,7 @@ u8 r8712_efuse_pg_packet_write(struct _adapter *padapter, const u8 offset,
+>  	u8 pg_header = 0;
+>  	u16 efuse_addr = 0, curr_size = 0;
+>  	u8 efuse_data, target_word_cnts = 0;
+> -	static int repeat_times;
+> +	static int repeat_times = 0;
+>  	int sub_repeat;
+>  	u8 bResult = true;
+>  
+> @@ -368,7 +368,6 @@ u8 r8712_efuse_pg_packet_write(struct _adapter *padapter, const u8 offset,
+>  		return false;
+>  	pg_header = MAKE_EFUSE_HEADER(offset, word_en);
+>  	target_word_cnts = calculate_word_cnts(word_en);
+> -	repeat_times = 0;
+>  	efuse_addr = 0;
+>  	while (efuse_addr < efuse_available_max_size) {
+>  		curr_size = r8712_efuse_get_current_size(padapter);
 
-perf script: Handle missing fields with -F +..
+This patch does not apply to my tree at all.
 
-When using -F + syntax to add a field the existing defaults are
-currently all marked user_set. This can cause errors when some field is
-missing in the perf.data
+And are you sure this is correct?
 
-This patch tracks the actually user set fields separately, so that we don't
-error out in this case.
-
-Before:
-
-  % perf record true
-  % perf script -F +metric
-  Samples for 'cycles:ppp' event do not have CPU attribute set. Cannot print 'cpu' field.
-  %
-
-After:
-
-  5 perf record true
-  % perf script -F +metric
-              perf 28936 278636.237688:          1 cycles:ppp:  ffffffff8117da99 perf_event_exec+0x59 (/lib/modules/4.20.0-odilo/build/vmlinux)
-  ...
-  %
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190224153722.27020-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-script.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 5b1543f42290..2d8cb1d1682c 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -149,6 +149,7 @@ static struct {
- 	unsigned int print_ip_opts;
- 	u64 fields;
- 	u64 invalid_fields;
-+	u64 user_set_fields;
- } output[OUTPUT_TYPE_MAX] = {
- 
- 	[PERF_TYPE_HARDWARE] = {
-@@ -345,7 +346,7 @@ static int perf_evsel__do_check_stype(struct perf_evsel *evsel,
- 	if (attr->sample_type & sample_type)
- 		return 0;
- 
--	if (output[type].user_set) {
-+	if (output[type].user_set_fields & field) {
- 		if (allow_user_set)
- 			return 0;
- 		evname = perf_evsel__name(evsel);
-@@ -2632,10 +2633,13 @@ parse:
- 					pr_warning("\'%s\' not valid for %s events. Ignoring.\n",
- 						   all_output_options[i].str, event_type(j));
- 				} else {
--					if (change == REMOVE)
-+					if (change == REMOVE) {
- 						output[j].fields &= ~all_output_options[i].field;
--					else
-+						output[j].user_set_fields &= ~all_output_options[i].field;
-+					} else {
- 						output[j].fields |= all_output_options[i].field;
-+						output[j].user_set_fields |= all_output_options[i].field;
-+					}
- 					output[j].user_set = true;
- 					output[j].wildcard_set = true;
- 				}
+greg k-h
