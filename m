@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9D8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D29DC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E64A218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3266F218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366831;
-	bh=9b6yJGGa8IaI9gziiGNK1GXHkb4fFzi8cdZvE1kA/IM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=aXsH7qfOX5qOMcmKYb6F6TNv1FDXsld+V/8vA62GEQkdvUYr9Nf5E7eXTUStEOaxX
-	 MMe/bzXE/D9VEQSjWh85mhCKuYu0Drt0iL8gcXgGYot35JVk0pfDQAkJCMCbN/aLpj
-	 +7gF63sPzjsdbgHgg587wR/J/EBWDWBDpiOy5RQ8=
+	s=default; t=1551366834;
+	bh=t3Glet6yn2rfa9d93nU0o2OF0T4oOn59h0iMyz6Cmpo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QCjhJmHqIg6WXaTe6EwP7yqpSbBRGQqkcqEqkAQLRy4sTopPe5uqJew0sCirzRoM9
+	 1Czrwx4NBTZvwVVeC87fmoOKDRorG4t84UNbzNFwfxfkejvQWnf+F+91FgUxUrBajL
+	 vavujGuLp0TOUzy2JjkLyaPkEZNjryy5FHRqsGFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387997AbfB1PNu (ORCPT
+        id S2388548AbfB1PNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:13:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47784 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:13:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387737AbfB1PNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:13:39 -0500
+        id S2388525AbfB1PNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:13:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA2D7218D9;
-        Thu, 28 Feb 2019 15:13:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2D1E218FC;
+        Thu, 28 Feb 2019 15:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366819;
-        bh=9b6yJGGa8IaI9gziiGNK1GXHkb4fFzi8cdZvE1kA/IM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YycHHQRMkZzd1Q9l4pDyASwEb8O7vAVA8H2f7tZQS/w87898F+mqawJrlKPewblvk
-         bIaLTqCPRtduTM8DKGO2IzQ0IvROhIDWi9SI09/LbgPgCU2advuTD/yUipY9fD9kc6
-         txs4kApgkwzk9gKSSvdHq5We8jmb8fjNGcRJi77Q=
+        s=default; t=1551366828;
+        bh=t3Glet6yn2rfa9d93nU0o2OF0T4oOn59h0iMyz6Cmpo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WOuy6iXr2G/0pjot/9GNDiAX7GOm/UD+NCOY0cSRAWIWp221byxBsh0EvFhmqXjqo
+         ICfQyo/xeme+N5HFK+bRi14e9S2UBDf+v1DbA/A1EOFcPlu4ZVGQ85mst9b/32C4Nm
+         kcvqamyWSfF2xvyAsmKg+Ej9dqdLPoiln7YGFdFs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/36] ARM: dts: omap4-droid4: Fix typo in cpcap IRQ flags
-Date:   Thu, 28 Feb 2019 10:13:02 -0500
-Message-Id: <20190228151337.12176-1-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/36] arm64: dts: add msm8996 compatible to gicv3
+Date:   Thu, 28 Feb 2019 10:13:07 -0500
+Message-Id: <20190228151337.12176-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
+References: <20190228151337.12176-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -56,38 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit ef4a55b9197a8f844ea0663138e902dcce3e2f36 ]
+[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
 
-We're now getting the following error:
+Add compatible to gicv3 node to enable quirk required to restrict writing
+to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
 
-genirq: Setting trigger mode 1 for irq 230 failed
-(regmap_irq_set_type+0x0/0x15c)
-cpcap-usb-phy cpcap-usb-phy.0: could not get irq dp: -524
+With this quirk MSM8996 can at least boot out of mainline, which can help
+community to work with boards based on MSM8996.
 
-Cc: Sebastian Reichel <sre@kernel.org>
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Tested-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Without this patch Qualcomm DB820c board reboots on mainline.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-index 4d61e5b1334a6..bcced922b2807 100644
---- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-@@ -92,7 +92,7 @@
- 			interrupts-extended = <
- 				&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
- 				&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
--				&cpcap 48 1
-+				&cpcap 48 0
- 			>;
- 			interrupt-names =
- 				"id_ground", "id_float", "se0conn", "vbusvld",
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index ab00be277c6fc..6f372ec055dd3 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -359,7 +359,7 @@
+ 		};
+ 
+ 		intc: interrupt-controller@9bc0000 {
+-			compatible = "arm,gic-v3";
++			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+ 			#redistributor-regions = <1>;
 -- 
 2.19.1
 
