@@ -2,209 +2,178 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4359AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29D4C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02162218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE081206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:27:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mEB/jTmq"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="G1RQ+ECQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732148AbfB1XYx (ORCPT
+        id S1731270AbfB1X1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:24:53 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:51486 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728891AbfB1XYv (ORCPT
+        Thu, 28 Feb 2019 18:27:55 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33642 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729374AbfB1X1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:24:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3OTMvqIsgBsJKRphPPB6sZbG3KA1MawSCRk7xDbyzX0=; b=mEB/jTmqBGbWZjLxTYyDNXKDKy
-        BTKsbKJHVI846klJqeDouvMnSlYtWxup0/+NzX7AHpweGS8a/6B2qBOB6AcUvd0M5w7Ausl8EEGd/
-        Fyl/RqsSFNs5UAktQWJE6FsLHc3GOSuHfIyVmHjSYNeBTagY/mY7QGggwRf2k1cxQEIy1Ai3fHm9X
-        MOoEfn+HW4RDttvgDV5LCTtOVCE29wq5BtUcVFvln9o0VhRKGPUgaSwkxI4HMV1cklcZxJGQ4XyXs
-        rlr5a60gMzXYkhy6z4vUoAOnL/VmF5fprFz6beSeeVyvLMO043wH+x8IrHAKpeLbmqERtE+fGxE5Q
-        38KRN1sQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1gzV2l-0001oM-3f; Thu, 28 Feb 2019 23:24:47 +0000
-Subject: Re: [PULL REQUEST] Lock down patches
-To:     Matthew Garrett <mjg59@google.com>, jmorris@namei.org
-Cc:     LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6826f3fa-487e-ca4e-0433-9160f38cd901@infradead.org>
-Date:   Thu, 28 Feb 2019 15:24:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Thu, 28 Feb 2019 18:27:54 -0500
+Received: by mail-qt1-f193.google.com with SMTP id z39so25754334qtz.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:27:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xWDbgPyPORkCT+/xgiItSx7wHOtxmHnj4rSzLgtTLKc=;
+        b=G1RQ+ECQeMr60kO4r1ZkhYD+3Ntx/+zn5QM6zXYoPKZ1+Ypta9xmQK7xgJ8MqBSAnz
+         7096XDsMJfXisgLXhRMSwWz7wTTlyRPys+wGUrVghyI5CG2fHkhMGoZi5R+9MisQLz5C
+         1ypSB6uaLK0iR3hZqBgOY10fRnfgMBqfIBIG4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xWDbgPyPORkCT+/xgiItSx7wHOtxmHnj4rSzLgtTLKc=;
+        b=kZSrDF/6ByCooHtMXxEp09RWM/pdxeB4w3EhnkW4wHlnl7lNDIAsE3B8G/56FOnKEB
+         bfGehhJZQB8NDGKOT+pUYnHqqNfYx3k1KbP/qUw87I+eIowVcW10KgbCQs0G5z+nnXZI
+         jNdnFKMzDaUA7Yb61mG05ygK8Ojmd3ifEnCKBGEl2yeScjcKyYpPLIBAUSKZQAlaD3tf
+         9JwQT9lQpGqjZKfuKdWtbCtmRPfWIudQaIEhb3KIEp2wL7akS4U4HSzW+A6Z+Sfr3ANc
+         FlztDl5JWbKB9hGH5G97oGKaOVcdDbcoDDNrdJXkUj6ktkyk+cnomaIFPWqF98G+vT8U
+         LAWQ==
+X-Gm-Message-State: APjAAAWeY3tJ1bLWP5Zi+ltkBZYKZMoRpZ65uq+6WDR731iJBIT02atz
+        i3HwgcxXNSUvYK5YMWcOXmD/ZV0Zj2Q=
+X-Google-Smtp-Source: APXvYqw4r+UaA3CrJtnaKan7IMyZtlQMubNJDHssmoo4+UiLRFPgNNOIlIFEzlqRMJl+KQPs6uc0+Q==
+X-Received: by 2002:ac8:19f5:: with SMTP id s50mr1580095qtk.25.1551396473234;
+        Thu, 28 Feb 2019 15:27:53 -0800 (PST)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id l16sm11523673qke.20.2019.02.28.15.27.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 15:27:51 -0800 (PST)
+Date:   Thu, 28 Feb 2019 18:27:51 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        qais.yousef@arm.com, Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190228232751.GA218988@google.com>
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+ <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
+ <20190228144306.GA138215@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228144306.GA138215@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/19 1:28 PM, Matthew Garrett wrote:
-> Hi James,
-> 
-> David is low on cycles at the moment, so I'm taking over for this time
-> round. This patchset introduces an optional kernel lockdown feature,
-> intended to strengthen the boundary between UID 0 and the kernel. When
-> enabled and active (by enabling the config option and passing the
-> "lockdown" option on the kernel command line), various pieces of
-> kernel functionality are restricted. Applications that rely on
-> low-level access to either hardware or the kernel may cease working as
-> a result - therefore this should not be enabled without appropriate
-> evaluation beforehand.
+On Thu, Feb 28, 2019 at 09:43:06AM -0500, Joel Fernandes wrote:
+> On Thu, Feb 28, 2019 at 11:17:51AM +0900, Masahiro Yamada wrote:
+> > Hi Joel,
+> > 
+> > 
+> > On Thu, Feb 28, 2019 at 4:40 AM Joel Fernandes (Google)
+> > <joel@joelfernandes.org> wrote:
+> > >
+> > > Introduce in-kernel headers and other artifacts which are made available
+> > > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> > > it possible to build kernel modules, run eBPF programs, and other
+> > > tracing programs that need to extend the kernel for tracing purposes
+> > > without any dependency on the file system having headers and build
+> > > artifacts.
+> > >
+> > > On Android and embedded systems, it is common to switch kernels but not
+> > > have kernel headers available on the file system. Raw kernel headers
+> > > also cannot be copied into the filesystem like they can be on other
+> > > distros, due to licensing and other issues. There's no linux-headers
+> > > package on Android. Further once a different kernel is booted, any
+> > > headers stored on the file system will no longer be useful. By storing
+> > > the headers as a compressed archive within the kernel, we can avoid these
+> > > issues that have been a hindrance for a long time.
+> > >
+> > > The feature is also buildable as a module just in case the user desires
+> > > it not being part of the kernel image. This makes it possible to load
+> > > and unload the headers on demand. A tracing program, or a kernel module
+> > > builder can load the module, do its operations, and then unload the
+> > > module to save kernel memory. The total memory needed is 3.8MB.
+> > >
+> > > The code to read the headers is based on /proc/config.gz code and uses
+> > > the same technique to embed the headers.
+> > 
+> > 
+> > 
+> > Please let me ask a question about the actual use-case.
+> > 
+> > 
+> > To build embedded systems including Android,
+> > I use an x86 build machine.
+> > 
+> > In other words, I cross-compile vmlinux and in-tree modules.
+> > So,
+> > 
+> >   target-arch: arm64
+> >   host-arch:   x86
+> > 
+> > 
+> > 
+> The other way we can make this work is using x86 usermode emulation inside a
+> chroot on the Android device which will make the earlier commands work.
 
-Documentation/process/submitting-patches.rst says (IMO) that these
-patches should also have Signed-of-by: <you>.
+I verified the steps to build a module on my Pixel 3 (arm64) with Linux
+kernel for arm64 compiled on my x86 host:
 
-"The Signed-off-by: tag indicates that the signer was involved in the
-development of the patch, or that he/she was in the patch's delivery path."
+After building the headers, the steps were something like:
 
-Also, the sysrq key usage should be documented in
-Documentation/admin-guide/sysrq.rst.
+1.Build an x86 debian image with cross-gcc:
 
-> The majority of mainstream distributions have been carrying variants
-> of this patchset for many years now, so there's value in providing a
-> unified upstream implementation to reduce the delta. This PR probably
-> doesn't meet every distribution requirement, but gets us much closer
-> to not requiring external patches.
-> 
-> This PR is mostly the same as the previous attempt, but with the
-> following changes:
-> 
-> 1) The integration between EFI secure boot and the lockdown state has
-> been removed
-> 2) A new CONFIG_KERNEL_LOCK_DOWN_FORCE kconfig option has been added,
-> which will always enable lockdown regardless of the kernel command
-> line
-> 3) The integration with IMA has been dropped for now. Requiring the
-> use of the IMA secure boot policy when lockdown is enabled isn't
-> practical for most distributions at the moment, as there's still not a
-> great deal of infrastructure for shipping packages with appropriate
-> IMA signatures, and it makes it complicated for end users to manage
-> custom IMA policies.
-> 
-> The following changes since commit a3b22b9f11d9fbc48b0291ea92259a5a810e9438:
-> 
->   Linux 5.0-rc7 (2019-02-17 18:46:40 -0800)
-> 
-> are available in the Git repository at:
-> 
->   https://github.com/mjg59/linux lock_down
-> 
-> for you to fetch changes up to 43e004ecae91bf9159b8e91cd1d613e58b8f63f8:
-> 
->   lockdown: Print current->comm in restriction messages (2019-02-28
-> 11:19:23 -0800)
-> 
-> ----------------------------------------------------------------
-> Dave Young (1):
->       Copy secure_boot flag in boot params across kexec reboot
-> 
-> David Howells (12):
->       Add the ability to lock down access to the running kernel image
->       Enforce module signatures if the kernel is locked down
->       Prohibit PCMCIA CIS storage when the kernel is locked down
->       Lock down TIOCSSERIAL
->       Lock down module params that specify hardware parameters (eg. ioport)
->       x86/mmiotrace: Lock down the testmmiotrace module
->       Lock down /proc/kcore
->       Lock down kprobes
->       bpf: Restrict kernel image access functions when the kernel is locked down
->       Lock down perf
->       debugfs: Restrict debugfs when the kernel is locked down
->       lockdown: Print current->comm in restriction messages
-> 
-> Jiri Bohac (2):
->       kexec_file: split KEXEC_VERIFY_SIG into KEXEC_SIG and KEXEC_SIG_FORCE
->       kexec_file: Restrict at runtime if the kernel is locked down
-> 
-> Josh Boyer (2):
->       hibernate: Disable when the kernel is locked down
->       acpi: Ignore acpi_rsdp kernel param when the kernel has been locked down
-> 
-> Kyle McMartin (1):
->       Add a SysRq option to lift kernel lockdown
-> 
-> Linn Crosetto (2):
->       acpi: Disable ACPI table override if the kernel is locked down
->       acpi: Disable APEI error injection if the kernel is locked down
-> 
-> Matthew Garrett (7):
->       Restrict /dev/{mem,kmem,port} when the kernel is locked down
->       kexec_load: Disable at runtime if the kernel is locked down
->       uswsusp: Disable when the kernel is locked down
->       PCI: Lock down BAR access when the kernel is locked down
->       x86: Lock down IO port access when the kernel is locked down
->       x86/msr: Restrict MSR access when the kernel is locked down
->       ACPI: Limit access to custom_method when the kernel is locked down
-> 
->  arch/x86/Kconfig                       |  20 ++++++++++++-----
->  arch/x86/include/asm/setup.h           |   2 ++
->  arch/x86/kernel/ioport.c               |   6 ++++--
->  arch/x86/kernel/kexec-bzimage64.c      |   1 +
->  arch/x86/kernel/msr.c                  |  10 +++++++++
->  arch/x86/mm/testmmiotrace.c            |   3 +++
->  crypto/asymmetric_keys/verify_pefile.c |   4 +++-
->  drivers/acpi/apei/einj.c               |   3 +++
->  drivers/acpi/custom_method.c           |   3 +++
->  drivers/acpi/osl.c                     |   2 +-
->  drivers/acpi/tables.c                  |   5 +++++
->  drivers/char/mem.c                     |   2 ++
->  drivers/input/misc/uinput.c            |   1 +
->  drivers/pci/pci-sysfs.c                |   9 ++++++++
->  drivers/pci/proc.c                     |   9 +++++++-
->  drivers/pci/syscall.c                  |   3 ++-
->  drivers/pcmcia/cistpl.c                |   3 +++
->  drivers/tty/serial/serial_core.c       |   6 ++++++
->  drivers/tty/sysrq.c                    |  19 +++++++++++------
->  fs/debugfs/file.c                      |  28 ++++++++++++++++++++++++
->  fs/debugfs/inode.c                     |  30 ++++++++++++++++++++++++--
->  fs/proc/kcore.c                        |   2 ++
->  include/linux/ima.h                    |   6 ++++++
->  include/linux/input.h                  |   5 +++++
->  include/linux/kernel.h                 |  17 +++++++++++++++
->  include/linux/kexec.h                  |   4 ++--
->  include/linux/security.h               |   9 +++++++-
->  include/linux/sysrq.h                  |   8 ++++++-
->  kernel/bpf/syscall.c                   |   3 +++
->  kernel/debug/kdb/kdb_main.c            |   2 +-
->  kernel/events/core.c                   |   5 +++++
->  kernel/kexec.c                         |   7 ++++++
->  kernel/kexec_file.c                    |  56
-> ++++++++++++++++++++++++++++++++++++++++++------
->  kernel/kprobes.c                       |   3 +++
->  kernel/module.c                        |  56
-> ++++++++++++++++++++++++++++++++++++------------
->  kernel/params.c                        |  26 ++++++++++++++++++-----
->  kernel/power/hibernate.c               |   2 +-
->  kernel/power/user.c                    |   3 +++
->  security/Kconfig                       |  24 +++++++++++++++++++++
->  security/Makefile                      |   3 +++
->  security/lock_down.c                   | 106
-> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  41 files changed, 466 insertions(+), 50 deletions(-)
->  create mode 100644 security/lock_down.c
-> 
+sudo qemu-debootstrap --arch amd64
+  --include=make,gcc,gcc-aarch64-linux-gnu,perl,libelf1,python
+  --variant=minbase $DIST $RUN_DIR http://ftp.us.debian.org/debian
 
+2. Push qemu-x86_64-static (which I downloaded from the web) onto the device.
 
--- 
-~Randy
+3. Tell binfmt_misc about qemu:
+echo
+':qemu-x86_64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x3e\x00:
+\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/qemu-x86_64-static:OC'
+> /proc/sys/fs/binfmt_misc/register
+
+4. adb shell and then chroot into the image
+
+5. follow all the steps in the commit message but set ARCH and CROSS_COMPILE
+appropriately.
+
+After Make, kernel module is cooked and ready :)
+
+thanks,
+
+ - Joel
+
