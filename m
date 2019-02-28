@@ -2,159 +2,122 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B09C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975A6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7114F218D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=essensium-com.20150623.gappssmtp.com header.i=@essensium-com.20150623.gappssmtp.com header.b="mGDSIwhB"
+	by mail.kernel.org (Postfix) with ESMTP id 678A5218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551366977;
+	bh=/SpI5RBeGdHbvSzpJPXzQaijuqIeg5FZ7KY0I2EcmpY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=B6zpM/u+cnCMkTQMTLlz23cnGP0MfEcEPI41TGMOlwPQWv7G3TnPTkjdTVFHpRs/q
+	 bPczNERdOSqu+T19WwP2fORUWPh5RZWyti8joUWWFzJGCZ8BAU8SFKqB7/86EWV4VQ
+	 SrWndyv/BDaeO8iPeCuqU+lTwhXVzASF+/IG52fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388976AbfB1PQK (ORCPT
+        id S2388998AbfB1PQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:16:10 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:40958 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387974AbfB1PQI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:16:08 -0500
-Received: by mail-yw1-f66.google.com with SMTP id c67so11300895ywa.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 07:16:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=essensium-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r7as5UqgEs27F6SS8cdriQYBlVMXNeU/jvVZs93ylnU=;
-        b=mGDSIwhBDolaEvThgIaHMKCCgLEVO/6KaM14o/3Ipfxj//g1c30jiV6oEvq1P8ukNp
-         rFozEB5XaOjIwhklWwc+M9fonZs4c6cDREkR6Bx6YIvwNHZY7fGDit1GGxhjF0FR3g9+
-         59mw/qjudWAP2rusRzjOl2i0fRvlFUh2ybjcBlDeilZ5XxXLr3NBv7Ovmg2XInjb+T7z
-         6XhjetxWk0Qy0dLV5fTEFreLTIMAw0pwCmu/A+KG8F72MmEGbPMlktRSr1G3UVf8B08t
-         40oy7Em2pUiZKJd/7XGDM8xyo5l9h77C9W+zSdr2JFSxq6oIw1+aBjKCh2a8jTintey5
-         q/xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r7as5UqgEs27F6SS8cdriQYBlVMXNeU/jvVZs93ylnU=;
-        b=CZSwh1Eb6s/SPeuTWDX/pP9pLZaSmBigDd0Fxc2K2baLzpuFExu+/NaI07bSfnnbfc
-         ARyRejHIysujINg56irntKwy44rnqq4IESnvKFOPVfRKIM1n9yBoTGybcKAgQGz4I/Nj
-         VIji0nWjVjsa8vOOvK5oplr9RHW7VwuHdNWm6zje1/d8Xe8lDR/ZafrthXpXf/U3ulFI
-         7mX1TPJIwM+eUek+VtpnawRSwX+qBZ68nAwRRqeqJsUG61xdlpzxn/RJS1Z9dVgbTivD
-         dUlgXeEL3pabTb5t4IlwIYrTL/iMMYd6WG85QZC/MMpx9Ollr4weAu3ChS5OAtwdb5Uw
-         6wxw==
-X-Gm-Message-State: APjAAAUmAlPBi5iw7vVkzzIKjGnTDZrt+X5xMCD9/ogX/KMH9DDPrcNr
-        okh22zas/GXVOk1hMAacsEZzbIcwZJ8ozomCv7JUuQ==
-X-Google-Smtp-Source: APXvYqwrzAWVRk6R/ePVTXpwDTKQJ1VVA/7yK//beFQSfkEnfg646C7i9v2C54KKb89LAtrwy+QgOD45ohF1lUQel7Q=
-X-Received: by 2002:a25:c947:: with SMTP id z68mr1277326ybf.522.1551366967287;
- Thu, 28 Feb 2019 07:16:07 -0800 (PST)
+        Thu, 28 Feb 2019 10:16:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388974AbfB1PQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:16:11 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0999A218EA;
+        Thu, 28 Feb 2019 15:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551366970;
+        bh=/SpI5RBeGdHbvSzpJPXzQaijuqIeg5FZ7KY0I2EcmpY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CWYCzSps0zpqTpnR/4M8AIeFXZc4JQ/DvdsPMv1KNK6LkPxUEYU8LlOXSHyk/7flc
+         IoAxkvuGkP9hCI4pfX27skVOGEOVNZqBn02cawoq3wS0Yvj0+Z2S/jcistUq7s5A0V
+         6MGWCJPpbE1khllr0Ak1lCg0GMMO6+07MdgMwaJ8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jun-Ru Chang <jrjang@realtek.com>, Tony Wu <tonywu@realtek.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
+        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 18/19] MIPS: Remove function size check in get_frame_info()
+Date:   Thu, 28 Feb 2019 10:15:14 -0500
+Message-Id: <20190228151517.12705-18-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
+References: <20190228151517.12705-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190226150214.19467-1-patrick.havelange@essensium.com> <20190227235947.GA27130@bogus>
-In-Reply-To: <20190227235947.GA27130@bogus>
-From:   Patrick Havelange <patrick.havelange@essensium.com>
-Date:   Thu, 28 Feb 2019 16:15:55 +0100
-Message-ID: <CAKKE0ZFNm1BNS5xbgo4D1Kp0U+TbL35A9Uk-r245CPVkAuE=XQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] iio:temperature:max31856:Add device tree bind info
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>,
-        Matt Weber <matthew.weber@rockwellcollins.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 12:59 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Feb 26, 2019 at 04:02:13PM +0100, Patrick Havelange wrote:
-> > From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> >
-> > This patch added device tree binding info for MAX31856 driver.
-> >
-> > Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> > Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
-> > Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> > ---
-> > Changes
-> > v1 -> v2
-> > [Matt
-> >  - Removed comment block and added possibilities of
-> >    thermocouple type in device tree binding doc.
-> >
-> > v2 -> v3
-> >  - Rebased
-> >
-> > v3 -> v4
-> >  - Removed one-shot property related information.
-> >  - Used standard name 'temp-sensor'
-> >
-> > v4 -> v5
-> > [Patrick
-> >  - Rename thermocouple type to maxim,thermocouple-type for DT entry
-> > ---
-> >  .../bindings/iio/temperature/max31856.txt     | 29 +++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/temperature/max31856.txt b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> > new file mode 100644
-> > index 000000000000..b4396069b8fa
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> > @@ -0,0 +1,29 @@
-> > +Maxim MAX31856 thermocouple support
-> > +
-> > +https://datasheets.maximintegrated.com/en/ds/MAX31856.pdf
-> > +
-> > +Required properties:
-> > +     - compatible: must be "maxim,max31856"
-> > +     - reg: SPI chip select number for the device
-> > +     - spi-max-frequency: As per datasheet max. supported freq is 5000000
-> > +     - spi-cpha: must be defined for max31856 to enable SPI mode 1
-> > +     - maxim,thermocouple-type: Type of thermocouple (By default is K-Type)
-> > +             0x00 : TYPE_B
-> > +             0x01 : TYPE_E
-> > +             0x02 : TYPE_J
-> > +             0x03 : TYPE_K (default)
-> > +             0x04 : TYPE_N
-> > +             0x05 : TYPE_R
-> > +             0x06 : TYPE_S
-> > +             0x07 : TYPE_T
->
-> These appear to be standard types. Perhaps this should be a common
-> property instead?
+From: Jun-Ru Chang <jrjang@realtek.com>
 
-A remark on the v4 of the patch recommended to add a vendor prefix. It
-also mentioned that it could be done as a generic type with a
-translation layer for each driver.
-Maybe this generic type could be introduced in a separate patch, or
-when another driver also uses that kind of thermocouple-type, as there
-is no other use of it for the moment it seems.
+[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
 
+Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
+microMIPS function size.") introduces additional function size
+check for microMIPS by only checking insn between ip and ip + func_size.
+However, func_size in get_frame_info() is always 0 if KALLSYMS is not
+enabled. This causes get_frame_info() to return immediately without
+calculating correct frame_size, which in turn causes "Can't analyze
+schedule() prologue" warning messages at boot time.
 
->
-> > +
-> > +     Refer to spi/spi-bus.txt for generic SPI slave bindings.
-> > +
-> > + Example:
-> > +     temp-sensor@0 {
-> > +             compatible = "maxim,max31856";
-> > +             reg = <0>;
-> > +             spi-max-frequency = <5000000>;
-> > +             spi-cpha;
-> > +             maxim,thermocouple-type = <0x03>;
-> > +     };
-> > --
-> > 2.19.1
-> >
+This patch removes func_size check, and let the frame_size check run
+up to 128 insns for both MIPS and microMIPS.
+
+Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
+Signed-off-by: Tony Wu <tonywu@realtek.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <macro@mips.com>
+Cc: <yamada.masahiro@socionext.com>
+Cc: <peterz@infradead.org>
+Cc: <mingo@kernel.org>
+Cc: <linux-mips@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/kernel/process.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index 1cc133e7026fd..fffd031dc6b61 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -344,7 +344,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip)
+ static int get_frame_info(struct mips_frame_info *info)
+ {
+ 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
+-	union mips_instruction insn, *ip, *ip_end;
++	union mips_instruction insn, *ip;
+ 	const unsigned int max_insns = 128;
+ 	unsigned int last_insn_size = 0;
+ 	unsigned int i;
+@@ -356,10 +356,9 @@ static int get_frame_info(struct mips_frame_info *info)
+ 	if (!ip)
+ 		goto err;
+ 
+-	ip_end = (void *)ip + info->func_size;
+-
+-	for (i = 0; i < max_insns && ip < ip_end; i++) {
++	for (i = 0; i < max_insns; i++) {
+ 		ip = (void *)ip + last_insn_size;
++
+ 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
+ 			insn.halfword[0] = 0;
+ 			insn.halfword[1] = ip->halfword[0];
+-- 
+2.19.1
+
