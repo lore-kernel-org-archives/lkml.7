@@ -2,76 +2,131 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA8AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2397C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C6D214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D21214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731056AbfB1Gs0 (ORCPT
+        id S1731110AbfB1Gtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 01:48:26 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46810 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725967AbfB1GsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 01:48:25 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id AB4A2C4A50A5E2E0BA61;
-        Thu, 28 Feb 2019 14:48:23 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
- 14:48:18 +0800
-Subject: Re: [PATCH v2] xfrm: policy: Fix possible user after free in
- __xfrm_policy_unlink
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-References: <20190228063801.27200-1-yuehaibing@huawei.com>
- <20190228064106.v4fe5b2ij3gbodxk@gondor.apana.org.au>
-CC:     <steffen.klassert@secunet.com>, <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <49905b89-3164-76df-dce7-becca1796a95@huawei.com>
-Date:   Thu, 28 Feb 2019 14:48:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 28 Feb 2019 01:49:35 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39506 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725967AbfB1Gte (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 01:49:34 -0500
+Received: by mail-lj1-f195.google.com with SMTP id g80so16109142ljg.6;
+        Wed, 27 Feb 2019 22:49:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9SEvbt26GPXckLEI57p2CYdvBjjgs/4kevRD1pygy3M=;
+        b=F06n/TMKR6ygoXhHpo6QWrF0ELxwJWDNgeM8D1da7zj5ZUF92D5TmKyEwiSpz5iXAX
+         vufE4mLg0wrgrAGndMNmTNd5hwBrf4tAGsrbSVNpd18bFgTsnUEr7db3wg4FfY6U3iMe
+         iQ6cbOjJ3oJldus7wMKU6lA+499PaWyNrGmghbTi6/kAjAQBAum/pTBnR42dnptHf8gx
+         Jx4uaJSGzmyK627gmuwXeT85+dynnUoRcjKIP4rHW5e6oquoVMRMCzS1CADjoTu3HFEo
+         yi1GmQvaPliXphZTH1KnOYNaP2ZxZQgPhM175uYDFsh+resveo4dDWZUQlQANHm8De4n
+         w6lA==
+X-Gm-Message-State: AHQUAubUymWPHw8KXzas0BCYAkZXJY/F4G6xiMQ6HmFD3OcYUfGHlCfN
+        oqTz6Mct9flXmGzV6IB45YU=
+X-Google-Smtp-Source: AHgI3IYI5kI99ZoJJV//cQtkAxyfn1eQWvpIE3u5Qc2vsW3KfuRlmHrVN5p16mwg0GXyW97ilVsnzw==
+X-Received: by 2002:a2e:934a:: with SMTP id m10mr3658426ljh.164.1551336571836;
+        Wed, 27 Feb 2019 22:49:31 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id g24sm3231411ljj.87.2019.02.27.22.49.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 Feb 2019 22:49:30 -0800 (PST)
+Date:   Thu, 28 Feb 2019 08:49:23 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     mazziesaccount@gmail.com, lee.jones@linaro.org,
+        mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        sre@kernel.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, wim@linux-watchdog.org,
+        linux@roeck-us.net, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Subject: Re: [RFC PATCH v1 07/13] devicetree: bindings: Document first ROHM
+ BD70528 bindings
+Message-ID: <20190228064923.GA3773@localhost.localdomain>
+References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <80de7a2b537ae3f414b0281736652256f38cf94c.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190223003041.GA16670@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20190228064106.v4fe5b2ij3gbodxk@gondor.apana.org.au>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190223003041.GA16670@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Rob, All
 
-On 2019/2/28 14:41, Herbert Xu wrote:
-> On Thu, Feb 28, 2019 at 02:38:01PM +0800, Yue Haibing wrote:
->>
->> diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
->> index a131f9f..aaa45c9 100644
->> --- a/net/xfrm/xfrm_user.c
->> +++ b/net/xfrm/xfrm_user.c
->> @@ -1424,7 +1424,8 @@ static int verify_newpolicy_info(struct xfrm_userpolicy_info *p)
->>  	ret = verify_policy_dir(p->dir);
->>  	if (ret)
->>  		return ret;
->> -	if (p->index && ((p->index & XFRM_POLICY_MAX) != p->dir))
->> +	if (p->index && (((p->index & XFRM_POLICY_MAX) != p->dir) ||
->> +			 (xfrm_policy_id2dir(p->index) >= XFRM_POLICY_MAX)))
+Sorry for long delay - I was ill for a few days. Back at the business
+now =)
+
+Rob, maybe dropping the RFC tag has messed your book keeping? This
+is the latest version:
+https://lore.kernel.org/lkml/90c3b820baf072a7cc3a21aa50c661774a045158.1550148989.git.matti.vaittinen@fi.rohmeurope.com/
+and I thought it already had the Reviewed-by tag from you :)
+
+On Fri, Feb 22, 2019 at 06:30:41PM -0600, Rob Herring wrote:
+> On Tue, Jan 22, 2019 at 11:45:38AM +0200, Matti Vaittinen wrote:
+> > Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
+> > drivers) and 4 GPIO pins which can be configured for I/O or
+> > as interrupt sources withe configurable trigger levels.
 > 
-> Please just check 
-> 
-> 	xfrm_policy_id2dir(p->index) != p->dir
+> 'dt-bindings: mfd: ...' for the subject.
 
-
-Oh, it indeed can be merged, Thanks!
+I see at least the patch subject comment is still valid though. Do you
+want me to change it and resubmit the series?
 
 > 
-> Thanks,
-> 
+> > 
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > ---
+> >  .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 104 +++++++++++++++++++++
+> >  1 file changed, 104 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+> > new file mode 100644
+> > index 000000000000..21801440a53a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+> > @@ -0,0 +1,104 @@
+> > +* ROHM BD70528 Power Management Integrated Circuit bindings
+> > +
+> > +BD70528MWV is an ultra-low Iq general purpose single-chip power management IC
+> > +for battery-powered portable devices. The IC integrates 3 ultra-low current
+> > +consumption buck converters, 3 LDOs and 2 LED Drivers. Also included are 4
+> > +GPIOs, a real-time clock (RTC), a 32kHz clock gate, high-accuracy VREF
+> > +for use with an external ADC, flexible dual-input power path, 10 bits SAR ADC
+> > +for battery temperature monitor and 1S battery charger with scalable charge
+> > +currents.
 
+Br,
+	Matti Vaittinen
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
