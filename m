@@ -2,53 +2,56 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F968C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7430C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C99520C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853C820C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367033;
-	bh=PoYs+UzqTHPO3CTwlHmc/6lVTpaMKr8p45fLsP7jvU0=;
+	s=default; t=1551367042;
+	bh=PlTF/9PXYYLJO15cU2+6LVeJWGPqVK389Hbj/snVojQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0QFbeZiGphsOmSfRZjMJ8QhvJDz/z0uHJG+WpFt9E30bIBASAw4edebUtuy/928vn
-	 dgp+YJlmeo+ddWfzYXrxDXAZhvHI8Tq6kMnJDbAS5Bd55WbwTsyFUOew6j8JnbOMjS
-	 YCE9h5lnu34q81ZfVjppBLsTlNL0uvNEiynRJfxQ=
+	b=0/LXjR1Q85AnQxT43uBtOUNZYjZbDjDTD8Ymy+Dn098EFwBuSLdV6vEZGMC6v78Dq
+	 Jcgdhv2BgHK+mRaYf6RSG3dkKOtOSr8vpxcVzHDnwBJAv++PpuA0Cp97fjoA01mPRt
+	 ZOTAJAFopOMG6nfNa12cgQ6ub6LyHQAG6HvOxphU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388800AbfB1PRL (ORCPT
+        id S2389118AbfB1PRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:17:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:17:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389026AbfB1PQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:16:24 -0500
+        id S2388564AbfB1PQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:16:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3765F218D9;
-        Thu, 28 Feb 2019 15:16:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EC222184A;
+        Thu, 28 Feb 2019 15:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366983;
-        bh=PoYs+UzqTHPO3CTwlHmc/6lVTpaMKr8p45fLsP7jvU0=;
+        s=default; t=1551366982;
+        bh=PlTF/9PXYYLJO15cU2+6LVeJWGPqVK389Hbj/snVojQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/ZSNBUF2PYhxQV/dlaku7jD8EtiSTsPKkkXeRqusuaysouW9aeld1fN7RNPzItIP
-         qdVwPnqVZvPvsSls3Mo1OkJ5/W2BzAqopu5+svDmTDN9xv3f4DE2IhDW/ZyPxwcrPv
-         gyp8u33WszhWj/u5EKmbZ7Q6Q+IC2Q5/8pW+OsKI=
+        b=vPE1jXaiBkbvt4gP3pX6wC9sSVThvELuGs5fm00NaGmJxId2AHwaUEFpNQ68VGU6Z
+         QCNAo5sMjvqexoOv3CRO2mvnqC87U5WWJwIxXw5qa49Lr/V/tznNJrv98mShLMseva
+         oNTKCDlJcZB+g7dZsxnwKAm3kQ+gQGEmmx9CDF0E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Nick Clifton <nickc@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 7/8] perf trace: Support multiple "vfs_getname" probes
-Date:   Thu, 28 Feb 2019 10:16:11 -0500
-Message-Id: <20190228151614.13022-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 6/8] perf symbols: Filter out hidden symbols from labels
+Date:   Thu, 28 Feb 2019 10:16:10 -0500
+Message-Id: <20190228151614.13022-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151614.13022-1-sashal@kernel.org>
 References: <20190228151614.13022-1-sashal@kernel.org>
@@ -60,101 +63,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@redhat.com>
 
-[ Upstream commit 6ab3bc240ade47a0f52bc16d97edd9accbe0024e ]
+[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
 
-With a suitably defined "probe:vfs_getname" probe, 'perf trace' can
-"beautify" its output, so syscalls like open() or openat() can print the
-"filename" argument instead of just its hex address, like:
+When perf is built with the annobin plugin (RHEL8 build) extra symbols
+are added to its binary:
 
-  $ perf trace -e open -- touch /dev/null
-  [...]
-       0.590 ( 0.014 ms): touch/18063 open(filename: /dev/null, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-  [...]
+  # nm perf | grep annobin | head -10
+  0000000000241100 t .annobin_annotate.c
+  0000000000326490 t .annobin_annotate.c
+  0000000000249255 t .annobin_annotate.c_end
+  00000000003283a8 t .annobin_annotate.c_end
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
+  00000000001bc400 t .annobin_annotate.c_end.unlikely
+  00000000001bce18 t .annobin_annotate.c.hot
+  00000000001bce18 t .annobin_annotate.c.hot
+  ...
 
-The output without such beautifier looks like:
+Those symbols have no use for report or annotation and should be
+skipped.  Moreover they interfere with the DWARF unwind test on the PPC
+arch, where they are mixed with checked symbols and then the test fails:
 
-     0.529 ( 0.011 ms): touch/18075 open(filename: 0xc78cf288, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+  # perf test dwarf -v
+  59: Test dwarf unwind                                     :
+  --- start ---
+  test child forked, pid 8515
+  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
+  ...
+  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
+  unwind: failed with 'no error'
 
-However, when the vfs_getname probe expands to multiple probes and it is
-not the first one that is hit, the beautifier fails, as following:
+The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
 
-     0.326 ( 0.010 ms): touch/18072 open(filename: , flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+  # readelf -s ./perf | grep annobin | head -1
+    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
 
-Fix it by hooking into all the expanded probes (inlines), now, for instance:
+They can still pass the check for the label symbol. Adding check for
+HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
+out such symbols.
 
-  [root@quaco ~]# perf probe -l
-    probe:vfs_getname    (on getname_flags:73@fs/namei.c with pathname)
-    probe:vfs_getname_1  (on getname_flags:73@fs/namei.c with pathname)
-  [root@quaco ~]# perf trace -e open* sleep 1
-       0.010 ( 0.005 ms): sleep/5588 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC)   = 3
-       0.029 ( 0.006 ms): sleep/5588 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: RDONLY|CLOEXEC)   = 3
-       0.194 ( 0.008 ms): sleep/5588 openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: RDONLY|CLOEXEC) = 3
-  [root@quaco ~]#
+>   Just to be awkward, if you are going to ignore STV_HIDDEN
+>   symbols then you should probably also ignore STV_INTERNAL ones
+>   as well...  Annobin does not generate them, but you never know,
+>   one day some other tool might create some.
 
-Works, further verified with:
-
-  [root@quaco ~]# perf test vfs
-  65: Use vfs_getname probe to get syscall args filenames   : Ok
-  66: Add vfs_getname probe to get syscall args filenames   : Ok
-  67: Check open filename arg using perf trace + vfs_getname: Ok
-  [root@quaco ~]#
-
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Tested-by: Michael Petlan <mpetlan@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-mv8kolk17xla1smvmp3qabv1@git.kernel.org
+Cc: Nick Clifton <nickc@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-trace.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ tools/perf/util/symbol-elf.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index da8afc1211182..039517c61c75a 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2403,19 +2403,30 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
- 
- static bool perf_evlist__add_vfs_getname(struct perf_evlist *evlist)
- {
--	struct perf_evsel *evsel = perf_evsel__newtp("probe", "vfs_getname");
-+	bool found = false;
-+	struct perf_evsel *evsel, *tmp;
-+	struct parse_events_error err = { .idx = 0, };
-+	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
- 
--	if (IS_ERR(evsel))
-+	if (ret)
- 		return false;
- 
--	if (perf_evsel__field(evsel, "pathname") == NULL) {
-+	evlist__for_each_entry_safe(evlist, evsel, tmp) {
-+		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
-+			continue;
-+
-+		if (perf_evsel__field(evsel, "pathname")) {
-+			evsel->handler = trace__vfs_getname;
-+			found = true;
-+			continue;
-+		}
-+
-+		list_del_init(&evsel->node);
-+		evsel->evlist = NULL;
- 		perf_evsel__delete(evsel);
--		return false;
- 	}
- 
--	evsel->handler = trace__vfs_getname;
--	perf_evlist__add(evlist, evsel);
--	return true;
-+	return found;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 7c97ecaeae484..2070c02de3af5 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -74,6 +74,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
+ 	return GELF_ST_TYPE(sym->st_info);
  }
  
- static int perf_evlist__add_pgfault(struct perf_evlist *evlist,
++static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
++{
++	return GELF_ST_VISIBILITY(sym->st_other);
++}
++
+ #ifndef STT_GNU_IFUNC
+ #define STT_GNU_IFUNC 10
+ #endif
+@@ -98,7 +103,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
+ 	return elf_sym__type(sym) == STT_NOTYPE &&
+ 		sym->st_name != 0 &&
+ 		sym->st_shndx != SHN_UNDEF &&
+-		sym->st_shndx != SHN_ABS;
++		sym->st_shndx != SHN_ABS &&
++		elf_sym__visibility(sym) != STV_HIDDEN &&
++		elf_sym__visibility(sym) != STV_INTERNAL;
+ }
+ 
+ static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
 -- 
 2.19.1
 
