@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0D6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A58C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778FB214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B743C214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yEzZQbbS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YhXnH/Tu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbfB1MVj (ORCPT
+        id S1731639AbfB1MVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 07:21:39 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54552 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731523AbfB1MVh (ORCPT
+        Thu, 28 Feb 2019 07:21:47 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39392 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731600AbfB1MVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 07:21:37 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a62so9068099wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:21:36 -0800 (PST)
+        Thu, 28 Feb 2019 07:21:44 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z84so8720301wmg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:21:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=H2crl7RmZMvIJT00kHO5k98tCahG1bLmtk7Nv322/6A=;
-        b=yEzZQbbSd8IxFs5neCEzP9oJ2DIiWndR7AngoPaboId/SzXcwwICvEfxF8YzepJ+Gi
-         TMBThEPu9y+jNpbWjFM/S8rfYOF19y/Rm0YRH+AUEswvF61FgsB2/PfM9VgNnAppY/fn
-         FY/rNopl3FmBqAtaGMs/ITKklYX423vE+TG8yvf3gwxDQ+q755cBd4fsSqJbJZrIKguZ
-         8aZ0TDKEnnAarJBV3mJoLtadfM86Agpifss83Raqh+Lkks0b29qWxj712V90u1plRvqi
-         U77dInHUHSVDi9bobG1IjSFcKE/AGF2GG8L/9e8aeu0UY1sRMULwtA21O9fHmrgfQvX3
-         QF1Q==
+        bh=zy0Ocp2xe2rob5f0FFseaWF46iQU7ldkZ5vVgEtDGww=;
+        b=YhXnH/Tu/A4AckJvgc67KJixvqSw/SmjzG2Oib3OL9KFw7jswdw+ZtPb5zT0DHbU9c
+         23kCfJhIYI2xhqNXVpJzUd5+KDOAyy1LBkL4fvFTBhoKpuaCrwGlNW9L82+GC0FHrXnG
+         n2+VGL9UguTZ8EIG0iMGPCNmwlVYBBisELEUYrfx/+PtyiqcAp/9FvdeHvs9Q/2FCSH7
+         /adxczFppCzGEEg5rh3YfuRsZEPhS3eTlcOndo5uElEpkI5B68TQjLtgW+0XvAZXZ5aI
+         Cy1jQewzRoCwqhPFeuLfFlopcwceqeVr1yDqxUZ2OhrWSdovEtvFIsw/pDlcZa1xnNXn
+         nzhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=H2crl7RmZMvIJT00kHO5k98tCahG1bLmtk7Nv322/6A=;
-        b=ef3wm80jguaVnPlqQI++PeceY4J+fUmkj4y2AW1e8emU0FHYPpJgnkr+MEGXXVr1/w
-         bl1Cis5svizVQyD/l9UiHJ0LZXnBq6m1zwWvNR1eKtEmNH0zEq+sZowoIY9CbhkZRjD5
-         osf8iD/X4QavyHlXV6FXXf7uyBzwM2ZVpSgXAACqco1P1ktRobN+x7PrnliJUsAgXCyf
-         nNYDmSOWOkZ9jnT8DrnVRPIj5zyjmDAao/DMmfKzzupAGzZoLha27LIVu5ELDyANc+N4
-         R+CQEE0n0etXrSDH1v9sUzUbxUvPQE6HwTjno/5mPGryQbLqBWiw5I2UIoAtuwwsQ/Q+
-         /MAA==
-X-Gm-Message-State: AHQUAuYSS3lzhUxNPbornW0hcryBz71kOhNLPnJGL8/adPeQ54BMAD5k
-        rXS9djLNMnfgh68k+JdXAg84Sp0X+CQ=
-X-Google-Smtp-Source: APXvYqw5EtuntVmwNkHAw3+zrjw+C6c5Qw3QEcic2hxXxAfxGVfFRLU3ELO63I7SeI5v+axw9ljFOA==
-X-Received: by 2002:a1c:f011:: with SMTP id a17mr2668098wmb.89.1551356494718;
-        Thu, 28 Feb 2019 04:21:34 -0800 (PST)
+        bh=zy0Ocp2xe2rob5f0FFseaWF46iQU7ldkZ5vVgEtDGww=;
+        b=pFFXMR4BrNQEXXvfqetmxAhtC2aVok271j8oebWHYT5ixbWMDhalQC0D/OhPATJCMQ
+         W0EL8+oFU2Ca4U5dW0byc4dP6Ayz9ZgeNwb70R4KKS1fE/oaowt6UOyCQtUk6F7f24v1
+         H7bMa4akg5RWDDEOyKfvA1hM9qkqut5ZGI3zQdRcjujM2c7pahOb/I83qLjh9FDgZSuu
+         5UbV/piCRCi0tX7pATA25EvrYkJsqgotpc0SBMCxp2e7h3WJWoh37V2dLZ7dhViKeaMB
+         +qm3fRBtXpfGKF42hOqszlSj4DFZ/7l/EGtd7NNCzFqr5UexvhO71y2ne41BnEsJqDe+
+         Tpmw==
+X-Gm-Message-State: APjAAAV9a83M2aL2jafIZPbE7FjWCGlXjDAzUs3wPqlN8oR1SajeV2GM
+        xIRQ1W1peDUF/dYrRCtW2xKFSL5yISc=
+X-Google-Smtp-Source: AHgI3IZcfHiACMA9iKs46bafdCEIkTtf+5dtZNgDyAb/CawcKIuTTLPibjZDbndU/EB6emunXH0KIA==
+X-Received: by 2002:a1c:a688:: with SMTP id p130mr2925081wme.53.1551356502172;
+        Thu, 28 Feb 2019 04:21:42 -0800 (PST)
 Received: from localhost ([49.248.54.130])
-        by smtp.gmail.com with ESMTPSA id y20sm5556146wmi.34.2019.02.28.04.21.32
+        by smtp.gmail.com with ESMTPSA id d21sm52650758wrc.44.2019.02.28.04.21.40
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 04:21:33 -0800 (PST)
+        Thu, 28 Feb 2019 04:21:41 -0800 (PST)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
@@ -63,9 +63,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         David Brown <david.brown@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH v2 01/24] drivers: thermal: tsens: Document the data structures
-Date:   Thu, 28 Feb 2019 17:50:51 +0530
-Message-Id: <859106c7c660cffc752165a79c63ee4d636b3c44.1551355503.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 02/24] drivers: thermal: tsens: Rename tsens_data
+Date:   Thu, 28 Feb 2019 17:50:52 +0530
+Message-Id: <8daf93badafc5adfe0e9ea18b7382e9d6de6c719.1551355503.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1551355503.git.amit.kucheria@linaro.org>
 References: <cover.1551355503.git.amit.kucheria@linaro.org>
@@ -76,75 +76,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Describe how the TSENS device and the various sensors connected to it
-are described in the driver
+Rename to tsens_plat_data to denote that it is platform-data passed in
+at compile-time.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/qcom/tsens.h | 31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+ drivers/thermal/qcom/tsens-8916.c | 2 +-
+ drivers/thermal/qcom/tsens-8960.c | 2 +-
+ drivers/thermal/qcom/tsens-8974.c | 2 +-
+ drivers/thermal/qcom/tsens-v2.c   | 4 ++--
+ drivers/thermal/qcom/tsens.c      | 2 +-
+ drivers/thermal/qcom/tsens.h      | 8 ++++----
+ 6 files changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/thermal/qcom/tsens-8916.c b/drivers/thermal/qcom/tsens-8916.c
+index c6dd620ac029..66edcfca1526 100644
+--- a/drivers/thermal/qcom/tsens-8916.c
++++ b/drivers/thermal/qcom/tsens-8916.c
+@@ -97,7 +97,7 @@ static const struct tsens_ops ops_8916 = {
+ 	.get_temp	= get_temp_common,
+ };
+ 
+-const struct tsens_data data_8916 = {
++const struct tsens_plat_data data_8916 = {
+ 	.num_sensors	= 5,
+ 	.ops		= &ops_8916,
+ 	.reg_offsets	= { [SROT_CTRL_OFFSET] = 0x0 },
+diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
+index 0f0adb302a7b..f3c3820e6e8e 100644
+--- a/drivers/thermal/qcom/tsens-8960.c
++++ b/drivers/thermal/qcom/tsens-8960.c
+@@ -277,7 +277,7 @@ static const struct tsens_ops ops_8960 = {
+ 	.resume		= resume_8960,
+ };
+ 
+-const struct tsens_data data_8960 = {
++const struct tsens_plat_data data_8960 = {
+ 	.num_sensors	= 11,
+ 	.ops		= &ops_8960,
+ };
+diff --git a/drivers/thermal/qcom/tsens-8974.c b/drivers/thermal/qcom/tsens-8974.c
+index 3d3fda3d731b..5023f20afc14 100644
+--- a/drivers/thermal/qcom/tsens-8974.c
++++ b/drivers/thermal/qcom/tsens-8974.c
+@@ -229,7 +229,7 @@ static const struct tsens_ops ops_8974 = {
+ 	.get_temp	= get_temp_common,
+ };
+ 
+-const struct tsens_data data_8974 = {
++const struct tsens_plat_data data_8974 = {
+ 	.num_sensors	= 11,
+ 	.ops		= &ops_8974,
+ 	.reg_offsets	= { [SROT_CTRL_OFFSET] = 0x0 },
+diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
+index 381a212872bf..cc98a61e093b 100644
+--- a/drivers/thermal/qcom/tsens-v2.c
++++ b/drivers/thermal/qcom/tsens-v2.c
+@@ -66,13 +66,13 @@ static const struct tsens_ops ops_generic_v2 = {
+ 	.get_temp	= get_temp_tsens_v2,
+ };
+ 
+-const struct tsens_data data_tsens_v2 = {
++const struct tsens_plat_data data_tsens_v2 = {
+ 	.ops            = &ops_generic_v2,
+ 	.reg_offsets	= { [SROT_CTRL_OFFSET] = 0x4 },
+ };
+ 
+ /* Kept around for backward compatibility with old msm8996.dtsi */
+-const struct tsens_data data_8996 = {
++const struct tsens_plat_data data_8996 = {
+ 	.num_sensors	= 13,
+ 	.ops		= &ops_generic_v2,
+ 	.reg_offsets	= { [SROT_CTRL_OFFSET] = 0x4 },
+diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+index f1ec9bbe4717..065ec2189bd3 100644
+--- a/drivers/thermal/qcom/tsens.c
++++ b/drivers/thermal/qcom/tsens.c
+@@ -102,7 +102,7 @@ static int tsens_probe(struct platform_device *pdev)
+ 	struct device *dev;
+ 	struct device_node *np;
+ 	struct tsens_device *tmdev;
+-	const struct tsens_data *data;
++	const struct tsens_plat_data *data;
+ 	const struct of_device_id *id;
+ 	u32 num_sensors;
+ 
 diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-index 7b7feee5dc46..89318523c848 100644
+index 89318523c848..232376c690cc 100644
 --- a/drivers/thermal/qcom/tsens.h
 +++ b/drivers/thermal/qcom/tsens.h
-@@ -14,6 +14,16 @@
- 
- struct tsens_device;
- 
-+/**
-+ * struct tsens_sensor - data for each sensor connected to the tsens device
-+ * @tmdev: tsens device instance that this sensor is connected to
-+ * @tzd: pointer to the thermal zone that this sensor is in
-+ * @offset: offset of temperature adjustment curve
-+ * @id: Sensor ID
-+ * @hw_id: HW ID can be used in case of platform-specific IDs
-+ * @slope: slope of temperature adjustment curve
-+ * @status: 8960-specific variable to track 8960 and 8660 status register offset
-+ */
- struct tsens_sensor {
- 	struct tsens_device		*tmdev;
- 	struct thermal_zone_device	*tzd;
-@@ -55,8 +65,8 @@ enum reg_list {
+@@ -65,13 +65,13 @@ enum reg_list {
  };
  
  /**
-- * struct tsens_data - tsens instance specific data
-- * @num_sensors: Max number of sensors supported by platform
-+ * struct tsens_data - tsens platform data
-+ * @num_sensors: Number of sensors supported by platform
+- * struct tsens_data - tsens platform data
++ * struct tsens_plat_data - tsens compile-time platform data
+  * @num_sensors: Number of sensors supported by platform
   * @ops: operations the tsens instance supports
   * @hw_ids: Subset of sensors ids supported by platform, if not the first n
   * @reg_offsets: Register offsets for commonly used registers
-@@ -68,12 +78,27 @@ struct tsens_data {
- 	unsigned int		*hw_ids;
- };
+  */
+-struct tsens_data {
++struct tsens_plat_data {
+ 	const u32		num_sensors;
+ 	const struct tsens_ops	*ops;
+ 	const u16		reg_offsets[REG_ARRAY_SIZE];
+@@ -117,8 +117,8 @@ int init_common(struct tsens_device *);
+ int get_temp_common(struct tsens_device *, int, int *);
  
--/* Registers to be saved/restored across a context loss */
-+/**
-+ * struct tsens_context - Registers to be saved/restored across a context loss
-+ */
- struct tsens_context {
- 	int	threshold;
- 	int	control;
- };
+ /* TSENS v1 targets */
+-extern const struct tsens_data data_8916, data_8974, data_8960;
++extern const struct tsens_plat_data data_8916, data_8974, data_8960;
+ /* TSENS v2 targets */
+-extern const struct tsens_data data_8996, data_tsens_v2;
++extern const struct tsens_plat_data data_8996, data_tsens_v2;
  
-+/**
-+ * struct tsens_device - private data for each instance of the tsens IP
-+ * @dev: pointer to struct device
-+ * @num_sensors: number of sensors enabled on this device
-+ * @tm_map: pointer to TM register address space
-+ * @srot_map: pointer to SROT register address space
-+ * @tm_offset: deal with old device trees that don't address TM and SROT
-+ *             address space separately
-+ * @reg_offsets: array of offsets to important regs for this version of IP
-+ * @ctx: registers to be saved and restored during suspend/resume
-+ * @ops: pointer to list of callbacks supported by this device
-+ * @sensor: list of sensors attached to this device
-+ */
- struct tsens_device {
- 	struct device			*dev;
- 	u32				num_sensors;
+ #endif /* __QCOM_TSENS_H__ */
 -- 
 2.17.1
 
