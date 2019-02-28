@@ -2,140 +2,98 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A30C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816CFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893CF20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:10:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="l5RZhBdl"
+	by mail.kernel.org (Postfix) with ESMTP id 54C4920C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387461AbfB1TKl (ORCPT
+        id S2387511AbfB1TKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 14:10:41 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34117 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733276AbfB1TKj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 14:10:39 -0500
-Received: by mail-qt1-f194.google.com with SMTP id w4so24899681qtc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 11:10:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+TfQWGMGs5ObBJodcOfCCLLfPFDT3yxUHkAF1a8U5pg=;
-        b=l5RZhBdloG5SnuEpC7J80qco08NL6zfZAxkTcaznq32CSbl1Fl6HOIZVB1gb1Ig5GQ
-         jfTPJz7YCH03JwzA0V2LbbykTqcoCFl5npJinI6Sap8KFNy9Q2Wl2JLj60qIBeQR3RsG
-         IShrGDzKjjlNM3Uu7Z0Ze64W0J0mLEhX/+Uec=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+TfQWGMGs5ObBJodcOfCCLLfPFDT3yxUHkAF1a8U5pg=;
-        b=ppn3TLYPCWrtVdslD11Kuhgv7WMByHK4y0sNloQJqzpJ/MnTyi/U9vJSumVfxy54Nh
-         kEJbkDg8RlbE1CiTQ02sToMj9EqVcbfPsmDlbO3tDPuGfxswUf6A0WM0v9e2Stl8dDtr
-         pDSpNeuE8KvqVs44Cb0BmGMEpA1CZclxQ4R/SLUUHboWADO29mWoevQwaVtcLBuuZybk
-         4yS1dagNNuueUt1Bfro4benbd8HO9i3xcrKnsKBcidaOf4nS8hjJ+KNNcIF5wOgaWFaO
-         ht7OSe6xguAL1NnBXBNRVTmQfA6LT6dcXWSkOWgGxbmTh329dBf+fH0XttLnLwhyVemc
-         iaGg==
-X-Gm-Message-State: APjAAAVxd3a1D/yvB40KWJ8xQ74yVWEEpu+8kaqKpgAgLBf1mUKFMJbS
-        Pi37OF07jtfEehyE1Jj2cM1LCw==
-X-Google-Smtp-Source: APXvYqy+TEco/RrLJg0x6DwgujHE/KEmoQqB+GMeGU4Nek5SZHYM7shD34UwjLyEuaMVNk9ZcC2VqQ==
-X-Received: by 2002:a0c:d121:: with SMTP id a30mr657202qvh.0.1551381038318;
-        Thu, 28 Feb 2019 11:10:38 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id n21sm11413235qtl.97.2019.02.28.11.10.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 11:10:37 -0800 (PST)
-Date:   Thu, 28 Feb 2019 14:10:36 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        mhiramat@kernel.org, paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190228191036.GA203889@google.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <20190228135343.23kzkilig3bsioov@e107158-lin.cambridge.arm.com>
- <20190228144759.GA156098@google.com>
- <b100f0a2-7966-b6a2-dcd5-ca11abe57ead@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b100f0a2-7966-b6a2-dcd5-ca11abe57ead@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 28 Feb 2019 14:10:48 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:34302 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733271AbfB1TKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 14:10:47 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 715AE30BDBE1;
+        Thu, 28 Feb 2019 19:10:47 +0000 (UTC)
+Received: from llong.com (ovpn-121-201.rdu2.redhat.com [10.10.121.201])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DE9360BE0;
+        Thu, 28 Feb 2019 19:10:38 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH-tip v3 04/11] locking/rwsem: Micro-optimize rwsem_try_read_lock_unqueued()
+Date:   Thu, 28 Feb 2019 14:09:34 -0500
+Message-Id: <1551380981-3113-5-git-send-email-longman@redhat.com>
+In-Reply-To: <1551380981-3113-1-git-send-email-longman@redhat.com>
+References: <1551380981-3113-1-git-send-email-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 28 Feb 2019 19:10:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 05:04:59PM +0100, Dietmar Eggemann wrote:
-[...]                      ^
-> kernel/kheaders_data.h:1:1: note: in expansion of macro ‘KH_MAGIC_END’
->  KH_MAGIC_END;
->  ^~~~~~~~~~~~
-> kernel/kheaders.c: In function ‘ikheaders_read_current’:
-> kernel/kheaders.c:38:12: error: ‘kernel_headers_data’ undeclared (first use
-> in this function); did you mean ‘kernel_headers_data_size’?
->             kernel_headers_data + KH_MAGIC_SIZE,
->             ^~~~~~~~~~~~~~~~~~~
->             kernel_headers_data_size
-> kernel/kheaders.c:38:12: note: each undeclared identifier is reported only
-> once for each function it appears in
-> kernel/kheaders.c: In function ‘ikheaders_init’:
-> kernel/kheaders.c:31:10: error: ‘kernel_headers_data’ undeclared (first use
-> in this function); did you mean ‘kernel_headers_data_size’?
->   (sizeof(kernel_headers_data) - 1 - KH_MAGIC_SIZE * 2)
->           ^
-> kernel/kheaders.c:57:23: note: in expansion of macro
-> ‘kernel_headers_data_size’
->   proc_set_size(entry, kernel_headers_data_size);
->                        ^~~~~~~~~~~~~~~~~~~~~~~~
-> kernel/kheaders.c: In function ‘ikheaders_read_current’:
-> kernel/kheaders.c:40:1: warning: control reaches end of non-void function
-> [-Wreturn-type]
->  }
-> 
-> 
-> The reason for me to stay on v4.20 is that with v5.0-rc8 I don't have ebpf
-> 'raw tracepoint' support any more on my arm64 board. But this issue is not
-> related to your patch though.
+The atomic_long_cmpxchg_acquire() in rwsem_try_read_lock_unqueued() is
+replaced by atomic_long_try_cmpxchg_acquire() to simpify the code and
+generate slightly better assembly code. There is no functional change.
 
-I'm glad mainline fixed your issue though as you said in the other thread ;-)
-I will refer to your email here later when doing backports if I hit the issue.
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Acked-by: Davidlohr Bueso <dbueso@suse.de>
+---
+ kernel/locking/rwsem-xadd.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-> Another point which supports the functionality your patch provides is the
-> fact that maintainers don't want to see new TRACE_EVENTs in their code. So
-> here your patch comes handy when using ebpf for tracing in embedded
-> environments.
-
-Yes, I agree. One can also use the series to build custom kernel modules
-which can also contain tracepoints in their own right. Glad you also find it
-useful. I will CC you on it for next spin.
-
-thanks,
-
- - Joel
+diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
+index c213869..f6198e1 100644
+--- a/kernel/locking/rwsem-xadd.c
++++ b/kernel/locking/rwsem-xadd.c
+@@ -259,21 +259,16 @@ static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem)
+  */
+ static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem)
+ {
+-	long old, count = atomic_long_read(&sem->count);
++	long count = atomic_long_read(&sem->count);
+ 
+-	while (true) {
+-		if (!(count == 0 || count == RWSEM_WAITING_BIAS))
+-			return false;
+-
+-		old = atomic_long_cmpxchg_acquire(&sem->count, count,
+-				      count + RWSEM_ACTIVE_WRITE_BIAS);
+-		if (old == count) {
++	while (!count || count == RWSEM_WAITING_BIAS) {
++		if (atomic_long_try_cmpxchg_acquire(&sem->count, &count,
++					count + RWSEM_ACTIVE_WRITE_BIAS)) {
+ 			rwsem_set_owner(sem);
+ 			return true;
+ 		}
+-
+-		count = old;
+ 	}
++	return false;
+ }
+ 
+ static inline bool owner_on_cpu(struct task_struct *owner)
+-- 
+1.8.3.1
 
