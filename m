@@ -2,110 +2,111 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5451C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048C6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07722083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45BA2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:53:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HQbw4FJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731933AbfB1NxF (ORCPT
+        id S1731903AbfB1Nxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:53:05 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:60492 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726003AbfB1NxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:53:04 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 17236ABBC5;
-        Thu, 28 Feb 2019 13:53:04 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F16E2620D1;
-        Thu, 28 Feb 2019 13:52:56 +0000 (UTC)
-Date:   Thu, 28 Feb 2019 14:52:54 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, pasic@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v4 1/7] s390: ap: kvm: add PQAP interception for AQIC
-Message-ID: <20190228145254.2909425e.cohuck@redhat.com>
-In-Reply-To: <be69498a-c4d3-81e7-b8bf-6931058cee74@linux.ibm.com>
-References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
-        <1550849400-27152-2-git-send-email-pmorel@linux.ibm.com>
-        <babf7884-35f1-2f2e-34dc-96d9190fd15b@linux.ibm.com>
-        <e7ba5cb0-b254-7f73-bc59-ca2456ce7951@linux.ibm.com>
-        <9f1d9241-39b9-adbc-d0e9-cb702e609cbc@linux.ibm.com>
-        <4dc59125-7f96-cba8-651b-382ed8f8bff8@linux.ibm.com>
-        <8526f468-9a4d-68d2-3868-0dad5ce16f46@linux.ibm.com>
-        <6058a017-6404-af3c-62ef-2452214ac97c@de.ibm.com>
-        <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
-        <20190228122251.75b31f62.cohuck@redhat.com>
-        <be69498a-c4d3-81e7-b8bf-6931058cee74@linux.ibm.com>
-Organization: Red Hat GmbH
+        Thu, 28 Feb 2019 08:53:36 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9540 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbfB1Nxg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 08:53:36 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c77e7e90000>; Thu, 28 Feb 2019 05:53:45 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 28 Feb 2019 05:53:36 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 28 Feb 2019 05:53:36 -0800
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Feb
+ 2019 13:53:33 +0000
+Subject: Re: [PATCH] sched/cputime: Remove unnecessary assignment statement
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Sachin Nikam <Snikam@nvidia.com>
+CC:     Ketan Patil <ketanp@nvidia.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Bharat Nihalani <bnihalani@nvidia.com>,
+        Bo Yan <byan@nvidia.com>,
+        Sai Gurrappadi <sgurrappadi@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Timo Alho <talho@nvidia.com>
+References: <1551248002-27303-1-git-send-email-ketanp@nvidia.com>
+ <20190227103230.GM32494@hirez.programming.kicks-ass.net>
+ <9bce6378-2221-f358-dc97-f15ee7ab546b@nvidia.com>
+ <20190228094733.GY32494@hirez.programming.kicks-ass.net>
+ <MN2PR12MB3278E52D04119DC55597A293BB750@MN2PR12MB3278.namprd12.prod.outlook.com>
+ <20190228123120.GA32494@hirez.programming.kicks-ass.net>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <397917cc-3656-e26c-7715-d4feec97bb4b@nvidia.com>
+Date:   Thu, 28 Feb 2019 13:53:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190228123120.GA32494@hirez.programming.kicks-ass.net>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 28 Feb 2019 13:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1551362025; bh=I2R8OVm72R100YHiJB2dEZ6K1N+tPCl6D0NuJX3x4YE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=HQbw4FJonKbaLYZ0ab6wfJ6PiKX96bvenLznhG8sq3iUpBh1aRw6oI7Y5fJwcGBf3
+         qAkmagANTqKQLxTDRiHPzXDFMc2VCxvXCuiOFLl76MC3FDI2qgedlHigiggvaWEuz5
+         3e6tZNOdjZyi4xLyYwfZCZTlw+M22lVh+FSOKbTmKiXK5Eqo0+P1ZQQMFlZ10jwjBb
+         YKgS+EUim1XlSgCXz8xW/Jnxs1l2TeX5/OHwkOpvaVdQUYfzfISln7nALtDUeoBtdo
+         qQjuhkwtfkOmvnZpkFkeGFL/f4rmfDujxitlDO8GUiuYwRSTW4pHub4MG3HDbM80L/
+         TdUveObmPF2TQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019 14:16:09 +0100
-Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> On 28/02/2019 12:22, Cornelia Huck wrote:
-
-> > So, to summarize, the function should do:
-> > - Is userspace supposed to emulate everything (!ECA_APIE)? Return
-> >    -EOPNOTSUPP to hand control to it.
-> > - We are now interpreting the instruction in KVM. Do common checks
-> >    (PSTATE etc.) and inject exceptions, if needed.
-> > - Now look at the fc; if there's a handler for it, call that; if not
-> >    (case does not attempt to call a specific handler, or no handler
-> >    registered), inject a specification exception. (Do we want pre-checks
-> >    like for facility 65 here, or in the handler?)
-> > 
-> > That response code 0x01 thingy probably needs to go into the specific
-> > handler function, if anywhere (don't know the semantics, sorry).  
+On 28/02/2019 12:31, Peter Zijlstra wrote:
 > 
-> What do you mean with specific handler function?
+> Clearly, because reading comprehension isn't your strong point:
 > 
-> If you mean a switch around the FC with static function's call, I agree, 
-> if you mean a jump into a hook I do not agree.
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
 
-Ah, ok; so each case (that we want to handle) should call into a
-subhandler that does
-{
-	(... check things like facilities ...)
-	if (!specific_hook)
-		inject_specif_excp_and_return();
-	ret = specific_hook();
-	if (ret)
-		set_resp_code_0x01(); // or in specific_hook()?
-}
+Sorry we have a few people helping out cleaning up our kernel branches
+and we need to do a better job here indeed!
 
-?
- 
-> > 
-> > Question: Will the handlers for the individual fcs need to generate
-> > different exceptions on their own? I.e., do they need to do injections
-> > themselves, or should the calling function possibly inject an exception
-> > on error?  
+> On Thu, Feb 28, 2019 at 12:14:09PM +0000, Sachin Nikam wrote:
 > 
-> There are some specificities.
+>> This isn't a security fix.
+>> However, I see this is kind of code cleanup.
+> 
+> As I've explained previously, it makes conceptual sense to have it in
+> the code, and any halfway sane compiler will observe the same double
+> store and eliminate it in its DCE pass.
 
-Ok, should probably done in the subhandlers?
+OK. Thanks for the feedback. We can agree to drop this and we will try
+to do a better job reviewing this type of thing before hand in future.
 
-(I hope I don't muddy the waters too much; but basically, I'm poking
-around with a stick in the dark :)
+Cheers
+Jon
+
+-- 
+nvpublic
