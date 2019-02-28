@@ -2,103 +2,97 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8077BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37507C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5364E20850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09AB120C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:14:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbfB1VNl (ORCPT
+        id S1729300AbfB1VOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 16:13:41 -0500
-Received: from mga04.intel.com ([192.55.52.120]:24451 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbfB1VNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 16:13:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 13:13:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,424,1544515200"; 
-   d="scan'208";a="278724699"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga004.jf.intel.com with ESMTP; 28 Feb 2019 13:13:36 -0800
-Date:   Thu, 28 Feb 2019 13:15:49 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        christian.koenig@amd.com, kevin.tian@intel.com,
-        ashok.raj@intel.com, baolu.lu@linux.intel.com,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 1/1] iommu: Bind process address spaces to devices
-Message-ID: <20190228131549.6c0e5fad@jacob-builder>
-In-Reply-To: <20190228140950.GD1594@8bytes.org>
-References: <20190220142759.33308-1-jean-philippe.brucker@arm.com>
-        <20190220142759.33308-2-jean-philippe.brucker@arm.com>
-        <20190226111743.GK20740@8bytes.org>
-        <20190227134129.51ad42ac@jacob-builder>
-        <20190228140950.GD1594@8bytes.org>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 28 Feb 2019 16:14:50 -0500
+Received: from relay11.mail.gandi.net ([217.70.178.231]:53181 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbfB1VOt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 16:14:49 -0500
+Received: from mc-bl-xps13.lan (lfbn-tou-1-149-99.w86-201.abo.wanadoo.fr [86.201.231.99])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 1A5E5100007;
+        Thu, 28 Feb 2019 21:14:42 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com
+Subject: [PATCH net] net: dsa: mv88e6xxx: power serdes on/off for 10G interfaces on 6390X
+Date:   Thu, 28 Feb 2019 22:14:33 +0100
+Message-Id: <20190228211433.14211-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019 15:09:50 +0100
-Joerg Roedel <joro@8bytes.org> wrote:
+Upon setting the cmode on 6390 and 6390X, the associated serdes
+interfaces must be powered off/on.
 
-> Hi Jacob,
-> 
-> On Wed, Feb 27, 2019 at 01:41:29PM -0800, Jacob Pan wrote:
-> > On Tue, 26 Feb 2019 12:17:43 +0100
-> > Joerg Roedel <joro@8bytes.org> wrote:  
-> 
-> > Just trying to understand how to use this API.
-> > So if we bind the same mm to two different devices, we should get
-> > two different iommu_sva handle, right?
-> > I think intel-svm still needs a flag argument for supervisor pasid
-> > etc. Other than that, I think both interface should work for vt-d.  
-> 
-> I second Jean's question here, is supervisor pasid still needed with
-> scalable mode? What is the use-case and which mm_struct will be used
-> for supervisor accesses?
-> 
-I will delegate this to Ashok.
+Both 6390X and 6390 share code to do so, but it currently uses the 6390
+specific helper mv88e6390_serdes_power() to disable and enable the
+serdes interface.
 
-> > Another question is that for nested SVA, we will need to bind guest
-> > mm. Do you think we should try to reuse this or have it separate? I
-> > am working on a separate API for now.  
-> 
-> I think a separate API makes more sense. It could be somehow fit into
-> this as well, but having it separate is cleaner. And we already have
-> separate API for aux-domains, so this would be just another extension
-> of the IOMMU-API for using PASIDs.
-> 
-Agreed.
-> 
-> > > 	int iommu_sva_get_pasid(struct iommu_sva *handle);  
-> > If multiple bind to the same mm gets multiple handles, this API
-> > should retrieve the same pasid for different handle?  
-> 
-> It can return the same handle if we store the pasid in the mm_struct,
-> for example ...
-> > Just curious why making the handle private instead of returning the
-> > pasid value in the handle?  
-> 
-> ... which is also the reason why I prefer the accessor function, it
-> allows to have the pasid not in the iommu_sva handle, but to retrieve
-> it from somewhere else (like the mm_struct).
-make sense, more flexible storage and controlled access too. thanks for
-explaining.
+This call will fail silently on 6390X when trying so set a 10G interface
+such as XAUI or RXAUI, since mv88e6390_serdes_power() internally grabs
+the lane number based on modes supported by the 6390, and returns 0 when
+getting -ENODEV as a lane number.
 
+Using mv88e6390x_serdes_power() should be safe here, since we explicitly
+rule-out all ports but the 9 and 10, and because modes supported by 6390
+ports 9 and 10 are a subset of those supported on 6390X.
 
-Jacob
+This was tested on 6390X using RXAUI mode.
+
+Fixes: 364e9d7776a3 ("net: dsa: mv88e6xxx: Power on/off SERDES on cmode change")
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ drivers/net/dsa/mv88e6xxx/port.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/port.c b/drivers/net/dsa/mv88e6xxx/port.c
+index ebd26b6a93e6..4b02c96f6786 100644
+--- a/drivers/net/dsa/mv88e6xxx/port.c
++++ b/drivers/net/dsa/mv88e6xxx/port.c
+@@ -408,7 +408,7 @@ int mv88e6390x_port_set_cmode(struct mv88e6xxx_chip *chip, int port,
+ 			return err;
+ 	}
+ 
+-	err = mv88e6390_serdes_power(chip, port, false);
++	err = mv88e6390x_serdes_power(chip, port, false);
+ 	if (err)
+ 		return err;
+ 
+@@ -424,7 +424,7 @@ int mv88e6390x_port_set_cmode(struct mv88e6xxx_chip *chip, int port,
+ 		if (err)
+ 			return err;
+ 
+-		err = mv88e6390_serdes_power(chip, port, true);
++		err = mv88e6390x_serdes_power(chip, port, true);
+ 		if (err)
+ 			return err;
+ 
+-- 
+2.19.2
+
