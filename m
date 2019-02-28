@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12442C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F373EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA291206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E73206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367253;
-	bh=ux5hH4pImCLVR1Fkj6R+/yG44Qe5ywQq0/G8p+yY0xo=;
+	s=default; t=1551367259;
+	bh=lATyR0mlQQWdOBzvH8+JIDeWmAKVsEaqfNeWQ8e81X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KeDx2/jfoiCSZb7oDVyHddpTKjVoKzy/ykMFpkSBuLyTIrrZDvinvm56akQNa1Ym8
-	 EY30xUJH62Tyecjt8WwvQdMePPLQdBvJ9BOJzk1TGy2zfYS14aTPfDAu8sOwCCHNqX
-	 56rFqJo9T3ZlIuTCrs9JMHUN1MhHAyI81Nz6dInU=
+	b=Iru78wt6HQey0wnzuW4rXA2089bd7z6c/Bc8GDXsgePtnkytTsGJAgTd7EVhcnPY6
+	 JmtOF/mcSucWatjf0yuYUurubxd52oYsOcvKV67kUrJhKDTALoRGM4EH1iGqrcqb+W
+	 XJJRC01p5h9cexkC197v1oCI7vM6fLhrp8YtN0gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388637AbfB1PON (ORCPT
+        id S1732606AbfB1PU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:14:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48550 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:20:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388613AbfB1POG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:14:06 -0500
+        id S2388622AbfB1POK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:14:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58A3B2184A;
-        Thu, 28 Feb 2019 15:14:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47C4C218C3;
+        Thu, 28 Feb 2019 15:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366845;
-        bh=ux5hH4pImCLVR1Fkj6R+/yG44Qe5ywQq0/G8p+yY0xo=;
+        s=default; t=1551366849;
+        bh=lATyR0mlQQWdOBzvH8+JIDeWmAKVsEaqfNeWQ8e81X0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SYXAkNYmTfWEATUvcFWP33rBHD3BfxeMlRDwM8NNHxFyR00HG6obDy66ZtkbMm82j
-         /sxm8/yTcjgRkFagA3jTpydCTEaLmoJUU0GpwakcZH5R7cbSmKHxRz/3ZIg3gSqiF6
-         AsGu3ofz/txXzECfY4QacRjTSM/SKXMr3l+1+9Qo=
+        b=jkU9Du8cDsboeDneSEw9ry+R/9bub9OPJPFQqPJomLyJSCuNXd7cDfQ8AO+w4M4IX
+         FENBqOIuRbw4cQjzyv7DhJuO2Xp2NEqBlcspXtld9m26u5qW/T+2vBQNk4QUQVrWnT
+         HxEWv+BjehNFs68h5HR7cZy/oAfybDv1nXZ1tThY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 15/36] irqchip/gic-v3-its: Fix ITT_entry_size accessor
-Date:   Thu, 28 Feb 2019 10:13:16 -0500
-Message-Id: <20190228151337.12176-15-sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 17/36] blk-mq: protect debugfs_create_files() from failures
+Date:   Thu, 28 Feb 2019 10:13:18 -0500
+Message-Id: <20190228151337.12176-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
 References: <20190228151337.12176-1-sashal@kernel.org>
@@ -57,37 +56,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 56841070ccc87b463ac037d2d1f2beb8e5e35f0c ]
+[ Upstream commit 36991ca68db9dd43bac7f3519f080ee3939263ef ]
 
-According to ARM IHI 0069C (ID070116), we should use GITS_TYPER's
-bits [7:4] as ITT_entry_size instead of [8:4]. Although this is
-pretty annoying, it only results in a potential over-allocation
-of memory, and nothing bad happens.
+If debugfs were to return a non-NULL error for a debugfs call, using
+that pointer later in debugfs_create_files() would crash.
 
-Fixes: 3dfa576bfb45 ("irqchip/gic-v3-its: Add probing for VLPI properties")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-[maz: massaged subject and commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fix that by properly checking the pointer before referencing it.
+
+Reported-by: Michal Hocko <mhocko@kernel.org>
+Reported-and-tested-by: syzbot+b382ba6a802a3d242790@syzkaller.appspotmail.com
+Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/irqchip/arm-gic-v3.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/blk-mq-debugfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index bacb499c512c7..845ff8c51564c 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -306,7 +306,7 @@
- #define GITS_TYPER_PLPIS		(1UL << 0)
- #define GITS_TYPER_VLPIS		(1UL << 1)
- #define GITS_TYPER_ITT_ENTRY_SIZE_SHIFT	4
--#define GITS_TYPER_ITT_ENTRY_SIZE(r)	((((r) >> GITS_TYPER_ITT_ENTRY_SIZE_SHIFT) & 0x1f) + 1)
-+#define GITS_TYPER_ITT_ENTRY_SIZE(r)	((((r) >> GITS_TYPER_ITT_ENTRY_SIZE_SHIFT) & 0xf) + 1)
- #define GITS_TYPER_IDBITS_SHIFT		8
- #define GITS_TYPER_DEVBITS_SHIFT	13
- #define GITS_TYPER_DEVBITS(r)		((((r) >> GITS_TYPER_DEVBITS_SHIFT) & 0x1f) + 1)
+diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+index d95439154556d..da0453277f7f2 100644
+--- a/block/blk-mq-debugfs.c
++++ b/block/blk-mq-debugfs.c
+@@ -791,6 +791,9 @@ static const struct blk_mq_debugfs_attr blk_mq_debugfs_ctx_attrs[] = {
+ static bool debugfs_create_files(struct dentry *parent, void *data,
+ 				 const struct blk_mq_debugfs_attr *attr)
+ {
++	if (IS_ERR_OR_NULL(parent))
++		return false;
++
+ 	d_inode(parent)->i_private = data;
+ 
+ 	for (; attr->name; attr++) {
 -- 
 2.19.1
 
