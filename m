@@ -2,328 +2,663 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C0AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B2DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08754214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E5C5218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:13:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732562AbfB1OM2 (ORCPT
+        id S1732425AbfB1ONV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:12:28 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41036 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731320AbfB1OM1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 09:12:27 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SE48DG006555
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 09:12:26 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxgk8j6rx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 09:12:25 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 28 Feb 2019 14:12:21 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Feb 2019 14:12:18 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SECGd517825976
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Feb 2019 14:12:17 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8CCCA4051;
-        Thu, 28 Feb 2019 14:12:16 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3528BA4053;
-        Thu, 28 Feb 2019 14:12:16 +0000 (GMT)
-Received: from [9.152.224.140] (unknown [9.152.224.140])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Feb 2019 14:12:16 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v4 1/7] s390: ap: kvm: add PQAP interception for AQIC
-To:     Halil Pasic <pasic@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
- <1550849400-27152-2-git-send-email-pmorel@linux.ibm.com>
- <babf7884-35f1-2f2e-34dc-96d9190fd15b@linux.ibm.com>
- <e7ba5cb0-b254-7f73-bc59-ca2456ce7951@linux.ibm.com>
- <9f1d9241-39b9-adbc-d0e9-cb702e609cbc@linux.ibm.com>
- <4dc59125-7f96-cba8-651b-382ed8f8bff8@linux.ibm.com>
- <8526f468-9a4d-68d2-3868-0dad5ce16f46@linux.ibm.com>
- <6058a017-6404-af3c-62ef-2452214ac97c@de.ibm.com>
- <20190228133927.75de6849@oc2783563651>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Thu, 28 Feb 2019 15:12:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Feb 2019 09:13:21 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4189 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727773AbfB1ONU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 09:13:20 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E009AA0249BC92B6DAB9;
+        Thu, 28 Feb 2019 22:13:13 +0800 (CST)
+Received: from HSH1000045364.huawei.com (10.177.181.43) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 28 Feb 2019 22:13:07 +0800
+From:   Pengcheng Li <lipengcheng8@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <john.stultz@linaro.org>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+CC:     <lipengcheng8@huawei.com>, <suzhuangluan@hisilicon.com>,
+        <kongfei@hisilicon.com>, <liyuequan@hisilicon.com>,
+        <cash.qianli@hisilicon.com>, <huangli295@hisilicon.com>,
+        <hantanglei@huawei.com>, <wangyoulin1@hisilicon.com>,
+        <ninggaoyu@hisilicon.com>, <xuwei5@huawei.com>
+Subject: [PATCH 1/3] sound: Add hikey960 i2s audio driver
+Date:   Thu, 28 Feb 2019 21:57:00 +0800
+Message-ID: <1551362220-99351-1-git-send-email-lipengcheng8@huawei.com>
+X-Mailer: git-send-email 2.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190228133927.75de6849@oc2783563651>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19022814-0020-0000-0000-0000031C656A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19022814-0021-0000-0000-0000216DD7E9
-Message-Id: <c391ed0f-55f1-70cc-3b5f-058c1fce691c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280098
+Content-Type: text/plain
+X-Originating-IP: [10.177.181.43]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 13:39, Halil Pasic wrote:
-> On Thu, 28 Feb 2019 10:42:23 +0100
-> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-> 
->>
->>
->> On 27.02.2019 19:00, Tony Krowiak wrote:
->>> On 2/27/19 3:09 AM, Pierre Morel wrote:
->>>> On 26/02/2019 16:47, Tony Krowiak wrote:
->>>>> On 2/26/19 6:47 AM, Pierre Morel wrote:
->>>>>> On 25/02/2019 19:36, Tony Krowiak wrote:
->>>>>>> On 2/22/19 10:29 AM, Pierre Morel wrote:
->>>>>>>> We prepare the interception of the PQAP/AQIC instruction for
->>>>>>>> the case the AQIC facility is enabled in the guest.
->>>>>>>>
->>>>>>>> We add a callback inside the KVM arch structure for s390 for
->>>>>>>> a VFIO driver to handle a specific response to the PQAP
->>>>>>>> instruction with the AQIC command.
->>>>>>>>
->>>>>>>> We inject the correct exceptions from inside KVM for the case the
->>>>>>>> callback is not initialized, which happens when the vfio_ap driver
->>>>>>>> is not loaded.
->>>>>>>>
->>>>>>>> If the callback has been setup we call it.
->>>>>>>> If not we setup an answer considering that no queue is available
->>>>>>>> for the guest when no callback has been setup.
->>>>>>>>
->>>>>>>> We do consider the responsability of the driver to always initialize
->>>>>>>> the PQAP callback if it defines queues by initializing the CRYCB for
->>>>>>>> a guest.
->>>>>>>>
->>>>>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>>>>>
->>>>>> ...snip...
->>>>>>
->>>>>>>> @@ -592,6 +593,55 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
->>>>>>>>        }
->>>>>>>>    }
->>>>>>>> +/*
->>>>>>>> + * handle_pqap: Handling pqap interception
->>>>>>>> + * @vcpu: the vcpu having issue the pqap instruction
->>>>>>>> + *
->>>>>>>> + * We now support PQAP/AQIC instructions and we need to correctly
->>>>>>>> + * answer the guest even if no dedicated driver's hook is available.
->>>>>>>> + *
->>>>>>>> + * The intercepting code calls a dedicated callback for this instruction
->>>>>>>> + * if a driver did register one in the CRYPTO satellite of the
->>>>>>>> + * SIE block.
->>>>>>>> + *
->>>>>>>> + * For PQAP/AQIC instructions only, verify privilege and specifications.
->>>>>>>> + *
->>>>>>>> + * If no callback available, the queues are not available, return this to
->>>>>>>> + * the caller.
->>>>>>>> + * Else return the value returned by the callback.
->>>>>>>> + */
->>>>>>>> +static int handle_pqap(struct kvm_vcpu *vcpu)
->>>>>>>> +{
->>>>>>>> +    uint8_t fc;
->>>>>>>> +    struct ap_queue_status status = {};
->>>>>>>> +
->>>>>>>> +    /* Verify that the AP instruction are available */
->>>>>>>> +    if (!ap_instructions_available())
->>>>>>>> +        return -EOPNOTSUPP;
->>>>>>>
->>>>>>> How can the guest even execute an AP instruction if the AP instructions
->>>>>>> are not available? If the AP instructions are not available on the host,
->>>>>>> they will not be available on the guest (i.e., CPU model feature
->>>>>>> S390_FEAT_AP will not be set). I suppose it doesn't hurt to check this
->>>>>>> here given QEMU may not be the only client.
->>>>>>>
->>>>>>>> +    /* Verify that the guest is allowed to use AP instructions */
->>>>>>>> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
->>>>>>>> +        return -EOPNOTSUPP;
->>>>>>>> +    /* Verify that the function code is AQIC */
->>>>>>>> +    fc = vcpu->run->s.regs.gprs[0] >> 24;
->>>>>>>> +    if (fc != 0x03)
->>>>>>>> +        return -EOPNOTSUPP;
->>>>>>>
->>>>>>> You must have missed my suggestion to move this to the
->>>>>>> vcpu->kvm->arch.crypto.pqap_hook(vcpu) in the following responses:
->>>>>>
->>>>>> Please consider what happen if the vfio_ap module is not loaded.
->>>>>
->>>>> I have considered it and even verified my expectations empirically. If
->>>>> the vfio_ap module is not loaded, you will not be able to create an mdev device.
->>>>
->>>> OK, now please consider that another userland tool, not QEMU uses KVM.
->>>
->>> What does that have to do with loading the vfio_ap module? Without the
->>> vfio_ap module, there will be no AP devices for the guest. What are you
->>> suggesting here?
->>>
->>>>
->>>>> If you don't have an mdev device, you will not be able to
->>>>> start a guest with a vfio-ap device. If you start a guest without a
->>>>> vfio-ap device, but enable AP instructions for the guest, there will be
->>>>> no AP devices attached to the guest. Without any AP devices attached,
->>>>> the PQAP(AQIC) instructions will not ever get executed.
->>>>
->>>> This is not right. The instruction will be executed, eventually, after decoding.
->>>
->>> Please explain why the PQAP(AQIC) instruction will be executed on a
->>> guest without any devices? Point me to the code in the AP bus where
->>> PQAP(AQIC) is executed without a queue?
->>
->> The host must be prepared to handle malicous and broken guests. So if
->> a guest does PQAP, we must handle that gracefully (e.g. by injecting an
->> exception)
->>
-> 
-> Nod.
-> 
->>>
->>>>
->>>>> Even if for some
->>>>> unknown reason the PQAP(AQIC) instruction is executed - for some unknown
->>>>> reason, it will fail with response code 0x01, AP-queue number not valid.
->>>>
->>>> No, before accessing the AP-queue the instruction will be decoded and depending on the installed micro-code it will fail with
->>>> - OPERATION EXCEPTION if the micro-code is not installed
->>>> - PRIVILEDGE OPERATION if the instruction is issued from userland (programm state)
->>>> - SPECIFICATION exception if the instruction do not respect the usage specification
->>>>
->>>> then it will be interpreted by the microcode and access the queue and only then it will fail with RC 0x01, AP queue not valid.
->>>>
->>>> In the case of KVM, we intercept the instruction because it is issued by the guest and we set the AQIC facility on to force interception.
->>>>
->>>> KVM do for us all the decode steps I mention here above, if there is or not a pqap hook to be call to simulate the QP queue access.
->>>>
->>>> That done, the AP queue virtualisation can be called, this is done by calling the hook.
->>>
->>> Okay, let's go back to the genesis of this discussion; namely, my
->>> suggestion about moving the fc == 0x03 check into the hook code. If
->>> the vfio_ap module is not loaded, there will be no hook code. In that
->>> case, the check for the hook will fail and ultimately response code
->>> 0x01 will be set in the status word (which may not be the right thing
->>> to do?). You have not stated a single good reason for keeping this
->>> check, but I'm done with this silly argument. It certainly doesn't
->>> hurt anything.
->>
->> The instruction handler must handle the basic checks for the
->> instruction itself as outlined above.
-> 
-> Nod.
-> 
->>
->> Do we want to allow QEMU to fully emulate everything (the  ECA_APIE case being off)?
->> The we should pass along everything to QEMU, but this is already done with the
->> ECA_APIE check, correct?
-> 
-> Nod.
-> 
->>
->> Do we agree that when we are beyond the ECA_APIE check, that we do not emulate
->> in QEMU and we have enabled the AP instructions interpretion?
-> 
-> At least the intention is to not emulate. ECA_APIE is an effective
-> control though...
-> 
->> If yes then this has some implication:
->>
->> 1. ECA is on and we should only get PQAP interception for specific FC (namely 3).
-> 
-> Not necessarily true. TAPQ can be intercepted as well (APFT depends
-> IC.3). But for now we don't care about that.
-> 
->> 2. What we certainly should check is the facility bit of the guest (65) and reject fc==3
->> right away with a specification exception. I do not want the hook to mess with
->> the kvm cpu model. @Pierre would be good to actually check test_kvm_facility(vcpu->kvm, 65))
-> 
-> As far as I can tell he already does test_kvm_facility(vcpu->kvm, 65). I
-> agree we need a spec exception if guest does not have facility 65, but
-> does have ap instructions.
-> 
->> 3. What shall we do when fc == 0x3? We can certainly do the check here OR in the
->> hook. As long as we have only fc==3 this does not matter.
->>
-> 
-> I guess Tony's point is that we may have fc == 0 that is TAPQ in the
-> APFT flavor. IMHO we don't need to care about that at the moment.
-> 
->> Correct?
-> 
-> IMHO mostly.
-> 
-> I also doing the facility checks in kvm is easier, and I think this is
-> something we can change later if needed without any major trouble.
-> 
-> There are a couple of things I would do differently than Pierre does:
-> 1) Do the PGM_PRIVILEGED_OP before the fc == 3 check.
+From: Youlin Wang <wangyoulin1@hisilicon.com>
 
-Idea was not to modify existing behavior for fc != 3
+Add i2s driver for hisi3660 soc found on the hikey960 board.
+Add conpile line in make file.
+Technical support by Guangke Ji.
 
-Also Christian already proposed to handle all FC codes. So in this idea, 
-this must be done as you say.
+Signed-off-by: Youlin Wang <wangyoulin1@hisilicon.com>
+Signed-off-by: Tanglei Han <hantanglei@huawei.com>
+Signed-off-by: Guangke Ji <jiguangke@huawei.com>
+Signed-off-by: Feng Chen <puck.chen@hisilicon.com>
+Signed-off-by: Kaihua Zhong <zhongkaihua@huawei.com>
+Signed-off-by: Jun Chen <chenjun14@huawei.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Yiping Xu <xuyiping@hisilicon.com>
+Signed-off-by: Pengcheng Li <lipengcheng8@huawei.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+---
+ sound/soc/hisilicon/Kconfig      |   8 +-
+ sound/soc/hisilicon/Makefile     |   1 +
+ sound/soc/hisilicon/hi3660-i2s.c | 448 +++++++++++++++++++++++++++++++++++++++
+ sound/soc/hisilicon/hi3660-i2s.h |  99 +++++++++
+ 4 files changed, 555 insertions(+), 1 deletion(-)
+ create mode 100644 sound/soc/hisilicon/hi3660-i2s.c
+ create mode 100644 sound/soc/hisilicon/hi3660-i2s.h
 
-> 
-> 2) Do the test_kvm_facility(vcpu->kvm, 65) check in the context of fc ==
-> 3. I.e. decide if this hook is about pqap or just about pqap aqic and
-> make the code convey that decision to its reader.
-> 
-> 3) I would most probably test if the queue is available by looking at the
-> masks in CRYCB here. If not AP_RESPONSE_Q_NOT_AVAIL is what we need.
-
-This I do not agree with, it is typically the responsibility of the part 
-in charge of the virtualization to do this, also the vfio_driver.
-
-> 
-> 4) If we have APIE and queues authorized by the CRYCB (i.e. we have a
-> vfio_ap module loaded an an mdev associated with the kvm) the callback
-> not set (!(vcpu->kvm->arch.crypto.pqap_hook)) is a BUG!
-
-I do not agree with this either, the maintainers ;) will not allow this.
-
-> In that case
-> lying that the queue is not available does not seem right. BTW this is
-> something Pierre changed since the last version quietly (I can't recall
-> a mention in the change log or somebody asking for this). If we want to
-> be very pedantic about this bug scenario our best bet is probably
-> response code 6.
-
-
-RC 06 means "Invalid address of AP-queue notification byte"
-
-So you must have think about another code or I do not understand at all 
-what you mean.
-
-Regards,
-Pierre
-
-
+diff --git a/sound/soc/hisilicon/Kconfig b/sound/soc/hisilicon/Kconfig
+index 4356d5a..b023ef9 100644
+--- a/sound/soc/hisilicon/Kconfig
++++ b/sound/soc/hisilicon/Kconfig
+@@ -1,5 +1,11 @@
+ config SND_I2S_HI6210_I2S
+-	tristate "Hisilicon I2S controller"
++	tristate "Hisilicon Hi6210 I2S controller"
++	select SND_SOC_GENERIC_DMAENGINE_PCM
++	help
++	  Hisilicon I2S
++
++config SND_I2S_HI3660_I2S
++	tristate "Hisilicon 960 I2S controller"
+ 	select SND_SOC_GENERIC_DMAENGINE_PCM
+ 	help
+ 	  Hisilicon I2S
+diff --git a/sound/soc/hisilicon/Makefile b/sound/soc/hisilicon/Makefile
+index e8095e2..6800516 100644
+--- a/sound/soc/hisilicon/Makefile
++++ b/sound/soc/hisilicon/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_SND_I2S_HI6210_I2S) += hi6210-i2s.o
++obj-$(CONFIG_SND_I2S_HI3660_I2S) += hi3660-i2s.o
+diff --git a/sound/soc/hisilicon/hi3660-i2s.c b/sound/soc/hisilicon/hi3660-i2s.c
+new file mode 100644
+index 0000000..b894007
+--- /dev/null
++++ b/sound/soc/hisilicon/hi3660-i2s.c
+@@ -0,0 +1,448 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * linux/sound/soc/hisilicon/hi3660-i2s.c
++ *
++ * I2S IP driver for hi3660.
++ *
++ * Copyright (c) 2001-2021, Huawei Tech. Co., Ltd.
++ */
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/delay.h>
++#include <linux/clk.h>
++#include <linux/jiffies.h>
++#include <linux/io.h>
++#include <linux/gpio.h>
++#include <sound/core.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/dmaengine_pcm.h>
++#include <sound/initval.h>
++#include <sound/soc.h>
++#include <linux/interrupt.h>
++#include <linux/reset.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/reset-controller.h>
++#include <linux/clk.h>
++#include <linux/regulator/consumer.h>
++
++#include "hi3660-i2s.h"
++
++struct hi3660_i2s {
++	struct device *dev;
++	struct reset_control *rc;
++	int clocks;
++	struct regulator *regu_asp;
++	struct pinctrl *pctrl;
++	struct pinctrl_state *pin_default;
++	struct pinctrl_state *pin_idle;
++	struct clk *asp_subsys_clk;
++	struct snd_soc_dai_driver dai;
++	void __iomem *base;
++	void __iomem *base_syscon;
++	phys_addr_t base_phys;
++	struct snd_dmaengine_dai_dma_data dma_data[2];
++	spinlock_t lock;
++	int rate;
++	int format;
++	int bits;
++	int channels;
++	u32 master;
++	u32 status;
++};
++
++static void update_bits(struct hi3660_i2s *i2s, u32 ofs, u32 reset, u32 set)
++{
++	u32 val = readl(i2s->base + ofs) & ~reset;
++
++	writel(val | set, i2s->base + ofs);
++}
++
++static void update_bits_syscon(struct hi3660_i2s *i2s,
++			u32 ofs, u32 reset, u32 set)
++{
++	u32 val = readl(i2s->base_syscon + ofs) & ~reset;
++
++	writel(val | set, i2s->base_syscon + ofs);
++}
++
++static int enable_format(struct hi3660_i2s *i2s,
++			       struct snd_pcm_substream *substream)
++{
++	switch (i2s->format & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBM_CFM:
++		i2s->master = false;
++		update_bits_syscon(i2s, HI_ASP_CFG_R_CLK_SEL_REG,
++				0, HI_ASP_CFG_R_CLK_SEL_EN);
++		break;
++	case SND_SOC_DAIFMT_CBS_CFS:
++		i2s->master = true;
++		update_bits_syscon(i2s, HI_ASP_CFG_R_CLK_SEL_REG,
++				HI_ASP_CFG_R_CLK_SEL_EN, 0);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int startup(struct snd_pcm_substream *substream,
++		     struct snd_soc_dai *cpu_dai)
++{
++	struct hi3660_i2s *i2s = dev_get_drvdata(cpu_dai->dev);
++
++	/* deassert reset on sio_bt*/
++	update_bits_syscon(i2s, HI_ASP_CFG_R_RST_CTRLDIS_REG,
++			0, BIT(2)|BIT(6)|BIT(8)|BIT(16));
++
++	/* enable clk before frequency division */
++	update_bits_syscon(i2s, HI_ASP_CFG_R_GATE_EN_REG,
++			0, BIT(5)|BIT(6));
++
++	/* enable frequency division */
++	update_bits_syscon(i2s, HI_ASP_CFG_R_GATE_CLKDIV_EN_REG,
++			0, BIT(2)|BIT(5));
++
++	/* select clk */
++	update_bits_syscon(i2s, HI_ASP_CFG_R_CLK_SEL_REG,
++			HI_ASP_MASK, HI_ASP_CFG_R_CLK_SEL);
++
++	/* select clk_div */
++	update_bits_syscon(i2s, HI_ASP_CFG_R_CLK1_DIV_REG,
++			HI_ASP_MASK, HI_ASP_CFG_R_CLK1_DIV_SEL);
++	update_bits_syscon(i2s, HI_ASP_CFG_R_CLK4_DIV_REG,
++			HI_ASP_MASK, HI_ASP_CFG_R_CLK4_DIV_SEL);
++	update_bits_syscon(i2s, HI_ASP_CFG_R_CLK6_DIV_REG,
++			HI_ASP_MASK, HI_ASP_CFG_R_CLK6_DIV_SEL);
++
++	/* sio config */
++	update_bits(i2s, HI_ASP_SIO_MODE_REG, HI_ASP_MASK, 0x0);
++	update_bits(i2s, HI_ASP_SIO_DATA_WIDTH_SET_REG, HI_ASP_MASK, 0x9);
++	update_bits(i2s, HI_ASP_SIO_I2S_POS_MERGE_EN_REG, HI_ASP_MASK, 0x1);
++	update_bits(i2s, HI_ASP_SIO_I2S_START_POS_REG, HI_ASP_MASK, 0x0);
++
++	return 0;
++}
++
++static void shutdown(struct snd_pcm_substream *substream,
++		       struct snd_soc_dai *cpu_dai)
++{
++	struct hi3660_i2s *i2s = dev_get_drvdata(cpu_dai->dev);
++
++	if (!IS_ERR_OR_NULL(i2s->asp_subsys_clk))
++		clk_disable_unprepare(i2s->asp_subsys_clk);
++}
++
++static void txctrl(struct snd_soc_dai *cpu_dai, int on)
++{
++	struct hi3660_i2s *i2s = dev_get_drvdata(cpu_dai->dev);
++
++	spin_lock(&i2s->lock);
++
++	if (on) {
++		/* enable SIO TX */
++		update_bits(i2s, HI_ASP_SIO_CT_SET_REG, 0,
++			HI_ASP_SIO_TX_ENABLE |
++			HI_ASP_SIO_TX_DATA_MERGE |
++			HI_ASP_SIO_TX_FIFO_THRESHOLD |
++			HI_ASP_SIO_RX_ENABLE |
++			HI_ASP_SIO_RX_DATA_MERGE |
++			HI_ASP_SIO_RX_FIFO_THRESHOLD);
++	} else {
++		/* disable SIO TX */
++		update_bits(i2s, HI_ASP_SIO_CT_CLR_REG, 0,
++			HI_ASP_SIO_TX_ENABLE | HI_ASP_SIO_RX_ENABLE);
++	}
++	spin_unlock(&i2s->lock);
++}
++
++static void rxctrl(struct snd_soc_dai *cpu_dai, int on)
++{
++	struct hi3660_i2s *i2s = dev_get_drvdata(cpu_dai->dev);
++
++	spin_lock(&i2s->lock);
++	if (on)
++		/* enable SIO RX */
++		update_bits(i2s, HI_ASP_SIO_CT_SET_REG, 0,
++			HI_ASP_SIO_TX_ENABLE |
++			HI_ASP_SIO_TX_DATA_MERGE |
++			HI_ASP_SIO_TX_FIFO_THRESHOLD |
++			HI_ASP_SIO_RX_ENABLE |
++			HI_ASP_SIO_RX_DATA_MERGE |
++			HI_ASP_SIO_RX_FIFO_THRESHOLD);
++	else
++		/* disable SIO RX */
++		update_bits(i2s, HI_ASP_SIO_CT_CLR_REG, 0,
++			HI_ASP_SIO_TX_ENABLE | HI_ASP_SIO_RX_ENABLE);
++	spin_unlock(&i2s->lock);
++}
++
++static int set_sysclk(struct snd_soc_dai *cpu_dai,
++			     int clk_id, unsigned int freq, int dir)
++{
++	return 0;
++}
++
++static int set_format(struct snd_soc_dai *cpu_dai, unsigned int fmt)
++{
++	struct hi3660_i2s *i2s = dev_get_drvdata(cpu_dai->dev);
++
++	i2s->format = fmt;
++	i2s->master = (i2s->format & SND_SOC_DAIFMT_MASTER_MASK) ==
++		      SND_SOC_DAIFMT_CBS_CFS;
++
++	return 0;
++}
++
++static int hw_params(struct snd_pcm_substream *substream,
++			    struct snd_pcm_hw_params *params,
++			    struct snd_soc_dai *cpu_dai)
++{
++	struct hi3660_i2s *i2s = dev_get_drvdata(cpu_dai->dev);
++	struct snd_dmaengine_dai_dma_data *dma_data;
++
++	dma_data = snd_soc_dai_get_dma_data(cpu_dai, substream);
++
++	enable_format(i2s, substream);
++
++	dma_data->maxburst = 4;
++
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++		dma_data->addr = i2s->base_phys +
++			HI_ASP_SIO_I2S_DUAL_TX_CHN_REG;
++	else
++		dma_data->addr = i2s->base_phys +
++			HI_ASP_SIO_I2S_DUAL_RX_CHN_REG;
++
++	switch (params_format(params)) {
++	case SNDRV_PCM_FORMAT_U16_LE:
++	case SNDRV_PCM_FORMAT_S16_LE:
++		i2s->bits = 16;
++		dma_data->addr_width = 4;
++		break;
++
++	case SNDRV_PCM_FORMAT_U24_LE:
++	case SNDRV_PCM_FORMAT_S24_LE:
++		i2s->bits = 32;
++		dma_data->addr_width = 4;
++		break;
++	default:
++		dev_err(cpu_dai->dev, "Bad format\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int trigger(struct snd_pcm_substream *substream, int cmd,
++			  struct snd_soc_dai *cpu_dai)
++{
++	switch (cmd) {
++	case SNDRV_PCM_TRIGGER_START:
++	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
++			rxctrl(cpu_dai, 1);
++		else
++			txctrl(cpu_dai, 1);
++		break;
++	case SNDRV_PCM_TRIGGER_STOP:
++	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
++			rxctrl(cpu_dai, 0);
++		else
++			txctrl(cpu_dai, 0);
++		break;
++	default:
++		dev_err(cpu_dai->dev, "unknown cmd\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int dai_probe(struct snd_soc_dai *dai)
++{
++	struct hi3660_i2s *i2s = snd_soc_dai_get_drvdata(dai);
++
++	snd_soc_dai_init_dma_data(dai,
++		&i2s->dma_data[SNDRV_PCM_STREAM_PLAYBACK],
++		&i2s->dma_data[SNDRV_PCM_STREAM_CAPTURE]);
++
++	return 0;
++}
++
++
++static struct snd_soc_dai_ops dai_ops = {
++	.trigger	= trigger,
++	.hw_params	= hw_params,
++	.set_fmt	= set_format,
++	.set_sysclk	= set_sysclk,
++	.startup	= startup,
++	.shutdown	= shutdown,
++};
++
++static struct snd_soc_dai_driver dai_init = {
++	.name = "hi3660_i2s",
++	.probe = dai_probe,
++	.playback = {
++		.channels_min = 2,
++		.channels_max = 2,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE |
++			   SNDRV_PCM_FMTBIT_U16_LE,
++		.rates = SNDRV_PCM_RATE_48000,
++	},
++	.capture = {
++		.channels_min = 2,
++		.channels_max = 2,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE |
++			   SNDRV_PCM_FMTBIT_U16_LE,
++		.rates = SNDRV_PCM_RATE_48000,
++	},
++	.ops = &dai_ops,
++};
++
++static const struct snd_soc_component_driver component_driver = {
++	.name = "hi3660_i2s",
++};
++
++#include <sound/dmaengine_pcm.h>
++
++static const struct snd_pcm_hardware sound_hardware = {
++	.info = SNDRV_PCM_INFO_MMAP |
++		SNDRV_PCM_INFO_MMAP_VALID |
++		SNDRV_PCM_INFO_PAUSE |
++		SNDRV_PCM_INFO_RESUME |
++		SNDRV_PCM_INFO_INTERLEAVED |
++		SNDRV_PCM_INFO_HALF_DUPLEX,
++	.period_bytes_min = 4096,
++	.period_bytes_max = 4096,
++	.periods_min = 4,
++	.periods_max = UINT_MAX,
++	.buffer_bytes_max = SIZE_MAX,
++};
++
++static const struct snd_dmaengine_pcm_config dmaengine_pcm_config = {
++	.pcm_hardware = &sound_hardware,
++	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
++	.prealloc_buffer_size = 64 * 1024,
++};
++
++static int hi3660_i2s_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct hi3660_i2s *i2s;
++	struct resource *res;
++	int ret;
++
++	i2s = devm_kzalloc(dev, sizeof(*i2s), GFP_KERNEL);
++	if (!i2s)
++		return -ENOMEM;
++
++	i2s->dev = dev;
++	spin_lock_init(&i2s->lock);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		ret = -ENODEV;
++		return ret;
++	}
++	i2s->base_phys = (phys_addr_t)res->start;
++
++	i2s->dai = dai_init;
++	dev_set_drvdata(&pdev->dev, i2s);
++
++	i2s->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(i2s->base)) {
++		dev_err(&pdev->dev, "ioremap failed\n");
++		ret = PTR_ERR(i2s->base);
++		return ret;
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (!res) {
++		ret = -ENODEV;
++		return ret;
++	}
++	i2s->base_syscon = devm_ioremap(dev, res->start, resource_size(res));
++	if (IS_ERR(i2s->base_syscon)) {
++		dev_err(&pdev->dev, "ioremap failed\n");
++		ret = PTR_ERR(i2s->base_syscon);
++		return ret;
++	}
++
++	/* i2s iomux config */
++	i2s->pctrl = devm_pinctrl_get(dev);
++	if (IS_ERR(i2s->pctrl)) {
++		dev_err(dev, "could not get pinctrl\n");
++		ret = -EIO;
++		return ret;
++	}
++
++	i2s->pin_default = pinctrl_lookup_state(i2s->pctrl,
++					PINCTRL_STATE_DEFAULT);
++	if (IS_ERR(i2s->pin_default)) {
++		dev_err(dev,
++			"could not get default state (%li)\n",
++			PTR_ERR(i2s->pin_default));
++		ret = -EIO;
++		return ret;
++	}
++
++	if (pinctrl_select_state(i2s->pctrl, i2s->pin_default)) {
++		dev_err(dev, "could not set pins to default state\n");
++		ret = -EIO;
++		return ret;
++	}
++
++	ret = devm_snd_dmaengine_pcm_register(&pdev->dev,
++				&dmaengine_pcm_config, 0);
++	if (ret)
++		return ret;
++
++	ret = snd_soc_register_component(&pdev->dev, &component_driver,
++				&i2s->dai, 1);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to register dai\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int hi3660_i2s_remove(struct platform_device *pdev)
++{
++	struct hi3660_i2s *i2s = dev_get_drvdata(&pdev->dev);
++
++	snd_soc_unregister_component(&pdev->dev);
++	dev_set_drvdata(&pdev->dev, NULL);
++
++	pinctrl_put(i2s->pctrl);
++
++	return 0;
++}
++
++static const struct of_device_id dt_ids[] = {
++	{ .compatible = "hisilicon,hi3660-i2s-1.0" },
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, dt_ids);
++
++static struct platform_driver local_platform_driver = {
++	.probe = hi3660_i2s_probe,
++	.remove = hi3660_i2s_remove,
++	.driver = {
++		.name = "hi3660_i2s",
++		.owner = THIS_MODULE,
++		.of_match_table = dt_ids,
++	},
++};
++
++module_platform_driver(local_platform_driver);
++
++MODULE_DESCRIPTION("Hisilicon I2S driver");
++MODULE_AUTHOR("Guangke Ji <j00209069@notesmail.huawei.com>");
++MODULE_LICENSE("GPL");
+diff --git a/sound/soc/hisilicon/hi3660-i2s.h b/sound/soc/hisilicon/hi3660-i2s.h
+new file mode 100644
+index 0000000..1874855
+--- /dev/null
++++ b/sound/soc/hisilicon/hi3660-i2s.h
+@@ -0,0 +1,99 @@
++/* SPDX-License-Identifier: GPL-2.0+
++ *
++ * linux/sound/soc/hisilicon/hi3660-i2s.c
++ *
++ * I2S IP driver for hi3660.
++ *
++ * Copyright (c) 2001-2021, Huawei Tech. Co., Ltd.
++ *
++ */
++
++#ifndef _HI3660_I2S_H
++#define _HI3660_I2S_H
++
++enum hisi_bits {
++	HII2S_BITS_16,
++	HII2S_BITS_18,
++	HII2S_BITS_20,
++	HII2S_BITS_24,
++};
++
++enum hisi_i2s_rates {
++	HII2S_FS_RATE_8KHZ = 0,
++	HII2S_FS_RATE_16KHZ = 1,
++	HII2S_FS_RATE_32KHZ = 2,
++	HII2S_FS_RATE_48KHZ = 4,
++	HII2S_FS_RATE_96KHZ = 5,
++	HII2S_FS_RATE_192KHZ = 6,
++};
++
++#define HI_ASP_CFG_R_RST_CTRLEN_REG		0x0
++#define HI_ASP_CFG_R_RST_CTRLDIS_REG		0x4
++#define HI_ASP_CFG_R_GATE_EN_REG		0xC
++#define HI_ASP_CFG_R_GATE_DIS_REG		0x10
++#define HI_ASP_CFG_R_GATE_CLKEN_REG		0x14
++#define HI_ASP_CFG_R_GATE_CLKSTAT_REG		0x18
++#define HI_ASP_CFG_R_GATE_CLKDIV_EN_REG		0x1C
++#define HI_ASP_CFG_R_CLK1_DIV_REG		0x20
++#define HI_ASP_CFG_R_CLK2_DIV_REG		0x24
++#define HI_ASP_CFG_R_CLK3_DIV_REG		0x28
++#define HI_ASP_CFG_R_CLK4_DIV_REG		0x2C
++#define HI_ASP_CFG_R_CLK5_DIV_REG		0x30
++#define HI_ASP_CFG_R_CLK6_DIV_REG		0x34
++#define HI_ASP_CFG_R_CLK_SEL_REG		0x38
++#define HI_ASP_CFG_R_SEC_REG			0x100
++
++
++#define HI_ASP_SIO_VERSION_REG			(0x3C)
++#define HI_ASP_SIO_MODE_REG			(0x40)
++#define HI_ASP_SIO_INTSTATUS_REG		(0x44)
++#define HI_ASP_SIO_INTCLR_REG			(0x48)
++#define HI_ASP_SIO_I2S_LEFT_XD_REG		(0x4C)
++#define HI_ASP_SIO_I2S_RIGHT_XD_REG		(0x50)
++#define HI_ASP_SIO_I2S_LEFT_RD_REG		(0x54)
++#define HI_ASP_SIO_I2S_RIGHT_RD_REG		(0x58)
++#define HI_ASP_SIO_CT_SET_REG			(0x5C)
++#define HI_ASP_SIO_CT_CLR_REG			(0x60)
++#define HI_ASP_SIO_RX_STA_REG			(0x68)
++#define HI_ASP_SIO_TX_STA_REG			(0x6C)
++#define HI_ASP_SIO_DATA_WIDTH_SET_REG		(0x78)
++#define HI_ASP_SIO_I2S_START_POS_REG		(0x7C)
++#define HI_ASP_SIO_I2S_POS_FLAG_REG		(0x80)
++#define HI_ASP_SIO_SIGNED_EXT_REG		(0x84)
++#define HI_ASP_SIO_I2S_POS_MERGE_EN_REG		(0x88)
++#define HI_ASP_SIO_INTMASK_REG			(0x8C)
++#define HI_ASP_SIO_I2S_DUAL_RX_CHN_REG		(0xA0)
++#define HI_ASP_SIO_I2S_DUAL_TX_CHN_REG		(0xC0)
++
++
++#define HI_ASP_CFG_R_CLK_SEL_EN			BIT(2)
++#define HI_ASP_CFG_R_CLK_SEL			0x140010
++#define HI_ASP_CFG_R_CLK1_DIV_SEL		0xbcdc9a
++#define HI_ASP_CFG_R_CLK4_DIV_SEL		0x00ff000f
++#define HI_ASP_CFG_R_CLK6_DIV_SEL		0x00ff003f
++#define HI_ASP_CFG_SIO_MODE			0
++#define HI_ASP_SIO_MODE_SEL_EN			BIT(0)
++#define HI_ASP_MASK				0xffffffff
++
++#define HI_ASP_SIO_RX_ENABLE			BIT(13)
++#define HI_ASP_SIO_TX_ENABLE			BIT(12)
++#define HI_ASP_SIO_RX_FIFO_DISABLE		BIT(11)
++#define HI_ASP_SIO_TX_FIFO_DISABLE		BIT(10)
++#define HI_ASP_SIO_RX_DATA_MERGE		BIT(9)
++#define HI_ASP_SIO_TX_DATA_MERGE		BIT(8)
++#define HI_ASP_SIO_RX_FIFO_THRESHOLD		(0x5 << 4)
++#define HI_ASP_SIO_TX_FIFO_THRESHOLD		(0xB << 0)
++#define HI_ASP_SIO_RX_FIFO_THRESHOLD_CLR	(0xF << 4)
++#define HI_ASP_SIO_TX_FIFO_THRESHOLD_CLR	(0xF << 0)
++#define HI_ASP_SIO_BURST			(0x4)
++
++
++enum hisi_i2s_formats {
++	HII2S_FORMAT_I2S,
++	HII2S_FORMAT_PCM_STD,
++	HII2S_FORMAT_PCM_USER,
++	HII2S_FORMAT_LEFT_JUST,
++	HII2S_FORMAT_RIGHT_JUST,
++};
++
++#endif/* _HI3660_I2S_H */
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+2.8.0
 
