@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52443C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737D3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9A720C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3228420C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367053;
-	bh=hvvQZVAsdCRj/vLr0fzHNfgoe7aEd9xa5g6SOYbOboE=;
+	s=default; t=1551367058;
+	bh=6BRDg+X4Yvl+FBpth0LCv74V41DNzX9MVlyneSEaR+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QOJ1oi7Bl5lpGrBkMKHeC4zmfG2n7o2BzdnshlaLOmB273DnSKbqfcvgK1F4pI0Nl
-	 eF8WFiPwbUdC0sl1RWtuHxGypfczyCCf0NMI6pP09HDi+SD+ICTjbJ35gOSgH43yJg
-	 An1NrlkseCzb+zbF7Klp63r0vWFCRQXrxYlJGYew=
+	b=CwTojSTY65mfa7u2qDhzHzpYC4ijNI7ZbupqhL23j424X6jlphNzb9gHcqHWjb3o7
+	 2hMmDLi+oFYn5j39r+8yWpWbJnTqZU/EdjxzUNFpljR4hNz0U9VNVo4qG4aLvtp65T
+	 TwG6sMIkRfEIOVIbwpqn1HbZzYKiz8jWsR7prO8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388659AbfB1PRb (ORCPT
+        id S2388856AbfB1PRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:17:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52558 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:17:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388673AbfB1PQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:16:18 -0500
+        id S1733115AbfB1PQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:16:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39A9D218D9;
-        Thu, 28 Feb 2019 15:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 436E22184A;
+        Thu, 28 Feb 2019 15:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366978;
-        bh=hvvQZVAsdCRj/vLr0fzHNfgoe7aEd9xa5g6SOYbOboE=;
+        s=default; t=1551366976;
+        bh=6BRDg+X4Yvl+FBpth0LCv74V41DNzX9MVlyneSEaR+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mB78KrRNFEEZDdifKQRz1JGd/iNH1zayYwqYj7M+w5fX74gQDePA20u3+B8yNXtzf
-         uES1wl6KEKWpPMTEGNC310z3OylAvjtbDcVvtCUEcDvUiSNY7XjePXJFd5IpYTcGjo
-         w94nu+lgGPKlsbyWgVD4bMlW+GccnAcVlnLuxBXU=
+        b=pbNQvayh2JUT8fRBAP7mJxcwjIZaFPPe3J5D59vVjlo9m86JbX7XSwtX/T6IUbVvT
+         B47bNtnPDu8/frspVHMJ3QiXgNNeTmG2C/1wLsN59Qy4/h/jKKDnlQYl13BYLWsyrl
+         2t6fOdVux4JhCbT8PZBV/5rsa4fSD2WgbNvElEHY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 3/8] dmaengine: at_xdmac: Fix wrongfull report of a channel as in use
-Date:   Thu, 28 Feb 2019 10:16:07 -0500
-Message-Id: <20190228151614.13022-3-sashal@kernel.org>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 2/8] irqchip/mmp: Only touch the PJ4 IRQ & FIQ bits on enable/disable
+Date:   Thu, 28 Feb 2019 10:16:06 -0500
+Message-Id: <20190228151614.13022-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151614.13022-1-sashal@kernel.org>
 References: <20190228151614.13022-1-sashal@kernel.org>
@@ -57,100 +57,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit dc3f595b6617ebc0307e0ce151e8f2f2b2489b95 ]
+[ Upstream commit 2380a22b60ce6f995eac806e69c66e397b59d045 ]
 
-atchan->status variable is used to store two different information:
- - pass channel interrupts status from interrupt handler to tasklet;
- - channel information like whether it is cyclic or paused;
+Resetting bit 4 disables the interrupt delivery to the "secure
+processor" core. This breaks the keyboard on a OLPC XO 1.75 laptop,
+where the firmware running on the "secure processor" bit-bangs the
+PS/2 protocol over the GPIO lines.
 
-This causes a bug when device_terminate_all() is called,
-(AT_XDMAC_CHAN_IS_CYCLIC cleared on atchan->status) and then a late End
-of Block interrupt arrives (AT_XDMAC_CIS_BIS), which sets bit 0 of
-atchan->status. Bit 0 is also used for AT_XDMAC_CHAN_IS_CYCLIC, so when
-a new descriptor for a cyclic transfer is created, the driver reports
-the channel as in use:
+It is not clear what the rest of the bits are and Marvell was unhelpful
+when asked for documentation. Aside from the SP bit, there are probably
+priority bits.
 
-if (test_and_set_bit(AT_XDMAC_CHAN_IS_CYCLIC, &atchan->status)) {
-	dev_err(chan2dev(chan), "channel currently used\n");
-	return NULL;
-}
+Leaving the unknown bits as the firmware set them up seems to be a wiser
+course of action compared to just turning them off.
 
-This patch fixes the bug by adding a different struct member to keep
-the interrupts status separated from the channel status bits.
-
-Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+[maz: fixed-up subject and commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/irqchip/irq-mmp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 82a7c89caae2a..af24c5bf32d69 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -203,6 +203,7 @@ struct at_xdmac_chan {
- 	u32				save_cim;
- 	u32				save_cnda;
- 	u32				save_cndc;
-+	u32				irq_status;
- 	unsigned long			status;
- 	struct tasklet_struct		tasklet;
- 	struct dma_slave_config		sconfig;
-@@ -1582,8 +1583,8 @@ static void at_xdmac_tasklet(unsigned long data)
- 	struct at_xdmac_desc	*desc;
- 	u32			error_mask;
+diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+index 013fc9659a842..2fe2bcb63a711 100644
+--- a/drivers/irqchip/irq-mmp.c
++++ b/drivers/irqchip/irq-mmp.c
+@@ -34,6 +34,9 @@
+ #define SEL_INT_PENDING		(1 << 6)
+ #define SEL_INT_NUM_MASK	0x3f
  
--	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08lx\n",
--		 __func__, atchan->status);
-+	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08x\n",
-+		__func__, atchan->irq_status);
++#define MMP2_ICU_INT_ROUTE_PJ4_IRQ	(1 << 5)
++#define MMP2_ICU_INT_ROUTE_PJ4_FIQ	(1 << 6)
++
+ struct icu_chip_data {
+ 	int			nr_irqs;
+ 	unsigned int		virq_base;
+@@ -190,7 +193,8 @@ static struct mmp_intc_conf mmp_conf = {
+ static struct mmp_intc_conf mmp2_conf = {
+ 	.conf_enable	= 0x20,
+ 	.conf_disable	= 0x0,
+-	.conf_mask	= 0x7f,
++	.conf_mask	= MMP2_ICU_INT_ROUTE_PJ4_IRQ |
++			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
+ };
  
- 	error_mask = AT_XDMAC_CIS_RBEIS
- 		     | AT_XDMAC_CIS_WBEIS
-@@ -1591,15 +1592,15 @@ static void at_xdmac_tasklet(unsigned long data)
- 
- 	if (at_xdmac_chan_is_cyclic(atchan)) {
- 		at_xdmac_handle_cyclic(atchan);
--	} else if ((atchan->status & AT_XDMAC_CIS_LIS)
--		   || (atchan->status & error_mask)) {
-+	} else if ((atchan->irq_status & AT_XDMAC_CIS_LIS)
-+		   || (atchan->irq_status & error_mask)) {
- 		struct dma_async_tx_descriptor  *txd;
- 
--		if (atchan->status & AT_XDMAC_CIS_RBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_RBEIS)
- 			dev_err(chan2dev(&atchan->chan), "read bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_WBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_WBEIS)
- 			dev_err(chan2dev(&atchan->chan), "write bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_ROIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_ROIS)
- 			dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
- 
- 		spin_lock_bh(&atchan->lock);
-@@ -1654,7 +1655,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 			atchan = &atxdmac->chan[i];
- 			chan_imr = at_xdmac_chan_read(atchan, AT_XDMAC_CIM);
- 			chan_status = at_xdmac_chan_read(atchan, AT_XDMAC_CIS);
--			atchan->status = chan_status & chan_imr;
-+			atchan->irq_status = chan_status & chan_imr;
- 			dev_vdbg(atxdmac->dma.dev,
- 				 "%s: chan%d: imr=0x%x, status=0x%x\n",
- 				 __func__, i, chan_imr, chan_status);
-@@ -1668,7 +1669,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CDA),
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CUBC));
- 
--			if (atchan->status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
-+			if (atchan->irq_status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
- 				at_xdmac_write(atxdmac, AT_XDMAC_GD, atchan->mask);
- 
- 			tasklet_schedule(&atchan->tasklet);
+ static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
 -- 
 2.19.1
 
