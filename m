@@ -4,48 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CE9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC423C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13100218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C1221850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731753AbfB1Hmy (ORCPT
+        id S1731125AbfB1Hnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:42:54 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:47243 "EHLO
+        Thu, 28 Feb 2019 02:43:52 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:35975 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfB1Hmx (ORCPT
+        with ESMTP id S1725973AbfB1Hnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:42:53 -0500
+        Thu, 28 Feb 2019 02:43:51 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7gbmp2948045
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7hJdP2948107
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Feb 2019 23:42:37 -0800
+        Wed, 27 Feb 2019 23:43:19 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7gaEf2948042;
-        Wed, 27 Feb 2019 23:42:36 -0800
-Date:   Wed, 27 Feb 2019 23:42:36 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7hJji2948104;
+        Wed, 27 Feb 2019 23:43:19 -0800
+Date:   Wed, 27 Feb 2019 23:43:19 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Richter <tipbot@zytor.com>
-Message-ID: <tip-03d309711d687460d1345de8a0363f45b1c8cd11@git.kernel.org>
-Cc:     brueckner@linux.vnet.ibm.com, hpa@zytor.com,
-        heiko.carstens@de.ibm.com, acme@redhat.com, tglx@linutronix.de,
-        schwidefsky@de.ibm.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, tmricht@linux.ibm.com
-Reply-To: linux-kernel@vger.kernel.org, schwidefsky@de.ibm.com,
-          tglx@linutronix.de, acme@redhat.com, heiko.carstens@de.ibm.com,
-          hpa@zytor.com, brueckner@linux.vnet.ibm.com,
-          tmricht@linux.ibm.com, mingo@kernel.org
-In-Reply-To: <20190219153639.31267-1-tmricht@linux.ibm.com>
-References: <20190219153639.31267-1-tmricht@linux.ibm.com>
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-lz14w0esqyt1333aon05jpwc@git.kernel.org>
+Cc:     tglx@linutronix.de, yhs@fb.com, daniel@iogearbox.net,
+        jolsa@kernel.org, mingo@kernel.org, ast@kernel.org,
+        linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+        hpa@zytor.com, namhyung@kernel.org, kafai@fb.com, acme@redhat.com
+Reply-To: jolsa@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+          tglx@linutronix.de, kafai@fb.com, namhyung@kernel.org,
+          acme@redhat.com, ast@kernel.org, mingo@kernel.org,
+          adrian.hunter@intel.com, hpa@zytor.com,
+          linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf test: Fix failure of 'evsel-tp-sched' test on
- s390
-Git-Commit-ID: 03d309711d687460d1345de8a0363f45b1c8cd11
+Subject: [tip:perf/core] perf bpf: Add bpf_map dumper
+Git-Commit-ID: d19f856479feef7c1383f02b87688563a0ef7a14
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -59,121 +57,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  03d309711d687460d1345de8a0363f45b1c8cd11
-Gitweb:     https://git.kernel.org/tip/03d309711d687460d1345de8a0363f45b1c8cd11
-Author:     Thomas Richter <tmricht@linux.ibm.com>
-AuthorDate: Tue, 19 Feb 2019 16:36:39 +0100
+Commit-ID:  d19f856479feef7c1383f02b87688563a0ef7a14
+Gitweb:     https://git.kernel.org/tip/d19f856479feef7c1383f02b87688563a0ef7a14
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Tue, 19 Feb 2019 16:11:56 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 19 Feb 2019 13:43:29 -0300
+CommitDate: Tue, 19 Feb 2019 16:11:56 -0300
 
-perf test: Fix failure of 'evsel-tp-sched' test on s390
+perf bpf: Add bpf_map dumper
 
-Commit 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
-causes test case 14 "Parse sched tracepoints fields" to fail on s390.
+At some point I'll suggest moving this to libbpf, for now I'll
+experiment with ways to dump BPF maps set by events in 'perf trace',
+starting with a very basic dumper for the current very limited needs
+of the augmented_raw_syscalls code: dumping booleans.
 
-This test succeeds on x86.
+Having functions that apply to the map keys and values and do table
+lookup in things like syscall id to string tables should come next.
 
-In fact this test now fails on all architectures with type char treated
-as type unsigned char.
-
-The root cause is the signed-ness of character arrays in the tracepoints
-sched_switch for structure members prev_comm and next_comm.
-
-On s390 the output of:
-
- [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
- name: sched_switch
- ID: 287
- format:
-   field:unsigned short common_type; offset:0; size:2;	signed:0;
-   ...
-   field:char prev_comm[16]; offset:8; size:16;	signed:0;
-   ...
-   field:char next_comm[16]; offset:40; size:16; signed:0;
-
-reveals the character arrays prev_comm and next_comm are per
-default unsigned char and have values in the range of 0..255.
-
-On x86 both fields are signed as this output shows:
- [root@f29]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
- name: sched_switch
- ID: 287
- format:
-   field:unsigned short common_type; offset:0; size:2;	signed:0;
-   ...
-   field:char prev_comm[16]; offset:8; size:16;	signed:1;
-   ...
-   field:char next_comm[16]; offset:40; size:16; signed:1;
-
-and the character arrays prev_comm and next_comm are per default signed
-char and have values in the range of -1..127.  The implementation of
-type char is architecture specific.
-
-Since the character arrays in both tracepoints sched_switch and
-sched_wakeup should contain ascii characters, simply omit the check for
-signedness in the test case.
-
-Output before:
-
-  [root@m35lp76 perf]# ./perf test -F 14
-  14: Parse sched tracepoints fields                        :
-  --- start ---
-  sched:sched_switch: "prev_comm" signedness(0) is wrong, should be 1
-  sched:sched_switch: "next_comm" signedness(0) is wrong, should be 1
-  sched:sched_wakeup: "comm" signedness(0) is wrong, should be 1
-  ---- end ----
-  14: Parse sched tracepoints fields                        : FAILED!
-  [root@m35lp76 perf]#
-
-Output after:
-
-  [root@m35lp76 perf]# ./perf test -Fv 14
-  14: Parse sched tracepoints fields                        :
-  --- start ---
-  ---- end ----
-  Parse sched tracepoints fields: Ok
-  [root@m35lp76 perf]#
-
-Fixes: 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190219153639.31267-1-tmricht@linux.ibm.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Link: https://lkml.kernel.org/n/tip-lz14w0esqyt1333aon05jpwc@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/evsel-tp-sched.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/Build     |  1 +
+ tools/perf/util/bpf_map.c | 72 +++++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/bpf_map.h | 22 +++++++++++++++
+ 3 files changed, 95 insertions(+)
 
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index 5cbba70bcdd0..ea7acf403727 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -43,7 +43,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 		return -1;
- 	}
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 3008d49fa587..8dd3102301ea 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -115,6 +115,7 @@ perf-y += branch.o
+ perf-y += mem2node.o
  
--	if (perf_evsel__test_field(evsel, "prev_comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "prev_comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "prev_pid", 4, true))
-@@ -55,7 +55,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 	if (perf_evsel__test_field(evsel, "prev_state", sizeof(long), true))
- 		ret = -1;
- 
--	if (perf_evsel__test_field(evsel, "next_comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "next_comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "next_pid", 4, true))
-@@ -73,7 +73,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 		return -1;
- 	}
- 
--	if (perf_evsel__test_field(evsel, "comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "pid", 4, true))
+ perf-$(CONFIG_LIBBPF) += bpf-loader.o
++perf-$(CONFIG_LIBBPF) += bpf_map.o
+ perf-$(CONFIG_BPF_PROLOGUE) += bpf-prologue.o
+ perf-$(CONFIG_LIBELF) += symbol-elf.o
+ perf-$(CONFIG_LIBELF) += probe-file.o
+diff --git a/tools/perf/util/bpf_map.c b/tools/perf/util/bpf_map.c
+new file mode 100644
+index 000000000000..eb853ca67cf4
+--- /dev/null
++++ b/tools/perf/util/bpf_map.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++
++#include "util/bpf_map.h"
++#include <bpf/bpf.h>
++#include <bpf/libbpf.h>
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <stdbool.h>
++#include <stdlib.h>
++#include <unistd.h>
++
++static bool bpf_map_def__is_per_cpu(const struct bpf_map_def *def)
++{
++	return def->type == BPF_MAP_TYPE_PERCPU_HASH ||
++	       def->type == BPF_MAP_TYPE_PERCPU_ARRAY ||
++	       def->type == BPF_MAP_TYPE_LRU_PERCPU_HASH ||
++	       def->type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE;
++}
++
++static void *bpf_map_def__alloc_value(const struct bpf_map_def *def)
++{
++	if (bpf_map_def__is_per_cpu(def))
++		return malloc(round_up(def->value_size, 8) * sysconf(_SC_NPROCESSORS_CONF));
++
++	return malloc(def->value_size);
++}
++
++int bpf_map__fprintf(struct bpf_map *map, FILE *fp)
++{
++	const struct bpf_map_def *def = bpf_map__def(map);
++	void *prev_key = NULL, *key, *value;
++	int fd = bpf_map__fd(map), err;
++	int printed = 0;
++
++	if (fd < 0)
++		return fd;
++
++	if (IS_ERR(def))
++		return PTR_ERR(def);
++
++	err = -ENOMEM;
++	key = malloc(def->key_size);
++	if (key == NULL)
++		goto out;
++
++	value = bpf_map_def__alloc_value(def);
++	if (value == NULL)
++		goto out_free_key;
++
++	while ((err = bpf_map_get_next_key(fd, prev_key, key) == 0)) {
++		int intkey = *(int *)key;
++
++		if (!bpf_map_lookup_elem(fd, key, value)) {
++			bool boolval = *(bool *)value;
++			if (boolval)
++				printed += fprintf(fp, "[%d] = %d,\n", intkey, boolval);
++		} else {
++			printed += fprintf(fp, "[%d] = ERROR,\n", intkey);
++		}
++
++		prev_key = key;
++	}
++
++	if (err == ENOENT)
++		err = printed;
++
++	free(value);
++out_free_key:
++	free(key);
++out:
++	return err;
++}
+diff --git a/tools/perf/util/bpf_map.h b/tools/perf/util/bpf_map.h
+new file mode 100644
+index 000000000000..d6abd5e47af8
+--- /dev/null
++++ b/tools/perf/util/bpf_map.h
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++#ifndef __PERF_BPF_MAP_H
++#define __PERF_BPF_MAP_H 1
++
++#include <stdio.h>
++#include <linux/compiler.h>
++struct bpf_map;
++
++#ifdef HAVE_LIBBPF_SUPPORT
++
++int bpf_map__fprintf(struct bpf_map *map, FILE *fp);
++
++#else
++
++static inline int bpf_map__fprintf(struct bpf_map *map __maybe_unused, FILE *fp __maybe_unused)
++{
++	return 0;
++}
++
++#endif // HAVE_LIBBPF_SUPPORT
++
++#endif // __PERF_BPF_MAP_H
