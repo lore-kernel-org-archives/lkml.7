@@ -2,174 +2,223 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EAFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54BDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA84E21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCD321850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732205AbfB1JrH convert rfc822-to-8bit (ORCPT
+        id S1732224AbfB1Jrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:47:07 -0500
-Received: from smtp.eu.citrix.com ([185.25.65.24]:51518 "EHLO
-        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfB1JrG (ORCPT
+        Thu, 28 Feb 2019 04:47:36 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48956 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725921AbfB1Jrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:47:06 -0500
-X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
-   d="scan'208";a="86578168"
-From:   Paul Durrant <Paul.Durrant@citrix.com>
-To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Wei Liu <wei.liu2@citrix.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Igor Druzhinin <igor.druzhinin@citrix.com>
-Subject: RE: [PATCH] xen-netback: fix occasional leak of grant ref mappings
- under memory pressure
-Thread-Topic: [PATCH] xen-netback: fix occasional leak of grant ref mappings
- under memory pressure
-Thread-Index: AQHUzwnalyGnLUhGt0OYo7x3WDkwmKX09AIQ
-Date:   Thu, 28 Feb 2019 09:46:57 +0000
-Message-ID: <8424fba34a1f43908a6dae3a9308863b@AMSPEX02CL02.citrite.net>
-References: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
-In-Reply-To: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 28 Feb 2019 04:47:35 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S9icSW018216
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:47:27 -0500
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxcyugvss-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:47:27 -0500
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
+        Thu, 28 Feb 2019 09:47:26 -0000
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Feb 2019 09:47:24 -0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1S9lNZE21364748
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Feb 2019 09:47:23 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8439C124053;
+        Thu, 28 Feb 2019 09:47:23 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41055124054;
+        Thu, 28 Feb 2019 09:47:23 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.124.35.84])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Feb 2019 09:47:23 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id B9F412E2D5F; Thu, 28 Feb 2019 15:17:19 +0530 (IST)
+Date:   Thu, 28 Feb 2019 15:17:19 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] powerpc/pseries: Only wait for dying CPU after call
+ to rtas_stop_self()
+Reply-To: ego@linux.vnet.ibm.com
+References: <20190222225752.6375-1-bauerman@linux.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190222225752.6375-1-bauerman@linux.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+x-cbid: 19022809-0060-0000-0000-000003138F03
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010679; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01167516; UDB=6.00609944; IPR=6.00948130;
+ MB=3.00025777; MTD=3.00000008; XFM=3.00000015; UTC=2019-02-28 09:47:25
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19022809-0061-0000-0000-00004873BC6A
+Message-Id: <20190228094719.GA24751@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902280069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Igor Druzhinin [mailto:igor.druzhinin@citrix.com]
-> Sent: 28 February 2019 02:03
-> To: xen-devel@lists.xenproject.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> Cc: Wei Liu <wei.liu2@citrix.com>; Paul Durrant <Paul.Durrant@citrix.com>; davem@davemloft.net; Igor
-> Druzhinin <igor.druzhinin@citrix.com>
-> Subject: [PATCH] xen-netback: fix occasional leak of grant ref mappings under memory pressure
+Hello Thiago,
+
+On Fri, Feb 22, 2019 at 07:57:52PM -0300, Thiago Jung Bauermann wrote:
+> When testing DLPAR CPU add/remove on a system under stress,
+> pseries_cpu_die() doesn't wait long enough for a CPU to die:
 > 
-> Zero-copy callback flag is not yet set on frag list skb at the moment
-> xenvif_handle_frag_list() returns -ENOMEM. This eventually results in
-> leaking grant ref mappings since xenvif_zerocopy_callback() is never
-> called for these fragments. Those eventually build up and cause Xen
-> to kill Dom0 as the slots get reused for new mappings.
+> [  446.983944] cpu 148 (hwid 148) Ready to die...
+> [  446.984062] cpu 149 (hwid 149) Ready to die...
+> [  446.993518] cpu 150 (hwid 150) Ready to die...
+> [  446.993543] Querying DEAD? cpu 150 (150) shows 2
+> [  446.994098] cpu 151 (hwid 151) Ready to die...
+> [  447.133726] cpu 136 (hwid 136) Ready to die...
+> [  447.403532] cpu 137 (hwid 137) Ready to die...
+> [  447.403772] cpu 138 (hwid 138) Ready to die...
+> [  447.403839] cpu 139 (hwid 139) Ready to die...
+> [  447.403887] cpu 140 (hwid 140) Ready to die...
+> [  447.403937] cpu 141 (hwid 141) Ready to die...
+> [  447.403979] cpu 142 (hwid 142) Ready to die...
+> [  447.404038] cpu 143 (hwid 143) Ready to die...
+> [  447.513546] cpu 128 (hwid 128) Ready to die...
+> [  447.693533] cpu 129 (hwid 129) Ready to die...
+> [  447.693999] cpu 130 (hwid 130) Ready to die...
+> [  447.703530] cpu 131 (hwid 131) Ready to die...
+> [  447.704087] Querying DEAD? cpu 132 (132) shows 2
+> [  447.704102] cpu 132 (hwid 132) Ready to die...
+> [  447.713534] cpu 133 (hwid 133) Ready to die...
+> [  447.714064] Querying DEAD? cpu 134 (134) shows 2
 > 
-> That behavior is observed under certain workloads where sudden spikes
-> of page cache usage for writes coexist with active atomic skb allocations.
+> This is a race between one CPU stopping and another one calling
+> pseries_cpu_die() to wait for it to stop. That function does a short busy
+> loop calling RTAS query-cpu-stopped-state on the stopping CPU to verify
+> that it is stopped, but I think there's a lot for the stopping CPU to do
+> which may take longer than this loop allows.
 > 
-> Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+> As can be seen in the dmesg right before or after the "Querying DEAD?"
+> messages, if pseries_cpu_die() waited a little longer it would have seen
+> the CPU in the stopped state.
+
+> 
+> I see two cases that can be causing this race:
+> 
+> 1. It's possible that CPU 134 was inactive at the time it was unplugged. In
+>    that case, dlpar_offline_cpu() calls H_PROD on that CPU and immediately
+>    calls pseries_cpu_die(). Meanwhile, the prodded CPU activates and start
+>    the process of stopping itself. It's possible that the busy loop is not
+>    long enough to allow for the CPU to wake up and complete the stopping
+>    process.
+
+The problem is a bit more severe since, after printing "Querying
+DEAD?" for CPU X, this CPU can prod another offline CPU Y on the same
+core which, on waking up, will call rtas_stop_self. Thus we can have two
+concurrent calls to rtas-stop-self, which is prohibited by the PAPR.
+
+
+> 
+> 2. If CPU 134 was online at the time it was unplugged, it would have gone
+>    through the new CPU hotplug state machine in kernel/cpu.c that was
+>    introduced in v4.6 to get itself stopped. It's possible that the busy
+>    loop in pseries_cpu_die() was long enough for the older hotplug code but
+>    not for the new hotplug state machine.
+
+I haven't been able to observe the "Querying DEAD?" messages for the
+online CPU which was being offlined and dlpar'ed out.
+
+> 
+> I don't know if this race condition has any ill effects, but we can make
+> the race a lot more even if we only start querying if the CPU is stopped
+> when the stopping CPU is close to call rtas_stop_self().
+> 
+> Since pseries_mach_cpu_die() sets the CPU current state to offline almost
+> immediately before calling rtas_stop_self(), we use that as a signal that
+> it is either already stopped or very close to that point, and we can start
+> the busy loop.
+> 
+> As suggested by Michael Ellerman, this patch also changes the busy loop to
+> wait for a fixed amount of wall time.
+> 
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 > ---
->  drivers/net/xen-netback/netback.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  arch/powerpc/platforms/pseries/hotplug-cpu.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
-> index 80aae3a..2023317 100644
-> --- a/drivers/net/xen-netback/netback.c
-> +++ b/drivers/net/xen-netback/netback.c
-> @@ -1146,9 +1146,12 @@ static int xenvif_tx_submit(struct xenvif_queue *queue)
+> I tried to estimate good amounts for the timeout and loop delays, but
+> I'm not sure how reasonable my numbers are. The busy loops will wait for
+> 100 µs between each try, and spin_event_timeout() will timeout after
+> 100 ms. I'll be happy to change these values if you have better
+> suggestions.
+
+Based on the measurements that I did on a POWER9 system, in successful
+cases of smp_query_cpu_stopped(cpu) returning affirmative, the maximum
+time spent inside the loop was was 10ms.
+
+
+> Gautham was able to test this patch and it solved the race condition.
 > 
->  		if (unlikely(skb_has_frag_list(skb))) {
->  			if (xenvif_handle_frag_list(queue, skb)) {
-> +				struct sk_buff *nskb =
-> +						skb_shinfo(skb)->frag_list;
->  				if (net_ratelimit())
->  					netdev_err(queue->vif->dev,
->  						   "Not enough memory to consolidate frag_list!\n");
-> +				xenvif_skb_zerocopy_prepare(queue, nskb);
->  				xenvif_skb_zerocopy_prepare(queue, skb);
->  				kfree_skb(skb);
->  				continue;
+> v1 was a cruder patch which just increased the number of loops:
+> https://lists.ozlabs.org/pipermail/linuxppc-dev/2017-February/153734.html
+> 
+> v1 also mentioned a kernel crash but Gautham narrowed it down to a bug
+> in RTAS, which is in the process of being fixed.
+> 
+> diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+> index 97feb6e79f1a..424146cc752e 100644
+> --- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
+> +++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+> @@ -214,13 +214,21 @@ static void pseries_cpu_die(unsigned int cpu)
+>  			msleep(1);
+>  		}
+>  	} else if (get_preferred_offline_state(cpu) == CPU_STATE_OFFLINE) {
+> +		/*
+> +		 * If the current state is not offline yet, it means that the
+> +		 * dying CPU (which is in pseries_mach_cpu_die) didn't have a
+> +		 * chance to call rtas_stop_self yet and therefore it's too
+> +		 * early to query if the CPU is stopped.
+> +		 */
+> +		spin_event_timeout(get_cpu_current_state(cpu) == CPU_STATE_OFFLINE,
+> +				   100000, 100);
+> 
+>  		for (tries = 0; tries < 25; tries++) {
 
-Whilst this fix will do the job, I think it would be better to get rid of the kfree_skb() from inside xenvif_handle_frag_list() and always deal with it here rather than having it happen in two different places. Something like the following...
+Can we bumped up the tries to 100, so that we wait for 10ms before
+printing the warning message ?
 
----8<---
-diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
-index 80aae3a32c2a..093c7b860772 100644
---- a/drivers/net/xen-netback/netback.c
-+++ b/drivers/net/xen-netback/netback.c
-@@ -1027,13 +1027,13 @@ static void xenvif_tx_build_gops(struct xenvif_queue *queue,
- /* Consolidate skb with a frag_list into a brand new one with local pages on
-  * frags. Returns 0 or -ENOMEM if can't allocate new pages.
-  */
--static int xenvif_handle_frag_list(struct xenvif_queue *queue, struct sk_buff *skb)
-+static int xenvif_handle_frag_list(struct xenvif_queue *queue, struct sk_buff *diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
-index 80aae3a32c2a..093c7b860772 100644
---- a/drivers/net/xen-netback/netback.c
-+++ b/drivers/net/xen-netback/netback.c
-@@ -1027,13 +1027,13 @@ static void xenvif_tx_build_gops(struct xenvif_queue *qu
-eue,
- /* Consolidate skb with a frag_list into a brand new one with local pages on
-  * frags. Returns 0 or -ENOMEM if can't allocate new pages.
-  */
--static int xenvif_handle_frag_list(struct xenvif_queue *queue, struct sk_buff *
-skb)
-+static int xenvif_handle_frag_list(struct xenvif_queue *queue, struct sk_buff *
-skb,
-+                                  struct sk_buff *nskb)
- {
-        unsigned int offset = skb_headlen(skb);
-        skb_frag_t frags[MAX_SKB_FRAGS];
-        int i, f;
-        struct ubuf_info *uarg;
--       struct sk_buff *nskb = skb_shinfo(skb)->frag_list;
-
-        queue->stats.tx_zerocopy_sent += 2;
-        queue->stats.tx_frag_overflow++;
-@@ -1072,11 +1072,6 @@ static int xenvif_handle_frag_list(struct xenvif_queue *q
-ueue, struct sk_buff *s
-                skb_frag_size_set(&frags[i], len);
-        }
-
--       /* Copied all the bits from the frag list -- free it. */
--       skb_frag_list_init(skb);
--       xenvif_skb_zerocopy_prepare(queue, nskb);
--       kfree_skb(nskb);
--
-        /* Release all the original (foreign) frags. */
-        for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
-                skb_frag_unref(skb, f);
-@@ -1145,7 +1140,11 @@ static int xenvif_tx_submit(struct xenvif_queue *queue)
-                xenvif_fill_frags(queue, skb);
-
-                if (unlikely(skb_has_frag_list(skb))) {
--                       if (xenvif_handle_frag_list(queue, skb)) {
-+                       struct sk_buff *nskb = skb_shinfo(skb)->frag_list;
-+
-+                       xenvif_skb_zerocopy_prepare(queue, nskb);
-+
-+                       if (xenvif_handle_frag_list(queue, skb, nskb)) {
-                                if (net_ratelimit())
-                                        netdev_err(queue->vif->dev,
-                                                   "Not enough memory to consolidate frag_list!\n");
-@@ -1153,6 +1152,10 @@ static int xenvif_tx_submit(struct xenvif_queue *queue)
-                                kfree_skb(skb);
-                                continue;
-                        }
-+
-+                       /* Copied all the bits from the frag list. */
-+                       skb_frag_list_init(skb);
-+                       kfree(nskb);
-                }
-
-                skb->dev      = queue->vif->dev;
----8<---
-
-What do you think?
-
-  Paul
-
-> --
-> 2.7.4
+>  			cpu_status = smp_query_cpu_stopped(pcpu);
+>  			if (cpu_status == QCSS_STOPPED ||
+>  			    cpu_status == QCSS_HARDWARE_ERROR)
+>  				break;
+> -			cpu_relax();
+> +			udelay(100);
+>  		}
+>  	}
+> 
 
