@@ -2,272 +2,95 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAB1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D30AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4199E218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6C8218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551378451;
-	bh=tbCBRoN3tDzBKovQ2Fk0uG/BvJxhK5Af/WJVqe/AhNc=;
+	s=default; t=1551378457;
+	bh=TtxvfFBtf5+mYVXEEAGD1O+zdCvnZ0GId4GIiYTiFYU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mBtNdAtWvKRoSLvTdfEDqYjmKl/pSf+vyZ/O6FAFSVvl9i7Yujdpou9BAj9Qxip02
-	 G8nym76ZXP14xC2U04/Di+xdJ/gUeLd6Tk+uC6G9whHs/pxShfKri8XLneocMftIEl
-	 TtalvUcwvp3EbSoTBkyumzofD/sE5o595gyjET6g=
+	b=SxqLbbuko3B8PUdHy8HCbuPb+dbhLo07pkMNa+qczlb1VXuDXPTh/M6Xztj9POcoO
+	 9gzCZE42XawQslJQLNdbVXKcH9ABBWhnYmxVanNa46s493OTf9WYkffV+KZIgKTaSU
+	 AtvboWHTRm28dRxPgpxlCvARscpTQD8gF/+ffi80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733017AbfB1S13 (ORCPT
+        id S1733142AbfB1S1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:27:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731063AbfB1S1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:27:25 -0500
-Received: from sol.localdomain (c-107-3-167-184.hsd1.ca.comcast.net [107.3.167.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8190A218AE;
-        Thu, 28 Feb 2019 18:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551378444;
-        bh=tbCBRoN3tDzBKovQ2Fk0uG/BvJxhK5Af/WJVqe/AhNc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NjWKs+XzjNsrZet0lcKHuFVwWwPacFUs/D5qoHIy2kIScsvhySkiTRBKZzZPgzq4W
-         Vb8ThseM2Gs6aiGWrK7HLt2PB+JFHbg+vu21KxiPD09jYzPYU8hKBAmiC4c+E0z0n2
-         r3YnZ5BpkQojw1/fXZEWFGhwFkuJzwMUXCXjUQts=
-Date:   Thu, 28 Feb 2019 10:27:22 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        nborisov@suse.com, Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Mike Kravetz <kravetz@us.ibm.com>
-Subject: Re: BUG: Bad page state (5)
-Message-ID: <20190228182720.GC663@sol.localdomain>
-References: <0000000000006a12bd0581ca4145@google.com>
- <20190213122331.632a4eb1a12b738ef9633855@linux-foundation.org>
- <20190226182129.GA218103@gmail.com>
- <20190227205323.GA186986@gmail.com>
- <CACT4Y+ZK5MrJ3GZ-sxihNpRaun4aMOxkRqmLqQJxYEgD2cnfZQ@mail.gmail.com>
- <20190228075943.GG699@sol.localdomain>
- <CACT4Y+aNnTzD1Q+WxFA9ob-t+NrehL3GYF-e+=U5Z8f5ZQTudg@mail.gmail.com>
+        Thu, 28 Feb 2019 13:27:36 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46550 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731063AbfB1S1f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:27:35 -0500
+Received: by mail-ot1-f66.google.com with SMTP id c18so18519121otl.13;
+        Thu, 28 Feb 2019 10:27:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xNovduMDo+bsSSdGYFMtjocQrj85X9mGKNQDCwYuzkg=;
+        b=VFlS28DadXj3N/rwsRpBfQxAATYWci7cAjbjGS77kB8fLGhUYgm7ZWW2hQCcJ3gQ49
+         7/cAbfYjU50ndyLoNdBdaeAbopLlnUooHLv3LpSGdfyptxylcsCwSasQOVseaSkqDRMc
+         9eMQs6opdBj8PigpQAm8tjw0Paak9zD/7kMoYP71v4HsU6BNhcvEa/ook808x8enasM0
+         cecx0u7VZM0aH1QmBOCapUv/F8qc5H7kXtCCDjSfirlqhoVIfTjxaUFIFMGSTJQpkZgJ
+         NiU1MPmfGyNy+o9+G1c2aLlo6aJuqYGmNzTao0D8gARdU77THCrk5hxPzscGwr+4IkTJ
+         rP6Q==
+X-Gm-Message-State: APjAAAWilfh2MDPMoQ22DX07ap+WYVTDc3ooGIUURbIG/aQUor7wnAvx
+        X8YOd1dH5/0WogbZHEMkvu7Wq+0=
+X-Google-Smtp-Source: APXvYqyNztIquLFpPlpRDDOooGeKjMhiVzNnt8fny7bkcGDxJPnYOcFHdFPJEM4teymiA5fIbja7Hw==
+X-Received: by 2002:a9d:32e5:: with SMTP id u92mr681650otb.208.1551378454720;
+        Thu, 28 Feb 2019 10:27:34 -0800 (PST)
+Received: from localhost (ip-184-203-129-180.hstntx.spcsdns.net. [184.203.129.180])
+        by smtp.gmail.com with ESMTPSA id q8sm635449oih.6.2019.02.28.10.27.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 10:27:34 -0800 (PST)
+Date:   Thu, 28 Feb 2019 12:27:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH] dt-bindings: clock: axg-audio: unexpose controller inputs
+Message-ID: <20190228182731.GA25353@bogus>
+References: <20190213095835.17448-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+aNnTzD1Q+WxFA9ob-t+NrehL3GYF-e+=U5Z8f5ZQTudg@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190213095835.17448-1-jbrunet@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 10:31:53AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> On Thu, Feb 28, 2019 at 8:59 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Thu, Feb 28, 2019 at 07:53:09AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> > > On Wed, Feb 27, 2019 at 9:53 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> > > >
-> > > > On Tue, Feb 26, 2019 at 10:21:30AM -0800, Eric Biggers wrote:
-> > > > > On Wed, Feb 13, 2019 at 12:23:31PM -0800, Andrew Morton wrote:
-> > > > > > On Wed, 13 Feb 2019 09:56:04 -0800 syzbot <syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com> wrote:
-> > > > > >
-> > > > > > > Hello,
-> > > > > > >
-> > > > > > > syzbot found the following crash on:
-> > > > > > >
-> > > > > > > HEAD commit:    c4f3ef3eb53f Add linux-next specific files for 20190213
-> > > > > > > git tree:       linux-next
-> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1130a124c00000
-> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=9ec67976eb2df882
-> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=2cd2887ea471ed6e6995
-> > > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ecdaa8c00000
-> > > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ebe178c00000
-> > > > > > >
-> > > > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > > > Reported-by: syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com
-> > > > > >
-> > > > > > It looks like a a memfd page was freed with a non-NULL ->mapping.
-> > > > > >
-> > > > > > Joel touched the memfd code with "mm/memfd: add an F_SEAL_FUTURE_WRITE
-> > > > > > seal to memfd" but it would be surprising if syzbot tickled that code?
-> > > > > >
-> > > > > >
-> > > > > > > BUG: Bad page state in process udevd  pfn:472f0
-> > > > > > > name:"memfd:"
-> > > > > > > page:ffffea00011cbc00 count:0 mapcount:0 mapping:ffff88800df2ad40 index:0xf
-> > > > > > > shmem_aops
-> > > > > > > flags: 0x1fffc000008000c(uptodate|dirty|swapbacked)
-> > > > > > > raw: 01fffc000008000c ffffea0000ac4f08 ffff8880a85af890 ffff88800df2ad40
-> > > > > > > raw: 000000000000000f 0000000000000000 00000000ffffffff 0000000000000000
-> > > > > > > page dumped because: non-NULL mapping
-> > > > > > > Modules linked in:
-> > > > > > > CPU: 1 PID: 7586 Comm: udevd Not tainted 5.0.0-rc6-next-20190213 #34
-> > > > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > > > > Google 01/01/2011
-> > > > > > > Call Trace:
-> > > > > > >   __dump_stack lib/dump_stack.c:77 [inline]
-> > > > > > >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> > > > > > >   bad_page.cold+0xda/0xff mm/page_alloc.c:586
-> > > > > > >   free_pages_check_bad+0x142/0x1a0 mm/page_alloc.c:1014
-> > > > > > >   free_pages_check mm/page_alloc.c:1023 [inline]
-> > > > > > >   free_pages_prepare mm/page_alloc.c:1113 [inline]
-> > > > > > >   free_pcp_prepare mm/page_alloc.c:1138 [inline]
-> > > > > > >   free_unref_page_prepare mm/page_alloc.c:2991 [inline]
-> > > > > > >   free_unref_page_list+0x31d/0xc40 mm/page_alloc.c:3060
-> > > > > > > name:"memfd:"
-> > > > > > >   release_pages+0x60d/0x1940 mm/swap.c:791
-> > > > > > >   pagevec_lru_move_fn+0x218/0x2a0 mm/swap.c:213
-> > > > > > >   __pagevec_lru_add mm/swap.c:917 [inline]
-> > > > > > >   lru_add_drain_cpu+0x2f7/0x520 mm/swap.c:581
-> > > > > > >   lru_add_drain+0x20/0x60 mm/swap.c:652
-> > > > > > >   exit_mmap+0x290/0x530 mm/mmap.c:3134
-> > > > > > >   __mmput kernel/fork.c:1047 [inline]
-> > > > > > >   mmput+0x15f/0x4c0 kernel/fork.c:1068
-> > > > > > >   exec_mmap fs/exec.c:1046 [inline]
-> > > > > > >   flush_old_exec+0x8d9/0x1c20 fs/exec.c:1279
-> > > > > > >   load_elf_binary+0x9bc/0x53f0 fs/binfmt_elf.c:864
-> > > > > > >   search_binary_handler fs/exec.c:1656 [inline]
-> > > > > > >   search_binary_handler+0x17f/0x570 fs/exec.c:1634
-> > > > > > >   exec_binprm fs/exec.c:1698 [inline]
-> > > > > > >   __do_execve_file.isra.0+0x1394/0x23f0 fs/exec.c:1818
-> > > > > > >   do_execveat_common fs/exec.c:1865 [inline]
-> > > > > > >   do_execve fs/exec.c:1882 [inline]
-> > > > > > >   __do_sys_execve fs/exec.c:1958 [inline]
-> > > > > > >   __se_sys_execve fs/exec.c:1953 [inline]
-> > > > > > >   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
-> > > > > > >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> > > > > > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > > > > RIP: 0033:0x7fc7001ba207
-> > > > > > > Code: Bad RIP value.
-> > > > > > > RSP: 002b:00007ffe06aa13b8 EFLAGS: 00000206 ORIG_RAX: 000000000000003b
-> > > > > > > RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fc7001ba207
-> > > > > > > RDX: 0000000001fd5fd0 RSI: 00007ffe06aa14b0 RDI: 00007ffe06aa24c0
-> > > > > > > RBP: 0000000000625500 R08: 0000000000001c49 R09: 0000000000001c49
-> > > > > > > R10: 0000000000000000 R11: 0000000000000206 R12: 0000000001fd5fd0
-> > > > > > > R13: 0000000000000007 R14: 0000000001fc6250 R15: 0000000000000005
-> > > > > > > BUG: Bad page state in process udevd  pfn:2b13c
-> > > > > > > page:ffffea0000ac4f00 count:0 mapcount:0 mapping:ffff88800df2ad40 index:0xe
-> > > > > > > shmem_aops
-> > > > > > > flags: 0x1fffc000008000c(uptodate|dirty|swapbacked)
-> > > > > > > raw: 01fffc000008000c ffff8880a85af890 ffff8880a85af890 ffff88800df2ad40
-> > > > > > > raw: 000000000000000e 0000000000000000 00000000ffffffff 0000000000000000
-> > > > > > > page dumped because: non-NULL mapping
-> > > > > > > Modules linked in:
-> > > > > > > CPU: 1 PID: 7586 Comm: udevd Tainted: G    B
-> > > > > > > 5.0.0-rc6-next-20190213 #34
-> > > > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > > > > Google 01/01/2011
-> > > > > > > Call Trace:
-> > > > > > >   __dump_stack lib/dump_stack.c:77 [inline]
-> > > > > > >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> > > > > > >   bad_page.cold+0xda/0xff mm/page_alloc.c:586
-> > > > > > > name:"memfd:"
-> > > > > > >   free_pages_check_bad+0x142/0x1a0 mm/page_alloc.c:1014
-> > > > > > >   free_pages_check mm/page_alloc.c:1023 [inline]
-> > > > > > >   free_pages_prepare mm/page_alloc.c:1113 [inline]
-> > > > > > >   free_pcp_prepare mm/page_alloc.c:1138 [inline]
-> > > > > > >   free_unref_page_prepare mm/page_alloc.c:2991 [inline]
-> > > > > > >   free_unref_page_list+0x31d/0xc40 mm/page_alloc.c:3060
-> > > > > > >   release_pages+0x60d/0x1940 mm/swap.c:791
-> > > > > > >   pagevec_lru_move_fn+0x218/0x2a0 mm/swap.c:213
-> > > > > > >   __pagevec_lru_add mm/swap.c:917 [inline]
-> > > > > > >   lru_add_drain_cpu+0x2f7/0x520 mm/swap.c:581
-> > > > > > >   lru_add_drain+0x20/0x60 mm/swap.c:652
-> > > > > > >   exit_mmap+0x290/0x530 mm/mmap.c:3134
-> > > > > > >   __mmput kernel/fork.c:1047 [inline]
-> > > > > > >   mmput+0x15f/0x4c0 kernel/fork.c:1068
-> > > > > > >   exec_mmap fs/exec.c:1046 [inline]
-> > > > > > >   flush_old_exec+0x8d9/0x1c20 fs/exec.c:1279
-> > > > > > >   load_elf_binary+0x9bc/0x53f0 fs/binfmt_elf.c:864
-> > > > > > >   search_binary_handler fs/exec.c:1656 [inline]
-> > > > > > >   search_binary_handler+0x17f/0x570 fs/exec.c:1634
-> > > > > > >   exec_binprm fs/exec.c:1698 [inline]
-> > > > > > >   __do_execve_file.isra.0+0x1394/0x23f0 fs/exec.c:1818
-> > > > > > >   do_execveat_common fs/exec.c:1865 [inline]
-> > > > > > >   do_execve fs/exec.c:1882 [inline]
-> > > > > > >   __do_sys_execve fs/exec.c:1958 [inline]
-> > > > > > >   __se_sys_execve fs/exec.c:1953 [inline]
-> > > > > > >   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
-> > > > > > >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> > > > > > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > > > > RIP: 0033:0x7fc7001ba207
-> > > > > > > Code: Bad RIP value.
-> > > > > > > RSP: 002b:00007ffe06aa13b8 EFLAGS: 00000206 ORIG_RAX: 000000000000003b
-> > > > > > > RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fc7001ba207
-> > > > > > > RDX: 0000000001fd5fd0 RSI: 00007ffe06aa14b0 RDI: 00007ffe06aa24c0
-> > > > > > > RBP: 0000000000625500 R08: 0000000000001c49 R09: 0000000000001c49
-> > > > > > > R10: 0000000000000000 R11: 0000000000000206 R12: 0000000001fd5fd0
-> > > > > > > R13: 0000000000000007 R14: 0000000001fc6250 R15: 0000000000000005
-> > > > > > >
-> > > > > > >
-> > > > > > > ---
-> > > > > > > This bug is generated by a bot. It may contain errors.
-> > > > > > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > > > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > > > > > >
-> > > > > > > syzbot will keep track of this bug report. See:
-> > > > > > > https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
-> > > > > > > syzbot.
-> > > > > > > syzbot can test patches for this bug, for details see:
-> > > > > > > https://goo.gl/tpsmEJ#testing-patches
-> > > > > >
-> > > > >
-> > > > > It's apparently the bug in the io_uring patchset I reported yesterday (well, I
-> > > > > stole it from another open syzbot bug...) and Jens is already planning to fix:
-> > > > > https://marc.info/?l=linux-api&m=155115288114046&w=2.  Reproducer is similar,
-> > > > > and the crash bisects down to the same commit from the io_uring patchset:
-> > > > > "block: implement bio helper to add iter bvec pages to bio".
-> > > > >
-> > > >
-> > > > Fixed in next-20190227.  The fix was folded into "block: implement bio helper to
-> > > > add iter bvec pages to bio".  Telling syzbot to invalidate this bug report:
-> > > >
-> > > > #syz invalid
-> > >
-> > > Was this discovered separately? We could also add Reported-by (or
-> > > Tested-by) tag to the commit.
-> > >
-> >
-> > My report was based on a crash from the syzbot dashboard.  However, there's no
-> > fixing commit, as the fix was folded into the original patch.  I.e. the mainline
-> > git history (if/when the io_uring stuff is actually merged) won't show the bug
-> > ever being introduced.  Thus Reported-by isn't appropriate, and I used '#syz
-> > invalid' instead of '#syz fix'.  Nor did syzbot specifically test the new
-> > version of the patch beyond fuzzing the next day's linux-next...  So while I
-> > personally might have added an informal note in the commit message, I don't
-> > think those formal tags make sense for folded-in linux-next fixes like this.
+On Wed, 13 Feb 2019 10:58:35 +0100, Jerome Brunet wrote:
+> Remove the bindings ID of the clock input of the controller. These
+> clocks are purely internal to the controller, exposing them was a
+> mistake. Actually, these should not even be in the provider and have
+> IDs to begin with.
 > 
-> This was discussed before and we come to conclusion that Tested-by is
-> a reasonable thing in such case:
-> https://groups.google.com/d/msg/syzkaller-bugs/xiSF9GdiikU/uBoyYyf3AQAJ
-> It did test the patch since it found the bug. Tested-by does not
-> necessary mean that the person did all possible kinds of testing on
-> all versions, right?
+> Unexpose these IDs before:
+>  * someone starts using them (even if there no valid reason to do so)
+>  * the actual clocks are removed. The fact that they exist is just the
+>    result of an ugly hack. This will be resolved in CCF when we can
+>    reference DT directly in parent table.
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/clk/meson/axg-audio.h              | 20 ++++++++++++++++++++
+>  include/dt-bindings/clock/axg-audio-clkc.h | 20 --------------------
+>  2 files changed, 20 insertions(+), 20 deletions(-)
 > 
 
-syzbot didn't actually run the reproducer on the new version of the patch; I
-did.  And I have high standards so I wouldn't offer my Tested-by just based on
-that, as the patch could still have many other problems which I did not test...
-
-Anyway, I don't think you will have much success trying to make people record
-the bug fix history of every linux-next patch.  In some branches that go into
-linux-next, patches are regularly merged, split, replaced, or dropped.  Also
-developers may use a free-form sentence explaining that a fix was folded in, as
-e.g. using Reported-by incorrectly implies that the patch fixes an existing bug.
-
-So I think that for linux-next people will sometimes just have to update the
-syzbot bug statuses manually.
-
-- Eric
+Reviewed-by: Rob Herring <robh@kernel.org>
