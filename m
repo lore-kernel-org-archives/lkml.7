@@ -6,50 +6,51 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5368BC10F09
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BA4C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186462184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4590F2184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qTFQB75m"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2nCLIS5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732390AbfB1PF3 (ORCPT
+        id S1731107AbfB1PFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:05:29 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:46190 "EHLO
+        Thu, 28 Feb 2019 10:05:34 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:46206 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732086AbfB1PF1 (ORCPT
+        with ESMTP id S1732086AbfB1PFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:05:27 -0500
+        Thu, 28 Feb 2019 10:05:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=VHYAnkYkgtGG0YZT0SdnZRLrw2/7FDGUHiHAxs7YPNo=; b=qTFQB75mDFzYXbSeLHrIN5wfBI
-        zSmvlHl6g51eQR5dWaLHZjtO7FldkDMrMDm1B8CcHLP7G479esSX/ZvHDO01nEVnGVlsqclb0RzzX
-        QWGHmNPUPchKT4edutlFrHeGoLKfPBf/4OsYmTNclNbuITxnROAfWQheifSNtSnala2tcNQdWObSw
-        GwOF2qg9jZpr4VdgjmZt7vu9CefzsqU0VYd5ibrdzJg4OPNeVcaXmd7Cz1XcS63Eb9LeDYot7csQW
-        jvPm9NK8Dertf26Jfb1GwghY2d44p6CnRWav+wrR1HuSxaRMXeDHWuchziO0cTryGg0BMNc7TNFV9
-        QBAz0sUg==;
+        bh=NCOwExRglA7GDbRpIFe8QPx8JZnZrtPW5WDyqNgV2G8=; b=2nCLIS5zVt77/xtW3WJjdO1qt8
+        d2zhrQ2ag1CJqKElpnKPp+vF3s7LymiWtUvq3MywgJ4S0gyL7NjuugJgA89/bsIqvFXmHofLbpBP1
+        pKBpGQa60uwHxiCahGGCJcRe+YPb/2mxTkf9lm56WM/0ND29l4+lu2JloCsqS71mKsBiJoc9BCIAo
+        PvQDbukWdjVbxoCMbLLqCufY5Om1vtK82KKkAJ95p6b4RDH8QRZNXk02jNetsVheLnRDtiQ9+MiRu
+        U9OA8XFfrWRdpA9GyJ0O0O8jptGOiiRQiLdgdjgtqG69fV76MEFPnxmDuhNhBleVEWg5gji2gHOAJ
+        YJ6q/ZjQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1gzNFI-0005bd-QF; Thu, 28 Feb 2019 15:05:13 +0000
+        id 1gzNFI-0005bc-QO; Thu, 28 Feb 2019 15:05:13 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id DC3E6202C2DAB; Thu, 28 Feb 2019 16:05:08 +0100 (CET)
-Message-Id: <20190228150152.635362492@infradead.org>
+        id DA313202C2DDA; Thu, 28 Feb 2019 16:05:08 +0100 (CET)
+Message-Id: <20190228150152.540038736@infradead.org>
 User-Agent: quilt/0.65
-Date:   Thu, 28 Feb 2019 15:54:57 +0100
+Date:   Thu, 28 Feb 2019 15:54:56 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
         julien.thierry@arm.com, will.deacon@arm.com, luto@amacapital.net,
         mingo@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
         valentin.schneider@arm.com, brgerst@gmail.com, jpoimboe@redhat.com,
         luto@kernel.org, bp@alien8.de, dvlasenk@redhat.com
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org
-Subject: [PATCH 7/8] objtool: Add UACCESS validation
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: [PATCH 6/8] i915,uaccess: Fix redundant CLAC
 References: <20190228145450.289603901@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,300 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is important that UACCESS regions are as small as possible;
-furthermore the UACCESS state is not scheduled, so doing anything that
-might directly call into the scheduler will cause random code to be
-ran with UACCESS enabled.
+drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x3c: redundant UACCESS disable
+drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x66: redundant UACCESS disable
 
-Teach objtool too track UACCESS state and warn about any CALL made
-while UACCESS is enabled. This very much includes the __fentry__()
-tracing calls and __preempt_schedule() calls.
+AKA. you don't need user_access_end() if user_access_begin() fails.
 
-Note that exceptions _do_ save/restore the UACCESS state, and therefore
-they can drive preemption. This also means that all exception handlers
-must have an otherwise dedundant UACCESS disable instruction;
-therefore ignore this warning for !STT_FUNC code (exception handlers
-are not normal functions).
-
-It also provides a UACCESS_SAFE() annotation which allows explicit
-annotation. This is meant to be used for future things like:
-unsafe_copy_{to,from}_user().
-
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/frame.h           |   23 +++++++
- tools/objtool/arch.h            |    4 -
- tools/objtool/arch/x86/decode.c |   14 ++++
- tools/objtool/check.c           |  126 +++++++++++++++++++++++++++++++++++++---
- tools/objtool/check.h           |    2 
- tools/objtool/elf.h             |    1 
- 6 files changed, 158 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/i915/i915_gem_execbuffer.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/include/linux/frame.h
-+++ b/include/linux/frame.h
-@@ -21,4 +21,27 @@
- 
- #endif /* CONFIG_STACK_VALIDATION */
- 
-+#if defined(CONFIG_STACK_VALIDATION) && !(defined(BUILD_VDSO) || defined(BUILD_VDSO32))
-+
-+/*
-+ * This macro marks functions as UACCESS-safe, that is, it is safe to call from an
-+ * UACCESS enabled region (typically user_access_begin() /
-+ * user_access_end()).
-+ *
-+ * These functions in turn will only call UACCESS-safe functions themselves (which
-+ * precludes tracing, including __fentry__ and scheduling, including
-+ * preempt_enable).
-+ *
-+ * UACCESS-safe functions will obviously also not change UACCESS themselves.
-+ */
-+#define UACCESS_SAFE(func) \
-+	static void __used __section(.discard.func_uaccess_safe) \
-+		*__func_uaccess_safe_##func = func
-+
-+#else
-+
-+#define UACCESS_SAFE(func)
-+
-+#endif
-+
- #endif /* _LINUX_FRAME_H */
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -33,7 +33,9 @@
- #define INSN_STACK		8
- #define INSN_BUG		9
- #define INSN_NOP		10
--#define INSN_OTHER		11
-+#define INSN_STAC		11
-+#define INSN_CLAC		12
-+#define INSN_OTHER		13
- #define INSN_LAST		INSN_OTHER
- 
- enum op_dest_type {
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -369,7 +369,19 @@ int arch_decode_instruction(struct elf *
- 
- 	case 0x0f:
- 
--		if (op2 >= 0x80 && op2 <= 0x8f) {
-+		if (op2 == 0x01) {
-+
-+			if (modrm == 0xca) {
-+
-+				*type = INSN_CLAC;
-+
-+			} else if (modrm == 0xcb) {
-+
-+				*type = INSN_STAC;
-+
-+			}
-+
-+		} else if (op2 >= 0x80 && op2 <= 0x8f) {
- 
- 			*type = INSN_JUMP_CONDITIONAL;
- 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -441,6 +441,66 @@ static void add_ignores(struct objtool_f
+--- a/drivers/gpu/drm/i915/i915_gem_execbuffer.c
++++ b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
+@@ -1605,7 +1605,6 @@ static int eb_copy_relocations(const str
+ 					     (char __user *)urelocs + copied,
+ 					     len)) {
+ end_user:
+-				user_access_end();
+ 				kvfree(relocs);
+ 				err = -EFAULT;
+ 				goto err;
+@@ -2628,8 +2627,8 @@ i915_gem_execbuffer2_ioctl(struct drm_de
+ 					&user_exec_list[i].offset,
+ 					end_user);
+ 		}
+-end_user:
+ 		user_access_end();
++end_user:;
  	}
- }
  
-+static const char *uaccess_safe_builtin[] = {
-+	/* KASAN */
-+	"__asan_loadN_noabort",
-+	"__asan_load1_noabort",
-+	"__asan_load2_noabort",
-+	"__asan_load4_noabort",
-+	"__asan_load8_noabort",
-+	"__asan_load16_noabort",
-+	"__asan_storeN_noabort",
-+	"__asan_store1_noabort",
-+	"__asan_store2_noabort",
-+	"__asan_store4_noabort",
-+	"__asan_store8_noabort",
-+	"__asan_store16_noabort",
-+	/* KCOV */
-+	"__sanitizer_cov_trace_pc",
-+	/* misc */
-+	"csum_partial_copy_generic",
-+	"__memcpy_mcsafe",
-+	NULL
-+};
-+
-+static void add_uaccess_safe(struct objtool_file *file)
-+{
-+	struct section *sec;
-+	struct symbol *func;
-+	struct rela *rela;
-+	const char **name;
-+
-+	sec = find_section_by_name(file->elf, ".rela.discard.func_uaccess_safe");
-+	if (sec) {
-+		list_for_each_entry(rela, &sec->rela_list, list) {
-+			switch (rela->sym->type) {
-+			case STT_FUNC:
-+				func = rela->sym;
-+				break;
-+
-+			case STT_SECTION:
-+				func = find_symbol_by_offset(rela->sym->sec, rela->addend);
-+				if (!func || func->type != STT_FUNC)
-+					continue;
-+				break;
-+
-+			default:
-+				continue;
-+			}
-+
-+			func->alias->uaccess_safe = true;
-+		}
-+	}
-+
-+	for (name = uaccess_safe_builtin; *name; name++) {
-+		func = find_symbol_by_name(file->elf, *name);
-+		if (!func)
-+			continue;
-+
-+		func->alias->uaccess_safe = true;
-+	}
-+}
-+
- /*
-  * FIXME: For now, just ignore any alternatives which add retpolines.  This is
-  * a temporary hack, as it doesn't allow ORC to unwind from inside a retpoline.
-@@ -1229,6 +1289,7 @@ static int decode_sections(struct objtoo
- 		return ret;
- 
- 	add_ignores(file);
-+	add_uaccess_safe(file);
- 
- 	ret = add_nospec_ignores(file);
- 	if (ret)
-@@ -1789,6 +1850,22 @@ static bool insn_state_match(struct inst
- 	return false;
- }
- 
-+static inline bool insn_dest_uaccess_safe(struct instruction *insn)
-+{
-+	if (!insn->call_dest)
-+		return false;
-+
-+	return insn->call_dest->alias->uaccess_safe;
-+}
-+
-+static inline const char *insn_dest_name(struct instruction *insn)
-+{
-+	if (!insn->call_dest)
-+		return "{dynamic}";
-+
-+	return insn->call_dest->name;
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -1893,6 +1970,9 @@ static int validate_branch(struct objtoo
- 		switch (insn->type) {
- 
- 		case INSN_RETURN:
-+			if (state.uaccess)
-+				WARN_FUNC("return with UACCESS enabled", sec, insn->offset);
-+
- 			if (func && has_modified_stack_frame(&state)) {
- 				WARN_FUNC("return with modified stack frame",
- 					  sec, insn->offset);
-@@ -1908,17 +1988,24 @@ static int validate_branch(struct objtoo
- 			return 0;
- 
- 		case INSN_CALL:
--			if (is_fentry_call(insn))
--				break;
-+		case INSN_CALL_DYNAMIC:
-+			if ((state.uaccess_safe || state.uaccess) &&
-+			    !insn_dest_uaccess_safe(insn)) {
-+				WARN_FUNC("call to %s() with UACCESS enabled",
-+					  sec, insn->offset, insn_dest_name(insn));
-+			}
- 
--			ret = dead_end_function(file, insn->call_dest);
--			if (ret == 1)
--				return 0;
--			if (ret == -1)
--				return 1;
-+			if (insn->type == INSN_CALL) {
-+				if (is_fentry_call(insn))
-+					break;
-+
-+				ret = dead_end_function(file, insn->call_dest);
-+				if (ret == 1)
-+					return 0;
-+				if (ret == -1)
-+					return 1;
-+			}
- 
--			/* fallthrough */
--		case INSN_CALL_DYNAMIC:
- 			if (!no_fp && func && !has_valid_stack_frame(&state)) {
- 				WARN_FUNC("call without frame pointer save/setup",
- 					  sec, insn->offset);
-@@ -1971,6 +2058,25 @@ static int validate_branch(struct objtoo
- 
- 			break;
- 
-+		case INSN_STAC:
-+			if (state.uaccess_safe || state.uaccess)
-+				WARN_FUNC("recursive UACCESS enable", sec, insn->offset);
-+
-+			state.uaccess = true;
-+			break;
-+
-+		case INSN_CLAC:
-+			if (!state.uaccess && insn->func)
-+				WARN_FUNC("redundant UACCESS disable", sec, insn->offset);
-+
-+			if (state.uaccess_safe) {
-+				WARN_FUNC("UACCESS-safe disables UACCESS", sec, insn->offset);
-+				break;
-+			}
-+
-+			state.uaccess = false;
-+			break;
-+
- 		default:
- 			break;
- 		}
-@@ -2132,6 +2238,8 @@ static int validate_functions(struct obj
- 			if (!insn || insn->ignore)
- 				continue;
- 
-+			state.uaccess_safe = func->alias->uaccess_safe;
-+
- 			ret = validate_branch(file, insn, state);
- 			warnings += ret;
- 		}
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -31,7 +31,7 @@ struct insn_state {
- 	int stack_size;
- 	unsigned char type;
- 	bool bp_scratch;
--	bool drap, end;
-+	bool drap, end, uaccess, uaccess_safe;
- 	int drap_reg, drap_offset;
- 	struct cfi_reg vals[CFI_NUM_REGS];
- };
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -62,6 +62,7 @@ struct symbol {
- 	unsigned long offset;
- 	unsigned int len;
- 	struct symbol *pfunc, *cfunc, *alias;
-+	bool uaccess_safe;
- };
- 
- struct rela {
+ 	args->flags &= ~__I915_EXEC_UNKNOWN_FLAGS;
 
 
