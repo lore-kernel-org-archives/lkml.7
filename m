@@ -2,342 +2,189 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F434C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496A5C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE29218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C244218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:51:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OEitEhmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfB1Ht5 (ORCPT
+        id S1730880AbfB1Hvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:49:57 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:58297 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbfB1Ht5 (ORCPT
+        Thu, 28 Feb 2019 02:51:49 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:49506 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbfB1Hvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:49:57 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7nmVC2950683
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Feb 2019 23:49:48 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7nmLm2950678;
-        Wed, 27 Feb 2019 23:49:48 -0800
-Date:   Wed, 27 Feb 2019 23:49:48 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-3c0cd952cf051903929cd57b89034cc5f71f451d@git.kernel.org>
-Cc:     acme@redhat.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
-        hpa@zytor.com
-Reply-To: jolsa@kernel.org, acme@redhat.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
-          adrian.hunter@intel.com
-In-Reply-To: <20190109091835.5570-7-adrian.hunter@intel.com>
-References: <20190109091835.5570-7-adrian.hunter@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf thread-stack: Hide x86 retpolines
-Git-Commit-ID: 3c0cd952cf051903929cd57b89034cc5f71f451d
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 28 Feb 2019 02:51:47 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190228075144euoutp029d66d76c4cb628d9849010dfb9eff93c~Hd8mjFpb81598015980euoutp02o;
+        Thu, 28 Feb 2019 07:51:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190228075144euoutp029d66d76c4cb628d9849010dfb9eff93c~Hd8mjFpb81598015980euoutp02o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1551340304;
+        bh=lK4OWNOVuPptmombO8Le5QI8Xei5HzbQ63F3nd2QMuE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=OEitEhmg6xm1xNGq9a7lMWdvcdbmRpoQQlTTyaQVBnLfPiRLhoGVtK/nqSMWe5150
+         PJBorZxXTTIxw0xi+1zpGEvRd1cdPD+EhmV9Y84INkhrRwxuPAELK5mCIkOBW/U/Nj
+         4nQd9yMaV3lsz6H0KInKfTkJggkU/aZOp/P5ToZ0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190228075144eucas1p2ab4f16e339afc9266c8ccf636ad7aab2~Hd8mGHZii1866118661eucas1p2i;
+        Thu, 28 Feb 2019 07:51:44 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id D9.7B.04806.F03977C5; Thu, 28
+        Feb 2019 07:51:43 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190228075142eucas1p1e9d84ec53a10294a72316b3c43235949~Hd8lE3fPQ0079100791eucas1p1r;
+        Thu, 28 Feb 2019 07:51:42 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190228075142eusmtrp1554cde5ac094e3de6c2ada0b657d9b94~Hd8kzAFzc0177101771eusmtrp1E;
+        Thu, 28 Feb 2019 07:51:42 +0000 (GMT)
+X-AuditID: cbfec7f5-34dff700000012c6-5d-5c77930f4636
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 1E.57.04128.E03977C5; Thu, 28
+        Feb 2019 07:51:42 +0000 (GMT)
+Received: from [106.116.147.30] (unknown [106.116.147.30]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190228075141eusmtip192f07709203f64ab50824324fb4ec67b~Hd8jbN6SF2947929479eusmtip1P;
+        Thu, 28 Feb 2019 07:51:41 +0000 (GMT)
+Subject: Re: [PATCH V15 14/18] block: enable multipage bvecs
+To:     Ming Lei <ming.lei@redhat.com>, Jon Hunter <jonathanh@nvidia.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Theodore Ts'o <tytso@mit.edu>, Omar Sandoval <osandov@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Dave Chinner <dchinner@redhat.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-raid@vger.kernel.org,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
+        Christoph Hellwig <hch@lst.de>, linux-ext4@vger.kernel.org,
+        Coly Li <colyli@suse.de>, linux-bcache@vger.kernel.org,
+        Boaz Harrosh <ooo@electrozaur.com>,
+        Bob Peterson <rpeterso@redhat.com>, cluster-devel@redhat.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <01155e88-f021-fbe2-d048-42e303fe2935@samsung.com>
+Date:   Thu, 28 Feb 2019 08:51:40 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <20190227232940.GA13319@ming.t460p>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUxTZxjde7/b7LJrZeGd+8rqRqZkAplkTzIkLnHJTcyWZX8MjmWr46Y4
+        aSW9ApP9AYoCpaDCFssFp4NEKVQYRBFrS2b56CqSqxIcEsCFj23SlMYNt5E41Pbixr/zPuec
+        9zkneTjS8CuzidtvPSTZrKZ8I6OneodX1LeeayjOSZtyp0No3sNAx/QxBrpdXTSEOuYYOFmm
+        sjAdvUTD6OIpFvxLTTTc+KeMgOXVcRrcHUMEVCgtFAyWl4Cq/sDCcO9tAvyTKXBrro2Fxu+m
+        GPD5QxSMeZsZmPE8omHw0TEElae9CFxqPwHVywoD3od9LAQa7AT8Hk6GgZlxChxNRxjoDEcp
+        ONr9AMER5woLwfN7QP03SO/cLHYuu2jxhH2JFS8r06yoznRTYsVghBZbffcIcWy0UOxpr2bE
+        nj/qWXHqto8Rr9wpZcTy60OkWGtfYsT7C5OUGO0fZ8S6C+3oo8S9+sxcKX9/kWRLzfpcn2e/
+        28oWDAlfTazW0KWoj3cgHYeF7bjj4jDhQHrOILQhHDo1R8QIg7CMsNqdoRF/Inzv5xHmqaN/
+        oYzSROcQPvvTZk0URXjiaoSMERuFTDx71oMciOUShffxbHZMQgpuHfYHFuJeRkjHjogj/icv
+        ZOFvr6hPMMdRwhu4rjEzBp8XcnCgtUhTbMChxvm4Uyek4cv33SiGSeFVfCnSTGo4CU/On453
+        wcKADlcHZtYi78K+651reCNeDF5gNfwSHmlwUprBjnClS2G1hxPhi819a4538UDwJh1LRApb
+        cJc3VRu/h7/3d8XHWEjAE5ENWogEXN97ktTGPK46atDUyVgJdv639uqNW+RxZFTWVVPW1VHW
+        1VH+33sGUe0oSSqULWZJftsqFW+TTRa50Gre9sVBSw96cv0jq8EHfaj/4b4AEjhkfJZ/01mU
+        Y6BNRfJhSwBhjjQm8t6q4hwDn2s6XCLZDn5mK8yX5AB6kaOMSfzXz/zyiUEwmw5JBySpQLI9
+        ZQlOt6kUbffs1V+rWDLzv1V0fUiW/+Uubf3SnNFTlzn9cpsnOfxOFfPj8X0E/YrrblN+8Zh7
+        9sBNqaYJMhK+Mf/9aaVl+INs0p+yS9pJVIW31OZad+eJltGP66WsEX7KecfX8lrJorNAplN3
+        rNSm1MDWa69nO6MvhFfOB3ZPnGlJOzEKRiMl55nSt5I22fQYCAgPtvkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0xTdxTH87vvktVcC4ZfGMlmjW7RrFIq64GwxmSa/NSYmJhsETHayU0h
+        o63pbXGwxJSHOjvmi6hQVJYBKk+lM4IILOMhaRi5C6SEEYtbhUVUYCLGkWG10Jnw3yfnfD/n
+        5CRHoDX/sQlCjs0pOWzmXC0XwwyE+4OfrCo7mpkU+GUD+CcaOWgInuGgpfwmC/6GRxxcKlR4
+        CM62sjD45AoPnTOVLPz+byEF8+EAC3UNfRSUeH9ioLeoABTlFg/374xQ0Dm2CYYe3eCh4uoD
+        Djo6/QwMt1/mYLzxDQu9b84gOFnVjqBc6aLg1LyXg/bFNh66y4opePx0A/SMBxjwVB7noPnp
+        LAMnWl4iOF66wEN/05egvO5nt64jzfPlLDlXPMOTu94gT5TxFoaU9E6zpLpjiiLDgy7iqz/F
+        Ed/ceZ48GOngyL0/3Bwp+q2PJj8Uz3Dk+eQYQ2a7Ahw5fbse7YnL0KU77C6n9GG2XXZ+pt2v
+        h2SdPhV0yVtSdXqD8UBacop2syk9S8rNyZMcm02HdNnFD6v5I33iN6Ph71k3alN7kErA4hbc
+        NVnIeFCMoBFrEfZeDzHRRiL2X3SzUY7FiyMeLhqaRrjmwmO01IgV03HoWmOEeSFO3I5D+5Yi
+        tNikwqEbQTqaH6Dw3LW/l4dyoh57ppcGqQS1aMIX7ikRFgRGXI9PV6QvldeImfif4CgVjazG
+        /oqJZVUlJuG7z+uW19LiR3jx6hAd5Q9w6/Tl/zkej01UUWeRxrtC965QvCsU7wrlR8TUozjJ
+        JVstVjlZJ5utsstm0R22W30o8nh37i/cbkOemb3dSBSQ9j31x6V5mRrWnCfnW7sRFmhtnLr9
+        u6OZGnWWOb9ActgPOly5ktyNUiK3naMT1hy2R97Y5jyoT9EbIVVvNBgNn4I2Xq0k5WdoRIvZ
+        KX0tSUckxzuPElQJblT2ctjeZTj2ouXzQ4uu+Gc7/9xWn7Vx9NvrnolxqiqALSlTQ09Sf64Y
+        +Kvm7ENlt6VhR2l41r0glbxIdIQ0Te8/q2t9tYvUlDf7fv3Kn/Yqls+otpl6Bk1SQm58QYex
+        cpNT3bNVGEurCTDzJYaptb7EnOov1oVjJmuLdMdqz++b0zJytlm/kXbI5reoanrQjgMAAA==
+X-CMS-MailID: 20190228075142eucas1p1e9d84ec53a10294a72316b3c43235949
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190221084301eucas1p11e8841a62b4b1da3cccca661b6f4c29d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190221084301eucas1p11e8841a62b4b1da3cccca661b6f4c29d
+References: <20190215111324.30129-1-ming.lei@redhat.com>
+        <20190215111324.30129-15-ming.lei@redhat.com>
+        <CGME20190221084301eucas1p11e8841a62b4b1da3cccca661b6f4c29d@eucas1p1.samsung.com>
+        <6c9ae4de-c56f-a2b3-2542-da7d8b95601d@samsung.com>
+        <0dbbee64-5c6b-0374-4360-6dc218c70d58@nvidia.com>
+        <20190227232940.GA13319@ming.t460p>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3c0cd952cf051903929cd57b89034cc5f71f451d
-Gitweb:     https://git.kernel.org/tip/3c0cd952cf051903929cd57b89034cc5f71f451d
-Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Wed, 9 Jan 2019 11:18:35 +0200
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Fri, 22 Feb 2019 16:49:49 -0300
+Hi Ming,
 
-perf thread-stack: Hide x86 retpolines
+On 2019-02-28 00:29, Ming Lei wrote:
+> On Wed, Feb 27, 2019 at 08:47:09PM +0000, Jon Hunter wrote:
+>> On 21/02/2019 08:42, Marek Szyprowski wrote:
+>>> On 2019-02-15 12:13, Ming Lei wrote:
+>>>> This patch pulls the trigger for multi-page bvecs.
+>>>>
+>>>> Reviewed-by: Omar Sandoval <osandov@fb.com>
+>>>> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+>>> Since Linux next-20190218 I've observed problems with block layer on one
+>>> of my test devices (Odroid U3 with EXT4 rootfs on SD card). Bisecting
+>>> this issue led me to this change. This is also the first linux-next
+>>> release with this change merged. The issue is fully reproducible and can
+>>> be observed in the following kernel log:
+>>>
+>>> sdhci: Secure Digital Host Controller Interface driver
+>>> sdhci: Copyright(c) Pierre Ossman
+>>> s3c-sdhci 12530000.sdhci: clock source 2: mmc_busclk.2 (100000000 Hz)
+>>> s3c-sdhci 12530000.sdhci: Got CD GPIO
+>>> mmc0: SDHCI controller on samsung-hsmmc [12530000.sdhci] using ADMA
+>>> mmc0: new high speed SDHC card at address aaaa
+>>> mmcblk0: mmc0:aaaa SL16G 14.8 GiB
+>> I have also noticed some failures when writing to an eMMC device on one
+>> of our Tegra boards. We have a simple eMMC write/read test and it is
+>> currently failing because the data written does not match the source.
+>>
+>> I did not seem the same crash as reported here, however, in our case the
+>> rootfs is NFS mounted and so probably would not. However, the bisect
+>> points to this commit and reverting on top of -next fixes the issues.
+> It is sdhci, probably related with max segment size, could you test the
+> following patch:
+>
+> https://marc.info/?l=linux-mmc&m=155128334122951&w=2
 
-x86 retpoline functions pollute the call graph by showing up everywhere
-there is an indirect branch, but they do not really mean anything. Make
-changes so that the default retpoline functions will no longer appear in
-the call graph. Note this only affects the call graph, since all the
-original branches are left unchanged.
+This seems to be fixing my issue too! Thanks!
 
-This does not handle function return thunks, nor is there any
-improvement for the handling of inline thunks or extern thunks.
+It also fixed the boot issue from USB stick (Exynos EHCI / Mass
+Storage), but I suspect that reading the partition table from the sd
+card (which hold the bootloader and thus must be present to boot the
+device) was enough to trash memory/page cache and break the boot process.
 
-Example:
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-  $ cat simple-retpoline.c
-  __attribute__((noinline)) int bar(void)
-  {
-          return -1;
-  }
-
-  int foo(void)
-  {
-          return bar() + 1;
-  }
-
-  __attribute__((indirect_branch("thunk"))) int main()
-  {
-          int (*volatile fn)(void) = foo;
-
-          fn();
-          return fn();
-  }
-  $ gcc -ggdb3 -Wall -Wextra -O2 -o simple-retpoline simple-retpoline.c
-  $ objdump -d simple-retpoline
-  <SNIP>
-  0000000000001040 <main>:
-      1040:       48 83 ec 18             sub    $0x18,%rsp
-      1044:       48 8d 05 25 01 00 00    lea    0x125(%rip),%rax        # 1170 <foo>
-      104b:       48 89 44 24 08          mov    %rax,0x8(%rsp)
-      1050:       48 8b 44 24 08          mov    0x8(%rsp),%rax
-      1055:       e8 1f 01 00 00          callq  1179 <__x86_indirect_thunk_rax>
-      105a:       48 8b 44 24 08          mov    0x8(%rsp),%rax
-      105f:       48 83 c4 18             add    $0x18,%rsp
-      1063:       e9 11 01 00 00          jmpq   1179 <__x86_indirect_thunk_rax>
-  <SNIP>
-  0000000000001160 <bar>:
-      1160:       b8 ff ff ff ff          mov    $0xffffffff,%eax
-      1165:       c3                      retq
-  <SNIP>
-  0000000000001170 <foo>:
-      1170:       e8 eb ff ff ff          callq  1160 <bar>
-      1175:       83 c0 01                add    $0x1,%eax
-      1178:       c3                      retq
-  0000000000001179 <__x86_indirect_thunk_rax>:
-      1179:       e8 07 00 00 00          callq  1185 <__x86_indirect_thunk_rax+0xc>
-      117e:       f3 90                   pause
-      1180:       0f ae e8                lfence
-      1183:       eb f9                   jmp    117e <__x86_indirect_thunk_rax+0x5>
-      1185:       48 89 04 24             mov    %rax,(%rsp)
-      1189:       c3                      retq
-  <SNIP>
-  $ perf record -o simple-retpoline.perf.data -e intel_pt/cyc/u ./simple-retpoline
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0,017 MB simple-retpoline.perf.data ]
-  $ perf script -i simple-retpoline.perf.data --itrace=be -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py simple-retpoline.db branches calls
-  2019-01-08 14:03:37.851655 Creating database...
-  2019-01-08 14:03:37.863256 Writing records...
-  2019-01-08 14:03:38.069750 Adding indexes
-  2019-01-08 14:03:38.078799 Done
-  $ ~/libexec/perf-core/scripts/python/exported-sql-viewer.py simple-retpoline.db
-
-Before:
-
-    main
-        -> __x86_indirect_thunk_rax
-            -> __x86_indirect_thunk_rax
-                -> foo
-                    -> bar
-
-After:
-
-    main
-        -> foo
-            -> bar
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190109091835.5570-7-adrian.hunter@intel.com
-[ Remove (sym->name != NULL) test, this is not a pointer and breaks the build with clang version 7.0.1 (Fedora 7.0.1-2.fc30) ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/thread-stack.c | 112 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 109 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 632c07a125ab..a8b45168513c 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -20,6 +20,7 @@
- #include "thread.h"
- #include "event.h"
- #include "machine.h"
-+#include "env.h"
- #include "util.h"
- #include "debug.h"
- #include "symbol.h"
-@@ -29,6 +30,19 @@
- 
- #define STACK_GROWTH 2048
- 
-+/*
-+ * State of retpoline detection.
-+ *
-+ * RETPOLINE_NONE: no retpoline detection
-+ * X86_RETPOLINE_POSSIBLE: x86 retpoline possible
-+ * X86_RETPOLINE_DETECTED: x86 retpoline detected
-+ */
-+enum retpoline_state_t {
-+	RETPOLINE_NONE,
-+	X86_RETPOLINE_POSSIBLE,
-+	X86_RETPOLINE_DETECTED,
-+};
-+
- /**
-  * struct thread_stack_entry - thread stack entry.
-  * @ret_addr: return address
-@@ -64,6 +78,7 @@ struct thread_stack_entry {
-  * @crp: call/return processor
-  * @comm: current comm
-  * @arr_sz: size of array if this is the first element of an array
-+ * @rstate: used to detect retpolines
-  */
- struct thread_stack {
- 	struct thread_stack_entry *stack;
-@@ -76,6 +91,7 @@ struct thread_stack {
- 	struct call_return_processor *crp;
- 	struct comm *comm;
- 	unsigned int arr_sz;
-+	enum retpoline_state_t rstate;
- };
- 
- /*
-@@ -115,10 +131,16 @@ static int thread_stack__init(struct thread_stack *ts, struct thread *thread,
- 	if (err)
- 		return err;
- 
--	if (thread->mg && thread->mg->machine)
--		ts->kernel_start = machine__kernel_start(thread->mg->machine);
--	else
-+	if (thread->mg && thread->mg->machine) {
-+		struct machine *machine = thread->mg->machine;
-+		const char *arch = perf_env__arch(machine->env);
-+
-+		ts->kernel_start = machine__kernel_start(machine);
-+		if (!strcmp(arch, "x86"))
-+			ts->rstate = X86_RETPOLINE_POSSIBLE;
-+	} else {
- 		ts->kernel_start = 1ULL << 63;
-+	}
- 	ts->crp = crp;
- 
- 	return 0;
-@@ -733,6 +755,70 @@ static int thread_stack__trace_end(struct thread_stack *ts,
- 				     false, true);
- }
- 
-+static bool is_x86_retpoline(const char *name)
-+{
-+	const char *p = strstr(name, "__x86_indirect_thunk_");
-+
-+	return p == name || !strcmp(name, "__indirect_thunk_start");
-+}
-+
-+/*
-+ * x86 retpoline functions pollute the call graph. This function removes them.
-+ * This does not handle function return thunks, nor is there any improvement
-+ * for the handling of inline thunks or extern thunks.
-+ */
-+static int thread_stack__x86_retpoline(struct thread_stack *ts,
-+				       struct perf_sample *sample,
-+				       struct addr_location *to_al)
-+{
-+	struct thread_stack_entry *tse = &ts->stack[ts->cnt - 1];
-+	struct call_path_root *cpr = ts->crp->cpr;
-+	struct symbol *sym = tse->cp->sym;
-+	struct symbol *tsym = to_al->sym;
-+	struct call_path *cp;
-+
-+	if (sym && is_x86_retpoline(sym->name)) {
-+		/*
-+		 * This is a x86 retpoline fn. It pollutes the call graph by
-+		 * showing up everywhere there is an indirect branch, but does
-+		 * not itself mean anything. Here the top-of-stack is removed,
-+		 * by decrementing the stack count, and then further down, the
-+		 * resulting top-of-stack is replaced with the actual target.
-+		 * The result is that the retpoline functions will no longer
-+		 * appear in the call graph. Note this only affects the call
-+		 * graph, since all the original branches are left unchanged.
-+		 */
-+		ts->cnt -= 1;
-+		sym = ts->stack[ts->cnt - 2].cp->sym;
-+		if (sym && sym == tsym && to_al->addr != tsym->start) {
-+			/*
-+			 * Target is back to the middle of the symbol we came
-+			 * from so assume it is an indirect jmp and forget it
-+			 * altogether.
-+			 */
-+			ts->cnt -= 1;
-+			return 0;
-+		}
-+	} else if (sym && sym == tsym) {
-+		/*
-+		 * Target is back to the symbol we came from so assume it is an
-+		 * indirect jmp and forget it altogether.
-+		 */
-+		ts->cnt -= 1;
-+		return 0;
-+	}
-+
-+	cp = call_path__findnew(cpr, ts->stack[ts->cnt - 2].cp, tsym,
-+				sample->addr, ts->kernel_start);
-+	if (!cp)
-+		return -ENOMEM;
-+
-+	/* Replace the top-of-stack with the actual target */
-+	ts->stack[ts->cnt - 1].cp = cp;
-+
-+	return 0;
-+}
-+
- int thread_stack__process(struct thread *thread, struct comm *comm,
- 			  struct perf_sample *sample,
- 			  struct addr_location *from_al,
-@@ -740,6 +826,7 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 			  struct call_return_processor *crp)
- {
- 	struct thread_stack *ts = thread__stack(thread, sample->cpu);
-+	enum retpoline_state_t rstate;
- 	int err = 0;
- 
- 	if (ts && !ts->crp) {
-@@ -755,6 +842,10 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 		ts->comm = comm;
- 	}
- 
-+	rstate = ts->rstate;
-+	if (rstate == X86_RETPOLINE_DETECTED)
-+		ts->rstate = X86_RETPOLINE_POSSIBLE;
-+
- 	/* Flush stack on exec */
- 	if (ts->comm != comm && thread->pid_ == thread->tid) {
- 		err = __thread_stack__flush(thread, ts);
-@@ -791,10 +882,25 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 					ts->kernel_start);
- 		err = thread_stack__push_cp(ts, ret_addr, sample->time, ref,
- 					    cp, false, trace_end);
-+
-+		/*
-+		 * A call to the same symbol but not the start of the symbol,
-+		 * may be the start of a x86 retpoline.
-+		 */
-+		if (!err && rstate == X86_RETPOLINE_POSSIBLE && to_al->sym &&
-+		    from_al->sym == to_al->sym &&
-+		    to_al->addr != to_al->sym->start)
-+			ts->rstate = X86_RETPOLINE_DETECTED;
-+
- 	} else if (sample->flags & PERF_IP_FLAG_RETURN) {
- 		if (!sample->ip || !sample->addr)
- 			return 0;
- 
-+		/* x86 retpoline 'return' doesn't match the stack */
-+		if (rstate == X86_RETPOLINE_DETECTED && ts->cnt > 2 &&
-+		    ts->stack[ts->cnt - 1].ret_addr != sample->addr)
-+			return thread_stack__x86_retpoline(ts, sample, to_al);
-+
- 		err = thread_stack__pop_cp(thread, ts, sample->addr,
- 					   sample->time, ref, from_al->sym);
- 		if (err) {
