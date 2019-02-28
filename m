@@ -2,242 +2,129 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCCDC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FA4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC515214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:53:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sy4MZQR4"
+	by mail.kernel.org (Postfix) with ESMTP id 1B8FF2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731139AbfB1GxX (ORCPT
+        id S1731155AbfB1G4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 01:53:23 -0500
-Received: from mail-it1-f195.google.com ([209.85.166.195]:54850 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725967AbfB1GxW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 01:53:22 -0500
-Received: by mail-it1-f195.google.com with SMTP id w18so13182396itj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 22:53:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i3/s5PglH9gxlcaNlP0KMkiKMOrsgOYVB0VY1Idim6o=;
-        b=Sy4MZQR4I3yEsBHIGkZYvkvGNPVTMOo746qBMr47WiM0SQaS5ZGjVBU5kDcWtdDUlY
-         GNLEbIBLx77WiwJedTtLEoGIN0QkcHAA1nCedJheS82cBft4I0hZI17zv+1kFHVYHvQ8
-         3j7yjg5cCWUa+lxdwL2T1ELacXUU9b/dyNvO9DUvF9emkMkYiSSIlq0i+mx+ZLGstEi/
-         42bI1e+vKARUZUWd3CtsmQ70y+ADNA+9axkptKPra+n65i8/6SiArpczqHxWWW/zK2GJ
-         uRr6g2litZZ2DAcBCanIpRsBpmEMwdIvuj8PtWI+uj245jRnF2VHDfJPpAuJRFzA8DPC
-         WARw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i3/s5PglH9gxlcaNlP0KMkiKMOrsgOYVB0VY1Idim6o=;
-        b=KFfzTboGJv4mQcIL+Q6JKVjqD2g9dhoNuM1CLgqZom18l2HwIUX+ThbBY/oqqmPnRL
-         YrI7F6smo4OQ4vP2FlP6CZNoK8RY0/kn/8Rl64D3aE/tITmTnXuLfu57qY2S61pmL4jl
-         /juVYgIoLdQIRPxW0FKORECzW8+Mk/YNgzFNlFfJWwuqrrMublO5bBxBrQBUc4qfvWjc
-         r9Xgg7bvIJV/37NpxVRqe1qO+KfFSOuIr6/Yq85xUkd8tZ2cehPEF2nsbvXEMpb3MKiS
-         lXybufwA9Gd6S4Heq/KAGIANdr7mYPhqvl2jivOXxbjDwiX4FAVJWGyS0gJjcFianVtk
-         R8aQ==
-X-Gm-Message-State: AHQUAuYMmyrObtX5UlF1W47mI2qgsMu05GSD0t5v3+vZm/zR16lbPxcl
-        uKVi5pNsjZwnosx7m6ykbnLQbR81Ja/LP/XQ9mTBSQ==
-X-Google-Smtp-Source: AHgI3IYkgWOQOJZ0I9PrRVK8rb84Y2Q584t96OHyX+QdRL8KN7SjW2cOx0P5+eNWrJqzUGIlGq6bcnoN8mFyvD3aL1o=
-X-Received: by 2002:a02:4985:: with SMTP id p5mr3640499jad.35.1551336801199;
- Wed, 27 Feb 2019 22:53:21 -0800 (PST)
+        Thu, 28 Feb 2019 01:56:39 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4742 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725967AbfB1G4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 01:56:38 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DFC612DD144B74C6E1E9;
+        Thu, 28 Feb 2019 14:56:35 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
+ 14:56:29 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v3] xfrm: policy: Fix possible user after free in __xfrm_policy_unlink
+Date:   Thu, 28 Feb 2019 14:56:23 +0800
+Message-ID: <20190228065623.21628-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <0000000000006a12bd0581ca4145@google.com> <20190213122331.632a4eb1a12b738ef9633855@linux-foundation.org>
- <20190226182129.GA218103@gmail.com> <20190227205323.GA186986@gmail.com>
-In-Reply-To: <20190227205323.GA186986@gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 28 Feb 2019 07:53:09 +0100
-Message-ID: <CACT4Y+ZK5MrJ3GZ-sxihNpRaun4aMOxkRqmLqQJxYEgD2cnfZQ@mail.gmail.com>
-Subject: Re: BUG: Bad page state (5)
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        nborisov@suse.com, Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Mike Kravetz <kravetz@us.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 9:53 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Tue, Feb 26, 2019 at 10:21:30AM -0800, Eric Biggers wrote:
-> > On Wed, Feb 13, 2019 at 12:23:31PM -0800, Andrew Morton wrote:
-> > > On Wed, 13 Feb 2019 09:56:04 -0800 syzbot <syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com> wrote:
-> > >
-> > > > Hello,
-> > > >
-> > > > syzbot found the following crash on:
-> > > >
-> > > > HEAD commit:    c4f3ef3eb53f Add linux-next specific files for 20190213
-> > > > git tree:       linux-next
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1130a124c00000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=9ec67976eb2df882
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=2cd2887ea471ed6e6995
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ecdaa8c00000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ebe178c00000
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com
-> > >
-> > > It looks like a a memfd page was freed with a non-NULL ->mapping.
-> > >
-> > > Joel touched the memfd code with "mm/memfd: add an F_SEAL_FUTURE_WRITE
-> > > seal to memfd" but it would be surprising if syzbot tickled that code?
-> > >
-> > >
-> > > > BUG: Bad page state in process udevd  pfn:472f0
-> > > > name:"memfd:"
-> > > > page:ffffea00011cbc00 count:0 mapcount:0 mapping:ffff88800df2ad40 index:0xf
-> > > > shmem_aops
-> > > > flags: 0x1fffc000008000c(uptodate|dirty|swapbacked)
-> > > > raw: 01fffc000008000c ffffea0000ac4f08 ffff8880a85af890 ffff88800df2ad40
-> > > > raw: 000000000000000f 0000000000000000 00000000ffffffff 0000000000000000
-> > > > page dumped because: non-NULL mapping
-> > > > Modules linked in:
-> > > > CPU: 1 PID: 7586 Comm: udevd Not tainted 5.0.0-rc6-next-20190213 #34
-> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > Google 01/01/2011
-> > > > Call Trace:
-> > > >   __dump_stack lib/dump_stack.c:77 [inline]
-> > > >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> > > >   bad_page.cold+0xda/0xff mm/page_alloc.c:586
-> > > >   free_pages_check_bad+0x142/0x1a0 mm/page_alloc.c:1014
-> > > >   free_pages_check mm/page_alloc.c:1023 [inline]
-> > > >   free_pages_prepare mm/page_alloc.c:1113 [inline]
-> > > >   free_pcp_prepare mm/page_alloc.c:1138 [inline]
-> > > >   free_unref_page_prepare mm/page_alloc.c:2991 [inline]
-> > > >   free_unref_page_list+0x31d/0xc40 mm/page_alloc.c:3060
-> > > > name:"memfd:"
-> > > >   release_pages+0x60d/0x1940 mm/swap.c:791
-> > > >   pagevec_lru_move_fn+0x218/0x2a0 mm/swap.c:213
-> > > >   __pagevec_lru_add mm/swap.c:917 [inline]
-> > > >   lru_add_drain_cpu+0x2f7/0x520 mm/swap.c:581
-> > > >   lru_add_drain+0x20/0x60 mm/swap.c:652
-> > > >   exit_mmap+0x290/0x530 mm/mmap.c:3134
-> > > >   __mmput kernel/fork.c:1047 [inline]
-> > > >   mmput+0x15f/0x4c0 kernel/fork.c:1068
-> > > >   exec_mmap fs/exec.c:1046 [inline]
-> > > >   flush_old_exec+0x8d9/0x1c20 fs/exec.c:1279
-> > > >   load_elf_binary+0x9bc/0x53f0 fs/binfmt_elf.c:864
-> > > >   search_binary_handler fs/exec.c:1656 [inline]
-> > > >   search_binary_handler+0x17f/0x570 fs/exec.c:1634
-> > > >   exec_binprm fs/exec.c:1698 [inline]
-> > > >   __do_execve_file.isra.0+0x1394/0x23f0 fs/exec.c:1818
-> > > >   do_execveat_common fs/exec.c:1865 [inline]
-> > > >   do_execve fs/exec.c:1882 [inline]
-> > > >   __do_sys_execve fs/exec.c:1958 [inline]
-> > > >   __se_sys_execve fs/exec.c:1953 [inline]
-> > > >   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
-> > > >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> > > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > RIP: 0033:0x7fc7001ba207
-> > > > Code: Bad RIP value.
-> > > > RSP: 002b:00007ffe06aa13b8 EFLAGS: 00000206 ORIG_RAX: 000000000000003b
-> > > > RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fc7001ba207
-> > > > RDX: 0000000001fd5fd0 RSI: 00007ffe06aa14b0 RDI: 00007ffe06aa24c0
-> > > > RBP: 0000000000625500 R08: 0000000000001c49 R09: 0000000000001c49
-> > > > R10: 0000000000000000 R11: 0000000000000206 R12: 0000000001fd5fd0
-> > > > R13: 0000000000000007 R14: 0000000001fc6250 R15: 0000000000000005
-> > > > BUG: Bad page state in process udevd  pfn:2b13c
-> > > > page:ffffea0000ac4f00 count:0 mapcount:0 mapping:ffff88800df2ad40 index:0xe
-> > > > shmem_aops
-> > > > flags: 0x1fffc000008000c(uptodate|dirty|swapbacked)
-> > > > raw: 01fffc000008000c ffff8880a85af890 ffff8880a85af890 ffff88800df2ad40
-> > > > raw: 000000000000000e 0000000000000000 00000000ffffffff 0000000000000000
-> > > > page dumped because: non-NULL mapping
-> > > > Modules linked in:
-> > > > CPU: 1 PID: 7586 Comm: udevd Tainted: G    B
-> > > > 5.0.0-rc6-next-20190213 #34
-> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > Google 01/01/2011
-> > > > Call Trace:
-> > > >   __dump_stack lib/dump_stack.c:77 [inline]
-> > > >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> > > >   bad_page.cold+0xda/0xff mm/page_alloc.c:586
-> > > > name:"memfd:"
-> > > >   free_pages_check_bad+0x142/0x1a0 mm/page_alloc.c:1014
-> > > >   free_pages_check mm/page_alloc.c:1023 [inline]
-> > > >   free_pages_prepare mm/page_alloc.c:1113 [inline]
-> > > >   free_pcp_prepare mm/page_alloc.c:1138 [inline]
-> > > >   free_unref_page_prepare mm/page_alloc.c:2991 [inline]
-> > > >   free_unref_page_list+0x31d/0xc40 mm/page_alloc.c:3060
-> > > >   release_pages+0x60d/0x1940 mm/swap.c:791
-> > > >   pagevec_lru_move_fn+0x218/0x2a0 mm/swap.c:213
-> > > >   __pagevec_lru_add mm/swap.c:917 [inline]
-> > > >   lru_add_drain_cpu+0x2f7/0x520 mm/swap.c:581
-> > > >   lru_add_drain+0x20/0x60 mm/swap.c:652
-> > > >   exit_mmap+0x290/0x530 mm/mmap.c:3134
-> > > >   __mmput kernel/fork.c:1047 [inline]
-> > > >   mmput+0x15f/0x4c0 kernel/fork.c:1068
-> > > >   exec_mmap fs/exec.c:1046 [inline]
-> > > >   flush_old_exec+0x8d9/0x1c20 fs/exec.c:1279
-> > > >   load_elf_binary+0x9bc/0x53f0 fs/binfmt_elf.c:864
-> > > >   search_binary_handler fs/exec.c:1656 [inline]
-> > > >   search_binary_handler+0x17f/0x570 fs/exec.c:1634
-> > > >   exec_binprm fs/exec.c:1698 [inline]
-> > > >   __do_execve_file.isra.0+0x1394/0x23f0 fs/exec.c:1818
-> > > >   do_execveat_common fs/exec.c:1865 [inline]
-> > > >   do_execve fs/exec.c:1882 [inline]
-> > > >   __do_sys_execve fs/exec.c:1958 [inline]
-> > > >   __se_sys_execve fs/exec.c:1953 [inline]
-> > > >   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
-> > > >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> > > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > RIP: 0033:0x7fc7001ba207
-> > > > Code: Bad RIP value.
-> > > > RSP: 002b:00007ffe06aa13b8 EFLAGS: 00000206 ORIG_RAX: 000000000000003b
-> > > > RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fc7001ba207
-> > > > RDX: 0000000001fd5fd0 RSI: 00007ffe06aa14b0 RDI: 00007ffe06aa24c0
-> > > > RBP: 0000000000625500 R08: 0000000000001c49 R09: 0000000000001c49
-> > > > R10: 0000000000000000 R11: 0000000000000206 R12: 0000000001fd5fd0
-> > > > R13: 0000000000000007 R14: 0000000001fc6250 R15: 0000000000000005
-> > > >
-> > > >
-> > > > ---
-> > > > This bug is generated by a bot. It may contain errors.
-> > > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > > >
-> > > > syzbot will keep track of this bug report. See:
-> > > > https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
-> > > > syzbot.
-> > > > syzbot can test patches for this bug, for details see:
-> > > > https://goo.gl/tpsmEJ#testing-patches
-> > >
-> >
-> > It's apparently the bug in the io_uring patchset I reported yesterday (well, I
-> > stole it from another open syzbot bug...) and Jens is already planning to fix:
-> > https://marc.info/?l=linux-api&m=155115288114046&w=2.  Reproducer is similar,
-> > and the crash bisects down to the same commit from the io_uring patchset:
-> > "block: implement bio helper to add iter bvec pages to bio".
-> >
->
-> Fixed in next-20190227.  The fix was folded into "block: implement bio helper to
-> add iter bvec pages to bio".  Telling syzbot to invalidate this bug report:
->
-> #syz invalid
+From: YueHaibing <yuehaibing@huawei.com>
 
-Was this discovered separately? We could also add Reported-by (or
-Tested-by) tag to the commit.
+UBSAN report this:
+
+UBSAN: Undefined behaviour in net/xfrm/xfrm_policy.c:1289:24
+index 6 is out of range for type 'unsigned int [6]'
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.4.162-514.55.6.9.x86_64+ #13
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+ 0000000000000000 1466cf39b41b23c9 ffff8801f6b07a58 ffffffff81cb35f4
+ 0000000041b58ab3 ffffffff83230f9c ffffffff81cb34e0 ffff8801f6b07a80
+ ffff8801f6b07a20 1466cf39b41b23c9 ffffffff851706e0 ffff8801f6b07ae8
+Call Trace:
+ <IRQ>  [<ffffffff81cb35f4>] __dump_stack lib/dump_stack.c:15 [inline]
+ <IRQ>  [<ffffffff81cb35f4>] dump_stack+0x114/0x1a0 lib/dump_stack.c:51
+ [<ffffffff81d94225>] ubsan_epilogue+0x12/0x8f lib/ubsan.c:164
+ [<ffffffff81d954db>] __ubsan_handle_out_of_bounds+0x16e/0x1b2 lib/ubsan.c:382
+ [<ffffffff82a25acd>] __xfrm_policy_unlink+0x3dd/0x5b0 net/xfrm/xfrm_policy.c:1289
+ [<ffffffff82a2e572>] xfrm_policy_delete+0x52/0xb0 net/xfrm/xfrm_policy.c:1309
+ [<ffffffff82a3319b>] xfrm_policy_timer+0x30b/0x590 net/xfrm/xfrm_policy.c:243
+ [<ffffffff813d3927>] call_timer_fn+0x237/0x990 kernel/time/timer.c:1144
+ [<ffffffff813d8e7e>] __run_timers kernel/time/timer.c:1218 [inline]
+ [<ffffffff813d8e7e>] run_timer_softirq+0x6ce/0xb80 kernel/time/timer.c:1401
+ [<ffffffff8120d6f9>] __do_softirq+0x299/0xe10 kernel/softirq.c:273
+ [<ffffffff8120e676>] invoke_softirq kernel/softirq.c:350 [inline]
+ [<ffffffff8120e676>] irq_exit+0x216/0x2c0 kernel/softirq.c:391
+ [<ffffffff82c5edab>] exiting_irq arch/x86/include/asm/apic.h:652 [inline]
+ [<ffffffff82c5edab>] smp_apic_timer_interrupt+0x8b/0xc0 arch/x86/kernel/apic/apic.c:926
+ [<ffffffff82c5c985>] apic_timer_interrupt+0xa5/0xb0 arch/x86/entry/entry_64.S:735
+ <EOI>  [<ffffffff81188096>] ? native_safe_halt+0x6/0x10 arch/x86/include/asm/irqflags.h:52
+ [<ffffffff810834d7>] arch_safe_halt arch/x86/include/asm/paravirt.h:111 [inline]
+ [<ffffffff810834d7>] default_idle+0x27/0x430 arch/x86/kernel/process.c:446
+ [<ffffffff81085f05>] arch_cpu_idle+0x15/0x20 arch/x86/kernel/process.c:437
+ [<ffffffff8132abc3>] default_idle_call+0x53/0x90 kernel/sched/idle.c:92
+ [<ffffffff8132b32d>] cpuidle_idle_call kernel/sched/idle.c:156 [inline]
+ [<ffffffff8132b32d>] cpu_idle_loop kernel/sched/idle.c:251 [inline]
+ [<ffffffff8132b32d>] cpu_startup_entry+0x60d/0x9a0 kernel/sched/idle.c:299
+ [<ffffffff8113e119>] start_secondary+0x3c9/0x560 arch/x86/kernel/smpboot.c:245
+
+The issue is triggered as this:
+
+xfrm_add_policy
+    -->verify_newpolicy_info  //check the index provided by user with XFRM_POLICY_MAX
+			      //In my case, the index is 0x6E6BB6, so it pass the check.
+    -->xfrm_policy_construct  //copy the user's policy and set xfrm_policy_timer
+    -->xfrm_policy_insert
+	--> __xfrm_policy_link //use the orgin dir, in my case is 2
+	--> xfrm_gen_index   //generate policy index, there is 0x6E6BB6
+
+then xfrm_policy_timer be fired
+
+xfrm_policy_timer
+   --> xfrm_policy_id2dir  //get dir from (policy index & 7), in my case is 6
+   --> xfrm_policy_delete
+      --> __xfrm_policy_unlink //access policy_count[dir], trigger out of range access
+
+Add xfrm_policy_id2dir check in verify_newpolicy_info, make sure the computed dir is
+valid, to fix the issue.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e682adf021be ("xfrm: Try to honor policy index if it's supplied by user")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v3: fold the check
+v2: fix index check in verify_newpolicy_info
+---
+ net/xfrm/xfrm_user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index a131f9f..8d4d52f 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1424,7 +1424,7 @@ static int verify_newpolicy_info(struct xfrm_userpolicy_info *p)
+ 	ret = verify_policy_dir(p->dir);
+ 	if (ret)
+ 		return ret;
+-	if (p->index && ((p->index & XFRM_POLICY_MAX) != p->dir))
++	if (p->index && (xfrm_policy_id2dir(p->index) != p->dir))
+ 		return -EINVAL;
+ 
+ 	return 0;
+-- 
+2.7.0
+
+
