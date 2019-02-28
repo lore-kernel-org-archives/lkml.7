@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C92C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBB1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D89218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF14218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366692;
-	bh=9fjNvQiPeQyd4K0FkeQ+YimG+qYmhIbif4GLc5Gu10A=;
+	s=default; t=1551366697;
+	bh=fn2VglIejKGerKOg1gc9808eDGStI104LvGM0tXePCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BmJA8pDBuBfWYnuhqD3NqdiyXeSInL25PyhjBoyxrabdVSKNHOr24E6KGeXn0NlTT
-	 nrnhwlhSfJr01P/c4kKLwqdRwaaiu1IV/wCh6aT/qQ91fDXEkj6kI8wSrTUMpAL4+e
-	 5WjkscXsdNXWCAQVkRh8LaG1bpNDcmz1RMZaF/iU=
+	b=DgGR12UcughLrYOR+n0OnYO7NnCkr7xVS0wZK80H6N1SvY6mhv0Mfav6cIyoz//Ac
+	 LdOWqpyMUxee1eQYjx12d4CvvIaYFh42aD1raKQWVXd2sX3oiIiAtrw1JNEekFrnS2
+	 kpQ/XereLfKqxvN2lPUqLGcIb1kn38LCQYE8YWMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730665AbfB1PLa (ORCPT
+        id S2388020AbfB1PLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44612 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:11:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732712AbfB1PL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:27 -0500
+        id S1732726AbfB1PL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7703218C3;
-        Thu, 28 Feb 2019 15:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87D89218C3;
+        Thu, 28 Feb 2019 15:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366686;
-        bh=9fjNvQiPeQyd4K0FkeQ+YimG+qYmhIbif4GLc5Gu10A=;
+        s=default; t=1551366689;
+        bh=fn2VglIejKGerKOg1gc9808eDGStI104LvGM0tXePCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ROvgzuyVL5d8w7lkxmgj97tPPT9LpTbGpYisLsMTL9vKgHXsTBp2kjf+r26wCTRLt
-         BcIivXt5s9n2MKToOa57g21PSekZxWEOCve1aHFjgnu6gCPP3f4fZHLTBSY5EVvDaY
-         zABGfaUUXZZ2hLpvJTCbElyMokDEnP5MCRrrt5R8=
+        b=agqDPERkpM5kbS5eDnEo4lx14Me2WE6DdjyahSm7Ldr9kvMa858yoUV46WHPt7WsR
+         FCLB9hi5takptiTO5YsFVAabfiez8+Cd8cSbQDzatHWIJNevQ7dgBiZlE1UcGvi4yp
+         JZ05bg5ke6IfyZq0pvmSg65HGaYFUYO34Pw8AZH0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/64] wlcore: sdio: Fixup power on/off sequence
-Date:   Thu, 28 Feb 2019 10:10:13 -0500
-Message-Id: <20190228151105.11277-12-sashal@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/64] bpftool: Fix prog dump by tag
+Date:   Thu, 28 Feb 2019 10:10:14 -0500
+Message-Id: <20190228151105.11277-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -59,78 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit 13e62626c578d9889ebbda7c521be5adff9bef8e ]
+[ Upstream commit 752bcf80f5549c9901b2e8bc77b2138de55b1026 ]
 
-During "wlan-up", we are programming the FW into the WiFi-chip. However,
-re-programming the FW doesn't work, unless a power cycle of the WiFi-chip
-is made in-between the programmings.
+Lance reported an issue with bpftool not being able to
+dump program if there are more programs loaded and you
+want to dump any but the first program, like:
 
-To conform to this requirement and to fix the regression in a simple way,
-let's start by allowing that the SDIO card (WiFi-chip) may stay powered on
-(runtime resumed) when wl12xx_sdio_power_off() returns. The intent with the
-current code is to treat this scenario as an error, but unfortunate this
-doesn't work as expected, so let's fix this.
+  # bpftool prog
+  28: kprobe  name trace_req_start  tag 1dfc28ba8b3dd597  gpl
+  	loaded_at 2019-01-18T17:02:40+1100  uid 0
+  	xlated 112B  jited 109B  memlock 4096B  map_ids 13
+  29: kprobe  name trace_req_compl  tag 5b6a5ecc6030a683  gpl
+  	loaded_at 2019-01-18T17:02:40+1100  uid 0
+  	xlated 928B  jited 575B  memlock 4096B  map_ids 13,14
+  #  bpftool prog dum jited tag 1dfc28ba8b3dd597
+   0:	push   %rbp
+   1:	mov    %rsp,%rbp
+  ...
 
-The other part is to guarantee that a power cycle of the SDIO card has been
-completed when wl12xx_sdio_power_on() returns, as to allow the FW
-programming to succeed. However, relying solely on runtime PM to deal with
-this isn't sufficient. For example, userspace may prevent runtime suspend
-via sysfs for the device that represents the SDIO card, leading to that the
-mmc core also keeps it powered on. For this reason, let's instead do a
-brute force power cycle in wl12xx_sdio_power_on().
+  #  bpftool prog dum jited tag 5b6a5ecc6030a683
+  Error: can't get prog info (29): Bad address
 
-Fixes: 728a9dc61f13 ("wlcore: sdio: Fix flakey SDIO runtime PM handling")
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Tested-by: Tony Lindgren <tony@atomide.com>
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+The problem is in the prog_fd_by_tag function not cleaning
+the struct bpf_prog_info before another request, so the
+previous program length is still in there and kernel assumes
+it needs to dump the program, which fails because there's no
+user pointer set.
+
+Moving the struct bpf_prog_info declaration into the loop,
+so it gets cleaned before each query.
+
+Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+Reported-by: Lance Digby <ldigby@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/sdio.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ tools/bpf/bpftool/prog.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index 750bea3574ee4..627df164b7b6d 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -164,6 +164,12 @@ static int wl12xx_sdio_power_on(struct wl12xx_sdio_glue *glue)
- 	}
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index 0de024a6cc2be..bbba0d61570fe 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -109,13 +109,14 @@ static void print_boot_time(__u64 nsecs, char *buf, unsigned int size)
  
- 	sdio_claim_host(func);
-+	/*
-+	 * To guarantee that the SDIO card is power cycled, as required to make
-+	 * the FW programming to succeed, let's do a brute force HW reset.
-+	 */
-+	mmc_hw_reset(card->host);
-+
- 	sdio_enable_func(func);
- 	sdio_release_host(func);
- 
-@@ -174,20 +180,13 @@ static int wl12xx_sdio_power_off(struct wl12xx_sdio_glue *glue)
+ static int prog_fd_by_tag(unsigned char *tag)
  {
- 	struct sdio_func *func = dev_to_sdio_func(glue->dev);
- 	struct mmc_card *card = func->card;
--	int error;
+-	struct bpf_prog_info info = {};
+-	__u32 len = sizeof(info);
+ 	unsigned int id = 0;
+ 	int err;
+ 	int fd;
  
- 	sdio_claim_host(func);
- 	sdio_disable_func(func);
- 	sdio_release_host(func);
- 
- 	/* Let runtime PM know the card is powered off */
--	error = pm_runtime_put(&card->dev);
--	if (error < 0 && error != -EBUSY) {
--		dev_err(&card->dev, "%s failed: %i\n", __func__, error);
--
--		return error;
--	}
--
-+	pm_runtime_put(&card->dev);
- 	return 0;
- }
- 
+ 	while (true) {
++		struct bpf_prog_info info = {};
++		__u32 len = sizeof(info);
++
+ 		err = bpf_prog_get_next_id(id, &id);
+ 		if (err) {
+ 			p_err("%s", strerror(errno));
 -- 
 2.19.1
 
