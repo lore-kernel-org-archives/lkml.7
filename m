@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1551FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E64C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AA321850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E9C218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731390AbfB1HG2 (ORCPT
+        id S1731396AbfB1HHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:06:28 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:41481 "EHLO
+        Thu, 28 Feb 2019 02:07:18 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:59763 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731129AbfB1HG2 (ORCPT
+        with ESMTP id S1731129AbfB1HHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:06:28 -0500
+        Thu, 28 Feb 2019 02:07:17 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S75xOu2938362
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S76dlo2938656
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Feb 2019 23:05:59 -0800
+        Wed, 27 Feb 2019 23:06:39 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S75xok2938357;
-        Wed, 27 Feb 2019 23:05:59 -0800
-Date:   Wed, 27 Feb 2019 23:05:59 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S76ceu2938653;
+        Wed, 27 Feb 2019 23:06:38 -0800
+Date:   Wed, 27 Feb 2019 23:06:38 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Bart Van Assche <tipbot@zytor.com>
-Message-ID: <tip-86cffb80a525f7b8f969c8c79669d383e02f17d1@git.kernel.org>
-Cc:     mingo@kernel.org, johannes@sipsolutions.net, peterz@infradead.org,
-        torvalds@linux-foundation.org, longman@redhat.com,
-        tglx@linutronix.de, bvanassche@acm.org,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        hpa@zytor.com, paulmck@linux.vnet.ibm.com, will.deacon@arm.com
-Reply-To: torvalds@linux-foundation.org, peterz@infradead.org,
-          johannes@sipsolutions.net, mingo@kernel.org, longman@redhat.com,
-          akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-          bvanassche@acm.org, tglx@linutronix.de, will.deacon@arm.com,
-          paulmck@linux.vnet.ibm.com, hpa@zytor.com
-In-Reply-To: <20190214230058.196511-7-bvanassche@acm.org>
-References: <20190214230058.196511-7-bvanassche@acm.org>
+Message-ID: <tip-feb0a3865ed2f7d66a1f2686f7ad784422c249ad@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, will.deacon@arm.com, hpa@zytor.com,
+        torvalds@linux-foundation.org, mingo@kernel.org,
+        bvanassche@acm.org, akpm@linux-foundation.org,
+        paulmck@linux.vnet.ibm.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, longman@redhat.com, peterz@infradead.org
+Reply-To: longman@redhat.com, bvanassche@acm.org, mingo@kernel.org,
+          peterz@infradead.org, will.deacon@arm.com, hpa@zytor.com,
+          johannes@sipsolutions.net, paulmck@linux.vnet.ibm.com,
+          linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+          torvalds@linux-foundation.org, tglx@linutronix.de
+In-Reply-To: <20190214230058.196511-8-bvanassche@acm.org>
+References: <20190214230058.196511-8-bvanassche@acm.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Make zap_class() remove all
- matching lock order entries
-Git-Commit-ID: 86cffb80a525f7b8f969c8c79669d383e02f17d1
+Subject: [tip:locking/core] locking/lockdep: Initialize the locks_before and
+ locks_after lists earlier
+Git-Commit-ID: feb0a3865ed2f7d66a1f2686f7ad784422c249ad
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -61,17 +61,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  86cffb80a525f7b8f969c8c79669d383e02f17d1
-Gitweb:     https://git.kernel.org/tip/86cffb80a525f7b8f969c8c79669d383e02f17d1
+Commit-ID:  feb0a3865ed2f7d66a1f2686f7ad784422c249ad
+Gitweb:     https://git.kernel.org/tip/feb0a3865ed2f7d66a1f2686f7ad784422c249ad
 Author:     Bart Van Assche <bvanassche@acm.org>
-AuthorDate: Thu, 14 Feb 2019 15:00:41 -0800
+AuthorDate: Thu, 14 Feb 2019 15:00:42 -0800
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 28 Feb 2019 07:55:40 +0100
+CommitDate: Thu, 28 Feb 2019 07:55:41 +0100
 
-locking/lockdep: Make zap_class() remove all matching lock order entries
+locking/lockdep: Initialize the locks_before and locks_after lists earlier
 
-Make sure that all lock order entries that refer to a class are removed
-from the list_entries[] array when a kernel module is unloaded.
+This patch does not change any functionality. A later patch will reuse
+lock classes that have been freed. In combination with that patch this
+patch wil have the effect of initializing lock class order lists once
+instead of every time a lock class structure is reinitialized.
 
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -85,85 +87,77 @@ Cc: Waiman Long <longman@redhat.com>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: johannes.berg@intel.com
 Cc: tj@kernel.org
-Link: https://lkml.kernel.org/r/20190214230058.196511-7-bvanassche@acm.org
+Link: https://lkml.kernel.org/r/20190214230058.196511-8-bvanassche@acm.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/lockdep.h  |  1 +
- kernel/locking/lockdep.c | 19 +++++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+ kernel/locking/lockdep.c | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 0c38bade84b7..b5e6bfe0ae4a 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -178,6 +178,7 @@ static inline void lockdep_copy_map(struct lockdep_map *to,
- struct lock_list {
- 	struct list_head		entry;
- 	struct lock_class		*class;
-+	struct lock_class		*links_to;
- 	struct stack_trace		trace;
- 	int				distance;
- 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 21d84510e28f..28fbeb2a10cc 100644
+index 28fbeb2a10cc..d1a6daf1f51f 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -859,7 +859,8 @@ static struct lock_list *alloc_list_entry(void)
+@@ -735,6 +735,25 @@ static bool assign_lock_key(struct lockdep_map *lock)
+ 	return true;
+ }
+ 
++/*
++ * Initialize the lock_classes[] array elements.
++ */
++static void init_data_structures_once(void)
++{
++	static bool initialization_happened;
++	int i;
++
++	if (likely(initialization_happened))
++		return;
++
++	initialization_happened = true;
++
++	for (i = 0; i < ARRAY_SIZE(lock_classes); i++) {
++		INIT_LIST_HEAD(&lock_classes[i].locks_after);
++		INIT_LIST_HEAD(&lock_classes[i].locks_before);
++	}
++}
++
  /*
-  * Add a new dependency to the head of the list:
-  */
--static int add_lock_to_list(struct lock_class *this, struct list_head *head,
-+static int add_lock_to_list(struct lock_class *this,
-+			    struct lock_class *links_to, struct list_head *head,
- 			    unsigned long ip, int distance,
- 			    struct stack_trace *trace)
- {
-@@ -873,6 +874,7 @@ static int add_lock_to_list(struct lock_class *this, struct list_head *head,
- 		return 0;
- 
- 	entry->class = this;
-+	entry->links_to = links_to;
- 	entry->distance = distance;
- 	entry->trace = *trace;
- 	/*
-@@ -1907,14 +1909,14 @@ check_prev_add(struct task_struct *curr, struct held_lock *prev,
- 	 * Ok, all validations passed, add the new lock
- 	 * to the previous lock's dependency list:
- 	 */
--	ret = add_lock_to_list(hlock_class(next),
-+	ret = add_lock_to_list(hlock_class(next), hlock_class(prev),
- 			       &hlock_class(prev)->locks_after,
- 			       next->acquire_ip, distance, trace);
- 
- 	if (!ret)
- 		return 0;
- 
--	ret = add_lock_to_list(hlock_class(prev),
-+	ret = add_lock_to_list(hlock_class(prev), hlock_class(next),
- 			       &hlock_class(next)->locks_before,
- 			       next->acquire_ip, distance, trace);
- 	if (!ret)
-@@ -4107,15 +4109,20 @@ void lockdep_reset(void)
-  */
- static void zap_class(struct lock_class *class)
- {
-+	struct lock_list *entry;
- 	int i;
- 
- 	/*
- 	 * Remove all dependencies this lock is
- 	 * involved in:
- 	 */
--	for (i = 0; i < nr_list_entries; i++) {
--		if (list_entries[i].class == class)
--			list_del_rcu(&list_entries[i].entry);
-+	for (i = 0, entry = list_entries; i < nr_list_entries; i++, entry++) {
-+		if (entry->class != class && entry->links_to != class)
-+			continue;
-+		list_del_rcu(&entry->entry);
-+		/* Clear .class and .links_to to avoid double removal. */
-+		WRITE_ONCE(entry->class, NULL);
-+		WRITE_ONCE(entry->links_to, NULL);
+  * Register a lock's class in the hash-table, if the class is not present
+  * yet. Otherwise we look it up. We cache the result in the lock object
+@@ -775,6 +794,8 @@ register_lock_class(struct lockdep_map *lock, unsigned int subclass, int force)
+ 			goto out_unlock_set;
  	}
+ 
++	init_data_structures_once();
++
  	/*
- 	 * Unhash the class and remove it from the all_lock_classes list:
+ 	 * Allocate a new key from the static array, and add it to
+ 	 * the hash:
+@@ -793,8 +814,8 @@ register_lock_class(struct lockdep_map *lock, unsigned int subclass, int force)
+ 	class->key = key;
+ 	class->name = lock->name;
+ 	class->subclass = subclass;
+-	INIT_LIST_HEAD(&class->locks_before);
+-	INIT_LIST_HEAD(&class->locks_after);
++	WARN_ON_ONCE(!list_empty(&class->locks_before));
++	WARN_ON_ONCE(!list_empty(&class->locks_after));
+ 	class->name_version = count_matching_names(class);
+ 	/*
+ 	 * We use RCU's safe list-add method to make
+@@ -4155,6 +4176,8 @@ void lockdep_free_key_range(void *start, unsigned long size)
+ 	int i;
+ 	int locked;
+ 
++	init_data_structures_once();
++
+ 	raw_local_irq_save(flags);
+ 	locked = graph_lock();
+ 
+@@ -4218,6 +4241,8 @@ void lockdep_reset_lock(struct lockdep_map *lock)
+ 	unsigned long flags;
+ 	int j, locked;
+ 
++	init_data_structures_once();
++
+ 	raw_local_irq_save(flags);
+ 	locked = graph_lock();
+ 
