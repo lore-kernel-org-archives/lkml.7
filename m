@@ -2,46 +2,46 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67374C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A59C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0D7218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BD32171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 05:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YFtjFw9M"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RbKVT9Gn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbfB1FHP (ORCPT
+        id S1730999AbfB1FH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 00:07:15 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34142 "EHLO
+        Thu, 28 Feb 2019 00:07:27 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34194 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730890AbfB1FHM (ORCPT
+        by vger.kernel.org with ESMTP id S1730946AbfB1FHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 00:07:12 -0500
+        Thu, 28 Feb 2019 00:07:17 -0500
 Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S54OP8032376
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 21:07:11 -0800
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S54wtQ000378
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 21:07:17 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=/4G2qHfT5nvvqHml+ZPq0wMYGt51ZXF51ny/oS8jfws=;
- b=YFtjFw9MfPM4QPhoGO0R3o1weB0trRcserY2iVtnyhdQIkspsTRBfuMV26ICLHOLa3AY
- E5fUQRESV6j4efnRIiprfcE5aSMM/IRYbMiGEG16sODeLqcYkFkLbDMlz0SR5kXRYgDK
- ReieHsHkDbYvnyGl8FThGUaPUT9a5G64UtM= 
+ content-type; s=facebook; bh=L17lMYCs4qCtCVnJBRZdUACuxGqR670uJ3oSj4rBavM=;
+ b=RbKVT9GnmhzGKQoBQAUz2NMlpIaAst98YjWIimcUuXgFPMJU/k39QjkYYndL4EzPYKY8
+ czFGV9CJ2YZMmItv59aGrutZ2MpZHcPTfuNJjyG8juGcYshH3pv2SseWGRVPKZLTAn0U
+ ZpqgPuHs7X+Bh3Lq17XcNqGqm47DDQGrJ0w= 
 Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2qx7600a7d-8
+        by mx0a-00082601.pphosted.com with ESMTP id 2qx7600a7v-8
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 21:07:11 -0800
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 21:07:17 -0800
 Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
- mail.thefacebook.com (2620:10d:c021:18::173) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c021:18::171) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1531.3;
- Wed, 27 Feb 2019 21:07:00 -0800
+ Wed, 27 Feb 2019 21:07:13 -0800
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 1B3DE62E2B27; Wed, 27 Feb 2019 21:07:00 -0800 (PST)
+        id 01E9C62E2B27; Wed, 27 Feb 2019 21:07:12 -0800 (PST)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -50,9 +50,9 @@ CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
         <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v5 perf,bpf 06/15] perf, bpf: save bpf_prog_info in a rbtree in perf_env
-Date:   Wed, 27 Feb 2019 21:06:34 -0800
-Message-ID: <20190228050643.958685-7-songliubraving@fb.com>
+Subject: [PATCH v5 perf,bpf 12/15] perf, bpf: enable annotation of bpf program
+Date:   Wed, 27 Feb 2019 21:06:40 -0800
+Message-ID: <20190228050643.958685-13-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190228050643.958685-1-songliubraving@fb.com>
 References: <20190228050643.958685-1-songliubraving@fb.com>
@@ -68,327 +68,336 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bpf_prog_info contains information necessary to annotate bpf programs.
-This patch saves bpf_prog_info for bpf programs loaded in the system.
+This patch enables the annotation of bpf program.
 
-Some big picture of the next few patches:
+A new dso type DSO_BINARY_TYPE__BPF_PROG_INFO is introduced to for BPF
+programs. In symbol__disassemble(), DSO_BINARY_TYPE__BPF_PROG_INFO dso
+calls into a new function symbol__disassemble_bpf(), where annotation
+line information is filled based bpf_prog_info and btf saved in given
+perf_env.
 
-To fully annotate BPF programs with source code mapping, 4 different
-information are needed:
-    1) PERF_RECORD_KSYMBOL
-    2) PERF_RECORD_BPF_EVENT
-    3) bpf_prog_info
-    4) btf
-
-Before this set, 1) and 2) in the list are already saved to perf.data
-file. For BPF programs that are already loaded before perf run, 1) and 2)
-are synthesized by perf_event__synthesize_bpf_events(). For short living
-BPF programs, 1) and 2) are generated by kernel.
-
-This set handles 3) and 4) from the list. Again, it is necessary to handle
-existing BPF program and short living program separately.
-
-This patch handles 3) for exising BPF programs while synthesizing 1) and
-2) in perf_event__synthesize_bpf_events(). These data are stored in
-perf_env. The next patch saves these data from perf_env to perf.data as
-headers.
-
-Similarly, the two patches after the next saves 4) of existing BPF
-programs to perf_env and perf.data.
-
-Another patch later will handle 3) and 4) for short living BPF programs
-by monitoring 1) and 2) in a dedicate thread.
+symbol__disassemble_bpf() uses libbfd to disassemble bpf programs.
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- tools/perf/perf.c           |  1 +
- tools/perf/util/bpf-event.c | 32 +++++++++++++-
- tools/perf/util/bpf-event.h |  7 +++-
- tools/perf/util/env.c       | 84 +++++++++++++++++++++++++++++++++++++
- tools/perf/util/env.h       | 18 ++++++++
- tools/perf/util/session.c   |  1 +
- 6 files changed, 141 insertions(+), 2 deletions(-)
+ tools/build/Makefile.feature |   6 +-
+ tools/perf/Makefile.config   |   4 +
+ tools/perf/util/annotate.c   | 150 ++++++++++++++++++++++++++++++++++-
+ tools/perf/util/dso.c        |   1 +
+ tools/perf/util/dso.h        |  33 +++++---
+ tools/perf/util/symbol.c     |   1 +
+ 6 files changed, 181 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index a11cb006f968..72df4b6fa36f 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -298,6 +298,7 @@ static int run_builtin(struct cmd_struct *p, int argc, const char **argv)
- 		use_pager = 1;
- 	commit_pager_choice();
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 5467c6bf9ceb..4f35e9ff1e00 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -71,7 +71,8 @@ FEATURE_TESTS_BASIC :=                  \
+         sdt				\
+         setns				\
+         libopencsd			\
+-        libaio
++        libaio				\
++        disassembler-four-args
  
-+	perf_env__init(&perf_env);
- 	perf_env__set_cmdline(&perf_env, argc, argv);
- 	status = p->fn(argc, argv);
- 	perf_config__exit();
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index ff7ee149ec46..ce81b2c43a51 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -10,6 +10,7 @@
- #include "debug.h"
- #include "symbol.h"
- #include "machine.h"
-+#include "env.h"
- #include "session.h"
+ # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+ # of all feature tests
+@@ -118,7 +119,8 @@ FEATURE_DISPLAY ?=              \
+          lzma                   \
+          get_cpuid              \
+          bpf			\
+-         libaio
++         libaio			\
++         disassembler-four-args
  
- #define ptr_to_u64(ptr)    ((__u64)(unsigned long)(ptr))
-@@ -54,17 +55,28 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 	struct bpf_event *bpf_event = &event->bpf_event;
- 	struct bpf_prog_info_linear *info_linear;
- 	struct perf_tool *tool = session->tool;
-+	struct bpf_prog_info_node *info_node;
- 	struct bpf_prog_info *info;
- 	struct btf *btf = NULL;
- 	bool has_btf = false;
-+	struct perf_env *env;
- 	u32 sub_prog_cnt, i;
- 	int err = 0;
- 	u64 arrays;
+ # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
+ # If in the future we need per-feature checks/flags for features not
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e0bafbc273af..ab223239f1fb 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -796,6 +796,10 @@ ifdef HAVE_KVM_STAT_SUPPORT
+     CFLAGS += -DHAVE_KVM_STAT_SUPPORT
+ endif
  
-+	/*
-+	 * for perf-record and perf-report use header.env;
-+	 * otherwise, use global perf_env.
-+	 */
-+	env = session->data ? &session->header.env : &perf_env;
++ifeq ($(feature-disassembler-four-args), 1)
++    CFLAGS += -DDISASM_FOUR_ARGS_SIGNATURE
++endif
 +
- 	arrays = 1UL << BPF_PROG_INFO_JITED_KSYMS;
- 	arrays |= 1UL << BPF_PROG_INFO_JITED_FUNC_LENS;
- 	arrays |= 1UL << BPF_PROG_INFO_FUNC_INFO;
- 	arrays |= 1UL << BPF_PROG_INFO_PROG_TAGS;
-+	arrays |= 1UL << BPF_PROG_INFO_JITED_INSNS;
-+	arrays |= 1UL << BPF_PROG_INFO_LINE_INFO;
-+	arrays |= 1UL << BPF_PROG_INFO_JITED_LINE_INFO;
+ ifeq (${IS_64_BIT}, 1)
+   ifndef NO_PERF_READ_VDSO32
+     $(call feature_check,compile-32)
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 70de8f6b3aee..e467aa0ef0c2 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -9,6 +9,10 @@
  
- 	info_linear = bpf_program__get_prog_info_linear(fd, arrays);
- 	if (IS_ERR_OR_NULL(info_linear)) {
-@@ -153,8 +165,8 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 						     machine, process);
- 	}
- 
--	/* Synthesize PERF_RECORD_BPF_EVENT */
- 	if (opts->bpf_event) {
-+		/* Synthesize PERF_RECORD_BPF_EVENT */
- 		*bpf_event = (struct bpf_event){
- 			.header = {
- 				.type = PERF_RECORD_BPF_EVENT,
-@@ -167,6 +179,24 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 		memcpy(bpf_event->tag, info->tag, BPF_TAG_SIZE);
- 		memset((void *)event + event->header.size, 0, machine->id_hdr_size);
- 		event->header.size += machine->id_hdr_size;
-+
-+		/* save bpf_prog_info to env */
-+		info_node = malloc(sizeof(struct bpf_prog_info_node));
-+
-+		/*
-+		 * Do not bail out for !info_node, as we still want to
-+		 * call  perf_tool__process_synth_event()
-+		 */
-+		if (info_node) {
-+			info_node->info_linear = info_linear;
-+			perf_env__insert_bpf_prog_info(env, info_node);
-+			info_linear = NULL;
-+		}
-+
-+		/*
-+		 * process after saving bpf_prog_info to env, so that
-+		 * required information is ready for look up
-+		 */
- 		err = perf_tool__process_synth_event(tool, event,
- 						     machine, process);
- 	}
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index 6698683612a7..fad932f7404f 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -3,14 +3,19 @@
- #define __PERF_BPF_EVENT_H
- 
- #include <linux/compiler.h>
-+#include <linux/rbtree.h>
- #include "event.h"
- 
- struct machine;
- union perf_event;
- struct perf_sample;
--struct perf_tool;
- struct record_opts;
- 
-+struct bpf_prog_info_node {
-+	struct bpf_prog_info_linear	*info_linear;
-+	struct rb_node			rb_node;
-+};
-+
- #ifdef HAVE_LIBBPF_SUPPORT
- int machine__process_bpf_event(struct machine *machine, union perf_event *event,
- 			       struct perf_sample *sample);
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 4c23779e271a..cdda46f2633f 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -3,15 +3,93 @@
- #include "env.h"
- #include "sane_ctype.h"
- #include "util.h"
-+#include "bpf-event.h"
  #include <errno.h>
- #include <sys/utsname.h>
+ #include <inttypes.h>
++#include <bpf/bpf.h>
++#include <bpf/btf.h>
++#include <bpf/libbpf.h>
++#include <linux/btf.h>
+ #include "util.h"
+ #include "ui/ui.h"
+ #include "sort.h"
+@@ -22,6 +26,7 @@
+ #include "annotate.h"
+ #include "evsel.h"
+ #include "evlist.h"
++#include "bpf-event.h"
+ #include "block-range.h"
+ #include "string2.h"
+ #include "arch/common.h"
+@@ -29,6 +34,9 @@
+ #include <pthread.h>
+ #include <linux/bitops.h>
+ #include <linux/kernel.h>
++#include <bfd.h>
++#include <dis-asm.h>
 +#include <bpf/libbpf.h>
  
- struct perf_env perf_env;
- 
-+void perf_env__insert_bpf_prog_info(struct perf_env *env,
-+				    struct bpf_prog_info_node *info_node)
-+{
-+	__u32 prog_id = info_node->info_linear->info.id;
-+	struct bpf_prog_info_node *node;
-+	struct rb_node *parent = NULL;
-+	struct rb_node **p;
-+
-+	down_write(&env->bpf_progs.lock);
-+	p = &env->bpf_progs.infos.rb_node;
-+
-+	while (*p != NULL) {
-+		parent = *p;
-+		node = rb_entry(parent, struct bpf_prog_info_node, rb_node);
-+		if (prog_id < node->info_linear->info.id) {
-+			p = &(*p)->rb_left;
-+		} else if (prog_id > node->info_linear->info.id) {
-+			p = &(*p)->rb_right;
-+		} else {
-+			pr_debug("duplicated bpf prog info %u\n", prog_id);
-+			goto out;
-+		}
-+	}
-+
-+	rb_link_node(&info_node->rb_node, parent, p);
-+	rb_insert_color(&info_node->rb_node, &env->bpf_progs.infos);
-+out:
-+	up_write(&env->bpf_progs.lock);
-+}
-+
-+struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
-+							__u32 prog_id)
-+{
-+	struct bpf_prog_info_node *node = NULL;
-+	struct rb_node *n;
-+
-+	down_read(&env->bpf_progs.lock);
-+	n = env->bpf_progs.infos.rb_node;
-+
-+	while (n) {
-+		node = rb_entry(n, struct bpf_prog_info_node, rb_node);
-+		if (prog_id < node->info_linear->info.id)
-+			n = n->rb_left;
-+		else if (prog_id > node->info_linear->info.id)
-+			n = n->rb_right;
-+		else
-+			break;
-+	}
-+
-+	up_read(&env->bpf_progs.lock);
-+	return node;
-+}
-+
-+/* purge data in bpf_progs.infos tree */
-+static void perf_env__purge_bpf(struct perf_env *env)
-+{
-+	struct rb_root *root;
-+	struct rb_node *next;
-+
-+	down_write(&env->bpf_progs.lock);
-+
-+	root = &env->bpf_progs.infos;
-+	next = rb_first(root);
-+
-+	while (next) {
-+		struct bpf_prog_info_node *node;
-+
-+		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
-+		next = rb_next(&node->rb_node);
-+		rb_erase_init(&node->rb_node, root);
-+		free(node);
-+	}
-+	up_write(&env->bpf_progs.lock);
-+}
-+
- void perf_env__exit(struct perf_env *env)
- {
- 	int i;
- 
-+	perf_env__purge_bpf(env);
- 	zfree(&env->hostname);
- 	zfree(&env->os_release);
- 	zfree(&env->version);
-@@ -38,6 +116,12 @@ void perf_env__exit(struct perf_env *env)
- 	zfree(&env->memory_nodes);
+ /* FIXME: For the HE_COLORSET */
+ #include "ui/browser.h"
+@@ -1672,6 +1680,144 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 	return 0;
  }
  
-+void perf_env__init(struct perf_env *env)
++static int symbol__disassemble_bpf(struct symbol *sym,
++				   struct annotate_args *args)
 +{
-+	env->bpf_progs.infos = RB_ROOT;
-+	init_rwsem(&env->bpf_progs.lock);
++	struct annotation *notes = symbol__annotation(sym);
++	struct annotation_options *opts = args->options;
++	struct bpf_prog_info_linear *info_linear;
++	struct bpf_prog_linfo *prog_linfo = NULL;
++	struct bpf_prog_info_node *info_node;
++	int len = sym->end - sym->start;
++	disassembler_ftype disassemble;
++	struct map *map = args->ms.map;
++	struct disassemble_info info;
++	struct dso *dso = map->dso;
++	int pc = 0, count, sub_id;
++	struct btf *btf = NULL;
++	char tpath[PATH_MAX];
++	size_t buf_size;
++	int nr_skip = 0;
++	int ret = -1;
++	char *buf;
++	bfd *bfdf;
++	FILE *s;
++
++	if (dso->binary_type != DSO_BINARY_TYPE__BPF_PROG_INFO)
++		return -1;
++
++	pr_debug("%s: handling sym %s addr %lx len %lx\n", __func__,
++		 sym->name, sym->start, sym->end - sym->start);
++
++	memset(tpath, 0, sizeof(tpath));
++	perf_exe(tpath, sizeof(tpath));
++
++	bfdf = bfd_openr(tpath, NULL);
++	assert(bfdf);
++	assert(bfd_check_format(bfdf, bfd_object));
++
++	s = open_memstream(&buf, &buf_size);
++	if (!s)
++		goto out;
++	init_disassemble_info(&info, s,
++			      (fprintf_ftype) fprintf);
++
++	info.arch = bfd_get_arch(bfdf);
++	info.mach = bfd_get_mach(bfdf);
++
++	info_node = perf_env__find_bpf_prog_info(dso->bpf_prog.env,
++						 dso->bpf_prog.id);
++	if (!info_node)
++		goto out;
++	info_linear = info_node->info_linear;
++	sub_id = dso->bpf_prog.sub_id;
++
++	info.buffer = (void *)(info_linear->info.jited_prog_insns);
++	info.buffer_length = info_linear->info.jited_prog_len;
++
++	if (info_linear->info.nr_line_info)
++		prog_linfo = bpf_prog_linfo__new(&info_linear->info);
++
++	if (info_linear->info.btf_id) {
++		struct btf_node *node;
++
++		node = perf_env__find_btf(dso->bpf_prog.env,
++					  info_linear->info.btf_id);
++		if (node)
++			btf = btf__new((__u8 *)(node->data),
++				       node->data_size);
++	}
++
++	disassemble_init_for_target(&info);
++
++#ifdef DISASM_FOUR_ARGS_SIGNATURE
++	disassemble = disassembler(info.arch,
++				   bfd_big_endian(bfdf),
++				   info.mach,
++				   bfdf);
++#else
++	disassemble = disassembler(bfdf);
++#endif
++	assert(disassemble);
++
++	fflush(s);
++	do {
++		const struct bpf_line_info *linfo = NULL;
++		struct disasm_line *dl;
++		size_t prev_buf_size;
++		const char *srcline;
++		u64 addr;
++
++		addr = pc + ((u64 *)(info_linear->info.jited_ksyms))[sub_id];
++		count = disassemble(pc, &info);
++
++		if (prog_linfo)
++			linfo = bpf_prog_linfo__lfind_addr_func(prog_linfo,
++								addr, sub_id,
++								nr_skip);
++
++		if (linfo && btf) {
++			srcline = btf__name_by_offset(btf, linfo->line_off);
++			nr_skip++;
++		} else
++			srcline = NULL;
++
++		fprintf(s, "\n");
++		prev_buf_size = buf_size;
++		fflush(s);
++
++		if (!opts->hide_src_code && srcline) {
++			args->offset = -1;
++			args->line = strdup(srcline);
++			args->line_nr = 0;
++			args->ms.sym  = sym;
++			dl = disasm_line__new(args);
++			if (dl) {
++				annotation_line__add(&dl->al,
++						     &notes->src->source);
++			}
++		}
++
++		args->offset = pc;
++		args->line = buf + prev_buf_size;
++		args->line_nr = 0;
++		args->ms.sym  = sym;
++		dl = disasm_line__new(args);
++		if (dl)
++			annotation_line__add(&dl->al, &notes->src->source);
++
++		pc += count;
++	} while (count > 0 && pc < len);
++
++	ret = 0;
++out:
++	free(prog_linfo);
++	free(btf);
++	fclose(s);
++	bfd_close(bfdf);
++	return ret;
 +}
 +
- int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[])
+ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
  {
- 	int i;
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index d01b8355f4ca..e034e5b438e3 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -3,7 +3,9 @@
- #define __PERF_ENV_H
+ 	struct annotation_options *opts = args->options;
+@@ -1699,7 +1845,9 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	pr_debug("annotating [%p] %30s : [%p] %30s\n",
+ 		 dso, dso->long_name, sym, sym->name);
  
- #include <linux/types.h>
-+#include <linux/rbtree.h>
- #include "cpumap.h"
-+#include "rwsem.h"
+-	if (dso__is_kcore(dso)) {
++	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO) {
++		return symbol__disassemble_bpf(sym, args);
++	} else if (dso__is_kcore(dso)) {
+ 		kce.kcore_filename = symfs_filename;
+ 		kce.addr = map__rip_2objdump(map, sym->start);
+ 		kce.offs = sym->start;
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 62c8cf622607..1798192bf0f9 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -181,6 +181,7 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 	case DSO_BINARY_TYPE__KALLSYMS:
+ 	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
+ 	case DSO_BINARY_TYPE__JAVA_JIT:
++	case DSO_BINARY_TYPE__BPF_PROG_INFO:
+ 	case DSO_BINARY_TYPE__NOT_FOUND:
+ 		ret = -1;
+ 		break;
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 8c8a7abe809d..f20d319463f1 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -14,6 +14,8 @@
+ #include "namespaces.h"
+ #include "build-id.h"
  
- struct cpu_topology_map {
- 	int	socket_id;
-@@ -64,8 +66,19 @@ struct perf_env {
- 	struct memory_node	*memory_nodes;
- 	unsigned long long	 memory_bsize;
- 	u64                     clockid_res_ns;
++struct perf_env;
 +
-+	/*
-+	 * bpf_info_lock protects bpf rbtrees. This is needed because the
-+	 * trees are accessed by different threads in perf-top
-+	 */
-+	struct {
-+		struct rw_semaphore	lock;
-+		struct rb_root		infos;
-+	} bpf_progs;
+ enum dso_binary_type {
+ 	DSO_BINARY_TYPE__KALLSYMS = 0,
+ 	DSO_BINARY_TYPE__GUEST_KALLSYMS,
+@@ -34,6 +36,7 @@ enum dso_binary_type {
+ 	DSO_BINARY_TYPE__KCORE,
+ 	DSO_BINARY_TYPE__GUEST_KCORE,
+ 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
++	DSO_BINARY_TYPE__BPF_PROG_INFO,
+ 	DSO_BINARY_TYPE__NOT_FOUND,
  };
  
-+struct bpf_prog_info_node;
-+
- extern struct perf_env perf_env;
+@@ -177,17 +180,25 @@ struct dso {
+ 	struct auxtrace_cache *auxtrace_cache;
+ 	int		 comp;
  
- void perf_env__exit(struct perf_env *env);
-@@ -80,4 +93,9 @@ const char *perf_env__arch(struct perf_env *env);
- const char *perf_env__raw_arch(struct perf_env *env);
- int perf_env__nr_cpus_avail(struct perf_env *env);
+-	/* dso data file */
+-	struct {
+-		struct rb_root	 cache;
+-		int		 fd;
+-		int		 status;
+-		u32		 status_seen;
+-		size_t		 file_size;
+-		struct list_head open_entry;
+-		u64		 debug_frame_offset;
+-		u64		 eh_frame_hdr_offset;
+-	} data;
++	union {
++		/* dso data file */
++		struct {
++			struct rb_root	 cache;
++			int		 fd;
++			int		 status;
++			u32		 status_seen;
++			size_t		 file_size;
++			struct list_head open_entry;
++			u64		 debug_frame_offset;
++			u64		 eh_frame_hdr_offset;
++		} data;
++		/* bpf prog information */
++		struct {
++			u32		id;
++			u32		sub_id;
++			struct perf_env	*env;
++		} bpf_prog;
++	};
  
-+void perf_env__init(struct perf_env *env);
-+void perf_env__insert_bpf_prog_info(struct perf_env *env,
-+				    struct bpf_prog_info_node *info_node);
-+struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
-+							__u32 prog_id);
- #endif /* __PERF_ENV_H */
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 026bf04bba74..3c858f1b254e 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -129,6 +129,7 @@ struct perf_session *perf_session__new(struct perf_data *data,
- 	ordered_events__init(&session->ordered_events,
- 			     ordered_events__deliver_event, NULL);
+ 	union { /* Tool specific area */
+ 		void	 *priv;
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 48efad6d0f90..33ae59e89da2 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1441,6 +1441,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
+ 	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
+ 		return true;
  
-+	perf_env__init(&session->header.env);
- 	if (data) {
- 		if (perf_data__open(data))
- 			goto out_delete;
++	case DSO_BINARY_TYPE__BPF_PROG_INFO:
+ 	case DSO_BINARY_TYPE__NOT_FOUND:
+ 	default:
+ 		return false;
 -- 
 2.17.1
 
