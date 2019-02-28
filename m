@@ -2,114 +2,85 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D4AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088CDC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F7920850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD76420851
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:58:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="SZ4fAeFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388393AbfB1Uwk (ORCPT
+        id S2387994AbfB1U6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 15:52:40 -0500
-Received: from mga17.intel.com ([192.55.52.151]:16411 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388186AbfB1UwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 15:52:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 12:52:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,424,1544515200"; 
-   d="scan'208";a="130192192"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga003.jf.intel.com with ESMTP; 28 Feb 2019 12:52:19 -0800
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com, rjw@rjwysocki.net, lenb@kernel.org,
-        robert.moore@intel.com, erik.schmauss@intel.com, ruscur@russell.cc
-Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        keith.busch@intel.com,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH v1 2/3] ACPI: Add Error Disconnect Recover (EDR) ACPI notifier support
-Date:   Thu, 28 Feb 2019 12:49:48 -0800
-Message-Id: <5229ccc3bbb1792ba625b7c54f5ad6f101826454.1551382061.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1551382061.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1551382061.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Thu, 28 Feb 2019 15:58:22 -0500
+Received: from mail-it1-f169.google.com ([209.85.166.169]:50833 "EHLO
+        mail-it1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732980AbfB1U6V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 15:58:21 -0500
+Received: by mail-it1-f169.google.com with SMTP id m137so16910725ita.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 12:58:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BLsspwXALJF06k47eK0KeHib+HMtqiL6byU7Xr8joP4=;
+        b=SZ4fAeFENFuiAkBJqbgoAGcixgdYZjColriK1UTGWLdfOOtZacLp+gcGA3jebSszPF
+         h4A+G3yqBcwm4qTJpTrqmpoZc1SWZeDOVWxJ87/lVijFGLYt4fQcX/Wl7aP5Ggcx/zAa
+         rwRsSmXVtbZWFwZC4nZ6zKAaODvwZInqK/uzh79kuZOZqV3fmbr2/DaEnKn4mWVtrIzf
+         W7y+dV7O/4DK85darUrbdp41DrTqMWdMb/ro/0/kqWAcyZp3CNZOFZ2Zh3sSXIuHl8N1
+         T4ntb+dXT5DIuM2gLOcEBTc5ALVLISCeIvYzfT4sVJXV6PmW3jWx8YDmq6aLTFI+0a3z
+         T5jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BLsspwXALJF06k47eK0KeHib+HMtqiL6byU7Xr8joP4=;
+        b=iG6YUxxqfC0hw1dFHIdFpQtbByKrmtNP6rCvKHJ1r3Hbq93v7G9DKQLirKtQMNy0OW
+         BnncHmS869+hlMNsCH8M9KGtMzXOv8lsV/K782piPxG3OH+4cuy2kOgSkwIphwHxvb6m
+         1Ps7IEa6JWeSBfw32NIO71OFGfvUZ4dC1QIKSI0ygcfo7F2q7eCmFwbneosHcnx1FgeF
+         RrKPvG1Ydi0G7giZCDPzopxz1J49HS4SQZMj21wM6TdX5Qc0UdbOLS7soMv3qq7SygFh
+         c6dA8kmolqA7ojGK9bhbHu+WpwhhAzSElEuqDlsCe5DLNT6NqTYmvVCcyyfTNohjO6+P
+         sLVA==
+X-Gm-Message-State: APjAAAXHqxbslQ9Bk4HNkH/OJRl0lBuV8VbnimBCOfqH5+RXc+Fz07Ne
+        LJRCMU4I3Qe7/z6N9aOvmavwtwR3ycrLdg==
+X-Google-Smtp-Source: AHgI3IZVnYD4sCialBMrZ6AvREjbcv3j1BQTi+WlyGM5GEGuWY2LYDrB9Jxz01WElTp+VGriUfK4Cw==
+X-Received: by 2002:a24:fdc9:: with SMTP id m192mr1013528ith.133.1551387500737;
+        Thu, 28 Feb 2019 12:58:20 -0800 (PST)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id k26sm7746905iol.14.2019.02.28.12.58.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 12:58:19 -0800 (PST)
+Subject: Re: [PATCH for-next 1/1] blk-mq: use HCTX_TYPE_DEFAULT but not 0 to
+ index blk_mq_tag_set->map
+To:     Dongli Zhang <dongli.zhang@oracle.com>, linux-block@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <1551274501-8297-1-git-send-email-dongli.zhang@oracle.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ff9e764d-a40f-c3ef-b244-15e5abebb1fe@kernel.dk>
+Date:   Thu, 28 Feb 2019 13:58:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1551274501-8297-1-git-send-email-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On 2/27/19 6:35 AM, Dongli Zhang wrote:
+> Replace set->map[0] with set->map[HCTX_TYPE_DEFAULT] to avoid hardcoding.
 
-As per ACPI spec r6.3, sec 6.3.5, Error Disconnect Recover
-notification can be used to notify OSPM of asynchronous removal
-of devices for error containment purposes. OSPM can use this
-notification to invalidate software states of disconnected child
-devices in the bus and also optionally can attempt recover the child
-devices.
+Thanks, applied.
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/acpi/acpica/utdecode.c | 3 ++-
- drivers/acpi/bus.c             | 5 ++++-
- include/acpi/actypes.h         | 3 ++-
- 3 files changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/acpi/acpica/utdecode.c b/drivers/acpi/acpica/utdecode.c
-index dad02b821e19..40d36c6661f1 100644
---- a/drivers/acpi/acpica/utdecode.c
-+++ b/drivers/acpi/acpica/utdecode.c
-@@ -431,7 +431,8 @@ static const char *acpi_gbl_generic_notify[ACPI_GENERIC_NOTIFY_MAX + 1] = {
- 								/* Reserved in ACPI 6.0 */
- 	/* 0D */ "System Resource Affinity Update",
- 								/* 0E */ "Heterogeneous Memory Attributes Update"
--								/* ACPI 6.2 */
-+	/* 0F */ "Error Disconnect Recover",
-+	/* ACPI 6.3 */
- };
- 
- static const char *acpi_gbl_device_notify[5] = {
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index 147f6c7ea59c..aacf82162604 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -397,7 +397,10 @@ static void acpi_bus_notify(acpi_handle handle, u32 type, void *data)
- 	case ACPI_NOTIFY_POWER_FAULT:
- 		acpi_handle_err(handle, "Device has suffered a power fault\n");
- 		break;
--
-+	case ACPI_NOTIFY_ERROR_DISCONNECT:
-+		acpi_handle_debug(handle,
-+				  "ACPI_NOTIFY_ERROR_DISCONNECT event\n");
-+		break;
- 	default:
- 		acpi_handle_debug(handle, "Unknown event type 0x%x\n", type);
- 		break;
-diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-index 2590627dbfcc..40ad91b06f02 100644
---- a/include/acpi/actypes.h
-+++ b/include/acpi/actypes.h
-@@ -617,8 +617,9 @@ typedef u64 acpi_integer;
- #define ACPI_NOTIFY_SHUTDOWN_REQUEST    (u8) 0x0C
- #define ACPI_NOTIFY_AFFINITY_UPDATE     (u8) 0x0D
- #define ACPI_NOTIFY_MEMORY_UPDATE       (u8) 0x0E
-+#define ACPI_NOTIFY_ERROR_DISCONNECT    (u8) 0x0F
- 
--#define ACPI_GENERIC_NOTIFY_MAX         0x0E
-+#define ACPI_GENERIC_NOTIFY_MAX         0x0F
- #define ACPI_SPECIFIC_NOTIFY_MAX        0x84
- 
- /*
 -- 
-2.20.1
+Jens Axboe
 
