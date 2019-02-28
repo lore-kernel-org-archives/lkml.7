@@ -2,145 +2,380 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB27C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E3AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D17F2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:14:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BOdHzfC1"
+	by mail.kernel.org (Postfix) with ESMTP id 0770B218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731652AbfB1HOw (ORCPT
+        id S1731667AbfB1HO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:14:52 -0500
-Received: from mail-eopbgr10084.outbound.protection.outlook.com ([40.107.1.84]:8963
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730951AbfB1HOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:14:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QdnG3cLlW+II3tMgg7guvF8HSwcgWuuHfOwSNGJahfA=;
- b=BOdHzfC1rcf4c1R7W/WSSJprdRYYvmzipl11I/f2DtdaNC38HoVFXChN3ZDOLZVHo9WypOHIM3H5bH51UiIFOBYZqw5fbVOoKd8imIkYEwD9DG8f7/6LrZJHEJdq96KD4PpWAz0xxoCG1JqFkkLoopqlZfT4cTThpqVkQvd+HdA=
-Received: from VI1PR04MB3247.eurprd04.prod.outlook.com (10.170.232.160) by
- VI1PR04MB5278.eurprd04.prod.outlook.com (20.177.51.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.15; Thu, 28 Feb 2019 07:14:45 +0000
-Received: from VI1PR04MB3247.eurprd04.prod.outlook.com
- ([fe80::8d98:21a4:2a84:3c1d]) by VI1PR04MB3247.eurprd04.prod.outlook.com
- ([fe80::8d98:21a4:2a84:3c1d%4]) with mapi id 15.20.1643.022; Thu, 28 Feb 2019
- 07:14:45 +0000
-From:   Qiang Zhao <qiang.zhao@nxp.com>
-To:     'Rasmus Villemoes' <rasmus.villemoes@prevas.dk>,
-        Leo Li <leoyang.li@nxp.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Valentin Longchamp <valentin.longchamp@keymile.com>,
-        Scott Wood <oss@buserror.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
-Subject: RE: [RFC PATCH] soc/fsl/qe: support MPC8309
-Thread-Topic: [RFC PATCH] soc/fsl/qe: support MPC8309
-Thread-Index: AQHUzbALXjDeDpgRFU++rfaOQW65LqX0y9ng
-Date:   Thu, 28 Feb 2019 07:14:44 +0000
-Message-ID: <VI1PR04MB32475CFE4827D2141262D34E91750@VI1PR04MB3247.eurprd04.prod.outlook.com>
-References: <20190226084816.20535-1-rasmus.villemoes@prevas.dk>
-In-Reply-To: <20190226084816.20535-1-rasmus.villemoes@prevas.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiang.zhao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f40619fe-f9b8-4e3f-6005-08d69d4c6a91
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB5278;
-x-ms-traffictypediagnostic: VI1PR04MB5278:
-x-microsoft-exchange-diagnostics: =?gb2312?B?MTtWSTFQUjA0TUI1Mjc4OzIzOkhwdHFibllhQlM1c3NVRWcrOS9YdzdtS2tE?=
- =?gb2312?B?QytXMXZMNGJVMGsvc1FXVk1tb0duVHEzNW1xK3hvS0cxVVFQdzlEcFU5aVdT?=
- =?gb2312?B?MHc5VjN4VThSZFIxaGo1TnI1Y25tYzBubldlL09XOTFGWHRXMEoyUnI1TlNM?=
- =?gb2312?B?SzFpa3YzbFRrMFZYQlBWSWliWXk5RUFacGNoelg1Z2MwSlpjN2tEbFU3NkNT?=
- =?gb2312?B?UU1QRGJpeHhEbUQyNzVDYkRPWERoY3AxRjNwUEdocHNXcWZDaSt5Q0x4MkhO?=
- =?gb2312?B?aytaaEp0M0NibEZuaUhxSnlOWmduN2Q5R0Y2TWtuR2d6MnBmOHA0M0RQelJC?=
- =?gb2312?B?WmNFRmlaQnVGNEN1bjNCRFJiNHdtNllFTW1lN0tFZk9ZR3hmb3FVSTdvWEZU?=
- =?gb2312?B?QlBBcFZsMHBwd2o3dDdBR0Qvd1NJL3JDUkZzRUwzcENhUXBOUk5paTRTeGV2?=
- =?gb2312?B?ZVo0L0xtSlFHY0R2MTRLTzREbyswUVMrZktvZDFQbEFVdmZjc0dTS3FEY1pD?=
- =?gb2312?B?ZDkvSklRWi8xL0lCNGhweVJoOUFLcy90Y2lnYWlLZTUwZnlRbEVRUE9ZYXht?=
- =?gb2312?B?cXNvSzBBU284TVFnSm12MWNxTExYdDZUWm84eG96Q3FpT2E5WVRJOFJyWTk5?=
- =?gb2312?B?ZWlTU1hpaGY2QUlCSnduNVV6dHlHTk90TlNtNlJESVJCMjlJeTVQWWpYcDlv?=
- =?gb2312?B?VUZKS0sxaGd4M21PSUdva0pIOXhTbjRiekhlK2xoaG1zVkUrVStvT1d2ZjNj?=
- =?gb2312?B?U1NxSXlhSTEzYktpR2xvdnJZd2R3SjRjczRlVDVmTkhKZjYwZE1mUGZrWjBa?=
- =?gb2312?B?MEFMaWROTm9KS29ER09BdjJlRVNuUys0cFd2QTdjdmNMYVk0QVlCci8xazVi?=
- =?gb2312?B?dll4bnZ6ODRBbUhxdEJMbEZVZ1hVUGY2aCs0SkdNNjJUZTNQQ1d0L3JFaFla?=
- =?gb2312?B?L1JNZ1JFdGZBRjdFb0VYeGpKbzAwWlBqeG96NSt0S3pYTDZOQmYvcEdYWWNq?=
- =?gb2312?B?aUcyTHBFNWxsYnVRSTVwYmd6dEIvMnZJSUNvUXFoc1NOMisrM0N4WXJpUDRF?=
- =?gb2312?B?OTlTWm5FZEI5dVpzdjh4VjZyeGtrcm9PdUg0b0NKWEFJZ0xlWGY1Z203aENF?=
- =?gb2312?B?OWZ4MVB4TGRaOU5rbGFkbWo3SWFPVkV4dGpCWkJERHFCZTVsRE9TNms5TS9M?=
- =?gb2312?B?N3c1QUpLWnJsd0tFZXJJZDNrbXdMRHhIK1QzT1BHdlZ6dG5tZEZMQ3gyMEZE?=
- =?gb2312?B?SjB6aUNrMlVaQUpwM01ubmF2SWJGdUY4RytIMm1yNE9CbTI0YUFSV0JyY0l5?=
- =?gb2312?B?cjBaNEhSbDdMbGR0VCs4WTdiVW5UQjUxcmdwZ1h5ajhlSktobXZQdlFkZnQ5?=
- =?gb2312?B?dFV3bWhsaEEzaUNIQ0hPTEY3YSs3cm8zcnFQbVo4SUxSTEQ0cGw1QmljeXZW?=
- =?gb2312?B?U0tIejlYQlFYZzFIRVRBQXRSTzFhd015RjdKeDZpRWdtNzRPRGU0UTNaV3Mv?=
- =?gb2312?B?QnZUdXdZWVVHbGhWN0dIWUg0TEF0WDJxd2lBMnU5eEhReld0anlsRWdSb0po?=
- =?gb2312?B?SkRpNnZlSFd3MThoaDJnN2NjSnFMWW16LzdjN2lFN1k0WlF4OFlJRzgzdFNU?=
- =?gb2312?B?MHVLOGVTalZoSHV1eTNyekUxMlhOSzV0aTQrU25DZWRnQUNWZHBmMDlFdlNR?=
- =?gb2312?B?MnF5SmFtNFlpeU5zeDZnbkxodnB1M0VUVC9QVmpLUnB0REJRcjFDU2tNWm90?=
- =?gb2312?B?ZXN2ci9pcW9NdkN3WlVxQT09?=
-x-microsoft-antispam-prvs: <VI1PR04MB527867427C7568D97CF3949F91750@VI1PR04MB5278.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0962D394D2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(366004)(136003)(13464003)(189003)(199004)(476003)(53546011)(316002)(6506007)(25786009)(11346002)(86362001)(54906003)(52536013)(2906002)(81166006)(81156014)(8936002)(44832011)(4326008)(186003)(68736007)(446003)(110136005)(102836004)(486006)(6246003)(26005)(5660300002)(8676002)(9686003)(66066001)(478600001)(53936002)(7736002)(14454004)(55016002)(74316002)(6116002)(3846002)(105586002)(6436002)(6636002)(106356001)(305945005)(97736004)(229853002)(33656002)(99286004)(256004)(7696005)(76176011)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5278;H:VI1PR04MB3247.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6whb1IDc7OVdXwmJRisqCAhGfT1mB313WiJYmlfQug9Btgym6lpd+k4/d0rgNc7LYUILIbRwgvokWFm4ZMISaYMD8m9ZJWY6T6QL7Hv0Crr7fA/g8RX9A6giqKmapaKXH9eORwaXPbli8rpLv6zdFQrGjjMPLlPQqCnzg2i2hvQceoGtRDASjESAIBt7nOe23VnEc053RQAzPy0Di3D/mo7aouGMY4AL4Fvugi+r6IsUst0Kljs9GDfk9zWacobH0FVoZvOEM0aS4Fj6dpZ9fsCvGMs2LLJa1N81k4UMhU6YTcdtAYrFWsuv3jjTiWc3bHPfDWFxK/BFuINZEUb+DLFWKi38yJKCqIHEPuqzRnDNHHIDzEFPL5898W/XVYWkLGtDO1BYpWdAcihq6Q815PRMECxlnJU7p9CIL7qDcag=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 28 Feb 2019 02:14:58 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:45347 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730951AbfB1HO5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 02:14:57 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7ER3b2939940
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 27 Feb 2019 23:14:27 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7ERAd2939937;
+        Wed, 27 Feb 2019 23:14:27 -0800
+Date:   Wed, 27 Feb 2019 23:14:27 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Bart Van Assche <tipbot@zytor.com>
+Message-ID: <tip-669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f@git.kernel.org>
+Cc:     johannes.berg@intel.com, bvanassche@acm.org,
+        linux-kernel@vger.kernel.org, will.deacon@arm.com,
+        peterz@infradead.org, paulmck@linux.vnet.ibm.com, tj@kernel.org,
+        akpm@linux-foundation.org, tglx@linutronix.de, mingo@kernel.org,
+        longman@redhat.com, hpa@zytor.com, torvalds@linux-foundation.org
+Reply-To: will.deacon@arm.com, peterz@infradead.org,
+          johannes.berg@intel.com, bvanassche@acm.org,
+          linux-kernel@vger.kernel.org, paulmck@linux.vnet.ibm.com,
+          akpm@linux-foundation.org, tj@kernel.org, tglx@linutronix.de,
+          mingo@kernel.org, hpa@zytor.com, torvalds@linux-foundation.org,
+          longman@redhat.com
+In-Reply-To: <20190214230058.196511-20-bvanassche@acm.org>
+References: <20190214230058.196511-20-bvanassche@acm.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] kernel/workqueue: Use dynamic lockdep keys for
+ workqueues
+Git-Commit-ID: 669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f40619fe-f9b8-4e3f-6005-08d69d4c6a91
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 07:14:44.8840
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5278
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCBGZWIgMjYsIDIwMTkgYXQgMjo0OSBBTSBSYXNtdXMgVmlsbGVtb2VzIDxyYXNtdXMu
-dmlsbGVtb2VzQHByZXZhcy5kaz4gd3JvdGU6DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-DQo+IEZyb206IFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJldmFzLmRrPg0K
-PiBTZW50OiAyMDE5xOoy1MIyNsjVIDE2OjQ4DQo+IFRvOiBRaWFuZyBaaGFvIDxxaWFuZy56aGFv
-QG54cC5jb20+OyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IFZhbGVudGluIExvbmdjaGFtcA0KPiA8dmFsZW50aW4ubG9uZ2No
-YW1wQGtleW1pbGUuY29tPjsgU2NvdHQgV29vZCA8b3NzQGJ1c2Vycm9yLm5ldD47DQo+IFJhc211
-cyBWaWxsZW1vZXMgPFJhc211cy5WaWxsZW1vZXNAcHJldmFzLnNlPg0KPiBTdWJqZWN0OiBbUkZD
-IFBBVENIXSBzb2MvZnNsL3FlOiBzdXBwb3J0IE1QQzgzMDkNCj4gDQo+IEN1cnJlbnRseSwgd2hl
-biBkZXZpY2UgdHJlZSBzcGVjaWZpZXMgZnNsLHFlLW51bS1zbnVtcyA9IDI4ICh3aGljaCBhIG51
-bWJlcg0KPiBvZiBpbi10cmVlIC5kdHMgZmlsZXMgZG8sIGFuZCB3aGljaCBpcyB0aGUgZGVmYXVs
-dCB3aGVuIHRoYXQgcHJvcGVydHkgaXMgbWlzc2luZyksDQo+IHFlX3NudW1zX2luaXQoKSBlbmRz
-IHVwIHVzaW5nIHRoZSBmaXJzdCAyOCBlbGVtZW50cyBvZiB0aGUgc251bV9pbml0XzQ2W10NCj4g
-YXJyYXkuDQo+IA0KPiBUaGUgc2l0dWF0aW9uIGlzIHF1aXRlIG1lc3N5LiBUaGlzIHBhdGNoIG1h
-eSBicmVhayBleGlzdGluZyBzZXR1cHMgdGhhdCBmb3INCj4gc29tZSByZWFzb24gd29yayB3aXRo
-IHNwZWNpZnlpbmcgZnNsLHFlLW51bS1zbnVtcyA9IDI4IGFuZCB1c2luZyB0aGUNCj4gZXhpc3Rp
-bmcgc251bV9pbml0XzQ2IGFycmF5LiBPVE9ILCB0aGUgY3VycmVudCBjb2RlIGNlcnRhaW5seSBk
-b2VzIG5vdCB3b3JrDQo+IGZvciB0aGUgTVBDODMwOS1iYXNlZCBib2FyZCB3ZSdyZSB3b3JraW5n
-IG9uLCBzaW5jZSB0aGUgZmlyc3QgMTQgb2YgdGhlDQo+IGVsZW1lbnRzIGluIHNudW1faW5pdF80
-NiBhcmUgIk5vdCBhdmFpbGFibGUgb24NCj4gTVBDODMwNi9NUEM4MzA2Uy9NUEM4MzA5IiBhY2Nv
-cmRpbmcgdG8gdGhlIFFVSUNDIEVuZ2luZSBSZWZlcmVuY2UNCj4gTWFudWFsIChUYWJsZSA0LTMw
-KSAtIGFuZCBpbmRlZWQsIHdpdGhvdXQgdGhpcyBwYXRjaCAob3Igc29tZXRoaW5nIHRvIHRoZQ0K
-PiBzYW1lIGVmZmVjdCksIHdlIGdldA0KDQpBY2NvcmRpbmcgdG8gdGhlIFFVSUNDIEVuZ2luZSBS
-ZWZlcmVuY2UgTWFudWFsIChUYWJsZSA0LTMwKSwgdGhlIG51bWJlciBvZiBzbnVtcyB1c2VkIGZv
-ciANCiIgTVBDODMwNi9NUEM4MzA2Uy9NUEM4MzA5IiBzaG91bGQgYmUgMTQgaW5zdGVhZCBvZiAy
-OCwgc28gbWF5YmUgd2Ugc2hvdWxkIGFzc2lnbiAiZnNsLHFlLW51bS1zbnVtcyA9IDE0Ig0KQW5k
-IGRlZmluZSBhIG5ldyBzbnVtX2luaXRfMTQgYXJyYXksIG1lYW53aGlsZSwgbW9kaWZ5IHRoZSBt
-aW5pbXVtIHZhbHVlIG9mICJudW1fb2Zfc251bXMiIHRvIDE0IGluIGZ1bmN0aW9uICJxZV9nZXRf
-bnVtX29mX3NudW1zIg0KKEkgbWVhbjogIiBpZiAoKG51bV9vZl9zbnVtcyA8IDE0KSB8fCAobnVt
-X29mX3NudW1zID4gUUVfTlVNX09GX1NOVU0pKSB7IikNCg0KQmVzdCBSZWdhcmRzDQpRaWFuZyBa
-aGFvDQoNCg==
+Commit-ID:  669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
+Gitweb:     https://git.kernel.org/tip/669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
+Author:     Bart Van Assche <bvanassche@acm.org>
+AuthorDate: Thu, 14 Feb 2019 15:00:54 -0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 28 Feb 2019 07:55:47 +0100
+
+kernel/workqueue: Use dynamic lockdep keys for workqueues
+
+The following commit:
+
+  87915adc3f0a ("workqueue: re-add lockdep dependencies for flushing")
+
+improved deadlock checking in the workqueue implementation. Unfortunately
+that patch also introduced a few false positive lockdep complaints.
+
+This patch suppresses these false positives by allocating the workqueue mutex
+lockdep key dynamically.
+
+An example of a false positive lockdep complaint suppressed by this patch
+can be found below. The root cause of the lockdep complaint shown below
+is that the direct I/O code can call alloc_workqueue() from inside a work
+item created by another alloc_workqueue() call and that both workqueues
+share the same lockdep key. This patch avoids that that lockdep complaint
+is triggered by allocating the work queue lockdep keys dynamically.
+
+In other words, this patch guarantees that a unique lockdep key is
+associated with each work queue mutex.
+
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  4.19.0-dbg+ #1 Not tainted
+  fio/4129 is trying to acquire lock:
+  00000000a01cfe1a ((wq_completion)"dio/%s"sb->s_id){+.+.}, at: flush_workqueue+0xd0/0x970
+
+  but task is already holding lock:
+  00000000a0acecf9 (&sb->s_type->i_mutex_key#14){+.+.}, at: ext4_file_write_iter+0x154/0x710
+
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #2 (&sb->s_type->i_mutex_key#14){+.+.}:
+         down_write+0x3d/0x80
+         __generic_file_fsync+0x77/0xf0
+         ext4_sync_file+0x3c9/0x780
+         vfs_fsync_range+0x66/0x100
+         dio_complete+0x2f5/0x360
+         dio_aio_complete_work+0x1c/0x20
+         process_one_work+0x481/0x9f0
+         worker_thread+0x63/0x5a0
+         kthread+0x1cf/0x1f0
+         ret_from_fork+0x24/0x30
+
+  -> #1 ((work_completion)(&dio->complete_work)){+.+.}:
+         process_one_work+0x447/0x9f0
+         worker_thread+0x63/0x5a0
+         kthread+0x1cf/0x1f0
+         ret_from_fork+0x24/0x30
+
+  -> #0 ((wq_completion)"dio/%s"sb->s_id){+.+.}:
+         lock_acquire+0xc5/0x200
+         flush_workqueue+0xf3/0x970
+         drain_workqueue+0xec/0x220
+         destroy_workqueue+0x23/0x350
+         sb_init_dio_done_wq+0x6a/0x80
+         do_blockdev_direct_IO+0x1f33/0x4be0
+         __blockdev_direct_IO+0x79/0x86
+         ext4_direct_IO+0x5df/0xbb0
+         generic_file_direct_write+0x119/0x220
+         __generic_file_write_iter+0x131/0x2d0
+         ext4_file_write_iter+0x3fa/0x710
+         aio_write+0x235/0x330
+         io_submit_one+0x510/0xeb0
+         __x64_sys_io_submit+0x122/0x340
+         do_syscall_64+0x71/0x220
+         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+  other info that might help us debug this:
+
+  Chain exists of:
+    (wq_completion)"dio/%s"sb->s_id --> (work_completion)(&dio->complete_work) --> &sb->s_type->i_mutex_key#14
+
+   Possible unsafe locking scenario:
+
+         CPU0                    CPU1
+         ----                    ----
+    lock(&sb->s_type->i_mutex_key#14);
+                                 lock((work_completion)(&dio->complete_work));
+                                 lock(&sb->s_type->i_mutex_key#14);
+    lock((wq_completion)"dio/%s"sb->s_id);
+
+   *** DEADLOCK ***
+
+  1 lock held by fio/4129:
+   #0: 00000000a0acecf9 (&sb->s_type->i_mutex_key#14){+.+.}, at: ext4_file_write_iter+0x154/0x710
+
+  stack backtrace:
+  CPU: 3 PID: 4129 Comm: fio Not tainted 4.19.0-dbg+ #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+  Call Trace:
+   dump_stack+0x86/0xc5
+   print_circular_bug.isra.32+0x20a/0x218
+   __lock_acquire+0x1c68/0x1cf0
+   lock_acquire+0xc5/0x200
+   flush_workqueue+0xf3/0x970
+   drain_workqueue+0xec/0x220
+   destroy_workqueue+0x23/0x350
+   sb_init_dio_done_wq+0x6a/0x80
+   do_blockdev_direct_IO+0x1f33/0x4be0
+   __blockdev_direct_IO+0x79/0x86
+   ext4_direct_IO+0x5df/0xbb0
+   generic_file_direct_write+0x119/0x220
+   __generic_file_write_iter+0x131/0x2d0
+   ext4_file_write_iter+0x3fa/0x710
+   aio_write+0x235/0x330
+   io_submit_one+0x510/0xeb0
+   __x64_sys_io_submit+0x122/0x340
+   do_syscall_64+0x71/0x220
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/20190214230058.196511-20-bvanassche@acm.org
+[ Reworked the changelog a bit. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/workqueue.h | 28 ++++------------------
+ kernel/workqueue.c        | 59 +++++++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 54 insertions(+), 33 deletions(-)
+
+diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
+index 60d673e15632..d9a1a480e920 100644
+--- a/include/linux/workqueue.h
++++ b/include/linux/workqueue.h
+@@ -390,43 +390,23 @@ extern struct workqueue_struct *system_freezable_wq;
+ extern struct workqueue_struct *system_power_efficient_wq;
+ extern struct workqueue_struct *system_freezable_power_efficient_wq;
+ 
+-extern struct workqueue_struct *
+-__alloc_workqueue_key(const char *fmt, unsigned int flags, int max_active,
+-	struct lock_class_key *key, const char *lock_name, ...) __printf(1, 6);
+-
+ /**
+  * alloc_workqueue - allocate a workqueue
+  * @fmt: printf format for the name of the workqueue
+  * @flags: WQ_* flags
+  * @max_active: max in-flight work items, 0 for default
+- * @args...: args for @fmt
++ * remaining args: args for @fmt
+  *
+  * Allocate a workqueue with the specified parameters.  For detailed
+  * information on WQ_* flags, please refer to
+  * Documentation/core-api/workqueue.rst.
+  *
+- * The __lock_name macro dance is to guarantee that single lock_class_key
+- * doesn't end up with different namesm, which isn't allowed by lockdep.
+- *
+  * RETURNS:
+  * Pointer to the allocated workqueue on success, %NULL on failure.
+  */
+-#ifdef CONFIG_LOCKDEP
+-#define alloc_workqueue(fmt, flags, max_active, args...)		\
+-({									\
+-	static struct lock_class_key __key;				\
+-	const char *__lock_name;					\
+-									\
+-	__lock_name = "(wq_completion)"#fmt#args;			\
+-									\
+-	__alloc_workqueue_key((fmt), (flags), (max_active),		\
+-			      &__key, __lock_name, ##args);		\
+-})
+-#else
+-#define alloc_workqueue(fmt, flags, max_active, args...)		\
+-	__alloc_workqueue_key((fmt), (flags), (max_active),		\
+-			      NULL, NULL, ##args)
+-#endif
++struct workqueue_struct *alloc_workqueue(const char *fmt,
++					 unsigned int flags,
++					 int max_active, ...);
+ 
+ /**
+  * alloc_ordered_workqueue - allocate an ordered workqueue
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index fc5d23d752a5..e163e7a7f5e5 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -259,6 +259,8 @@ struct workqueue_struct {
+ 	struct wq_device	*wq_dev;	/* I: for sysfs interface */
+ #endif
+ #ifdef CONFIG_LOCKDEP
++	char			*lock_name;
++	struct lock_class_key	key;
+ 	struct lockdep_map	lockdep_map;
+ #endif
+ 	char			name[WQ_NAME_LEN]; /* I: workqueue name */
+@@ -3337,11 +3339,49 @@ static int init_worker_pool(struct worker_pool *pool)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_LOCKDEP
++static void wq_init_lockdep(struct workqueue_struct *wq)
++{
++	char *lock_name;
++
++	lockdep_register_key(&wq->key);
++	lock_name = kasprintf(GFP_KERNEL, "%s%s", "(wq_completion)", wq->name);
++	if (!lock_name)
++		lock_name = wq->name;
++	lockdep_init_map(&wq->lockdep_map, lock_name, &wq->key, 0);
++}
++
++static void wq_unregister_lockdep(struct workqueue_struct *wq)
++{
++	lockdep_unregister_key(&wq->key);
++}
++
++static void wq_free_lockdep(struct workqueue_struct *wq)
++{
++	if (wq->lock_name != wq->name)
++		kfree(wq->lock_name);
++}
++#else
++static void wq_init_lockdep(struct workqueue_struct *wq)
++{
++}
++
++static void wq_unregister_lockdep(struct workqueue_struct *wq)
++{
++}
++
++static void wq_free_lockdep(struct workqueue_struct *wq)
++{
++}
++#endif
++
+ static void rcu_free_wq(struct rcu_head *rcu)
+ {
+ 	struct workqueue_struct *wq =
+ 		container_of(rcu, struct workqueue_struct, rcu);
+ 
++	wq_free_lockdep(wq);
++
+ 	if (!(wq->flags & WQ_UNBOUND))
+ 		free_percpu(wq->cpu_pwqs);
+ 	else
+@@ -3532,8 +3572,10 @@ static void pwq_unbound_release_workfn(struct work_struct *work)
+ 	 * If we're the last pwq going away, @wq is already dead and no one
+ 	 * is gonna access it anymore.  Schedule RCU free.
+ 	 */
+-	if (is_last)
++	if (is_last) {
++		wq_unregister_lockdep(wq);
+ 		call_rcu(&wq->rcu, rcu_free_wq);
++	}
+ }
+ 
+ /**
+@@ -4067,11 +4109,9 @@ static int init_rescuer(struct workqueue_struct *wq)
+ 	return 0;
+ }
+ 
+-struct workqueue_struct *__alloc_workqueue_key(const char *fmt,
+-					       unsigned int flags,
+-					       int max_active,
+-					       struct lock_class_key *key,
+-					       const char *lock_name, ...)
++struct workqueue_struct *alloc_workqueue(const char *fmt,
++					 unsigned int flags,
++					 int max_active, ...)
+ {
+ 	size_t tbl_size = 0;
+ 	va_list args;
+@@ -4106,7 +4146,7 @@ struct workqueue_struct *__alloc_workqueue_key(const char *fmt,
+ 			goto err_free_wq;
+ 	}
+ 
+-	va_start(args, lock_name);
++	va_start(args, max_active);
+ 	vsnprintf(wq->name, sizeof(wq->name), fmt, args);
+ 	va_end(args);
+ 
+@@ -4123,7 +4163,7 @@ struct workqueue_struct *__alloc_workqueue_key(const char *fmt,
+ 	INIT_LIST_HEAD(&wq->flusher_overflow);
+ 	INIT_LIST_HEAD(&wq->maydays);
+ 
+-	lockdep_init_map(&wq->lockdep_map, lock_name, key, 0);
++	wq_init_lockdep(wq);
+ 	INIT_LIST_HEAD(&wq->list);
+ 
+ 	if (alloc_and_link_pwqs(wq) < 0)
+@@ -4161,7 +4201,7 @@ err_destroy:
+ 	destroy_workqueue(wq);
+ 	return NULL;
+ }
+-EXPORT_SYMBOL_GPL(__alloc_workqueue_key);
++EXPORT_SYMBOL_GPL(alloc_workqueue);
+ 
+ /**
+  * destroy_workqueue - safely terminate a workqueue
+@@ -4214,6 +4254,7 @@ void destroy_workqueue(struct workqueue_struct *wq)
+ 		kthread_stop(wq->rescuer->task);
+ 
+ 	if (!(wq->flags & WQ_UNBOUND)) {
++		wq_unregister_lockdep(wq);
+ 		/*
+ 		 * The base ref is never dropped on per-cpu pwqs.  Directly
+ 		 * schedule RCU free.
