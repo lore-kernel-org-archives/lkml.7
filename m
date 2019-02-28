@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB87C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E2BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB47218EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B1920C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366997;
-	bh=quUfVBsh1egx3PHipbQvybC6LAzSSpBwrbwCCsOVcw8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2qmxZLtCphzsMHerjfXJxKPbkIVMtOQ1nzkkuRG1o38P+ZQ9XcR2vZQx57D6Xqrp8
-	 koDVOV4YkXJQFKxQNPqA/AhMULRwCiGVaJDGinwtFI3e8pVQNOztFxSzFKEf59K131
-	 wacFcUZESYUyoHnl6L8ZqqsHK8q/oQP8CC6PPUBI=
+	s=default; t=1551367003;
+	bh=ENlCPdTElHMjae1r1+0RCbyUMLu4sjDa1Oa4S92Z2Xk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=c+1bJiY1SKUvRvwTWCEgxQN3/yvsz3Mq5jU3nSgjzrbERNtF5Y2xVFeAfIP21ymmn
+	 DZgEp/dksuwlU84LnfJRp4+KTdkIT5v3XqAvl1L7yKGB+/cjaK43aZEVXmTAYGCwIK
+	 okXdR+FsAqoxPBbs4WmnfIlHU37XjfjYoFZTAcsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389074AbfB1PQf (ORCPT
+        id S2388713AbfB1PQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:16:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52922 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:16:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389054AbfB1PQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:16:30 -0500
+        id S2389066AbfB1PQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:16:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C3C2218D9;
-        Thu, 28 Feb 2019 15:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5CC4218EA;
+        Thu, 28 Feb 2019 15:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366990;
-        bh=quUfVBsh1egx3PHipbQvybC6LAzSSpBwrbwCCsOVcw8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=wfrMBlzCZTVdRe+HXqINYLobCsanilX19cQNhr9DHN3VuQK6b3mhRF6jttQNcb+4O
-         NKattPJbrxUeSakLZfeo+LacugWMzqWdMg2FoRGm1ciG2iDAQYWXI7e0ClZJt5HSz+
-         VD/s+42VkUA5X65BUvoieN8upGNSZXH57AcW0928=
+        s=default; t=1551366993;
+        bh=ENlCPdTElHMjae1r1+0RCbyUMLu4sjDa1Oa4S92Z2Xk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PB59DIlmADBomh6pv2/cIh7oXtFxj039A0Zv2IeusQmCggo3Gv0eqJ+Zb5hCEq8do
+         p/V7nijEWieOLZGezh/dNtIsFNrRSuOeVliszlMmZKaZExwSvtCj3fNmDlN0FoJuHh
+         DTQ9qoqkBDzAvovJuWMhnxQc/jvPO6MGlCaF20X4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Hao <peng.hao2@zte.com.cn>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 1/5] ARM: pxa: ssp: unneeded to free devm_ allocated data
-Date:   Thu, 28 Feb 2019 10:16:23 -0500
-Message-Id: <20190228151628.13364-1-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 4/5] s390/qeth: fix use-after-free in error path
+Date:   Thu, 28 Feb 2019 10:16:26 -0500
+Message-Id: <20190228151628.13364-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151628.13364-1-sashal@kernel.org>
+References: <20190228151628.13364-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -55,43 +58,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Hao <peng.hao2@zte.com.cn>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit ba16adeb346387eb2d1ada69003588be96f098fa ]
+[ Upstream commit afa0c5904ba16d59b0454f7ee4c807dae350f432 ]
 
-devm_ allocated data will be automatically freed. The free
-of devm_ allocated data is invalid.
+The error path in qeth_alloc_qdio_buffers() that takes care of
+cleaning up the Output Queues is buggy. It first frees the queue, but
+then calls qeth_clear_outq_buffers() with that very queue struct.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-[title's prefix changed]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Make the call to qeth_clear_outq_buffers() part of the free action
+(in the correct order), and while at it fix the naming of the helper.
+
+Fixes: 0da9581ddb0f ("qeth: exploit asynchronous delivery of storage blocks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-pxa/ssp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
-index 1f5ee17a10e8e..50c051bb9f908 100644
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -239,8 +239,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	if (ssp == NULL)
- 		return -ENODEV;
- 
--	iounmap(ssp->mmio_base);
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	release_mem_region(res->start, resource_size(res));
- 
-@@ -250,7 +248,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
- 
--	kfree(ssp);
- 	return 0;
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 2ac6d66658348..a874b821d239b 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -2423,11 +2423,12 @@ static int qeth_init_qdio_out_buf(struct qeth_qdio_out_q *q, int bidx)
+ 	return rc;
  }
  
+-static void qeth_free_qdio_out_buf(struct qeth_qdio_out_q *q)
++static void qeth_free_output_queue(struct qeth_qdio_out_q *q)
+ {
+ 	if (!q)
+ 		return;
+ 
++	qeth_clear_outq_buffers(q, 1);
+ 	qdio_free_buffers(q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
+ 	kfree(q);
+ }
+@@ -2500,10 +2501,8 @@ static int qeth_alloc_qdio_buffers(struct qeth_card *card)
+ 		card->qdio.out_qs[i]->bufs[j] = NULL;
+ 	}
+ out_freeoutq:
+-	while (i > 0) {
+-		qeth_free_qdio_out_buf(card->qdio.out_qs[--i]);
+-		qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
+-	}
++	while (i > 0)
++		qeth_free_output_queue(card->qdio.out_qs[--i]);
+ 	kfree(card->qdio.out_qs);
+ 	card->qdio.out_qs = NULL;
+ out_freepool:
+@@ -2536,10 +2535,8 @@ static void qeth_free_qdio_buffers(struct qeth_card *card)
+ 	qeth_free_buffer_pool(card);
+ 	/* free outbound qdio_qs */
+ 	if (card->qdio.out_qs) {
+-		for (i = 0; i < card->qdio.no_out_queues; ++i) {
+-			qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
+-			qeth_free_qdio_out_buf(card->qdio.out_qs[i]);
+-		}
++		for (i = 0; i < card->qdio.no_out_queues; i++)
++			qeth_free_output_queue(card->qdio.out_qs[i]);
+ 		kfree(card->qdio.out_qs);
+ 		card->qdio.out_qs = NULL;
+ 	}
 -- 
 2.19.1
 
