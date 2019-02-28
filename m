@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13276C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B056C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF09F2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9DE218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366715;
-	bh=1KDBaHuJQ1XiVu1AokvVXHBI5mnwZYyeRBmC/+Esl+4=;
+	s=default; t=1551366719;
+	bh=1IIk6XIx7k+qSdumUby1AWzknyn7Bvt2OsBKS3zjzrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bBK9k32X0mi4Z3Wbx7bun11OLmOL8mgNlkg1+LwiNohQF9C4z11yCKjDklbGxLAtv
-	 gNSjZMg73LL1iRmlPwoXa5spVeOmQrHJW0Ytx7adipS6h5BXp4sggpyqw2R6QfZBhh
-	 XlrjflmjgnqD2SrLjxQtW6sm2Y9Rg7+wKF44wIqQ=
+	b=A/sIocHi0boI7bKXj6XqFD/hfn9hFP0nf1WFAHUBpnm883rq6QVeeUhQ5QZwCZ9sh
+	 jM6ZyoLCRUIPY5ikQOVgcSeIJYJkXJlHqoNTJ2bBeR8zjNJSBANHJco03FCU3EKoXo
+	 3Agn3k3pbHqnQhks/EXRpXAQpfM4q8kN7UgI6e7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388115AbfB1PLy (ORCPT
+        id S2388129AbfB1PL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:11:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45112 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:11:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388069AbfB1PLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:49 -0500
+        id S2388117AbfB1PLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD366218C3;
-        Thu, 28 Feb 2019 15:11:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 902312171F;
+        Thu, 28 Feb 2019 15:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366708;
-        bh=1KDBaHuJQ1XiVu1AokvVXHBI5mnwZYyeRBmC/+Esl+4=;
+        s=default; t=1551366714;
+        bh=1IIk6XIx7k+qSdumUby1AWzknyn7Bvt2OsBKS3zjzrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hNKociPhxTQjZs31Pltv6GOOsorUU1WzyDVAoKtert/cTFW2IADMI0TDK2CLUqZcF
-         VojmmIZIeVMwTVLUZnGe4CKSI8CC50Dy2NhbZXjC5rJBaDXuMKTf+I2YcVaiJg46V2
-         4hbtkkZOA89qC68gjPN3IwLRph8//Dl+rUrMS7uk=
+        b=TXwmCjelX9RCk6d/QHzlZl43x8ylRUkYl0+rXk2kQMcr4wEYdmw0Ftn/dV90VOL/U
+         qEwUiMvWlnm1fh66BImyWsv9cAetsIUOeTTjFkEbVucqaQJxQL5zbKyzNd4Efi3dYe
+         IWw6fXYWFSbI8Tpd8hFxwaeMS85SqvtjJCL0PGXw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 23/64] irqchip/mmp: Only touch the PJ4 IRQ & FIQ bits on enable/disable
-Date:   Thu, 28 Feb 2019 10:10:24 -0500
-Message-Id: <20190228151105.11277-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 26/64] debugfs: return error values, not NULL
+Date:   Thu, 28 Feb 2019 10:10:27 -0500
+Message-Id: <20190228151105.11277-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -58,55 +57,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 2380a22b60ce6f995eac806e69c66e397b59d045 ]
+[ Upstream commit ff9fb72bc07705c00795ca48631f7fffe24d2c6b ]
 
-Resetting bit 4 disables the interrupt delivery to the "secure
-processor" core. This breaks the keyboard on a OLPC XO 1.75 laptop,
-where the firmware running on the "secure processor" bit-bangs the
-PS/2 protocol over the GPIO lines.
+When an error happens, debugfs should return an error pointer value, not
+NULL.  This will prevent the totally theoretical error where a debugfs
+call fails due to lack of memory, returning NULL, and that dentry value
+is then passed to another debugfs call, which would end up succeeding,
+creating a file at the root of the debugfs tree, but would then be
+impossible to remove (because you can not remove the directory NULL).
 
-It is not clear what the rest of the bits are and Marvell was unhelpful
-when asked for documentation. Aside from the SP bit, there are probably
-priority bits.
+So, to make everyone happy, always return errors, this makes the users
+of debugfs much simpler (they do not have to ever check the return
+value), and everyone can rest easy.
 
-Leaving the unknown bits as the firmware set them up seems to be a wiser
-course of action compared to just turning them off.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-[maz: fixed-up subject and commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Reported-by: Gary R Hook <ghook@amd.com>
+Reported-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Reported-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reported-by: Michal Hocko <mhocko@kernel.org>
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reported-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-mmp.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/debugfs/inode.c | 39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index 25f32e1d77647..3496b61a312ae 100644
---- a/drivers/irqchip/irq-mmp.c
-+++ b/drivers/irqchip/irq-mmp.c
-@@ -34,6 +34,9 @@
- #define SEL_INT_PENDING		(1 << 6)
- #define SEL_INT_NUM_MASK	0x3f
+diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+index 41ef452c1fcfb..b16f8035b1af7 100644
+--- a/fs/debugfs/inode.c
++++ b/fs/debugfs/inode.c
+@@ -254,8 +254,8 @@ MODULE_ALIAS_FS("debugfs");
+  * @parent: a pointer to the parent dentry of the file.
+  *
+  * This function will return a pointer to a dentry if it succeeds.  If the file
+- * doesn't exist or an error occurs, %NULL will be returned.  The returned
+- * dentry must be passed to dput() when it is no longer needed.
++ * doesn't exist or an error occurs, %ERR_PTR(-ERROR) will be returned.  The
++ * returned dentry must be passed to dput() when it is no longer needed.
+  *
+  * If debugfs is not enabled in the kernel, the value -%ENODEV will be
+  * returned.
+@@ -265,17 +265,17 @@ struct dentry *debugfs_lookup(const char *name, struct dentry *parent)
+ 	struct dentry *dentry;
  
-+#define MMP2_ICU_INT_ROUTE_PJ4_IRQ	(1 << 5)
-+#define MMP2_ICU_INT_ROUTE_PJ4_FIQ	(1 << 6)
-+
- struct icu_chip_data {
- 	int			nr_irqs;
- 	unsigned int		virq_base;
-@@ -190,7 +193,8 @@ static const struct mmp_intc_conf mmp_conf = {
- static const struct mmp_intc_conf mmp2_conf = {
- 	.conf_enable	= 0x20,
- 	.conf_disable	= 0x0,
--	.conf_mask	= 0x7f,
-+	.conf_mask	= MMP2_ICU_INT_ROUTE_PJ4_IRQ |
-+			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
- };
+ 	if (IS_ERR(parent))
+-		return NULL;
++		return parent;
  
- static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
+ 	if (!parent)
+ 		parent = debugfs_mount->mnt_root;
+ 
+ 	dentry = lookup_one_len_unlocked(name, parent, strlen(name));
+ 	if (IS_ERR(dentry))
+-		return NULL;
++		return dentry;
+ 	if (!d_really_is_positive(dentry)) {
+ 		dput(dentry);
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 	}
+ 	return dentry;
+ }
+@@ -324,7 +324,7 @@ static struct dentry *failed_creating(struct dentry *dentry)
+ 	inode_unlock(d_inode(dentry->d_parent));
+ 	dput(dentry);
+ 	simple_release_fs(&debugfs_mount, &debugfs_mount_count);
+-	return NULL;
++	return ERR_PTR(-ENOMEM);
+ }
+ 
+ static struct dentry *end_creating(struct dentry *dentry)
+@@ -347,7 +347,7 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
+ 	dentry = start_creating(name, parent);
+ 
+ 	if (IS_ERR(dentry))
+-		return NULL;
++		return dentry;
+ 
+ 	inode = debugfs_get_inode(dentry->d_sb);
+ 	if (unlikely(!inode))
+@@ -386,7 +386,8 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
+  * This function will return a pointer to a dentry if it succeeds.  This
+  * pointer must be passed to the debugfs_remove() function when the file is
+  * to be removed (no automatic cleanup happens if your module is unloaded,
+- * you are responsible here.)  If an error occurs, %NULL will be returned.
++ * you are responsible here.)  If an error occurs, %ERR_PTR(-ERROR) will be
++ * returned.
+  *
+  * If debugfs is not enabled in the kernel, the value -%ENODEV will be
+  * returned.
+@@ -464,7 +465,8 @@ EXPORT_SYMBOL_GPL(debugfs_create_file_unsafe);
+  * This function will return a pointer to a dentry if it succeeds.  This
+  * pointer must be passed to the debugfs_remove() function when the file is
+  * to be removed (no automatic cleanup happens if your module is unloaded,
+- * you are responsible here.)  If an error occurs, %NULL will be returned.
++ * you are responsible here.)  If an error occurs, %ERR_PTR(-ERROR) will be
++ * returned.
+  *
+  * If debugfs is not enabled in the kernel, the value -%ENODEV will be
+  * returned.
+@@ -495,7 +497,8 @@ EXPORT_SYMBOL_GPL(debugfs_create_file_size);
+  * This function will return a pointer to a dentry if it succeeds.  This
+  * pointer must be passed to the debugfs_remove() function when the file is
+  * to be removed (no automatic cleanup happens if your module is unloaded,
+- * you are responsible here.)  If an error occurs, %NULL will be returned.
++ * you are responsible here.)  If an error occurs, %ERR_PTR(-ERROR) will be
++ * returned.
+  *
+  * If debugfs is not enabled in the kernel, the value -%ENODEV will be
+  * returned.
+@@ -506,7 +509,7 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
+ 	struct inode *inode;
+ 
+ 	if (IS_ERR(dentry))
+-		return NULL;
++		return dentry;
+ 
+ 	inode = debugfs_get_inode(dentry->d_sb);
+ 	if (unlikely(!inode))
+@@ -545,7 +548,7 @@ struct dentry *debugfs_create_automount(const char *name,
+ 	struct inode *inode;
+ 
+ 	if (IS_ERR(dentry))
+-		return NULL;
++		return dentry;
+ 
+ 	inode = debugfs_get_inode(dentry->d_sb);
+ 	if (unlikely(!inode))
+@@ -581,8 +584,8 @@ EXPORT_SYMBOL(debugfs_create_automount);
+  * This function will return a pointer to a dentry if it succeeds.  This
+  * pointer must be passed to the debugfs_remove() function when the symbolic
+  * link is to be removed (no automatic cleanup happens if your module is
+- * unloaded, you are responsible here.)  If an error occurs, %NULL will be
+- * returned.
++ * unloaded, you are responsible here.)  If an error occurs, %ERR_PTR(-ERROR)
++ * will be returned.
+  *
+  * If debugfs is not enabled in the kernel, the value -%ENODEV will be
+  * returned.
+@@ -594,12 +597,12 @@ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
+ 	struct inode *inode;
+ 	char *link = kstrdup(target, GFP_KERNEL);
+ 	if (!link)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	dentry = start_creating(name, parent);
+ 	if (IS_ERR(dentry)) {
+ 		kfree(link);
+-		return NULL;
++		return dentry;
+ 	}
+ 
+ 	inode = debugfs_get_inode(dentry->d_sb);
+@@ -827,7 +830,9 @@ struct dentry *debugfs_rename(struct dentry *old_dir, struct dentry *old_dentry,
+ 	if (dentry && !IS_ERR(dentry))
+ 		dput(dentry);
+ 	unlock_rename(new_dir, old_dir);
+-	return NULL;
++	if (IS_ERR(dentry))
++		return dentry;
++	return ERR_PTR(-EINVAL);
+ }
+ EXPORT_SYMBOL_GPL(debugfs_rename);
+ 
 -- 
 2.19.1
 
