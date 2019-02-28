@@ -2,82 +2,142 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEA2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A2FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA7920C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551397408;
-	bh=dplmfv6vVROr0h1jNUQcvIOIDqhJRQKcihmYyn7pKts=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=N9CiMoSvxz6DDwYBidsBzMMYIERGbjKWnrDWRjdfE/qklDRx9DaASnB2024lIOOEa
-	 v9dhG8mA/wV6YT5T32HxwJU1gzsXGiBJ2G3mzxu7pNMGkplfXu/Q8iTaoGqz33pOO1
-	 TV6T03soAV0gMdTkC67yzvWNqzn5z4L/l54enWKk=
+	by mail.kernel.org (Postfix) with ESMTP id A1246218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=dell.com header.i=@dell.com header.b="pmg8gON8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbfB1Xn0 (ORCPT
+        id S1729581AbfB1Xnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:43:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727707AbfB1Xn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:43:26 -0500
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEC1D218D9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 23:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551397406;
-        bh=dplmfv6vVROr0h1jNUQcvIOIDqhJRQKcihmYyn7pKts=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NQFe50H23wRdHX2hV0MXfoiF79PbTWAy5QhoyuStIjEiC9Bsjk/N1hFK6EfqLS6lg
-         QVi7rQ7iZ8dnYx/0iGKi/QZM8YBciEH5lfeaixmA4qHOTqyM4zWb7lZqAwlyYmbMnI
-         nwkR2P2/luyt+ZF+1sVDa9EwCU0JPG+mzEohNTOQ=
-Received: by mail-wr1-f51.google.com with SMTP id n2so23883220wrw.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:43:25 -0800 (PST)
-X-Gm-Message-State: APjAAAVA5Yq21qyU+1b0ubrRbjuUwW9dL8getdMnr/XhOEF+x5OGgW9w
-        3o2W2T0Nz+dYeXxREv8PxXBxy3w0/VB4gGsuFk6CnQ==
-X-Google-Smtp-Source: APXvYqyhD1Obv2Xz5j3nPTaLMXnbqwk6yRcYRxBJ0buqF8neDzSQqlJvvDasjXv8JvAfmdA1ipDjVjOIMm9Ia4eHbSs=
-X-Received: by 2002:adf:e58f:: with SMTP id l15mr1212854wrm.309.1551397404167;
- Thu, 28 Feb 2019 15:43:24 -0800 (PST)
+        Thu, 28 Feb 2019 18:43:51 -0500
+Received: from esa8.dell-outbound.iphmx.com ([68.232.149.218]:11700 "EHLO
+        esa8.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729146AbfB1Xnu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 18:43:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=dell.com; i=@dell.com; q=dns/txt; s=smtpout;
+  t=1551397430; x=1582933430;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=QOSdfByuhtkPKEJ0cSJSD4649XeXi7jkI4EcoSByiAg=;
+  b=pmg8gON89LffyZAmbi5dal4Q1tPlf8MO/7fhRuTgp/TaNVAHQXGG0ha6
+   oCy6YV8pTpK4Cb5PF+dJm/OWxQdveQ2GiVAKCRmA9TSwCqqKaTA025BTA
+   +pAbBsdlfrwqU79pGR1SFV1lQVvpb9JCWG77PiY0deXyYXJvhKncfjw82
+   0=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2FMAADgcXhchieV50NlHAEBAQQBAQc?=
+ =?us-ascii?q?EAQGBVAQBAQsBgVWBBoECEhUSCox3jH2BfZY3gWcLAQGEbIQ5NwYNAQMBAQM?=
+ =?us-ascii?q?BAwIBAQIQAQEBCgkLCCkvgjoigm8BAQEBAgESKD8FCwIBCBgeEFcCBAENBQg?=
+ =?us-ascii?q?agn6BawifQj0Cb4EBiQcBAQGCHoozjl6BEYJkLoROARIBCBeFYQKJaYIpl1g?=
+ =?us-ascii?q?HApJiIZMch2+CbpIXAgQCBAUCFIFdgQhxcIM8gjaOJ0ABMY1mgR+BHwEB?=
+X-IPAS-Result: =?us-ascii?q?A2FMAADgcXhchieV50NlHAEBAQQBAQcEAQGBVAQBAQsBg?=
+ =?us-ascii?q?VWBBoECEhUSCox3jH2BfZY3gWcLAQGEbIQ5NwYNAQMBAQMBAwIBAQIQAQEBC?=
+ =?us-ascii?q?gkLCCkvgjoigm8BAQEBAgESKD8FCwIBCBgeEFcCBAENBQgagn6BawifQj0Cb?=
+ =?us-ascii?q?4EBiQcBAQGCHoozjl6BEYJkLoROARIBCBeFYQKJaYIpl1gHApJiIZMch2+Cb?=
+ =?us-ascii?q?pIXAgQCBAUCFIFdgQhxcIM8gjaOJ0ABMY1mgR+BHwEB?=
+Received: from mx0a-00154901.pphosted.com (HELO mx0b-00154901.pphosted.com) ([67.231.149.39])
+  by esa8.dell-outbound.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Feb 2019 17:43:49 -0600
+Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SNhnif127358
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 18:43:49 -0500
+Received: from esa6.dell-outbound2.iphmx.com (esa6.dell-outbound2.iphmx.com [68.232.154.99])
+        by mx0b-00154901.pphosted.com with ESMTP id 2qxp1ghpsx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 18:43:49 -0500
+From:   <Austin.Bolen@dell.com>
+To:     <kbusch@kernel.org>, <Austin.Bolen@dell.com>
+Received: from ausxipps310.us.dell.com ([143.166.148.211])
+  by esa6.dell-outbound2.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA256; 01 Mar 2019 05:43:48 +0600
+X-LoopCount0: from 10.166.134.87
+X-IronPort-AV: E=Sophos;i="5.58,425,1544508000"; 
+   d="scan'208";a="324989107"
+CC:     <hch@infradead.org>, <Alex_Gagniuc@Dellteam.com>,
+        <torvalds@linux-foundation.org>, <keith.busch@intel.com>,
+        <sagi@grimberg.me>, <linux-kernel@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>, <axboe@fb.com>,
+        <mr.nuke.me@gmail.com>, <hch@lst.de>, <jonathan.derrick@intel.com>
+Subject: Re: [PATCH] nvme-pci: Prevent mmio reads if pci channel offline
+Thread-Topic: [PATCH] nvme-pci: Prevent mmio reads if pci channel offline
+Thread-Index: AQHUyksezlXXaxBLsUa+kQskBqUhAw==
+Date:   Thu, 28 Feb 2019 23:43:46 +0000
+Message-ID: <680f55f95e7547bdaffddce49772a5b7@AUSX13MPC131.AMER.DELL.COM>
+References: <CAHk-=wg_e5M0b5aJJf8V_UYaqX12YYA9MEg=gHNp6ALE5fK23w@mail.gmail.com>
+ <cbe2ed1562a64609be6538f5816ec1b6@ausx13mps321.AMER.DELL.COM>
+ <20190225155501.GI10237@localhost.localdomain>
+ <b35ebf928ed743cca6649a191c76957b@ausx13mps321.AMER.DELL.COM>
+ <CAHk-=wgRdATtsBzo-LDkWn_sW-PJvq95SahZcsTxxDMPzLWxKA@mail.gmail.com>
+ <940d608e1a044a54abcb9d65923951f3@ausx13mps317.AMER.DELL.COM>
+ <f6704855445b44639f023a48f3003309@AUSX13MPC131.AMER.DELL.COM>
+ <443262761d0e41fbb46a46dab28759c2@AUSX13MPC131.AMER.DELL.COM>
+ <20190228141655.GA18319@infradead.org>
+ <883e2fad8f6e4791bfee2ec08992da39@AUSX13MPC131.AMER.DELL.COM>
+ <20190228232020.GB22003@localhost.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190228220155.88124-1-cai@lca.pw>
-In-Reply-To: <20190228220155.88124-1-cai@lca.pw>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 28 Feb 2019 15:43:12 -0800
-X-Gmail-Original-Message-ID: <CALCETrW+p_PsdRfQh99JkPW2Zi6z_w4RqDnsK0=kU+D7RqeYzA@mail.gmail.com>
-Message-ID: <CALCETrW+p_PsdRfQh99JkPW2Zi6z_w4RqDnsK0=kU+D7RqeYzA@mail.gmail.com>
-Subject: Re: [PATCH] x86/mm: fix "cpu" set but not used
-To:     Qian Cai <cai@lca.pw>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902280158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 2:02 PM Qian Cai <cai@lca.pw> wrote:
->
-> The commit a2055abe9c67 ("x86/mm: Pass flush_tlb_info to
-> flush_tlb_others() etc") removed the unnecessary cpu parameter from
-> uv_flush_tlb_others() but left an unused variable.
->
-> arch/x86/mm/tlb.c: In function 'native_flush_tlb_others':
-> arch/x86/mm/tlb.c:688:16: warning: variable 'cpu' set but not used
-> [-Wunused-but-set-variable]
->    unsigned int cpu;
->                 ^~~
->
-
-Acked-by: Andyt Lutomirski <luto@kernel.org>
+On 2/28/2019 5:20 PM, Keith Busch wrote:=0A=
+> =0A=
+> [EXTERNAL EMAIL]=0A=
+> =0A=
+> On Thu, Feb 28, 2019 at 11:10:11PM +0000, Austin.Bolen@dell.com wrote:=0A=
+>> I'd also note that in PCIe, things that intentionally take the link down=
+=0A=
+>> like SBR or Link Disable suppress surprise down error reporting.  But=0A=
+>> NSSR doesn't have this requirement to suppress surprise down reporting.=
+=0A=
+>> I think that's a gap on the part of the NVMe spec.=0A=
+> =0A=
+> SBR and Link Disable are done from the down stream port, though, so the=
+=0A=
+> host can still communicate with the function that took the link down.=0A=
+> That's entirely different than taking the link down from the end device,=
+=0A=
+> so I'm not sure how NVMe can fix that.=0A=
+> =0A=
+=0A=
+Agreed it is different.  Here is one way they could have solved it: host =
+=0A=
+writes magic value to NSSRC but device latches this instead of =0A=
+resetting.  Then require host to do SBR.  When device sees SBR with =0A=
+magic value in NSSRC it does an NSSR.=0A=
+=0A=
+> But I can't even recall why NVMe defined NSSR to require PCIe LTSSM=0A=
+> Detect. That seems entirely unnecessary and is just asking for trouble.=
+=0A=
+> =0A=
+=0A=
+Not sure why but maybe they wanted a full reset of everything including =0A=
+the PCIe block.  I can ask around.  Also agree it is asking for trouble =0A=
+to have device take the link down without parent bridge knowing what's =0A=
+going on.  There are new mechanism being proposed in NVMe that would =0A=
+also allow the device to initiate link down with no co-ordination with =0A=
+the parent bridge so may need to think on ways to avoid this issue for =0A=
+these new similar mechanisms.=0A=
+=0A=
+-Austin=0A=
