@@ -2,109 +2,133 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F1FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05F8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D231F206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB3B206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:22:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551367359;
+	bh=Xj9rEhiC2w3frSBDY0Hg6KStfg8e2O/hSiTwQcrYBfE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RUvrfDKd4hWeY7q3RD/bc0LnjPpZphZDpECd0ad7atF3qNE5h4sZCH5Z8+p/WPZ6g
+	 vWizYezySEWogAS66wcz0+46Cz57lso/etOEwjQppOHOEF9tZGHxnruCcHOXdf8zeR
+	 3TKUTFr2XR8OWMFHr2AkLcw6H2UjIBGYlYw1nZuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388969AbfB1PW3 convert rfc822-to-8bit (ORCPT
+        id S2388491AbfB1PNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:22:29 -0500
-Received: from unicorn.mansr.com ([81.2.72.234]:48126 "EHLO unicorn.mansr.com"
+        Thu, 28 Feb 2019 10:13:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732623AbfB1PW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:22:26 -0500
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 66DE015632; Thu, 28 Feb 2019 15:22:24 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH] dt-bindings: usb: add non-removable device property
-References: <20190228143344.16312-1-mans@mansr.com>
-        <20190228151330.GA1360@kroah.com>
-Date:   Thu, 28 Feb 2019 15:22:24 +0000
-In-Reply-To: <20190228151330.GA1360@kroah.com> (Greg Kroah-Hartman's message
-        of "Thu, 28 Feb 2019 16:13:30 +0100")
-Message-ID: <yw1x8sy0uedr.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S2388431AbfB1PNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:13:30 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 637E1218FC;
+        Thu, 28 Feb 2019 15:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551366809;
+        bh=Xj9rEhiC2w3frSBDY0Hg6KStfg8e2O/hSiTwQcrYBfE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bVEBiNTghEN5kpkZL6p2ekE0suyYx5KJM3TpW4kHIB7gd5c6LiZH0+8VOAE0mmOJl
+         RXFDz0a6fzk4LfjIORxCYJZegZJwIOWR0/ypnPMg7D9Nj/3SJ9z7bZEoI5XwOYJaya
+         L3z/42PCqID74aF1yEDcEwVi8qARdeMntSRT1X/0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 60/64] fs: ratelimit __find_get_block_slow() failure message.
+Date:   Thu, 28 Feb 2019 10:11:01 -0500
+Message-Id: <20190228151105.11277-60-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
+References: <20190228151105.11277-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-> On Thu, Feb 28, 2019 at 02:33:44PM +0000, Mans Rullgard wrote:
->> Add a boolean property indicating that a device is hardwired to the
->> upstream port.  Although hubs can provide this information, they are not
->> always configured correctly.  An alternate means of indicating this for
->> built-in USB devices is thus useful.
->> 
->> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> ---
->> I have a situation where userspace would like to know which USB devices
->> are built-in, but the on-board hub doesn't have the right setting.
->> Also, the hub itself can't be indicated as fixed in any other way that
->> I'm aware of.
->
-> Then that's a firmware bug, right?  We have a way for firmware to export
-> this to the USB core, why not use that?  Your on-board hub should get a
-> firmware update with this information, let's not try to create
-> yet-another-way to define this type of information please.
+[ Upstream commit 43636c804df0126da669c261fc820fb22f62bfc2 ]
 
-What firmware?  This is not an ACPI system, obviously, so DT _is_ the
-firmware.
+When something let __find_get_block_slow() hit all_mapped path, it calls
+printk() for 100+ times per a second. But there is no need to print same
+message with such high frequency; it is just asking for stall warning, or
+at least bloating log files.
 
->> In a way, adding this property seems a bit silly since dt can only
->> sensibly be used for hardwired devices in the first place.  Thus the
->> mere presence of a dt node could be taken to indicate the same thing.
->> On the other hand, it's conceivable that someone might dynamically
->> generate a devicetree based on what happens to be connected on boot or
->> something.  For that reason, and explicit property seems safer.
->> ---
->>  Documentation/devicetree/bindings/usb/usb-device.txt | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->
-> Can you show some code actually using this?  Again, this should "just
-> work" for USB today unless your platform is really broken (and if it is,
-> go complain to the vendor...)
+  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
+  [  399.873324][T15342] b_state=0x00000029, b_size=512
+  [  399.878403][T15342] device loop0 blocksize: 4096
+  [  399.883296][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
+  [  399.890400][T15342] b_state=0x00000029, b_size=512
+  [  399.895595][T15342] device loop0 blocksize: 4096
+  [  399.900556][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
+  [  399.907471][T15342] b_state=0x00000029, b_size=512
+  [  399.912506][T15342] device loop0 blocksize: 4096
 
-You know full well that complaining to the vendor is rarely something
-that works.  Especially not when there are already thousands of the
-devices in the field.
+This patch reduces frequency to up to once per a second, in addition to
+concatenating three lines into one.
 
-This is how I meant to use it:
+  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8, b_state=0x00000029, b_size=512, device loop0 blocksize: 4096
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 3adff4da2ee1..81ef3cb705b7 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -2392,6 +2392,14 @@ static void set_usb_port_removable(struct usb_device *udev)
-                break;
-        }
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/buffer.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 6f1ae3ac97896..c083c4b3c1e7c 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -200,6 +200,7 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
+ 	struct buffer_head *head;
+ 	struct page *page;
+ 	int all_mapped = 1;
++	static DEFINE_RATELIMIT_STATE(last_warned, HZ, 1);
  
-+       /*
-+        * Otherwise, check whether DT indicates this device is non-removable.
-+        */
-+       if (of_property_read_bool(udev->dev.of_node, "non-removable")) {
-+               udev->removable = USB_DEVICE_FIXED;
-+               return;
-+       }
-+
-        /*
-         * Otherwise, check whether the hub knows whether a port is removable
-         * or not
-
-
+ 	index = block >> (PAGE_SHIFT - bd_inode->i_blkbits);
+ 	page = find_get_page_flags(bd_mapping, index, FGP_ACCESSED);
+@@ -227,15 +228,15 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
+ 	 * file io on the block device and getblk.  It gets dealt with
+ 	 * elsewhere, don't buffer_error if we had some unmapped buffers
+ 	 */
+-	if (all_mapped) {
+-		printk("__find_get_block_slow() failed. "
+-			"block=%llu, b_blocknr=%llu\n",
+-			(unsigned long long)block,
+-			(unsigned long long)bh->b_blocknr);
+-		printk("b_state=0x%08lx, b_size=%zu\n",
+-			bh->b_state, bh->b_size);
+-		printk("device %pg blocksize: %d\n", bdev,
+-			1 << bd_inode->i_blkbits);
++	ratelimit_set_flags(&last_warned, RATELIMIT_MSG_ON_RELEASE);
++	if (all_mapped && __ratelimit(&last_warned)) {
++		printk("__find_get_block_slow() failed. block=%llu, "
++		       "b_blocknr=%llu, b_state=0x%08lx, b_size=%zu, "
++		       "device %pg blocksize: %d\n",
++		       (unsigned long long)block,
++		       (unsigned long long)bh->b_blocknr,
++		       bh->b_state, bh->b_size, bdev,
++		       1 << bd_inode->i_blkbits);
+ 	}
+ out_unlock:
+ 	spin_unlock(&bd_mapping->private_lock);
 -- 
-Måns Rullgård
+2.19.1
+
