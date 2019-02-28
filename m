@@ -2,110 +2,162 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CDCC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA52C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16503218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551345366;
-	bh=SoyQ9NbCNu3qCLC3H+YdvJG0aFL8MI4pPTrw/9cL3Qg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hytQQzG+TiFT49LlgfttfyT8Uh8Wvx/ppVCPbcL0CTXrFDIiolWXXxAWr0Lv4tlT3
-	 jzqQzGbkA0fMjNFE0uUvAJyvr3vB/BdzBFO6wMJejMe+p0Nar3WglNdfOXC24+RUCP
-	 7eB8PDeIpHdjGW9EHr//eLNa8l7T9qLKv1NYz86c=
+	by mail.kernel.org (Postfix) with ESMTP id 94D202184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732053AbfB1JQE (ORCPT
+        id S1732131AbfB1JQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:16:04 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52244 "EHLO mx1.suse.de"
+        Thu, 28 Feb 2019 04:16:09 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58488 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731421AbfB1JQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:16:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C6DA1ACC0;
-        Thu, 28 Feb 2019 09:16:02 +0000 (UTC)
-Date:   Thu, 28 Feb 2019 10:16:02 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] mm,memory_hotplug: Unlock 1GB-hugetlb on x86_64
-Message-ID: <20190228091602.GU10588@dhcp22.suse.cz>
-References: <20190221094212.16906-1-osalvador@suse.de>
- <20190227215109.cpiaheyqs2qdbl7p@d104.suse.de>
- <201cc8d8-953f-f198-bbfe-96470136db68@oracle.com>
- <bb71b68e-dc1b-a4d3-d842-b311535b92a8@redhat.com>
+        id S1731379AbfB1JQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 04:16:09 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 950203C66BE75D268DEB;
+        Thu, 28 Feb 2019 17:16:06 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 28 Feb 2019 17:15:57 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     <jolsa@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <dsahern@gmail.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <acme@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <kim.phillips@arm.com>,
+        <guohanjun@huawei.com>, <huawei.libin@huawei.com>
+Subject: [PATCH] perf machine: Update kernel map address and re-order properly
+Date:   Thu, 28 Feb 2019 17:20:03 +0800
+Message-ID: <20190228092003.34071-1-liwei391@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb71b68e-dc1b-a4d3-d842-b311535b92a8@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28-02-19 08:38:34, David Hildenbrand wrote:
-> On 27.02.19 23:00, Mike Kravetz wrote:
-> > On 2/27/19 1:51 PM, Oscar Salvador wrote:
-> >> On Thu, Feb 21, 2019 at 10:42:12AM +0100, Oscar Salvador wrote:
-> >>> [1] https://lore.kernel.org/patchwork/patch/998796/
-> >>>
-> >>> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> >>
-> >> Any further comments on this?
-> >> I do have a "concern" I would like to sort out before dropping the RFC:
-> >>
-> >> It is the fact that unless we have spare gigantic pages in other notes, the
-> >> offlining operation will loop forever (until the customer cancels the operation).
-> >> While I do not really like that, I do think that memory offlining should be done
-> >> with some sanity, and the administrator should know in advance if the system is going
-> >> to be able to keep up with the memory pressure, aka: make sure we got what we need in
-> >> order to make the offlining operation to succeed.
-> >> That translates to be sure that we have spare gigantic pages and other nodes
-> >> can take them.
-> >>
-> >> Given said that, another thing I thought about is that we could check if we have
-> >> spare gigantic pages at has_unmovable_pages() time.
-> >> Something like checking "h->free_huge_pages - h->resv_huge_pages > 0", and if it
-> >> turns out that we do not have gigantic pages anywhere, just return as we have
-> >> non-movable pages.
-> > 
-> > Of course, that check would be racy.  Even if there is an available gigantic
-> > page at has_unmovable_pages() time there is no guarantee it will be there when
-> > we want to allocate/use it.  But, you would at least catch 'most' cases of
-> > looping forever.
-> > 
-> >> But I would rather not convulate has_unmovable_pages() with such checks and "trust"
-> >> the administrator.
-> 
-> I think we have the exact same issue already with huge/ordinary pages if
-> we are low on memory. We could loop forever.
-> 
-> In the long run, we should properly detect such issues and abort instead
-> of looping forever I guess. But as we all know, error handling in the
-> whole offlining part is still far away from being perfect ...
+Since commit 1fb87b8e9599 ("perf machine: Don't search for active kernel
+start in __machine__create_kernel_maps"), the __machine__create_kernel_maps()
+just create a map what start and end are both zero. Though the address will be
+updated later, the order of map in the rbtree may be incorrect.
 
-Migration allocation callbacks use __GFP_RETRY_MAYFAIL to not
-be disruptive so they do not trigger the OOM killer and rely on somebody
-else to pull the trigger instead. This means that if there is no other
-activity on the system the hotplug migration would just loop for ever
-or until interrupted by the userspace. THe later is important, user
-might define a policy when to terminate and keep retrying is not
-necessarily a wrong thing. One can simply do
-timeout $TIMEOUT echo 0 > $PATH_TO_MEMBLOCK/online
+The commit ee05d21791db ("perf machine: Set main kernel end address properly")
+fixed the logic in machine__create_kernel_maps(), but it's still wrong in
+function machine__process_kernel_mmap_event().
 
-and ENOMEM handling is not important. But I can see how people might
-want to bail out early instead. So I do not have a strong opinion here.
-We can try to consider ENOMEM from the migration as a hard failure and
-bail out and see whether it works in practice.
+To reproduce this issue, we need an environment which the module address
+is before the kernel text segment. I tested it on an aarch64 machine with
+kernel 4.19.25:
+
+[root@localhost hulk]# grep _stext /proc/kallsyms 
+ffff000008081000 T _stext
+[root@localhost hulk]# grep _etext /proc/kallsyms 
+ffff000009780000 R _etext
+[root@localhost hulk]# tail /proc/modules 
+hisi_sas_v2_hw 77824 0 - Live 0xffff00000191d000
+nvme_core 126976 7 nvme, Live 0xffff0000018b6000
+mdio 20480 1 ixgbe, Live 0xffff0000018ab000
+hisi_sas_main 106496 1 hisi_sas_v2_hw, Live 0xffff000001861000
+hns_mdio 20480 2 - Live 0xffff000001822000
+hnae 28672 3 hns_dsaf,hns_enet_drv, Live 0xffff000001815000
+dm_mirror 40960 0 - Live 0xffff000001804000
+dm_region_hash 32768 1 dm_mirror, Live 0xffff0000017f5000
+dm_log 32768 2 dm_mirror,dm_region_hash, Live 0xffff0000017e7000
+dm_mod 315392 17 dm_mirror,dm_log, Live 0xffff000001780000
+[root@localhost hulk]# 
+
+Before fix:
+
+[root@localhost bin]# perf record sleep 3
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
+[root@localhost bin]# perf buildid-list -i perf.data 
+4c4e46c971ca935f781e603a09b52a92e8bdfee8 [vdso]
+[root@localhost bin]# perf buildid-list -i perf.data -H
+0000000000000000000000000000000000000000 /proc/kcore
+[root@localhost bin]# 
+
+After fix:
+
+[root@localhost tools]# ./perf/perf record sleep 3
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
+[root@localhost tools]# ./perf/perf buildid-list -i perf.data 
+28a6c690262896dbd1b5e1011ed81623e6db0610 [kernel.kallsyms]
+106c14ce6e4acea3453e484dc604d66666f08a2f [vdso]
+[root@localhost tools]# ./perf/perf buildid-list -i perf.data -H
+28a6c690262896dbd1b5e1011ed81623e6db0610 /proc/kcore
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
+---
+ tools/perf/util/machine.c | 32 ++++++++++++++++++++------------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index b1508ce3e412..076718a7b3ea 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1358,6 +1358,20 @@ static void machine__set_kernel_mmap(struct machine *machine,
+ 		machine->vmlinux_map->end = ~0ULL;
+ }
+ 
++static void machine__update_kernel_mmap(struct machine *machine,
++				     u64 start, u64 end)
++{
++	struct map *map = machine__kernel_map(machine);
++
++	map__get(map);
++	map_groups__remove(&machine->kmaps, map);
++
++	machine__set_kernel_mmap(machine, start, end);
++
++	map_groups__insert(&machine->kmaps, map);
++	map__put(map);
++}
++
+ int machine__create_kernel_maps(struct machine *machine)
+ {
+ 	struct dso *kernel = machine__get_kernel(machine);
+@@ -1390,17 +1404,11 @@ int machine__create_kernel_maps(struct machine *machine)
+ 			goto out_put;
+ 		}
+ 
+-		/* we have a real start address now, so re-order the kmaps */
+-		map = machine__kernel_map(machine);
+-
+-		map__get(map);
+-		map_groups__remove(&machine->kmaps, map);
+-
+-		/* assume it's the last in the kmaps */
+-		machine__set_kernel_mmap(machine, addr, ~0ULL);
+-
+-		map_groups__insert(&machine->kmaps, map);
+-		map__put(map);
++		/*
++		 * we have a real start address now, so re-order the kmaps
++		 * assume it's the last in the kmaps
++		 */
++		machine__update_kernel_mmap(machine, addr, ~0ULL);
+ 	}
+ 
+ 	if (machine__create_extra_kernel_maps(machine, kernel))
+@@ -1536,7 +1544,7 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
+ 		if (strstr(kernel->long_name, "vmlinux"))
+ 			dso__set_short_name(kernel, "[kernel.vmlinux]", false);
+ 
+-		machine__set_kernel_mmap(machine, event->mmap.start,
++		machine__update_kernel_mmap(machine, event->mmap.start,
+ 					 event->mmap.start + event->mmap.len);
+ 
+ 		/*
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
