@@ -2,170 +2,107 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E40C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB3BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2231E2184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB8C2184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:48:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3/FMtjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733028AbfB1QsJ (ORCPT
+        id S1733074AbfB1Qsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 11:48:09 -0500
-Received: from foss.arm.com ([217.140.101.70]:51462 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbfB1QsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 11:48:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BC6EEBD;
-        Thu, 28 Feb 2019 08:48:08 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.17])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF7463F720;
-        Thu, 28 Feb 2019 08:48:03 -0800 (PST)
-Date:   Thu, 28 Feb 2019 16:48:01 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        mhiramat@kernel.org, paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190228164801.iahwphx5o2zeks4n@e107158-lin.cambridge.arm.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <20190228135343.23kzkilig3bsioov@e107158-lin.cambridge.arm.com>
- <20190228144759.GA156098@google.com>
- <b100f0a2-7966-b6a2-dcd5-ca11abe57ead@arm.com>
+        Thu, 28 Feb 2019 11:48:37 -0500
+Received: from mail-it1-f194.google.com ([209.85.166.194]:53459 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbfB1Qsh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 11:48:37 -0500
+Received: by mail-it1-f194.google.com with SMTP id v2so15664522ith.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 08:48:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cV3QheQ/KTX1k6paCx3zmKRnyrqW71O0cAwXV4iKCKA=;
+        b=A3/FMtjpNeOzMv3WXL057jHk3V8Sv9j8nFexHvedaqYtWWoBnuBefPkQWA3fIhMlEp
+         brNl72H41EeqiC+i+2YyfY9UQZu+njbFPila7zoJdK1S7DWm2fxE4d6cAkAJAsL4lBp8
+         B3DUPpLbNkmm5NU3eEHtlsZsXkP0RXB7ZeO5awWCYslqnIyXff4kEAdgD6XCbeEwn6qx
+         9dXb708v7CBYKIAjJrvXfmi392gH6YN277jL3VlaB2PQBS9SAMKfX5+f67Ycp3B3wu4l
+         StSI2eM8WnO63aqMidjHkAt7nLdjPN+8BGCsnUbt+Zs0fOn2Y9TR6Io9Vq1tcGbQvzPS
+         v16w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cV3QheQ/KTX1k6paCx3zmKRnyrqW71O0cAwXV4iKCKA=;
+        b=D+t3G9GBVnORQ+9c8Xd0qGugxSO57YyT4RfRrsLWTY1qECvW2DQLV/Rp+TtlT33vwX
+         UUepNVdG2629W2+uK8B13S/Vm2DiK3uY5o9x6Ht8IwhRt4PlhUl3WKyqn88rUHaGfhzS
+         iQG9dQ7JngZS+1+6p+hYm1XiC5MNeivAeh9zfcpY5/OZrq5b572TrMxEliATimmalgBZ
+         tn5NdwvCEIYYRiEmwopMMRgqghLm79rRslaGU2zoJp9pAxDoMCvGfaJUhgr0s/UXDVDg
+         CUybNzHDvo6wymEjp+7SWwFanOP2AsNz2+FtvcNXHbF1U/+1GYmNkXwbzWKYEElwBxT5
+         /Jog==
+X-Gm-Message-State: APjAAAVZPl3azSK3Rn1hc/58SlFSA0M0ZzDNtFuxYnUSqdMDWtnoIPnP
+        OPe337OlX88YosvbVPJ5Y6VBE63/
+X-Google-Smtp-Source: AHgI3IYNq79lFFZPnKvKQtpgKESpZu95KND+wmz7pRUVatN4e9P+GxDD6jEDM0Oxrk5y32zEdScmJg==
+X-Received: by 2002:a24:c486:: with SMTP id v128mr488030itf.138.1551372516462;
+        Thu, 28 Feb 2019 08:48:36 -0800 (PST)
+Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
+        by smtp.gmail.com with ESMTPSA id p18sm3057534itp.10.2019.02.28.08.48.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 08:48:35 -0800 (PST)
+From:   Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To:     dri-devel@lists.freedesktop.org, Gerd Hoffmann <kraxel@redhat.com>
+Cc:     Joshua Watt <JPEWhacker@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/virtio: Allow userspace to mmap() framebuffer
+Date:   Thu, 28 Feb 2019 10:47:41 -0600
+Message-Id: <20190228164741.15590-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b100f0a2-7966-b6a2-dcd5-ca11abe57ead@arm.com>
-User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/28/19 17:04, Dietmar Eggemann wrote:
-> Hi Joel,
-> 
-> On 2/28/19 3:47 PM, Joel Fernandes wrote:
-> > On Thu, Feb 28, 2019 at 01:53:43PM +0000, Qais Yousef wrote:
-> > > Hi Joel
-> > > 
-> > > On 02/27/19 14:37, Joel Fernandes (Google) wrote:
-> 
-> [...]
-> 
-> > Ah good catch, I made this change for "file_list=${@:2}" in my tree but
-> > forgot to push it. Below is the updated patch. Sorry and I'll refresh the
-> > series with the change after we finish the discussion in the other thread.
-> > Meanwhile the updated patch is as follows...
-> > 
-> > ---8<-----------------------
-> > 
-> > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> > Subject: [PATCH v3.1] Provide in-kernel headers for making it easy to extend the kernel
-> > 
-> > Introduce in-kernel headers and other artifacts which are made available
-> > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> > it possible to build kernel modules, run eBPF programs, and other
-> > tracing programs that need to extend the kernel for tracing purposes
-> > without any dependency on the file system having headers and build
-> > artifacts.
-> > 
-> > On Android and embedded systems, it is common to switch kernels but not
-> > have kernel headers available on the file system. Raw kernel headers
-> > also cannot be copied into the filesystem like they can be on other
-> > distros, due to licensing and other issues. There's no linux-headers
-> > package on Android. Further once a different kernel is booted, any
-> > headers stored on the file system will no longer be useful. By storing
-> > the headers as a compressed archive within the kernel, we can avoid these
-> > issues that have been a hindrance for a long time.
-> > 
-> > The feature is also buildable as a module just in case the user desires
-> > it not being part of the kernel image. This makes it possible to load
-> > and unload the headers on demand. A tracing program, or a kernel module
-> > builder can load the module, do its operations, and then unload the
-> > module to save kernel memory. The total memory needed is 3.8MB.
-> > 
-> > The code to read the headers is based on /proc/config.gz code and uses
-> > the same technique to embed the headers.
-> 
-> This version gives me the header files on a v5.0-rc8 kernel on my arm64 box
-> but does not compile anymore on v4.20:
-> 
-> kernel/kheaders.c:25:22: error: expected identifier or ‘(’ before string
-> constant
->  #define KH_MAGIC_END "IKHD_ED"
->                       ^
-> kernel/kheaders_data.h:1:1: note: in expansion of macro ‘KH_MAGIC_END’
->  KH_MAGIC_END;
->  ^~~~~~~~~~~~
-> kernel/kheaders.c: In function ‘ikheaders_read_current’:
-> kernel/kheaders.c:38:12: error: ‘kernel_headers_data’ undeclared (first use
-> in this function); did you mean ‘kernel_headers_data_size’?
->             kernel_headers_data + KH_MAGIC_SIZE,
->             ^~~~~~~~~~~~~~~~~~~
->             kernel_headers_data_size
-> kernel/kheaders.c:38:12: note: each undeclared identifier is reported only
-> once for each function it appears in
-> kernel/kheaders.c: In function ‘ikheaders_init’:
-> kernel/kheaders.c:31:10: error: ‘kernel_headers_data’ undeclared (first use
-> in this function); did you mean ‘kernel_headers_data_size’?
->   (sizeof(kernel_headers_data) - 1 - KH_MAGIC_SIZE * 2)
->           ^
-> kernel/kheaders.c:57:23: note: in expansion of macro
-> ‘kernel_headers_data_size’
->   proc_set_size(entry, kernel_headers_data_size);
->                        ^~~~~~~~~~~~~~~~~~~~~~~~
-> kernel/kheaders.c: In function ‘ikheaders_read_current’:
-> kernel/kheaders.c:40:1: warning: control reaches end of non-void function
-> [-Wreturn-type]
->  }
-> 
-> 
-> The reason for me to stay on v4.20 is that with v5.0-rc8 I don't have ebpf
-> 'raw tracepoint' support any more on my arm64 board. But this issue is not
-> related to your patch though.
+Reports the size of the virtgpu framebuffer to userspace and installs
+the deferred I/O handlers so that userspace can mmap() and write to it.
 
-And this is caused by a38d1107f937 (bpf: support raw tracepoints in modules)
-which renamed bpf_find_raw_tracepoint() which bcc-tools relies on to detect if
-raw tracepoints are supported..
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_fb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-https://github.com/iovisor/bcc/blob/master/src/python/bcc/__init__.py#L860
+diff --git a/drivers/gpu/drm/virtio/virtgpu_fb.c b/drivers/gpu/drm/virtio/virtgpu_fb.c
+index fb1cc8b2f119..9f44c8d27c64 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_fb.c
++++ b/drivers/gpu/drm/virtio/virtgpu_fb.c
+@@ -266,11 +266,15 @@ static int virtio_gpufb_create(struct drm_fb_helper *helper,
+ 	info->fbops = &virtio_gpufb_ops;
+ 	info->pixmap.flags = FB_PIXMAP_SYSTEM;
+ 
++	info->fix.smem_start = 0;
++	info->fix.smem_len = size;
++
+ 	info->screen_buffer = obj->vmap;
+ 	info->screen_size = obj->gem_base.size;
+ 	drm_fb_helper_fill_fix(info, fb->pitches[0], fb->format->depth);
+ 	drm_fb_helper_fill_var(info, &vfbdev->helper,
+ 			       sizes->fb_width, sizes->fb_height);
++	drm_fb_helper_defio_init(helper);
+ 
+ 	info->fix.mmio_start = 0;
+ 	info->fix.mmio_len = 0;
+-- 
+2.20.1
 
-Speaking of fragile depedencies :-)
-
-I guess the check can be extended to check for both symbols - but it'll stay
-fragile. Not sure if they can do better.
-
-I filed a bug
-
-https://github.com/iovisor/bcc/issues/2240
-
---
-Qais Yousef
-
-> 
-> Another point which supports the functionality your patch provides is the
-> fact that maintainers don't want to see new TRACE_EVENTs in their code. So
-> here your patch comes handy when using ebpf for tracing in embedded
-> environments.
