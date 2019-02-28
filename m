@@ -6,67 +6,69 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30000C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2944C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E516720C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D7D218D0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Rb+5Dvng"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tNKFQNF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388391AbfB1VDZ (ORCPT
+        id S1728301AbfB1VIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 16:03:25 -0500
-Received: from mail-it1-f193.google.com ([209.85.166.193]:36453 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfB1VDZ (ORCPT
+        Thu, 28 Feb 2019 16:08:17 -0500
+Received: from mail-it1-f194.google.com ([209.85.166.194]:38377 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728087AbfB1VIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 16:03:25 -0500
-Received: by mail-it1-f193.google.com with SMTP id v83so17972626itf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 13:03:24 -0800 (PST)
+        Thu, 28 Feb 2019 16:08:16 -0500
+Received: by mail-it1-f194.google.com with SMTP id l66so18004556itg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 13:08:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Nv3u0G/V3fQnw0uOpLM1knoRv2ExvBRHpS5Vngv0uhI=;
-        b=Rb+5Dvngpl3lnByRKyvcQQo4lDFOSdougL9iFYjKQFlnbhAoX1dxToOrZNy/UA/HOm
-         fYAllvWj8g7D0pvBMl/vXcjOasNTdOgGyZd+nWadMpVOYgehNlcmZjHkNEj5OBNvTwhb
-         KxQ5zyfz75P+9bhDcyLaprX0VKay00LLlYU0HZmDIrdbW9W9S4OzI+ksWGPi5gQ/n7S4
-         4hBNLL0DJhnJjBtkH8uE651Bo0JlhcK7XQWbogdZQDREgrT8IQgOrSM3dQ9KyJDmGUN1
-         5p/j/cA9wv26BIUS2WDdH9iPTjjJfltUPsCHTcNeow3ttK2J1h1dPC9rGo3GCfbfhzWT
-         nasw==
+        bh=a8OGmkCjq5X89nK2bcAL+DSyLzAo8iTw8rvOOB71peo=;
+        b=tNKFQNF//lQbz2sCSBjTo5WLzzRDXC7YLsdbTwJt5QNpsrXAyRPXSeLvUjGtbKLmPK
+         33zv7E1AuqzNpWAz9wPegV1OM11ix5m3baUV3YMp3nMtSMPgtfHxrtuxm625iGy8mt4/
+         yD/689x32eg+69sZQD00OfhiZqyzzchcgcrguqLCSZYCQezJFL8V1bDl5elssjtT24C8
+         Y45VGtPsEbmQqm/ggGYWsOU0/jsrikqevr8bgNRvkiA5eYEttZX4N70KcnpjxgH/nidH
+         SbDTh7ylYlHS8UIOEq1zV/UfradK8JfsTIpsENpGhoCF8Qbw8bgyPwEGD1JYkpNukX9b
+         cswQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Nv3u0G/V3fQnw0uOpLM1knoRv2ExvBRHpS5Vngv0uhI=;
-        b=YlJ7Ay5UOz+iXtysiKZBFapfJiB42df7zvCSV0MnQOogxoHiBoM0Xsk71+S1HLnyy6
-         lSHCY+rcOBlQrP4k7Ooq6j6T+EuK/TzUph6TD3XCSM6JEqvAglLh0u5FBudRH4lgobyW
-         gMb7BFO55wtwop9ZVVQpylGlhRyt5lj6bQJOuww2PKfibl0neZt5jYON4k3rZe2KAGR3
-         zPuTl/GhjkeVdMJhFH4hfYDzGBV8DsH9iJvcXftr84YNEu15simkl/Wh+O3i8fAOc1RS
-         vb3+vmrx7JAymJ3VxuLHY9njvbN9V4x1upAqPt2QVCSAnx9zqeHBkqeCnWtnGyh6I5Bk
-         BRdQ==
-X-Gm-Message-State: APjAAAVE/IyCSbBu03wxmc5iSSeZwSFoGZcV7CS2jq7CJxaeSlVuEQoU
-        RaHME1uJv2VPMPTNYNVN1/53rQ==
-X-Google-Smtp-Source: APXvYqwxAb+3495RQBw9bnB4X8f2zqgDSs7FAf7da+dIuge5VO/XG8LGGTOHwxD+CpfNH2z6eiTGBg==
-X-Received: by 2002:a02:7124:: with SMTP id n36mr706400jac.122.1551387804251;
-        Thu, 28 Feb 2019 13:03:24 -0800 (PST)
+        bh=a8OGmkCjq5X89nK2bcAL+DSyLzAo8iTw8rvOOB71peo=;
+        b=D/wsFkT7tcfOLBsuEHhKSUw8OHUiOmpjMmW7W/a3a0jOfTspxeAJY8Yu2j2Or2+7AS
+         I3IzJnX86LxU28k4cN5MChQSNJoRxcyC4Sh8LX4OBKDhtWDHuA6YRAvE07H5EaptYh0K
+         KHSRCdydmVg9inz1P5MBSoEaJvDzMAalmYscgNvF2Xi3CiYnsatA7aSYOS/4QzIZo/kS
+         +af8pdt0G83leKTqySwjoRcB2ZlE+KEznhf5uNJwt5dsKiTxzhPO5njZ4jfcHAqQ2hL5
+         il+OGSq2O68FrsB1HW7wNQmeKxh4Amcwk0alHaIz850RWHCGCLNfrJiUI0aG7MKB8x4g
+         3adQ==
+X-Gm-Message-State: APjAAAW3QCu2CSYs0lHKHHOqFuVzd00kLI16dEyiV+vC4UN8o6x5TcGX
+        ++lG0HAxCzbqgDXy1HpV+xcVwdRLqtNidA==
+X-Google-Smtp-Source: AHgI3IY6wigESFk1Zi40Wn/HxGnRy8anTcGKnH3pBH9C1aJqaTAQfS5GO3L4ayPa9bTxWkpi6JfrMg==
+X-Received: by 2002:a24:7688:: with SMTP id z130mr1139866itb.94.1551388095413;
+        Thu, 28 Feb 2019 13:08:15 -0800 (PST)
 Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id u82sm3286213itb.18.2019.02.28.13.03.22
+        by smtp.gmail.com with ESMTPSA id v21sm3382571ita.21.2019.02.28.13.08.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 13:03:23 -0800 (PST)
-Subject: Re: [PATCH] null_blk: fix checking for REQ_FUA
-To:     Heinz Mauelshagen <heinzm@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-References: <154589c8c1b22879dfc03aec4555793329d5ce83.1550861849.git.heinzm@redhat.com>
+        Thu, 28 Feb 2019 13:08:14 -0800 (PST)
+Subject: Re: [PATCH] ata: libahci: Only warn for AHCI_HFLAG_MULTI_MSI set when
+ genuine custom irq handler implemented
+To:     John Garry <john.garry@huawei.com>
+Cc:     linuxarm@huawei.com, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1550511813-133136-1-git-send-email-john.garry@huawei.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <de98873b-a47d-c200-c260-b62ef704f26a@kernel.dk>
-Date:   Thu, 28 Feb 2019 14:03:22 -0700
+Message-ID: <639bded2-54a5-882d-b782-b7b59f8dbc93@kernel.dk>
+Date:   Thu, 28 Feb 2019 14:08:12 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <154589c8c1b22879dfc03aec4555793329d5ce83.1550861849.git.heinzm@redhat.com>
+In-Reply-To: <1550511813-133136-1-git-send-email-john.garry@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,14 +77,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/22/19 12:00 PM, Heinz Mauelshagen wrote:
-> null_handle_bio() erroneously uses the bio_op macro
-> which masks respective request flag bits including REQ_FUA
-> out thus failing the check.
+On 2/18/19 10:43 AM, John Garry wrote:
+> For an AHCI controller with AHCI_HFLAG_MULTI_MSI flag set, we may get the
+> following log, regardless of whether a custom irq handler was implemented
+> or not:
 > 
-> Fix by checking bio->bi_opf directly.
+> [   14.700238] ahci 0000:74:03.0: both AHCI_HFLAG_MULTI_MSI flag set and custom irq handler implemented
+> 
+> This is because we can set hpriv->irq_handler to
+> ahci_single_level_irq_intr() if not already set, in
+> ahci_init_one()->ahci_pci_save_initial_config()->ahci_save_initial_config().
+> 
+> Stop having this warn being misleading by adding a check for
+> hpriv->irq_handler != ahci_single_level_irq_intr.
 
-Thanks, applied.
+Applied, thanks.
 
 -- 
 Jens Axboe
