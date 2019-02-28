@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929F1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC166C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634F8218D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA44218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551374004;
-	bh=lMDmD+yHh+DlWhq/53k7Ao+2uIANDRR35ZmppOVVl8c=;
+	s=default; t=1551374006;
+	bh=ZQoVqRW6Zu1lCFYe/ygXJGf7oHrzWzrc3FZ4EzIERQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T7yNkTcpL1fBT/MJN1pu8PnNzrBt3tLee3yObfuqwehDQyMmeGbF6JOlrOK1kJ3Nw
-	 I5lI+JGEU3mm8pxBCqPThApOFY8r9e5vvjAwIcE7IoVTE0jUV/ovEbr+NZdgyIegPV
-	 rabXX46t4VPOnkMdwhfMoX5cF7DJebsJJyVBKlbo=
+	b=yb6XxRQ6O0/m8Tge3wteCdaOhK0D+T0ZR7aSHqvEavlywZfrhCUACAunmmcA9NL30
+	 Y/PlIAuzu1AGlC08YwA15zfUmTDpnkeVlYP5tsFBhApW2ldTCEMie9/UFh/V6Z22LA
+	 ZlPa+DmBAJ50vIKrzNOOJeDtJjJP33BkbRVEdBoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387650AbfB1RNX (ORCPT
+        id S2387670AbfB1RNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:13:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58114 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 12:13:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387587AbfB1RNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:13:19 -0500
+        id S2387644AbfB1RNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:13:23 -0500
 Received: from lerouge.home (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D2E7218AE;
-        Thu, 28 Feb 2019 17:13:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94BE4218EA;
+        Thu, 28 Feb 2019 17:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551373999;
-        bh=lMDmD+yHh+DlWhq/53k7Ao+2uIANDRR35ZmppOVVl8c=;
+        s=default; t=1551374002;
+        bh=ZQoVqRW6Zu1lCFYe/ygXJGf7oHrzWzrc3FZ4EzIERQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=meALxdGOCDarFNGzXykv5bS5OPkRw78FCEtr6Ixrw12xPZi6q7AHnwmZyVbWj4QHg
-         vmLnXT0pLGKGLDICFCY98BM3n4d/7GaVkmEPkTXgy1O57OX+eToinOFXfWCg4TM/wr
-         eiOzYQchVn294bkIokflcW+4dreDb7qH6/La2OkU=
+        b=V5YWbHIdkwFZAyj3WUR+eClBU24plXNkB+fchrtpCrFQlLT1ps7NfGaBYdDJQtFsq
+         V6ROh0UjxWyjKmfczUtkMSb/G6zbIZPV/MRV1HrjMGaj5hHlAEtJ8SAlZAfWuMNoaJ
+         Wum198nBhFJnPI8Ebh3BK2yGT7u65bAEJzFFEuMg=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
@@ -53,9 +53,9 @@ Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Pavan Kondeti <pkondeti@codeaurora.org>,
         Ingo Molnar <mingo@kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 08/37] locking/lockdep: Prepare check_usage_*() to handle plain masks
-Date:   Thu, 28 Feb 2019 18:12:13 +0100
-Message-Id: <20190228171242.32144-9-frederic@kernel.org>
+Subject: [PATCH 09/37] locking/lockdep: Prepare state_verbose() to handle all softirqs
+Date:   Thu, 28 Feb 2019 18:12:14 +0100
+Message-Id: <20190228171242.32144-10-frederic@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190228171242.32144-1-frederic@kernel.org>
 References: <20190228171242.32144-1-frederic@kernel.org>
@@ -66,12 +66,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mark_lock_irq() is going to deal with lock usages that gather multiple
-softirq vectors at once. Therefore the validation through
-check_usage_backwards() and check_usage_forwards() will need to handle
-expanded usage masks.
-
-So enhance those functions to that purpose.
+Loosely handle all the softirq vectors verbosity under the same
+function.
 
 Reviewed-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
@@ -86,97 +82,35 @@ Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- kernel/locking/lockdep.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ kernel/locking/lockdep.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2321b5e16cdf..d1bfe5eff708 100644
+index d1bfe5eff708..0988de06a7ed 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -2662,9 +2662,12 @@ print_irq_inversion_bug(struct task_struct *curr,
-  */
- static int
- check_usage_forwards(struct task_struct *curr, struct held_lock *this,
--		     u64 usage_mask, const char *irqclass)
-+		     u64 usage_mask, bool read)
+@@ -2757,17 +2757,13 @@ static int SOFTIRQ_verbose(struct lock_class *class)
+ 
+ #define STRICT_READ_CHECKS	1
+ 
+-static int (*state_verbose_f[])(struct lock_class *class) = {
+-#define LOCKDEP_STATE(__STATE) \
+-	__STATE##_verbose,
+-#include "lockdep_states.h"
+-#undef LOCKDEP_STATE
+-};
+-
+ static inline int state_verbose(enum lock_usage_bit bit,
+ 				struct lock_class *class)
  {
- 	int ret;
-+	u64 intersec;
-+	int intersec_bit;
-+	const char *irqclass;
- 	struct lock_list root;
- 	struct lock_list *uninitialized_var(target_entry);
- 
-@@ -2676,8 +2679,14 @@ check_usage_forwards(struct task_struct *curr, struct held_lock *this,
- 	if (ret == 1)
- 		return ret;
- 
-+	intersec = usage_mask & target_entry->class->usage_mask;
-+	intersec_bit = __ffs64(intersec);
-+	if (read)
-+		intersec_bit += LOCK_USAGE_READ_MASK;
-+	irqclass = state_name(intersec_bit);
-+
- 	return print_irq_inversion_bug(curr, &root, target_entry,
--					this, 1, irqclass);
-+				       this, 1, irqclass);
- }
- 
- /*
-@@ -2686,9 +2695,12 @@ check_usage_forwards(struct task_struct *curr, struct held_lock *this,
-  */
- static int
- check_usage_backwards(struct task_struct *curr, struct held_lock *this,
--		      u64 usage_mask, const char *irqclass)
-+		      u64 usage_mask, bool read)
- {
- 	int ret;
-+	u64 intersec;
-+	int intersec_bit;
-+	const char *irqclass;
- 	struct lock_list root;
- 	struct lock_list *uninitialized_var(target_entry);
- 
-@@ -2700,6 +2712,12 @@ check_usage_backwards(struct task_struct *curr, struct held_lock *this,
- 	if (ret == 1)
- 		return ret;
- 
-+	intersec = usage_mask & target_entry->class->usage_mask;
-+	intersec_bit = __ffs64(intersec);
-+	if (read)
-+		intersec_bit += LOCK_USAGE_READ_MASK;
-+	irqclass = state_name(intersec_bit);
-+
- 	return print_irq_inversion_bug(curr, &root, target_entry,
- 					this, 0, irqclass);
- }
-@@ -2753,7 +2771,7 @@ static inline int state_verbose(enum lock_usage_bit bit,
+-	return state_verbose_f[bit >> 2](class);
++	if (bit < LOCK_USED_IN_SOFTIRQ)
++		return HARDIRQ_verbose(class);
++	else
++		return SOFTIRQ_verbose(class);
  }
  
  typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
--			     u64 usage_mask, const char *name);
-+			     u64 usage_mask, bool read);
- 
- static int
- mark_lock_irq(struct task_struct *curr, struct held_lock *this,
-@@ -2789,7 +2807,7 @@ mark_lock_irq(struct task_struct *curr, struct held_lock *this,
- 	 * states.
- 	 */
- 	if ((!read || !dir || STRICT_READ_CHECKS) &&
--	    !usage(curr, this, lock_usage_mask(&excl_usage), state_name(new_usage->bit & ~LOCK_USAGE_READ_MASK)))
-+	    !usage(curr, this, lock_usage_mask(&excl_usage), false))
- 		return 0;
- 
- 	/*
-@@ -2803,7 +2821,7 @@ mark_lock_irq(struct task_struct *curr, struct held_lock *this,
- 
- 		if (STRICT_READ_CHECKS &&
- 		    !usage(curr, this, lock_usage_mask(&excl_usage),
--			   state_name(new_usage->bit + LOCK_USAGE_READ_MASK)))
-+			       true))
- 			return 0;
- 	}
- 
 -- 
 2.21.0
 
