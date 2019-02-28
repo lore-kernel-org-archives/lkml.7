@@ -6,148 +6,190 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F17C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5473C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE89C2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796452133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732721AbfB1MEO (ORCPT
+        id S1731158AbfB1MKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 07:04:14 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46522 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730524AbfB1MEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 07:04:13 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 394E180D;
-        Thu, 28 Feb 2019 04:04:13 -0800 (PST)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7A4E3F738;
-        Thu, 28 Feb 2019 04:04:09 -0800 (PST)
-Subject: Re: [PATCH v3 09/34] m68k: mm: Add p?d_large() definitions
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190227170608.27963-1-steven.price@arm.com>
- <20190227170608.27963-10-steven.price@arm.com>
- <CAMuHMdXCjuurBiFzQBeLPUFu=mmSowvb=37XyWmF_=xVhkQm4g@mail.gmail.com>
- <20190228113653.GB3766@rapoport-lnx>
- <CAMuHMdU5gn6ftAHNwHNPDoUy_JvcZLcXbkk1hvUmYxtfJRfTTQ@mail.gmail.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <a17f5ad7-9fba-9d51-4d6e-7a9effe81e4e@arm.com>
-Date:   Thu, 28 Feb 2019 12:04:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Thu, 28 Feb 2019 07:10:08 -0500
+Received: from smtp.eu.citrix.com ([185.25.65.24]:58274 "EHLO
+        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfB1MKH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 07:10:07 -0500
+X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
+   d="scan'208";a="86585274"
+From:   Paul Durrant <Paul.Durrant@citrix.com>
+To:     Paul Durrant <Paul.Durrant@citrix.com>,
+        Wei Liu <wei.liu2@citrix.com>
+CC:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Wei Liu <wei.liu2@citrix.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "davem@davemloft.net" <davem@davemloft.net>
+Subject: RE: [PATCH] xen-netback: fix occasional leak of grant ref mappings
+ under memory pressure
+Thread-Topic: [PATCH] xen-netback: fix occasional leak of grant ref mappings
+ under memory pressure
+Thread-Index: AQHUzwnalyGnLUhGt0OYo7x3WDkwmKX09AIQgAAHGACAABYNsIAADMdw
+Date:   Thu, 28 Feb 2019 12:07:07 +0000
+Message-ID: <0aa1850892c94d6ba7543bf322734614@AMSPEX02CL02.citrite.net>
+References: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
+ <8424fba34a1f43908a6dae3a9308863b@AMSPEX02CL02.citrite.net>
+ <20190228110136.somjads2f5ivqhju@zion.uk.xensource.com>
+ <e5ef3c0291854b67841b6c532f7651b9@AMSPEX02CL02.citrite.net>
+In-Reply-To: <e5ef3c0291854b67841b6c532f7651b9@AMSPEX02CL02.citrite.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdU5gn6ftAHNwHNPDoUy_JvcZLcXbkk1hvUmYxtfJRfTTQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 11:53, Geert Uytterhoeven wrote:
-> Hi Mike,
-> 
-> On Thu, Feb 28, 2019 at 12:37 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
->> On Wed, Feb 27, 2019 at 08:27:40PM +0100, Geert Uytterhoeven wrote:
->>> On Wed, Feb 27, 2019 at 6:07 PM Steven Price <steven.price@arm.com> wrote:
->>>> walk_page_range() is going to be allowed to walk page tables other than
->>>> those of user space. For this it needs to know when it has reached a
->>>> 'leaf' entry in the page tables. This information is provided by the
->>>> p?d_large() functions/macros.
->>>>
->>>> For m68k, we don't support large pages, so add stubs returning 0
->>>>
->>>> CC: Geert Uytterhoeven <geert@linux-m68k.org>
->>>> CC: linux-m68k@lists.linux-m68k.org
->>>> Signed-off-by: Steven Price <steven.price@arm.com>
->>>
->>> Thanks for your patch!
->>>
->>>>  arch/m68k/include/asm/mcf_pgtable.h      | 2 ++
->>>>  arch/m68k/include/asm/motorola_pgtable.h | 2 ++
->>>>  arch/m68k/include/asm/pgtable_no.h       | 1 +
->>>>  arch/m68k/include/asm/sun3_pgtable.h     | 2 ++
->>>>  4 files changed, 7 insertions(+)
->>>
->>> If the definitions are the same, why not add them to
->>> arch/m68k/include/asm/pgtable.h instead?
-
-I don't really understand the structure of m68k, so I just followed the
-existing layout (arch/m68k/include/asm/pgtable.h is basically empty). I
-believe the following patch would be functionally equivalent.
-
-----8<----
-diff --git a/arch/m68k/include/asm/pgtable.h
-b/arch/m68k/include/asm/pgtable.h
-index ad15d655a9bf..6f6d463e69c1 100644
---- a/arch/m68k/include/asm/pgtable.h
-+++ b/arch/m68k/include/asm/pgtable.h
-@@ -3,4 +3,9 @@
- #include <asm/pgtable_no.h>
- #else
- #include <asm/pgtable_mm.h>
-+
-+#define pmd_large(pmd)		(0)
-+
- #endif
-+
-+#define pgd_large(pgd)		(0)
-----8<----
-
-Let me know if you'd prefer that
-
->> Maybe I'm missing something, but why the stubs have to be defined in
->> arch/*/include/asm/pgtable.h rather than in include/asm-generic/pgtable.h?
-> 
-> That would even make more sense, given most architectures don't
-> support huge pages.
-
-Where the architecture has folded a level stubs are provided by the
-asm-generic layer, see this later patch:
-
-https://lore.kernel.org/lkml/20190227170608.27963-25-steven.price@arm.com/
-
-However just because an architecture port doesn't (currently) support
-huge pages doesn't mean that the architecture itself can't have large[1]
-mappings at higher levels of the page table. For instance an
-architecture might use large pages for the linear map but not support
-huge page mappings for user space.
-
-My previous posting of this series attempted to define generic versions
-of p?d_large(), but it was pointed out to me that this was fragile and
-having a way of knowing whether the page table was a 'leaf' is actually
-useful, so I've attempted to implement for all architectures. See the
-discussion here:
-https://lore.kernel.org/lkml/20190221113502.54153-1-steven.price@arm.com/T/#mf0bd0155f185a19681b48a288be212ed1596e85d
-
-Steve
-
-[1] Note I've tried to use the term "large page" where I mean that page
-table walk terminates early, and "huge page" for the Linux concept of
-combining a large area of memory to reduce TLB pressure. Some
-architectures have ways of mapping a large block in the TLB without
-reducing the number of levels in the table walk - for example contiguous
-hint bits in the page table entries.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogWGVuLWRldmVsIFttYWls
+dG86eGVuLWRldmVsLWJvdW5jZXNAbGlzdHMueGVucHJvamVjdC5vcmddIE9uIEJlaGFsZiBPZiBQ
+YXVsIER1cnJhbnQNCj4gU2VudDogMjggRmVicnVhcnkgMjAxOSAxMToyMg0KPiBUbzogV2VpIExp
+dSA8d2VpLmxpdTJAY2l0cml4LmNvbT4NCj4gQ2M6IElnb3IgRHJ1emhpbmluIDxpZ29yLmRydXpo
+aW5pbkBjaXRyaXguY29tPjsgV2VpIExpdSA8d2VpLmxpdTJAY2l0cml4LmNvbT47IG5ldGRldkB2
+Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHhlbi1kZXZl
+bEBsaXN0cy54ZW5wcm9qZWN0Lm9yZzsgZGF2ZW1AZGF2ZW1sb2Z0Lm5ldA0KPiBTdWJqZWN0OiBS
+ZTogW1hlbi1kZXZlbF0gW1BBVENIXSB4ZW4tbmV0YmFjazogZml4IG9jY2FzaW9uYWwgbGVhayBv
+ZiBncmFudCByZWYgbWFwcGluZ3MgdW5kZXIgbWVtb3J5DQo+IHByZXNzdXJlDQo+IA0KPiA+IC0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogV2VpIExpdSBbbWFpbHRvOndlaS5s
+aXUyQGNpdHJpeC5jb21dDQo+ID4gU2VudDogMjggRmVicnVhcnkgMjAxOSAxMTowMg0KPiA+IFRv
+OiBQYXVsIER1cnJhbnQgPFBhdWwuRHVycmFudEBjaXRyaXguY29tPg0KPiA+IENjOiBJZ29yIERy
+dXpoaW5pbiA8aWdvci5kcnV6aGluaW5AY2l0cml4LmNvbT47IHhlbi1kZXZlbEBsaXN0cy54ZW5w
+cm9qZWN0Lm9yZzsNCj4gPiBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnOyBXZWkgTGl1IDx3ZWkubGl1MkBjaXRyaXguY29tPjsNCj4gPiBkYXZlbUBk
+YXZlbWxvZnQubmV0DQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0geGVuLW5ldGJhY2s6IGZpeCBv
+Y2Nhc2lvbmFsIGxlYWsgb2YgZ3JhbnQgcmVmIG1hcHBpbmdzIHVuZGVyIG1lbW9yeSBwcmVzc3Vy
+ZQ0KPiA+DQo+ID4gT24gVGh1LCBGZWIgMjgsIDIwMTkgYXQgMDk6NDY6NTdBTSArMDAwMCwgUGF1
+bCBEdXJyYW50IHdyb3RlOg0KPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
+ID4gPiBGcm9tOiBJZ29yIERydXpoaW5pbiBbbWFpbHRvOmlnb3IuZHJ1emhpbmluQGNpdHJpeC5j
+b21dDQo+ID4gPiA+IFNlbnQ6IDI4IEZlYnJ1YXJ5IDIwMTkgMDI6MDMNCj4gPiA+ID4gVG86IHhl
+bi1kZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZzsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiA+ID4gPiBDYzogV2VpIExpdSA8d2VpLmxpdTJA
+Y2l0cml4LmNvbT47IFBhdWwgRHVycmFudCA8UGF1bC5EdXJyYW50QGNpdHJpeC5jb20+OyBkYXZl
+bUBkYXZlbWxvZnQubmV0Ow0KPiA+IElnb3INCj4gPiA+ID4gRHJ1emhpbmluIDxpZ29yLmRydXpo
+aW5pbkBjaXRyaXguY29tPg0KPiA+ID4gPiBTdWJqZWN0OiBbUEFUQ0hdIHhlbi1uZXRiYWNrOiBm
+aXggb2NjYXNpb25hbCBsZWFrIG9mIGdyYW50IHJlZiBtYXBwaW5ncyB1bmRlciBtZW1vcnkgcHJl
+c3N1cmUNCj4gPiA+ID4NCj4gPiA+ID4gWmVyby1jb3B5IGNhbGxiYWNrIGZsYWcgaXMgbm90IHll
+dCBzZXQgb24gZnJhZyBsaXN0IHNrYiBhdCB0aGUgbW9tZW50DQo+ID4gPiA+IHhlbnZpZl9oYW5k
+bGVfZnJhZ19saXN0KCkgcmV0dXJucyAtRU5PTUVNLiBUaGlzIGV2ZW50dWFsbHkgcmVzdWx0cyBp
+bg0KPiA+ID4gPiBsZWFraW5nIGdyYW50IHJlZiBtYXBwaW5ncyBzaW5jZSB4ZW52aWZfemVyb2Nv
+cHlfY2FsbGJhY2soKSBpcyBuZXZlcg0KPiA+ID4gPiBjYWxsZWQgZm9yIHRoZXNlIGZyYWdtZW50
+cy4gVGhvc2UgZXZlbnR1YWxseSBidWlsZCB1cCBhbmQgY2F1c2UgWGVuDQo+ID4gPiA+IHRvIGtp
+bGwgRG9tMCBhcyB0aGUgc2xvdHMgZ2V0IHJldXNlZCBmb3IgbmV3IG1hcHBpbmdzLg0KPiA+ID4g
+Pg0KPiA+ID4gPiBUaGF0IGJlaGF2aW9yIGlzIG9ic2VydmVkIHVuZGVyIGNlcnRhaW4gd29ya2xv
+YWRzIHdoZXJlIHN1ZGRlbiBzcGlrZXMNCj4gPiA+ID4gb2YgcGFnZSBjYWNoZSB1c2FnZSBmb3Ig
+d3JpdGVzIGNvZXhpc3Qgd2l0aCBhY3RpdmUgYXRvbWljIHNrYiBhbGxvY2F0aW9ucy4NCj4gPiA+
+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSWdvciBEcnV6aGluaW4gPGlnb3IuZHJ1emhpbmlu
+QGNpdHJpeC5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgZHJpdmVycy9uZXQveGVuLW5ldGJh
+Y2svbmV0YmFjay5jIHwgMyArKysNCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlv
+bnMoKykNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3hlbi1uZXRi
+YWNrL25ldGJhY2suYyBiL2RyaXZlcnMvbmV0L3hlbi1uZXRiYWNrL25ldGJhY2suYw0KPiA+ID4g
+PiBpbmRleCA4MGFhZTNhLi4yMDIzMzE3IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL25l
+dC94ZW4tbmV0YmFjay9uZXRiYWNrLmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9uZXQveGVuLW5l
+dGJhY2svbmV0YmFjay5jDQo+ID4gPiA+IEBAIC0xMTQ2LDkgKzExNDYsMTIgQEAgc3RhdGljIGlu
+dCB4ZW52aWZfdHhfc3VibWl0KHN0cnVjdCB4ZW52aWZfcXVldWUgKnF1ZXVlKQ0KPiA+ID4gPg0K
+PiA+ID4gPiAgCQlpZiAodW5saWtlbHkoc2tiX2hhc19mcmFnX2xpc3Qoc2tiKSkpIHsNCj4gPiA+
+ID4gIAkJCWlmICh4ZW52aWZfaGFuZGxlX2ZyYWdfbGlzdChxdWV1ZSwgc2tiKSkgew0KPiA+ID4g
+PiArCQkJCXN0cnVjdCBza19idWZmICpuc2tiID0NCj4gPiA+ID4gKwkJCQkJCXNrYl9zaGluZm8o
+c2tiKS0+ZnJhZ19saXN0Ow0KPiA+ID4gPiAgCQkJCWlmIChuZXRfcmF0ZWxpbWl0KCkpDQo+ID4g
+PiA+ICAJCQkJCW5ldGRldl9lcnIocXVldWUtPnZpZi0+ZGV2LA0KPiA+ID4gPiAgCQkJCQkJICAg
+Ik5vdCBlbm91Z2ggbWVtb3J5IHRvIGNvbnNvbGlkYXRlIGZyYWdfbGlzdCFcbiIpOw0KPiA+ID4g
+PiArCQkJCXhlbnZpZl9za2JfemVyb2NvcHlfcHJlcGFyZShxdWV1ZSwgbnNrYik7DQo+ID4gPiA+
+ICAJCQkJeGVudmlmX3NrYl96ZXJvY29weV9wcmVwYXJlKHF1ZXVlLCBza2IpOw0KPiA+ID4gPiAg
+CQkJCWtmcmVlX3NrYihza2IpOw0KPiA+ID4gPiAgCQkJCWNvbnRpbnVlOw0KPiA+ID4NCj4gPiA+
+IFdoaWxzdCB0aGlzIGZpeCB3aWxsIGRvIHRoZSBqb2IsIEkgdGhpbmsgaXQgd291bGQgYmUgYmV0
+dGVyIHRvIGdldCByaWQgb2YgdGhlIGtmcmVlX3NrYigpIGZyb20NCj4gPiBpbnNpZGUgeGVudmlm
+X2hhbmRsZV9mcmFnX2xpc3QoKSBhbmQgYWx3YXlzIGRlYWwgd2l0aCBpdCBoZXJlIHJhdGhlciB0
+aGFuIGhhdmluZyBpdCBoYXBwZW4gaW4gdHdvDQo+ID4gZGlmZmVyZW50IHBsYWNlcy4gU29tZXRo
+aW5nIGxpa2UgdGhlIGZvbGxvd2luZy4uLg0KPiA+DQo+ID4gKzEgZm9yIGhhdmluZyBvbmx5IG9u
+ZSBwbGFjZS4NCj4gPg0KPiA+ID4NCj4gPiA+IC0tLTg8LS0tDQo+ID4gPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9uZXQveGVuLW5ldGJhY2svbmV0YmFjay5jIGIvZHJpdmVycy9uZXQveGVuLW5ldGJh
+Y2svbmV0YmFjay5jDQo+ID4gPiBpbmRleCA4MGFhZTNhMzJjMmEuLjA5M2M3Yjg2MDc3MiAxMDA2
+NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMvbmV0L3hlbi1uZXRiYWNrL25ldGJhY2suYw0KPiA+ID4g
+KysrIGIvZHJpdmVycy9uZXQveGVuLW5ldGJhY2svbmV0YmFjay5jDQo+ID4gPiBAQCAtMTAyNywx
+MyArMTAyNywxMyBAQCBzdGF0aWMgdm9pZCB4ZW52aWZfdHhfYnVpbGRfZ29wcyhzdHJ1Y3QgeGVu
+dmlmX3F1ZXVlICpxdWV1ZSwNCj4gPiA+ICAvKiBDb25zb2xpZGF0ZSBza2Igd2l0aCBhIGZyYWdf
+bGlzdCBpbnRvIGEgYnJhbmQgbmV3IG9uZSB3aXRoIGxvY2FsIHBhZ2VzIG9uDQo+ID4gPiAgICog
+ZnJhZ3MuIFJldHVybnMgMCBvciAtRU5PTUVNIGlmIGNhbid0IGFsbG9jYXRlIG5ldyBwYWdlcy4N
+Cj4gPiA+ICAgKi8NCj4gPiA+IC1zdGF0aWMgaW50IHhlbnZpZl9oYW5kbGVfZnJhZ19saXN0KHN0
+cnVjdCB4ZW52aWZfcXVldWUgKnF1ZXVlLCBzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQ0KPiA+ID4gK3N0
+YXRpYyBpbnQgeGVudmlmX2hhbmRsZV9mcmFnX2xpc3Qoc3RydWN0IHhlbnZpZl9xdWV1ZSAqcXVl
+dWUsIHN0cnVjdCBza19idWZmICpkaWZmIC0tZ2l0DQo+ID4gYS9kcml2ZXJzL25ldC94ZW4tbmV0
+YmFjay9uZXRiYWNrLmMgYi9kcml2ZXJzL25ldC94ZW4tbmV0YmFjay9uZXRiYWNrLmMNCj4gPiA+
+IGluZGV4IDgwYWFlM2EzMmMyYS4uMDkzYzdiODYwNzcyIDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJp
+dmVycy9uZXQveGVuLW5ldGJhY2svbmV0YmFjay5jDQo+ID4gPiArKysgYi9kcml2ZXJzL25ldC94
+ZW4tbmV0YmFjay9uZXRiYWNrLmMNCj4gPiA+IEBAIC0xMDI3LDEzICsxMDI3LDEzIEBAIHN0YXRp
+YyB2b2lkIHhlbnZpZl90eF9idWlsZF9nb3BzKHN0cnVjdCB4ZW52aWZfcXVldWUgKnF1DQo+ID4g
+PiBldWUsDQo+ID4gPiAgLyogQ29uc29saWRhdGUgc2tiIHdpdGggYSBmcmFnX2xpc3QgaW50byBh
+IGJyYW5kIG5ldyBvbmUgd2l0aCBsb2NhbCBwYWdlcyBvbg0KPiA+ID4gICAqIGZyYWdzLiBSZXR1
+cm5zIDAgb3IgLUVOT01FTSBpZiBjYW4ndCBhbGxvY2F0ZSBuZXcgcGFnZXMuDQo+ID4gPiAgICov
+DQo+ID4gPiAtc3RhdGljIGludCB4ZW52aWZfaGFuZGxlX2ZyYWdfbGlzdChzdHJ1Y3QgeGVudmlm
+X3F1ZXVlICpxdWV1ZSwgc3RydWN0IHNrX2J1ZmYgKg0KPiA+ID4gc2tiKQ0KPiA+ID4gK3N0YXRp
+YyBpbnQgeGVudmlmX2hhbmRsZV9mcmFnX2xpc3Qoc3RydWN0IHhlbnZpZl9xdWV1ZSAqcXVldWUs
+IHN0cnVjdCBza19idWZmICoNCj4gPiA+IHNrYiwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgc3RydWN0IHNrX2J1ZmYgKm5za2IpDQo+ID4gPiAgew0KPiA+ID4gICAg
+ICAgICB1bnNpZ25lZCBpbnQgb2Zmc2V0ID0gc2tiX2hlYWRsZW4oc2tiKTsNCj4gPiA+ICAgICAg
+ICAgc2tiX2ZyYWdfdCBmcmFnc1tNQVhfU0tCX0ZSQUdTXTsNCj4gPiA+ICAgICAgICAgaW50IGks
+IGY7DQo+ID4gPiAgICAgICAgIHN0cnVjdCB1YnVmX2luZm8gKnVhcmc7DQo+ID4gPiAtICAgICAg
+IHN0cnVjdCBza19idWZmICpuc2tiID0gc2tiX3NoaW5mbyhza2IpLT5mcmFnX2xpc3Q7DQo+ID4g
+Pg0KPiA+ID4gICAgICAgICBxdWV1ZS0+c3RhdHMudHhfemVyb2NvcHlfc2VudCArPSAyOw0KPiA+
+ID4gICAgICAgICBxdWV1ZS0+c3RhdHMudHhfZnJhZ19vdmVyZmxvdysrOw0KPiA+ID4gQEAgLTEw
+NzIsMTEgKzEwNzIsNiBAQCBzdGF0aWMgaW50IHhlbnZpZl9oYW5kbGVfZnJhZ19saXN0KHN0cnVj
+dCB4ZW52aWZfcXVldWUgKnENCj4gPiA+IHVldWUsIHN0cnVjdCBza19idWZmICpzDQo+ID4gPiAg
+ICAgICAgICAgICAgICAgc2tiX2ZyYWdfc2l6ZV9zZXQoJmZyYWdzW2ldLCBsZW4pOw0KPiA+ID4g
+ICAgICAgICB9DQo+ID4gPg0KPiA+ID4gLSAgICAgICAvKiBDb3BpZWQgYWxsIHRoZSBiaXRzIGZy
+b20gdGhlIGZyYWcgbGlzdCAtLSBmcmVlIGl0LiAqLw0KPiA+ID4gLSAgICAgICBza2JfZnJhZ19s
+aXN0X2luaXQoc2tiKTsNCj4gPiA+IC0gICAgICAgeGVudmlmX3NrYl96ZXJvY29weV9wcmVwYXJl
+KHF1ZXVlLCBuc2tiKTsNCj4gPiA+IC0gICAgICAga2ZyZWVfc2tiKG5za2IpOw0KPiA+ID4gLQ0K
+PiA+ID4gICAgICAgICAvKiBSZWxlYXNlIGFsbCB0aGUgb3JpZ2luYWwgKGZvcmVpZ24pIGZyYWdz
+LiAqLw0KPiA+ID4gICAgICAgICBmb3IgKGYgPSAwOyBmIDwgc2tiX3NoaW5mbyhza2IpLT5ucl9m
+cmFnczsgZisrKQ0KPiA+ID4gICAgICAgICAgICAgICAgIHNrYl9mcmFnX3VucmVmKHNrYiwgZik7
+DQo+ID4gPiBAQCAtMTE0NSw3ICsxMTQwLDExIEBAIHN0YXRpYyBpbnQgeGVudmlmX3R4X3N1Ym1p
+dChzdHJ1Y3QgeGVudmlmX3F1ZXVlICpxdWV1ZSkNCj4gPiA+ICAgICAgICAgICAgICAgICB4ZW52
+aWZfZmlsbF9mcmFncyhxdWV1ZSwgc2tiKTsNCj4gPiA+DQo+ID4gPiAgICAgICAgICAgICAgICAg
+aWYgKHVubGlrZWx5KHNrYl9oYXNfZnJhZ19saXN0KHNrYikpKSB7DQo+ID4gPiAtICAgICAgICAg
+ICAgICAgICAgICAgICBpZiAoeGVudmlmX2hhbmRsZV9mcmFnX2xpc3QocXVldWUsIHNrYikpIHsN
+Cj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBza19idWZmICpuc2tiID0gc2ti
+X3NoaW5mbyhza2IpLT5mcmFnX2xpc3Q7DQo+ID4gPiArDQo+ID4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICB4ZW52aWZfc2tiX3plcm9jb3B5X3ByZXBhcmUocXVldWUsIG5za2IpOw0KPiA+ID4g
+Kw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaWYgKHhlbnZpZl9oYW5kbGVfZnJhZ19s
+aXN0KHF1ZXVlLCBza2IsIG5za2IpKSB7DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGlmIChuZXRfcmF0ZWxpbWl0KCkpDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgbmV0ZGV2X2VycihxdWV1ZS0+dmlmLT5kZXYsDQo+ID4gPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiTm90IGVub3Vn
+aCBtZW1vcnkgdG8gY29uc29saWRhdGUNCj4gZnJhZ19saXN0IVxuIik7DQo+ID4gPiBAQCAtMTE1
+Myw2ICsxMTUyLDEwIEBAIHN0YXRpYyBpbnQgeGVudmlmX3R4X3N1Ym1pdChzdHJ1Y3QgeGVudmlm
+X3F1ZXVlICpxdWV1ZSkNCj4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2Zy
+ZWVfc2tiKHNrYik7DQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRp
+bnVlOw0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgfQ0KPiA+ID4gKw0KPiA+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgLyogQ29waWVkIGFsbCB0aGUgYml0cyBmcm9tIHRoZSBmcmFn
+IGxpc3QuICovDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBza2JfZnJhZ19saXN0X2lu
+aXQoc2tiKTsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGtmcmVlKG5za2IpOw0KPiA+
+DQo+ID4gSSB0aGluayB5b3Ugd2FudCBrZnJlZV9za2IgaGVyZT8NCj4gDQo+IE5vLiBuc2tiIGlz
+IHRoZSBmcmFnIGxpc3QuLi4gaXQgaXMgdW5saW5rZWQgZnJvbSBza2IgYnkgdGhlIGNhbGwgdG8g
+c2tiX2ZyYWdfbGlzdF9pbml0KCkgYW5kIHRoZW4gaXQNCj4gY2FuIGJlIGZyZWVkIG9uIGl0cyBv
+d24uIFRoZSBza2IgaXMgd2hhdCB3ZSBuZWVkIHRvIHJldGFpbiwgYmVjYXVzZSB0aGF0IG5vdyBj
+b250YWlucyBhbGwgdGhlIGRhdGEuDQoNClNvcnJ5IEkgbWlzcmVhZC91bmRlcnN0b29kIHdoYXQg
+eW91IHdlcmUgZ2V0dGluZyBhdC4gWWVzLCBJIG1lYW50IGtmcmVlX3NrYihuc2tiKS4NCg0KICBQ
+YXVsDQoNCj4gDQo+ICAgQ2hlZXJzLA0KPiANCj4gICAgIFBhdWwNCj4gDQo+ID4NCj4gPiBXZWku
+DQo+ID4NCj4gPiA+ICAgICAgICAgICAgICAgICB9DQo+ID4gPg0KPiA+ID4gICAgICAgICAgICAg
+ICAgIHNrYi0+ZGV2ICAgICAgPSBxdWV1ZS0+dmlmLT5kZXY7DQo+ID4gPiAtLS04PC0tLQ0KPiA+
+ID4NCj4gPiA+IFdoYXQgZG8geW91IHRoaW5rPw0KPiA+ID4NCj4gPiA+ICAgUGF1bA0KPiA+ID4N
+Cj4gPiA+ID4gLS0NCj4gPiA+ID4gMi43LjQNCj4gPiA+DQo+IA0KPiBfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBYZW4tZGV2ZWwgbWFpbGluZyBsaXN0
+DQo+IFhlbi1kZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZw0KPiBodHRwczovL2xpc3RzLnhlbnBy
+b2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8veGVuLWRldmVsDQo=
