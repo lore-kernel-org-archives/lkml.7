@@ -2,123 +2,195 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566F3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36545C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22BF320854
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:55:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttdPdWHk"
+	by mail.kernel.org (Postfix) with ESMTP id F312720854
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbfB1Nzk (ORCPT
+        id S1731976AbfB1N4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:55:40 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36786 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbfB1Nzk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:55:40 -0500
-Received: by mail-qt1-f194.google.com with SMTP id p25so23533073qtb.3;
-        Thu, 28 Feb 2019 05:55:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3gbkIhvVF1AH1z+WfY/qwoD1anC7NSB9emFlODUv0kQ=;
-        b=ttdPdWHkXVD6z9n9tTmttepq00LBNrbDtp7tWmiTFo25hnQ3FdFuNMdyo/bvCQwJ0p
-         SNtU6rEeuq56FBTaxVQYell6+5E5xaAxtQ/nI11yM7r0DNSSbo/fQg3hKMJ1k9Zhf/qA
-         kVDz6AD9x9wploJCOOOvAFqRwfyo/nkarhBFzZFbB8nVqc31+y+LFkFCkcfc+1N0o+wg
-         8U6TmZCUw8j4qLM1SkWLOcT/aMfyfVNFnbVNFd+sxGFagnrpOlwUNaILjG3aUSB9TQ87
-         DdZFaj8x2aBiiRgGUTA4rvVF7XtjcdUE3aL0CBxECh1+QmVXHGgkx7e0GiovvBYP4SCs
-         t4uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3gbkIhvVF1AH1z+WfY/qwoD1anC7NSB9emFlODUv0kQ=;
-        b=Ep2bi/FGPr34V7G0OQJZhaQ84n8B2dUpKFtXGVGRZ2mFL+JV1V6SeRHl8bOm+VcVgU
-         UDyegdFHyd9vnpBjBjYkwjjZ1ASpsoPt/GXSxq0JUTlHvv6Kic+q2/Ue5mZ6YWkivtcY
-         jRiGoj2eu1LEFdEN1AgHnhrJfIzymkuezd4XIdGqo9/IGjY4Y1vIsZPrMJh4RlAmodv3
-         ejFT+adjEj5o3J8F48m0L8ncALCndaNep9MNH5Lm8qqIQYWy456a4wCMt7xmp45Q8Sr0
-         b8j0z0vSQYaOEmtHrCXaUQTDhfnfD/zW9oBBhUN64pKuVbothGnteo1Di2bEtpjgaVME
-         krnQ==
-X-Gm-Message-State: AHQUAuZbSIv4GoujY0T06a7lFyDIQI4NX8thwjOEHclf6qBk7jURtaSQ
-        oRAFX7PZBiBSGQsma/uDOctFW8xU
-X-Google-Smtp-Source: APXvYqwed09qVBfmc/51mPBlv9t2qk5ZcQXOdQ8awFREBN+TSn58dSdmPYeRBoQT8/b7UFaeYPQH7w==
-X-Received: by 2002:aed:21c2:: with SMTP id m2mr6572834qtc.107.1551362138813;
-        Thu, 28 Feb 2019 05:55:38 -0800 (PST)
-Received: from localhost.localdomain ([2001:1284:f016:a307:76c1:1c91:d108:16d4])
-        by smtp.gmail.com with ESMTPSA id l16sm10855160qke.20.2019.02.28.05.55.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 05:55:37 -0800 (PST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 0573A180CD5; Thu, 28 Feb 2019 10:55:34 -0300 (-03)
-Date:   Thu, 28 Feb 2019 10:55:34 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sctp: chunk.c: correct format string for size_t in printk
-Message-ID: <20190228135534.GC13343@localhost.localdomain>
-References: <20190228113652.55552-1-maennich@google.com>
+        Thu, 28 Feb 2019 08:56:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42346 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730385AbfB1N4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 08:56:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 32638ADE1;
+        Thu, 28 Feb 2019 13:56:09 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     oneukum@suse.de, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC/RFT] HID: primax: Fix wireless keyboards descriptor
+Date:   Thu, 28 Feb 2019 14:55:55 +0100
+Message-Id: <20190228135556.14713-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228113652.55552-1-maennich@google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 11:36:52AM +0000, Matthias Maennich wrote:
-> According to Documentation/core-api/printk-formats.rst, size_t should be
-> printed with %zu, rather than %Zu.
-> 
-> In addition, using %Zu triggers a warning on clang (-Wformat-extra-args):
-> 
-> net/sctp/chunk.c:196:25: warning: data argument not used by format string [-Wformat-extra-args]
->                                     __func__, asoc, max_data);
->                                     ~~~~~~~~~~~~~~~~^~~~~~~~~
-> ./include/linux/printk.h:440:49: note: expanded from macro 'pr_warn_ratelimited'
->         printk_ratelimited(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
->         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
-> ./include/linux/printk.h:424:17: note: expanded from macro 'printk_ratelimited'
->                 printk(fmt, ##__VA_ARGS__);                             \
->                        ~~~    ^
-> 
-> Fixes: 5b5e0928f742 ("lib/vsprintf.c: remove %Z support")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/378
-> Signed-off-by: Matthias Maennich <maennich@google.com>
+A whole set of Primax manufactured wireless keyboards won't work out of
+the box as they provide wrong HID descriptors. In this case the offense
+being defining the "Usage Maximum/Minimum" local items before the "Usage
+Page". This will make the parser use the previous "Usage Page" on those
+local items, generating a wrong HID report. This is not a parser error
+as the spec clearly states that "Usage Page" applies to any item that
+follows it (see 6.2.2.7).
 
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+In other words, we get this:
 
-> ---
->  net/sctp/chunk.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/sctp/chunk.c b/net/sctp/chunk.c
-> index 64bef313d436..5cb7c1ff97e9 100644
-> --- a/net/sctp/chunk.c
-> +++ b/net/sctp/chunk.c
-> @@ -192,7 +192,7 @@ struct sctp_datamsg *sctp_datamsg_from_user(struct sctp_association *asoc,
->  	if (unlikely(!max_data)) {
->  		max_data = sctp_min_frag_point(sctp_sk(asoc->base.sk),
->  					       sctp_datachk_len(&asoc->stream));
-> -		pr_warn_ratelimited("%s: asoc:%p frag_point is zero, forcing max_data to default minimum (%Zu)",
-> +		pr_warn_ratelimited("%s: asoc:%p frag_point is zero, forcing max_data to default minimum (%zu)",
->  				    __func__, asoc, max_data);
->  	}
->  
-> -- 
-> 2.21.0.rc2.261.ga7da99ff1b-goog
-> 
+15 00          Logical Minimum (0),
+26 ff 00       Logical Maximum (255),
+19 00          Usage Minimum (00h),
+2a ff 00       Usage Maximum (FFh),
+05 07          Usage Page (Keyboard),          ; Keyboard/keypad (07h)
+75 08          Report Size (8),
+95 06          Report Count (6),
+81 00          Input,
+
+Yet they meant this:
+
+15 00          Logical Minimum (0),
+26 ff 00       Logical Maximum (255),
+05 07          Usage Page (Keyboard),          ; Keyboard/keypad (07h)
+19 00          Usage Minimum (00h),
+2a ff 00       Usage Maximum (FFh),
+75 08          Report Size (8),
+95 06          Report Count (6),
+81 00          Input,
+
+This patch fixes the issue by overwriting the offending report with a
+correct one.
+
+This was made thanks to the user's answers provided here, also full HID
+descriptors are available there:
+https://unix.stackexchange.com/questions/377830/linux-hid-driver-for-primax-wireless-keyboards/
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+
+NOTE: This is an RFC as I'm unable to test my fix. Apart from the
+  devices mentioned in the patch there is a whole list of them, yet I
+  didn't include them as I was unable to access their HID descriptors.
+
+ drivers/hid/hid-ids.h    |  3 +++
+ drivers/hid/hid-primax.c | 30 +++++++++++++++++++++++++++++-
+ drivers/hid/hid-quirks.c |  3 +++
+ 3 files changed, 35 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 24f846d67478..b39f9f36d41f 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -714,6 +714,7 @@
+ #define USB_DEVICE_ID_LENOVO_TPPRODOCK	0x6067
+ #define USB_DEVICE_ID_LENOVO_X1_COVER	0x6085
+ #define USB_DEVICE_ID_LENOVO_X1_TAB	0x60a3
++#define USB_DEVICE_ID_LENOVO_WIRELESS_PROFESSIONAL	0x609b
+ 
+ #define USB_VENDOR_ID_LG		0x1fd2
+ #define USB_DEVICE_ID_LG_MULTITOUCH	0x0064
+@@ -1225,6 +1226,8 @@
+ #define USB_DEVICE_ID_PRIMAX_REZEL	0x4e72
+ #define USB_DEVICE_ID_PRIMAX_PIXART_MOUSE_4D0F	0x4d0f
+ #define USB_DEVICE_ID_PRIMAX_PIXART_MOUSE_4E22	0x4e22
++#define USB_DEVICE_ID_PRIMAX_WIRELESS_KEYBOARD_4E63	0x4e63
++#define USB_DEVICE_ID_PRIMAX_WIRELESS_KEYBOARD_4E80	0x4e80
+ 
+ 
+ #define USB_VENDOR_ID_RISO_KAGAKU	0x1294	/* Riso Kagaku Corp. */
+diff --git a/drivers/hid/hid-primax.c b/drivers/hid/hid-primax.c
+index 3a1c3c4c50dc..033f6660e8b6 100644
+--- a/drivers/hid/hid-primax.c
++++ b/drivers/hid/hid-primax.c
+@@ -2,9 +2,11 @@
+  * HID driver for primax and similar keyboards with in-band modifiers
+  *
+  * Copyright 2011 Google Inc. All Rights Reserved
++ * Copyright 2019 Nicolas Saenz Julienne
+  *
+- * Author:
++ * Authors:
+  *	Terry Lambert <tlambert@google.com>
++ *	Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+  *
+  * This software is licensed under the terms of the GNU General Public
+  * License version 2, as published by the Free Software Foundation, and
+@@ -27,6 +29,9 @@ static int px_raw_event(struct hid_device *hid, struct hid_report *report,
+ {
+ 	int idx = size;
+ 
++	if (hid->product != USB_DEVICE_ID_PRIMAX_KEYBOARD)
++		return 0;
++
+ 	switch (report->id) {
+ 	case 0:		/* keyboard input */
+ 		/*
+@@ -64,8 +69,29 @@ static int px_raw_event(struct hid_device *hid, struct hid_report *report,
+ 	return 0;
+ }
+ 
++/*
++ * Some Primax manufactured keyboards set "Usage Minimum/Maximum" values before
++ * setting the "Usage Page". This is not supported as per spec 6.2.2.7.
++ */
++static __u8 *px_fixup(struct hid_device *hid, __u8 *rdesc, unsigned int *rsize)
++{
++	__u8 wrong_report[] = { 0x19, 0x00, 0x2a, 0xff, 0x05, 0x07 };
++	__u8 fixed_report[] = { 0x05, 0x07, 0x19, 0x00, 0x2a, 0xff };
++
++	if (*rsize > 57 &&
++	    !memcmp(&rdesc[51], wrong_report, ARRAY_SIZE(wrong_report))) {
++		hid_info(hid, "fixing up Primax report descriptor\n");
++		memcpy(&rdesc[51], fixed_report, ARRAY_SIZE(fixed_report));
++	}
++
++	return rdesc;
++}
++
+ static const struct hid_device_id px_devices[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_KEYBOARD) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_WIRELESS_KEYBOARD_4E63) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_WIRELESS_KEYBOARD_4E80) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_WIRELESS_PROFESSIONAL) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(hid, px_devices);
+@@ -74,8 +100,10 @@ static struct hid_driver px_driver = {
+ 	.name = "primax",
+ 	.id_table = px_devices,
+ 	.raw_event = px_raw_event,
++	.report_fixup = px_fixup,
+ };
+ module_hid_driver(px_driver);
+ 
+ MODULE_AUTHOR("Terry Lambert <tlambert@google.com>");
++MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 94088c0ed68a..9fd256fea231 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -563,6 +563,9 @@ static const struct hid_device_id hid_have_special_driver[] = {
+ #endif
+ #if IS_ENABLED(CONFIG_HID_PRIMAX)
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_KEYBOARD) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_WIRELESS_KEYBOARD_4E63) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_PRIMAX, USB_DEVICE_ID_PRIMAX_WIRELESS_KEYBOARD_4E80) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_WIRELESS_PROFESSIONAL) },
+ #endif
+ #if IS_ENABLED(CONFIG_HID_PRODIKEYS)
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CREATIVELABS, USB_DEVICE_ID_PRODIKEYS_PCMIDI) },
+-- 
+2.20.1
+
