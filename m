@@ -2,85 +2,80 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF09C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1EEC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B684B218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:27:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNTdLMJA"
+	by mail.kernel.org (Postfix) with ESMTP id B4F34218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551378516;
+	bh=EDlpU+X+9JIQiHcd6wbYcvmKfkUiQnRd+oNU2kUUGY8=;
+	h=To:References:Cc:Subject:From:In-Reply-To:Date:List-ID:From;
+	b=ngge26oQM27J6ax+IO9uCD/SJ7M7GHznPBu4nNHRgYRwOc8tifDlPWMvL2kyD9vzD
+	 7g5ed2pefs+KgGGJ52eOIqaDEDCIg2p19/+to5KcW6XBnLUaKgW0e7JvPZDE50++Vt
+	 lOOzzKWo0oLkULNOB4+iU7YGPtFS7z1WjBIiBjro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388704AbfB1S16 (ORCPT
+        id S1733069AbfB1S2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:27:58 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39218 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731474AbfB1S15 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:27:57 -0500
-Received: by mail-ot1-f66.google.com with SMTP id e15so8993787otk.6;
-        Thu, 28 Feb 2019 10:27:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Wb4Sk2aPP3ObI+K6cINJDHonqGOmDkpOENIGc6U7/I=;
-        b=sNTdLMJAzbD20FJYlH6F90kRnbLXrAy9HdIQQrxX2JPkeZ59MVuOAWO/DExmKfh6EX
-         p2T+mxdKn65XawegVHB1XiBaj6m8l9uohk2YoaGdBsf+mnBgz1Gp1T8mXaWWuriNk3i9
-         VQoXHbzuM9pBJkxVObYQOBdV3g8d+oxCIejAaAjAKfHyy6/nFnA0RTdxH1TkCVfwXdBE
-         2+aFvRIdXt8gnTM3A1/xTzBIlD9H5TTxrXi9YyZ4VIPPWKHenU6RoAnge/zQ3FKu8mDz
-         Gkmduus08UeJ5RPOypglc8bRwo2o1R1b+WJ6lizWhQe6nhA2CJ1DpxBeUpKpoLXgHVTA
-         SV2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Wb4Sk2aPP3ObI+K6cINJDHonqGOmDkpOENIGc6U7/I=;
-        b=eekQfO6ROP/14AviYUMhDlTTP0zt2DTTwjysBooIp0AhNZ3MmDnYkgx2bO1mZV9Y6U
-         IX5+fYFU5rIyBSdKGY/yFk3+n4dSXcN4VjsccQcLrSNt6a6IU1VS/KmGHj59K5sMNeLs
-         pFECRbzKItHLtF3MITvGQp+LjfOUrTKUamFzwUgw4VQeY4oWQe6DiECRaoN61HeiylRu
-         IzxIFkZoZiTs95U8yDiZbHX6QjtekO8HbHjDDq1sNHHaERnnS8QG/JSkeVjxUL+nY8iB
-         Z+YFNQHzAXdMIjj6OIN2/72ABFn3DBrB/pxIiKGkpPPUwkEX5qh0CnfJMYjZQq8o33Vb
-         9HIw==
-X-Gm-Message-State: APjAAAXWngCrL1+vmLGg9G2lm+CpVkidmkeB7v30vwpy2BOJmLWE5X+1
-        fgUQnJVUfqfDfo7/31bnCIkB+DOY7/y9Vz2VUuY=
-X-Google-Smtp-Source: APXvYqwXLVibQkBQ5OOp6Q3QaFYd82w/KgSvtUDOv7BOlbzHPCg1nYCMW4wuiedWgudZ+GToL9h2L15XiM1Jc54ryqY=
-X-Received: by 2002:a9d:72c2:: with SMTP id d2mr712498otk.228.1551378477139;
- Thu, 28 Feb 2019 10:27:57 -0800 (PST)
+        Thu, 28 Feb 2019 13:28:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726810AbfB1S2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:28:35 -0500
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DCEF218AE;
+        Thu, 28 Feb 2019 18:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551378514;
+        bh=EDlpU+X+9JIQiHcd6wbYcvmKfkUiQnRd+oNU2kUUGY8=;
+        h=To:References:Cc:Subject:From:In-Reply-To:Date:From;
+        b=QLh6bVItzkZatE3zhsIdzVZ3TED7T1IcpQZclFHdMo8rnLJ5EOADbx2NARxA10W0A
+         OLFeF7Gzi90fVPweI2QV2F5+0N5B8sr1nP+/fZ78V72fnUxnAyRV1YMjj8OXxWooM/
+         Tk8SVwxySVlR2s187v6XSi+H0xzgHqlkCVTwVpYI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1551321831-11597-1-git-send-email-Anson.Huang@nxp.com> <1551321831-11597-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1551321831-11597-2-git-send-email-Anson.Huang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 28 Feb 2019 15:27:47 -0300
-Message-ID: <CAOMZO5C8CWu2ArCZ1vMzZsmpFKt9RuR+FrfB_P3S35s8Ynbt2Q@mail.gmail.com>
-Subject: Re: [PATCH V3 2/3] ARM: dts: imx7ulp: add mmdc support
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+Content-Transfer-Encoding: quoted-printable
+To:     "agx@sigxcpu.org" <agx@sigxcpu.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>
+References: <1551230622-30660-1-git-send-email-Anson.Huang@nxp.com>
+Message-ID: <155137851395.260864.14415827055284077946@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH RESEND V2 1/2] clk: imx8mq: add GPIO clocks to clock tree
+From:   Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <1551230622-30660-1-git-send-email-Anson.Huang@nxp.com>
+Date:   Thu, 28 Feb 2019 10:28:33 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 11:48 PM Anson Huang <anson.huang@nxp.com> wrote:
->
-> i.MX7ULP has a MMDC module to control DDR, it reuses
-> i.MX6Q's MMDC module, add support for it.
->
+Quoting Anson Huang (2019-02-26 17:28:26)
+> i.MX8MQ has clock gate for each GPIO bank, add them
+> into clock tree for GPIO driver to manage.
+>=20
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Applied to clk-next
+
