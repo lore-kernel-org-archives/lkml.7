@@ -2,178 +2,103 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29D4C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CB9C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE081206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E26218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:31:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="G1RQ+ECQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEaIHPAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbfB1X1z (ORCPT
+        id S1732858AbfB1Xbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:27:55 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33642 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729374AbfB1X1y (ORCPT
+        Thu, 28 Feb 2019 18:31:45 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44419 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732367AbfB1Xbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:27:54 -0500
-Received: by mail-qt1-f193.google.com with SMTP id z39so25754334qtz.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:27:53 -0800 (PST)
+        Thu, 28 Feb 2019 18:31:44 -0500
+Received: by mail-pf1-f195.google.com with SMTP id a3so10452308pff.11;
+        Thu, 28 Feb 2019 15:31:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xWDbgPyPORkCT+/xgiItSx7wHOtxmHnj4rSzLgtTLKc=;
-        b=G1RQ+ECQeMr60kO4r1ZkhYD+3Ntx/+zn5QM6zXYoPKZ1+Ypta9xmQK7xgJ8MqBSAnz
-         7096XDsMJfXisgLXhRMSwWz7wTTlyRPys+wGUrVghyI5CG2fHkhMGoZi5R+9MisQLz5C
-         1ypSB6uaLK0iR3hZqBgOY10fRnfgMBqfIBIG4=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ntjfVa+jngHFHVKJwKRWVLjgGzUEmZ1zbsiDrkIYxIo=;
+        b=nEaIHPAiZtM905nJguLEKVXr7X5kW/qtIUC85tbg8CikmJxHmMelCHiR7nh6x0nwJO
+         X9sYO8xgJ0qu5sP/c62jYFtdPyaxbc1j+WrZqZpK4W0gbe9TkQLDW9B79pMEmjOt9Ub6
+         51pmu5PBL+b4Re2l7EhfIrKq2yq3Hhn53GjizKeME/JSdXIPZLtB3uFi0ymJM15+K1h/
+         SF/FIzKQ3mV+lvDYU/LRdESUIwiXqQTHMfE/5x//kYZZw1O1ve9+tBieXRfyBi01eVlH
+         /JDLDWPYeZWxQZJ4m13SMqcVkntIMMLcnOc8Yb8nSv6U0LswkOGxN8nRecMI6UFcSt3q
+         Y73g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xWDbgPyPORkCT+/xgiItSx7wHOtxmHnj4rSzLgtTLKc=;
-        b=kZSrDF/6ByCooHtMXxEp09RWM/pdxeB4w3EhnkW4wHlnl7lNDIAsE3B8G/56FOnKEB
-         bfGehhJZQB8NDGKOT+pUYnHqqNfYx3k1KbP/qUw87I+eIowVcW10KgbCQs0G5z+nnXZI
-         jNdnFKMzDaUA7Yb61mG05ygK8Ojmd3ifEnCKBGEl2yeScjcKyYpPLIBAUSKZQAlaD3tf
-         9JwQT9lQpGqjZKfuKdWtbCtmRPfWIudQaIEhb3KIEp2wL7akS4U4HSzW+A6Z+Sfr3ANc
-         FlztDl5JWbKB9hGH5G97oGKaOVcdDbcoDDNrdJXkUj6ktkyk+cnomaIFPWqF98G+vT8U
-         LAWQ==
-X-Gm-Message-State: APjAAAWeY3tJ1bLWP5Zi+ltkBZYKZMoRpZ65uq+6WDR731iJBIT02atz
-        i3HwgcxXNSUvYK5YMWcOXmD/ZV0Zj2Q=
-X-Google-Smtp-Source: APXvYqw4r+UaA3CrJtnaKan7IMyZtlQMubNJDHssmoo4+UiLRFPgNNOIlIFEzlqRMJl+KQPs6uc0+Q==
-X-Received: by 2002:ac8:19f5:: with SMTP id s50mr1580095qtk.25.1551396473234;
-        Thu, 28 Feb 2019 15:27:53 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id l16sm11523673qke.20.2019.02.28.15.27.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 15:27:51 -0800 (PST)
-Date:   Thu, 28 Feb 2019 18:27:51 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190228232751.GA218988@google.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
- <20190228144306.GA138215@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ntjfVa+jngHFHVKJwKRWVLjgGzUEmZ1zbsiDrkIYxIo=;
+        b=LDPV/cKASy9DqlqlbKeRgEbVpDM+pCcp+EggwUqu3DqN9OJ7oYtstBCK0pw8+CxKIF
+         KPJjwqvb3KYqhIXdcUa9JkT4TyOMuP8Sdp9izD/5evwkRy9EXeJ3KGLkTtTI7OlzxscA
+         4mZQ2J19aMJTAZAsU4fEDijPqfMLg16edtHmix2rmHWpj5H3udelWJLylmMjM+2rnOIQ
+         AZt2Ie7J6xptxj6MaAHvEHnmThW8lU3OKyBhX3c6ZNFq3M8twSGhS03It1q4dQGbB8pv
+         X6BP+cczMF9WdsgLPf/VDGMRLDMTRVzJms0La6J8WrVsvPsKmg5z0TBksCLcjoBq5qFX
+         518Q==
+X-Gm-Message-State: APjAAAWax1MjSqNjs02Jtx0aQEqq2tJVG20q2onYvQJhXHowxtg7FcU0
+        SjyMB3i190rTX2ntUsxh02wwYcwQ
+X-Google-Smtp-Source: APXvYqzG2TvvEDbj+fCX6zqbl0k8Tw/WLcjYDPXGjKGC5u02DNYV2Vr/JbaOSLtTlJ/agl/GsfwCcA==
+X-Received: by 2002:a63:144:: with SMTP id 65mr1808067pgb.38.1551396703305;
+        Thu, 28 Feb 2019 15:31:43 -0800 (PST)
+Received: from ?IPv6:2601:282:800:fd80:426:ff55:d0ef:2e52? ([2601:282:800:fd80:426:ff55:d0ef:2e52])
+        by smtp.googlemail.com with ESMTPSA id o5sm45932039pfi.118.2019.02.28.15.31.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 15:31:42 -0800 (PST)
+Subject: Re: [PATCH] net: ipv6: check net in ip6_call_ra_chain
+To:     David Miller <davem@davemloft.net>, fruggeri@arista.com
+Cc:     yoshfuji@linux-ipv6.org, kuznet@ms2.inr.ac.ru, maxim@arista.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20190228190146.802CD95C016B@us180.sjc.aristanetworks.com>
+ <20190228.130213.1481374802407995712.davem@davemloft.net>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <171e33d9-ee82-6a62-693e-5d585e4eca28@gmail.com>
+Date:   Thu, 28 Feb 2019 16:31:40 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228144306.GA138215@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190228.130213.1481374802407995712.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 09:43:06AM -0500, Joel Fernandes wrote:
-> On Thu, Feb 28, 2019 at 11:17:51AM +0900, Masahiro Yamada wrote:
-> > Hi Joel,
-> > 
-> > 
-> > On Thu, Feb 28, 2019 at 4:40 AM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > >
-> > > Introduce in-kernel headers and other artifacts which are made available
-> > > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> > > it possible to build kernel modules, run eBPF programs, and other
-> > > tracing programs that need to extend the kernel for tracing purposes
-> > > without any dependency on the file system having headers and build
-> > > artifacts.
-> > >
-> > > On Android and embedded systems, it is common to switch kernels but not
-> > > have kernel headers available on the file system. Raw kernel headers
-> > > also cannot be copied into the filesystem like they can be on other
-> > > distros, due to licensing and other issues. There's no linux-headers
-> > > package on Android. Further once a different kernel is booted, any
-> > > headers stored on the file system will no longer be useful. By storing
-> > > the headers as a compressed archive within the kernel, we can avoid these
-> > > issues that have been a hindrance for a long time.
-> > >
-> > > The feature is also buildable as a module just in case the user desires
-> > > it not being part of the kernel image. This makes it possible to load
-> > > and unload the headers on demand. A tracing program, or a kernel module
-> > > builder can load the module, do its operations, and then unload the
-> > > module to save kernel memory. The total memory needed is 3.8MB.
-> > >
-> > > The code to read the headers is based on /proc/config.gz code and uses
-> > > the same technique to embed the headers.
-> > 
-> > 
-> > 
-> > Please let me ask a question about the actual use-case.
-> > 
-> > 
-> > To build embedded systems including Android,
-> > I use an x86 build machine.
-> > 
-> > In other words, I cross-compile vmlinux and in-tree modules.
-> > So,
-> > 
-> >   target-arch: arm64
-> >   host-arch:   x86
-> > 
-> > 
-> > 
-> The other way we can make this work is using x86 usermode emulation inside a
-> chroot on the Android device which will make the earlier commands work.
+On 2/28/19 2:02 PM, David Miller wrote:
+> From: fruggeri@arista.com (Francesco Ruggeri)
+> Date: Thu, 28 Feb 2019 11:01:46 -0800
+> 
+>> ip6_call_ra_chain is called when IPv6 packet with Router Alert option
+>> is forwarded.
+>> It needs to check if the net of the socket is the same as the net of the
+>> input device, otherwise the packet gets delivered to every IPv6 socket
+>> listening for Router Alerts, no matter which network namespace it is in.
+>>
+>> Suggested-by: Maxim Martynov <maxim@arista.com>
+>> Signed-off-by: Maxim Martynov <maxim@arista.com>
+>> Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+> 
+> Right now someone using such a tool does get all RAs in the system.
+> 
+> Your change not only breaks them, but also gives them no method by
+> which to keep obtaining the same behavior.
+> 
+> I don't know what to do or suggest in this situation, but right now
+> I'm putting this patch on hold.
+> 
 
-I verified the steps to build a module on my Pixel 3 (arm64) with Linux
-kernel for arm64 compiled on my x86 host:
-
-After building the headers, the steps were something like:
-
-1.Build an x86 debian image with cross-gcc:
-
-sudo qemu-debootstrap --arch amd64
-  --include=make,gcc,gcc-aarch64-linux-gnu,perl,libelf1,python
-  --variant=minbase $DIST $RUN_DIR http://ftp.us.debian.org/debian
-
-2. Push qemu-x86_64-static (which I downloaded from the web) onto the device.
-
-3. Tell binfmt_misc about qemu:
-echo
-':qemu-x86_64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x3e\x00:
-\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/qemu-x86_64-static:OC'
-> /proc/sys/fs/binfmt_misc/register
-
-4. adb shell and then chroot into the image
-
-5. follow all the steps in the commit message but set ARCH and CROSS_COMPILE
-appropriately.
-
-After Make, kernel module is cooked and ready :)
-
-thanks,
-
- - Joel
-
+need an equivalent to NETLINK_LISTEN_ALL_NSID
