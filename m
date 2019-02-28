@@ -2,189 +2,95 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D17C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0739C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DC920C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:19:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hy2A5rbh"
+	by mail.kernel.org (Postfix) with ESMTP id A984E214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732757AbfB1NTV (ORCPT
+        id S1732759AbfB1NTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:19:21 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34639 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbfB1NSr (ORCPT
+        Thu, 28 Feb 2019 08:19:51 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55013 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726913AbfB1NTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:18:47 -0500
-Received: by mail-lj1-f195.google.com with SMTP id l5so17113670lje.1;
-        Thu, 28 Feb 2019 05:18:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JPHqguOp/7QU9S+J0U9TetxPLGIvYKymEwgwMO29Kd8=;
-        b=Hy2A5rbhklLatywHq1T53j3uQilomncH0DHlXBYQzUpAllgu0nRHHPgdcZrFIVrrlN
-         4WV47kXrLAGS4XHo8dTxuAxCOnQuCBObcX4QUsaW3cdEq3Ye+Kl0ogmzfTBSDtzduJOr
-         x2XAegq11xz2MfMwm8346hRD08vVJBLYnbW+LCnu9ai8k9aZiIO/N9XNDVQrD3c6K27E
-         5DLX03mbss/cvPwsFrb0ri+LZ4WiDuSkwho4sHj0Vddqt8OBHmbZFWWzGSxYjqCCKgnu
-         mOJUhZlyttXYTE/uEh0A1JIAdraUQOo2QsI6AYgISWqYsF9Obz76dL7XcQrkrCi7nPrw
-         eD+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JPHqguOp/7QU9S+J0U9TetxPLGIvYKymEwgwMO29Kd8=;
-        b=ZrHFs41E4XOdAPno5+crcB8+0X7vGcCKk5Vpys+a8DKP49NtWkEZwkfZEKaN0+QK1j
-         wjn2ZnS8MWN238Cs8utfhRefOVwqub5Ijdd6bDj8I/rNujffTD3Bkv/lUWBQNCyN5q+W
-         zRANk8o00JIblSJyuIyhJp3Yo/ADHjSQU/xqUbtdypqCr2mgBmGAn3H8oI+hFY0l418L
-         BWcEc1XEJmg+3B7ePZybLZOeFIoHBCvGfEV9rkocTBXEKwuXIRy4GJEY/doWRUVLP7WR
-         VJ0r4cqtERhoTTlMNt+fCq5Ub3ljoQrRuUBoi2W1Q+5VVWaYJhz3k9N31TzGAmhiM4oj
-         KyGw==
-X-Gm-Message-State: APjAAAW+Ux1U/OG9RVLiQQ5HBZcO9SfQ/PCf6VbmvsZtTrNChLgD49Xu
-        UtemSmwinI4zEreQ46/ZTW0=
-X-Google-Smtp-Source: APXvYqyZdbQXIKMbxFPOdC4unYY3ldojfzXhSZxMau+ZDAeizEAApK5yt3nMe0RZXWKejMQVBNurHg==
-X-Received: by 2002:a2e:6a18:: with SMTP id f24mr4862460ljc.97.1551359925090;
-        Thu, 28 Feb 2019 05:18:45 -0800 (PST)
-Received: from localhost.localdomain (ppp91-79-175-49.pppoe.mtu-net.ru. [91.79.175.49])
-        by smtp.gmail.com with ESMTPSA id l26sm4600069lfc.37.2019.02.28.05.18.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 05:18:44 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Robert Yang <decatf@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 2/7] ARM: trusted_foundations: Make prepare_idle call to take mode argument
-Date:   Thu, 28 Feb 2019 16:17:02 +0300
-Message-Id: <20190228131707.2592-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190228131707.2592-1-digetx@gmail.com>
-References: <20190228131707.2592-1-digetx@gmail.com>
+        Thu, 28 Feb 2019 08:19:51 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SDH6L3010694;
+        Thu, 28 Feb 2019 14:19:33 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2qtwxpdff7-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 28 Feb 2019 14:19:33 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E799D34;
+        Thu, 28 Feb 2019 13:19:32 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C04C856BE;
+        Thu, 28 Feb 2019 13:19:32 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 28 Feb
+ 2019 14:19:31 +0100
+Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 28 Feb 2019 14:19:30
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
+        <arnaud.pouliquen@st.com>, <benjamin.gaignard@st.com>
+Subject: [PATCH 2/5] ASoC: stm32: sai: fix exposed capabilities in spdif mode
+Date:   Thu, 28 Feb 2019 14:19:22 +0100
+Message-ID: <1551359965-25228-3-git-send-email-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1551359965-25228-1-git-send-email-olivier.moysan@st.com>
+References: <1551359965-25228-1-git-send-email-olivier.moysan@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.16]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Trusted Foundations firmware call varies depending on the required
-suspend-mode. Make the firmware API to take the mode argument in order
-to expose all of the modes to firmware user.
+Change capabilities exposed in SAI S/PDIF mode, to match
+actually supported formats.
+In S/PDIF mode only 32 bits stereo is supported.
 
-Tested-by: Robert Yang <decatf@gmail.com>
-Tested-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 ---
- arch/arm/firmware/trusted_foundations.c    | 29 ++++++++++++++++++++--
- arch/arm/include/asm/firmware.h            |  2 +-
- arch/arm/include/asm/trusted_foundations.h |  6 +++++
- arch/arm/mach-tegra/cpuidle-tegra114.c     |  3 ++-
- 4 files changed, 36 insertions(+), 4 deletions(-)
+ sound/soc/stm/stm32_sai_sub.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/firmware/trusted_foundations.c b/arch/arm/firmware/trusted_foundations.c
-index 4028104cf7b2..188b9a33f72b 100644
---- a/arch/arm/firmware/trusted_foundations.c
-+++ b/arch/arm/firmware/trusted_foundations.c
-@@ -67,9 +67,34 @@ static int tf_set_cpu_boot_addr(int cpu, unsigned long boot_addr)
- 	return 0;
- }
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 506360b7bc01..e418f446e03b 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -682,6 +682,14 @@ static int stm32_sai_startup(struct snd_pcm_substream *substream,
  
--static int tf_prepare_idle(void)
-+static int tf_prepare_idle(unsigned long mode)
- {
--	tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S1_NOFLUSH_L2, cpu_boot_addr);
-+	switch (mode) {
-+	case TF_PM_MODE_LP0:
-+		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S3, cpu_boot_addr);
-+		break;
-+
-+	case TF_PM_MODE_LP1:
-+		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S2, cpu_boot_addr);
-+		break;
-+
-+	case TF_PM_MODE_LP1_NO_MC_CLK:
-+		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S2_NO_MC_CLK,
-+			       cpu_boot_addr);
-+		break;
-+
-+	case TF_PM_MODE_LP2:
-+		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S1, cpu_boot_addr);
-+		break;
-+
-+	case TF_PM_MODE_LP2_NOFLUSH_L2:
-+		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S1_NOFLUSH_L2,
-+			       cpu_boot_addr);
-+		break;
-+
-+	default:
-+		return -EINVAL;
+ 	sai->substream = substream;
+ 
++	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
++		snd_pcm_hw_constraint_mask64(substream->runtime,
++					     SNDRV_PCM_HW_PARAM_FORMAT,
++					     SNDRV_PCM_FMTBIT_S32_LE);
++		snd_pcm_hw_constraint_single(substream->runtime,
++					     SNDRV_PCM_HW_PARAM_CHANNELS, 2);
 +	}
- 
- 	return 0;
- }
-diff --git a/arch/arm/include/asm/firmware.h b/arch/arm/include/asm/firmware.h
-index 34c1d96ef46d..6698272bbcbf 100644
---- a/arch/arm/include/asm/firmware.h
-+++ b/arch/arm/include/asm/firmware.h
-@@ -24,7 +24,7 @@ struct firmware_ops {
- 	/*
- 	 * Inform the firmware we intend to enter CPU idle mode
- 	 */
--	int (*prepare_idle)(void);
-+	int (*prepare_idle)(unsigned long mode);
- 	/*
- 	 * Enters CPU idle mode
- 	 */
-diff --git a/arch/arm/include/asm/trusted_foundations.h b/arch/arm/include/asm/trusted_foundations.h
-index 07183ca43b25..650cca7435f4 100644
---- a/arch/arm/include/asm/trusted_foundations.h
-+++ b/arch/arm/include/asm/trusted_foundations.h
-@@ -35,6 +35,12 @@
- #include <asm/hardware/cache-l2x0.h>
- #include <asm/outercache.h>
- 
-+#define TF_PM_MODE_LP0			0
-+#define TF_PM_MODE_LP1			1
-+#define TF_PM_MODE_LP1_NO_MC_CLK	2
-+#define TF_PM_MODE_LP2			3
-+#define TF_PM_MODE_LP2_NOFLUSH_L2	4
 +
- struct trusted_foundations_platform_data {
- 	unsigned int version_major;
- 	unsigned int version_minor;
-diff --git a/arch/arm/mach-tegra/cpuidle-tegra114.c b/arch/arm/mach-tegra/cpuidle-tegra114.c
-index e3fbcfedf845..3b9af4766cdf 100644
---- a/arch/arm/mach-tegra/cpuidle-tegra114.c
-+++ b/arch/arm/mach-tegra/cpuidle-tegra114.c
-@@ -24,6 +24,7 @@
- #include <asm/cpuidle.h>
- #include <asm/smp_plat.h>
- #include <asm/suspend.h>
-+#include <asm/trusted_foundations.h>
- #include <asm/psci.h>
- 
- #include "cpuidle.h"
-@@ -46,7 +47,7 @@ static int tegra114_idle_power_down(struct cpuidle_device *dev,
- 	tegra_set_cpu_in_lp2();
- 	cpu_pm_enter();
- 
--	call_firmware_op(prepare_idle);
-+	call_firmware_op(prepare_idle, TF_PM_MODE_LP2_NOFLUSH_L2);
- 
- 	/* Do suspend by ourselves if the firmware does not implement it */
- 	if (call_firmware_op(do_idle, 0) == -ENOSYS)
+ 	ret = clk_prepare_enable(sai->sai_ck);
+ 	if (ret < 0) {
+ 		dev_err(cpu_dai->dev, "Failed to enable clock: %d\n", ret);
 -- 
-2.20.1
+2.7.4
 
