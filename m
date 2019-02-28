@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0B2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D08C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577102184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53B3218E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366987;
-	bh=wIbWpnhPRN3SfQiz7teZzGpJ3Qk9a1oxLNrfAGIz68s=;
+	s=default; t=1551366990;
+	bh=8zhW52B+DJe3HBprdZDJn1wJiof8ZBnnHU4bCIx5Bpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C1WXXLXwsZwovhzTXLeK9OLReOa7j2w7doj+O1hhfYlqr9NpHj0dHa3A9n9IlYwri
-	 AvgsyEk93ExH2R8Tt56O33JRrTOnTANHtTNqZyIcfYYIacJ60rF1p7DQQjd6i9Nu5g
-	 LY+SPDYyIivGPa3uq23dJcBIeBIjvHT3JjfpNN8Q=
+	b=DvAr9qXTGG0VonHWB41HAPv4gTv7bY1ffvUEo2bFOJE/DPW1yBjxvuXmWx21cj0pK
+	 z7dslJcHWaz7cRFilEehocG22V5HX4Ymf+PD6qMS4sYUqkmjeW4Cw4bNrGPmbnFeh7
+	 wR9R6pycAC8rEJaX+U9lzu3MV6N7WjUtmXb9CSRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388593AbfB1PQZ (ORCPT
+        id S2389048AbfB1PQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:16:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:16:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388682AbfB1PQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:16:20 -0500
+        id S2388361AbfB1PQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:16:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 818E3218FC;
-        Thu, 28 Feb 2019 15:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FC8520C01;
+        Thu, 28 Feb 2019 15:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366980;
-        bh=wIbWpnhPRN3SfQiz7teZzGpJ3Qk9a1oxLNrfAGIz68s=;
+        s=default; t=1551366986;
+        bh=8zhW52B+DJe3HBprdZDJn1wJiof8ZBnnHU4bCIx5Bpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sqK/eULxGyTcV640q0OzS/6ELP6P3fIuMjo7rAN3zj9jbkT5JHTQoAyaljTpc/FSa
-         Bj3PpNTOd8YksDlEQPeGEW7Ms/zmoDOY/+rsCWMKwqYnrhuM6G1BBQBw0W2q9aFi45
-         RV2x90zzs2bw/fCQ6ucZKb5rSvFl3gQCZi1ia9J0=
+        b=kLnSSdm+jRgEfcRxm6qRxtJjBua3VW383ARDT3JdajYmxCbvsmYYcqTlBO3hqZdqP
+         kBhqBgKaeWbq7IGpzfrv3IdUU6B4aC069J2StTg/p56bMW7qUyM43/10RjQIoQoWXQ
+         Q4hlyArzEAeWysWnnjRXi33/5sFQ3yCrzcV+gohg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 5/8] s390/qeth: fix use-after-free in error path
-Date:   Thu, 28 Feb 2019 10:16:09 -0500
-Message-Id: <20190228151614.13022-5-sashal@kernel.org>
+Cc:     Jun-Ru Chang <jrjang@realtek.com>, Tony Wu <tonywu@realtek.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
+        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 8/8] MIPS: Remove function size check in get_frame_info()
+Date:   Thu, 28 Feb 2019 10:16:12 -0500
+Message-Id: <20190228151614.13022-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151614.13022-1-sashal@kernel.org>
 References: <20190228151614.13022-1-sashal@kernel.org>
@@ -58,70 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Jun-Ru Chang <jrjang@realtek.com>
 
-[ Upstream commit afa0c5904ba16d59b0454f7ee4c807dae350f432 ]
+[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
 
-The error path in qeth_alloc_qdio_buffers() that takes care of
-cleaning up the Output Queues is buggy. It first frees the queue, but
-then calls qeth_clear_outq_buffers() with that very queue struct.
+Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
+microMIPS function size.") introduces additional function size
+check for microMIPS by only checking insn between ip and ip + func_size.
+However, func_size in get_frame_info() is always 0 if KALLSYMS is not
+enabled. This causes get_frame_info() to return immediately without
+calculating correct frame_size, which in turn causes "Can't analyze
+schedule() prologue" warning messages at boot time.
 
-Make the call to qeth_clear_outq_buffers() part of the free action
-(in the correct order), and while at it fix the naming of the helper.
+This patch removes func_size check, and let the frame_size check run
+up to 128 insns for both MIPS and microMIPS.
 
-Fixes: 0da9581ddb0f ("qeth: exploit asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
+Signed-off-by: Tony Wu <tonywu@realtek.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <macro@mips.com>
+Cc: <yamada.masahiro@socionext.com>
+Cc: <peterz@infradead.org>
+Cc: <mingo@kernel.org>
+Cc: <linux-mips@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ arch/mips/kernel/process.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 533bd2467910b..b40604d0126f8 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2452,11 +2452,12 @@ static int qeth_init_qdio_out_buf(struct qeth_qdio_out_q *q, int bidx)
- 	return rc;
- }
- 
--static void qeth_free_qdio_out_buf(struct qeth_qdio_out_q *q)
-+static void qeth_free_output_queue(struct qeth_qdio_out_q *q)
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index ebd8a715fe380..e6102775892d1 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -339,7 +339,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip)
+ static int get_frame_info(struct mips_frame_info *info)
  {
- 	if (!q)
- 		return;
+ 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
+-	union mips_instruction insn, *ip, *ip_end;
++	union mips_instruction insn, *ip;
+ 	const unsigned int max_insns = 128;
+ 	unsigned int last_insn_size = 0;
+ 	unsigned int i;
+@@ -351,10 +351,9 @@ static int get_frame_info(struct mips_frame_info *info)
+ 	if (!ip)
+ 		goto err;
  
-+	qeth_clear_outq_buffers(q, 1);
- 	qdio_free_buffers(q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
- 	kfree(q);
- }
-@@ -2529,10 +2530,8 @@ static int qeth_alloc_qdio_buffers(struct qeth_card *card)
- 		card->qdio.out_qs[i]->bufs[j] = NULL;
- 	}
- out_freeoutq:
--	while (i > 0) {
--		qeth_free_qdio_out_buf(card->qdio.out_qs[--i]);
--		qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--	}
-+	while (i > 0)
-+		qeth_free_output_queue(card->qdio.out_qs[--i]);
- 	kfree(card->qdio.out_qs);
- 	card->qdio.out_qs = NULL;
- out_freepool:
-@@ -2565,10 +2564,8 @@ static void qeth_free_qdio_buffers(struct qeth_card *card)
- 	qeth_free_buffer_pool(card);
- 	/* free outbound qdio_qs */
- 	if (card->qdio.out_qs) {
--		for (i = 0; i < card->qdio.no_out_queues; ++i) {
--			qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--			qeth_free_qdio_out_buf(card->qdio.out_qs[i]);
--		}
-+		for (i = 0; i < card->qdio.no_out_queues; i++)
-+			qeth_free_output_queue(card->qdio.out_qs[i]);
- 		kfree(card->qdio.out_qs);
- 		card->qdio.out_qs = NULL;
- 	}
+-	ip_end = (void *)ip + info->func_size;
+-
+-	for (i = 0; i < max_insns && ip < ip_end; i++) {
++	for (i = 0; i < max_insns; i++) {
+ 		ip = (void *)ip + last_insn_size;
++
+ 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
+ 			insn.halfword[0] = 0;
+ 			insn.halfword[1] = ip->halfword[0];
 -- 
 2.19.1
 
