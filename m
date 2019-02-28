@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96B8C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1F3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED9920C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1497320C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367597;
-	bh=2Rv7brahYN8Uz9rnNkGYlc8II7kelXFK7zP2hogbRlA=;
+	s=default; t=1551367602;
+	bh=bHze5SsU9HdUuDefwMEGfnZn9b4BewsDq9Er7jUDf0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MXDCKi9qO2Hu1rrRe0nowf2oO7vhD/xOKROwj27VOpcFN6H9x2BGs4A9L4v2Xo+qp
-	 /nEwLINrgAtFmFHwRxmoy7OsU4LsqDbz3ScMnmSyUTb4x8bnyrxZQiIpXfXH+OjymV
-	 e9yrFSe+MN/3rH+v63Qm9UwEpLOh5SBPNU+gnQqY=
+	b=HMuiWlMtJ48ePZNuBWQP/Z3+CN4Iq/BWJ9RDX0qrN4bsJlJPp0rMG/gW78QW0rnwy
+	 mmWrLFQy2kTIJ0Sr3N/EHTLCKBEmuzVCeMfoTxRnmkv11IErM4p+aFiQaKuyYktoYT
+	 ZNmoYXyWGeI7rFb9qglx/sVa9eAYy+Nlfatu2Q/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388037AbfB1PLo (ORCPT
+        id S2389054AbfB1P0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:11:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44854 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:26:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732726AbfB1PLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:37 -0500
+        id S1732707AbfB1PLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F819218D8;
-        Thu, 28 Feb 2019 15:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD2CD218E2;
+        Thu, 28 Feb 2019 15:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366696;
-        bh=2Rv7brahYN8Uz9rnNkGYlc8II7kelXFK7zP2hogbRlA=;
+        s=default; t=1551366699;
+        bh=bHze5SsU9HdUuDefwMEGfnZn9b4BewsDq9Er7jUDf0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZFxQeCMedfQwHCEl4xD77KvQ7pxGCyBeHCJD2iX4WfvjLZu9SmpBV+y1VsBSBQfO
-         rvvwYg8PJukHK1BnMoP2I6+Ip1Hv6aLim/IE4YSl1mSMFEFK8snXWZRV/KVOF3LoFU
-         PaQSial0BvQBnxBfXqyTxjmyVBPLvC2jNMyKd6AE=
+        b=uBT0GBFVJIau4g7ZKT0MtYMzQ4J4a5o7msvMZ0qxnkYr4sQBgHT/GVoxHpjGqD2CT
+         kCDf6VbY2GlQjZnfs0M51DbBtB3KMhBWv8LNsW11/6mBX0JvDenNCKQSGNDsSYBmN5
+         WNiCGgps29hZzutqTzai9nOC9VA5xmHDHCzE9G64=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Hao <peng.hao2@zte.com.cn>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 16/64] ARM: pxa: ssp: unneeded to free devm_ allocated data
-Date:   Thu, 28 Feb 2019 10:10:17 -0500
-Message-Id: <20190228151105.11277-16-sashal@kernel.org>
+Cc:     Felix Fietkau <nbd@nbd.name>, Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 18/64] batman-adv: release station info tidstats
+Date:   Thu, 28 Feb 2019 10:10:19 -0500
+Message-Id: <20190228151105.11277-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -57,43 +57,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Hao <peng.hao2@zte.com.cn>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit ba16adeb346387eb2d1ada69003588be96f098fa ]
+[ Upstream commit 7d652669b61d702c6e62a39579d17f6881670ab6 ]
 
-devm_ allocated data will be automatically freed. The free
-of devm_ allocated data is invalid.
+With the addition of TXQ stats in the per-tid statistics the struct
+station_info grew significantly. This resulted in stack size warnings
+due to the structure itself being above the limit for the warnings.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-[title's prefix changed]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+To work around this, the TID array was allocated dynamically. Also a
+function to free this content was introduced with commit 7ea3e110f2f8
+("cfg80211: release station info tidstats where needed") but the necessary
+changes were not provided for batman-adv's B.A.T.M.A.N. V implementation.
+
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Fixes: 8689c051a201 ("cfg80211: dynamically allocate per-tid stats for station info")
+[sven@narfation.org: add commit message]
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-pxa/ssp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ net/batman-adv/bat_v_elp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
-index ed36dcab80f1e..f519199741837 100644
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -190,8 +190,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	if (ssp == NULL)
- 		return -ENODEV;
+diff --git a/net/batman-adv/bat_v_elp.c b/net/batman-adv/bat_v_elp.c
+index e8090f099eb80..ef0dec20c7d87 100644
+--- a/net/batman-adv/bat_v_elp.c
++++ b/net/batman-adv/bat_v_elp.c
+@@ -104,6 +104,9 @@ static u32 batadv_v_elp_get_throughput(struct batadv_hardif_neigh_node *neigh)
  
--	iounmap(ssp->mmio_base);
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	release_mem_region(res->start, resource_size(res));
+ 		ret = cfg80211_get_station(real_netdev, neigh->addr, &sinfo);
  
-@@ -201,7 +199,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
- 
--	kfree(ssp);
- 	return 0;
- }
- 
++		/* free the TID stats immediately */
++		cfg80211_sinfo_release_content(&sinfo);
++
+ 		dev_put(real_netdev);
+ 		if (ret == -ENOENT) {
+ 			/* Node is not associated anymore! It would be
 -- 
 2.19.1
 
