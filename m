@@ -2,200 +2,188 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20E2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94090C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F73020863
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:37:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrRyDgaH"
+	by mail.kernel.org (Postfix) with ESMTP id 5DB9E20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbfB1Chh (ORCPT
+        id S1730789AbfB1Chr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:37:37 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32891 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730577AbfB1Chh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:37:37 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i19so8967902pfd.0;
-        Wed, 27 Feb 2019 18:37:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GMkiTJqCagvIb09Uuj0om9cKdwSMRHgaoyAla48hwtI=;
-        b=BrRyDgaHMCwNrmaP7YdtrJyv+ED/eFNi2H8hHdzCpy8TXH+EFjQti4yrEXLzaa/kgO
-         zol90yhw2YoKLBFFhyBYJiObcLulVOS0bU+QlC9uLPuKhwyuGFzXd8pYtZoCrL+YYT3g
-         3M+Nwb4BZfEGB0tRCIwWS62HB0PvAibOgH4n3oOEEdCPpvGZ3KbbO14YblZ8J3xrWqB2
-         jG5OyGPR8VHro3RGslAM0noqN5X9FOB9t8sqEm7t7xoJd6CjQFHYen3cDd05+0Yqsrmz
-         Ym7usp7DCmtwY0szZRDjHuksXJCcULOrGjSmo4aJa4LPPov6/nkbYTmcLXPDPKkNlQ6E
-         ozRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GMkiTJqCagvIb09Uuj0om9cKdwSMRHgaoyAla48hwtI=;
-        b=opensy8QrkRut0v3rZGCk+yF+ugknXfAAexvjzGeBLBM/Zr6NhO15AwVX/L+y+dTHP
-         I9rTgf0P/ZiZfu3v26KLvFRESDOlzifPNqOcymEGUjQ6W2BMmbHXnLHCpYQHCAZU7wSa
-         Z0ow2ObGq2ZI4REK5Se4K95jiYGklppQl7FfHPp0bnW60fIpBqhQdgMlsVN9pR8W1CLu
-         cevRVLELTK5F8bF8UxDeiWGv9OSnhvaVc2Pq5nN1VP3/sMKvReqx72tvyH+qqkZ3FUbC
-         3OFx0LhybwpHT7BBoNGflMZNnmM4OQoudyPxKE2oZGUiNmdG0nBamwYJnYzxegtyw/dd
-         mNpg==
-X-Gm-Message-State: AHQUAubNn/sRi9SBNxLCzij9acMvP01X4RELRSY6UJ9ey3yH/cq4izLL
-        LO/byOS7IQR0aOpdPIqz7VUBWLJaaDNdpQ==
-X-Google-Smtp-Source: AHgI3IYy7y4L8ixGsjO+JTDm16UPBOPuXokGs4m2MR2lpBWNGQ1vznGEBUOewMcfo+pF0843rKMKfA==
-X-Received: by 2002:a63:1cd:: with SMTP id 196mr6219091pgb.58.1551321455915;
-        Wed, 27 Feb 2019 18:37:35 -0800 (PST)
-Received: from maya190131 ([52.247.237.14])
-        by smtp.gmail.com with ESMTPSA id f87sm11741316pff.38.2019.02.27.18.37.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Feb 2019 18:37:35 -0800 (PST)
-Date:   Thu, 28 Feb 2019 02:37:34 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, kys@microsoft.com,
-        sthemmin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
-        jasowang@redhat.com, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, haiyangz@microsoft.com,
-        vkuznets@redhat.com, marcelo.cerri@canonical.com,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH v4 2/2] PCI: hv: Refactor hv_irq_unmask() to use
- cpumask_to_vpset()
-Message-ID: <d691069ffe6e41b04cb4dff0dfabd1755afa500f.1551319643.git.m.maya.nakamura@gmail.com>
-References: <cover.1551319643.git.m.maya.nakamura@gmail.com>
+        Wed, 27 Feb 2019 21:37:47 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:47140 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730577AbfB1Chr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 21:37:47 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7C870308425B;
+        Thu, 28 Feb 2019 02:37:46 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-122-158.rdu2.redhat.com [10.10.122.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C3E685ED41;
+        Thu, 28 Feb 2019 02:37:42 +0000 (UTC)
+Subject: Re: [LKP] [page cache] eb797a8ee0: vm-scalability.throughput -16.5%
+ regression
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Chen, Rong A" <rong.a.chen@intel.com>, "lkp@01.org" <lkp@01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tim C Chen <tim.c.chen@intel.com>
+References: <20181114092242.GD18977@shao2-debian>
+ <20181114141713.GA25731@bombadil.infradead.org>
+ <875zt7t14h.fsf@yhuang-dev.intel.com>
+ <CAHk-=whn+F+vFgCR0a04atTQuBmXhq0oU1Y1f0YqMiUFHj28JQ@mail.gmail.com>
+ <1c33a91c-a436-a879-ca14-7eebcbf971c2@redhat.com>
+ <87imx4pv5q.fsf@yhuang-dev.intel.com>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <04aed7af-fe04-5639-cfe1-fe8468164897@redhat.com>
+Date:   Wed, 27 Feb 2019 21:37:41 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1551319643.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87imx4pv5q.fsf@yhuang-dev.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 28 Feb 2019 02:37:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the duplicate implementation of cpumask_to_vpset() and use the
-shared implementation. Export hv_max_vp_index, which is required by
-cpumask_to_vpset().
+On 02/27/2019 08:18 PM, Huang, Ying wrote:
+> Waiman Long <longman@redhat.com> writes:
+>
+>> On 02/26/2019 12:30 PM, Linus Torvalds wrote:
+>>> On Tue, Feb 26, 2019 at 12:17 AM Huang, Ying <ying.huang@intel.com> wrote:
+>>>> As for fixing.  Should we care about the cache line alignment of struct
+>>>> inode?  Or its size is considered more important because there may be a
+>>>> huge number of struct inode in the system?
+>>> Thanks for the great analysis.
+>>>
+>>> I suspect we _would_ like to make sure inodes are as small as
+>>> possible, since they are everywhere. Also, they are usually embedded
+>>> in other structures (ie "struct inode" is embedded into "struct
+>>> ext4_inode_info"), and unless we force alignment (and thus possibly
+>>> lots of padding), the actual alignment of 'struct inode' will vary
+>>> depending on filesystem.
+>>>
+>>> So I would suggest we *not* do cacheline alignment, because it will
+>>> result in random padding.
+>>>
+>>> But it sounds like maybe the solution is to make sure that the
+>>> different fields of the inode can and should be packed differently?
+>>>
+>>> So one thing to look at is to see what fields in 'struct inode' might
+>>> be best moved together, to minimize cache accesses.
+>>>
+>>> And in particular, if this is *only* an issue of "struct
+>>> rw_semaphore", maybe we should look at the layout of *that*. In
+>>> particular, I'm getting the feeling that we should put the "owner"
+>>> field right next to the "count" field, because the normal
+>>> non-contended path only touches those two fields.
+>> That is true. Putting the two next to each other reduces the chance of
+>> needing to touch 2 cachelines to acquire a rwsem.
+>>
+>>> Right now those two fields are pretty far from each other in 'struct
+>>> rw_semaphore', which then makes the "oops they got allocated in
+>>> different cachelines" much more likely.
+>>>
+>>> So even if 'struct inode' layout itself isn't changed, maybe just
+>>> optimizing the layout of 'struct rw_semaphore' a bit for the common
+>>> case might fix it all up.
+>>>
+>>> Waiman, I didn't check if your rewrite already possibly fixes this?
+>> My current patch doesn't move the owner field, but I will add one to do
+>> it. That change alone probably won't solve the regression we see here.
+>> The optimistic spinner is spinning on the on_cpu flag of the task
+>> structure as well as the rwsem->owner value (looking for change). The
+>> lock holder only need to touch the count/owner values once at unlock.
+>> However, if other hot data variables are in the same cacheline as
+>> rwsem->owner, we will have cacaheline bouncing problem. So we need to
+>> pad some rarely touched variables right before the rwsem in order to
+>> reduce the chance of false cacheline sharing.
+> Yes. And if my understanding were correct, if the rwsem is locked, the
+> new rw_sem users (which calls down_write()) will write rwsem->count and
+> some other fields of rwsem.  This will cause cache ping-pong between
+> lock holder and the new users too if the memory accessed by lock holder
+> shares the same cache line with rwsem->count, thus hurt the system
+> performance.  For the regression reported, the rwsem holder will change
+> address_space->i_mmap, if I put i_mmap and rwsem->count in the same
+> cache line and rwsem->owner in a different cache line, the performance
+> can improve ~8.3%.  While if I put i_mmap in one cache line and all
+> fields of rwsem in another different cache line, the performance can
+> improve ~12.9% (in another machine, where the regression is ~14%).
 
-Apply changes to hv_irq_unmask() based on feedback.
+So it is better to have i_mmap and the rwsem in separate cachelines. Right?
 
-Based on Vitaly's finding, use GFP_ATOMIC instead of GFP_KERNEL for
-alloc_cpumask_var() because hv_irq_unmask() runs while a spinlock is
-held.
+> So I think in the heavily contended situation, we should put the fields
+> accessed by rwsem holder in a different cache line of rwsem.  But in
+> un-contended situation, we should put the fields accessed in rwsem
+> holder and rwsem in the same cache line to reduce the cache footprint.
+> The requirement of un-contended and heavily contended situation is
+> contradicted.
 
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
----
-Changes in v4:
- - Replace GFP_KERNEL with GFP_ATOMIC for alloc_cpumask_var().
- - Update the commit message.
+Write to the rwsem's count mostly happens at lock and unlock times. It
+is the constant spinning on owner by the optimistic waiter that is
+likely to cause the most problem when its cacheline is shared with
+another piece of data outside of the rwsem that is rewritten to fairly
+frequently. Perhaps moving i_mmap further away from i_mmap_rwsem may help.
 
-Changes in v3:
- - Modify to catch all failures from cpumask_to_vpset().
- - Correct the v2 change log about the commit message.
-
-Changes in v2:
- - Remove unnecessary nr_bank initialization.
- - Delete two unnecessary dev_err()'s.
- - Unlock before returning.
- - Update the commit message.
-
- arch/x86/hyperv/hv_init.c           |  1 +
- drivers/pci/controller/pci-hyperv.c | 38 +++++++++++++----------------
- 2 files changed, 18 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 7abb09e2eeb8..7f2eed1fc81b 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -96,6 +96,7 @@ void  __percpu **hyperv_pcpu_input_arg;
- EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
- 
- u32 hv_max_vp_index;
-+EXPORT_SYMBOL_GPL(hv_max_vp_index);
- 
- static int hv_cpu_init(unsigned int cpu)
- {
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index d71695db1ba0..95441a35eceb 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -391,8 +391,6 @@ struct hv_interrupt_entry {
- 	u32	data;
- };
- 
--#define HV_VP_SET_BANK_COUNT_MAX	5 /* current implementation limit */
--
- /*
-  * flags for hv_device_interrupt_target.flags
-  */
-@@ -908,12 +906,12 @@ static void hv_irq_unmask(struct irq_data *data)
- 	struct retarget_msi_interrupt *params;
- 	struct hv_pcibus_device *hbus;
- 	struct cpumask *dest;
-+	cpumask_var_t tmp;
- 	struct pci_bus *pbus;
- 	struct pci_dev *pdev;
- 	unsigned long flags;
- 	u32 var_size = 0;
--	int cpu_vmbus;
--	int cpu;
-+	int cpu, nr_bank;
- 	u64 res;
- 
- 	dest = irq_data_get_effective_affinity_mask(data);
-@@ -953,29 +951,27 @@ static void hv_irq_unmask(struct irq_data *data)
- 		 */
- 		params->int_target.flags |=
- 			HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
--		params->int_target.vp_set.valid_bank_mask =
--			(1ull << HV_VP_SET_BANK_COUNT_MAX) - 1;
-+
-+		if (!alloc_cpumask_var(&tmp, GFP_ATOMIC)) {
-+			res = 1;
-+			goto exit_unlock;
-+		}
-+
-+		cpumask_and(tmp, dest, cpu_online_mask);
-+		nr_bank = cpumask_to_vpset(&params->int_target.vp_set, tmp);
-+		free_cpumask_var(tmp);
-+
-+		if (nr_bank <= 0) {
-+			res = 1;
-+			goto exit_unlock;
-+		}
- 
- 		/*
- 		 * var-sized hypercall, var-size starts after vp_mask (thus
- 		 * vp_set.format does not count, but vp_set.valid_bank_mask
- 		 * does).
- 		 */
--		var_size = 1 + HV_VP_SET_BANK_COUNT_MAX;
--
--		for_each_cpu_and(cpu, dest, cpu_online_mask) {
--			cpu_vmbus = hv_cpu_number_to_vp_number(cpu);
--
--			if (cpu_vmbus >= HV_VP_SET_BANK_COUNT_MAX * 64) {
--				dev_err(&hbus->hdev->device,
--					"too high CPU %d", cpu_vmbus);
--				res = 1;
--				goto exit_unlock;
--			}
--
--			params->int_target.vp_set.bank_contents[cpu_vmbus / 64]	|=
--				(1ULL << (cpu_vmbus & 63));
--		}
-+		var_size = 1 + nr_bank;
- 	} else {
- 		for_each_cpu_and(cpu, dest, cpu_online_mask) {
- 			params->int_target.vp_mask |=
--- 
-2.17.1
+Cheers,
+Longman
 
