@@ -2,135 +2,106 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3946C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B7DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734C1218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E460A218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551342893;
-	bh=1Ok9YCr1jJh+ph2hLY5yswrP0Etv+EN2lqnJ2dIYNEQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MEnP3rw+9IKBQjzpJ6GVg2FcdL1u96iWotVOAg0J1pUMJJP/pgw29Kko/L4PeQsBD
-	 77vkoLYTh01Y1R9OWdiOnQwRdPXT8RLqrQoGknbyS9ScZD8Q4nCA0WSCx8zOXxSLX5
-	 u89BG6djwHaVqoa0Kvxw2qKzWiU4lxsFrGDiPzLM=
+	s=default; t=1551342940;
+	bh=fO3nInzBdbn7z0qyyE4t/ur1U8Xt2SJRP2XuX10mjNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oPLndAHwDusi8Nhl3/I+MyW5NtC40gUiCwI3VT1+HHRaQAhLCkWDTLc9dlf5Hf9Z/
+	 e7SIGBzaLDoGR5okY+V9I6GFKfSof9VXGW+uIuTUiwTnE7cClQbwxbK1WCZwwhDODw
+	 N3iH7OaWnlyk5G4okAmUa2c8LvEPHCs6LoDGodkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731464AbfB1Iew (ORCPT
+        id S1731719AbfB1Ifi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:34:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42370 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 03:35:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfB1Iev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:34:51 -0500
-Received: from devbox (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1731123AbfB1Ifh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 03:35:37 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60F7F2184A;
-        Thu, 28 Feb 2019 08:34:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 896F8218AE;
+        Thu, 28 Feb 2019 08:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551342890;
-        bh=1Ok9YCr1jJh+ph2hLY5yswrP0Etv+EN2lqnJ2dIYNEQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i7vNW/WnLyGCiFP/iPFpM9V6ReNy4dm+oKYu1clucazlY5Hp828V+u5ybb/eOqxgC
-         RUlyvXnxAP50ZBYbd4repUlMsHsPn/LhP9lYEgR08hDKK8V10cuKB+vFnn1eGCuEgh
-         SDr6s1zLoYhUky0DwEeyp1OjbH3vIDHEp9uCKqTw=
-Date:   Thu, 28 Feb 2019 17:34:44 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+        s=default; t=1551342937;
+        bh=fO3nInzBdbn7z0qyyE4t/ur1U8Xt2SJRP2XuX10mjNo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oGaCKN7tScPlAkaEhtAyyS7sWFZYUpmRpGuCpX3I9aqESf7zsg9Xa7P/uxId5e+ly
+         K8VY2LFCmIvlnOkrEJMovSnDYijm5sCIRteCewPNxhC6fAGbktC24TpoVy1lQEMwFC
+         vKoOMGe/fz80BbtHvrtKD461fZ8BTwaQ5jWmCZ8g=
+Date:   Thu, 28 Feb 2019 09:35:34 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        mhiramat@kernel.org, paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-Id: <20190228173444.54403795211d80ba540b61cb@kernel.org>
-In-Reply-To: <20190227193748.132301-1-joel@joelfernandes.org>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH 1/2] device.h: pack struct dev_links_info
+Message-ID: <20190228083534.GA16271@kroah.com>
+References: <20190226144108.25891-1-gregkh@linuxfoundation.org>
+ <20190227092318.GK4747@localhost>
+ <20190227093104.GA5354@kroah.com>
+ <20190227094021.GL4747@localhost>
+ <20190227095424.GA11387@kroah.com>
+ <20190227105951.GM4747@localhost>
+ <20190227120645.GA15587@kroah.com>
+ <20190227133226.GQ4747@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190227133226.GQ4747@localhost>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
-
-On Wed, 27 Feb 2019 14:37:47 -0500
-"Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
-
-> Introduce in-kernel headers and other artifacts which are made available
-> as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> it possible to build kernel modules, run eBPF programs, and other
-> tracing programs that need to extend the kernel for tracing purposes
-> without any dependency on the file system having headers and build
-> artifacts.
+On Wed, Feb 27, 2019 at 02:32:26PM +0100, Johan Hovold wrote:
+> On Wed, Feb 27, 2019 at 01:06:45PM +0100, Greg Kroah-Hartman wrote:
+> > On Wed, Feb 27, 2019 at 11:59:51AM +0100, Johan Hovold wrote:
 > 
-> On Android and embedded systems, it is common to switch kernels but not
-> have kernel headers available on the file system. Raw kernel headers
-> also cannot be copied into the filesystem like they can be on other
-> distros, due to licensing and other issues. There's no linux-headers
-> package on Android. Further once a different kernel is booted, any
-> headers stored on the file system will no longer be useful. By storing
-> the headers as a compressed archive within the kernel, we can avoid these
-> issues that have been a hindrance for a long time.
-
-Hmm, isn't it easier to add kernel-headers package on Android?
-
-> The feature is also buildable as a module just in case the user desires
-> it not being part of the kernel image. This makes it possible to load
-> and unload the headers on demand. A tracing program, or a kernel module
-> builder can load the module, do its operations, and then unload the
-> module to save kernel memory. The total memory needed is 3.8MB.
-
-But it also requires to install build environment (tools etc.)
-on the target system...
-
+> > Yeah, that is a good point, normally we use packed to keep padding from
+> > the middle of the structure from happening.
+> > 
+> > I just don't like that 4 bytes sitting there doing nothing :)
 > 
-> The code to read the headers is based on /proc/config.gz code and uses
-> the same technique to embed the headers.
+> You could perhaps put them directly in struct device if the
+> dev_links_info struct is just used a separator there and this really
+> bothers you. :)
+
+True :)
+
+> > But, in thinking about this, there is no real reason that I can see that
+> > this structure even is in struct device.  It should be able to be in the
+> > private "internal" structure.
+> > 
+> > The patch below moves it out of struct device entirely.  Overall there
+> > is no memory savings, but it could give us the chance to only create
+> > this structure if we really need it later on, as very few things use
+> > links at this point in time.
+> > 
+> > Rafael, there is one logic change below, the link structure is not
+> > initialized until device_add() happens, instead of device_initialize().
+> > Will that affect anything that you can think of?  Does anyone do
+> > anything with links before device_add() is called?
 > 
-> To build a module, the below steps have been tested on an x86 machine:
-> modprobe kheaders
-> rm -rf $HOME/headers
-> mkdir -p $HOME/headers
-> tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> cd my-kernel-module
-> make -C $HOME/headers M=$(pwd) modules
-> rmmod kheaders
+> I think device_add() may be too late.
+> 
+> 	The earliest point in time when device links can be added is
+> 	after :c:func:`device_add()` has been called for the supplier
+> 	and :c:func:`device_initialize()` has been called for the
+> 	consumer.
 
-It seems a bit complex, but no difference from compared with carrying
-kheaders.tar.gz. I think we would better have a psudo filesystem
-which can mount this compressed header file directly :) Then it becomes
-simpler, like
+That is true today due to the way the code is set up, but it would be
+good to figure out if anyone actually does call it this early.
 
-modprobe headerfs
-mkdir $HOME/headers
-mount -t headerfs $HOME/headers
+thanks,
 
-And this doesn't consume any disk-space.
-
-Thank you,
-
-
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+greg k-h
