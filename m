@@ -2,114 +2,102 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7AAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E931C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4D220C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403F220C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367946;
-	bh=KEiIZz9xfVnTxdjO3KuNj0QnPOpROjgUVLibf7Lafis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XGALCCW5uyY4pUcdr18OZqJD+aL4YFo9v2CU76i9KVUghq82Zydk3NknVBTE5a5nl
-	 yNm7/JVm2xFZYxBPIdRPxXkph+8z0av/9qKSR0Plm1XW2SANMtdkGd47L1mIn9kjG1
-	 Xw1CbsM9hUpGEskqyh2bwxlTri88M76TXfNNLkWM=
+	s=default; t=1551367960;
+	bh=QsesaWgoOeFN4HurJ2gWE+mKWQxKhEthzNyFeKttoe4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lMs3AbK/waY6EC+5ryJHw6jeouzrvnmSDu8Og28nweZ9PzSOloCS5eXD1qgVP+CPe
+	 BnMQsjQmdUCRqp1oEt4inSVbXQ9X9v6sXZXiOG9hAEumfTcpyoKKLzUfGz2u3GnyZX
+	 kx0CbLQvA5k+/aylf1N+e1kOLoFnnu0zL+CvdNSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389180AbfB1PcY (ORCPT
+        id S2389184AbfB1Pci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:32:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:32:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732423AbfB1PcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:32:16 -0500
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1733300AbfB1PI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:08:58 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1A7F218B0;
-        Thu, 28 Feb 2019 15:32:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2B47218D8;
+        Thu, 28 Feb 2019 15:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551367935;
-        bh=KEiIZz9xfVnTxdjO3KuNj0QnPOpROjgUVLibf7Lafis=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gspTyG7XERiaNULLr7bGpqEa1T8kJ130sR6hH31VbOL43oWxDTnpaHOOmXeiU4nAK
-         nUko47PfLhsQwPaImSWtfbeEYdIUIU8JrJ0iegwI4UVZLORPZxm4l4zELAJlSx3mf5
-         oegnyLV5oedPNMAeACbeltzWHBUqh+11+io9jTXw=
-Date:   Thu, 28 Feb 2019 16:32:12 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Eric Biggers <ebiggers@kernel.org>, kvm@vger.kernel.org,
-        syzbot <syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        penguin-kernel@i-love.sakura.ne.jp,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] kvm: properly check debugfs dentry before using it
-Message-ID: <20190228153212.GH8481@kroah.com>
-References: <0000000000007e10c50580aa7684@google.com>
- <0000000000006164d205825fb497@google.com>
- <20190226191932.GB218103@gmail.com>
- <20190228150805.GA31904@kroah.com>
- <a4ca3faa-5e57-b07a-5598-bde465bfebac@redhat.com>
+        s=default; t=1551366537;
+        bh=QsesaWgoOeFN4HurJ2gWE+mKWQxKhEthzNyFeKttoe4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dpQu9/UpRxGqsnKl43Nl0ETAG6Q4C9cFnohyfU95OT8Bfbl48Cl1DHBORBF+u+Yfp
+         slGH+1An32d0z2GMCKvM+Y18ldLBphRQFLx5BiDhDgVE7c2Eal+rEKXOc4msATDq8K
+         bjisqvozdlzZMEjo+XLwnCEfutXz2KlP9pLy0Z5w=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 27/81] usb: dwc3: exynos: Fix error handling of clk_prepare_enable
+Date:   Thu, 28 Feb 2019 10:07:19 -0500
+Message-Id: <20190228150813.10256-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
+References: <20190228150813.10256-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a4ca3faa-5e57-b07a-5598-bde465bfebac@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 04:14:50PM +0100, Paolo Bonzini wrote:
-> On 28/02/19 16:08, Greg Kroah-Hartman wrote:
-> > debugfs can now report an error code if something went wrong instead of
-> > just NULL.  So if the return value is to be used as a "real" dentry, it
-> > needs to be checked if it is an error before dereferencing it.
-> > 
-> > This is now happening because of ff9fb72bc077 ("debugfs: return error
-> > values, not NULL").  syzbot has found a way to trigger multiple debugfs
-> > files attempting to be created, which fails, and then the error code
-> > gets passed to dentry_path_raw() which obviously does not like it.
-> > 
-> > Reported-by: Eric Biggers <ebiggers@kernel.org>
-> > Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> > Cc: kvm@vger.kernel.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > ---
-> > 
-> > Paolo, this should be merged into 5.0-final, and if not there, then
-> > 5.1-rc1 and then backported to 5.0 through the stable tree.  If you
-> > want me to send this to Linus, I will be glad to do so.
-> > 
-> > 
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 585845203db8..076bc38963bf 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -4044,7 +4044,7 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm)
-> >  	}
-> >  	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
-> >  
-> > -	if (kvm->debugfs_dentry) {
-> > +	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
-> >  		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
-> >  
-> >  		if (p) {
-> > 
-> 
-> Sure, go ahead.
-> 
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+From: Alexey Khoroshilov <khoroshilov@ispras.ru>
 
-Wonderful, will do so right now, thanks!
+[ Upstream commit 512e6fb589bc18f9321457632e89b95017447db9 ]
 
-greg k-h
+If clk_prepare_enable() fails in dwc3_exynos_probe() or in
+dwc3_exynos_resume(), exynos->clks[0] is left undisabled
+because of usage preincrement in while condition.
+
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Fixes: 9f2168367a0a ("usb: dwc3: exynos: Rework clock handling and prepare for new variants")
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/dwc3/dwc3-exynos.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+index cb7fcd7c0ad84..c1e9ea621f413 100644
+--- a/drivers/usb/dwc3/dwc3-exynos.c
++++ b/drivers/usb/dwc3/dwc3-exynos.c
+@@ -78,7 +78,7 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+ 	for (i = 0; i < exynos->num_clks; i++) {
+ 		ret = clk_prepare_enable(exynos->clks[i]);
+ 		if (ret) {
+-			while (--i > 0)
++			while (i-- > 0)
+ 				clk_disable_unprepare(exynos->clks[i]);
+ 			return ret;
+ 		}
+@@ -223,7 +223,7 @@ static int dwc3_exynos_resume(struct device *dev)
+ 	for (i = 0; i < exynos->num_clks; i++) {
+ 		ret = clk_prepare_enable(exynos->clks[i]);
+ 		if (ret) {
+-			while (--i > 0)
++			while (i-- > 0)
+ 				clk_disable_unprepare(exynos->clks[i]);
+ 			return ret;
+ 		}
+-- 
+2.19.1
+
