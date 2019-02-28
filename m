@@ -2,67 +2,153 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC548C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F12C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7A120C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:00:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X/LXIMx4"
+	by mail.kernel.org (Postfix) with ESMTP id 6DD9E20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732761AbfB1OAr (ORCPT
+        id S1732361AbfB1OBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:00:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57554 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731305AbfB1OAr (ORCPT
+        Thu, 28 Feb 2019 09:01:21 -0500
+Received: from relmlor2.renesas.com ([210.160.252.172]:54989 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730687AbfB1OBV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 09:00:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=YDUWC7wUujpAzTqYlp/PqlL1MRgZJoeqqg0wLYhDrLk=; b=X/LXIMx4HY4qQMsMjFotJlJRb
-        2I87RAq5nlSXvqp7qTCMcDj/xmWroVBZWV4o3t/cxwaMJGEfFHdrmRhKAuhT9avyZvNnDJmfmpQ/4
-        ssPkeGkvKzvW46u7OOE9K18m/ivtlu0/Y1mMSo/hhOTg5+F+Zn0LrROlD0YohSwMA/r8fEAidqd7y
-        rmedK7u+KouxMg7aUole9UUlYED80n5D8/nz4Ee8224e6nEunejGf+guLxH9kBa9kc7iivb29oQG2
-        XBuUVE0XtmZCV+zVk4tBKwYMC2KfYiLvc0RM+b7erh7mBHygfxip8Y7+T5Spk9w1o305tWA2+qUSn
-        Sqgwk08oQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1gzMEv-0000Rt-8i; Thu, 28 Feb 2019 14:00:45 +0000
-Date:   Thu, 28 Feb 2019 06:00:45 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Robert Eshleman <bobbyeshleman@gmail.com>
-Cc:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tariq Toukan <tariqt@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 5/8] at12: use pci_zalloc instead of pci_alloc
-Message-ID: <20190228140045.GA24819@infradead.org>
-References: <cover.1551246708.git.bobbyeshleman@gmail.com>
- <485f61fd135d56e6e0c66ec41770ce7e5b8b219e.1551246708.git.bobbyeshleman@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <485f61fd135d56e6e0c66ec41770ce7e5b8b219e.1551246708.git.bobbyeshleman@gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 28 Feb 2019 09:01:21 -0500
+X-IronPort-AV: E=Sophos;i="5.58,423,1544454000"; 
+   d="scan'208";a="8917342"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 28 Feb 2019 23:01:19 +0900
+Received: from renesas-VirtualBox.ree.adwin.renesas.com (unknown [10.226.37.56])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 11F11446E12D;
+        Thu, 28 Feb 2019 23:01:16 +0900 (JST)
+From:   Gareth Williams <gareth.williams.jx@renesas.com>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org
+Cc:     Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Gareth Williams <gareth.williams.jx@renesas.com>
+Subject: [PATCH v5 2/2] i2c: designware: Add support for an interface clock
+Date:   Thu, 28 Feb 2019 13:52:10 +0000
+Message-Id: <1551361930-24434-3-git-send-email-gareth.williams.jx@renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1551361930-24434-1-git-send-email-gareth.williams.jx@renesas.com>
+References: <1551361930-24434-1-git-send-email-gareth.williams.jx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 10:09:52PM -0800, Robert Eshleman wrote:
-> This patch replaces a pci_alloc and memset(,0) call
-> with a single call to pci_zalloc.
+From: Phil Edworthy <phil.edworthy@renesas.com>
 
-Please don't move from one deprecated API to another one.  If you feel
-like cleaning up DMA API calls please move to dma_alloc_coherent,
-and do that for the whole DMA API usage.
+The Synopsys I2C Controller has an interface clock, but most SoCs hide
+this away. However, on some SoCs you need to explicitly enable the
+interface clock in order to access the registers. Therefore, add 
+support for an optional interface clock.
+
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+v5:
+ - Updated comments to reference "interface clock" instead of
+   "peripheral clock".
+ - Corrected spelling in commit message, changing "explicity" to
+   "explicitly".
+v4:
+ - Updated comments to reference "peripheral clock"
+   instead of "bus clock".
+ - Added Wolfram's Acked-by
+v3:
+ - busclk renamed to pclk.
+ - Added comment with dw_i2c_dev struct definition describing pclk.
+ - Added enable rollback of first clock if second fails to enable.
+v2:
+ - Use new devm_clk_get_optional() function as it simplifies handling when
+   the optional clock is not present.
+---
+ drivers/i2c/busses/i2c-designware-common.c  | 18 ++++++++++++++++--
+ drivers/i2c/busses/i2c-designware-core.h    |  2 ++
+ drivers/i2c/busses/i2c-designware-platdrv.c |  5 +++++
+ 3 files changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-designware-common.c b/drivers/i2c/busses/i2c-designware-common.c
+index a473011..2de7452 100644
+--- a/drivers/i2c/busses/i2c-designware-common.c
++++ b/drivers/i2c/busses/i2c-designware-common.c
+@@ -251,13 +251,27 @@ unsigned long i2c_dw_clk_rate(struct dw_i2c_dev *dev)
+ 
+ int i2c_dw_prepare_clk(struct dw_i2c_dev *dev, bool prepare)
+ {
++	int ret;
++
+ 	if (IS_ERR(dev->clk))
+ 		return PTR_ERR(dev->clk);
+ 
+-	if (prepare)
+-		return clk_prepare_enable(dev->clk);
++	if (prepare) {
++		/* Optional interface clock */
++		ret = clk_prepare_enable(dev->pclk);
++		if (ret)
++			return ret;
++
++		ret = clk_prepare_enable(dev->clk);
++		if (ret)
++			clk_disable_unprepare(dev->pclk);
++
++		return ret;
++	}
+ 
+ 	clk_disable_unprepare(dev->clk);
++	clk_disable_unprepare(dev->pclk);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(i2c_dw_prepare_clk);
+diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+index b4a0b2b..e88c711 100644
+--- a/drivers/i2c/busses/i2c-designware-core.h
++++ b/drivers/i2c/busses/i2c-designware-core.h
+@@ -177,6 +177,7 @@
+  * @base: IO registers pointer
+  * @cmd_complete: tx completion indicator
+  * @clk: input reference clock
++ * @pclk: clock required to access the registers
+  * @slave: represent an I2C slave device
+  * @cmd_err: run time hadware error code
+  * @msgs: points to an array of messages currently being transferred
+@@ -226,6 +227,7 @@ struct dw_i2c_dev {
+ 	void __iomem		*ext;
+ 	struct completion	cmd_complete;
+ 	struct clk		*clk;
++	struct clk		*pclk;
+ 	struct reset_control	*rst;
+ 	struct i2c_client		*slave;
+ 	u32			(*get_clk_rate_khz) (struct dw_i2c_dev *dev);
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 9eaac3b..97129f5 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -346,6 +346,11 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 	else
+ 		i2c_dw_configure_master(dev);
+ 
++	/* Optional interface clock */
++	dev->pclk = devm_clk_get_optional(&pdev->dev, "pclk");
++	if (IS_ERR(dev->pclk))
++		return PTR_ERR(dev->pclk);
++
+ 	dev->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (!i2c_dw_prepare_clk(dev, true)) {
+ 		u64 clk_khz;
+-- 
+2.7.4
+
