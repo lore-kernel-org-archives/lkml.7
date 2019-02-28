@@ -3,30 +3,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE33C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89BEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D150C218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4AF20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387823AbfB1TLS (ORCPT
+        id S2387916AbfB1TLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 14:11:18 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:53920 "EHLO mx1.redhat.com"
+        Thu, 28 Feb 2019 14:11:23 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:34756 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387518AbfB1TKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 14:10:51 -0500
+        id S1732704AbfB1TLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 14:11:21 -0500
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4F76E3088D8B;
-        Thu, 28 Feb 2019 19:10:51 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2FF7E30BF54C;
+        Thu, 28 Feb 2019 19:11:21 +0000 (UTC)
 Received: from llong.com (ovpn-121-201.rdu2.redhat.com [10.10.121.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D370F60C5C;
-        Thu, 28 Feb 2019 19:10:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBA8660BE6;
+        Thu, 28 Feb 2019 19:11:09 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -40,114 +40,69 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Tim Chen <tim.c.chen@linux.intel.com>,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH-tip v3 06/11] locking/rwsem: Enhance DEBUG_RWSEMS_WARN_ON() macro
-Date:   Thu, 28 Feb 2019 14:09:36 -0500
-Message-Id: <1551380981-3113-7-git-send-email-longman@redhat.com>
+Subject: [PATCH-tip v3 11/11] locking/rwsem: Optimize rwsem structure for uncontended lock acquisition
+Date:   Thu, 28 Feb 2019 14:09:41 -0500
+Message-Id: <1551380981-3113-12-git-send-email-longman@redhat.com>
 In-Reply-To: <1551380981-3113-1-git-send-email-longman@redhat.com>
 References: <1551380981-3113-1-git-send-email-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 28 Feb 2019 19:10:51 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 28 Feb 2019 19:11:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the DEBUG_RWSEMS_WARN_ON() macro just dumps a stack trace
-when the rwsem isn't in the right state. It does not show the actual
-states of the rwsem. This may not be that helpful in the debugging
-process.
+For an uncontended rwsem, count and owner are the only fields a task
+needs to touch when acquiring the rwsem. So they are put next to each
+other to increase the chance that they will share the same cacheline.
 
-Enhance the DEBUG_RWSEMS_WARN_ON() macro to also show the current
-content of the rwsem count and owner fields to give more information
-about what is wrong with the rwsem.
-
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Waiman Long <longman@redhat.com>
-Acked-by: Davidlohr Bueso <dbueso@suse.de>
 ---
- kernel/locking/rwsem.c |  3 ++-
- kernel/locking/rwsem.h | 19 ++++++++++++-------
- 2 files changed, 14 insertions(+), 8 deletions(-)
+ include/linux/rwsem.h | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 90de5f1..ccbf18f 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -198,7 +198,8 @@ int __sched down_write_killable_nested(struct rw_semaphore *sem, int subclass)
- 
- void up_read_non_owner(struct rw_semaphore *sem)
- {
--	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED));
-+	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED),
-+				sem);
- 	__up_read(sem);
- }
- 
-diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
-index 1d8f722..c8fd3f1 100644
---- a/kernel/locking/rwsem.h
-+++ b/kernel/locking/rwsem.h
-@@ -27,9 +27,13 @@
- #define RWSEM_ANONYMOUSLY_OWNED	(1UL << 1)
- 
- #ifdef CONFIG_DEBUG_RWSEMS
--# define DEBUG_RWSEMS_WARN_ON(c)	DEBUG_LOCKS_WARN_ON(c)
-+# define DEBUG_RWSEMS_WARN_ON(c, sem)				\
-+	WARN_ONCE(c, "DEBUG_RWSEMS_WARN_ON(%s): count = 0x%lx, owner = 0x%lx, curr 0x%lx, list %sempty\n",\
-+		#c, atomic_long_read(&(sem)->count),		\
-+		(long)((sem)->owner), (long)current,		\
-+		list_empty(&(sem)->wait_list) ? "" : "not ")
- #else
--# define DEBUG_RWSEMS_WARN_ON(c)
-+# define DEBUG_RWSEMS_WARN_ON(c, sem)
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index b44e533..be0b926 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -20,21 +20,30 @@
+ #include <linux/osq_lock.h>
  #endif
  
- /*
-@@ -168,7 +172,7 @@ static inline void __down_read(struct rw_semaphore *sem)
- 	if (unlikely(atomic_long_inc_return_acquire(&sem->count) <= 0)) {
- 		rwsem_down_read_failed(sem);
- 		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
--					RWSEM_READER_OWNED));
-+					RWSEM_READER_OWNED), sem);
- 	} else {
- 		rwsem_set_reader_owned(sem);
- 	}
-@@ -180,7 +184,7 @@ static inline int __down_read_killable(struct rw_semaphore *sem)
- 		if (IS_ERR(rwsem_down_read_failed_killable(sem)))
- 			return -EINTR;
- 		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
--					RWSEM_READER_OWNED));
-+					RWSEM_READER_OWNED), sem);
- 	} else {
- 		rwsem_set_reader_owned(sem);
- 	}
-@@ -251,7 +255,8 @@ static inline void __up_read(struct rw_semaphore *sem)
- {
- 	long tmp;
- 
--	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED));
-+	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED),
-+				sem);
- 	rwsem_clear_reader_owned(sem);
- 	tmp = atomic_long_dec_return_release(&sem->count);
- 	if (unlikely(tmp < -1 && (tmp & RWSEM_ACTIVE_MASK) == 0))
-@@ -263,7 +268,7 @@ static inline void __up_read(struct rw_semaphore *sem)
-  */
- static inline void __up_write(struct rw_semaphore *sem)
- {
--	DEBUG_RWSEMS_WARN_ON(sem->owner != current);
-+	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
- 	rwsem_clear_owner(sem);
- 	if (unlikely(atomic_long_sub_return_release(RWSEM_ACTIVE_WRITE_BIAS,
- 						    &sem->count) < 0))
-@@ -284,7 +289,7 @@ static inline void __downgrade_write(struct rw_semaphore *sem)
- 	 * read-locked region is ok to be re-ordered into the
- 	 * write side. As such, rely on RELEASE semantics.
+-struct rw_semaphore;
+-
+-/* All arch specific implementations share the same struct */
++/*
++ * For an uncontended rwsem, count and owner are the only fields a task
++ * needs to touch when acquiring the rwsem. So they are put next to each
++ * other to increase the chance that they will share the same cacheline.
++ *
++ * In a contended rwsem, the owner is likely the most frequently accessed
++ * field in the structure as the optimistic waiter that holds the osq lock
++ * will spin on owner. For an embedded rwsem, other hot fields in the
++ * containing structure should be moved further away from the rwsem to
++ * reduce the chance that they will share the same cacheline causing
++ * cacheline bouncing problem.
++ */
+ struct rw_semaphore {
+ 	atomic_long_t count;
+-	struct list_head wait_list;
+-	raw_spinlock_t wait_lock;
+ #ifdef CONFIG_RWSEM_SPIN_ON_OWNER
+-	struct optimistic_spin_queue osq; /* spinner MCS lock */
+ 	/*
+ 	 * Write owner. Used as a speculative check to see
+ 	 * if the owner is running on the cpu.
  	 */
--	DEBUG_RWSEMS_WARN_ON(sem->owner != current);
-+	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
- 	tmp = atomic_long_add_return_release(-RWSEM_WAITING_BIAS, &sem->count);
- 	rwsem_set_reader_owned(sem);
- 	if (tmp < 0)
+ 	struct task_struct *owner;
++	struct optimistic_spin_queue osq; /* spinner MCS lock */
+ #endif
++	raw_spinlock_t wait_lock;
++	struct list_head wait_list;
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 	struct lockdep_map	dep_map;
+ #endif
 -- 
 1.8.3.1
 
