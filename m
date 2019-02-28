@@ -2,127 +2,460 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F7BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4618BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D57218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="ibsDylxQ"
+	by mail.kernel.org (Postfix) with ESMTP id 082C6218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732169AbfB1JLm (ORCPT
+        id S1732183AbfB1JL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:11:42 -0500
-Received: from mail-eopbgr40101.outbound.protection.outlook.com ([40.107.4.101]:34456
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732032AbfB1JLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:11:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8iKke3KNufx1kqFVnH5PwYr1KuRqGCNb810R/PwDDhs=;
- b=ibsDylxQnuuYmbWhGlhtugQGq02A0MxbS7MdF6r82fnkOrXVdJ2Thh/utqZTuObAKCyAm/1fT5oxHGdfy6z5jyo+iVvs/yxEup4ZgRXhMngi95W4RqSAHrQxpEFCYGIR+oNl2BUyJbAWXF1iYP81y4I4/CkKfTOJoCHUMpsIvBg=
-Received: from AM6PR08MB3733.eurprd08.prod.outlook.com (20.178.88.82) by
- AM6PR08MB5192.eurprd08.prod.outlook.com (10.255.121.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.16; Thu, 28 Feb 2019 09:11:37 +0000
-Received: from AM6PR08MB3733.eurprd08.prod.outlook.com
- ([fe80::34d4:a213:bfd3:8c52]) by AM6PR08MB3733.eurprd08.prod.outlook.com
- ([fe80::34d4:a213:bfd3:8c52%2]) with mapi id 15.20.1643.022; Thu, 28 Feb 2019
- 09:11:37 +0000
-From:   Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     Ingo Molnar <mingo@redhat.com>, Al Viro <viro@ZenIV.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing: Fix event filters and triggers to handle
- negative numbers
-Thread-Topic: [PATCH] tracing: Fix event filters and triggers to handle
- negative numbers
-Thread-Index: AQHUOsusUEySyEIyIU6EJDlMMMKxLKTOEtmAgSgCxIA=
-Date:   Thu, 28 Feb 2019 09:11:37 +0000
-Message-ID: <f0929165-bc75-c13a-7a20-43262ef8a496@virtuozzo.com>
-References: <20180823102534.7642-1-ptikhomirov@virtuozzo.com>
- <20180823204849.3b4aede3@vmware.local.home>
-In-Reply-To: <20180823204849.3b4aede3@vmware.local.home>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR1001CA0007.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:3:f7::17) To AM6PR08MB3733.eurprd08.prod.outlook.com
- (2603:10a6:20b:82::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ptikhomirov@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [185.231.240.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 45c57fb9-1683-4c18-b285-08d69d5cbe21
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:AM6PR08MB5192;
-x-ms-traffictypediagnostic: AM6PR08MB5192:
-x-microsoft-exchange-diagnostics: 1;AM6PR08MB5192;20:/h9VfDn5vOdA9xYQMu7zB4MYmgh/j5HuXchMMuk5b94+ebMI3H07wUGeJu5Q/CMiT4ny5kTNKdW8pLHWpSWqaHA/l1WSwYYNqa96Mo2J9ed6+4AGtVKzRvtKCGjr7tG2OOjoXwXJzlLGxSrstktym/z6B20gwEmhcUhfxpTLWlg=
-x-microsoft-antispam-prvs: <AM6PR08MB51921B246DE335EE5DF7C76EB7750@AM6PR08MB5192.eurprd08.prod.outlook.com>
-x-forefront-prvs: 0962D394D2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(136003)(366004)(396003)(346002)(376002)(51914003)(189003)(199004)(11346002)(386003)(2906002)(53936002)(446003)(14454004)(68736007)(6512007)(97736004)(6486002)(99286004)(186003)(14444005)(31686004)(76176011)(102836004)(53546011)(486006)(52116002)(8676002)(2616005)(256004)(81156014)(81166006)(6436002)(8936002)(105586002)(36756003)(476003)(106356001)(6506007)(66066001)(316002)(305945005)(478600001)(26005)(54906003)(4326008)(31696002)(7736002)(6246003)(86362001)(229853002)(25786009)(5660300002)(6116002)(3846002)(6916009)(71190400001)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR08MB5192;H:AM6PR08MB3733.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iSam/4WerJy9hGpphcFkQecoQlp4vJ3IpFkHfSupoGWxOj5ATBdiChS12UWE6ODWfnSDua8R4pfZT3tboWzTynKXb4FyCvpfCmhFhFXIP+SMplS82JWEUUoVKiJvmW5xV0KuqiFw8ltn2D3HT0SrZiIsAyf4W80OB91R73nHbyZnKbeT1YuTBl84MDDVb+Xxr/6ys01/yzx6Ce2VL3eRqOD/Sp+C4y/As/MN1Icp3DMC1K6jwV3ReGAWibeFKaEkLYp7+4DXERpZSNaScXIN1nYeITlSXzTszyuFUbhdfYQKkqVVhIEEo8mgnroLmVlGfKea2vLJP8qxFiq7W+65majnrgvWCwl077MtP5ikgjwRI+iMuDHwI1yQpw9sLulyKrbrYKtTYBZNY73AncutTjMP1kLePEXnEimZGdIDJxI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FFB77C3F721B1D4C977B0255F6B819FE@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 28 Feb 2019 04:11:59 -0500
+Received: from mga14.intel.com ([192.55.52.115]:36407 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732032AbfB1JL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 04:11:58 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 01:11:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,422,1544515200"; 
+   d="scan'208";a="142327574"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 28 Feb 2019 01:11:57 -0800
+Received: from [10.251.86.205] (abudanko-mobl.ccr.corp.intel.com [10.251.86.205])
+        by linux.intel.com (Postfix) with ESMTP id 600E158040E;
+        Thu, 28 Feb 2019 01:11:55 -0800 (PST)
+Subject: [PATCH v4 07/10] perf record: implement -z,--compression_level=n
+ option and compression
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <d1f03ff2-c31a-4d61-8cad-9fc7ca3b8b3a@linux.intel.com>
+Date:   Thu, 28 Feb 2019 12:11:54 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45c57fb9-1683-4c18-b285-08d69d5cbe21
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 09:11:36.8653
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB5192
+In-Reply-To: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cGluZywgbG9va3MgbGlrZSB0aGUgcGF0Y2ggd2FzIGxvc3QNCg0KT24gOC8yNC8xOCAzOjQ4IEFN
-LCBTdGV2ZW4gUm9zdGVkdCB3cm90ZToNCj4gT24gVGh1LCAyMyBBdWcgMjAxOCAxMzoyNTozNCAr
-MDMwMA0KPiBQYXZlbCBUaWtob21pcm92IDxwdGlraG9taXJvdkB2aXJ0dW96em8uY29tPiB3cm90
-ZToNCj4gDQo+PiBUaGVuIHRyYWNpbmcgc3lzY2FsbCBleGl0IGV2ZW50IGl0IGlzIGV4dHJlbWVs
-eSB1c2VmdWwgdG8gZmlsdGVyIGV4aXQNCj4+IGNvZGVzIGVxdWFsIHRvIHNvbWUgbmVnYXRpdmUg
-dmFsdWUsIHRvIHJlYWN0IG9ubHkgdG8gcmVxdWlyZWQgZXJyb3JzLg0KPj4gQnV0IG5lZ2F0aXZl
-IG51bWJlcnMgZG9lcyBub3Qgd29yazoNCj4+DQo+PiBbcm9vdEBzbm9yY2ggc3lzX2V4aXRfcmVh
-ZF0jIGVjaG8gInJldCA9PSAtMSIgPiBmaWx0ZXINCj4+IGJhc2g6IGVjaG86IHdyaXRlIGVycm9y
-OiBJbnZhbGlkIGFyZ3VtZW50DQo+PiBbcm9vdEBzbm9yY2ggc3lzX2V4aXRfcmVhZF0jIGNhdCBm
-aWx0ZXINCj4+IHJldCA9PSAtMQ0KPj4gICAgICAgICAgXg0KPj4gcGFyc2VfZXJyb3I6IEludmFs
-aWQgdmFsdWUgKGRpZCB5b3UgZm9yZ2V0IHF1b3Rlcyk/DQo+IA0KPiBUaGFua3MgZm9yIHRoZSBw
-YXRjaC4gSSdsbCBhcHBseSBpdCBhbmQgdGhlbiBzdGFydCB0ZXN0aW5nIGl0IQ0KPiANCj4gLS0g
-U3RldmUNCj4gDQo+Pg0KPj4gU2ltaWxhciB0aGluZyBoYXBwZW5zIHdoZW4gc2V0dGluZyB0cmln
-Z2Vycy4NCj4+DQo+PiBUaGVzZSBpcyBhIHJlZ3Jlc3Npb24gaW4gdjQuMTcgaW50cm9kdWNlZCBi
-eSB0aGUgY29tbWl0IG1lbnRpb25lZCBiZWxvdywNCj4+IHRlc3Rpbmcgd2l0aG91dCB0aGVzZSBj
-b21taXQgc2hvd3Mgbm8gcHJvYmxlbSB3aXRoIG5lZ2F0aXZlIG51bWJlcnMuDQo+Pg0KPj4gRml4
-ZXM6IDgwNzY1NTk3YmM1OCAoInRyYWNpbmc6IFJld3JpdGUgZmlsdGVyIGxvZ2ljIHRvIGJlIHNp
-bXBsZXIgYW5kIGZhc3RlciIpDQo+PiBTaWduZWQtb2ZmLWJ5OiBQYXZlbCBUaWtob21pcm92IDxw
-dGlraG9taXJvdkB2aXJ0dW96em8uY29tPg0KPj4gLS0tDQo+PiAgIGtlcm5lbC90cmFjZS90cmFj
-ZV9ldmVudHNfZmlsdGVyLmMgfCA1ICsrKystDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEva2VybmVsL3RyYWNl
-L3RyYWNlX2V2ZW50c19maWx0ZXIuYyBiL2tlcm5lbC90cmFjZS90cmFjZV9ldmVudHNfZmlsdGVy
-LmMNCj4+IGluZGV4IDg0YTY1MTczYjFlOS4uMmJhNDQ5MjkyNTYxIDEwMDY0NA0KPj4gLS0tIGEv
-a2VybmVsL3RyYWNlL3RyYWNlX2V2ZW50c19maWx0ZXIuYw0KPj4gKysrIGIva2VybmVsL3RyYWNl
-L3RyYWNlX2V2ZW50c19maWx0ZXIuYw0KPj4gQEAgLTEyOTksNyArMTI5OSw3IEBAIHN0YXRpYyBp
-bnQgcGFyc2VfcHJlZChjb25zdCBjaGFyICpzdHIsIHZvaWQgKmRhdGEsDQo+PiAgIAkJLyogZ28g
-cGFzdCB0aGUgbGFzdCBxdW90ZSAqLw0KPj4gICAJCWkrKzsNCj4+ICAgDQo+PiAtCX0gZWxzZSBp
-ZiAoaXNkaWdpdChzdHJbaV0pKSB7DQo+PiArCX0gZWxzZSBpZiAoaXNkaWdpdChzdHJbaV0pIHx8
-IHN0cltpXSA9PSAnLScpIHsNCj4+ICAgDQo+PiAgIAkJLyogTWFrZSBzdXJlIHRoZSBmaWVsZCBp
-cyBub3QgYSBzdHJpbmcgKi8NCj4+ICAgCQlpZiAoaXNfc3RyaW5nX2ZpZWxkKGZpZWxkKSkgew0K
-Pj4gQEAgLTEzMTIsNiArMTMxMiw5IEBAIHN0YXRpYyBpbnQgcGFyc2VfcHJlZChjb25zdCBjaGFy
-ICpzdHIsIHZvaWQgKmRhdGEsDQo+PiAgIAkJCWdvdG8gZXJyX2ZyZWU7DQo+PiAgIAkJfQ0KPj4g
-ICANCj4+ICsJCWlmIChzdHJbaV0gPT0gJy0nKQ0KPj4gKwkJCWkrKzsNCj4+ICsNCj4+ICAgCQkv
-KiBXZSBhbGxvdyAweERFQURCRUVGICovDQo+PiAgIAkJd2hpbGUgKGlzYWxudW0oc3RyW2ldKSkN
-Cj4+ICAgCQkJaSsrOw0KPiANCg0KLS0gDQpCZXN0IHJlZ2FyZHMsIFRpa2hvbWlyb3YgUGF2ZWwN
-ClNvZnR3YXJlIERldmVsb3BlciwgVmlydHVvenpvLg0K
+
+Implemented -z,--compression_level=n option that enables compression
+of mmaped kernel data buffers content in runtime during perf record
+sampling collection.
+
+Compression is implemented using the functions from zstd.c. As the
+memory to operate on the compression employs mmap->data buffer in case
+of serial trace writing and mmap AIO buffers in case of AIO trace
+writing. If Zstd streaming compression API fails for some reason the
+data to be compressed are just copied into the memory buffers using
+memcpy().
+
+Compressed trace frame consists of an array of PERF_RECORD_COMPRESSED
+records. Each element of the array is not longer that 64KiB because of
+u16 size limitation and comprised of perf_event_header followed by the
+compressed chunk that is decompressed on the loading stage. --mmap-flush
+option value can be used to avoid compression of every single byte of
+data and possibly increase compression ratio.
+
+Compression overhead has been measured for serial and AIO trace writing
+when profiling matrix multiplication workload:
+
+    -------------------------------------------------------------
+    | SERIAL			  | AIO-1                       |
+-----------------------------------------------------------------
+|-z | OVH(x) | ratio(x) size(MiB) | OVH(x) | ratio(x) size(MiB) |
+|----------------------------------------------------------------
+| 0 | 1,00   | 1,000    179,424   | 1,00   | 1,000    187,527   |
+| 1 | 1,04   | 8,427    181,148   | 1,01   | 8,474    188,562   |
+| 2 | 1,07   | 8,055    186,953   | 1,03   | 7,912    191,773   |
+| 3 | 1,04   | 8,283    181,908   | 1,03   | 8,220    191,078   |
+| 5 | 1,09   | 8,101    187,705   | 1,05   | 7,780    190,065   |
+| 8 | 1,05   | 9,217    179,191   | 1,12   | 6,111    193,024   |
+-----------------------------------------------------------------
+
+OVH = (Execution time with -z N) / (Execution time with -z 0)
+
+ratio - compression ratio
+size  - number of bytes that was compressed
+
+	size ~= trace size x ratio
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-record.txt |  5 ++
+ tools/perf/builtin-record.c              | 87 ++++++++++++++++++++----
+ tools/perf/util/mmap.c                   | 31 ++++++---
+ tools/perf/util/mmap.h                   | 13 ++--
+ tools/perf/util/session.h                |  2 +
+ 5 files changed, 110 insertions(+), 28 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 1727663382f1..c36666adc747 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -464,6 +464,11 @@ Set affinity mask of trace reading thread according to the policy defined by 'mo
+ Minimal number of bytes accumulated in mmaped kernel buffer that is flushed to a storage (default: 1).
+ Maximal allowed value is a quarter of mmaped kernel buffer size.
+ 
++-z::
++--compression-level=n::
++Produce compressed trace using specified level n to save storage space (no compression: 0 - default,
++fastest compression: 1, smallest trace: 22)
++
+ --all-kernel::
+ Configure all used events to run in kernel space.
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 1c0d68d27360..5b75aaccebca 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -237,7 +237,7 @@ static int record__aio_sync(struct perf_mmap *md, bool sync_all)
+ 	} while (1);
+ }
+ 
+-static int record__aio_pushfn(void *to, struct aiocb *cblock, void *bf, size_t size, off_t off)
++static int record__aio_pushfn(void *to, void *bf, size_t size, off_t off, struct aiocb *cblock)
+ {
+ 	struct record *rec = to;
+ 	int ret, trace_fd = rec->session->data->file.fd;
+@@ -264,13 +264,15 @@ static void record__aio_set_pos(int trace_fd, off_t pos)
+ 	lseek(trace_fd, pos, SEEK_SET);
+ }
+ 
++static int record__aio_enabled(struct record *rec);
++
+ static void record__aio_mmap_read_sync(struct record *rec)
+ {
+ 	int i;
+ 	struct perf_evlist *evlist = rec->evlist;
+ 	struct perf_mmap *maps = evlist->mmap;
+ 
+-	if (!rec->opts.nr_cblocks)
++	if (!record__aio_enabled(rec))
+ 		return;
+ 
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
+@@ -292,25 +294,28 @@ static int record__aio_parse(const struct option *opt,
+ 
+ 	if (unset) {
+ 		opts->nr_cblocks = 0;
+-	} else {
+-		if (str)
+-			opts->nr_cblocks = strtol(str, NULL, 0);
+-		if (!opts->nr_cblocks)
+-			opts->nr_cblocks = nr_cblocks_default;
++		return 0;
+ 	}
+ 
++	if (str)
++		opts->nr_cblocks = strtol(str, NULL, 0);
++	if (!opts->nr_cblocks)
++		opts->nr_cblocks = nr_cblocks_default;
++
++	if (opts->nr_cblocks > nr_cblocks_max)
++		opts->nr_cblocks = nr_cblocks_max;
++
+ 	return 0;
+ }
+ #else /* HAVE_AIO_SUPPORT */
+-static int nr_cblocks_max = 0;
+-
+ static int record__aio_sync(struct perf_mmap *md __maybe_unused, bool sync_all __maybe_unused)
+ {
+ 	return -1;
+ }
+ 
+-static int record__aio_pushfn(void *to __maybe_unused, struct aiocb *cblock __maybe_unused,
+-		void *bf __maybe_unused, size_t size __maybe_unused, off_t off __maybe_unused)
++static int record__aio_pushfn(void *to __maybe_unused, void *bf __maybe_unused,
++		size_t size __maybe_unused, off_t off __maybe_unused,
++		struct aiocb *cblock __maybe_unused)
+ {
+ 	return -1;
+ }
+@@ -761,6 +766,40 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
+ 	}
+ }
+ 
++static size_t record__process_comp_header(void *record, size_t increment)
++{
++	struct compressed_event *event = record;
++	size_t size = sizeof(struct compressed_event);
++
++	if (increment) {
++		event->header.size += increment;
++		return increment;
++	} else {
++		event->header.type = PERF_RECORD_COMPRESSED;
++		event->header.size = size;
++		return size;
++	}
++}
++
++static size_t record__zstd_compress(void *data, void *dst, size_t dst_size,
++		void *src, size_t src_size)
++{
++	size_t compressed;
++	struct perf_session *session = data;
++	/* maximum size of record data size (2^16 - 1 - header) */
++	const size_t max_record_size = (1 << 8 * sizeof(u16)) -
++					1 - sizeof(struct compressed_event);
++
++	compressed = zstd_compress_stream_to_records(&(session->zstd_data),
++				dst, dst_size, src, src_size, max_record_size,
++				record__process_comp_header);
++
++	session->bytes_transferred += src_size;
++	session->bytes_compressed  += compressed;
++
++	return compressed;
++}
++
+ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+ 				    bool overwrite, bool sync)
+ {
+@@ -770,6 +809,8 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	struct perf_mmap *maps;
+ 	int trace_fd = rec->data.file.fd;
+ 	off_t off;
++	struct perf_session *session = rec->session;
++	perf_mmap__compress_fn_t compress_fn;
+ 
+ 	if (!evlist)
+ 		return 0;
+@@ -781,6 +822,8 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	if (overwrite && evlist->bkw_mmap_state != BKW_MMAP_DATA_PENDING)
+ 		return 0;
+ 
++	compress_fn = record__comp_enabled(rec) ? record__zstd_compress : NULL;
++
+ 	if (record__aio_enabled(rec))
+ 		off = record__aio_get_pos(trace_fd);
+ 
+@@ -795,7 +838,8 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				map->flush = MMAP_FLUSH_DEFAULT;
+ 			}
+ 			if (!record__aio_enabled(rec)) {
+-				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
++				if (perf_mmap__push(map, rec, record__pushfn,
++						    compress_fn, session) != 0) {
+ 					if (sync)
+ 						map->flush = flush;
+ 					rc = -1;
+@@ -808,7 +852,8 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				 * becomes available after previous aio write request.
+ 				 */
+ 				idx = record__aio_sync(map, false);
+-				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
++				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off,
++							compress_fn, session) != 0) {
+ 					record__aio_set_pos(trace_fd, off);
+ 					if (sync)
+ 						map->flush = flush;
+@@ -1189,6 +1234,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	fd = perf_data__fd(data);
+ 	rec->session = session;
+ 
++	if (zstd_init(&(session->zstd_data), rec->opts.comp_level) < 0) {
++		pr_err("Compression initialization failed.\n");
++		return -1;
++	}
++
++	session->header.env.comp_type  = PERF_COMP_ZSTD;
++	session->header.env.comp_level = rec->opts.comp_level;
++
+ 	record__init_features(rec);
+ 
+ 	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
+@@ -1518,6 +1571,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	}
+ 
+ out_delete_session:
++	zstd_fini(&(session->zstd_data));
+ 	perf_session__delete(session);
+ 	return status;
+ }
+@@ -2038,6 +2092,10 @@ static struct option __record_options[] = {
+ 	OPT_CALLBACK(0, "affinity", &record.opts, "node|cpu",
+ 		     "Set affinity mask of trace reading thread to NUMA node cpu mask or cpu of processed mmap buffer",
+ 		     record__parse_affinity),
++#ifdef HAVE_ZSTD_SUPPORT
++	OPT_UINTEGER('z', "compression-level", &record.opts.comp_level,
++		     "Produce compressed trace (default: 0, fastest: 1, smallest: 22)"),
++#endif
+ 	OPT_END()
+ };
+ 
+@@ -2235,8 +2293,7 @@ int cmd_record(int argc, const char **argv)
+ 
+ 	if (rec->opts.nr_cblocks > nr_cblocks_max)
+ 		rec->opts.nr_cblocks = nr_cblocks_max;
+-	if (verbose > 0)
+-		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
++	pr_debug("nr_cblocks: %d\n", rec->opts.nr_cblocks);
+ 
+ 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
+ 	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 08fd846df604..ea0db6281e44 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -295,14 +295,15 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map)
+ }
+ 
+ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off)
++			int push(void *to, void *buf, size_t size, off_t off, struct aiocb *cblock),
++			off_t *off, perf_mmap__compress_fn_t compress, void *comp_data)
+ {
+ 	u64 head = perf_mmap__read_head(md);
+ 	unsigned char *data = md->base + page_size;
+ 	unsigned long size, size0 = 0;
+ 	void *buf;
+ 	int rc = 0;
++	size_t mmap_len = perf_mmap__mmap_len(md);
+ 
+ 	rc = perf_mmap__read_init(md);
+ 	if (rc < 0)
+@@ -331,14 +332,20 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+ 		buf = &data[md->start & md->mask];
+ 		size = md->mask + 1 - (md->start & md->mask);
+ 		md->start += size;
+-		memcpy(md->aio.data[idx], buf, size);
+ 		size0 = size;
++		if (!compress)
++			memcpy(md->aio.data[idx], buf, size);
++		else
++			size0 = compress(comp_data, md->aio.data[idx], mmap_len, buf, size);
+ 	}
+ 
+ 	buf = &data[md->start & md->mask];
+ 	size = md->end - md->start;
+ 	md->start += size;
+-	memcpy(md->aio.data[idx] + size0, buf, size);
++	if (!compress)
++		memcpy(md->aio.data[idx] + size0, buf, size);
++	else
++		size = compress(comp_data, md->aio.data[idx] + size0, mmap_len - size0, buf, size);
+ 
+ 	/*
+ 	 * Increment md->refcount to guard md->data[idx] buffer
+@@ -354,7 +361,7 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+ 	md->prev = head;
+ 	perf_mmap__consume(md);
+ 
+-	rc = push(to, &md->aio.cblocks[idx], md->aio.data[idx], size0 + size, *off);
++	rc = push(to, md->aio.data[idx], size0 + size, *off, &md->aio.cblocks[idx]);
+ 	if (!rc) {
+ 		*off += size0 + size;
+ 	} else {
+@@ -555,13 +562,15 @@ int perf_mmap__read_init(struct perf_mmap *map)
+ }
+ 
+ int perf_mmap__push(struct perf_mmap *md, void *to,
+-		    int push(struct perf_mmap *map, void *to, void *buf, size_t size))
++		    int push(struct perf_mmap *map, void *to, void *buf, size_t size),
++		    perf_mmap__compress_fn_t compress, void *comp_data)
+ {
+ 	u64 head = perf_mmap__read_head(md);
+ 	unsigned char *data = md->base + page_size;
+ 	unsigned long size;
+ 	void *buf;
+ 	int rc = 0;
++	size_t mmap_len = perf_mmap__mmap_len(md);
+ 
+ 	rc = perf_mmap__read_init(md);
+ 	if (rc < 0)
+@@ -573,7 +582,10 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 		buf = &data[md->start & md->mask];
+ 		size = md->mask + 1 - (md->start & md->mask);
+ 		md->start += size;
+-
++		if (compress) {
++			size = compress(comp_data, md->data, mmap_len, buf, size);
++			buf = md->data;
++		}
+ 		if (push(md, to, buf, size) < 0) {
+ 			rc = -1;
+ 			goto out;
+@@ -583,7 +595,10 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 	buf = &data[md->start & md->mask];
+ 	size = md->end - md->start;
+ 	md->start += size;
+-
++	if (compress) {
++		size = compress(comp_data, md->data, mmap_len, buf, size);
++		buf = md->data;
++	}
+ 	if (push(md, to, buf, size) < 0) {
+ 		rc = -1;
+ 		goto out;
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index a02427d609c0..2df3882c4b83 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -99,16 +99,19 @@ union perf_event *perf_mmap__read_forward(struct perf_mmap *map);
+ 
+ union perf_event *perf_mmap__read_event(struct perf_mmap *map);
+ 
++typedef size_t (*perf_mmap__compress_fn_t)(void *data, void *dst, size_t dst_size,
++		void *src, size_t src_size);
+ int perf_mmap__push(struct perf_mmap *md, void *to,
+-		    int push(struct perf_mmap *map, void *to, void *buf, size_t size));
++		    int push(struct perf_mmap *map, void *to, void *buf, size_t size),
++		    perf_mmap__compress_fn_t compress, void *compress_data);
+ #ifdef HAVE_AIO_SUPPORT
+ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off);
++			int push(void *to, void *buf, size_t size, off_t off, struct aiocb *cblock),
++			off_t *off, perf_mmap__compress_fn_t compress, void *compress_data);
+ #else
+ static inline int perf_mmap__aio_push(struct perf_mmap *md __maybe_unused, void *to __maybe_unused, int idx __maybe_unused,
+-	int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off) __maybe_unused,
+-	off_t *off __maybe_unused)
++	int push(void *to, void *buf, size_t size, off_t off, struct aiocb *cblock) __maybe_unused,
++	off_t *off __maybe_unused, perf_mmap__compress_fn_t compress __maybe_unused, void *compress_data __maybe_unused)
+ {
+ 	return 0;
+ }
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 0e14884f28b2..6c984c895924 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -8,6 +8,7 @@
+ #include "machine.h"
+ #include "data.h"
+ #include "ordered-events.h"
++#include "util/compress.h"
+ #include <linux/kernel.h>
+ #include <linux/rbtree.h>
+ #include <linux/perf_event.h>
+@@ -37,6 +38,7 @@ struct perf_session {
+ 	struct perf_tool	*tool;
+ 	u64			bytes_transferred;
+ 	u64			bytes_compressed;
++	struct zstd_data	zstd_data;
+ };
+ 
+ struct perf_tool;
