@@ -2,86 +2,92 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F2AC4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EBBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C8A218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 298E92133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732189AbfB1QJV (ORCPT
+        id S1731725AbfB1QMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 11:09:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53198 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 11:12:34 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:53468 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfB1QJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 11:09:21 -0500
-Received: from vmware.local.home (unknown [38.88.19.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726403AbfB1QMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 11:12:33 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31DEF2184A;
-        Thu, 28 Feb 2019 16:09:20 +0000 (UTC)
-Date:   Thu, 28 Feb 2019 11:09:18 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, rdunlap@infradead.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190228110918.06ae3346@vmware.local.home>
-In-Reply-To: <20190228154513.GA12050@kroah.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
-        <20190228173444.54403795211d80ba540b61cb@kernel.org>
-        <20190228150054.GB156098@google.com>
-        <20190228153026.GG8481@kroah.com>
-        <20190228153741.GA168373@google.com>
-        <20190228154513.GA12050@kroah.com>
-X-Mailer: Claws Mail 3.15.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id BD31F14D015;
+        Thu, 28 Feb 2019 16:12:33 +0000 (UTC)
+Received: from krava (unknown [10.43.17.18])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 168BF4384;
+        Thu, 28 Feb 2019 16:12:31 +0000 (UTC)
+Date:   Thu, 28 Feb 2019 17:12:31 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, eranian@google.com,
+        linux-kernel@vger.kernel.org, tonyj@suse.com, nasastry@in.ibm.com
+Subject: Re: [PATCH] perf c2c: Fix c2c report for empty numa node
+Message-ID: <20190228161231.GB8674@krava>
+References: <20190228153719.23411-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228153719.23411-1-ravi.bangoria@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 28 Feb 2019 16:12:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019 16:45:13 +0100
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> On Thu, Feb 28, 2019 at 10:37:41AM -0500, Joel Fernandes wrote:
-> > In any case, it is not practical to provide headers for every kernel version on
-> > the system image and maintain them, it will take up too much space and has to
-> > be periodically packaged. Not to mention that there will be kernel versions
-> > that are booting Android that simply don't have anyone maintaining headers
-> > for. So the proposed solution is an easier path.  
+On Thu, Feb 28, 2019 at 09:07:19PM +0530, Ravi Bangoria wrote:
+> perf c2c report fails if system has empty numa node(0 cpus):
 > 
-> I totally agree with this, and with your proposed patches, just wanting
-> to clear up some potential anti-GPL-FUD before it got spread any further :)
->
+>   $ lscpu
+>   NUMA node0 CPU(s):   
+>   NUMA node1 CPU(s):   0-4
+> 
+>   $ sudo ./perf c2c report 
+>   node/cpu topology bugFailed setup nodes
+> 
+> Fix this.
+> 
+> Reported-by: Nageswara R Sastry <nasastry@in.ibm.com>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>  tools/perf/util/cpumap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 383674f448fc..517c3f37c613 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -261,7 +261,7 @@ struct cpu_map *cpu_map__dummy_new(void)
+>  	struct cpu_map *cpus = malloc(sizeof(*cpus) + sizeof(int));
+>  
+>  	if (cpus != NULL) {
+> -		cpus->nr = 1;
+> +		cpus->nr = 0;
 
-I would believe that the decision of saying it is "not allowed" is not
-about it being illegal, but more of a "we would then need to keep track
-of every GPL code and all the specific versions in every package that we
-ship such that we will have to provide it if someone were to ask for
-it", which would be required by the license. And that can be quite a
-burden.
+you can't do this, there's one item in the map, nr needs to
+reflect that.. it breaks 'perf test' badly
 
--- Steve
+so the node is empty.. we need to teach c2c to work with that
+I'll check
+
+jirka
+
+>  		cpus->map[0] = -1;
+>  		refcount_set(&cpus->refcnt, 1);
+>  	}
+> -- 
+> 2.17.1
+> 
