@@ -2,157 +2,88 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F46C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68496C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811972171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:26:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nW9dLhzw"
+	by mail.kernel.org (Postfix) with ESMTP id 2C9F12171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732926AbfB1O0I (ORCPT
+        id S1732952AbfB1O0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:26:08 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39114 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbfB1O0I (ORCPT
+        Thu, 28 Feb 2019 09:26:15 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:40533 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727861AbfB1O0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 09:26:08 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i20so9803421pfo.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 06:26:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=TPH1F6QaQBZy0OXRSFkFddIPa1FgO4WXkmvghRdHxvw=;
-        b=nW9dLhzwtKcSF+9EcYgMks9YJfTfXaGZWsLZvdaKyOpc4zAMiW/DxV5nxG3ALRkTlV
-         4Pta6iIdHT1UTIrcDuzjWLL6M4oEDi+9A3dR2GVhins4FO+kVC+MEwlzq/JJX5EdZF1v
-         7sq3sqTazQScjcLk6gGpdNu3dNaOgxPh6gnyTRYXSZ7roZZ2Q1IUlcfWqOMij29id0Y5
-         a+11h/1vpI5pHjJuOpLl61xEhQ76FFqgeY4jN24eoi/2X6z/GO5ORoNF4wCuhs/D/e7y
-         AC2llNwgJD8M7xesx2imWhdPinAOxXzdS1PmbF7GIGNjN64vWV3DAscmQ/pUBpEGYEqo
-         YStg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=TPH1F6QaQBZy0OXRSFkFddIPa1FgO4WXkmvghRdHxvw=;
-        b=t2Igu7DiqeWaVM+HN+nhACXrxDN5EBTch1hxlH5nVu4Taw5vasaWUlsuwKJbu4t7Vr
-         GQ1Mh68F7yAGYh5O/ZmAhBRRUpLAXNSpEhKWpzXWqIFnAbe9X0SVrDUa15yTup2SXJLC
-         hx2267Y/NyFdaZzJXIczT/bxGDqOe0Nri7bGRfopjbVcnyB+vtoWM5wmXhy8TNx+dusU
-         1vt75NTUBX99zIealStvdNDmTwi/4xOmGNyN1ZSdtsvbHvQ9fCp8O1DHZn+DS4HNL8k5
-         c5fM/m7OG3iM948vf2thYLKvhaAc79yNG0zJRNrxA4Zlwtg7MlVJIPRvYfqHRDf5qWGj
-         Y8Fg==
-X-Gm-Message-State: AHQUAubo0X7qvUIFk8WPCifm7m/fqlzBLzfkj/HKIYME5k9wTfXiabIQ
-        Auq/dmWaoCFSwF/ah6LWy0M=
-X-Google-Smtp-Source: AHgI3IaIfiBa+SKpNvdBXqmBfF/E2jePBuz8TGy/jNmYQrv/IjNM7Es/QWtYG24547o5JdQDK9ur5A==
-X-Received: by 2002:a63:2bd5:: with SMTP id r204mr8924602pgr.48.1551363965942;
-        Thu, 28 Feb 2019 06:26:05 -0800 (PST)
-Received: from ikegamiPC ([240b:10:2720:5510:f9b9:4f97:abd5:501b])
-        by smtp.gmail.com with ESMTPSA id y70sm22777080pgd.6.2019.02.28.06.26.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 06:26:04 -0800 (PST)
-From:   "Tokunori Ikegami" <ikegami.t@gmail.com>
-To:     "'Liu Jian'" <liujian56@huawei.com>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <bbrezillon@kernel.org>,
-        <marek.vasut@gmail.com>, <richard@nod.at>,
-        <joakim.tjernlund@infinera.com>, <ikegami@allied-telesis.co.jp>,
-        <keescook@chromium.org>, <vigneshr@ti.com>
-Cc:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <1551189648-58073-1-git-send-email-liujian56@huawei.com>
-In-Reply-To: <1551189648-58073-1-git-send-email-liujian56@huawei.com>
-Subject: RE: [PATCH v3] cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
-Date:   Thu, 28 Feb 2019 23:25:54 +0900
-Message-ID: <016001d4cf71$865e7b60$931b7220$@gmail.com>
+        Thu, 28 Feb 2019 09:26:13 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SEIAfk027219;
+        Thu, 28 Feb 2019 15:25:59 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2qtvtxd4hu-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 28 Feb 2019 15:25:59 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7840638;
+        Thu, 28 Feb 2019 14:25:58 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5463A5993;
+        Thu, 28 Feb 2019 14:25:58 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 28 Feb
+ 2019 15:25:58 +0100
+Received: from localhost (10.201.23.19) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 28 Feb 2019 15:25:56
+ +0100
+From:   Hugues Fruchet <hugues.fruchet@st.com>
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH 0/4] Enable stm32mp1 camera support
+Date:   Thu, 28 Feb 2019 15:25:41 +0100
+Message-ID: <1551363945-19497-1-git-send-email-hugues.fruchet@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQHOptjmAmqem5WpXlLpfOi8uScBsaYBk5wg
-Content-Language: ja
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.19]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset serie enables camera of stm32mp157c evaluation board.
+To do so, both stm32mp157c DCMI camera interface driver and OV5640 camera
+module driver are enabled in devicetree.
 
+DCMI camera interface driver is enabled by default in multi_v7 configuration
+but OV5640 driver remains to be selected at kernel configuration time.
 
-> -----Original Message-----
-> From: linux-mtd [mailto:linux-mtd-bounces@lists.infradead.org] On Behalf
-> Of Liu Jian
-> Sent: Tuesday, February 26, 2019 11:01 PM
-> To: dwmw2@infradead.org; computersforpeace@gmail.com;
-> bbrezillon@kernel.org; marek.vasut@gmail.com; richard@nod.at;
-> joakim.tjernlund@infinera.com; ikegami@allied-telesis.co.jp;
-> keescook@chromium.org; vigneshr@ti.com
-> Cc: linux-mtd@lists.infradead.org; liujian56@huawei.com;
-> linux-kernel@vger.kernel.org
-> Subject: [PATCH v3] cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
-> 
-> In function do_write_buffer(), in the for loop, there is a case
-> chip_ready() returns 1 while chip_good() returns 0, so it never
-> break the loop.
-> To fix this, chip_good() is enough and it should timeout if it stay
-> bad for a while.
-> 
-> Fixes: dfeae1073583("mtd: cfi_cmdset_0002: Change write buffer to check
-> correct value")
-> Signed-off-by: Yi Huaijie <yihuaijie@huawei.com>
-> Signed-off-by: Liu Jian <liujian56@huawei.com>
-> Reviewed-by: Tokunori Ikegami <ikegami_to@yahoo.co.jp>
-> ---
-> v2->v3:
-> Follow Vignesh's advice:
-> add one more check for check_good() even when time_after() returns true.
-> 
->  drivers/mtd/chips/cfi_cmdset_0002.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c
-> b/drivers/mtd/chips/cfi_cmdset_0002.c
-> index 72428b6..3da2376 100644
-> --- a/drivers/mtd/chips/cfi_cmdset_0002.c
-> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-> @@ -1876,7 +1876,7 @@ static int __xipram do_write_buffer(struct map_info
-> *map, struct flchip *chip,
->  			continue;
->  		}
-> 
-> -		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
-> +		if (time_after(jiffies, timeo) && !chip_good(map, adr,
-> datum))
+This patchset depends on STMicroelectronics Multi-Function eXpander
+(STMFX) support [1].
 
-  Just another idea to understand easily.
+[1] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1944108.html
 
-    unsigned long now = jiffies;
+Hugues Fruchet (4):
+  ARM: dts: stm32: add 2v8 fixed regulator for stm32mp157c-ed1 board
+  ARM: dts: stm32: add DCMI camera interface support on stm32mp157c
+  ARM: dts: stm32: add DCMI pins to stm32mp157c
+  ARM: dts: stm32: enable OV5640 camera on stm32mp157c-ev1 board
 
-    if (chip_good(map, adr, datum)) {
-        xip_enable(map, chip, adr);
-        goto op_done;
-    }
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 41 ++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts     |  8 +++++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts     | 56 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c.dtsi        | 12 +++++++
+ 4 files changed, 117 insertions(+)
 
-    if (time_after(now, timeo) {
-        break;
-    }
-
-Regards,
-Ikegami
-
->  			break;
-> 
->  		if (chip_good(map, adr, datum)) {
-> --
-> 2.7.4
-> 
-> 
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+2.7.4
 
