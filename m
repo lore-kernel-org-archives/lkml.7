@@ -2,105 +2,140 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A17C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E598FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A72420854
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BB920854
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MAb08vz9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g4ffMHZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfB1TB1 (ORCPT
+        id S1732644AbfB1TBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 14:01:27 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:47262 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbfB1TB1 (ORCPT
+        Thu, 28 Feb 2019 14:01:31 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46787 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727165AbfB1TB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 14:01:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kGIstRIPMaHHmUX9ti2AYr78dKS9FrMpFqBae+rMp+A=; b=MAb08vz95D76HXImRKhdfzqiG
-        SFYSCliWvLeXuNmGBAAXqvKTr82QiTK1WiULljgYubrN+6vYxB49UDB7GE5VKmDBvhaUFybGE5tCv
-        v0nVpJDcqyF52lEoOHhNovhs9CqA9+tfVnYKnrK/Rb78UVxVXd4t7XkxWH1NpmppMm5yHSoWFEcYt
-        XmoMbDxhyZa7y2CthggE3/6MNSku3aK97anSXinNoND3PM/MCL7bl6PwzltpLVvHlMQSj+QoawAHg
-        uDOrrIZYBlyeZvrZ8eNsScGQ0BmDQ/l0jEllqcP8k96REb2YxF/vDEfGNH4Am/17fgkLb6uDdw+7A
-        lihCX4Myg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1gzQvi-0006AW-Cf; Thu, 28 Feb 2019 19:01:14 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F28D3202C2DAC; Thu, 28 Feb 2019 20:01:11 +0100 (CET)
-Date:   Thu, 28 Feb 2019 20:01:11 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: Re: [PATCH 6/8] i915,uaccess: Fix redundant CLAC
-Message-ID: <20190228190111.GI32494@hirez.programming.kicks-ass.net>
-References: <20190228145450.289603901@infradead.org>
- <20190228150152.540038736@infradead.org>
- <CAHk-=wgsSXxL5c2Lbmbai=bcCgN0G=jPO+gWhQ3a+wx-LTaFkQ@mail.gmail.com>
- <20190228175114.GG32494@hirez.programming.kicks-ass.net>
- <20190228180154.GO32534@hirez.programming.kicks-ass.net>
- <CAHk-=whJww5smbSU2VzvcR7tajNqp=i9ZBYHK3RvwVXbs+V_JQ@mail.gmail.com>
+        Thu, 28 Feb 2019 14:01:28 -0500
+Received: by mail-qt1-f195.google.com with SMTP id z25so24754473qti.13;
+        Thu, 28 Feb 2019 11:01:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0rnACV3hbRWsqpW2HE8Ikf+ekHji4cbWGZSHPV64ldU=;
+        b=g4ffMHZjCyu8x11WY1if256v35ur3sP069P/zNgpF7GpDf/VXZS5HIroFO+kNIu2bu
+         VmDCq3/nYP3oPfkoo/JI9MZkcBZ1ick7VSZDHibf/7GjTZjHGU4cXT/tPpF6JdY3tw07
+         3mlkWSe35r9Wp4QW9thC+Mb7fr3Qw2gZhv0wogEVIWl6zljMbmFY6Be8ffrua3ww0j9/
+         H0Q5uBdHMg2OIHaHm9Y3xfsjKVE0uT20qDf8d+QS3ElII+v9Z3G0ok/UZxkSjHwvgR3Z
+         qseQJ6PQ/uU7meM+dDPlC8Nx5iNl4QQusxxVJDXeuzGWS09VZhFnpu4eEO3XEWDyQcwq
+         0AXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0rnACV3hbRWsqpW2HE8Ikf+ekHji4cbWGZSHPV64ldU=;
+        b=KlpOIc5qZvy3tzVRQKF4VR9p0n81JV7+ZZChGwuZNkjVsxAexHNi9Uefv2h0VWnH8o
+         HGcMbvuuw4PEEC7w23tXi0JHKv69jw3JCuSbVzNRozPlIC9cOaik1R/DIbBVfNQr7CTr
+         Rr22ez6FQGtQqcigfCEFZY374qFKZ3ASthuNNwJt5fUTOBcCPTTISbo9lqya7dp7H9pY
+         j5lVntx2NRdc2P4lo2BJrP4eyELi1T+h4ugiTtNAgV6+8BtkYSpu7UfYnEj0ul4r2RrV
+         74JirG9zYgMtCkCY0/KZhkRW2DxnTKXwjJN2x3t3D6y3eRL0/1TJGntN/pkP8fWxoOos
+         9RcA==
+X-Gm-Message-State: APjAAAXFgFIScgXxQMMYkbawM6enViO2bPZyCLDntsNq1DJXsCSCkamT
+        5mX/DBVcBG62JrSsRS/ayAQ=
+X-Google-Smtp-Source: APXvYqwunXF92TgKBDvISyf/yJMZ2M3u2YakqBICyX24YzEmmTQ0hmNBzZ4WzDLQC61UeCdTQH40zA==
+X-Received: by 2002:a0c:b5ed:: with SMTP id o45mr564914qvf.242.1551380486929;
+        Thu, 28 Feb 2019 11:01:26 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id u18sm7800687qka.25.2019.02.28.11.01.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 11:01:25 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 74E724039C; Thu, 28 Feb 2019 16:01:23 -0300 (-03)
+Date:   Thu, 28 Feb 2019 16:01:23 -0300
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-perf-users@vger.kernel.org,
+        Mathias Krause <minipli@googlemail.com>,
+        linux-trace-devel@vger.kernel.org,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Michael Sartain <mikesart@fastmail.com>
+Subject: Re: [PATCH] tools lib traceevent: Fix buffer overflow in arg_eval
+Message-ID: <20190228190123.GK9508@kernel.org>
+References: <20190228015532.8941-1-tonyj@suse.de>
+ <20190227221250.74996869@vmware.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whJww5smbSU2VzvcR7tajNqp=i9ZBYHK3RvwVXbs+V_JQ@mail.gmail.com>
+In-Reply-To: <20190227221250.74996869@vmware.local.home>
+X-Url:  http://acmel.wordpress.com
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 10:29:25AM -0800, Linus Torvalds wrote:
-> On Thu, Feb 28, 2019 at 10:02 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Weird, that jump is from C, not from a .fixup table. objtool _should_
-> > see that and complain if there is a AC=1 path that reaches RET.
+Em Wed, Feb 27, 2019 at 10:12:50PM -0500, Steven Rostedt escreveu:
+> On Wed, 27 Feb 2019 17:55:32 -0800
+> Tony Jones <tonyj@suse.de> wrote:
 > 
-> No, unsafe_put_user() actually does the "asm goto" thing, so the jump
-> is literally hidden as an exception entry. And apparently objtool
-> doesn't follow exceptions (which *normally* doesn't matter for code
-> liveness analysis since they normally jump back to right after the
-> excepting instruction, but maybe it misses some exception handling
-> code because of it?).
+> > Fix buffer overflow observed when running perf test.
+> > 
+> > The overflow is when trying to evaluate "1ULL << (64 - 1)" which
+> > is resulting in -9223372036854775808 which overflows the 20 character
+> > buffer.
+> > 
+> > If is possible this bug has been reported before but I still don't
+> > see any fix checked in:
+> > 
+> > See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
+> > 
+> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Cc: linux-perf-users@vger.kernel.org
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Tony Jones <tonyj@suse.de>
 > 
-> You may have looked at unsafe_get_user(), which does indeed make the
-> branch as C code, because gcc currently does not allow outputs from
-> "asm goto" statements (which "get" obviously needs).
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> I have to say I've let this slide and it is not the first time a patch
+> went out with this fix. But this one has the correct fix because we
+> should use a buffer with a multiple of 4. Anyway, Tony I believe was
+> the first to report this anyway.
+> 
+> For reference we have:
+> 
+> I first heard about Tony's complaint on a post to linux-perf-users on Jan 18.
+> 
+> But then we had after that:
+> 
+>  Michael Sartain reported it on 1/24 (and fixed by Tzvetomir)
+>  https://lore.kernel.org/linux-trace-devel/20190125102014.19600-1-tstoyanov@vmware.com/
+>  
+> It was later fixed again by Mathias Krause
+>  https://lore.kernel.org/linux-trace-devel/20190223122404.21137-1-minipli@googlemail.com/
+> 
+> But since Tony was first to report it, and we discussed that it should
+> be 24 bytes, I would say this is the patch to take.
+> 
+> Again, sorry for not getting this acknowledged earlier and everyone doing
+> the same thing multiple times. :-/
+> 
+> Arnaldo, please take this patch. But also add:
+> 
+> Reported-by: Michael Sartain <mikesart@fastmail.com>
+> Reported-by: Mathias Krause <minipli@googlemail.com>
 
-Indeed I did. But it looks like objtool actually does parse .fixup. What
-appears to go wrong is the 'visited' marker for backward jumps.
+Will do.
 
-If we've been there with AC=0 first, and then backjump with AC=1, things
-go missing.
+Thanks for the credit research,
 
-I've also now confused myself on how it branches from alternatives. It
-looks like it now considers paths that take the STAC alternative, and
-exit through the NOP alternative (which should be CLAC) and then hit
-RET with AC=1.
-
-I'll get this sorted, eventually..
-
+- Arnaldo
