@@ -2,197 +2,205 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_12_24,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8478EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D51AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49FAF2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIJYAh6v"
+	by mail.kernel.org (Postfix) with ESMTP id 604AF2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733261AbfCABch (ORCPT
+        id S1733307AbfCABd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 20:32:37 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44898 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbfCABch (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 20:32:37 -0500
-Received: by mail-pf1-f193.google.com with SMTP id a3so10584331pff.11;
-        Thu, 28 Feb 2019 17:32:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=fGlbx7N309avKzRv2g+xVb30ZDH61OHN1bu7L6jNwgc=;
-        b=VIJYAh6vqvGiZWCCtT0j1nCFHYDgyKBj3dKE70yevnhP7pn2EocdyBz8vsO+RA/Dfk
-         1h1k5WjtK7QMPZWbE/2p0xqx0iVHWj4WS4vWIb95GkmPkfxh4hfit/pnPh062YdAElFn
-         n/eCAZG3TlbwzcfXKLC0K4rT8eLzWwVI5fFWOy1bCjpzSxgmKOV7mji5cSgPdN41ykfq
-         HMKuxqsP89NudZ5RMDZ+Zvj0uYHHgcPq8hdr/6PINmk5wTfnbrJr8Y89ONg1PZQlSx5m
-         mkTh9fm6/Jv2i4k8hU6mBeKipLZacyC4Ms1KLUVmWPvBc5Es7ArY+ZoKm2cr3WlUYwgS
-         uDlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=fGlbx7N309avKzRv2g+xVb30ZDH61OHN1bu7L6jNwgc=;
-        b=KRdWH0WvZR5MyOUQs230xTgIV60wWLa2BAk7ETfUDBbG78BamNIl/cGhJsWQn7rgcB
-         7BAnzxuQPHwT0udOqtzt2guGHpmvous9qSjshSblBVJvsfh1jB+mMjnIXOcLLAwmVeT9
-         5e0GKNf8uEZsAHsn+0CZuwx/859L51FtlOow5vxFb3jFdiwJ8QiO1U8Oy5OY361t8W8S
-         rOiIjij3l6Psbehp4nFILstvxQBfe1Z/M2xT9RGe3H9w+Xtq/j/ArcUkYTLIAtjLzxYj
-         w6F4NPkD/l9eMRzW2hm+1GmGuzcS8BWtQN/4aeBm/5n7GkOcs5sDv8mOBMEXHy09OBQr
-         P4kA==
-X-Gm-Message-State: APjAAAW5VRH9l+pbpFhpTgllKDT/QIF53FOn6JSvRD/srqv6+is2fCuX
-        k3CjcHoAC1HdvXZKKKYICaA=
-X-Google-Smtp-Source: APXvYqy8oMTWsVtTWakF5RV27sjB/MB/z3wvgr2AiJQ+9eE8DPR8LVpNBbkWO7HOWFzPgq18DRKfCA==
-X-Received: by 2002:a65:6642:: with SMTP id z2mr2265262pgv.196.1551403956073;
-        Thu, 28 Feb 2019 17:32:36 -0800 (PST)
-Received: from ?IPv6:2001:df0:0:200c:b825:86af:2827:e844? ([2001:df0:0:200c:b825:86af:2827:e844])
-        by smtp.gmail.com with ESMTPSA id m68sm53067576pfj.89.2019.02.28.17.32.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 17:32:35 -0800 (PST)
-Subject: Re: [PATCH v2] scsi: NCR5380: Mark expected switch fall-through
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190228202759.GA5883@embeddedor>
- <alpine.LNX.2.21.1903011143550.8@nippy.intranet>
-From:   Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <193a8c9d-2af4-150a-c9fc-3113bcc27e4d@gmail.com>
-Date:   Fri, 1 Mar 2019 14:32:30 +1300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Feb 2019 20:33:57 -0500
+Received: from mga07.intel.com ([134.134.136.100]:27116 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727861AbfCABd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 20:33:57 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 17:33:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,425,1544515200"; 
+   d="scan'208";a="147516395"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2019 17:33:54 -0800
+Date:   Thu, 28 Feb 2019 16:28:32 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: Re: [PATCH v3 3/8] KVM:CPUID: Add CPUID support for Guest CET
+Message-ID: <20190228082831.GB12006@local-michael-cet-test.sh.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-4-weijiang.yang@intel.com>
+ <20190228155939.GD6166@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LNX.2.21.1903011143550.8@nippy.intranet>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228155939.GD6166@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Finn's version looks fine to me.
+On Thu, Feb 28, 2019 at 07:59:40AM -0800, Sean Christopherson wrote:
+> On Mon, Feb 25, 2019 at 09:27:11PM +0800, Yang Weijiang wrote:
+> > Guest CET SHSTK and IBT capability are reported via
+> > CPUID.(EAX=7, ECX=0):ECX[bit 7] and EDX[bit 20] respectively.
+> > Guest user mode and supervisor mode xsaves component size
+> > is reported via CPUID.(EAX=0xD, ECX=1):ECX[bit 11] and ECX[bit 12]
+> > respectively.
+> > 
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> >  arch/x86/kvm/cpuid.c | 60 +++++++++++++++++++++++++++++++++-----------
+> >  arch/x86/kvm/x86.h   |  4 +++
+> >  2 files changed, 50 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index cb1aece25b17..5e05756cc6db 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
+> >  	return xcr0;
+> >  }
+> >  
+> > +u64 kvm_supported_xss(void)
+> > +{
+> > +	u64 xss;
+> > +
+> > +	rdmsrl(MSR_IA32_XSS, xss);
+> > +	xss &= KVM_SUPPORTED_XSS;
+> > +	return xss;
+> > +}
+> > +EXPORT_SYMBOL(kvm_supported_xss);
+> > +
+> >  #define F(x) bit(X86_FEATURE_##x)
+> >  
+> >  /* For scattered features from cpufeatures.h; we currently expose none */
+> > @@ -323,6 +333,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  				 u32 index, int *nent, int maxnent)
+> >  {
+> >  	int r;
+> > +	u32 eax, ebx, ecx, edx;
+> >  	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+> >  #ifdef CONFIG_X86_64
+> >  	unsigned f_gbpages = (kvm_x86_ops->get_lpage_level() == PT_PDPE_LEVEL)
+> > @@ -503,6 +514,20 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  			 * if the host doesn't support it.
+> >  			 */
+> >  			entry->edx |= F(ARCH_CAPABILITIES);
+> > +
+> > +			/*
+> > +			 * Guest OS CET enabling is designed independent to
+> > +			 * host enabling, it only has dependency on Host HW
+> > +			 * capability, if it has, report CET support to
+> > +			 * Guest.
+> > +			 */
+> > +			cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+> > +			if (ecx & F(SHSTK))
+> > +				entry->ecx |= F(SHSTK);
+> > +
+> > +			if (edx & F(IBT))
+> > +				entry->edx |= F(IBT);
+> 
+> There's no need to manually add these flags.  They will be automatically
+> kept if supported in hardware because your previous patch, 02/08, added
+> them to the mask of features that can be exposed to the guest,
+> i.e. set them in kvm_cpuid_7_0_e{c,d}x_x86_features.
+> 
+I shared the same thought as you before, but after I took a closer look at the
+kernel code, actually, when host CET feature is disabled by user via
+cmdline options(no_cet_shstk and no_cet_ibt), it'll mask out CET feature bits in
+boot_cpu_data.x86_capbility[] array, and cpuid_mask() will make the bits
+in previous definition lost, so these lines actually add them back when
+host CET is disabled.
 
-Cheers,
+please check CET kernel patch here:
+https://lkml.org/lkml/2018/11/20/204
 
-     Michael
-
-On 1/03/19 2:16 PM, Finn Thain wrote:
-> On Thu, 28 Feb 2019, Gustavo A. R. Silva wrote:
->
->> In preparation to enabling -Wimplicit-fallthrough, mark switch
->> cases where we are expecting to fall through.
->>
-> This switch case is already marked. So I think the patch description
-> should state that this patch is actually a workaround for a gcc deficiency
-> which prevents it from locating the marker.
->
->> This patch fixes the following warning:
->>
->> In file included from drivers/scsi/dmx3191d.c:48:
->> drivers/scsi/NCR5380.c: In function ?NCR5380_information_transfer?:
->> drivers/scsi/NCR5380.c:1933:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>        if (!hostdata->connected)
->>           ^
->> drivers/scsi/NCR5380.c:1937:5: note: here
->>       default:
->>       ^~~~~~~
->>
->> Warning level 3 was used: -Wimplicit-fallthrough=3
->>
->> Notice that, in this particular case, the code comment is modified
->> in accordance with what GCC is expecting to find.
->>
->> This patch is part of the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->> Changes in v2:
->>   - Update commit log.
->>   - Move code comment after the default label and
->>     retain reason for fall-through in comment as
->>     requested by Michael Schmitz.
->>
->>   drivers/scsi/NCR5380.c | 9 ++++-----
->>   1 file changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
->> index 01c23d27f290..985d1c053578 100644
->> --- a/drivers/scsi/NCR5380.c
->> +++ b/drivers/scsi/NCR5380.c
->> @@ -1933,13 +1933,12 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
->>   					if (!hostdata->connected)
->>   						return;
->>   
->> -					/* Fall through to reject message */
->> -
->> +					/* Fall through - to reject message */
-> This new hyphen is wrong and harms readability for humans.
->
-> I did confirm that gcc can be appeased by the use of a hyphen but not by
-> correct grammar such as "Fall through to reject message" or "Fall through.
-> Reject message."
->
->> +				default:
->>   					/*
->> -					 * If we get something weird that we aren't expecting,
->> -					 * reject it.
->> +					 * If we get something weird that we
->> +					 * aren't expecting, reject it.
-> This reformatting isn't relevant to this patch. The comments can be
-> improved however (see below).
->
->>   					 */
->> -				default:
-> Moving the 'default' keyword closer to the 'fall through' comment makes
-> sense to me -- I could understand if gcc had simple, unambiguous rules for
-> annotations.
->
-> Do compilers and static analysers agree as to what a correctly annotated
-> switch label should look like? If not, we would have to try to mangle code
-> and comments in such a way that might satisfy all of the failings in all
-> of the tools.
->
->>   					if (tmp == EXTENDED_MESSAGE)
->>   						scmd_printk(KERN_INFO, cmd,
->>   						            "rejecting unknown extended message code %02x, length %d\n",
->>
-> Here's an alternative patch, which has the virtue that a simple heuristic
-> will work. This patch does not require that other static analysis tools
-> will follow gcc's weird rules about hyphens. (I assume they don't but I
-> didn't check.)
->
-> diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-> index 7fed9bb72784..fe0535affc14 100644
-> --- a/drivers/scsi/NCR5380.c
-> +++ b/drivers/scsi/NCR5380.c
-> @@ -1932,13 +1932,13 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
->   					if (!hostdata->connected)
->   						return;
->   
-> -					/* Fall through to reject message */
-> -
-> +					/* Reject message */
-> +					/* Fall through */
-> +				default:
->   					/*
->   					 * If we get something weird that we aren't expecting,
-> -					 * reject it.
-> +					 * log it.
->   					 */
-> -				default:
->   					if (tmp == EXTENDED_MESSAGE)
->   						scmd_printk(KERN_INFO, cmd,
->   						            "rejecting unknown extended message code %02x, length %d\n",
->
+> > +
+> >  		} else {
+> >  			entry->ebx = 0;
+> >  			entry->ecx = 0;
+> > @@ -564,14 +589,17 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  	}
+> >  	case 0xd: {
+> >  		int idx, i;
+> > -		u64 supported = kvm_supported_xcr0();
+> > +		u64 u_supported = kvm_supported_xcr0();
+> > +		u64 s_supported = kvm_supported_xss();
+> > +		u64 supported;
+> > +		int compacted;
+> >  
+> > -		entry->eax &= supported;
+> > -		entry->ebx = xstate_required_size(supported, false);
+> > +		entry->eax &= u_supported;
+> > +		entry->ebx = xstate_required_size(u_supported, false);
+> >  		entry->ecx = entry->ebx;
+> > -		entry->edx &= supported >> 32;
+> > +		entry->edx &= u_supported >> 32;
+> >  		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> > -		if (!supported)
+> > +		if (!u_supported && !s_supported)
+> >  			break;
+> >  
+> >  		for (idx = 1, i = 1; idx < 64; ++idx) {
+> > @@ -583,19 +611,23 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  			if (idx == 1) {
+> >  				entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
+> >  				cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
+> > -				entry[i].ebx = 0;
+> > -				if (entry[i].eax & (F(XSAVES)|F(XSAVEC)))
+> > -					entry[i].ebx =
+> > -						xstate_required_size(supported,
+> > -								     true);
+> > +				supported = u_supported | s_supported;
+> > +				compacted = entry[i].eax &
+> > +					(F(XSAVES) | F(XSAVEC));
+> > +				entry[i].ebx = xstate_required_size(supported,
+> > +								    compacted);
+> > +				entry[i].ecx &= s_supported;
+> > +				entry[i].edx = 0;
+> >  			} else {
+> > +				supported = (entry[i].ecx & 1) ? s_supported :
+> > +								 u_supported;
+> >  				if (entry[i].eax == 0 || !(supported & mask))
+> >  					continue;
+> > -				if (WARN_ON_ONCE(entry[i].ecx & 1))
+> > -					continue;
+> > +				entry[i].ecx &= 1;
+> > +				entry[i].edx = 0;
+> > +				if (entry[i].ecx)
+> > +					entry[i].ebx = 0;
+> >  			}
+> > -			entry[i].ecx = 0;
+> > -			entry[i].edx = 0;
+> >  			entry[i].flags |=
+> >  			       KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> >  			++*nent;
+> > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> > index 224cd0a47568..c61da41c3c5c 100644
+> > --- a/arch/x86/kvm/x86.h
+> > +++ b/arch/x86/kvm/x86.h
+> > @@ -283,6 +283,10 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
+> >  				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
+> >  				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
+> >  				| XFEATURE_MASK_PKRU)
+> > +
+> > +#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_SHSTK_USER \
+> > +				| XFEATURE_MASK_SHSTK_KERNEL)
+> > +
+> >  extern u64 host_xcr0;
+> >  
+> >  extern u64 kvm_supported_xcr0(void);
+> > -- 
+> > 2.17.1
+> > 
