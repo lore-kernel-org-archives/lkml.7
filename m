@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C209BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770E5C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9057E20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BADF2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367557;
-	bh=BPDmHPMQIa6sDO4bI9XpiWcpwI1jnVTDXSDb0FhOTXg=;
+	s=default; t=1551367561;
+	bh=OSmQ5vhrznVfvKMW0+PN1HUC0o9AgphD2pFkCMhXTMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RpB7cwC818carp5p0EISe5ykS9PiuOW0egVI45SOwaJw4I+WdgCwSikbHv+Qr0d/1
-	 dwTOj48hAWfEj0eKyHtpB4FpkqGDc3gd3cyBnu7mfPgHBfBcpPhIH0WLkVNx2+8slQ
-	 J602hAqM9qWkR7TLhrMnQ+PKIKZBrywa0CiDxoMk=
+	b=Pc/46WnB7VKq6TWmUo8qOKMScl7nUEbAUQ8nULPzkGtD7sm8DfrYVwytcf4/5wZ0H
+	 v/offaMKheArC9kRoUyWZvTwxi2UrDNtnmpmU8sxKmE9RgGAI8y/yigAuHct4QptKB
+	 yuTALyFna8SGfOTw75OLsC5Kk8Tu9azHOv/FCnL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388091AbfB1PLv (ORCPT
+        id S2388081AbfB1PLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:11:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45070 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:11:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388053AbfB1PLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:47 -0500
+        id S1733264AbfB1PLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5526218D9;
-        Thu, 28 Feb 2019 15:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32519218AE;
+        Thu, 28 Feb 2019 15:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366706;
-        bh=BPDmHPMQIa6sDO4bI9XpiWcpwI1jnVTDXSDb0FhOTXg=;
+        s=default; t=1551366703;
+        bh=OSmQ5vhrznVfvKMW0+PN1HUC0o9AgphD2pFkCMhXTMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Ac+ZX/BX2LrBQDYXxZ6IoFJjSXywHL3ILVgb0JSSc3XSIIyJIUJ7N2JZMoQ9QypV
-         3kF+zgl4dib22OI9Uc1ApHOxNC+Mex6eLdWYaEDmGz6jp8usuc1Tp0JkomwV1nEuTe
-         +xEhyFBVdQ4qP87gyuVJnyzzCjr18+pXCueITYEE=
+        b=npcG6MN2BLCVOY6Cjvk3bppI1Y0V9+ETx4oFv9OlrBGc/OMBGLjBoHX0ejjtZIogG
+         SZ+txtVcHiRfSKTZCZ4+HlG+T2RnGpVDJ1sYyd/hEtCX6YRiaT4OwAkIGvQ4AJZj+0
+         gVBMq5+CPig2BwFe4UaReEXhf9cWFTct21RwgBRo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heyi Guo <guoheyi@huawei.com>, Heyi Guo <heyi.guo@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+Cc:     Zhou Yanjie <zhouyanjie@cduestc.edu.cn>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com,
+        malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org,
+        syq <syq@debian.org>, "jiaxun . yang" <jiaxun.yang@flygoat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 21/64] irqchip/gic-v4: Fix occasional VLPI drop
-Date:   Thu, 28 Feb 2019 10:10:22 -0500
-Message-Id: <20190228151105.11277-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/64] DTS: CI20: Fix bugs in ci20's device tree.
+Date:   Thu, 28 Feb 2019 10:10:20 -0500
+Message-Id: <20190228151105.11277-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -58,138 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heyi Guo <guoheyi@huawei.com>
+From: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
 
-[ Upstream commit 6479450f72c1391c03f08affe0d0110f41ae7ca0 ]
+[ Upstream commit 1ca1c87f91d9dc50d6a38e2177b2032996e7901c ]
 
-1. In current implementation, every VLPI will temporarily be mapped to
-the first CPU in system (normally CPU0) and then moved to the real
-scheduled CPU later.
+According to the Schematic, the hardware of ci20 leads to uart3,
+but not to uart2. Uart2 is miswritten in the original code.
 
-2. So there is a time window and a VLPI may be sent to CPU0 instead of
-the real scheduled vCPU, in a multi-CPU virtual machine.
-
-3. However, CPU0 may have not been scheduled as a virtual CPU after
-system boots up, so the value of its GICR_VPROPBASER is unknown at
-that moment.
-
-4. If the INTID of VLPI is larger than 2^(GICR_VPROPBASER.IDbits+1),
-while IDbits is also in unknown state, GIC will behave as if the VLPI
-is out of range and simply drop it, which results in interrupt missing
-in Guest.
-
-As no code will clear GICR_VPROPBASER at runtime, we can safely
-initialize the IDbits field at boot time for each CPU to get rid of
-this issue.
-
-We also clear Valid bit of GICR_VPENDBASER in case any ancient
-programming gets left in and causes memory corrupting. A new function
-its_clear_vpend_valid() is added to reuse the code in
-its_vpe_deschedule().
-
-Fixes: e643d8034036 ("irqchip/gic-v3-its: Add VPE scheduling")
-Signed-off-by: Heyi Guo <guoheyi@huawei.com>
-Signed-off-by: Heyi Guo <heyi.guo@linaro.org>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips <linux-mips@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: mark.rutland@arm.com
+Cc: malat@debian.org
+Cc: ezequiel@collabora.co.uk
+Cc: ulf.hansson@linaro.org
+Cc: syq <syq@debian.org>
+Cc: jiaxun.yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 66 ++++++++++++++++++++++++--------
- 1 file changed, 49 insertions(+), 17 deletions(-)
+ arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 4c2246fe5dbe9..d9a8801083156 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1951,6 +1951,29 @@ static void its_free_pending_table(struct page *pt)
- 		   get_order(max_t(u32, LPI_PENDBASE_SZ, SZ_64K)));
- }
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 50cff3cbcc6de..4f7b1fa31cf53 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -76,7 +76,7 @@
+ 	status = "okay";
  
-+static u64 its_clear_vpend_valid(void __iomem *vlpi_base)
-+{
-+	u32 count = 1000000;	/* 1s! */
-+	bool clean;
-+	u64 val;
-+
-+	val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
-+	val &= ~GICR_VPENDBASER_Valid;
-+	gits_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
-+
-+	do {
-+		val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
-+		clean = !(val & GICR_VPENDBASER_Dirty);
-+		if (!clean) {
-+			count--;
-+			cpu_relax();
-+			udelay(1);
-+		}
-+	} while (!clean && count);
-+
-+	return val;
-+}
-+
- static void its_cpu_init_lpis(void)
- {
- 	void __iomem *rbase = gic_data_rdist_rd_base();
-@@ -2024,6 +2047,30 @@ static void its_cpu_init_lpis(void)
- 	val |= GICR_CTLR_ENABLE_LPIS;
- 	writel_relaxed(val, rbase + GICR_CTLR);
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pins_uart2>;
++	pinctrl-0 = <&pins_uart3>;
+ };
  
-+	if (gic_rdists->has_vlpis) {
-+		void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
-+
-+		/*
-+		 * It's possible for CPU to receive VLPIs before it is
-+		 * sheduled as a vPE, especially for the first CPU, and the
-+		 * VLPI with INTID larger than 2^(IDbits+1) will be considered
-+		 * as out of range and dropped by GIC.
-+		 * So we initialize IDbits to known value to avoid VLPI drop.
-+		 */
-+		val = (LPI_NRBITS - 1) & GICR_VPROPBASER_IDBITS_MASK;
-+		pr_debug("GICv4: CPU%d: Init IDbits to 0x%llx for GICR_VPROPBASER\n",
-+			smp_processor_id(), val);
-+		gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
-+
-+		/*
-+		 * Also clear Valid bit of GICR_VPENDBASER, in case some
-+		 * ancient programming gets left in and has possibility of
-+		 * corrupting memory.
-+		 */
-+		val = its_clear_vpend_valid(vlpi_base);
-+		WARN_ON(val & GICR_VPENDBASER_Dirty);
-+	}
-+
- 	/* Make sure the GIC has seen the above */
- 	dsb(sy);
- }
-@@ -2644,26 +2691,11 @@ static void its_vpe_schedule(struct its_vpe *vpe)
- static void its_vpe_deschedule(struct its_vpe *vpe)
- {
- 	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
--	u32 count = 1000000;	/* 1s! */
--	bool clean;
- 	u64 val;
+ &uart4 {
+@@ -196,9 +196,9 @@
+ 		bias-disable;
+ 	};
  
--	/* We're being scheduled out */
--	val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
--	val &= ~GICR_VPENDBASER_Valid;
--	gits_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
--
--	do {
--		val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
--		clean = !(val & GICR_VPENDBASER_Dirty);
--		if (!clean) {
--			count--;
--			cpu_relax();
--			udelay(1);
--		}
--	} while (!clean && count);
-+	val = its_clear_vpend_valid(vlpi_base);
+-	pins_uart2: uart2 {
+-		function = "uart2";
+-		groups = "uart2-data", "uart2-hwflow";
++	pins_uart3: uart3 {
++		function = "uart3";
++		groups = "uart3-data", "uart3-hwflow";
+ 		bias-disable;
+ 	};
  
--	if (unlikely(!clean && !count)) {
-+	if (unlikely(val & GICR_VPENDBASER_Dirty)) {
- 		pr_err_ratelimited("ITS virtual pending table not cleaning\n");
- 		vpe->idai = false;
- 		vpe->pending_last = true;
 -- 
 2.19.1
 
