@@ -6,51 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591E7C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1A4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B93620C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB60E20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366838;
-	bh=hLEA00lgfO2702WMHeIiQDc/vaMICsiKJPqpsoynM9Y=;
+	s=default; t=1551366844;
+	bh=Zzdlv58zkJoQ2Qk+yyA75zOVj5zejISbneBuJwZwBbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jjWWfT+QLUyC7NSYsiyM5nRu7j4HnH3QFrm/wYc+tbu/H8YkwBFOmDXUUCqt57LMk
-	 NWjsGXBUJ25Hn/YQRwNL7z1VtPG5FC4il2OAEe4+BR5gggAI2irj0WNW/2/1JthvuG
-	 mkYVngMrS5G+RiMImw+cjS+N+5stUV5BDiyvjNSE=
+	b=fl8eWBLD02XxCcu+gGOOdLsa/14YrQO67xtorOnu0ZSX3RA58hy15ZFfxewwCN1sp
+	 x9KsDLgF0OgdbtXCPu3SOiY7KA38JrjQq/z0FsLPMgA7w8eNMqDmuR7FjF6rycSRCL
+	 /ZjqtM7KAsgX+eVW8sjpc3Q9el2j7d0ooDo/7kJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388567AbfB1PN5 (ORCPT
+        id S2388597AbfB1POC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:13:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48122 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:14:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388545AbfB1PNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:13:52 -0500
+        id S2388572AbfB1POA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:14:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CF4F218D9;
-        Thu, 28 Feb 2019 15:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59C0B218D3;
+        Thu, 28 Feb 2019 15:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366831;
-        bh=hLEA00lgfO2702WMHeIiQDc/vaMICsiKJPqpsoynM9Y=;
+        s=default; t=1551366839;
+        bh=Zzdlv58zkJoQ2Qk+yyA75zOVj5zejISbneBuJwZwBbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ezneIJnM/OG5HDynexe4GjPuHXb0KnsbAXYcWntn5johdcvqCB3vwB/DElNqIXdMD
-         VsgFtaGMTXk2zE0wN3KckF0iJNIDNpeNF5oE09wwoyyJDjNr28uF30v4t/10EhVzrU
-         IRQiVDmtmGdR/O1v50XZN3w8KJZ21lhAcFS/Y0+I=
+        b=yu6X4cd5nSCgtaQpJtRVXaaCOX79ZK7JVEsLX+Wts0Fx69B7tH71nFqD60lWQ6ijz
+         Laye3Gaoi8MnQMgA+WpphsmFT88eTEQnLvEY/ngxp9QEIbxZB0YncrMZkfvRDpmqS1
+         QVpCyO6rf0FdGRnrQjKrkhAI2Pb5XBhlpIp3cZIM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhou Yanjie <zhouyanjie@cduestc.edu.cn>,
-        Paul Burton <paul.burton@mips.com>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com,
-        malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org,
-        syq <syq@debian.org>, "jiaxun . yang" <jiaxun.yang@flygoat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 07/36] DTS: CI20: Fix bugs in ci20's device tree.
-Date:   Thu, 28 Feb 2019 10:13:08 -0500
-Message-Id: <20190228151337.12176-7-sashal@kernel.org>
+Cc:     Jose Abreu <jose.abreu@synopsys.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 12/36] net: stmmac: Fallback to Platform Data clock in Watchdog conversion
+Date:   Thu, 28 Feb 2019 10:13:13 -0500
+Message-Id: <20190228151337.12176-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
 References: <20190228151337.12176-1-sashal@kernel.org>
@@ -62,58 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
+From: Jose Abreu <jose.abreu@synopsys.com>
 
-[ Upstream commit 1ca1c87f91d9dc50d6a38e2177b2032996e7901c ]
+[ Upstream commit 4ec5302fa906ec9d86597b236f62315bacdb9622 ]
 
-According to the Schematic, the hardware of ci20 leads to uart3,
-but not to uart2. Uart2 is miswritten in the original code.
+If we don't have DT then stmmac_clk will not be available. Let's add a
+new Platform Data field so that we can specify the refclk by this mean.
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips <linux-mips@vger.kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: mark.rutland@arm.com
-Cc: malat@debian.org
-Cc: ezequiel@collabora.co.uk
-Cc: ulf.hansson@linaro.org
-Cc: syq <syq@debian.org>
-Cc: jiaxun.yang <jiaxun.yang@flygoat.com>
+This way we can still use the coalesce command in PCI based setups.
+
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   | 14 ++++++++++----
+ include/linux/stmmac.h                             |  1 +
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index a4cc52214dbdb..dad4aa0ebdd8c 100644
---- a/arch/mips/boot/dts/ingenic/ci20.dts
-+++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -54,7 +54,7 @@
- 	status = "okay";
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index c3c6335cbe9ae..ecddd9948788a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -702,8 +702,11 @@ static u32 stmmac_usec2riwt(u32 usec, struct stmmac_priv *priv)
+ {
+ 	unsigned long clk = clk_get_rate(priv->plat->stmmac_clk);
  
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pins_uart2>;
-+	pinctrl-0 = <&pins_uart3>;
- };
+-	if (!clk)
+-		return 0;
++	if (!clk) {
++		clk = priv->plat->clk_ref_rate;
++		if (!clk)
++			return 0;
++	}
  
- &uart4 {
-@@ -174,9 +174,9 @@
- 		bias-disable;
- 	};
+ 	return (usec * (clk / 1000000)) / 256;
+ }
+@@ -712,8 +715,11 @@ static u32 stmmac_riwt2usec(u32 riwt, struct stmmac_priv *priv)
+ {
+ 	unsigned long clk = clk_get_rate(priv->plat->stmmac_clk);
  
--	pins_uart2: uart2 {
--		function = "uart2";
--		groups = "uart2-data", "uart2-hwflow";
-+	pins_uart3: uart3 {
-+		function = "uart3";
-+		groups = "uart3-data", "uart3-hwflow";
- 		bias-disable;
- 	};
+-	if (!clk)
+-		return 0;
++	if (!clk) {
++		clk = priv->plat->clk_ref_rate;
++		if (!clk)
++			return 0;
++	}
  
+ 	return (riwt * 256) / (clk / 1000000);
+ }
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index 32feac5bbd75b..5844105a482bc 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -183,6 +183,7 @@ struct plat_stmmacenet_data {
+ 	struct clk *pclk;
+ 	struct clk *clk_ptp_ref;
+ 	unsigned int clk_ptp_rate;
++	unsigned int clk_ref_rate;
+ 	struct reset_control *stmmac_rst;
+ 	struct stmmac_axi *axi;
+ 	int has_gmac4;
 -- 
 2.19.1
 
