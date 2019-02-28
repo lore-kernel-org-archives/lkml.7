@@ -3,79 +3,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D282C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9920C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B27621850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B135C21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732366AbfB1KUD convert rfc822-to-8bit (ORCPT
+        id S1732378AbfB1KUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:20:03 -0500
-Received: from mail.fireflyinternet.com ([109.228.58.192]:60481 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732204AbfB1KUC (ORCPT
+        Thu, 28 Feb 2019 05:20:16 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:58871 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732204AbfB1KUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:20:02 -0500
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 15727769-1500050 
-        for multiple; Thu, 28 Feb 2019 10:19:42 +0000
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Thomas Gleixner <tglx@linutronix.de>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <alpine.DEB.2.21.1902281105520.1821@nanos.tec.linutronix.de>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thu, 28 Feb 2019 05:20:15 -0500
+Received: from fsav304.sakura.ne.jp (fsav304.sakura.ne.jp [153.120.85.135])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x1SAJwuC096766;
+        Thu, 28 Feb 2019 19:19:58 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav304.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp);
+ Thu, 28 Feb 2019 19:19:58 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x1SAJwBr096742
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 28 Feb 2019 19:19:58 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: kernel panic: MAC Initialization failed.
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+e1b8084e532b6ee7afab@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        James Morris <jmorris@namei.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20190212162857.20003-1-bigeasy@linutronix.de>
- <20190226160038.5vwk465gwzfwn75i@linutronix.de>
- <155134800668.5847.13013477917200660218@skylake-alporthouse-com>
- <alpine.DEB.2.21.1902281105520.1821@nanos.tec.linutronix.de>
-Message-ID: <155134918155.5847.17130320586410453868@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [Intel-gfx] [PATCH] drm/i915/fence: Do not use TIMER_IRQSAFE
-Date:   Thu, 28 Feb 2019 10:19:41 +0000
+        linux-security-module@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>, takedakn@nttdata.co.jp
+References: <0000000000001c63c80582e32294@google.com>
+ <8d94063c-e10c-c470-8ce0-1f86c517b1b4@i-love.sakura.ne.jp>
+ <CACT4Y+ZqjoXftDAby9s-YUrOv8txBFqKukRcxP6ty3LLKz_+Hw@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <722a3390-3112-0067-282c-b94a8be53aa0@i-love.sakura.ne.jp>
+Date:   Thu, 28 Feb 2019 19:19:55 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <CACT4Y+ZqjoXftDAby9s-YUrOv8txBFqKukRcxP6ty3LLKz_+Hw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Thomas Gleixner (2019-02-28 10:09:26)
-> On Thu, 28 Feb 2019, Chris Wilson wrote:
+On 2019/02/28 15:51, Dmitry Vyukov wrote:
+> On Wed, Feb 27, 2019 at 11:37 PM Tetsuo Handa
+>>
+>> Thank you. The LSM stacking seems to be working as expected.
+>> But this one should not be considered as a bug.
+>>
+>> If something went wrong before loading access control rules,
+>> it is pointless to continue. Thus, stopping with kernel panic.
 > 
-> > Quoting Sebastian Andrzej Siewior (2019-02-26 16:00:38)
-> > > On 2019-02-12 17:28:57 [+0100], To linux-kernel@vger.kernel.org wrote:
-> > > > The timer is initialized with TIMER_IRQSAFE flag. It does look like the
-> > > > timer callback requires this flag at all. Its sole purpose is to ensure
-> > > > synchronisation in the workqueue code.
-> > > > 
-> > > > Remove TIMER_IRQSAFE flag because it is not required.
-> > > 
-> > > ping
-> > 
-> > We call del_timer_sync from irq context, which mandates using
-> > TIMER_IRQSAFE. Failure to do so results in lots of explosions across CI
-> > -- every machine managed to hit the warning.
-> > 
-> > It may not be the best of api, but it's the only one available for the
-> > driver to use...
+> Hi Tetsuo,
 > 
-> The comment in the header files says clearly:
-> 
->  * Note: The irq disabled callback execution is a special case for
->  * workqueue locking issues. It's not meant for executing random crap
->  * with interrupts disabled. Abuse is monitored!                                   
-> 
-> So what's so special in drm that you need to call del_timer_sync() from
-> interrupt context?
+> What misconfiguration you mean?
 
-There's no protection against fence signaling from inside interrupt
-context, and a lot of pressure to do so.
--Chris
+To use security modules, access control rules need to be loaded. Regarding
+TOMOYO, access control rules can be loaded from the kernel itself (built-in)
+and/or from /etc/tomoyo/ directory via /sbin/tomoyo-init (run-time).
+
+Since the kernel is built without built-in policy and /sbin/tomoyo-init does
+not exist, memory allocation failure is handled as a fatal problem.
+
+But if syzbot cannot test other paths due to hitting this path, we need to somehow
+avoid panic(). Can you add tomoyo-tools package into your rootfs images? It is
+explained at https://tomoyo.osdn.jp/2.6/chapter-3.html .
