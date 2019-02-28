@@ -2,203 +2,137 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1A8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00164C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAAF218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CBC2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:31:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="s3OiMvgl"
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="E50hhW0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732343AbfB1Ka6 (ORCPT
+        id S1732381AbfB1KbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:30:58 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44876 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbfB1Ka5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:30:57 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c4so9526680pls.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 02:30:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/zxEZrCB0Wgc/NCx8Hnp+bZnUbk6C015eIc77mGkJzw=;
-        b=s3OiMvglGm7u5UX3smTz7sOBLFQbRQhJ5IPamwhpY6Lw3Pjkaoi1RoaT/Hr9aauyIa
-         jzcrQERQtXPIFN5NwGv5IOtc7Sgc6aIWzHY/1fukaSog5V5cOz/r7J08+5Mo1Qull4GR
-         A6OQLuVmJeh6LzBPF0ZIiwpuwM/Wn8RyCMYX/KRCJ59/3El7I+Rli/me6yeqj1T4c3E4
-         4bnb3qqoWIme8s6/jOIMDf9xHhdZWBe0n2FcpV3kMOyfAfZU0rc+DDLdes6kZVjrMF5Q
-         assKYaYyr4pgXE2qiBpPzrzVT807oDw+zdCj0nI9q5urake9m3sn1VCasjfDItVfvcE+
-         JKjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/zxEZrCB0Wgc/NCx8Hnp+bZnUbk6C015eIc77mGkJzw=;
-        b=QeVVsQeZtMfKbu2w/GxHaMZ7s0g3gM15WdfvzhtBMmsC7zwp1HAoys47LHMvoMjgH4
-         +l3P5M8iDS8RUbfTE1sy4417/iMTjROKZWOe4T/D4lxWd9M4/V7pJJaDKQTH+8e0RqOk
-         v9OAD4RkCcoohIjhESj5nUKVbS7IejFg4CKDnaRao+OXjtS9W7Z4eh+4L0DfBxUQbT+X
-         RJpf1Q4nHRn6fIaEZWIXpBP8pcEaSl8WO6qk6/3XGwWVSPdmOMHuUb1B02jNePNFbsuN
-         XoGYdkyahMABGw4xpu5q6zTg/fK7Qv8ucp8S0wiUHNcir3meb3FiwhIno65IvlsB7WQ+
-         dbaQ==
-X-Gm-Message-State: AHQUAuYo2rYfTb0WlQvTUvvsZRCCUQPs1xVNUYdEyqdZxNH3+UnTHsyh
-        Q4AknPnmBwJ7EWvjxQZR94NSJg==
-X-Google-Smtp-Source: AHgI3IauMbwDcRYxolvj7ZHJx4ULEIMQDiyCjdlK9ZBhIRlPpKHr4AfF6mDGSE1zA+LCLWGX+neHpQ==
-X-Received: by 2002:a17:902:e60e:: with SMTP id cm14mr7242890plb.192.1551349856378;
-        Thu, 28 Feb 2019 02:30:56 -0800 (PST)
-Received: from kshutemo-mobl1.localdomain ([134.134.139.83])
-        by smtp.gmail.com with ESMTPSA id g3sm24577027pfo.125.2019.02.28.02.30.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 02:30:55 -0800 (PST)
-Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
-        id CC68C3000E5; Thu, 28 Feb 2019 13:30:51 +0300 (+03)
-Date:   Thu, 28 Feb 2019 13:30:51 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, keescook@chromium.org, thgarnie@google.com
-Subject: Re: [PATCH v2 0/2] x86/mm/KASLR: Change the granularity of
- randomization to PUD size in 5-level
-Message-ID: <20190228103051.dvqiy2slwwt56ag2@kshutemo-mobl1>
-References: <20190228003522.9957-1-bhe@redhat.com>
- <20190228091001.5wvkwe7cqkf2euzc@kshutemo-mobl1>
- <20190228092346.GQ14858@MiWiFi-R3L-srv>
- <20190228095503.jy44nwqhtmr4qeaq@kshutemo-mobl1>
- <20190228100419.GS14858@MiWiFi-R3L-srv>
+        Thu, 28 Feb 2019 05:31:02 -0500
+Received: from mail-eopbgr80119.outbound.protection.outlook.com ([40.107.8.119]:56544
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727666AbfB1KbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 05:31:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O26vb5004hodE99XrNgnzOTz1Zi0p1QM1cOLNqsUT9k=;
+ b=E50hhW0HMDGcRr+J9PEmKtUexKZtsiZjeb+O/sqk/YGTpwk1oKd0ULsQfRja3SZW+2K4pNG1qk31uVmyeoevxsmGKR/F5YrG0il0F4S6QOrc+wfrI+sHGJrpyw7je4LM1KUbUBsut4OYlzU3bREtH2Yx1NHlkmIiei8hL12DwuM=
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (20.178.126.212) by
+ VI1PR10MB0509.EURPRD10.PROD.OUTLOOK.COM (10.167.201.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.16; Thu, 28 Feb 2019 10:30:40 +0000
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::d49:d85b:58bf:cd5b]) by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::d49:d85b:58bf:cd5b%6]) with mapi id 15.20.1643.022; Thu, 28 Feb 2019
+ 10:30:40 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Qiang Zhao <qiang.zhao@nxp.com>, Leo Li <leoyang.li@nxp.com>
+CC:     Scott Wood <oss@buserror.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Timur Tabi <timur@freescale.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: [PATCH 1/4] soc/fsl/qe: qe.c: drop useless static qualifier
+Thread-Topic: [PATCH 1/4] soc/fsl/qe: qe.c: drop useless static qualifier
+Thread-Index: AQHUz1CmMqAdaREcZEKCvGiAOZA3Tw==
+Date:   Thu, 28 Feb 2019 10:30:40 +0000
+Message-ID: <20190228103026.9566-2-rasmus.villemoes@prevas.dk>
+References: <338677b2-ef74-2afc-4542-c66f1acdb7e5@prevas.dk>
+ <20190228103026.9566-1-rasmus.villemoes@prevas.dk>
+In-Reply-To: <20190228103026.9566-1-rasmus.villemoes@prevas.dk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0127.eurprd05.prod.outlook.com
+ (2603:10a6:7:28::14) To VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e3::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [81.216.59.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ff822ff6-108a-4fa5-bdb8-08d69d67c92f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB0509;
+x-ms-traffictypediagnostic: VI1PR10MB0509:
+x-microsoft-antispam-prvs: <VI1PR10MB0509230F2B852A0B58F3B2228A750@VI1PR10MB0509.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 0962D394D2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39850400004)(376002)(366004)(346002)(396003)(189003)(199004)(476003)(446003)(11346002)(2616005)(8936002)(44832011)(8976002)(106356001)(42882007)(486006)(68736007)(186003)(50226002)(107886003)(105586002)(54906003)(74482002)(4744005)(110136005)(316002)(5660300002)(97736004)(1076003)(72206003)(2906002)(52116002)(71190400001)(6486002)(305945005)(478600001)(256004)(71200400001)(53936002)(14444005)(99286004)(6436002)(66066001)(6512007)(6116002)(81156014)(81166006)(102836004)(4326008)(25786009)(6506007)(386003)(26005)(76176011)(7736002)(36756003)(8676002)(14454004)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB0509;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;VI1PR10MB0509;23:3lHSN37oJdr+IYGJNsxRDHi7EHj3qMTAkkhJ5RK?=
+ =?iso-8859-1?Q?MUW6Sb2A2BK6Df69IDhcQtqxgFDJKpf1fwXdZewY5nIcWCTwA6IsM0AjUt?=
+ =?iso-8859-1?Q?4iU3XclvT9IkN20lAmABJGWxdErcJUoZi70TeSLq0L3AQTv2lVCg8H4eNz?=
+ =?iso-8859-1?Q?ZMu3oDJTn5YHmWpXRA1tgKy3Ve2EpUBqVAuAk1yOn78yZPJBsTzQ0jE4W0?=
+ =?iso-8859-1?Q?E4qndhN6nauTvQy09aFywKTbQWb6F/qqo7Qz+TWZkbs71xOWrrg7pPEBep?=
+ =?iso-8859-1?Q?UffEhdKtJeoAT9bewhAFSfQy0OnOFo30Rh0qQRt52mxn+X7cxjfR4Oet/g?=
+ =?iso-8859-1?Q?fzJfEo28hmfcseeU930V+qTG3L1d4JJY1Yhmmi9w2AIFe0MFgBq/tL2mGd?=
+ =?iso-8859-1?Q?zTgavudthjPk+CaHwNPbH9btgawzcMGAnRlgHVLVKCWzBMrMDVXzsxOF0p?=
+ =?iso-8859-1?Q?vYV0OP69JmTbwP5AGFbExBcq2SzhqxXDuOO+hY5nZhuzaVEwh7qydjbvrv?=
+ =?iso-8859-1?Q?651NCqhIzFCeASZvXqfu66j2eUybhkwOHHr7DIUz7o+miYjFYw5Hc0kTvd?=
+ =?iso-8859-1?Q?9mHVq6Ypuo25H5nozAcurTIAFXU5V3FFDAcWUhYpn3rUC5I4Jj7bVXQhUX?=
+ =?iso-8859-1?Q?+jK7lsmaJHuUAIPoXKLV3yZvBIYZIJKtWoSNgUkUOsRGP+gZ3pj0Bsfthl?=
+ =?iso-8859-1?Q?0p3DaKh1xD3nuZ87XznTBsiiqLJ099V+xIzohPBuW3x0j5t0Zin3PNUYzp?=
+ =?iso-8859-1?Q?2/sPrcx9vw49xB9aWAXU7gUDye6snX84UDM+QzvwhKiPg3t1OG8Cy+/wqe?=
+ =?iso-8859-1?Q?MhtYkLD35hQu29UpxOgJ03DkthT6N8a3sZ0/Z81qGdptNfVSE7UMqmFhFA?=
+ =?iso-8859-1?Q?gbG9DskKMAwUqNgAcWI1bvXZ3wmS3hi+4kdtBcorlfVF5gTDxPaSXFz5ns?=
+ =?iso-8859-1?Q?SwIxf7IIcbZc6ZliKhwJHEO4rmjajHCDZtZQbEn73SBfZGpfMpFScQAiQs?=
+ =?iso-8859-1?Q?sM0AdCVRj/EiONU1Oh95/xVpMdYRdsv+YrVstClXCHi1dqIJeR8Ky7tXYa?=
+ =?iso-8859-1?Q?/Y1aKfbDDBE3k68vO8VCkaEnYGj/E3FoSxOo3mFcFKgiKC4fUMKLyPaIt0?=
+ =?iso-8859-1?Q?ntTX0o8vnpPWn6U90h8pTCHjzp1s1tLwbpOst+TIbjXDakmdS5xt4ebV4r?=
+ =?iso-8859-1?Q?wpSI2yMmYUH1C4MGQDiYa7lrig1psrLuQj0vuu7E7LZgqrFL8t78rvoSZW?=
+ =?iso-8859-1?Q?MhSLrOXKFSP/t40BcGDJpiUMlF+7AEnshtZCr4H74FEa6MqZrYrJp+foFg?=
+ =?iso-8859-1?Q?xyoIxBh4MiI2rRhxVvKXPQp52/lMTHmBTD5/5vJM6aDGZrx8NtLm70B+Qe?=
+ =?iso-8859-1?Q?EaSC5Y4OmCuIMy5UOF9aSlWufZfwfBYkw24xxI86pSLrpluGvjA=3D=3D?=
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +ZsYl1LlwS1i75aVNqq69EOzdYX5fijwKwMp+MJe4nneDDCj1kCc/uLxvzxtXwoJjxcynb27zg1XVWuSKDiW5ZFmOFYPeoxprHUZEIcQID0CAPnHetglJeDRrf6oaqpt2clpyD0lySQPkq8n3HMEIKMvP/vrUp3SzZXdLsrfc4EokqSVnYOI6UsZXgt4EsapAZQ9psOmA7Ok6LBzPR0+jQc+0G+YvEwVAS6IK46ib8O07XSeRKHZceDD/P9JYqJsDzCkY9tKVBgLSzfJM9CoBMWltnLDAATgeOB8S5HHOX3cz6HtXrVsNRQKlZ7pD5vb6aMjeWMxV/PE4W+nslyWAtIqOh6MilLtBeJMorH/biBoVzd+A+843PzRCL2+6h1gT+o0jAT342NHVeuGKOMehdfJ+6bTF+dXSq5W3wKR9ho=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228100419.GS14858@MiWiFi-R3L-srv>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff822ff6-108a-4fa5-bdb8-08d69d67c92f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 10:30:39.6611
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB0509
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 06:04:19PM +0800, Baoquan He wrote:
-> On 02/28/19 at 12:55pm, Kirill A. Shutemov wrote:
-> > I cannot apply the first patch too. Hm?
-> 
-> It's weird. I use 'git cherry-pick' and it can be cleanly applied.
-> 
-> And git formatted patch can be applied too. Could you try below one? 
-> git am works for me with it, based on this commit on linus's tree.
-> 7d762d69145a  afs: Fix manually set volume location server list.
-> 
-> 
-> From dcbe8e4846102fdd051deb3c2946125c17b270fb Mon Sep 17 00:00:00 2001
-> From: Baoquan He <bhe@redhat.com>
-> Date: Thu, 21 Feb 2019 11:46:59 +0800
-> Subject: [PATCH v3] x86/mm/KASLR: Only build one PUD entry of area for real mode
->  trampoline
-> 
-> The current code builds identity mapping for real mode treampoline by
-> borrowing page tables from the direct mapping section if KASLR is
-> enabled. It will copy present entries of the first PUD table in 4-level
-> paging mode, or the first P4D table in 5-level paging mode.
-> 
-> However, there's only a very small area under low 1 MB reserved
-> for real mode trampoline in reserve_real_mode(). Makes no sense
-> to build up so large area of mapping for it. Since the randomization
-> granularity in 4-level is 1 GB, and 512 GB in 5-level, only copying
-> one PUD entry is enough.
-> 
-> Hence, only copy one PUD entry of area where physical address 0
-> resides. And this is preparation for later changing the randomization
-> granularity of 5-level paging mode from 512 GB to 1 GB.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  arch/x86/mm/kaslr.c | 82 +++++++++++++++++++++------------------------
->  1 file changed, 38 insertions(+), 44 deletions(-)
-> 
-> diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-> index 754b5da91d43..131e08a10a68 100644
-> --- a/arch/x86/mm/kaslr.c
-> +++ b/arch/x86/mm/kaslr.c
-> @@ -226,74 +226,68 @@ void __init kernel_randomize_memory(void)
->  
->  static void __meminit init_trampoline_pud(void)
->  {
-> -	unsigned long paddr, paddr_next;
-> +	unsigned long paddr, vaddr;
->  	pgd_t *pgd;
-> -	pud_t *pud_page, *pud_page_tramp;
-> -	int i;
-> +
+The local variable snum_init has no reason to have static storage duration.
 
-Unneeded empty line.
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+---
+ drivers/soc/fsl/qe/qe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	pud_t *pud_page, *pud_page_tramp, *pud, *pud_tramp;
->  
->  	pud_page_tramp = alloc_low_page();
->  
->  	paddr = 0;
-> +	vaddr = (unsigned long)__va(paddr);
+diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+index 2ef6fc6487c1..4b6aa6b3b685 100644
+--- a/drivers/soc/fsl/qe/qe.c
++++ b/drivers/soc/fsl/qe/qe.c
+@@ -306,7 +306,7 @@ static void qe_snums_init(void)
+ 		0x28, 0x29, 0x38, 0x39, 0x48, 0x49, 0x58, 0x59,
+ 		0x68, 0x69, 0x78, 0x79, 0x80, 0x81,
+ 	};
+-	static const u8 *snum_init;
++	const u8 *snum_init;
+=20
+ 	qe_num_of_snum =3D qe_get_num_of_snums();
+=20
+--=20
+2.20.1
 
-Maybe just
-
-	vaddr = PAGE_OFFSET;
-
-?
-
->  	pgd = pgd_offset_k((unsigned long)__va(paddr));
-
-We do have 'vaddr' already.
-
-	pgd = pgd_offset_k(vaddr);
-
-> -	pud_page = (pud_t *) pgd_page_vaddr(*pgd);
-> -
-> -	for (i = pud_index(paddr); i < PTRS_PER_PUD; i++, paddr = paddr_next) {
-> -		pud_t *pud, *pud_tramp;
-> -		unsigned long vaddr = (unsigned long)__va(paddr);
->  
-> -		pud_tramp = pud_page_tramp + pud_index(paddr);
-> -		pud = pud_page + pud_index(vaddr);
-> -		paddr_next = (paddr & PUD_MASK) + PUD_SIZE;
-> -
-> -		*pud_tramp = *pud;
-> -	}
-> +	if (pgtable_l5_enabled()) {
-> +		p4d_t *p4d_page, *p4d_page_tramp, *p4d, *p4d_tramp;
-> +		p4d_page_tramp = alloc_low_page();
->  
-> -	set_pgd(&trampoline_pgd_entry,
-> -		__pgd(_KERNPG_TABLE | __pa(pud_page_tramp)));
-> -}
-> +		p4d_page = (p4d_t *) pgd_page_vaddr(*pgd);
-> +		p4d = p4d_page + p4d_index(vaddr);
->  
-> -static void __meminit init_trampoline_p4d(void)
-> -{
-> -	unsigned long paddr, paddr_next;
-> -	pgd_t *pgd;
-> -	p4d_t *p4d_page, *p4d_page_tramp;
-> -	int i;
-> +		pud_page = (pud_t *) p4d_page_vaddr(*p4d);
-> +		pud = pud_page + pud_index(vaddr);
->  
-> -	p4d_page_tramp = alloc_low_page();
-> +		p4d_tramp = p4d_page_tramp + p4d_index(paddr);
-> +		pud_tramp = pud_page_tramp + pud_index(paddr);
-
-p?d_index() has to be called on the virtual address. It shouldn't break
-anything, but it's wrong from conceptual point of view.
-
-I don't think need paddr at all in the function.
-
-BTW, any reason we cannot use p?d_offset() instead of playing with
-p?d_index() directly?
-
-
--- 
- Kirill A. Shutemov
