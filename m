@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7337C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F0FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B580A2184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07593206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367170;
-	bh=5RhQ+pZ+Ak6qnlqDE3bLjH0p7Ntf34MV2KCRBBMquo4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=PF/FEkLekwRYNxWxs62QfSSJgoT0Ra97YCDcKFm2BmLqgvKiwCUdHmfmr48jDJo+X
-	 /6AcL38xvBGrUMbrmiYHOnPWvfW4hdLcIV+GWhuxF+pnCVH8ZtfAeY9WnIml/Mtdr+
-	 uQ3vuZXZ513STltAuLnAIBlSLyuv8Jpyk8gjvAz0=
+	s=default; t=1551367180;
+	bh=zp3GEOvVFFahC3leHyPzjJgdI5tl4y6B0KJuXpmzce4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dqBGVxz8OExRiRxPWetRPLW2kcfSNp5A8l/7UgWXmD6/aJGU0AdehpUtFg6G+TEJE
+	 v5OqecQ8stMsIk0wrnF6GvJvWk8oaVgAkMPGLiLZxGhHVsvEmpdw1AkuVS/EN/bI10
+	 zH4THtlUglADiqGaeGjmf0JjhE/Gz0mUXRuKdMhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388839AbfB1PPY (ORCPT
+        id S1732868AbfB1PTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:15:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:19:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387648AbfB1PPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:20 -0500
+        id S2388818AbfB1PPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6FAE218D9;
-        Thu, 28 Feb 2019 15:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11C6A218D8;
+        Thu, 28 Feb 2019 15:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366919;
-        bh=5RhQ+pZ+Ak6qnlqDE3bLjH0p7Ntf34MV2KCRBBMquo4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=O14pC2YHP3t/9mnIiWld7yieTu9yv4h5nHLs0fuWFGH9Hf7+zsYhQi4Z7aAePOdIK
-         7fnR5Y+bVXkvl12IJmCpEw+P4iQ6rwCvyNoqiazOiF7wK0Zc2unLNFM6YUrHAim0d9
-         SQiUssXQ1uCblLQdQgEyx/1zJw994Y+omERE4ujc=
+        s=default; t=1551366921;
+        bh=zp3GEOvVFFahC3leHyPzjJgdI5tl4y6B0KJuXpmzce4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eQhhWUt323BukHdhiKjSbdZHdXyoIB246VtatnJiavHAMX9ncVy0/ppGYbMjm5Y09
+         veFQEgD0zcEkILXgfDLjGQNqHrR6q1gZ/SnJVI7iOfXKIKUfWT5fxHB+7XnahF65Zk
+         dIaJ5UkeiVFK2S2CLKkxpy1dbxl81EO9mVWU/91M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 01/19] soc: fsl: qbman: avoid race in clearing QMan interrupt
-Date:   Thu, 28 Feb 2019 10:14:57 -0500
-Message-Id: <20190228151517.12705-1-sashal@kernel.org>
+Cc:     Peng Hao <peng.hao2@zte.com.cn>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 02/19] ARM: pxa: ssp: unneeded to free devm_ allocated data
+Date:   Thu, 28 Feb 2019 10:14:58 -0500
+Message-Id: <20190228151517.12705-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
+References: <20190228151517.12705-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,51 +57,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+From: Peng Hao <peng.hao2@zte.com.cn>
 
-[ Upstream commit 89857a8a5c89a406b967ab2be7bd2ccdbe75e73d ]
+[ Upstream commit ba16adeb346387eb2d1ada69003588be96f098fa ]
 
-By clearing all interrupt sources, not only those that
-already occurred, the existing code may acknowledge by
-mistake interrupts that occurred after the code checks
-for them.
+devm_ allocated data will be automatically freed. The free
+of devm_ allocated data is invalid.
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
-Signed-off-by: Li Yang <leoyang.li@nxp.com>
+Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
+[title's prefix changed]
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/fsl/qbman/qman.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm/plat-pxa/ssp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
-index 2cc82ed6433a0..91f5c951850f7 100644
---- a/drivers/soc/fsl/qbman/qman.c
-+++ b/drivers/soc/fsl/qbman/qman.c
-@@ -1073,18 +1073,19 @@ static void qm_mr_process_task(struct work_struct *work);
- static irqreturn_t portal_isr(int irq, void *ptr)
- {
- 	struct qman_portal *p = ptr;
+diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
+index ba13f793fbce4..b92673efffffb 100644
+--- a/arch/arm/plat-pxa/ssp.c
++++ b/arch/arm/plat-pxa/ssp.c
+@@ -237,8 +237,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
+ 	if (ssp == NULL)
+ 		return -ENODEV;
+ 
+-	iounmap(ssp->mmio_base);
 -
--	u32 clear = QM_DQAVAIL_MASK | p->irq_sources;
- 	u32 is = qm_in(&p->p, QM_REG_ISR) & p->irq_sources;
-+	u32 clear = 0;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	release_mem_region(res->start, resource_size(res));
  
- 	if (unlikely(!is))
- 		return IRQ_NONE;
+@@ -248,7 +246,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
+ 	list_del(&ssp->node);
+ 	mutex_unlock(&ssp_lock);
  
- 	/* DQRR-handling if it's interrupt-driven */
--	if (is & QM_PIRQ_DQRI)
-+	if (is & QM_PIRQ_DQRI) {
- 		__poll_portal_fast(p, QMAN_POLL_LIMIT);
-+		clear = QM_DQAVAIL_MASK | QM_PIRQ_DQRI;
-+	}
- 	/* Handling of anything else that's interrupt-driven */
--	clear |= __poll_portal_slow(p, is);
-+	clear |= __poll_portal_slow(p, is) & QM_PIRQ_SLOW;
- 	qm_out(&p->p, QM_REG_ISR, clear);
- 	return IRQ_HANDLED;
+-	kfree(ssp);
+ 	return 0;
  }
+ 
 -- 
 2.19.1
 
