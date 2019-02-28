@@ -2,51 +2,48 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF21C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8552C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34962171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FEF02184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731944AbfB1IFV (ORCPT
+        id S1731701AbfB1IGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:05:21 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:47375 "EHLO
+        Thu, 28 Feb 2019 03:06:23 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:49685 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730263AbfB1IFU (ORCPT
+        with ESMTP id S1730263AbfB1IGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:05:20 -0500
+        Thu, 28 Feb 2019 03:06:23 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S8458H2953267
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S8649B2955180
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 28 Feb 2019 00:04:05 -0800
+        Thu, 28 Feb 2019 00:06:04 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S845EN2953242;
-        Thu, 28 Feb 2019 00:04:05 -0800
-Date:   Thu, 28 Feb 2019 00:04:05 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S8626v2955089;
+        Thu, 28 Feb 2019 00:06:02 -0800
+Date:   Thu, 28 Feb 2019 00:06:02 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-eb6176709b235b96511c7b4745c30412568395c7@git.kernel.org>
-Cc:     eranian@google.com, jolsa@kernel.org,
-        alexey.budankov@linux.intel.com, tglx@linutronix.de,
-        adrian.hunter@intel.com, acme@redhat.com, ak@linux.intel.com,
-        peterz@infradead.org, mingo@kernel.org, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        alexander.shishkin@linux.intel.com
-Reply-To: acme@redhat.com, ak@linux.intel.com, peterz@infradead.org,
-          mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
-          namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-          alexey.budankov@linux.intel.com, eranian@google.com,
-          jolsa@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de
-In-Reply-To: <20190224190656.30163-10-jolsa@kernel.org>
-References: <20190224190656.30163-10-jolsa@kernel.org>
+From:   tip-bot for Tony Jones <tipbot@zytor.com>
+Message-ID: <tip-02b03ec383e0c79d73aa4b402b3427a8b490ef9f@git.kernel.org>
+Cc:     tonyj@suse.de, sanagi.koki@jp.fujitsu.com, mingo@kernel.org,
+        hpa@zytor.com, acme@redhat.com, tglx@linutronix.de,
+        s1seetee@linux.vnet.ibm.com, linux-kernel@vger.kernel.org
+Reply-To: linux-kernel@vger.kernel.org, s1seetee@linux.vnet.ibm.com,
+          tglx@linutronix.de, acme@redhat.com, hpa@zytor.com,
+          mingo@kernel.org, tonyj@suse.de, sanagi.koki@jp.fujitsu.com
+In-Reply-To: <20190222230619.17887-2-tonyj@suse.de>
+References: <20190222230619.17887-2-tonyj@suse.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf data: Add perf_data__open_dir_data function
-Git-Commit-ID: eb6176709b235b96511c7b4745c30412568395c7
+Subject: [tip:perf/core] perf script python: Add Python3 support to
+ netdev-times.py
+Git-Commit-ID: 02b03ec383e0c79d73aa4b402b3427a8b490ef9f
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -60,120 +57,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  eb6176709b235b96511c7b4745c30412568395c7
-Gitweb:     https://git.kernel.org/tip/eb6176709b235b96511c7b4745c30412568395c7
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 24 Feb 2019 20:06:45 +0100
+Commit-ID:  02b03ec383e0c79d73aa4b402b3427a8b490ef9f
+Gitweb:     https://git.kernel.org/tip/02b03ec383e0c79d73aa4b402b3427a8b490ef9f
+Author:     Tony Jones <tonyj@suse.de>
+AuthorDate: Fri, 22 Feb 2019 15:06:05 -0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 25 Feb 2019 10:43:07 -0300
+CommitDate: Mon, 25 Feb 2019 17:16:42 -0300
 
-perf data: Add perf_data__open_dir_data function
+perf script python: Add Python3 support to netdev-times.py
 
-Add perf_data__open_dir_data to open files inside 'struct perf_data'
-path directory:
+Support both Python2 and Python3 in the netdev-times.py script
 
-   static int perf_data__open_dir(struct perf_data *data);
+There may be differences in the ordering of output lines due to
+differences in dictionary ordering etc.  However the format within lines
+should be unchanged.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190224190656.30163-10-jolsa@kernel.org
+The use of 'from __future__' implies the minimum supported Python2
+version is now v2.6.
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Cc: Sanagi Koki <sanagi.koki@jp.fujitsu.com>
+Link: http://lkml.kernel.org/r/20190222230619.17887-2-tonyj@suse.de
+Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data.c | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/data.h |  1 +
- 2 files changed, 60 insertions(+)
+ tools/perf/scripts/python/netdev-times.py | 82 ++++++++++++++++---------------
+ 1 file changed, 42 insertions(+), 40 deletions(-)
 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 005b3909d1dc..7bd5ddeb7a41 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
+diff --git a/tools/perf/scripts/python/netdev-times.py b/tools/perf/scripts/python/netdev-times.py
+index 9b2050f778f1..267bda49325d 100644
+--- a/tools/perf/scripts/python/netdev-times.py
++++ b/tools/perf/scripts/python/netdev-times.py
 @@ -8,6 +8,8 @@
- #include <unistd.h>
- #include <string.h>
- #include <asm/bug.h>
-+#include <sys/types.h>
-+#include <dirent.h>
+ # dev=: show only thing related to specified device
+ # debug: work with debug mode. It shows buffer status.
  
- #include "data.h"
- #include "util.h"
-@@ -59,6 +61,63 @@ out_err:
- 	return ret;
- }
++from __future__ import print_function
++
+ import os
+ import sys
  
-+int perf_data__open_dir(struct perf_data *data)
-+{
-+	struct perf_data_file *files = NULL;
-+	struct dirent *dent;
-+	int ret = -1;
-+	DIR *dir;
-+	int nr = 0;
-+
-+	dir = opendir(data->path);
-+	if (!dir)
-+		return -EINVAL;
-+
-+	while ((dent = readdir(dir)) != NULL) {
-+		struct perf_data_file *file;
-+		char path[PATH_MAX];
-+		struct stat st;
-+
-+		snprintf(path, sizeof(path), "%s/%s", data->path, dent->d_name);
-+		if (stat(path, &st))
-+			continue;
-+
-+		if (!S_ISREG(st.st_mode) || strncmp(dent->d_name, "data", 4))
-+			continue;
-+
-+		ret = -ENOMEM;
-+
-+		file = realloc(files, (nr + 1) * sizeof(*files));
-+		if (!file)
-+			goto out_err;
-+
-+		files = file;
-+		file = &files[nr++];
-+
-+		file->path = strdup(path);
-+		if (!file->path)
-+			goto out_err;
-+
-+		ret = open(file->path, O_RDONLY);
-+		if (ret < 0)
-+			goto out_err;
-+
-+		file->fd = ret;
-+		file->size = st.st_size;
-+	}
-+
-+	if (!files)
-+		return -EINVAL;
-+
-+	data->dir.files = files;
-+	data->dir.nr    = nr;
-+	return 0;
-+
-+out_err:
-+	close_dir(files, nr);
-+	return ret;
-+}
-+
- static bool check_pipe(struct perf_data *data)
- {
- 	struct stat st;
-diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index 2d0d015a7d4d..14b47be2bd69 100644
---- a/tools/perf/util/data.h
-+++ b/tools/perf/util/data.h
-@@ -71,5 +71,6 @@ int perf_data__switch(struct perf_data *data,
- 			   size_t pos, bool at_exit);
+@@ -17,6 +19,7 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
+ from perf_trace_context import *
+ from Core import *
+ from Util import *
++from functools import cmp_to_key
  
- int perf_data__create_dir(struct perf_data *data, int nr);
-+int perf_data__open_dir(struct perf_data *data);
- void perf_data__close_dir(struct perf_data *data);
- #endif /* __PERF_DATA_H */
+ all_event_list = []; # insert all tracepoint event related with this script
+ irq_dic = {}; # key is cpu and value is a list which stacks irqs
+@@ -61,12 +64,12 @@ def diff_msec(src, dst):
+ def print_transmit(hunk):
+ 	if dev != 0 and hunk['dev'].find(dev) < 0:
+ 		return
+-	print "%7s %5d %6d.%06dsec %12.3fmsec      %12.3fmsec" % \
++	print("%7s %5d %6d.%06dsec %12.3fmsec      %12.3fmsec" %
+ 		(hunk['dev'], hunk['len'],
+ 		nsecs_secs(hunk['queue_t']),
+ 		nsecs_nsecs(hunk['queue_t'])/1000,
+ 		diff_msec(hunk['queue_t'], hunk['xmit_t']),
+-		diff_msec(hunk['xmit_t'], hunk['free_t']))
++		diff_msec(hunk['xmit_t'], hunk['free_t'])))
+ 
+ # Format for displaying rx packet processing
+ PF_IRQ_ENTRY= "  irq_entry(+%.3fmsec irq=%d:%s)"
+@@ -98,55 +101,55 @@ def print_receive(hunk):
+ 	if show_hunk == 0:
+ 		return
+ 
+-	print "%d.%06dsec cpu=%d" % \
+-		(nsecs_secs(base_t), nsecs_nsecs(base_t)/1000, cpu)
++	print("%d.%06dsec cpu=%d" %
++		(nsecs_secs(base_t), nsecs_nsecs(base_t)/1000, cpu))
+ 	for i in range(len(irq_list)):
+-		print PF_IRQ_ENTRY % \
++		print(PF_IRQ_ENTRY %
+ 			(diff_msec(base_t, irq_list[i]['irq_ent_t']),
+-			irq_list[i]['irq'], irq_list[i]['name'])
+-		print PF_JOINT
++			irq_list[i]['irq'], irq_list[i]['name']))
++		print(PF_JOINT)
+ 		irq_event_list = irq_list[i]['event_list']
+ 		for j in range(len(irq_event_list)):
+ 			irq_event = irq_event_list[j]
+ 			if irq_event['event'] == 'netif_rx':
+-				print PF_NET_RX % \
++				print(PF_NET_RX %
+ 					(diff_msec(base_t, irq_event['time']),
+-					irq_event['skbaddr'])
+-				print PF_JOINT
+-	print PF_SOFT_ENTRY % \
+-		diff_msec(base_t, hunk['sirq_ent_t'])
+-	print PF_JOINT
++					irq_event['skbaddr']))
++				print(PF_JOINT)
++	print(PF_SOFT_ENTRY %
++		diff_msec(base_t, hunk['sirq_ent_t']))
++	print(PF_JOINT)
+ 	event_list = hunk['event_list']
+ 	for i in range(len(event_list)):
+ 		event = event_list[i]
+ 		if event['event_name'] == 'napi_poll':
+-			print PF_NAPI_POLL % \
+-			    (diff_msec(base_t, event['event_t']), event['dev'])
++			print(PF_NAPI_POLL %
++			    (diff_msec(base_t, event['event_t']), event['dev']))
+ 			if i == len(event_list) - 1:
+-				print ""
++				print("")
+ 			else:
+-				print PF_JOINT
++				print(PF_JOINT)
+ 		else:
+-			print PF_NET_RECV % \
++			print(PF_NET_RECV %
+ 			    (diff_msec(base_t, event['event_t']), event['skbaddr'],
+-				event['len'])
++				event['len']))
+ 			if 'comm' in event.keys():
+-				print PF_WJOINT
+-				print PF_CPY_DGRAM % \
++				print(PF_WJOINT)
++				print(PF_CPY_DGRAM %
+ 					(diff_msec(base_t, event['comm_t']),
+-					event['pid'], event['comm'])
++					event['pid'], event['comm']))
+ 			elif 'handle' in event.keys():
+-				print PF_WJOINT
++				print(PF_WJOINT)
+ 				if event['handle'] == "kfree_skb":
+-					print PF_KFREE_SKB % \
++					print(PF_KFREE_SKB %
+ 						(diff_msec(base_t,
+ 						event['comm_t']),
+-						event['location'])
++						event['location']))
+ 				elif event['handle'] == "consume_skb":
+-					print PF_CONS_SKB % \
++					print(PF_CONS_SKB %
+ 						diff_msec(base_t,
+-							event['comm_t'])
+-			print PF_JOINT
++							event['comm_t']))
++			print(PF_JOINT)
+ 
+ def trace_begin():
+ 	global show_tx
+@@ -172,8 +175,7 @@ def trace_begin():
+ 
+ def trace_end():
+ 	# order all events in time
+-	all_event_list.sort(lambda a,b :cmp(a[EINFO_IDX_TIME],
+-					    b[EINFO_IDX_TIME]))
++	all_event_list.sort(key=cmp_to_key(lambda a,b :a[EINFO_IDX_TIME] < b[EINFO_IDX_TIME]))
+ 	# process all events
+ 	for i in range(len(all_event_list)):
+ 		event_info = all_event_list[i]
+@@ -210,19 +212,19 @@ def trace_end():
+ 			print_receive(receive_hunk_list[i])
+ 	# display transmit hunks
+ 	if show_tx:
+-		print "   dev    len      Qdisc        " \
+-			"       netdevice             free"
++		print("   dev    len      Qdisc        "
++			"       netdevice             free")
+ 		for i in range(len(tx_free_list)):
+ 			print_transmit(tx_free_list[i])
+ 	if debug:
+-		print "debug buffer status"
+-		print "----------------------------"
+-		print "xmit Qdisc:remain:%d overflow:%d" % \
+-			(len(tx_queue_list), of_count_tx_queue_list)
+-		print "xmit netdevice:remain:%d overflow:%d" % \
+-			(len(tx_xmit_list), of_count_tx_xmit_list)
+-		print "receive:remain:%d overflow:%d" % \
+-			(len(rx_skb_list), of_count_rx_skb_list)
++		print("debug buffer status")
++		print("----------------------------")
++		print("xmit Qdisc:remain:%d overflow:%d" %
++			(len(tx_queue_list), of_count_tx_queue_list))
++		print("xmit netdevice:remain:%d overflow:%d" %
++			(len(tx_xmit_list), of_count_tx_xmit_list))
++		print("receive:remain:%d overflow:%d" %
++			(len(rx_skb_list), of_count_rx_skb_list))
+ 
+ # called from perf, when it finds a correspoinding event
+ def irq__softirq_entry(name, context, cpu, sec, nsec, pid, comm, callchain, vec):
