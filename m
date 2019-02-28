@@ -3,121 +3,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B90C5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01160C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B8E20857
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F9820863
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388386AbfB1R7N (ORCPT
+        id S2388467AbfB1SAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:59:13 -0500
-Received: from mga14.intel.com ([192.55.52.115]:9164 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbfB1R7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:59:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 09:59:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,423,1544515200"; 
-   d="scan'208";a="147405226"
-Received: from chenyu-office.sh.intel.com ([10.239.158.163])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2019 09:59:10 -0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <len.brown@intel.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yu.chen.surf@gmail.com, Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 2/2][RFC v2] ACPI: Update cpuinfo.max after bootup if necessary
-Date:   Fri,  1 Mar 2019 02:08:02 +0800
-Message-Id: <bd3c5e04e882e5a4c977211a8d268440b36276a4.1551375162.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1551375162.git.yu.c.chen@intel.com>
-References: <cover.1551375162.git.yu.c.chen@intel.com>
+        Thu, 28 Feb 2019 13:00:21 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52228 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727499AbfB1SAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:00:18 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66748EBD;
+        Thu, 28 Feb 2019 10:00:18 -0800 (PST)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB47A3F720;
+        Thu, 28 Feb 2019 10:00:16 -0800 (PST)
+Subject: Re: [PATCH] lib/raid6: use vdupq_n_u8 to avoid endianness warnings
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20190226040345.202047-1-ndesaulniers@google.com>
+ <CAKv+Gu-5DvWZL6ogLVNDEvgKe6TENX+5sF1U7QxiyYC8Wx0nXw@mail.gmail.com>
+ <CAKwvOdmzb1WF6NU5LYWGXK_O2cbqwMjbWGAa5xk5x+EMz7A1yw@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <b3bf85a9-85de-3800-787e-2b00d3edd939@arm.com>
+Date:   Thu, 28 Feb 2019 18:00:15 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <CAKwvOdmzb1WF6NU5LYWGXK_O2cbqwMjbWGAa5xk5x+EMz7A1yw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Dell Inc. XPS13 9333, the BIOS changes the value of
-MSR_IA32_MISC_ENABLE_TURBO_DISABLE at runtime (e.g., when
-the power source changes), the maximum frequency of the
-CPU is not updated accordingly. This is due to the policy's
-cpuinfo.max is not updated when _PPC notifier fires.
+On 26/02/2019 20:44, Nick Desaulniers wrote:
+> On Mon, Feb 25, 2019 at 11:19 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+>>
+>> On Tue, 26 Feb 2019 at 05:03, <ndesaulniers@google.com> wrote:
+>>>
+>>> Clang warns: vector initializers are not compatible with NEON intrinsics
+>>> in big endian mode [-Wnonportable-vector-initialization]
+>>>
+>>> While this is usually the case, it's not an issue for this case since
+>>> we're initializing the uint8x16_t (16x uint8_t's) with the same value.
+>>>
+>>> Instead, use vdupq_n_u8 which both compilers lower into a single movi
+>>> instruction: https://godbolt.org/z/vBrgzt
+>>>
+>>> This avoids the static storage for a constant value.
+>>>
+>>> Link: https://github.com/ClangBuiltLinux/linux/issues/214
+>>> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+>>> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+>>
+>> Much better, thanks,
+>>
+>> Did you double check that the intrinsic exists on 32-bit ARM as well?
+>> I assume it does, but please make sure if you haven't yet.
+> 
+> Thanks for the review!
+> Looking through Clang's generated arm_neon.h, vdupq_n_u8 seems to have
+> 2 definitions predicated on __LITTLE_ENDIAN__ (not __arch64__ or
+> __ARM_ARCH >= 8 like some of the other types and functions).
+> 
+> So NEON got some additions in v8?  Is there a doc that lists them?
+> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0491g/BABDBBJB.html
+> is where I found vdupq_n_u8, but it doesn't seem to mention
+> compatibility (so I assume it's been around since the introduction of
+> NEON?).
 
-Fix this problem by updating the policy's cpuinfo.max when
-necessary.
+FWIW the most recent 'proper' spec document I know of is this one:
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=200759
-Reported-and-tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Originally-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- drivers/cpufreq/cpufreq.c      |  2 ++
- drivers/cpufreq/intel_pstate.c | 15 +++++++++++++--
- 2 files changed, 15 insertions(+), 2 deletions(-)
+http://infocenter.arm.com/help/topic/com.arm.doc.ihi0073b/index.html
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index e35a886e00bc..95e08816b512 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -2237,6 +2237,8 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
- 
- 	policy->min = new_policy->min;
- 	policy->max = new_policy->max;
-+	policy->cpuinfo.max_freq = new_policy->cpuinfo.max_freq;
-+	policy->cpuinfo.min_freq = new_policy->cpuinfo.min_freq;
- 	trace_cpu_frequency_limits(policy);
- 
- 	policy->cached_target_freq = UINT_MAX;
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index dd66decf2087..841c74f69f66 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -2081,11 +2081,17 @@ static void intel_pstate_adjust_policy_max(struct cpufreq_policy *policy,
- 
- static int intel_pstate_verify_policy(struct cpufreq_policy *policy)
- {
-+	int max_freq;
- 	struct cpudata *cpu = all_cpu_data[policy->cpu];
- 
- 	update_turbo_state();
-+	max_freq = intel_pstate_get_max_freq(cpu);
-+
-+	if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
-+		policy->cpuinfo.max_freq = policy->max = max_freq;
-+
- 	cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
--				     intel_pstate_get_max_freq(cpu));
-+				     max_freq);
- 
- 	if (policy->policy != CPUFREQ_POLICY_POWERSAVE &&
- 	    policy->policy != CPUFREQ_POLICY_PERFORMANCE)
-@@ -2192,11 +2198,16 @@ static struct cpufreq_driver intel_pstate = {
- 
- static int intel_cpufreq_verify_policy(struct cpufreq_policy *policy)
- {
-+	int max_freq;
- 	struct cpudata *cpu = all_cpu_data[policy->cpu];
- 
- 	update_turbo_state();
-+	max_freq = intel_pstate_get_max_freq(cpu);
-+
-+	if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
-+		policy->cpuinfo.max_freq = policy->max = max_freq;
- 	cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
--				     intel_pstate_get_max_freq(cpu));
-+				     max_freq);
- 
- 	intel_pstate_adjust_policy_max(policy, cpu);
- 
--- 
-2.17.1
 
+Apparently we have a more interactive playground on the new site, too:
+
+https://developer.arm.com/technologies/neon/intrinsics
+
+
+Robin.
