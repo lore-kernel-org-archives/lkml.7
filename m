@@ -2,108 +2,81 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3E1C00319
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57657C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861F820863
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:32:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vCbDcmF6"
+	by mail.kernel.org (Postfix) with ESMTP id 13A6C20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbfB1CcD (ORCPT
+        id S1730718AbfB1CeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:32:03 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45113 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730341AbfB1CcC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:32:02 -0500
-Received: by mail-pl1-f196.google.com with SMTP id r14so8948222pls.12;
-        Wed, 27 Feb 2019 18:32:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=9fb7ulQzUjFrkS4BsHjJTXR9fBvG6ZDDHxB1iOz56mc=;
-        b=vCbDcmF64enXQA3g6wu0hTdSeF0EeQQRnBEZ80nu+CphWXhJSZzIWSBfYUXF+nA1Oq
-         t+rUp24De3z+CWNY25Zd9wIO4O5mnA0OXlOwFlCwHdZDBK7kquEh36g4hlI3W+VMlkW9
-         S/Dc2Xfz7F9SnjVGirXYMgzvrdrNFX/kiEfzZvkm9//y66amQqCU6CN/buubDmqOQUGQ
-         Lu+al7FkSkn+6MIvLLuCUEY5+mNOi1rQusz4ESR0fMUdQu8isXEoZ5LGqtfEuPq1o7oh
-         5e5qxziau9rqZBhjQlYpjJP/Zj3dFFaIIpOxmHBINSfWSjt++131XXT+r2pymXT/KhnY
-         SlrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=9fb7ulQzUjFrkS4BsHjJTXR9fBvG6ZDDHxB1iOz56mc=;
-        b=YBCL33vt0bfrHrF31dAB3og55f48Cg7L07u3afO3/0M5aB67n4db244Pk+s58oCYnN
-         EXaL3l9cso/7l5dgNVN/U6d368QtHoUR9daOcg6DEScKcxF1apckpysumGAohOoIopGZ
-         y342clxsNB5WhMvU6I5OqQeko/GmEnj58dnIBNmA9FlCxWv2KrSH4IH+ArdpF+dy8UOo
-         +/36HGRnPRIqunHFLDcl1A5ieoYEFZVJgqNQfWJT7IjgLycwTy+7FdILOliY9qjH2bZA
-         tleYKZC9SX6Dj0oLsM+9eeBInb9NvdjtXPTuos6mqxX9RVowkAUdPpxueLpfAk1vXZK8
-         A0zg==
-X-Gm-Message-State: AHQUAuZnHnzvqoIOYJzS8BT79JKanu4c7ErSUFoQ6R1zALPAnnKsRT+F
-        aR+o0TukiUcHyCe4qp7doflr8VfpQfp3+w==
-X-Google-Smtp-Source: AHgI3IaCy2JPUgJYk96eaieQgS9nGzkn3Bx4ZYHnRiAdKogQgJLOZ3UzwTCbdlhfIPtmPanarYvoSg==
-X-Received: by 2002:a17:902:5992:: with SMTP id p18mr5477363pli.231.1551321121917;
-        Wed, 27 Feb 2019 18:32:01 -0800 (PST)
-Received: from maya190131 ([52.247.237.14])
-        by smtp.gmail.com with ESMTPSA id d86sm10043549pfm.18.2019.02.27.18.32.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Feb 2019 18:32:01 -0800 (PST)
-Date:   Thu, 28 Feb 2019 02:32:00 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, kys@microsoft.com,
-        sthemmin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
-        jasowang@redhat.com, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, haiyangz@microsoft.com,
-        vkuznets@redhat.com, marcelo.cerri@canonical.com,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH v4 0/2] PCI: hv: Refactor hv_irq_unmask() to use hv_vpset and
- cpumask_to_vpset()
-Message-ID: <cover.1551319643.git.m.maya.nakamura@gmail.com>
+        Wed, 27 Feb 2019 21:34:09 -0500
+Received: from mx.socionext.com ([202.248.49.38]:43253 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730341AbfB1CeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 21:34:08 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 28 Feb 2019 11:34:07 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id BD0F818020E;
+        Thu, 28 Feb 2019 11:34:07 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 28 Feb 2019 11:34:07 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 3573940362;
+        Thu, 28 Feb 2019 11:34:07 +0900 (JST)
+Received: from [127.0.0.1] (unknown [10.213.119.83])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 1A69F121B6C;
+        Thu, 28 Feb 2019 11:34:07 +0900 (JST)
+Subject: Re: [PATCH v4 03/10] dt-bindings: Add documentation for Milbeaut SoCs
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        soc@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Takao Orito <orito.takao@socionext.com>,
+        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
+        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+References: <1551243145-10635-1-git-send-email-sugaya.taichi@socionext.com>
+ <CAL_JsqJvKMCmV3aq4LX_n2xsMEUfSK41--VVU+aQqtqv4F5U=g@mail.gmail.com>
+From:   "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Message-ID: <717fed0b-13f1-9043-223c-e6cf0bc71008@socionext.com>
+Date:   Thu, 28 Feb 2019 11:34:04 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAL_JsqJvKMCmV3aq4LX_n2xsMEUfSK41--VVU+aQqtqv4F5U=g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset removes a duplicate definition of VP set (hv_vp_set) and
-uses the common definition (hv_vpset) that is used in other places. It
-changes the order of the members in struct hv_pcibus_device due to
-flexible array in hv_vpset.
+Hi,
 
-It also removes the duplicate implementation of cpumask_to_vpset(), uses
-the shared implementation, and exports hv_max_vp_index, which is
-required by cpumask_to_vpset().
+On 2019/02/27 23:47, Rob Herring wrote:
+> On Tue, Feb 26, 2019 at 10:51 PM Sugaya Taichi
+> <sugaya.taichi@socionext.com> wrote:
+>>
+>> This adds a DT binding documentation for the M10V and its evaluation
+>> board.
+>>
+>> Signed-off-by: Sugaya Taichi <sugaya.taichi@socionext.com>
+>> ---
+>>   .../bindings/arm/socionext/milbeaut.yaml           | 22 ++++++++++++++++++++++
+>>   1 file changed, 22 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 
-Based on Vitaly's findings, two changes were applied: replace GFP_KERNEL
-with GFP_ATOMIC for alloc_cpumask_var() because hv_irq_unmask() runs
-while a spinlock is held, and add __aligned(8) to struct
-retarget_msi_interrupt because Hyper-V requires that hypercall arguments
-be aligned on an 8 byte boundary.
-
-Vitaly, thank you for finding the issues, and Lorenzo and Michael, thank
-you for your guidance and support!
-
-Maya Nakamura (2):
-  PCI: hv: Replace hv_vp_set with hv_vpset
-  PCI: hv: Refactor hv_irq_unmask() to use cpumask_to_vpset()
-
- arch/x86/hyperv/hv_init.c           |  1 +
- drivers/pci/controller/pci-hyperv.c | 61 +++++++++++++----------------
- 2 files changed, 29 insertions(+), 33 deletions(-)
-
--- 
-2.17.1
+Thank you!
 
