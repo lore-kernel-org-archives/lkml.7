@@ -2,159 +2,505 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532D9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3949C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AA12184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756F32171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ZoMoD6AF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsyIiao+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbfB1Ikl (ORCPT
+        id S1731093AbfB1InE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:40:41 -0500
-Received: from mail-eopbgr30068.outbound.protection.outlook.com ([40.107.3.68]:32112
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727714AbfB1Ikl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:40:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rv4PzrQxD4/QS4TNAhkMXC4q67VM4knzaAf10qjsTX0=;
- b=ZoMoD6AFscnEybc/hDXLuh3POnAaRhTOTR2QwX3q0fQwseKxKnRxXH6HDC8m0a6vs/cDsDAWXvYY1JeO0wyzWUpptyiR/LkxtlEvp1kFRjhv5BIyZyWSshEqPrTnhKDriKFvqwcbDtZPOn+L4d365M3D+Ma5gMyr8rLJxnP8XUc=
-Received: from HE1PR05MB3257.eurprd05.prod.outlook.com (10.170.243.19) by
- HE1PR05MB3354.eurprd05.prod.outlook.com (10.170.243.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.16; Thu, 28 Feb 2019 08:40:35 +0000
-Received: from HE1PR05MB3257.eurprd05.prod.outlook.com
- ([fe80::550a:a35e:2062:792a]) by HE1PR05MB3257.eurprd05.prod.outlook.com
- ([fe80::550a:a35e:2062:792a%7]) with mapi id 15.20.1643.022; Thu, 28 Feb 2019
- 08:40:35 +0000
-From:   Tariq Toukan <tariqt@mellanox.com>
-To:     Robert Eshleman <bobbyeshleman@gmail.com>
-CC:     Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/8] net/mlx4: use kzalloc instead of kmalloc
-Thread-Topic: [PATCH 1/8] net/mlx4: use kzalloc instead of kmalloc
-Thread-Index: AQHUzmMbUgrdV9kWXUGqPZgGsrBPfaX05cEA
-Date:   Thu, 28 Feb 2019 08:40:35 +0000
-Message-ID: <b691702d-e7d8-226a-f225-75f2e0a810a9@mellanox.com>
-References: <cover.1551246708.git.bobbyeshleman@gmail.com>
- <b350ebb5410291e80e12244ccb41b4b4bae31e0c.1551246708.git.bobbyeshleman@gmail.com>
-In-Reply-To: <b350ebb5410291e80e12244ccb41b4b4bae31e0c.1551246708.git.bobbyeshleman@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6PR01CA0068.eurprd01.prod.exchangelabs.com
- (2603:10a6:20b:e0::45) To HE1PR05MB3257.eurprd05.prod.outlook.com
- (2603:10a6:7:35::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tariqt@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ea472aa-f765-4773-bf8d-08d69d586828
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:HE1PR05MB3354;
-x-ms-traffictypediagnostic: HE1PR05MB3354:
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtIRTFQUjA1TUIzMzU0OzIzOm8zSTVaV2hYOGVFNVJIZU1hNUZXM3pyUmxN?=
- =?utf-8?B?M29nKzlRTjVyRDZSYks2WFdNZU5lSHNjb1B1ZWxDM2M0YWZFYVJVU082dVAr?=
- =?utf-8?B?T05RYXBPUjU5MnJPNFFCTUVWVE5rM3hlaStHdlVlYUQ5MWFhMEJFakMybUtV?=
- =?utf-8?B?UHF5SVlXT3JxUGh0b1dOd3g4WEZ2Wm5ZcVVWUzRYeTQ1U2tlYUZFZWI5MENJ?=
- =?utf-8?B?bkVOMkhBeU1hUXkvNEs4WjhROXREVnFyeC9BT3ZzY0ZINlhtNkF0T2JsNGtV?=
- =?utf-8?B?UVVpc1lYVHJOUUYzSERPa0NPWGJqL2ZEcFNGZEVjNXY1T1k5aEhKY0JjL3g5?=
- =?utf-8?B?d1kvZVgyRUdQNXB2aTFCd01NSzNsQjFMSUl1a3lVUVQrMFRNWHFTYzVnNmpX?=
- =?utf-8?B?OHpkTnFqZElvY2JuTzRIaUdoZlNBR1hDdzFScWxFd3RwV3hVYnNzUG96Vk1K?=
- =?utf-8?B?UmwreVduU1h5T2N3Z0pPa09iTzkzVkd5TjZNd1FRYXJ1aStaRG5RWXlwcU9H?=
- =?utf-8?B?YVlIcXhxeWdzRnNjajZEYzFFcXFEY1BtcEhwRTNNWXhwNUsxNlA3Z2dZSkNz?=
- =?utf-8?B?R3NZdVVRWTRBcEEvUStQZ09yTXdodzZzV0U2REc0Z1l0ZGJ5ODVsa3p0R1BW?=
- =?utf-8?B?Q2wybXhzZW9KaWNWOTAvWWtHVUZpVUphKzdYTisreEdld0RhRFNhUmRpNUhk?=
- =?utf-8?B?cHEwbDByeGVYZzdseklzcXZVZnJTSjZkQW02SWtLQnFsQkV5RGl0NWxWR2Rq?=
- =?utf-8?B?YytIV2hBZUxGK1F6TnVCK0xwa2V1aGtUTlFRbHNDUGgyeW1PbGJZYTZESXFr?=
- =?utf-8?B?dFpsSjcwZitJeXYyaFdqSjdQRjNSdTZiYncxSEFqQVUwWkRMM1dBdVJUNm5P?=
- =?utf-8?B?djVDNWFkTy9QMFFMOEloOURGR2tUQTBtK2JOUUxXeVVKRmU0UERUWEhabGpw?=
- =?utf-8?B?REVzVnJnYW50TWlwVi9OSHVZTWIrSE9RTGU1bHJJenI5Sm9lMTlaSVZxUWpI?=
- =?utf-8?B?b1B4K3RUcGdwK0xWVmZla2hTM1Q1N0sxWDhWR3VkVUR6MzNvbWJDZWYyUHMr?=
- =?utf-8?B?Y0txQzVENytQTittZjFyY3pEcElBeGpreWlwZnpxL2FZdm9EbmxwT2JCd3I0?=
- =?utf-8?B?allGSy9Gd2cwWVNWQ29SYThSenRVbmNGU2MzQUdmVFNTeEJ6WU9sVlczSnNM?=
- =?utf-8?B?V0kydDg2MXhycVhhNWplNGtBZDRBMmdYU0Q1b0NjOExSTmNWaW5JRnpjTHRT?=
- =?utf-8?B?c3ZqNW1FWktxNW5hM3BFd2hGaE1McFVqZkFkSkdXTHltaGJtVUF2ZWFaK29n?=
- =?utf-8?B?b3BKL2ptL2Q5d2VFWnJFdzl0cDJkdDFrTGpMWkh2ZWYxUXQ5bVUydTh1K0ZJ?=
- =?utf-8?B?d0RiNGwwWE9CRXFVVzg4WCtBM0Z1S3lKanA4c3dyVG02Wm41dVpxbmxHdkts?=
- =?utf-8?B?OGFkRTY0MzNoZ21LQXZLQU9YOVU1SGhDaXFHWnRKUjZsSmZrVzlPaGtNaHN5?=
- =?utf-8?B?NncvU0haSHhwcEIxUnVqY2tXU1ZpaWlJSEVZK0Zud3B3VUd2YmtkQUxRcXZh?=
- =?utf-8?B?WkN6ZHRWZWRLdEFLWXJQcloyVldyaFZST2VXK1NhcnZFcmdGN3BFU1pVTEdH?=
- =?utf-8?B?cmxsRERzeHFKdS9SbTBGbUpwcHdjcGtGSS9jclNKakFwTHdvLzdpUitRbUMz?=
- =?utf-8?B?b3RmNkxETjZ4eDdzMHVQMldURzNtVzR3WEdFQjEzbENiNTAvODdJVFVZY0xX?=
- =?utf-8?B?SkF6OXU3ZkNWQXRtRVBlUT09?=
-x-microsoft-antispam-prvs: <HE1PR05MB3354FBDA24B8B679E6060E4AAE750@HE1PR05MB3354.eurprd05.prod.outlook.com>
-x-forefront-prvs: 0962D394D2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(136003)(396003)(366004)(346002)(199004)(189003)(8936002)(26005)(71200400001)(71190400001)(2906002)(102836004)(54906003)(386003)(478600001)(5660300002)(6506007)(99286004)(6512007)(53936002)(66066001)(76176011)(53546011)(68736007)(86362001)(6436002)(1411001)(52116002)(31696002)(97736004)(316002)(81166006)(36756003)(2616005)(11346002)(305945005)(486006)(7736002)(81156014)(476003)(186003)(229853002)(8676002)(6116002)(446003)(6486002)(3846002)(25786009)(6916009)(256004)(6246003)(106356001)(4326008)(14454004)(31686004)(105586002);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR05MB3354;H:HE1PR05MB3257.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fjgyHUw4t+DGmGy8WT3XslBD2sBCdIOwADZsWJady8ZWeL+835b29qHBVOG2krFOLXkx5nPWI2NdxamPxv0D4tW+0f4bTX+VKUmV0wHqR/d0WZGPgGJApj3InbuN3CihxCKZ3nTRtFiRAHzX/Q0SqZC+x9iAqnIf5GmcTNrX5UZ20jf/sb2gBETeYzQoE1zxfD7tfBrV2AyTw1i5SF/Xq34SM2LUIYKBFEcaeji2CMhyatG+/fi0SyYkqRBx3cAQTM1i9Gb6CEQ1y11pj/lqrQU9F8JmPwaGrVoB9+y8OJO87P+0GF2n428TR1bc1t1ARBGyxenqYkjQy4Yg0BN6ea7BTI2LkuoUbx+OENgSh6lgLGn3vUKRrKdXZ5zEPTT/w5gwFCplynpnov+q8apGgXfwBFifBqOkSWjFwKb2Ibc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <459F25E69B8C3D4BB6E8DB80B977D26D@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 28 Feb 2019 03:43:04 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45365 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfB1InE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 03:43:04 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w17so20917920wrn.12;
+        Thu, 28 Feb 2019 00:43:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8PtPJ+fdlVYb6iecRV19Ls4bXUkTClzBLMI6Wf/OaKY=;
+        b=ZsyIiao+EOQX1YkQ3k6bJNF7j12wo2LimYrTh2d6+NvsKFxFeG+ORHCZdvEUjhoqmF
+         /qVoRIhkxAUpqbWeM+DHnMLBvnMmDRnKWHMyxH5xLohWmj7GLF9gwuRMZsHUsqX+kOzb
+         jePIEFZDaweL3rXmeS8P0FB55EpwpqbLlbT2KkAD3S3S0nqWZq98eKv4WVRvPJX4PCc0
+         tW3RNFnCi55aWo01AReHCD+jSH+7/Bu+Nlgxdxps7Q9YuwQ9Qs0w8QbO4Ubt0luGfbO8
+         U/ZdKRTp+80qB76q5B1vSgD3dE+NOKIsGo32ObsC4CKwPMSvTdu1tQE+VrcR1mdZiE4C
+         9vPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8PtPJ+fdlVYb6iecRV19Ls4bXUkTClzBLMI6Wf/OaKY=;
+        b=j8upijAs8AMJj13QhJ1w6e2Gf9Zi/FEbM2w5KDpXIc1sj+yw90FQOj6DFNpEgam4/s
+         ll56hfBBMe3qjiZlhmGx3iEc5nEmpAq/YbAM6xMYMjQiXI/oJCb+ogPGFMA4vVfmZYuh
+         xd6dl3/iqcqJkpa1rsrDm92pyWeUrZ8BSn3X6fmERRz4KW+V2Wb4j8XaJdJwasjeJqdY
+         JbojzuuwtaAY8b8pJlDsAmBP+/puRkfQafml/OZpeftfS6o0rOoIplEGUEkIvrbrCSue
+         zjoBmW0csq6sEX1py3sGNygONDEqv2nlJdzzhjn4t3qWiIE16mBxPNVGbDXQ+DHa4dt1
+         tBjw==
+X-Gm-Message-State: APjAAAVrFvVFOVb9kn2ZG1Gbwbm2PtCVvmxlFgYIvl/KjPrHDPhw8lXX
+        46CZYiZlmSrmSY4V2guKx1g=
+X-Google-Smtp-Source: APXvYqwnF4bzclaSf3t5ixK+VSH5FcoozPnxpQcHT83rzfu6g5ok5u3ah8bu8Wj/IE8cKfoqKDHz2Q==
+X-Received: by 2002:adf:b3d3:: with SMTP id x19mr5449578wrd.181.1551343380649;
+        Thu, 28 Feb 2019 00:43:00 -0800 (PST)
+Received: from [10.0.21.20] ([95.157.63.22])
+        by smtp.gmail.com with ESMTPSA id c18sm2284526wre.88.2019.02.28.00.42.59
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 00:42:59 -0800 (PST)
+Cc:     mtk.manpages@gmail.com, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andi Kleen <andi@firstfloor.org>, Chris Lameter <cl@linux.com>,
+        Ben Maurer <bmaurer@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH man-pages] Add rseq manpage
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20181206144228.9656-1-mathieu.desnoyers@efficios.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <f6512944-26e1-6231-87b3-b30a2017b4b8@gmail.com>
+Date:   Thu, 28 Feb 2019 09:42:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ea472aa-f765-4773-bf8d-08d69d586828
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 08:40:34.1902
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR05MB3354
+In-Reply-To: <20181206144228.9656-1-mathieu.desnoyers@efficios.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDIvMjcvMjAxOSA4OjA5IEFNLCBSb2JlcnQgRXNobGVtYW4gd3JvdGU6DQo+IFRoaXMg
-cGF0Y2ggcmVwbGFjZXMgYSBrbWFsbG9jL21lbXNldCgsMCkgY2FsbCB3aXRoIGEgY2FsbCB0byBr
-emFsbG9jLg0KPiBJdCBhbHNvIHJlbW92ZXMgYSBtZW1zZXQoLDApIGNhbGwgdGhhdCBhbHdheXMg
-Zm9sbG93cyBhICp6YWxsb2MgY2FsbC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJvYmVydCBFc2hs
-ZW1hbiA8Ym9iYnllc2hsZW1hbkBnbWFpbC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvbmV0L2V0
-aGVybmV0L21lbGxhbm94L21seDQvY21kLmMgICB8IDEgLQ0KPiAgIGRyaXZlcnMvbmV0L2V0aGVy
-bmV0L21lbGxhbm94L21seDQvZW5fcnguYyB8IDMgKy0tDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAx
-IGluc2VydGlvbigrKSwgMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg0L2NtZC5jIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQv
-bWVsbGFub3gvbWx4NC9jbWQuYw0KPiBpbmRleCBlNjViYzNjOTU2MzAuLjdiZmE2ZTg1MGU1ZiAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NC9jbWQuYw0K
-PiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg0L2NtZC5jDQo+IEBAIC0z
-MzA3LDcgKzMzMDcsNiBAQCBpbnQgbWx4NF9nZXRfY291bnRlcl9zdGF0cyhzdHJ1Y3QgbWx4NF9k
-ZXYgKmRldiwgaW50IGNvdW50ZXJfaW5kZXgsDQo+ICAgCWlmIChJU19FUlIobWFpbGJveCkpDQo+
-ICAgCQlyZXR1cm4gUFRSX0VSUihtYWlsYm94KTsNCj4gICANCj4gLQltZW1zZXQobWFpbGJveC0+
-YnVmLCAwLCBzaXplb2Yoc3RydWN0IG1seDRfY291bnRlcikpOw0KPiAgIAlpZl9zdGF0X2luX21v
-ZCA9IGNvdW50ZXJfaW5kZXg7DQo+ICAgCWlmIChyZXNldCkNCj4gICAJCWlmX3N0YXRfaW5fbW9k
-IHw9IE1MWDRfUVVFUllfSUZfU1RBVF9SRVNFVDsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0
-L2V0aGVybmV0L21lbGxhbm94L21seDQvZW5fcnguYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21l
-bGxhbm94L21seDQvZW5fcnguYw0KPiBpbmRleCA5YTA4ODFjYjdmNTEuLmY1NTgwNWQyMDZlZiAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NC9lbl9yeC5j
-DQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDQvZW5fcnguYw0KPiBA
-QCAtMTA0NCw3ICsxMDQ0LDcgQEAgc3RhdGljIGludCBtbHg0X2VuX2NvbmZpZ19yc3NfcXAoc3Ry
-dWN0IG1seDRfZW5fcHJpdiAqcHJpdiwgaW50IHFwbiwNCj4gICAJc3RydWN0IG1seDRfcXBfY29u
-dGV4dCAqY29udGV4dDsNCj4gICAJaW50IGVyciA9IDA7DQo+ICAgDQo+IC0JY29udGV4dCA9IGtt
-YWxsb2Moc2l6ZW9mKCpjb250ZXh0KSwgR0ZQX0tFUk5FTCk7DQo+ICsJY29udGV4dCA9IGt6YWxs
-b2Moc2l6ZW9mKCpjb250ZXh0KSwgR0ZQX0tFUk5FTCk7DQo+ICAgCWlmICghY29udGV4dCkNCj4g
-ICAJCXJldHVybiAtRU5PTUVNOw0KPiAgIA0KPiBAQCAtMTA1NSw3ICsxMDU1LDYgQEAgc3RhdGlj
-IGludCBtbHg0X2VuX2NvbmZpZ19yc3NfcXAoc3RydWN0IG1seDRfZW5fcHJpdiAqcHJpdiwgaW50
-IHFwbiwNCj4gICAJfQ0KPiAgIAlxcC0+ZXZlbnQgPSBtbHg0X2VuX3NxcF9ldmVudDsNCj4gICAN
-Cj4gLQltZW1zZXQoY29udGV4dCwgMCwgc2l6ZW9mKCpjb250ZXh0KSk7DQo+ICAgCW1seDRfZW5f
-ZmlsbF9xcF9jb250ZXh0KHByaXYsIHJpbmctPmFjdHVhbF9zaXplLCByaW5nLT5zdHJpZGUsIDAs
-IDAsDQo+ICAgCQkJCXFwbiwgcmluZy0+Y3FuLCAtMSwgY29udGV4dCk7DQo+ICAgCWNvbnRleHQt
-PmRiX3JlY19hZGRyID0gY3B1X3RvX2JlNjQocmluZy0+d3FyZXMuZGIuZG1hKTsNCj4gDQoNCkhp
-LA0KDQpUaGFua3MgZm9yIHlvdXIgcGF0Y2guDQpJdCBsb29rcyBnb29kLCBidXQgbWlzc2VzIG9u
-ZSBzaW1pbGFyIHBvaW50IHlvdSBtaWdodCB3YW50IHRvIGNvdmVyOg0KDQppbiBkcml2ZXJzL25l
-dC9ldGhlcm5ldC9tZWxsYW5veC9tbHg0L3BvcnQuYzoxNzgwIDoNCm1lbXNldChjb250ZXh0LCAw
-LCBzaXplb2YoKmNvbnRleHQpKTsNCg0KVGFyaXENCg==
+On 12/6/18 3:42 PM, Mathieu Desnoyers wrote:
+> [ Michael, rseq(2) was merged into 4.18. Can you have a look at this
+>   patch which adds rseq documentation to the man-pages project ? ]
+Hi Matthieu
+
+Sorry for the long delay. I've merged this page into a private
+branch and have done quite a lot of editing. I have many
+questions :-).
+
+In the first instance, I think it is probably best to have
+a free-form text discussion rather than firing patches
+back and forward. Could you take a look at the questions below
+and respond?
+
+Thanks,
+
+Michael
+
+
+RSEQ(2)                    Linux Programmer's Manual                   RSEQ(2)
+
+NAME
+       rseq - Restartable sequences and CPU number cache
+
+SYNOPSIS
+       #include <linux/rseq.h>
+
+       int rseq(struct rseq *rseq, uint32_t rseq_len, int flags, uint32_t sig);
+
+DESCRIPTION
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │Imagine  you  are  someone who is pretty new to this │
+       │idea...  What is notably lacking from this  page  is │
+       │an overview explaining:                              │
+       │                                                     │
+       │    * What a restartable sequence actually is.       │
+       │                                                     │
+       │    * An outline of the steps to perform when using  │
+       │    restartable sequences / rseq(2).                 │
+       │                                                     │
+       │I.e.,  something  along  the  lines  of Jon Corbet's │
+       │https://lwn.net/Articles/697979/.  Can you  come  up │
+       │with something? (Part of it might be at the start of │
+       │this page, and the rest in NOTES; it need not be all │
+       │in one place.)                                       │
+       └─────────────────────────────────────────────────────┘
+       The  rseq()  ABI  accelerates  user-space operations on per-CPU data by
+       defining a shared data structure ABI between each user-space thread and
+       the kernel.
+
+       It allows user-space to perform update operations on per-CPU data with‐
+       out requiring heavy-weight atomic operations.
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │In the following para: "a  hardware  execution  con‐ │
+       │text"?   What  is  the contrast being drawn here? It │
+       │would be good to state it more explicitly.           │
+       └─────────────────────────────────────────────────────┘
+       The term CPU used in this documentation refers to a hardware  execution
+       context.
+
+       Restartable  sequences are atomic with respect to preemption (making it
+       atomic with respect to other threads running on the same CPU), as  well
+       as  signal delivery (user-space execution contexts nested over the same
+       thread).  They either complete atomically with respect to preemption on
+       the current CPU and signal delivery, or they are aborted.
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │In  the  preceding sentence, we need a definition of │
+       │"current CPU".                                       │
+       └─────────────────────────────────────────────────────┘
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │In the following, does "It  is"  means  "Restartable │
+       │sequences are"?                                      │
+       └─────────────────────────────────────────────────────┘
+       It is suited for update operations on per-CPU data.
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │In  the  following,  does "It is" means "Restartable │
+       │sequences are"?                                      │
+       └─────────────────────────────────────────────────────┘
+       It can be used on data  structures  shared  between  threads  within  a
+       process, and on data structures shared between threads across different
+       processes.
+
+       Some examples of operations that can be accelerated or improved by this
+       ABI:
+
+       · Memory allocator per-CPU free-lists
+
+       · Querying the current CPU number
+
+       · Incrementing per-CPU counters
+
+       · Modifying data protected by per-CPU spinlocks
+
+       · Inserting/removing elements in per-CPU linked-lists
+
+       · Writing/reading per-CPU ring buffers content
+
+       · Accurately  reading performance monitoring unit counters with respect
+         to thread migration
+
+       Restartable sequences must not perform  system  calls.   Doing  so  may
+       result in termination of the process by a segmentation fault.
+
+       The rseq argument is a pointer to the thread-local rseq structure to be
+       shared between kernel and user-space.  The layout of this structure  is
+       shown below.
+
+       The rseq_len argument is the size of the struct rseq to register.
+
+       The  flags  argument is 0 for registration, or RSEQ_FLAG_UNREGISTER for
+       unregistration.
+
+       The sig argument is the 32-bit signature  to  be  expected  before  the
+       abort handler code.
+
+   The rseq structure
+       The  struct  rseq  is aligned on a 32-byte boundary.  This structure is
+       extensible.  Its size is passed as parameter to the rseq() system call.
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │Below, I added the structure definition (in abbrevi‐ │
+       │ated form).  Is there any reason not to do this?     │
+       └─────────────────────────────────────────────────────┘
+
+           struct rseq {
+               __u32             cpu_id_start;
+               __u32             cpu_id;
+               union {
+                   __u64 ptr64;
+           #ifdef __LP64__
+                   __u64 ptr;
+           #else
+                   ....
+           #endif
+               }                 rseq_cs;
+               __u32             flags;
+           } __attribute__((aligned(4 * sizeof(__u64))));
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │In  the  text  below, I think it would be helpful to │
+       │explicitly note which of these fields are set by the │
+       │kernel  (on  return from the reseq() call) and which │
+       │are set by the caller (before  calling  rseq()).  Is │
+       │the following correct:                               │
+       │                                                     │
+       │    cpu_id_start - initialized by caller to possible │
+       │    CPU number (e.g., 0), updated by kernel          │
+       │    on return                                        │
+       │                                                     │
+       │    cpu_id - initialized to -1 by caller,            │
+       │    updated by kernel on return                      │
+       │                                                     │
+       │    rseq_cs - initialized by caller, either to NULL  │
+       │    or a pointer to an 'rseq_cs' structure           │
+       │    that is initialized by the caller                │
+       │                                                     │
+       │    flags - initialized by caller, used by kernel    │
+       └─────────────────────────────────────────────────────┘
+
+       The structure fields are as follows:
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │In  the  following paragraph, and in later places, I │
+       │changed "current thread" to "calling thread". Okay?  │
+       └─────────────────────────────────────────────────────┘
+
+       cpu_id_start
+              Optimistic cache of the CPU number on which the  calling  thread
+              is  running.  The value in this field is guaranteed to always be
+              a possible CPU number, even when rseq is not  initialized.   The
+              value  it  contains  should  always  be confirmed by reading the
+              cpu_id field.
+
+              ┌─────────────────────────────────────────────────────┐
+              │FIXME                                                │
+              ├─────────────────────────────────────────────────────┤
+              │What does the last sentence mean?                    │
+              └─────────────────────────────────────────────────────┘
+
+              This field is an optimistic cache in the sense that it is always
+              guaranteed  to hold a valid CPU number in the range [0..(nr_pos‐
+              sible_cpus - 1)].  It can therefore be loaded by user-space  and
+              used  as  an offset in per-CPU data structures without having to
+              check whether its value is within the valid bounds  compared  to
+              the number of possible CPUs in the system.
+
+              For  user-space  applications  executed on a kernel without rseq
+              support, the cpu_id_start field stays initialized at 0, which is
+              indeed  a  valid CPU number.  It is therefore valid to use it as
+              an offset in per-CPU data structures, and only validate  whether
+              it's  actually  the  current CPU number by comparing it with the
+              cpu_id field within the rseq critical section.
+
+              If the kernel does not provide rseq support, that  cpu_id  field
+              stays  initialized  at  -1,  so  the comparison always fails, as
+              intended.  It is then up to user-space to use a fall-back mecha‐
+              nism, considering that rseq is not available.
+
+              ┌─────────────────────────────────────────────────────┐
+              │FIXME                                                │
+              ├─────────────────────────────────────────────────────┤
+              │The  last  sentence is rather difficult to grok. Can │
+              │we say some more here?                               │
+              └─────────────────────────────────────────────────────┘
+
+       cpu_id Cache of the CPU number on which the calling thread is  running.
+              -1 if uninitialized.
+
+       rseq_cs
+              The  rseq_cs  field  is a pointer to a struct rseq_cs (described
+              below).  It is NULL when no rseq assembly block critical section
+              is  active  for  the  calling  thread.  Setting it to point to a
+              critical section descriptor (struct rseq_cs) marks the beginning
+              of the critical section.
+
+       flags  Flags  indicating  the  restart behavior for the calling thread.
+              This is mainly used for debugging purposes.  Can be either:
+
+              RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT
+
+              RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL
+
+              RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │Each of the above values needs an explanation.       │
+       │                                                     │
+       │Is it correct that only one of  the  values  may  be │
+       │specified in 'flags'? I ask because in the 'rseq_cs' │
+       │structure below, the 'flags' field  is  a  bit  mask │
+       │where  any  combination  of  these flags may be ORed │
+       │together.                                            │
+       │                                                     │
+       └─────────────────────────────────────────────────────┘
+
+   The rseq_cs structure
+       The struct rseq_cs is aligned on a 32-byte boundary  and  has  a  fixed
+       size of 32 bytes.
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │Below, I added the structure definition (in abbrevi‐ │
+       │ated form).  Is there any reason not to do this?     │
+       └─────────────────────────────────────────────────────┘
+
+           struct rseq_cs {
+               __u32   version;
+               __u32   flags;
+               __u64   start_ip;
+               __u64   post_commit_offset;
+               __u64   abort_ip;
+           } __attribute__((aligned(4 * sizeof(__u64))));
+
+       The structure fields are as follows:
+
+       version
+              Version of this structure.
+
+              ┌─────────────────────────────────────────────────────┐
+              │FIXME                                                │
+              ├─────────────────────────────────────────────────────┤
+              │What does 'version' need to be initialized to?       │
+              └─────────────────────────────────────────────────────┘
+
+       flags  Flags indicating the restart behavior of this structure.  Can be
+              a combination of:
+
+              RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT
+
+              RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL
+
+              RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │Each of the above values needs an explanation.       │
+       └─────────────────────────────────────────────────────┘
+
+       start_ip
+              Instruction  pointer  address  of  the  first instruction of the
+              sequence of consecutive assembly instructions.
+
+       post_commit_offset
+              Offset (from start_ip address) of the  address  after  the  last
+              instruction  of  the  sequence  of consecutive assembly instruc‐
+              tions.
+
+       abort_ip
+              Instruction pointer address where to move the execution flow  in
+              case  of  abort of the sequence of consecutive assembly instruc‐
+              tions.
+
+NOTES
+       A single library per process  should  keep  the  rseq  structure  in  a
+       thread-local  storage variable.  The cpu_id field should be initialized
+       to -1, and the cpu_id_start field should be initialized to  a  possible
+       CPU value (typically 0).
+
+       Each  thread  is responsible for registering and unregistering its rseq
+       structure.  No more than one rseq structure address can  be  registered
+       per thread at a given time.
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │In  the  following paragraph, what is the difference │
+       │between "freed" and "reclaim"?  I'm  supposing  they │
+       │mean the same thing, but it's not clear. And if they │
+       │do mean the same thing, then the first two sentences │
+       │appear to contain contradictory information.         │
+       └─────────────────────────────────────────────────────┘
+
+       Memory  of a registered rseq object must not be freed before the thread
+       exits.  Reclaim of rseq object's memory must only be done after  either
+       an explicit rseq unregistration is performed or after the thread exits.
+       Keep in mind that the implementation of  the  Thread-Local  Storage  (C
+       language  __thread)  lifetime  does  not guarantee existence of the TLS
+       area up until the thread exits.
+
+       In a typical usage scenario, the thread registering the rseq  structure
+       will be performing loads and stores from/to that structure.  It is how‐
+       ever also allowed to read that structure from other threads.  The  rseq
+       field  updates performed by the kernel provide relaxed atomicity seman‐
+       tics, which guarantee that  other  threads  performing  relaxed  atomic
+       reads of the CPU number cache will always observe a consistent value.
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │In  the  preceding  paragraph, can we reasonably add │
+       │some words to explain "relaxed atomicity  semantics" │
+       │and "relaxed atomic reads"?                          │
+       └─────────────────────────────────────────────────────┘
+
+RETURN VALUE
+       A  return  value of 0 indicates success.  On error, -1 is returned, and
+       errno is set appropriately.
+
+ERRORS
+       EBUSY  Restartable sequence is already registered for this thread.
+
+       EFAULT rseq is an invalid address.
+
+       EINVAL Either flags contains an invalid  value,  or  rseq  contains  an
+              address which is not appropriately aligned, or rseq_len contains
+              a size that does not match the size received on registration.
+
+              ┌─────────────────────────────────────────────────────┐
+              │FIXME                                                │
+              ├─────────────────────────────────────────────────────┤
+              │The last case "rseq_len contains a  size  that  does │
+              │not  match  the  size  received on registration" can │
+              │occur only on RSEQ_FLAG_UNREGISTER, tight?           │
+              └─────────────────────────────────────────────────────┘
+
+       ENOSYS The rseq() system call is not implemented by this kernel.
+
+       EPERM  The sig argument on unregistration does not match the  signature
+              received on registration.
+
+VERSIONS
+       The rseq() system call was added in Linux 4.18.
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │What is the current state of library support?        │
+       └─────────────────────────────────────────────────────┘
+
+CONFORMING TO
+       rseq() is Linux-specific.
+
+       ┌─────────────────────────────────────────────────────┐
+       │FIXME                                                │
+       ├─────────────────────────────────────────────────────┤
+       │Is  there  any  example  code that can reasonably be │
+       │included in this manual page? Or some  example  code │
+       │that can be referred to?                             │
+       └─────────────────────────────────────────────────────┘
+
+SEE ALSO
+       sched_getcpu(3), membarrier(2)
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
