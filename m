@@ -2,130 +2,242 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EBEC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25332C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB0E2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5761206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAz2RmJb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lt47Wg1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbfB1Wmx (ORCPT
+        id S1731702AbfB1WpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 17:42:53 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43527 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfB1Wmx (ORCPT
+        Thu, 28 Feb 2019 17:45:25 -0500
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:33652 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728763AbfB1WpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 17:42:53 -0500
-Received: by mail-lj1-f194.google.com with SMTP id z20so18633163ljj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 14:42:51 -0800 (PST)
+        Thu, 28 Feb 2019 17:45:25 -0500
+Received: by mail-yw1-f73.google.com with SMTP id c8so19423840ywa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 14:45:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=QzZ+n7IBdI2RXmQ15IzwcgP+pV0cSReqXSAMzq87oLo=;
-        b=WAz2RmJbM6BkcX457lDuCbCQaYBv2DSxw7oZFusOuJIcAs3Qkd/3d0YbbaUq1dSw/z
-         bsgUIILqV4bLOPkKuvVVMblM8H6LAmVrPi08swdxzggC4ATQV4xhpJE202H40EENr0vy
-         PWeU1Rey5YERkN1Ru1wB0j+M7kX3YtsDQKBVKAa1maY2euDu4mI8zSWqfNbZgA9UutQk
-         962aEQrwgHZsXx11rvnFuKSOwhU0FvwzNJ96/3A0+yMuC8++etRri7lPlgKiWaF0ijny
-         0fZZqr0fX4xioS0GkO3PxFJF4Fj1uAt/FZmary9POSa3ayja233U/2InjmSBGeikkbjA
-         P8CA==
+        bh=JgzwmpXUZt6KNQDOAKfrLdx7UP057Xc3K0KJM8I4IMs=;
+        b=Lt47Wg1APFp2M6To1egyx29fj4coXryui4+x2KR9LMj46Bwc7h45gQTZl7/4sbwUOJ
+         0u2Fr1XwdFwXclIYZRd3ECzWh0xNNCWcEJc/8aRYqWaCNJ/ddZrE5ULTXmYkLEVt6b3U
+         UExjSxlWaIrdg+UCPTObr4QfLj8xKnDovtX9Mioe2er82t7IImTEBZ8QwY9v/b2z+Qei
+         a0Nxa+hqBPAXEGAdJj/SPPTKjLdDcwsuY8qyyUlAlyeVCMS00iyIlkqZ7O9uEXW98E7l
+         hsbDcaFWho2t6UpD1kVDudL8ixrvCWnRQKUMC/ZF+p7/JJkHgHMPV+H1srBgmWiNT/qF
+         XyMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QzZ+n7IBdI2RXmQ15IzwcgP+pV0cSReqXSAMzq87oLo=;
-        b=GMfSdwJpUVvKW8uXBRVZPtffUfifsblNEaJXQG8WOFiuj4xVDYYEKe2XqZQNk7oh09
-         jM843sBwDkGFrHA1SD9Xfhi2NlO73ZVrtDrm28/hMlgskLwsFJnzMNOL7vzxxfg+D8EK
-         W7Gk6BBBS10WQ5QnnAHGePEaEQhqdKw2Q5k1hU+cgYcD47GEwTJyR9YcBgGlIQkMvxlP
-         sDXZPWPTktknYAa7hFSfozr0Puc9Ns8W1QZSROcsKYp4jxcK5OANG5DxV2s8EtkTrofg
-         tO6mcA+vQuSFpShNeXB/JgjAlgfP7iOeSqzuOyAK2FtB8OKCE9ownaZ/kM9m6Yy+5trg
-         rApw==
-X-Gm-Message-State: APjAAAX57/7NifNXU3sk4k+WWG78uQa1EMcnyNUq/cEbVboDTkkhXkPR
-        iAo8QsBkB28QX83sj+2qQSXjYGfvXS+kzjT5VnA=
-X-Google-Smtp-Source: APXvYqw22XZF5sRF2LYwx7g7BBpNP+uw03dtpHVz09/t+hQxIH6IvPRiwsh6xDfyE5SjgtTdGPoTGsuM2nHoVk1Z2Mc=
-X-Received: by 2002:a2e:86d2:: with SMTP id n18mr745123ljj.128.1551393770888;
- Thu, 28 Feb 2019 14:42:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20190228223257.6189-1-alistair.francis@wdc.com> <alpine.DEB.2.21.9999.1902281437380.17965@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1902281437380.17965@viisi.sifive.com>
-From:   Alistair Francis <alistair23@gmail.com>
-Date:   Thu, 28 Feb 2019 14:41:53 -0800
-Message-ID: <CAKmqyKND0ruL+cTLoMzV2oG5BOdHDzAzWkKrW5eqLAP2Q6smvQ@mail.gmail.com>
-Subject: Re: [PATCH] Revert "of/device: Really only set bus DMA mask when appropriate"
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Alistair Francis <Alistair.Francis@wdc.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=JgzwmpXUZt6KNQDOAKfrLdx7UP057Xc3K0KJM8I4IMs=;
+        b=eHqQTBtT8mLdbO8xCwp85Nz9b3Gy4+vVgivTpFlES/2sbMdSBFOm5bCSGrdVavSl3o
+         w3VoVUl2/MNH76GuObzXKe/N4yr2zeykg3RApzGwqI5pYYpV6PX4GjjW7CDnLIEWxKvU
+         WB5/VJ9YAUejGBu21XzsCqyAbKSDfLZydLxxN0uvy8ezF3gD+9etc3zabpKRMpK+sh/P
+         2IL0CkjFvkN1rVHtjkEr0j69cij3CFrEEO3k62Y6Fpo9Xk3ZUvc1VJW0zxcEiXTZLOJ4
+         5m//iPxbBVjuBCXdw2g7S5EU7yWO2u0uxHQ5cMNymCE/kZlx+FzhsXKDF+W+xueGwpSm
+         4pKA==
+X-Gm-Message-State: APjAAAVKTFmF5UR8GGh31Dj5dLtTV00VMjSXWL1id0fe9PCFdPH6j8Ea
+        yusupaHVAL6UxKzW/mhJUVN478i7zeXtLI669eBHrg==
+X-Google-Smtp-Source: APXvYqzOUdvDsOdnZaHwv63FfSC01OGwpYFnVmcI7CiQKML/BAMqg5jKrtUds28QdA8OJfIlEUvx8XxI7R+kV2IqR0ocQQ==
+X-Received: by 2002:a25:41c2:: with SMTP id o185mr967551yba.96.1551393923889;
+ Thu, 28 Feb 2019 14:45:23 -0800 (PST)
+Date:   Thu, 28 Feb 2019 14:44:41 -0800
+In-Reply-To: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
+Message-Id: <20190228224507.198833-1-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
+X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
+Subject: [PATCH 01/27] Add the ability to lock down access to the running
+ kernel image
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     jmorris@namei.org
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dhowells@redhat.com,
+        James Morris <james.l.morris@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 2:39 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> Hello Alistair,
->
-> On Thu, 28 Feb 2019, Alistair Francis wrote:
->
-> > This reverts commit 6778be4e520959659b27a441c06a84c9cb009085.
-> >
-> > Reverting the commit fixes these error messages and an non-functioning
-> > USB bus when attaching a USB to PCIe card to a RISC-V board:
-> >     xhci_hcd 0000:03:00.0: Host took too long to start, waited 16000 microseconds.
-> >     xhci_hcd 0000:03:00.0: startup error -19
-> >     xhci_hcd 0000:03:00.0: USB bus 2 deregistered
-> >     xhci_hcd 0000:03:00.0: WARNING: Host System Error
-> >     xhci_hcd 0000:03:00.0: remove, state 1
-> >
-> > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> > ---
-> > I'm not sure if this is the correct fix, it's possible something else is
-> > wrong, but I wanted to get some feedback.
-> >
-> > drivers/of/device.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > index 3717f2a20d0d..8299f8055da7 100644
-> > --- a/drivers/of/device.c
-> > +++ b/drivers/of/device.c
-> > @@ -149,11 +149,9 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
-> >        * set by the driver.
-> >        */
-> >       mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1);
-> > +     dev->bus_dma_mask = mask;
-> >       dev->coherent_dma_mask &= mask;
-> >       *dev->dma_mask &= mask;
-> > -     /* ...but only set bus mask if we found valid dma-ranges earlier */
->
-> Does the DT data for the PCIe controller that you're using contain a
-> dma-ranges node?
+From: David Howells <dhowells@redhat.com>
 
-Ah, no it does not. It only has ranges and bus-range [1].
+Provide a single call to allow kernel code to determine whether the system
+should be locked down, thereby disallowing various accesses that might
+allow the running kernel image to be changed including the loading of
+modules that aren't validly signed with a key we recognise, fiddling with
+MSR registers and disallowing hibernation.
 
-Any idea what the dma-ranges should be?
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: James Morris <james.l.morris@oracle.com>
+---
+ include/linux/kernel.h   | 17 ++++++++++++
+ include/linux/security.h |  9 +++++-
+ security/Kconfig         | 15 ++++++++++
+ security/Makefile        |  3 ++
+ security/lock_down.c     | 59 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 102 insertions(+), 1 deletion(-)
+ create mode 100644 security/lock_down.c
 
-1: https://github.com/riscv/opensbi/blob/master/platform/sifive/fu540/HiFiveUnleashed-MicroSemi-Expansion.dts#L407
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 8f0e68e250a7..833bf32ce4e6 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -340,6 +340,23 @@ static inline void refcount_error_report(struct pt_regs *regs, const char *err)
+ { }
+ #endif
+ 
++#ifdef CONFIG_LOCK_DOWN_KERNEL
++extern bool __kernel_is_locked_down(const char *what, bool first);
++#else
++static inline bool __kernel_is_locked_down(const char *what, bool first)
++{
++	return false;
++}
++#endif
++
++#define kernel_is_locked_down(what)					\
++	({								\
++		static bool message_given;				\
++		bool locked_down = __kernel_is_locked_down(what, !message_given); \
++		message_given = true;					\
++		locked_down;						\
++	})
++
+ /* Internal, do not use. */
+ int __must_check _kstrtoul(const char *s, unsigned int base, unsigned long *res);
+ int __must_check _kstrtol(const char *s, unsigned int base, long *res);
+diff --git a/include/linux/security.h b/include/linux/security.h
+index dbfb5a66babb..35f0be540e0b 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -1793,5 +1793,12 @@ static inline void security_bpf_prog_free(struct bpf_prog_aux *aux)
+ #endif /* CONFIG_SECURITY */
+ #endif /* CONFIG_BPF_SYSCALL */
+ 
+-#endif /* ! __LINUX_SECURITY_H */
++#ifdef CONFIG_LOCK_DOWN_KERNEL
++extern void __init init_lockdown(void);
++#else
++static inline void __init init_lockdown(void)
++{
++}
++#endif
+ 
++#endif /* ! __LINUX_SECURITY_H */
+diff --git a/security/Kconfig b/security/Kconfig
+index e4fe2f3c2c65..c2aff0006de2 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -230,6 +230,21 @@ config STATIC_USERMODEHELPER_PATH
+ 	  If you wish for all usermode helper programs to be disabled,
+ 	  specify an empty string here (i.e. "").
+ 
++config LOCK_DOWN_KERNEL
++	bool "Allow the kernel to be 'locked down'"
++	help
++	  Allow the kernel to be locked down. If lockdown support is enabled
++	  and activated, the kernel will impose additional restrictions
++	  intended to prevent uid 0 from being able to modify the running
++	  kernel. This may break userland applications that rely on low-level
++	  access to hardware.
++
++config LOCK_DOWN_KERNEL_FORCE
++        bool "Enable kernel lockdown mode automatically"
++        depends on LOCK_DOWN_KERNEL
++        help
++          Enable the kernel lock down functionality automatically at boot.
++
+ source "security/selinux/Kconfig"
+ source "security/smack/Kconfig"
+ source "security/tomoyo/Kconfig"
+diff --git a/security/Makefile b/security/Makefile
+index 4d2d3782ddef..507ac8c520ce 100644
+--- a/security/Makefile
++++ b/security/Makefile
+@@ -30,3 +30,6 @@ obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
+ # Object integrity file lists
+ subdir-$(CONFIG_INTEGRITY)		+= integrity
+ obj-$(CONFIG_INTEGRITY)			+= integrity/
++
++# Allow the kernel to be locked down
++obj-$(CONFIG_LOCK_DOWN_KERNEL)		+= lock_down.o
+diff --git a/security/lock_down.c b/security/lock_down.c
+new file mode 100644
+index 000000000000..13a8228c1034
+--- /dev/null
++++ b/security/lock_down.c
+@@ -0,0 +1,59 @@
++/* Lock down the kernel
++ *
++ * Copyright (C) 2016 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public Licence
++ * as published by the Free Software Foundation; either version
++ * 2 of the Licence, or (at your option) any later version.
++ */
++
++#include <linux/security.h>
++#include <linux/export.h>
++
++static __ro_after_init bool kernel_locked_down;
++
++/*
++ * Put the kernel into lock-down mode.
++ */
++static void __init lock_kernel_down(const char *where)
++{
++	if (!kernel_locked_down) {
++		kernel_locked_down = true;
++		pr_notice("Kernel is locked down from %s; see man kernel_lockdown.7\n",
++			  where);
++	}
++}
++
++static int __init lockdown_param(char *ignored)
++{
++	lock_kernel_down("command line");
++	return 0;
++}
++
++early_param("lockdown", lockdown_param);
++
++/*
++ * Lock the kernel down from very early in the arch setup.  This must happen
++ * prior to things like ACPI being initialised.
++ */
++void __init init_lockdown(void)
++{
++#ifdef CONFIG_LOCK_DOWN_FORCE
++	lock_kernel_down("Kernel configuration");
++#endif
++}
++
++/**
++ * kernel_is_locked_down - Find out if the kernel is locked down
++ * @what: Tag to use in notice generated if lockdown is in effect
++ */
++bool __kernel_is_locked_down(const char *what, bool first)
++{
++	if (what && first && kernel_locked_down)
++		pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
++			  what);
++	return kernel_locked_down;
++}
++EXPORT_SYMBOL(__kernel_is_locked_down);
+-- 
+2.21.0.352.gf09ad66450-goog
 
-Alistair
-
->
-> > -     if (!ret)
-> > -             dev->bus_dma_mask = mask;
-> >
-> >       coherent = of_dma_is_coherent(np);
-> >       dev_dbg(dev, "device is%sdma coherent\n",
->
->
-> - Paul
