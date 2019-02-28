@@ -2,117 +2,92 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D10DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375CFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D9120C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:31:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TLrbb5ju"
+	by mail.kernel.org (Postfix) with ESMTP id 049A020C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551367869;
+	bh=QVcIaP+MA59SyAgFst32utuG2nTD5JgMRVtSCU06Ypk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1Qv3B+7xW3e040gTWGilC+asaqDaA45loKLJGnLazqrwNuH51/3J7Dqs9SIleT7Y7
+	 5jK7zJTLxwnPL0p7vkxUJsveERhiU/J9w2iQA33EyuW+By7QpPTsYZVgmsYXkG0E/S
+	 Ikx0lR/7fUe5ogWorAhoGBu+4RUiQ+TZd+l7eIj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388249AbfB1PbE (ORCPT
+        id S2389139AbfB1PbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:31:04 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56243 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfB1PbB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:31:01 -0500
-Received: by mail-wm1-f67.google.com with SMTP id q187so9687974wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 07:31:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YrFq4peLuN62Cw+RvpRMk9ymMFBSZPIVHmIFKLtxidM=;
-        b=TLrbb5juIqET+wHGfzSvjv0mxtHHwzdrjbMhpxwbX/ToHIQvi2c2wg3gO/ARqvbFI8
-         TkLzxGMy/ANm+xnxf8P5BRttx4YchhoqU08Kqr3e8J9eyPGXP7YLR3BurhiLK7CotpEh
-         DdLSbRqXn8IQb+fVm7I+4KQLU6IYlfTKAGbzhyltJ2sy2g17bIeOELO1aU55Adpardw5
-         x1+QliiPrxD7jfN7VQBVqEwFA7jKA1TQAHFomfRzo0cH8DWH+MH/BS4LaYCCVipkjnSj
-         wpf2tEf6PKLUtFRDBWv2BwcU5VXxVV5ceO2gqZJIges2ozRrv/hBBjre8W6Q2libCNEi
-         QTCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YrFq4peLuN62Cw+RvpRMk9ymMFBSZPIVHmIFKLtxidM=;
-        b=rPVqFxCw4qnV9nrlRpqKoXTpnvO537M0EexlR212c4cHRxPE3eW6iXCuPBcaKSFeoR
-         ZqC/ypL03LpBxZZeF+8N5iaF+pP1B+Rok4AJd7xwWLQuO6bGJ0H9ujtKfAffqQHGLei2
-         MR7CbrscCnSTMAU+oj+h6hHO9Y1MQ/QgSUv+0HUYJXHPd2SJhNPPfy0afylKi6qvE0IJ
-         KLxKSCCiuUCparqbUSBiwP7I8PmoDVF7DNoN6CxeHt+veL4zz/orrvIM7dRBdGxmQvrf
-         xv3If06eSEYqHToZCQUGrr8QggmnEtoS/UHUPPePulNLr3BdfHLxIPx9tAJTlwU5IYXm
-         SlCw==
-X-Gm-Message-State: AHQUAuZJPKQeBVSjnoV5Ll8lWVPZSwNyO7gl6GOixCmddQ50JMa5lUpo
-        FDW0sj6uVYoIXmVYroF+sCBmiA==
-X-Google-Smtp-Source: APXvYqz1oR+wuqCFdbCcIk+4KU8rhrZgsS4M1sKFH/c+FkH0h+jOFgJSNuD60Y09D7pbu21bjcf0dw==
-X-Received: by 2002:a1c:9d94:: with SMTP id g142mr144463wme.125.1551367859183;
-        Thu, 28 Feb 2019 07:30:59 -0800 (PST)
-Received: from [192.168.0.41] (244.150.136.77.rev.sfr.net. [77.136.150.244])
-        by smtp.googlemail.com with ESMTPSA id s127sm3318513wmf.39.2019.02.28.07.30.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 07:30:58 -0800 (PST)
-Subject: Re: [PATCH 4/7] ARM/ARM64: cpuidle: Let back-end init ops take the
- driver as input
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Lina Iyer <ilina@codeaurora.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>
-References: <20190228135919.3747-1-ulf.hansson@linaro.org>
- <20190228135919.3747-5-ulf.hansson@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <37c1fd29-a888-4ae5-ae7b-3d4c00812941@linaro.org>
-Date:   Thu, 28 Feb 2019 16:30:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Feb 2019 10:31:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387400AbfB1PJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:09:19 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AADB0206B8;
+        Thu, 28 Feb 2019 15:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551366559;
+        bh=QVcIaP+MA59SyAgFst32utuG2nTD5JgMRVtSCU06Ypk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=exTRBKfvSkxD81CpFVlSVj0nO2ljyc5AmqPoMj2emfI8xGwescY36ss6iMhywqHii
+         Er5BJpP8UPxPRyXuHiXc0LI2Grxa22vByaiXMEmSkRGhwcW5x37vCzOFeQDq4KHrPF
+         XhWjWlg6ksdjC6YeXMh0usn65yQa5tMRaYL0Lkww=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 41/81] irqchip/gic-v3-its: Fix ITT_entry_size accessor
+Date:   Thu, 28 Feb 2019 10:07:33 -0500
+Message-Id: <20190228150813.10256-41-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
+References: <20190228150813.10256-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190228135919.3747-5-ulf.hansson@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 14:59, Ulf Hansson wrote:
-> To allow arch back-end init ops to operate on the cpuidle driver for the
-> corresponding CPU, let's pass along a pointer to the struct cpuidle_driver*
-> and forward it the relevant layers of callbacks for ARM/ARM64.
-> 
-> Following changes for the PSCI firmware driver starts making use of this.
-> 
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: David Brown <david.brown@linaro.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+[ Upstream commit 56841070ccc87b463ac037d2d1f2beb8e5e35f0c ]
 
+According to ARM IHI 0069C (ID070116), we should use GITS_TYPER's
+bits [7:4] as ITT_entry_size instead of [8:4]. Although this is
+pretty annoying, it only results in a potential over-allocation
+of memory, and nothing bad happens.
 
+Fixes: 3dfa576bfb45 ("irqchip/gic-v3-its: Add probing for VLPI properties")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+[maz: massaged subject and commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/irqchip/arm-gic-v3.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index 071b4cbdf0104..c848a7cc502ee 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -319,7 +319,7 @@
+ #define GITS_TYPER_PLPIS		(1UL << 0)
+ #define GITS_TYPER_VLPIS		(1UL << 1)
+ #define GITS_TYPER_ITT_ENTRY_SIZE_SHIFT	4
+-#define GITS_TYPER_ITT_ENTRY_SIZE(r)	((((r) >> GITS_TYPER_ITT_ENTRY_SIZE_SHIFT) & 0x1f) + 1)
++#define GITS_TYPER_ITT_ENTRY_SIZE(r)	((((r) >> GITS_TYPER_ITT_ENTRY_SIZE_SHIFT) & 0xf) + 1)
+ #define GITS_TYPER_IDBITS_SHIFT		8
+ #define GITS_TYPER_DEVBITS_SHIFT	13
+ #define GITS_TYPER_DEVBITS(r)		((((r) >> GITS_TYPER_DEVBITS_SHIFT) & 0x1f) + 1)
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.19.1
 
