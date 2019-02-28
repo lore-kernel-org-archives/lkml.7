@@ -2,155 +2,143 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CD3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F388C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E35121850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="swR6sdEv"
+	by mail.kernel.org (Postfix) with ESMTP id 10EED2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731983AbfB1Nle (ORCPT
+        id S1732004AbfB1Nlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:41:34 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41349 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725967AbfB1Nld (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:41:33 -0500
-Received: by mail-pf1-f196.google.com with SMTP id d25so9749571pfn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:41:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vtTGwUejXgguh3usIOSkA2LjGatLjq9nOVtB790HeP8=;
-        b=swR6sdEvXmYxCRoKQtS7cqbj26KsVI0EgGKujtUSW0ez5gQulX6G7GrmV/kgGEghnr
-         uMKvI5uLQFUw5zSjIgixrteq+YtcWGacUbRQiRESjKbmrYVSm3IA4tWvSUAkEdHFo4V8
-         ea7H/WfegBjDQZZTNtB/05o3ziiDwoAxCZIBEyeF8W4loNwY5mkrIbARYBx9HzRBn02h
-         v4zbAVyHNMIriyYM6Q/OdfDzxCd48tPbVcGuiHbuXTRL5UOQ030mH/8B345QthsbDxDz
-         c5ilftyMz+Gqw4n0qveGKrc80iqCQC7DkfKTEvxwMiJ00EAOn7EwOL7AYprooxY8HDSS
-         M2+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=vtTGwUejXgguh3usIOSkA2LjGatLjq9nOVtB790HeP8=;
-        b=Ry/7RV1q/Sw6Oc2mehyApygmecFrdTtjlhXy73lEfhxfs0uPCf39U5KyeYQxo9HhHu
-         xr1RMAIAcGrZzeRkEnxdwVQ2vevN4a4xKyPsPCLam5TAif8RbLqLky0+uWW8i/zjZ+DL
-         w+IqWjth0s06yFS3MFVPoOKAky3zJHZLMpWQXWtK7RsZU7xFAm/H8InYUyjwKjUls1Kn
-         Jb+bba4q5nojhsSx4iL7PM0R45cF6YpB9lvDIoaOuxCam93lyLfpNqaMqFLWevTsADdz
-         53uGwGNcDbMEdGZv6uml6/muIqTQhcoTgFsYrBWajtfAY838CfHWC0EYcO7vRbVguLeI
-         Bk4Q==
-X-Gm-Message-State: AHQUAuZtL7GLKo9AhFyY9JxWe0f6eYK1Tgjl5iTjegVTU//tnU4bOBgx
-        j+avpQ641heIFWnULJqLAPZF8g==
-X-Google-Smtp-Source: AHgI3IaGd8fAhGRSfwOFXNo+o+XKWOEfbfMqKhdT/uiS8b+oBzs4D58yV0YHBjrXv1oy4IBujTQs0Q==
-X-Received: by 2002:a62:6453:: with SMTP id y80mr7421268pfb.203.1551361292437;
-        Thu, 28 Feb 2019 05:41:32 -0800 (PST)
-Received: from localhost.localdomain (2001-b400-e706-b6eb-8c00-6a08-1689-4d5a.emome-ip6.hinet.net. [2001:b400:e706:b6eb:8c00:6a08:1689:4d5a])
-        by smtp.gmail.com with ESMTPSA id 186sm36777133pga.36.2019.02.28.05.41.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 05:41:31 -0800 (PST)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        patches@opensource.cirrus.com,
-        Ashish Jangam <ashish.jangam@kpitcummins.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Paul Kocialkowski <contact@paulk.fr>,
-        Milo Kim <milo.kim@ti.com>, Keerthy <j-keerthy@ti.com>,
-        James Ban <James.Ban.opensource@diasemi.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 11/11] regulator: wm831x-dcdc: Convert to use regulator_set/get_current_limit_regmap
-Date:   Thu, 28 Feb 2019 21:40:22 +0800
-Message-Id: <20190228134022.32625-12-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190228134022.32625-1-axel.lin@ingics.com>
-References: <20190228134022.32625-1-axel.lin@ingics.com>
+        Thu, 28 Feb 2019 08:41:55 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:45678 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725967AbfB1Nlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 08:41:55 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C05563247895;
+        Thu, 28 Feb 2019 13:41:54 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-41.pek2.redhat.com [10.72.12.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7F0EB1973E;
+        Thu, 28 Feb 2019 13:41:51 +0000 (UTC)
+Date:   Thu, 28 Feb 2019 21:41:46 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH 2/3] scripts/ima: define a set of common functions
+Message-ID: <20190228134146.GA7528@dhcp-128-65.nay.redhat.com>
+References: <1548960936-7800-1-git-send-email-zohar@linux.ibm.com>
+ <1548960936-7800-3-git-send-email-zohar@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1548960936-7800-3-git-send-email-zohar@linux.ibm.com>
+User-Agent: Mutt/1.9.5 (2018-04-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 28 Feb 2019 13:41:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use regulator_set/get_current_limit_regmap helpers to save some code.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/wm831x-dcdc.c | 42 +++++----------------------------
- 1 file changed, 6 insertions(+), 36 deletions(-)
-
-diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
-index 828f262d6be0..12b422373580 100644
---- a/drivers/regulator/wm831x-dcdc.c
-+++ b/drivers/regulator/wm831x-dcdc.c
-@@ -308,48 +308,14 @@ static const unsigned int wm831x_dcdc_ilim[] = {
- 	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
- };
+Hi Mimi,
  
--static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
--					   int min_uA, int max_uA)
--{
--	struct wm831x_dcdc *dcdc = rdev_get_drvdata(rdev);
--	struct wm831x *wm831x = dcdc->wm831x;
--	u16 reg = dcdc->base + WM831X_DCDC_CONTROL_2;
--	int i;
--
--	for (i = ARRAY_SIZE(wm831x_dcdc_ilim) - 1; i >= 0; i--) {
--		if ((min_uA <= wm831x_dcdc_ilim[i]) &&
--		    (wm831x_dcdc_ilim[i] <= max_uA))
--			return wm831x_set_bits(wm831x, reg,
--					       WM831X_DC1_HC_THR_MASK,
--						i << WM831X_DC1_HC_THR_SHIFT);
--	}
--
--	return -EINVAL;
--}
--
--static int wm831x_buckv_get_current_limit(struct regulator_dev *rdev)
--{
--	struct wm831x_dcdc *dcdc = rdev_get_drvdata(rdev);
--	struct wm831x *wm831x = dcdc->wm831x;
--	u16 reg = dcdc->base + WM831X_DCDC_CONTROL_2;
--	int val;
--
--	val = wm831x_reg_read(wm831x, reg);
--	if (val < 0)
--		return val;
--
--	val = (val & WM831X_DC1_HC_THR_MASK) >> WM831X_DC1_HC_THR_SHIFT;
--	return wm831x_dcdc_ilim[val];
--}
--
- static const struct regulator_ops wm831x_buckv_ops = {
- 	.set_voltage_sel = wm831x_buckv_set_voltage_sel,
- 	.get_voltage_sel = wm831x_buckv_get_voltage_sel,
- 	.list_voltage = regulator_list_voltage_linear_range,
- 	.map_voltage = regulator_map_voltage_linear_range,
- 	.set_suspend_voltage = wm831x_buckv_set_suspend_voltage,
--	.set_current_limit = wm831x_buckv_set_current_limit,
--	.get_current_limit = wm831x_buckv_get_current_limit,
-+	.set_current_limit = regulator_set_current_limit_regmap,
-+	.get_current_limit = regulator_get_current_limit_regmap,
- 
- 	.is_enabled = regulator_is_enabled_regmap,
- 	.enable = regulator_enable_regmap,
-@@ -475,6 +441,10 @@ static int wm831x_buckv_probe(struct platform_device *pdev)
- 	dcdc->desc.owner = THIS_MODULE;
- 	dcdc->desc.enable_reg = WM831X_DCDC_ENABLE;
- 	dcdc->desc.enable_mask = 1 << id;
-+	dcdc->desc.csel_reg = dcdc->base + WM831X_DCDC_CONTROL_2;
-+	dcdc->desc.csel_mask = WM831X_DC1_HC_THR_MASK;
-+	dcdc->desc.n_current_limits = ARRAY_SIZE(wm831x_dcdc_ilim);
-+	dcdc->desc.curr_table = wm831x_dcdc_ilim;
- 
- 	ret = wm831x_reg_read(wm831x, dcdc->base + WM831X_DCDC_ON_CONFIG);
- 	if (ret < 0) {
--- 
-2.17.1
+Sorry for jumping in late, just noticed this kexec selftests, I think we
+also need a kexec load test not only for ima, but for general kexec
 
+On 01/31/19 at 01:55pm, Mimi Zohar wrote:
+> Define and move get_secureboot_mode() to a common file for use by other
+> tests.
+> 
+> Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+> ---
+>  tools/testing/selftests/ima/common_lib.sh      | 20 ++++++++++++++++++++
+>  tools/testing/selftests/ima/test_kexec_load.sh | 17 +++--------------
+>  2 files changed, 23 insertions(+), 14 deletions(-)
+>  create mode 100755 tools/testing/selftests/ima/common_lib.sh
+> 
+> diff --git a/tools/testing/selftests/ima/common_lib.sh b/tools/testing/selftests/ima/common_lib.sh
+> new file mode 100755
+> index 000000000000..ae097a634da5
+> --- /dev/null
+> +++ b/tools/testing/selftests/ima/common_lib.sh
+> @@ -0,0 +1,20 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0+
+> +
+> +get_secureboot_mode()
+> +{
+> +	EFIVARFS="/sys/firmware/efi/efivars"
+> +	# Make sure that efivars is mounted in the normal location
+> +	if ! grep -q "^\S\+ $EFIVARFS efivarfs" /proc/mounts; then
+> +		echo "$TEST: efivars is not mounted on $EFIVARFS" >&2
+> +		exit $ksft_skip
+> +	fi
+> +
+> +	# Get secureboot mode
+> +	file="$EFIVARFS/SecureBoot-*"
+> +	if [ ! -e $file ]; then
+> +		echo "$TEST: unknown secureboot mode" >&2
+> +		exit $ksft_skip
+> +	fi
+> +	return `hexdump $file | awk '{print substr($4,length($4),1)}'`
+> +}
+
+Do you want to get the Secureboot status here?
+I got some advice from Peter Jones previously, thus we have below
+in our kdump scripts:
+https://src.fedoraproject.org/cgit/rpms/kexec-tools.git/tree/kdump-lib.sh
+ 
+See the function is_secure_boot_enforced(), probably you can refer to
+that function and check setup mode as well.
+
+> diff --git a/tools/testing/selftests/ima/test_kexec_load.sh b/tools/testing/selftests/ima/test_kexec_load.sh
+> index 74423c4229e2..5e3566738888 100755
+> --- a/tools/testing/selftests/ima/test_kexec_load.sh
+> +++ b/tools/testing/selftests/ima/test_kexec_load.sh
+> @@ -5,7 +5,7 @@
+>  # is booted in secureboot mode.
+>  
+>  TEST="$0"
+> -EFIVARFS="/sys/firmware/efi/efivars"
+> +. ./common_lib.sh
+>  rc=0
+>  
+>  # Kselftest framework requirement - SKIP code is 4.
+> @@ -17,19 +17,8 @@ if [ $(id -ru) != 0 ]; then
+>  	exit $ksft_skip
+>  fi
+>  
+> -# Make sure that efivars is mounted in the normal location
+> -if ! grep -q "^\S\+ $EFIVARFS efivarfs" /proc/mounts; then
+> -	echo "$TEST: efivars is not mounted on $EFIVARFS" >&2
+> -	exit $ksft_skip
+> -fi
+> -
+> -# Get secureboot mode
+> -file="$EFIVARFS/SecureBoot-*"
+> -if [ ! -e $file ]; then
+> -	echo "$TEST: unknown secureboot mode" >&2
+> -	exit $ksft_skip
+> -fi
+> -secureboot=`hexdump $file | awk '{print substr($4,length($4),1)}'`
+> +get_secureboot_mode
+> +secureboot=$?
+>  
+>  # kexec_load should fail in secure boot mode
+>  KERNEL_IMAGE="/boot/vmlinuz-`uname -r`"
+> -- 
+> 2.7.5
+> 
+Thanks
+Dave
