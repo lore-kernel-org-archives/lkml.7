@@ -2,97 +2,101 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC95C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771CBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0452133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455AC2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551368083;
-	bh=fJK6iMzVu0kVdh0LvvygSDe9BB+1XB4OIFTMCsjXWH8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=TwKkf/k5TBTNL6XpgQP5MLHi4M9RGNVSDQ5EwRrYOcpRGtg6CxVBZ3pbeFe6v3I3O
-	 OBpclqbinPq+ULif96HX0Wj9dTEVjGK7KTtJHcTmAcODiBStftB+6ldYXWG6/dScU+
-	 0y6bS0bH2ROY9LVy2giKLN64c+Ayp+DsOuj/jemE=
+	s=default; t=1551368087;
+	bh=/gXx+sHByFhAxCM4gt0GeWtBOcR9/XWDE9CcRP0bQPw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uDd4nKjYnsZUS8A1eqXzC0Dimazpw3wuvxL+myNPqtzPMznY6z8FOXTVlzj+mlkBZ
+	 zwIP+we5lzgBgrpPts6ia7QzwlMo+BUw3oYLf4yuiYUOu/iWG9tQ1TYonsnnJIvCED
+	 2c92QKTmkPCfTY9WLFwuTgHhWgcoSAaRk95gjRSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387761AbfB1Pem (ORCPT
+        id S1731454AbfB1Pep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:34:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35766 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:34:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732065AbfB1Pek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:34:40 -0500
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1732492AbfB1PIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:08:22 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3B59206DD;
-        Thu, 28 Feb 2019 15:34:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABA8C218D3;
+        Thu, 28 Feb 2019 15:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551368080;
-        bh=fJK6iMzVu0kVdh0LvvygSDe9BB+1XB4OIFTMCsjXWH8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MrnjIUGhQYCBUFZqVBISbCFt65iTZqGIvbTw3c1L4+4MNWQ/HRV/cMgRORfqfU5I+
-         iOuBiWw3zVaPVKBp/q+bGN5EgQj2XvjbRlN/fILpHE78hr3Uv0Z/Y50jqNR68wFV+O
-         2y8KUMiFis5q+NpiIJsGfP6smlGrxo38yMniKptw=
-Date:   Thu, 28 Feb 2019 16:34:37 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Eric Biggers <ebiggers@kernel.org>, kvm@vger.kernel.org,
-        syzbot <syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        penguin-kernel@i-love.sakura.ne.jp,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: [PATCH] kvm: properly check debugfs dentry before using it
-Message-ID: <20190228153437.GI8481@kroah.com>
+        s=default; t=1551366501;
+        bh=/gXx+sHByFhAxCM4gt0GeWtBOcR9/XWDE9CcRP0bQPw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IXTRLKk2F7QOSaEfH7CAjwJVVypMrQPJGZlJgzwtLt/7IbCY29+lMS5kUl/R1MJrc
+         cdKe+dInf0FsqUtonlGSMU3hszzDJtG//tZ7OjhUheNseHyy9B7sz7S+1jwW/WQ9AG
+         TQJ1HczWkEtxTwf3fAOiWFMng1tOowSDeIq/iAJc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.20 06/81] ARM: dts: meson8b: ec100: mark the SD card detection GPIO active-low
+Date:   Thu, 28 Feb 2019 10:06:58 -0500
+Message-Id: <20190228150813.10256-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
+References: <20190228150813.10256-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-debugfs can now report an error code if something went wrong instead of
-just NULL.  So if the return value is to be used as a "real" dentry, it
-needs to be checked if it is an error before dereferencing it.
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-This is now happening because of ff9fb72bc077 ("debugfs: return error
-values, not NULL").  syzbot has found a way to trigger multiple debugfs
-files attempting to be created, which fails, and then the error code
-gets passed to dentry_path_raw() which obviously does not like it.
+[ Upstream commit c8bfe65fb1fb7a43d766df1dfa379406112cba61 ]
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: kvm@vger.kernel.org
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
+tree") SD cards are not detected anymore.
+
+The CD GPIO is "active low" on the EC-100. The MMC dt-bindings specify:
+"[...] using the "cd-inverted" property means, that the CD line is active
+high, i.e. it is high, when a card is inserted".
+
+Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
+drop the "cd-inverted" property. This makes the definition consistent
+with the existing dt-bindings and fixes the check whether an SD card is
+inserted.
+
+Fixes: bbedc1f1d90e33 ("ARM: dts: meson8b: Add support for the Endless Mini (EC-100)")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ arch/arm/boot/dts/meson8b-ec100.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Linus, this should go in before 5.0-final is out, as it resolves a
-problem found by syzbot.  Paolo has given his ack for me to send this
-directly to you.  If you want this in [GIT PULL] format, I can do that
-as well.
-
- virt/kvm/kvm_main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -4044,7 +4044,7 @@ static void kvm_uevent_notify_change(uns
- 	}
- 	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
+diff --git a/arch/arm/boot/dts/meson8b-ec100.dts b/arch/arm/boot/dts/meson8b-ec100.dts
+index 0872f6e3abf56..d50fc2f60fa31 100644
+--- a/arch/arm/boot/dts/meson8b-ec100.dts
++++ b/arch/arm/boot/dts/meson8b-ec100.dts
+@@ -205,8 +205,7 @@
+ 		cap-sd-highspeed;
+ 		disable-wp;
  
--	if (kvm->debugfs_dentry) {
-+	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
- 		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
+-		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-		cd-inverted;
++		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
  
- 		if (p) {
+ 		vmmc-supply = <&vcc_3v3>;
+ 	};
+-- 
+2.19.1
+
