@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0031C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5E0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF8420C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB5E2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v5dc9YJ2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FVXnHtLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732526AbfB1N7g (ORCPT
+        id S1732647AbfB1N75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:59:36 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39223 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732397AbfB1N7c (ORCPT
+        Thu, 28 Feb 2019 08:59:57 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43534 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732502AbfB1N7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:59:32 -0500
-Received: by mail-lj1-f194.google.com with SMTP id g80so17201774ljg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:59:30 -0800 (PST)
+        Thu, 28 Feb 2019 08:59:36 -0500
+Received: by mail-lj1-f196.google.com with SMTP id z20so17191981ljj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:59:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XTL5kvu2ODR6s8WzbGt1Q9EGWFN00ZZECyFc5WKOL08=;
-        b=v5dc9YJ2CfLXA88Ddg4mdr8OXTZWdV8R70YevFWUfu2VAN9Rybotd5gA5nzXDb6gT7
-         ZLoVqbpcCW68+/GbRxNIeO0Q/qO9KbPtG3wwIVHw/xiMXN3fm+eI9683YYbfZGfdwZ94
-         4KxI094X2myvVe84L6FSjJSGiwzf8aSQCuFCQKcOGtknhZ3BKbkNK30++qMcxYHYsXIJ
-         LvLezvV4gropCpiWw7dRzW/ni27ZK0rip3bjrOw/g83OAkknUrab1jGopnDuHV+iRGIe
-         tbP7xRud7elrzW1PRRsugDFX0ZmQhUqrwFq7W4Q95XsIG4QbZ4S9fS7eKK63VCw3QULE
-         0t/g==
+        bh=hYUbL8LbBo82QhtQinEvxE8lGJZ9H5Ith2yhnCB+jfs=;
+        b=FVXnHtLFTrcIsi6QjOHvDk72G+oUmcjjHSBm6gOpkR8yahj/V1QIS1G5ehizJn1wuA
+         6WDxEgGJRdSbqz4DDEbcVpENyPnwXeqdMWWNAFf9lN+6qzc9QRoeSDhIWF+icNXyz6fW
+         UQYxOWQ4ENTXypM11P/07ftev62Jo66OAGARyGbzZPAlGiLw1OnYzQa9rghzecD48VB6
+         cBpxHW47WDo70pErlO17ptrY7aJUSIdPaZ0DoE7aUGropbrhf5DwN3jkIUXNm1Aj6hXX
+         xnXciiS5mAPAWRrtfhwI6rkU1IsSbT5aiYPp1XShUC+jNSV0amTsj6e+DCLyveFBNam8
+         2A5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=XTL5kvu2ODR6s8WzbGt1Q9EGWFN00ZZECyFc5WKOL08=;
-        b=Gn4ItGJ+xHs/Ow5t8sCL80KNakJuWcbSfcj1WcZD4/wH9BJCFxbOvWUJq7f6b+IcA+
-         35H6VunS5kPY8gExtmJ0Hc9A7p8aTniavAKzx1UaZ+jWHD1ACN1j+AebA+KNlt0rw3O6
-         RIYb5hKB5UZUhYOXq43k0S5DVOFsONpFxeUZGLejbBUCr1IvLz/WmthSdtj0AR/VuWxW
-         5NNdQ2M45XxVOm3uxnCGtCQHo/MCX8TDwHZcZO9cjtfbchm2hv0vj0jik98v8cpID5qi
-         iCnZdxgCNnk42xZJKqzr+hTKCbOxaKsJl/2Dv222WMaWnvetEfqV/HEEZlAtoEr3/H/H
-         ot/g==
-X-Gm-Message-State: AHQUAuYqHPnSznJ6jqCUO/R56scg6wzZ7Wy5VSyDVuOLKmvJRf1OGQ39
-        9HUQRWBt7dqBSdmOfpwgTp0fMg==
-X-Google-Smtp-Source: AHgI3IY2ox/XeGe6KsY5KJUJU6v/IZ2wfliDAnc848cYmdj8zrb5B2R5Xl4tkL4goYIX7vfo9L+BDw==
-X-Received: by 2002:a2e:21d2:: with SMTP id h79mr4411563lji.39.1551362369923;
-        Thu, 28 Feb 2019 05:59:29 -0800 (PST)
+        bh=hYUbL8LbBo82QhtQinEvxE8lGJZ9H5Ith2yhnCB+jfs=;
+        b=IMZu7KZMpKdMbVZap3R3X+L5rJNZT07cWk0su1/W/CmD7w92heJxNNUCNnnpTob4S4
+         3GnJBkqqzGLHa7mHU8YuKqDGpKO3rALUGvvY2xI66gfQTcH3I/yXCY4JTmQCMLu2n5ON
+         U2hcAucIB0zS9S1TswyN4aB1XIm00iVd9qsAu6Tq8EKt10WShrqWo+VmF49EROH+OhzY
+         3HSVUeB96RNBT86yDUjQE/ahLXmqJvJ07AtELndO0rG/tH0YbT7YDsY90lBFibGee1Qe
+         +ZYKME+ob3klJ5Ez+W95KbTkswHoVkgIC2Mr0CzjXEZH8CezQtgkwoFqracUbN0M4BOG
+         L50g==
+X-Gm-Message-State: AHQUAuaSHBvY44dGodsMl6o7EHrkKHnEOFrlFfdudkRjm35wS71YnmwT
+        8naEK/CtVhLT41c0IulH/UBOiQ==
+X-Google-Smtp-Source: AHgI3IZO2Wq9Mtzo7x2cc9k3I15Qn/9ArqedLsbZ57QDgmSES47es6+2O5q3dGm9ObdOHf0PNMrJ8w==
+X-Received: by 2002:a2e:2202:: with SMTP id i2mr5173940lji.170.1551362374036;
+        Thu, 28 Feb 2019 05:59:34 -0800 (PST)
 Received: from uffe-XPS-13-9360.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id v20sm4090265ljv.83.2019.02.28.05.59.28
+        by smtp.gmail.com with ESMTPSA id v20sm4090265ljv.83.2019.02.28.05.59.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 05:59:29 -0800 (PST)
+        Thu, 28 Feb 2019 05:59:33 -0800 (PST)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Sudeep Holla <sudeep.holla@arm.com>,
@@ -65,9 +65,9 @@ Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] drivers: firmware: psci: Split psci_dt_cpu_init_idle()
-Date:   Thu, 28 Feb 2019 14:59:15 +0100
-Message-Id: <20190228135919.3747-4-ulf.hansson@linaro.org>
+Subject: [PATCH 6/7] drivers: firmware: psci: Simplify error path of psci_dt_init()
+Date:   Thu, 28 Feb 2019 14:59:18 +0100
+Message-Id: <20190228135919.3747-7-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190228135919.3747-1-ulf.hansson@linaro.org>
 References: <20190228135919.3747-1-ulf.hansson@linaro.org>
@@ -76,83 +76,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's split the psci_dt_cpu_init_idle() function into two functions. This
-makes the code clearer and provides better re-usability.
+Instead of having each psci init function taking care of the of_node_put(),
+let's deal with that from psci_dt_init(), as this enables a bit simpler
+error path for each psci init function.
 
 Cc: Lina Iyer <ilina@codeaurora.org>
 Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/firmware/psci/psci.c | 42 ++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
+ drivers/firmware/psci/psci.c | 23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-index c80ec1d03274..9788bfc1cf8b 100644
+index cbfc936d251c..14d25b54b9f2 100644
 --- a/drivers/firmware/psci/psci.c
 +++ b/drivers/firmware/psci/psci.c
-@@ -270,9 +270,26 @@ static int __init psci_features(u32 psci_func_id)
- #ifdef CONFIG_CPU_IDLE
- static DEFINE_PER_CPU_READ_MOSTLY(u32 *, psci_power_state);
+@@ -609,9 +609,9 @@ static int __init psci_0_2_init(struct device_node *np)
+ 	int err;
  
-+static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
-+{
-+	int err = of_property_read_u32(np, "arm,psci-suspend-param", state);
-+
-+	if (err) {
-+		pr_warn("%pOF missing arm,psci-suspend-param property\n", np);
-+		return err;
-+	}
-+
-+	if (!psci_power_state_is_valid(*state)) {
-+		pr_warn("Invalid PSCI power state %#x\n", *state);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int psci_dt_cpu_init_idle(struct device_node *cpu_node, int cpu)
- {
--	int i, ret, count = 0;
-+	int i, ret = 0, count = 0;
- 	u32 *psci_states;
- 	struct device_node *state_node;
- 
-@@ -291,29 +308,16 @@ static int psci_dt_cpu_init_idle(struct device_node *cpu_node, int cpu)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < count; i++) {
--		u32 state;
+ 	err = get_set_conduit_method(np);
 -
- 		state_node = of_parse_phandle(cpu_node, "cpu-idle-states", i);
-+		ret = psci_dt_parse_state_node(state_node, &psci_states[i]);
-+		of_node_put(state_node);
- 
--		ret = of_property_read_u32(state_node,
--					   "arm,psci-suspend-param",
--					   &state);
--		if (ret) {
--			pr_warn(" * %pOF missing arm,psci-suspend-param property\n",
--				state_node);
--			of_node_put(state_node);
-+		if (ret)
- 			goto free_mem;
--		}
- 
--		of_node_put(state_node);
--		pr_debug("psci-power-state %#x index %d\n", state, i);
--		if (!psci_power_state_is_valid(state)) {
--			pr_warn("Invalid PSCI power state %#x\n", state);
--			ret = -EINVAL;
--			goto free_mem;
--		}
--		psci_states[i] = state;
-+		pr_debug("psci-power-state %#x index %d\n", psci_states[i], i);
- 	}
+ 	if (err)
+-		goto out_put_node;
++		return err;
 +
- 	/* Idle states parsed correctly, initialize per-cpu pointer */
- 	per_cpu(psci_power_state, cpu) = psci_states;
- 	return 0;
+ 	/*
+ 	 * Starting with v0.2, the PSCI specification introduced a call
+ 	 * (PSCI_VERSION) that allows probing the firmware version, so
+@@ -619,11 +619,7 @@ static int __init psci_0_2_init(struct device_node *np)
+ 	 * can be carried out according to the specific version reported
+ 	 * by firmware
+ 	 */
+-	err = psci_probe();
+-
+-out_put_node:
+-	of_node_put(np);
+-	return err;
++	return psci_probe();
+ }
+ 
+ /*
+@@ -635,9 +631,8 @@ static int __init psci_0_1_init(struct device_node *np)
+ 	int err;
+ 
+ 	err = get_set_conduit_method(np);
+-
+ 	if (err)
+-		goto out_put_node;
++		return err;
+ 
+ 	pr_info("Using PSCI v0.1 Function IDs from DT\n");
+ 
+@@ -661,9 +656,7 @@ static int __init psci_0_1_init(struct device_node *np)
+ 		psci_ops.migrate = psci_migrate;
+ 	}
+ 
+-out_put_node:
+-	of_node_put(np);
+-	return err;
++	return 0;
+ }
+ 
+ static const struct of_device_id psci_of_match[] __initconst = {
+@@ -678,6 +671,7 @@ int __init psci_dt_init(void)
+ 	struct device_node *np;
+ 	const struct of_device_id *matched_np;
+ 	psci_initcall_t init_fn;
++	int ret;
+ 
+ 	np = of_find_matching_node_and_match(NULL, psci_of_match, &matched_np);
+ 
+@@ -685,7 +679,10 @@ int __init psci_dt_init(void)
+ 		return -ENODEV;
+ 
+ 	init_fn = (psci_initcall_t)matched_np->data;
+-	return init_fn(np);
++	ret = init_fn(np);
++
++	of_node_put(np);
++	return ret;
+ }
+ 
+ #ifdef CONFIG_ACPI
 -- 
 2.17.1
 
