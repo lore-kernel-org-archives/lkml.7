@@ -2,117 +2,159 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353F0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D84BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5A421850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64BE22184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:54:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="EhzMZZr+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730974AbfB1Hwl (ORCPT
+        id S1731143AbfB1HyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:52:41 -0500
-Received: from orcrist.hmeau.com ([104.223.48.154]:43062 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfB1Hwl (ORCPT
+        Thu, 28 Feb 2019 02:54:06 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37238 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730888AbfB1HyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:52:41 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1gzGUa-0007Sx-PN; Thu, 28 Feb 2019 15:52:32 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1gzGUV-00023R-25; Thu, 28 Feb 2019 15:52:27 +0800
-Date:   Thu, 28 Feb 2019 15:52:27 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     steffen.klassert@secunet.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] xfrm: policy: Fix out-of-bound array accesses in
- __xfrm_policy_unlink
-Message-ID: <20190228075226.hza3hydllddj65nd@gondor.apana.org.au>
-References: <20190228071859.17768-1-yuehaibing@huawei.com>
+        Thu, 28 Feb 2019 02:54:04 -0500
+Received: by mail-oi1-f196.google.com with SMTP id w66so15769287oia.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 23:54:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Oge1v0CI7B6i3pkVqnC/QfefhOu5L2twbcqoTGVhkCQ=;
+        b=EhzMZZr+sRfu5A8F4nCspWxurM7GYsUuit+M4eikNppiCN/FWZEg/OF2ZVRFUMf7Sm
+         wzzbepq/XbXWubVw6VHXPdLE74Z4AEiqKZ5KsekOmYyYUUFPVlsqLgNJtZWjvI6/n7YU
+         Xsh+BicS3fJnhOH8z8dWI20m0CauIc70eq0w0NUbdKeOIzovGSA546Ig//TY6MXLpOTX
+         jr613YEjvSXUnJAG3sOsYnRvyj0B5T6Xj0V6A8SM12RY5MsMLvrUETkZmJ9bPdxaIsqS
+         aVStzMCiTkjyVcpqYeAhNZEbo1VkW3Td7LQvioIiHqE8HHUN4U77ohdlQo8PWQttszpD
+         1+LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Oge1v0CI7B6i3pkVqnC/QfefhOu5L2twbcqoTGVhkCQ=;
+        b=P09SsAzjA+ldot6L5pUNOJ0q2t5lzzt2WannrkXT2clxc9dS6gdgLlvtihqAXgS2yf
+         mvcNmGmyz2bPFTzlEulBtfxzGzTh9oOjz5ziFgqzVkGYnBK5Hi33v7HAkuV4xrrtNIFZ
+         Nw94izi1W4HG9ACF1Zk6II2ESlFurGlTWcXPFyGpXInaSDLFRBYAB3X/8B27DM6IvcxX
+         D3ML03LS+8UF1Y1HqZtXcKu5R8l8Va9GYxGbx+d5Kw5Qq82yHFj73+olomyZIuwortdj
+         /86QQEnCx3Ji5/ETOJIl1jXBnOd2oHdNNl1NWMdXIWTVFhbUnUmjt9QEC7C+OIqEhSLV
+         Z2og==
+X-Gm-Message-State: AHQUAuYdvvDioFGcZFc+ZVBxw03MetEXYHYIox5N5g4Okm9ke/AdwQEA
+        4Ogx8bHScjhBMDjlD7CuTnGEGiBYu43jPF1igAswpA==
+X-Google-Smtp-Source: AHgI3IbkiPdsFeFzguag0b4I3zroh+QeHRG2uCIfc+UreYswnZM9YP/qszsvAyNGZLPR65RdvNitqZGb90bHbB/ahMU=
+X-Received: by 2002:aca:4a10:: with SMTP id x16mr2100135oia.73.1551340443762;
+ Wed, 27 Feb 2019 23:54:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228071859.17768-1-yuehaibing@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190225185727.BCBD768C@viggo.jf.intel.com>
+In-Reply-To: <20190225185727.BCBD768C@viggo.jf.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 27 Feb 2019 23:53:52 -0800
+Message-ID: <CAPcyv4g8ACK6ZOmDWVVhCAwcoaxRZdXQDt_8D6Omckuop8DapQ@mail.gmail.com>
+Subject: Re: [PATCH 0/5] [v5] Allow persistent memory to be used like normal RAM
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Juergen Gross <jgross@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 03:18:59PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> UBSAN report this:
-> 
-> UBSAN: Undefined behaviour in net/xfrm/xfrm_policy.c:1289:24
-> index 6 is out of range for type 'unsigned int [6]'
-> CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.4.162-514.55.6.9.x86_64+ #13
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
->  0000000000000000 1466cf39b41b23c9 ffff8801f6b07a58 ffffffff81cb35f4
->  0000000041b58ab3 ffffffff83230f9c ffffffff81cb34e0 ffff8801f6b07a80
->  ffff8801f6b07a20 1466cf39b41b23c9 ffffffff851706e0 ffff8801f6b07ae8
-> Call Trace:
->  <IRQ>  [<ffffffff81cb35f4>] __dump_stack lib/dump_stack.c:15 [inline]
->  <IRQ>  [<ffffffff81cb35f4>] dump_stack+0x114/0x1a0 lib/dump_stack.c:51
->  [<ffffffff81d94225>] ubsan_epilogue+0x12/0x8f lib/ubsan.c:164
->  [<ffffffff81d954db>] __ubsan_handle_out_of_bounds+0x16e/0x1b2 lib/ubsan.c:382
->  [<ffffffff82a25acd>] __xfrm_policy_unlink+0x3dd/0x5b0 net/xfrm/xfrm_policy.c:1289
->  [<ffffffff82a2e572>] xfrm_policy_delete+0x52/0xb0 net/xfrm/xfrm_policy.c:1309
->  [<ffffffff82a3319b>] xfrm_policy_timer+0x30b/0x590 net/xfrm/xfrm_policy.c:243
->  [<ffffffff813d3927>] call_timer_fn+0x237/0x990 kernel/time/timer.c:1144
->  [<ffffffff813d8e7e>] __run_timers kernel/time/timer.c:1218 [inline]
->  [<ffffffff813d8e7e>] run_timer_softirq+0x6ce/0xb80 kernel/time/timer.c:1401
->  [<ffffffff8120d6f9>] __do_softirq+0x299/0xe10 kernel/softirq.c:273
->  [<ffffffff8120e676>] invoke_softirq kernel/softirq.c:350 [inline]
->  [<ffffffff8120e676>] irq_exit+0x216/0x2c0 kernel/softirq.c:391
->  [<ffffffff82c5edab>] exiting_irq arch/x86/include/asm/apic.h:652 [inline]
->  [<ffffffff82c5edab>] smp_apic_timer_interrupt+0x8b/0xc0 arch/x86/kernel/apic/apic.c:926
->  [<ffffffff82c5c985>] apic_timer_interrupt+0xa5/0xb0 arch/x86/entry/entry_64.S:735
->  <EOI>  [<ffffffff81188096>] ? native_safe_halt+0x6/0x10 arch/x86/include/asm/irqflags.h:52
->  [<ffffffff810834d7>] arch_safe_halt arch/x86/include/asm/paravirt.h:111 [inline]
->  [<ffffffff810834d7>] default_idle+0x27/0x430 arch/x86/kernel/process.c:446
->  [<ffffffff81085f05>] arch_cpu_idle+0x15/0x20 arch/x86/kernel/process.c:437
->  [<ffffffff8132abc3>] default_idle_call+0x53/0x90 kernel/sched/idle.c:92
->  [<ffffffff8132b32d>] cpuidle_idle_call kernel/sched/idle.c:156 [inline]
->  [<ffffffff8132b32d>] cpu_idle_loop kernel/sched/idle.c:251 [inline]
->  [<ffffffff8132b32d>] cpu_startup_entry+0x60d/0x9a0 kernel/sched/idle.c:299
->  [<ffffffff8113e119>] start_secondary+0x3c9/0x560 arch/x86/kernel/smpboot.c:245
-> 
-> The issue is triggered as this:
-> 
-> xfrm_add_policy
->     -->verify_newpolicy_info  //check the index provided by user with XFRM_POLICY_MAX
-> 			      //In my case, the index is 0x6E6BB6, so it pass the check.
->     -->xfrm_policy_construct  //copy the user's policy and set xfrm_policy_timer
->     -->xfrm_policy_insert
-> 	--> __xfrm_policy_link //use the orgin dir, in my case is 2
-> 	--> xfrm_gen_index   //generate policy index, there is 0x6E6BB6
-> 
-> then xfrm_policy_timer be fired
-> 
-> xfrm_policy_timer
->    --> xfrm_policy_id2dir  //get dir from (policy index & 7), in my case is 6
->    --> xfrm_policy_delete
->       --> __xfrm_policy_unlink //access policy_count[dir], trigger out of range access
-> 
-> Add xfrm_policy_id2dir check in verify_newpolicy_info, make sure the computed dir is
-> valid, to fix the issue.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: e682adf021be ("xfrm: Try to honor policy index if it's supplied by user")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  net/xfrm/xfrm_user.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+[ add Stephen and Juergen ]
 
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On Mon, Feb 25, 2019 at 11:02 AM Dave Hansen
+<dave.hansen@linux.intel.com> wrote:
+>
+> This is a relatively small delta from v4.  The review comments seem
+> to be settling down, so it seems like we should start thinking about
+> how this might get merged.  Are there any objections to taking it in
+> via the nvdimm tree?
+>
+> Dan Williams, our intrepid nvdimm maintainer has said he would
+> appreciate acks on these from relevant folks before merging them.
+> Reviews/acks on any in the series would be welcome, but the last
+> two especially are lacking any non-Intel acks:
+>
+>         mm/resource: let walk_system_ram_range() search child resources
+>         dax: "Hotplug" persistent memory for use like normal RAM
+
+I've gone ahead and added this to the libnvdimm-for-next branch for
+wider exposure. Acks of course still welcome.
+
+Stephen, this collides with commit 357b4da50a62 "x86: respect memory
+size limiting via mem= parameter" in current -next. Here's my
+resolution for reference, basically just add the max_mem_size
+statement to Dave's rework. Holler if this causes any other problems.
+
+diff --cc mm/memory_hotplug.c
+index a9d5787044e1,b37f3a5c4833..c4f59ac21014
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@@ -102,28 -99,21 +102,24 @@@ u64 max_mem_size = U64_MAX
+  /* add this memory to iomem resource */
+  static struct resource *register_memory_resource(u64 start, u64 size)
+  {
+-       struct resource *res, *conflict;
++       struct resource *res;
++       unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
++       char *resource_name = "System RAM";
+
+ +      if (start + size > max_mem_size)
+ +              return ERR_PTR(-E2BIG);
+ +
+-       res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+-       if (!res)
+-               return ERR_PTR(-ENOMEM);
+-
+-       res->name = "System RAM";
+-       res->start = start;
+-       res->end = start + size - 1;
+-       res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+-       conflict =  request_resource_conflict(&iomem_resource, res);
+-       if (conflict) {
+-               if (conflict->desc == IORES_DESC_DEVICE_PRIVATE_MEMORY) {
+-                       pr_debug("Device unaddressable memory block "
+-                                "memory hotplug at %#010llx !\n",
+-                                (unsigned long long)start);
+-               }
+-               pr_debug("System RAM resource %pR cannot be added\n", res);
+-               kfree(res);
++       /*
++        * Request ownership of the new memory range.  This might be
++        * a child of an existing resource that was present but
++        * not marked as busy.
++        */
++       res = __request_region(&iomem_resource, start, size,
++                              resource_name, flags);
++
++       if (!res) {
++               pr_debug("Unable to reserve System RAM region:
+%016llx->%016llx\n",
++                               start, start + size);
+                return ERR_PTR(-EEXIST);
+        }
+        return res;
