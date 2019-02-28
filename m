@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3011C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBBEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0DF21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67F921850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732105AbfB1JHe (ORCPT
+        id S1732132AbfB1JID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:07:34 -0500
-Received: from mga14.intel.com ([192.55.52.115]:35826 "EHLO mga14.intel.com"
+        Thu, 28 Feb 2019 04:08:03 -0500
+Received: from foss.arm.com ([217.140.101.70]:44624 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732025AbfB1JHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:07:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 01:03:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,422,1544515200"; 
-   d="scan'208";a="127883193"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Feb 2019 01:03:31 -0800
-Received: from [10.251.86.205] (abudanko-mobl.ccr.corp.intel.com [10.251.86.205])
-        by linux.intel.com (Postfix) with ESMTP id E576658062A;
-        Thu, 28 Feb 2019 01:03:28 -0800 (PST)
-Subject: [PATCH v4 04/10] perf record: implement COMPRESSED event record and
- its attributes
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <b9483ec6-7885-eb19-917b-bf5be7e0c1ee@linux.intel.com>
-Date:   Thu, 28 Feb 2019 12:03:27 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1731800AbfB1JIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 04:08:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83855EBD;
+        Thu, 28 Feb 2019 01:08:02 -0800 (PST)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD6B13F738;
+        Thu, 28 Feb 2019 01:07:58 -0800 (PST)
+Subject: Re: [PATCH v6 3/6] arm64/kvm: context-switch ptrauth registers
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>
+References: <1550568271-5319-1-git-send-email-amit.kachhap@arm.com>
+ <1550568271-5319-4-git-send-email-amit.kachhap@arm.com>
+ <20190221122942.GC33673@lakrids.cambridge.arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <04f19012-3a18-60af-b43f-dc52139633bd@arm.com>
+Date:   Thu, 28 Feb 2019 14:37:56 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190221122942.GC33673@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,233 +57,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mark,
 
-Implemented PERF_RECORD_COMPRESSED event, related data types, header
-feature and functions to write, read and print feature attributes
-from the trace header section.
+On 2/21/19 5:59 PM, Mark Rutland wrote:
+> On Tue, Feb 19, 2019 at 02:54:28PM +0530, Amit Daniel Kachhap wrote:
+>> From: Mark Rutland <mark.rutland@arm.com>
+>>
+>> When pointer authentication is supported, a guest may wish to use it.
+>> This patch adds the necessary KVM infrastructure for this to work, with
+>> a semi-lazy context switch of the pointer auth state.
+>>
+>> Pointer authentication feature is only enabled when VHE is built
+>> in the kernel and present into CPU implementation so only VHE code
+>> paths are modified.
+> 
+> Nit: s/into/in the/
+ok.
+> 
+>>
+>> When we schedule a vcpu, we disable guest usage of pointer
+>> authentication instructions and accesses to the keys. While these are
+>> disabled, we avoid context-switching the keys. When we trap the guest
+>> trying to use pointer authentication functionality, we change to eagerly
+>> context-switching the keys, and enable the feature. The next time the
+>> vcpu is scheduled out/in, we start again. However the host key registers
+>> are saved in vcpu load stage as they remain constant for each vcpu
+>> schedule.
+>>
+>> Pointer authentication consists of address authentication and generic
+>> authentication, and CPUs in a system might have varied support for
+>> either. Where support for either feature is not uniform, it is hidden
+>> from guests via ID register emulation, as a result of the cpufeature
+>> framework in the host.
+>>
+>> Unfortunately, address authentication and generic authentication cannot
+>> be trapped separately, as the architecture provides a single EL2 trap
+>> covering both. If we wish to expose one without the other, we cannot
+>> prevent a (badly-written) guest from intermittently using a feature
+>> which is not uniformly supported (when scheduled on a physical CPU which
+>> supports the relevant feature). Hence, this patch expects both type of
+>> authentication to be present in a cpu.
+>>
+>> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+>> [Only VHE, key switch from from assembly, kvm_supports_ptrauth
+>> checks, save host key in vcpu_load]
+> 
+> Hmm, why do we need to do the key switch in assembly, given it's not
+> used in-kernel right now?
+> 
+> Is that in preparation for in-kernel pointer auth usage? If so, please
+> call that out in the commit message.
+ok sure.
+> 
+> [...]
+> 
+>> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+>> index 4e2fb87..5cac605 100644
+>> --- a/arch/arm64/kernel/traps.c
+>> +++ b/arch/arm64/kernel/traps.c
+>> @@ -749,6 +749,7 @@ static const char *esr_class_str[] = {
+>>   	[ESR_ELx_EC_CP14_LS]		= "CP14 LDC/STC",
+>>   	[ESR_ELx_EC_FP_ASIMD]		= "ASIMD",
+>>   	[ESR_ELx_EC_CP10_ID]		= "CP10 MRC/VMRS",
+>> +	[ESR_ELx_EC_PAC]		= "Pointer authentication trap",
+> 
+> For consistency with the other strings, can we please make this "PAC"?
+ok. It makes sense.
+> 
+> [...]
+> 
+>> diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
+>> index 82d1904..17cec99 100644
+>> --- a/arch/arm64/kvm/hyp/Makefile
+>> +++ b/arch/arm64/kvm/hyp/Makefile
+>> @@ -19,6 +19,7 @@ obj-$(CONFIG_KVM_ARM_HOST) += switch.o
+>>   obj-$(CONFIG_KVM_ARM_HOST) += fpsimd.o
+>>   obj-$(CONFIG_KVM_ARM_HOST) += tlb.o
+>>   obj-$(CONFIG_KVM_ARM_HOST) += hyp-entry.o
+>> +obj-$(CONFIG_KVM_ARM_HOST) += ptrauth-sr.o
+> 
+> Huh, so we're actually doing the switch in C code...
+> 
+>>   # KVM code is run at a different exception code with a different map, so
+>>   # compiler instrumentation that inserts callbacks or checks into the code may
+>> diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+>> index 675fdc1..b78cc15 100644
+>> --- a/arch/arm64/kvm/hyp/entry.S
+>> +++ b/arch/arm64/kvm/hyp/entry.S
+>> @@ -64,6 +64,12 @@ ENTRY(__guest_enter)
+>>   
+>>   	add	x18, x0, #VCPU_CONTEXT
+>>   
+>> +#ifdef	CONFIG_ARM64_PTR_AUTH
+>> +	// Prepare parameter for __ptrauth_switch_to_guest(vcpu, host, guest).
+>> +	mov	x2, x18
+>> +	bl	__ptrauth_switch_to_guest
+>> +#endif
+> 
+> ... and conditionally *calling* that switch code from assembly ...
+> 
+>> +
+>>   	// Restore guest regs x0-x17
+>>   	ldp	x0, x1,   [x18, #CPU_XREG_OFFSET(0)]
+>>   	ldp	x2, x3,   [x18, #CPU_XREG_OFFSET(2)]
+>> @@ -118,6 +124,17 @@ ENTRY(__guest_exit)
+>>   
+>>   	get_host_ctxt	x2, x3
+>>   
+>> +#ifdef	CONFIG_ARM64_PTR_AUTH
+>> +	// Prepare parameter for __ptrauth_switch_to_host(vcpu, guest, host).
+>> +	// Save x0, x2 which are used later in callee saved registers.
+>> +	mov	x19, x0
+>> +	mov	x20, x2
+>> +	sub	x0, x1, #VCPU_CONTEXT
+>> +	ldr	x29, [x2, #CPU_XREG_OFFSET(29)]
+>> +	bl	__ptrauth_switch_to_host
+>> +	mov	x0, x19
+>> +	mov	x2, x20
+>> +#endif
+> 
+> ... which adds a load of boilerplate for no immediate gain.
+Here some parameter optimizations may be possible as guest and host ctxt 
+can be derived from vcpu itself as James suggested in other review 
+comments. I thought about doing all save/restore in assembly but for 
+optimization now host keys are saved in vcpu_load stage in C so reused 
+those C codes here also.
 
-comp_mmap_len preserves the size of mmaped kernel buffer that was used
-during collection. comp_mmap_len size is used on loading stage as the
-size of decomp buffer for decompression of COMPRESSED events content.
+Again all these codes are beneficial with in-kernel ptrauth and hence in 
+case of strong objection may revert to old way.
+> 
+> Do we really need to do this in assembly today?
+During the last patchset review [1], James provided a lot of supporting 
+arguments to have these switch routines called from assembly due to 
+function outlining between kvm_vcpu_run_vhe() and __kvm_vcpu_run_nvhe().
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-record.c |  9 ++++++
- tools/perf/perf.h           |  1 +
- tools/perf/util/env.h       | 10 +++++++
- tools/perf/util/event.c     |  1 +
- tools/perf/util/event.h     |  7 +++++
- tools/perf/util/header.c    | 55 ++++++++++++++++++++++++++++++++++++-
- tools/perf/util/header.h    |  1 +
- 7 files changed, 83 insertions(+), 1 deletion(-)
+[1]: https://lkml.org/lkml/2019/1/31/662
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 6d78a7720698..4e992f51e914 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -357,6 +357,11 @@ static int record__mmap_flush_parse(const struct option *opt,
- 	return 0;
- }
- 
-+static int record__comp_enabled(struct record *rec)
-+{
-+	return rec->opts.comp_level > 0;
-+}
-+
- static int process_synthesized_event(struct perf_tool *tool,
- 				     union perf_event *event,
- 				     struct perf_sample *sample __maybe_unused,
-@@ -872,6 +877,9 @@ static void record__init_features(struct record *rec)
- 	if (!(rec->opts.use_clockid && rec->opts.clockid_res_ns))
- 		perf_header__clear_feat(&session->header, HEADER_CLOCKID);
- 
-+	if (!record__comp_enabled(rec))
-+		perf_header__clear_feat(&session->header, HEADER_COMPRESSED);
-+
- 	perf_header__clear_feat(&session->header, HEADER_STAT);
- }
- 
-@@ -1210,6 +1218,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		err = -1;
- 		goto out_child;
- 	}
-+	session->header.env.comp_mmap_len = session->evlist->mmap_len;
- 
- 	err = bpf__apply_obj_config();
- 	if (err) {
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index 7886cc9771cf..2c6caad45b10 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -86,6 +86,7 @@ struct record_opts {
- 	int	     nr_cblocks;
- 	int	     affinity;
- 	int	     mmap_flush;
-+	unsigned int comp_level;
- };
- 
- enum perf_affinity {
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index fb39e9af128f..7990d63ab764 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -65,6 +65,16 @@ struct perf_env {
- 	unsigned long long	 memory_bsize;
- 	u64                     clockid_res_ns;
- 	u32                     comp_ratio;
-+	u32			comp_ver;
-+	u32			comp_type;
-+	u32			comp_level;
-+	u32			comp_mmap_len;
-+};
-+
-+enum perf_compress_type {
-+	PERF_COMP_NONE = 0,
-+	PERF_COMP_ZSTD,
-+	PERF_COMP_MAX
- };
- 
- extern struct perf_env perf_env;
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index ba7be74fad6e..d1ad6c419724 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -68,6 +68,7 @@ static const char *perf_event__names[] = {
- 	[PERF_RECORD_EVENT_UPDATE]		= "EVENT_UPDATE",
- 	[PERF_RECORD_TIME_CONV]			= "TIME_CONV",
- 	[PERF_RECORD_HEADER_FEATURE]		= "FEATURE",
-+	[PERF_RECORD_COMPRESSED]		= "COMPRESSED",
- };
- 
- static const char *perf_ns__names[] = {
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 36ae7e92dab1..8a13aefe734e 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -254,6 +254,7 @@ enum perf_user_event_type { /* above any possible kernel type */
- 	PERF_RECORD_EVENT_UPDATE		= 78,
- 	PERF_RECORD_TIME_CONV			= 79,
- 	PERF_RECORD_HEADER_FEATURE		= 80,
-+	PERF_RECORD_COMPRESSED			= 81,
- 	PERF_RECORD_HEADER_MAX
- };
- 
-@@ -626,6 +627,11 @@ struct feature_event {
- 	char				data[];
- };
- 
-+struct compressed_event {
-+	struct perf_event_header	header;
-+	char				data[];
-+};
-+
- union perf_event {
- 	struct perf_event_header	header;
- 	struct mmap_event		mmap;
-@@ -659,6 +665,7 @@ union perf_event {
- 	struct feature_event		feat;
- 	struct ksymbol_event		ksymbol_event;
- 	struct bpf_event		bpf_event;
-+	struct compressed_event		pack;
- };
- 
- void perf_event__print_totals(void);
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 01b324c275b9..5dadc6e4df76 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1244,6 +1244,30 @@ static int write_mem_topology(struct feat_fd *ff __maybe_unused,
- 	return ret;
- }
- 
-+static int write_compressed(struct feat_fd *ff __maybe_unused,
-+			    struct perf_evlist *evlist __maybe_unused)
-+{
-+	int ret;
-+
-+	ret = do_write(ff, &(ff->ph->env.comp_ver), sizeof(ff->ph->env.comp_ver));
-+	if (ret)
-+		return ret;
-+
-+	ret = do_write(ff, &(ff->ph->env.comp_type), sizeof(ff->ph->env.comp_type));
-+	if (ret)
-+		return ret;
-+
-+	ret = do_write(ff, &(ff->ph->env.comp_level), sizeof(ff->ph->env.comp_level));
-+	if (ret)
-+		return ret;
-+
-+	ret = do_write(ff, &(ff->ph->env.comp_ratio), sizeof(ff->ph->env.comp_ratio));
-+	if (ret)
-+		return ret;
-+
-+	return do_write(ff, &(ff->ph->env.comp_mmap_len), sizeof(ff->ph->env.comp_mmap_len));
-+}
-+
- static void print_hostname(struct feat_fd *ff, FILE *fp)
- {
- 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
-@@ -1531,6 +1555,13 @@ static void print_cache(struct feat_fd *ff, FILE *fp __maybe_unused)
- 	}
- }
- 
-+static void print_compressed(struct feat_fd *ff, FILE *fp)
-+{
-+	fprintf(fp, "# compressed : %s, level = %d, ratio = %d\n",
-+		ff->ph->env.comp_type == PERF_COMP_ZSTD ? "Zstd" : "Unknown",
-+		ff->ph->env.comp_level, ff->ph->env.comp_ratio);
-+}
-+
- static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
- {
- 	const char *delimiter = "# pmu mappings: ";
-@@ -2373,6 +2404,27 @@ static int process_clockid(struct feat_fd *ff,
- 	return 0;
- }
- 
-+static int process_compressed(struct feat_fd *ff,
-+			      void *data __maybe_unused)
-+{
-+	if (do_read_u32(ff, &(ff->ph->env.comp_ver)))
-+		return -1;
-+
-+	if (do_read_u32(ff, &(ff->ph->env.comp_type)))
-+		return -1;
-+
-+	if (do_read_u32(ff, &(ff->ph->env.comp_level)))
-+		return -1;
-+
-+	if (do_read_u32(ff, &(ff->ph->env.comp_ratio)))
-+		return -1;
-+
-+	if (do_read_u32(ff, &(ff->ph->env.comp_mmap_len)))
-+		return -1;
-+
-+	return 0;
-+}
-+
- struct feature_ops {
- 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
- 	void (*print)(struct feat_fd *ff, FILE *fp);
-@@ -2432,7 +2484,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPN(CACHE,		cache,		true),
- 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
- 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
--	FEAT_OPR(CLOCKID,       clockid,        false)
-+	FEAT_OPR(CLOCKID,       clockid,        false),
-+	FEAT_OPR(COMPRESSED,	compressed,	false)
- };
- 
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 0d553ddca0a3..ee867075dc64 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -39,6 +39,7 @@ enum {
- 	HEADER_SAMPLE_TIME,
- 	HEADER_MEM_TOPOLOGY,
- 	HEADER_CLOCKID,
-+	HEADER_COMPRESSED,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
+Thanks,
+Amit D
+> 
+> Thanks,
+> Mark.
+> 
