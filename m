@@ -2,41 +2,42 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D62BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B565AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25ED520851
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F6520851
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbfB1DtP (ORCPT
+        id S1730668AbfB1Dta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 22:49:15 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4182 "EHLO huawei.com"
+        Wed, 27 Feb 2019 22:49:30 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34710 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730131AbfB1DtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 22:49:15 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F0448C0D36D239731C3D;
-        Thu, 28 Feb 2019 11:49:12 +0800 (CST)
-Received: from [127.0.0.1] (10.134.22.195) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
- 11:49:09 +0800
-Subject: Re: [PATCH v3] f2fs: rebuild nat_bits during umount
-To:     Chao Yu <chao@kernel.org>, <jaegeuk@kernel.org>
+        id S1730131AbfB1Dta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 22:49:30 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5C2159834BF2AE99520C;
+        Thu, 28 Feb 2019 11:49:28 +0800 (CST)
+Received: from [127.0.0.1] (10.134.22.195) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
+ 11:49:25 +0800
+Subject: Re: [PATCH v4] f2fs: add bio cache for IPU
+To:     <jaegeuk@kernel.org>
 CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <20190216222645.18341-1-chao@kernel.org>
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20190219081529.5106-1-yuchao0@huawei.com>
 From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <4c826d7c-0bd3-a63f-23f6-f15f8767719d@huawei.com>
-Date:   Thu, 28 Feb 2019 11:49:10 +0800
+Message-ID: <51637fbc-2b55-8215-952e-b155487cc63d@huawei.com>
+Date:   Thu, 28 Feb 2019 11:49:26 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190216222645.18341-1-chao@kernel.org>
+In-Reply-To: <20190219081529.5106-1-yuchao0@huawei.com>
 Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -49,277 +50,274 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Ping,
 
-Could you please try this new version?
-
-On 2019/2/17 6:26, Chao Yu wrote:
-> From: Chao Yu <yuchao0@huawei.com>
+On 2019/2/19 16:15, Chao Yu wrote:
+> SQLite in Wal mode may trigger sequential IPU write in db-wal file, after
+> commit d1b3e72d5490 ("f2fs: submit bio of in-place-update pages"), we
+> lost the chance of merging page in inner managed bio cache, result in
+> submitting more small-sized IO.
 > 
-> If all free_nat_bitmap are available, we can rebuild nat_bits from
-> free_nat_bitmap entirely during umount, let's make another chance
-> to reenable nat_bits for image.
+> So let's add temporary bio in writepages() to cache mergeable write IO as
+> much as possible.
+> 
+> Test case:
+> 1. xfs_io -f /mnt/f2fs/file -c "pwrite 0 65536" -c "fsync"
+> 2. xfs_io -f /mnt/f2fs/file -c "pwrite 0 65536" -c "fsync"
+> 
+> Before:
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65544, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65552, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65560, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65568, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65576, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65584, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65592, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65600, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65608, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65616, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65624, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65632, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65640, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65648, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65656, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65664, size = 4096
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), NODE, sector = 57352, size = 4096
+> 
+> After:
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65544, size = 65536
+> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), NODE, sector = 57368, size = 4096
 > 
 > Signed-off-by: Chao Yu <yuchao0@huawei.com>
 > ---
-> v3:
-> - fix to remove nat journal during umount.
->  fs/f2fs/checkpoint.c | 23 +++++++++----
->  fs/f2fs/f2fs.h       | 29 ++--------------
->  fs/f2fs/node.c       | 82 +++++++++++++++++++++++++++++++++++++-------
->  3 files changed, 89 insertions(+), 45 deletions(-)
+> v4:
+> - fix to set *bio to NULL in f2fs_submit_ipu_bio()
+> - spread f2fs_submit_ipu_bio()
+> - fix to count dirty encrypted page correctly in f2fs_merge_page_bio()
+> - remove redundant assignment of fio->last_block
+>  fs/f2fs/data.c    | 88 ++++++++++++++++++++++++++++++++++++++++++-----
+>  fs/f2fs/f2fs.h    |  3 ++
+>  fs/f2fs/segment.c |  5 ++-
+>  3 files changed, 86 insertions(+), 10 deletions(-)
 > 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 10a3ada28715..b4c9de4e6eb0 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1225,12 +1225,22 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	struct f2fs_checkpoint *ckpt = F2FS_CKPT(sbi);
->  	unsigned long flags;
->  
-> -	spin_lock_irqsave(&sbi->cp_lock, flags);
-> +	if (cpc->reason & CP_UMOUNT) {
-> +		if (le32_to_cpu(ckpt->cp_pack_total_block_count) >
-> +			sbi->blocks_per_seg - NM_I(sbi)->nat_bits_blocks) {
-> +			clear_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
-> +			f2fs_msg(sbi->sb, KERN_NOTICE,
-> +				"Disable nat_bits due to no space");
-> +		} else if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG) &&
-> +						f2fs_nat_bitmap_enabled(sbi)) {
-> +			f2fs_enable_nat_bits(sbi);
-> +			set_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
-> +			f2fs_msg(sbi->sb, KERN_NOTICE,
-> +				"Rebuild and enable nat_bits");
-> +		}
-> +	}
->  
-> -	if ((cpc->reason & CP_UMOUNT) &&
-> -			le32_to_cpu(ckpt->cp_pack_total_block_count) >
-> -			sbi->blocks_per_seg - NM_I(sbi)->nat_bits_blocks)
-> -		disable_nat_bits(sbi, false);
-> +	spin_lock_irqsave(&sbi->cp_lock, flags);
->  
->  	if (cpc->reason & CP_TRIMMED)
->  		__set_ckpt_flags(ckpt, CP_TRIMMED_FLAG);
-> @@ -1395,7 +1405,8 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	start_blk = __start_cp_next_addr(sbi);
->  
->  	/* write nat bits */
-> -	if (enabled_nat_bits(sbi, cpc)) {
-> +	if ((cpc->reason & CP_UMOUNT) &&
-> +			is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG)) {
->  		__u64 cp_ver = cur_cp_version(ckpt);
->  		block_t blk;
->  
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index c0d30810ef8a..a543354fc6bf 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -1615,33 +1615,6 @@ static inline void clear_ckpt_flags(struct f2fs_sb_info *sbi, unsigned int f)
->  	spin_unlock_irqrestore(&sbi->cp_lock, flags);
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 35910ff23582..e4c183e85de8 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -296,20 +296,20 @@ static void __submit_merged_bio(struct f2fs_bio_info *io)
+>  	io->bio = NULL;
 >  }
 >  
-> -static inline void disable_nat_bits(struct f2fs_sb_info *sbi, bool lock)
-> -{
-> -	unsigned long flags;
-> -
-> -	/*
-> -	 * In order to re-enable nat_bits we need to call fsck.f2fs by
-> -	 * set_sbi_flag(sbi, SBI_NEED_FSCK). But it may give huge cost,
-> -	 * so let's rely on regular fsck or unclean shutdown.
-> -	 */
-> -
-> -	if (lock)
-> -		spin_lock_irqsave(&sbi->cp_lock, flags);
-> -	__clear_ckpt_flags(F2FS_CKPT(sbi), CP_NAT_BITS_FLAG);
-> -	kvfree(NM_I(sbi)->nat_bits);
-> -	NM_I(sbi)->nat_bits = NULL;
-> -	if (lock)
-> -		spin_unlock_irqrestore(&sbi->cp_lock, flags);
-> -}
-> -
-> -static inline bool enabled_nat_bits(struct f2fs_sb_info *sbi,
-> -					struct cp_control *cpc)
-> -{
-> -	bool set = is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
-> -
-> -	return (cpc) ? (cpc->reason & CP_UMOUNT) && set : set;
-> -}
-> -
->  static inline void f2fs_lock_op(struct f2fs_sb_info *sbi)
+> -static bool __has_merged_page(struct f2fs_bio_info *io, struct inode *inode,
+> +static bool __has_merged_page(struct bio *bio, struct inode *inode,
+>  						struct page *page, nid_t ino)
 >  {
->  	down_read(&sbi->cp_rwsem);
-> @@ -2970,6 +2943,7 @@ int f2fs_truncate_inode_blocks(struct inode *inode, pgoff_t from);
->  int f2fs_truncate_xattr_node(struct inode *inode);
->  int f2fs_wait_on_node_pages_writeback(struct f2fs_sb_info *sbi,
->  					unsigned int seq_id);
-> +bool f2fs_nat_bitmap_enabled(struct f2fs_sb_info *sbi);
->  int f2fs_remove_inode_page(struct inode *inode);
->  struct page *f2fs_new_inode_page(struct inode *inode);
->  struct page *f2fs_new_node_page(struct dnode_of_data *dn, unsigned int ofs);
-> @@ -2993,6 +2967,7 @@ int f2fs_recover_xattr_data(struct inode *inode, struct page *page);
->  int f2fs_recover_inode_page(struct f2fs_sb_info *sbi, struct page *page);
->  int f2fs_restore_node_summary(struct f2fs_sb_info *sbi,
->  			unsigned int segno, struct f2fs_summary_block *sum);
-> +void f2fs_enable_nat_bits(struct f2fs_sb_info *sbi);
->  int f2fs_flush_nat_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc);
->  int f2fs_build_node_manager(struct f2fs_sb_info *sbi);
->  void f2fs_destroy_node_manager(struct f2fs_sb_info *sbi);
-> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> index f6ff84e29749..e364c6a84f3c 100644
-> --- a/fs/f2fs/node.c
-> +++ b/fs/f2fs/node.c
-> @@ -2038,6 +2038,24 @@ static void __move_free_nid(struct f2fs_sb_info *sbi, struct free_nid *i,
->  	}
->  }
+>  	struct bio_vec *bvec;
+>  	struct page *target;
+>  	int i;
 >  
-> +bool f2fs_nat_bitmap_enabled(struct f2fs_sb_info *sbi)
-> +{
-> +	struct f2fs_nm_info *nm_i = NM_I(sbi);
-> +	unsigned int i;
-> +	bool ret = true;
-> +
-> +	down_read(&nm_i->nat_tree_lock);
-> +	for (i = 0; i < nm_i->nat_blocks; i++) {
-> +		if (!test_bit_le(i, nm_i->nat_block_bitmap)) {
-> +			ret = false;
-> +			break;
-> +		}
-> +	}
-> +	up_read(&nm_i->nat_tree_lock);
-> +
-> +	return ret;
-> +}
-> +
->  static void update_free_nid_bitmap(struct f2fs_sb_info *sbi, nid_t nid,
->  							bool set, bool build)
->  {
-> @@ -2698,7 +2716,7 @@ static void __update_nat_bits(struct f2fs_sb_info *sbi, nid_t start_nid,
->  	int valid = 0;
->  	int i = 0;
+> -	if (!io->bio)
+> +	if (!bio)
+>  		return false;
 >  
-> -	if (!enabled_nat_bits(sbi, NULL))
-> +	if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG))
->  		return;
+>  	if (!inode && !page && !ino)
+>  		return true;
 >  
->  	if (nat_index == 0) {
-> @@ -2722,6 +2740,43 @@ static void __update_nat_bits(struct f2fs_sb_info *sbi, nid_t start_nid,
->  		__clear_bit_le(nat_index, nm_i->full_nat_bits);
->  }
+> -	bio_for_each_segment_all(bvec, io->bio, i) {
+> +	bio_for_each_segment_all(bvec, bio, i) {
 >  
-> +void f2fs_enable_nat_bits(struct f2fs_sb_info *sbi)
-> +{
-> +	struct f2fs_nm_info *nm_i = NM_I(sbi);
-> +	int nat_ofs;
-> +
-> +	down_read(&nm_i->nat_tree_lock);
-> +
-> +	for (nat_ofs = 0; nat_ofs < nm_i->nat_blocks; nat_ofs++) {
-> +		int valid = 0, nid_ofs = 0;
-> +
-> +		if (nat_ofs == 0) {
-> +			valid = 1;
-> +			nid_ofs = 1;
-> +		}
-> +
-> +		for (; nid_ofs < NAT_ENTRY_PER_BLOCK; nid_ofs++) {
-> +			if (!test_bit_le(nid_ofs,
-> +					nm_i->free_nid_bitmap[nat_ofs]))
-> +				valid++;
-> +		}
-> +
-> +		if (valid == 0) {
-> +			__set_bit_le(nat_ofs, nm_i->empty_nat_bits);
-> +			__clear_bit_le(nat_ofs, nm_i->full_nat_bits);
-> +			continue;
-> +		}
-> +
-> +		__clear_bit_le(nat_ofs, nm_i->empty_nat_bits);
-> +		if (valid == NAT_ENTRY_PER_BLOCK)
-> +			__set_bit_le(nat_ofs, nm_i->full_nat_bits);
-> +		else
-> +			__clear_bit_le(nat_ofs, nm_i->full_nat_bits);
-> +	}
-> +
-> +	up_read(&nm_i->nat_tree_lock);
-> +}
-> +
->  static int __flush_nat_entry_set(struct f2fs_sb_info *sbi,
->  		struct nat_entry_set *set, struct cp_control *cpc)
->  {
-> @@ -2738,7 +2793,7 @@ static int __flush_nat_entry_set(struct f2fs_sb_info *sbi,
->  	 * #1, flush nat entries to journal in current hot data summary block.
->  	 * #2, flush nat entries to nat page.
->  	 */
-> -	if (enabled_nat_bits(sbi, cpc) ||
-> +	if ((cpc->reason & CP_UMOUNT) ||
->  		!__has_cursum_space(journal, set->entry_cnt, NAT_JOURNAL))
->  		to_journal = false;
+>  		if (bvec->bv_page->mapping)
+>  			target = bvec->bv_page;
+> @@ -360,7 +360,7 @@ static void __submit_merged_write_cond(struct f2fs_sb_info *sbi,
+>  			struct f2fs_bio_info *io = sbi->write_io[btype] + temp;
 >  
-> @@ -2813,7 +2868,7 @@ int f2fs_flush_nat_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	int err = 0;
->  
->  	/* during unmount, let's flush nat_bits before checking dirty_nat_cnt */
-> -	if (enabled_nat_bits(sbi, cpc)) {
-> +	if (cpc->reason & CP_UMOUNT) {
->  		down_write(&nm_i->nat_tree_lock);
->  		remove_nats_in_journal(sbi);
->  		up_write(&nm_i->nat_tree_lock);
-> @@ -2829,7 +2884,7 @@ int f2fs_flush_nat_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	 * entries, remove all entries from journal and merge them
->  	 * into nat entry set.
->  	 */
-> -	if (enabled_nat_bits(sbi, cpc) ||
-> +	if ((cpc->reason & CP_UMOUNT) ||
->  		!__has_cursum_space(journal, nm_i->dirty_nat_cnt, NAT_JOURNAL))
->  		remove_nats_in_journal(sbi);
->  
-> @@ -2864,15 +2919,18 @@ static int __get_nat_bitmaps(struct f2fs_sb_info *sbi)
->  	__u64 cp_ver = cur_cp_version(ckpt);
->  	block_t nat_bits_addr;
->  
-> -	if (!enabled_nat_bits(sbi, NULL))
-> -		return 0;
-> -
->  	nm_i->nat_bits_blocks = F2FS_BLK_ALIGN((nat_bits_bytes << 1) + 8);
->  	nm_i->nat_bits = f2fs_kzalloc(sbi,
->  			nm_i->nat_bits_blocks << F2FS_BLKSIZE_BITS, GFP_KERNEL);
->  	if (!nm_i->nat_bits)
->  		return -ENOMEM;
->  
-> +	nm_i->full_nat_bits = nm_i->nat_bits + 8;
-> +	nm_i->empty_nat_bits = nm_i->full_nat_bits + nat_bits_bytes;
-> +
-> +	if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG))
-> +		return 0;
-> +
->  	nat_bits_addr = __start_cp_addr(sbi) + sbi->blocks_per_seg -
->  						nm_i->nat_bits_blocks;
->  	for (i = 0; i < nm_i->nat_bits_blocks; i++) {
-> @@ -2889,13 +2947,13 @@ static int __get_nat_bitmaps(struct f2fs_sb_info *sbi)
->  
->  	cp_ver |= (cur_cp_crc(ckpt) << 32);
->  	if (cpu_to_le64(cp_ver) != *(__le64 *)nm_i->nat_bits) {
-> -		disable_nat_bits(sbi, true);
-> +		clear_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
-> +		f2fs_msg(sbi->sb, KERN_NOTICE,
-> +			"Disable nat_bits due to incorrect cp_ver (%llu, %llu)",
-> +			cp_ver, le64_to_cpu(*(__le64 *)nm_i->nat_bits));
->  		return 0;
->  	}
->  
-> -	nm_i->full_nat_bits = nm_i->nat_bits + 8;
-> -	nm_i->empty_nat_bits = nm_i->full_nat_bits + nat_bits_bytes;
-> -
->  	f2fs_msg(sbi->sb, KERN_NOTICE, "Found nat_bits in checkpoint");
+>  			down_read(&io->io_rwsem);
+> -			ret = __has_merged_page(io, inode, page, ino);
+> +			ret = __has_merged_page(io->bio, inode, page, ino);
+>  			up_read(&io->io_rwsem);
+>  		}
+>  		if (ret)
+> @@ -429,6 +429,61 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
 >  	return 0;
 >  }
-> @@ -2906,7 +2964,7 @@ static inline void load_free_nid_bitmap(struct f2fs_sb_info *sbi)
->  	unsigned int i = 0;
->  	nid_t nid, last_nid;
 >  
-> -	if (!enabled_nat_bits(sbi, NULL))
-> +	if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG))
->  		return;
+> +int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+> +{
+> +	struct bio *bio = *fio->bio;
+> +	struct page *page = fio->encrypted_page ?
+> +			fio->encrypted_page : fio->page;
+> +
+> +	if (!f2fs_is_valid_blkaddr(fio->sbi, fio->new_blkaddr,
+> +			__is_meta_io(fio) ? META_GENERIC : DATA_GENERIC))
+> +		return -EFAULT;
+> +
+> +	trace_f2fs_submit_page_bio(page, fio);
+> +	f2fs_trace_ios(fio, 0);
+> +
+> +	if (bio && (*fio->last_block + 1 != fio->new_blkaddr ||
+> +			!__same_bdev(fio->sbi, fio->new_blkaddr, bio))) {
+> +		__submit_bio(fio->sbi, bio, fio->type);
+> +		bio = NULL;
+> +	}
+> +alloc_new:
+> +	if (!bio) {
+> +		bio = __bio_alloc(fio->sbi, fio->new_blkaddr, fio->io_wbc,
+> +				BIO_MAX_PAGES, false, fio->type, fio->temp);
+> +		bio_set_op_attrs(bio, fio->op, fio->op_flags);
+> +	}
+> +
+> +	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
+> +		__submit_bio(fio->sbi, bio, fio->type);
+> +		bio = NULL;
+> +		goto alloc_new;
+> +	}
+> +
+> +	if (fio->io_wbc)
+> +		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
+> +
+> +	inc_page_count(fio->sbi, WB_DATA_TYPE(page));
+> +
+> +	*fio->last_block = fio->new_blkaddr;
+> +	*fio->bio = bio;
+> +
+> +	return 0;
+> +}
+> +
+> +void f2fs_submit_ipu_bio(struct f2fs_sb_info *sbi, struct bio **bio,
+> +							struct page *page)
+> +{
+> +	if (!bio)
+> +		return;
+> +
+> +	if (!__has_merged_page(*bio, NULL, page, 0))
+> +		return;
+> +
+> +	__submit_bio(sbi, *bio, DATA);
+> +	*bio = NULL;
+> +}
+> +
+>  void f2fs_submit_page_write(struct f2fs_io_info *fio)
+>  {
+>  	struct f2fs_sb_info *sbi = fio->sbi;
+> @@ -1854,6 +1909,8 @@ int f2fs_do_write_data_page(struct f2fs_io_info *fio)
+>  }
 >  
->  	for (i = 0; i < nm_i->nat_blocks; i++) {
+>  static int __write_data_page(struct page *page, bool *submitted,
+> +				struct bio **bio,
+> +				sector_t *last_block,
+>  				struct writeback_control *wbc,
+>  				enum iostat_type io_type)
+>  {
+> @@ -1879,6 +1936,8 @@ static int __write_data_page(struct page *page, bool *submitted,
+>  		.need_lock = LOCK_RETRY,
+>  		.io_type = io_type,
+>  		.io_wbc = wbc,
+> +		.bio = bio,
+> +		.last_block = last_block,
+>  	};
+>  
+>  	trace_f2fs_writepage(page, DATA);
+> @@ -1976,10 +2035,13 @@ static int __write_data_page(struct page *page, bool *submitted,
+>  	}
+>  
+>  	unlock_page(page);
+> -	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode))
+> +	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode)) {
+> +		f2fs_submit_ipu_bio(sbi, bio, page);
+>  		f2fs_balance_fs(sbi, need_balance_fs);
+> +	}
+>  
+>  	if (unlikely(f2fs_cp_error(sbi))) {
+> +		f2fs_submit_ipu_bio(sbi, bio, page);
+>  		f2fs_submit_merged_write(sbi, DATA);
+>  		submitted = NULL;
+>  	}
+> @@ -2006,7 +2068,7 @@ static int __write_data_page(struct page *page, bool *submitted,
+>  static int f2fs_write_data_page(struct page *page,
+>  					struct writeback_control *wbc)
+>  {
+> -	return __write_data_page(page, NULL, wbc, FS_DATA_IO);
+> +	return __write_data_page(page, NULL, NULL, NULL, wbc, FS_DATA_IO);
+>  }
+>  
+>  /*
+> @@ -2022,6 +2084,8 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>  	int done = 0;
+>  	struct pagevec pvec;
+>  	struct f2fs_sb_info *sbi = F2FS_M_SB(mapping);
+> +	struct bio *bio = NULL;
+> +	sector_t last_block;
+>  	int nr_pages;
+>  	pgoff_t uninitialized_var(writeback_index);
+>  	pgoff_t index;
+> @@ -2098,17 +2162,20 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>  			}
+>  
+>  			if (PageWriteback(page)) {
+> -				if (wbc->sync_mode != WB_SYNC_NONE)
+> +				if (wbc->sync_mode != WB_SYNC_NONE) {
+>  					f2fs_wait_on_page_writeback(page,
+>  							DATA, true, true);
+> -				else
+> +					f2fs_submit_ipu_bio(sbi, &bio, page);
+> +				} else {
+>  					goto continue_unlock;
+> +				}
+>  			}
+>  
+>  			if (!clear_page_dirty_for_io(page))
+>  				goto continue_unlock;
+>  
+> -			ret = __write_data_page(page, &submitted, wbc, io_type);
+> +			ret = __write_data_page(page, &submitted, &bio,
+> +					&last_block, wbc, io_type);
+>  			if (unlikely(ret)) {
+>  				/*
+>  				 * keep nr_to_write, since vfs uses this to
+> @@ -2157,6 +2224,9 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>  	if (nwritten)
+>  		f2fs_submit_merged_write_cond(F2FS_M_SB(mapping), mapping->host,
+>  								NULL, 0, DATA);
+> +	/* submit cached bio of IPU write */
+> +	if (bio)
+> +		__submit_bio(sbi, bio, DATA);
+>  
+>  	return ret;
+>  }
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 46db3ed87c84..7c4355927d28 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -1048,6 +1048,8 @@ struct f2fs_io_info {
+>  	bool retry;		/* need to reallocate block address */
+>  	enum iostat_type io_type;	/* io type */
+>  	struct writeback_control *io_wbc; /* writeback control */
+> +	struct bio **bio;		/* bio for ipu */
+> +	sector_t *last_block;		/* last block number in bio */
+>  	unsigned char version;		/* version of the node */
+>  };
+>  
+> @@ -3105,6 +3107,7 @@ void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
+>  				nid_t ino, enum page_type type);
+>  void f2fs_flush_merged_writes(struct f2fs_sb_info *sbi);
+>  int f2fs_submit_page_bio(struct f2fs_io_info *fio);
+> +int f2fs_merge_page_bio(struct f2fs_io_info *fio);
+>  void f2fs_submit_page_write(struct f2fs_io_info *fio);
+>  struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
+>  			block_t blk_addr, struct bio *bio);
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index b2167d53fb9d..66838ab2f21e 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -3196,7 +3196,10 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+>  
+>  	stat_inc_inplace_blocks(fio->sbi);
+>  
+> -	err = f2fs_submit_page_bio(fio);
+> +	if (fio->bio)
+> +		err = f2fs_merge_page_bio(fio);
+> +	else
+> +		err = f2fs_submit_page_bio(fio);
+>  	if (!err)
+>  		update_device_state(fio);
+>  
 > 
 
