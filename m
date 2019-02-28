@@ -2,117 +2,133 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA852C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48659C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9A62133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551375218;
-	bh=iaZTOBnrrgWE18p50uYDA3VkgY6khMk2Osf8xCHMiMQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uQP/Y4oIY6Ya2Mnm9yPaS5Wy9PKJQkGzx+iYAYoJPErbtNyIY7gL335u7yJnza6kR
-	 sI0vSMDqd2IVNFfYEUOzRgaRaZ1yswLsa1ly0wvgkdGunu5t4DsK+tniYS9EZGOzND
-	 QW6Q9lvxZOgKM/CfStMwXf1a2ylrRd3bY/74yAbA=
+	by mail.kernel.org (Postfix) with ESMTP id 1BABF218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387433AbfB1Rdg (ORCPT
+        id S2387500AbfB1Re2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:33:36 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43556 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733298AbfB1Rdg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:33:36 -0500
-Received: by mail-lf1-f68.google.com with SMTP id j1so15867967lfb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 09:33:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iMu2O/vZRJSlcfN6NkwY2zHaqajsdGz15PfunWQ8voA=;
-        b=ZF/VH/DUrQzhpZ6+3Za0Zcvx9YddFk6+TNpyRcIHZ+0xx6VLg/iqUWyvM2w91by5GG
-         pHP+9xqpeiCuI9O0z8SX34yxkk+Qfw30hi+3h0XKKwLOeRcg8ed0C4vxo1mj6PNfV2Oz
-         vgpGG9J+yy+OTm1blkCBf52UDj+4idBwrG+1A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iMu2O/vZRJSlcfN6NkwY2zHaqajsdGz15PfunWQ8voA=;
-        b=g9LT1gEXeK2m3GtzivpKgOUFps+yRV/HV4raTBxdwQT311GNRgKuINX4C+bw1escou
-         BAnLHC3PtdTfennWFqfxEPaX2tDjQ8ACSzVO1oG4j+9X6sJXcUxTACQEAKbYA5uMFD5l
-         3W8CY0STSEnYORIuH6RFXs+ovKDblsGj0DJvRm4U649RGAritIAo2WBpSKVMYaD33tMP
-         RIWbYvby16EprSeFveEtIm1ZrXNxJbU/PkSPVcCf/Y8uWtkr0EaWHRpOu8gpRKW/QOvR
-         4yuvLFKRFuuqohJyQ/bVCoGOAiGpHc4HEKQTJ6W0+lYhMw6c7FY2CPb3nempiQBS5Drw
-         lMMg==
-X-Gm-Message-State: APjAAAXyP6EmDIUY3DIE7prue1h9VgDlzxEM/k81lJTycvi6ZycXfr66
-        ve5Q+37bMncxwVF3qgRgVgO1gbhllfk=
-X-Google-Smtp-Source: APXvYqx9CML4faAiULtuvua8ATMDRnPBMGNHLTqfX0KB1Ka5FtF7Uuxhe+JuZZbzaYE6bSxbHBUkWQ==
-X-Received: by 2002:ac2:4219:: with SMTP id y25mr374291lfh.130.1551375212847;
-        Thu, 28 Feb 2019 09:33:32 -0800 (PST)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id s129sm4171470lja.49.2019.02.28.09.33.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 09:33:31 -0800 (PST)
-Received: by mail-lj1-f181.google.com with SMTP id l5so17908327lje.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 09:33:31 -0800 (PST)
-X-Received: by 2002:a2e:208a:: with SMTP id g10mr33158lji.135.1551375210888;
- Thu, 28 Feb 2019 09:33:30 -0800 (PST)
+        Thu, 28 Feb 2019 12:34:28 -0500
+Received: from unicorn.mansr.com ([81.2.72.234]:48658 "EHLO unicorn.mansr.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732729AbfB1Re1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:34:27 -0500
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id D8E2715632; Thu, 28 Feb 2019 17:34:25 +0000 (GMT)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH] dt-bindings: usb: add non-removable device property
+References: <20190228143344.16312-1-mans@mansr.com>
+        <20190228151330.GA1360@kroah.com> <yw1x8sy0uedr.fsf@mansr.com>
+        <20190228155241.GC12050@kroah.com>
+Date:   Thu, 28 Feb 2019 17:34:25 +0000
+In-Reply-To: <20190228155241.GC12050@kroah.com> (Greg Kroah-Hartman's message
+        of "Thu, 28 Feb 2019 16:52:41 +0100")
+Message-ID: <yw1x4l8nvmu6.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-References: <20190228171242.32144-1-frederic@kernel.org>
-In-Reply-To: <20190228171242.32144-1-frederic@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 Feb 2019 09:33:15 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wh5MQiXNUBCN6VKNGRR2gDekhXpaTc914D3y4=dHpmh4Q@mail.gmail.com>
-Message-ID: <CAHk-=wh5MQiXNUBCN6VKNGRR2gDekhXpaTc914D3y4=dHpmh4Q@mail.gmail.com>
-Subject: Re: [PATCH 00/37] softirq: Per vector masking v3
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 9:12 AM Frederic Weisbecker <frederic@kernel.org> wrote:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+
+> On Thu, Feb 28, 2019 at 03:22:24PM +0000, Måns Rullgård wrote:
+>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> 
+>> > On Thu, Feb 28, 2019 at 02:33:44PM +0000, Mans Rullgard wrote:
+>> >> Add a boolean property indicating that a device is hardwired to the
+>> >> upstream port.  Although hubs can provide this information, they are not
+>> >> always configured correctly.  An alternate means of indicating this for
+>> >> built-in USB devices is thus useful.
+>> >> 
+>> >> Signed-off-by: Mans Rullgard <mans@mansr.com>
+>> >> ---
+>> >> I have a situation where userspace would like to know which USB devices
+>> >> are built-in, but the on-board hub doesn't have the right setting.
+>> >> Also, the hub itself can't be indicated as fixed in any other way that
+>> >> I'm aware of.
+>> >
+>> > Then that's a firmware bug, right?  We have a way for firmware to export
+>> > this to the USB core, why not use that?  Your on-board hub should get a
+>> > firmware update with this information, let's not try to create
+>> > yet-another-way to define this type of information please.
+>> 
+>> What firmware?  This is not an ACPI system, obviously, so DT _is_ the
+>> firmware.
 >
-> So this set should hopefully address all reviews from the v2, and
-> fix all reports from the extremely useful (as always) Kbuild testing
-> bot. It also completes support for all archs.
+> Firmware in your hub.  There's a whole crazy software stack in that
+> beast :)
 
-The one thing I'd still like to see is some actual performance
-(latency?) numbers.
+The hub chip itself (SMSC/Microchip USB2512B in the case at hand) is
+fine.  The problem is that whoever designed the PCB didn't add the
+pull-ups marking the ports non-removable.  Besides, the hub can't
+indicate that it itself is hardwired to the host port.  That information
+needs to be supplied elsewhere.
 
-Maybe they were hiding somewhere in the pile and my quick scan missed
-them. But the main argument for this was that we've had the occasional
-latency issues with softirqs blocking (eg the USB v4l frame dropping
-etc), and I did that SOFTIRQ_NOW_MASK because it helped one particular
-case.
+>> >> In a way, adding this property seems a bit silly since dt can only
+>> >> sensibly be used for hardwired devices in the first place.  Thus the
+>> >> mere presence of a dt node could be taken to indicate the same thing.
+>> >> On the other hand, it's conceivable that someone might dynamically
+>> >> generate a devicetree based on what happens to be connected on boot or
+>> >> something.  For that reason, and explicit property seems safer.
+>> >> ---
+>> >>  Documentation/devicetree/bindings/usb/usb-device.txt | 8 ++++++++
+>> >>  1 file changed, 8 insertions(+)
+>> >
+>> > Can you show some code actually using this?  Again, this should "just
+>> > work" for USB today unless your platform is really broken (and if it is,
+>> > go complain to the vendor...)
+>> 
+>> You know full well that complaining to the vendor is rarely something
+>> that works.  Especially not when there are already thousands of the
+>> devices in the field.
+>
+> Understood, but constantly working around broken hardware is annoying at
+> times.
 
-And you don't seem to have removed that hack, and I'd really like to
-see that that thing isn't needed any more.
+It's annoying, sure.  It is also the reality, and we have to deal with it.
+Ignoring such hardware won't make it go away.
 
-Because otherwise the whole series seems a bit pointless, don't you
-think? If it doesn't fix that fundamental issue, then what's the point
-of all this churn..
+>> This is how I meant to use it:
+>> 
+>> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+>> index 3adff4da2ee1..81ef3cb705b7 100644
+>> --- a/drivers/usb/core/hub.c
+>> +++ b/drivers/usb/core/hub.c
+>> @@ -2392,6 +2392,14 @@ static void set_usb_port_removable(struct usb_device *udev)
+>>                 break;
+>>         }
+>>  
+>> +       /*
+>> +        * Otherwise, check whether DT indicates this device is non-removable.
+>> +        */
+>> +       if (of_property_read_bool(udev->dev.of_node, "non-removable")) {
+>> +               udev->removable = USB_DEVICE_FIXED;
+>> +               return;
+>> +       }
+>
+> Shouldn't this be an attribute of the USB hub's port, not the device
+> itself?  That's the way it works with ACPI, and odds are any description
+> of USB devices in DT is also going to look much like how ACPI describes
+> the devices, let's not try to diverge when it is not necessary.
 
-See commit 3c53776e29f8 ("Mark HI and TASKLET softirq synchronous"),
-which also has a couple of people listed who could hopefully re-test
-the v4l latency thing with whatever USB capture dongle it was that
-showed the issue.
+Fine with me.  That's why I asked.
 
-                 Linus
+How about a non-removable-ports property in the hub node listing the
+hardwired ports?
+
+-- 
+Måns Rullgård
