@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71767C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CD3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3582721850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E35121850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="CBxxBVuB"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="swR6sdEv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbfB1Nlb (ORCPT
+        id S1731983AbfB1Nle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:41:31 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39454 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725967AbfB1Nl3 (ORCPT
+        Thu, 28 Feb 2019 08:41:34 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41349 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725967AbfB1Nld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:41:29 -0500
-Received: by mail-pg1-f196.google.com with SMTP id h8so9235146pgp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:41:28 -0800 (PST)
+        Thu, 28 Feb 2019 08:41:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id d25so9749571pfn.8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:41:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ingics-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yrseqgr1GN0kfQBtkZLhXupoJWeTWIVNctr3h8BfTG4=;
-        b=CBxxBVuBykn+63dyKq6uW1VpusRiTRaq/KEa/rVs+FN2Ts/lUeZNpgbAHad9OpfB79
-         Ru3k2flJxxabPiWkagqv8kPfyJKlIc3JADUTAv6uqud703YC84ro05DxsD/Z9xbjEqgq
-         FDeZ8EasiwUosnDsoezHOxKDqjE/5WKL/3yjfO9lX8w3WQFx3EK8oMWq4RjKLEuCZBn1
-         pLr9tlhpWgd4XwCz+UaUrkpVHWuFHblNMk/LWNe2CmmBqhO8Mfelfgn+h2lrfVfbgFnG
-         mbauvt/nq2oFXvkPxP8hDjxcU04oACagYAOTMfQ+V4hufB4a1WhWZB2k+vFh9njPIW6P
-         E7dA==
+        bh=vtTGwUejXgguh3usIOSkA2LjGatLjq9nOVtB790HeP8=;
+        b=swR6sdEvXmYxCRoKQtS7cqbj26KsVI0EgGKujtUSW0ez5gQulX6G7GrmV/kgGEghnr
+         uMKvI5uLQFUw5zSjIgixrteq+YtcWGacUbRQiRESjKbmrYVSm3IA4tWvSUAkEdHFo4V8
+         ea7H/WfegBjDQZZTNtB/05o3ziiDwoAxCZIBEyeF8W4loNwY5mkrIbARYBx9HzRBn02h
+         v4zbAVyHNMIriyYM6Q/OdfDzxCd48tPbVcGuiHbuXTRL5UOQ030mH/8B345QthsbDxDz
+         c5ilftyMz+Gqw4n0qveGKrc80iqCQC7DkfKTEvxwMiJ00EAOn7EwOL7AYprooxY8HDSS
+         M2+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=yrseqgr1GN0kfQBtkZLhXupoJWeTWIVNctr3h8BfTG4=;
-        b=QTYnFoQkSqQZ1pxyKZwRmiZgWpJkUeCDBIEbTf+KtsG1c3cbGeTq3uQHNtw+m6Rcgk
-         qeuloouUOmwAVWSVV3rgFMnT0adVaBYDPFfDEjUILfhWZqzgX214Cto22CXyt9fcxRlS
-         gUI5oqYW6TLxSEoiwc9qr7I7HaSCVk6PEMot3Ch+f5crttaMcrQ/8D0mIv1VlKqfYmT9
-         OI/3cY1j3UYwOPLNzSgzSrirAxNVK6ci/BVlWAnTwN3/k9cKdYD9aEuk3RN3xhef2ptw
-         LhHg2OnRpIRr135hXfUX3p8uc9B++jiTpHNFxRV6NYJ2YRseVv0AddbZnGVn4KHzRiem
-         03qw==
-X-Gm-Message-State: AHQUAua5FpEoTnUnv1UKFoNiCnRHR5g/FqJYq2522v16phocvr+Lq4KI
-        s86qflkruu3tAQz8woASJS6jjQ==
-X-Google-Smtp-Source: AHgI3IZQess6kAVhjSZN5tBTrEalUM1eZPW30vPmcm1/SAkrzAjcbbdwWig9z7fXW/ZGfm41Aybv9Q==
-X-Received: by 2002:a62:41cc:: with SMTP id g73mr7359463pfd.145.1551361287799;
-        Thu, 28 Feb 2019 05:41:27 -0800 (PST)
+        bh=vtTGwUejXgguh3usIOSkA2LjGatLjq9nOVtB790HeP8=;
+        b=Ry/7RV1q/Sw6Oc2mehyApygmecFrdTtjlhXy73lEfhxfs0uPCf39U5KyeYQxo9HhHu
+         xr1RMAIAcGrZzeRkEnxdwVQ2vevN4a4xKyPsPCLam5TAif8RbLqLky0+uWW8i/zjZ+DL
+         w+IqWjth0s06yFS3MFVPoOKAky3zJHZLMpWQXWtK7RsZU7xFAm/H8InYUyjwKjUls1Kn
+         Jb+bba4q5nojhsSx4iL7PM0R45cF6YpB9lvDIoaOuxCam93lyLfpNqaMqFLWevTsADdz
+         53uGwGNcDbMEdGZv6uml6/muIqTQhcoTgFsYrBWajtfAY838CfHWC0EYcO7vRbVguLeI
+         Bk4Q==
+X-Gm-Message-State: AHQUAuZtL7GLKo9AhFyY9JxWe0f6eYK1Tgjl5iTjegVTU//tnU4bOBgx
+        j+avpQ641heIFWnULJqLAPZF8g==
+X-Google-Smtp-Source: AHgI3IaGd8fAhGRSfwOFXNo+o+XKWOEfbfMqKhdT/uiS8b+oBzs4D58yV0YHBjrXv1oy4IBujTQs0Q==
+X-Received: by 2002:a62:6453:: with SMTP id y80mr7421268pfb.203.1551361292437;
+        Thu, 28 Feb 2019 05:41:32 -0800 (PST)
 Received: from localhost.localdomain (2001-b400-e706-b6eb-8c00-6a08-1689-4d5a.emome-ip6.hinet.net. [2001:b400:e706:b6eb:8c00:6a08:1689:4d5a])
-        by smtp.gmail.com with ESMTPSA id 186sm36777133pga.36.2019.02.28.05.41.23
+        by smtp.gmail.com with ESMTPSA id 186sm36777133pga.36.2019.02.28.05.41.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 05:41:27 -0800 (PST)
+        Thu, 28 Feb 2019 05:41:31 -0800 (PST)
 From:   Axel Lin <axel.lin@ingics.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Support Opensource <support.opensource@diasemi.com>,
@@ -67,9 +67,9 @@ Cc:     Support Opensource <support.opensource@diasemi.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 10/11] regulator: pv88090: Convert to use regulator_set/get_current_limit_regmap
-Date:   Thu, 28 Feb 2019 21:40:21 +0800
-Message-Id: <20190228134022.32625-11-axel.lin@ingics.com>
+Subject: [PATCH 11/11] regulator: wm831x-dcdc: Convert to use regulator_set/get_current_limit_regmap
+Date:   Thu, 28 Feb 2019 21:40:22 +0800
+Message-Id: <20190228134022.32625-12-axel.lin@ingics.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190228134022.32625-1-axel.lin@ingics.com>
 References: <20190228134022.32625-1-axel.lin@ingics.com>
@@ -82,108 +82,75 @@ Use regulator_set/get_current_limit_regmap helpers to save some code.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/regulator/pv88090-regulator.c | 53 ++++-----------------------
- 1 file changed, 8 insertions(+), 45 deletions(-)
+ drivers/regulator/wm831x-dcdc.c | 42 +++++----------------------------
+ 1 file changed, 6 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/regulator/pv88090-regulator.c b/drivers/regulator/pv88090-regulator.c
-index 2302b0df7630..6e97cc6df2ee 100644
---- a/drivers/regulator/pv88090-regulator.c
-+++ b/drivers/regulator/pv88090-regulator.c
-@@ -42,10 +42,6 @@ enum {
- 
- struct pv88090_regulator {
- 	struct regulator_desc desc;
--	/* Current limiting */
--	unsigned int n_current_limits;
--	const int	*current_limits;
--	unsigned int limit_mask;
- 	unsigned int conf;
- 	unsigned int conf2;
- };
-@@ -71,14 +67,14 @@ static const struct regmap_config pv88090_regmap_config = {
-  *  Entry indexes corresponds to register values.
-  */
- 
--static const int pv88090_buck1_limits[] = {
-+static const unsigned int pv88090_buck1_limits[] = {
- 	 220000,  440000,  660000,  880000, 1100000, 1320000, 1540000, 1760000,
- 	1980000, 2200000, 2420000, 2640000, 2860000, 3080000, 3300000, 3520000,
- 	3740000, 3960000, 4180000, 4400000, 4620000, 4840000, 5060000, 5280000,
- 	5500000, 5720000, 5940000, 6160000, 6380000, 6600000, 6820000, 7040000
+diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
+index 828f262d6be0..12b422373580 100644
+--- a/drivers/regulator/wm831x-dcdc.c
++++ b/drivers/regulator/wm831x-dcdc.c
+@@ -308,48 +308,14 @@ static const unsigned int wm831x_dcdc_ilim[] = {
+ 	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
  };
  
--static const int pv88090_buck23_limits[] = {
-+static const unsigned int pv88090_buck23_limits[] = {
- 	1496000, 2393000, 3291000, 4189000
- };
- 
-@@ -150,40 +146,6 @@ static int pv88090_buck_set_mode(struct regulator_dev *rdev,
- 					PV88090_BUCK1_MODE_MASK, val);
- }
- 
--static int pv88090_set_current_limit(struct regulator_dev *rdev, int min,
--				    int max)
+-static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
+-					   int min_uA, int max_uA)
 -{
--	struct pv88090_regulator *info = rdev_get_drvdata(rdev);
+-	struct wm831x_dcdc *dcdc = rdev_get_drvdata(rdev);
+-	struct wm831x *wm831x = dcdc->wm831x;
+-	u16 reg = dcdc->base + WM831X_DCDC_CONTROL_2;
 -	int i;
 -
--	/* search for closest to maximum */
--	for (i = info->n_current_limits - 1; i >= 0; i--) {
--		if (min <= info->current_limits[i]
--			&& max >= info->current_limits[i]) {
--			return regmap_update_bits(rdev->regmap,
--				info->conf,
--				info->limit_mask,
--				i << PV88090_BUCK1_ILIM_SHIFT);
--		}
+-	for (i = ARRAY_SIZE(wm831x_dcdc_ilim) - 1; i >= 0; i--) {
+-		if ((min_uA <= wm831x_dcdc_ilim[i]) &&
+-		    (wm831x_dcdc_ilim[i] <= max_uA))
+-			return wm831x_set_bits(wm831x, reg,
+-					       WM831X_DC1_HC_THR_MASK,
+-						i << WM831X_DC1_HC_THR_SHIFT);
 -	}
 -
 -	return -EINVAL;
 -}
 -
--static int pv88090_get_current_limit(struct regulator_dev *rdev)
+-static int wm831x_buckv_get_current_limit(struct regulator_dev *rdev)
 -{
--	struct pv88090_regulator *info = rdev_get_drvdata(rdev);
--	unsigned int data;
--	int ret;
+-	struct wm831x_dcdc *dcdc = rdev_get_drvdata(rdev);
+-	struct wm831x *wm831x = dcdc->wm831x;
+-	u16 reg = dcdc->base + WM831X_DCDC_CONTROL_2;
+-	int val;
 -
--	ret = regmap_read(rdev->regmap, info->conf, &data);
--	if (ret < 0)
--		return ret;
+-	val = wm831x_reg_read(wm831x, reg);
+-	if (val < 0)
+-		return val;
 -
--	data = (data & info->limit_mask) >> PV88090_BUCK1_ILIM_SHIFT;
--	return info->current_limits[data];
+-	val = (val & WM831X_DC1_HC_THR_MASK) >> WM831X_DC1_HC_THR_SHIFT;
+-	return wm831x_dcdc_ilim[val];
 -}
 -
- static const struct regulator_ops pv88090_buck_ops = {
- 	.get_mode = pv88090_buck_get_mode,
- 	.set_mode = pv88090_buck_set_mode,
-@@ -193,8 +155,8 @@ static const struct regulator_ops pv88090_buck_ops = {
- 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
- 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
- 	.list_voltage = regulator_list_voltage_linear,
--	.set_current_limit = pv88090_set_current_limit,
--	.get_current_limit = pv88090_get_current_limit,
+ static const struct regulator_ops wm831x_buckv_ops = {
+ 	.set_voltage_sel = wm831x_buckv_set_voltage_sel,
+ 	.get_voltage_sel = wm831x_buckv_get_voltage_sel,
+ 	.list_voltage = regulator_list_voltage_linear_range,
+ 	.map_voltage = regulator_map_voltage_linear_range,
+ 	.set_suspend_voltage = wm831x_buckv_set_suspend_voltage,
+-	.set_current_limit = wm831x_buckv_set_current_limit,
+-	.get_current_limit = wm831x_buckv_get_current_limit,
 +	.set_current_limit = regulator_set_current_limit_regmap,
 +	.get_current_limit = regulator_get_current_limit_regmap,
- };
  
- static const struct regulator_ops pv88090_ldo_ops = {
-@@ -223,10 +185,11 @@ static const struct regulator_ops pv88090_ldo_ops = {
- 		.enable_mask = PV88090_##regl_name##_EN, \
- 		.vsel_reg = PV88090_REG_##regl_name##_CONF0, \
- 		.vsel_mask = PV88090_V##regl_name##_MASK, \
-+		.curr_table = limits_array, \
-+		.n_current_limits = ARRAY_SIZE(limits_array), \
-+		.csel_reg = PV88090_REG_##regl_name##_CONF1, \
-+		.csel_mask = PV88090_##regl_name##_ILIM_MASK, \
- 	},\
--	.current_limits = limits_array, \
--	.n_current_limits = ARRAY_SIZE(limits_array), \
--	.limit_mask = PV88090_##regl_name##_ILIM_MASK, \
- 	.conf = PV88090_REG_##regl_name##_CONF1, \
- 	.conf2 = PV88090_REG_##regl_name##_CONF2, \
- }
+ 	.is_enabled = regulator_is_enabled_regmap,
+ 	.enable = regulator_enable_regmap,
+@@ -475,6 +441,10 @@ static int wm831x_buckv_probe(struct platform_device *pdev)
+ 	dcdc->desc.owner = THIS_MODULE;
+ 	dcdc->desc.enable_reg = WM831X_DCDC_ENABLE;
+ 	dcdc->desc.enable_mask = 1 << id;
++	dcdc->desc.csel_reg = dcdc->base + WM831X_DCDC_CONTROL_2;
++	dcdc->desc.csel_mask = WM831X_DC1_HC_THR_MASK;
++	dcdc->desc.n_current_limits = ARRAY_SIZE(wm831x_dcdc_ilim);
++	dcdc->desc.curr_table = wm831x_dcdc_ilim;
+ 
+ 	ret = wm831x_reg_read(wm831x, dcdc->base + WM831X_DCDC_ON_CONFIG);
+ 	if (ret < 0) {
 -- 
 2.17.1
 
