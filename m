@@ -2,78 +2,103 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4EBC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566B8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22862183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E88F21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732314AbfB1KLi (ORCPT
+        id S1732324AbfB1KMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:11:38 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:23942 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732250AbfB1KLi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:11:38 -0500
-Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x1SABKBE089969;
-        Thu, 28 Feb 2019 19:11:20 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp);
- Thu, 28 Feb 2019 19:11:20 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x1SABFjK089866
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 28 Feb 2019 19:11:20 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: kernel panic: MAC Initialization failed. (2)
-To:     syzbot <syzbot+29569ed06425fcf67a95@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000009c92240582ee96ce@google.com>
-Cc:     jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        takedakn@nttdata.co.jp
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <bd185896-d78e-ce2c-ed70-5998e05545e2@i-love.sakura.ne.jp>
-Date:   Thu, 28 Feb 2019 19:11:12 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Feb 2019 05:12:40 -0500
+Received: from sauhun.de ([88.99.104.3]:44448 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730388AbfB1KMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 05:12:40 -0500
+Received: from localhost (p54B33386.dip0.t-ipconnect.de [84.179.51.134])
+        by pokefinder.org (Postfix) with ESMTPSA id 246B92C08C3;
+        Thu, 28 Feb 2019 11:12:38 +0100 (CET)
+Date:   Thu, 28 Feb 2019 11:12:37 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Elie Morisse <syniurge@gmail.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "Singh, Sandeep" <Sandeep.Singh@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v16] i2c: Add drivers for the AMD PCIe MP2 I2C controller
+Message-ID: <20190228101237.GA1010@kunai>
+References: <20190226161243.GA21539@syn-yoga530>
+ <CAC_JBqrE_g-neObMMvsdAG4USDqgc+oqAs2y6WYRdrT6PBAiSQ@mail.gmail.com>
+ <20190226165001.GD839@kunai>
+ <360a227c-68f9-81f8-bcf4-9aeefa837cc0@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <0000000000009c92240582ee96ce@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Content-Disposition: inline
+In-Reply-To: <360a227c-68f9-81f8-bcf4-9aeefa837cc0@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/02/28 15:42, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    7b827ff9af88 Add linux-next specific files for 20190227
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10f71894c00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5fa6b8975759dcc5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=29569ed06425fcf67a95
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113a8242c00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=154d6bd0c00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+29569ed06425fcf67a95@syzkaller.appspotmail.com
-> 
 
-Memory allocation failure due to fault injection before loading policy.
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-#syz dup: kernel panic: MAC Initialization failed.
+On Thu, Feb 28, 2019 at 09:56:16AM +0000, Shah, Nehal-bakulchandra wrote:
+> Hi Elie,
+>=20
+> On 2/26/2019 10:20 PM, Wolfram Sang wrote:
+> > Hi Elie,
+> >=20
+> >> My apologies for the time it took to apply those changes.
+> >=20
+> > No worries. I am super happy that you are still around and willing to
+> > continue the work!
+> >=20
+> >> I will also start working on an alternate (v17?) version with only one
+> >> module and replacing the platform driver by an ACPI lookup as
+> >> requested by Bjorn Helgaas, unless Nehal clarifies how AMD plans to
+> >> expand the platform driver.
+> >=20
+> > Sounds really good to me.
+>=20
+> Thanks for the patch. For our upcoming sensor hub design we need MP2-PCIE=
+ as independent driver.Hence i am requesting to keep the two separate modul=
+es.
+
+CCing Bjorn on this one because he expressed in the past that there
+might be other possible designs, too. But I don't know PCIE, so I'd like
+to have his expertise at the table.
+
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlx3tBEACgkQFA3kzBSg
+KbZrlw//fsaZttlyI6OhS7d3zPRegWG8DUNWkNUh61QZue3stD82AdG8rEqkfKqE
+ImAJD6PvLbKtlUum4GJbu25+9vYOJVt5kAh8Hc2liNQrayfCaJog25hK6LiIe8HU
+r/W+OMBw8THhbFw+1hajrw/ISu8O6i4ZDYtAiDhbjcyKgDhdiJKiwWpueq6fwbIZ
+/yh0oiK4Cl99kHpnE0uvuAHH5ZRWNWYuJo5Sy+dCoVyD5lTfDeKkJsUr6uIY9t+l
+Zo1gRL3ndZr5C4EwjyrpJ6Vfec2m1kpP4VwCoe36aYW6+uUqKlol9wDqw1wv45Cn
+0+t0zgP7jygB45GZn/37rje9pqcedE9uzJvrg7inZLQoM2sFt+IjOz8+eiajPXP2
+JSDRl07Wyzda7VUpVOWErkKh0c08clWRB4rMZkesvLNDi3RcXEMaE0CuLgYl/pDg
+uR+lqtr1bO7+D30azpOEdLdNKltWOLjeFUolKRL4zu69spjMsp+W7MOj2xo9cs78
+lpwubJv/MNDllW4ts3Wc7BqBXiujRT4+OqxMP+4MX/PQORCGO3V5Lf+/1Xt0tzPd
+DoChWBnth6t+M5AYvjSOcrzeYV+15wgiOYjLvnrHKiaM5+AgYR5WgJrNggBQWk9d
+OmbKzJNiLk8dgK/d37bzY+8v4GHhIg+3b7Vt8QQ9LdBYilKh1LA=
+=JJ4A
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
