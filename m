@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40361C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26C1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BAE520C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA4720C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367776;
-	bh=rIkrAy7K5uvotLqiphBnNXj4xLJS/190vOuCAwrn1jk=;
+	s=default; t=1551367783;
+	bh=dTjbH+x6F2EbsL8pWq8JJ5oYGAeCuOV6L4kY/YnfzaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nd5TX+8tHWRb9CctsMermotfDtZCKpGOnuD4cKXaAc2JwPzMD4sDD6qLxs/Iynyzc
-	 0t/6JO/0BpGJrvkuzAPKe/EI31rEOMz4BRj3r0o53KxqeYhABmnNuNLzzvnDd1X/pR
-	 yAFAkt9I9MtKdIWNTwdQkhKmuXkAyMlsmPgRdkCc=
+	b=bMdrF+GPQR3KFBSvKieUfFW58UVJh2pWHMKvJbklJJ92pChOF6PIfGPSOZNPaJ0lM
+	 ctcREsW+whS3JizsfzjyeWyYXS2WP8q9u8efbfOqLrQf6nd6qGDakOZ4cTK7BwaaSD
+	 NgMC25dLreZCwH9bt9QXSzb1uUGWsaexH5t4ITRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388753AbfB1P3e (ORCPT
+        id S2389021AbfB1P3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:29:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43164 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:29:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732745AbfB1PKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:10:24 -0500
+        id S1731658AbfB1PKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:10:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3085218C3;
-        Thu, 28 Feb 2019 15:10:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92DB7218B0;
+        Thu, 28 Feb 2019 15:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366624;
-        bh=rIkrAy7K5uvotLqiphBnNXj4xLJS/190vOuCAwrn1jk=;
+        s=default; t=1551366623;
+        bh=dTjbH+x6F2EbsL8pWq8JJ5oYGAeCuOV6L4kY/YnfzaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S6adsNZoXG7uIgPlbKPvD5puV/9b/LwtVsJN6AFkxLD8gsbiW4tNnKlD7Iwp8Cf7x
-         qQIMZw8R1D13JLfkbgowCeN8zSrMWhRjwFn7pWnMZIpWFaHYLAe0PukFTsOA138kyp
-         e7zZMh2DlXwF1Ni3gmx8HZvH/7WdsdICXMuDmmrY=
+        b=AkY/H9/WMsbwf8xhA1mW4r7Sejf60AN4WP2cvru3IeQh1FGi4TKIxmIpEtxKdds1G
+         YvClwpWS/C5ZeiJ91B2URRtJPLbohfr79pw/BCcX4r68H1X5tgP4mQDUe+OsLGQ5F4
+         L4ksxoSdln+PVKuKe4ZbDljbltmuOjEUdMnY+xUs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 62/81] s390/qeth: fix use-after-free in error path
-Date:   Thu, 28 Feb 2019 10:07:54 -0500
-Message-Id: <20190228150813.10256-62-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 61/81] s390/qeth: release cmd buffer in error paths
+Date:   Thu, 28 Feb 2019 10:07:53 -0500
+Message-Id: <20190228150813.10256-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -59,68 +60,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit afa0c5904ba16d59b0454f7ee4c807dae350f432 ]
+[ Upstream commit 5065b2dd3e5f9247a6c9d67974bc0472bf561b9d ]
 
-The error path in qeth_alloc_qdio_buffers() that takes care of
-cleaning up the Output Queues is buggy. It first frees the queue, but
-then calls qeth_clear_outq_buffers() with that very queue struct.
+Whenever we fail before/while starting an IO, make sure to release the
+IO buffer. Usually qeth_irq() would do this for us, but if the IO
+doesn't even start we obviously won't get an interrupt for it either.
 
-Make the call to qeth_clear_outq_buffers() part of the free action
-(in the correct order), and while at it fix the naming of the helper.
-
-Fixes: 0da9581ddb0f ("qeth: exploit asynchronous delivery of storage blocks")
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 623ddda5d2ba8..89cc172820ca4 100644
+index 0c9a5250dd93f..623ddda5d2ba8 100644
 --- a/drivers/s390/net/qeth_core_main.c
 +++ b/drivers/s390/net/qeth_core_main.c
-@@ -2397,11 +2397,12 @@ static int qeth_init_qdio_out_buf(struct qeth_qdio_out_q *q, int bidx)
- 	return 0;
- }
- 
--static void qeth_free_qdio_out_buf(struct qeth_qdio_out_q *q)
-+static void qeth_free_output_queue(struct qeth_qdio_out_q *q)
- {
- 	if (!q)
- 		return;
- 
-+	qeth_clear_outq_buffers(q, 1);
- 	qdio_free_buffers(q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
- 	kfree(q);
- }
-@@ -2475,10 +2476,8 @@ static int qeth_alloc_qdio_buffers(struct qeth_card *card)
- 		card->qdio.out_qs[i]->bufs[j] = NULL;
+@@ -568,6 +568,7 @@ static int __qeth_issue_next_read(struct qeth_card *card)
+ 		QETH_DBF_MESSAGE(2, "error %i on device %x when starting next read ccw!\n",
+ 				 rc, CARD_DEVID(card));
+ 		atomic_set(&channel->irq_pending, 0);
++		qeth_release_buffer(channel, iob);
+ 		card->read_or_write_problem = 1;
+ 		qeth_schedule_recovery(card);
+ 		wake_up(&card->wait_q);
+@@ -1129,6 +1130,8 @@ static void qeth_irq(struct ccw_device *cdev, unsigned long intparm,
+ 		rc = qeth_get_problem(card, cdev, irb);
+ 		if (rc) {
+ 			card->read_or_write_problem = 1;
++			if (iob)
++				qeth_release_buffer(iob->channel, iob);
+ 			qeth_clear_ipacmd_list(card);
+ 			qeth_schedule_recovery(card);
+ 			goto out;
+@@ -1811,6 +1814,7 @@ static int qeth_idx_activate_get_answer(struct qeth_card *card,
+ 		QETH_DBF_MESSAGE(2, "Error2 in activating channel rc=%d\n", rc);
+ 		QETH_DBF_TEXT_(SETUP, 2, "2err%d", rc);
+ 		atomic_set(&channel->irq_pending, 0);
++		qeth_release_buffer(channel, iob);
+ 		wake_up(&card->wait_q);
+ 		return rc;
  	}
- out_freeoutq:
--	while (i > 0) {
--		qeth_free_qdio_out_buf(card->qdio.out_qs[--i]);
--		qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--	}
-+	while (i > 0)
-+		qeth_free_output_queue(card->qdio.out_qs[--i]);
- 	kfree(card->qdio.out_qs);
- 	card->qdio.out_qs = NULL;
- out_freepool:
-@@ -2511,10 +2510,8 @@ static void qeth_free_qdio_buffers(struct qeth_card *card)
- 	qeth_free_buffer_pool(card);
- 	/* free outbound qdio_qs */
- 	if (card->qdio.out_qs) {
--		for (i = 0; i < card->qdio.no_out_queues; ++i) {
--			qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--			qeth_free_qdio_out_buf(card->qdio.out_qs[i]);
--		}
-+		for (i = 0; i < card->qdio.no_out_queues; i++)
-+			qeth_free_output_queue(card->qdio.out_qs[i]);
- 		kfree(card->qdio.out_qs);
- 		card->qdio.out_qs = NULL;
+@@ -1880,6 +1884,7 @@ static int qeth_idx_activate_channel(struct qeth_card *card,
+ 			rc);
+ 		QETH_DBF_TEXT_(SETUP, 2, "1err%d", rc);
+ 		atomic_set(&channel->irq_pending, 0);
++		qeth_release_buffer(channel, iob);
+ 		wake_up(&card->wait_q);
+ 		return rc;
  	}
+@@ -2060,6 +2065,7 @@ int qeth_send_control_data(struct qeth_card *card, int len,
+ 	}
+ 	reply = qeth_alloc_reply(card);
+ 	if (!reply) {
++		qeth_release_buffer(channel, iob);
+ 		return -ENOMEM;
+ 	}
+ 	reply->callback = reply_cb;
 -- 
 2.19.1
 
