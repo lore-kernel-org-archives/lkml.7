@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A921C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEE2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD4F218FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEAF2184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366899;
-	bh=syEqZrYYcw+/cL6WIuruJAWF1k1EOT8HXe1tS/MPf0c=;
+	s=default; t=1551366901;
+	bh=GrpIzYDqKCUF86PlPs6S1AUk/5j64nuWlzocAijdptk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WmKHL6iFQ/gGDyqpHteUoHVDDWYGuU2LcNi+q2gu0dZBLpMfJUjO4fuPH1mEhUI6m
-	 ufwdP8Nok2XtsAtGCyP68IFR72+eS1t42iE0uAyQNU/niaWiSA/z1VR+ygFLextR1Q
-	 nsXQ8VRaE9UmEUHNS7HH8gQuVBvKctfrj6U09N68=
+	b=2qcfLVWX41ndtO5McFLc7vKwvN5NfH2AHnOaac5Syp9liKE3gfvCiniUx2q9YXz2Z
+	 m/SxnlYI9cQiSvIETTurpJL0OsRM98iRAtaIzpGJRXiqF/q5GYrMoSqu4GVxBZ2j5e
+	 zUoVREqv6Q49U0rDzyXhO/AaG/yhBNznqwwlLO10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388746AbfB1PO5 (ORCPT
+        id S1732127AbfB1PPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:14:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49886 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:15:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388725AbfB1POw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:14:52 -0500
+        id S2388741AbfB1PO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:14:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AAFF218C3;
-        Thu, 28 Feb 2019 15:14:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9CD620C01;
+        Thu, 28 Feb 2019 15:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366891;
-        bh=syEqZrYYcw+/cL6WIuruJAWF1k1EOT8HXe1tS/MPf0c=;
+        s=default; t=1551366894;
+        bh=GrpIzYDqKCUF86PlPs6S1AUk/5j64nuWlzocAijdptk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BLPhycyPui4qyLCyNyIqQgaeuJjjQ3nYmd90JkB0hQ3q/VlRVTMIF0ZUmrfSZ2zOP
-         cxF4l0qDrs3rgskeLdaKfEpKtKU0rixGKpJKu8ldctFKfzIDRBtxvdfO6Uw4I1ii5S
-         7++y83vPqdtBHfabBOrxQkkWtOSt3NcK9YuL8PYo=
+        b=NnyJDTRV3XYhv1e3bLLRPum1onhdn8LMEXln+eiLKbjH/u3B25VgT5tbj4Ia4RVhi
+         r7coji/+3OcRHbb8Sg7koPaJY0VBJbR1uzcgVNPNA9sXXeTTs0OJGoqB2kUwwfAD0b
+         GPE7Xid1tJWHxPTwke3JNQexQ3vAjAeSObbmcIXw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 28/36] s390/qeth: fix use-after-free in error path
-Date:   Thu, 28 Feb 2019 10:13:29 -0500
-Message-Id: <20190228151337.12176-28-sashal@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Clifton <nickc@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 29/36] perf symbols: Filter out hidden symbols from labels
+Date:   Thu, 28 Feb 2019 10:13:30 -0500
+Message-Id: <20190228151337.12176-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
 References: <20190228151337.12176-1-sashal@kernel.org>
@@ -58,70 +63,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Jiri Olsa <jolsa@redhat.com>
 
-[ Upstream commit afa0c5904ba16d59b0454f7ee4c807dae350f432 ]
+[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
 
-The error path in qeth_alloc_qdio_buffers() that takes care of
-cleaning up the Output Queues is buggy. It first frees the queue, but
-then calls qeth_clear_outq_buffers() with that very queue struct.
+When perf is built with the annobin plugin (RHEL8 build) extra symbols
+are added to its binary:
 
-Make the call to qeth_clear_outq_buffers() part of the free action
-(in the correct order), and while at it fix the naming of the helper.
+  # nm perf | grep annobin | head -10
+  0000000000241100 t .annobin_annotate.c
+  0000000000326490 t .annobin_annotate.c
+  0000000000249255 t .annobin_annotate.c_end
+  00000000003283a8 t .annobin_annotate.c_end
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
+  00000000001bc400 t .annobin_annotate.c_end.unlikely
+  00000000001bce18 t .annobin_annotate.c.hot
+  00000000001bce18 t .annobin_annotate.c.hot
+  ...
 
-Fixes: 0da9581ddb0f ("qeth: exploit asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Those symbols have no use for report or annotation and should be
+skipped.  Moreover they interfere with the DWARF unwind test on the PPC
+arch, where they are mixed with checked symbols and then the test fails:
+
+  # perf test dwarf -v
+  59: Test dwarf unwind                                     :
+  --- start ---
+  test child forked, pid 8515
+  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
+  ...
+  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
+  unwind: failed with 'no error'
+
+The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
+
+  # readelf -s ./perf | grep annobin | head -1
+    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
+
+They can still pass the check for the label symbol. Adding check for
+HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
+out such symbols.
+
+>   Just to be awkward, if you are going to ignore STV_HIDDEN
+>   symbols then you should probably also ignore STV_INTERNAL ones
+>   as well...  Annobin does not generate them, but you never know,
+>   one day some other tool might create some.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nick Clifton <nickc@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ tools/perf/util/symbol-elf.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 69ef5f4060edb..6566fceef38d5 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2472,11 +2472,12 @@ static int qeth_init_qdio_out_buf(struct qeth_qdio_out_q *q, int bidx)
- 	return rc;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 8ad4296de98b0..3d39332b3a06a 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -87,6 +87,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
+ 	return GELF_ST_TYPE(sym->st_info);
  }
  
--static void qeth_free_qdio_out_buf(struct qeth_qdio_out_q *q)
-+static void qeth_free_output_queue(struct qeth_qdio_out_q *q)
- {
- 	if (!q)
- 		return;
- 
-+	qeth_clear_outq_buffers(q, 1);
- 	qdio_free_buffers(q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
- 	kfree(q);
++static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
++{
++	return GELF_ST_VISIBILITY(sym->st_other);
++}
++
+ #ifndef STT_GNU_IFUNC
+ #define STT_GNU_IFUNC 10
+ #endif
+@@ -111,7 +116,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
+ 	return elf_sym__type(sym) == STT_NOTYPE &&
+ 		sym->st_name != 0 &&
+ 		sym->st_shndx != SHN_UNDEF &&
+-		sym->st_shndx != SHN_ABS;
++		sym->st_shndx != SHN_ABS &&
++		elf_sym__visibility(sym) != STV_HIDDEN &&
++		elf_sym__visibility(sym) != STV_INTERNAL;
  }
-@@ -2549,10 +2550,8 @@ static int qeth_alloc_qdio_buffers(struct qeth_card *card)
- 		card->qdio.out_qs[i]->bufs[j] = NULL;
- 	}
- out_freeoutq:
--	while (i > 0) {
--		qeth_free_qdio_out_buf(card->qdio.out_qs[--i]);
--		qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--	}
-+	while (i > 0)
-+		qeth_free_output_queue(card->qdio.out_qs[--i]);
- 	kfree(card->qdio.out_qs);
- 	card->qdio.out_qs = NULL;
- out_freepool:
-@@ -2585,10 +2584,8 @@ static void qeth_free_qdio_buffers(struct qeth_card *card)
- 	qeth_free_buffer_pool(card);
- 	/* free outbound qdio_qs */
- 	if (card->qdio.out_qs) {
--		for (i = 0; i < card->qdio.no_out_queues; ++i) {
--			qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--			qeth_free_qdio_out_buf(card->qdio.out_qs[i]);
--		}
-+		for (i = 0; i < card->qdio.no_out_queues; i++)
-+			qeth_free_output_queue(card->qdio.out_qs[i]);
- 		kfree(card->qdio.out_qs);
- 		card->qdio.out_qs = NULL;
- 	}
+ 
+ static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
 -- 
 2.19.1
 
