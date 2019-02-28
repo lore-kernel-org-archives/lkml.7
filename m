@@ -2,209 +2,123 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1906DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566F3C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4CE2083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BF320854
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:55:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttdPdWHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbfB1Nxw (ORCPT
+        id S1731825AbfB1Nzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:53:52 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48116 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727761AbfB1Nxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:53:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 862D480D;
-        Thu, 28 Feb 2019 05:53:50 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.17])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 463963F703;
-        Thu, 28 Feb 2019 05:53:46 -0800 (PST)
-Date:   Thu, 28 Feb 2019 13:53:43 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        mhiramat@kernel.org, paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com,
-        dietmar.eggemann@arm.com
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190228135343.23kzkilig3bsioov@e107158-lin.cambridge.arm.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
+        Thu, 28 Feb 2019 08:55:40 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36786 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726003AbfB1Nzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 08:55:40 -0500
+Received: by mail-qt1-f194.google.com with SMTP id p25so23533073qtb.3;
+        Thu, 28 Feb 2019 05:55:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3gbkIhvVF1AH1z+WfY/qwoD1anC7NSB9emFlODUv0kQ=;
+        b=ttdPdWHkXVD6z9n9tTmttepq00LBNrbDtp7tWmiTFo25hnQ3FdFuNMdyo/bvCQwJ0p
+         SNtU6rEeuq56FBTaxVQYell6+5E5xaAxtQ/nI11yM7r0DNSSbo/fQg3hKMJ1k9Zhf/qA
+         kVDz6AD9x9wploJCOOOvAFqRwfyo/nkarhBFzZFbB8nVqc31+y+LFkFCkcfc+1N0o+wg
+         8U6TmZCUw8j4qLM1SkWLOcT/aMfyfVNFnbVNFd+sxGFagnrpOlwUNaILjG3aUSB9TQ87
+         DdZFaj8x2aBiiRgGUTA4rvVF7XtjcdUE3aL0CBxECh1+QmVXHGgkx7e0GiovvBYP4SCs
+         t4uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3gbkIhvVF1AH1z+WfY/qwoD1anC7NSB9emFlODUv0kQ=;
+        b=Ep2bi/FGPr34V7G0OQJZhaQ84n8B2dUpKFtXGVGRZ2mFL+JV1V6SeRHl8bOm+VcVgU
+         UDyegdFHyd9vnpBjBjYkwjjZ1ASpsoPt/GXSxq0JUTlHvv6Kic+q2/Ue5mZ6YWkivtcY
+         jRiGoj2eu1LEFdEN1AgHnhrJfIzymkuezd4XIdGqo9/IGjY4Y1vIsZPrMJh4RlAmodv3
+         ejFT+adjEj5o3J8F48m0L8ncALCndaNep9MNH5Lm8qqIQYWy456a4wCMt7xmp45Q8Sr0
+         b8j0z0vSQYaOEmtHrCXaUQTDhfnfD/zW9oBBhUN64pKuVbothGnteo1Di2bEtpjgaVME
+         krnQ==
+X-Gm-Message-State: AHQUAuZbSIv4GoujY0T06a7lFyDIQI4NX8thwjOEHclf6qBk7jURtaSQ
+        oRAFX7PZBiBSGQsma/uDOctFW8xU
+X-Google-Smtp-Source: APXvYqwed09qVBfmc/51mPBlv9t2qk5ZcQXOdQ8awFREBN+TSn58dSdmPYeRBoQT8/b7UFaeYPQH7w==
+X-Received: by 2002:aed:21c2:: with SMTP id m2mr6572834qtc.107.1551362138813;
+        Thu, 28 Feb 2019 05:55:38 -0800 (PST)
+Received: from localhost.localdomain ([2001:1284:f016:a307:76c1:1c91:d108:16d4])
+        by smtp.gmail.com with ESMTPSA id l16sm10855160qke.20.2019.02.28.05.55.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 05:55:37 -0800 (PST)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 0573A180CD5; Thu, 28 Feb 2019 10:55:34 -0300 (-03)
+Date:   Thu, 28 Feb 2019 10:55:34 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sctp: chunk.c: correct format string for size_t in printk
+Message-ID: <20190228135534.GC13343@localhost.localdomain>
+References: <20190228113652.55552-1-maennich@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190227193748.132301-1-joel@joelfernandes.org>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190228113652.55552-1-maennich@google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel
-
-On 02/27/19 14:37, Joel Fernandes (Google) wrote:
-> Introduce in-kernel headers and other artifacts which are made available
-> as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> it possible to build kernel modules, run eBPF programs, and other
-> tracing programs that need to extend the kernel for tracing purposes
-> without any dependency on the file system having headers and build
-> artifacts.
-
-Thanks for doing this work. This will be a very helpful feature and simplify
-the workflow, especially when dealing with multiple targets each with its own
-kernel tree/version.
-
+On Thu, Feb 28, 2019 at 11:36:52AM +0000, Matthias Maennich wrote:
+> According to Documentation/core-api/printk-formats.rst, size_t should be
+> printed with %zu, rather than %Zu.
 > 
-> On Android and embedded systems, it is common to switch kernels but not
-> have kernel headers available on the file system. Raw kernel headers
-> also cannot be copied into the filesystem like they can be on other
-> distros, due to licensing and other issues. There's no linux-headers
-> package on Android. Further once a different kernel is booted, any
-
-I use non-android systems quite often for development. And yes while getting
-the headers on the target isn't always a problem but when moving across trees
-or versions it's very easy to mess this up and having the headers embedded in
-the kernel means you're always guaranteed to use the right headers. eBPF is my
-main use case here.
-
-> headers stored on the file system will no longer be useful. By storing
-> the headers as a compressed archive within the kernel, we can avoid these
-> issues that have been a hindrance for a long time.
+> In addition, using %Zu triggers a warning on clang (-Wformat-extra-args):
 > 
-> The feature is also buildable as a module just in case the user desires
-> it not being part of the kernel image. This makes it possible to load
-> and unload the headers on demand. A tracing program, or a kernel module
-> builder can load the module, do its operations, and then unload the
-> module to save kernel memory. The total memory needed is 3.8MB.
+> net/sctp/chunk.c:196:25: warning: data argument not used by format string [-Wformat-extra-args]
+>                                     __func__, asoc, max_data);
+>                                     ~~~~~~~~~~~~~~~~^~~~~~~~~
+> ./include/linux/printk.h:440:49: note: expanded from macro 'pr_warn_ratelimited'
+>         printk_ratelimited(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+>         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+> ./include/linux/printk.h:424:17: note: expanded from macro 'printk_ratelimited'
+>                 printk(fmt, ##__VA_ARGS__);                             \
+>                        ~~~    ^
+> 
+> Fixes: 5b5e0928f742 ("lib/vsprintf.c: remove %Z support")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/378
+> Signed-off-by: Matthias Maennich <maennich@google.com>
 
-[...]
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 
-> diff --git a/scripts/gen_ikh_data.sh b/scripts/gen_ikh_data.sh
-> new file mode 100755
-> index 000000000000..7329262bed2f
-> --- /dev/null
-> +++ b/scripts/gen_ikh_data.sh
-> @@ -0,0 +1,76 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +spath="$(dirname "$(readlink -f "$0")")"
-> +kroot="$spath/.."
-> +outdir="$(pwd)"
-> +tarfile=$1
-> +cpio_dir=$outdir/$tarfile.tmp
-> +
-> +src_file_list=""
-> +for f in $file_list; do
-
-$file_list is not assigned here.
-
-I applied the patches and I got an empty tar generated. Setting `file_list=$*`
-fixed it for me - though not sure if this is the right fix to use. Last minute
-change/cleanup accidently removed the line that assigns $file_list?
-
-Cheers
-
---
-Qais Yousef
-
-> +	src_file_list="$src_file_list $(echo $f | grep -v OBJDIR)"
-> +done
-> +
-> +obj_file_list=""
-> +for f in $file_list; do
-> +	f=$(echo $f | grep OBJDIR | sed -e 's/OBJDIR\///g')
-> +	obj_file_list="$obj_file_list $f";
-> +done
-> +
-> +# Support incremental builds by skipping archive generation
-> +# if timestamps of files being archived are not changed.
-> +
-> +# This block is useful for debugging the incremental builds.
-> +# Uncomment it for debugging.
-> +# iter=1
-> +# if [ ! -f /tmp/iter ]; then echo 1 > /tmp/iter;
-> +# else; 	iter=$(($(cat /tmp/iter) + 1)); fi
-> +# find $src_file_list -type f | xargs ls -lR > /tmp/src-ls-$iter
-> +# find $obj_file_list -type f | xargs ls -lR > /tmp/obj-ls-$iter
-> +
-> +# modules.order and include/generated/compile.h are ignored because these are
-> +# touched even when none of the source files changed. This causes pointless
-> +# regeneration, so let us ignore them for md5 calculation.
-> +pushd $kroot > /dev/null
-> +src_files_md5="$(find $src_file_list -type f ! -name modules.order |
-> +		grep -v "include/generated/compile.h"		   |
-> +		xargs ls -lR | md5sum | cut -d ' ' -f1)"
-> +popd > /dev/null
-> +obj_files_md5="$(find $obj_file_list -type f ! -name modules.order |
-> +		grep -v "include/generated/compile.h"		   |
-> +		xargs ls -lR | md5sum | cut -d ' ' -f1)"
-> +
-> +if [ -f $tarfile ]; then tarfile_md5="$(md5sum $tarfile | cut -d ' ' -f1)"; fi
-> +if [ -f kernel/kheaders.md5 ] &&
-> +	[ "$(cat kernel/kheaders.md5|head -1)" == "$src_files_md5" ] &&
-> +	[ "$(cat kernel/kheaders.md5|head -2|tail -1)" == "$obj_files_md5" ] &&
-> +	[ "$(cat kernel/kheaders.md5|tail -1)" == "$tarfile_md5" ]; then
-> +		exit
-> +fi
-> +
-> +rm -rf $cpio_dir
-> +mkdir $cpio_dir
-> +
-> +pushd $kroot > /dev/null
-> +for f in $src_file_list;
-> +	do find "$f" ! -name "*.c" ! -name "*.o" ! -name "*.cmd" ! -name ".*";
-> +done | cpio --quiet -pd $cpio_dir
-> +popd > /dev/null
-> +
-> +# The second CPIO can complain if files already exist which can
-> +# happen with out of tree builds. Just silence CPIO for now.
-> +for f in $obj_file_list;
-> +	do find "$f" ! -name "*.c" ! -name "*.o" ! -name "*.cmd" ! -name ".*";
-> +done | cpio --quiet -pd $cpio_dir >/dev/null 2>&1
-> +
-> +find  $cpio_dir -type f -print0 |
-> +	xargs -0 -P8 -n1 -I {} sh -c "$spath/strip-comments.pl {}"
-> +
-> +tar -Jcf $tarfile -C $cpio_dir/ . > /dev/null
-> +
-> +echo "$src_files_md5" > kernel/kheaders.md5
-> +echo "$obj_files_md5" >> kernel/kheaders.md5
-> +echo "$(md5sum $tarfile | cut -d ' ' -f1)" >> kernel/kheaders.md5
-> +
-> +rm -rf $cpio_dir
-> diff --git a/scripts/strip-comments.pl b/scripts/strip-comments.pl
-> new file mode 100755
-> index 000000000000..f8ada87c5802
-> --- /dev/null
-> +++ b/scripts/strip-comments.pl
-> @@ -0,0 +1,8 @@
-> +#!/usr/bin/perl -pi
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +# This script removes /**/ comments from a file, unless such comments
-> +# contain "SPDX". It is used when building compressed in-kernel headers.
-> +
-> +BEGIN {undef $/;}
-> +s/\/\*((?!SPDX).)*?\*\///smg;
+> ---
+>  net/sctp/chunk.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/sctp/chunk.c b/net/sctp/chunk.c
+> index 64bef313d436..5cb7c1ff97e9 100644
+> --- a/net/sctp/chunk.c
+> +++ b/net/sctp/chunk.c
+> @@ -192,7 +192,7 @@ struct sctp_datamsg *sctp_datamsg_from_user(struct sctp_association *asoc,
+>  	if (unlikely(!max_data)) {
+>  		max_data = sctp_min_frag_point(sctp_sk(asoc->base.sk),
+>  					       sctp_datachk_len(&asoc->stream));
+> -		pr_warn_ratelimited("%s: asoc:%p frag_point is zero, forcing max_data to default minimum (%Zu)",
+> +		pr_warn_ratelimited("%s: asoc:%p frag_point is zero, forcing max_data to default minimum (%zu)",
+>  				    __func__, asoc, max_data);
+>  	}
+>  
 > -- 
 > 2.21.0.rc2.261.ga7da99ff1b-goog
+> 
