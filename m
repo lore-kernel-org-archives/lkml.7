@@ -6,179 +6,768 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265BBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6054DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBD02084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBBC218CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388251AbfB1UEF convert rfc822-to-8bit (ORCPT
+        id S1733034AbfB1UHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 15:04:05 -0500
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:38034 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727110AbfB1UDo (ORCPT
+        Thu, 28 Feb 2019 15:07:41 -0500
+Received: from mailproxy06.manitu.net ([217.11.48.70]:35554 "EHLO
+        mailproxy06.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfB1UHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 15:03:44 -0500
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SJuuvE002555;
-        Thu, 28 Feb 2019 20:03:37 GMT
-Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2qxnj7gjuv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Feb 2019 20:03:36 +0000
-Received: from G2W6311.americas.hpqcorp.net (g2w6311.austin.hp.com [16.197.64.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Thu, 28 Feb 2019 15:07:40 -0500
+Received: from [192.168.178.20] (aftr-88-217-180-92.dynamic.mnet-online.de [88.217.180.92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by g2t2354.austin.hpe.com (Postfix) with ESMTPS id 96DBCC6;
-        Thu, 28 Feb 2019 20:03:35 +0000 (UTC)
-Received: from G9W8669.americas.hpqcorp.net (16.220.49.28) by
- G2W6311.americas.hpqcorp.net (16.197.64.53) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 28 Feb 2019 20:03:23 +0000
-Received: from G4W10204.americas.hpqcorp.net (2002:10cf:5210::10cf:5210) by
- G9W8669.americas.hpqcorp.net (2002:10dc:311c::10dc:311c) with Microsoft SMTP
- Server (TLS) id 15.0.1367.3; Thu, 28 Feb 2019 20:03:22 +0000
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (15.241.52.13) by
- G4W10204.americas.hpqcorp.net (16.207.82.16) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3 via Frontend Transport; Thu, 28 Feb 2019 20:03:22 +0000
-Received: from AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM (10.169.7.147) by
- AT5PR8401MB0836.NAMPRD84.PROD.OUTLOOK.COM (10.169.4.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.15; Thu, 28 Feb 2019 20:03:21 +0000
-Received: from AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::4dc1:79a0:953b:2cc1]) by AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::4dc1:79a0:953b:2cc1%3]) with mapi id 15.20.1665.015; Thu, 28 Feb 2019
- 20:03:21 +0000
-From:   "Elliott, Robert (Persistent Memory)" <elliott@hpe.com>
-To:     Erwan Velu <erwanaliasr1@gmail.com>
-CC:     Erwan Velu <e.velu@criteo.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
-        <esc.storagedev@microsemi.com>,
-        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
-        <linux-scsi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] scsi: smartpqi_init: Reporting 'logical unit failure'
-Thread-Topic: [PATCH] scsi: smartpqi_init: Reporting 'logical unit failure'
-Thread-Index: AQHUzrn9RkWbUR+YoEiqb4hCDJ3016X1mfMg
-Date:   Thu, 28 Feb 2019 20:03:20 +0000
-Message-ID: <AT5PR8401MB11696B5DDB2DA774A0E584F4AB750@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
-References: <20190227163133.26283-1-e.velu@criteo.com>
-In-Reply-To: <20190227163133.26283-1-e.velu@criteo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [15.211.195.7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c8fc903b-623c-4b84-7daa-08d69db7c9e1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AT5PR8401MB0836;
-x-ms-traffictypediagnostic: AT5PR8401MB0836:
-x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;AT5PR8401MB0836;23:8cbUtpJL+Jyy6xVQ+oDdQghsCuP8uB3Dy5iWNve?=
- =?us-ascii?Q?wInHv9+XydWSebt/6JjSfzRXJNULePcw7VoFBZyWaHAX9Ys1PqZg+aangP8k?=
- =?us-ascii?Q?WiQ/5W1aJbFevk4+WXkOrDpFV3pNCHQ5zQmbrw8qJ+uFUjhnwVWagyl6dV4L?=
- =?us-ascii?Q?do1Uk8T31+tlrTQVx8eWPYJGUL+V442tObKJapNZf5/GNmV0iXzjiVj7pw9p?=
- =?us-ascii?Q?AQ60VAASXRbCUZ77/gAyF81bvV2YlO6WVK4W+ll9bqEgCC2NeHisMHvhRluU?=
- =?us-ascii?Q?ao5iA+d7ArhHs2lEvEJMVqoKDNbRnYpYo02X2U6ZUX+9+80sm1CuJwPCtJYt?=
- =?us-ascii?Q?OQGecLqSnuyDqFi+GWdNy8ygy5anhoeVZxnnf0z+Bkr1z9wI2vlxBuuuKjMM?=
- =?us-ascii?Q?/+oo0llmh6zydVTmDk+U1FS5uqsxbz3Ws0t5T1RKHa2IFLURYkaQRF8RthTB?=
- =?us-ascii?Q?uUKjLGIRGd+kV9UlIHA13gmT+VIZ/2OCf5onWdUQkV7HjM5KjN7WvYtLa5db?=
- =?us-ascii?Q?K2XjkPKQOMudUBZCTScuWH7O/FH1Cv/xL3MUE7F403rbfnRzfz0u1hgw+Frq?=
- =?us-ascii?Q?uCcDU7Gxlv1qM7xanOPlav6puGdbOvPmcVjuTqWx9sx+kGfUjApVqeozv909?=
- =?us-ascii?Q?AQwrIY2FCJOnwzXtHVclF4xwos9QnYfW2dSOlujLL/vIAthUVi0aKVQFUuAc?=
- =?us-ascii?Q?k/gUPDN0YilVzaTiMOEJeSobf2oBpuq4gv9pzf2o/q9qLk2CmLlbLxrxEdRp?=
- =?us-ascii?Q?kLOTE/tsfmpT2D6aI2xG1Ehp7XIa65gXiSIAt0uYYOmQaHbtvDZ3qyWcKS2f?=
- =?us-ascii?Q?vNM1bJQ0qlW8iYRlZxqPxljDUJBkn5F9KGf434sDsJ3yggdi0q2bO9dDQriS?=
- =?us-ascii?Q?vScvBxpH3dGkCy5xxx7Hi6BjdApQNPlSw+Yoxrt5VuxPgUAJzIYVw8dzy+/a?=
- =?us-ascii?Q?jbSqnDxp+8ia/EDIobC6FOOjnZknLeIVw/8qeglE+zBi9jPCQmEE/Xa2/dwr?=
- =?us-ascii?Q?XG4vYt1MGZtifA6eq1D/fCCU6enuJ/0yBeG60a0uLWes2fl84cZoS4QlAgZ8?=
- =?us-ascii?Q?ZfXeD21HiBZeH2z/XVELyAhuE/L5MVxAyyk2umnPq6MVAAsbEpVHIVtmniYs?=
- =?us-ascii?Q?lKYt60Q2MiGgQ0mBAWHaohmhLsbLHEdR6J8JY7C2vVgBkjLtW66jnZK9nJzi?=
- =?us-ascii?Q?OWawfpnrhsfSrnVGTNg4wSSUQbw9t8lDtj/VN6jdvHFH2HVAI4bNUGdOUWDf?=
- =?us-ascii?Q?VJ5NaXtvE9CCVehYShhaR+ErSr5SmjF/ludt09JFl?=
-x-microsoft-antispam-prvs: <AT5PR8401MB0836C519A17ADC8CFD1FDCE0AB750@AT5PR8401MB0836.NAMPRD84.PROD.OUTLOOK.COM>
-x-forefront-prvs: 0962D394D2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(366004)(376002)(136003)(346002)(199004)(189003)(13464003)(8936002)(76176011)(7696005)(6116002)(26005)(99286004)(6246003)(229853002)(53546011)(6506007)(68736007)(71190400001)(6436002)(55016002)(9686003)(2906002)(53936002)(3846002)(66066001)(102836004)(106356001)(105586002)(71200400001)(14444005)(256004)(1411001)(11346002)(316002)(8676002)(74316002)(478600001)(186003)(446003)(14454004)(25786009)(305945005)(81156014)(486006)(7736002)(81166006)(4326008)(54906003)(5660300002)(97736004)(6916009)(33656002)(476003)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:AT5PR8401MB0836;H:AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hpe.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cPeQhr1k/ZcazPMwvzBP55dfKUcTsVSP/nE5rqo8eIPAOLpDMdwplk3SUhtDasZY/xQ4Big4MV09VFH4Tkx4fr0ie9Sk+ctRiW4tEtMy9yzPmrK1YevRXjVzD4NBNvVB2l+tKJLJGXnd6vKmPAAm2IUMDSuhgKWfRMvxX+QPhGvdVtyTLtA+ulwHAipBeh5A9h0wAmC3CJRBmVxUPY6ht1+Dg10ckRUbbvMD77mF/3t/CYrKOkwZjKSQ5tHaB8829HGoKb8ibJkMJ/JcxusCRysfOfUT5DzO3jXUAqLotoCd2fU9K09VSeqpEz2ilXxaQZ9GCFlg4x1yUkcC8uMW8lUfz/Iko8nLIkus4uHcTWdrctTqwhtbHSY3BUsYAkWNEfHRuy6tl9yk7YZ7WLlV8lx0x5mH08tI3zm+zxCPR34=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        (Authenticated sender: wg@grandegger.com)
+        by mailproxy06.manitu.net (Postfix) with ESMTPSA id 11CCE582859;
+        Thu, 28 Feb 2019 21:09:55 +0100 (CET)
+Subject: Re: [PATCH v5 5/5] can: tcan4x5x: Add tcan4x5x driver to the kernel
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
+        davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190214182754.30721-1-dmurphy@ti.com>
+ <20190214182754.30721-6-dmurphy@ti.com>
+ <6b5ce732-bce1-7e35-2bf4-a1000bfc9208@grandegger.com>
+ <b98b9ccd-1833-50ed-dace-5f8cfd8734f0@ti.com>
+From:   Wolfgang Grandegger <wg@grandegger.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8QEfHnPzgykCs2DOOQ==
+Message-ID: <b8ca8a5a-b6ba-25a0-edcd-65e6a2518d5f@grandegger.com>
+Date:   Thu, 28 Feb 2019 21:07:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8fc903b-623c-4b84-7daa-08d69db7c9e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 20:03:20.9957
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AT5PR8401MB0836
-X-OriginatorOrg: hpe.com
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280134
+In-Reply-To: <b98b9ccd-1833-50ed-dace-5f8cfd8734f0@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of
-> Erwan Velu
-> Sent: Wednesday, February 27, 2019 10:32 AM
-> Subject: [PATCH] scsi: smartpqi_init: Reporting 'logical unit failure'
+Am 28.02.19 um 19:03 schrieb Dan Murphy:
 > 
-> When this HARDWARE_ERROR/0x3e/0x1 case is triggered, the logical volume is offlined.
-> When reading the kernel log, the cause why the device got offlined isn't reported to the user.
-> This situation makes difficult for admins to estimate _why_ the volume got offlined.
-> Reading this part of the code makes clear this is because driver received a HARDWARE_ERROR/0x3e/0x1
-> which is a 'logical unit failure'.
+> Wolfgang
 > 
-> This patch is just about reporting that fact to help admins making a relationship between this event
-> and the offlining.
+> On 2/28/19 11:50 AM, Wolfgang Grandegger wrote:
+>>
+>>
+>> Am 14.02.19 um 19:27 schrieb Dan Murphy:
+>>> Add the TCAN4x5x SPI CAN driver.  This device
+>>> uses the Bosch MCAN IP core along with a SPI
+>>> interface map.  Leverage the MCAN common core
+>>> code to manage the MCAN IP.
+>>>
+>>> This device has a special method to indicate a
+>>> write/read operation on the data payload.
+>>
+>> Please expand the text to approx. 72 lines.>>
 > 
-> Signed-off-by: Erwan Velu <e.velu@criteo.com>
-> ---
->  drivers/scsi/smartpqi/smartpqi_init.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> 72 lines or characters?
+
+Characters, of course!
+
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>
+>>> v5 - Changes to accomodate previous patches for functionality - https://lore.kernel.org/patchwork/patch/1033096/
+>>>
+>>>  drivers/net/can/m_can/Kconfig    |   6 +
+>>>  drivers/net/can/m_can/Makefile   |   1 +
+>>>  drivers/net/can/m_can/tcan4x5x.c | 531 +++++++++++++++++++++++++++++++
+>>>  3 files changed, 538 insertions(+)
+>>>  create mode 100644 drivers/net/can/m_can/tcan4x5x.c
+>>>
+>>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
+>>> index 66e31022a5fa..6c0ab4703fb7 100644
+>>> --- a/drivers/net/can/m_can/Kconfig
+>>> +++ b/drivers/net/can/m_can/Kconfig
+>>> @@ -9,3 +9,9 @@ config CAN_M_CAN_PLATFORM
+>>>  	depends on CAN_M_CAN
+>>>  	---help---
+>>>  	  Say Y here if you want to support for Bosch M_CAN controller.
+>>> +
+>>> +config CAN_M_CAN_TCAN4X5X
+>>> +	depends on CAN_M_CAN
+>>> +	tristate "TCAN4X5X M_CAN device"
+>>> +	---help---
+>>> +	  Say Y here if you want to support for TI M_CAN controller.
+>>
+>> Could yo please be a bit more verbose here.
 > 
-> diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-> index f564af8949e8..89f37d76735c 100644
-> --- a/drivers/scsi/smartpqi/smartpqi_init.c
-> +++ b/drivers/scsi/smartpqi/smartpqi_init.c
-> @@ -2764,6 +2764,12 @@ static void pqi_process_raid_io_error(struct pqi_io_request *io_request)
->  				sshdr.sense_key == HARDWARE_ERROR &&
->  				sshdr.asc == 0x3e &&
->  				sshdr.ascq == 0x1) {
-> +			struct pqi_ctrl_info *ctrl_info = shost_to_hba(scmd->device->host);
-> +			struct pqi_scsi_dev *device = scmd->device->hostdata;
-> +
-> +			dev_err(&ctrl_info->pci_dev->dev, "received 'logical unit failure' from controller
-> for scsi %d:%d:%d:%d\n",
-> +							ctrl_info->scsi_host->host_no, device->bus,
-> +							device->target, device->lun);
->  			pqi_take_device_offline(scmd->device, "RAID");
->  			host_byte = DID_NO_CONNECT;
->  		}
+> ACK
+> 
+>>
+>>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
+>>> index 057bbcdb3c74..e77f0eccff97 100644
+>>> --- a/drivers/net/can/m_can/Makefile
+>>> +++ b/drivers/net/can/m_can/Makefile
+>>> @@ -4,3 +4,4 @@
+>>>  
+>>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
+>>>  obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
+>>> +obj-$(CONFIG_CAN_M_CAN_TCAN4X5X) += tcan4x5x.o
+>>> diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
+>>> new file mode 100644
+>>> index 000000000000..606cd1925009
+>>> --- /dev/null
+>>> +++ b/drivers/net/can/m_can/tcan4x5x.c
+>>> @@ -0,0 +1,531 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +// SPI to CAN driver for the Texas Instruments TCAN4x5x
+>>> +// Copyright (C) 2018-19 Texas Instruments Incorporated - http://www.ti.com/
+>>> +
+>>> +#include <linux/regmap.h>
+>>> +#include <linux/spi/spi.h>
+>>> +
+>>> +#include <linux/regulator/consumer.h>
+>>> +#include <linux/gpio/consumer.h>
+>>> +
+>>> +#include "m_can.h"
+>>> +
+>>> +#define DEVICE_NAME "tcan4x5x"
+>>> +#define TCAN4X5X_EXT_CLK_DEF	40000000
+>>> +
+>>> +#define TCAN4X5X_DEV_ID0	0x00
+>>> +#define TCAN4X5X_DEV_ID1	0x04
+>>> +#define TCAN4X5X_REV		0x08
+>>> +#define TCAN4X5X_STATUS		0x0C
+>>> +#define TCAN4X5X_ERROR_STATUS	0x10
+>>> +#define TCAN4X5X_CONTROL	0x14
+>>> +
+>>> +#define TCAN4X5X_CONFIG		0x800
+>>> +#define TCAN4X5X_TS_PRESCALE	0x804
+>>> +#define TCAN4X5X_TEST_REG	0x808
+>>> +#define TCAN4X5X_INT_FLAGS	0x820
+>>> +#define TCAN4X5X_MCAN_INT_REG	0x824
+>>> +#define TCAN4X5X_INT_EN		0x830
+>>> +
+>>> +
+>>> +/* Interrupt bits */
+>>> +#define TCAN4X5X_CANBUSTERMOPEN_INT_EN	BIT(30)
+>>> +#define TCAN4X5X_CANHCANL_INT_EN	BIT(29)
+>>> +#define TCAN4X5X_CANHBAT_INT_EN		BIT(28)
+>>> +#define TCAN4X5X_CANLGND_INT_EN		BIT(27)
+>>> +#define TCAN4X5X_CANBUSOPEN_INT_EN	BIT(26)
+>>> +#define TCAN4X5X_CANBUSGND_INT_EN	BIT(25)
+>>> +#define TCAN4X5X_CANBUSBAT_INT_EN	BIT(24)
+>>> +#define TCAN4X5X_UVSUP_INT_EN		BIT(22)
+>>> +#define TCAN4X5X_UVIO_INT_EN		BIT(21)
+>>> +#define TCAN4X5X_TSD_INT_EN		BIT(19)
+>>> +#define TCAN4X5X_ECCERR_INT_EN		BIT(16)
+>>> +#define TCAN4X5X_CANINT_INT_EN		BIT(15)
+>>> +#define TCAN4X5X_LWU_INT_EN		BIT(14)
+>>> +#define TCAN4X5X_CANSLNT_INT_EN		BIT(10)
+>>> +#define TCAN4X5X_CANDOM_INT_EN		BIT(8)
+>>> +#define TCAN4X5X_CANBUS_ERR_INT_EN	BIT(5)
+>>> +#define TCAN4X5X_BUS_FAULT		BIT(4)
+>>> +#define TCAN4X5X_MCAN_INT		BIT(1)
+>>> +#define TCAN4X5X_ENABLE_TCAN_INT	(TCAN4X5X_MCAN_INT | \
+>>> +					TCAN4X5X_BUS_FAULT | \
+>>> +					TCAN4X5X_CANBUS_ERR_INT_EN | \
+>>> +					TCAN4X5X_CANINT_INT_EN)
+>>> +
+>>> +/* MCAN Interrupt bits */
+>>> +#define TCAN4X5X_MCAN_IR_ARA		BIT(29)
+>>> +#define TCAN4X5X_MCAN_IR_PED		BIT(28)
+>>> +#define TCAN4X5X_MCAN_IR_PEA		BIT(27)
+>>> +#define TCAN4X5X_MCAN_IR_WD		BIT(26)
+>>> +#define TCAN4X5X_MCAN_IR_BO		BIT(25)
+>>> +#define TCAN4X5X_MCAN_IR_EW		BIT(24)
+>>> +#define TCAN4X5X_MCAN_IR_EP		BIT(23)
+>>> +#define TCAN4X5X_MCAN_IR_ELO		BIT(22)
+>>> +#define TCAN4X5X_MCAN_IR_BEU		BIT(21)
+>>> +#define TCAN4X5X_MCAN_IR_BEC		BIT(20)
+>>> +#define TCAN4X5X_MCAN_IR_DRX		BIT(19)
+>>> +#define TCAN4X5X_MCAN_IR_TOO		BIT(18)
+>>> +#define TCAN4X5X_MCAN_IR_MRAF		BIT(17)
+>>> +#define TCAN4X5X_MCAN_IR_TSW		BIT(16)
+>>> +#define TCAN4X5X_MCAN_IR_TEFL		BIT(15)
+>>> +#define TCAN4X5X_MCAN_IR_TEFF		BIT(14)
+>>> +#define TCAN4X5X_MCAN_IR_TEFW		BIT(13)
+>>> +#define TCAN4X5X_MCAN_IR_TEFN		BIT(12)
+>>> +#define TCAN4X5X_MCAN_IR_TFE		BIT(11)
+>>> +#define TCAN4X5X_MCAN_IR_TCF		BIT(10)
+>>> +#define TCAN4X5X_MCAN_IR_TC		BIT(9)
+>>> +#define TCAN4X5X_MCAN_IR_HPM		BIT(8)
+>>> +#define TCAN4X5X_MCAN_IR_RF1L		BIT(7)
+>>> +#define TCAN4X5X_MCAN_IR_RF1F		BIT(6)
+>>> +#define TCAN4X5X_MCAN_IR_RF1W		BIT(5)
+>>> +#define TCAN4X5X_MCAN_IR_RF1N		BIT(4)
+>>> +#define TCAN4X5X_MCAN_IR_RF0L		BIT(3)
+>>> +#define TCAN4X5X_MCAN_IR_RF0F		BIT(2)
+>>> +#define TCAN4X5X_MCAN_IR_RF0W		BIT(1)
+>>> +#define TCAN4X5X_MCAN_IR_RF0N		BIT(0)
+>>> +#define TCAN4X5X_ENABLE_MCAN_INT	(TCAN4X5X_MCAN_IR_TC | \
+>>> +					TCAN4X5X_MCAN_IR_RF0N | \
+>>> +					TCAN4X5X_MCAN_IR_RF1N | \
+>>> +					TCAN4X5X_MCAN_IR_RF0F | \
+>>> +					TCAN4X5X_MCAN_IR_RF1F)
+>>> +#define TCAN4X5X_MRAM_START	0x8000
+>>> +#define TCAN4X5X_MCAN_OFFSET	0x1000
+>>> +#define TCAN4X5X_MAX_REGISTER	0x8fff
+>>> +
+>>> +#define TCAN4X5X_CLEAR_ALL_INT	0xffffffff
+>>> +#define TCAN4X5X_SET_ALL_INT	0xffffffff
+>>> +
+>>> +#define TCAN4X5X_WRITE_CMD	(0x61 << 24)
+>>> +#define TCAN4X5X_READ_CMD	(0x41 << 24)
+>>> +
+>>> +#define TCAN4X5X_MODE_SEL_MASK		(BIT(7) | BIT(6))
+>>> +#define TCAN4X5X_MODE_SLEEP		0x00
+>>> +#define TCAN4X5X_MODE_STANDBY		BIT(6)
+>>> +#define TCAN4X5X_MODE_NORMAL		BIT(7)
+>>> +
+>>> +#define TCAN4X5X_SW_RESET	BIT(2)
+>>> +
+>>> +#define TCAN4X5X_MCAN_CONFIGURED	BIT(5)
+>>> +#define TCAN4X5X_WATCHDOG_EN		BIT(3)
+>>> +#define TCAN4X5X_WD_60_MS_TIMER		0
+>>> +#define TCAN4X5X_WD_600_MS_TIMER	BIT(28)
+>>> +#define TCAN4X5X_WD_3_S_TIMER		BIT(29)
+>>> +#define TCAN4X5X_WD_6_S_TIMER		(BIT(28) | BIT(29))
+>>> +
+>>> +struct tcan4x5x_priv {
+>>> +	struct regmap *regmap;
+>>> +	struct spi_device *spi;
+>>> +	struct mutex tcan4x5x_lock; /* SPI device lock */
+>>> +
+>>> +	struct m_can_classdev *mcan_dev;
+>>> +
+>>> +	struct gpio_desc *reset_gpio;
+>>> +	struct gpio_desc *interrupt_gpio;
+>>> +	struct gpio_desc *device_wake_gpio;
+>>> +	struct gpio_desc *device_state_gpio;
+>>> +	struct regulator *power;
+>>> +
+>>> +	/* Register based ip */
+>>> +	int mram_start;
+>>> +	int reg_offset;
+>>> +};
+>>> +
+>>> +static struct can_bittiming_const tcan4x5x_bittiming_const = {
+>>> +	.name = DEVICE_NAME,
+>>> +	.tseg1_min = 2,
+>>> +	.tseg1_max = 31,
+>>> +	.tseg2_min = 2,
+>>> +	.tseg2_max = 16,
+>>> +	.sjw_max = 16,
+>>> +	.brp_min = 1,
+>>> +	.brp_max = 32,
+>>> +	.brp_inc = 1,
+>>> +};
+>>> +
+>>> +static struct can_bittiming_const tcan4x5x_data_bittiming_const = {
+>>> +	.name = DEVICE_NAME,
+>>> +	.tseg1_min = 1,
+>>> +	.tseg1_max = 32,
+>>> +	.tseg2_min = 1,
+>>> +	.tseg2_max = 16,
+>>> +	.sjw_max = 16,
+>>> +	.brp_min = 1,
+>>> +	.brp_max = 32,
+>>> +	.brp_inc = 1,
+>>> +};
+>>> +
+>>> +static void tcan4x5x_check_wake(struct tcan4x5x_priv *priv)
+>>> +{
+>>> +	int wake_state = 0;
+>>> +
+>>> +	if (priv->device_state_gpio)
+>>> +		wake_state = gpiod_get_value(priv->device_state_gpio);
+>>> +
+>>> +	if (priv->device_wake_gpio && wake_state) {
+>>> +		gpiod_set_value(priv->device_wake_gpio, 1);
+>>> +		udelay(100);
+>>
+>> Do you need the setting above?
+>>
+> 
+> Do you mean do I need to set the reset line then delay?
 
-Be careful printing errors per-IO; you could get thousands of them if things go bad.
-The block layer print_req_error() uses printk_ratelimited(KERN_ERR) for that reason,
-and the SCSI layer scsi_io_completion_action() maintains a ratelimit on its own.
+I mean, do you need to set the gpio value to 1 at the beginning? Is 0->1
+not enough?
 
-The dev_err_ratelimited() macro might be a good fit here.
+> 
+>>> +		gpiod_set_value(priv->device_wake_gpio, 0);
+>>> +		udelay(100);
+>>> +		gpiod_set_value(priv->device_wake_gpio, 1);
+>>> +	}
+>>> +}
+>>> +
+>>> +static int regmap_spi_gather_write(void *context, const void *reg,
+>>> +				   size_t reg_len, const void *val,
+>>> +				   size_t val_len)
+>>> +{
+>>> +	struct device *dev = context;
+>>> +	struct spi_device *spi = to_spi_device(dev);
+>>> +	struct spi_message m;
+>>> +	u32 addr;
+>>> +	struct spi_transfer t[2] = {{ .tx_buf = &addr, .len = reg_len, .cs_change = 0,},
+>>> +				   { .tx_buf = val, .len = val_len, },};
+>>
+>> 	struct spi_transfer t[2] = {
+>> 		 {.tx_buf = &addr, .len = reg_len, .cs_change = 0,},
+>> 		 {.tx_buf = val, .len = val_len,},
+>> 	};
+>>
+>>
+> 
+> I am assuming LTL issue here.
 
+LTL means? I just reformatted the declaration.
 
----
-Robert Elliott, HPE Persistent Memory
+> 
+>>> +
+>>> +	addr = TCAN4X5X_WRITE_CMD | (*((u16 *)reg) << 8) | val_len >> 3;
+>>
+>>
+> 
+> There is nothing here 
 
+It's OK.
 
+> 
+>>
+>>> +
+>>> +	spi_message_init(&m);
+>>> +	spi_message_add_tail(&t[0], &m);
+>>> +	spi_message_add_tail(&t[1], &m);
+>>> +
+>>> +	return spi_sync(spi, &m);
+>>> +}
+>>> +
+>>> +static int tcan4x5x_regmap_write(void *context, const void *data, size_t count)
+>>> +{
+>>> +	u16 *reg = (u16 *)(data);
+>>> +	const u32 *val = data + 4;
+>>> +
+>>> +	return regmap_spi_gather_write(context, reg, 4, val, count);
+>>> +}
+>>> +
+>>> +static int regmap_spi_async_write(void *context,
+>>> +				  const void *reg, size_t reg_len,
+>>> +				  const void *val, size_t val_len,
+>>> +				  struct regmap_async *a)
+>>> +{
+>>> +	return -ENOTSUPP;
+>>> +}
+>>> +
+>>> +static struct regmap_async *regmap_spi_async_alloc(void)
+>>> +{
+>>> +	return NULL;
+>>> +}
+>>> +
+>>> +static int tcan4x5x_regmap_read(void *context,
+>>> +				const void *reg, size_t reg_size,
+>>> +				void *val, size_t val_size)
+>>> +{
+>>> +	struct device *dev = context;
+>>> +	struct spi_device *spi = to_spi_device(dev);
+>>> +
+>>> +	u32 addr = TCAN4X5X_READ_CMD | (*((u16 *)reg) << 8) | val_size >> 2;
+>>> +
+>>> +	return spi_write_then_read(spi, &addr, reg_size, (u32 *)val, val_size);
+>>> +}
+>>> +
+>>> +static struct regmap_bus tcan4x5x_bus = {
+>>> +	.write = tcan4x5x_regmap_write,
+>>> +	.gather_write = regmap_spi_gather_write,
+>>> +	.async_write = regmap_spi_async_write,
+>>> +	.async_alloc = regmap_spi_async_alloc,
+>>> +	.read = tcan4x5x_regmap_read,
+>>> +	.read_flag_mask = 0x00,
+>>> +	.reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
+>>> +	.val_format_endian_default = REGMAP_ENDIAN_NATIVE,
+>>> +};
+>>> +
+>>> +static u32 tcan4x5x_read_reg(struct m_can_classdev *m_can_class, int reg)
+>>> +{
+>>> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+>>> +	u32 val;
+>>> +
+>>> +	tcan4x5x_check_wake(priv);
+>>> +
+>>> +	regmap_read(priv->regmap, priv->reg_offset + reg, &val);
+>>> +
+>>> +	return val;
+>>> +}
+>>> +
+>>> +static u32 tcan4x5x_read_fifo(struct m_can_classdev *m_can_class,
+>>> +			      int addr_offset)
+>>> +{
+>>> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+>>> +	u32 val;
+>>> +
+>>> +	tcan4x5x_check_wake(priv);
+>>> +
+>>> +	regmap_read(priv->regmap, priv->mram_start + addr_offset, &val);
+>>> +
+>>> +	return val;
+>>> +}
+>>> +
+>>> +static int tcan4x5x_write_reg(struct m_can_classdev *m_can_class,
+>>> +			      int reg, int val)
+>>> +{
+>>> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+>>> +
+>>> +	tcan4x5x_check_wake(priv);
+>>> +
+>>> +	return regmap_write(priv->regmap, priv->reg_offset + reg, val);
+>>> +}
+>>> +
+>>> +static int tcan4x5x_write_fifo(struct m_can_classdev *m_can_class,
+>>> +			       int addr_offset, int val)
+>>> +{
+>>> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+>>> +
+>>> +	tcan4x5x_check_wake(priv);
+>>> +
+>>> +	return regmap_write(priv->regmap, priv->mram_start + addr_offset, val);
+>>> +}
+>>> +
+>>> +static int tcan4x5x_power_enable(struct regulator *reg, int enable)
+>>> +{
+>>> +	if (IS_ERR_OR_NULL(reg))
+>>> +		return 0;
+>>> +
+>>> +	if (enable)
+>>> +		return regulator_enable(reg);
+>>> +	else
+>>> +		return regulator_disable(reg);
+>>> +}
+>>> +
+>>> +static int tcan4x5x_write_tcan_reg(struct m_can_classdev *m_can_class,
+>>> +				   int reg, int val)
+>>> +{
+>>> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+>>> +
+>>> +	tcan4x5x_check_wake(priv);
+>>> +
+>>> +	return regmap_write(priv->regmap, reg, val);
+>>> +}
+>>> +
+>>> +static int tcan4x5x_clear_interrupts(struct m_can_classdev *class_dev)
+>>> +{
+>>> +	struct tcan4x5x_priv *tcan4x5x = (struct tcan4x5x_priv *)class_dev->device_data;
+>>> +	int ret;
+>>> +
+>>> +	tcan4x5x_check_wake(tcan4x5x);
+>>> +
+>>> +	ret = tcan4x5x_write_tcan_reg(class_dev, TCAN4X5X_STATUS,
+>>> +				      TCAN4X5X_CLEAR_ALL_INT);
+>>> +	if (ret)
+>>> +		return -EIO;
+>>
+>> Does "ret" not return a proper error code?
+> 
+> I can change it to ret.
+
+Browsing some kernel code, returning "ret" seems the usual approach
+(apart from ignoring the return code).
+
+> 
+>>
+>>> +
+>>> +	ret = tcan4x5x_write_tcan_reg(class_dev, TCAN4X5X_MCAN_INT_REG,
+>>> +				      TCAN4X5X_ENABLE_MCAN_INT);
+>>> +	if (ret)
+>>> +		return -EIO;
+>>> +
+>>> +	ret = tcan4x5x_write_tcan_reg(class_dev, TCAN4X5X_INT_FLAGS,
+>>> +				      TCAN4X5X_CLEAR_ALL_INT);
+>>> +	if (ret)
+>>> +		return -EIO;
+>>> +
+>>> +
+>>> +	ret = tcan4x5x_write_tcan_reg(class_dev, TCAN4X5X_ERROR_STATUS,
+>>> +				      TCAN4X5X_CLEAR_ALL_INT);
+>>> +	if (ret)
+>>> +		return -EIO;
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int tcan4x5x_init(struct m_can_classdev *class_dev)
+>>> +{
+>>> +	struct tcan4x5x_priv *tcan4x5x = (struct tcan4x5x_priv *)class_dev->device_data;
+>>> +	int ret;
+>>> +
+>>> +	tcan4x5x_check_wake(tcan4x5x);
+>>> +
+>>> +	ret = tcan4x5x_clear_interrupts(class_dev);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	ret = tcan4x5x_write_tcan_reg(class_dev, TCAN4X5X_INT_EN,
+>>> +				      TCAN4X5X_ENABLE_TCAN_INT);
+>>> +	if (ret)
+>>> +		return -EIO;
+>>> +
+>>> +	ret = regmap_update_bits(tcan4x5x->regmap, TCAN4X5X_CONFIG,
+>>> +				 TCAN4X5X_MODE_SEL_MASK, TCAN4X5X_MODE_NORMAL);
+>>> +	if (ret)
+>>> +		return -EIO;
+> 
+> Same comment as above
+> 
+>>> +
+>>> +	/* Zero out the MCAN buffers */
+>>> +	m_can_init_ram(class_dev);
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int tcan4x5x_parse_config(struct m_can_classdev *class_dev)
+>>> +{
+>>> +	struct tcan4x5x_priv *tcan4x5x = (struct tcan4x5x_priv *)class_dev->device_data;
+>>> +
+>>> +	tcan4x5x->reset_gpio = devm_gpiod_get_optional(class_dev->dev,
+>>> +						       "reset", GPIOD_OUT_LOW);
+>>> +	if (IS_ERR(tcan4x5x->reset_gpio))
+>>> +		tcan4x5x->reset_gpio = NULL;
+>>> +
+>>> +	tcan4x5x->device_wake_gpio = devm_gpiod_get_optional(class_dev->dev,
+>>> +							     "device-wake",
+>>> +							     GPIOD_OUT_HIGH);
+>>> +	if (IS_ERR(tcan4x5x->device_wake_gpio))
+>>> +		tcan4x5x->device_wake_gpio = NULL;
+>>> +
+>>> +	tcan4x5x->device_state_gpio = devm_gpiod_get_optional(class_dev->dev,
+>>> +							      "device-state",
+>>> +							      GPIOD_IN);
+>>> +	if (IS_ERR(tcan4x5x->device_state_gpio))
+>>> +		tcan4x5x->device_state_gpio = NULL;
+>>> +
+>>> +	tcan4x5x->interrupt_gpio = devm_gpiod_get(class_dev->dev,
+>>> +						  "data-ready", GPIOD_IN);
+>>> +	if (IS_ERR(tcan4x5x->interrupt_gpio)) {
+>>> +		dev_err(class_dev->dev, "data-ready gpio not defined\n");
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	class_dev->net->irq = gpiod_to_irq(tcan4x5x->interrupt_gpio);
+>>> +
+>>> +	tcan4x5x->power = devm_regulator_get_optional(class_dev->dev,
+>>> +						      "vsup");
+>>> +	if (PTR_ERR(tcan4x5x->power) == -EPROBE_DEFER)
+>>> +		return -EPROBE_DEFER;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static const struct regmap_config tcan4x5x_regmap = {
+>>> +	.reg_bits = 32,
+>>> +	.val_bits = 32,
+>>> +	.cache_type = REGCACHE_NONE,
+>>> +	.max_register = TCAN4X5X_MAX_REGISTER,
+>>> +};
+>>> +
+>>> +static struct m_can_ops tcan4x5x_ops = {
+>>> +	.device_init = tcan4x5x_init,
+>>> +	.read_reg = tcan4x5x_read_reg,
+>>> +	.write_reg = tcan4x5x_write_reg,
+>>> +	.write_fifo = tcan4x5x_write_fifo,
+>>> +	.read_fifo = tcan4x5x_read_fifo,
+>>> +	.clr_dev_interrupts = tcan4x5x_clear_interrupts,
+>>> +};
+>>> +
+>>> +static int tcan4x5x_can_probe(struct spi_device *spi)
+>>> +{
+>>> +	struct tcan4x5x_priv *priv;
+>>> +	struct m_can_classdev *mcan_class;
+>>> +	int freq, ret;
+>>> +
+>>> +	mcan_class = m_can_class_allocate_dev(&spi->dev);
+>>> +	priv = devm_kzalloc(&spi->dev, sizeof(*priv), GFP_KERNEL);
+>>> +	if (!priv)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	mcan_class->device_data = priv;
+>>> +
+>>> +	m_can_class_get_clocks(mcan_class);
+>>> +	if (IS_ERR(mcan_class->cclk)) {
+>>> +		dev_err(&spi->dev, "no CAN clock source defined\n");
+>>> +		freq = TCAN4X5X_EXT_CLK_DEF;
+>>> +	} else {
+>>> +		freq = clk_get_rate(mcan_class->cclk);
+>>> +	}
+>>> +
+>>> +	/* Sanity check */
+>>> +	if (freq < 20000000 || freq > TCAN4X5X_EXT_CLK_DEF)
+>>> +		return -ERANGE;
+>>> +
+>>> +	priv->reg_offset = TCAN4X5X_MCAN_OFFSET;
+>>> +	priv->mram_start = TCAN4X5X_MRAM_START;
+>>> +	priv->spi = spi;
+>>> +	priv->mcan_dev = mcan_class;
+>>> +
+>>> +	mcan_class->pm_clock_support = 0;
+>>> +	mcan_class->can.clock.freq = freq;
+>>> +	mcan_class->dev = &spi->dev;
+>>> +	mcan_class->ops = &tcan4x5x_ops;
+>>> +	mcan_class->is_peripherial = true;
+>>> +	mcan_class->bit_timing = &tcan4x5x_bittiming_const;
+>>> +	mcan_class->data_timing = &tcan4x5x_data_bittiming_const;
+>>> +
+>>> +	spi_set_drvdata(spi, priv);
+>>> +
+>>> +	ret = tcan4x5x_parse_config(mcan_class);
+>>> +	if (ret)
+>>> +		goto out_clk;
+>>> +
+>>> +	/* Configure the SPI bus */
+>>> +	spi->bits_per_word = 32;
+>>> +	ret = spi_setup(spi);
+>>> +	if (ret)
+>>> +		goto out_clk;
+>>> +
+>>> +	priv->regmap = devm_regmap_init(&spi->dev, &tcan4x5x_bus,
+>>> +					&spi->dev, &tcan4x5x_regmap);
+>>> +
+>>> +	mutex_init(&priv->tcan4x5x_lock);
+>>> +
+>>> +	tcan4x5x_power_enable(priv->power, 1);
+>>> +
+>>> +	ret = m_can_class_register(mcan_class);
+>>> +	if (ret)
+>>> +		goto reg_err;
+>>
+>> out_power?
+>>
+> 
+> Not sure what you are asking?
+
+"reg_err" stands for what? Above you use "out_clk" to disable clock
+settings. Therefore "out_power" does make sense to me (or something
+similar). Next time I will be a bit more verbose, sorry!
+
+> 
+>>> +
+>>> +	netdev_info(mcan_class->net, "TCAN4X5X successfully initialized.\n");
+>>> +	return 0;
+>>> +
+>>> +reg_err:
+>>> +	tcan4x5x_power_enable(priv->power, 0);
+>>> +out_clk:
+>>> +	if (!IS_ERR(mcan_class->cclk)) {
+>>> +		clk_disable_unprepare(mcan_class->cclk);
+>>> +		clk_disable_unprepare(mcan_class->hclk);
+>>> +	}
+>>> +
+>>> +	dev_err(&spi->dev, "Probe failed, err=%d\n", -ret);
+>>
+>> Just "ret" is fine!
+>>
+> 
+> Ack
+> 
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int tcan4x5x_can_remove(struct spi_device *spi)
+>>> +{
+>>> +	struct tcan4x5x_priv *priv = spi_get_drvdata(spi);
+>>> +
+>>> +	tcan4x5x_power_enable(priv->power, 0);
+>>> +
+>>> +	m_can_class_unregister(priv->mcan_dev);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static const struct of_device_id tcan4x5x_of_match[] = {
+>>> +	{ .compatible = "ti,tcan4x5x", },
+>>> +	{ }
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, tcan4x5x_of_match);
+>>> +
+>>> +static const struct spi_device_id tcan4x5x_id_table[] = {
+>>> +	{
+>>> +		.name		= "tcan4x5x",
+>>> +		.driver_data	= 0,
+>>> +	},
+>>> +	{ }
+>>> +};
+>>> +MODULE_DEVICE_TABLE(spi, tcan4x5x_id_table);
+>>> +
+>>> +static struct spi_driver tcan4x5x_can_driver = {
+>>> +	.driver = {
+>>> +		.name = DEVICE_NAME,
+>>> +		.of_match_table = tcan4x5x_of_match,
+>>> +		.pm = NULL,
+>>> +	},
+>>> +	.id_table = tcan4x5x_id_table,
+>>> +	.probe = tcan4x5x_can_probe,
+>>> +	.remove = tcan4x5x_can_remove,
+>>> +};
+>>> +module_spi_driver(tcan4x5x_can_driver);
+>>> +
+>>> +MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
+>>> +MODULE_DESCRIPTION("Texas Instruments TCAN4x5x CAN driver");
+>>> +MODULE_LICENSE("GPL v2");
+>>>
+>>
+>> The changes to the io-mapped driver look good and non-critical... time
+>> to ask for beta-testers for the next version of the patch series.
+>>
+> 
+> OK.  I also tested this here on one of our boards that use the iomapped code.
+
+I know, you are testing on a dra76x from?
+
+  https://www.spinics.net/lists/linux-can/msg00886.html
+
+More testing would be nice.
+
+Wolfgang.
