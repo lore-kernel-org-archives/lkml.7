@@ -2,105 +2,116 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43656C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03028C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E58720863
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD10220863
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbfCABod (ORCPT
+        id S1729583AbfCABta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 20:44:33 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57366 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725967AbfCABod (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 20:44:33 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x211hxDg087578
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 20:44:31 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxsxg34rp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 20:44:31 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 1 Mar 2019 01:44:29 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 1 Mar 2019 01:44:26 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x211iPE861210718
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Mar 2019 01:44:26 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C49FEAE057;
-        Fri,  1 Mar 2019 01:44:25 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A217AE045;
-        Fri,  1 Mar 2019 01:44:25 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.108.117])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 Mar 2019 01:44:24 +0000 (GMT)
-Subject: Re: [PULL REQUEST] Lock down patches
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     jmorris@namei.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-Date:   Thu, 28 Feb 2019 20:44:14 -0500
-In-Reply-To: <CACdnJutqg26pk5xnK2ii3ia9JabAnBptE3YQ3yLvVT93as666Q@mail.gmail.com>
-References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
-         <1551392438.10911.227.camel@linux.ibm.com>
-         <CACdnJuvwnh0PKr5jUTm2h=P5-u-oLgBjvThX+DxcegShXReCdA@mail.gmail.com>
-         <1551398720.10911.270.camel@linux.ibm.com>
-         <CACdnJutqg26pk5xnK2ii3ia9JabAnBptE3YQ3yLvVT93as666Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030101-4275-0000-0000-000003155751
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030101-4276-0000-0000-000038239FF7
-Message-Id: <1551404654.10911.276.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903010008
+        Thu, 28 Feb 2019 20:49:30 -0500
+Received: from mga02.intel.com ([134.134.136.20]:31757 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725967AbfCABt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 20:49:29 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 17:49:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,425,1544515200"; 
+   d="scan'208";a="118657832"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2019 17:49:27 -0800
+Date:   Thu, 28 Feb 2019 16:44:04 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>,
+        weijiang.yang@intel.com
+Subject: Re: [PATCH v3 7/8] KVM:X86: Add XSS bit 11 and 12 support for CET
+ xsaves/xrstors.
+Message-ID: <20190228084404.GD12006@local-michael-cet-test.sh.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-8-weijiang.yang@intel.com>
+ <20190228162512.GG6166@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228162512.GG6166@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-02-28 at 17:01 -0800, Matthew Garrett wrote:
-
-> > That's not a valid reason for preventing systems that do use IMA for
-> > verifying the kexec kernel image signature or kernel module signatures
-> > from enabling "lock down".  This just means that there needs to be
-> > some coordination between the different signature verification
-> > methods. [1][2]
+On Thu, Feb 28, 2019 at 08:25:12AM -0800, Sean Christopherson wrote:
+> On Mon, Feb 25, 2019 at 09:27:15PM +0800, Yang Weijiang wrote:
+> > For Guest XSS, right now, only bit 11(user states) and bit 12
+> > (supervisor states) are supported, if other bits are being set,
+> > need to modify KVM_SUPPORTED_XSS macro to have support.
 > 
-> I agree, but the current form of the integration makes it impossible
-> for anyone using an IMA-enabled kernel (but not using IMA) to do
-> anything unless they have IMA signatures. It's a problem we need to
-> solve, I just don't think it's a problem we need to solve before
-> merging the patchset.
-
-That's simply not true.  Have you even looked at the IMA architecture
-patches?
-
-fcf338449af5 x86/ima: require signed kernel modules
-d958083a8f64 x86/ima: define arch_get_ima_policy() for x86
-
-Mimi
-
+> The changelog should describe what the change does directly.  Referencing
+> specific bits implies that the code is explicitly checking for said bits,
+> which it does not.  And there's no need to advise readers on how to add
+> more bits in the future, e.g. the KVM_SUPPORTED_XSS macro may not exist
+> the next time new bits are added.  Just cover what the patch does and why.
+> 
+> Something like:
+> 
+> KVM: x86: Allow the guest to set supported bits in XSS
+> 
+> ...now that KVM supports setting CET related bits.  Previously, KVM did
+> not support setting any bits in XSS and so hardcoded its check to inject
+> a #GP if the guest attempted to write a non-zero value to IA32_XSS.
+>
+good point! Will change these description.
+> > 
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> >  arch/x86/kvm/vmx.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > index d32cee9ee079..68908ed7b151 100644
+> > --- a/arch/x86/kvm/vmx.c
+> > +++ b/arch/x86/kvm/vmx.c
+> > @@ -47,6 +47,7 @@
+> >  #include <asm/virtext.h>
+> >  #include <asm/mce.h>
+> >  #include <asm/fpu/internal.h>
+> > +#include <asm/fpu/types.h>
+> >  #include <asm/perf_event.h>
+> >  #include <asm/debugreg.h>
+> >  #include <asm/kexec.h>
+> > @@ -4336,12 +4337,13 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> >  	case MSR_IA32_XSS:
+> >  		if (!vmx_xsaves_supported())
+> >  			return 1;
+> > +
+> >  		/*
+> > -		 * The only supported bit as of Skylake is bit 8, but
+> > -		 * it is not supported on KVM.
+> > +		 * Check bits being set are supported in KVM.
+> 
+> I'd drop the comment altogether, it's pretty obvious from the code that
+> were checking which bits are supported.
+you won't see these redundancies in next version ;)
+> >  		 */
+> > -		if (data != 0)
+> > +		if (data & ~kvm_supported_xss())
+> >  			return 1;
+> > +
+> >  		vcpu->arch.ia32_xss = data;
+> >  		if (vcpu->arch.ia32_xss != host_xss)
+> >  			add_atomic_switch_msr(vmx, MSR_IA32_XSS,
+> > -- 
+> > 2.17.1
+> > 
