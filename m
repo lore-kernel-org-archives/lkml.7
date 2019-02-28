@@ -2,106 +2,106 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE23C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66984C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0C1218CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C464218CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:40:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gjrUtY96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388058AbfB1Sj1 (ORCPT
+        id S2387744AbfB1SkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:39:27 -0500
-Received: from vmicros1.altlinux.org ([194.107.17.57]:58248 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732879AbfB1Sj0 (ORCPT
+        Thu, 28 Feb 2019 13:40:23 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35528 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfB1SkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:39:26 -0500
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 2E47172CA65;
-        Thu, 28 Feb 2019 21:39:24 +0300 (MSK)
-Received: from altlinux.org (sole.flsd.net [185.75.180.6])
-        by imap.altlinux.org (Postfix) with ESMTPSA id 0FC2F4A4AE7;
-        Thu, 28 Feb 2019 21:39:24 +0300 (MSK)
-Date:   Thu, 28 Feb 2019 21:39:23 +0300
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 04/10] crypto: akcipher - new verify API for public
- key algorithms
-Message-ID: <20190228183923.5klzwli5zmeew54j@altlinux.org>
-Mail-Followup-To: David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190224060828.2527-5-vt@altlinux.org>
- <20190224060828.2527-1-vt@altlinux.org>
- <14843.1551377934@warthog.procyon.org.uk>
+        Thu, 28 Feb 2019 13:40:22 -0500
+Received: by mail-ot1-f67.google.com with SMTP id z19so18627365otm.2;
+        Thu, 28 Feb 2019 10:40:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=281J533cm8Mq2gkG6Koc9nq8Kvg2bVEm0r9YRwAbVUA=;
+        b=gjrUtY96LH4IuvNOHUzhDFc6qq0X/4/XvQ1N1hEZbJj4HcuxM4F03igpbo2uoBc07T
+         jmefZvwy2922cpJyf+sd04UeW2vtle7XK9vnmaVrW29yYKLQEkhlJsdH3TgPaWzCUHtN
+         Rjxxnr0KCpNQ+m3qwuPBvIp0KwDNXGdodf+OmfNQh8n9fN8kaygV+HeIbO4x+wypkX8B
+         RFgAdW3j0tipmpgVFl/VCgECKx/KdHOELaUT8ISRoIvJUFgK+zZgsP/KA3C3jVSybQiE
+         UOHU1j072gfNIwi4at9UiwRuCpPYb8jO9gtMTA8e0VvPJK0197BjE29Ws9qxch8to5IV
+         T03A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=281J533cm8Mq2gkG6Koc9nq8Kvg2bVEm0r9YRwAbVUA=;
+        b=tJOJ/gzkJLqMx+xFX8jC/LDDQwCs9T1JyxkdoRxrfcxELkqRBX/dIRc9jZQp1AfUa3
+         NVOkeTUP9vVmcEe8Frab/vz2eJBP2KWzP+e17gekvO3B49DcvHFrnjUdTKVGfDB+4Vuw
+         0QT8au+am11n8C2zfTGkJPXIDxqvUu45Qf8v5qReD8b+rJ8njFINSNngdbfW4KWQDhJY
+         KYgaFToFTxLzO/hKE19EUghAlc54RJmuuSsRnd6zAENwPB4JsLjIXggm9fBuH/VIlZHF
+         BWdFOcOvaQ//oEMEpaUFSS+GbTiecj+QSCo3uSsZ5AbnJukO8kTphJCRj0CS2va2PZEt
+         zkpQ==
+X-Gm-Message-State: APjAAAXd6XVM3H4yi9Y8aHtBc8oZ/AFZs3nJSbofZJq/2/Y3FSSBN2dX
+        Vasxy/QKmh5cTosGsZlu+CIfT1zKodm/qCPJtnE=
+X-Google-Smtp-Source: APXvYqx2cndA7WoRhT9xVx5379LMl2RQ4jfjL3cctwYyE2hQ9tN2Grkx8xFMj74lzzLQhDoN6vpSMQrmGOpQUu1kqZ4=
+X-Received: by 2002:a9d:6348:: with SMTP id y8mr667215otk.287.1551379221903;
+ Thu, 28 Feb 2019 10:40:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <14843.1551377934@warthog.procyon.org.uk>
-User-Agent: NeoMutt/20171215-106-ac61c7
+References: <20190227063737.24445-1-daniel.baluta@nxp.com> <20190227063737.24445-6-daniel.baluta@nxp.com>
+In-Reply-To: <20190227063737.24445-6-daniel.baluta@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 28 Feb 2019 15:40:12 -0300
+Message-ID: <CAOMZO5AY--Q7FDwK-k8u=mkR-9bxz0XWXN3HNZb4Pb+MESZ6Dg@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: imx8mq-evk: Enable wm8524 codec
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
+        "spencercw@gmail.com" <spencercw@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David,
+On Wed, Feb 27, 2019 at 3:38 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
 
-On Thu, Feb 28, 2019 at 06:18:54PM +0000, David Howells wrote:
-> Vitaly Chikunov <vt@altlinux.org> wrote:
-> 
-> > +	digest = kmemdup(sig->digest, sig->digest_size, GFP_KERNEL);
-> > +	if (!digest)
-> 
-> You shouldn't need to copy the digest.  It's being passed in to the crypto
-> algorithm, not extracted out.
+> +
+> +       wm8524: audio-codec-0 {
 
-That's how Herbert suggested to do it. Quoting FYI:
+This -0 is not needed as we have a single codec on this board.
 
-| On Fri, Feb 01, 2019 at 02:26:55PM +0800, Herbert Xu wrote:
-| > On Fri, Jan 25, 2019 at 09:01:16PM +0300, Vitaly Chikunov wrote:
-| > >
-| > > @@ -781,36 +780,17 @@ static int tpm_key_verify_signature(const struct key *key,
-| > >     if (!req)
-| > >             goto error_free_tfm;
-| > >
-| > > -   ret = -ENOMEM;
-| > > -   outlen = crypto_akcipher_maxsize(tfm);
-| > > -   output = kmalloc(outlen, GFP_KERNEL);
-| > > -   if (!output)
-| > > -           goto error_free_req;
-| > > -
-| > > -   sg_init_one(&sig_sg, sig->s, sig->s_size);
-| > > -   sg_init_one(&digest_sg, output, outlen);
-| > > -   akcipher_request_set_crypt(req, &sig_sg, &digest_sg, sig->s_size,
-| > > -                              outlen);
-| > > +   sg_init_table(&src_sg, 2);
-| > > +   sg_set_buf(&src_sg[0], sig->s, sig->s_size);
-| > > +   sg_set_buf(&src_sg[1], sig->digest, sig->digest_size);
-| > > +   akcipher_request_set_crypt(req, &src_sg, NULL, sig->s_size,
-| > > +                              sig->digest_size);
-| >
-| > It's not clear that sig->digest is guaranteed to be kmalloc memory.
-| > In any case, it's best not to mix unrelated changes in a single
-| > patch.  So please keep the kmalloc on output and then copy
-| > sig->digest into it and put output into the SG list.
+> +               #sound-dai-cells = <0>;
+> +               compatible = "wlf,wm8524";
+> +               clocks = <&clk IMX8MQ_CLK_SAI2_ROOT>;
+> +               clock-names = "mclk";
 
+The clocks and clock-names properties can be removed, right?
 
-> > +		if (memcmp(c, outbuf_enc, c_size)) {
-> 
-> Please use == 0 and != 0 with memcmp() and strcmp().  Their return values are
-> kind of inverted in sense if you treat them as boolean.
+I don't see them defined in the binding doc and the codec driver does
+not call clk_get(), so there is a mismatch.
 
-OK.
-
-Thanks!
-
+Also, I still think this one and the previous patch could be made into
+a single patch that adds audio support for the board.
