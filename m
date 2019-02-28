@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56E9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0B2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CF2218E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577102184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366984;
-	bh=HD0ZgtkClz+U54CZRrOFB8omyqUPYJImcmwtLfKc3cs=;
+	s=default; t=1551366987;
+	bh=wIbWpnhPRN3SfQiz7teZzGpJ3Qk9a1oxLNrfAGIz68s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vD0phGo3phRbXprdxI7tAcn7rgBlsrplSZ6Pjgv4aWKgXxLc+iQBQVTJcC/C2mHD0
-	 XwogeoustocqtuJbsJJ8BZuhym2QonFG1cbA8BuDCFLxwIeyGt6T/97Shd/wVlElGn
-	 UpaIAQbZV1pzCu0E6KYIzS4+on8N65Vqt9Z6HqdI=
+	b=C1WXXLXwsZwovhzTXLeK9OLReOa7j2w7doj+O1hhfYlqr9NpHj0dHa3A9n9IlYwri
+	 AvgsyEk93ExH2R8Tt56O33JRrTOnTANHtTNqZyIcfYYIacJ60rF1p7DQQjd6i9Nu5g
+	 LY+SPDYyIivGPa3uq23dJcBIeBIjvHT3JjfpNN8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389024AbfB1PQX (ORCPT
+        id S2388593AbfB1PQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:16:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52588 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:16:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389005AbfB1PQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2388682AbfB1PQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Feb 2019 10:16:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C677218EA;
-        Thu, 28 Feb 2019 15:16:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 818E3218FC;
+        Thu, 28 Feb 2019 15:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366979;
-        bh=HD0ZgtkClz+U54CZRrOFB8omyqUPYJImcmwtLfKc3cs=;
+        s=default; t=1551366980;
+        bh=wIbWpnhPRN3SfQiz7teZzGpJ3Qk9a1oxLNrfAGIz68s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q+KP9Nwvu7Ey1a4530Y3m6zf/J+rPXqHWb/fFAJ3oQKaxR/NuevT56WyxM1JB7r3R
-         qfQtuMmwWCT/Vcf4aXsNespW5ghrQBnAn+mxCSIThohl8rn4fRs1gw0BeXDno31jCA
-         SOLMQdhzHrWV3X4YmRHSN5EFasiQ3a7XPfB+oObo=
+        b=sqK/eULxGyTcV640q0OzS/6ELP6P3fIuMjo7rAN3zj9jbkT5JHTQoAyaljTpc/FSa
+         Bj3PpNTOd8YksDlEQPeGEW7Ms/zmoDOY/+rsCWMKwqYnrhuM6G1BBQBw0W2q9aFi45
+         RV2x90zzs2bw/fCQ6ucZKb5rSvFl3gQCZi1ia9J0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 4/8] dmaengine: dmatest: Abort test in case of mapping error
-Date:   Thu, 28 Feb 2019 10:16:08 -0500
-Message-Id: <20190228151614.13022-4-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 5/8] s390/qeth: fix use-after-free in error path
+Date:   Thu, 28 Feb 2019 10:16:09 -0500
+Message-Id: <20190228151614.13022-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151614.13022-1-sashal@kernel.org>
 References: <20190228151614.13022-1-sashal@kernel.org>
@@ -58,121 +58,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 6454368a804c4955ccd116236037536f81e5b1f1 ]
+[ Upstream commit afa0c5904ba16d59b0454f7ee4c807dae350f432 ]
 
-In case of mapping error the DMA addresses are invalid and continuing
-will screw system memory or potentially something else.
+The error path in qeth_alloc_qdio_buffers() that takes care of
+cleaning up the Output Queues is buggy. It first frees the queue, but
+then calls qeth_clear_outq_buffers() with that very queue struct.
 
-[  222.480310] dmatest: dma0chan7-copy0: summary 1 tests, 3 failures 6 iops 349 KB/s (0)
-...
-[  240.912725] check: Corrupted low memory at 00000000c7c75ac9 (2940 phys) = 5656000000000000
-[  240.921998] check: Corrupted low memory at 000000005715a1cd (2948 phys) = 279f2aca5595ab2b
-[  240.931280] check: Corrupted low memory at 000000002f4024c0 (2950 phys) = 5e5624f349e793cf
-...
+Make the call to qeth_clear_outq_buffers() part of the free action
+(in the correct order), and while at it fix the naming of the helper.
 
-Abort any test if mapping failed.
-
-Fixes: 4076e755dbec ("dmatest: convert to dmaengine_unmap_data")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 0da9581ddb0f ("qeth: exploit asynchronous delivery of storage blocks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmatest.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 6796eb1a8a4cb..884aecebb249b 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -563,11 +563,9 @@ static int dmatest_func(void *data)
- 			srcs[i] = um->addr[i] + src_off;
- 			ret = dma_mapping_error(dev->dev, um->addr[i]);
- 			if (ret) {
--				dmaengine_unmap_put(um);
- 				result("src mapping error", total_tests,
- 				       src_off, dst_off, len, ret);
--				failed_tests++;
--				continue;
-+				goto error_unmap_continue;
- 			}
- 			um->to_cnt++;
- 		}
-@@ -582,11 +580,9 @@ static int dmatest_func(void *data)
- 					       DMA_BIDIRECTIONAL);
- 			ret = dma_mapping_error(dev->dev, dsts[i]);
- 			if (ret) {
--				dmaengine_unmap_put(um);
- 				result("dst mapping error", total_tests,
- 				       src_off, dst_off, len, ret);
--				failed_tests++;
--				continue;
-+				goto error_unmap_continue;
- 			}
- 			um->bidi_cnt++;
- 		}
-@@ -611,12 +607,10 @@ static int dmatest_func(void *data)
- 		}
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 533bd2467910b..b40604d0126f8 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -2452,11 +2452,12 @@ static int qeth_init_qdio_out_buf(struct qeth_qdio_out_q *q, int bidx)
+ 	return rc;
+ }
  
- 		if (!tx) {
--			dmaengine_unmap_put(um);
- 			result("prep error", total_tests, src_off,
- 			       dst_off, len, ret);
- 			msleep(100);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
+-static void qeth_free_qdio_out_buf(struct qeth_qdio_out_q *q)
++static void qeth_free_output_queue(struct qeth_qdio_out_q *q)
+ {
+ 	if (!q)
+ 		return;
  
- 		done->done = false;
-@@ -625,12 +619,10 @@ static int dmatest_func(void *data)
- 		cookie = tx->tx_submit(tx);
- 
- 		if (dma_submit_error(cookie)) {
--			dmaengine_unmap_put(um);
- 			result("submit error", total_tests, src_off,
- 			       dst_off, len, ret);
- 			msleep(100);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
- 		dma_async_issue_pending(chan);
- 
-@@ -643,16 +635,14 @@ static int dmatest_func(void *data)
- 			dmaengine_unmap_put(um);
- 			result("test timed out", total_tests, src_off, dst_off,
- 			       len, 0);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		} else if (status != DMA_COMPLETE) {
- 			dmaengine_unmap_put(um);
- 			result(status == DMA_ERROR ?
- 			       "completion error status" :
- 			       "completion busy status", total_tests, src_off,
- 			       dst_off, len, ret);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
- 
- 		dmaengine_unmap_put(um);
-@@ -691,6 +681,12 @@ static int dmatest_func(void *data)
- 			verbose_result("test passed", total_tests, src_off,
- 				       dst_off, len, 0);
- 		}
-+
-+		continue;
-+
-+error_unmap_continue:
-+		dmaengine_unmap_put(um);
-+		failed_tests++;
++	qeth_clear_outq_buffers(q, 1);
+ 	qdio_free_buffers(q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
+ 	kfree(q);
+ }
+@@ -2529,10 +2530,8 @@ static int qeth_alloc_qdio_buffers(struct qeth_card *card)
+ 		card->qdio.out_qs[i]->bufs[j] = NULL;
  	}
- 	runtime = ktime_us_delta(ktime_get(), ktime);
- 
+ out_freeoutq:
+-	while (i > 0) {
+-		qeth_free_qdio_out_buf(card->qdio.out_qs[--i]);
+-		qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
+-	}
++	while (i > 0)
++		qeth_free_output_queue(card->qdio.out_qs[--i]);
+ 	kfree(card->qdio.out_qs);
+ 	card->qdio.out_qs = NULL;
+ out_freepool:
+@@ -2565,10 +2564,8 @@ static void qeth_free_qdio_buffers(struct qeth_card *card)
+ 	qeth_free_buffer_pool(card);
+ 	/* free outbound qdio_qs */
+ 	if (card->qdio.out_qs) {
+-		for (i = 0; i < card->qdio.no_out_queues; ++i) {
+-			qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
+-			qeth_free_qdio_out_buf(card->qdio.out_qs[i]);
+-		}
++		for (i = 0; i < card->qdio.no_out_queues; i++)
++			qeth_free_output_queue(card->qdio.out_qs[i]);
+ 		kfree(card->qdio.out_qs);
+ 		card->qdio.out_qs = NULL;
+ 	}
 -- 
 2.19.1
 
