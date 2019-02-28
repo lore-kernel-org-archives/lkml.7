@@ -2,157 +2,455 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6985FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8573FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38512218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E43218FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551366912;
+	bh=9k7YWxfOmcpqwmQNNgAn5DpF5BzRfvpMae2bhFexTuM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xyiOj8neTuHW70vHlV9W5UR/76Uk6CJ2RAl6xtNuovIx+peZGzz0YVIhPZzAq0+W2
+	 Nky1lKZBdI3E4nc8mpb3yrovdMmHPYRYyEYC+iNskambu4leqJWfAM0uNcrlpoQoGw
+	 si3AYPzGgNsPBJkvSw6yLxDjEUZtnVd4CkI6mNrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388771AbfB1PPH (ORCPT
+        id S2388784AbfB1PPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:15:07 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:35380 "EHLO mx1.redhat.com"
+        Thu, 28 Feb 2019 10:15:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388123AbfB1PPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:05 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2388762AbfB1PPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:08 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E934BC0ED315;
-        Thu, 28 Feb 2019 15:15:03 +0000 (UTC)
-Received: from [10.36.112.40] (ovpn-112-40.ams2.redhat.com [10.36.112.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 42FAB60BE0;
-        Thu, 28 Feb 2019 15:14:53 +0000 (UTC)
-Subject: Re: [PATCH] kvm: properly check debugfs dentry before using it
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     kvm@vger.kernel.org,
-        syzbot <syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        penguin-kernel@i-love.sakura.ne.jp,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-References: <0000000000007e10c50580aa7684@google.com>
- <0000000000006164d205825fb497@google.com> <20190226191932.GB218103@gmail.com>
- <20190228150805.GA31904@kroah.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <a4ca3faa-5e57-b07a-5598-bde465bfebac@redhat.com>
-Date:   Thu, 28 Feb 2019 16:14:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F6C6218C3;
+        Thu, 28 Feb 2019 15:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551366906;
+        bh=9k7YWxfOmcpqwmQNNgAn5DpF5BzRfvpMae2bhFexTuM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XLf4VVXzE0Y4ia39RnaGZZHvwODUCGweZHoKhA+Eiqk1fIdvCFEQDb1dIRIoYxPxb
+         LhFeAnoG60nXgoJ3+apH5yhmoyzreAhx9R5sbXhpjgP6O35X8F0P5fCrXlYES+Umwr
+         v2QMQo5bXGXVv89eShttrXBxToblsGJEWFEhE9EY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Huacai Chen <chenhc@lemote.com>, Huang Pei <huangpei@loongson.cn>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>, ambrosehua@gmail.com,
+        "Steven J . Hill" <Steven.Hill@cavium.com>,
+        linux-mips@linux-mips.org, Fuxin Zhang <zhangfx@lemote.com>,
+        Zhangjin Wu <wuzhangjin@gmail.com>,
+        Li Xuefeng <lixuefeng@loongson.cn>,
+        Xu Chenghua <xuchenghua@loongson.cn>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 31/36] MIPS: Loongson: Introduce and use loongson_llsc_mb()
+Date:   Thu, 28 Feb 2019 10:13:32 -0500
+Message-Id: <20190228151337.12176-31-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
+References: <20190228151337.12176-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190228150805.GA31904@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 28 Feb 2019 15:15:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/19 16:08, Greg Kroah-Hartman wrote:
-> debugfs can now report an error code if something went wrong instead of
-> just NULL.  So if the return value is to be used as a "real" dentry, it
-> needs to be checked if it is an error before dereferencing it.
-> 
-> This is now happening because of ff9fb72bc077 ("debugfs: return error
-> values, not NULL").  syzbot has found a way to trigger multiple debugfs
-> files attempting to be created, which fails, and then the error code
-> gets passed to dentry_path_raw() which obviously does not like it.
-> 
-> Reported-by: Eric Biggers <ebiggers@kernel.org>
-> Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
-> 
-> Paolo, this should be merged into 5.0-final, and if not there, then
-> 5.1-rc1 and then backported to 5.0 through the stable tree.  If you
-> want me to send this to Linus, I will be glad to do so.
-> 
-> 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 585845203db8..076bc38963bf 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -4044,7 +4044,7 @@ static void kvm_uevent_notify_change(unsigned int type, struct kvm *kvm)
->  	}
->  	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
->  
-> -	if (kvm->debugfs_dentry) {
-> +	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
->  		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
->  
->  		if (p) {
-> 
+From: Huacai Chen <chenhc@lemote.com>
 
-Sure, go ahead.
+[ Upstream commit e02e07e3127d8aec1f4bcdfb2fc52a2d99b4859e ]
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+On the Loongson-2G/2H/3A/3B there is a hardware flaw that ll/sc and
+lld/scd is very weak ordering. We should add sync instructions "before
+each ll/lld" and "at the branch-target between ll/sc" to workaround.
+Otherwise, this flaw will cause deadlock occasionally (e.g. when doing
+heavy load test with LTP).
 
-Paolo
+Below is the explaination of CPU designer:
+
+"For Loongson 3 family, when a memory access instruction (load, store,
+or prefetch)'s executing occurs between the execution of LL and SC, the
+success or failure of SC is not predictable. Although programmer would
+not insert memory access instructions between LL and SC, the memory
+instructions before LL in program-order, may dynamically executed
+between the execution of LL/SC, so a memory fence (SYNC) is needed
+before LL/LLD to avoid this situation.
+
+Since Loongson-3A R2 (3A2000), we have improved our hardware design to
+handle this case. But we later deduce a rarely circumstance that some
+speculatively executed memory instructions due to branch misprediction
+between LL/SC still fall into the above case, so a memory fence (SYNC)
+at branch-target (if its target is not between LL/SC) is needed for
+Loongson 3A1000, 3B1500, 3A2000 and 3A3000.
+
+Our processor is continually evolving and we aim to to remove all these
+workaround-SYNCs around LL/SC for new-come processor."
+
+Here is an example:
+
+Both cpu1 and cpu2 simutaneously run atomic_add by 1 on same atomic var,
+this bug cause both 'sc' run by two cpus (in atomic_add) succeed at same
+time('sc' return 1), and the variable is only *added by 1*, sometimes,
+which is wrong and unacceptable(it should be added by 2).
+
+Why disable fix-loongson3-llsc in compiler?
+Because compiler fix will cause problems in kernel's __ex_table section.
+
+This patch fix all the cases in kernel, but:
+
++. the fix at the end of futex_atomic_cmpxchg_inatomic is for branch-target
+of 'bne', there other cases which smp_mb__before_llsc() and smp_llsc_mb() fix
+the ll and branch-target coincidently such as atomic_sub_if_positive/
+cmpxchg/xchg, just like this one.
+
++. Loongson 3 does support CONFIG_EDAC_ATOMIC_SCRUB, so no need to touch
+edac.h
+
++. local_ops and cmpxchg_local should not be affected by this bug since
+only the owner can write.
+
++. mips_atomic_set for syscall.c is deprecated and rarely used, just let
+it go
+
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Huang Pei <huangpei@loongson.cn>
+[paul.burton@mips.com:
+  - Simplify the addition of -mno-fix-loongson3-llsc to cflags, and add
+    a comment describing why it's there.
+  - Make loongson_llsc_mb() a no-op when
+    CONFIG_CPU_LOONGSON3_WORKAROUNDS=n, rather than a compiler memory
+    barrier.
+  - Add a comment describing the bug & how loongson_llsc_mb() helps
+    in asm/barrier.h.]
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: ambrosehua@gmail.com
+Cc: Steven J . Hill <Steven.Hill@cavium.com>
+Cc: linux-mips@linux-mips.org
+Cc: Fuxin Zhang <zhangfx@lemote.com>
+Cc: Zhangjin Wu <wuzhangjin@gmail.com>
+Cc: Li Xuefeng <lixuefeng@loongson.cn>
+Cc: Xu Chenghua <xuchenghua@loongson.cn>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/Kconfig               | 15 ++++++++++++++
+ arch/mips/include/asm/atomic.h  |  6 ++++++
+ arch/mips/include/asm/barrier.h | 36 +++++++++++++++++++++++++++++++++
+ arch/mips/include/asm/bitops.h  |  5 +++++
+ arch/mips/include/asm/futex.h   |  3 +++
+ arch/mips/include/asm/pgtable.h |  2 ++
+ arch/mips/loongson64/Platform   | 23 +++++++++++++++++++++
+ arch/mips/mm/tlbex.c            | 10 +++++++++
+ 8 files changed, 100 insertions(+)
+
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 8d4470f44b740..77877c56ffc10 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1407,6 +1407,21 @@ config LOONGSON3_ENHANCEMENT
+ 	  please say 'N' here. If you want a high-performance kernel to run on
+ 	  new Loongson 3 machines only, please say 'Y' here.
+ 
++config CPU_LOONGSON3_WORKAROUNDS
++	bool "Old Loongson 3 LLSC Workarounds"
++	default y if SMP
++	depends on CPU_LOONGSON3
++	help
++	  Loongson 3 processors have the llsc issues which require workarounds.
++	  Without workarounds the system may hang unexpectedly.
++
++	  Newer Loongson 3 will fix these issues and no workarounds are needed.
++	  The workarounds have no significant side effect on them but may
++	  decrease the performance of the system so this option should be
++	  disabled unless the kernel is intended to be run on old systems.
++
++	  If unsure, please say Y.
++
+ config CPU_LOONGSON2E
+ 	bool "Loongson 2E"
+ 	depends on SYS_HAS_CPU_LOONGSON2E
+diff --git a/arch/mips/include/asm/atomic.h b/arch/mips/include/asm/atomic.h
+index 0ab176bdb8e81..8ee17565bc781 100644
+--- a/arch/mips/include/asm/atomic.h
++++ b/arch/mips/include/asm/atomic.h
+@@ -47,6 +47,7 @@ static __inline__ void atomic_##op(int i, atomic_t * v)			      \
+ 	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+ 		int temp;						      \
+ 									      \
++		loongson_llsc_mb();					      \
+ 		__asm__ __volatile__(					      \
+ 		"	.set	arch=r4000				\n"   \
+ 		"1:	ll	%0, %1		# atomic_" #op "	\n"   \
+@@ -86,6 +87,7 @@ static __inline__ int atomic_##op##_return_relaxed(int i, atomic_t * v)	      \
+ 	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+ 		int temp;						      \
+ 									      \
++		loongson_llsc_mb();					      \
+ 		__asm__ __volatile__(					      \
+ 		"	.set	arch=r4000				\n"   \
+ 		"1:	ll	%1, %2		# atomic_" #op "_return	\n"   \
+@@ -134,6 +136,7 @@ static __inline__ int atomic_fetch_##op##_relaxed(int i, atomic_t * v)	      \
+ 	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+ 		int temp;						      \
+ 									      \
++		loongson_llsc_mb();					      \
+ 		__asm__ __volatile__(					      \
+ 		"	.set	arch=r4000				\n"   \
+ 		"1:	ll	%1, %2		# atomic_fetch_" #op "	\n"   \
+@@ -389,6 +392,7 @@ static __inline__ void atomic64_##op(long i, atomic64_t * v)		      \
+ 	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+ 		long temp;						      \
+ 									      \
++		loongson_llsc_mb();					      \
+ 		__asm__ __volatile__(					      \
+ 		"	.set	arch=r4000				\n"   \
+ 		"1:	lld	%0, %1		# atomic64_" #op "	\n"   \
+@@ -428,6 +432,7 @@ static __inline__ long atomic64_##op##_return_relaxed(long i, atomic64_t * v) \
+ 	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+ 		long temp;						      \
+ 									      \
++		loongson_llsc_mb();					      \
+ 		__asm__ __volatile__(					      \
+ 		"	.set	arch=r4000				\n"   \
+ 		"1:	lld	%1, %2		# atomic64_" #op "_return\n"  \
+@@ -477,6 +482,7 @@ static __inline__ long atomic64_fetch_##op##_relaxed(long i, atomic64_t * v)  \
+ 	if (kernel_uses_llsc && R10000_LLSC_WAR) {			      \
+ 		long temp;						      \
+ 									      \
++		loongson_llsc_mb();					      \
+ 		__asm__ __volatile__(					      \
+ 		"	.set	arch=r4000				\n"   \
+ 		"1:	lld	%1, %2		# atomic64_fetch_" #op "\n"   \
+diff --git a/arch/mips/include/asm/barrier.h b/arch/mips/include/asm/barrier.h
+index a5eb1bb199a7f..b7f6ac5e513c9 100644
+--- a/arch/mips/include/asm/barrier.h
++++ b/arch/mips/include/asm/barrier.h
+@@ -222,6 +222,42 @@
+ #define __smp_mb__before_atomic()	__smp_mb__before_llsc()
+ #define __smp_mb__after_atomic()	smp_llsc_mb()
+ 
++/*
++ * Some Loongson 3 CPUs have a bug wherein execution of a memory access (load,
++ * store or pref) in between an ll & sc can cause the sc instruction to
++ * erroneously succeed, breaking atomicity. Whilst it's unusual to write code
++ * containing such sequences, this bug bites harder than we might otherwise
++ * expect due to reordering & speculation:
++ *
++ * 1) A memory access appearing prior to the ll in program order may actually
++ *    be executed after the ll - this is the reordering case.
++ *
++ *    In order to avoid this we need to place a memory barrier (ie. a sync
++ *    instruction) prior to every ll instruction, in between it & any earlier
++ *    memory access instructions. Many of these cases are already covered by
++ *    smp_mb__before_llsc() but for the remaining cases, typically ones in
++ *    which multiple CPUs may operate on a memory location but ordering is not
++ *    usually guaranteed, we use loongson_llsc_mb() below.
++ *
++ *    This reordering case is fixed by 3A R2 CPUs, ie. 3A2000 models and later.
++ *
++ * 2) If a conditional branch exists between an ll & sc with a target outside
++ *    of the ll-sc loop, for example an exit upon value mismatch in cmpxchg()
++ *    or similar, then misprediction of the branch may allow speculative
++ *    execution of memory accesses from outside of the ll-sc loop.
++ *
++ *    In order to avoid this we need a memory barrier (ie. a sync instruction)
++ *    at each affected branch target, for which we also use loongson_llsc_mb()
++ *    defined below.
++ *
++ *    This case affects all current Loongson 3 CPUs.
++ */
++#ifdef CONFIG_CPU_LOONGSON3_WORKAROUNDS /* Loongson-3's LLSC workaround */
++#define loongson_llsc_mb()	__asm__ __volatile__(__WEAK_LLSC_MB : : :"memory")
++#else
++#define loongson_llsc_mb()	do { } while (0)
++#endif
++
+ #include <asm-generic/barrier.h>
+ 
+ #endif /* __ASM_BARRIER_H */
+diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.h
+index fa57cef12a466..38a162d11b7b8 100644
+--- a/arch/mips/include/asm/bitops.h
++++ b/arch/mips/include/asm/bitops.h
+@@ -68,6 +68,7 @@ static inline void set_bit(unsigned long nr, volatile unsigned long *addr)
+ 		: "ir" (1UL << bit), GCC_OFF_SMALL_ASM() (*m));
+ #if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
+ 	} else if (kernel_uses_llsc && __builtin_constant_p(bit)) {
++		loongson_llsc_mb();
+ 		do {
+ 			__asm__ __volatile__(
+ 			"	" __LL "%0, %1		# set_bit	\n"
+@@ -78,6 +79,7 @@ static inline void set_bit(unsigned long nr, volatile unsigned long *addr)
+ 		} while (unlikely(!temp));
+ #endif /* CONFIG_CPU_MIPSR2 || CONFIG_CPU_MIPSR6 */
+ 	} else if (kernel_uses_llsc) {
++		loongson_llsc_mb();
+ 		do {
+ 			__asm__ __volatile__(
+ 			"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"
+@@ -120,6 +122,7 @@ static inline void clear_bit(unsigned long nr, volatile unsigned long *addr)
+ 		: "ir" (~(1UL << bit)));
+ #if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
+ 	} else if (kernel_uses_llsc && __builtin_constant_p(bit)) {
++		loongson_llsc_mb();
+ 		do {
+ 			__asm__ __volatile__(
+ 			"	" __LL "%0, %1		# clear_bit	\n"
+@@ -130,6 +133,7 @@ static inline void clear_bit(unsigned long nr, volatile unsigned long *addr)
+ 		} while (unlikely(!temp));
+ #endif /* CONFIG_CPU_MIPSR2 || CONFIG_CPU_MIPSR6 */
+ 	} else if (kernel_uses_llsc) {
++		loongson_llsc_mb();
+ 		do {
+ 			__asm__ __volatile__(
+ 			"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"
+@@ -188,6 +192,7 @@ static inline void change_bit(unsigned long nr, volatile unsigned long *addr)
+ 		unsigned long *m = ((unsigned long *) addr) + (nr >> SZLONG_LOG);
+ 		unsigned long temp;
+ 
++		loongson_llsc_mb();
+ 		do {
+ 			__asm__ __volatile__(
+ 			"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"
+diff --git a/arch/mips/include/asm/futex.h b/arch/mips/include/asm/futex.h
+index a9e61ea54ca96..0a62a91b592d6 100644
+--- a/arch/mips/include/asm/futex.h
++++ b/arch/mips/include/asm/futex.h
+@@ -50,6 +50,7 @@
+ 		  "i" (-EFAULT)						\
+ 		: "memory");						\
+ 	} else if (cpu_has_llsc) {					\
++		loongson_llsc_mb();					\
+ 		__asm__ __volatile__(					\
+ 		"	.set	push				\n"	\
+ 		"	.set	noat				\n"	\
+@@ -162,6 +163,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ 		  "i" (-EFAULT)
+ 		: "memory");
+ 	} else if (cpu_has_llsc) {
++		loongson_llsc_mb();
+ 		__asm__ __volatile__(
+ 		"# futex_atomic_cmpxchg_inatomic			\n"
+ 		"	.set	push					\n"
+@@ -190,6 +192,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ 		: GCC_OFF_SMALL_ASM() (*uaddr), "Jr" (oldval), "Jr" (newval),
+ 		  "i" (-EFAULT)
+ 		: "memory");
++		loongson_llsc_mb();
+ 	} else
+ 		return -ENOSYS;
+ 
+diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
+index 9e9e94415d08f..aab7b382a0623 100644
+--- a/arch/mips/include/asm/pgtable.h
++++ b/arch/mips/include/asm/pgtable.h
+@@ -229,6 +229,7 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ 			: [buddy] "+m" (buddy->pte), [tmp] "=&r" (tmp)
+ 			: [global] "r" (page_global));
+ 		} else if (kernel_uses_llsc) {
++			loongson_llsc_mb();
+ 			__asm__ __volatile__ (
+ 			"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"
+ 			"	.set	push				\n"
+@@ -244,6 +245,7 @@ static inline void set_pte(pte_t *ptep, pte_t pteval)
+ 			"	.set	mips0				\n"
+ 			: [buddy] "+m" (buddy->pte), [tmp] "=&r" (tmp)
+ 			: [global] "r" (page_global));
++			loongson_llsc_mb();
+ 		}
+ #else /* !CONFIG_SMP */
+ 		if (pte_none(*buddy))
+diff --git a/arch/mips/loongson64/Platform b/arch/mips/loongson64/Platform
+index 0fce4608aa886..c1a4d4dc46655 100644
+--- a/arch/mips/loongson64/Platform
++++ b/arch/mips/loongson64/Platform
+@@ -23,6 +23,29 @@ ifdef CONFIG_CPU_LOONGSON2F_WORKAROUNDS
+ endif
+ 
+ cflags-$(CONFIG_CPU_LOONGSON3)	+= -Wa,--trap
++
++#
++# Some versions of binutils, not currently mainline as of 2019/02/04, support
++# an -mfix-loongson3-llsc flag which emits a sync prior to each ll instruction
++# to work around a CPU bug (see loongson_llsc_mb() in asm/barrier.h for a
++# description).
++#
++# We disable this in order to prevent the assembler meddling with the
++# instruction that labels refer to, ie. if we label an ll instruction:
++#
++# 1: ll v0, 0(a0)
++#
++# ...then with the assembler fix applied the label may actually point at a sync
++# instruction inserted by the assembler, and if we were using the label in an
++# exception table the table would no longer contain the address of the ll
++# instruction.
++#
++# Avoid this by explicitly disabling that assembler behaviour. If upstream
++# binutils does not merge support for the flag then we can revisit & remove
++# this later - for now it ensures vendor toolchains don't cause problems.
++#
++cflags-$(CONFIG_CPU_LOONGSON3)	+= $(call as-option,-Wa$(comma)-mno-fix-loongson3-llsc,)
++
+ #
+ # binutils from v2.25 on and gcc starting from v4.9.0 treat -march=loongson3a
+ # as MIPS64 R2; older versions as just R1.  This leaves the possibility open
+diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
+index 79b9f2ad3ff51..7da67a2781292 100644
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -935,6 +935,8 @@ build_get_pgd_vmalloc64(u32 **p, struct uasm_label **l, struct uasm_reloc **r,
+ 		 * to mimic that here by taking a load/istream page
+ 		 * fault.
+ 		 */
++		if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
++			uasm_i_sync(p, 0);
+ 		UASM_i_LA(p, ptr, (unsigned long)tlb_do_page_fault_0);
+ 		uasm_i_jr(p, ptr);
+ 
+@@ -1660,6 +1662,8 @@ static void
+ iPTE_LW(u32 **p, unsigned int pte, unsigned int ptr)
+ {
+ #ifdef CONFIG_SMP
++	if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
++		uasm_i_sync(p, 0);
+ # ifdef CONFIG_PHYS_ADDR_T_64BIT
+ 	if (cpu_has_64bits)
+ 		uasm_i_lld(p, pte, 0, ptr);
+@@ -2277,6 +2281,8 @@ static void build_r4000_tlb_load_handler(void)
+ #endif
+ 
+ 	uasm_l_nopage_tlbl(&l, p);
++	if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
++		uasm_i_sync(&p, 0);
+ 	build_restore_work_registers(&p);
+ #ifdef CONFIG_CPU_MICROMIPS
+ 	if ((unsigned long)tlb_do_page_fault_0 & 1) {
+@@ -2332,6 +2338,8 @@ static void build_r4000_tlb_store_handler(void)
+ #endif
+ 
+ 	uasm_l_nopage_tlbs(&l, p);
++	if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
++		uasm_i_sync(&p, 0);
+ 	build_restore_work_registers(&p);
+ #ifdef CONFIG_CPU_MICROMIPS
+ 	if ((unsigned long)tlb_do_page_fault_1 & 1) {
+@@ -2388,6 +2396,8 @@ static void build_r4000_tlb_modify_handler(void)
+ #endif
+ 
+ 	uasm_l_nopage_tlbm(&l, p);
++	if (IS_ENABLED(CONFIG_CPU_LOONGSON3_WORKAROUNDS))
++		uasm_i_sync(&p, 0);
+ 	build_restore_work_registers(&p);
+ #ifdef CONFIG_CPU_MICROMIPS
+ 	if ((unsigned long)tlb_do_page_fault_1 & 1) {
+-- 
+2.19.1
+
