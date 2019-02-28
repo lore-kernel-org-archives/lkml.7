@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F656C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F07C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7D92184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA329218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551369832;
-	bh=0moKi9ZDADvDamp5b4cHz81e+NQhJ8w3MIPUXyiDZQI=;
+	s=default; t=1551369861;
+	bh=Z5ga+B2KEl8AyZcpOnfmbw6TPyGKVbXH8zrvkH6poNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8IdIoDQHdhtIfPyp8ElCkar+PjZSEwziq4AcguiXCRDDS0jBiyCer//SKvKpSvLU
-	 CJLoXicURfUzt4IKUt3eGZEdoc1y8EYpdRnD75sHViOq2b66ZWvr2T9ZCj53f3yRdL
-	 GGT7J7rPVngZ8V+hEHco1piYf5oP1Ods+JRkuYGs=
+	b=BRBlMxfuiLEWP7G/dpAs9be/3tnTLOJ9wyCohQeb9C0Sz7CJ2iLpQWF8b8lUbNtvX
+	 z612gzFZk20Ddh6uwc+vWYoFLZRNeiB9A5pimYCSYM12/5FTFBnmGeRbfYd+pChB5e
+	 CiKHFWSAN7DdSk367FvutD97+gGVdXf9zFHaCZoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732430AbfB1QDu (ORCPT
+        id S1732548AbfB1QEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 11:03:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49754 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 11:04:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731208AbfB1QDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 11:03:50 -0500
+        id S1731142AbfB1QEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 11:04:20 -0500
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C931218B0;
-        Thu, 28 Feb 2019 16:03:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0BD62184A;
+        Thu, 28 Feb 2019 16:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551369829;
-        bh=0moKi9ZDADvDamp5b4cHz81e+NQhJ8w3MIPUXyiDZQI=;
+        s=default; t=1551369859;
+        bh=Z5ga+B2KEl8AyZcpOnfmbw6TPyGKVbXH8zrvkH6poNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDikd4k/4WtwbrVy+FkwkVJ7/AaJKHSEA0dtvP0kI9CU2uk48GA2p3or1i/7DusKg
-         cVW+BMGivYwr/OkQ8SmOUDFNXeY4vHGUAiFiTNurjpKYmusSHQfk4VYTZK9hiLK6Wk
-         WUqGoAj3fkck0o7OaxtvmtfBWcwDSDVHg+RKyJqk=
+        b=IG7sVzLF2g242gZ8uhUgEfzEGNo8gwOofd0G/dG78hYU1J/tcWS/4bQX70H0FZaKX
+         7ci6XDPUrJIQCxdbnCVfbsVQjqeAPOSxkg8dd+w4JMNotAezpdZ88BfXOayI9MUZnO
+         Y/3E4A6lNsxj8HiBYu+3kcyjvy9m2VFCOy534l3A=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -54,9 +54,9 @@ Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
         Nadav Amit <namit@vmware.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: [PATCH v5 2/6] uaccess: Use user_access_ok() in user_access_begin()
-Date:   Fri,  1 Mar 2019 01:03:25 +0900
-Message-Id: <155136980507.2968.15165201054223875356.stgit@devbox>
+Subject: [PATCH v5 3/6] uaccess: Add non-pagefault user-space read functions
+Date:   Fri,  1 Mar 2019 01:03:54 +0900
+Message-Id: <155136983467.2968.13980231890937828195.stgit@devbox>
 X-Mailer: git-send-email 2.13.6
 In-Reply-To: <155136974478.2968.3105123100519786079.stgit@devbox>
 References: <155136974478.2968.3105123100519786079.stgit@devbox>
@@ -69,41 +69,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use user_access_ok() instead of access_ok() in user_access_begin()
-to validate the access context is user. This also allow us to
-use (generic) strncpy_from_user() and strnlen_user() in atomic
-state with setting USER_DS and disable pagefaults.
+Add probe_user_read(), strncpy_from_unsafe_user() and
+strnlen_unsafe_user() which allows caller to access user-space
+in IRQ context.
+
+Current probe_kernel_read() and strncpy_from_unsafe() are
+not available for user-space memory, because it sets
+KERNEL_DS while accessing data. On some arch, user address
+space and kernel address space can be co-exist, but others
+can not. In that case, setting KERNEL_DS means given
+address is treated as a kernel address space.
+Also strnlen_user() is only available from user context since
+it can sleep if pagefault is enabled.
+
+To access user-space memory without pagefault, we need
+these new functions which sets USER_DS while accessing
+the data.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- arch/x86/include/asm/uaccess.h |    2 +-
- include/linux/uaccess.h        |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+  Changes in v5:
+   - Simplify probe_user_read() (Thanks, Peter!)
+   - Add strnlen_unsafe_user()
+  Changes in v3:
+   - Use user_access_ok() for probe_user_read().
+  Changes in v2:
+   - Simplify strncpy_from_unsafe_user() using strncpy_from_user()
+     according to Linus's suggestion.
+   - Simplify probe_user_read() not using intermediate function.
+---
+ include/linux/uaccess.h |   14 +++++
+ mm/maccess.c            |  122 +++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 130 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 3125d129d3b6..3b7502a34114 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -715,7 +715,7 @@ extern struct movsl_mask {
-  */
- static __must_check inline bool user_access_begin(const void __user *ptr, size_t len)
- {
--	if (unlikely(!access_ok(ptr,len)))
-+	if (unlikely(!user_access_ok(ptr, len)))
- 		return 0;
- 	__uaccess_begin_nospec();
- 	return 1;
 diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index bf762689658b..1afd9dfabe67 100644
+index 1afd9dfabe67..5be7f9adb418 100644
 --- a/include/linux/uaccess.h
 +++ b/include/linux/uaccess.h
-@@ -282,7 +282,7 @@ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
- 	probe_kernel_read(&retval, addr, sizeof(retval))
+@@ -258,6 +258,17 @@ extern long probe_kernel_read(void *dst, const void *src, size_t size);
+ extern long __probe_kernel_read(void *dst, const void *src, size_t size);
  
- #ifndef user_access_begin
--#define user_access_begin(ptr,len) access_ok(ptr, len)
-+#define user_access_begin(ptr, len) user_access_ok(ptr, len)
- #define user_access_end() do { } while (0)
- #define unsafe_get_user(x, ptr, err) do { if (unlikely(__get_user(x, ptr))) goto err; } while (0)
- #define unsafe_put_user(x, ptr, err) do { if (unlikely(__put_user(x, ptr))) goto err; } while (0)
+ /*
++ * probe_user_read(): safely attempt to read from a location in user space
++ * @dst: pointer to the buffer that shall take the data
++ * @src: address to read from
++ * @size: size of the data chunk
++ *
++ * Safely read from address @src to the buffer at @dst.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++extern long probe_user_read(void *dst, const void __user *src, size_t size);
++
++/*
+  * probe_kernel_write(): safely attempt to write to a location
+  * @dst: address to write to
+  * @src: pointer to the data that shall be written
+@@ -270,6 +281,9 @@ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
+ extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
+ 
+ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
++extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
++				     long count);
++extern long strnlen_unsafe_user(const void __user *unsafe_addr, long count);
+ 
+ /**
+  * probe_kernel_address(): safely attempt to read from a location
+diff --git a/mm/maccess.c b/mm/maccess.c
+index ec00be51a24f..d1b2ec78d9ef 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -5,8 +5,20 @@
+ #include <linux/mm.h>
+ #include <linux/uaccess.h>
+ 
++static __always_inline long
++probe_read_common(void *dst, const void __user *src, size_t size)
++{
++	long ret;
++
++	pagefault_disable();
++	ret = __copy_from_user_inatomic(dst, src, size);
++	pagefault_enable();
++
++	return ret ? -EFAULT : 0;
++}
++
+ /**
+- * probe_kernel_read(): safely attempt to read from a location
++ * probe_kernel_read(): safely attempt to read from a kernel-space location
+  * @dst: pointer to the buffer that shall take the data
+  * @src: address to read from
+  * @size: size of the data chunk
+@@ -29,17 +41,45 @@ long __probe_kernel_read(void *dst, const void *src, size_t size)
+ 	mm_segment_t old_fs = get_fs();
+ 
+ 	set_fs(KERNEL_DS);
+-	pagefault_disable();
+-	ret = __copy_from_user_inatomic(dst,
+-			(__force const void __user *)src, size);
+-	pagefault_enable();
++	ret = probe_read_common(dst, (__force const void __user *)src, size);
+ 	set_fs(old_fs);
+ 
+-	return ret ? -EFAULT : 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(probe_kernel_read);
+ 
+ /**
++ * probe_user_read(): safely attempt to read from a user-space location
++ * @dst: pointer to the buffer that shall take the data
++ * @src: address to read from. This must be a user address.
++ * @size: size of the data chunk
++ *
++ * Safely read from user address @src to the buffer at @dst. If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++
++long __weak probe_user_read(void *dst, const void __user *src, size_t size)
++    __attribute__((alias("__probe_user_read")));
++
++long __probe_user_read(void *dst, const void __user *src, size_t size)
++{
++	long ret = -EFAULT;
++	mm_segment_t old_fs = get_fs();
++
++	/*
++	 * Since this can be called in IRQ context, we carefully set the
++	 * USER_DS and use user_access_ok() which checks segment setting
++	 * instead of task context.
++	 */
++	set_fs(USER_DS);
++	if (user_access_ok(src, size))
++		ret = probe_read_common(dst, src, size);
++	set_fs(old_fs);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(probe_user_read);
++
++/**
+  * probe_kernel_write(): safely attempt to write to a location
+  * @dst: address to write to
+  * @src: pointer to the data that shall be written
+@@ -66,6 +106,7 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
+ }
+ EXPORT_SYMBOL_GPL(probe_kernel_write);
+ 
++
+ /**
+  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
+  * @dst:   Destination address, in kernel space.  This buffer must be at
+@@ -105,3 +146,72 @@ long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
+ 
+ 	return ret ? -EFAULT : src - unsafe_addr;
+ }
++
++/**
++ * strncpy_from_unsafe_user: - Copy a NUL terminated string from unsafe user
++ *				address.
++ * @dst:   Destination address, in kernel space.  This buffer must be at
++ *         least @count bytes long.
++ * @unsafe_addr: Unsafe user address.
++ * @count: Maximum number of bytes to copy, including the trailing NUL.
++ *
++ * Copies a NUL-terminated string from unsafe user address to kernel buffer.
++ *
++ * On success, returns the length of the string INCLUDING the trailing NUL.
++ *
++ * If access fails, returns -EFAULT (some data may have been copied
++ * and the trailing NUL added).
++ *
++ * If @count is smaller than the length of the string, copies @count-1 bytes,
++ * sets the last byte of @dst buffer to NUL and returns @count.
++ */
++long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
++			      long count)
++{
++	mm_segment_t old_fs = get_fs();
++	long ret;
++
++	if (unlikely(count <= 0))
++		return 0;
++
++	set_fs(USER_DS);
++	pagefault_disable();
++	ret = strncpy_from_user(dst, unsafe_addr, count);
++	pagefault_enable();
++	set_fs(old_fs);
++	if (ret >= count) {
++		ret = count;
++		dst[ret - 1] = '\0';
++	} else if (ret > 0)
++		ret++;
++	return ret;
++}
++
++/**
++ * strnlen_unsafe_user: - Get the size of a user string INCLUDING final NUL.
++ * @unsafe_addr: The string to measure.
++ * @count: Maximum count (including NUL character)
++ *
++ * Get the size of a NUL-terminated string in user space without pagefault.
++ *
++ * Returns the size of the string INCLUDING the terminating NUL.
++ *
++ * If the string is too long, returns a number larger than @count. User
++ * has to check the return value against "> count".
++ * On exception (or invalid count), returns 0.
++ *
++ * Unlike strnlen_user, this can be used from IRQ handler etc. because
++ * it disables pagefaults.
++ */
++long strnlen_unsafe_user(const void __user *unsafe_addr, long count)
++{
++	mm_segment_t old_fs = get_fs();
++	int ret;
++
++	set_fs(USER_DS);
++	pagefault_disable();
++	ret = strnlen_user(unsafe_addr, count);
++	pagefault_enable();
++	set_fs(old_fs);
++	return ret;
++}
 
