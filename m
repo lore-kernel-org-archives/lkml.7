@@ -2,65 +2,248 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5670AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76A2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306BF21900
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E684218E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551366667;
+	bh=bkSAOvYwvW/GStXcAGCxOAa9EXMIxYgPTqPQneTX/X4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pVQ7FfWpmW3/lN2pSXjcHs53z4GS97qGEYnilhPSgyzkx1RAyEfQ/nP52JPEBfQIF
+	 xQn/BibQSH5sSghhwZfcJUKHG2qxHtHYfVXzTRaPASR5z70+rkD0fC1LDfMzkQGgS7
+	 /N3XMknJg2vt2x7O0hSpXZamgjvTotbvl5PdulJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387878AbfB1PLE convert rfc822-to-8bit (ORCPT
+        id S1731509AbfB1PLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 28 Feb 2019 10:11:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387876AbfB1PLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Feb 2019 10:11:04 -0500
-Received: from mail.fireflyinternet.com ([109.228.58.192]:54377 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387854AbfB1PLC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:02 -0500
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 15732212-1500050 
-        for multiple; Thu, 28 Feb 2019 15:10:45 +0000
-Content-Type: text/plain; charset="utf-8"
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C05D6218D9;
+        Thu, 28 Feb 2019 15:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551366663;
+        bh=bkSAOvYwvW/GStXcAGCxOAa9EXMIxYgPTqPQneTX/X4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dbn/N+7skJVgXS3/g00lrF7JLf2GGGwmHInA8AZWnoc6YbH2lBzU8cQBbl1J+vET3
+         nFkNUsAICjj5fV0tEIlIoIDxK1jk1fIRUl/q7fQIZtUQHtj9mwCzUgMGEraMTD499m
+         ARdT9PDjPGZrRT0EvHuSk/phd4u4YxvSWSczAo7s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Liu Bo <bo.liu@linux.alibaba.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 81/81] blk-iolatency: fix IO hang due to negative inflight counter
+Date:   Thu, 28 Feb 2019 10:08:13 -0500
+Message-Id: <20190228150813.10256-81-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
+References: <20190228150813.10256-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Peter Zijlstra <peterz@infradead.org>, bp@alien8.de,
-        brgerst@gmail.com, catalin.marinas@arm.com, dvlasenk@redhat.com,
-        hpa@zytor.com, james.morse@arm.com, jpoimboe@redhat.com,
-        julien.thierry@arm.com, luto@amacapital.net, luto@kernel.org,
-        mingo@kernel.org, tglx@linutronix.de,
-        torvalds@linux-foundation.org, valentin.schneider@arm.com,
-        will.deacon@arm.com
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <20190228150152.540038736@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org
-References: <20190228145450.289603901@infradead.org>
- <20190228150152.540038736@infradead.org>
-Message-ID: <155136664389.5847.6200085578174808757@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH 6/8] i915,uaccess: Fix redundant CLAC
-Date:   Thu, 28 Feb 2019 15:10:44 +0000
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Peter Zijlstra (2019-02-28 14:54:56)
-> drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x3c: redundant UACCESS disable
-> drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x66: redundant UACCESS disable
-> 
-> AKA. you don't need user_access_end() if user_access_begin() fails.
+From: Liu Bo <bo.liu@linux.alibaba.com>
 
-Cool, I had no idea if it was required or not. The closest to
-instructions on how to use user_access_begin() is in
-arch/x86/include/asm/uaccess.h ... which I guess is earlier in this
-series!
+[ Upstream commit 8c772a9bfc7c07c76f4a58b58910452fbb20843b ]
 
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Our test reported the following stack, and vmcore showed that
+->inflight counter is -1.
 
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
--Chris
+[ffffc9003fcc38d0] __schedule at ffffffff8173d95d
+[ffffc9003fcc3958] schedule at ffffffff8173de26
+[ffffc9003fcc3970] io_schedule at ffffffff810bb6b6
+[ffffc9003fcc3988] blkcg_iolatency_throttle at ffffffff813911cb
+[ffffc9003fcc3a20] rq_qos_throttle at ffffffff813847f3
+[ffffc9003fcc3a48] blk_mq_make_request at ffffffff8137468a
+[ffffc9003fcc3b08] generic_make_request at ffffffff81368b49
+[ffffc9003fcc3b68] submit_bio at ffffffff81368d7d
+[ffffc9003fcc3bb8] ext4_io_submit at ffffffffa031be00 [ext4]
+[ffffc9003fcc3c00] ext4_writepages at ffffffffa03163de [ext4]
+[ffffc9003fcc3d68] do_writepages at ffffffff811c49ae
+[ffffc9003fcc3d78] __filemap_fdatawrite_range at ffffffff811b6188
+[ffffc9003fcc3e30] filemap_write_and_wait_range at ffffffff811b6301
+[ffffc9003fcc3e60] ext4_sync_file at ffffffffa030cee8 [ext4]
+[ffffc9003fcc3ea8] vfs_fsync_range at ffffffff8128594b
+[ffffc9003fcc3ee8] do_fsync at ffffffff81285abd
+[ffffc9003fcc3f18] sys_fsync at ffffffff81285d50
+[ffffc9003fcc3f28] do_syscall_64 at ffffffff81003c04
+[ffffc9003fcc3f50] entry_SYSCALL_64_after_swapgs at ffffffff81742b8e
+
+The ->inflight counter may be negative (-1) if
+
+1) blk-iolatency was disabled when the IO was issued,
+
+2) blk-iolatency was enabled before this IO reached its endio,
+
+3) the ->inflight counter is decreased from 0 to -1 in endio()
+
+In fact the hang can be easily reproduced by the below script,
+
+H=/sys/fs/cgroup/unified/
+P=/sys/fs/cgroup/unified/test
+
+echo "+io" > $H/cgroup.subtree_control
+mkdir -p $P
+
+echo $$ > $P/cgroup.procs
+
+xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
+
+echo "`cat /sys/block/sdg/dev` target=1000000" > $P/io.latency
+
+xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
+
+This fixes the problem by freezing the queue so that while
+enabling/disabling iolatency, there is no inflight rq running.
+
+Note that quiesce_queue is not needed as this only updating iolatency
+configuration about which dispatching request_queue doesn't care.
+
+Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/blk-iolatency.c | 52 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 45 insertions(+), 7 deletions(-)
+
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index 38c35c32aff2d..c1c72b42dda0a 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -72,6 +72,7 @@
+ #include <linux/sched/loadavg.h>
+ #include <linux/sched/signal.h>
+ #include <trace/events/block.h>
++#include <linux/blk-mq.h>
+ #include "blk-rq-qos.h"
+ #include "blk-stat.h"
+ 
+@@ -648,6 +649,9 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 		return;
+ 
+ 	enabled = blk_iolatency_enabled(iolat->blkiolat);
++	if (!enabled)
++		return;
++
+ 	while (blkg && blkg->parent) {
+ 		iolat = blkg_to_lat(blkg);
+ 		if (!iolat) {
+@@ -657,7 +661,7 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 		rqw = &iolat->rq_wait;
+ 
+ 		atomic_dec(&rqw->inflight);
+-		if (!enabled || iolat->min_lat_nsec == 0)
++		if (iolat->min_lat_nsec == 0)
+ 			goto next;
+ 		iolatency_record_time(iolat, &bio->bi_issue, now,
+ 				      issue_as_root);
+@@ -801,10 +805,13 @@ int blk_iolatency_init(struct request_queue *q)
+ 	return 0;
+ }
+ 
+-static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
++/*
++ * return 1 for enabling iolatency, return -1 for disabling iolatency, otherwise
++ * return 0.
++ */
++static int iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
+ {
+ 	struct iolatency_grp *iolat = blkg_to_lat(blkg);
+-	struct blk_iolatency *blkiolat = iolat->blkiolat;
+ 	u64 oldval = iolat->min_lat_nsec;
+ 
+ 	iolat->min_lat_nsec = val;
+@@ -813,9 +820,10 @@ static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
+ 				    BLKIOLATENCY_MAX_WIN_SIZE);
+ 
+ 	if (!oldval && val)
+-		atomic_inc(&blkiolat->enabled);
++		return 1;
+ 	if (oldval && !val)
+-		atomic_dec(&blkiolat->enabled);
++		return -1;
++	return 0;
+ }
+ 
+ static void iolatency_clear_scaling(struct blkcg_gq *blkg)
+@@ -847,6 +855,7 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
+ 	u64 lat_val = 0;
+ 	u64 oldval;
+ 	int ret;
++	int enable = 0;
+ 
+ 	ret = blkg_conf_prep(blkcg, &blkcg_policy_iolatency, buf, &ctx);
+ 	if (ret)
+@@ -881,7 +890,12 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
+ 	blkg = ctx.blkg;
+ 	oldval = iolat->min_lat_nsec;
+ 
+-	iolatency_set_min_lat_nsec(blkg, lat_val);
++	enable = iolatency_set_min_lat_nsec(blkg, lat_val);
++	if (enable) {
++		WARN_ON_ONCE(!blk_get_queue(blkg->q));
++		blkg_get(blkg);
++	}
++
+ 	if (oldval != iolat->min_lat_nsec) {
+ 		iolatency_clear_scaling(blkg);
+ 	}
+@@ -889,6 +903,24 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
+ 	ret = 0;
+ out:
+ 	blkg_conf_finish(&ctx);
++	if (ret == 0 && enable) {
++		struct iolatency_grp *tmp = blkg_to_lat(blkg);
++		struct blk_iolatency *blkiolat = tmp->blkiolat;
++
++		blk_mq_freeze_queue(blkg->q);
++
++		if (enable == 1)
++			atomic_inc(&blkiolat->enabled);
++		else if (enable == -1)
++			atomic_dec(&blkiolat->enabled);
++		else
++			WARN_ON_ONCE(1);
++
++		blk_mq_unfreeze_queue(blkg->q);
++
++		blkg_put(blkg);
++		blk_put_queue(blkg->q);
++	}
+ 	return ret ?: nbytes;
+ }
+ 
+@@ -1024,8 +1056,14 @@ static void iolatency_pd_offline(struct blkg_policy_data *pd)
+ {
+ 	struct iolatency_grp *iolat = pd_to_lat(pd);
+ 	struct blkcg_gq *blkg = lat_to_blkg(iolat);
++	struct blk_iolatency *blkiolat = iolat->blkiolat;
++	int ret;
+ 
+-	iolatency_set_min_lat_nsec(blkg, 0);
++	ret = iolatency_set_min_lat_nsec(blkg, 0);
++	if (ret == 1)
++		atomic_inc(&blkiolat->enabled);
++	if (ret == -1)
++		atomic_dec(&blkiolat->enabled);
+ 	iolatency_clear_scaling(blkg);
+ }
+ 
+-- 
+2.19.1
+
