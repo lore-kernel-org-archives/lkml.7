@@ -2,126 +2,90 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE7FC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DF5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD822133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551379706;
-	bh=LtUrXngQUYvD/5hhmNfQGS5wMFk3+eZdUG/gRmddzdo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2AgdjOh4kqiaKVgPfvZKKuGkQvCgo3EGpa0XZhj0CGI491jioBtR6qz5uZetOljgg
-	 TcoGzGT71aISAp2ViMRESnMQf1kY64P5x/ICxKHT6rPNCrD+DrekaUS756pxxcCecq
-	 GBuJzyPU91Hp0hHqdkLvXikfN2il8QnfxUe0wjcA=
+	by mail.kernel.org (Postfix) with ESMTP id 49918218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:50:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732601AbfB1SsZ (ORCPT
+        id S1731137AbfB1Sud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:48:25 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34016 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfB1SsZ (ORCPT
+        Thu, 28 Feb 2019 13:50:33 -0500
+Received: from imap1.codethink.co.uk ([176.9.8.82]:41202 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfB1Suc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:48:25 -0500
-Received: by mail-oi1-f195.google.com with SMTP id g16so17381998oib.1;
-        Thu, 28 Feb 2019 10:48:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=roqaL1uJJkGE/SVuMmyzeIg//rbsB7+jOOnA0IByL7I=;
-        b=t7fQK2T/yBUym2fM2vLpOf4igz3oRTvmfG0cm2iI1BxpjZ4pDN0xWdeA5JJc4/fT6V
-         rqrOXCRwSP9ymbM+SUTzvgxHwObbE02VcvIbyszI81G4BjkNZMbJDzswGOP4/ldEH4VV
-         gt1Lv+IhfgX3K5lTGoCcSRnOBPzC37IkEh1Xi925dbQ+UKgr9ML5OJHDHVI6ts62hyTm
-         qv3olEuryw9CTolgNIIhmLflRrgNUhys7BMeOH6SCvAxA4kdCJ77IRfPRYMhD5eda68u
-         55cD363BkjyGblqjJOBpqRgn199CF4uiuSdxk6OtoiJrCV+K5WhsTbOA7diNFtVXi1Vv
-         BVag==
-X-Gm-Message-State: AHQUAubd2JxKjW53wNqBOudpSxt0xas0DQ0jIE5jH1kyLu0SfWwnit2p
-        dE2ZT8seyHmsX22J/8CNGw==
-X-Google-Smtp-Source: AHgI3IYq6yI7kg8jKcCd3Ucyo9MhXCG5WVvW0u09VPczg6502VXstUc9eNtthclC0JXhrzZJBUO4cw==
-X-Received: by 2002:aca:ac45:: with SMTP id v66mr737665oie.134.1551379704135;
-        Thu, 28 Feb 2019 10:48:24 -0800 (PST)
-Received: from localhost (ip-184-203-129-180.hstntx.spcsdns.net. [184.203.129.180])
-        by smtp.gmail.com with ESMTPSA id v62sm8308367oie.21.2019.02.28.10.48.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 10:48:23 -0800 (PST)
-Date:   Thu, 28 Feb 2019 12:48:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 4/7] dt-bindings: power: supply: Add docs for Ingenic
- JZ47xx SoCs battery.
-Message-ID: <20190228184822.GA17624@bogus>
-References: <20190217142914.17433-1-contact@artur-rojek.eu>
- <20190217142914.17433-4-contact@artur-rojek.eu>
+        Thu, 28 Feb 2019 13:50:32 -0500
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1gzQlJ-0000bI-R2; Thu, 28 Feb 2019 18:50:29 +0000
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92-RC6)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1gzQlJ-0000ej-3e; Thu, 28 Feb 2019 18:50:29 +0000
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.co, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@lists.codethink.co.uk,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH] x86/asm: add __user on copy_user_handle_tail() pointers
+Date:   Thu, 28 Feb 2019 18:50:27 +0000
+Message-Id: <20190228185027.2480-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190217142914.17433-4-contact@artur-rojek.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 17, 2019 at 03:29:13PM +0100, Artur Rojek wrote:
-> Add documentation for the ingenic-battery driver, used on JZ47xx SoCs.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->  .../bindings/power/supply/ingenic,battery.txt | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-> new file mode 100644
-> index 000000000000..66430bf73815
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-> @@ -0,0 +1,31 @@
-> +* Ingenic JZ47xx battery bindings
-> +
-> +Required properties:
-> +
-> +- compatible: Must be "ingenic,jz4740-battery".
-> +- io-channels: phandle and IIO specifier pair to the IIO device.
-> +  Format described in iio-bindings.txt.
-> +- monitored-battery: phandle to a "simple-battery" compatible node.
-> +
-> +The "monitored-battery" property must be a phandle to a node using the format
-> +described in battery.txt, with the following properties being required:
-> +
-> +- voltage-min-design-microvolt: Drained battery voltage.
-> +- voltage-max-design-microvolt: Fully charged battery voltage.
-> +
-> +Example:
-> +
-> +#include <dt-bindings/iio/adc/ingenic,adc.h>
-> +
-> +simple_battery: battery {
-> +	compatible = "simple-battery";
-> +	voltage-min-design-microvolt = <3600000>;
-> +	voltage-max-design-microvolt = <4200000>;
-> +};
-> +
-> +ingenic_battery {
-> +	compatible = "ingenic,jz4740-battery";
-> +	io-channels = <&adc INGENIC_ADC_BATTERY>;
-> +	io-channel-names = "battery";
-> +	monitored-battery = <&simple_battery>;
+The copy_user_handle_tail() clearly uses both from and to as pointers
+to user-space memory. This triggers sparse warning on using the calls
+to get and put to user-space. This can be fixed easily by changing the
+call to take __user annotated pointer.s
 
-Isn't this just an ADC monitored battery? What's specific to JZ4740?
+arch/x86/lib/usercopy_64.c:68:21: warning: incorrect type in argument 1 (different address spaces)
+arch/x86/lib/usercopy_64.c:68:21:    expected void const volatile [noderef] <asn:1>*<noident>
+arch/x86/lib/usercopy_64.c:68:21:    got char *
+arch/x86/lib/usercopy_64.c:70:21: warning: incorrect type in argument 1 (different address spaces)
+arch/x86/lib/usercopy_64.c:70:21:    expected void const volatile [noderef] <asn:1>*<noident>
+arch/x86/lib/usercopy_64.c:70:21:    got char *to
 
-Maybe a generic binding is appropriate here?
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+ arch/x86/include/asm/uaccess_64.h | 2 +-
+ arch/x86/lib/usercopy_64.c        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Rob
+diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
+index a9d637bc301d..cbca2cb28939 100644
+--- a/arch/x86/include/asm/uaccess_64.h
++++ b/arch/x86/include/asm/uaccess_64.h
+@@ -208,7 +208,7 @@ __copy_from_user_flushcache(void *dst, const void __user *src, unsigned size)
+ }
+ 
+ unsigned long
+-copy_user_handle_tail(char *to, char *from, unsigned len);
++copy_user_handle_tail(char __user *to, char __user *from, unsigned len);
+ 
+ unsigned long
+ mcsafe_handle_tail(char *to, char *from, unsigned len);
+diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
+index ee42bb0cbeb3..aa180424e77a 100644
+--- a/arch/x86/lib/usercopy_64.c
++++ b/arch/x86/lib/usercopy_64.c
+@@ -60,7 +60,7 @@ EXPORT_SYMBOL(clear_user);
+  * it is not necessary to optimize tail handling.
+  */
+ __visible unsigned long
+-copy_user_handle_tail(char *to, char *from, unsigned len)
++copy_user_handle_tail(char __user *to, char __user *from, unsigned len)
+ {
+ 	for (; len; --len, to++) {
+ 		char c;
+-- 
+2.20.1
 
