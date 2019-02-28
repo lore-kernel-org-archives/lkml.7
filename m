@@ -2,282 +2,236 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD2DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0D1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB4A2083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7205A20857
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbfB1LKb (ORCPT
+        id S1731745AbfB1LOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 06:10:31 -0500
-Received: from outbound-smtp16.blacknight.com ([46.22.139.233]:59346 "EHLO
-        outbound-smtp16.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730906AbfB1LKa (ORCPT
+        Thu, 28 Feb 2019 06:14:24 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:56171 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbfB1LOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 06:10:30 -0500
-Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
-        by outbound-smtp16.blacknight.com (Postfix) with ESMTPS id A28201C1D71
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 11:10:25 +0000 (GMT)
-Received: (qmail 13883 invoked from network); 28 Feb 2019 11:10:25 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 28 Feb 2019 11:10:25 -0000
-Date:   Thu, 28 Feb 2019 11:10:23 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@01.org
-Subject: Re: [LKP] [sched/fair]  2c83362734:  pft.faults_per_sec_per_cpu
- -41.4% regression
-Message-ID: <20190228111023.GC9565@techsingularity.net>
-References: <20190228071751.GE10770@shao2-debian>
+        Thu, 28 Feb 2019 06:14:23 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1SBD07L3014413
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 28 Feb 2019 03:13:00 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1SBCxsX3014410;
+        Thu, 28 Feb 2019 03:12:59 -0800
+Date:   Thu, 28 Feb 2019 03:12:59 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Daniel Borkmann <tipbot@zytor.com>
+Message-ID: <tip-ce02ef06fcf7a399a6276adb83f37373d10cbbe1@git.kernel.org>
+Cc:     magnus.karlsson@intel.com, brouer@redhat.com, davem@davemloft.net,
+        bjorn.topel@intel.com, mingo@kernel.org, daniel@iogearbox.net,
+        ast@kernel.org, dwmw2@infradead.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
+        tglx@linutronix.de, hpa@zytor.com, luto@kernel.org
+Reply-To: daniel@iogearbox.net, mingo@kernel.org, bjorn.topel@intel.com,
+          davem@davemloft.net, brouer@redhat.com,
+          magnus.karlsson@intel.com, luto@kernel.org, hpa@zytor.com,
+          tglx@linutronix.de, peterz@infradead.org, bp@alien8.de,
+          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+          dwmw2@infradead.org, ast@kernel.org
+In-Reply-To: <20190221221941.29358-1-daniel@iogearbox.net>
+References: <20190221221941.29358-1-daniel@iogearbox.net>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/build] x86, retpolines: Raise limit for generating
+ indirect calls from switch-case
+Git-Commit-ID: ce02ef06fcf7a399a6276adb83f37373d10cbbe1
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190228071751.GE10770@shao2-debian>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 03:17:51PM +0800, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed a -41.4% regression of pft.faults_per_sec_per_cpu due to commit:
-> 
-> 
-> commit: 2c83362734dad8e48ccc0710b5cd2436a0323893 ("sched/fair: Consider SD_NUMA when selecting the most idle group to schedule on")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> 
-> in testcase: pft
-> on test machine: 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 64G memory
-> with following parameters:
-> 
-> 	runtime: 300s
-> 	nr_task: 50%
-> 	cpufreq_governor: performance
-> 	ucode: 0xb00002e
-> 
+Commit-ID:  ce02ef06fcf7a399a6276adb83f37373d10cbbe1
+Gitweb:     https://git.kernel.org/tip/ce02ef06fcf7a399a6276adb83f37373d10cbbe1
+Author:     Daniel Borkmann <daniel@iogearbox.net>
+AuthorDate: Thu, 21 Feb 2019 23:19:41 +0100
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 28 Feb 2019 12:10:31 +0100
 
-The headline regression looks high but it's also a known consequence for
-some microbenchmarks, particularly those that are short-lived and consist
-of non-communicating tasks.
+x86, retpolines: Raise limit for generating indirect calls from switch-case
 
-The impact of the patch is to favour starting a new task on the local
-node unless the socket is saturated. This is to avoid a pattern where a
-task that clones a helper that it communicates with starts on a remote
-node. Starting remote negatively impacts basis workloads like
-shellscripts, client/server workloads or pipelined tasks. The workloads
-that benefit from spreading early are parallelised tasks that do not
-communicate until end of the task.
+From networking side, there are numerous attempts to get rid of indirect
+calls in fast-path wherever feasible in order to avoid the cost of
+retpolines, for example, just to name a few:
 
-PFT is an example of the latter. If spread early, it maximises the total
-memory bandwidth of the machine early in the lifetime of the machine. It
-would quickly recover if it run long enough, the early measurements are
-low as it saturates the bandwidth of the local node. This configuration
-is at 50% and the machine is likely to be 2-socket so it has half the
-bandwidth in all likelihood and hence the 41.4% regression (very close
-to half so some tasks probably got load-balanced).
+  * 283c16a2dfd3 ("indirect call wrappers: helpers to speed-up indirect calls of builtin")
+  * aaa5d90b395a ("net: use indirect call wrappers at GRO network layer")
+  * 028e0a476684 ("net: use indirect call wrappers at GRO transport layer")
+  * 356da6d0cde3 ("dma-mapping: bypass indirect calls for dma-direct")
+  * 09772d92cd5a ("bpf: avoid retpoline for lookup/update/delete calls on maps")
+  * 10870dd89e95 ("netfilter: nf_tables: add direct calls for all builtin expressions")
+  [...]
 
-On to the other examples;
+Recent work on XDP from Björn and Magnus additionally found that manually
+transforming the XDP return code switch statement with more than 5 cases
+into if-else combination would result in a considerable speedup in XDP
+layer due to avoidance of indirect calls in CONFIG_RETPOLINE enabled
+builds. On i40e driver with XDP prog attached, a 20-26% speedup has been
+observed [0]. Aside from XDP, there are many other places later in the
+networking stack's critical path with similar switch-case
+processing. Rather than fixing every XDP-enabled driver and locations in
+stack by hand, it would be good to instead raise the limit where gcc would
+emit expensive indirect calls from the switch under retpolines and stick
+with the default as-is in case of !retpoline configured kernels. This would
+also have the advantage that for archs where this is not necessary, we let
+compiler select the underlying target optimization for these constructs and
+avoid potential slow-downs by if-else hand-rewrite.
 
-> test-description: Pft is the page fault test micro benchmark.
-> test-url: https://github.com/gormanm/pft
-> 
-> In addition to that, the commit also has significant impact on the following tests:
-> 
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | stream:                                                                  |
-> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory    |
-> | test parameters  | array_size=10000000                                                      |
-> |                  | cpufreq_governor=performance                                             |
-> |                  | nr_threads=25%                                                           |
-> |                  | omp=true                                                                 |
-> |                  | ucode=0xb00002e                                                          |
+In case of gcc, this setting is controlled by case-values-threshold which
+has an architecture global default that selects 4 or 5 (latter if target
+does not have a case insn that compares the bounds) where some arch back
+ends like arm64 or s390 override it with their own target hooks, for
+example, in gcc commit db7a90aa0de5 ("S/390: Disable prediction of indirect
+branches") the threshold pretty much disables jump tables by limit of 20
+under retpoline builds.  Comparing gcc's and clang's default code
+generation on x86-64 under O2 level with retpoline build results in the
+following outcome for 5 switch cases:
 
-STREAM is typically short-lived. Again, it benefits from spreading early
-to maximise memory bandwidth. 25% of threads would fit in one node. For
-parallelised stream tests it's usually the case that OMP is used to bind 1
-thread per memory channel using the openmp directives to measure the total
-machine memory bandwidth rather than using it as a scaling tests. I'm
-guessing this machine didn't have 22 memory channels that would make
-nr_thread=25% a sensible configuration.
+* gcc with -mindirect-branch=thunk-inline -mindirect-branch-register:
 
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | reaim: reaim.jobs_per_min 1.3% improvement                               |
-> | test machine     | 72 threads Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz with 256G memory    |
-> | test parameters  | cpufreq_governor=performance                                             |
-> |                  | nr_job=3000                                                              |
-> |                  | nr_task=100%                                                             |
-> |                  | runtime=300s                                                             |
-> |                  | test=custom                                                              |
-> |                  | ucode=0x3d                                                               |
+  # gdb -batch -ex 'disassemble dispatch' ./c-switch
+  Dump of assembler code for function dispatch:
+   0x0000000000400be0 <+0>:     cmp    $0x4,%edi
+   0x0000000000400be3 <+3>:     ja     0x400c35 <dispatch+85>
+   0x0000000000400be5 <+5>:     lea    0x915f8(%rip),%rdx        # 0x4921e4
+   0x0000000000400bec <+12>:    mov    %edi,%edi
+   0x0000000000400bee <+14>:    movslq (%rdx,%rdi,4),%rax
+   0x0000000000400bf2 <+18>:    add    %rdx,%rax
+   0x0000000000400bf5 <+21>:    callq  0x400c01 <dispatch+33>
+   0x0000000000400bfa <+26>:    pause
+   0x0000000000400bfc <+28>:    lfence
+   0x0000000000400bff <+31>:    jmp    0x400bfa <dispatch+26>
+   0x0000000000400c01 <+33>:    mov    %rax,(%rsp)
+   0x0000000000400c05 <+37>:    retq
+   0x0000000000400c06 <+38>:    nopw   %cs:0x0(%rax,%rax,1)
+   0x0000000000400c10 <+48>:    jmpq   0x400c90 <fn_3>
+   0x0000000000400c15 <+53>:    nopl   (%rax)
+   0x0000000000400c18 <+56>:    jmpq   0x400c70 <fn_2>
+   0x0000000000400c1d <+61>:    nopl   (%rax)
+   0x0000000000400c20 <+64>:    jmpq   0x400c50 <fn_1>
+   0x0000000000400c25 <+69>:    nopl   (%rax)
+   0x0000000000400c28 <+72>:    jmpq   0x400c40 <fn_0>
+   0x0000000000400c2d <+77>:    nopl   (%rax)
+   0x0000000000400c30 <+80>:    jmpq   0x400cb0 <fn_4>
+   0x0000000000400c35 <+85>:    push   %rax
+   0x0000000000400c36 <+86>:    callq  0x40dd80 <abort>
+  End of assembler dump.
 
-reaim is generally a mess so in this case it's unclear. The load is a
-mix of task creation, IO operations, signal and others. It might have
-benefitted slightly from running local. One reason I don't particularly
-like reaim is that historically it was dominated by sending/receiving
-signals. In my own tests, signal is typically removed as well as it's
-tendency to sync the entire filesystem at high frequency.
+* clang with -mretpoline emitting search tree:
 
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | stream: stream.add_bandwidth_MBps -32.0% regression                      |
-> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory    |
-> | test parameters  | array_size=10000000                                                      |
-> |                  | cpufreq_governor=performance                                             |
-> |                  | nr_threads=50%                                                           |
-> |                  | omp=true                                                                 |
-> |                  | ucode=0xb00002e                                                          |
+  # gdb -batch -ex 'disassemble dispatch' ./c-switch
+  Dump of assembler code for function dispatch:
+   0x0000000000400b30 <+0>:     cmp    $0x1,%edi
+   0x0000000000400b33 <+3>:     jle    0x400b44 <dispatch+20>
+   0x0000000000400b35 <+5>:     cmp    $0x2,%edi
+   0x0000000000400b38 <+8>:     je     0x400b4d <dispatch+29>
+   0x0000000000400b3a <+10>:    cmp    $0x3,%edi
+   0x0000000000400b3d <+13>:    jne    0x400b52 <dispatch+34>
+   0x0000000000400b3f <+15>:    jmpq   0x400c50 <fn_3>
+   0x0000000000400b44 <+20>:    test   %edi,%edi
+   0x0000000000400b46 <+22>:    jne    0x400b5c <dispatch+44>
+   0x0000000000400b48 <+24>:    jmpq   0x400c20 <fn_0>
+   0x0000000000400b4d <+29>:    jmpq   0x400c40 <fn_2>
+   0x0000000000400b52 <+34>:    cmp    $0x4,%edi
+   0x0000000000400b55 <+37>:    jne    0x400b66 <dispatch+54>
+   0x0000000000400b57 <+39>:    jmpq   0x400c60 <fn_4>
+   0x0000000000400b5c <+44>:    cmp    $0x1,%edi
+   0x0000000000400b5f <+47>:    jne    0x400b66 <dispatch+54>
+   0x0000000000400b61 <+49>:    jmpq   0x400c30 <fn_1>
+   0x0000000000400b66 <+54>:    push   %rax
+   0x0000000000400b67 <+55>:    callq  0x40dd20 <abort>
+  End of assembler dump.
 
-STREAM covered already other than noting that it's unlikely it has 44
-memory channels to work with so any imbalance in the task distribution
-should show up as a regression. Again, the patch favours using local node
-first which would saturate the local memory channel earlier.
+  For sake of comparison, clang without -mretpoline:
 
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | plzip:                                                                   |
-> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory    |
-> | test parameters  | cpufreq_governor=performance                                             |
-> |                  | nr_threads=100%                                                          |
-> |                  | ucode=0xb00002e                                                          |
+  # gdb -batch -ex 'disassemble dispatch' ./c-switch
+  Dump of assembler code for function dispatch:
+   0x0000000000400b30 <+0>:	cmp    $0x4,%edi
+   0x0000000000400b33 <+3>:	ja     0x400b57 <dispatch+39>
+   0x0000000000400b35 <+5>:	mov    %edi,%eax
+   0x0000000000400b37 <+7>:	jmpq   *0x492148(,%rax,8)
+   0x0000000000400b3e <+14>:	jmpq   0x400bf0 <fn_0>
+   0x0000000000400b43 <+19>:	jmpq   0x400c30 <fn_4>
+   0x0000000000400b48 <+24>:	jmpq   0x400c10 <fn_2>
+   0x0000000000400b4d <+29>:	jmpq   0x400c20 <fn_3>
+   0x0000000000400b52 <+34>:	jmpq   0x400c00 <fn_1>
+   0x0000000000400b57 <+39>:	push   %rax
+   0x0000000000400b58 <+40>:	callq  0x40dcf0 <abort>
+  End of assembler dump.
 
-Doesn't state what change happened be it positive or negative.
+Raising the cases to a high number (e.g. 100) will still result in similar
+code generation pattern with clang and gcc as above, in other words clang
+generally turns off jump table emission by having an extra expansion pass
+under retpoline build to turn indirectbr instructions from their IR into
+switch instructions as a built-in -mno-jump-table lowering of a switch (in
+this case, even if IR input already contained an indirect branch).
 
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | reaim: reaim.jobs_per_min -11.9% regression                              |
-> | test machine     | 192 threads Intel(R) Xeon(R) CPU E7-8890 v4 @ 2.20GHz with 512G memory   |
-> | test parameters  | cpufreq_governor=performance                                             |
-> |                  | nr_task=100%                                                             |
-> |                  | runtime=300s                                                             |
-> |                  | test=all_utime                                                           |
-> |                  | ucode=0xb00002e                                                          |
+For gcc, adding --param=case-values-threshold=20 as in similar fashion as
+s390 in order to raise the limit for x86 retpoline enabled builds results
+in a small vmlinux size increase of only 0.13% (before=18,027,528
+after=18,051,192). For clang this option is ignored due to i) not being
+needed as mentioned and ii) not having above cmdline
+parameter. Non-retpoline-enabled builds with gcc continue to use the
+default case-values-threshold setting, so nothing changes here.
 
-This is completely user-space bound running basic math operations. Not
-clear why it would suffer *but* if hyperthreading is enabled, the patch
-might mean that hyperthread siblings were used early due to favouring
-the local node.
+[0] https://lore.kernel.org/netdev/20190129095754.9390-1-bjorn.topel@gmail.com/
+    and "The Path to DPDK Speeds for AF_XDP", LPC 2018, networking track:
+  - http://vger.kernel.org/lpc_net2018_talks/lpc18_pres_af_xdp_perf-v3.pdf
+  - http://vger.kernel.org/lpc_net2018_talks/lpc18_paper_af_xdp_perf-v2.pdf
 
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | hackbench: hackbench.throughput -7.3% regression                         |
-> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 64G memory     |
-> | test parameters  | cpufreq_governor=performance                                             |
-> |                  | ipc=pipe                                                                 |
-> |                  | mode=process                                                             |
-> |                  | nr_threads=1600%                                                         |
-> |                  | ucode=0xb00002e                                                          |
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: netdev@vger.kernel.org
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Magnus Karlsson <magnus.karlsson@intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Link: https://lkml.kernel.org/r/20190221221941.29358-1-daniel@iogearbox.net
 
-Hackbench very short-lived but the workload is also heavily saturating the
-machine to an extent where it would be hard to tell from this report if
-the 7.3% is statically significant or not. The patch might mean a socket
-is severely over-saturated in the very early phases of the workload.
+---
+ arch/x86/Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | reaim: reaim.std_dev_percent 11.4% undefined                             |
-> | test machine     | 104 threads Intel(R) Xeon(R) Platinum 8170 CPU @ 2.10GHz with 64G memory |
-> | test parameters  | cpufreq_governor=performance                                             |
-> |                  | nr_task=100%                                                             |
-> |                  | runtime=300s                                                             |
-> |                  | test=custom                                                              |
-> |                  | ucode=0x200004d                                                          |
-
-Not sure what the change is saying. Possibly that it's less variable.
-
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | reaim: boot-time.boot 95.3% regression                                   |
-> | test machine     | 104 threads Intel(R) Xeon(R) Platinum 8170 CPU @ 2.10GHz with 64G memory |
-> | test parameters  | cpufreq_governor=performance                                             |
-> |                  | nr_task=100%                                                             |
-> |                  | runtime=300s                                                             |
-> |                  | test=alltests                                                            |
-> |                  | ucode=0x200004d                                                          |
-
-boot-time.boot?
-
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | pft: pft.faults_per_sec_per_cpu -42.7% regression                        |
-> | test machine     | 104 threads Intel(R) Xeon(R) Platinum 8170 CPU @ 2.10GHz with 64G memory |
-> | test parameters  | cpufreq_governor=performance                                             |
-> |                  | nr_task=50%                                                              |
-> |                  | runtime=300s                                                             |
-> |                  | ucode=0x200004d                                                          |
-
-PFT already discussed.
-
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | stream: stream.add_bandwidth_MBps -28.8% regression                      |
-> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory    |
-> | test parameters  | array_size=50000000                                                      |
-> |                  | cpufreq_governor=performance                                             |
-> |                  | nr_threads=50%                                                           |
-> |                  | omp=true                                                                 |
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | stream: stream.add_bandwidth_MBps -30.6% regression                      |
-> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory    |
-> | test parameters  | array_size=10000000                                                      |
-> |                  | cpufreq_governor=performance                                             |
-> |                  | nr_threads=50%                                                           |
-> |                  | omp=true                                                                 |
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | pft: pft.faults_per_sec_per_cpu -42.5% regression                        |
-> | test machine     | 104 threads Intel(R) Xeon(R) Platinum 8170 CPU @ 2.10GHz with 64G memory |
-> | test parameters  | cpufreq_governor=performance                                             |
-> |                  | nr_task=50%                                                              |
-> |                  | runtime=300s                                                             |
-
-Already discussed.
-
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | reaim: reaim.child_systime -1.4% undefined                               |
-> | test machine     | 144 threads Intel(R) Xeon(R) CPU E7-8890 v3 @ 2.50GHz with 512G memory   |
-> | test parameters  | cpufreq_governor=performance                                             |
-> |                  | iterations=30                                                            |
-> |                  | nr_task=1600%                                                            |
-> |                  | test=compute                                                             |
-
-1.4% change in system time could be overhead in the fork phase as it
-looks for local idle cores then remote idle cores early but the
-difference is tiny.
-
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | stress-ng: stress-ng.fifo.ops_per_sec 76.2% improvement                  |
-> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory    |
-> | test parameters  | class=pipe                                                               |
-> |                  | cpufreq_governor=performance                                             |
-> |                  | nr_threads=100%                                                          |
-> |                  | testtime=1s                                                              |
-
-A case where short-lived communicating tasks benefit by starting local.
-
-> +------------------+--------------------------------------------------------------------------+
-> | testcase: change | stress-ng: stress-ng.tsearch.ops_per_sec -17.1% regression               |
-> | test machine     | 88 threads Intel(R) Xeon(R) CPU E5-2699 v4 @ 2.20GHz with 128G memory    |
-> | test parameters  | class=cpu                                                                |
-> |                  | cpufreq_governor=performance                                             |
-> |                  | nr_threads=100%                                                          |
-> |                  | testtime=1s                                                              |
-> +------------------+--------------------------------------------------------------------------+
-> 
-
-Given full machine utilisation and a 1 second duration, it's a case
-where saturating the local node early was sub-optimal and 1 second is
-too long for load balancing or other factors to correct it.
-
-Bottom line, the patch is a trade off but from a range of tests, I found
-that on balance we benefit more from having tasks start local until
-there is evidence that the kernel is justified to spread the load to
-remote nodes.
-
--- 
-Mel Gorman
-SUSE Labs
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 9c5a67d1b9c1..f55420a67164 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -217,6 +217,11 @@ KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+ # Avoid indirect branches in kernel to deal with Spectre
+ ifdef CONFIG_RETPOLINE
+   KBUILD_CFLAGS += $(RETPOLINE_CFLAGS)
++  # Additionally, avoid generating expensive indirect jumps which
++  # are subject to retpolines for small number of switch cases.
++  # clang turns off jump table generation by default when under
++  # retpoline builds, however, gcc does not for x86.
++  KBUILD_CFLAGS += $(call cc-option,--param=case-values-threshold=20)
+ endif
+ 
+ archscripts: scripts_basic
