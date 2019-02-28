@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A53FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73020C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA401218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1762133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h2dQs5JS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pnhNMoj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388138AbfB1XNE (ORCPT
+        id S2388180AbfB1XNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:13:04 -0500
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:35897 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388084AbfB1XNC (ORCPT
+        Thu, 28 Feb 2019 18:13:09 -0500
+Received: from mail-oi1-f201.google.com ([209.85.167.201]:42519 "EHLO
+        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388128AbfB1XNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:13:02 -0500
-Received: by mail-pl1-f201.google.com with SMTP id f65so12037524plb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:13:01 -0800 (PST)
+        Thu, 28 Feb 2019 18:13:04 -0500
+Received: by mail-oi1-f201.google.com with SMTP id j205so9747438oih.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:13:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=1Fd13wAoeAlJDZDMn5wRTcmN7nj+iFwc6tEPzGSBE4U=;
-        b=h2dQs5JSnAG5Wy4W0iJMttDO7lKtCKoinJmTMo41kH6xI6qAI/Rq9vmuNe3Ff+fio5
-         LuvzOvPbhTpyh34gr9zrOE5mA1Y5t0ifI7DWi4CcqVkoc8uMRf9HfZV8LAEXrmOcPxJD
-         HPzwxav8T+gSYUt7jFe2FK6xBbwCBCxFQ8o7gYEQ3UklvUjo3FtFW+yxeESQH9iowvh1
-         97xDBgCWJvCFr9mig2BOszoMYCp/5BCz6gIE+Hss9v4IdxSkmMYoZOSBOW/RDtxVP0jD
-         7PU+J/oherZ/xNZSWdJ8dLmULlg5bDB3PE1jpql9FajhQLT0wu4uFj6RoxqsbWteM0Vk
-         CSvQ==
+        bh=JIwaSFIgIpUk1i3h4qdR8xZajEtDlWkjNkGrpJU0gjI=;
+        b=pnhNMoj3vEwEZFQ80G+9zkZNjLXJb/86amfRx9ym9v/+3EvPEut4iVIgscYdJFc90A
+         m1w294KRxnq5r8gj97JIKxU8ZiLkOhVJ+LOPc1fd5QYFG6kBaWFAzWtKXVwW/Hcr2YO9
+         J9VFWbp5K1QXuhedJNxRRssZWy5rpc5C2jFMdB7Ush+pn9Fr+onFXwGStQLqZWQa7J6L
+         dqXhrvzgWTvII4B1PXZ7eDgVj0KLKO8Bs4KPuhGuvYQ3Iw9T5L4ghAkGdJypAihkcdfm
+         Pb8S9wc8LVS8ofuhm0G15AUrOGnogvi0xzmLh6CA+WGqMZj7p+NBNgzDatgZy5pqTbvl
+         8uMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=1Fd13wAoeAlJDZDMn5wRTcmN7nj+iFwc6tEPzGSBE4U=;
-        b=NsDdk2Fbl63SJC61hh54z1eyRvYFM3EO1HUI+Ma1O+5g8Zdd7sEqNbtwc6ReWSguSY
-         GQ+ArvFEVzmB/9Ogux9vIkq2/lrQDsfKHh/fRsG113COrthAabxj7CSy7CACpZsWil8B
-         GZArKn+PWhYgNkywQ+SdfSdl6HSAwiK3WhYq9oUrsJ875bqU8AbYIqIJnuidIcqQ/jNZ
-         mfdOIrSUo4AU9uZ/nULSUycpFYxILNMqUrxzqMyLl7AyrZSQMhWV/amN4s/KNnueJlA0
-         yOT/mMCaZSmL9c5dKPUk3h2yx+fBEyZKydrYpBQvjJCMLQ3rQ22tmDi4RceDD+mSdB8+
-         VMFg==
-X-Gm-Message-State: AHQUAua7F/WEqu06rIfevk8zyU8B+OWdjBukRbeBEttX5zLdx2TTsjXD
-        IRZ6tH6DTJhlBdbuNKMEdvcetA0psh4e7k6r0oh/wQ==
-X-Google-Smtp-Source: AHgI3IbPb2bAkGu7mbtq3dNBtqEavh+uoz2l0tI4DokDL5Yk3RfeUuSVrpg8fxfLlyNRX+BVqb6qkCQm79o4/aJYuKCGxA==
-X-Received: by 2002:aa7:8699:: with SMTP id d25mr975489pfo.22.1551395581516;
- Thu, 28 Feb 2019 15:13:01 -0800 (PST)
-Date:   Thu, 28 Feb 2019 15:11:58 -0800
+        bh=JIwaSFIgIpUk1i3h4qdR8xZajEtDlWkjNkGrpJU0gjI=;
+        b=d1wMdgdCP8bebS3h2IaBn2fB0MTxovVJO/vbthpRRnO4pjhYJQhnMhGV9sLWVIBSEn
+         Pw41lzhC61fix9RN2DWZhJlOMRKrLBhdES1chRYNOCsOflFfkYFe6a3Gdrtd0y5EDyRJ
+         uDyCsz1OiBhKXL14j5tsztIkbqsJeotw6boKyIFzfTI2f5ven1Ud4E5K/g2nu3F1TPVq
+         gc4SbzyDUjwgpis2dXgqQVjqbZTs5lulN3mOm2PxKtt2+wdwevzZqfUDtwtQBxSxKOp7
+         eCLiZsCnOtW2aoWaSdzeXpPqxyZsn4PyLMUYClFsOzExrYYa/16bM1uO8N4I60dCcs84
+         ygHQ==
+X-Gm-Message-State: APjAAAVo8/WInVM8F4IpcbvnsesXgKfX6qKlWMzvDAz/J9M7Wm1T2Xo4
+        Llp6HSjdRuhT4O+Xd/KXKmWyC4J92cGWhphcRmOuDg==
+X-Google-Smtp-Source: APXvYqyTAQpBWJqJBvnFjzipwZ1yX7nxGIsNthCKsjRm6tRMc3jq4nOkuFbUCwM1avNqR/85HT7iEU7SeMicoTGP0rwGYQ==
+X-Received: by 2002:a05:6830:8b:: with SMTP id a11mr1298882oto.33.1551395584234;
+ Thu, 28 Feb 2019 15:13:04 -0800 (PST)
+Date:   Thu, 28 Feb 2019 15:11:59 -0800
 In-Reply-To: <20190228231203.212359-1-matthewgarrett@google.com>
-Message-Id: <20190228231203.212359-22-matthewgarrett@google.com>
+Message-Id: <20190228231203.212359-23-matthewgarrett@google.com>
 Mime-Version: 1.0
 References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
  <20190228231203.212359-1-matthewgarrett@google.com>
 X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH 22/27] Lock down /proc/kcore
+Subject: [PATCH 23/27] Lock down kprobes
 From:   Matthew Garrett <matthewgarrett@google.com>
 To:     jmorris@namei.org
 Cc:     linux-security-module@vger.kernel.org,
@@ -72,28 +72,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-Disallow access to /proc/kcore when the kernel is locked down to prevent
-access to cryptographic data.
+Disallow the creation of kprobes when the kernel is locked down by
+preventing their registration.  This prevents kprobes from being used to
+access kernel memory, either to make modifications or to steal crypto data.
 
+Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: James Morris <james.l.morris@oracle.com>
 ---
- fs/proc/kcore.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/kprobes.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index bbcc185062bb..d50ebfbf3dbb 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -518,6 +518,8 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index f4ddfdd2d07e..6f66cca8e2c6 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1552,6 +1552,9 @@ int register_kprobe(struct kprobe *p)
+ 	struct module *probed_mod;
+ 	kprobe_opcode_t *addr;
  
- static int open_kcore(struct inode *inode, struct file *filp)
- {
-+	if (kernel_is_locked_down("/proc/kcore"))
++	if (kernel_is_locked_down("Use of kprobes"))
 +		return -EPERM;
- 	if (!capable(CAP_SYS_RAWIO))
- 		return -EPERM;
- 
++
+ 	/* Adjust probe address from symbol */
+ 	addr = kprobe_addr(p);
+ 	if (IS_ERR(addr))
 -- 
 2.21.0.352.gf09ad66450-goog
 
