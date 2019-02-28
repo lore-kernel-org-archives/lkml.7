@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B753C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3EFC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E843F218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3D6C21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732399AbfB1KVf (ORCPT
+        id S1732414AbfB1KVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:21:35 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36284 "EHLO
+        Thu, 28 Feb 2019 05:21:37 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36273 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732285AbfB1KVd (ORCPT
+        by vger.kernel.org with ESMTP id S1732306AbfB1KVb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:21:33 -0500
+        Thu, 28 Feb 2019 05:21:31 -0500
 Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SAHwFM007042;
-        Thu, 28 Feb 2019 11:20:06 +0100
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SAHtU0007035;
+        Thu, 28 Feb 2019 11:20:08 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qtwxpcm7j-1
+        by mx08-00178001.pphosted.com with ESMTP id 2qtwxpcm7y-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 28 Feb 2019 11:20:06 +0100
+        Thu, 28 Feb 2019 11:20:08 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C08B341;
-        Thu, 28 Feb 2019 10:20:04 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9FF9846;
+        Thu, 28 Feb 2019 10:20:07 +0000 (GMT)
 Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9D4C14E45;
-        Thu, 28 Feb 2019 10:20:04 +0000 (GMT)
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8292D4E51;
+        Thu, 28 Feb 2019 10:20:07 +0000 (GMT)
 Received: from localhost (10.75.127.48) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 28 Feb 2019 11:20:03
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 28 Feb 2019 11:20:06
  +0100
 From:   Fabrice Gasnier <fabrice.gasnier@st.com>
 To:     <srinivas.kandagatla@linaro.org>, <robh+dt@kernel.org>,
@@ -45,16 +45,16 @@ CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/6] dt-bindings: nvmem: Add STM32 factory-programmed romem
-Date:   Thu, 28 Feb 2019 11:19:51 +0100
-Message-ID: <1551349196-8956-2-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v2 5/6] ARM: dts: stm32: Add romem and temperature calibration on stm32mp157c
+Date:   Thu, 28 Feb 2019 11:19:55 +0100
+Message-ID: <1551349196-8956-6-git-send-email-fabrice.gasnier@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
 References: <1551349196-8956-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG5NODE3.st.com
+X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG5NODE3.st.com
  (10.75.127.15)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_05:,,
  signatures=0
@@ -63,55 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for STMicroelectronics STM32 Factory-programmed
-read only memory area.
+Add & enable stm32 factory-programmed memory. Describe temperature sensor
+calibration cells. Non-volatile calibration data is made available by
+stm32mp157c bootrom in bsec_dataX registers.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
-Changes in v2:
-- update "st,stm32f4-otp" compatible as discussed with Rob
----
- .../devicetree/bindings/nvmem/st,stm32-romem.txt   | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
+ arch/arm/boot/dts/stm32mp157c.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
-new file mode 100644
-index 0000000..142a51d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
-@@ -0,0 +1,31 @@
-+STMicroelectronics STM32 Factory-programmed data device tree bindings
-+
-+This represents STM32 Factory-programmed read only non-volatile area: locked
-+flash, OTP, read-only HW regs... This contains various information such as:
-+analog calibration data for temperature sensor (e.g. TS_CAL1, TS_CAL2),
-+internal vref (VREFIN_CAL), unique device ID...
-+
-+Required properties:
-+- compatible:		Should be one of:
-+			"st,stm32f4-otp"
-+			"st,stm32mp15-bsec"
-+- reg:			Offset and length of factory-programmed area.
-+- #address-cells:	Should be '<1>'.
-+- #size-cells:		Should be '<1>'.
-+
-+Optional Data cells:
-+- Must be child nodes as described in nvmem.txt.
-+
-+Example on stm32f4:
-+	romem: nvmem@1fff7800 {
-+		compatible = "st,stm32f4-otp";
-+		reg = <0x1fff7800 0x400>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/* Data cells: ts_cal1 at 0x1fff7a2c */
-+		ts_cal1: calib@22c {
-+			reg = <0x22c 0x2>;
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 8bf1c17..9a7ac80 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -1106,6 +1106,19 @@
+ 			status = "disabled";
+ 		};
+ 
++		bsec: nvmem@5c005000 {
++			compatible = "st,stm32mp15-bsec";
++			reg = <0x5c005000 0x400>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ts_cal1: calib@5c {
++				reg = <0x5c 0x2>;
++			};
++			ts_cal2: calib@5e {
++				reg = <0x5e 0x2>;
++			};
 +		};
-+		...
-+	};
++
+ 		i2c6: i2c@5c009000 {
+ 			compatible = "st,stm32f7-i2c";
+ 			reg = <0x5c009000 0x400>;
 -- 
 2.7.4
 
