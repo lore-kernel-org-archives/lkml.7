@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65454C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A89CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6B320C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1E920C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367472;
-	bh=RvdKrs2J4vID1r2V9vS1Q8l0c9444hQTv95KLkjenbA=;
+	s=default; t=1551367480;
+	bh=QPkiITx4hrR9c1OtIrF2xqFtPL0p3l/QJkjFuCfHJ64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RiFyupxVg35xvcKRGIGBYOLPmOaf9PXojYtqD14qrSazeFw24NPksIwU9NAf/k96Q
-	 rRZIFIjoDn7BCxl9/XrDvhPQMpnDgrsrw409ONd0BN/qUU/tQVFbh6z6vWp88Bsd/o
-	 OVr2sjEyVGyFuXpdJzBRNIcGOBFuaNC4QYQbxVZ8=
+	b=oAbyk/j58Fd/Q26naaUGr1Yw6/Hxhdv3ugtkVp36X8pKmqByZ1ReL226GmMQCRVxJ
+	 ta4gxozFzwpbQfbS65Z8O41LPVL4aljq2gkhJiU/zA3c3UvaJr4DUaCNbjFIPTL3Ba
+	 X1a8q60CmF0i9TyzYZUaLChbntz2xgYgEiGs72Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388869AbfB1PYa (ORCPT
+        id S2389030AbfB1PYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:24:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45720 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:24:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388220AbfB1PMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:12:18 -0500
+        id S2388211AbfB1PMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:12:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EEC1218E0;
-        Thu, 28 Feb 2019 15:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE562171F;
+        Thu, 28 Feb 2019 15:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366737;
-        bh=RvdKrs2J4vID1r2V9vS1Q8l0c9444hQTv95KLkjenbA=;
+        s=default; t=1551366736;
+        bh=QPkiITx4hrR9c1OtIrF2xqFtPL0p3l/QJkjFuCfHJ64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtWxOUN1Re0yutFmscpNAgYUyJ+cFbPTOK/7XgCEk5fJv30YIiy4QdphazTfl2xy8
-         7LtWAD3W3gc9Tj8T8Zt30znLBtaYZQyD66D+S30XsMsONjKVuClDiV4xvTvnvIKlLJ
-         Dl6fInyGAxYgcG6UOlhmf3jAE2kGfKpWJSxZRtpk=
+        b=af9Q0VWJbbhbqmQ8veKCWJzyNceNdBwitdbSIvA06oNTm8p97p2vixNBkjG+Xu9/D
+         EIqqa1CymttQvF08iZgfNxKV4O6ipRGpEXkHHkE5Pf/aYYItcVVKhXI/rJLYoscjmM
+         ypTqsuJrJa4qRm8lDOsNY8eIf1sJ02lmRnvtrl5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 37/64] bpf: fix potential deadlock in bpf_prog_register
-Date:   Thu, 28 Feb 2019 10:10:38 -0500
-Message-Id: <20190228151105.11277-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 36/64] bpf: fix lockdep false positive in percpu_freelist
+Date:   Thu, 28 Feb 2019 10:10:37 -0500
+Message-Id: <20190228151105.11277-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -61,165 +61,303 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexei Starovoitov <ast@kernel.org>
 
-[ Upstream commit e16ec34039c701594d55d08a5aa49ee3e1abc821 ]
+[ Upstream commit a89fac57b5d080771efd4d71feaae19877cf68f0 ]
 
-Lockdep found a potential deadlock between cpu_hotplug_lock, bpf_event_mutex, and cpuctx_mutex:
-[   13.007000] WARNING: possible circular locking dependency detected
-[   13.007587] 5.0.0-rc3-00018-g2fa53f892422-dirty #477 Not tainted
-[   13.008124] ------------------------------------------------------
-[   13.008624] test_progs/246 is trying to acquire lock:
-[   13.009030] 0000000094160d1d (tracepoints_mutex){+.+.}, at: tracepoint_probe_register_prio+0x2d/0x300
-[   13.009770]
-[   13.009770] but task is already holding lock:
-[   13.010239] 00000000d663ef86 (bpf_event_mutex){+.+.}, at: bpf_probe_register+0x1d/0x60
-[   13.010877]
-[   13.010877] which lock already depends on the new lock.
-[   13.010877]
-[   13.011532]
-[   13.011532] the existing dependency chain (in reverse order) is:
-[   13.012129]
-[   13.012129] -> #4 (bpf_event_mutex){+.+.}:
-[   13.012582]        perf_event_query_prog_array+0x9b/0x130
-[   13.013016]        _perf_ioctl+0x3aa/0x830
-[   13.013354]        perf_ioctl+0x2e/0x50
-[   13.013668]        do_vfs_ioctl+0x8f/0x6a0
-[   13.014003]        ksys_ioctl+0x70/0x80
-[   13.014320]        __x64_sys_ioctl+0x16/0x20
-[   13.014668]        do_syscall_64+0x4a/0x180
-[   13.015007]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   13.015469]
-[   13.015469] -> #3 (&cpuctx_mutex){+.+.}:
-[   13.015910]        perf_event_init_cpu+0x5a/0x90
-[   13.016291]        perf_event_init+0x1b2/0x1de
-[   13.016654]        start_kernel+0x2b8/0x42a
-[   13.016995]        secondary_startup_64+0xa4/0xb0
-[   13.017382]
-[   13.017382] -> #2 (pmus_lock){+.+.}:
-[   13.017794]        perf_event_init_cpu+0x21/0x90
-[   13.018172]        cpuhp_invoke_callback+0xb3/0x960
-[   13.018573]        _cpu_up+0xa7/0x140
-[   13.018871]        do_cpu_up+0xa4/0xc0
-[   13.019178]        smp_init+0xcd/0xd2
-[   13.019483]        kernel_init_freeable+0x123/0x24f
-[   13.019878]        kernel_init+0xa/0x110
-[   13.020201]        ret_from_fork+0x24/0x30
-[   13.020541]
-[   13.020541] -> #1 (cpu_hotplug_lock.rw_sem){++++}:
-[   13.021051]        static_key_slow_inc+0xe/0x20
-[   13.021424]        tracepoint_probe_register_prio+0x28c/0x300
-[   13.021891]        perf_trace_event_init+0x11f/0x250
-[   13.022297]        perf_trace_init+0x6b/0xa0
-[   13.022644]        perf_tp_event_init+0x25/0x40
-[   13.023011]        perf_try_init_event+0x6b/0x90
-[   13.023386]        perf_event_alloc+0x9a8/0xc40
-[   13.023754]        __do_sys_perf_event_open+0x1dd/0xd30
-[   13.024173]        do_syscall_64+0x4a/0x180
-[   13.024519]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   13.024968]
-[   13.024968] -> #0 (tracepoints_mutex){+.+.}:
-[   13.025434]        __mutex_lock+0x86/0x970
-[   13.025764]        tracepoint_probe_register_prio+0x2d/0x300
-[   13.026215]        bpf_probe_register+0x40/0x60
-[   13.026584]        bpf_raw_tracepoint_open.isra.34+0xa4/0x130
-[   13.027042]        __do_sys_bpf+0x94f/0x1a90
-[   13.027389]        do_syscall_64+0x4a/0x180
-[   13.027727]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   13.028171]
-[   13.028171] other info that might help us debug this:
-[   13.028171]
-[   13.028807] Chain exists of:
-[   13.028807]   tracepoints_mutex --> &cpuctx_mutex --> bpf_event_mutex
-[   13.028807]
-[   13.029666]  Possible unsafe locking scenario:
-[   13.029666]
-[   13.030140]        CPU0                    CPU1
-[   13.030510]        ----                    ----
-[   13.030875]   lock(bpf_event_mutex);
-[   13.031166]                                lock(&cpuctx_mutex);
-[   13.031645]                                lock(bpf_event_mutex);
-[   13.032135]   lock(tracepoints_mutex);
-[   13.032441]
-[   13.032441]  *** DEADLOCK ***
-[   13.032441]
-[   13.032911] 1 lock held by test_progs/246:
-[   13.033239]  #0: 00000000d663ef86 (bpf_event_mutex){+.+.}, at: bpf_probe_register+0x1d/0x60
-[   13.033909]
-[   13.033909] stack backtrace:
-[   13.034258] CPU: 1 PID: 246 Comm: test_progs Not tainted 5.0.0-rc3-00018-g2fa53f892422-dirty #477
-[   13.034964] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
-[   13.035657] Call Trace:
-[   13.035859]  dump_stack+0x5f/0x8b
-[   13.036130]  print_circular_bug.isra.37+0x1ce/0x1db
-[   13.036526]  __lock_acquire+0x1158/0x1350
-[   13.036852]  ? lock_acquire+0x98/0x190
-[   13.037154]  lock_acquire+0x98/0x190
-[   13.037447]  ? tracepoint_probe_register_prio+0x2d/0x300
-[   13.037876]  __mutex_lock+0x86/0x970
-[   13.038167]  ? tracepoint_probe_register_prio+0x2d/0x300
-[   13.038600]  ? tracepoint_probe_register_prio+0x2d/0x300
-[   13.039028]  ? __mutex_lock+0x86/0x970
-[   13.039337]  ? __mutex_lock+0x24a/0x970
-[   13.039649]  ? bpf_probe_register+0x1d/0x60
-[   13.039992]  ? __bpf_trace_sched_wake_idle_without_ipi+0x10/0x10
-[   13.040478]  ? tracepoint_probe_register_prio+0x2d/0x300
-[   13.040906]  tracepoint_probe_register_prio+0x2d/0x300
-[   13.041325]  bpf_probe_register+0x40/0x60
-[   13.041649]  bpf_raw_tracepoint_open.isra.34+0xa4/0x130
-[   13.042068]  ? __might_fault+0x3e/0x90
-[   13.042374]  __do_sys_bpf+0x94f/0x1a90
-[   13.042678]  do_syscall_64+0x4a/0x180
-[   13.042975]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   13.043382] RIP: 0033:0x7f23b10a07f9
-[   13.045155] RSP: 002b:00007ffdef42fdd8 EFLAGS: 00000202 ORIG_RAX: 0000000000000141
-[   13.045759] RAX: ffffffffffffffda RBX: 00007ffdef42ff70 RCX: 00007f23b10a07f9
-[   13.046326] RDX: 0000000000000070 RSI: 00007ffdef42fe10 RDI: 0000000000000011
-[   13.046893] RBP: 00007ffdef42fdf0 R08: 0000000000000038 R09: 00007ffdef42fe10
-[   13.047462] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
-[   13.048029] R13: 0000000000000016 R14: 00007f23b1db4690 R15: 0000000000000000
+Lockdep warns about false positive:
+[   12.492084] 00000000e6b28347 (&head->lock){+...}, at: pcpu_freelist_push+0x2a/0x40
+[   12.492696] but this lock was taken by another, HARDIRQ-safe lock in the past:
+[   12.493275]  (&rq->lock){-.-.}
+[   12.493276]
+[   12.493276]
+[   12.493276] and interrupts could create inverse lock ordering between them.
+[   12.493276]
+[   12.494435]
+[   12.494435] other info that might help us debug this:
+[   12.494979]  Possible interrupt unsafe locking scenario:
+[   12.494979]
+[   12.495518]        CPU0                    CPU1
+[   12.495879]        ----                    ----
+[   12.496243]   lock(&head->lock);
+[   12.496502]                                local_irq_disable();
+[   12.496969]                                lock(&rq->lock);
+[   12.497431]                                lock(&head->lock);
+[   12.497890]   <Interrupt>
+[   12.498104]     lock(&rq->lock);
+[   12.498368]
+[   12.498368]  *** DEADLOCK ***
+[   12.498368]
+[   12.498837] 1 lock held by dd/276:
+[   12.499110]  #0: 00000000c58cb2ee (rcu_read_lock){....}, at: trace_call_bpf+0x5e/0x240
+[   12.499747]
+[   12.499747] the shortest dependencies between 2nd lock and 1st lock:
+[   12.500389]  -> (&rq->lock){-.-.} {
+[   12.500669]     IN-HARDIRQ-W at:
+[   12.500934]                       _raw_spin_lock+0x2f/0x40
+[   12.501373]                       scheduler_tick+0x4c/0xf0
+[   12.501812]                       update_process_times+0x40/0x50
+[   12.502294]                       tick_periodic+0x27/0xb0
+[   12.502723]                       tick_handle_periodic+0x1f/0x60
+[   12.503203]                       timer_interrupt+0x11/0x20
+[   12.503651]                       __handle_irq_event_percpu+0x43/0x2c0
+[   12.504167]                       handle_irq_event_percpu+0x20/0x50
+[   12.504674]                       handle_irq_event+0x37/0x60
+[   12.505139]                       handle_level_irq+0xa7/0x120
+[   12.505601]                       handle_irq+0xa1/0x150
+[   12.506018]                       do_IRQ+0x77/0x140
+[   12.506411]                       ret_from_intr+0x0/0x1d
+[   12.506834]                       _raw_spin_unlock_irqrestore+0x53/0x60
+[   12.507362]                       __setup_irq+0x481/0x730
+[   12.507789]                       setup_irq+0x49/0x80
+[   12.508195]                       hpet_time_init+0x21/0x32
+[   12.508644]                       x86_late_time_init+0xb/0x16
+[   12.509106]                       start_kernel+0x390/0x42a
+[   12.509554]                       secondary_startup_64+0xa4/0xb0
+[   12.510034]     IN-SOFTIRQ-W at:
+[   12.510305]                       _raw_spin_lock+0x2f/0x40
+[   12.510772]                       try_to_wake_up+0x1c7/0x4e0
+[   12.511220]                       swake_up_locked+0x20/0x40
+[   12.511657]                       swake_up_one+0x1a/0x30
+[   12.512070]                       rcu_process_callbacks+0xc5/0x650
+[   12.512553]                       __do_softirq+0xe6/0x47b
+[   12.512978]                       irq_exit+0xc3/0xd0
+[   12.513372]                       smp_apic_timer_interrupt+0xa9/0x250
+[   12.513876]                       apic_timer_interrupt+0xf/0x20
+[   12.514343]                       default_idle+0x1c/0x170
+[   12.514765]                       do_idle+0x199/0x240
+[   12.515159]                       cpu_startup_entry+0x19/0x20
+[   12.515614]                       start_kernel+0x422/0x42a
+[   12.516045]                       secondary_startup_64+0xa4/0xb0
+[   12.516521]     INITIAL USE at:
+[   12.516774]                      _raw_spin_lock_irqsave+0x38/0x50
+[   12.517258]                      rq_attach_root+0x16/0xd0
+[   12.517685]                      sched_init+0x2f2/0x3eb
+[   12.518096]                      start_kernel+0x1fb/0x42a
+[   12.518525]                      secondary_startup_64+0xa4/0xb0
+[   12.518986]   }
+[   12.519132]   ... key      at: [<ffffffff82b7bc28>] __key.71384+0x0/0x8
+[   12.519649]   ... acquired at:
+[   12.519892]    pcpu_freelist_pop+0x7b/0xd0
+[   12.520221]    bpf_get_stackid+0x1d2/0x4d0
+[   12.520563]    ___bpf_prog_run+0x8b4/0x11a0
+[   12.520887]
+[   12.521008] -> (&head->lock){+...} {
+[   12.521292]    HARDIRQ-ON-W at:
+[   12.521539]                     _raw_spin_lock+0x2f/0x40
+[   12.521950]                     pcpu_freelist_push+0x2a/0x40
+[   12.522396]                     bpf_get_stackid+0x494/0x4d0
+[   12.522828]                     ___bpf_prog_run+0x8b4/0x11a0
+[   12.523296]    INITIAL USE at:
+[   12.523537]                    _raw_spin_lock+0x2f/0x40
+[   12.523944]                    pcpu_freelist_populate+0xc0/0x120
+[   12.524417]                    htab_map_alloc+0x405/0x500
+[   12.524835]                    __do_sys_bpf+0x1a3/0x1a90
+[   12.525253]                    do_syscall_64+0x4a/0x180
+[   12.525659]                    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   12.526167]  }
+[   12.526311]  ... key      at: [<ffffffff838f7668>] __key.13130+0x0/0x8
+[   12.526812]  ... acquired at:
+[   12.527047]    __lock_acquire+0x521/0x1350
+[   12.527371]    lock_acquire+0x98/0x190
+[   12.527680]    _raw_spin_lock+0x2f/0x40
+[   12.527994]    pcpu_freelist_push+0x2a/0x40
+[   12.528325]    bpf_get_stackid+0x494/0x4d0
+[   12.528645]    ___bpf_prog_run+0x8b4/0x11a0
+[   12.528970]
+[   12.529092]
+[   12.529092] stack backtrace:
+[   12.529444] CPU: 0 PID: 276 Comm: dd Not tainted 5.0.0-rc3-00018-g2fa53f892422 #475
+[   12.530043] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+[   12.530750] Call Trace:
+[   12.530948]  dump_stack+0x5f/0x8b
+[   12.531248]  check_usage_backwards+0x10c/0x120
+[   12.531598]  ? ___bpf_prog_run+0x8b4/0x11a0
+[   12.531935]  ? mark_lock+0x382/0x560
+[   12.532229]  mark_lock+0x382/0x560
+[   12.532496]  ? print_shortest_lock_dependencies+0x180/0x180
+[   12.532928]  __lock_acquire+0x521/0x1350
+[   12.533271]  ? find_get_entry+0x17f/0x2e0
+[   12.533586]  ? find_get_entry+0x19c/0x2e0
+[   12.533902]  ? lock_acquire+0x98/0x190
+[   12.534196]  lock_acquire+0x98/0x190
+[   12.534482]  ? pcpu_freelist_push+0x2a/0x40
+[   12.534810]  _raw_spin_lock+0x2f/0x40
+[   12.535099]  ? pcpu_freelist_push+0x2a/0x40
+[   12.535432]  pcpu_freelist_push+0x2a/0x40
+[   12.535750]  bpf_get_stackid+0x494/0x4d0
+[   12.536062]  ___bpf_prog_run+0x8b4/0x11a0
 
-Since tracepoints_mutex will be taken in tracepoint_probe_register/unregister()
-there is no need to take bpf_event_mutex too.
-bpf_event_mutex is protecting modifications to prog array used in kprobe/perf bpf progs.
-bpf_raw_tracepoints don't need to take this mutex.
+It has been explained that is a false positive here:
+https://lkml.org/lkml/2018/7/25/756
+Recap:
+- stackmap uses pcpu_freelist
+- The lock in pcpu_freelist is a percpu lock
+- stackmap is only used by tracing bpf_prog
+- A tracing bpf_prog cannot be run if another bpf_prog
+  has already been running (ensured by the percpu bpf_prog_active counter).
 
-Fixes: c4f6699dfcb8 ("bpf: introduce BPF_RAW_TRACEPOINT")
+Eric pointed out that this lockdep splats stops other
+legit lockdep splats in selftests/bpf/test_progs.c.
+
+Fix this by calling local_irq_save/restore for stackmap.
+
+Another false positive had also been worked around by calling
+local_irq_save in commit 89ad2fa3f043 ("bpf: fix lockdep splat").
+That commit added unnecessary irq_save/restore to fast path of
+bpf hash map. irqs are already disabled at that point, since htab
+is holding per bucket spin_lock with irqsave.
+
+Let's reduce overhead for htab by introducing __pcpu_freelist_push/pop
+function w/o irqsave and convert pcpu_freelist_push/pop to irqsave
+to be used elsewhere (right now only in stackmap).
+It stops lockdep false positive in stackmap with a bit of acceptable overhead.
+
+Fixes: 557c0c6e7df8 ("bpf: convert stackmap to pre-allocation")
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
 Acked-by: Martin KaFai Lau <kafai@fb.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/bpf_trace.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ kernel/bpf/hashtab.c         |  4 ++--
+ kernel/bpf/percpu_freelist.c | 41 +++++++++++++++++++++++++-----------
+ kernel/bpf/percpu_freelist.h |  4 ++++
+ 3 files changed, 35 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 9864a35c8bb57..6c28d519447d1 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1158,22 +1158,12 @@ static int __bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_prog *
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 03cc59ee9c953..cebadd6af4d9d 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -677,7 +677,7 @@ static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
+ 	}
  
- int bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_prog *prog)
- {
--	int err;
--
--	mutex_lock(&bpf_event_mutex);
--	err = __bpf_probe_register(btp, prog);
--	mutex_unlock(&bpf_event_mutex);
--	return err;
-+	return __bpf_probe_register(btp, prog);
+ 	if (htab_is_prealloc(htab)) {
+-		pcpu_freelist_push(&htab->freelist, &l->fnode);
++		__pcpu_freelist_push(&htab->freelist, &l->fnode);
+ 	} else {
+ 		atomic_dec(&htab->count);
+ 		l->htab = htab;
+@@ -739,7 +739,7 @@ static struct htab_elem *alloc_htab_elem(struct bpf_htab *htab, void *key,
+ 		} else {
+ 			struct pcpu_freelist_node *l;
+ 
+-			l = pcpu_freelist_pop(&htab->freelist);
++			l = __pcpu_freelist_pop(&htab->freelist);
+ 			if (!l)
+ 				return ERR_PTR(-E2BIG);
+ 			l_new = container_of(l, struct htab_elem, fnode);
+diff --git a/kernel/bpf/percpu_freelist.c b/kernel/bpf/percpu_freelist.c
+index 673fa6fe2d73c..0c1b4ba9e90e7 100644
+--- a/kernel/bpf/percpu_freelist.c
++++ b/kernel/bpf/percpu_freelist.c
+@@ -28,8 +28,8 @@ void pcpu_freelist_destroy(struct pcpu_freelist *s)
+ 	free_percpu(s->freelist);
  }
  
- int bpf_probe_unregister(struct bpf_raw_event_map *btp, struct bpf_prog *prog)
+-static inline void __pcpu_freelist_push(struct pcpu_freelist_head *head,
+-					struct pcpu_freelist_node *node)
++static inline void ___pcpu_freelist_push(struct pcpu_freelist_head *head,
++					 struct pcpu_freelist_node *node)
  {
--	int err;
--
--	mutex_lock(&bpf_event_mutex);
--	err = tracepoint_probe_unregister(btp->tp, (void *)btp->bpf_func, prog);
--	mutex_unlock(&bpf_event_mutex);
--	return err;
-+	return tracepoint_probe_unregister(btp->tp, (void *)btp->bpf_func, prog);
+ 	raw_spin_lock(&head->lock);
+ 	node->next = head->first;
+@@ -37,12 +37,22 @@ static inline void __pcpu_freelist_push(struct pcpu_freelist_head *head,
+ 	raw_spin_unlock(&head->lock);
  }
  
- int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
+-void pcpu_freelist_push(struct pcpu_freelist *s,
++void __pcpu_freelist_push(struct pcpu_freelist *s,
+ 			struct pcpu_freelist_node *node)
+ {
+ 	struct pcpu_freelist_head *head = this_cpu_ptr(s->freelist);
+ 
+-	__pcpu_freelist_push(head, node);
++	___pcpu_freelist_push(head, node);
++}
++
++void pcpu_freelist_push(struct pcpu_freelist *s,
++			struct pcpu_freelist_node *node)
++{
++	unsigned long flags;
++
++	local_irq_save(flags);
++	__pcpu_freelist_push(s, node);
++	local_irq_restore(flags);
+ }
+ 
+ void pcpu_freelist_populate(struct pcpu_freelist *s, void *buf, u32 elem_size,
+@@ -63,7 +73,7 @@ void pcpu_freelist_populate(struct pcpu_freelist *s, void *buf, u32 elem_size,
+ 	for_each_possible_cpu(cpu) {
+ again:
+ 		head = per_cpu_ptr(s->freelist, cpu);
+-		__pcpu_freelist_push(head, buf);
++		___pcpu_freelist_push(head, buf);
+ 		i++;
+ 		buf += elem_size;
+ 		if (i == nr_elems)
+@@ -74,14 +84,12 @@ void pcpu_freelist_populate(struct pcpu_freelist *s, void *buf, u32 elem_size,
+ 	local_irq_restore(flags);
+ }
+ 
+-struct pcpu_freelist_node *pcpu_freelist_pop(struct pcpu_freelist *s)
++struct pcpu_freelist_node *__pcpu_freelist_pop(struct pcpu_freelist *s)
+ {
+ 	struct pcpu_freelist_head *head;
+ 	struct pcpu_freelist_node *node;
+-	unsigned long flags;
+ 	int orig_cpu, cpu;
+ 
+-	local_irq_save(flags);
+ 	orig_cpu = cpu = raw_smp_processor_id();
+ 	while (1) {
+ 		head = per_cpu_ptr(s->freelist, cpu);
+@@ -89,16 +97,25 @@ struct pcpu_freelist_node *pcpu_freelist_pop(struct pcpu_freelist *s)
+ 		node = head->first;
+ 		if (node) {
+ 			head->first = node->next;
+-			raw_spin_unlock_irqrestore(&head->lock, flags);
++			raw_spin_unlock(&head->lock);
+ 			return node;
+ 		}
+ 		raw_spin_unlock(&head->lock);
+ 		cpu = cpumask_next(cpu, cpu_possible_mask);
+ 		if (cpu >= nr_cpu_ids)
+ 			cpu = 0;
+-		if (cpu == orig_cpu) {
+-			local_irq_restore(flags);
++		if (cpu == orig_cpu)
+ 			return NULL;
+-		}
+ 	}
+ }
++
++struct pcpu_freelist_node *pcpu_freelist_pop(struct pcpu_freelist *s)
++{
++	struct pcpu_freelist_node *ret;
++	unsigned long flags;
++
++	local_irq_save(flags);
++	ret = __pcpu_freelist_pop(s);
++	local_irq_restore(flags);
++	return ret;
++}
+diff --git a/kernel/bpf/percpu_freelist.h b/kernel/bpf/percpu_freelist.h
+index 3049aae8ea1e2..c3960118e6178 100644
+--- a/kernel/bpf/percpu_freelist.h
++++ b/kernel/bpf/percpu_freelist.h
+@@ -22,8 +22,12 @@ struct pcpu_freelist_node {
+ 	struct pcpu_freelist_node *next;
+ };
+ 
++/* pcpu_freelist_* do spin_lock_irqsave. */
+ void pcpu_freelist_push(struct pcpu_freelist *, struct pcpu_freelist_node *);
+ struct pcpu_freelist_node *pcpu_freelist_pop(struct pcpu_freelist *);
++/* __pcpu_freelist_* do spin_lock only. caller must disable irqs. */
++void __pcpu_freelist_push(struct pcpu_freelist *, struct pcpu_freelist_node *);
++struct pcpu_freelist_node *__pcpu_freelist_pop(struct pcpu_freelist *);
+ void pcpu_freelist_populate(struct pcpu_freelist *s, void *buf, u32 elem_size,
+ 			    u32 nr_elems);
+ int pcpu_freelist_init(struct pcpu_freelist *);
 -- 
 2.19.1
 
