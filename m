@@ -2,93 +2,247 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313E0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3213C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BD7218FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995C5218FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366826;
-	bh=byAg77FHN3WI5S1frV8IHsE1cuzxw/EeGiVs4Ma0yCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ConloeoRKWrfvNmlyrS/tThOa2o/tJquXnsnJJVJu21Gypoc878+TrPJ/Qs/edsG5
-	 sTwYR+eQjBgzEKJZOS/JYBe+giWfEiISrC7r/iuiLQSDQbkzcfiySEx12M23IfyNSN
-	 5m480VTrfrbmjZEgEb9NKoBOhfpTFW0V6At98/vk=
+	s=default; t=1551366828;
+	bh=O9Nf3IsnQFghLWKMdPoeKuLyx/jWjLHrbhojycHDH20=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Fu1As/PqEgFloruEFj2ZtcugI+hiz/cJVPJaIofF/ZFDj3kGyOgopRdPNom7xTMXj
+	 s2Aq+Ma+s6mrVM0B81u/g2kW18nox8XpKUmfSjnc+F1fQaeyC2+IZDbZcwWki19Qys
+	 7TiZwAVhFJLvInOjC84Ms+etDg1INtF4TXU/UiJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388514AbfB1PNo (ORCPT
+        id S2388524AbfB1PNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:13:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47628 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:13:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388470AbfB1PNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:13:33 -0500
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2388423AbfB1PNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:13:36 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 571C0218FC;
-        Thu, 28 Feb 2019 15:13:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA44218D9;
+        Thu, 28 Feb 2019 15:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366812;
-        bh=byAg77FHN3WI5S1frV8IHsE1cuzxw/EeGiVs4Ma0yCI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pPsDmY2tjjxJvBQhNDa7rFUeSrlSVV0123nVIbojMmrb2xKfaL5B/gTZEeCd91L16
-         0/Gh6aJlJd8zHMytPC2Mql8KA0W0aGudXGMVeQcrJ/8IJPJypzemn+TNXSlysayW4H
-         uJc0gh0vd5TVpQS02BwX/8fc2cE3FbvKr8hPGIY8=
-Date:   Thu, 28 Feb 2019 16:13:30 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mans Rullgard <mans@mansr.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH] dt-bindings: usb: add non-removable device property
-Message-ID: <20190228151330.GA1360@kroah.com>
-References: <20190228143344.16312-1-mans@mansr.com>
+        s=default; t=1551366815;
+        bh=O9Nf3IsnQFghLWKMdPoeKuLyx/jWjLHrbhojycHDH20=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DsjgbCr96Ni7cj/MHHK5eLw9q7R8svzT1i9lxXfOei38YO9nJyv6E28P+DK7EV6ZQ
+         pzu3kIQWBXYfUpw82UzTdpNYWWBpjFSe3ep3saJUnv79FXehpkYO5FUP9UKQf5VbM0
+         LD5taC/LSiHgr5f+ExGaQ/u1qZ4nJms5DiDA31P0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Liu Bo <bo.liu@linux.alibaba.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 64/64] blk-iolatency: fix IO hang due to negative inflight counter
+Date:   Thu, 28 Feb 2019 10:11:05 -0500
+Message-Id: <20190228151105.11277-64-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
+References: <20190228151105.11277-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228143344.16312-1-mans@mansr.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 02:33:44PM +0000, Mans Rullgard wrote:
-> Add a boolean property indicating that a device is hardwired to the
-> upstream port.  Although hubs can provide this information, they are not
-> always configured correctly.  An alternate means of indicating this for
-> built-in USB devices is thus useful.
-> 
-> Signed-off-by: Mans Rullgard <mans@mansr.com>
-> ---
-> I have a situation where userspace would like to know which USB devices
-> are built-in, but the on-board hub doesn't have the right setting.
-> Also, the hub itself can't be indicated as fixed in any other way that
-> I'm aware of.
+From: Liu Bo <bo.liu@linux.alibaba.com>
 
-Then that's a firmware bug, right?  We have a way for firmware to export
-this to the USB core, why not use that?  Your on-board hub should get a
-firmware update with this information, let's not try to create
-yet-another-way to define this type of information please.
+[ Upstream commit 8c772a9bfc7c07c76f4a58b58910452fbb20843b ]
 
-> In a way, adding this property seems a bit silly since dt can only
-> sensibly be used for hardwired devices in the first place.  Thus the
-> mere presence of a dt node could be taken to indicate the same thing.
-> On the other hand, it's conceivable that someone might dynamically
-> generate a devicetree based on what happens to be connected on boot or
-> something.  For that reason, and explicit property seems safer.
-> ---
->  Documentation/devicetree/bindings/usb/usb-device.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+Our test reported the following stack, and vmcore showed that
+->inflight counter is -1.
 
-Can you show some code actually using this?  Again, this should "just
-work" for USB today unless your platform is really broken (and if it is,
-go complain to the vendor...)
+[ffffc9003fcc38d0] __schedule at ffffffff8173d95d
+[ffffc9003fcc3958] schedule at ffffffff8173de26
+[ffffc9003fcc3970] io_schedule at ffffffff810bb6b6
+[ffffc9003fcc3988] blkcg_iolatency_throttle at ffffffff813911cb
+[ffffc9003fcc3a20] rq_qos_throttle at ffffffff813847f3
+[ffffc9003fcc3a48] blk_mq_make_request at ffffffff8137468a
+[ffffc9003fcc3b08] generic_make_request at ffffffff81368b49
+[ffffc9003fcc3b68] submit_bio at ffffffff81368d7d
+[ffffc9003fcc3bb8] ext4_io_submit at ffffffffa031be00 [ext4]
+[ffffc9003fcc3c00] ext4_writepages at ffffffffa03163de [ext4]
+[ffffc9003fcc3d68] do_writepages at ffffffff811c49ae
+[ffffc9003fcc3d78] __filemap_fdatawrite_range at ffffffff811b6188
+[ffffc9003fcc3e30] filemap_write_and_wait_range at ffffffff811b6301
+[ffffc9003fcc3e60] ext4_sync_file at ffffffffa030cee8 [ext4]
+[ffffc9003fcc3ea8] vfs_fsync_range at ffffffff8128594b
+[ffffc9003fcc3ee8] do_fsync at ffffffff81285abd
+[ffffc9003fcc3f18] sys_fsync at ffffffff81285d50
+[ffffc9003fcc3f28] do_syscall_64 at ffffffff81003c04
+[ffffc9003fcc3f50] entry_SYSCALL_64_after_swapgs at ffffffff81742b8e
 
-thanks,
+The ->inflight counter may be negative (-1) if
 
-greg k-h
+1) blk-iolatency was disabled when the IO was issued,
+
+2) blk-iolatency was enabled before this IO reached its endio,
+
+3) the ->inflight counter is decreased from 0 to -1 in endio()
+
+In fact the hang can be easily reproduced by the below script,
+
+H=/sys/fs/cgroup/unified/
+P=/sys/fs/cgroup/unified/test
+
+echo "+io" > $H/cgroup.subtree_control
+mkdir -p $P
+
+echo $$ > $P/cgroup.procs
+
+xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
+
+echo "`cat /sys/block/sdg/dev` target=1000000" > $P/io.latency
+
+xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
+
+This fixes the problem by freezing the queue so that while
+enabling/disabling iolatency, there is no inflight rq running.
+
+Note that quiesce_queue is not needed as this only updating iolatency
+configuration about which dispatching request_queue doesn't care.
+
+Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/blk-iolatency.c | 52 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 45 insertions(+), 7 deletions(-)
+
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index 19923f8a029dd..b154e057ca67c 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -72,6 +72,7 @@
+ #include <linux/sched/loadavg.h>
+ #include <linux/sched/signal.h>
+ #include <trace/events/block.h>
++#include <linux/blk-mq.h>
+ #include "blk-rq-qos.h"
+ #include "blk-stat.h"
+ 
+@@ -568,6 +569,9 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 		return;
+ 
+ 	enabled = blk_iolatency_enabled(iolat->blkiolat);
++	if (!enabled)
++		return;
++
+ 	while (blkg && blkg->parent) {
+ 		iolat = blkg_to_lat(blkg);
+ 		if (!iolat) {
+@@ -577,7 +581,7 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 		rqw = &iolat->rq_wait;
+ 
+ 		atomic_dec(&rqw->inflight);
+-		if (!enabled || iolat->min_lat_nsec == 0)
++		if (iolat->min_lat_nsec == 0)
+ 			goto next;
+ 		iolatency_record_time(iolat, &bio->bi_issue, now,
+ 				      issue_as_root);
+@@ -721,10 +725,13 @@ int blk_iolatency_init(struct request_queue *q)
+ 	return 0;
+ }
+ 
+-static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
++/*
++ * return 1 for enabling iolatency, return -1 for disabling iolatency, otherwise
++ * return 0.
++ */
++static int iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
+ {
+ 	struct iolatency_grp *iolat = blkg_to_lat(blkg);
+-	struct blk_iolatency *blkiolat = iolat->blkiolat;
+ 	u64 oldval = iolat->min_lat_nsec;
+ 
+ 	iolat->min_lat_nsec = val;
+@@ -733,9 +740,10 @@ static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
+ 				    BLKIOLATENCY_MAX_WIN_SIZE);
+ 
+ 	if (!oldval && val)
+-		atomic_inc(&blkiolat->enabled);
++		return 1;
+ 	if (oldval && !val)
+-		atomic_dec(&blkiolat->enabled);
++		return -1;
++	return 0;
+ }
+ 
+ static void iolatency_clear_scaling(struct blkcg_gq *blkg)
+@@ -768,6 +776,7 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
+ 	u64 lat_val = 0;
+ 	u64 oldval;
+ 	int ret;
++	int enable = 0;
+ 
+ 	ret = blkg_conf_prep(blkcg, &blkcg_policy_iolatency, buf, &ctx);
+ 	if (ret)
+@@ -803,7 +812,12 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
+ 	blkg = ctx.blkg;
+ 	oldval = iolat->min_lat_nsec;
+ 
+-	iolatency_set_min_lat_nsec(blkg, lat_val);
++	enable = iolatency_set_min_lat_nsec(blkg, lat_val);
++	if (enable) {
++		WARN_ON_ONCE(!blk_get_queue(blkg->q));
++		blkg_get(blkg);
++	}
++
+ 	if (oldval != iolat->min_lat_nsec) {
+ 		iolatency_clear_scaling(blkg);
+ 	}
+@@ -811,6 +825,24 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
+ 	ret = 0;
+ out:
+ 	blkg_conf_finish(&ctx);
++	if (ret == 0 && enable) {
++		struct iolatency_grp *tmp = blkg_to_lat(blkg);
++		struct blk_iolatency *blkiolat = tmp->blkiolat;
++
++		blk_mq_freeze_queue(blkg->q);
++
++		if (enable == 1)
++			atomic_inc(&blkiolat->enabled);
++		else if (enable == -1)
++			atomic_dec(&blkiolat->enabled);
++		else
++			WARN_ON_ONCE(1);
++
++		blk_mq_unfreeze_queue(blkg->q);
++
++		blkg_put(blkg);
++		blk_put_queue(blkg->q);
++	}
+ 	return ret ?: nbytes;
+ }
+ 
+@@ -910,8 +942,14 @@ static void iolatency_pd_offline(struct blkg_policy_data *pd)
+ {
+ 	struct iolatency_grp *iolat = pd_to_lat(pd);
+ 	struct blkcg_gq *blkg = lat_to_blkg(iolat);
++	struct blk_iolatency *blkiolat = iolat->blkiolat;
++	int ret;
+ 
+-	iolatency_set_min_lat_nsec(blkg, 0);
++	ret = iolatency_set_min_lat_nsec(blkg, 0);
++	if (ret == 1)
++		atomic_inc(&blkiolat->enabled);
++	if (ret == -1)
++		atomic_dec(&blkiolat->enabled);
+ 	iolatency_clear_scaling(blkg);
+ }
+ 
+-- 
+2.19.1
+
