@@ -7,46 +7,43 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1306C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECF4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE81218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6818B218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731779AbfB1Hsw (ORCPT
+        id S1731799AbfB1HtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:48:52 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:56075 "EHLO
+        Thu, 28 Feb 2019 02:49:25 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:39389 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725918AbfB1Hsw (ORCPT
+        with ESMTP id S1725918AbfB1HtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:48:52 -0500
+        Thu, 28 Feb 2019 02:49:17 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7mUj92950559
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7n9NS2950603
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Feb 2019 23:48:30 -0800
+        Wed, 27 Feb 2019 23:49:09 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7mTfo2950556;
-        Wed, 27 Feb 2019 23:48:29 -0800
-Date:   Wed, 27 Feb 2019 23:48:29 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7n9Xo2950599;
+        Wed, 27 Feb 2019 23:49:09 -0800
+Date:   Wed, 27 Feb 2019 23:49:09 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Wei Li <tipbot@zytor.com>
-Message-ID: <tip-11db1ad4513d6205d2519e1a30ff4cef746e3243@git.kernel.org>
-Cc:     peterz@infradead.org, hpa@zytor.com, acme@redhat.com,
-        mingo@kernel.org, liwei391@huawei.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        yao.jin@linux.intel.com, alexander.shishkin@linux.intel.com,
-        tglx@linutronix.de
-Reply-To: hpa@zytor.com, acme@redhat.com, peterz@infradead.org,
-          jolsa@kernel.org, namhyung@kernel.org, liwei391@huawei.com,
-          mingo@kernel.org, yao.jin@linux.intel.com,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          alexander.shishkin@linux.intel.com
-In-Reply-To: <20190221095716.39529-1-liwei391@huawei.com>
-References: <20190221095716.39529-1-liwei391@huawei.com>
+From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
+Message-ID: <tip-1f35cd65386e02430546727bd3cc2508d052e3ec@git.kernel.org>
+Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com,
+        adrian.hunter@intel.com, tglx@linutronix.de, mingo@kernel.org,
+        hpa@zytor.com
+Reply-To: linux-kernel@vger.kernel.org, acme@redhat.com, jolsa@kernel.org,
+          hpa@zytor.com, mingo@kernel.org, tglx@linutronix.de,
+          adrian.hunter@intel.com
+In-Reply-To: <20190109091835.5570-6-adrian.hunter@intel.com>
+References: <20190109091835.5570-6-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf annotate: Fix getting source line failure
-Git-Commit-ID: 11db1ad4513d6205d2519e1a30ff4cef746e3243
+Subject: [tip:perf/core] perf thread-stack: Improve
+ thread_stack__no_call_return()
+Git-Commit-ID: 1f35cd65386e02430546727bd3cc2508d052e3ec
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -60,177 +57,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  11db1ad4513d6205d2519e1a30ff4cef746e3243
-Gitweb:     https://git.kernel.org/tip/11db1ad4513d6205d2519e1a30ff4cef746e3243
-Author:     Wei Li <liwei391@huawei.com>
-AuthorDate: Thu, 21 Feb 2019 17:57:16 +0800
+Commit-ID:  1f35cd65386e02430546727bd3cc2508d052e3ec
+Gitweb:     https://git.kernel.org/tip/1f35cd65386e02430546727bd3cc2508d052e3ec
+Author:     Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate: Wed, 9 Jan 2019 11:18:34 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Thu, 21 Feb 2019 17:00:35 -0300
+CommitDate: Fri, 22 Feb 2019 11:42:34 -0300
 
-perf annotate: Fix getting source line failure
+perf thread-stack: Improve thread_stack__no_call_return()
 
-The output of "perf annotate -l --stdio xxx" changed since commit 425859ff0de33
-("perf annotate: No need to calculate notes->start twice") removed notes->start
-assignment in symbol__calc_lines(). It will get failed in
-find_address_in_section() from symbol__tty_annotate() subroutine as the
-a2l->addr is wrong. So the annotate summary doesn't report the line number of
-source code correctly.
+Improve thread_stack__no_call_return() to better handle 'returns' that
+do not match the stack i.e. 'no call'. See code comments for details.
+The example below shows how retpolines are affected:
 
-Before fix:
+Example:
 
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ cat common_while_1.c
-  void hotspot_1(void)
+  $ cat simple-retpoline.c
+  __attribute__((noinline)) int bar(void)
   {
-	volatile int i;
-
-	for (i = 0; i < 0x10000000; i++);
-	for (i = 0; i < 0x10000000; i++);
-	for (i = 0; i < 0x10000000; i++);
+          return -1;
   }
 
-  int main(void)
+  int foo(void)
   {
-	hotspot_1();
-
-	return 0;
+          return bar() + 1;
   }
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ gcc common_while_1.c -g -o common_while_1
 
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.488 MB perf.data (12498 samples) ]
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
+  __attribute__((indirect_branch("thunk"))) int main()
+  {
+          int (*volatile fn)(void) = foo;
 
-  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
-  ----------------------------------------------
+          fn();
+          return fn();
+  }
+  $ gcc -ggdb3 -Wall -Wextra -O2 -o simple-retpoline simple-retpoline.c
+  $ objdump -d simple-retpoline
+  <SNIP>
+  0000000000001040 <main>:
+      1040:       48 83 ec 18             sub    $0x18,%rsp
+      1044:       48 8d 05 25 01 00 00    lea    0x125(%rip),%rax        # 1170 <foo>
+      104b:       48 89 44 24 08          mov    %rax,0x8(%rsp)
+      1050:       48 8b 44 24 08          mov    0x8(%rsp),%rax
+      1055:       e8 1f 01 00 00          callq  1179 <__x86_indirect_thunk_rax>
+      105a:       48 8b 44 24 08          mov    0x8(%rsp),%rax
+      105f:       48 83 c4 18             add    $0x18,%rsp
+      1063:       e9 11 01 00 00          jmpq   1179 <__x86_indirect_thunk_rax>
+  <SNIP>
+  0000000000001160 <bar>:
+      1160:       b8 ff ff ff ff          mov    $0xffffffff,%eax
+      1165:       c3                      retq
+  <SNIP>
+  0000000000001170 <foo>:
+      1170:       e8 eb ff ff ff          callq  1160 <bar>
+      1175:       83 c0 01                add    $0x1,%eax
+      1178:       c3                      retq
+  0000000000001179 <__x86_indirect_thunk_rax>:
+      1179:       e8 07 00 00 00          callq  1185 <__x86_indirect_thunk_rax+0xc>
+      117e:       f3 90                   pause
+      1180:       0f ae e8                lfence
+      1183:       eb f9                   jmp    117e <__x86_indirect_thunk_rax+0x5>
+      1185:       48 89 04 24             mov    %rax,(%rsp)
+      1189:       c3                      retq
+  <SNIP>
+  $ perf record -o simple-retpoline.perf.data -e intel_pt/cyc/u ./simple-retpoline
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0,017 MB simple-retpoline.perf.data ]
+  $ perf script -i simple-retpoline.perf.data --itrace=be -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py simple-retpoline.db branches calls
+  2019-01-08 14:03:37.851655 Creating database...
+  2019-01-08 14:03:37.863256 Writing records...
+  2019-01-08 14:03:38.069750 Adding indexes
+  2019-01-08 14:03:38.078799 Done
+  $ ~/libexec/perf-core/scripts/python/exported-sql-viewer.py simple-retpoline.db
 
-   19.30 common_while_1[32]
-   19.03 common_while_1[4e]
-   19.01 common_while_1[16]
-    5.04 common_while_1[13]
-    4.99 common_while_1[4b]
-    4.78 common_while_1[2c]
-    4.77 common_while_1[10]
-    4.66 common_while_1[2f]
-    4.59 common_while_1[51]
-    4.59 common_while_1[35]
-    4.52 common_while_1[19]
-    4.20 common_while_1[56]
-    0.51 common_while_1[48]
-   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12480 samples, percent: local period)
-  -----------------------------------------------------------------------------------------------------------------
-         :
-         :
-         :
-         :         Disassembly of section .text:
-         :
-         :         00000000000005fa <hotspot_1>:
-         :         hotspot_1():
-         :         void hotspot_1(void)
-         :         {
-    0.00 :   5fa:   push   %rbp
-    0.00 :   5fb:   mov    %rsp,%rbp
-         :                 volatile int i;
-         :
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
-    0.00 :   605:   jmp    610 <hotspot_1+0x16>
-    0.00 :   607:   mov    -0x4(%rbp),%eax
-   common_while_1[10]    4.77 :   60a:   add    $0x1,%eax
-   common_while_1[13]    5.04 :   60d:   mov    %eax,-0x4(%rbp)
-   common_while_1[16]   19.01 :   610:   mov    -0x4(%rbp),%eax
-   common_while_1[19]    4.52 :   613:   cmp    $0xfffffff,%eax
-      0.00 :   618:   jle    607 <hotspot_1+0xd>
-           :                 for (i = 0; i < 0x10000000; i++);
-  ...
+Before:
 
-After fix:
+    main
+        -> __x86_indirect_thunk_rax
+            -> __x86_indirect_thunk_rax
+                -> __x86_indirect_thunk_rax
+                    -> bar
 
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf record ./common_while_1
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.488 MB perf.data (12500 samples) ]
-  liwei@euler:~/main_code/hulk_work/hulk/tools/perf$ sudo ./perf annotate -l -s hotspot_1 --stdio
+After:
 
-  Sorted summary for file /home/liwei/main_code/hulk_work/hulk/tools/perf/common_while_1
-  ----------------------------------------------
+    main
+        -> __x86_indirect_thunk_rax
+            -> __x86_indirect_thunk_rax
+                -> foo
+                    -> bar
 
-   33.34 common_while_1.c:5
-   33.34 common_while_1.c:6
-   33.32 common_while_1.c:7
-   Percent |      Source code & Disassembly of common_while_1 for cycles:ppp (12482 samples, percent: local period)
-  -----------------------------------------------------------------------------------------------------------------
-         :
-         :
-         :
-         :         Disassembly of section .text:
-         :
-         :         00000000000005fa <hotspot_1>:
-         :         hotspot_1():
-         :         void hotspot_1(void)
-         :         {
-    0.00 :   5fa:   push   %rbp
-    0.00 :   5fb:   mov    %rsp,%rbp
-         :                 volatile int i;
-         :
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   5fe:   movl   $0x0,-0x4(%rbp)
-    0.00 :   605:   jmp    610 <hotspot_1+0x16>
-    0.00 :   607:   mov    -0x4(%rbp),%eax
-   common_while_1.c:5    4.70 :   60a:   add    $0x1,%eax
-    4.89 :   60d:   mov    %eax,-0x4(%rbp)
-   common_while_1.c:5   19.03 :   610:   mov    -0x4(%rbp),%eax
-   common_while_1.c:5    4.72 :   613:   cmp    $0xfffffff,%eax
-    0.00 :   618:   jle    607 <hotspot_1+0xd>
-         :                 for (i = 0; i < 0x10000000; i++);
-    0.00 :   61a:   movl   $0x0,-0x4(%rbp)
-    0.00 :   621:   jmp    62c <hotspot_1+0x32>
-    0.00 :   623:   mov    -0x4(%rbp),%eax
-   common_while_1.c:6    4.54 :   626:   add    $0x1,%eax
-    4.73 :   629:   mov    %eax,-0x4(%rbp)
-   common_while_1.c:6   19.54 :   62c:   mov    -0x4(%rbp),%eax
-   common_while_1.c:6    4.54 :   62f:   cmp    $0xfffffff,%eax
-  ...
+Committer testing:
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Chose "Reports", Then "Context-Sensitive Call Graph" and then go on
+expanding:
+
+Before:
+
+simple-retpolin
+   PID:PID
+      _start
+         _start
+            __libc_start_main
+               main
+                   __x86_indirect_thunk_rax
+                      __x86_indirect_thunk_rax
+                      bar
+
+After:
+
+Remove the "simple.retpoline.db" file, run again the 'perf script' line
+to regenerate the .db file and run the exported-sql-viewer.py again to
+get the same all the way to 'main', then, from there, including 'main':
+
+               main
+                   __x86_indirect_thunk_rax
+                       __x86_indirect_thunk_rax
+                           foo
+                               bar
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 425859ff0de33 ("perf annotate: No need to calculate notes->start twice")
-Link: http://lkml.kernel.org/r/20190221095716.39529-1-liwei391@huawei.com
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190109091835.5570-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/thread-stack.c | 49 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 46 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 2468b8aa0b6b..11a8a447a3af 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1891,6 +1891,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
- 		     struct annotation_options *options,
- 		     struct arch **parch)
- {
-+	struct annotation *notes = symbol__annotation(sym);
- 	struct annotate_args args = {
- 		.privsize	= privsize,
- 		.evsel		= evsel,
-@@ -1921,6 +1922,7 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
+index f52c0f90915d..632c07a125ab 100644
+--- a/tools/perf/util/thread-stack.c
++++ b/tools/perf/util/thread-stack.c
+@@ -638,14 +638,57 @@ static int thread_stack__no_call_return(struct thread *thread,
+ 	else
+ 		parent = root;
  
- 	args.ms.map = map;
- 	args.ms.sym = sym;
-+	notes->start = map__rip_2objdump(map, sym->start);
+-	/* This 'return' had no 'call', so push and pop top of stack */
+-	cp = call_path__findnew(cpr, parent, fsym, ip, ks);
++	if (parent->sym == from_al->sym) {
++		/*
++		 * At the bottom of the stack, assume the missing 'call' was
++		 * before the trace started. So, pop the current symbol and push
++		 * the 'to' symbol.
++		 */
++		if (ts->cnt == 1) {
++			err = thread_stack__call_return(thread, ts, --ts->cnt,
++							tm, ref, false);
++			if (err)
++				return err;
++		}
++
++		if (!ts->cnt) {
++			cp = call_path__findnew(cpr, root, tsym, addr, ks);
++
++			return thread_stack__push_cp(ts, addr, tm, ref, cp,
++						     true, false);
++		}
++
++		/*
++		 * Otherwise assume the 'return' is being used as a jump (e.g.
++		 * retpoline) and just push the 'to' symbol.
++		 */
++		cp = call_path__findnew(cpr, parent, tsym, addr, ks);
++
++		err = thread_stack__push_cp(ts, 0, tm, ref, cp, true, false);
++		if (!err)
++			ts->stack[ts->cnt - 1].non_call = true;
++
++		return err;
++	}
++
++	/*
++	 * Assume 'parent' has not yet returned, so push 'to', and then push and
++	 * pop 'from'.
++	 */
++
++	cp = call_path__findnew(cpr, parent, tsym, addr, ks);
  
- 	return symbol__disassemble(sym, &args);
+ 	err = thread_stack__push_cp(ts, addr, tm, ref, cp, true, false);
+ 	if (err)
+ 		return err;
+ 
+-	return thread_stack__pop_cp(thread, ts, addr, tm, ref, tsym);
++	cp = call_path__findnew(cpr, cp, fsym, ip, ks);
++
++	err = thread_stack__push_cp(ts, ip, tm, ref, cp, true, false);
++	if (err)
++		return err;
++
++	return thread_stack__call_return(thread, ts, --ts->cnt, tm, ref, false);
  }
-@@ -2796,8 +2798,6 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
  
- 	symbol__calc_percent(sym, evsel);
- 
--	notes->start = map__rip_2objdump(map, sym->start);
--
- 	annotation__set_offsets(notes, size);
- 	annotation__mark_jump_targets(notes, sym);
- 	annotation__compute_ipc(notes, size);
+ static int thread_stack__trace_begin(struct thread *thread,
