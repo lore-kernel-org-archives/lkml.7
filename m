@@ -2,59 +2,59 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13188C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8995BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBDB621850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0A22171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:41:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="RiIaCwhg"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="kdBh48IV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfB1NlE (ORCPT
+        id S1731696AbfB1NlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:41:04 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40412 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731547AbfB1NlB (ORCPT
+        Thu, 28 Feb 2019 08:41:08 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32980 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731547AbfB1NlG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:41:01 -0500
-Received: by mail-pl1-f196.google.com with SMTP id bj4so9773212plb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:41:01 -0800 (PST)
+        Thu, 28 Feb 2019 08:41:06 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y10so9805891plp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:41:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ingics-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4qboQr5mj/MpLlzJSKMn+3syI3I3umISlClB03x9/+U=;
-        b=RiIaCwhgd1CwaCDefg2WFV3xj8tEzhSAaJ2COLI2FHnjCV60YuirGxf5N3vYnWFbHn
-         ybNlk6MRTvyufAWUgqJyMNMUy8LNAg5fH+l8UHUOrolV4kQOc9HnZ3jteJlxyd8b2r3B
-         36sWD2UffhEYtH3yX/sHy7GD+H0XkFInIc5IA62iqFz+h1jmdRDRZzqhu/QGxHB7w6EP
-         YC8jXQztdxNnNux8noCLvGpftUxnsnPHJgWqMUtk5ZK6HQLXDeY1P6h2DHPONolf8IKv
-         3ATrNk7edJ5tmh/xGDD3AtwN575/6AY6WK7uZUMv2uuEe9qp6B/UlF+pA8AFaUMhv5RC
-         X5Uw==
+        bh=CUId/4aLHLz2W4p4NH5icc1gKNfqgcQjHhLUY8ec5l0=;
+        b=kdBh48IV5llxWKNrXYX7BDfccY29OXgIlJ5BNPQbB7Qxmo+NmDyTG+3cth4OVQtdMv
+         RxsZNypXxmfMJbd7jBQWVKGbvl1HkpPFojw/RwcEL4letd5vDjatpQtr6uUWgao5kJ0A
+         AlamDG+Gt6QqxnlHwuVi4Y2TdCOo50asE/sJM4SHyAY4Sfi1ciFOop9H3qfl6f0TH2hu
+         Dp6sM6KbefrZa3x04Qtkaw6WIoAgwjOy6LMs+L8FyhNVAFgTlrhS0890qAJElMXp/wmk
+         V/6uNzpR/kpEgX+ue4izyyE8sHN4iUX8K+w3vJyicoqHPtTBhra7yxATaDT93TZybvpp
+         pxwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4qboQr5mj/MpLlzJSKMn+3syI3I3umISlClB03x9/+U=;
-        b=tkBKCbkYp5UiT+Yz+zNAzATckGzqXBLG4oy6Cm67dvH5guD/T8EntM9mUMHE7xFk5c
-         4VTviV/LJ5Q4B18I/Z4ZV0mCG2f1f/2VWSyRO7Mm6Fyg1f7mxqDfhpmCR9kiGCWCqHUE
-         0Ki2+FARLbIHR+fTObzrBgiagtDrZGiWOxk3TGV+giffYPI1YkQkqL7KdZpsJEWV//jA
-         jFmYegCT1LMzhDU5c4UE5QlbIPKjFZCY3CNdAcSzaVXQ5Yxj/qF24w+c6my3eRF6QD7s
-         wRN+wV177LlrY/OBV9+58JL7sqoAlxyA9gQO7HGnZLWwEClwWFEgDNyjHurwnEbrFsV/
-         P9NQ==
-X-Gm-Message-State: AHQUAuaIGDpEYA+v7V7+xJv4DHOI1ftZhCK2BwdO33Tz6S+NmJ8uFtnS
-        8sMgmUiSODXAmGOVTKQ90HqpPQ==
-X-Google-Smtp-Source: AHgI3IYlehzg131o8/kfVFyuOuVDBJ9VSStKNkezYKqQ0wvBOWq1RegXvJQNSAxbvgk1i1DfsNB2Wg==
-X-Received: by 2002:a17:902:1aa:: with SMTP id b39mr8065878plb.317.1551361260944;
-        Thu, 28 Feb 2019 05:41:00 -0800 (PST)
+        bh=CUId/4aLHLz2W4p4NH5icc1gKNfqgcQjHhLUY8ec5l0=;
+        b=AB/6LZohLGRCNi0YdS0L/anRua6KG8SRBQ22U63bfj4vQupzgIFI+TVlvEooN44HJu
+         szhfRmBBcYZE4nXk9y9Xhz8lzG/6hI55ZXPnZhlrIV7pS15MIg3Uy22lhZKXuoNhs/rM
+         P9zpngYqa3Yn5penLEBd9ZjZSe1MLtsMc0lE39IAfxIrmi2xNzeQhuCYliNR6yZNb4wt
+         hQZ0oSvFZyBTrXQc1JxF7dkERmQzh3wQx/EQ0N8xsOWHaIB5RQLuHS9IosuiZhytJ3SF
+         ENNkNKgz8gbBTPngm9yzxbW18HyIbnMhK928xDOJS8ednhTZY6dC+MDdgxqs0aKjPUn9
+         rBQQ==
+X-Gm-Message-State: AHQUAuarR0Mk6IcunkWwuJs3NoeCrzuztMFBxzhY6B1mm62HYubFvwDA
+        ZkUglt972ypFWEh7/l0kY/k7lg==
+X-Google-Smtp-Source: AHgI3IY+9zog1HyPMsuGVAMO+oPkocjD17fLivG8bcTo91OhJgntTAzo6ptyGHoJZg3dDN8Ngh3nGA==
+X-Received: by 2002:a17:902:129:: with SMTP id 38mr8095680plb.140.1551361265295;
+        Thu, 28 Feb 2019 05:41:05 -0800 (PST)
 Received: from localhost.localdomain (2001-b400-e706-b6eb-8c00-6a08-1689-4d5a.emome-ip6.hinet.net. [2001:b400:e706:b6eb:8c00:6a08:1689:4d5a])
-        by smtp.gmail.com with ESMTPSA id 186sm36777133pga.36.2019.02.28.05.40.56
+        by smtp.gmail.com with ESMTPSA id 186sm36777133pga.36.2019.02.28.05.41.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 05:41:00 -0800 (PST)
+        Thu, 28 Feb 2019 05:41:04 -0800 (PST)
 From:   Axel Lin <axel.lin@ingics.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Support Opensource <support.opensource@diasemi.com>,
@@ -67,9 +67,9 @@ Cc:     Support Opensource <support.opensource@diasemi.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 04/11] regulator: da9210: Convert to use regulator_set/get_current_limit_regmap
-Date:   Thu, 28 Feb 2019 21:40:15 +0800
-Message-Id: <20190228134022.32625-5-axel.lin@ingics.com>
+Subject: [PATCH 05/11] regulator: lp872x: Convert to use regulator_set/get_current_limit_regmap
+Date:   Thu, 28 Feb 2019 21:40:16 +0800
+Message-Id: <20190228134022.32625-6-axel.lin@ingics.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190228134022.32625-1-axel.lin@ingics.com>
 References: <20190228134022.32625-1-axel.lin@ingics.com>
@@ -82,96 +82,111 @@ Use regulator_set/get_current_limit_regmap helpers to save some code.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/regulator/da9210-regulator.c | 53 ++++------------------------
- 1 file changed, 7 insertions(+), 46 deletions(-)
+ drivers/regulator/lp872x.c | 70 ++++++--------------------------------
+ 1 file changed, 10 insertions(+), 60 deletions(-)
 
-diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-regulator.c
-index 84dba64ed11e..528303771723 100644
---- a/drivers/regulator/da9210-regulator.c
-+++ b/drivers/regulator/da9210-regulator.c
-@@ -41,10 +41,6 @@ static const struct regmap_config da9210_regmap_config = {
- 	.val_bits = 8,
- };
+diff --git a/drivers/regulator/lp872x.c b/drivers/regulator/lp872x.c
+index f8f875bad7dd..ca95257ce252 100644
+--- a/drivers/regulator/lp872x.c
++++ b/drivers/regulator/lp872x.c
+@@ -353,64 +353,6 @@ static int lp872x_buck_get_voltage_sel(struct regulator_dev *rdev)
+ 	return val & LP872X_VOUT_M;
+ }
  
--static int da9210_set_current_limit(struct regulator_dev *rdev, int min_uA,
--				    int max_uA);
--static int da9210_get_current_limit(struct regulator_dev *rdev);
--
- static const struct regulator_ops da9210_buck_ops = {
- 	.enable = regulator_enable_regmap,
- 	.disable = regulator_disable_regmap,
-@@ -52,8 +48,8 @@ static const struct regulator_ops da9210_buck_ops = {
- 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
- 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
- 	.list_voltage = regulator_list_voltage_linear,
--	.set_current_limit = da9210_set_current_limit,
--	.get_current_limit = da9210_get_current_limit,
-+	.set_current_limit = regulator_set_current_limit_regmap,
-+	.get_current_limit = regulator_get_current_limit_regmap,
- };
- 
- /* Default limits measured in millivolts and milliamps */
-@@ -62,7 +58,7 @@ static const struct regulator_ops da9210_buck_ops = {
- #define DA9210_STEP_MV		10
- 
- /* Current limits for buck (uA) indices corresponds with register values */
--static const int da9210_buck_limits[] = {
-+static const unsigned int da9210_buck_limits[] = {
- 	1600000, 1800000, 2000000, 2200000, 2400000, 2600000, 2800000, 3000000,
- 	3200000, 3400000, 3600000, 3800000, 4000000, 4200000, 4400000, 4600000
- };
-@@ -80,47 +76,12 @@ static const struct regulator_desc da9210_reg = {
- 	.enable_reg = DA9210_REG_BUCK_CONT,
- 	.enable_mask = DA9210_BUCK_EN,
- 	.owner = THIS_MODULE,
-+	.curr_table = da9210_buck_limits,
-+	.n_current_limits = ARRAY_SIZE(da9210_buck_limits),
-+	.csel_reg = DA9210_REG_BUCK_ILIM,
-+	.csel_mask = DA9210_BUCK_ILIM_MASK,
- };
- 
--static int da9210_set_current_limit(struct regulator_dev *rdev, int min_uA,
--				    int max_uA)
+-static int lp8725_buck_set_current_limit(struct regulator_dev *rdev,
+-					int min_uA, int max_uA)
 -{
--	struct da9210 *chip = rdev_get_drvdata(rdev);
--	unsigned int sel;
+-	struct lp872x *lp = rdev_get_drvdata(rdev);
+-	enum lp872x_regulator_id buck = rdev_get_id(rdev);
 -	int i;
+-	u8 addr;
 -
--	/* search for closest to maximum */
--	for (i = ARRAY_SIZE(da9210_buck_limits)-1; i >= 0; i--) {
--		if (min_uA <= da9210_buck_limits[i] &&
--		    max_uA >= da9210_buck_limits[i]) {
--			sel = i;
--			sel = sel << DA9210_BUCK_ILIM_SHIFT;
--			return regmap_update_bits(chip->regmap,
--						  DA9210_REG_BUCK_ILIM,
--						  DA9210_BUCK_ILIM_MASK, sel);
--		}
+-	switch (buck) {
+-	case LP8725_ID_BUCK1:
+-		addr = LP8725_BUCK1_VOUT2;
+-		break;
+-	case LP8725_ID_BUCK2:
+-		addr = LP8725_BUCK2_VOUT2;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	for (i = ARRAY_SIZE(lp8725_buck_uA) - 1; i >= 0; i--) {
+-		if (lp8725_buck_uA[i] >= min_uA &&
+-			lp8725_buck_uA[i] <= max_uA)
+-			return lp872x_update_bits(lp, addr,
+-						  LP8725_BUCK_CL_M,
+-						  i << LP8725_BUCK_CL_S);
 -	}
 -
 -	return -EINVAL;
 -}
 -
--static int da9210_get_current_limit(struct regulator_dev *rdev)
+-static int lp8725_buck_get_current_limit(struct regulator_dev *rdev)
 -{
--	struct da9210 *chip = rdev_get_drvdata(rdev);
--	unsigned int data;
--	unsigned int sel;
+-	struct lp872x *lp = rdev_get_drvdata(rdev);
+-	enum lp872x_regulator_id buck = rdev_get_id(rdev);
+-	u8 addr, val;
 -	int ret;
 -
--	ret = regmap_read(chip->regmap, DA9210_REG_BUCK_ILIM, &data);
--	if (ret < 0)
+-	switch (buck) {
+-	case LP8725_ID_BUCK1:
+-		addr = LP8725_BUCK1_VOUT2;
+-		break;
+-	case LP8725_ID_BUCK2:
+-		addr = LP8725_BUCK2_VOUT2;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	ret = lp872x_read_byte(lp, addr, &val);
+-	if (ret)
 -		return ret;
 -
--	/* select one of 16 values: 0000 (1600mA) to 1111 (4600mA) */
--	sel = (data & DA9210_BUCK_ILIM_MASK) >> DA9210_BUCK_ILIM_SHIFT;
+-	val = (val & LP8725_BUCK_CL_M) >> LP8725_BUCK_CL_S;
 -
--	return da9210_buck_limits[sel];
+-	return (val < ARRAY_SIZE(lp8725_buck_uA)) ?
+-			lp8725_buck_uA[val] : -EINVAL;
 -}
 -
- static irqreturn_t da9210_irq_handler(int irq, void *data)
+ static int lp872x_buck_set_mode(struct regulator_dev *rdev, unsigned int mode)
  {
- 	struct da9210 *chip = data;
+ 	struct lp872x *lp = rdev_get_drvdata(rdev);
+@@ -513,8 +455,8 @@ static const struct regulator_ops lp8725_buck_ops = {
+ 	.enable_time = lp872x_regulator_enable_time,
+ 	.set_mode = lp872x_buck_set_mode,
+ 	.get_mode = lp872x_buck_get_mode,
+-	.set_current_limit = lp8725_buck_set_current_limit,
+-	.get_current_limit = lp8725_buck_get_current_limit,
++	.set_current_limit = regulator_set_current_limit_regmap,
++	.get_current_limit = regulator_get_current_limit_regmap,
+ };
+ 
+ static const struct regulator_desc lp8720_regulator_desc[] = {
+@@ -712,6 +654,10 @@ static const struct regulator_desc lp8725_regulator_desc[] = {
+ 		.owner = THIS_MODULE,
+ 		.enable_reg = LP872X_GENERAL_CFG,
+ 		.enable_mask = LP8725_BUCK1_EN_M,
++		.curr_table = lp8725_buck_uA,
++		.n_current_limits = ARRAY_SIZE(lp8725_buck_uA),
++		.csel_reg = LP8725_BUCK1_VOUT2,
++		.csel_mask = LP8725_BUCK_CL_M,
+ 	},
+ 	{
+ 		.name = "buck2",
+@@ -724,6 +670,10 @@ static const struct regulator_desc lp8725_regulator_desc[] = {
+ 		.owner = THIS_MODULE,
+ 		.enable_reg = LP872X_GENERAL_CFG,
+ 		.enable_mask = LP8725_BUCK2_EN_M,
++		.curr_table = lp8725_buck_uA,
++		.n_current_limits = ARRAY_SIZE(lp8725_buck_uA),
++		.csel_reg = LP8725_BUCK2_VOUT2,
++		.csel_mask = LP8725_BUCK_CL_M,
+ 	},
+ };
+ 
 -- 
 2.17.1
 
