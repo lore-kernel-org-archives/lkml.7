@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707FBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D75C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7A1218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE57218D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551374029;
-	bh=n1IlhGhZUrEdmwpaze4xmIXnAuLxkGveQd6nCi910JU=;
+	s=default; t=1551374034;
+	bh=izsgkwMaFBPC1U7kABLWjGZrETM1VE9Z1DwdN+FSV7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KrBAk8dyWONPKLbPGSirWf1t6SguxFHMT8qRqElOU7K0cN1YhZdWwK+PgdDp2/GiO
-	 5C6AtbccKnXjOmm47RUKGj8hSJ9vR9t1RdMqNH2P4BYL6yMP3/wZs2bZ9oDgA0cUYh
-	 4szHp3FMzix8hzLPzu8lA1/Y11A5HmT00UdLePZE=
+	b=zXqN6Z3RZtI9oQaiW9oLIQs81BROuvJghNeEGymYps3SyNiKC8XBQ+A7lICyIV2NK
+	 cDbO6ukHPhZzlPYITE982QMqhiqTFCN2BWalOj7+d4wEsZloyrXtOJMfxBhh7ggoUY
+	 4/RkYtDZ4M4uFYCtqoCeg3seP4B9JJATb2FvO/2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387816AbfB1RNr (ORCPT
+        id S2387640AbfB1RNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:13:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58466 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 12:13:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387790AbfB1RNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:13:44 -0500
+        id S2387809AbfB1RNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:13:47 -0500
 Received: from lerouge.home (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6764218E0;
-        Thu, 28 Feb 2019 17:13:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36E60218D0;
+        Thu, 28 Feb 2019 17:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551374023;
-        bh=n1IlhGhZUrEdmwpaze4xmIXnAuLxkGveQd6nCi910JU=;
+        s=default; t=1551374027;
+        bh=izsgkwMaFBPC1U7kABLWjGZrETM1VE9Z1DwdN+FSV7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MKt2u4+/485I4XzYUuyeRvZuKu5O8uLitYn9gv+3BUHHTyIMq2i5XCY+cdpMrCpI/
-         5iT6o3t8zsFg6bTBDSNujP5kgDjN0BzI065cumT0gingprjoLBk3uIuD05DEJC/JUt
-         oB65mALMdpOql4/86ilDP5xxJdEonoQLLQHjqpHU=
+        b=R4D0dLT7YuTTxCB4Nfdl9hkalANlQX8/d1zls5m5UmvrX1GhRVN5Ie04wa9fq3Ejv
+         Vom5gjFYQNaLvvmsSkbp+PUw9OYqMQ16e5BoGmjymebTWuG8Q4Kbc6QYtwV9XLY1Y1
+         Qni0WbVw+IU0Nm2LKDeeA07LZuChBQ6xposhXWQE=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
@@ -53,9 +53,9 @@ Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Pavan Kondeti <pkondeti@codeaurora.org>,
         Ingo Molnar <mingo@kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 15/37] softirq: Pass softirq vector number to lockdep on vector execution
-Date:   Thu, 28 Feb 2019 18:12:20 +0100
-Message-Id: <20190228171242.32144-16-frederic@kernel.org>
+Subject: [PATCH 16/37] x86: Revert "x86/irq: Demote irq_cpustat_t::__softirq_pending to u16"
+Date:   Thu, 28 Feb 2019 18:12:21 +0100
+Message-Id: <20190228171242.32144-17-frederic@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190228171242.32144-1-frederic@kernel.org>
 References: <20190228171242.32144-1-frederic@kernel.org>
@@ -66,10 +66,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass the softirq vector number to lockdep on callback execution so that
-we know which one is involved while holding a lock. We will then be able
-to pick up the proper LOCK_USED_IN_*_SOFTIRQ index to perform the
-finegrained verifications.
+This reverts commit 9aee5f8a7e30330d0a8f4c626dc924ca5590aba5.
+
+We are going to need the 16 high bits above in order to implement
+a softirq enable mask. x86 is the only architecture that doesn't use
+unsigned int to implement softirq_pending.
 
 Reviewed-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
@@ -84,99 +85,22 @@ Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- include/linux/irqflags.h | 12 ++++++------
- kernel/softirq.c         |  8 ++++----
- lib/locking-selftest.c   |  4 ++--
- 3 files changed, 12 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/hardirq.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
-index 21619c92c377..623030a74866 100644
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -43,13 +43,13 @@ do {						\
- do {						\
- 	current->hardirq_context--;		\
- } while (0)
--# define lockdep_softirq_enter()		\
-+# define lockdep_softirq_enter(__VEC)		\
- do {						\
--	current->softirq_context++;		\
-+	current->softirq_context |= BIT(__VEC);	\
- } while (0)
--# define lockdep_softirq_exit()			\
-+# define lockdep_softirq_exit(__VEC)		\
- do {						\
--	current->softirq_context--;		\
-+	current->softirq_context &= ~BIT(__VEC);\
- } while (0)
- #else
- # define trace_hardirqs_on()		do { } while (0)
-@@ -60,8 +60,8 @@ do {						\
- # define trace_softirqs_enabled(p)	0
- # define trace_hardirq_enter()		do { } while (0)
- # define trace_hardirq_exit()		do { } while (0)
--# define lockdep_softirq_enter()	do { } while (0)
--# define lockdep_softirq_exit()		do { } while (0)
-+# define lockdep_softirq_enter(vec)	do { } while (0)
-+# define lockdep_softirq_exit(vec)	do { } while (0)
+diff --git a/arch/x86/include/asm/hardirq.h b/arch/x86/include/asm/hardirq.h
+index d9069bb26c7f..a8e8e126b421 100644
+--- a/arch/x86/include/asm/hardirq.h
++++ b/arch/x86/include/asm/hardirq.h
+@@ -5,7 +5,7 @@
+ #include <linux/threads.h>
+ 
+ typedef struct {
+-	u16	     __softirq_pending;
++	unsigned int __softirq_pending;
+ #if IS_ENABLED(CONFIG_KVM_INTEL)
+ 	u8	     kvm_cpu_l1tf_flush_l1d;
  #endif
- 
- #if defined(CONFIG_IRQSOFF_TRACER) || \
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index d28813306b2c..2dcaef813acb 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -229,18 +229,15 @@ static inline bool lockdep_softirq_start(void)
- 		trace_hardirq_exit();
- 	}
- 
--	lockdep_softirq_enter();
--
- 	return in_hardirq;
- }
- 
- static inline void lockdep_softirq_end(bool in_hardirq)
- {
--	lockdep_softirq_exit();
--
- 	if (in_hardirq)
- 		trace_hardirq_enter();
- }
-+
- #else
- static inline bool lockdep_softirq_start(void) { return false; }
- static inline void lockdep_softirq_end(bool in_hardirq) { }
-@@ -288,9 +285,12 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
- 
- 		kstat_incr_softirqs_this_cpu(vec_nr);
- 
-+		lockdep_softirq_enter(vec_nr);
- 		trace_softirq_entry(vec_nr);
- 		h->action(h);
- 		trace_softirq_exit(vec_nr);
-+		lockdep_softirq_exit(vec_nr);
-+
- 		if (unlikely(prev_count != preempt_count())) {
- 			pr_err("huh, entered softirq %u %s %p with preempt_count %08x, exited with %08x?\n",
- 			       vec_nr, softirq_to_name[vec_nr], h->action,
-diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
-index 1e1bbf171eca..2bd782d7f2e5 100644
---- a/lib/locking-selftest.c
-+++ b/lib/locking-selftest.c
-@@ -197,11 +197,11 @@ static void init_shared_classes(void)
- #define SOFTIRQ_ENTER()				\
- 		local_bh_disable();		\
- 		local_irq_disable();		\
--		lockdep_softirq_enter();	\
-+		lockdep_softirq_enter(0);	\
- 		WARN_ON(!in_softirq());
- 
- #define SOFTIRQ_EXIT()				\
--		lockdep_softirq_exit();		\
-+		lockdep_softirq_exit(0);	\
- 		local_irq_enable();		\
- 		local_bh_enable();
- 
 -- 
 2.21.0
 
