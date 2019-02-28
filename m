@@ -7,43 +7,42 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECF4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F434C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6818B218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE29218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbfB1HtZ (ORCPT
+        id S1731790AbfB1Ht5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:49:25 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:39389 "EHLO
+        Thu, 28 Feb 2019 02:49:57 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:58297 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725918AbfB1HtR (ORCPT
+        with ESMTP id S1725896AbfB1Ht5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:49:17 -0500
+        Thu, 28 Feb 2019 02:49:57 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7n9NS2950603
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7nmVC2950683
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Feb 2019 23:49:09 -0800
+        Wed, 27 Feb 2019 23:49:48 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7n9Xo2950599;
-        Wed, 27 Feb 2019 23:49:09 -0800
-Date:   Wed, 27 Feb 2019 23:49:09 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7nmLm2950678;
+        Wed, 27 Feb 2019 23:49:48 -0800
+Date:   Wed, 27 Feb 2019 23:49:48 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-1f35cd65386e02430546727bd3cc2508d052e3ec@git.kernel.org>
-Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com,
-        adrian.hunter@intel.com, tglx@linutronix.de, mingo@kernel.org,
+Message-ID: <tip-3c0cd952cf051903929cd57b89034cc5f71f451d@git.kernel.org>
+Cc:     acme@redhat.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, adrian.hunter@intel.com, tglx@linutronix.de,
         hpa@zytor.com
-Reply-To: linux-kernel@vger.kernel.org, acme@redhat.com, jolsa@kernel.org,
-          hpa@zytor.com, mingo@kernel.org, tglx@linutronix.de,
+Reply-To: jolsa@kernel.org, acme@redhat.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
           adrian.hunter@intel.com
-In-Reply-To: <20190109091835.5570-6-adrian.hunter@intel.com>
-References: <20190109091835.5570-6-adrian.hunter@intel.com>
+In-Reply-To: <20190109091835.5570-7-adrian.hunter@intel.com>
+References: <20190109091835.5570-7-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf thread-stack: Improve
- thread_stack__no_call_return()
-Git-Commit-ID: 1f35cd65386e02430546727bd3cc2508d052e3ec
+Subject: [tip:perf/core] perf thread-stack: Hide x86 retpolines
+Git-Commit-ID: 3c0cd952cf051903929cd57b89034cc5f71f451d
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -57,18 +56,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1f35cd65386e02430546727bd3cc2508d052e3ec
-Gitweb:     https://git.kernel.org/tip/1f35cd65386e02430546727bd3cc2508d052e3ec
+Commit-ID:  3c0cd952cf051903929cd57b89034cc5f71f451d
+Gitweb:     https://git.kernel.org/tip/3c0cd952cf051903929cd57b89034cc5f71f451d
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Wed, 9 Jan 2019 11:18:34 +0200
+AuthorDate: Wed, 9 Jan 2019 11:18:35 +0200
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Fri, 22 Feb 2019 11:42:34 -0300
+CommitDate: Fri, 22 Feb 2019 16:49:49 -0300
 
-perf thread-stack: Improve thread_stack__no_call_return()
+perf thread-stack: Hide x86 retpolines
 
-Improve thread_stack__no_call_return() to better handle 'returns' that
-do not match the stack i.e. 'no call'. See code comments for details.
-The example below shows how retpolines are affected:
+x86 retpoline functions pollute the call graph by showing up everywhere
+there is an indirect branch, but they do not really mean anything. Make
+changes so that the default retpoline functions will no longer appear in
+the call graph. Note this only affects the call graph, since all the
+original branches are left unchanged.
+
+This does not handle function return thunks, nor is there any
+improvement for the handling of inline thunks or extern thunks.
 
 Example:
 
@@ -134,117 +138,206 @@ Before:
     main
         -> __x86_indirect_thunk_rax
             -> __x86_indirect_thunk_rax
-                -> __x86_indirect_thunk_rax
+                -> foo
                     -> bar
 
 After:
 
     main
-        -> __x86_indirect_thunk_rax
-            -> __x86_indirect_thunk_rax
-                -> foo
-                    -> bar
-
-Committer testing:
-
-Chose "Reports", Then "Context-Sensitive Call Graph" and then go on
-expanding:
-
-Before:
-
-simple-retpolin
-   PID:PID
-      _start
-         _start
-            __libc_start_main
-               main
-                   __x86_indirect_thunk_rax
-                      __x86_indirect_thunk_rax
-                      bar
-
-After:
-
-Remove the "simple.retpoline.db" file, run again the 'perf script' line
-to regenerate the .db file and run the exported-sql-viewer.py again to
-get the same all the way to 'main', then, from there, including 'main':
-
-               main
-                   __x86_indirect_thunk_rax
-                       __x86_indirect_thunk_rax
-                           foo
-                               bar
+        -> foo
+            -> bar
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190109091835.5570-6-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190109091835.5570-7-adrian.hunter@intel.com
+[ Remove (sym->name != NULL) test, this is not a pointer and breaks the build with clang version 7.0.1 (Fedora 7.0.1-2.fc30) ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread-stack.c | 49 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 46 insertions(+), 3 deletions(-)
+ tools/perf/util/thread-stack.c | 112 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 109 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index f52c0f90915d..632c07a125ab 100644
+index 632c07a125ab..a8b45168513c 100644
 --- a/tools/perf/util/thread-stack.c
 +++ b/tools/perf/util/thread-stack.c
-@@ -638,14 +638,57 @@ static int thread_stack__no_call_return(struct thread *thread,
- 	else
- 		parent = root;
+@@ -20,6 +20,7 @@
+ #include "thread.h"
+ #include "event.h"
+ #include "machine.h"
++#include "env.h"
+ #include "util.h"
+ #include "debug.h"
+ #include "symbol.h"
+@@ -29,6 +30,19 @@
  
--	/* This 'return' had no 'call', so push and pop top of stack */
--	cp = call_path__findnew(cpr, parent, fsym, ip, ks);
-+	if (parent->sym == from_al->sym) {
-+		/*
-+		 * At the bottom of the stack, assume the missing 'call' was
-+		 * before the trace started. So, pop the current symbol and push
-+		 * the 'to' symbol.
-+		 */
-+		if (ts->cnt == 1) {
-+			err = thread_stack__call_return(thread, ts, --ts->cnt,
-+							tm, ref, false);
-+			if (err)
-+				return err;
-+		}
-+
-+		if (!ts->cnt) {
-+			cp = call_path__findnew(cpr, root, tsym, addr, ks);
-+
-+			return thread_stack__push_cp(ts, addr, tm, ref, cp,
-+						     true, false);
-+		}
-+
-+		/*
-+		 * Otherwise assume the 'return' is being used as a jump (e.g.
-+		 * retpoline) and just push the 'to' symbol.
-+		 */
-+		cp = call_path__findnew(cpr, parent, tsym, addr, ks);
-+
-+		err = thread_stack__push_cp(ts, 0, tm, ref, cp, true, false);
-+		if (!err)
-+			ts->stack[ts->cnt - 1].non_call = true;
-+
-+		return err;
-+	}
-+
-+	/*
-+	 * Assume 'parent' has not yet returned, so push 'to', and then push and
-+	 * pop 'from'.
-+	 */
-+
-+	cp = call_path__findnew(cpr, parent, tsym, addr, ks);
+ #define STACK_GROWTH 2048
  
- 	err = thread_stack__push_cp(ts, addr, tm, ref, cp, true, false);
++/*
++ * State of retpoline detection.
++ *
++ * RETPOLINE_NONE: no retpoline detection
++ * X86_RETPOLINE_POSSIBLE: x86 retpoline possible
++ * X86_RETPOLINE_DETECTED: x86 retpoline detected
++ */
++enum retpoline_state_t {
++	RETPOLINE_NONE,
++	X86_RETPOLINE_POSSIBLE,
++	X86_RETPOLINE_DETECTED,
++};
++
+ /**
+  * struct thread_stack_entry - thread stack entry.
+  * @ret_addr: return address
+@@ -64,6 +78,7 @@ struct thread_stack_entry {
+  * @crp: call/return processor
+  * @comm: current comm
+  * @arr_sz: size of array if this is the first element of an array
++ * @rstate: used to detect retpolines
+  */
+ struct thread_stack {
+ 	struct thread_stack_entry *stack;
+@@ -76,6 +91,7 @@ struct thread_stack {
+ 	struct call_return_processor *crp;
+ 	struct comm *comm;
+ 	unsigned int arr_sz;
++	enum retpoline_state_t rstate;
+ };
+ 
+ /*
+@@ -115,10 +131,16 @@ static int thread_stack__init(struct thread_stack *ts, struct thread *thread,
  	if (err)
  		return err;
  
--	return thread_stack__pop_cp(thread, ts, addr, tm, ref, tsym);
-+	cp = call_path__findnew(cpr, cp, fsym, ip, ks);
+-	if (thread->mg && thread->mg->machine)
+-		ts->kernel_start = machine__kernel_start(thread->mg->machine);
+-	else
++	if (thread->mg && thread->mg->machine) {
++		struct machine *machine = thread->mg->machine;
++		const char *arch = perf_env__arch(machine->env);
 +
-+	err = thread_stack__push_cp(ts, ip, tm, ref, cp, true, false);
-+	if (err)
-+		return err;
-+
-+	return thread_stack__call_return(thread, ts, --ts->cnt, tm, ref, false);
++		ts->kernel_start = machine__kernel_start(machine);
++		if (!strcmp(arch, "x86"))
++			ts->rstate = X86_RETPOLINE_POSSIBLE;
++	} else {
+ 		ts->kernel_start = 1ULL << 63;
++	}
+ 	ts->crp = crp;
+ 
+ 	return 0;
+@@ -733,6 +755,70 @@ static int thread_stack__trace_end(struct thread_stack *ts,
+ 				     false, true);
  }
  
- static int thread_stack__trace_begin(struct thread *thread,
++static bool is_x86_retpoline(const char *name)
++{
++	const char *p = strstr(name, "__x86_indirect_thunk_");
++
++	return p == name || !strcmp(name, "__indirect_thunk_start");
++}
++
++/*
++ * x86 retpoline functions pollute the call graph. This function removes them.
++ * This does not handle function return thunks, nor is there any improvement
++ * for the handling of inline thunks or extern thunks.
++ */
++static int thread_stack__x86_retpoline(struct thread_stack *ts,
++				       struct perf_sample *sample,
++				       struct addr_location *to_al)
++{
++	struct thread_stack_entry *tse = &ts->stack[ts->cnt - 1];
++	struct call_path_root *cpr = ts->crp->cpr;
++	struct symbol *sym = tse->cp->sym;
++	struct symbol *tsym = to_al->sym;
++	struct call_path *cp;
++
++	if (sym && is_x86_retpoline(sym->name)) {
++		/*
++		 * This is a x86 retpoline fn. It pollutes the call graph by
++		 * showing up everywhere there is an indirect branch, but does
++		 * not itself mean anything. Here the top-of-stack is removed,
++		 * by decrementing the stack count, and then further down, the
++		 * resulting top-of-stack is replaced with the actual target.
++		 * The result is that the retpoline functions will no longer
++		 * appear in the call graph. Note this only affects the call
++		 * graph, since all the original branches are left unchanged.
++		 */
++		ts->cnt -= 1;
++		sym = ts->stack[ts->cnt - 2].cp->sym;
++		if (sym && sym == tsym && to_al->addr != tsym->start) {
++			/*
++			 * Target is back to the middle of the symbol we came
++			 * from so assume it is an indirect jmp and forget it
++			 * altogether.
++			 */
++			ts->cnt -= 1;
++			return 0;
++		}
++	} else if (sym && sym == tsym) {
++		/*
++		 * Target is back to the symbol we came from so assume it is an
++		 * indirect jmp and forget it altogether.
++		 */
++		ts->cnt -= 1;
++		return 0;
++	}
++
++	cp = call_path__findnew(cpr, ts->stack[ts->cnt - 2].cp, tsym,
++				sample->addr, ts->kernel_start);
++	if (!cp)
++		return -ENOMEM;
++
++	/* Replace the top-of-stack with the actual target */
++	ts->stack[ts->cnt - 1].cp = cp;
++
++	return 0;
++}
++
+ int thread_stack__process(struct thread *thread, struct comm *comm,
+ 			  struct perf_sample *sample,
+ 			  struct addr_location *from_al,
+@@ -740,6 +826,7 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
+ 			  struct call_return_processor *crp)
+ {
+ 	struct thread_stack *ts = thread__stack(thread, sample->cpu);
++	enum retpoline_state_t rstate;
+ 	int err = 0;
+ 
+ 	if (ts && !ts->crp) {
+@@ -755,6 +842,10 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
+ 		ts->comm = comm;
+ 	}
+ 
++	rstate = ts->rstate;
++	if (rstate == X86_RETPOLINE_DETECTED)
++		ts->rstate = X86_RETPOLINE_POSSIBLE;
++
+ 	/* Flush stack on exec */
+ 	if (ts->comm != comm && thread->pid_ == thread->tid) {
+ 		err = __thread_stack__flush(thread, ts);
+@@ -791,10 +882,25 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
+ 					ts->kernel_start);
+ 		err = thread_stack__push_cp(ts, ret_addr, sample->time, ref,
+ 					    cp, false, trace_end);
++
++		/*
++		 * A call to the same symbol but not the start of the symbol,
++		 * may be the start of a x86 retpoline.
++		 */
++		if (!err && rstate == X86_RETPOLINE_POSSIBLE && to_al->sym &&
++		    from_al->sym == to_al->sym &&
++		    to_al->addr != to_al->sym->start)
++			ts->rstate = X86_RETPOLINE_DETECTED;
++
+ 	} else if (sample->flags & PERF_IP_FLAG_RETURN) {
+ 		if (!sample->ip || !sample->addr)
+ 			return 0;
+ 
++		/* x86 retpoline 'return' doesn't match the stack */
++		if (rstate == X86_RETPOLINE_DETECTED && ts->cnt > 2 &&
++		    ts->stack[ts->cnt - 1].ret_addr != sample->addr)
++			return thread_stack__x86_retpoline(ts, sample, to_al);
++
+ 		err = thread_stack__pop_cp(thread, ts, sample->addr,
+ 					   sample->time, ref, from_al->sym);
+ 		if (err) {
