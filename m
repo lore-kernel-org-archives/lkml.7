@@ -2,53 +2,52 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA26C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D07C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68EDB20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034C720C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367086;
-	bh=qIpnS2pq/WGI8aKIt+lKAPOe/48G/rc05SQ+aPVFkyk=;
+	s=default; t=1551367095;
+	bh=7oi7TntVPUw5g2J24gMEsASxr3uzwTV0ecCh2PFUVp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=avyETvMWjgfZj+wOb1O2MedLAp+MOxxJyT9HQ1VNlo8CphnAaZTAc6VcGg2B310R2
-	 ZbgWThjw1IiwRFCT6b7EE7BCaLol4xItrHhwcLKLCbog0eRjHiMKf8A4lWUDGYN57I
-	 /Fmp2lVASUpxf78srUwHWvt5lfC4ii0krk5DUh9c=
+	b=ohozuc5zqMWJxdCQ9KR8gS3SaTHGZ6KlkMD2j79PSHfp0foIUiUmdvW/IHdFcqeni
+	 x8MRkCcJrbHzS7w83NjlNAtMEs/X8J+cOBCrRqzYRx/IfpAUxiJJQNZmNhldAI5M4m
+	 +F6csNonV4ATSEHFnsk31yp7sBAe/vYyGE6UdUbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732983AbfB1PSE (ORCPT
+        id S2388885AbfB1PPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:18:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52048 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:15:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388938AbfB1PQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:16:00 -0500
+        id S2388849AbfB1PP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99486218D3;
-        Thu, 28 Feb 2019 15:15:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66392218D9;
+        Thu, 28 Feb 2019 15:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366959;
-        bh=qIpnS2pq/WGI8aKIt+lKAPOe/48G/rc05SQ+aPVFkyk=;
+        s=default; t=1551366926;
+        bh=7oi7TntVPUw5g2J24gMEsASxr3uzwTV0ecCh2PFUVp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0gitHQg2A44s7W6y+pjvGh2BuCgEa3oEWx0/s4VgDPTJ6Ka5vtkCRCDpvhOj+Bw/e
-         n/kQpL+LP1rXuNm2U/8cUCEXJcbsy9H5owHBH9Q8P3rMFfhJf8cz4/fAmwZkeEQB2R
-         PhjTAswtFKXNATRONAbG0PkszYytZv+/TBITnQgQ=
+        b=uO7tuU8P/AIBLt+Bqdye57GfgnMlHi386o6nkPTkD6v1s1SVkHSlJ3DCeizv0qwgk
+         H/r+SklBL+X/0qde2V8mhMQJQtYLk3HReHEq2Td0lCB2kcJ5/XJBrgD95NKJe0xKI4
+         JDqcYsZOMhOMI26237FLed9c+I/9g+GD93WzQu5Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 16/19] perf trace: Support multiple "vfs_getname" probes
-Date:   Thu, 28 Feb 2019 10:15:12 -0500
-Message-Id: <20190228151517.12705-16-sashal@kernel.org>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 06/19] drm/sun4i: tcon: Prepare and enable TCON channel 0 clock at init
+Date:   Thu, 28 Feb 2019 10:15:02 -0500
+Message-Id: <20190228151517.12705-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
 References: <20190228151517.12705-1-sashal@kernel.org>
@@ -60,101 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 6ab3bc240ade47a0f52bc16d97edd9accbe0024e ]
+[ Upstream commit b14e945bda8ae227d1bf2b1837c0c4a61721cd1a ]
 
-With a suitably defined "probe:vfs_getname" probe, 'perf trace' can
-"beautify" its output, so syscalls like open() or openat() can print the
-"filename" argument instead of just its hex address, like:
+When initializing clocks, a reference to the TCON channel 0 clock is
+obtained. However, the clock is never prepared and enabled later.
+Switching from simplefb to DRM actually disables the clock (that was
+usually configured by U-Boot) because of that.
 
-  $ perf trace -e open -- touch /dev/null
-  [...]
-       0.590 ( 0.014 ms): touch/18063 open(filename: /dev/null, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-  [...]
+On the V3s, this results in a hang when writing to some mixer registers
+when switching over to DRM from simplefb.
 
-The output without such beautifier looks like:
+Fix this by preparing and enabling the clock when initializing other
+clocks. Waiting for sun4i_tcon_channel_enable to enable the clock is
+apparently too late and results in the same mixer register access hang.
 
-     0.529 ( 0.011 ms): touch/18075 open(filename: 0xc78cf288, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-
-However, when the vfs_getname probe expands to multiple probes and it is
-not the first one that is hit, the beautifier fails, as following:
-
-     0.326 ( 0.010 ms): touch/18072 open(filename: , flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-
-Fix it by hooking into all the expanded probes (inlines), now, for instance:
-
-  [root@quaco ~]# perf probe -l
-    probe:vfs_getname    (on getname_flags:73@fs/namei.c with pathname)
-    probe:vfs_getname_1  (on getname_flags:73@fs/namei.c with pathname)
-  [root@quaco ~]# perf trace -e open* sleep 1
-       0.010 ( 0.005 ms): sleep/5588 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC)   = 3
-       0.029 ( 0.006 ms): sleep/5588 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: RDONLY|CLOEXEC)   = 3
-       0.194 ( 0.008 ms): sleep/5588 openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: RDONLY|CLOEXEC) = 3
-  [root@quaco ~]#
-
-Works, further verified with:
-
-  [root@quaco ~]# perf test vfs
-  65: Use vfs_getname probe to get syscall args filenames   : Ok
-  66: Add vfs_getname probe to get syscall args filenames   : Ok
-  67: Check open filename arg using perf trace + vfs_getname: Ok
-  [root@quaco ~]#
-
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Tested-by: Michael Petlan <mpetlan@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-mv8kolk17xla1smvmp3qabv1@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190131132550.26355-1-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-trace.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 0fd8bfb77f652..6e568d361edf7 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2059,19 +2059,30 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
- 
- static bool perf_evlist__add_vfs_getname(struct perf_evlist *evlist)
- {
--	struct perf_evsel *evsel = perf_evsel__newtp("probe", "vfs_getname");
-+	bool found = false;
-+	struct perf_evsel *evsel, *tmp;
-+	struct parse_events_error err = { .idx = 0, };
-+	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
- 
--	if (IS_ERR(evsel))
-+	if (ret)
- 		return false;
- 
--	if (perf_evsel__field(evsel, "pathname") == NULL) {
-+	evlist__for_each_entry_safe(evlist, evsel, tmp) {
-+		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
-+			continue;
-+
-+		if (perf_evsel__field(evsel, "pathname")) {
-+			evsel->handler = trace__vfs_getname;
-+			found = true;
-+			continue;
-+		}
-+
-+		list_del_init(&evsel->node);
-+		evsel->evlist = NULL;
- 		perf_evsel__delete(evsel);
--		return false;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index f2975a1525bee..2796fea70a427 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -327,6 +327,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
+ 		dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
+ 		return PTR_ERR(tcon->sclk0);
  	}
++	clk_prepare_enable(tcon->sclk0);
  
--	evsel->handler = trace__vfs_getname;
--	perf_evlist__add(evlist, evsel);
--	return true;
-+	return found;
+ 	if (tcon->quirks->has_channel_1) {
+ 		tcon->sclk1 = devm_clk_get(dev, "tcon-ch1");
+@@ -341,6 +342,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
+ 
+ static void sun4i_tcon_free_clocks(struct sun4i_tcon *tcon)
+ {
++	clk_disable_unprepare(tcon->sclk0);
+ 	clk_disable_unprepare(tcon->clk);
  }
  
- static struct perf_evsel *perf_evsel__new_pgfault(u64 config)
 -- 
 2.19.1
 
