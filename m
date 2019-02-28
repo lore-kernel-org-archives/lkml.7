@@ -2,340 +2,261 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9483C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ED1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDD6218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:45:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uv+SiUFF"
+	by mail.kernel.org (Postfix) with ESMTP id D0102218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbfB1Ppp (ORCPT
+        id S2387495AbfB1PqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:45:45 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43190 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733248AbfB1Ppn (ORCPT
+        Thu, 28 Feb 2019 10:46:03 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44214 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387438AbfB1PqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:45:43 -0500
-Received: by mail-pg1-f194.google.com with SMTP id l11so9884311pgq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 07:45:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=c+AELDY17wHmxjiCNCeFeLqIyPtQM6I4vkrBuOGF1VU=;
-        b=Uv+SiUFFLWsLlKGPC2nF6SSc0x20Zh50g5+rEr8hKxKL6mQdh2m83YW+tgeWvxSo0x
-         Y9IYNmegzPnSeM4yeLPKwHvtpVfjVuW8dK8hAXWh8XMeo9OcNQgHOvCs0XZ+s7iG+2tc
-         T3ewzdeukLgjDjHtf2ynCaOoJeHIA8sa0lpGN0NJza//OloVREbW1+I9UUZVz95QReBE
-         g28nDI+7PhlE85/TY8FQfxEfLURNam7LMvvI4pnzHZ+62sNh3H31I3Oxjg6RrvCwsPx5
-         9rj7jL+nLy812pGtD/NPheWNtW4QbKg5VSsuhoGCfKvlTRo8dWWaOotYnn6KNT1023uR
-         sCEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=c+AELDY17wHmxjiCNCeFeLqIyPtQM6I4vkrBuOGF1VU=;
-        b=iiABpQDOFR+mr9OBj03iRdxpKz6iaXRkBbxa0X0t23aqKTLonx79p+LhJ58LnQQa5b
-         ZKsfnBHKeLvsJP6GaJowTQbMtXh2CIbM321y56sF4X37pMLjQxNJndzRbSXEFD4KN6qJ
-         aRjlSdzaiZSsOEFbAndFwHiA7vrVeoRdCo5TaftMtNyzD1tGtgG+wxcajKSFWYVHrGdl
-         bm2ur0W7lk04HET03N2ZMXsAtOAsJf+Ivf+9oVUWcEf8p4/aPXY+zjnQT2YF2KluhxaU
-         QZdWF4mOHU48lALnxoSacRgdTeV9+0dSHS0Xz+QE8FT14RE6azkUvY5ACwjUuCUs0CZZ
-         UIvA==
-X-Gm-Message-State: AHQUAuaj+jVXQJhQzppwi+pSJJz8nV2Vuj/9BELLeEHRGNNJ/JjhoyXd
-        gRfouvXugFkQ0brpK2vBkbTr
-X-Google-Smtp-Source: AHgI3IYPvROrSa64EHzzLJTQcyH8v+XCEStxQuQOEhIwWefOuUOBlqmQVgIg2VuihpNa9iGZ/ipbEw==
-X-Received: by 2002:aa7:9102:: with SMTP id 2mr199296pfh.179.1551368742712;
-        Thu, 28 Feb 2019 07:45:42 -0800 (PST)
-Received: from localhost.localdomain ([2409:4072:905:9c3:2dd3:3db1:5145:4da9])
-        by smtp.gmail.com with ESMTPSA id m13sm37485286pff.175.2019.02.28.07.45.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 07:45:42 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     xuwei5@hisilicon.com, robh+dt@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, john.stultz@linaro.org,
-        amit.kucheria@linaro.org, guodong.xu@linaro.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 3/3] arm64: dts: hisilicon: hikey970: Add SD and WiFi support
-Date:   Thu, 28 Feb 2019 21:15:11 +0530
-Message-Id: <20190228154511.17566-4-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190228154511.17566-1-manivannan.sadhasivam@linaro.org>
-References: <20190228154511.17566-1-manivannan.sadhasivam@linaro.org>
+        Thu, 28 Feb 2019 10:46:02 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SFgGiD102480
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 10:46:02 -0500
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxje8rfu0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 10:46:01 -0500
+Received: from localhost
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Thu, 28 Feb 2019 15:46:00 -0000
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Feb 2019 15:45:58 -0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SFjqbi58654966
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Feb 2019 15:45:53 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 499FE136059;
+        Thu, 28 Feb 2019 15:45:52 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91BB913604F;
+        Thu, 28 Feb 2019 15:45:50 +0000 (GMT)
+Received: from [9.85.128.205] (unknown [9.85.128.205])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Feb 2019 15:45:50 +0000 (GMT)
+Subject: Re: [PATCH v4 1/7] s390: ap: kvm: add PQAP interception for AQIC
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        pmorel@linux.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
+ <1550849400-27152-2-git-send-email-pmorel@linux.ibm.com>
+ <babf7884-35f1-2f2e-34dc-96d9190fd15b@linux.ibm.com>
+ <e7ba5cb0-b254-7f73-bc59-ca2456ce7951@linux.ibm.com>
+ <9f1d9241-39b9-adbc-d0e9-cb702e609cbc@linux.ibm.com>
+ <4dc59125-7f96-cba8-651b-382ed8f8bff8@linux.ibm.com>
+ <8526f468-9a4d-68d2-3868-0dad5ce16f46@linux.ibm.com>
+ <6058a017-6404-af3c-62ef-2452214ac97c@de.ibm.com>
+ <2d52b709-05dd-fa60-658a-36b827cf3041@linux.ibm.com>
+ <ee916b01-8d8f-6bcc-8764-4c8b1f636014@de.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Thu, 28 Feb 2019 10:45:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <ee916b01-8d8f-6bcc-8764-4c8b1f636014@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19022815-0036-0000-0000-00000A92896B
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010679; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01167636; UDB=6.00610016; IPR=6.00948250;
+ MB=3.00025780; MTD=3.00000008; XFM=3.00000015; UTC=2019-02-28 15:46:00
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19022815-0037-0000-0000-00004AE13A8E
+Message-Id: <f03dc1ed-f9da-86d0-0fce-a23a3a2f61d4@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902280106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SD and WiFi support for HiKey970 board based on HI3670 SoC. Due to
-the absence of the PMIC driver, fixed regulators are sourced to make the
-driver working.
+On 2/28/19 8:44 AM, Christian Borntraeger wrote:
+> 
+> 
+> On 28.02.2019 14:23, Pierre Morel wrote:
+>> On 28/02/2019 10:42, Christian Borntraeger wrote:
+>>>
+>>>
+>>> On 27.02.2019 19:00, Tony Krowiak wrote:
+>>>> On 2/27/19 3:09 AM, Pierre Morel wrote:
+>>>>> On 26/02/2019 16:47, Tony Krowiak wrote:
+>>>>>> On 2/26/19 6:47 AM, Pierre Morel wrote:
+>>>>>>> On 25/02/2019 19:36, Tony Krowiak wrote:
+>>>>>>>> On 2/22/19 10:29 AM, Pierre Morel wrote:
+>>>>>>>>> We prepare the interception of the PQAP/AQIC instruction for
+>>>>>>>>> the case the AQIC facility is enabled in the guest.
+>>>>>>>>>
+>>>>>>>>> We add a callback inside the KVM arch structure for s390 for
+>>>>>>>>> a VFIO driver to handle a specific response to the PQAP
+>>>>>>>>> instruction with the AQIC command.
+>>>>>>>>>
+>>>>>>>>> We inject the correct exceptions from inside KVM for the case the
+>>>>>>>>> callback is not initialized, which happens when the vfio_ap driver
+>>>>>>>>> is not loaded.
+>>>>>>>>>
+>>>>>>>>> If the callback has been setup we call it.
+>>>>>>>>> If not we setup an answer considering that no queue is available
+>>>>>>>>> for the guest when no callback has been setup.
+>>>>>>>>>
+>>>>>>>>> We do consider the responsability of the driver to always initialize
+>>>>>>>>> the PQAP callback if it defines queues by initializing the CRYCB for
+>>>>>>>>> a guest.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>>>>>>
+>>>>>>> ...snip...
+>>>>>>>
+>>>>>>>>> @@ -592,6 +593,55 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
+>>>>>>>>>         }
+>>>>>>>>>     }
+>>>>>>>>> +/*
+>>>>>>>>> + * handle_pqap: Handling pqap interception
+>>>>>>>>> + * @vcpu: the vcpu having issue the pqap instruction
+>>>>>>>>> + *
+>>>>>>>>> + * We now support PQAP/AQIC instructions and we need to correctly
+>>>>>>>>> + * answer the guest even if no dedicated driver's hook is available.
+>>>>>>>>> + *
+>>>>>>>>> + * The intercepting code calls a dedicated callback for this instruction
+>>>>>>>>> + * if a driver did register one in the CRYPTO satellite of the
+>>>>>>>>> + * SIE block.
+>>>>>>>>> + *
+>>>>>>>>> + * For PQAP/AQIC instructions only, verify privilege and specifications.
+>>>>>>>>> + *
+>>>>>>>>> + * If no callback available, the queues are not available, return this to
+>>>>>>>>> + * the caller.
+>>>>>>>>> + * Else return the value returned by the callback.
+>>>>>>>>> + */
+>>>>>>>>> +static int handle_pqap(struct kvm_vcpu *vcpu)
+>>>>>>>>> +{
+>>>>>>>>> +    uint8_t fc;
+>>>>>>>>> +    struct ap_queue_status status = {};
+>>>>>>>>> +
+>>>>>>>>> +    /* Verify that the AP instruction are available */
+>>>>>>>>> +    if (!ap_instructions_available())
+>>>>>>>>> +        return -EOPNOTSUPP;
+>>>>>>>>
+>>>>>>>> How can the guest even execute an AP instruction if the AP instructions
+>>>>>>>> are not available? If the AP instructions are not available on the host,
+>>>>>>>> they will not be available on the guest (i.e., CPU model feature
+>>>>>>>> S390_FEAT_AP will not be set). I suppose it doesn't hurt to check this
+>>>>>>>> here given QEMU may not be the only client.
+>>>>>>>>
+>>>>>>>>> +    /* Verify that the guest is allowed to use AP instructions */
+>>>>>>>>> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
+>>>>>>>>> +        return -EOPNOTSUPP;
+>>>>>>>>> +    /* Verify that the function code is AQIC */
+>>>>>>>>> +    fc = vcpu->run->s.regs.gprs[0] >> 24;
+>>>>>>>>> +    if (fc != 0x03)
+>>>>>>>>> +        return -EOPNOTSUPP;
+>>>>>>>>
+>>>>>>>> You must have missed my suggestion to move this to the
+>>>>>>>> vcpu->kvm->arch.crypto.pqap_hook(vcpu) in the following responses:
+>>>>>>>
+>>>>>>> Please consider what happen if the vfio_ap module is not loaded.
+>>>>>>
+>>>>>> I have considered it and even verified my expectations empirically. If
+>>>>>> the vfio_ap module is not loaded, you will not be able to create an mdev device.
+>>>>>
+>>>>> OK, now please consider that another userland tool, not QEMU uses KVM.
+>>>>
+>>>> What does that have to do with loading the vfio_ap module? Without the
+>>>> vfio_ap module, there will be no AP devices for the guest. What are you
+>>>> suggesting here?
+>>>>
+>>>>>
+>>>>>> If you don't have an mdev device, you will not be able to
+>>>>>> start a guest with a vfio-ap device. If you start a guest without a
+>>>>>> vfio-ap device, but enable AP instructions for the guest, there will be
+>>>>>> no AP devices attached to the guest. Without any AP devices attached,
+>>>>>> the PQAP(AQIC) instructions will not ever get executed.
+>>>>>
+>>>>> This is not right. The instruction will be executed, eventually, after decoding.
+>>>>
+>>>> Please explain why the PQAP(AQIC) instruction will be executed on a
+>>>> guest without any devices? Point me to the code in the AP bus where
+>>>> PQAP(AQIC) is executed without a queue?
+>>>
+>>> The host must be prepared to handle malicous and broken guests. So if
+>>> a guest does PQAP, we must handle that gracefully (e.g. by injecting an
+>>> exception)
+>>>
+>>>>
+>>>>>
+>>>>>> Even if for some
+>>>>>> unknown reason the PQAP(AQIC) instruction is executed - for some unknown
+>>>>>> reason, it will fail with response code 0x01, AP-queue number not valid.
+>>>>>
+>>>>> No, before accessing the AP-queue the instruction will be decoded and depending on the installed micro-code it will fail with
+>>>>> - OPERATION EXCEPTION if the micro-code is not installed
+>>>>> - PRIVILEDGE OPERATION if the instruction is issued from userland (programm state)
+>>>>> - SPECIFICATION exception if the instruction do not respect the usage specification
+>>>>>
+>>>>> then it will be interpreted by the microcode and access the queue and only then it will fail with RC 0x01, AP queue not valid.
+>>>>>
+>>>>> In the case of KVM, we intercept the instruction because it is issued by the guest and we set the AQIC facility on to force interception.
+>>>>>
+>>>>> KVM do for us all the decode steps I mention here above, if there is or not a pqap hook to be call to simulate the QP queue access.
+>>>>>
+>>>>> That done, the AP queue virtualisation can be called, this is done by calling the hook.
+>>>>
+>>>> Okay, let's go back to the genesis of this discussion; namely, my
+>>>> suggestion about moving the fc == 0x03 check into the hook code. If
+>>>> the vfio_ap module is not loaded, there will be no hook code. In that
+>>>> case, the check for the hook will fail and ultimately response code
+>>>> 0x01 will be set in the status word (which may not be the right thing
+>>>> to do?). You have not stated a single good reason for keeping this
+>>>> check, but I'm done with this silly argument. It certainly doesn't
+>>>> hurt anything.
+>>>
+>>> The instruction handler must handle the basic checks for the
+>>> instruction itself as outlined above.
+>>>
+>>> Do we want to allow QEMU to fully emulate everything (the  ECA_APIE case being off)?
+>>> The we should pass along everything to QEMU, but this is already done with the
+>>> ECA_APIE check, correct?
+>>>
+>>> Do we agree that when we are beyond the ECA_APIE check, that we do not emulate
+>>> in QEMU and we have enabled the AP instructions interpretion?
+>>> If yes then this has some implication:
+>>>
+>>> 1. ECA is on and we should only get PQAP interception for specific FC (namely 3).
+>>> 2. What we certainly should check is the facility bit of the guest (65) and reject fc==3
+>>> right away with a specification exception. I do not want the hook to mess with
+>>> the kvm cpu model. @Pierre would be good to actually check test_kvm_facility(vcpu->kvm, 65))
+>>
+>>
+>> Currently the check test_kvm_facility(vcpu->kvm, 65) is done in the instruction handler, what do you mean here?
+> 
+> Found it. I think we should couple the check for 64 to fc==3. Otherwise both things are somewhat
+> disconnected when reviewing.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- .../boot/dts/hisilicon/hi3670-hikey970.dts    |  75 ++++++++++++
- .../boot/dts/hisilicon/hikey970-pinctrl.dtsi  | 115 ++++++++++++++++++
- 2 files changed, 190 insertions(+)
+I think you meant facility bit 65.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-index c9775b66629f..7dac33d4fd5c 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-@@ -8,6 +8,7 @@
-  */
- 
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- 
- #include "hi3670.dtsi"
- #include "hikey970-pinctrl.dtsi"
-@@ -17,6 +18,8 @@
- 	compatible = "hisilicon,hi3670-hikey970", "hisilicon,hi3670";
- 
- 	aliases {
-+		mshc1 = &dwmmc1;
-+		mshc2 = &dwmmc2;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-@@ -35,6 +38,37 @@
- 		/* expect bootloader to fill in this region */
- 		reg = <0x0 0x0 0x0 0x0>;
- 	};
-+
-+	sd_1v8: regulator-1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-1.8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	sd_3v3: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	wlan_en: wlan-en-1-8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wlan-en-regulator";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+
-+		/* GPIO_051_WIFI_EN */
-+		gpio = <&gpio6 3 0>;
-+
-+		/* WLAN card specific delay */
-+		startup-delay-us = <70000>;
-+		enable-active-high;
-+	};
- };
- 
- /*
-@@ -354,6 +388,47 @@
- 		"GPIO_231_HDMI_INT";
- };
- 
-+&dwmmc1 {
-+	bus-width = <0x4>;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	cap-sd-highspeed;
-+	disable-wp;
-+	cd-inverted;
-+	cd-gpios = <&gpio25 5 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd_pmx_func
-+		     &sd_clk_cfg_func
-+		     &sd_cfg_func>;
-+	vmmc-supply = <&sd_3v3>;
-+	vqmmc-supply = <&sd_1v8>;
-+	status = "okay";
-+};
-+
-+&dwmmc2 { /* WIFI */
-+	bus-width = <0x4>;
-+	non-removable;
-+	broken-cd;
-+	cap-power-off-card;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio_pmx_func
-+		     &sdio_clk_cfg_func
-+		     &sdio_cfg_func>;
-+	/* WL_EN */
-+	vmmc-supply = <&wlan_en>;
-+	status = "ok";
-+
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1837";
-+		reg = <2>;      /* sdio func num */
-+		/* WL_IRQ, GPIO_177_WL_WAKEUP_AP */
-+		interrupt-parent = <&gpio22>;
-+		interrupts = <1 IRQ_TYPE_EDGE_RISING>;
-+	};
-+};
-+
- &uart0 {
- 	/* On High speed expansion header */
- 	label = "HS-UART0";
-diff --git a/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
-index 67bb52d43619..d456b0aa6f58 100644
---- a/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hikey970-pinctrl.dtsi
-@@ -196,6 +196,16 @@
- 			/* pin base, nr pins & gpio function */
- 			pinctrl-single,gpio-range = <&range 0 10 0>;
- 
-+			sdio_pmx_func: sdio_pmx_func {
-+				pinctrl-single,pins = <
-+					0x000 MUX_M1 /* SDIO_CLK */
-+					0x004 MUX_M1 /* SDIO_CMD */
-+					0x008 MUX_M1 /* SDIO_DATA0 */
-+					0x00c MUX_M1 /* SDIO_DATA1 */
-+					0x010 MUX_M1 /* SDIO_DATA2 */
-+					0x014 MUX_M1 /* SDIO_DATA3 */
-+				>;
-+			};
- 		};
- 
- 		pmx6: pinmux@fc182800 {
-@@ -203,6 +213,52 @@
- 			reg = <0x0 0xfc182800 0x0 0x028>;
- 			#pinctrl-cells = <1>;
- 			pinctrl-single,register-width = <0x20>;
-+
-+			sdio_clk_cfg_func: sdio_clk_cfg_func {
-+				pinctrl-single,pins = <
-+					0x000 0x0 /* SDIO_CLK */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE6_32MA DRIVE6_MASK
-+				>;
-+			};
-+
-+			sdio_cfg_func: sdio_cfg_func {
-+				pinctrl-single,pins = <
-+					0x004 0x0 /* SDIO_CMD */
-+					0x008 0x0 /* SDIO_DATA0 */
-+					0x00c 0x0 /* SDIO_DATA1 */
-+					0x010 0x0 /* SDIO_DATA2 */
-+					0x014 0x0 /* SDIO_DATA3 */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_UP
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE6_19MA DRIVE6_MASK
-+				>;
-+			};
- 		};
- 
- 		pmx7: pinmux@ff37e000 {
-@@ -214,6 +270,17 @@
- 			pinctrl-single,function-mask = <7>;
- 			/* pin base, nr pins & gpio function */
- 			pinctrl-single,gpio-range = <&range 0 12 0>;
-+
-+			sd_pmx_func: sd_pmx_func {
-+				pinctrl-single,pins = <
-+					0x000 MUX_M1 /* SD_CLK */
-+					0x004 MUX_M1 /* SD_CMD */
-+					0x008 MUX_M1 /* SD_DATA0 */
-+					0x00c MUX_M1 /* SD_DATA1 */
-+					0x010 MUX_M1 /* SD_DATA2 */
-+					0x014 MUX_M1 /* SD_DATA3 */
-+				>;
-+			};
- 		};
- 
- 		pmx8: pinmux@ff37e800 {
-@@ -221,6 +288,54 @@
- 			reg = <0x0 0xff37e800 0x0 0x030>;
- 			#pinctrl-cells = <1>;
- 			pinctrl-single,register-width = <0x20>;
-+
-+			sd_clk_cfg_func: sd_clk_cfg_func {
-+				pinctrl-single,pins = <
-+					0x000 0x0 /* SD_CLK */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_DIS
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE6_32MA
-+					DRIVE6_MASK
-+				>;
-+			};
-+
-+			sd_cfg_func: sd_cfg_func {
-+				pinctrl-single,pins = <
-+					0x004 0x0 /* SD_CMD */
-+					0x008 0x0 /* SD_DATA0 */
-+					0x00c 0x0 /* SD_DATA1 */
-+					0x010 0x0 /* SD_DATA2 */
-+					0x014 0x0 /* SD_DATA3 */
-+				>;
-+				pinctrl-single,bias-pulldown = <
-+					PULL_DIS
-+					PULL_DOWN
-+					PULL_DIS
-+					PULL_DOWN
-+				>;
-+				pinctrl-single,bias-pullup = <
-+					PULL_UP
-+					PULL_UP
-+					PULL_DIS
-+					PULL_UP
-+				>;
-+				pinctrl-single,drive-strength = <
-+					DRIVE6_19MA
-+					DRIVE6_MASK
-+				>;
-+			};
- 		};
- 
- 		pmx1: pinmux@fff11000 {
--- 
-2.17.1
+> 
 
