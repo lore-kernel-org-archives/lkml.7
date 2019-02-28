@@ -2,190 +2,86 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46855C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78608C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0665E20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ECdGhCwn"
+	by mail.kernel.org (Postfix) with ESMTP id 491E520C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732720AbfB1OAO (ORCPT
+        id S1732746AbfB1OA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:00:14 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44739 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732333AbfB1N72 (ORCPT
+        Thu, 28 Feb 2019 09:00:28 -0500
+Received: from relmlor2.renesas.com ([210.160.252.172]:54366 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731450AbfB1OA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:59:28 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q128so17180460ljb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:59:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GI6XZmnxcYO/CY+bl29qXuso3VQMluSDkZvmK3rltbA=;
-        b=ECdGhCwn8eiyl27bdwu/8OOk2JAEI2UoSPCIsVrC3N7eNNOSfQ2l/na89v/Lm9AwVD
-         0V8Ojda8kJ9Xlal+TeCeQ0r4Tbt0Bp7IF0Yd636JSJwcRZBKt7ZLUKJ2eYulJMrEIb6a
-         Q9Whg3t6AB0qxd+TdYsJoI4h3g3BloVn1eflb5M1XEnTH9xs32iAJSF/a5cxFtY74Skn
-         AcGhFatt+MNORl3p4bmUcp33sVPH3FkJiLX1emaeYI1Fvme3AK/VIpMi3eG7XqGGHwub
-         bRcYjUIaZWfG9uL5VhlxW+UTrO7KDaTWU2F1T3Amxetd7eWoeNUJhf0qbm0ODJR5Nil1
-         Tf5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GI6XZmnxcYO/CY+bl29qXuso3VQMluSDkZvmK3rltbA=;
-        b=g0k26CHXRnXwugPeIx/YhotHMyqTWHegs3ftQmZ0McnzCm88tDwA0SWSM/a8UjA/ea
-         TnSMd60SnLSpay+b8EDxiwhU5V3yaJnL2D8Zus7pEHEdbW2R+vOMlJsM/pDVR3qyCRKo
-         olDBkEf93rINuTT4/Ogy/trDxyjavxIQ1HR2CStwcGEleeoe2QHk03uVxrU/p16urhdR
-         TojtGQe1/DNKgwj+XH1wDqtCga8oKU6X7VD39GFxOvcWZGCFCt8UAyc7iJnIvv2Ge8zq
-         /DQu6/P6SBW3S4UH212SqcNw9xCwlpkCI5oaZPnHfclwqEHoBwi6T9Q+ZQOzEqJ1pFtw
-         1Dzw==
-X-Gm-Message-State: APjAAAXJ2YuGYKW5gZ1zLe8nZ7zr8elYcJrAv3O4gw7KMhotXrB4frg6
-        00KCwJdNSe+d17Gi2WUhVV/vew==
-X-Google-Smtp-Source: AHgI3IbeIXk8Cl8KhHC8bomqccjeVUdmfRBg8eJwL/dSo1Ys7nWisrbAqtKKDv+6q3D0f/fTDczaGw==
-X-Received: by 2002:a2e:80cd:: with SMTP id r13mr4832648ljg.34.1551362365801;
-        Thu, 28 Feb 2019 05:59:25 -0800 (PST)
-Received: from uffe-XPS-13-9360.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id v20sm4090265ljv.83.2019.02.28.05.59.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 05:59:25 -0800 (PST)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] drivers: firmware: psci: Move psci to separate directory
-Date:   Thu, 28 Feb 2019 14:59:13 +0100
-Message-Id: <20190228135919.3747-2-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190228135919.3747-1-ulf.hansson@linaro.org>
-References: <20190228135919.3747-1-ulf.hansson@linaro.org>
+        Thu, 28 Feb 2019 09:00:27 -0500
+X-IronPort-AV: E=Sophos;i="5.58,423,1544454000"; 
+   d="scan'208";a="8917271"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 28 Feb 2019 23:00:25 +0900
+Received: from renesas-VirtualBox.ree.adwin.renesas.com (unknown [10.226.37.56])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3C321446E12B;
+        Thu, 28 Feb 2019 23:00:22 +0900 (JST)
+From:   Gareth Williams <gareth.williams.jx@renesas.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/2] i2c: designware: Add support for a bus clock
+Date:   Thu, 28 Feb 2019 13:52:08 +0000
+Message-Id: <1551361930-24434-1-git-send-email-gareth.williams.jx@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some following changes extends the PSCI driver with some additional new
-files.  Let's avoid to continue cluttering the toplevel firmware directory
-and first move the PSCI files into a PSCI sub-directory.
+The Synopsys I2C Controller has an interface clock that some SoCs 
+require to access the registers. This series also details the new clock
+property in the bindings documentation.
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- drivers/firmware/Kconfig                   | 15 +--------------
- drivers/firmware/Makefile                  |  3 +--
- drivers/firmware/psci/Kconfig              | 13 +++++++++++++
- drivers/firmware/psci/Makefile             |  4 ++++
- drivers/firmware/{ => psci}/psci.c         |  0
- drivers/firmware/{ => psci}/psci_checker.c |  0
- 6 files changed, 19 insertions(+), 16 deletions(-)
- create mode 100644 drivers/firmware/psci/Kconfig
- create mode 100644 drivers/firmware/psci/Makefile
- rename drivers/firmware/{ => psci}/psci.c (100%)
- rename drivers/firmware/{ => psci}/psci_checker.c (100%)
+v5:
+ - Code comments and commit messages updated to reference "interface clock"
+   instead of "peripheral clock".
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index f754578414f0..e1385f47d4ac 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -5,20 +5,6 @@
- 
- menu "Firmware Drivers"
- 
--config ARM_PSCI_FW
--	bool
--
--config ARM_PSCI_CHECKER
--	bool "ARM PSCI checker"
--	depends on ARM_PSCI_FW && HOTPLUG_CPU && CPU_IDLE && !TORTURE_TEST
--	help
--	  Run the PSCI checker during startup. This checks that hotplug and
--	  suspend operations work correctly when using PSCI.
--
--	  The torture tests may interfere with the PSCI checker by turning CPUs
--	  on and off through hotplug, so for now torture tests and PSCI checker
--	  are mutually exclusive.
--
- config ARM_SCMI_PROTOCOL
- 	bool "ARM System Control and Management Interface (SCMI) Message Protocol"
- 	depends on ARM || ARM64 || COMPILE_TEST
-@@ -270,6 +256,7 @@ config TI_SCI_PROTOCOL
- config HAVE_ARM_SMCCC
- 	bool
- 
-+source "drivers/firmware/psci/Kconfig"
- source "drivers/firmware/broadcom/Kconfig"
- source "drivers/firmware/google/Kconfig"
- source "drivers/firmware/efi/Kconfig"
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 80feb635120f..9a3909a22682 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -2,8 +2,6 @@
- #
- # Makefile for the linux kernel.
- #
--obj-$(CONFIG_ARM_PSCI_FW)	+= psci.o
--obj-$(CONFIG_ARM_PSCI_CHECKER)	+= psci_checker.o
- obj-$(CONFIG_ARM_SCPI_PROTOCOL)	+= arm_scpi.o
- obj-$(CONFIG_ARM_SCPI_POWER_DOMAIN) += scpi_pm_domain.o
- obj-$(CONFIG_ARM_SDE_INTERFACE)	+= arm_sdei.o
-@@ -25,6 +23,7 @@ CFLAGS_qcom_scm-32.o :=$(call as-instr,.arch armv7-a\n.arch_extension sec,-DREQU
- obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
- 
- obj-$(CONFIG_ARM_SCMI_PROTOCOL)	+= arm_scmi/
-+obj-y				+= psci/
- obj-y				+= broadcom/
- obj-y				+= meson/
- obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
-diff --git a/drivers/firmware/psci/Kconfig b/drivers/firmware/psci/Kconfig
-new file mode 100644
-index 000000000000..26a3b32bf7ab
---- /dev/null
-+++ b/drivers/firmware/psci/Kconfig
-@@ -0,0 +1,13 @@
-+config ARM_PSCI_FW
-+	bool
-+
-+config ARM_PSCI_CHECKER
-+	bool "ARM PSCI checker"
-+	depends on ARM_PSCI_FW && HOTPLUG_CPU && CPU_IDLE && !TORTURE_TEST
-+	help
-+	  Run the PSCI checker during startup. This checks that hotplug and
-+	  suspend operations work correctly when using PSCI.
-+
-+	  The torture tests may interfere with the PSCI checker by turning CPUs
-+	  on and off through hotplug, so for now torture tests and PSCI checker
-+	  are mutually exclusive.
-diff --git a/drivers/firmware/psci/Makefile b/drivers/firmware/psci/Makefile
-new file mode 100644
-index 000000000000..1956b882470f
---- /dev/null
-+++ b/drivers/firmware/psci/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+obj-$(CONFIG_ARM_PSCI_FW)	+= psci.o
-+obj-$(CONFIG_ARM_PSCI_CHECKER)	+= psci_checker.o
-diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci/psci.c
-similarity index 100%
-rename from drivers/firmware/psci.c
-rename to drivers/firmware/psci/psci.c
-diff --git a/drivers/firmware/psci_checker.c b/drivers/firmware/psci/psci_checker.c
-similarity index 100%
-rename from drivers/firmware/psci_checker.c
-rename to drivers/firmware/psci/psci_checker.c
+v4:
+ - Code comments and commit messages updated to reference "peripheral 
+   clock"
+   instead of "bus clock".
+
+v3:
+ - busclk renamed to pclk.
+ - Added comment with dw_i2c_dev struct definition describing pclk.
+ - Added enable rollback of first clock if second fails to enable.
+ - Changed clocks and clock-names sections to use term "peripheral clock"
+   (pclk) instead of "bus clock" (busclk) in dt-bindings documentation.
+
+v2:
+ - Use new devm_clk_get_optional() function as it simplifies handling when
+   the optional clock is not present.
+
+Phil Edworthy (2):
+  dt: snps,designware-i2c: Add clock bindings documentation
+  i2c: designware: Add support for an interface clock
+
+ .../devicetree/bindings/i2c/i2c-designware.txt         |  9 +++++++++
+ drivers/i2c/busses/i2c-designware-common.c             | 18 ++++++++++++++++--
+ drivers/i2c/busses/i2c-designware-core.h               |  2 ++
+ drivers/i2c/busses/i2c-designware-platdrv.c            |  5 +++++
+ 4 files changed, 32 insertions(+), 2 deletions(-)
+
 -- 
-2.17.1
+2.7.4
 
