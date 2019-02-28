@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD7DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B0AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA39218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026F82171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEqhqFbl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqvSL9j0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731939AbfB1Iqs (ORCPT
+        id S1732013AbfB1Iqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:46:48 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37033 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731833AbfB1Iqp (ORCPT
+        Thu, 28 Feb 2019 03:46:55 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36145 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731931AbfB1Iqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:46:45 -0500
-Received: by mail-wm1-f67.google.com with SMTP id x10so7994291wmg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 00:46:44 -0800 (PST)
+        Thu, 28 Feb 2019 03:46:49 -0500
+Received: by mail-wm1-f68.google.com with SMTP id j125so8058790wmj.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 00:46:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LGIzJpJvXuJ3oVbc6oLVhFAATUbTP/Cf/RKodfADNmc=;
-        b=iEqhqFbl6jY2rYRs/d37LxWxgWv2U+i+LboWckhtEMqjqcsyYV3LccGwgptT3EGH9A
-         lqjY4R18FQw67F1Kf++ggoMtxDPoeYWOZrJRVcHy2LvJrrYYegohY5CwKNrmBcKd/fqG
-         aO3p6xC4LkA8mb8OyICojs87bu+X9oM/zo+k4hUG2PmaWPkFTYyNDkpyZRfmDHwOWWVA
-         RQY4q28o8lPv+pVtnyNTzO7bc6ail7Sscleh4DBnUNUk1ndbL9SH+3SGzHHIG+RRgYEE
-         HccFzUXsqB3RbtwSB/OYONPsQLxblJbuG4ZbZbWDNtfIfooA/jwqOna3p5sFWeLLrKy9
-         KHXw==
+        bh=M1XdwZtwAosdJP136ZFqHjIOI3upm3EbRWSk+eiYROQ=;
+        b=ZqvSL9j0ENlVQJvCTCNzbWCKioAzTDzS3QEx2absrhSMvJfiwMDMx2Db6fULI4s7Ww
+         QnS/6HStHShNXufAfa8dQ3FHRi7V6WADwixlFFiOWl20VlvcwEFHhNNg7J8Wo7CiwMkb
+         uxZ6MkDRMy306QZ9J3pJdsSQ2GA9TMfuKweRNfj2KrhWLbw6EL17jm4BC9DzMAT0m+LW
+         Egjn6w/jJt98/YMNmMmB8uZuzmfmcqWGtFGc5/BgmaIMBqAWlf4IT947lZvQouvJZ/Wc
+         Ma9sx/XjpCnw3wTN/HuUzwLP5fpSb4/KKTwYxR05L7ZVwsyMlbZOncuUmtsc94IYbtPI
+         3k9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LGIzJpJvXuJ3oVbc6oLVhFAATUbTP/Cf/RKodfADNmc=;
-        b=cxX2RRawxLFlbn8riXOz8l+pfRFbDSiNSzbpE/l4IND7iix4kCJPPuQAiCBX3Rrpdk
-         4YQDs7Uo1r+d7bhbaz/DueOW2WIcDOt9AV28S2uw1QIeD+sPrNGh1gKGc2SBGt5qhTqV
-         2YjvfXXMtfNHwvsTjpceElkC2zuO889GB1cGFHerbelvnov/CxSGv8NDlzU+YjFT45If
-         udDUPMw6ZTw0FMGljgYChM7hAAY9IqbJ/hYvtcq+kAlRGtbA7jfnJBqPBRYRXD3J5Us5
-         Wz80CCK1xqqQo8NdQSIicr3OvvdL/jAG8+8Nb0icBWwNagv7fq3ueOkV1uY1XnG7YHMO
-         DPPw==
-X-Gm-Message-State: AHQUAubu4e58drSAnA/YqhYKBcd0wfIjWboOABCpPfLwrBi164KdbGHQ
-        xPVrJNM0meDpVDcWZalYQ3/3PmcK
-X-Google-Smtp-Source: APXvYqx6OST/TLCvHRgpstsMpgZwcK6GzHLLx7wzHtBi3fi/q2cF9HOdIFhCfMyno4UYEPPv6p31dg==
-X-Received: by 2002:a1c:44d7:: with SMTP id r206mr2162398wma.40.1551343603721;
-        Thu, 28 Feb 2019 00:46:43 -0800 (PST)
+        bh=M1XdwZtwAosdJP136ZFqHjIOI3upm3EbRWSk+eiYROQ=;
+        b=s4mOrQffiwIXE5Xe+lbTatU+hiflzri28WvYnknB4Zauki9DRPaal1BRUg0TzsLNUC
+         pgwShcarFo0j+wDobH3qH1wRo+kZXc//SS64BBIj9GuJmvm76wjueZr3+teQI+EKmwmR
+         Kk14ojGjrBWzXVxdKbMjNjy7ZXGwR9tsLDbHVBFXpUgXCqqTNEshKJsxesp+X/2wQbQm
+         WRnUcj7gmP8BNwgUt492uM0sgH2zwKdBVKewPgS9srecK+vRvPb6OHzvuLmdtwH7upvg
+         Vyv14wEHPuSpVyw+fZJRQ4XwgtRnpw5x+c34wBB78oaUUeUg8cJVIBLZT0f1kEPETV7m
+         63wg==
+X-Gm-Message-State: AHQUAubKQGqVXbkqtRSwuAwu4+d+kM0S11LPwHAsqwUlXOgvh5mVQFCa
+        sp8uU5RYPQ/7bVE0mRutXgQ=
+X-Google-Smtp-Source: APXvYqyr7ZM21bofUEj/iPXG63SYOQ7ilmkhLeW6ExqTOzvn/rnToGg1bwcwfFrtune9O4F2cvAJuQ==
+X-Received: by 2002:a1c:80d6:: with SMTP id b205mr2167460wmd.109.1551343607282;
+        Thu, 28 Feb 2019 00:46:47 -0800 (PST)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id h126sm4409305wmf.2.2019.02.28.00.46.42
+        by smtp.gmail.com with ESMTPSA id h126sm4409305wmf.2.2019.02.28.00.46.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 00:46:43 -0800 (PST)
+        Thu, 28 Feb 2019 00:46:46 -0800 (PST)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     Omer Shpigelman <oshpigelman@habana.ai>
-Subject: [PATCH 07/15] habanalabs: extend QMAN0 job timeout
-Date:   Thu, 28 Feb 2019 10:46:16 +0200
-Message-Id: <20190228084624.25288-8-oded.gabbay@gmail.com>
+Subject: [PATCH 09/15] habanalabs: return correct error code on MMU mapping failure
+Date:   Thu, 28 Feb 2019 10:46:18 +0200
+Message-Id: <20190228084624.25288-10-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190228084624.25288-1-oded.gabbay@gmail.com>
 References: <20190228084624.25288-1-oded.gabbay@gmail.com>
@@ -72,53 +72,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Omer Shpigelman <oshpigelman@habana.ai>
 
-This patch fix a bug where the timeout for sending a job on QMAN0 by KMD
-wasn't enough in palladium environment.
+This patch fix a bug where EINVAL was returned instead of -EINVAL.
 
 Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/goya/goya.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/misc/habanalabs/mmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 578e4bdc3a49..13923f4127af 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -83,6 +83,7 @@
- #define GOYA_CPU_TIMEOUT_USEC		10000000	/* 10s */
- #define GOYA_TEST_QUEUE_WAIT_USEC	100000		/* 100ms */
- #define GOYA_PLDM_MMU_TIMEOUT_USEC	(MMU_CONFIG_TIMEOUT_USEC * 100)
-+#define GOYA_PLDM_QMAN0_TIMEOUT_USEC	(HL_DEVICE_TIMEOUT_USEC * 30)
+diff --git a/drivers/misc/habanalabs/mmu.c b/drivers/misc/habanalabs/mmu.c
+index a7187f9a5948..ce404e6cc9a9 100644
+--- a/drivers/misc/habanalabs/mmu.c
++++ b/drivers/misc/habanalabs/mmu.c
+@@ -710,7 +710,7 @@ static int _hl_mmu_map(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr,
+ 			dev_err(hdev->dev,
+ 				"DRAM: mapping already exists for virt_addr 0x%llx\n",
+ 					virt_addr);
+-			rc = EINVAL;
++			rc = -EINVAL;
+ 			goto err;
+ 		}
  
- #define GOYA_QMAN0_FENCE_VAL		0xD169B243
+@@ -744,7 +744,7 @@ static int _hl_mmu_map(struct hl_ctx *ctx, u64 virt_addr, u64 phys_addr,
+ 							hop4_pte_addr),
+ 							hop4_pte_addr);
  
-@@ -3126,9 +3127,14 @@ static int goya_send_job_on_qman0(struct hl_device *hdev, struct hl_cs_job *job)
- 	u32 *fence_ptr;
- 	dma_addr_t fence_dma_addr;
- 	struct hl_cb *cb;
--	u32 tmp;
-+	u32 tmp, timeout;
- 	int rc;
- 
-+	if (hdev->pldm)
-+		timeout = GOYA_PLDM_QMAN0_TIMEOUT_USEC;
-+	else
-+		timeout = HL_DEVICE_TIMEOUT_USEC;
-+
- 	if (!hdev->asic_funcs->is_device_idle(hdev)) {
- 		dev_err_ratelimited(hdev->dev,
- 			"Can't send KMD job on QMAN0 if device is not idle\n");
-@@ -3175,8 +3181,8 @@ static int goya_send_job_on_qman0(struct hl_device *hdev, struct hl_cs_job *job)
- 		goto free_fence_ptr;
+-		rc = EINVAL;
++		rc = -EINVAL;
+ 		goto err;
  	}
- 
--	rc = hl_poll_timeout_memory(hdev, (u64) (uintptr_t) fence_ptr,
--					HL_DEVICE_TIMEOUT_USEC, &tmp);
-+	rc = hl_poll_timeout_memory(hdev, (u64) (uintptr_t) fence_ptr, timeout,
-+					&tmp);
- 
- 	hl_hw_queue_inc_ci_kernel(hdev, GOYA_QUEUE_ID_DMA_0);
  
 -- 
 2.17.1
