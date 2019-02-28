@@ -3,79 +3,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5CFC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3A6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC9A214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1073B21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730683AbfB1CDs (ORCPT
+        id S1730626AbfB1CHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:03:48 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:43446 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730649AbfB1CDs (ORCPT
+        Wed, 27 Feb 2019 21:07:24 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:50792 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730240AbfB1CHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:03:48 -0500
-X-UUID: 1fe05881b1af47fca3a0cc347b992b6c-20190228
-X-UUID: 1fe05881b1af47fca3a0cc347b992b6c-20190228
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <seiya.wang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 860474768; Thu, 28 Feb 2019 10:03:38 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 28 Feb 2019 10:03:37 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 28 Feb 2019 10:03:37 +0800
-Message-ID: <1551319417.3477.0.camel@mtksdccf07>
-Subject: Re: [PATCH v2 2/2] clk: mediatek: correct cpu clock name for MT8173
- SoC
-From:   Seiya Wang <seiya.wang@mediatek.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Rob Herring" <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
-Date:   Thu, 28 Feb 2019 10:03:37 +0800
-In-Reply-To: <155120509627.260864.5936412356126577519@swboyd.mtv.corp.google.com>
-References: <20190225065112.3400-1-seiya.wang@mediatek.com>
-         <20190225065112.3400-2-seiya.wang@mediatek.com>
-         <155120509627.260864.5936412356126577519@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 27 Feb 2019 21:07:24 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TLVqCd-_1551319640;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TLVqCd-_1551319640)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 28 Feb 2019 10:07:21 +0800
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Subject: Re: [bug report][stable] perf probe: failed to add events
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        luto@kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
+        Xu Yu <xuyu@linux.alibaba.com>, peterz@infradead.org,
+        mingo@redhat.com
+References: <1a4240a8-288b-45d0-073d-d5cb8f0c63eb@linux.alibaba.com>
+ <20190226090505.GA24409@kroah.com>
+ <c7ccd9cb-3a66-98a9-faa1-7ee5ed20ff88@linux.alibaba.com>
+ <20190226130802.GA10343@kroah.com> <20190226142009.GC26786@kernel.org>
+ <3b233ff2-e87a-1c61-d516-6c4cdecb4f01@intel.com>
+Message-ID: <8e798942-0e71-c88f-866f-88e55177e286@linux.alibaba.com>
+Date:   Thu, 28 Feb 2019 10:07:20 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.5.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <3b233ff2-e87a-1c61-d516-6c4cdecb4f01@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-02-26 at 10:18 -0800, Stephen Boyd wrote:
-> Quoting Seiya Wang (2019-02-24 22:51:12)
-> > diff --git a/include/dt-bindings/clock/mt8173-clk.h b/include/dt-bindings/clock/mt8173-clk.h
-> > index 8aea623dd518..76e4e5b65353 100644
-> > --- a/include/dt-bindings/clock/mt8173-clk.h
-> > +++ b/include/dt-bindings/clock/mt8173-clk.h
-> > @@ -194,7 +194,8 @@
-> >  #define CLK_INFRA_PMICWRAP             11
-> >  #define CLK_INFRA_CLK_13M              12
-> >  #define CLK_INFRA_CA53SEL               13
-> > -#define CLK_INFRA_CA57SEL               14
-> > +#define CLK_INFRA_CA57SEL               14 /* Deprecated. Don't use it. */
-> > +#define CLK_INFRA_CA72SEL               14
-> 
-> Also, please send a followup patch to remove the deprecated define later
-> when the dts file is fixed up.
-> 
+Hi Adrian,
 
-Sure. Thank you so much~
+On 19/2/27 20:39, Adrian Hunter wrote:
+> Seems to be fixed by this:
+> 
+> From: Adrian Hunter <adrian.hunter@intel.com>
+> Date: Wed, 27 Feb 2019 05:35:25 +0200
+> Subject: [PATCH] perf probe: Fix getting the kernel map
+> 
+> Since commit 4d99e4136580 ("perf machine: Workaround missing maps for x86
+> PTI entry trampolines"), perf tools has been creating more than one kernel
+> map, however 'perf probe' assumed there could be only one.
+> 
+> Fix by using machine__kernel_map() to get the main kernel map.
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Fixes: 4d99e4136580 ("perf machine: Workaround missing maps for x86 PTI entry trampolines")
 
+Below is my investigation result before, FYI.
+the first bad commit (v4.18 ~ v4.19):
+d83212d5dd67 kallsyms, x86: Export addresses of PTI entry trampolines
+revert this commit on 4.19.0, it works.
+the first good commit again (v4.19 ~ v4.20):
+bf904d2762ee x86/pti/64: Remove the SYSCALL64 entry trampoline
+backported this commit as well as the related commit 98f05b5138f0 on
+v4.19.24, it works.
+
+And I've tested your fix on v4.19.24, it also works.
+Tested-by: Joseph Qi <joseph.qi@linux.alibaba.com>
