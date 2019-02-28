@@ -2,92 +2,75 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E2BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9FEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105DB218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCDA218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:26:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dQC9CSec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732999AbfB1O02 (ORCPT
+        id S1733012AbfB1O0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:26:28 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51028 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727861AbfB1O0S (ORCPT
+        Thu, 28 Feb 2019 09:26:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:47052 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732966AbfB1O0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Feb 2019 09:26:18 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SEG1WW022486;
-        Thu, 28 Feb 2019 15:26:00 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2qtvh3we8c-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 28 Feb 2019 15:26:00 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D3F8738;
-        Thu, 28 Feb 2019 14:25:59 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B37405996;
-        Thu, 28 Feb 2019 14:25:59 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 28 Feb
- 2019 15:25:59 +0100
-Received: from localhost (10.201.23.19) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Thu, 28 Feb 2019 15:25:58
- +0100
-From:   Hugues Fruchet <hugues.fruchet@st.com>
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 1/4] ARM: dts: stm32: add 2v8 fixed regulator for stm32mp157c-ed1 board
-Date:   Thu, 28 Feb 2019 15:25:42 +0100
-Message-ID: <1551363945-19497-2-git-send-email-hugues.fruchet@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551363945-19497-1-git-send-email-hugues.fruchet@st.com>
-References: <1551363945-19497-1-git-send-email-hugues.fruchet@st.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HEs5axV892K6nYaUjh28uqou6pnSDGNSj/z37uwPTKQ=; b=dQC9CSec/QOYSlSgrTwmosoQr
+        tOdzyAC5iiXdHeU//lb8MEOizsMvJoFDLXlrsxUhyEGHBwRoPUZi5+SMBeKCUJK2XqoPPXmtegMK2
+        GjXuVhFM1TlGDMFQndO26y2DbmEthClYQowDnb73cIpNP2V0YaFUcN6b9uM0DXhfV7cJWr2ONxd/f
+        +NMhkO3uET0wsRIuazyfFa9LlzJsnfC+N6ODr1U3h/60xyjEyjVgR/vwhxwCsiDHSIe527eTkkkKD
+        OYQjVZOz9xM3Mmk14CNDuVYPsX7tGDUlpPLdgOPspdtD5y9kGkNgXDg75VyPu0+RcmtQxotj9NN0J
+        EmDkq+7bQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gzMda-0002Tw-QG; Thu, 28 Feb 2019 14:26:14 +0000
+Date:   Thu, 28 Feb 2019 06:26:14 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "Ardelean, Alexandru" <Alex.Ardelean@analog.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "bhole_prashant_q7@lab.ntt.co.jp" <bhole_prashant_q7@lab.ntt.co.jp>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "khandual@linux.vnet.ibm.com" <khandual@linux.vnet.ibm.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+Subject: Re: [PATCH] lib/scatterlist: introduce sg_nents_for_dma() helper
+Message-ID: <20190228142614.GC18319@infradead.org>
+References: <20190227085050.30000-1-alexandru.ardelean@analog.com>
+ <CAHp75VfsLJq1ei5U-jkgFc-zj-T6KCdTy8+Je+GnjB=KN4BS5w@mail.gmail.com>
+ <CAHp75VdgwM_ybfymh28iqxu2qOfzZo79VOF+XE+brj70Aji6YQ@mail.gmail.com>
+ <26f1c0d1a7d98a6a41301d58e53bd9abc1d2f5c9.camel@analog.com>
+ <CAHp75Vcup+UUYmqo7stwC4FOmG3GWqOOuewmmG_dSiDoeBms7w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.19]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_07:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vcup+UUYmqo7stwC4FOmG3GWqOOuewmmG_dSiDoeBms7w@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 2v8 fixed regulator and enable it.
+On Wed, Feb 27, 2019 at 04:15:37PM +0200, Andy Shevchenko wrote:
+> > https://patchwork.kernel.org/patch/10814527/
+> >
+> > But, I can rework this patch to work without the helper.
+> 
+> Ah, okay, worth to mention this in comments (in addition to what you
+> put about the patch below).
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 10dc7c0..4b5bcfd 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -57,6 +57,14 @@
- 		regulator-boot-on;
- 	};
- 
-+	v2v8: ldo2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "v2v8";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
-+
- 	sd_switch: regulator-sd_switch {
- 		compatible = "regulator-gpio";
- 		regulator-name = "sd_switch";
--- 
-2.7.4
-
+Just include the patch adding the helper in the series.
