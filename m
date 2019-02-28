@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D75C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BB1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A41A20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831B420818
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551368040;
-	bh=ZsqKXICJm5SqmJ62b5L1X5qx0uaMbjJcRC2+EtDtRf8=;
+	s=default; t=1551368049;
+	bh=8NBzQZdVwbrv+05qKc9VNrXaUKT+rhRpYwJUCs5Ij48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jQq08NcG0ClEYZDvfMQCtt2GETX6AI50klzTSHw2g7JscCHXE0rf/Gg+mNuOneo1K
-	 ldd6OqnAdyayouozCYr1m4ZGYhiuD65snSms15DKQOwhwLLgP4t++wh+FeLflo7lOT
-	 Cgtb1rFnCmF1E7GrA9l1rrJ/hni0/QXmF+Tyw+00=
+	b=OmjXSsidDJPB3HdovUQtMtpNKXjsB8GFu19eVQ5bQWJx8GLbOZUX7zaQJgAC0w/UW
+	 2KPoxFjM4gxWprrKiXZrW8EwtTQ8lqnT8D8duJpw8pZZ7DfPsjuLwprr5P1OBCy4ms
+	 KD26/Atfywjd6FgX06pbz+WqQffxsRr0zARcpe8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731544AbfB1PIg (ORCPT
+        id S2387740AbfB1PeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:08:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40628 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:34:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732816AbfB1PI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:08:28 -0500
+        id S1731615AbfB1PIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:08:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA1B2184A;
-        Thu, 28 Feb 2019 15:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 191C6218D0;
+        Thu, 28 Feb 2019 15:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366508;
-        bh=ZsqKXICJm5SqmJ62b5L1X5qx0uaMbjJcRC2+EtDtRf8=;
+        s=default; t=1551366512;
+        bh=8NBzQZdVwbrv+05qKc9VNrXaUKT+rhRpYwJUCs5Ij48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X/Zm1KFRY59fsv3INBRRLrEXnpdXN5+jxSqI52dRyiMl0nPyuF+MTyWsrMyc3jHPh
-         KI0oBjZiBHx6Zz7yP4X7YrAYpa/xgtMaWQzuXcH0oVTTpIXLGZHgv9ogL4eiPizMKC
-         BPwe5kQV6mi/rdtrD76lNZRYZC57alSFDDuCwGxg=
+        b=mdCbQjkwBD8Eo4mpwQPoqBCfD+27ZhjItMAy5q6MBkxTzwwV5VoZCKAs5IyAaHprP
+         oEqNCdP/LzgVWMJ67oUixJ0JaTGyPonEy87nEAlI4FmIfmlE69DYYx8ftWJPy/4nVa
+         5qmppxm4xSaITsvj89Sx+x8eYuefA28hhObn8lvg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 10/81] arm64: dts: renesas: r8a7796: Enable DMA for SCIF2
-Date:   Thu, 28 Feb 2019 10:07:02 -0500
-Message-Id: <20190228150813.10256-10-sashal@kernel.org>
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.20 12/81] soc: fsl: qbman: avoid race in clearing QMan interrupt
+Date:   Thu, 28 Feb 2019 10:07:04 -0500
+Message-Id: <20190228150813.10256-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -59,34 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-[ Upstream commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4 ]
+[ Upstream commit 89857a8a5c89a406b967ab2be7bd2ccdbe75e73d ]
 
-SCIF2 on R-Car M3-W can be used with both DMAC1 and DMAC2.
+By clearing all interrupt sources, not only those that
+already occurred, the existing code may acknowledge by
+mistake interrupts that occurred after the code checks
+for them.
 
-Fixes: dbcae5ea4bd27409 ("arm64: dts: r8a7796: Enable SCIF DMA")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: Roy Pledge <roy.pledge@nxp.com>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/soc/fsl/qbman/qman.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 1ec6aaa520c19..09320caea54ed 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -1160,6 +1160,9 @@
- 				 <&cpg CPG_CORE R8A7796_CLK_S3D1>,
- 				 <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
-+			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
-+			       <&dmac2 0x13>, <&dmac2 0x12>;
-+			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
- 			resets = <&cpg 310>;
- 			status = "disabled";
+diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
+index 5ce24718c2fd1..d8b3ba047c28f 100644
+--- a/drivers/soc/fsl/qbman/qman.c
++++ b/drivers/soc/fsl/qbman/qman.c
+@@ -1124,18 +1124,19 @@ static void qm_mr_process_task(struct work_struct *work);
+ static irqreturn_t portal_isr(int irq, void *ptr)
+ {
+ 	struct qman_portal *p = ptr;
+-
+-	u32 clear = QM_DQAVAIL_MASK | p->irq_sources;
+ 	u32 is = qm_in(&p->p, QM_REG_ISR) & p->irq_sources;
++	u32 clear = 0;
+ 
+ 	if (unlikely(!is))
+ 		return IRQ_NONE;
+ 
+ 	/* DQRR-handling if it's interrupt-driven */
+-	if (is & QM_PIRQ_DQRI)
++	if (is & QM_PIRQ_DQRI) {
+ 		__poll_portal_fast(p, QMAN_POLL_LIMIT);
++		clear = QM_DQAVAIL_MASK | QM_PIRQ_DQRI;
++	}
+ 	/* Handling of anything else that's interrupt-driven */
+-	clear |= __poll_portal_slow(p, is);
++	clear |= __poll_portal_slow(p, is) & QM_PIRQ_SLOW;
+ 	qm_out(&p->p, QM_REG_ISR, clear);
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.19.1
 
