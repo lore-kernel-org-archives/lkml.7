@@ -2,142 +2,139 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCE7C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979AFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0D52184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CB62184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:07:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731962AbfB1IG6 (ORCPT
+        id S1731700AbfB1IHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:06:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41122 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730263AbfB1IG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:06:57 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A152DAD9F;
-        Thu, 28 Feb 2019 08:06:55 +0000 (UTC)
-Subject: Re: [PATCH] mm,mremap: Bail out earlier in mremap_to under map
- pressure
-To:     Oscar Salvador <osalvador@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, hughd@google.com, kirill@shutemov.name,
-        joel@joelfernandes.org, jglisse@redhat.com,
-        yang.shi@linux.alibaba.com, mgorman@techsingularity.net
-References: <20190226091314.18446-1-osalvador@suse.de>
- <20190226140428.3e7c8188eda6a54f9da08c43@linux-foundation.org>
- <20190227213205.5wdjucqdgfqx33tr@d104.suse.de>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <5edcfeb8-4f53-0fe6-1e5b-c1e485f91d0d@suse.cz>
-Date:   Thu, 28 Feb 2019 09:06:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Feb 2019 03:07:36 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:39133 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfB1IHg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 03:07:36 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S87Kdg2955373
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 28 Feb 2019 00:07:20 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S87K9j2955369;
+        Thu, 28 Feb 2019 00:07:20 -0800
+Date:   Thu, 28 Feb 2019 00:07:20 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Tony Jones <tipbot@zytor.com>
+Message-ID: <tip-e4d053ddb4c48cbde27b4c5edd3cc8f957684e4f@git.kernel.org>
+Cc:     s1seetee@linux.vnet.ibm.com, tonyj@suse.de,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
+        acme@redhat.com, mingo@kernel.org
+Reply-To: mingo@kernel.org, acme@redhat.com, tonyj@suse.de,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
+          s1seetee@linux.vnet.ibm.com
+In-Reply-To: <20190222230619.17887-8-tonyj@suse.de>
+References: <20190222230619.17887-8-tonyj@suse.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf script python: Add Python3 support to
+ mem-phys-addr.py
+Git-Commit-ID: e4d053ddb4c48cbde27b4c5edd3cc8f957684e4f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190227213205.5wdjucqdgfqx33tr@d104.suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/27/19 10:32 PM, Oscar Salvador wrote:
-> On Tue, Feb 26, 2019 at 02:04:28PM -0800, Andrew Morton wrote:
->> How is this going to affect existing userspace which is aware of the
->> current behaviour?
-> 
-> Well, current behavior is not really predictable.
-> Our customer was "surprised" that the call to mremap() failed, but the regions
-> got unmapped nevertheless.
-> They found it the hard way when they got a segfault when trying to write to those
-> regions when cleaning up. 
-> 
-> As I said in the changelog, the possibility for false positives exists, due to
-> the fact that we might get rid of several vma's when unmapping, but I do not
-> expect existing userspace applications to start failing.
-> Should be that the case, we can revert the patch, it is not that it adds a lot
-> of churn.
+Commit-ID:  e4d053ddb4c48cbde27b4c5edd3cc8f957684e4f
+Gitweb:     https://git.kernel.org/tip/e4d053ddb4c48cbde27b4c5edd3cc8f957684e4f
+Author:     Tony Jones <tonyj@suse.de>
+AuthorDate: Fri, 22 Feb 2019 15:06:11 -0800
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 25 Feb 2019 17:16:51 -0300
 
-Hopefully the only program that would start failing would be a LTP test
-testing the current behavior near the limit (if such test exists). And
-that can be adjusted.
+perf script python: Add Python3 support to mem-phys-addr.py
 
->> And how does it affect your existing cleanup code, come to that?  Does
->> it work as well or better after this change?
-> 
-> I guess the customer can trust more reliable that the maps were left untouched.
-> I still have my reserves though.
-> 
-> We can get as far as move_vma(), and copy_vma() can fail returning -ENOMEM.
-> (Or not due to the "too small to fail" ?)
-> 
+Support both Python2 and Python3 in the mem-phys-addr.py script
 
+There may be differences in the ordering of output lines due to
+differences in dictionary ordering etc.  However the format within lines
+should be unchanged.
+
+The use of 'from __future__' implies the minimum supported Python2 version
+is now v2.6
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Link: http://lkml.kernel.org/r/20190222230619.17887-8-tonyj@suse.de
+Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/scripts/python/mem-phys-addr.py | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/tools/perf/scripts/python/mem-phys-addr.py b/tools/perf/scripts/python/mem-phys-addr.py
+index ebee2c5ae496..fb0bbcbfa0f0 100644
+--- a/tools/perf/scripts/python/mem-phys-addr.py
++++ b/tools/perf/scripts/python/mem-phys-addr.py
+@@ -4,6 +4,8 @@
+ # Copyright (c) 2018, Intel Corporation.
+ 
+ from __future__ import division
++from __future__ import print_function
++
+ import os
+ import sys
+ import struct
+@@ -31,21 +33,23 @@ def parse_iomem():
+ 	for i, j in enumerate(f):
+ 		m = re.split('-|:',j,2)
+ 		if m[2].strip() == 'System RAM':
+-			system_ram.append(long(m[0], 16))
+-			system_ram.append(long(m[1], 16))
++			system_ram.append(int(m[0], 16))
++			system_ram.append(int(m[1], 16))
+ 		if m[2].strip() == 'Persistent Memory':
+-			pmem.append(long(m[0], 16))
+-			pmem.append(long(m[1], 16))
++			pmem.append(int(m[0], 16))
++			pmem.append(int(m[1], 16))
+ 
+ def print_memory_type():
+-	print "Event: %s" % (event_name)
+-	print "%-40s  %10s  %10s\n" % ("Memory type", "count", "percentage"),
+-	print "%-40s  %10s  %10s\n" % ("----------------------------------------", \
++	print("Event: %s" % (event_name))
++	print("%-40s  %10s  %10s\n" % ("Memory type", "count", "percentage"), end='')
++	print("%-40s  %10s  %10s\n" % ("----------------------------------------",
+ 					"-----------", "-----------"),
++                                        end='');
+ 	total = sum(load_mem_type_cnt.values())
+ 	for mem_type, count in sorted(load_mem_type_cnt.most_common(), \
+-					key = lambda(k, v): (v, k), reverse = True):
+-		print "%-40s  %10d  %10.1f%%\n" % (mem_type, count, 100 * count / total),
++					key = lambda kv: (kv[1], kv[0]), reverse = True):
++		print("%-40s  %10d  %10.1f%%\n" % (mem_type, count, 100 * count / total),
++                        end='')
+ 
+ def trace_begin():
+ 	parse_iomem()
+@@ -80,7 +84,7 @@ def find_memory_type(phys_addr):
+ 	f.seek(0, 0)
+ 	for j in f:
+ 		m = re.split('-|:',j,2)
+-		if long(m[0], 16) <= phys_addr <= long(m[1], 16):
++		if int(m[0], 16) <= phys_addr <= int(m[1], 16):
+ 			return m[2]
+ 	return "N/A"
+ 
