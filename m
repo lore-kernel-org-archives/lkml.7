@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9769DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D75C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649252133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A41A20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551368032;
-	bh=2QvFP32Ga8j3xHaC7/6eUD4L8ANF7U/SBoGPBU2EqNU=;
+	s=default; t=1551368040;
+	bh=ZsqKXICJm5SqmJ62b5L1X5qx0uaMbjJcRC2+EtDtRf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YpVrJipQqBWq5NTPXOg3BcQWlx7U8AHsBzBAXt4grS5jS+50oPPtM/7lVQ07Mfc6Z
-	 U+0hlj3zkOOMy/WqgT14BtZI3TfY5cEPyFGbGA+lL5DkzsiMpeRE5OdsyixwlJ0Cov
-	 /y+ehRo+2uSxScXMy6zV111OceaxT4aATL5lNVJc=
+	b=jQq08NcG0ClEYZDvfMQCtt2GETX6AI50klzTSHw2g7JscCHXE0rf/Gg+mNuOneo1K
+	 ldd6OqnAdyayouozCYr1m4ZGYhiuD65snSms15DKQOwhwLLgP4t++wh+FeLflo7lOT
+	 Cgtb1rFnCmF1E7GrA9l1rrJ/hni0/QXmF+Tyw+00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389200AbfB1Pdu (ORCPT
+        id S1731544AbfB1PIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:33:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40872 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:08:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732791AbfB1PIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:08:37 -0500
+        id S1732816AbfB1PI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:08:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2524F2184A;
-        Thu, 28 Feb 2019 15:08:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DA1B2184A;
+        Thu, 28 Feb 2019 15:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366515;
-        bh=2QvFP32Ga8j3xHaC7/6eUD4L8ANF7U/SBoGPBU2EqNU=;
+        s=default; t=1551366508;
+        bh=ZsqKXICJm5SqmJ62b5L1X5qx0uaMbjJcRC2+EtDtRf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tjFlJbQ1wfDu4lIApae8e9ovzJO1fh3deXQyFtUZM/STA87B5qC7EJzNu0+aR/Jkd
-         jHHr0EhIiD79CVCW3ug/tj6/lMMn46ZZKjKnGDwLKBR2VCshnezSdu5MRa+2kuf1W6
-         b/lcMSP0E+maoBRn2rLLcQ3+TNPaAaoEmD3C2Rhg=
+        b=X/Zm1KFRY59fsv3INBRRLrEXnpdXN5+jxSqI52dRyiMl0nPyuF+MTyWsrMyc3jHPh
+         KI0oBjZiBHx6Zz7yP4X7YrAYpa/xgtMaWQzuXcH0oVTTpIXLGZHgv9ogL4eiPizMKC
+         BPwe5kQV6mi/rdtrD76lNZRYZC57alSFDDuCwGxg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 14/81] wlcore: sdio: Fixup power on/off sequence
-Date:   Thu, 28 Feb 2019 10:07:06 -0500
-Message-Id: <20190228150813.10256-14-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 10/81] arm64: dts: renesas: r8a7796: Enable DMA for SCIF2
+Date:   Thu, 28 Feb 2019 10:07:02 -0500
+Message-Id: <20190228150813.10256-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -59,78 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 13e62626c578d9889ebbda7c521be5adff9bef8e ]
+[ Upstream commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4 ]
 
-During "wlan-up", we are programming the FW into the WiFi-chip. However,
-re-programming the FW doesn't work, unless a power cycle of the WiFi-chip
-is made in-between the programmings.
+SCIF2 on R-Car M3-W can be used with both DMAC1 and DMAC2.
 
-To conform to this requirement and to fix the regression in a simple way,
-let's start by allowing that the SDIO card (WiFi-chip) may stay powered on
-(runtime resumed) when wl12xx_sdio_power_off() returns. The intent with the
-current code is to treat this scenario as an error, but unfortunate this
-doesn't work as expected, so let's fix this.
-
-The other part is to guarantee that a power cycle of the SDIO card has been
-completed when wl12xx_sdio_power_on() returns, as to allow the FW
-programming to succeed. However, relying solely on runtime PM to deal with
-this isn't sufficient. For example, userspace may prevent runtime suspend
-via sysfs for the device that represents the SDIO card, leading to that the
-mmc core also keeps it powered on. For this reason, let's instead do a
-brute force power cycle in wl12xx_sdio_power_on().
-
-Fixes: 728a9dc61f13 ("wlcore: sdio: Fix flakey SDIO runtime PM handling")
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Tested-by: Tony Lindgren <tony@atomide.com>
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: dbcae5ea4bd27409 ("arm64: dts: r8a7796: Enable SCIF DMA")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/sdio.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index bd10165d7eec5..4d4b077011497 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -164,6 +164,12 @@ static int wl12xx_sdio_power_on(struct wl12xx_sdio_glue *glue)
- 	}
- 
- 	sdio_claim_host(func);
-+	/*
-+	 * To guarantee that the SDIO card is power cycled, as required to make
-+	 * the FW programming to succeed, let's do a brute force HW reset.
-+	 */
-+	mmc_hw_reset(card->host);
-+
- 	sdio_enable_func(func);
- 	sdio_release_host(func);
- 
-@@ -174,20 +180,13 @@ static int wl12xx_sdio_power_off(struct wl12xx_sdio_glue *glue)
- {
- 	struct sdio_func *func = dev_to_sdio_func(glue->dev);
- 	struct mmc_card *card = func->card;
--	int error;
- 
- 	sdio_claim_host(func);
- 	sdio_disable_func(func);
- 	sdio_release_host(func);
- 
- 	/* Let runtime PM know the card is powered off */
--	error = pm_runtime_put(&card->dev);
--	if (error < 0 && error != -EBUSY) {
--		dev_err(&card->dev, "%s failed: %i\n", __func__, error);
--
--		return error;
--	}
--
-+	pm_runtime_put(&card->dev);
- 	return 0;
- }
- 
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 1ec6aaa520c19..09320caea54ed 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -1160,6 +1160,9 @@
+ 				 <&cpg CPG_CORE R8A7796_CLK_S3D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
++			       <&dmac2 0x13>, <&dmac2 0x12>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+ 			resets = <&cpg 310>;
+ 			status = "disabled";
 -- 
 2.19.1
 
