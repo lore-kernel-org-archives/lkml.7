@@ -2,104 +2,92 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119C6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABB1C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF56021850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D596421850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731465AbfB1HLm (ORCPT
+        id S1731484AbfB1HLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:11:42 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:41933 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727645AbfB1HLl (ORCPT
+        Thu, 28 Feb 2019 02:11:47 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:38646 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731467AbfB1HLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:11:41 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7BCTT2939434
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Feb 2019 23:11:12 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7BBMj2939431;
-        Wed, 27 Feb 2019 23:11:11 -0800
-Date:   Wed, 27 Feb 2019 23:11:11 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Bart Van Assche <tipbot@zytor.com>
-Message-ID: <tip-527af3ea273b2cf0c017a2c90090b3c94af8aba4@git.kernel.org>
-Cc:     peterz@infradead.org, johannes@sipsolutions.net,
-        bvanassche@acm.org, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, paulmck@linux.vnet.ibm.com,
-        tglx@linutronix.de, longman@redhat.com, akpm@linux-foundation.org,
-        mingo@kernel.org, will.deacon@arm.com, hpa@zytor.com
-Reply-To: paulmck@linux.vnet.ibm.com, torvalds@linux-foundation.org,
-          johannes@sipsolutions.net, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, bvanassche@acm.org, hpa@zytor.com,
-          tglx@linutronix.de, akpm@linux-foundation.org,
-          longman@redhat.com, will.deacon@arm.com, mingo@kernel.org
-In-Reply-To: <20190214230058.196511-15-bvanassche@acm.org>
-References: <20190214230058.196511-15-bvanassche@acm.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Fix a comment in
- add_chain_cache()
-Git-Commit-ID: 527af3ea273b2cf0c017a2c90090b3c94af8aba4
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 28 Feb 2019 02:11:47 -0500
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id B188372CC53;
+        Thu, 28 Feb 2019 10:11:43 +0300 (MSK)
+Received: from altlinux.org (sole.flsd.net [185.75.180.6])
+        by imap.altlinux.org (Postfix) with ESMTPSA id 9C7434A4AE7;
+        Thu, 28 Feb 2019 10:11:43 +0300 (MSK)
+Date:   Thu, 28 Feb 2019 10:11:43 +0300
+From:   Vitaly Chikunov <vt@altlinux.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/4] X.509: Parse public key parameters from x509 for
+ akcipher
+Message-ID: <20190228071143.mstflzxozj4bfpix@altlinux.org>
+Mail-Followup-To: Herbert Xu <herbert@gondor.apana.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190106133608.820-1-vt@altlinux.org>
+ <20190106133608.820-2-vt@altlinux.org>
+ <20190209214240.56gq7ivn3pw3bssf@altlinux.org>
+ <20190210184628.yupsxgjlaicwbxg6@altlinux.org>
+ <20190219043732.x3sbwzqlz4ikntxo@gondor.apana.org.au>
+ <20190224064840.hii4ccjksjdnewae@altlinux.org>
+ <20190228061444.3escryzoit3idtwg@gondor.apana.org.au>
+ <20190228070449.gjwoq4c2b3x5grie@altlinux.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=koi8-r
 Content-Disposition: inline
+In-Reply-To: <20190228070449.gjwoq4c2b3x5grie@altlinux.org>
+User-Agent: NeoMutt/20171215-106-ac61c7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  527af3ea273b2cf0c017a2c90090b3c94af8aba4
-Gitweb:     https://git.kernel.org/tip/527af3ea273b2cf0c017a2c90090b3c94af8aba4
-Author:     Bart Van Assche <bvanassche@acm.org>
-AuthorDate: Thu, 14 Feb 2019 15:00:49 -0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 28 Feb 2019 07:55:45 +0100
+On Thu, Feb 28, 2019 at 10:04:49AM +0300, Vitaly Chikunov wrote:
+> Herbert,
+> 
+> On Thu, Feb 28, 2019 at 02:14:44PM +0800, Herbert Xu wrote:
+> > On Sun, Feb 24, 2019 at 09:48:40AM +0300, Vitaly Chikunov wrote:
+> > > 
+> > > If we pass SubjectPublicKeyInfo into set_pub_key itself (making
+> > > set_params not needed) we will break ABI and compatibility with RSA
+> > > drivers, because whole SubjectPublicKeyInfo is not expected by the
+> > 
+> > This compatibility does not matter.  We can always add translating
+> > layers into the crypto API to deal with this.  The only ABI that
+> > matters is the one to user-space.
+> 
+> It seems that you insist on set_params to be removed and both key and
+> params to be passed into set_{pub,priv}_key. This means reworking all
+> existing RSA drivers and callers, right? Can you please confirm that
+> huge rework to avoid misunderstanding?
+> 
+> I think to pass SubjectPublicKeyInfo into set_*_key would be overkill,
+> because TPM drivers may not have it and we would need BER encoder just
+> for that.
+> 
+> So, probably, something simple like length, key data, length, params data
+> will be enough?
 
-locking/lockdep: Fix a comment in add_chain_cache()
+Or maybe we could just add additional argument to set_{pub,priv}_key?
+(If you agree to change that ABI anyway).
 
-Reflect that add_chain_cache() is always called with the graph lock held.
-
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: johannes.berg@intel.com
-Cc: tj@kernel.org
-Link: https://lkml.kernel.org/r/20190214230058.196511-15-bvanassche@acm.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/lockdep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 753a9b758266..ec0cb794f70d 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2266,7 +2266,7 @@ static inline int add_chain_cache(struct task_struct *curr,
- 	 */
- 
- 	/*
--	 * We might need to take the graph lock, ensure we've got IRQs
-+	 * The caller must hold the graph lock, ensure we've got IRQs
- 	 * disabled to make this an IRQ-safe lock.. for recursion reasons
- 	 * lockdep won't complain about its own locking errors.
- 	 */
+> Thanks,
