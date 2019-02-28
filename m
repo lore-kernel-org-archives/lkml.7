@@ -2,129 +2,73 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E4DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5345C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94DE2084F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B03E218D0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387698AbfB1UwA (ORCPT
+        id S2388158AbfB1UwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 15:52:00 -0500
-Received: from gateway20.websitewelcome.com ([192.185.64.36]:46553 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726172AbfB1UwA (ORCPT
+        Thu, 28 Feb 2019 15:52:20 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:59537 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387795AbfB1UwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 15:52:00 -0500
-X-Greylist: delayed 1435 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 Feb 2019 15:51:59 EST
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 50E88400E8E5F
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 14:28:04 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id zSHkgPGcPdnCezSHkgLLS3; Thu, 28 Feb 2019 14:28:04 -0600
-X-Authority-Reason: nr=8
-Received: from [189.250.127.169] (port=58214 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1gzSHh-001Ecm-FM; Thu, 28 Feb 2019 14:28:01 -0600
-Date:   Thu, 28 Feb 2019 14:27:59 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v2] scsi: NCR5380: Mark expected switch fall-through
-Message-ID: <20190228202759.GA5883@embeddedor>
+        Thu, 28 Feb 2019 15:52:19 -0500
+X-Originating-IP: 86.202.231.219
+Received: from localhost (lfbn-lyo-1-149-219.w86-202.abo.wanadoo.fr [86.202.231.219])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id DB0EA240002;
+        Thu, 28 Feb 2019 20:52:14 +0000 (UTC)
+Date:   Thu, 28 Feb 2019 21:52:14 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Claudiu.Beznea@microchip.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
+        bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
+        thierry.reding@gmail.com, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/7] add LCD support for SAM9X60
+Message-ID: <20190228205214.GD23094@piout.net>
+References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
+ <20190228182119.GA28318@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.169
-X-Source-L: No
-X-Exim-ID: 1gzSHh-001Ecm-FM
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.169]:58214
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190228182119.GA28318@ravnborg.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
+On 28/02/2019 19:21:19+0100, Sam Ravnborg wrote:
+> Hi Claudiu
+> 
+> On Wed, Feb 27, 2019 at 04:24:11PM +0000, Claudiu.Beznea@microchip.com wrote:
+> > From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> > 
+> > Hi,
+> > 
+> > These patches adds support for SAM9X60's LCD controller.
+> Can you elaborate a little more which chips that are relevant.
+> To be able to look into the right data-sheet, while reviewing.
+> Link to data-sheet would be nice too.
+> 
 
-This patch fixes the following warning:
+sam9x60 is the chip name (i.e. x is not a wildcard). I don't think the
+datasheet is finished/public yet.
 
-In file included from drivers/scsi/dmx3191d.c:48:
-drivers/scsi/NCR5380.c: In function ‘NCR5380_information_transfer’:
-drivers/scsi/NCR5380.c:1933:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-      if (!hostdata->connected)
-         ^
-drivers/scsi/NCR5380.c:1937:5: note: here
-     default:
-     ^~~~~~~
 
-Warning level 3 was used: -Wimplicit-fallthrough=3
-
-Notice that, in this particular case, the code comment is modified
-in accordance with what GCC is expecting to find.
-
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-Changes in v2:
- - Update commit log.
- - Move code comment after the default label and
-   retain reason for fall-through in comment as
-   requested by Michael Schmitz.
-
- drivers/scsi/NCR5380.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 01c23d27f290..985d1c053578 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -1933,13 +1933,12 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
- 					if (!hostdata->connected)
- 						return;
- 
--					/* Fall through to reject message */
--
-+					/* Fall through - to reject message */
-+				default:
- 					/*
--					 * If we get something weird that we aren't expecting,
--					 * reject it.
-+					 * If we get something weird that we
-+					 * aren't expecting, reject it.
- 					 */
--				default:
- 					if (tmp == EXTENDED_MESSAGE)
- 						scmd_printk(KERN_INFO, cmd,
- 						            "rejecting unknown extended message code %02x, length %d\n",
 -- 
-2.21.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
