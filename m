@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5831DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4032FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23ED3218D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01720218D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366671;
-	bh=7GBN7F6r70R3eIW5++8gc7kApOT9Ro0+zP7htqEmK5o=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BIKbdp+DdXZ9t7yNmWPYs1HpnEsXJdhIix9J39vqcvFqb8s96/aYXV/4OSmYcDexD
-	 wZr6cpDwAygtA2BERzuNJjRJ4spjkGT/KXklErbHDmyYa+gi/e4aF1MmA0VpMwLIOm
-	 ZlxF+bY4x/wWCMDZuedizrtZaM568RT3ywYc1fYU=
+	s=default; t=1551366674;
+	bh=sNqcpBrNbYAymDMCfOq+RbDaqf4p0AlS67Z91fAN9IU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oc48f80WRdLYEjYJEfW6euBkqJVnXdUI//Sd2p/D2ZH1edXgV4MTG47UVsVuLibVI
+	 uALTmZeUnFj0/nRfIPuJn0VnvglUNhQ/wFtU3sfnLv324DICv8yvacgjdolyEeQM/R
+	 LRYgPBxGyy5VPdbuQVNuExctFbeVfE41DBAmJNCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387905AbfB1PLJ (ORCPT
+        id S2387918AbfB1PLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:11:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44128 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:11:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731715AbfB1PLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:08 -0500
+        id S2387907AbfB1PLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB0A12171F;
-        Thu, 28 Feb 2019 15:11:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E403A218C3;
+        Thu, 28 Feb 2019 15:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366667;
-        bh=7GBN7F6r70R3eIW5++8gc7kApOT9Ro0+zP7htqEmK5o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=170DVwyBEDD2JsGEvFJGdm2sTz0aXAweTF6m+qAwQ4Mitvn2qGL2P9Up68jbV1Med
-         JblAHSRu2pTSxt/CWryeA/GLKDm/OMHdDlHjEifS6ntoU8c2+8XSwfKun5Oewjvb9+
-         FLFb7N2SG+Qh3zkgqdHURQNKw3lCWYW84gERMCNk=
+        s=default; t=1551366669;
+        bh=sNqcpBrNbYAymDMCfOq+RbDaqf4p0AlS67Z91fAN9IU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GFySMCRJTSpyD171GZ7xzRIXgJdkPGbwGyTOlBQqPkKnbdIdCrhK9QNA47bU0chGB
+         I8skvcoZxfRHTaOqR1/qLBBlNPxx2ArFg4HhiqpnCtIABfHRSMaFbliGNEI2E83NgD
+         957TYaE/yJFCj6RFpfttqsZ7uXUyYB049gYZG7BQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/64] ARM: OMAP: dts: N950/N9: fix onenand timings
-Date:   Thu, 28 Feb 2019 10:10:02 -0500
-Message-Id: <20190228151105.11277-1-sashal@kernel.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/64] ARM: dts: sun8i: h3: Add ethernet0 alias to Beelink X2
+Date:   Thu, 28 Feb 2019 10:10:04 -0500
+Message-Id: <20190228151105.11277-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
+References: <20190228151105.11277-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,90 +57,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 8443e4843e1c2594bf5664e1d993a1be71d1befb ]
+[ Upstream commit cc4bddade114b696ab27c1a77cfc7040151306da ]
 
-Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-started using DT specified timings for GPMC, and as a result the
-OneNAND stopped working on N950/N9 as we had wrong values in the DT.
-Fix by updating the values to bootloader timings that have been tested
-to be working on both Nokia N950 and N9.
+Because "ethernet0" alias is missing, U-Boot doesn't generate board
+specific MAC address. Effect of this is random MAC address every boot
+and thus new IP address is assigned to the board.
 
-Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fix this by adding alias.
+
+Fixes: 7389172fc3ed ("ARM: dts: sun8i: h3: Enable dwmac-sun8i on the Beelink X2")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+[Maxime: Removed unneeded comment]
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-n950-n9.dtsi | 42 ++++++++++++++++++----------
- 1 file changed, 28 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-index 0d9b85317529b..e142e6c70a59f 100644
---- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-+++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-@@ -370,6 +370,19 @@
- 		compatible = "ti,omap2-onenand";
- 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
+diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+index 5d23667dc2d2e..25540b7694d59 100644
+--- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
++++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+@@ -53,7 +53,7 @@
  
-+		/*
-+		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
-+		 * bootloader set values when booted with v4.19 using both N950
-+		 * and N9 devices (OneNAND Manufacturer: Samsung):
-+		 *
-+		 *   gpmc cs0 before gpmc_cs_program_settings:
-+		 *   cs0 GPMC_CS_CONFIG1: 0xfd001202
-+		 *   cs0 GPMC_CS_CONFIG2: 0x00181800
-+		 *   cs0 GPMC_CS_CONFIG3: 0x00030300
-+		 *   cs0 GPMC_CS_CONFIG4: 0x18001804
-+		 *   cs0 GPMC_CS_CONFIG5: 0x03171d1d
-+		 *   cs0 GPMC_CS_CONFIG6: 0x97080000
-+		 */
- 		gpmc,sync-read;
- 		gpmc,sync-write;
- 		gpmc,burst-length = <16>;
-@@ -379,26 +392,27 @@
- 		gpmc,device-width = <2>;
- 		gpmc,mux-add-data = <2>;
- 		gpmc,cs-on-ns = <0>;
--		gpmc,cs-rd-off-ns = <87>;
--		gpmc,cs-wr-off-ns = <87>;
-+		gpmc,cs-rd-off-ns = <122>;
-+		gpmc,cs-wr-off-ns = <122>;
- 		gpmc,adv-on-ns = <0>;
--		gpmc,adv-rd-off-ns = <10>;
--		gpmc,adv-wr-off-ns = <10>;
--		gpmc,oe-on-ns = <15>;
--		gpmc,oe-off-ns = <87>;
-+		gpmc,adv-rd-off-ns = <15>;
-+		gpmc,adv-wr-off-ns = <15>;
-+		gpmc,oe-on-ns = <20>;
-+		gpmc,oe-off-ns = <122>;
- 		gpmc,we-on-ns = <0>;
--		gpmc,we-off-ns = <87>;
--		gpmc,rd-cycle-ns = <112>;
--		gpmc,wr-cycle-ns = <112>;
--		gpmc,access-ns = <81>;
-+		gpmc,we-off-ns = <122>;
-+		gpmc,rd-cycle-ns = <148>;
-+		gpmc,wr-cycle-ns = <148>;
-+		gpmc,access-ns = <117>;
- 		gpmc,page-burst-access-ns = <15>;
- 		gpmc,bus-turnaround-ns = <0>;
- 		gpmc,cycle2cycle-delay-ns = <0>;
- 		gpmc,wait-monitoring-ns = <0>;
--		gpmc,clk-activation-ns = <5>;
--		gpmc,wr-data-mux-bus-ns = <30>;
--		gpmc,wr-access-ns = <81>;
--		gpmc,sync-clk-ps = <15000>;
-+		gpmc,clk-activation-ns = <10>;
-+		gpmc,wr-data-mux-bus-ns = <40>;
-+		gpmc,wr-access-ns = <117>;
-+
-+		gpmc,sync-clk-ps = <15000>; /* TBC; Where this value came? */
+ 	aliases {
+ 		serial0 = &uart0;
+-		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
++		ethernet0 = &emac;
+ 		ethernet1 = &sdiowifi;
+ 	};
  
- 		/*
- 		 * MTD partition table corresponding to Nokia's MeeGo 1.2
 -- 
 2.19.1
 
