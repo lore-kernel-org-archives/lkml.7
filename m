@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCE1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66427C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9A720C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252FE20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367741;
-	bh=WL+ctsMxJivo1IpC+iyz+XlXQndVw9IZtDO8Rn6S6QY=;
+	s=default; t=1551367748;
+	bh=L+hbZ7fSxfbGTnpeQKZtlJuuEWJaJbvt777eMxAH1Xw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y1CjdZdlj0TM4UDoBheqV6375LW2xD2lFUNVaEgxOEkJkByvj8GHNOq5Sl89hP/Cf
-	 ouYtecr+JvMGzNXjkoMFewmJpKm/4mgQkEn6OujlyhLd6/4friHGHiiHWdFdPl5dhz
-	 d77eFX+MpQBuTnciCSNMDcndkDOWXedsX4FKEa+Y=
+	b=kCPMjUjjxWv6lVsLd6dEOCicizMo3lTaRxnYnDBaBDl+NUCRrWE+exwgH+SKJd/FN
+	 K5XzOKVosU0kTZbYO2lwZN9Y01+ownses2DqUA2uE3oOnXfyo9brqPIBP0YPN+wtxV
+	 Wb6bZ9UOSmH9f0F4hyfEIqfO38rEm0djkKiseNTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388842AbfB1P3A (ORCPT
+        id S2387789AbfB1PKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:29:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43638 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:10:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387788AbfB1PKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:10:48 -0500
+        id S2387771AbfB1PKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:10:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8F58218C3;
-        Thu, 28 Feb 2019 15:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00F3E2171F;
+        Thu, 28 Feb 2019 15:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366647;
-        bh=WL+ctsMxJivo1IpC+iyz+XlXQndVw9IZtDO8Rn6S6QY=;
+        s=default; t=1551366642;
+        bh=L+hbZ7fSxfbGTnpeQKZtlJuuEWJaJbvt777eMxAH1Xw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YsSYsMuCCNKPYf6xH+QUNwauLdGxTmIhulbDi1FVQwR81/55gfAT2Vw2dK3w5qiV5
-         U/jUprAOltPIa1M9wcQ/tlxTUsgfmcfxv+piZhyGHoEyBFlhZq6fROMgZMfwvop06y
-         8xqvPHs7Slel2eGUa5s+GzFn29yMW+4JHOT3qu8c=
+        b=WeRBKrqvFfxPYIPIy1z3zFTx4545FbuRQtc5EgY7bMdrzRR7DlnXDa+i6U3dxJL++
+         l0GoKlCt4p9DFwOQxkVsmyV+vbIU2FgnOVGqfQhev0ZB/W7rwZokMKkM2ZrUr2xKC5
+         +xSCtytbAaBeDTjl/gCKbXPLkHe7JZDHlAJyRZPk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philip Yang <Philip.Yang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.20 71/81] drm/amdgpu: use spin_lock_irqsave to protect vm_manager.pasid_idr
-Date:   Thu, 28 Feb 2019 10:08:03 -0500
-Message-Id: <20190228150813.10256-71-sashal@kernel.org>
+Cc:     Jun-Ru Chang <jrjang@realtek.com>, Tony Wu <tonywu@realtek.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
+        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 68/81] MIPS: Remove function size check in get_frame_info()
+Date:   Thu, 28 Feb 2019 10:08:00 -0500
+Message-Id: <20190228150813.10256-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,43 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philip Yang <Philip.Yang@amd.com>
+From: Jun-Ru Chang <jrjang@realtek.com>
 
-[ Upstream commit 0a5f49cbf9d6ad3721c16f8a6d823363ea7a160f ]
+[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
 
-amdgpu_vm_get_task_info is called from interrupt handler and sched timeout
-workqueue, we should use irq version spin_lock to avoid deadlock.
+Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
+microMIPS function size.") introduces additional function size
+check for microMIPS by only checking insn between ip and ip + func_size.
+However, func_size in get_frame_info() is always 0 if KALLSYMS is not
+enabled. This causes get_frame_info() to return immediately without
+calculating correct frame_size, which in turn causes "Can't analyze
+schedule() prologue" warning messages at boot time.
 
-Signed-off-by: Philip Yang <Philip.Yang@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This patch removes func_size check, and let the frame_size check run
+up to 128 insns for both MIPS and microMIPS.
+
+Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
+Signed-off-by: Tony Wu <tonywu@realtek.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <macro@mips.com>
+Cc: <yamada.masahiro@socionext.com>
+Cc: <peterz@infradead.org>
+Cc: <mingo@kernel.org>
+Cc: <linux-mips@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/mips/kernel/process.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index 62df4bd0a0fc2..16c83155ef5ca 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -3405,14 +3405,15 @@ void amdgpu_vm_get_task_info(struct amdgpu_device *adev, unsigned int pasid,
- 			 struct amdgpu_task_info *task_info)
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index d4f7fd4550e10..85522c137f19f 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -371,7 +371,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip, int *frame_size)
+ static int get_frame_info(struct mips_frame_info *info)
  {
- 	struct amdgpu_vm *vm;
-+	unsigned long flags;
+ 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
+-	union mips_instruction insn, *ip, *ip_end;
++	union mips_instruction insn, *ip;
+ 	const unsigned int max_insns = 128;
+ 	unsigned int last_insn_size = 0;
+ 	unsigned int i;
+@@ -384,10 +384,9 @@ static int get_frame_info(struct mips_frame_info *info)
+ 	if (!ip)
+ 		goto err;
  
--	spin_lock(&adev->vm_manager.pasid_lock);
-+	spin_lock_irqsave(&adev->vm_manager.pasid_lock, flags);
- 
- 	vm = idr_find(&adev->vm_manager.pasid_idr, pasid);
- 	if (vm)
- 		*task_info = vm->task_info;
- 
--	spin_unlock(&adev->vm_manager.pasid_lock);
-+	spin_unlock_irqrestore(&adev->vm_manager.pasid_lock, flags);
- }
- 
- /**
+-	ip_end = (void *)ip + info->func_size;
+-
+-	for (i = 0; i < max_insns && ip < ip_end; i++) {
++	for (i = 0; i < max_insns; i++) {
+ 		ip = (void *)ip + last_insn_size;
++
+ 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
+ 			insn.word = ip->halfword[0] << 16;
+ 			last_insn_size = 2;
 -- 
 2.19.1
 
