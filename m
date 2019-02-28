@@ -2,94 +2,68 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0D3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B805EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEAC2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367986;
-	bh=3KMSoKF2lXxLtF/xHMQLLdK0xqwETA/iRrw+b8YAq4c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tWGhk4l8jZtueJyG5dDhKa4QO0jm0bO7+iMoPluoH64Rtt8XkU/Ty7reQ0794FqMY
-	 sICNZztWUx/AsiZOun5og7mKzAO2H9GULxW0WaY8vTDiDQwPAIJDznIbio5bjdMzb5
-	 ZfWlPOjr+4OQu1ZHItlVWp9Hsvq8rf1mXaT4GXxs=
+	by mail.kernel.org (Postfix) with ESMTP id 87D4B20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:33:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3R+pP9ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388183AbfB1PdF (ORCPT
+        id S2389135AbfB1PdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:33:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41220 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:33:09 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:41848 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733133AbfB1PIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:08:49 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E5D0218E0;
-        Thu, 28 Feb 2019 15:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366528;
-        bh=3KMSoKF2lXxLtF/xHMQLLdK0xqwETA/iRrw+b8YAq4c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EOGwbtlQ8nxR486CuaZU+fyBMxnRJ1Jpn9hFwK5QO60kJVe5kGanrCpx76vhb78w1
-         CbMjvDJ/Pb1v47HTxbQRCCr7uuLGFDFJua+cEDjUEOuU7ak9j2jBKbZ8fYRMOXKq2J
-         ED+u349RBeRMLQ4phmyZLUCeXErcr2BlDYlkkbpM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 22/81] arm64: dts: add msm8996 compatible to gicv3
-Date:   Thu, 28 Feb 2019 10:07:14 -0500
-Message-Id: <20190228150813.10256-22-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
-References: <20190228150813.10256-1-sashal@kernel.org>
+        id S2387501AbfB1PdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:33:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=LGQa47AsbWpP/5YhYun05kE7ORpuATn4szWRFaYP6WU=; b=3R+pP9ww9AJBbHnq/pg8w0y/99
+        CA2dy6GqJwJ8XIyOD7/TxH+ADCXnbQJkeehvh4+m+gPTe4ksCnBrmiBTnASRirLznSkx/O+g12k87
+        zh02DEhLJccYypoH4Dv8RcC9iNrDxSt/oudPLzO3e4DfBPt/ND1EUYa0yFdGHTR8bxKc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1gzNfx-0003W7-Mv; Thu, 28 Feb 2019 16:32:45 +0100
+Date:   Thu, 28 Feb 2019 16:32:45 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Flavio Suligoi <f.suligoi@asem.it>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] net: e1000e: add MAC address kernel cmd line parameter
+Message-ID: <20190228153245.GA17912@lunn.ch>
+References: <1551361135-404-1-git-send-email-f.suligoi@asem.it>
+ <1551361951-1595-1-git-send-email-f.suligoi@asem.it>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551361951-1595-1-git-send-email-f.suligoi@asem.it>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Thu, Feb 28, 2019 at 02:52:31PM +0100, Flavio Suligoi wrote:
+> Sometimes, in some embedded systems boards (i.e. ARM boards),
+> the NVM eeprom is not mounted, to save cost and space.
+> 
+> In this case it is necessary to bypass the NVM management
+> and directly force the MAC address using a kernel command-line
+> parameter (macaddr).
 
-[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
+Hi Flavio
 
-Add compatible to gicv3 node to enable quirk required to restrict writing
-to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
+Why not use device tree, since this is an ARM platform?
 
-With this quirk MSM8996 can at least boot out of mainline, which can help
-community to work with boards based on MSM8996.
-
-Without this patch Qualcomm DB820c board reboots on mainline.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index b29fe80d72883..461612a5ab5e4 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -397,7 +397,7 @@
- 		};
- 
- 		intc: interrupt-controller@9bc0000 {
--			compatible = "arm,gic-v3";
-+			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			#redistributor-regions = <1>;
--- 
-2.19.1
-
+    Andrew
