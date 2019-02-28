@@ -2,236 +2,127 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0D1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7D0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7205A20857
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3033120857
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:17:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lvkQZQJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731745AbfB1LOY (ORCPT
+        id S1731945AbfB1LRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 06:14:24 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:56171 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbfB1LOX (ORCPT
+        Thu, 28 Feb 2019 06:17:13 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:36067 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbfB1LRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 06:14:23 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1SBD07L3014413
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 28 Feb 2019 03:13:00 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1SBCxsX3014410;
-        Thu, 28 Feb 2019 03:12:59 -0800
-Date:   Thu, 28 Feb 2019 03:12:59 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Daniel Borkmann <tipbot@zytor.com>
-Message-ID: <tip-ce02ef06fcf7a399a6276adb83f37373d10cbbe1@git.kernel.org>
-Cc:     magnus.karlsson@intel.com, brouer@redhat.com, davem@davemloft.net,
-        bjorn.topel@intel.com, mingo@kernel.org, daniel@iogearbox.net,
-        ast@kernel.org, dwmw2@infradead.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
-        tglx@linutronix.de, hpa@zytor.com, luto@kernel.org
-Reply-To: daniel@iogearbox.net, mingo@kernel.org, bjorn.topel@intel.com,
-          davem@davemloft.net, brouer@redhat.com,
-          magnus.karlsson@intel.com, luto@kernel.org, hpa@zytor.com,
-          tglx@linutronix.de, peterz@infradead.org, bp@alien8.de,
-          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          dwmw2@infradead.org, ast@kernel.org
-In-Reply-To: <20190221221941.29358-1-daniel@iogearbox.net>
-References: <20190221221941.29358-1-daniel@iogearbox.net>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/build] x86, retpolines: Raise limit for generating
- indirect calls from switch-case
-Git-Commit-ID: ce02ef06fcf7a399a6276adb83f37373d10cbbe1
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 28 Feb 2019 06:17:13 -0500
+Received: by mail-it1-f195.google.com with SMTP id v83so15065231itf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 03:17:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JEqCH0xeq/DKANfJYARB3choSwMbkMxuXgceEII+fxc=;
+        b=lvkQZQJM3bIepgY8ryxe6yBsM0QLCZUK+oYoObsdY7Xp/3OotdEzIHhifzZRJLEVV7
+         GvjbF7gc7fmj5y3V1mXf9+TRUINIR/80Tr+sFnyDcYj5uch9GEKJqsBMsYNz1sUnnvWG
+         bKwY2VtMagWcrWpXQlLdEeKNxresxU6irhvd940AGu+XvWKSqFA981PrIXMADMylLzfU
+         yP9vsa3sxLe8oy7m7JCC3yEo2ZBSwEWa1XHlNe/1slwU1poeiJ0hvfJk+aUzUZPwuFAX
+         oDH5h9Il0JA3xZBuEac5FkddbEPo/Vp7+bv2caj1R4dZfXdrii8uettZjnu4wyOG4AoX
+         3rSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JEqCH0xeq/DKANfJYARB3choSwMbkMxuXgceEII+fxc=;
+        b=KW+5pRHoQw9l83hx0luC/HOa6l+c+c8/04Njm9l4KGydBCPm8k2ISQYw9hHk04Xl20
+         FiIaf07mQp0CAUsVZVEFWd8azsX5OIuqr2SFJhkzz8MeQAEbbF7pTYguGkAq0xCZv4I7
+         voSNfQX7uJKWIZmV1vFDm/R4gcrEN8eZrj9V8wqPGHbCf7hVKxzDnHLtHa9PUB9A/dU3
+         UWBxVWhvPTzZClxVEyVO1GeUPIEnlC+vgiawWp5jWZH5Q8zqBZ0KwQ637p5rurW8e2sI
+         pBgAaOOeicsay5k88Nd8nolenO7E6mXRdErQxCf3dV05A7rBoBwphhccIsv7/ms8tvBj
+         2+3g==
+X-Gm-Message-State: APjAAAW4Ls7SD3yPpawhx8yvFSLEqGOV7q/fGwLfz3yclEOB7MdlTAKr
+        xP3Q28Y5wZluK6OJdtJTXYr8Pole4n5X54u0mIiFEA==
+X-Google-Smtp-Source: AHgI3Ias1DO9gaSTOptHADlxI8kCjfhOIoSN5CAHE9bZL+71Ano9AGzLkASONE3XtdvCtRSEz0cP2AuyR0lwpBWfc/w=
+X-Received: by 2002:a24:9686:: with SMTP id z128mr2501961itd.97.1551352632347;
+ Thu, 28 Feb 2019 03:17:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <1550928043-14889-1-git-send-email-Julia.Lawall@lip6.fr> <1550928043-14889-6-git-send-email-Julia.Lawall@lip6.fr>
+In-Reply-To: <1550928043-14889-6-git-send-email-Julia.Lawall@lip6.fr>
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Thu, 28 Feb 2019 12:17:01 +0100
+Message-ID: <CAHUa44HdtbAocBgc3gj5RZZPQs_uf85XnDsgUKfGPuzi+H0Z7w@mail.gmail.com>
+Subject: Re: [PATCH 05/12] tee: optee: add missing of_node_put after of_device_is_available
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     kernel-janitors@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ce02ef06fcf7a399a6276adb83f37373d10cbbe1
-Gitweb:     https://git.kernel.org/tip/ce02ef06fcf7a399a6276adb83f37373d10cbbe1
-Author:     Daniel Borkmann <daniel@iogearbox.net>
-AuthorDate: Thu, 21 Feb 2019 23:19:41 +0100
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Thu, 28 Feb 2019 12:10:31 +0100
+Hi Julia,
+On Sat, Feb 23, 2019 at 2:58 PM Julia Lawall <Julia.Lawall@lip6.fr> wrote:
+>
+> Add an of_node_put when a tested device node is not available.
+>
+> The semantic patch that fixes this problem is as follows
+> (http://coccinelle.lip6.fr):
+>
+> // <smpl>
+> @@
+> identifier f;
+> local idexpression e;
+> expression x;
+> @@
+>
+> e = f(...);
+> ... when != of_node_put(e)
+>     when != x = e
+>     when != e = x
+>     when any
+> if (<+...of_device_is_available(e)...+>) {
+>   ... when != of_node_put(e)
+> (
+>   return e;
+> |
+> + of_node_put(e);
+>   return ...;
+> )
+> }
+> // </smpl>
+>
+> Fixes: db878f76b9ff ("tee: optee: take DT status property into account")
+> Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+>
+> ---
+>  drivers/tee/optee/core.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff -u -p a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+> --- a/drivers/tee/optee/core.c
+> +++ b/drivers/tee/optee/core.c
+> @@ -703,8 +703,10 @@ static int __init optee_driver_init(void
+>                 return -ENODEV;
+>
+>         np = of_find_matching_node(fw_np, optee_match);
+> -       if (!np || !of_device_is_available(np))
+> +       if (!np || !of_device_is_available(np)) {
+> +               of_node_put(np);
+>                 return -ENODEV;
+> +       }
+>
+>         optee = optee_probe(np);
+>         of_node_put(np);
+>
 
-x86, retpolines: Raise limit for generating indirect calls from switch-case
+Applied.
 
-From networking side, there are numerous attempts to get rid of indirect
-calls in fast-path wherever feasible in order to avoid the cost of
-retpolines, for example, just to name a few:
-
-  * 283c16a2dfd3 ("indirect call wrappers: helpers to speed-up indirect calls of builtin")
-  * aaa5d90b395a ("net: use indirect call wrappers at GRO network layer")
-  * 028e0a476684 ("net: use indirect call wrappers at GRO transport layer")
-  * 356da6d0cde3 ("dma-mapping: bypass indirect calls for dma-direct")
-  * 09772d92cd5a ("bpf: avoid retpoline for lookup/update/delete calls on maps")
-  * 10870dd89e95 ("netfilter: nf_tables: add direct calls for all builtin expressions")
-  [...]
-
-Recent work on XDP from Björn and Magnus additionally found that manually
-transforming the XDP return code switch statement with more than 5 cases
-into if-else combination would result in a considerable speedup in XDP
-layer due to avoidance of indirect calls in CONFIG_RETPOLINE enabled
-builds. On i40e driver with XDP prog attached, a 20-26% speedup has been
-observed [0]. Aside from XDP, there are many other places later in the
-networking stack's critical path with similar switch-case
-processing. Rather than fixing every XDP-enabled driver and locations in
-stack by hand, it would be good to instead raise the limit where gcc would
-emit expensive indirect calls from the switch under retpolines and stick
-with the default as-is in case of !retpoline configured kernels. This would
-also have the advantage that for archs where this is not necessary, we let
-compiler select the underlying target optimization for these constructs and
-avoid potential slow-downs by if-else hand-rewrite.
-
-In case of gcc, this setting is controlled by case-values-threshold which
-has an architecture global default that selects 4 or 5 (latter if target
-does not have a case insn that compares the bounds) where some arch back
-ends like arm64 or s390 override it with their own target hooks, for
-example, in gcc commit db7a90aa0de5 ("S/390: Disable prediction of indirect
-branches") the threshold pretty much disables jump tables by limit of 20
-under retpoline builds.  Comparing gcc's and clang's default code
-generation on x86-64 under O2 level with retpoline build results in the
-following outcome for 5 switch cases:
-
-* gcc with -mindirect-branch=thunk-inline -mindirect-branch-register:
-
-  # gdb -batch -ex 'disassemble dispatch' ./c-switch
-  Dump of assembler code for function dispatch:
-   0x0000000000400be0 <+0>:     cmp    $0x4,%edi
-   0x0000000000400be3 <+3>:     ja     0x400c35 <dispatch+85>
-   0x0000000000400be5 <+5>:     lea    0x915f8(%rip),%rdx        # 0x4921e4
-   0x0000000000400bec <+12>:    mov    %edi,%edi
-   0x0000000000400bee <+14>:    movslq (%rdx,%rdi,4),%rax
-   0x0000000000400bf2 <+18>:    add    %rdx,%rax
-   0x0000000000400bf5 <+21>:    callq  0x400c01 <dispatch+33>
-   0x0000000000400bfa <+26>:    pause
-   0x0000000000400bfc <+28>:    lfence
-   0x0000000000400bff <+31>:    jmp    0x400bfa <dispatch+26>
-   0x0000000000400c01 <+33>:    mov    %rax,(%rsp)
-   0x0000000000400c05 <+37>:    retq
-   0x0000000000400c06 <+38>:    nopw   %cs:0x0(%rax,%rax,1)
-   0x0000000000400c10 <+48>:    jmpq   0x400c90 <fn_3>
-   0x0000000000400c15 <+53>:    nopl   (%rax)
-   0x0000000000400c18 <+56>:    jmpq   0x400c70 <fn_2>
-   0x0000000000400c1d <+61>:    nopl   (%rax)
-   0x0000000000400c20 <+64>:    jmpq   0x400c50 <fn_1>
-   0x0000000000400c25 <+69>:    nopl   (%rax)
-   0x0000000000400c28 <+72>:    jmpq   0x400c40 <fn_0>
-   0x0000000000400c2d <+77>:    nopl   (%rax)
-   0x0000000000400c30 <+80>:    jmpq   0x400cb0 <fn_4>
-   0x0000000000400c35 <+85>:    push   %rax
-   0x0000000000400c36 <+86>:    callq  0x40dd80 <abort>
-  End of assembler dump.
-
-* clang with -mretpoline emitting search tree:
-
-  # gdb -batch -ex 'disassemble dispatch' ./c-switch
-  Dump of assembler code for function dispatch:
-   0x0000000000400b30 <+0>:     cmp    $0x1,%edi
-   0x0000000000400b33 <+3>:     jle    0x400b44 <dispatch+20>
-   0x0000000000400b35 <+5>:     cmp    $0x2,%edi
-   0x0000000000400b38 <+8>:     je     0x400b4d <dispatch+29>
-   0x0000000000400b3a <+10>:    cmp    $0x3,%edi
-   0x0000000000400b3d <+13>:    jne    0x400b52 <dispatch+34>
-   0x0000000000400b3f <+15>:    jmpq   0x400c50 <fn_3>
-   0x0000000000400b44 <+20>:    test   %edi,%edi
-   0x0000000000400b46 <+22>:    jne    0x400b5c <dispatch+44>
-   0x0000000000400b48 <+24>:    jmpq   0x400c20 <fn_0>
-   0x0000000000400b4d <+29>:    jmpq   0x400c40 <fn_2>
-   0x0000000000400b52 <+34>:    cmp    $0x4,%edi
-   0x0000000000400b55 <+37>:    jne    0x400b66 <dispatch+54>
-   0x0000000000400b57 <+39>:    jmpq   0x400c60 <fn_4>
-   0x0000000000400b5c <+44>:    cmp    $0x1,%edi
-   0x0000000000400b5f <+47>:    jne    0x400b66 <dispatch+54>
-   0x0000000000400b61 <+49>:    jmpq   0x400c30 <fn_1>
-   0x0000000000400b66 <+54>:    push   %rax
-   0x0000000000400b67 <+55>:    callq  0x40dd20 <abort>
-  End of assembler dump.
-
-  For sake of comparison, clang without -mretpoline:
-
-  # gdb -batch -ex 'disassemble dispatch' ./c-switch
-  Dump of assembler code for function dispatch:
-   0x0000000000400b30 <+0>:	cmp    $0x4,%edi
-   0x0000000000400b33 <+3>:	ja     0x400b57 <dispatch+39>
-   0x0000000000400b35 <+5>:	mov    %edi,%eax
-   0x0000000000400b37 <+7>:	jmpq   *0x492148(,%rax,8)
-   0x0000000000400b3e <+14>:	jmpq   0x400bf0 <fn_0>
-   0x0000000000400b43 <+19>:	jmpq   0x400c30 <fn_4>
-   0x0000000000400b48 <+24>:	jmpq   0x400c10 <fn_2>
-   0x0000000000400b4d <+29>:	jmpq   0x400c20 <fn_3>
-   0x0000000000400b52 <+34>:	jmpq   0x400c00 <fn_1>
-   0x0000000000400b57 <+39>:	push   %rax
-   0x0000000000400b58 <+40>:	callq  0x40dcf0 <abort>
-  End of assembler dump.
-
-Raising the cases to a high number (e.g. 100) will still result in similar
-code generation pattern with clang and gcc as above, in other words clang
-generally turns off jump table emission by having an extra expansion pass
-under retpoline build to turn indirectbr instructions from their IR into
-switch instructions as a built-in -mno-jump-table lowering of a switch (in
-this case, even if IR input already contained an indirect branch).
-
-For gcc, adding --param=case-values-threshold=20 as in similar fashion as
-s390 in order to raise the limit for x86 retpoline enabled builds results
-in a small vmlinux size increase of only 0.13% (before=18,027,528
-after=18,051,192). For clang this option is ignored due to i) not being
-needed as mentioned and ii) not having above cmdline
-parameter. Non-retpoline-enabled builds with gcc continue to use the
-default case-values-threshold setting, so nothing changes here.
-
-[0] https://lore.kernel.org/netdev/20190129095754.9390-1-bjorn.topel@gmail.com/
-    and "The Path to DPDK Speeds for AF_XDP", LPC 2018, networking track:
-  - http://vger.kernel.org/lpc_net2018_talks/lpc18_pres_af_xdp_perf-v3.pdf
-  - http://vger.kernel.org/lpc_net2018_talks/lpc18_paper_af_xdp_perf-v2.pdf
-
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: netdev@vger.kernel.org
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Magnus Karlsson <magnus.karlsson@intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Link: https://lkml.kernel.org/r/20190221221941.29358-1-daniel@iogearbox.net
-
----
- arch/x86/Makefile | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 9c5a67d1b9c1..f55420a67164 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -217,6 +217,11 @@ KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
- # Avoid indirect branches in kernel to deal with Spectre
- ifdef CONFIG_RETPOLINE
-   KBUILD_CFLAGS += $(RETPOLINE_CFLAGS)
-+  # Additionally, avoid generating expensive indirect jumps which
-+  # are subject to retpolines for small number of switch cases.
-+  # clang turns off jump table generation by default when under
-+  # retpoline builds, however, gcc does not for x86.
-+  KBUILD_CFLAGS += $(call cc-option,--param=case-values-threshold=20)
- endif
- 
- archscripts: scripts_basic
+Thanks,
+Jens
