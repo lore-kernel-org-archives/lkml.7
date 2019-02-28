@@ -2,112 +2,117 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242F8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A048C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB761214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E44721850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NazPIa6i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FpdFsSOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbfB1All (ORCPT
+        id S1730528AbfB1Arv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 19:41:41 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37965 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730131AbfB1All (ORCPT
+        Wed, 27 Feb 2019 19:47:51 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38345 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730139AbfB1Arv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 19:41:41 -0500
-Received: by mail-pg1-f194.google.com with SMTP id m2so8796450pgl.5;
-        Wed, 27 Feb 2019 16:41:40 -0800 (PST)
+        Wed, 27 Feb 2019 19:47:51 -0500
+Received: by mail-pg1-f196.google.com with SMTP id m2so8803182pgl.5;
+        Wed, 27 Feb 2019 16:47:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=QaQgui+Uqm7iZjL3134DAwSFPs3Gz5Qy3G0UKS3OGfM=;
-        b=NazPIa6iJZNoFtWD7cGGaFiEVBgTXdNdje7haVepGKjUIQllpMcAFoZqxHB5HmO17W
-         ZD+oy0LUW5h4av3i055X6y+DCdKZH4sB/0TiT9GmRasNaFmA/mgvFPAT0/jadamQN7Oe
-         d+Gqa+q1uZBC7A1weRAC7BjnVuKYqrx0RrxZkTDGWm233bPy2HEiwd2rsNnC7x45e2Bt
-         eV5qaiZGMMgi8Xpni06DXE7429T9QeOcDsKzX7BDDsM0/mgukoNkd1vfvtZhbFHRtSCc
-         A3WLERTQInKuVv4ZQXEXYsdwr6dnu1bIrt4gpHSzr7839azzlw8Fom3GcWjC1FZ0khvb
-         NfIA==
+        bh=H3hXfDj0PXBoFA9cGgNBp7TmibItk5rJ8IiapF7qRlI=;
+        b=FpdFsSORXTE5ALYt/FEXzffH7PDPJuT7po/2MhlkDBB//oLyzu6aeKWhqQ+awdLqqX
+         t1arCbISgUK0YFJNR0PODGctCHdIuymlgyOCnBhLZzGYBN59S9wB+B8VvY2xYBlIkUQe
+         /RqKqh6T3GMhyrum2Ugp5n+ZYzx3/0Dd1CgZP50Dfea7Xd/gBisQO5IfEtMz9hX+hiyk
+         HaGA93icCJAbnMJZtFI1yIgX2y0CmFIF2SBmhyM+xJdU/4IV7FJoaq+irIe4vREsiits
+         5cXr/aP6Rk6Ju20tyG2SWhaUD6ExAjM4lgFl9HueMix4rPE3hIZIfTOZbl3N/glgaXW4
+         V8lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QaQgui+Uqm7iZjL3134DAwSFPs3Gz5Qy3G0UKS3OGfM=;
-        b=YPElMc0VWY2Xzt4FIXz8cW47OiHwT8CJ5eYzomQF9LlYfZ21nGyePLKzAxcBe/RD2P
-         ve6TI6+DIfvdYr7JNtsW3lAXeV9OpB52ps/v+o2eCJ49DaBMZwT0KV+nf5XA6pha1sy0
-         28pG4wF0K9en1diYKYbFlcqDlhyqzpb2+aU+3I76JYx7b7wO2dUKcztwECB4xRFrIAPg
-         tqznDeIbPqaz9/iffuCzQCrg/DPO8B4XKBNwn28l/S2zjjkrScr2VDFwLVcEOj7p4G6l
-         OqGjwH6iD54ViVyVzcpNd6RVxlJustssDbEowjbOpGdrWe9QlLMpTID1yhUq/cN49GD9
-         hm4A==
-X-Gm-Message-State: AHQUAuYth13F5i1Vleu+ZHbim9A88LKOWFUBJWFcPCUc58VFHVthwHml
-        AD07fATwo+eKq6sZQFOgtzE=
-X-Google-Smtp-Source: AHgI3IaX1vRwvf/aQJO2SUwltnjIH9Z6wL26Pop85HDpjfaq/WbWMKVpGE4yDf5cL7votn/kCdJoDQ==
-X-Received: by 2002:a63:6244:: with SMTP id w65mr5636697pgb.300.1551314500180;
-        Wed, 27 Feb 2019 16:41:40 -0800 (PST)
+        bh=H3hXfDj0PXBoFA9cGgNBp7TmibItk5rJ8IiapF7qRlI=;
+        b=ofTHc1nkIUgKl+TZscI19CDTQlaozIZRuTyMhXwnJTqxhdr9aiyWN5FGKYt7Po6sS5
+         glKagXUzBW/wGWIj5cw12WM3UOzdZRjPqN8r3BwKcLlFivSbTHWFU0z0Xpc5f6v3dACA
+         pSHOQzhsLWoB+IAjZ3sMolOIQIR88YTG/oi/XQUIAApFPgwVCMD3UvNAuSTKUHt7U4Oi
+         f5et8nhIfoQXiYQNz7plBR9PIdNz7TN6Hb2UXjKo7WevQLwvfzVzfqAYPaLw9VfJeWR4
+         RfXKsmIU8G0VYWpgUoQ927bUMBH/4KuIdRZmwaIBxCpUCFKf714r4UG4C7Os2wbldanr
+         YHtg==
+X-Gm-Message-State: AHQUAuZ08UP16/vfcbNmVswR/4NqJmFMqd6G1NUmFP9wObgAJVoWrToR
+        kZO9YByjOMN9mLTGnK/4pw8=
+X-Google-Smtp-Source: AHgI3IZhh1JFXZBlrrbqGTkMOIDkp0jCdJZyTpl42phRKA6pJQ3SiAvO0ijYaGWfFyh8Rvp5uGiN2g==
+X-Received: by 2002:a65:51c3:: with SMTP id i3mr5670927pgq.45.1551314870020;
+        Wed, 27 Feb 2019 16:47:50 -0800 (PST)
 Received: from bobby.localdomain ([2601:1c0:5501:37e2::87c4])
-        by smtp.gmail.com with ESMTPSA id x15sm22033649pfn.74.2019.02.27.16.41.39
+        by smtp.gmail.com with ESMTPSA id a24sm21150495pfo.160.2019.02.27.16.47.48
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Feb 2019 16:41:39 -0800 (PST)
-Date:   Wed, 27 Feb 2019 16:41:51 -0800
+        Wed, 27 Feb 2019 16:47:49 -0800 (PST)
+Date:   Wed, 27 Feb 2019 16:48:00 -0800
 From:   Robert Eshleman <bobbyeshleman@gmail.com>
-To:     Joe Perches <joe@perches.com>
+To:     Robert Eshleman <bobbyeshleman@gmail.com>
 Cc:     Tariq Toukan <tariqt@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Samuel Chessman <chessman@tux.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/8] tlan: use pci_zalloc instead of pci_alloc
-Message-ID: <20190228004151.GA26282@bobby.localdomain>
+        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 7/8] net: seeq: replace kmalloc / memset(,0) with kzalloc
+Message-ID: <20190228004800.GA26378@bobby.localdomain>
 References: <cover.1551246708.git.bobbyeshleman@gmail.com>
- <51125a3daac49f7b5bb360a422663aee26e6776b.1551246708.git.bobbyeshleman@gmail.com>
- <ce11feb21863662cf2ad96f0f7b69f0edcabfcf7.camel@perches.com>
+ <5ff7bcf7b8db8daa129703e5f7b632825f25c766.1551246708.git.bobbyeshleman@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ce11feb21863662cf2ad96f0f7b69f0edcabfcf7.camel@perches.com>
+In-Reply-To: <5ff7bcf7b8db8daa129703e5f7b632825f25c766.1551246708.git.bobbyeshleman@gmail.com>
 User-Agent: Mutt/1.11.2 (2019-01-07)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 10:22:06PM -0800, Joe Perches wrote:
-> On Tue, 2019-02-26 at 22:09 -0800, Robert Eshleman wrote:
-> > This patch replaces a pci_alloc_consistent and memset(,0) call
-> > with a single call to pci_zalloc_consistent.
-> []
-> > diff --git a/drivers/net/ethernet/ti/tlan.c b/drivers/net/ethernet/ti/tlan.c
-> []
-> > @@ -845,17 +845,16 @@ static int tlan_init(struct net_device *dev)
-> >  
-> >  	dma_size = (TLAN_NUM_RX_LISTS + TLAN_NUM_TX_LISTS)
-> >  		* (sizeof(struct tlan_list));
-> > -	priv->dma_storage = pci_alloc_consistent(priv->pci_dev,
-> > -						 dma_size,
-> > -						 &priv->dma_storage_dma);
-> > +	priv->dma_storage = pci_zalloc_consistent(priv->pci_dev,
-> > +						  dma_size,
-> > +						  &priv->dma_storage_dma);
-> >  	priv->dma_size = dma_size;
-> >  
-> > -	if (priv->dma_storage == NULL) {
-> > +	if (!priv->dma_storage) {
-> >  		pr_err("Could not allocate lists and buffers for %s\n",
-> >  		       dev->name);
+On Tue, Feb 26, 2019 at 10:09:54PM -0800, Robert Eshleman wrote:
+> This patch reduces a call to memset(,0) by replacing
+> a kmalloc call with a kzalloc call.
 > 
-> unrelated trivia:
+> Signed-off-by: Robert Eshleman <bobbyeshleman@gmail.com>
+> ---
+>  drivers/net/ethernet/seeq/ether3.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> This pr_err (and likely others in this file)
-> could be replace by netdev_err
-> 
+> diff --git a/drivers/net/ethernet/seeq/ether3.c b/drivers/net/ethernet/seeq/ether3.c
+> index d1bb73bf9914..7456cf08a48f 100644
+> --- a/drivers/net/ethernet/seeq/ether3.c
+> +++ b/drivers/net/ethernet/seeq/ether3.c
+> @@ -223,7 +223,7 @@ ether3_addr(char *addr, struct expansion_card *ec)
+>  static int
+>  ether3_ramtest(struct net_device *dev, unsigned char byte)
+>  {
+> -	unsigned char *buffer = kmalloc(RX_END, GFP_KERNEL);
+> +	unsigned char *buffer = kzalloc(RX_END, GFP_KERNEL);
+>  	int i,ret = 0;
+>  	int max_errors = 4;
+>  	int bad = -1;
+> @@ -231,7 +231,6 @@ ether3_ramtest(struct net_device *dev, unsigned char byte)
+>  	if (!buffer)
+>  		return 1;
+>  
+> -	memset(buffer, byte, RX_END);
 
-Definitely good to know (I may make that change too).  Thanks Joe.
+Byte is not zero, so the intent of this patch does not apply here.
+Dropping this from the patch set in v2.
 
--Bobby
+
+>  	ether3_setbuffer(dev, buffer_write, 0);
+>  	ether3_writebuffer(dev, buffer, TX_END);
+>  	ether3_setbuffer(dev, buffer_write, RX_START);
+> -- 
+> 2.20.1
+> 
