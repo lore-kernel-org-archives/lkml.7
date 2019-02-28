@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA09C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9321BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76EE3218D0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A39C20854
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="B9HY3xXB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dfPG8wH/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733109AbfB1S7P (ORCPT
+        id S1733159AbfB1S7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:59:15 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:60826 "EHLO
+        Thu, 28 Feb 2019 13:59:18 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:60932 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfB1S7N (ORCPT
+        with ESMTP id S1732948AbfB1S7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:59:13 -0500
+        Thu, 28 Feb 2019 13:59:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1551380351; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1551380354; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
         bh=XsIYjbm4bDDRIq/OhgStYAH9uxCsKUcgdpaA3fYuJTQ=;
-        b=B9HY3xXB+34gX7uoORcBFy1uA6+7ih+Fi8bO2mJKQzAVlkDjIDshRZRltu7Sf0FRLhc9Ym
-        N4qwvC9RjhTJApKgLjHBzlupl4szBM/00PqA+5lIrAiEiojRBMz0EQKfYp6W133NL+lMnX
-        gms1yGxj3CUabU0cSuBu4pbYxis/g7Y=
+        b=dfPG8wH/TgUKB0Vh4hcLVRG1QrlTxYHETpNDk1BUQCuz070PZt8HuZybbjU6hlfk1gY9IF
+        /qb0emJORQzQO4DgC9XhDCwii0crcJzFtWiQ/sKAdHYu9HIRge50EVQ0tTLIrgvOsgC3to
+        mpom/U+AK48xSHoJavfS99rTaEsKlR8=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] drm/panel: Add GiantPlus GPM940B0 panel support
-Date:   Thu, 28 Feb 2019 15:58:53 -0300
-Message-Id: <20190228185854.11824-2-paul@crapouillou.net>
+Subject: [PATCH 2/2] drm/panel: simple: Add GiantPlus GPM940B0 panel support
+Date:   Thu, 28 Feb 2019 15:58:54 -0300
+Message-Id: <20190228185854.11824-3-paul@crapouillou.net>
 In-Reply-To: <20190228185854.11824-1-paul@crapouillou.net>
 References: <20190228185854.11824-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
