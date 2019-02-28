@@ -2,104 +2,139 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD4AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6724C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 467212084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99202085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CD2TxwtF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fn5+DrI6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbfB1WLi (ORCPT
+        id S1728866AbfB1WNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 17:11:38 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17552 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfB1WLi (ORCPT
+        Thu, 28 Feb 2019 17:13:46 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:36876 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbfB1WNq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 17:11:38 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c785c990000>; Thu, 28 Feb 2019 14:11:37 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 28 Feb 2019 14:11:37 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 28 Feb 2019 14:11:37 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Feb
- 2019 22:11:37 +0000
-Subject: Re: [PATCH v2 2/4] mm: remove zone_lru_lock() function access
- ->lru_lock directly
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Rik van Riel <riel@surriel.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-References: <20190228083329.31892-1-aryabinin@virtuozzo.com>
- <20190228083329.31892-2-aryabinin@virtuozzo.com>
- <44ffadb4-4235-76c9-332f-680dda5da521@nvidia.com>
- <67a79bb9-12b5-e668-abb1-ef91a9cbfea8@suse.cz>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <1f978daf-a037-e7e8-079f-80b421e663e1@nvidia.com>
-Date:   Thu, 28 Feb 2019 14:11:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Feb 2019 17:13:46 -0500
+Received: by mail-ua1-f68.google.com with SMTP id v26so20559807uap.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 14:13:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dRhswVLUmWEZ8ZYnthCAU41Qq83maWxBpoDRzhyn2LA=;
+        b=fn5+DrI62stv+zYS7HsttmqZlNJk2+i6nsNhG3rUX0LgO2xc63O5p5hXHbQdjCvCb7
+         fr161YWe22SyU0xKwTac7xWSAyGGF/5Hc1Oub+71z9C1bVFCdS66qkvKGlpspDtg4T/Y
+         Dcgx2Ps46ESM80K4k2aAPZADl1Hor7m6vhgwOqXwThebrBUVeHnoEZNzdvy5JuwiYsIc
+         cfsomvscosW1XM3DCtjTCfvz9OQvrlrjxguGvoIYkT0y/bqTDgn8AChxUP6gkMvNVo1N
+         tSzM92ZOEROJWz0eriiL0pKOuSZy3qEZ3hjxcJh/9xua1oq6A+vc5LFRZaY8xwfIee4I
+         y5JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dRhswVLUmWEZ8ZYnthCAU41Qq83maWxBpoDRzhyn2LA=;
+        b=IIYUj+uWwZe8xUyrKJJrUy5I266/LH0eoTIh2PLvHm4lIBRphcMrFhpPpry7AHJZYN
+         fNB8zfz83rTZrsNMeeSeXrFBBTLYlFhmTn6XKITAMKd7qy4kLLu8IZXCu5sSawhsW5H4
+         9cfN2f6bTcqzb8kiQdXklDi0i/kjkQSo1UCLeRjPUhHdoQ/gMpY4VfbqZwhU9XRuJzjD
+         WxAYYJXHdBKG8JfZeycG8crJpU+6tEFGRHaW+kLAcVyrxXYDlDwfYqn7ILvHUHjW2OWX
+         V34/Qxdfspk6QAolTxfgamT28Lc4sZDaQ1Wlmz9bvqTnhu/p/fCVOLC3VTF7q0liqiFr
+         Ftpg==
+X-Gm-Message-State: APjAAAUiNxUZIn7/MqIAU02BDNH6HLC4iwxI2EQ/RWGy8V2ajCEiSeC1
+        NKR/6L9V9lTnZqIOaEpEEKPJwZqQK5W5I1JbXEX7iQ==
+X-Google-Smtp-Source: APXvYqy9/s9edOdB0K00pNIaMXmCxWH5+nSnOdw5d9w5dN8DYYDLLCbfhsQEJL4nNmDB2RTq+h4FOrUQ5OaFRhj5CFU=
+X-Received: by 2002:ab0:6016:: with SMTP id j22mr767965ual.119.1551392024919;
+ Thu, 28 Feb 2019 14:13:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <67a79bb9-12b5-e668-abb1-ef91a9cbfea8@suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551391897; bh=lp0YkothahhdP4oQqOkXRwHxr5NEdq2Tk+d6kbvXpvs=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CD2TxwtFekB+bBed5i0C1P4DuD2v5dgZN5qqtiUld50Q948O/cWRv7yuw5gs/TDEQ
-         FR9v7o8SGJLGMEzBTYMb4VC1rjPp+RfJztcpEXyfH7kqwO2HurvKBogeltDkmhKdyV
-         jSVGop4Ot6AWpm3d23F7Luig9XGcMjxBRgPac0ciDvobI8UI7gU8vqQoWxtvdTjZNn
-         /uXzPbJqd8HuQYuqMhLg2j9AmqQVDYadRch9zSM2P/VIzyK0ZSKQ/omIEN6VJ6YEz5
-         zbNC7GfJBfL7wTVavZe7xcODbD3Pe7sDxcfcQwTIdN/CMX5jcUeyM372zo+/Fkjkpw
-         21BdF8AWj+V1w==
+References: <20190228135919.3747-1-ulf.hansson@linaro.org> <20190228135919.3747-4-ulf.hansson@linaro.org>
+ <02a96f2c-dde1-73be-683d-b51d8c6b1b03@linaro.org>
+In-Reply-To: <02a96f2c-dde1-73be-683d-b51d8c6b1b03@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 28 Feb 2019 23:13:09 +0100
+Message-ID: <CAPDyKFo8nZwNHuxY0Vr3CXW=Z5B4ho7dy_iiDD5pS3yUWGBA7A@mail.gmail.com>
+Subject: Re: [PATCH 3/7] drivers: firmware: psci: Split psci_dt_cpu_init_idle()
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/19 1:56 PM, Vlastimil Babka wrote:
-> On 2/28/2019 10:44 PM, John Hubbard wrote:
->> Instead of removing that function, let's change it, and add another
->> (since you have two cases: either a page* or a pgdat* is available),
->> and move it to where it can compile, like this:
->>
->>
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index 80bb6408fe73..cea3437f5d68 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -1167,6 +1167,16 @@ static inline pg_data_t *page_pgdat(const struct page *page)
->>         return NODE_DATA(page_to_nid(page));
->>  }
->>  
->> +static inline spinlock_t *zone_lru_lock(pg_data_t *pgdat)
-> 
-> In that case it should now be named node_lru_lock(). zone_lru_lock() was a
-> wrapper introduced to make the conversion of per-zone to per-node lru_lock smoother.
-> 
+On Thu, 28 Feb 2019 at 15:42, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>
+> On 28/02/2019 14:59, Ulf Hansson wrote:
+> > Let's split the psci_dt_cpu_init_idle() function into two functions. This
+> > makes the code clearer and provides better re-usability.
+> >
+> > Cc: Lina Iyer <ilina@codeaurora.org>
+> > Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+>
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>
+> but one question below.
+>
+>
+> > ---
+> >  drivers/firmware/psci/psci.c | 42 ++++++++++++++++++++----------------
+> >  1 file changed, 23 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> > index c80ec1d03274..9788bfc1cf8b 100644
+> > --- a/drivers/firmware/psci/psci.c
+> > +++ b/drivers/firmware/psci/psci.c
+> > @@ -270,9 +270,26 @@ static int __init psci_features(u32 psci_func_id)
+> >  #ifdef CONFIG_CPU_IDLE
+> >  static DEFINE_PER_CPU_READ_MOSTLY(u32 *, psci_power_state);
+> >
+> > +static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
+> > +{
+> > +     int err = of_property_read_u32(np, "arm,psci-suspend-param", state);
+> > +
+> > +     if (err) {
+> > +             pr_warn("%pOF missing arm,psci-suspend-param property\n", np);
+> > +             return err;
+> > +     }
+> > +
+> > +     if (!psci_power_state_is_valid(*state)) {
+> > +             pr_warn("Invalid PSCI power state %#x\n", *state);
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int psci_dt_cpu_init_idle(struct device_node *cpu_node, int cpu)
+> >  {
+> > -     int i, ret, count = 0;
+> > +     int i, ret = 0, count = 0;
+>
+> Why do you need to intialize the ret variable? If the count is zero we
+> go directly to return 0, otherwise we enter in the loop and ret is
+> affected with the new function call.
 
-Sounds good to me.
+Depending on the compiler and the compiler flags, one could otherwise
+potentially get a warning about using an uninitialized variable at the
+free_mem label (not shown in the patch).
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+So, I just wanted to play safe.
+
+Thanks a lot for reviewing!
+
+Kind regards
+Uffe
