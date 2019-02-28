@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73520C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43740C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4234E218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BFA218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551374042;
-	bh=kwPyCRH/NCziBW165fW7pRpj3g+ayvaj44ZZFZCH9Is=;
+	s=default; t=1551374048;
+	bh=bH+frexEWF6C42QwduEEysQMEyNPQ+yRz30BVc5l2E8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t23BtLG9nmxdvy0xvtftVKO370nkN1zX2JGWieUBQoLfJoZ1AoeQUxzVSzgY2q02l
-	 wApqdauzAy1GHXby1BgMKbEBvCbNuMah9cnTxgcOdOPnDENrJE19MgrmDtVAcZhdma
-	 8A7e5/mf5shViXPw/O2z+pW5bvVR+jbdgg+C/HWg=
+	b=lR1CjTumTBCJi+sp2BfbdyhcyPuVejDUDH48xqqRmyBhb73NI8C+YaM7ELiHmpuzA
+	 oI11D4Q0ghI2c2YTRTk/pHNLZ59QEdl/YAJvhQ3cAXFZZNXrFhWVd5aey+UQZf88Fi
+	 uKgGWi6Fra61TTMonssCL5da2f9FMatNsO0CNj+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387862AbfB1ROA (ORCPT
+        id S2387805AbfB1ROG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:14:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58626 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 12:14:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387809AbfB1RNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:13:55 -0500
+        id S2387865AbfB1ROC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:14:02 -0500
 Received: from lerouge.home (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13CF6218AE;
-        Thu, 28 Feb 2019 17:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E60B320857;
+        Thu, 28 Feb 2019 17:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551374034;
-        bh=kwPyCRH/NCziBW165fW7pRpj3g+ayvaj44ZZFZCH9Is=;
+        s=default; t=1551374040;
+        bh=bH+frexEWF6C42QwduEEysQMEyNPQ+yRz30BVc5l2E8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TIvt+mkGLZYir6W9iSKt2KhXNbH+d/yOm3QurX3mmnnSIGk0vdO+fIO+mZ/orLi5z
-         Q7FQeSmI8aZrVW6k8pdgdKrn5h0tB9ieiv/wuySJR8FpySEKUD0SmXKRiPrEoaov+/
-         sYHldokL5dKUpJJPXGmyBhMG9GOHLeP8XfR6EsvU=
+        b=keHbzH4nT8x/2cPcEJTYzEubneJOWDbWhqYY4poE3oFgo3bjuxo9DgpyllFqP9jpr
+         LbnJIYBsImei2GLFYucpPkHqFTj/fF4MwzMu/4c9El4AghGRE0umQ5ISl9wPFT/zBA
+         KU0JhTD2st/JXOb1mlsAoh5MDlKLavGe0Ulq4viA=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -49,13 +49,13 @@ Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
         Pavan Kondeti <pkondeti@codeaurora.org>,
         Ingo Molnar <mingo@kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 18/37] softirq: Normalize softirq_pending naming scheme
-Date:   Thu, 28 Feb 2019 18:12:23 +0100
-Message-Id: <20190228171242.32144-19-frederic@kernel.org>
+Subject: [PATCH 20/37] softirq: Introduce disabled softirq vectors bits
+Date:   Thu, 28 Feb 2019 18:12:25 +0100
+Message-Id: <20190228171242.32144-21-frederic@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190228171242.32144-1-frederic@kernel.org>
 References: <20190228171242.32144-1-frederic@kernel.org>
@@ -66,14 +66,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <fweisbec@gmail.com>
+Disabling the softirqs is currently an all-or-nothing operation: either
+all softirqs are enabled or none of them. However we plan to introduce a
+per vector granularity of this ability to improve latency response and
+make each softirq vector interruptible by the others.
 
-Use the subsystem as the prefix to name the __softirq_data accessors.
-They are going to be extended and want a more greppable and standard
-naming sheme.
+The first step carried here is to provide the necessary APIs to control
+the per-vector enable bits.
 
 Reviewed-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Frederic Weisbecker <fweisbec@gmail.com>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Cc: Joel Fernandes <joel@joelfernandes.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -85,90 +87,103 @@ Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/s390/include/asm/hardirq.h |  4 ++--
- include/linux/interrupt.h       | 24 ++++++++++++------------
- kernel/softirq.c                |  4 ++--
- 3 files changed, 16 insertions(+), 16 deletions(-)
+ arch/s390/include/asm/hardirq.h |  9 ++++--
+ include/linux/interrupt.h       | 55 ++++++++++++++++++++++++++++++---
+ 2 files changed, 57 insertions(+), 7 deletions(-)
 
 diff --git a/arch/s390/include/asm/hardirq.h b/arch/s390/include/asm/hardirq.h
-index e26325fe287d..3103680487cf 100644
+index 54e81f520175..13c57289e7ec 100644
 --- a/arch/s390/include/asm/hardirq.h
 +++ b/arch/s390/include/asm/hardirq.h
-@@ -14,8 +14,8 @@
+@@ -13,9 +13,14 @@
+ 
  #include <asm/lowcore.h>
  
- #define local_softirq_pending() (S390_lowcore.softirq_data)
--#define set_softirq_pending(x) (S390_lowcore.softirq_data = (x))
--#define or_softirq_pending(x)  (S390_lowcore.softirq_data |= (x))
-+#define softirq_pending_set(x) (S390_lowcore.softirq_data = (x))
-+#define softirq_pending_or(x)  (S390_lowcore.softirq_data |= (x))
+-#define local_softirq_pending() (S390_lowcore.softirq_data)
+-#define softirq_pending_clear_mask(x) (S390_lowcore.softirq_data &= ~(x))
++#define local_softirq_data() (S390_lowcore.softirq_data)
++#define local_softirq_pending() (local_softirq_data() & SOFTIRQ_PENDING_MASK)
++#define local_softirq_enabled() (local_softirq_data() >> SOFTIRQ_ENABLED_SHIFT)
++#define softirq_enabled_set_mask(x) (S390_lowcore.softirq_data |= ((x) << SOFTIRQ_ENABLED_SHIFT))
++#define softirq_enabled_clear_mask(x) (S390_lowcore.softirq_data &= ~((x) << SOFTIRQ_ENABLED_SHIFT))
++#define softirq_enabled_set(x) (S390_lowcore.softirq_data = local_softirq_pending() | ((x) << SOFTIRQ_ENABLED_SHIFT))
+ #define softirq_pending_set_mask(x)  (S390_lowcore.softirq_data |= (x))
++#define softirq_pending_clear_mask(x) (S390_lowcore.softirq_data &= ~(x))
  
  #define __ARCH_IRQ_STAT
  #define __ARCH_HAS_DO_SOFTIRQ
 diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index a32bdd9bb103..a5dec926531b 100644
+index c402770ae45b..0c3590e4fcac 100644
 --- a/include/linux/interrupt.h
 +++ b/include/linux/interrupt.h
-@@ -447,18 +447,6 @@ extern bool force_irqthreads;
- #define force_irqthreads	(0)
- #endif
+@@ -474,17 +474,62 @@ enum
+ #define SOFTIRQ_STOP_IDLE_MASK (~(1 << RCU_SOFTIRQ))
+ #define SOFTIRQ_ALL_MASK (BIT(NR_SOFTIRQS) - 1)
  
 -#ifndef local_softirq_pending
--
--#ifndef local_softirq_data_ref
--#define local_softirq_data_ref irq_stat.__softirq_data
--#endif
--
++#define SOFTIRQ_ENABLED_SHIFT 16
++#define SOFTIRQ_PENDING_MASK (BIT(SOFTIRQ_ENABLED_SHIFT) - 1)
++
++
++#ifndef local_softirq_data
+ 
+ #ifndef local_softirq_data_ref
+ #define local_softirq_data_ref irq_stat.__softirq_data
+ #endif
+ 
 -#define local_softirq_pending()	(__this_cpu_read(local_softirq_data_ref))
--#define set_softirq_pending(x)	(__this_cpu_write(local_softirq_data_ref, (x)))
--#define or_softirq_pending(x)	(__this_cpu_or(local_softirq_data_ref, (x)))
--
+-#define softirq_pending_clear_mask(x)	(__this_cpu_and(local_softirq_data_ref, ~(x)))
+-#define softirq_pending_set_mask(x)	(__this_cpu_or(local_softirq_data_ref, (x)))
++static inline unsigned int local_softirq_data(void)
++{
++	return __this_cpu_read(local_softirq_data_ref);
++}
+ 
 -#endif /* local_softirq_pending */
--
- /* Some architectures might implement lazy enabling/disabling of
-  * interrupts. In some cases, such as stop_machine, we might want
-  * to ensure that after a local_irq_disable(), interrupts have
-@@ -485,6 +473,18 @@ enum
++static inline unsigned int local_softirq_enabled(void)
++{
++	return local_softirq_data() >> SOFTIRQ_ENABLED_SHIFT;
++}
++
++static inline unsigned int local_softirq_pending(void)
++{
++	return local_softirq_data() & SOFTIRQ_PENDING_MASK;
++}
++
++static inline void softirq_enabled_clear_mask(unsigned int enabled)
++{
++	enabled <<= SOFTIRQ_ENABLED_SHIFT;
++	__this_cpu_and(local_softirq_data_ref, ~enabled);
++}
++
++static inline void softirq_enabled_set_mask(unsigned int enabled)
++{
++	enabled <<= SOFTIRQ_ENABLED_SHIFT;
++	__this_cpu_or(local_softirq_data_ref, enabled);
++}
++
++static inline void softirq_enabled_set(unsigned int enabled)
++{
++	unsigned int data;
++
++	data = enabled << SOFTIRQ_ENABLED_SHIFT;
++	data |= local_softirq_pending();
++	__this_cpu_write(local_softirq_data_ref, data);
++}
++
++static inline void softirq_pending_clear_mask(unsigned int pending)
++{
++	__this_cpu_and(local_softirq_data_ref, ~pending);
++}
++
++static inline void softirq_pending_set_mask(unsigned int pending)
++{
++	__this_cpu_or(local_softirq_data_ref, pending);
++}
++#endif /* local_softirq_data */
  
- #define SOFTIRQ_STOP_IDLE_MASK (~(1 << RCU_SOFTIRQ))
- 
-+#ifndef local_softirq_pending
-+
-+#ifndef local_softirq_data_ref
-+#define local_softirq_data_ref irq_stat.__softirq_data
-+#endif
-+
-+#define local_softirq_pending()	(__this_cpu_read(local_softirq_data_ref))
-+#define softirq_pending_set(x)	(__this_cpu_write(local_softirq_data_ref, (x)))
-+#define softirq_pending_or(x)	(__this_cpu_or(local_softirq_data_ref, (x)))
-+
-+#endif /* local_softirq_pending */
-+
  /* map softirq index to softirq name. update 'softirq_to_name' in
   * kernel/softirq.c when adding a new softirq.
-  */
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index 2dcaef813acb..2137c54baf98 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -268,7 +268,7 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
- 
- restart:
- 	/* Reset the pending bitmask before enabling irqs */
--	set_softirq_pending(0);
-+	softirq_pending_set(0);
- 
- 	local_irq_enable();
- 
-@@ -449,7 +449,7 @@ void raise_softirq(unsigned int nr)
- void __raise_softirq_irqoff(unsigned int nr)
- {
- 	trace_softirq_raise(nr);
--	or_softirq_pending(1UL << nr);
-+	softirq_pending_or(1UL << nr);
- }
- 
- void open_softirq(int nr, void (*action)(struct softirq_action *))
 -- 
 2.21.0
 
