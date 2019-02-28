@@ -2,203 +2,125 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1014C00319
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC5FC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE927218AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDB32186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qYoc/vau"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbfB1CrV (ORCPT
+        id S1730790AbfB1Cri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:47:21 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:34496 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730621AbfB1CrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:47:21 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 452BF316EB80;
-        Thu, 28 Feb 2019 02:47:20 +0000 (UTC)
-Received: from xz-x1 (dhcp-14-116.nay.redhat.com [10.66.14.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F04F61001DD6;
-        Thu, 28 Feb 2019 02:47:10 +0000 (UTC)
-Date:   Thu, 28 Feb 2019 10:47:07 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>, Shaohua Li <shli@fb.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v2 23/26] userfaultfd: wp: don't wake up when doing write
- protect
-Message-ID: <20190228024707.GT13653@xz-x1>
-References: <20190212025632.28946-1-peterx@redhat.com>
- <20190212025632.28946-24-peterx@redhat.com>
- <20190225210934.GE10454@rapoport-lnx>
- <20190226062424.GH13653@xz-x1>
- <20190226072933.GF5873@rapoport-lnx>
- <20190226074117.GL13653@xz-x1>
- <20190226080029.GH5873@rapoport-lnx>
+        Wed, 27 Feb 2019 21:47:38 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55732 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730621AbfB1Crh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 21:47:37 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q187so7792869wme.5;
+        Wed, 27 Feb 2019 18:47:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=piun7cPCDuB9fhc+zbtouycM0pCBqlSH7LI+pTCrrFA=;
+        b=qYoc/vauBb0mvg0h2P2uDTLWw1WojP/LlO7d7AEyZMEt37IR/WHnNvcXLLNsMMAPOD
+         l8P9ygdHaXrzPu2PrWJnF4bPRrHyQWDHkUMCw5fR1Ahn1n9i85Ueoab1qFLwHfeYlqfk
+         SFsUSr9IS7FQ7PbFwnHEy95NZC58GPDhEZ0lIi8HUVFBYIreX8ldJWgDEy7Ot/nNXXP4
+         szeLRhdAoSjhSWu5N08LovteeXOF2EWC69kcmGIrvw/C+0vJYz1QHCC0fN7lLrYOEbxr
+         CRBZNeX78ftR12b/KE2QQhxIEtw1WcUbzkGq6M0Qq41oyeKw+eGGPp7U9QgjQSAYxt6x
+         KCTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=piun7cPCDuB9fhc+zbtouycM0pCBqlSH7LI+pTCrrFA=;
+        b=dSqTLxtqRUKJaipH914mlzpypGA+B2mMJvts317SihG1lTLhrKZ3A1TiEi/bc9YArX
+         y+4+Ef+BW3FJpiPqjufNPFXMdkuVVTt8D9ksTrmvnnZ2NW+xIa8iCo3EMyr+UsMUa/Tl
+         nGxlC9oyxnsB7yw/arTxPMErER2a5vesDjGIYNgOy04vLBiEZANWnMAocbWzOe4G/lr+
+         i1ZH7NQcYMPmCIPguNShpRMKFSJQO6/a5o9FVcd0PubPvTzOp2m36++2L8vADS8ecaZt
+         WdsVmHooJpxyz/5Vb3VZMvD2KfGoJ8lSKJGYPRrQQcRMClTqkJwtU2YHkUEIA8UpzocW
+         cl/Q==
+X-Gm-Message-State: AHQUAuY9n5eIL6WCvaoKQOqt4QD/a+rIoV7PJG98nH9RIyHRpqJ1oqm7
+        46ZxnX5C6yV2vMc7VQTU7kfESYflcnyfL19IfZk=
+X-Google-Smtp-Source: APXvYqwciHcVMwKXOaRDXCKgTJwtRJ/RNrINtDr+wHckAKXRB/Ggk27VO92fjDEW+x6Cpj27+dTLF6318ztJgsXSHic=
+X-Received: by 2002:a1c:c205:: with SMTP id s5mr1231874wmf.116.1551322055306;
+ Wed, 27 Feb 2019 18:47:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190226080029.GH5873@rapoport-lnx>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 28 Feb 2019 02:47:20 +0000 (UTC)
+References: <20190226054828.120809-1-yuehaibing@huawei.com>
+In-Reply-To: <20190226054828.120809-1-yuehaibing@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 27 Feb 2019 21:47:23 -0500
+Message-ID: <CADnq5_McbtEZVjyrP+E1ORx8UKMhmPmK2C5rSmcbDCothx0g-w@mail.gmail.com>
+Subject: Re: [PATCH -next] drm/amdgpu: remove set but not used variable 'vbi_time_out'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>, Rex Zhu <Rex.Zhu@amd.com>,
+        "Quan, Evan" <evan.quan@amd.com>, Huang Rui <ray.huang@amd.com>,
+        kernel-janitors@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 10:00:29AM +0200, Mike Rapoport wrote:
-> On Tue, Feb 26, 2019 at 03:41:17PM +0800, Peter Xu wrote:
-> > On Tue, Feb 26, 2019 at 09:29:33AM +0200, Mike Rapoport wrote:
-> > > On Tue, Feb 26, 2019 at 02:24:52PM +0800, Peter Xu wrote:
-> > > > On Mon, Feb 25, 2019 at 11:09:35PM +0200, Mike Rapoport wrote:
-> > > > > On Tue, Feb 12, 2019 at 10:56:29AM +0800, Peter Xu wrote:
-> > > > > > It does not make sense to try to wake up any waiting thread when we're
-> > > > > > write-protecting a memory region.  Only wake up when resolving a write
-> > > > > > protected page fault.
-> > > > > > 
-> > > > > > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > > > > > ---
-> > > > > >  fs/userfaultfd.c | 13 ++++++++-----
-> > > > > >  1 file changed, 8 insertions(+), 5 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> > > > > > index 81962d62520c..f1f61a0278c2 100644
-> > > > > > --- a/fs/userfaultfd.c
-> > > > > > +++ b/fs/userfaultfd.c
-> > > > > > @@ -1771,6 +1771,7 @@ static int userfaultfd_writeprotect(struct userfaultfd_ctx *ctx,
-> > > > > >  	struct uffdio_writeprotect uffdio_wp;
-> > > > > >  	struct uffdio_writeprotect __user *user_uffdio_wp;
-> > > > > >  	struct userfaultfd_wake_range range;
-> > > > > > +	bool mode_wp, mode_dontwake;
-> > > > > > 
-> > > > > >  	if (READ_ONCE(ctx->mmap_changing))
-> > > > > >  		return -EAGAIN;
-> > > > > > @@ -1789,18 +1790,20 @@ static int userfaultfd_writeprotect(struct userfaultfd_ctx *ctx,
-> > > > > >  	if (uffdio_wp.mode & ~(UFFDIO_WRITEPROTECT_MODE_DONTWAKE |
-> > > > > >  			       UFFDIO_WRITEPROTECT_MODE_WP))
-> > > > > >  		return -EINVAL;
-> > > > > > -	if ((uffdio_wp.mode & UFFDIO_WRITEPROTECT_MODE_WP) &&
-> > > > > > -	     (uffdio_wp.mode & UFFDIO_WRITEPROTECT_MODE_DONTWAKE))
-> > > > > > +
-> > > > > > +	mode_wp = uffdio_wp.mode & UFFDIO_WRITEPROTECT_MODE_WP;
-> > > > > > +	mode_dontwake = uffdio_wp.mode & UFFDIO_WRITEPROTECT_MODE_DONTWAKE;
-> > > > > > +
-> > > > > > +	if (mode_wp && mode_dontwake)
-> > > > > >  		return -EINVAL;
-> > > > > 
-> > > > > This actually means the opposite of the commit message text ;-)
-> > > > > 
-> > > > > Is any dependency of _WP and _DONTWAKE needed at all?
-> > > > 
-> > > > So this is indeed confusing at least, because both you and Jerome have
-> > > > asked the same question... :)
-> > > > 
-> > > > My understanding is that we don't have any reason to wake up any
-> > > > thread when we are write-protecting a range, in that sense the flag
-> > > > UFFDIO_WRITEPROTECT_MODE_DONTWAKE is already meaningless in the
-> > > > UFFDIO_WRITEPROTECT ioctl context.  So before everything here's how
-> > > > these flags are defined:
-> > > > 
-> > > > struct uffdio_writeprotect {
-> > > > 	struct uffdio_range range;
-> > > > 	/* !WP means undo writeprotect. DONTWAKE is valid only with !WP */
-> > > > #define UFFDIO_WRITEPROTECT_MODE_WP		((__u64)1<<0)
-> > > > #define UFFDIO_WRITEPROTECT_MODE_DONTWAKE	((__u64)1<<1)
-> > > > 	__u64 mode;
-> > > > };
-> > > > 
-> > > > To make it clear, we simply define it as "DONTWAKE is valid only with
-> > > > !WP".  When with that, "mode_wp && mode_dontwake" is indeed a
-> > > > meaningless flag combination.  Though please note that it does not
-> > > > mean that the operation ("don't wake up the thread") is meaningless -
-> > > > that's what we'll do no matter what when WP==1.  IMHO it's only about
-> > > > the interface not the behavior.
-> > > > 
-> > > > I don't have a good way to make this clearer because firstly we'll
-> > > > need the WP flag to mark whether we're protecting or unprotecting the
-> > > > pages.  Later on, we need DONTWAKE for page fault handling case to
-> > > > mark that we don't want to wake up the waiting thread now.  So both
-> > > > the flags have their reason to stay so far.  Then with all these in
-> > > > mind what I can think of is only to forbid using DONTWAKE in WP case,
-> > > > and that's how above definition comes (I believe, because it was
-> > > > defined that way even before I started to work on it and I think it
-> > > > makes sense).
-> > > 
-> > > There's no argument how DONTWAKE can be used with !WP. The
-> > > userfaultfd_writeprotect() is called in response of the uffd monitor to WP
-> > > page fault, it asks to clear write protection to some range, but it does
-> > > not want to wake the faulting thread yet but rather it will use uffd_wake()
-> > > later.
-> > > 
-> > > Still, I can't grok the usage of DONTWAKE with WP=1. In my understanding,
-> > > in this case userfaultfd_writeprotect() is called unrelated to page faults,
-> > > and the monitored thread runs freely, so why it should be waked at all?
-> > 
-> > Exactly this is how I understand it.  And that's why I wrote this
-> > patch to remove the extra wakeup() since I think it's unecessary.
-> > 
-> > > 
-> > > And what happens, if the thread is waiting on a missing page fault and we
-> > > do userfaultfd_writeprotect(WP=1) at the same time?
-> > 
-> > Then IMHO the userfaultfd_writeprotect() will be a noop simply because
-> > the page is still missing.  Here if with the old code (before this
-> > patch) we'll probably even try to wake up this thread but this thread
-> > should just fault again on the same address due to the fact that the
-> > page is missing.  After this patch the monitored thread should
-> > continue to wait on the missing page.
-> 
-> So, my understanding of what we have is:
-> 
-> userfaultfd_writeprotect() can be used either to mark a region as write
-> protected or to resolve WP page fault.
-> In the first case DONTWAKE does not make sense and we forbid setting it
-> with WP=1.
-> In the second case it's the uffd monitor decision whether to wake up the
-> faulting thread immediately after #PF is resolved or later, so with WP=0 we
-> allow DONTWAKE.
+Applied.  thanks!
 
-Yes exactly.
-
-> 
-> I suggest to extend the comment in the definition of 
-> 'struct uffdio_writeprotect' to something like
-> 
-> /*
->  * Write protecting a region (WP=1) is unrelated to page faults, therefore
->  * DONTWAKE flag is meaningless with WP=1.
->  * Removing write protection (WP=0) in response to a page fault wakes the
->  * faulting task unless DONTWAKE is set.
->  */
->  
-> And a documentation update along these lines would be appreciated :)
-
-Thanks for the write-up!  I'm stoling the whole paragraph into the
-patch where uffdio_writeprotect is introduced.
-
-Regards,
-
--- 
-Peter Xu
+On Tue, Feb 26, 2019 at 12:36 AM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/gpu/drm/amd/amdgpu/si_dpm.c: In function 'si_program_response_times':
+> drivers/gpu/drm/amd/amdgpu/si_dpm.c:4101:29: warning:
+>  variable 'backbias_response_time' set but not used [-Wunused-but-set-variable]
+>
+> It's never used since introduction in 841686df9f7d ("drm/amdgpu: add SI DPM
+> support (v4)"), so can be removed
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/si_dpm.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.c b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+> index 41e01a7f57a4..d57e75e5c71f 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+> @@ -4098,14 +4098,13 @@ static int si_notify_smc_display_change(struct amdgpu_device *adev,
+>
+>  static void si_program_response_times(struct amdgpu_device *adev)
+>  {
+> -       u32 voltage_response_time, backbias_response_time, acpi_delay_time, vbi_time_out;
+> +       u32 voltage_response_time, acpi_delay_time, vbi_time_out;
+>         u32 vddc_dly, acpi_dly, vbi_dly;
+>         u32 reference_clock;
+>
+>         si_write_smc_soft_register(adev, SI_SMC_SOFT_REGISTER_mvdd_chg_time, 1);
+>
+>         voltage_response_time = (u32)adev->pm.dpm.voltage_response_time;
+> -       backbias_response_time = (u32)adev->pm.dpm.backbias_response_time;
+>
+>         if (voltage_response_time == 0)
+>                 voltage_response_time = 1000;
+>
+>
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
