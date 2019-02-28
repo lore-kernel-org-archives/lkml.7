@@ -2,107 +2,105 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D025C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2DBC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7B42133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:14:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ruw+AyiS"
+	by mail.kernel.org (Postfix) with ESMTP id 738882133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551395685;
+	bh=pjWaxZNql3F0/t5xjbzqBvJc099CWofLnPE0Wc+1U6M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gbD2CDdfANU9MhMnLTYAEwfVxVNQsh0MNF0lwUnEOPiEu8HSPmh8lIJWRDcnUcwG2
+	 tlNnBTuWPc3zEbDV5026osapP/CFIIao/GomEKL3m2nQ3D95U4nyObi40hHZQiHNAu
+	 ezIn3EKQt8SbIG8TWFMRAluQmQO9Ux6hCU95jR+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732650AbfB1XOg (ORCPT
+        id S1732709AbfB1XOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:14:36 -0500
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:41153 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387554AbfB1XMU (ORCPT
+        Thu, 28 Feb 2019 18:14:43 -0500
+Received: from mail.linuxfoundation.org ([140.211.169.12]:39246 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfB1XOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:12:20 -0500
-Received: by mail-qk1-f202.google.com with SMTP id f70so17167261qke.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:12:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=uJSG4DfOm5wajFhd/fVp5JjZRZbJ1ZIYh8VYeWgqjpg=;
-        b=Ruw+AyiSDZ47njZAbBZaRrEZ+ClOByQdbrxyjiK4O6ppfEXb7Rv+WzMs/RrJ5O4jP1
-         Dxm84G0NNsq1mR4oERWpXqSQIwujmDFAg4+h1xhzJIbfgxaH+XF1dRNP1najZMpc9C8A
-         oBR1ZpNcbBgKGNf28Y2pyslDbDtAOg22nwGrQL1DIK/pgPL3UQPCZXBANWv9RpkTdcPF
-         MQzsINxIhVkOmpux2VNHTvttTgDm5gtPSXr/aKGHeAt39PqSSTpfm3X3Q/Ws2gjhGAJR
-         ztwjrhFoQiueFYKCmLth5vaunhFITzN6MdkANN3RuG8EZVqWK0Q1+k/3Yq6bOo5ojyZC
-         VLyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=uJSG4DfOm5wajFhd/fVp5JjZRZbJ1ZIYh8VYeWgqjpg=;
-        b=Sa0UI4MsvtD3v0nAcoIZzic+3RVSMMh+BVAccR/mdgNlfWCjt3UT8bEqGSdwrU2Z3x
-         tddNugWuX0g0exMn5Tzp5DuHHEe6deuHZ6U/5kBg4RAXt0BQaq+bG4J9d/X2ciwiHZU2
-         giBvE4dT9e1g2pKhT5r+3uVEZt7YkkwhdgwTxjREIkZsK2zi7HhPuyRzqyK7DksN0rN4
-         TeSM0fxoVKzajoXk8UqUolmSq6GLrV9BtqHIGtO2zq0KK7YrXiGlurIUtrhvDrKPulof
-         8+iBFtk0CmtoerFs2RFXwfsYsNtcHyuH9swKuNJqn1J4Mit9C7mlhmDUcLRTTzc5tRlx
-         MNdg==
-X-Gm-Message-State: APjAAAX68hkNrBhx1DbyhZfx6jBkfoJWejQZEJWWN2t4TRhTIb79mfZb
-        fiPdthpNZ/Ly8cdvHlFW63fuj3Fg241sbdx+Cpg4ng==
-X-Google-Smtp-Source: APXvYqzfQKeEcAbnraohBadiJQXH1phr5qwXa6NhpSZOwRC0UMZMDCIv1gIs7WF6+nytf5B7sWkQz5s81QdNS935XYJSOA==
-X-Received: by 2002:a0c:b8a3:: with SMTP id y35mr1037792qvf.25.1551395539553;
- Thu, 28 Feb 2019 15:12:19 -0800 (PST)
-Date:   Thu, 28 Feb 2019 15:11:42 -0800
-In-Reply-To: <20190228231203.212359-1-matthewgarrett@google.com>
-Message-Id: <20190228231203.212359-6-matthewgarrett@google.com>
+        Thu, 28 Feb 2019 18:14:41 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id CFEA0A94E;
+        Thu, 28 Feb 2019 23:14:39 +0000 (UTC)
+Date:   Thu, 28 Feb 2019 15:14:38 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        guillaume.tucker@collabora.com, matthew.hart@linaro.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+Message-Id: <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
+In-Reply-To: <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+References: <5c6702da.1c69fb81.12a14.4ece@mx.google.com>
+        <20190215104325.039dbbd9c3bfb35b95f9247b@linux-foundation.org>
+        <20190215185151.GG7897@sirena.org.uk>
+        <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
+        <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
- <20190228231203.212359-1-matthewgarrett@google.com>
-X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH 06/27] Copy secure_boot flag in boot params across kexec reboot
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dhowells@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Young <dyoung@redhat.com>
+On Tue, 26 Feb 2019 16:04:04 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
 
-Kexec reboot in case secure boot being enabled does not keep the secure
-boot mode in new kernel, so later one can load unsigned kernel via legacy
-kexec_load.  In this state, the system is missing the protections provided
-by secure boot.
+> On Tue, Feb 26, 2019 at 4:00 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Fri, 15 Feb 2019 18:51:51 +0000 Mark Brown <broonie@kernel.org> wrote:
+> >
+> > > On Fri, Feb 15, 2019 at 10:43:25AM -0800, Andrew Morton wrote:
+> > > > On Fri, 15 Feb 2019 10:20:10 -0800 (PST) "kernelci.org bot" <bot@kernelci.org> wrote:
+> > >
+> > > > >   Details:    https://kernelci.org/boot/id/5c666ea959b514b017fe6017
+> > > > >   Plain log:  https://storage.kernelci.org//next/master/next-20190215/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-collabora/boot-am335x-boneblack.txt
+> > > > >   HTML log:   https://storage.kernelci.org//next/master/next-20190215/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-collabora/boot-am335x-boneblack.html
+> > >
+> > > > Thanks.
+> > >
+> > > > But what actually went wrong?  Kernel doesn't boot?
+> > >
+> > > The linked logs show the kernel dying early in boot before the console
+> > > comes up so yeah.  There should be kernel output at the bottom of the
+> > > logs.
+> >
+> > I assume Dan is distracted - I'll keep this patchset on hold until we
+> > can get to the bottom of this.
+> 
+> Michal had asked if the free space accounting fix up addressed this
+> boot regression? I was awaiting word on that.
 
-Adding a patch to fix this by retain the secure_boot flag in original
-kernel.
+hm, does bot@kernelci.org actually read emails?  Let's try info@ as well..
 
-secure_boot flag in boot_params is set in EFI stub, but kexec bypasses the
-stub.  Fixing this issue by copying secure_boot flag across kexec reboot.
+Is it possible to determine whether this regression is still present in
+current linux-next?
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
-cc: kexec@lists.infradead.org
----
- arch/x86/kernel/kexec-bzimage64.c | 1 +
- 1 file changed, 1 insertion(+)
+> I assume you're not willing to entertain a "depends
+> NOT_THIS_ARM_BOARD" hack in the meantime?
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 53917a3ebf94..58301a11f6da 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -182,6 +182,7 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
- 	if (efi_enabled(EFI_OLD_MEMMAP))
- 		return 0;
- 
-+	params->secure_boot = boot_params.secure_boot;
- 	ei->efi_loader_signature = current_ei->efi_loader_signature;
- 	ei->efi_systab = current_ei->efi_systab;
- 	ei->efi_systab_hi = current_ei->efi_systab_hi;
--- 
-2.21.0.352.gf09ad66450-goog
-
+We'd probably never be able to remove it.  And we don't know whether
+other systems might be affected.
