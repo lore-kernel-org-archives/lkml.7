@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4DDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88666C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5CA218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5537A218E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366544;
-	bh=5pWmnEXUIZhcIa1/J7ri5v85TwVVoOiZnUAyJD2I0LE=;
+	s=default; t=1551366548;
+	bh=9re+ZwkhJKfuS+JRS4wz1OZuXPPz/Ji+yoHhD/YIw+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QxP9KSPaj00q6ML7xG6qlHBRXBSScJQRb2tw4wukXzKgZXBImo5FACLMH9/USaQzU
-	 S3bB+UwhZuQn7L3enruLZkXIW7rpR/5iTP53488g2VbFC6fpBICoE9TqywqMLuyDnj
-	 uTsZMvJRUOSCRIg0tzJRL1Qo2R++f7z/EAQauzM0=
+	b=mcq2RqSot6YxoW0M+4QgJYOpsi390XS8g0DqA/b6CXCJZRnJXX0Agr16+3S6Qlyuu
+	 fJ3ZWzmY5dL5SLJDHhN6eszmcuPeNAZSbbvinokh4NmVynqR5DoAucmCixEkly7On+
+	 P0hHOZBuAaErIRKwLexIqIZqgkVl4ufKzUmWKUTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbfB1PJD (ORCPT
+        id S2387451AbfB1PJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:09:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41264 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:09:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733099AbfB1PIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:08:53 -0500
+        id S1732112AbfB1PJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:09:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54A63218B0;
-        Thu, 28 Feb 2019 15:08:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E69A3218D9;
+        Thu, 28 Feb 2019 15:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366532;
-        bh=5pWmnEXUIZhcIa1/J7ri5v85TwVVoOiZnUAyJD2I0LE=;
+        s=default; t=1551366538;
+        bh=9re+ZwkhJKfuS+JRS4wz1OZuXPPz/Ji+yoHhD/YIw+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z/exKk5yCTd7B63+z7B2Azu0hDQLVx7NFCJAvpUHeJ8CedEDv3Y7kc+FOjf7QgREN
-         wxVdl7AmDDrUI9QobsNd9GaBNnJUOkg0b5VebvYrtbaPLJs/vucbFoKKzCSE//gtvb
-         1bA9Ejv1/2sdPNDHnT+Ed/drR72PIINAm7CDfYhg=
+        b=oREV1u9ydnI3C1D3nZykA9+QXBv+ATVKIxiRlz9aHKCToZCXcuMkZj0CHXeLGmAmP
+         ffKmDFtVtrRlxeKYe7XBuRXC9C0fEYkm3XfX3+EbctWd06UYIiDDVtMo9tA1j7QjJe
+         2Z4Tw79ZxPuyWGQPIcbwe/3HyqD7fCguMxQyu1Q4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 24/81] MIPS: DTS: jz4740: Correct interrupt number of DMA core
-Date:   Thu, 28 Feb 2019 10:07:16 -0500
-Message-Id: <20190228150813.10256-24-sashal@kernel.org>
+Cc:     Heyi Guo <guoheyi@huawei.com>, Heyi Guo <heyi.guo@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 28/81] irqchip/gic-v4: Fix occasional VLPI drop
+Date:   Thu, 28 Feb 2019 10:07:20 -0500
+Message-Id: <20190228150813.10256-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -61,40 +57,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Heyi Guo <guoheyi@huawei.com>
 
-[ Upstream commit 70999ec1c9d3f783a7232973cfc26971e5732758 ]
+[ Upstream commit 6479450f72c1391c03f08affe0d0110f41ae7ca0 ]
 
-The interrupt number set in the devicetree node of the DMA driver was
-wrong.
+1. In current implementation, every VLPI will temporarily be mapped to
+the first CPU in system (normally CPU0) and then moved to the real
+scheduled CPU later.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+2. So there is a time window and a VLPI may be sent to CPU0 instead of
+the real scheduled vCPU, in a multi-CPU virtual machine.
+
+3. However, CPU0 may have not been scheduled as a virtual CPU after
+system boots up, so the value of its GICR_VPROPBASER is unknown at
+that moment.
+
+4. If the INTID of VLPI is larger than 2^(GICR_VPROPBASER.IDbits+1),
+while IDbits is also in unknown state, GIC will behave as if the VLPI
+is out of range and simply drop it, which results in interrupt missing
+in Guest.
+
+As no code will clear GICR_VPROPBASER at runtime, we can safely
+initialize the IDbits field at boot time for each CPU to get rid of
+this issue.
+
+We also clear Valid bit of GICR_VPENDBASER in case any ancient
+programming gets left in and causes memory corrupting. A new function
+its_clear_vpend_valid() is added to reuse the code in
+its_vpe_deschedule().
+
+Fixes: e643d8034036 ("irqchip/gic-v3-its: Add VPE scheduling")
+Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+Signed-off-by: Heyi Guo <heyi.guo@linaro.org>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its.c | 66 ++++++++++++++++++++++++--------
+ 1 file changed, 49 insertions(+), 17 deletions(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 6fb16fd240353..2beb78a62b7dc 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -161,7 +161,7 @@
- 		#dma-cells = <2>;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 350f999d205be..f25ec92f23ee2 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2065,6 +2065,29 @@ static int __init allocate_lpi_tables(void)
+ 	return 0;
+ }
  
- 		interrupt-parent = <&intc>;
--		interrupts = <29>;
-+		interrupts = <20>;
++static u64 its_clear_vpend_valid(void __iomem *vlpi_base)
++{
++	u32 count = 1000000;	/* 1s! */
++	bool clean;
++	u64 val;
++
++	val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
++	val &= ~GICR_VPENDBASER_Valid;
++	gits_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
++
++	do {
++		val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
++		clean = !(val & GICR_VPENDBASER_Dirty);
++		if (!clean) {
++			count--;
++			cpu_relax();
++			udelay(1);
++		}
++	} while (!clean && count);
++
++	return val;
++}
++
+ static void its_cpu_init_lpis(void)
+ {
+ 	void __iomem *rbase = gic_data_rdist_rd_base();
+@@ -2150,6 +2173,30 @@ static void its_cpu_init_lpis(void)
+ 	val |= GICR_CTLR_ENABLE_LPIS;
+ 	writel_relaxed(val, rbase + GICR_CTLR);
  
- 		clocks = <&cgu JZ4740_CLK_DMA>;
++	if (gic_rdists->has_vlpis) {
++		void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
++
++		/*
++		 * It's possible for CPU to receive VLPIs before it is
++		 * sheduled as a vPE, especially for the first CPU, and the
++		 * VLPI with INTID larger than 2^(IDbits+1) will be considered
++		 * as out of range and dropped by GIC.
++		 * So we initialize IDbits to known value to avoid VLPI drop.
++		 */
++		val = (LPI_NRBITS - 1) & GICR_VPROPBASER_IDBITS_MASK;
++		pr_debug("GICv4: CPU%d: Init IDbits to 0x%llx for GICR_VPROPBASER\n",
++			smp_processor_id(), val);
++		gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
++
++		/*
++		 * Also clear Valid bit of GICR_VPENDBASER, in case some
++		 * ancient programming gets left in and has possibility of
++		 * corrupting memory.
++		 */
++		val = its_clear_vpend_valid(vlpi_base);
++		WARN_ON(val & GICR_VPENDBASER_Dirty);
++	}
++
+ 	/* Make sure the GIC has seen the above */
+ 	dsb(sy);
+ out:
+@@ -2776,26 +2823,11 @@ static void its_vpe_schedule(struct its_vpe *vpe)
+ static void its_vpe_deschedule(struct its_vpe *vpe)
+ {
+ 	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
+-	u32 count = 1000000;	/* 1s! */
+-	bool clean;
+ 	u64 val;
  
+-	/* We're being scheduled out */
+-	val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
+-	val &= ~GICR_VPENDBASER_Valid;
+-	gits_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
+-
+-	do {
+-		val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
+-		clean = !(val & GICR_VPENDBASER_Dirty);
+-		if (!clean) {
+-			count--;
+-			cpu_relax();
+-			udelay(1);
+-		}
+-	} while (!clean && count);
++	val = its_clear_vpend_valid(vlpi_base);
+ 
+-	if (unlikely(!clean && !count)) {
++	if (unlikely(val & GICR_VPENDBASER_Dirty)) {
+ 		pr_err_ratelimited("ITS virtual pending table not cleaning\n");
+ 		vpe->idai = false;
+ 		vpe->pending_last = true;
 -- 
 2.19.1
 
