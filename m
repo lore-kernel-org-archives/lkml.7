@@ -2,168 +2,150 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DC2C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B85C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8BF218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551323972;
-	bh=xePYJHDagXzcOhYXctzwQW8JZanDVo7BDIflpVHfPE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fHE13w4sB2Z1wtOI2UIFryJmoTIlxBw2dChgF2yWfnqysb+cBifxkS9MBaEZzbCyU
-	 s/MBKqrl9osuX3amLpvyxEEhXQDttGQ8NtQv4J/RFknU1reNOMwqht7wv73BFI0nNp
-	 rfukBRZTpM8j1e9Q/Q8x5t4angbp7qp2b5dLdfTw=
+	by mail.kernel.org (Postfix) with ESMTP id C429E2183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730633AbfB1DTb (ORCPT
+        id S1730530AbfB1D0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 22:19:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
+        Wed, 27 Feb 2019 22:26:10 -0500
+Received: from mga04.intel.com ([192.55.52.120]:24548 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730131AbfB1DTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 22:19:30 -0500
-Received: from dragon (unknown [139.162.86.229])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A75A2183F;
-        Thu, 28 Feb 2019 03:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551323969;
-        bh=xePYJHDagXzcOhYXctzwQW8JZanDVo7BDIflpVHfPE8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lbEZhmOsNZAIOEu1ugj4MGpwIKsf1oyn1S1xz+6c0cg2USnKTrm7s1obnOgnRE7+p
-         J/Agka6rq/a3m+JKjrLk0eFv6fa6uuiQWY8XfZB+8wr49jAOkG9GoQg5xhnVFUGv8g
-         hVMH8XlhcKWIV6KXL1dqcon6bCCCCuMFLXG+HS5o=
-Date:   Thu, 28 Feb 2019 11:18:34 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V7 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
-Message-ID: <20190228031832.GH26041@dragon>
-References: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
+        id S1730131AbfB1D0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 22:26:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Feb 2019 19:26:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,421,1544515200"; 
+   d="scan'208";a="278452682"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.151])
+  by orsmga004.jf.intel.com with ESMTP; 27 Feb 2019 19:26:07 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Chen\, Rong A" <rong.a.chen@intel.com>,
+        "lkp\@01.org" <lkp@01.org>, LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tim C Chen <tim.c.chen@intel.com>
+Subject: Re: [LKP] [page cache] eb797a8ee0: vm-scalability.throughput -16.5% regression
+References: <20181114092242.GD18977@shao2-debian>
+        <20181114141713.GA25731@bombadil.infradead.org>
+        <875zt7t14h.fsf@yhuang-dev.intel.com>
+        <CAHk-=whn+F+vFgCR0a04atTQuBmXhq0oU1Y1f0YqMiUFHj28JQ@mail.gmail.com>
+        <1c33a91c-a436-a879-ca14-7eebcbf971c2@redhat.com>
+        <87imx4pv5q.fsf@yhuang-dev.intel.com>
+        <04aed7af-fe04-5639-cfe1-fe8468164897@redhat.com>
+Date:   Thu, 28 Feb 2019 11:26:06 +0800
+In-Reply-To: <04aed7af-fe04-5639-cfe1-fe8468164897@redhat.com> (Waiman Long's
+        message of "Wed, 27 Feb 2019 21:37:41 -0500")
+Message-ID: <87a7igpp9t.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 05:17:31AM +0000, Anson Huang wrote:
-> Add i.MX8QXP CPU opp table to support cpufreq.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Waiman Long <longman@redhat.com> writes:
 
-Prefix 'arm64: dts: imx8qxp: ' would already be clear enough.  I dropped
-'freescale' from there and applied patch.
+> On 02/27/2019 08:18 PM, Huang, Ying wrote:
+>> Waiman Long <longman@redhat.com> writes:
+>>
+>>> On 02/26/2019 12:30 PM, Linus Torvalds wrote:
+>>>> On Tue, Feb 26, 2019 at 12:17 AM Huang, Ying <ying.huang@intel.com> wrote:
+>>>>> As for fixing.  Should we care about the cache line alignment of struct
+>>>>> inode?  Or its size is considered more important because there may be a
+>>>>> huge number of struct inode in the system?
+>>>> Thanks for the great analysis.
+>>>>
+>>>> I suspect we _would_ like to make sure inodes are as small as
+>>>> possible, since they are everywhere. Also, they are usually embedded
+>>>> in other structures (ie "struct inode" is embedded into "struct
+>>>> ext4_inode_info"), and unless we force alignment (and thus possibly
+>>>> lots of padding), the actual alignment of 'struct inode' will vary
+>>>> depending on filesystem.
+>>>>
+>>>> So I would suggest we *not* do cacheline alignment, because it will
+>>>> result in random padding.
+>>>>
+>>>> But it sounds like maybe the solution is to make sure that the
+>>>> different fields of the inode can and should be packed differently?
+>>>>
+>>>> So one thing to look at is to see what fields in 'struct inode' might
+>>>> be best moved together, to minimize cache accesses.
+>>>>
+>>>> And in particular, if this is *only* an issue of "struct
+>>>> rw_semaphore", maybe we should look at the layout of *that*. In
+>>>> particular, I'm getting the feeling that we should put the "owner"
+>>>> field right next to the "count" field, because the normal
+>>>> non-contended path only touches those two fields.
+>>> That is true. Putting the two next to each other reduces the chance of
+>>> needing to touch 2 cachelines to acquire a rwsem.
+>>>
+>>>> Right now those two fields are pretty far from each other in 'struct
+>>>> rw_semaphore', which then makes the "oops they got allocated in
+>>>> different cachelines" much more likely.
+>>>>
+>>>> So even if 'struct inode' layout itself isn't changed, maybe just
+>>>> optimizing the layout of 'struct rw_semaphore' a bit for the common
+>>>> case might fix it all up.
+>>>>
+>>>> Waiman, I didn't check if your rewrite already possibly fixes this?
+>>> My current patch doesn't move the owner field, but I will add one to do
+>>> it. That change alone probably won't solve the regression we see here.
+>>> The optimistic spinner is spinning on the on_cpu flag of the task
+>>> structure as well as the rwsem->owner value (looking for change). The
+>>> lock holder only need to touch the count/owner values once at unlock.
+>>> However, if other hot data variables are in the same cacheline as
+>>> rwsem->owner, we will have cacaheline bouncing problem. So we need to
+>>> pad some rarely touched variables right before the rwsem in order to
+>>> reduce the chance of false cacheline sharing.
+>> Yes. And if my understanding were correct, if the rwsem is locked, the
+>> new rw_sem users (which calls down_write()) will write rwsem->count and
+>> some other fields of rwsem.  This will cause cache ping-pong between
+>> lock holder and the new users too if the memory accessed by lock holder
+>> shares the same cache line with rwsem->count, thus hurt the system
+>> performance.  For the regression reported, the rwsem holder will change
+>> address_space->i_mmap, if I put i_mmap and rwsem->count in the same
+>> cache line and rwsem->owner in a different cache line, the performance
+>> can improve ~8.3%.  While if I put i_mmap in one cache line and all
+>> fields of rwsem in another different cache line, the performance can
+>> improve ~12.9% (in another machine, where the regression is ~14%).
+>
+> So it is better to have i_mmap and the rwsem in separate cachelines. Right?
 
-> ---
-> No changes since V6.
-> ---
->  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> index 4c3dd95..41bf0ce 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-> @@ -34,6 +34,9 @@
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
->  			next-level-cache = <&A35_L2>;
-> +			clocks = <&clk IMX_A35_CLK>;
-> +			operating-points-v2 = <&a35_0_opp_table>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		A35_1: cpu@1 {
-> @@ -42,6 +45,9 @@
->  			reg = <0x0 0x1>;
->  			enable-method = "psci";
->  			next-level-cache = <&A35_L2>;
-> +			clocks = <&clk IMX_A35_CLK>;
-> +			operating-points-v2 = <&a35_0_opp_table>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		A35_2: cpu@2 {
-> @@ -50,6 +56,9 @@
->  			reg = <0x0 0x2>;
->  			enable-method = "psci";
->  			next-level-cache = <&A35_L2>;
-> +			clocks = <&clk IMX_A35_CLK>;
-> +			operating-points-v2 = <&a35_0_opp_table>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		A35_3: cpu@3 {
-> @@ -58,6 +67,9 @@
->  			reg = <0x0 0x3>;
->  			enable-method = "psci";
->  			next-level-cache = <&A35_L2>;
-> +			clocks = <&clk IMX_A35_CLK>;
-> +			operating-points-v2 = <&a35_0_opp_table>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		A35_L2: l2-cache0 {
-> @@ -65,6 +77,24 @@
->  		};
->  	};
->  
-> +	a35_0_opp_table: opp-table {
+Yes.
 
-What does the '0' in the label mean?
+>> So I think in the heavily contended situation, we should put the fields
+>> accessed by rwsem holder in a different cache line of rwsem.  But in
+>> un-contended situation, we should put the fields accessed in rwsem
+>> holder and rwsem in the same cache line to reduce the cache footprint.
+>> The requirement of un-contended and heavily contended situation is
+>> contradicted.
+>
+> Write to the rwsem's count mostly happens at lock and unlock times. It
+> is the constant spinning on owner by the optimistic waiter that is
+> likely to cause the most problem when its cacheline is shared with
+> another piece of data outside of the rwsem that is rewritten to fairly
+> frequently. Perhaps moving i_mmap further away from i_mmap_rwsem may help.
 
-Shawn
+Yes.  I think rwsem->owner is more important too.  rwsem->count has
+measurable effect too.  And yes, moving i_mmap further away should help
+rwsem->count sharing too.
 
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp-900000000 {
-> +			opp-hz = /bits/ 64 <900000000>;
-> +			opp-microvolt = <1000000>;
-> +			clock-latency-ns = <150000>;
-> +		};
-> +
-> +		opp-1200000000 {
-> +			opp-hz = /bits/ 64 <1200000000>;
-> +			opp-microvolt = <1100000>;
-> +			clock-latency-ns = <150000>;
-> +			opp-suspend;
-> +		};
-> +	};
-> +
->  	gic: interrupt-controller@51a00000 {
->  		compatible = "arm,gic-v3";
->  		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Best Regards,
+Huang, Ying
+
+> Cheers,
+> Longman
