@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBB1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13276C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF14218E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF09F2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366697;
-	bh=fn2VglIejKGerKOg1gc9808eDGStI104LvGM0tXePCE=;
+	s=default; t=1551366715;
+	bh=1KDBaHuJQ1XiVu1AokvVXHBI5mnwZYyeRBmC/+Esl+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DgGR12UcughLrYOR+n0OnYO7NnCkr7xVS0wZK80H6N1SvY6mhv0Mfav6cIyoz//Ac
-	 LdOWqpyMUxee1eQYjx12d4CvvIaYFh42aD1raKQWVXd2sX3oiIiAtrw1JNEekFrnS2
-	 kpQ/XereLfKqxvN2lPUqLGcIb1kn38LCQYE8YWMA=
+	b=bBK9k32X0mi4Z3Wbx7bun11OLmOL8mgNlkg1+LwiNohQF9C4z11yCKjDklbGxLAtv
+	 gNSjZMg73LL1iRmlPwoXa5spVeOmQrHJW0Ytx7adipS6h5BXp4sggpyqw2R6QfZBhh
+	 XlrjflmjgnqD2SrLjxQtW6sm2Y9Rg7+wKF44wIqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388020AbfB1PLf (ORCPT
+        id S2388115AbfB1PLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:11:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44676 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:11:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732726AbfB1PL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:29 -0500
+        id S2388069AbfB1PLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87D89218C3;
-        Thu, 28 Feb 2019 15:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD366218C3;
+        Thu, 28 Feb 2019 15:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366689;
-        bh=fn2VglIejKGerKOg1gc9808eDGStI104LvGM0tXePCE=;
+        s=default; t=1551366708;
+        bh=1KDBaHuJQ1XiVu1AokvVXHBI5mnwZYyeRBmC/+Esl+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=agqDPERkpM5kbS5eDnEo4lx14Me2WE6DdjyahSm7Ldr9kvMa858yoUV46WHPt7WsR
-         FCLB9hi5takptiTO5YsFVAabfiez8+Cd8cSbQDzatHWIJNevQ7dgBiZlE1UcGvi4yp
-         JZ05bg5ke6IfyZq0pvmSg65HGaYFUYO34Pw8AZH0=
+        b=hNKociPhxTQjZs31Pltv6GOOsorUU1WzyDVAoKtert/cTFW2IADMI0TDK2CLUqZcF
+         VojmmIZIeVMwTVLUZnGe4CKSI8CC50Dy2NhbZXjC5rJBaDXuMKTf+I2YcVaiJg46V2
+         4hbtkkZOA89qC68gjPN3IwLRph8//Dl+rUrMS7uk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/64] bpftool: Fix prog dump by tag
-Date:   Thu, 28 Feb 2019 10:10:14 -0500
-Message-Id: <20190228151105.11277-13-sashal@kernel.org>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 23/64] irqchip/mmp: Only touch the PJ4 IRQ & FIQ bits on enable/disable
+Date:   Thu, 28 Feb 2019 10:10:24 -0500
+Message-Id: <20190228151105.11277-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -59,70 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 752bcf80f5549c9901b2e8bc77b2138de55b1026 ]
+[ Upstream commit 2380a22b60ce6f995eac806e69c66e397b59d045 ]
 
-Lance reported an issue with bpftool not being able to
-dump program if there are more programs loaded and you
-want to dump any but the first program, like:
+Resetting bit 4 disables the interrupt delivery to the "secure
+processor" core. This breaks the keyboard on a OLPC XO 1.75 laptop,
+where the firmware running on the "secure processor" bit-bangs the
+PS/2 protocol over the GPIO lines.
 
-  # bpftool prog
-  28: kprobe  name trace_req_start  tag 1dfc28ba8b3dd597  gpl
-  	loaded_at 2019-01-18T17:02:40+1100  uid 0
-  	xlated 112B  jited 109B  memlock 4096B  map_ids 13
-  29: kprobe  name trace_req_compl  tag 5b6a5ecc6030a683  gpl
-  	loaded_at 2019-01-18T17:02:40+1100  uid 0
-  	xlated 928B  jited 575B  memlock 4096B  map_ids 13,14
-  #  bpftool prog dum jited tag 1dfc28ba8b3dd597
-   0:	push   %rbp
-   1:	mov    %rsp,%rbp
-  ...
+It is not clear what the rest of the bits are and Marvell was unhelpful
+when asked for documentation. Aside from the SP bit, there are probably
+priority bits.
 
-  #  bpftool prog dum jited tag 5b6a5ecc6030a683
-  Error: can't get prog info (29): Bad address
+Leaving the unknown bits as the firmware set them up seems to be a wiser
+course of action compared to just turning them off.
 
-The problem is in the prog_fd_by_tag function not cleaning
-the struct bpf_prog_info before another request, so the
-previous program length is still in there and kernel assumes
-it needs to dump the program, which fails because there's no
-user pointer set.
-
-Moving the struct bpf_prog_info declaration into the loop,
-so it gets cleaned before each query.
-
-Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
-Reported-by: Lance Digby <ldigby@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+[maz: fixed-up subject and commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/prog.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-mmp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index 0de024a6cc2be..bbba0d61570fe 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -109,13 +109,14 @@ static void print_boot_time(__u64 nsecs, char *buf, unsigned int size)
+diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
+index 25f32e1d77647..3496b61a312ae 100644
+--- a/drivers/irqchip/irq-mmp.c
++++ b/drivers/irqchip/irq-mmp.c
+@@ -34,6 +34,9 @@
+ #define SEL_INT_PENDING		(1 << 6)
+ #define SEL_INT_NUM_MASK	0x3f
  
- static int prog_fd_by_tag(unsigned char *tag)
- {
--	struct bpf_prog_info info = {};
--	__u32 len = sizeof(info);
- 	unsigned int id = 0;
- 	int err;
- 	int fd;
- 
- 	while (true) {
-+		struct bpf_prog_info info = {};
-+		__u32 len = sizeof(info);
++#define MMP2_ICU_INT_ROUTE_PJ4_IRQ	(1 << 5)
++#define MMP2_ICU_INT_ROUTE_PJ4_FIQ	(1 << 6)
 +
- 		err = bpf_prog_get_next_id(id, &id);
- 		if (err) {
- 			p_err("%s", strerror(errno));
+ struct icu_chip_data {
+ 	int			nr_irqs;
+ 	unsigned int		virq_base;
+@@ -190,7 +193,8 @@ static const struct mmp_intc_conf mmp_conf = {
+ static const struct mmp_intc_conf mmp2_conf = {
+ 	.conf_enable	= 0x20,
+ 	.conf_disable	= 0x0,
+-	.conf_mask	= 0x7f,
++	.conf_mask	= MMP2_ICU_INT_ROUTE_PJ4_IRQ |
++			  MMP2_ICU_INT_ROUTE_PJ4_FIQ,
+ };
+ 
+ static void __exception_irq_entry mmp_handle_irq(struct pt_regs *regs)
 -- 
 2.19.1
 
