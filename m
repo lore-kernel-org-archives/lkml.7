@@ -2,75 +2,80 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A6CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE43C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA45021850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D27A218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V0l/qLtp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ptIE6cLm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732240AbfB1Jrk (ORCPT
+        id S1732251AbfB1JsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:47:40 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:43046 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfB1Jri (ORCPT
+        Thu, 28 Feb 2019 04:48:03 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:39404 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfB1JsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:47:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LtMdzsReUUFSdAWcFspo9gkFYAAv1bEvSZQYF3L2Di0=; b=V0l/qLtplGAi2NyWnjZxw1LDD
-        W1J4LYjixJvqwupWiLq5HNF5e4WlQvO2vc1lzXSfqk5oeeixWls6di/iqA30ViXlzLSMyp26QQUIf
-        Kimq7wo23sKGAeDwvm5TvEDEmSVlsRvErM4NrHR5pbvtH/rde/2DaEJxlZFKzl7eMyY34g6qJUTU4
-        xJ396aCBMEmqNs1Mt7YZEeZ0r266BzpNQ0SEKibyJhPmKUZj6nwCfvJAzdDonnqqXpzdFcc6nRK17
-        Mce9qw5AWBDvOpUakgYgoMWJt2egkCtcwoXfUApmanclHn1LsXZehPmrCzX/Dq3ayQ41IlkVurhKZ
-        gsX74K81A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1gzIHu-0000bB-9H; Thu, 28 Feb 2019 09:47:34 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 10238202CF5F8; Thu, 28 Feb 2019 10:47:33 +0100 (CET)
-Date:   Thu, 28 Feb 2019 10:47:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ketan Patil <ketanp@nvidia.com>
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, snikam@nvidia.com,
-        bnihalani@nvidia.com, byan@nvidia.com, sgurrappadi@nvidia.com,
-        treding@nvidia.com, talho@nvidia.com
-Subject: Re: [PATCH] sched/cputime: Remove unnecessary assignment statement
-Message-ID: <20190228094733.GY32494@hirez.programming.kicks-ass.net>
-References: <1551248002-27303-1-git-send-email-ketanp@nvidia.com>
- <20190227103230.GM32494@hirez.programming.kicks-ass.net>
- <9bce6378-2221-f358-dc97-f15ee7ab546b@nvidia.com>
+        Thu, 28 Feb 2019 04:48:03 -0500
+Received: by mail-ua1-f68.google.com with SMTP id s15so18256062uap.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 01:48:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Qg42lEb92IAFtEM163V3IbIWP2EydgJg/Abq5iGNqM=;
+        b=ptIE6cLmEsjwglLkzHm84BELBoscHobXcahmFGODBiSV5Dub0DxvCKOLzgeFqeDRBk
+         wxgniaCEjiKXDuD9oWLSftiowNnZR8zzWWq5FFTkTY2GGhAvezSA3HBHX5pXdvyuJdBY
+         Ljd5nTGASR4qDUh6b4Lz2Mbj/CJuf1635xv0eS7vUHTAP2gmEiFpy8CR16igl64PqJLO
+         tqhsouJwQhRo97Qnk+e97xfNqp2IFMc6hNalYXctB1ne6vwb/Rp4UW68vUix2E57NwGq
+         1Bv1ezBucSfzlVLhafJ0uRiog/PO0toKcO/DbtZ1epPCJ6x0+2WfK3THL4dCkXFJ59b/
+         h9Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Qg42lEb92IAFtEM163V3IbIWP2EydgJg/Abq5iGNqM=;
+        b=OPMsvCoOkaRzPAjiqCGJmh7lfvHDmZPEFfGg1mr0LdJIisv9HJkFJKz4R5L9IphJ5z
+         YiJoBZoBWIOpGWmnX4dzOtgXNS6nm+On7ds1F6+5bqaomSmC2M5KMnQ1UYTfcc5qB2kd
+         nyiWmXdJe+r+bu4dLpoWmhXVO8obX51paa1CQD+nXpKoCFRspCw4OZrw7WS17TIm9z/F
+         jGKJDY+FOpQERiN3QO8e4B15xpvYnKl0ff35FajEof16J1S1wbNYxS55GPxOt2sP7Pds
+         dfkMkaH7BQhpt5p/pxRgSN3K9JVruano96kGEa6TkZhEfFKBr9aQZ210cmWRG1Q4aMWB
+         Nb1A==
+X-Gm-Message-State: AHQUAuYnf86XE/wzQ3yqGyDmg0e8/fF8Rw/FeorAZ3pYgPhS5u/+pymG
+        oT3K1OwIgIwYDbV96a/72Ay2JcQWX3vSNCrJUOMtLg==
+X-Google-Smtp-Source: AHgI3IbieWuFzWBVrJAOMs70fBWl4NgvXptn9ixvMXAmcWkYCRhKxU0tU+8PZK7k8NifnV/8FzA0qjwBCGhEaWu+IvE=
+X-Received: by 2002:a67:6849:: with SMTP id d70mr4339854vsc.61.1551347282008;
+ Thu, 28 Feb 2019 01:48:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9bce6378-2221-f358-dc97-f15ee7ab546b@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190228084624.25288-1-oded.gabbay@gmail.com> <20190228084624.25288-12-oded.gabbay@gmail.com>
+ <20190228093140.GA32514@kroah.com>
+In-Reply-To: <20190228093140.GA32514@kroah.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Thu, 28 Feb 2019 11:47:35 +0200
+Message-ID: <CAFCwf12GCWn-xJHcCU=Fk4eY9s=zRz0bvEW0nU4OVSd=kQCTKg@mail.gmail.com>
+Subject: Re: [PATCH 11/15] habanalabs: print pointer using %p
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 28, 2019 at 11:31 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Feb 28, 2019 at 10:46:20AM +0200, Oded Gabbay wrote:
+> > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+>
+> I can't take patches without any changelog text :(
+>
+ah, didn't know it was required for even this trivial change.
+I'll resend this and another patch that is without commit message.
 
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
-
-On Thu, Feb 28, 2019 at 03:12:13PM +0530, Ketan Patil wrote:
-> The coverity tool has detected this issue as an unused value, since
-> the code assigns the value to utime variable and then after the jump, the
-> value of utime again gets updated, hence the previous value is not at all
-> useful and this patch removes that first assignment.
-
-Not a security issue then; just tell coverity to shut up.
+Oded
