@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E3AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F801C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0770B218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A4E2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731667AbfB1HO6 (ORCPT
+        id S1731617AbfB1HPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:14:58 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:45347 "EHLO
+        Thu, 28 Feb 2019 02:15:37 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:46893 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730951AbfB1HO5 (ORCPT
+        with ESMTP id S1730951AbfB1HPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:14:57 -0500
+        Thu, 28 Feb 2019 02:15:37 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7ER3b2939940
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7F6qM2940217
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Feb 2019 23:14:27 -0800
+        Wed, 27 Feb 2019 23:15:06 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7ERAd2939937;
-        Wed, 27 Feb 2019 23:14:27 -0800
-Date:   Wed, 27 Feb 2019 23:14:27 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7F61d2940212;
+        Wed, 27 Feb 2019 23:15:06 -0800
+Date:   Wed, 27 Feb 2019 23:15:06 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Bart Van Assche <tipbot@zytor.com>
-Message-ID: <tip-669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f@git.kernel.org>
-Cc:     johannes.berg@intel.com, bvanassche@acm.org,
-        linux-kernel@vger.kernel.org, will.deacon@arm.com,
-        peterz@infradead.org, paulmck@linux.vnet.ibm.com, tj@kernel.org,
-        akpm@linux-foundation.org, tglx@linutronix.de, mingo@kernel.org,
-        longman@redhat.com, hpa@zytor.com, torvalds@linux-foundation.org
-Reply-To: will.deacon@arm.com, peterz@infradead.org,
-          johannes.berg@intel.com, bvanassche@acm.org,
-          linux-kernel@vger.kernel.org, paulmck@linux.vnet.ibm.com,
-          akpm@linux-foundation.org, tj@kernel.org, tglx@linutronix.de,
-          mingo@kernel.org, hpa@zytor.com, torvalds@linux-foundation.org,
-          longman@redhat.com
-In-Reply-To: <20190214230058.196511-20-bvanassche@acm.org>
-References: <20190214230058.196511-20-bvanassche@acm.org>
+Message-ID: <tip-d93ac78bf7b37db36fa00225f8e9a14c7ed1b2ba@git.kernel.org>
+Cc:     mingo@kernel.org, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, bvanassche@acm.org,
+        paulmck@linux.vnet.ibm.com, longman@redhat.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        akpm@linux-foundation.org, peterz@infradead.org,
+        johannes@sipsolutions.net, hpa@zytor.com
+Reply-To: hpa@zytor.com, torvalds@linux-foundation.org,
+          johannes@sipsolutions.net, akpm@linux-foundation.org,
+          tglx@linutronix.de, peterz@infradead.org, mingo@kernel.org,
+          longman@redhat.com, linux-kernel@vger.kernel.org,
+          will.deacon@arm.com, paulmck@linux.vnet.ibm.com,
+          bvanassche@acm.org
+In-Reply-To: <20190214230058.196511-23-bvanassche@acm.org>
+References: <20190214230058.196511-23-bvanassche@acm.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] kernel/workqueue: Use dynamic lockdep keys for
- workqueues
-Git-Commit-ID: 669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
+Subject: [tip:locking/core] lockdep/lib/tests: Fix run_tests.sh
+Git-Commit-ID: d93ac78bf7b37db36fa00225f8e9a14c7ed1b2ba
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -62,320 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
-Gitweb:     https://git.kernel.org/tip/669de8bda87b92ab9a2fc663b3f5743c2ad1ae9f
+Commit-ID:  d93ac78bf7b37db36fa00225f8e9a14c7ed1b2ba
+Gitweb:     https://git.kernel.org/tip/d93ac78bf7b37db36fa00225f8e9a14c7ed1b2ba
 Author:     Bart Van Assche <bvanassche@acm.org>
-AuthorDate: Thu, 14 Feb 2019 15:00:54 -0800
+AuthorDate: Thu, 14 Feb 2019 15:00:57 -0800
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 28 Feb 2019 07:55:47 +0100
+CommitDate: Thu, 28 Feb 2019 07:55:48 +0100
 
-kernel/workqueue: Use dynamic lockdep keys for workqueues
+lockdep/lib/tests: Fix run_tests.sh
 
-The following commit:
-
-  87915adc3f0a ("workqueue: re-add lockdep dependencies for flushing")
-
-improved deadlock checking in the workqueue implementation. Unfortunately
-that patch also introduced a few false positive lockdep complaints.
-
-This patch suppresses these false positives by allocating the workqueue mutex
-lockdep key dynamically.
-
-An example of a false positive lockdep complaint suppressed by this patch
-can be found below. The root cause of the lockdep complaint shown below
-is that the direct I/O code can call alloc_workqueue() from inside a work
-item created by another alloc_workqueue() call and that both workqueues
-share the same lockdep key. This patch avoids that that lockdep complaint
-is triggered by allocating the work queue lockdep keys dynamically.
-
-In other words, this patch guarantees that a unique lockdep key is
-associated with each work queue mutex.
-
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  4.19.0-dbg+ #1 Not tainted
-  fio/4129 is trying to acquire lock:
-  00000000a01cfe1a ((wq_completion)"dio/%s"sb->s_id){+.+.}, at: flush_workqueue+0xd0/0x970
-
-  but task is already holding lock:
-  00000000a0acecf9 (&sb->s_type->i_mutex_key#14){+.+.}, at: ext4_file_write_iter+0x154/0x710
-
-  which lock already depends on the new lock.
-
-  the existing dependency chain (in reverse order) is:
-
-  -> #2 (&sb->s_type->i_mutex_key#14){+.+.}:
-         down_write+0x3d/0x80
-         __generic_file_fsync+0x77/0xf0
-         ext4_sync_file+0x3c9/0x780
-         vfs_fsync_range+0x66/0x100
-         dio_complete+0x2f5/0x360
-         dio_aio_complete_work+0x1c/0x20
-         process_one_work+0x481/0x9f0
-         worker_thread+0x63/0x5a0
-         kthread+0x1cf/0x1f0
-         ret_from_fork+0x24/0x30
-
-  -> #1 ((work_completion)(&dio->complete_work)){+.+.}:
-         process_one_work+0x447/0x9f0
-         worker_thread+0x63/0x5a0
-         kthread+0x1cf/0x1f0
-         ret_from_fork+0x24/0x30
-
-  -> #0 ((wq_completion)"dio/%s"sb->s_id){+.+.}:
-         lock_acquire+0xc5/0x200
-         flush_workqueue+0xf3/0x970
-         drain_workqueue+0xec/0x220
-         destroy_workqueue+0x23/0x350
-         sb_init_dio_done_wq+0x6a/0x80
-         do_blockdev_direct_IO+0x1f33/0x4be0
-         __blockdev_direct_IO+0x79/0x86
-         ext4_direct_IO+0x5df/0xbb0
-         generic_file_direct_write+0x119/0x220
-         __generic_file_write_iter+0x131/0x2d0
-         ext4_file_write_iter+0x3fa/0x710
-         aio_write+0x235/0x330
-         io_submit_one+0x510/0xeb0
-         __x64_sys_io_submit+0x122/0x340
-         do_syscall_64+0x71/0x220
-         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-  other info that might help us debug this:
-
-  Chain exists of:
-    (wq_completion)"dio/%s"sb->s_id --> (work_completion)(&dio->complete_work) --> &sb->s_type->i_mutex_key#14
-
-   Possible unsafe locking scenario:
-
-         CPU0                    CPU1
-         ----                    ----
-    lock(&sb->s_type->i_mutex_key#14);
-                                 lock((work_completion)(&dio->complete_work));
-                                 lock(&sb->s_type->i_mutex_key#14);
-    lock((wq_completion)"dio/%s"sb->s_id);
-
-   *** DEADLOCK ***
-
-  1 lock held by fio/4129:
-   #0: 00000000a0acecf9 (&sb->s_type->i_mutex_key#14){+.+.}, at: ext4_file_write_iter+0x154/0x710
-
-  stack backtrace:
-  CPU: 3 PID: 4129 Comm: fio Not tainted 4.19.0-dbg+ #1
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-  Call Trace:
-   dump_stack+0x86/0xc5
-   print_circular_bug.isra.32+0x20a/0x218
-   __lock_acquire+0x1c68/0x1cf0
-   lock_acquire+0xc5/0x200
-   flush_workqueue+0xf3/0x970
-   drain_workqueue+0xec/0x220
-   destroy_workqueue+0x23/0x350
-   sb_init_dio_done_wq+0x6a/0x80
-   do_blockdev_direct_IO+0x1f33/0x4be0
-   __blockdev_direct_IO+0x79/0x86
-   ext4_direct_IO+0x5df/0xbb0
-   generic_file_direct_write+0x119/0x220
-   __generic_file_write_iter+0x131/0x2d0
-   ext4_file_write_iter+0x3fa/0x710
-   aio_write+0x235/0x330
-   io_submit_one+0x510/0xeb0
-   __x64_sys_io_submit+0x122/0x340
-   do_syscall_64+0x71/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Apparently the execute bits were set for the tests/*.sh scripts on my
+test setup but these are not set in the kernel tree. Fix this by adding
+the interpreter path in front of the script paths.
 
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Tejun Heo <tj@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Waiman Long <longman@redhat.com>
 Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/20190214230058.196511-20-bvanassche@acm.org
-[ Reworked the changelog a bit. ]
+Cc: johannes.berg@intel.com
+Cc: tj@kernel.org
+Fixes: 5ecb8e94b494 ("tools/lib/lockdep/tests: Improve testing accuracy") # v5.0-rc1
+Link: https://lkml.kernel.org/r/20190214230058.196511-23-bvanassche@acm.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/workqueue.h | 28 ++++------------------
- kernel/workqueue.c        | 59 +++++++++++++++++++++++++++++++++++++++--------
- 2 files changed, 54 insertions(+), 33 deletions(-)
+ tools/lib/lockdep/run_tests.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-index 60d673e15632..d9a1a480e920 100644
---- a/include/linux/workqueue.h
-+++ b/include/linux/workqueue.h
-@@ -390,43 +390,23 @@ extern struct workqueue_struct *system_freezable_wq;
- extern struct workqueue_struct *system_power_efficient_wq;
- extern struct workqueue_struct *system_freezable_power_efficient_wq;
- 
--extern struct workqueue_struct *
--__alloc_workqueue_key(const char *fmt, unsigned int flags, int max_active,
--	struct lock_class_key *key, const char *lock_name, ...) __printf(1, 6);
--
- /**
-  * alloc_workqueue - allocate a workqueue
-  * @fmt: printf format for the name of the workqueue
-  * @flags: WQ_* flags
-  * @max_active: max in-flight work items, 0 for default
-- * @args...: args for @fmt
-+ * remaining args: args for @fmt
-  *
-  * Allocate a workqueue with the specified parameters.  For detailed
-  * information on WQ_* flags, please refer to
-  * Documentation/core-api/workqueue.rst.
-  *
-- * The __lock_name macro dance is to guarantee that single lock_class_key
-- * doesn't end up with different namesm, which isn't allowed by lockdep.
-- *
-  * RETURNS:
-  * Pointer to the allocated workqueue on success, %NULL on failure.
-  */
--#ifdef CONFIG_LOCKDEP
--#define alloc_workqueue(fmt, flags, max_active, args...)		\
--({									\
--	static struct lock_class_key __key;				\
--	const char *__lock_name;					\
--									\
--	__lock_name = "(wq_completion)"#fmt#args;			\
--									\
--	__alloc_workqueue_key((fmt), (flags), (max_active),		\
--			      &__key, __lock_name, ##args);		\
--})
--#else
--#define alloc_workqueue(fmt, flags, max_active, args...)		\
--	__alloc_workqueue_key((fmt), (flags), (max_active),		\
--			      NULL, NULL, ##args)
--#endif
-+struct workqueue_struct *alloc_workqueue(const char *fmt,
-+					 unsigned int flags,
-+					 int max_active, ...);
- 
- /**
-  * alloc_ordered_workqueue - allocate an ordered workqueue
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index fc5d23d752a5..e163e7a7f5e5 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -259,6 +259,8 @@ struct workqueue_struct {
- 	struct wq_device	*wq_dev;	/* I: for sysfs interface */
- #endif
- #ifdef CONFIG_LOCKDEP
-+	char			*lock_name;
-+	struct lock_class_key	key;
- 	struct lockdep_map	lockdep_map;
- #endif
- 	char			name[WQ_NAME_LEN]; /* I: workqueue name */
-@@ -3337,11 +3339,49 @@ static int init_worker_pool(struct worker_pool *pool)
- 	return 0;
- }
- 
-+#ifdef CONFIG_LOCKDEP
-+static void wq_init_lockdep(struct workqueue_struct *wq)
-+{
-+	char *lock_name;
-+
-+	lockdep_register_key(&wq->key);
-+	lock_name = kasprintf(GFP_KERNEL, "%s%s", "(wq_completion)", wq->name);
-+	if (!lock_name)
-+		lock_name = wq->name;
-+	lockdep_init_map(&wq->lockdep_map, lock_name, &wq->key, 0);
-+}
-+
-+static void wq_unregister_lockdep(struct workqueue_struct *wq)
-+{
-+	lockdep_unregister_key(&wq->key);
-+}
-+
-+static void wq_free_lockdep(struct workqueue_struct *wq)
-+{
-+	if (wq->lock_name != wq->name)
-+		kfree(wq->lock_name);
-+}
-+#else
-+static void wq_init_lockdep(struct workqueue_struct *wq)
-+{
-+}
-+
-+static void wq_unregister_lockdep(struct workqueue_struct *wq)
-+{
-+}
-+
-+static void wq_free_lockdep(struct workqueue_struct *wq)
-+{
-+}
-+#endif
-+
- static void rcu_free_wq(struct rcu_head *rcu)
- {
- 	struct workqueue_struct *wq =
- 		container_of(rcu, struct workqueue_struct, rcu);
- 
-+	wq_free_lockdep(wq);
-+
- 	if (!(wq->flags & WQ_UNBOUND))
- 		free_percpu(wq->cpu_pwqs);
+diff --git a/tools/lib/lockdep/run_tests.sh b/tools/lib/lockdep/run_tests.sh
+index c8fbd0306960..11f425662b43 100755
+--- a/tools/lib/lockdep/run_tests.sh
++++ b/tools/lib/lockdep/run_tests.sh
+@@ -11,7 +11,7 @@ find tests -name '*.c' | sort | while read -r i; do
+ 	testname=$(basename "$i" .c)
+ 	echo -ne "$testname... "
+ 	if gcc -o "tests/$testname" -pthread "$i" liblockdep.a -Iinclude -D__USE_LIBLOCKDEP &&
+-		timeout 1 "tests/$testname" 2>&1 | "tests/${testname}.sh"; then
++		timeout 1 "tests/$testname" 2>&1 | /bin/bash "tests/${testname}.sh"; then
+ 		echo "PASSED!"
  	else
-@@ -3532,8 +3572,10 @@ static void pwq_unbound_release_workfn(struct work_struct *work)
- 	 * If we're the last pwq going away, @wq is already dead and no one
- 	 * is gonna access it anymore.  Schedule RCU free.
- 	 */
--	if (is_last)
-+	if (is_last) {
-+		wq_unregister_lockdep(wq);
- 		call_rcu(&wq->rcu, rcu_free_wq);
-+	}
- }
- 
- /**
-@@ -4067,11 +4109,9 @@ static int init_rescuer(struct workqueue_struct *wq)
- 	return 0;
- }
- 
--struct workqueue_struct *__alloc_workqueue_key(const char *fmt,
--					       unsigned int flags,
--					       int max_active,
--					       struct lock_class_key *key,
--					       const char *lock_name, ...)
-+struct workqueue_struct *alloc_workqueue(const char *fmt,
-+					 unsigned int flags,
-+					 int max_active, ...)
- {
- 	size_t tbl_size = 0;
- 	va_list args;
-@@ -4106,7 +4146,7 @@ struct workqueue_struct *__alloc_workqueue_key(const char *fmt,
- 			goto err_free_wq;
- 	}
- 
--	va_start(args, lock_name);
-+	va_start(args, max_active);
- 	vsnprintf(wq->name, sizeof(wq->name), fmt, args);
- 	va_end(args);
- 
-@@ -4123,7 +4163,7 @@ struct workqueue_struct *__alloc_workqueue_key(const char *fmt,
- 	INIT_LIST_HEAD(&wq->flusher_overflow);
- 	INIT_LIST_HEAD(&wq->maydays);
- 
--	lockdep_init_map(&wq->lockdep_map, lock_name, key, 0);
-+	wq_init_lockdep(wq);
- 	INIT_LIST_HEAD(&wq->list);
- 
- 	if (alloc_and_link_pwqs(wq) < 0)
-@@ -4161,7 +4201,7 @@ err_destroy:
- 	destroy_workqueue(wq);
- 	return NULL;
- }
--EXPORT_SYMBOL_GPL(__alloc_workqueue_key);
-+EXPORT_SYMBOL_GPL(alloc_workqueue);
- 
- /**
-  * destroy_workqueue - safely terminate a workqueue
-@@ -4214,6 +4254,7 @@ void destroy_workqueue(struct workqueue_struct *wq)
- 		kthread_stop(wq->rescuer->task);
- 
- 	if (!(wq->flags & WQ_UNBOUND)) {
-+		wq_unregister_lockdep(wq);
- 		/*
- 		 * The base ref is never dropped on per-cpu pwqs.  Directly
- 		 * schedule RCU free.
+ 		echo "FAILED!"
+@@ -24,7 +24,7 @@ find tests -name '*.c' | sort | while read -r i; do
+ 	echo -ne "(PRELOAD) $testname... "
+ 	if gcc -o "tests/$testname" -pthread -Iinclude "$i" &&
+ 		timeout 1 ./lockdep "tests/$testname" 2>&1 |
+-		"tests/${testname}.sh"; then
++		/bin/bash "tests/${testname}.sh"; then
+ 		echo "PASSED!"
+ 	else
+ 		echo "FAILED!"
+@@ -37,7 +37,7 @@ find tests -name '*.c' | sort | while read -r i; do
+ 	echo -ne "(PRELOAD + Valgrind) $testname... "
+ 	if gcc -o "tests/$testname" -pthread -Iinclude "$i" &&
+ 		{ timeout 10 valgrind --read-var-info=yes ./lockdep "./tests/$testname" >& "tests/${testname}.vg.out"; true; } &&
+-		"tests/${testname}.sh" < "tests/${testname}.vg.out" &&
++		/bin/bash "tests/${testname}.sh" < "tests/${testname}.vg.out" &&
+ 		! grep -Eq '(^==[0-9]*== (Invalid |Uninitialised ))|Mismatched free|Source and destination overlap| UME ' "tests/${testname}.vg.out"; then
+ 		echo "PASSED!"
+ 	else
