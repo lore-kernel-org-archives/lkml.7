@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB92C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE4BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13BDD20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEB22184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367566;
-	bh=AbiHw8yGGGziVNj1B3MjtkRGbl0fx5XTEV7/ahEc5Hk=;
+	s=default; t=1551367570;
+	bh=RQf4DS9ekfkSDwTadI5Gomd636xP1+SchhYaNpekzk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GkpQQ4gMlrsba5JaPzf89hvZgeng3Pbm7OLcPPssx3wkC5+rMsDyBzBJ7Jk1TW0Vm
-	 FKxsuisnl4omTp2MyCUmxCLKpPRgitramdjvmg7cBqOi1jctJ1SpNcJ7XREG0i465w
-	 p3EqhLpuWT0EpEHTg55ES5kUz/Bmz7LKnen6W/7A=
+	b=SOUJj2Kvca2ZG5wNdgqzlOF/15nyrWnGFMu1s65oMgSNg5mcHtEWcYNF198k+/Yz/
+	 DmMn6KuYQYZRATMnqJR1PwUWDRJXVUuJAqlKviZXF0oAbPd+o5g5S2ZD5VqmDb2KcB
+	 McxtE1lkukORCt4H3cIE+tlkVn579nTsF3DbPqFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388065AbfB1PLr (ORCPT
+        id S2388054AbfB1PLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:11:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44766 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:11:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387581AbfB1PLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:33 -0500
+        id S1731348AbfB1PLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78D1A218E0;
-        Thu, 28 Feb 2019 15:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E91C218D9;
+        Thu, 28 Feb 2019 15:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366693;
-        bh=AbiHw8yGGGziVNj1B3MjtkRGbl0fx5XTEV7/ahEc5Hk=;
+        s=default; t=1551366698;
+        bh=RQf4DS9ekfkSDwTadI5Gomd636xP1+SchhYaNpekzk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KD5pVnZKtEco0QRnqfxeyRZ7LpBacpNXip8k+W+FfZhJttVEo2i48KagFckhMTnBW
-         TnNstb8jbx1kEjqS/7l8rCb6myWD7RdqvPkDfpSjE3nyB3MS9w2Mu8+DDocz8IutKi
-         2qoXG5KV3JZk6dTcSKWJKnE0XdI5+V5ZWqqtZSkw=
+        b=OOV0ljZ4Bi0vdZ1E39/0gI9sGiV0LrpzXSOfrOtP1+cILGGeL93QMAn97Eyh4ru8S
+         T9JiKlBDsR5dBHfdT2rlo2a3S3M2YQDAhmR4pyLnOn7cdal9ZNDjEIAADskV1Z1hxk
+         l0ehMedrYQybCPL5o4h4FJ6EyCZwoTQHagsZofnc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yafang Shao <laoar.shao@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/64] bpf: sock recvbuff must be limited by rmem_max in bpf_setsockopt()
-Date:   Thu, 28 Feb 2019 10:10:16 -0500
-Message-Id: <20190228151105.11277-15-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/64] arm64: dts: add msm8996 compatible to gicv3
+Date:   Thu, 28 Feb 2019 10:10:18 -0500
+Message-Id: <20190228151105.11277-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -58,40 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yafang Shao <laoar.shao@gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit c9e4576743eeda8d24dedc164d65b78877f9a98c ]
+[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
 
-When sock recvbuff is set by bpf_setsockopt(), the value must by
-limited by rmem_max. It is the same with sendbuff.
+Add compatible to gicv3 node to enable quirk required to restrict writing
+to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
 
-Fixes: 8c4b4c7e9ff0 ("bpf: Add setsockopt helper function to bpf")
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Lawrence Brakmo <brakmo@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+With this quirk MSM8996 can at least boot out of mainline, which can help
+community to work with boards based on MSM8996.
+
+Without this patch Qualcomm DB820c board reboots on mainline.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index fb0080e84bd43..bed9061102f43 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -3909,10 +3909,12 @@ BPF_CALL_5(bpf_setsockopt, struct bpf_sock_ops_kern *, bpf_sock,
- 		/* Only some socketops are supported */
- 		switch (optname) {
- 		case SO_RCVBUF:
-+			val = min_t(u32, val, sysctl_rmem_max);
- 			sk->sk_userlocks |= SOCK_RCVBUF_LOCK;
- 			sk->sk_rcvbuf = max_t(int, val * 2, SOCK_MIN_RCVBUF);
- 			break;
- 		case SO_SNDBUF:
-+			val = min_t(u32, val, sysctl_wmem_max);
- 			sk->sk_userlocks |= SOCK_SNDBUF_LOCK;
- 			sk->sk_sndbuf = max_t(int, val * 2, SOCK_MIN_SNDBUF);
- 			break;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index cd3865e7a270b..8c86c41a0d25f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -399,7 +399,7 @@
+ 		};
+ 
+ 		intc: interrupt-controller@9bc0000 {
+-			compatible = "arm,gic-v3";
++			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+ 			#redistributor-regions = <1>;
 -- 
 2.19.1
 
