@@ -2,96 +2,82 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D417C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF6AC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE2B2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F2D2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="QjwzuLxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbfB1MsN (ORCPT
+        id S1731218AbfB1Mvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 07:48:13 -0500
-Received: from smtp03.citrix.com ([162.221.156.55]:25747 "EHLO
-        SMTP03.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfB1MsN (ORCPT
+        Thu, 28 Feb 2019 07:51:46 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34294 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfB1Mvp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 07:48:13 -0500
-X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
-   d="scan'208";a="79320306"
-From:   Igor Druzhinin <igor.druzhinin@citrix.com>
-To:     <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <wei.liu2@citrix.com>, <paul.durrant@citrix.com>,
-        <davem@davemloft.net>, Igor Druzhinin <igor.druzhinin@citrix.com>
-Subject: [PATCH v2] xen-netback: fix occasional leak of grant ref mappings under memory pressure
-Date:   Thu, 28 Feb 2019 12:48:03 +0000
-Message-ID: <1551358083-14227-1-git-send-email-igor.druzhinin@citrix.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 28 Feb 2019 07:51:45 -0500
+Received: by mail-wr1-f68.google.com with SMTP id f14so21847753wrg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:51:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9abm0vdzy1u8k6t9ZPdWfEHMFX/OS1Bdc2ERO6x3ga0=;
+        b=QjwzuLxDrl+HPKlwdKfODyAY2mBGwVvTaW9CLwhP32n2Lvx/8GicnuinoOZWPO8NJP
+         qsjsDgtvcl/0BePwDn7LlW7Vyc1CI604eY1Jt6o6HWr2VcYo2muKLPsjM/ljuwaBxvbQ
+         bOpUhPejtlwVVJHXuL2oF7YeBoiy+i3VrcLRg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9abm0vdzy1u8k6t9ZPdWfEHMFX/OS1Bdc2ERO6x3ga0=;
+        b=jjnNMsByJU5t1B+ELh+Z/dESnfRgj62a0b5s0dt+XneRlLdRocsltmk/8qtnXtZQEV
+         iX//F6QSfkqOzohO3T2S38fy7EoKnGPkjQLplvERrqcwo3VccIlSdoZukPClf6Ey/RiC
+         uvdi7rZgp5EOE1OwdNVgIJFWYXuATN7/0T2WHubha4r/UcDBTLjqILILbqPegf1wHe2L
+         4Hdtgh7UPYmRYi9MskW8yWPx9NVsQC16Gx28E8+JEuP670J8YVnwS6h/hHeijBAPRMMf
+         ftekhM7WmzWW9gZFmn+BitPMulvkZNt0sbchyUA9A11ENkqDfFEixfP0+8gqiRxhy1jZ
+         LGaA==
+X-Gm-Message-State: APjAAAU4hFM3IkC7/9s0WOinA2HLKh16mST0EUq6KJsP7TjSUfRfjWmK
+        0bGoaIjUOZOCW4AvbBQxb9Cld7VeIug=
+X-Google-Smtp-Source: APXvYqycnvwkVA52YbGqmvi8Gr4mzZGaRSuKwx2AMis/NyMnS1IjehuHd5ENSFRGBC/ossCj84e1lw==
+X-Received: by 2002:adf:9cc3:: with SMTP id h3mr6010367wre.47.1551358303852;
+        Thu, 28 Feb 2019 04:51:43 -0800 (PST)
+Received: from localhost ([85.255.236.253])
+        by smtp.gmail.com with ESMTPSA id m15sm14260352wrx.30.2019.02.28.04.51.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 28 Feb 2019 04:51:43 -0800 (PST)
+Date:   Thu, 28 Feb 2019 12:51:41 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm, memcg: Handle cgroup_disable=memory when getting
+ memcg protection
+Message-ID: <20190228125141.GA7365@chrisdown.name>
+References: <20190201045711.GA18302@chrisdown.name>
+ <20190201071203.GD11599@dhcp22.suse.cz>
+ <20190201074809.GF11599@dhcp22.suse.cz>
+ <20190226152958.726b921f0cb03ccc50144539@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190226152958.726b921f0cb03ccc50144539@linux-foundation.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zero-copy callback flag is not yet set on frag list skb at the moment
-xenvif_handle_frag_list() returns -ENOMEM. This eventually results in
-leaking grant ref mappings since xenvif_zerocopy_callback() is never
-called for these fragments. Those eventually build up and cause Xen
-to kill Dom0 as the slots get reused for new mappings:
+Andrew Morton writes:
+>Things settled down.  Here's the rolled-up patch.  Please review?
 
-"d0v0 Attempt to implicitly unmap a granted PTE c010000329fce005"
-
-That behavior is observed under certain workloads where sudden spikes
-of page cache writes coexist with active atomic skb allocations from
-network traffic. Additionally, rework the logic to deal with frag_list
-deallocation in a single place.
-
-Signed-off-by: Paul Durrant <paul.durrant@citrix.com>
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
----
- drivers/net/xen-netback/netback.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
-index 80aae3a..f09948b 100644
---- a/drivers/net/xen-netback/netback.c
-+++ b/drivers/net/xen-netback/netback.c
-@@ -1072,11 +1072,6 @@ static int xenvif_handle_frag_list(struct xenvif_queue *queue, struct sk_buff *s
- 		skb_frag_size_set(&frags[i], len);
- 	}
- 
--	/* Copied all the bits from the frag list -- free it. */
--	skb_frag_list_init(skb);
--	xenvif_skb_zerocopy_prepare(queue, nskb);
--	kfree_skb(nskb);
--
- 	/* Release all the original (foreign) frags. */
- 	for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
- 		skb_frag_unref(skb, f);
-@@ -1145,6 +1140,8 @@ static int xenvif_tx_submit(struct xenvif_queue *queue)
- 		xenvif_fill_frags(queue, skb);
- 
- 		if (unlikely(skb_has_frag_list(skb))) {
-+			struct sk_buff *nskb = skb_shinfo(skb)->frag_list;
-+			xenvif_skb_zerocopy_prepare(queue, nskb);
- 			if (xenvif_handle_frag_list(queue, skb)) {
- 				if (net_ratelimit())
- 					netdev_err(queue->vif->dev,
-@@ -1153,6 +1150,9 @@ static int xenvif_tx_submit(struct xenvif_queue *queue)
- 				kfree_skb(skb);
- 				continue;
- 			}
-+			/* Copied all the bits from the frag list -- free it. */
-+			skb_frag_list_init(skb);
-+			kfree_skb(nskb);
- 		}
- 
- 		skb->dev      = queue->vif->dev;
--- 
-2.7.4
-
+Looks correct to me as patch author, thanks!
