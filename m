@@ -7,103 +7,94 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B6DC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F216C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D62218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F07A21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OU0Fo8tM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ii+6pZt+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732215AbfB1Jzu (ORCPT
+        id S1726619AbfB1Jzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:55:50 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45883 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbfB1Jzu (ORCPT
+        Thu, 28 Feb 2019 04:55:55 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45885 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfB1Jzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:55:50 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w17so21173390wrn.12
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 01:55:49 -0800 (PST)
+        Thu, 28 Feb 2019 04:55:52 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w17so21173471wrn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 01:55:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=5dby7dWRNXrTe8adVYnbWgyEhYb7JWERjbyamo16SDU=;
-        b=OU0Fo8tMpufyybRYN8cmgwFC7usggu49V2IatjG9tsoArqEMeYQ8vi7w93FywY2Zkz
-         m13WZiqqTiT/1KSccCxjy3L/9/9s7mEMzvURm+AAi/Nv4Tth8NXs/j7jShugxuZT6Unh
-         kFwokQ+0j9c7vhaV7JXDsxBRzbuFaXTk8CaIXVZK3jyH3UJAXC+eunbXp3RWQxDahmI7
-         Y2nU4JaTuyWiWWwp3Addzw+eGAC5hRXEmRY/McbTX1jTSoFdcT8WuFabCKrTEtEwSQuu
-         2BloscWpI1BqW5752pGQg2HYO9epvTwwIOSkuyvYxWQXsQALsDAdKk2JMnPuSaHJVzsu
-         D5wA==
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=zqpI/B5m5rMa9RUUj4JMXK0QX2rw2KjRN3wUHsQtjtc=;
+        b=Ii+6pZt+yUKUiUaDbPGDjpcVZlH+Z0kPVLhHSQvel3HlM+AsFdKe5mEiHBoVhazo9Z
+         kDVP13xcGq2pgCbUGWRtupwl7DFF7QAX6EXIDpGSpUn+Q13yMxgvWqV+0AYpAd73E9X5
+         8o8kI7dO5sdOMoX2I77GNbhOH0PfmDfWyBT3/crrg1AAfZb/Jd7FY4HWy/ZvyEnNFdxx
+         w4oQY85u+Bwp8D5Jsb0RAMzaPylGPvd4dQPUX27ZpmKqa4RHpWdGD+c3h5VV+WVeF1lq
+         3gDAzAfPN6G0gsNHegAHG7nrs+GzsDVgs9clSSMnTRpSpAwBM+F+Nclj+JLBF0Y/i0yX
+         wlqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=5dby7dWRNXrTe8adVYnbWgyEhYb7JWERjbyamo16SDU=;
-        b=ILzNZqFvyJWAShDSEVqWx+tmwluyLmdTCK+FXi1Y5R+Xpe1vWx8pIlCG9iQQX7ed3J
-         RY5fFJzlI5hbaniSKKX8+bjWybzb1vX04myYYR66W6fzyBF/QaiXOJk8ueZVGEJ12HIw
-         Kd4QTlrEMGKWzTtvro4ChXolPLYzFbGK3aR3k7C121tnyW4CvHaUeHuyqr1FNig9FyCs
-         lR+Yzy8iUX4OK1EoAgxYQpAtStV1jmZ88zDCmltDHgmGR/OuNqPZGrxWBMT56U4fmKCi
-         zJXSm0UfPogD7To+LE2NVNczN9Pa58fwmBOLZTAGYc2JGf9mGs3tFT2KEadgWuqrjVJe
-         houQ==
-X-Gm-Message-State: APjAAAU70QuL+wYTwDUNma/ia22ojAonVgkebBGfAEBNKdWj8zO3mE8r
-        bQgkcSqjvuVl54se9ac5854XznwE
-X-Google-Smtp-Source: APXvYqxQDDKm+Inq1Q9fdUu2jL1KgLQgoPDc+8Bhqy9fcOpCLgE9zZ9h9Awz41pFCPDLkLMlIG8fHw==
-X-Received: by 2002:adf:e98c:: with SMTP id h12mr5906530wrm.302.1551347748331;
-        Thu, 28 Feb 2019 01:55:48 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=zqpI/B5m5rMa9RUUj4JMXK0QX2rw2KjRN3wUHsQtjtc=;
+        b=OPwUVAqcsSgBzSt5L18EgS5A8SNYVsRgdZkCofLljie7XCVNhy2UhgLLKZGnYK9JBa
+         CtHeixLboF96yny0gWr/ZgTU84knyQ7GoHTohe+TvmKH7H3cFcvGX5IsUWRsXo7OTkCW
+         C+c8IOez4DG96IFf026zR5KuuxAIosjcmDqDAaT0kg05HBpPX004a7qx24tmr4pZq4ZY
+         J1lldjwh2pFTv3YKM+gUcAdHOIqRVbV5Q6fbCWUjuOBbUsfbsH89XFSGo5H2GjauSzLI
+         WB3IfWsJl5/PiR4NoBggP1tlMM3AC16oMc5SMtknDIt5CDuVpfkTze6vu/bUMeyJORgB
+         FquA==
+X-Gm-Message-State: APjAAAWkfQ6KwDNF+4jhVqkB8kVbyXdLDlVXHOb4MMSsgPBckJ37QuEn
+        Y4fugy8VKnuwfYt9Qgud4RKdzzCd
+X-Google-Smtp-Source: APXvYqx4nJQ0iqDdNvNIvm2TYkB6vzBRq0D/tWo5aeYUOXCELkM1+mf26gI0VEOJ6ep45w+XoRuj3A==
+X-Received: by 2002:a5d:668b:: with SMTP id l11mr5495943wru.116.1551347749809;
+        Thu, 28 Feb 2019 01:55:49 -0800 (PST)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id p9sm4420406wmc.14.2019.02.28.01.55.47
+        by smtp.gmail.com with ESMTPSA id p9sm4420406wmc.14.2019.02.28.01.55.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 01:55:47 -0800 (PST)
+        Thu, 28 Feb 2019 01:55:49 -0800 (PST)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/15] habanalabs: add comments in uapi/misc/habanalabs.h
-Date:   Thu, 28 Feb 2019 11:55:44 +0200
-Message-Id: <20190228095545.30842-1-oded.gabbay@gmail.com>
+Subject: [PATCH 11/15] habanalabs: print pointer using %p
+Date:   Thu, 28 Feb 2019 11:55:45 +0200
+Message-Id: <20190228095545.30842-2-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190228095545.30842-1-oded.gabbay@gmail.com>
+References: <20190228095545.30842-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add comment about minimum and maximum size of command buffer.
-Add some text about the expected input of CS IOCTL.
+Don't cast pointer to u64 to print it. Instead, print the pointer using
+%p.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
 Changes in v2:
   - Add changelog in the commit message
  
- include/uapi/misc/habanalabs.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/misc/habanalabs/goya/goya.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
-index 23d6ad3459cb..7fd6f633534c 100644
---- a/include/uapi/misc/habanalabs.h
-+++ b/include/uapi/misc/habanalabs.h
-@@ -112,7 +112,9 @@ struct hl_cb_in {
- 	__u64 cb_handle;
- 	/* HL_CB_OP_* */
- 	__u32 op;
--	/* Size of CB. Minimum requested size must be PAGE_SIZE */
-+	/* Size of CB. Maximum size is 2MB. The minimum size that will be
-+	 * allocated, regardless of this parameter's value, is PAGE_SIZE
-+	 */
- 	__u32 cb_size;
- 	/* Context ID - Currently not in use */
- 	__u32 ctx_id;
-@@ -364,6 +366,12 @@ union hl_mem_args {
-  * internal. The driver will get completion notifications from the device only
-  * on JOBS which are enqueued in the external queues.
-  *
-+ * For jobs on external queues, the user needs to create command buffers
-+ * through the CB ioctl and give the CB's handle to the CS ioctl. For jobs on
-+ * internal queues, the user needs to prepare a "command buffer" with packets
-+ * on either the SRAM or DRAM, and give the device address of that buffer to
-+ * the CS ioctl.
-+ *
-  * This IOCTL is asynchronous in regard to the actual execution of the CS. This
-  * means it returns immediately after ALL the JOBS were enqueued on their
-  * relevant queues. Therefore, the user mustn't assume the CS has been completed
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 13923f4127af..39824214ce61 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -4276,9 +4276,8 @@ static int goya_parse_cb_no_ext_quque(struct hl_device *hdev,
+ 			return 0;
+ 
+ 		dev_err(hdev->dev,
+-			"Internal CB address 0x%llx + 0x%x is not in SRAM nor in DRAM\n",
+-			(u64) (uintptr_t) parser->user_cb,
+-			parser->user_cb_size);
++			"Internal CB address %p + 0x%x is not in SRAM nor in DRAM\n",
++			parser->user_cb, parser->user_cb_size);
+ 
+ 		return -EFAULT;
+ 	}
 -- 
 2.17.1
 
