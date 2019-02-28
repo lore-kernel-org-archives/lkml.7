@@ -2,160 +2,135 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_SIGNED,DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD64C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700CBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1B720863
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:17:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="tAulTENt"
+	by mail.kernel.org (Postfix) with ESMTP id 34A52205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551392334;
+	bh=E3W0KdqcKhB4dprnomioCONPe5/IHeyxzHd+Gkjc9JE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NmX85hLEVxsnT7GsfEN2gfIjDjJS1317x8lGp2fz/2FZwINP1fIABzjIuSe0DK77l
+	 ZJZgzeSCrvGpUxudugPVxg6Gmcv7IJTDcqUyJXHC7gPKYo44YDaV10Dbexn/52DJgy
+	 dlHicDihRpsBXXYi4Ncl7z+CLUx6GVcqOiLhW/CA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfB1WRt (ORCPT
+        id S1729214AbfB1WSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 17:17:49 -0500
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:54740 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbfB1WRq (ORCPT
+        Thu, 28 Feb 2019 17:18:52 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34543 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbfB1WSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 17:17:46 -0500
-Received: from nis-sj1-27.broadcom.com (nis-sj1-27.lvn.broadcom.net [10.75.144.136])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 5EF4D30C04C;
-        Thu, 28 Feb 2019 14:17:44 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 5EF4D30C04C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1551392264;
-        bh=6v8rWmKbm19cPG30ujMQBqdZv3fhMujqMeaEXG+Iib8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tAulTENtbAevIfGMN+Ey1ef+DKh8Z7K9E+8FhQ4VcLaMFWP9VcX+c6GPChWYQW1Rx
-         APK26cWNPoVeuZHhz3jQgMFroS8VyYPysDj7ReYsl8bLU2G1DoHCqUssxLHCV5JvD4
-         kvzIUTPYpgIW8buOApeZNunwFCSlLIN/NjbgoOWY=
-Received: from stbirv-lnx-2.igp.broadcom.net (stbirv-lnx-2.igp.broadcom.net [10.67.48.34])
-        by nis-sj1-27.broadcom.com (Postfix) with ESMTP id 11D77AC0798;
-        Thu, 28 Feb 2019 14:17:45 -0800 (PST)
-Received: by stbirv-lnx-2.igp.broadcom.net (Postfix, from userid 47169)
-        id 09E6B27ECE7; Thu, 28 Feb 2019 14:17:45 -0800 (PST)
-From:   justinpopo6@gmail.com
-To:     linux-iio@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        f.fainelli@gmail.com, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-kernel@vger.kernel.org,
-        Justin Chen <justinpopo6@gmail.com>
-Subject: [PATCH v4 1/2] iio: adc: ti-ads7950: Fix improper use of mlock
-Date:   Thu, 28 Feb 2019 14:16:48 -0800
-Message-Id: <1551392209-20004-2-git-send-email-justinpopo6@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551392209-20004-1-git-send-email-justinpopo6@gmail.com>
-References: <1551392209-20004-1-git-send-email-justinpopo6@gmail.com>
+        Thu, 28 Feb 2019 17:18:52 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 98so19255617oty.1;
+        Thu, 28 Feb 2019 14:18:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ji3mmE4+UtF9krUdy/zdGVH41oTqTHXFLEm6pMEOivc=;
+        b=NyzqxHIG0lu6wDBA8OtZVudS/dlmkRuU5QQIbdhR5KeYAFhDSMJzwdmBrgRq5e7rMV
+         AsjwHO4irKjl0hBgLGRnm50X2GAEyLvKXFdJN7vkeSCFmRJ30JelEHwG0yvTwaxedUKF
+         tIlA6kNihow7G8o6cXEEeqB7J3Mizt/cw1P7iaC2UqbIncUH/Y4B8XUbvSVttuAwPFxe
+         bzZkam4erOyOPwgIX6fEKd07QE/LJt9UzKJnlZrxvov9ziovlopBDVJEzyR1kU/c8qZa
+         QzX2KNHALXhrdas10OUklwU/n6X80sh/m/aUni6/Mzh6PlU6gDtayvOsTU10l8sBTPpM
+         OzWg==
+X-Gm-Message-State: APjAAAXUeq09VLdQ+dXQ4rpX2wbLI1CgTitLTfRynBuyHuc7U1JQp65i
+        zTkHqDHvfh2vQStXNMEDj2BXhFXTbgdn8ynzEoI=
+X-Google-Smtp-Source: APXvYqxXSw1Qui4ZYPO6iSzmteYd7OfkgJRg6kRdGl9ikhj0FTCqSbv6u9qjPM8c3JHnliGj1YDB7yN2obMLcRdYSfc=
+X-Received: by 2002:a9d:7547:: with SMTP id b7mr1285722otl.244.1551392331152;
+ Thu, 28 Feb 2019 14:18:51 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1551375162.git.yu.c.chen@intel.com> <ee0250bfc7709ce0a0cc93bf83336133d5e248c4.1551375162.git.yu.c.chen@intel.com>
+In-Reply-To: <ee0250bfc7709ce0a0cc93bf83336133d5e248c4.1551375162.git.yu.c.chen@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 28 Feb 2019 23:18:39 +0100
+Message-ID: <CAJZ5v0iw=THw4Cr7asFoNdUaAu7tG0nz0S4NWzqxGEDvyS11ng@mail.gmail.com>
+Subject: Re: [PATCH 1/2][RFC v2] ACPI: add "processor.broadcast_ppc" hook to
+ broadcast _PPC
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yu Chen <yu.chen.surf@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+On Thu, Feb 28, 2019 at 6:59 PM Chen Yu <yu.c.chen@intel.com> wrote:
+>
+> On some problematic platforms, the _PPC notifier is
+> only delivered to one CPU, which might cause information
+> inconsistent between CPUs within the package. Thus introduce a boot up parameter to broadcast this _PPC notifier onto all
+> online CPUs.
+>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+>  drivers/acpi/processor_perflib.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/processor_perflib.c b/drivers/acpi/processor_perflib.c
+> index a303fd0e108c..737dbf5aa7f7 100644
+> --- a/drivers/acpi/processor_perflib.c
+> +++ b/drivers/acpi/processor_perflib.c
+> @@ -63,6 +63,10 @@ module_param(ignore_ppc, int, 0644);
+>  MODULE_PARM_DESC(ignore_ppc, "If the frequency of your machine gets wrongly" \
+>                  "limited by BIOS, this should help");
+>
+> +static int broadcast_ppc;
+> +module_param(broadcast_ppc, int, 0644);
+> +MODULE_PARM_DESC(broadcast_ppc, "Broadcast the ppc to all online CPUs");
+> +
+>  #define PPC_REGISTERED   1
+>  #define PPC_IN_USE       2
+>
+> @@ -180,8 +184,16 @@ void acpi_processor_ppc_has_changed(struct acpi_processor *pr, int event_flag)
+>                 else
+>                         acpi_processor_ppc_ost(pr->handle, 0);
+>         }
+> -       if (ret >= 0)
+> -               cpufreq_update_policy(pr->id);
+> +       if (ret >= 0) {
+> +               if (broadcast_ppc) {
+> +                       int cpu;
+> +
+> +                       for_each_possible_cpu(cpu)
+> +                               cpufreq_update_policy(cpu);
 
-Indio->mlock is used for protecting the different iio device modes.
-It is currently not being used in this way. Replace the lock with
-an internal lock specifically used for protecting the SPI transfer
-buffer.
+This doesn't actually help AFAICS, because it only causes
+acpi_processor_ppc_notifier() to be called for all policies, but
+pr->performance_platform_limit is re-computed for the target CPU only
+anyway, so the limit will only be applied to that one.
 
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
----
- drivers/iio/adc/ti-ads7950.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+What happens in the BZ is that invoking cpufreq_update_policy() for
+all CPUs causes ->verify() to run on all of them which triggers
+update_turbo_state() and cpuinfo.max_freq update, because
+global.turbo_disabled has changed.
 
-diff --git a/drivers/iio/adc/ti-ads7950.c b/drivers/iio/adc/ti-ads7950.c
-index 0ad6359..1e47bef 100644
---- a/drivers/iio/adc/ti-ads7950.c
-+++ b/drivers/iio/adc/ti-ads7950.c
-@@ -56,6 +56,9 @@ struct ti_ads7950_state {
- 	struct spi_message	ring_msg;
- 	struct spi_message	scan_single_msg;
- 
-+	/* Lock to protect the spi xfer buffers */
-+	struct mutex		slock;
-+
- 	struct regulator	*reg;
- 	unsigned int		vref_mv;
- 
-@@ -268,6 +271,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
- 	struct ti_ads7950_state *st = iio_priv(indio_dev);
- 	int ret;
- 
-+	mutex_lock(&st->slock);
- 	ret = spi_sync(st->spi, &st->ring_msg);
- 	if (ret < 0)
- 		goto out;
-@@ -276,6 +280,7 @@ static irqreturn_t ti_ads7950_trigger_handler(int irq, void *p)
- 					   iio_get_time_ns(indio_dev));
- 
- out:
-+	mutex_unlock(&st->slock);
- 	iio_trigger_notify_done(indio_dev->trig);
- 
- 	return IRQ_HANDLED;
-@@ -286,7 +291,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
- 	struct ti_ads7950_state *st = iio_priv(indio_dev);
- 	int ret, cmd;
- 
--	mutex_lock(&indio_dev->mlock);
-+	mutex_lock(&st->slock);
- 
- 	cmd = TI_ADS7950_CR_WRITE | TI_ADS7950_CR_CHAN(ch) | st->settings;
- 	st->single_tx = cmd;
-@@ -298,7 +303,7 @@ static int ti_ads7950_scan_direct(struct iio_dev *indio_dev, unsigned int ch)
- 	ret = st->single_rx;
- 
- out:
--	mutex_unlock(&indio_dev->mlock);
-+	mutex_unlock(&st->slock);
- 
- 	return ret;
- }
-@@ -432,16 +437,19 @@ static int ti_ads7950_probe(struct spi_device *spi)
- 	if (ACPI_COMPANION(&spi->dev))
- 		st->vref_mv = TI_ADS7950_VA_MV_ACPI_DEFAULT;
- 
-+	mutex_init(&st->slock);
-+
- 	st->reg = devm_regulator_get(&spi->dev, "vref");
- 	if (IS_ERR(st->reg)) {
- 		dev_err(&spi->dev, "Failed get get regulator \"vref\"\n");
--		return PTR_ERR(st->reg);
-+		ret = PTR_ERR(st->reg);
-+		goto error_destroy_mutex;
- 	}
- 
- 	ret = regulator_enable(st->reg);
- 	if (ret) {
- 		dev_err(&spi->dev, "Failed to enable regulator \"vref\"\n");
--		return ret;
-+		goto error_destroy_mutex;
- 	}
- 
- 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-@@ -463,6 +471,8 @@ static int ti_ads7950_probe(struct spi_device *spi)
- 	iio_triggered_buffer_cleanup(indio_dev);
- error_disable_reg:
- 	regulator_disable(st->reg);
-+error_destroy_mutex:
-+	mutex_destroy(&st->slock);
- 
- 	return ret;
- }
-@@ -475,6 +485,7 @@ static int ti_ads7950_remove(struct spi_device *spi)
- 	iio_device_unregister(indio_dev);
- 	iio_triggered_buffer_cleanup(indio_dev);
- 	regulator_disable(st->reg);
-+	mutex_destroy(&st->slock);
- 
- 	return 0;
- }
--- 
-2.7.4
+That is rather less than straightforward and intel_pstate really
+doesn't need any _PPC change notifications to notice that the
+MSR_IA32_MISC_ENABLE_TURBO_DISABLE bit has changed as it checks that
+bit on every P-state update.
 
+So no, we are not going to do this to fix the particular issue at hand.
+
+> +               } else {
+> +                       cpufreq_update_policy(pr->id);
+> +               }
+> +       }
+>  }
+>
+>  int acpi_processor_get_bios_limit(int cpu, unsigned int *limit)
+> --
+> 2.17.1
+>
