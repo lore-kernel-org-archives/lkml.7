@@ -2,74 +2,85 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33C6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371A5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848402133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057B52133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551365585;
+	bh=L4xdRxRoZFwDSVJVik+Yv2lySYyXURLhZ5KjhCPjHW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zNtgznzZdFWNUKDsfOvXC8HcsFREmAWS0yBsei3H2i0OS6ajBGxKwpN8uR52VBFsK
+	 Iyl/9MorV27Ct/zzw8Ezh6Qov2voW5oyXzkiKpHNLjy+ucyuIil2OPve9f7qi1jfdh
+	 ADRbAaj7a19eWnP9fTX2rU8m5ZX3Wzs023/fZFsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733242AbfB1OwD (ORCPT
+        id S1731736AbfB1OxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:52:03 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46370 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731586AbfB1Ov3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 09:51:29 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A38F2426C058B687E66D;
-        Thu, 28 Feb 2019 22:51:25 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 28 Feb 2019 22:51:18 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, John Garry <john.garry@huawei.com>
-Subject: [PATCH 0/6] hisi_sas: Some misc patches
-Date:   Thu, 28 Feb 2019 22:50:56 +0800
-Message-ID: <1551365462-128193-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 28 Feb 2019 09:53:03 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40482 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbfB1OxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 09:53:03 -0500
+Received: by mail-oi1-f196.google.com with SMTP id x187so16663371oia.7;
+        Thu, 28 Feb 2019 06:53:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s9Vv1TBNek5DFMFU+NNQpjYmahV93/sD4N5xl77tNP0=;
+        b=PbU+HtO5mDfRb5HCxH9YO4dQkZ0EBk7iV2drwSgfPqPxIDWuBSr0rf6DW8zVpncrzl
+         6e1Q/VaIdDkK4sId4Dfm34M/nF/wGU9HTtliApfP9L1Au768KZEilntqX6JZrW4esHGC
+         RpyzdkLug9cQA4FYVgNih3JyRUU1JZAzgpUyhqtqXo7YD55W9Tk7nvBs99s83q1Ya2Up
+         1GnSTW+BVhgFIUuiGFudetxEB9IQUFCTnrb5AEluLslPujXndQjCzAGDDEOBM+mh6M8L
+         cTvjkY8AEA9BPSW12c1NaiPOtavHxcMLI1WD37/DnY41DQlu7waT4Y7xRZ/KO7TTjLO7
+         LpJA==
+X-Gm-Message-State: APjAAAUK0I/R0sB8eLQSy1+Blu96SCULpL8QQEGq2y0K8xQmxH24vIJc
+        FyjQ7dvTtWFHQmT5qcI6m1EV0DU=
+X-Google-Smtp-Source: AHgI3IYLJvkbEfPqw7Lph/P0WdLJYft2WnwPy+9sdeONngoknCO3nNZ0gkwKMzJLUC4cH9RjfWPk5w==
+X-Received: by 2002:aca:3786:: with SMTP id e128mr66069oia.120.1551365582202;
+        Thu, 28 Feb 2019 06:53:02 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i9sm3873448otl.43.2019.02.28.06.53.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 06:53:01 -0800 (PST)
+Date:   Thu, 28 Feb 2019 08:53:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: Add vendor prefix for techstar
+Message-ID: <20190228145300.GA17680@bogus>
+References: <20190212112744.2332-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190212112744.2332-1-jagan@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patchset contains some misc patches for the driver, including:
-- Workaround for acute scenario of SMP/internal IO timeout and reset racing
-- Clear Affiliation for STP target port (from Luo Jiaxing and Xiang Chen)
-- Fix PHY negotiated linkrate value for when PHY down
-- Some init reg config changes
-- Add support to coalesce and print PHY errors
-- A tidy-up patch
+On Tue, Feb 12, 2019 at 04:57:44PM +0530, Jagan Teki wrote:
+> Add vendor prefix for techstar, known as
+> Shenzhen Techstar Electronics Co., Ltd. a known producer for LCD modules.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Changes for v2:
+> - rebase for master
+> 
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-John Garry (1):
-  scsi: hisi_sas: Set PHY linkrate when disconnected
+Applied.
 
-Xiang Chen (4):
-  scsi: hisi_sas: Change return variable type in phy_up_v3_hw()
-  scsi: hisi_sas: Fix a timeout race of driver internal and SMP IO
-  scsi: hisi_sas: Send HARD RESET to clear the previous affiliation of
-    STP target port
-  scsi: hisi_sas: Change SERDES_CFG init value to increase reliability
-    of HiLink
-
-Xiaofei Tan (1):
-  scsi: hisi_sas: print PHY RX errors count for later revision of v3 hw
-
- drivers/scsi/hisi_sas/hisi_sas.h       |  8 +++
- drivers/scsi/hisi_sas/hisi_sas_main.c  | 57 +++++++++++++++--
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |  1 +
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 89 ++++++++++++++++++--------
- 4 files changed, 125 insertions(+), 30 deletions(-)
-
--- 
-2.17.1
-
+Rob
