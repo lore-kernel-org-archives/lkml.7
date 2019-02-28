@@ -2,102 +2,146 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8A5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E95BC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFEE2184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A972184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732190AbfB1JSN (ORCPT
+        id S1731119AbfB1JUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:18:13 -0500
-Received: from mga02.intel.com ([134.134.136.20]:29748 "EHLO mga02.intel.com"
+        Thu, 28 Feb 2019 04:20:54 -0500
+Received: from smtp.asem.it ([151.1.184.197]:64947 "EHLO smtp.asem.it"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731877AbfB1JSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:18:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 01:18:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,422,1544515200"; 
-   d="scan'208";a="324119738"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Feb 2019 01:18:10 -0800
-Received: from [10.251.86.205] (abudanko-mobl.ccr.corp.intel.com [10.251.86.205])
-        by linux.intel.com (Postfix) with ESMTP id 94F44580472;
-        Thu, 28 Feb 2019 01:18:08 -0800 (PST)
-Subject: [PATCH v4 10/10] perf tests: implement Zstd comp/decomp integration
- test
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <059a8cb8-cdb7-b57d-c5c7-bde3c007683a@linux.intel.com>
-Date:   Thu, 28 Feb 2019 12:18:07 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726717AbfB1JUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 04:20:54 -0500
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 5.5.0)
+        with ESMTP id SG003722240.MSG 
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 10:20:50 +0100S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Thu, 28
+ Feb 2019 10:20:50 +0100
+Received: from flavio-x.asem.intra (172.16.17.161) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server id 15.1.1261.35 via Frontend
+ Transport; Thu, 28 Feb 2019 10:20:50 +0100
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH] net: e1000e: add MAC address kernel cmd line parameter
+Date:   Thu, 28 Feb 2019 10:20:35 +0100
+Message-ID: <1551345635-10291-1-git-send-email-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A0B020E.5C77A7F2.006E,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sometimes, in some embedded systems boards (i.e. ARM boards),
+the NVM eeprom is not mounted, to save cost and space.
 
-Implemented basic integration test for Zstd based trace
-compression/decompression in record and report modes.
+In this case it is necessary to bypass the NVM management
+and directly force the MAC address using a kernel command-line
+parameter (macaddr).
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
 ---
- .../tests/shell/record+zstd_comp_decomp.sh    | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp.sh
+ drivers/net/ethernet/intel/e1000e/netdev.c | 50 ++++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-new file mode 100755
-index 000000000000..5cb2ab8e2112
---- /dev/null
-+++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-@@ -0,0 +1,28 @@
-+#!/bin/sh
-+# record trace Zstd compression/decompression
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 189f231..054c398 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -39,6 +39,10 @@ static int debug = -1;
+ module_param(debug, int, 0);
+ MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
+ 
++static unsigned char macaddr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
++module_param_array(macaddr, byte, NULL, 0);
++MODULE_PARM_DESC(macaddr, "e1000e Ethernet MAC address");
 +
-+trace_file=$(mktemp /tmp/perf.data.XXX)
-+perf_tool=perf
-+output=/dev/null
+ static const struct e1000_info *e1000_info_tbl[] = {
+ 	[board_82571]		= &e1000_82571_info,
+ 	[board_82572]		= &e1000_82572_info,
+@@ -7053,6 +7057,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	static int cards_found;
+ 	u16 aspm_disable_flag = 0;
+ 	int bars, i, err, pci_using_dac;
 +
-+skip_if_no_z_record() {
-+	$perf_tool record -h 2>&1 | grep '\-z, \-\-compression\-level <n>'
-+}
-+
-+collect_z_record() {
-+	echo "Collecting compressed record trace file:"
-+	$perf_tool record -o $trace_file -a -z 1 -F 25000 -e cycles -- \
-+		dd count=2000 if=/dev/random of=/dev/null > $output 2>&1
-+}
-+
-+check_compressed_stats() {
-+	echo "Checking compressed events stats:"
-+	$perf_tool report -i $trace_file --header --stats | \
-+		grep -E "(# compressed : Zstd,)|(COMPRESSED events:)" > $output 2>&1
-+}
-+
-+skip_if_no_z_record || exit 2
-+collect_z_record && check_compressed_stats
-+err=$?
-+rm -f $trace_file
-+exit $err
+ 	u16 eeprom_data = 0;
+ 	u16 eeprom_apme_mask = E1000_EEPROM_APME;
+ 	s32 ret_val = 0;
+@@ -7232,27 +7237,38 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	 */
+ 	adapter->hw.mac.ops.reset_hw(&adapter->hw);
+ 
+-	/* systems with ASPM and others may see the checksum fail on the first
+-	 * attempt. Let's give it a few tries
+-	 */
+-	for (i = 0;; i++) {
+-		if (e1000_validate_nvm_checksum(&adapter->hw) >= 0)
+-			break;
+-		if (i == 2) {
+-			dev_err(&pdev->dev, "The NVM Checksum Is Not Valid\n");
+-			err = -EIO;
+-			goto err_eeprom;
++	/* If the MAC address is supplied by the bootloader, use it! */
++	if (!is_multicast_ether_addr(macaddr)) {
++		dev_info(&pdev->dev,
++			 "MAC address from kernel command line argument\n");
++		memcpy(adapter->hw.mac.addr, macaddr, netdev->addr_len);
++		memcpy(netdev->dev_addr,     macaddr, netdev->addr_len);
++	} else {
++		/* systems with ASPM and others may see the checksum fail on
++		 * the first attempt. Let's give it a few tries
++		 */
++		dev_info(&pdev->dev, "MAC address from NVM\n");
++		for (i = 0;; i++) {
++			if (e1000_validate_nvm_checksum(&adapter->hw) >= 0)
++				break;
++			if (i == 2) {
++				dev_err(&pdev->dev,
++					"The NVM Checksum Is Not Valid\n");
++				err = -EIO;
++				goto err_eeprom;
++			}
+ 		}
+-	}
+ 
+-	e1000_eeprom_checks(adapter);
++		e1000_eeprom_checks(adapter);
+ 
+-	/* copy the MAC address */
+-	if (e1000e_read_mac_addr(&adapter->hw))
+-		dev_err(&pdev->dev,
+-			"NVM Read Error while reading MAC address\n");
++		/* copy the MAC address */
++		if (e1000e_read_mac_addr(&adapter->hw))
++			dev_err(&pdev->dev,
++				"NVM Read Error while reading MAC address\n");
+ 
+-	memcpy(netdev->dev_addr, adapter->hw.mac.addr, netdev->addr_len);
++		memcpy(netdev->dev_addr, adapter->hw.mac.addr,
++		       netdev->addr_len);
++	}
+ 
+ 	if (!is_valid_ether_addr(netdev->dev_addr)) {
+ 		dev_err(&pdev->dev, "Invalid MAC Address: %pM\n",
+-- 
+2.7.4
+
