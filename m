@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4925C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F97C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8462171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E328E2184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731859AbfB1ICy (ORCPT
+        id S1731886AbfB1IDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:02:54 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:57059 "EHLO
+        Thu, 28 Feb 2019 03:03:03 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:33503 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731184AbfB1ICx (ORCPT
+        with ESMTP id S1731184AbfB1IDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:02:53 -0500
+        Thu, 28 Feb 2019 03:03:02 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S81TUp2952729
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S82kSR2952829
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 28 Feb 2019 00:01:29 -0800
+        Thu, 28 Feb 2019 00:02:46 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S81ScF2952726;
-        Thu, 28 Feb 2019 00:01:28 -0800
-Date:   Thu, 28 Feb 2019 00:01:28 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S82jYM2952825;
+        Thu, 28 Feb 2019 00:02:45 -0800
+Date:   Thu, 28 Feb 2019 00:02:45 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-c69e4c37b37c816c7dbd307a6e7d2d2a5cfe8788@git.kernel.org>
-Cc:     alexander.shishkin@linux.intel.com,
-        alexey.budankov@linux.intel.com, mingo@kernel.org, acme@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org, adrian.hunter@intel.com,
-        hpa@zytor.com, jolsa@kernel.org, ak@linux.intel.com,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        tglx@linutronix.de
-Reply-To: alexey.budankov@linux.intel.com,
-          alexander.shishkin@linux.intel.com, acme@redhat.com,
-          mingo@kernel.org, adrian.hunter@intel.com, hpa@zytor.com,
-          jolsa@kernel.org, namhyung@kernel.org, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          eranian@google.com, ak@linux.intel.com
-In-Reply-To: <20190224190656.30163-4-jolsa@kernel.org>
-References: <20190224190656.30163-4-jolsa@kernel.org>
+Message-ID: <tip-ccb7a71dcea071c7fd68192909c4e54561c88043@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, alexey.budankov@linux.intel.com,
+        ak@linux.intel.com, acme@redhat.com, eranian@google.com,
+        hpa@zytor.com, namhyung@kernel.org, tglx@linutronix.de,
+        adrian.hunter@intel.com, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        mingo@kernel.org
+Reply-To: mingo@kernel.org, eranian@google.com, hpa@zytor.com,
+          acme@redhat.com, ak@linux.intel.com,
+          alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+          peterz@infradead.org, alexey.budankov@linux.intel.com,
+          linux-kernel@vger.kernel.org, namhyung@kernel.org,
+          tglx@linutronix.de, adrian.hunter@intel.com
+In-Reply-To: <20190224190656.30163-8-jolsa@kernel.org>
+References: <20190224190656.30163-8-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf tools: Add rm_rf_perf_data function
-Git-Commit-ID: c69e4c37b37c816c7dbd307a6e7d2d2a5cfe8788
+Subject: [tip:perf/core] perf data: Fail check_backup in case of error
+Git-Commit-ID: ccb7a71dcea071c7fd68192909c4e54561c88043
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -62,64 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c69e4c37b37c816c7dbd307a6e7d2d2a5cfe8788
-Gitweb:     https://git.kernel.org/tip/c69e4c37b37c816c7dbd307a6e7d2d2a5cfe8788
+Commit-ID:  ccb7a71dcea071c7fd68192909c4e54561c88043
+Gitweb:     https://git.kernel.org/tip/ccb7a71dcea071c7fd68192909c4e54561c88043
 Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 24 Feb 2019 20:06:39 +0100
+AuthorDate: Sun, 24 Feb 2019 20:06:43 +0100
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 25 Feb 2019 10:33:51 -0300
+CommitDate: Mon, 25 Feb 2019 10:37:01 -0300
 
-perf tools: Add rm_rf_perf_data function
+perf data: Fail check_backup in case of error
 
-To remove perf.data including the directory, with checking on expected
-files and no other directories inside.
+And display the error message from removing the old data file:
+
+  $ perf record ls
+  Can't remove old data: Permission denied (perf.data.old)
+  Perf session creation failed.
+
+  $ perf record ls
+  Can't remove old data: Unknown file found (perf.data.old)
+  Perf session creation failed.
+
+Not sure how to make fail the rename (after we successfully remove the
+destination file/dir) to show the message, anyway let's have it there.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Suggested-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190224190656.30163-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190224190656.30163-8-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/util.c | 11 +++++++++++
- tools/perf/util/util.h |  1 +
- 2 files changed, 12 insertions(+)
+ tools/perf/util/data.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 02b7a38f98ce..706818693086 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -202,6 +202,17 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
- 	return rmdir(path);
- }
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index bbf9a299615e..d008c3973012 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -41,12 +41,27 @@ static int check_backup(struct perf_data *data)
+ 		return 0;
  
-+int rm_rf_perf_data(const char *path)
-+{
-+	const char *pat[] = {
-+		"header",
-+		"data.*",
-+		NULL,
-+	};
+ 	if (!stat(data->path, &st) && st.st_size) {
+-		/* TODO check errors properly */
+ 		char oldname[PATH_MAX];
++		int ret;
 +
-+	return rm_rf_depth_pat(path, 0, pat);
-+}
+ 		snprintf(oldname, sizeof(oldname), "%s.old",
+ 			 data->path);
+-		rm_rf_perf_data(oldname);
+-		rename(data->path, oldname);
 +
- int rm_rf(const char *path)
- {
- 	return rm_rf_depth_pat(path, INT_MAX, NULL);
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index ece040b799f6..01c538027c6f 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -31,6 +31,7 @@ struct strlist;
++		ret = rm_rf_perf_data(oldname);
++		if (ret) {
++			pr_err("Can't remove old data: %s (%s)\n",
++			       ret == -2 ?
++			       "Unknown file found" : strerror(errno),
++			       oldname);
++			return -1;
++		}
++
++		if (rename(data->path, oldname)) {
++			pr_err("Can't move data: %s (%s to %s)\n",
++			       strerror(errno),
++			       data->path, oldname);
++			return -1;
++		}
+ 	}
  
- int mkdir_p(char *path, mode_t mode);
- int rm_rf(const char *path);
-+int rm_rf_perf_data(const char *path);
- struct strlist *lsdir(const char *name, bool (*filter)(const char *, struct dirent *));
- bool lsdir_no_dot_filter(const char *name, struct dirent *d);
- int copyfile(const char *from, const char *to);
+ 	return 0;
