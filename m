@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36683C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD487C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E322083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4A82083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 12:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="liqYSAAa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U4rNZOWP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbfB1M2O (ORCPT
+        id S1732450AbfB1M2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 07:28:14 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50320 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732069AbfB1M2M (ORCPT
+        Thu, 28 Feb 2019 07:28:21 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52864 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732069AbfB1M2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 07:28:12 -0500
-Received: by mail-wm1-f65.google.com with SMTP id x7so9004535wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:28:11 -0800 (PST)
+        Thu, 28 Feb 2019 07:28:19 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m1so9088478wml.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:28:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=aLsMVwtpgSOaGBz4AILnRl4PUyhZEZVIsjfHxCwTaGk=;
-        b=liqYSAAaRLAxjf7E18Jg20APdR6ztu6B4pKk1U3HBLgv6nlh82wSfLAPzNfPn/zgSi
-         aTPD4d2HPqVKHIp6PhSxktLepegSGSCiD8kgxm1kH8Xj8wxaJS9Y43ilCOYL1n2CSqjA
-         G/uRdoLH2fRFpLmOC7YDy/JE0RhpyZGEfAs5NrJREEAe8LiOzfoQOG4hlktWsfnd8B0T
-         PGiU5zU/0hpe2RNmDadTp4XyhJVisjZ6RghX9Nu3hJyU6PnZ2uAwMoZbWy0PnnEIiHgZ
-         lc8ov+A5efgF9rCl9e6fZ801rasqNGRSa9mIvrHbSdOCacsPxPYAQ714sMebcCExcM2L
-         uwYw==
+        bh=C9KTcipBBMH7iKIKkQeECQsP2OoeAr07E1QgLTBcEng=;
+        b=U4rNZOWPYk3JdSh5EfKt+17n3fALS6FunIpr9HvS0GEuvgK28pPMANAdGYJWJWGOKy
+         Q0b8lh9LFQrjIfGUNvrzsu/gaoJOanYgVGFJGNIUINuX1faSy3a4p2htrMnHxNxmtONK
+         efQEjt6GRZWJLTqSRHHs528gzI/0m9aQDhdPT+jDKoNW7ST+yc0oGYrYfLdFlHOiR/xK
+         vMqoyJJxIT44R+gBVmyI/fNo8Vx3DTjdUns3q/8VohR6MpG672FCGT0leSYMGIgVuc8k
+         nWVLuCJoNDCoW7e5+3Ed8LSfTM5JTxzJme87HELZZ5BAOa8YNnZlXbWb10zcrfpLT+O1
+         rllA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=aLsMVwtpgSOaGBz4AILnRl4PUyhZEZVIsjfHxCwTaGk=;
-        b=acNyHe7ii4H10A1DIXlYvVv8QgVyI9JZRDLOrX1mUOkvt1v/XN1m09u4ZrY+zyeUyH
-         7yUC/dN2KkixXcN6C8p4FpY8Yiyw5ahNQs8oT+ZzlFXqsPwOTnj1iwyNcP/VXhbAP7XA
-         6bWqr2BzfkjXhtrjkG9DtavSQv7DvP0eh2gxwOykTY9KABGZ69EBNIDhs2oB/Fj65bDk
-         O/ZfFL5IM5+sihwyC+357mZQFLNyz+xS6WE0bsdoyZNtSEvrH0vT2ztvDxBZ/LO0VEDK
-         ehNyNtNP4p5Cm1tbPQLDRDospc84zhcIRckUp0uBAeTRr1CN78ntcUXLW4OGXkb1fLn4
-         /xeA==
-X-Gm-Message-State: AHQUAuYt9Ho8hh2A0zKuHYNPsoJAqsjL6KABFjULx/KV5Io6EJHpaw7N
-        4VUkvf/atxn8a1WNVBWgMUkZ3aX6VtY=
-X-Google-Smtp-Source: APXvYqy5lSppSZKs9iS6iPx8zAHounSgwtuTkG7qMc4oqyzBOJlxs/K59JS9oIFk/ffQcR1/weNmRQ==
-X-Received: by 2002:a1c:2947:: with SMTP id p68mr2789122wmp.104.1551356889992;
-        Thu, 28 Feb 2019 04:28:09 -0800 (PST)
+        bh=C9KTcipBBMH7iKIKkQeECQsP2OoeAr07E1QgLTBcEng=;
+        b=VI7seJEMTfWNIO68vrg10vNWIWCcVdtsHIQAKqSxBkPieDgZzR9yC1h6j94B0qb2B5
+         mrx1UFNRelw/rl4MmEJ38HBQMj7KCKbL4qj6lEmGb0pDJBxFWhfPvMsKgsjKVygk8FDm
+         JtB/5v6k//dJMEkd7iq5+Fam/jiR4T7Db0bxHFlzVfwK82geHMv9CmM14HfPp7QfN28K
+         nOQPmbTzowpAp07jWqPRQLO6N6vlPg7FXsnk+aUSkw1y7w0R/BgoY+FqQpjj84UznlU8
+         a6MKS5Xg5BPwLaFYYmSwc4SAJN5k6IdRQBfUM+K196QpYFghvKnTeAltFhrx6G1fLejw
+         EXrw==
+X-Gm-Message-State: APjAAAVO+1WZf5vRpTnxE9M5+TEbH4ayh3R3JQmugvVVwZDdKuPDTabG
+        IroQx7jnLUR1B/TCJNOf8sfMon4xSs0=
+X-Google-Smtp-Source: AHgI3IbXZvDZrkGk/mg10q/vpJzTiaqCpdBhLTS5+enh4XqQDF1IaZ72/EOAf7N8J5EQ/t4Xap3cRQ==
+X-Received: by 2002:a1c:7d8c:: with SMTP id y134mr2914817wmc.102.1551356896073;
+        Thu, 28 Feb 2019 04:28:16 -0800 (PST)
 Received: from localhost ([49.248.54.130])
-        by smtp.gmail.com with ESMTPSA id h62sm4760705wmf.11.2019.02.28.04.28.08
+        by smtp.gmail.com with ESMTPSA id i16sm15119244wru.16.2019.02.28.04.28.14
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 04:28:09 -0800 (PST)
+        Thu, 28 Feb 2019 04:28:15 -0800 (PST)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, edubezval@gmail.com,
@@ -63,9 +63,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         David Brown <david.brown@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 22/24] arm64: dts: qcom: qcs404: Add tsens controller
-Date:   Thu, 28 Feb 2019 17:51:12 +0530
-Message-Id: <59921d5433cb82e79e5ef9d70218beb5230f80ea.1551355503.git.amit.kucheria@linaro.org>
+Subject: [PATCH v2 23/24] arm64: dts: qcom: qcs404: Add thermal zones for each sensor
+Date:   Thu, 28 Feb 2019 17:51:13 +0530
+Message-Id: <63c4711ea258c557158ef9dd551a1b4eae4038da.1551355503.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1551355503.git.amit.kucheria@linaro.org>
 References: <cover.1551355503.git.amit.kucheria@linaro.org>
@@ -76,54 +76,310 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qcs404 has a single TSENS IP block with 10 sensors. The calibration data
-is stored in an eeprom (qfprom) that is accessed through the nvmem
-framework. We add the qfprom node to allow the tsens sensors to be
-calibrated correctly.
+qcs404 has 10 sensors connected to the single TSENS IP. Define a thermal
+zone for each of those sensors to expose the temperature of each zone.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 252 +++++++++++++++++++++++++++
+ 1 file changed, 252 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 9b5c16562bbe..57d14d8f0c90 100644
+index 57d14d8f0c90..8b3ac5f7f2a3 100644
 --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
 +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -253,6 +253,16 @@
- 			reg = <0x00060000 0x6000>;
+@@ -3,6 +3,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-qcs404.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -30,6 +31,7 @@
+ 			reg = <0x100>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			#cooling-cells= <2>;
  		};
  
-+		qfprom: qfprom@a4000 {
-+			compatible = "qcom,qfprom";
-+			reg = <0x000a4000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			tsens_caldata: caldata@d0 {
-+				reg = <0x1f8 0x14>;
+ 		CPU1: cpu@101 {
+@@ -38,6 +40,7 @@
+ 			reg = <0x101>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			#cooling-cells= <2>;
+ 		};
+ 
+ 		CPU2: cpu@102 {
+@@ -46,6 +49,7 @@
+ 			reg = <0x102>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			#cooling-cells= <2>;
+ 		};
+ 
+ 		CPU3: cpu@103 {
+@@ -54,6 +58,7 @@
+ 			reg = <0x103>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			#cooling-cells= <2>;
+ 		};
+ 
+ 		L2_0: l2-cache {
+@@ -507,4 +512,251 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 	};
++
++	thermal-zones {
++		aoss-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 0>;
++
++			trips {
++				aoss_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++				aoss_crit: aoss_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
 +			};
 +		};
 +
- 		rng: rng@e3000 {
- 			compatible = "qcom,prng-ee";
- 			reg = <0x000e3000 0x1000>;
-@@ -260,6 +270,16 @@
- 			clock-names = "core";
- 		};
- 
-+		tsens: thermal-sensor@4a9000 {
-+			compatible = "qcom,qcs404-tsens", "qcom,tsens-v1";
-+			reg = <0x004a9000 0x1000>, /* TM */
-+			      <0x004a8000 0x1000>; /* SROT */
-+			nvmem-cells = <&tsens_caldata>;
-+			nvmem-cell-names = "calib";
-+			#qcom,sensors = <10>;
-+			#thermal-sensor-cells = <1>;
++		q6-hvx-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 1>;
++
++			trips {
++				dsp_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++				dsp_crit: dsp_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
 +		};
 +
- 		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,qcs404-pinctrl";
- 			reg = <0x01000000 0x200000>,
++		lpass-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 2>;
++
++			trips {
++				lpass_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++				lpass_crit: lpass_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		wlan-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 3>;
++
++			trips {
++				wlan_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++				wlan_crit: wlan_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cluster-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 4>;
++
++			trips {
++				cluster_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cluster_crit: cluster_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++			cooling-maps {
++				map0 {
++					trip = <&cluster_alert0>;
++					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		cpu0-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 5>;
++
++			trips {
++				cpu0_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu0_crit: cpu_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++			cooling-maps {
++				map0 {
++					trip = <&cpu0_alert0>;
++					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		cpu1-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 6>;
++
++			trips {
++				cpu1_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu1_crit: cpu_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++			cooling-maps {
++				map0 {
++					trip = <&cpu1_alert0>;
++					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		cpu2-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 7>;
++
++			trips {
++				cpu2_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu2_crit: cpu_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++			cooling-maps {
++				map0 {
++					trip = <&cpu2_alert0>;
++					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		cpu3-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 8>;
++
++			trips {
++				cpu3_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu3_crit: cpu_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++			cooling-maps {
++				map0 {
++					trip = <&cpu3_alert0>;
++					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++						       <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		gpu-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 9>;
++
++			trips {
++				gpu_alert0: trip-point@0 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++				gpu_crit: gpu_crit {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++	};
+ };
 -- 
 2.17.1
 
