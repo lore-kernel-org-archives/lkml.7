@@ -2,83 +2,81 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF18C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBDBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039ED2083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A187A2083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbfB1Ltl (ORCPT
+        id S1731576AbfB1LuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 06:49:41 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46290 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbfB1Ltl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 06:49:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B29A880D;
-        Thu, 28 Feb 2019 03:49:40 -0800 (PST)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EDAB3F738;
-        Thu, 28 Feb 2019 03:49:37 -0800 (PST)
-Subject: Re: [PATCH v3 20/34] sparc: mm: Add p?d_large() definitions
-To:     David Miller <davem@davemloft.net>
-Cc:     Mark.Rutland@arm.com, x86@kernel.org, arnd@arndb.de,
-        ard.biesheuvel@linaro.org, peterz@infradead.org,
-        catalin.marinas@arm.com, dave.hansen@linux.intel.com,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, jglisse@redhat.com, mingo@redhat.com,
-        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
-        sparclinux@vger.kernel.org, james.morse@arm.com,
-        tglx@linutronix.de, linux-arm-kernel@lists.infradead.org,
-        kan.liang@linux.intel.com
-References: <20190227170608.27963-1-steven.price@arm.com>
- <20190227170608.27963-21-steven.price@arm.com>
- <20190227.103837.668255833945043179.davem@davemloft.net>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <eee95a89-ed4a-dab9-1349-a50eee4f5b77@arm.com>
-Date:   Thu, 28 Feb 2019 11:49:35 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Thu, 28 Feb 2019 06:50:01 -0500
+Received: from smtp.eu.citrix.com ([185.25.65.24]:57271 "EHLO
+        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbfB1LuA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 06:50:00 -0500
+X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
+   d="scan'208";a="86583885"
+From:   Paul Durrant <Paul.Durrant@citrix.com>
+To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Wei Liu <wei.liu2@citrix.com>
+CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>
+Subject: RE: [PATCH] xen-netback: fix occasional leak of grant ref mappings
+ under memory pressure
+Thread-Topic: [PATCH] xen-netback: fix occasional leak of grant ref mappings
+ under memory pressure
+Thread-Index: AQHUzwnalyGnLUhGt0OYo7x3WDkwmKX09AIQgAAHGACAABYNsP//9bsAgAAR2wA=
+Date:   Thu, 28 Feb 2019 11:49:15 +0000
+Message-ID: <271c9beb91a74ded8e62d1cfc540976c@AMSPEX02CL02.citrite.net>
+References: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
+ <8424fba34a1f43908a6dae3a9308863b@AMSPEX02CL02.citrite.net>
+ <20190228110136.somjads2f5ivqhju@zion.uk.xensource.com>
+ <e5ef3c0291854b67841b6c532f7651b9@AMSPEX02CL02.citrite.net>
+ <447cd231-3ea4-e56d-29b0-6528804c9e9a@citrix.com>
+In-Reply-To: <447cd231-3ea4-e56d-29b0-6528804c9e9a@citrix.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190227.103837.668255833945043179.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/02/2019 18:38, David Miller wrote:
-> From: Steven Price <steven.price@arm.com>
-> Date: Wed, 27 Feb 2019 17:05:54 +0000
-> 
->> walk_page_range() is going to be allowed to walk page tables other than
->> those of user space. For this it needs to know when it has reached a
->> 'leaf' entry in the page tables. This information is provided by the
->> p?d_large() functions/macros.
->>
->> For sparc, we don't support large pages, so add stubs returning 0.
->>
->> CC: "David S. Miller" <davem@davemloft.net>
->> CC: sparclinux@vger.kernel.org
->> Signed-off-by: Steven Price <steven.price@arm.com>
-> 
-> Sparc does support large pages on 64-bit, just not at this level.  It
-> would be nice if the commit message was made more accurate.  
-
-Yes you are right, I fear I only looked at the 32 bit changes when I
-wrote the commit message. I'll clarify the difference between 32/64 bit.
-
-> Other than that:
-> 
-> Acked-by: David S. Miller <davem@davemloft.net>
-
-Thanks,
-
-Steve
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBJZ29yIERydXpoaW5pbiBbbWFp
+bHRvOmlnb3IuZHJ1emhpbmluQGNpdHJpeC5jb21dDQo+IFNlbnQ6IDI4IEZlYnJ1YXJ5IDIwMTkg
+MTE6NDQNCj4gVG86IFBhdWwgRHVycmFudCA8UGF1bC5EdXJyYW50QGNpdHJpeC5jb20+OyBXZWkg
+TGl1IDx3ZWkubGl1MkBjaXRyaXguY29tPg0KPiBDYzogeGVuLWRldmVsQGxpc3RzLnhlbnByb2pl
+Y3Qub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOw0KPiBkYXZlbUBkYXZlbWxvZnQubmV0DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIHhlbi1u
+ZXRiYWNrOiBmaXggb2NjYXNpb25hbCBsZWFrIG9mIGdyYW50IHJlZiBtYXBwaW5ncyB1bmRlciBt
+ZW1vcnkgcHJlc3N1cmUNCj4gDQo+IE9uIDI4LzAyLzIwMTkgMTE6MjEsIFBhdWwgRHVycmFudCB3
+cm90ZToNCj4gPj4+IEBAIC0xMTUzLDYgKzExNTIsMTAgQEAgc3RhdGljIGludCB4ZW52aWZfdHhf
+c3VibWl0KHN0cnVjdCB4ZW52aWZfcXVldWUgKnF1ZXVlKQ0KPiA+Pj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBrZnJlZV9za2Ioc2tiKTsNCj4gPj4+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgY29udGludWU7DQo+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICB9
+DQo+ID4+PiArDQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAvKiBDb3BpZWQgYWxsIHRo
+ZSBiaXRzIGZyb20gdGhlIGZyYWcgbGlzdC4gKi8NCj4gPj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIHNrYl9mcmFnX2xpc3RfaW5pdChza2IpOw0KPiA+Pj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAga2ZyZWUobnNrYik7DQo+ID4+DQo+ID4+IEkgdGhpbmsgeW91IHdhbnQga2ZyZWVfc2tiIGhl
+cmU/DQo+ID4NCj4gPiBOby4gbnNrYiBpcyB0aGUgZnJhZyBsaXN0Li4uIGl0IGlzIHVubGlua2Vk
+IGZyb20gc2tiIGJ5IHRoZSBjYWxsIHRvIHNrYl9mcmFnX2xpc3RfaW5pdCgpIGFuZCB0aGVuIGl0
+DQo+IGNhbiBiZSBmcmVlZCBvbiBpdHMgb3duLiBUaGUgc2tiIGlzIHdoYXQgd2UgbmVlZCB0byBy
+ZXRhaW4sIGJlY2F1c2UgdGhhdCBub3cgY29udGFpbnMgYWxsIHRoZSBkYXRhLg0KPiA+DQo+IA0K
+PiBBcmUgeW91IHNheWluZyBwcmV2aW91cyBjb2RlIGluIHhlbnZpZl9oYW5kbGVfZnJhZ19saXN0
+KCkgaW5jb3JyZWN0bHkNCj4gY2FsbGVkIGtmcmVlX3NrYigpPw0KDQpObywgaXQgY29ycmVjdGx5
+IGNhbGxlZCBrZnJlZV9za2IoKSBvbiBuc2tiIGluIHRoZSBzdWNjZXNzIGNhc2UuIFdoYXQgV2Vp
+IGFuZCBteXNlbGYgd291bGQgcHJlZmVyIGlzIHRoYXQgd2UgaGF2ZSBhIHNpbmdsZSBwbGFjZSB0
+aGF0IHRoZSBmcmFnIGxpc3QgaXMgZnJlZWQgaW4gYm90aCB0aGUgc3VjY2VzcyBhbmQgZXJyb3Ig
+Y2FzZXMuDQoNCiAgUGF1bA0KDQo+IA0KPiBJZ29yDQo=
