@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2669C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664D0C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FBB20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2834220C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367711;
-	bh=lK/3caKyJKKcBMLqo56YOZ+Rx3kL9qi0N7a3buHyB4w=;
+	s=default; t=1551367724;
+	bh=2ZQv0lP4SMX7o5mZA8GhGrLz7gHyIZ3QFGGvt/vXxkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aa0FX/0zlgysdUy6Lt1Q1Ar2gOnIvGikNjhluLlyMDS+1zn0+OWZebOtN+ixAgOal
-	 Kl4sDgE1pldUS/ua35AWvnZ9PqwLneCTuqIr7Lj5raM/MwDXP5oC69derKxMo3i0Aw
-	 k4yMDzo5iBmyrkz9pp/SH8HUqBVrRbz1StF1aTOE=
+	b=XYPOiyhJm4yM1wApQhpSPbv4ydJIuJyl1Iu7u0wXj9JyouevRhoZWjzwS7wa3SdC6
+	 2kx7S7Bjy5ssDAU0JgYS4ZIy8qKZSZ1kCUPubXU9AIGqCm8DgOkxLZyicSceKLBDKP
+	 PLgdzEwIm8ovbaxW7kzZDu84ZUwhAjJz01EVhE7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389037AbfB1P2a (ORCPT
+        id S2388958AbfB1P2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:28:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:28:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387844AbfB1PLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:11:00 -0500
+        id S2387836AbfB1PK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:10:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1658C2171F;
-        Thu, 28 Feb 2019 15:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D882E218C3;
+        Thu, 28 Feb 2019 15:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366659;
-        bh=lK/3caKyJKKcBMLqo56YOZ+Rx3kL9qi0N7a3buHyB4w=;
+        s=default; t=1551366658;
+        bh=2ZQv0lP4SMX7o5mZA8GhGrLz7gHyIZ3QFGGvt/vXxkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TtHxKAYSkGvwixlhVu7mPk/DvgA7Ezaqgd8ru4uviEeGN7GsiJ5eJsCNK3mA3Z+tG
-         XTUwbGy+PvI9Si3aOk9NN3Ws3CmsG1YKSDy0Bg4lK/0SKEG/f0Df4vghbPCiOLpUi+
-         Xs/jWEJwS0UR0RPDnDbGJ5jNGdY6tMxtDGKrmOPQ=
+        b=zZNglkNcS072SgQqhZOQNhurF9UgA2DHojfzVY6keB3t59hb7UkMAsQymf/EEhZ1u
+         +X7igBzTmGl1wGQkzZOQjcPJdLbgkBpCKO3Sym8qScEPnJrVVo85wd+YwNmbvH7qXc
+         0SjTEpQVVUqCpcACOmGfRBPX5ALo47VSJk/iszTk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 78/81] qed: Fix EQ full firmware assert.
-Date:   Thu, 28 Feb 2019 10:08:10 -0500
-Message-Id: <20190228150813.10256-78-sashal@kernel.org>
+Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 77/81] fs: ratelimit __find_get_block_slow() failure message.
+Date:   Thu, 28 Feb 2019 10:08:09 -0500
+Message-Id: <20190228150813.10256-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -59,84 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 660492bcf4a7561b5fdc13be0ae0b0c0a8c120be ]
+[ Upstream commit 43636c804df0126da669c261fc820fb22f62bfc2 ]
 
-When slowpath messages are sent with high rate, the resulting
-events can lead to a FW assert in case they are not handled fast
-enough (Event Queue Full assert). Attempt to send queued slowpath
-messages only after the newly evacuated entries in the EQ ring
-are indicated to FW.
+When something let __find_get_block_slow() hit all_mapped path, it calls
+printk() for 100+ times per a second. But there is no need to print same
+message with such high frequency; it is just asking for stall warning, or
+at least bloating log files.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
+  [  399.873324][T15342] b_state=0x00000029, b_size=512
+  [  399.878403][T15342] device loop0 blocksize: 4096
+  [  399.883296][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
+  [  399.890400][T15342] b_state=0x00000029, b_size=512
+  [  399.895595][T15342] device loop0 blocksize: 4096
+  [  399.900556][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
+  [  399.907471][T15342] b_state=0x00000029, b_size=512
+  [  399.912506][T15342] device loop0 blocksize: 4096
+
+This patch reduces frequency to up to once per a second, in addition to
+concatenating three lines into one.
+
+  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8, b_state=0x00000029, b_size=512, device loop0 blocksize: 4096
+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_sp.h  |  1 +
- drivers/net/ethernet/qlogic/qed/qed_spq.c | 15 +++++++--------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ fs/buffer.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sp.h b/drivers/net/ethernet/qlogic/qed/qed_sp.h
-index 3157c0d994417..dae2896e1d8e4 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sp.h
-@@ -380,6 +380,7 @@ void qed_consq_setup(struct qed_hwfn *p_hwfn);
-  * @param p_hwfn
-  */
- void qed_consq_free(struct qed_hwfn *p_hwfn);
-+int qed_spq_pend_post(struct qed_hwfn *p_hwfn);
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 1286c2b95498d..72e33ffa00ff6 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -200,6 +200,7 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
+ 	struct buffer_head *head;
+ 	struct page *page;
+ 	int all_mapped = 1;
++	static DEFINE_RATELIMIT_STATE(last_warned, HZ, 1);
  
- /**
-  * @file
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_spq.c b/drivers/net/ethernet/qlogic/qed/qed_spq.c
-index 0a9c5bb0fa486..a721b9348b6ca 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_spq.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_spq.c
-@@ -402,6 +402,11 @@ int qed_eq_completion(struct qed_hwfn *p_hwfn, void *cookie)
- 
- 	qed_eq_prod_update(p_hwfn, qed_chain_get_prod_idx(p_chain));
- 
-+	/* Attempt to post pending requests */
-+	spin_lock_bh(&p_hwfn->p_spq->lock);
-+	rc = qed_spq_pend_post(p_hwfn);
-+	spin_unlock_bh(&p_hwfn->p_spq->lock);
-+
- 	return rc;
- }
- 
-@@ -744,7 +749,7 @@ static int qed_spq_post_list(struct qed_hwfn *p_hwfn,
- 	return 0;
- }
- 
--static int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
-+int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
- {
- 	struct qed_spq *p_spq = p_hwfn->p_spq;
- 	struct qed_spq_entry *p_ent = NULL;
-@@ -882,7 +887,6 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
- 	struct qed_spq_entry	*p_ent = NULL;
- 	struct qed_spq_entry	*tmp;
- 	struct qed_spq_entry	*found = NULL;
--	int			rc;
- 
- 	if (!p_hwfn)
- 		return -EINVAL;
-@@ -940,12 +944,7 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
- 		 */
- 		qed_spq_return_entry(p_hwfn, found);
- 
--	/* Attempt to post pending requests */
--	spin_lock_bh(&p_spq->lock);
--	rc = qed_spq_pend_post(p_hwfn);
--	spin_unlock_bh(&p_spq->lock);
--
--	return rc;
-+	return 0;
- }
- 
- int qed_consq_alloc(struct qed_hwfn *p_hwfn)
+ 	index = block >> (PAGE_SHIFT - bd_inode->i_blkbits);
+ 	page = find_get_page_flags(bd_mapping, index, FGP_ACCESSED);
+@@ -227,15 +228,15 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
+ 	 * file io on the block device and getblk.  It gets dealt with
+ 	 * elsewhere, don't buffer_error if we had some unmapped buffers
+ 	 */
+-	if (all_mapped) {
+-		printk("__find_get_block_slow() failed. "
+-			"block=%llu, b_blocknr=%llu\n",
+-			(unsigned long long)block,
+-			(unsigned long long)bh->b_blocknr);
+-		printk("b_state=0x%08lx, b_size=%zu\n",
+-			bh->b_state, bh->b_size);
+-		printk("device %pg blocksize: %d\n", bdev,
+-			1 << bd_inode->i_blkbits);
++	ratelimit_set_flags(&last_warned, RATELIMIT_MSG_ON_RELEASE);
++	if (all_mapped && __ratelimit(&last_warned)) {
++		printk("__find_get_block_slow() failed. block=%llu, "
++		       "b_blocknr=%llu, b_state=0x%08lx, b_size=%zu, "
++		       "device %pg blocksize: %d\n",
++		       (unsigned long long)block,
++		       (unsigned long long)bh->b_blocknr,
++		       bh->b_state, bh->b_size, bdev,
++		       1 << bd_inode->i_blkbits);
+ 	}
+ out_unlock:
+ 	spin_unlock(&bd_mapping->private_lock);
 -- 
 2.19.1
 
