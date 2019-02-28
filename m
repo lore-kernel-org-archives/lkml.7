@@ -4,102 +4,173 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F8FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A0AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8445921850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1182F21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbfB1K5r (ORCPT
+        id S1732391AbfB1K5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:57:47 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:36306 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfB1K5q (ORCPT
+        Thu, 28 Feb 2019 05:57:52 -0500
+Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:56692 "EHLO
+        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725934AbfB1K5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:57:46 -0500
-Received: from ramsan ([84.194.111.163])
-        by andre.telenet-ops.be with bizsmtp
-        id iAxd1z00K3XaVaC01Axdl7; Thu, 28 Feb 2019 11:57:44 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1gzJNh-0007Qs-9z; Thu, 28 Feb 2019 11:57:37 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1gzJNh-0000IO-6O; Thu, 28 Feb 2019 11:57:37 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] Documentation/locking/lockdep: Drop last two chars of sample states
-Date:   Thu, 28 Feb 2019 11:57:31 +0100
-Message-Id: <20190228105731.1092-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Thu, 28 Feb 2019 05:57:51 -0500
+Received: from ATCSQR.andestech.com (localhost [127.0.0.2] (may be forged))
+        by ATCSQR.andestech.com with ESMTP id x1SAVeLV086903
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 18:31:40 +0800 (GMT-8)
+        (envelope-from vincentc@andestech.com)
+Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
+        by ATCSQR.andestech.com with ESMTP id x1SAVDs7086841;
+        Thu, 28 Feb 2019 18:31:13 +0800 (GMT-8)
+        (envelope-from vincentc@andestech.com)
+Received: from atcsqa06.andestech.com (10.0.15.65) by ATCPCS16.andestech.com
+ (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Thu, 28 Feb 2019
+ 18:31:47 +0800
+From:   Vincent Chen <vincentc@andestech.com>
+To:     <palmer@sifive.com>, <aou@eecs.berkeley.edu>,
+        <ebiederm@xmission.com>, <jimw@sifive.com>, <arnd@arndb.de>,
+        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC:     <deanbo422@gmail.com>, <vincentc@andestech.com>
+Subject: [PATCH 3/3] riscv: Make WARN() related functions able to trigger a trap exception
+Date:   Thu, 28 Feb 2019 18:31:31 +0800
+Message-ID: <1551349891-22683-4-git-send-email-vincentc@andestech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1551349891-22683-1-git-send-email-vincentc@andestech.com>
+References: <1551349891-22683-1-git-send-email-vincentc@andestech.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.0.15.65]
+X-DNSRBL: 
+X-MAIL: ATCSQR.andestech.com x1SAVDs7086841
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the removal of FS_RECLAIM annotations, lockdep states contain six
-characters, not four.
+This can help developers to analyze the cause of WARN() because the
+control will be transferred to debugging environment if the debugger is
+connected.
 
-Fixes: e5684bbfc3f03480 ("Documentation/locking/lockdep: Update info about states")
-Fixes: d92a8cfcb37ecd13 ("locking/lockdep: Rework FS_RECLAIM annotation")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Vincent Chen <vincentc@andestech.com>
 ---
- Documentation/RCU/lockdep-splat.txt      | 6 +++---
- Documentation/locking/lockdep-design.txt | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ arch/riscv/include/asm/bug.h |   27 ++++++++++++++++++---------
+ arch/riscv/kernel/traps.c    |   19 ++++++++++++++++---
+ 2 files changed, 34 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/RCU/lockdep-splat.txt b/Documentation/RCU/lockdep-splat.txt
-index 238e9f61352f6187..9423b633526d14df 100644
---- a/Documentation/RCU/lockdep-splat.txt
-+++ b/Documentation/RCU/lockdep-splat.txt
-@@ -24,11 +24,11 @@ other info that might help us debug this:
+diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
+index 1cab7f4..b2aa88f 100644
+--- a/arch/riscv/include/asm/bug.h
++++ b/arch/riscv/include/asm/bug.h
+@@ -43,38 +43,47 @@
+ #define __BUG_ENTRY			\
+ 	__BUG_ENTRY_ADDR "\n\t"		\
+ 	__BUG_ENTRY_FILE "\n\t"		\
+-	RISCV_SHORT " %1"
++	RISCV_SHORT " %1  \n\t"		\
++	RISCV_SHORT " %2"
+ #else
+ #define __BUG_ENTRY			\
+-	__BUG_ENTRY_ADDR
++	__BUG_ENTRY_ADDR "\n\t"		\
++	RISCV_SHORT " %2"
+ #endif
  
- rcu_scheduler_active = 1, debug_locks = 0
- 3 locks held by scsi_scan_6/1552:
-- #0:  (&shost->scan_mutex){+.+.+.}, at: [<ffffffff8145efca>]
-+ #0:  (&shost->scan_mutex){+.+.}, at: [<ffffffff8145efca>]
- scsi_scan_host_selected+0x5a/0x150
-- #1:  (&eq->sysfs_lock){+.+...}, at: [<ffffffff812a5032>]
-+ #1:  (&eq->sysfs_lock){+.+.}, at: [<ffffffff812a5032>]
- elevator_exit+0x22/0x60
-- #2:  (&(&q->__queue_lock)->rlock){-.-...}, at: [<ffffffff812b6233>]
-+ #2:  (&(&q->__queue_lock)->rlock){-.-.}, at: [<ffffffff812b6233>]
- cfq_exit_queue+0x43/0x190
+-#define BUG()							\
++#define __BUG_FLAGS(flags)					\
+ do {								\
+ 	__asm__ __volatile__ (					\
+ 		"1:\n\t"					\
+ 			"ebreak\n"				\
+-			".pushsection __bug_table,\"a\"\n\t"	\
++			".pushsection __bug_table,\"aw\"\n\t"	\
+ 		"2:\n\t"					\
+ 			__BUG_ENTRY "\n\t"			\
+-			".org 2b + %2\n\t"			\
++			".org 2b + %3\n\t"                      \
+ 			".popsection"				\
+ 		:						\
+ 		: "i" (__FILE__), "i" (__LINE__),		\
+-		  "i" (sizeof(struct bug_entry)));		\
+-	unreachable();						\
++		  "i" (flags),					\
++		  "i" (sizeof(struct bug_entry)));              \
+ } while (0)
++
+ #endif /* !__ASSEMBLY__ */
+ #else /* CONFIG_GENERIC_BUG */
+ #ifndef __ASSEMBLY__
+-#define BUG()							\
++#define __BUG_FLAGS(flags)					\
+ do {								\
+ 	__asm__ __volatile__ ("ebreak\n");			\
+-	unreachable();						\
+ } while (0)
+ #endif /* !__ASSEMBLY__ */
+ #endif /* CONFIG_GENERIC_BUG */
  
- stack backtrace:
-diff --git a/Documentation/locking/lockdep-design.txt b/Documentation/locking/lockdep-design.txt
-index 49f58a07ee7b19c8..39fae143c9cbf5ff 100644
---- a/Documentation/locking/lockdep-design.txt
-+++ b/Documentation/locking/lockdep-design.txt
-@@ -45,10 +45,10 @@ When locking rules are violated, these state bits are presented in the
- locking error messages, inside curlies. A contrived example:
++#define BUG() do {						\
++	__BUG_FLAGS(0);						\
++	unreachable();						\
++} while (0)
++
++#define __WARN_FLAGS(flags) __BUG_FLAGS(BUGFLAG_WARNING|(flags))
++
+ #define HAVE_ARCH_BUG
  
-    modprobe/2287 is trying to acquire lock:
--    (&sio_locks[i].lock){-.-...}, at: [<c02867fd>] mutex_lock+0x21/0x24
-+    (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
+ #include <asm-generic/bug.h>
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index dee0e5e..023208b 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -118,6 +118,17 @@ asmlinkage void name(struct pt_regs *regs)				\
+ DO_ERROR_INFO(do_trap_ecall_m,
+ 	SIGILL, ILL_ILLTRP, "environment call from M-mode");
  
-    but task is already holding lock:
--    (&sio_locks[i].lock){-.-...}, at: [<c02867fd>] mutex_lock+0x21/0x24
-+    (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
++#ifdef CONFIG_GENERIC_BUG
++static inline unsigned long get_break_insn_length(unsigned long pc)
++{
++	bug_insn_t insn;
++
++	if (probe_kernel_address((bug_insn_t *)pc, insn))
++		return 0;
++	return ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32) ? 4UL : 2UL;
++}
++#endif /* CONFIG_GENERIC_BUG */
++
+ asmlinkage void do_trap_break(struct pt_regs *regs)
+ {
+ #ifdef CONFIG_GENERIC_BUG
+@@ -129,7 +140,8 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
+ 		case BUG_TRAP_TYPE_NONE:
+ 			break;
+ 		case BUG_TRAP_TYPE_WARN:
+-			die(regs, "Kernel BUG. Kernel got an unexpected WARN trapped by ebreak");
++			regs->sepc += get_break_insn_length(regs->sepc);
++			break;
+ 		case BUG_TRAP_TYPE_BUG:
+ 			die(regs, "Kernel BUG");
+ 		}
+@@ -149,12 +161,13 @@ int is_valid_bugaddr(unsigned long pc)
+ 	if (probe_kernel_address((bug_insn_t *)pc, insn))
+ 		return 0;
+ 	if ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32)
+-		return insn == __BUG_INSN_32;
++		return (insn == __BUG_INSN_32);
+ 	else
+-		return (insn & __COMPRESSED_INSN_MASK) == __BUG_INSN_16;
++		return ((insn & __COMPRESSED_INSN_MASK) == __BUG_INSN_16);
+ }
+ #endif /* CONFIG_GENERIC_BUG */
  
- 
- The bit position indicates STATE, STATE-read, for each of the states listed
++
+ void __init trap_init(void)
+ {
+ 	/*
 -- 
-2.17.1
+1.7.1
 
