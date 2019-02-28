@@ -4,47 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D51CC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CBCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF052171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645A0206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366629;
-	bh=sjRDTeemEjp11k7RyCD/FIsH51xeI8QueAqNRXaYg8Q=;
+	s=default; t=1551366634;
+	bh=JY1IqUWUWA5mDCz21P4mUjQzRecXSFSjcltyPM6JetM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFGCMxdECEfdICmOWqY/qj1wyTb8FY/gtvYMmzkI247Kl7PhVf00pYBUe/1aa9wX1
-	 TDUugQ79HzSi/+aNdYyAF9hSEPjy7+RPPCXIUO6QuZl92s8ff2J2brkdr4FgqBzO7T
-	 FLd+UeupteCUl37kdslcrSgeu3LtoyBrKpLUu8YU=
+	b=XMbtcYbiC70drJSxfBlKZKr7sYU7k1vEuaDQd5oGy4LDP6IPv5rJ4x7RsJfbsFA6u
+	 iPpPNPurfB//eWya90Jn7322x946vEGVZXlKHKCd1Q6i9fF7zGG8lJze4O+YIW93MT
+	 3CdkS+aDRYkFeWjxRjYIvxf51DOPoG76dK7dtJn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387727AbfB1PK2 (ORCPT
+        id S2387751AbfB1PKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:10:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:10:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387690AbfB1PKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:10:23 -0500
+        id S2387738AbfB1PKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:10:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A757A218AE;
-        Thu, 28 Feb 2019 15:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 508D9206B8;
+        Thu, 28 Feb 2019 15:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366622;
-        bh=sjRDTeemEjp11k7RyCD/FIsH51xeI8QueAqNRXaYg8Q=;
+        s=default; t=1551366629;
+        bh=JY1IqUWUWA5mDCz21P4mUjQzRecXSFSjcltyPM6JetM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SSTj59DGTCYn+urepSBm7rbKjL5r0Unus7h8Xtwz70dAI1Rh8ygdiyEEI+A8ZL91w
-         JB+G3OkpIalOvpS1I9M2f1Vi7VSC9/6AkQasyIpTdmxfUvWixdlYECKXXXwGYoNqfp
-         6ndPt2MAT/Nh5hUFCAiJ6N8JtSzqe21k9lwwPPm4=
+        b=RzWkUG45p/1qlIN12fwupwNxc6zKo/+vr68GE5GtR4YAS0xTGSUFjYxlJYlLDsVL+
+         uqS4w3ChxSnVNAFwXHB5cfL1gdihdBL77z2aldKpD98t3gT8V3zIUROI/ywsxiNbTM
+         5O3kz+pb4XxMf2ilCWn4sAL2JFZELAiQXYh1E6qY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will.deacon@arm.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 60/81] arm64: ptdump: Don't iterate kernel page tables using PTRS_PER_PXX
-Date:   Thu, 28 Feb 2019 10:07:52 -0500
-Message-Id: <20190228150813.10256-60-sashal@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Clifton <nickc@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 65/81] perf symbols: Filter out hidden symbols from labels
+Date:   Thu, 28 Feb 2019 10:07:57 -0500
+Message-Id: <20190228150813.10256-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -56,140 +64,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Jiri Olsa <jolsa@redhat.com>
 
-[ Upstream commit d23c808c6fc6132e812690648e14c0d6b0cbe273 ]
+[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
 
-When 52-bit virtual addressing is enabled for userspace
-(CONFIG_ARM64_USER_VA_BITS_52=y), the kernel continues to utilise 48-bit
-virtual addressing in TTBR1. Consequently, PTRS_PER_PGD reflects the
-larger page table size for userspace and the pgd pointer for kernel page
-tables is offset before being written to TTBR1.
+When perf is built with the annobin plugin (RHEL8 build) extra symbols
+are added to its binary:
 
-This means that we can't use PTRS_PER_PGD to iterate over kernel page
-tables unless we apply the same offset, which is fiddly to get right and
-leads to some non-idiomatic walking code. Instead, just follow the usual
-pattern when walking page tables by using a while loop driven by
-pXd_offset() and pXd_addr_end().
+  # nm perf | grep annobin | head -10
+  0000000000241100 t .annobin_annotate.c
+  0000000000326490 t .annobin_annotate.c
+  0000000000249255 t .annobin_annotate.c_end
+  00000000003283a8 t .annobin_annotate.c_end
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
+  00000000001bc400 t .annobin_annotate.c_end.unlikely
+  00000000001bce18 t .annobin_annotate.c.hot
+  00000000001bce18 t .annobin_annotate.c.hot
+  ...
 
-Reported-by: Qian Cai <cai@lca.pw>
-Tested-by: Qian Cai <cai@lca.pw>
-Acked-by: Steve Capper <steve.capper@arm.com>
-Tested-by: Steve Capper <steve.capper@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Those symbols have no use for report or annotation and should be
+skipped.  Moreover they interfere with the DWARF unwind test on the PPC
+arch, where they are mixed with checked symbols and then the test fails:
+
+  # perf test dwarf -v
+  59: Test dwarf unwind                                     :
+  --- start ---
+  test child forked, pid 8515
+  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
+  ...
+  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
+  unwind: failed with 'no error'
+
+The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
+
+  # readelf -s ./perf | grep annobin | head -1
+    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
+
+They can still pass the check for the label symbol. Adding check for
+HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
+out such symbols.
+
+>   Just to be awkward, if you are going to ignore STV_HIDDEN
+>   symbols then you should probably also ignore STV_INTERNAL ones
+>   as well...  Annobin does not generate them, but you never know,
+>   one day some other tool might create some.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nick Clifton <nickc@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/dump.c | 59 ++++++++++++++++++++++----------------------
- 1 file changed, 29 insertions(+), 30 deletions(-)
+ tools/perf/util/symbol-elf.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-index fcb1f2a6d7c66..99bb8facb5cbc 100644
---- a/arch/arm64/mm/dump.c
-+++ b/arch/arm64/mm/dump.c
-@@ -286,74 +286,73 @@ static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
- 
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 66a84d5846c88..03cb8c6d620aa 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -87,6 +87,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
+ 	return GELF_ST_TYPE(sym->st_info);
  }
  
--static void walk_pte(struct pg_state *st, pmd_t *pmdp, unsigned long start)
-+static void walk_pte(struct pg_state *st, pmd_t *pmdp, unsigned long start,
-+		     unsigned long end)
- {
--	pte_t *ptep = pte_offset_kernel(pmdp, 0UL);
--	unsigned long addr;
--	unsigned i;
-+	unsigned long addr = start;
-+	pte_t *ptep = pte_offset_kernel(pmdp, start);
- 
--	for (i = 0; i < PTRS_PER_PTE; i++, ptep++) {
--		addr = start + i * PAGE_SIZE;
-+	do {
- 		note_page(st, addr, 4, READ_ONCE(pte_val(*ptep)));
--	}
-+	} while (ptep++, addr += PAGE_SIZE, addr != end);
++static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
++{
++	return GELF_ST_VISIBILITY(sym->st_other);
++}
++
+ #ifndef STT_GNU_IFUNC
+ #define STT_GNU_IFUNC 10
+ #endif
+@@ -111,7 +116,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
+ 	return elf_sym__type(sym) == STT_NOTYPE &&
+ 		sym->st_name != 0 &&
+ 		sym->st_shndx != SHN_UNDEF &&
+-		sym->st_shndx != SHN_ABS;
++		sym->st_shndx != SHN_ABS &&
++		elf_sym__visibility(sym) != STV_HIDDEN &&
++		elf_sym__visibility(sym) != STV_INTERNAL;
  }
  
--static void walk_pmd(struct pg_state *st, pud_t *pudp, unsigned long start)
-+static void walk_pmd(struct pg_state *st, pud_t *pudp, unsigned long start,
-+		     unsigned long end)
- {
--	pmd_t *pmdp = pmd_offset(pudp, 0UL);
--	unsigned long addr;
--	unsigned i;
-+	unsigned long next, addr = start;
-+	pmd_t *pmdp = pmd_offset(pudp, start);
- 
--	for (i = 0; i < PTRS_PER_PMD; i++, pmdp++) {
-+	do {
- 		pmd_t pmd = READ_ONCE(*pmdp);
-+		next = pmd_addr_end(addr, end);
- 
--		addr = start + i * PMD_SIZE;
- 		if (pmd_none(pmd) || pmd_sect(pmd)) {
- 			note_page(st, addr, 3, pmd_val(pmd));
- 		} else {
- 			BUG_ON(pmd_bad(pmd));
--			walk_pte(st, pmdp, addr);
-+			walk_pte(st, pmdp, addr, next);
- 		}
--	}
-+	} while (pmdp++, addr = next, addr != end);
- }
- 
--static void walk_pud(struct pg_state *st, pgd_t *pgdp, unsigned long start)
-+static void walk_pud(struct pg_state *st, pgd_t *pgdp, unsigned long start,
-+		     unsigned long end)
- {
--	pud_t *pudp = pud_offset(pgdp, 0UL);
--	unsigned long addr;
--	unsigned i;
-+	unsigned long next, addr = start;
-+	pud_t *pudp = pud_offset(pgdp, start);
- 
--	for (i = 0; i < PTRS_PER_PUD; i++, pudp++) {
-+	do {
- 		pud_t pud = READ_ONCE(*pudp);
-+		next = pud_addr_end(addr, end);
- 
--		addr = start + i * PUD_SIZE;
- 		if (pud_none(pud) || pud_sect(pud)) {
- 			note_page(st, addr, 2, pud_val(pud));
- 		} else {
- 			BUG_ON(pud_bad(pud));
--			walk_pmd(st, pudp, addr);
-+			walk_pmd(st, pudp, addr, next);
- 		}
--	}
-+	} while (pudp++, addr = next, addr != end);
- }
- 
- static void walk_pgd(struct pg_state *st, struct mm_struct *mm,
- 		     unsigned long start)
- {
--	pgd_t *pgdp = pgd_offset(mm, 0UL);
--	unsigned i;
--	unsigned long addr;
-+	unsigned long end = (start < TASK_SIZE_64) ? TASK_SIZE_64 : 0;
-+	unsigned long next, addr = start;
-+	pgd_t *pgdp = pgd_offset(mm, start);
- 
--	for (i = 0; i < PTRS_PER_PGD; i++, pgdp++) {
-+	do {
- 		pgd_t pgd = READ_ONCE(*pgdp);
-+		next = pgd_addr_end(addr, end);
- 
--		addr = start + i * PGDIR_SIZE;
- 		if (pgd_none(pgd)) {
- 			note_page(st, addr, 1, pgd_val(pgd));
- 		} else {
- 			BUG_ON(pgd_bad(pgd));
--			walk_pud(st, pgdp, addr);
-+			walk_pud(st, pgdp, addr, next);
- 		}
--	}
-+	} while (pgdp++, addr = next, addr != end);
- }
- 
- void ptdump_walk_pgd(struct seq_file *m, struct ptdump_info *info)
+ static bool elf_sym__filter(GElf_Sym *sym)
 -- 
 2.19.1
 
