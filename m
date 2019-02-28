@@ -2,149 +2,138 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CC3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27432C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24BBE20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:58:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="m0eBCrnC"
+	by mail.kernel.org (Postfix) with ESMTP id F046A206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 13:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732157AbfB1N6z (ORCPT
+        id S1732263AbfB1N7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 08:58:55 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43171 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbfB1N6z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 08:58:55 -0500
-Received: by mail-qk1-f195.google.com with SMTP id f196so12081765qke.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 05:58:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=758vBfS9FVSzDR5rjnZneg86DRz7Zk633FP3j+m28Wk=;
-        b=m0eBCrnCX+Ka+F+y7oxZ8u0ggnGmqtxmwpufEm0RerSMp16I1/iHXMAo/DNfnLFZ1v
-         /+Uj7O4DK6WOxhtW58zU95XhdY01QVbfd/jX5CR2hranT/A4F8tRJtLeJ9yH+XZEctI+
-         htl45tl1SOnOBg+AwLobTKJQBZ8m1m8uK/l9M/59lWFtKFXhF16bTf1lQhdaidMHPeYt
-         zpWHN/x3fm5VZOQrZ+wVnPkXLoimB+E5BuslpN3U/WRKxTZof0ZyzQYpo6W6sKfk2hZp
-         SGnUXfuDlcO1/Qw1yUVkCI2eDHb9N9MZewLXeTtZMB8RSDQXkmghCc4BBID9Uwx1JTdL
-         oFEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=758vBfS9FVSzDR5rjnZneg86DRz7Zk633FP3j+m28Wk=;
-        b=g129lW8RdPGwaJPM3wo0zmF6QJc3CmOIcVfjL4gFt72i/4Yze4KWNZpSateQKYQFuJ
-         qMRfc3NhN65ZfpgnKLGQDer90Ms7i5hS1FdW6gowFq3kv/TfmkuVVTcazQqBzyJqNpip
-         3rxTFBs0C8xoXJcM6x4M+lC9QdWBlsGR1F6IHnnOWsZZ9YiM/LessMx4lJPAkMJOsxsm
-         e6hH9iUKaxjmrYHOEz+M1xGCUW2Tlr0ZQkAZq8+eamVJHiNbJyrHSN0DJOQzw/xE8mTY
-         KN/hcKSrnDLZlOzECugHI0ThR4o5JHjn4DQzaautvkjqF0BkgqRHd8LfQ2OF9C/sB0E+
-         zzpQ==
-X-Gm-Message-State: AHQUAuaA3EHG63AkJISHkyVQPjirbAt3mJ3AuaqmwjdvLQfy8a4dNWuN
-        qe0edIT5NRRU/HVQOkLxvaE6nQG/U19vp7mhglUG1A==
-X-Google-Smtp-Source: AHgI3Ia594tIs2HugEgQqtR1rhm/lNmqDXav+f8NieGdbioR5jxG77M9bmHs6Ma3EHDRHB3fuDqh2ouecdGFGtgmqWI=
-X-Received: by 2002:a05:620a:1348:: with SMTP id c8mr6619049qkl.246.1551362333977;
- Thu, 28 Feb 2019 05:58:53 -0800 (PST)
+        Thu, 28 Feb 2019 08:59:11 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57052 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730687AbfB1N7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 08:59:11 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 66648E54007E58B5632D;
+        Thu, 28 Feb 2019 21:59:05 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
+ 21:58:56 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <joe@perches.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH 1/2] appletalk: use remove_proc_subtree to simplify procfs code
+Date:   Thu, 28 Feb 2019 21:56:26 +0800
+Message-ID: <20190228135627.30408-2-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190228135627.30408-1-yuehaibing@huawei.com>
+References: <20190228135627.30408-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <1551289652-7377-1-git-send-email-mw@semihalf.com> <20190228093627.vtfglsl2djenohlm@shell.armlinux.org.uk>
-In-Reply-To: <20190228093627.vtfglsl2djenohlm@shell.armlinux.org.uk>
-From:   Marcin Wojtas <mw@semihalf.com>
-Date:   Thu, 28 Feb 2019 14:58:42 +0100
-Message-ID: <CAPv3WKdj+EKr2VR+NcBHQrS9xoxHoMzZOri65G61CH6xLL8jFw@mail.gmail.com>
-Subject: Re: [net: PATCH] net: mvpp2: disable link IRQ waiting for IDLE frames
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        netdev <netdev@vger.kernel.org>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Grzegorz Jaszczyk <jaz@semihalf.com>,
-        =?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>,
-        nadavh@marvell.com,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Tomasz Nowicki <tn@semihalf.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
+From: YueHaibing <yuehaibing@huawei.com>
 
-czw., 28 lut 2019 o 10:36 Russell King - ARM Linux admin
-<linux@armlinux.org.uk> napisa=C5=82(a):
->
-> On Wed, Feb 27, 2019 at 06:47:32PM +0100, Marcin Wojtas wrote:
-> > Current version of the driver was configuring XLG MAC
-> > in a way to wait 3 IDLE frames before allowing for the
-> > link-up interrupt to be triggered. This resulted in an
-> > issue, preventing to detect the link change during RX
-> > traffic on the interface. Fix that.
->
-> What about noise sensitivity?  Does this now mean that on boards such as
-> Macchiatobin Single Shot or Clearfog GT9k where the serdes is connected
-> directly to a SFP cage, that noise on the serdes lines triggers a link
-> indication?
->
+Use remove_proc_subtree to remove the whole subtree
+on cleanup.Also do some cleanup.
 
-Afaik waiting for idle frames is not required by any standard. In fact
-this feature of the XLG MAC caused a risk that after dropping the link
-during data transfer it would never go up again until remote peer
-stops it.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/appletalk/atalk_proc.c | 56 ++++++++++++++--------------------------------
+ 1 file changed, 17 insertions(+), 39 deletions(-)
 
-I tested it on 3 different boards with SerDes directly connected to
-the SFP cage and I'm also not aware of any reporte about
-noise-triggered false link interrupts in XLG MAC (proprietary Marvell
-mvpp2x driver did not use waiting 3 idle frames feature). I'd rather
-assume the MAC is not vulnerable to it, and only properly established
-link can trigger an event.
+diff --git a/net/appletalk/atalk_proc.c b/net/appletalk/atalk_proc.c
+index 8006295..bd8734e 100644
+--- a/net/appletalk/atalk_proc.c
++++ b/net/appletalk/atalk_proc.c
+@@ -210,56 +210,34 @@ static const struct seq_operations atalk_seq_socket_ops = {
+ 	.show   = atalk_seq_socket_show,
+ };
+ 
+-static struct proc_dir_entry *atalk_proc_dir;
+-
+ int __init atalk_proc_init(void)
+ {
+-	struct proc_dir_entry *p;
+-	int rc = -ENOMEM;
++	if (!proc_mkdir("atalk", init_net.proc_net))
++		return -ENOMEM;
+ 
+-	atalk_proc_dir = proc_mkdir("atalk", init_net.proc_net);
+-	if (!atalk_proc_dir)
++	if (!proc_create_seq("atalk/interface", 0444, init_net.proc_net,
++			    &atalk_seq_interface_ops))
+ 		goto out;
+ 
+-	p = proc_create_seq("interface", 0444, atalk_proc_dir,
+-			&atalk_seq_interface_ops);
+-	if (!p)
+-		goto out_interface;
+-
+-	p = proc_create_seq("route", 0444, atalk_proc_dir,
+-			&atalk_seq_route_ops);
+-	if (!p)
+-		goto out_route;
++	if (!proc_create_seq("atalk/route", 0444, init_net.proc_net,
++			    &atalk_seq_route_ops))
++		goto out;
+ 
+-	p = proc_create_seq("socket", 0444, atalk_proc_dir,
+-			&atalk_seq_socket_ops);
+-	if (!p)
+-		goto out_socket;
++	if (!proc_create_seq("atalk/socket", 0444, init_net.proc_net,
++			    &atalk_seq_socket_ops))
++		goto out;
+ 
+-	p = proc_create_seq_private("arp", 0444, atalk_proc_dir, &aarp_seq_ops,
+-			sizeof(struct aarp_iter_state), NULL);
+-	if (!p)
+-		goto out_arp;
++	if (!proc_create_seq_private("atalk/arp", 0444, init_net.proc_net,
++				     &aarp_seq_ops,
++				     sizeof(struct aarp_iter_state), NULL))
++		goto out;
+ 
+-	rc = 0;
+ out:
+-	return rc;
+-out_arp:
+-	remove_proc_entry("socket", atalk_proc_dir);
+-out_socket:
+-	remove_proc_entry("route", atalk_proc_dir);
+-out_route:
+-	remove_proc_entry("interface", atalk_proc_dir);
+-out_interface:
+-	remove_proc_entry("atalk", init_net.proc_net);
+-	goto out;
++	remove_proc_subtree("atalk", init_net.proc_net);
++	return -ENOMEM;
+ }
+ 
+ void __exit atalk_proc_exit(void)
+ {
+-	remove_proc_entry("interface", atalk_proc_dir);
+-	remove_proc_entry("route", atalk_proc_dir);
+-	remove_proc_entry("socket", atalk_proc_dir);
+-	remove_proc_entry("arp", atalk_proc_dir);
+-	remove_proc_entry("atalk", init_net.proc_net);
++	remove_proc_subtree("atalk", init_net.proc_net);
+ }
+-- 
+2.7.0
 
-Best regards,
-Marcin
 
-> >
-> > Fixes: 4bb043262878 ("net: mvpp2: phylink support")
-> > Signed-off-by: Marcin Wojtas <mw@semihalf.com>
-> > ---
-> >  drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/=
-net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > index 16066c2..f1378f9 100644
-> > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > @@ -4532,8 +4532,7 @@ static void mvpp2_xlg_config(struct mvpp2_port *p=
-ort, unsigned int mode,
-> >               ctrl0 |=3D MVPP22_XLG_CTRL0_RX_FLOW_CTRL_EN;
-> >
-> >       ctrl4 &=3D ~MVPP22_XLG_CTRL4_MACMODSELECT_GMAC;
-> > -     ctrl4 |=3D MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC |
-> > -              MVPP22_XLG_CTRL4_EN_IDLE_CHECK;
-> > +     ctrl4 |=3D MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC;
-> >
-> >       writel(ctrl0, port->base + MVPP22_XLG_CTRL0_REG);
-> >       writel(ctrl4, port->base + MVPP22_XLG_CTRL4_REG);
-> > --
-> > 2.7.4
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbp=
-s up
-> According to speedtest.net: 11.9Mbps down 500kbps up
