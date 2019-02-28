@@ -2,99 +2,87 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6314BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BAFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F51218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:29:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rt3Fun1I"
+	by mail.kernel.org (Postfix) with ESMTP id 28E59218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731762AbfB1S3N (ORCPT
+        id S1733207AbfB1S33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:29:13 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46702 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725918AbfB1S3N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:29:13 -0500
-Received: by mail-ot1-f66.google.com with SMTP id c18so18523792otl.13;
-        Thu, 28 Feb 2019 10:29:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YPxNELC/mMzQcnBrBkeXrAaVVc9OKke25zTgzjlC2Hg=;
-        b=Rt3Fun1I0xzcwYyy0eOn2evBLece0Q0TW/TYnPBuOhchbLskhcRqxNGh1p40iww2Us
-         8xKTXEvCyjmSOiwBmgMsiWF/usEFzOmoUxjzxlB7Vbvcojv+6geOSiXPW6WiAvBfQ72d
-         zbDRekfBiCGGZMPJUA4aFmMGHtaBSXN9vwsBR4Th31atSOtulFkQcH50irfOrCG3HL49
-         YdjVDIyhN+73tJf26h+uGcQoCVBgzc++M3OaGDyfdk3UZXguXbBi/LCi3gPamutmWEM3
-         kzP8uJfTkUZ6myPfdVyWBBf+IY4xSap1bf/DJ9kdd9/oZu5AT4Zd/WtYqNXM9tubMzaf
-         YXZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YPxNELC/mMzQcnBrBkeXrAaVVc9OKke25zTgzjlC2Hg=;
-        b=PEQt7VVHcBqusGT7VaaliGzKh0D5LskXepmqKpvXEpl84B4EdYRA/UxuITCE95Hrnx
-         lWU+l5X2hurHMQO1SW56Ey5lv6OMnyyAjFSiqVJ0JYVdXE62wlu1JvBJvk3KMF/7/4TT
-         y7C+3T6TwiscvKoB3Vq27x/3tE0JUjZAarAkoNnbh5lGBIGlb1qddhWp+CiTcHASWMj8
-         9RYklisvFSZTROjKjMX2HQZjyw9i+x2oXWq56IrFesx2vyY0EdLSORREIaBBD3HElpSC
-         YXcr5j9ZVeIiRLOvkexW3Uv/Z3NrfeJ/ZilMbbp5pgsf7nhQVr6vxAXOThiEriU4vHXS
-         aueA==
-X-Gm-Message-State: APjAAAX1WLKjPf8ylCvVMCGfU8B/ydTz8DOtydM8J0ZlN7TZI7/tOmxW
-        /lBhRHhTxZaDUWgjIw2bQwNhhP/J1/ecfxRjKXU=
-X-Google-Smtp-Source: APXvYqzec5gsQCrIahOujFpzujtPCezr0eEh9qEZZfC37IpzFf3H06I9xgw84+VDQaXpba6aGDzeFqQTWF2FK4gVJ14=
-X-Received: by 2002:a9d:6d94:: with SMTP id x20mr678736otp.78.1551378552808;
- Thu, 28 Feb 2019 10:29:12 -0800 (PST)
+        Thu, 28 Feb 2019 13:29:29 -0500
+Received: from foss.arm.com ([217.140.101.70]:52768 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727871AbfB1S33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:29:29 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10E23EBD;
+        Thu, 28 Feb 2019 10:29:29 -0800 (PST)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F094E3F5C1;
+        Thu, 28 Feb 2019 10:29:26 -0800 (PST)
+Subject: Re: [PATCH v5 02/10] arm64: add sysfs vulnerability show for spectre
+ v1
+To:     jeremy.linton@arm.com, linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
+        dave.martin@arm.com, shankerd@codeaurora.org,
+        julien.thierry@arm.com, mlangsdo@redhat.com, stefan.wahren@i2e.com,
+        andre.przywara@arm.com, linux-kernel@vger.kernel.org,
+        ykaukab@suse.de
+References: <20190227010544.597579-1-jeremy.linton@arm.com>
+ <20190227010544.597579-3-jeremy.linton@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <2df6424a-cffc-95b8-1052-4a1acaeb4068@arm.com>
+Date:   Thu, 28 Feb 2019 18:29:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190227063737.24445-1-daniel.baluta@nxp.com> <20190227063737.24445-2-daniel.baluta@nxp.com>
-In-Reply-To: <20190227063737.24445-2-daniel.baluta@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 28 Feb 2019 15:29:03 -0300
-Message-ID: <CAOMZO5AeH3uBfD_5dVc_-M4+cGmYsx9kohc01E16o5yNu4bRSA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] arm64: dts: imx8mq: Add SDMA nodes
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "baruch@tkos.co.il" <baruch@tkos.co.il>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
-        "spencercw@gmail.com" <spencercw@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190227010544.597579-3-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 3:38 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
->
-> SDMA1 is part of AIPS-3 region and SDMA2 is part
-> of AIPS-1 region.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> [initial submit in i.MX internal tree]
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> [adaptation for linux-next]
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+
+On 27/02/2019 01:05, Jeremy Linton wrote:
+> From: Mian Yousaf Kaukab <ykaukab@suse.de>
+> 
+> spectre v1, has been mitigated, and the mitigation is
+> always active.
+> 
+> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> ---
+>   arch/arm64/kernel/cpu_errata.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> index d2b2c69d31bb..ad58958becb6 100644
+> --- a/arch/arm64/kernel/cpu_errata.c
+> +++ b/arch/arm64/kernel/cpu_errata.c
+> @@ -755,3 +755,9 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+>   	{
+>   	}
+>   };
+> +
+> +ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr,
+> +		char *buf)
+> +{
+> +	return sprintf(buf, "Mitigation: __user pointer sanitization\n");
+> +}
+> 
+
+minor nit: This could possibly have been in the cpufeature.c, where we keep
+the spectre_v2 routine.
+
+Either way,
+
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
