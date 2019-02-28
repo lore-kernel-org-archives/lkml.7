@@ -2,95 +2,95 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C28FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF0CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B49218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551377184;
-	bh=8Uuxb/lFsJ0rC6cZGz3qtixJcwx5rjLc+xYmengBaV8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D1GMmDfj/EUXh8Oc/EZRq63tADuvcKbC1vAZMCzxD7YqIXZhErKSza7AwOi1tospi
-	 aPcswzTYzTifcqyg9nAmwQ3yVjmz3iAnJMWZPYG4mXJdM1z3eVGtkrf3rHYoBlnimn
-	 ZaCgSBa17it34GIY2J1+/9lEQ5gDM8Z4zow3MZo8=
+	by mail.kernel.org (Postfix) with ESMTP id 9B2DF20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:07:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiMPOdm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388543AbfB1SGX (ORCPT
+        id S2388560AbfB1SHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:06:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727499AbfB1SGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:06:22 -0500
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62CBC20863;
-        Thu, 28 Feb 2019 18:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551377181;
-        bh=8Uuxb/lFsJ0rC6cZGz3qtixJcwx5rjLc+xYmengBaV8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=giUy9BNN7disBe/HLmiU5gQoCF2ruLeTJUXPXtTA0graBp4+hjHPVUNqdbfgiYLnW
-         D1Eie/tyLl/XXIjng3GC593lBbeOGsAith+SS7PkQ2bHc2JjYkJKMXPfDb+kV3Li9O
-         oS+jkWEKxD5YeuhI3gjBAnuRSJCH7JJFrcapnX9w=
-Date:   Thu, 28 Feb 2019 19:06:19 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH] dt-bindings: usb: add non-removable device property
-Message-ID: <20190228180619.GB30532@kroah.com>
-References: <20190228143344.16312-1-mans@mansr.com>
- <20190228151330.GA1360@kroah.com>
- <yw1x8sy0uedr.fsf@mansr.com>
- <20190228155241.GC12050@kroah.com>
- <yw1x4l8nvmu6.fsf@mansr.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <yw1x4l8nvmu6.fsf@mansr.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Thu, 28 Feb 2019 13:07:52 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39264 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727499AbfB1SHv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:07:51 -0500
+Received: by mail-wr1-f66.google.com with SMTP id l5so23025691wrw.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 10:07:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zYAsKudwVvUsx3oedl2oKeJpm9BSOkvJEnrUIz73q/8=;
+        b=UiMPOdm46fdP1SPbk0XgV2tIXJ5W0WM9Qq6Am+Y8qJFcRJ0WXo0vycio6oCFbgrGyB
+         MGR2FLVeZAwnxUCx1CulNNz0E9H5r+bSR6TK3IJZG3HeRIJCJiY+lbPkdiYMP7sqA+rB
+         A+p2OMI4Xftwbdx7d6KQ6i7pYKZawU5ZhJQf5jy128vdpKOAJtt+kGA9goyj5u8zLBtt
+         ce4jVu5T2509XeMJOgvjzQz8replbPk4qEdkYA7NOaeMmLpHEB2mruKcjEo+IA6+OXJq
+         Rq0m7jphwiZPQpkSfNwiNOeQA+4FBf10xcEKdZuVw4AvDZTw5fkhu89dWJQEdENP9JEk
+         tM0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zYAsKudwVvUsx3oedl2oKeJpm9BSOkvJEnrUIz73q/8=;
+        b=BECle3Y6xplJZKOQmbGCj7dnVfeP+pr19qjri7m6u9jiOSiglMrhulvtQaZOIP7ghH
+         75xy3JcQ4sykGoxaV/69ZH4LGxwjQyvxNsdrzpvE5/0sFV0SCsr2lsJl5JdoQOET5vYw
+         tIOEwSel4tpqPH+ll6uno7IdQKqNqYXe0c4FHlPqjLZZHRuTzdgrov7itLRveYdM8VQV
+         F5YaUz8PvMbJ9oCfF4CSMuyvYceeElslkQeipYu3OofMJ+V/YN/FoDQ4WaVbFTMOQxh4
+         qhlWE6Roasm3mKgqjDH7Acki4a48RwxaQJpkt+VosEDBu7/4SDIPT14AwKDcO5/Dpb9v
+         xOaA==
+X-Gm-Message-State: APjAAAVFby7xCfTBwJe/AzxyEppr+F200Qc2LlC7Ca6IUh2xez0NQei4
+        zT4dTDqlNkOe20Om3iHYS/w=
+X-Google-Smtp-Source: APXvYqyNXsIzkSC3lqaYtBlg+YAnKVmMj5sabwJNQ5lgcFzcbXPDWzDFJENb839htKcIQLLDpQrAIA==
+X-Received: by 2002:a5d:4e44:: with SMTP id r4mr462124wrt.228.1551377269985;
+        Thu, 28 Feb 2019 10:07:49 -0800 (PST)
+Received: from luna.home (2.154.9.52.dyn.user.ono.com. [2.154.9.52])
+        by smtp.gmail.com with ESMTPSA id b17sm12778415wrt.39.2019.02.28.10.07.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 28 Feb 2019 10:07:49 -0800 (PST)
+From:   Oscar Gomez Fuente <oscargomezf@gmail.com>
+To:     oscargomezf@gmail.com
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8192e: Fix space and suspect issue
+Date:   Thu, 28 Feb 2019 19:07:29 +0100
+Message-Id: <1551377249-12142-1-git-send-email-oscargomezf@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 05:34:25PM +0000, Måns Rullgård wrote:
-> >> --- a/drivers/usb/core/hub.c
-> >> +++ b/drivers/usb/core/hub.c
-> >> @@ -2392,6 +2392,14 @@ static void set_usb_port_removable(struct usb_device *udev)
-> >>                 break;
-> >>         }
-> >>  
-> >> +       /*
-> >> +        * Otherwise, check whether DT indicates this device is non-removable.
-> >> +        */
-> >> +       if (of_property_read_bool(udev->dev.of_node, "non-removable")) {
-> >> +               udev->removable = USB_DEVICE_FIXED;
-> >> +               return;
-> >> +       }
-> >
-> > Shouldn't this be an attribute of the USB hub's port, not the device
-> > itself?  That's the way it works with ACPI, and odds are any description
-> > of USB devices in DT is also going to look much like how ACPI describes
-> > the devices, let's not try to diverge when it is not necessary.
-> 
-> Fine with me.  That's why I asked.
-> 
-> How about a non-removable-ports property in the hub node listing the
-> hardwired ports?
+These changes fixed a checkpatch error for space required before the
+open brace '{' as well as a warning for suspect code indent for
+conditional statements.
 
-Sounds reasonable to me as that should mirror what happens in ACPI, so
-you should be able to just mirror what drivers/usb/core/usb-acpi.c does
-for dt.
+Signed-off-by: Oscar Gomez Fuente <oscargomezf@gmail.com>
+---
+ drivers/staging/rtl8192e/rtllib_wx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-thanks,
+diff --git a/drivers/staging/rtl8192e/rtllib_wx.c b/drivers/staging/rtl8192e/rtllib_wx.c
+index 74d4d2d..4f4904a 100644
+--- a/drivers/staging/rtl8192e/rtllib_wx.c
++++ b/drivers/staging/rtl8192e/rtllib_wx.c
+@@ -541,8 +541,8 @@ int rtllib_wx_set_encode_ext(struct rtllib_device *ieee,
+ 		if (idx < 1 || idx > NUM_WEP_KEYS)
+ 			return -EINVAL;
+ 		idx--;
+-	} else{
+-			idx = ieee->crypt_info.tx_keyidx;
++	} else {
++		idx = ieee->crypt_info.tx_keyidx;
+ 	}
+ 	if (ext->ext_flags & IW_ENCODE_EXT_GROUP_KEY) {
+ 		crypt = &ieee->crypt_info.crypt[idx];
+-- 
+2.7.4
 
-greg k-h
