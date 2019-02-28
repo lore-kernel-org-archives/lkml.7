@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB48C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65454C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D0B20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E6B320C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367464;
-	bh=sW/R9I1Oacc7BCpmMVKhKW2UlfJUlA3GvcWWL4NgC8w=;
+	s=default; t=1551367472;
+	bh=RvdKrs2J4vID1r2V9vS1Q8l0c9444hQTv95KLkjenbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wtzms8k2pPI1enqsn0CfY65V+2Fbg/f9LzELw7pNj7mtBd6mLtR5mlc3YBh1Q2nwb
-	 D2ZWA0+8hwWkkRxk0vFlmTclLjY7aMuud9EqckrPiurM8x0gLqKoqeDGViWBUa2iX/
-	 0EZedggaLy/ENZGrtexHgjJhtfeRfKWHMNrdJ1yU=
+	b=RiFyupxVg35xvcKRGIGBYOLPmOaf9PXojYtqD14qrSazeFw24NPksIwU9NAf/k96Q
+	 rRZIFIjoDn7BCxl9/XrDvhPQMpnDgrsrw409ONd0BN/qUU/tQVFbh6z6vWp88Bsd/o
+	 OVr2sjEyVGyFuXpdJzBRNIcGOBFuaNC4QYQbxVZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388787AbfB1PYX (ORCPT
+        id S2388869AbfB1PYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:24:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45804 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:24:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388204AbfB1PMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:12:21 -0500
+        id S2388220AbfB1PMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:12:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E548214D8;
-        Thu, 28 Feb 2019 15:12:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EEC1218E0;
+        Thu, 28 Feb 2019 15:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366740;
-        bh=sW/R9I1Oacc7BCpmMVKhKW2UlfJUlA3GvcWWL4NgC8w=;
+        s=default; t=1551366737;
+        bh=RvdKrs2J4vID1r2V9vS1Q8l0c9444hQTv95KLkjenbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T5P12Pguhhhk6j7FXB/6x2mDRmu7w9t+UtrMjCSFvCmH9wF0LYSV2PTy0Fg/7kVQ/
-         U3Yp2SmZ60fSbRqS8noBJcMvJq6339i5gj1lw2jlbX9BEY82e5ikqcUJV5WjpTCKvv
-         qLa5AxFEuB7wIHXkfWCDwlJ3zlCbPiKGwIPxuwBE=
+        b=gtWxOUN1Re0yutFmscpNAgYUyJ+cFbPTOK/7XgCEk5fJv30YIiy4QdphazTfl2xy8
+         7LtWAD3W3gc9Tj8T8Zt30znLBtaYZQyD66D+S30XsMsONjKVuClDiV4xvTvnvIKlLJ
+         Dl6fInyGAxYgcG6UOlhmf3jAE2kGfKpWJSxZRtpk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 40/64] dmaengine: at_xdmac: Fix wrongfull report of a channel as in use
-Date:   Thu, 28 Feb 2019 10:10:41 -0500
-Message-Id: <20190228151105.11277-40-sashal@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 37/64] bpf: fix potential deadlock in bpf_prog_register
+Date:   Thu, 28 Feb 2019 10:10:38 -0500
+Message-Id: <20190228151105.11277-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151105.11277-1-sashal@kernel.org>
 References: <20190228151105.11277-1-sashal@kernel.org>
@@ -57,100 +59,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+From: Alexei Starovoitov <ast@kernel.org>
 
-[ Upstream commit dc3f595b6617ebc0307e0ce151e8f2f2b2489b95 ]
+[ Upstream commit e16ec34039c701594d55d08a5aa49ee3e1abc821 ]
 
-atchan->status variable is used to store two different information:
- - pass channel interrupts status from interrupt handler to tasklet;
- - channel information like whether it is cyclic or paused;
+Lockdep found a potential deadlock between cpu_hotplug_lock, bpf_event_mutex, and cpuctx_mutex:
+[   13.007000] WARNING: possible circular locking dependency detected
+[   13.007587] 5.0.0-rc3-00018-g2fa53f892422-dirty #477 Not tainted
+[   13.008124] ------------------------------------------------------
+[   13.008624] test_progs/246 is trying to acquire lock:
+[   13.009030] 0000000094160d1d (tracepoints_mutex){+.+.}, at: tracepoint_probe_register_prio+0x2d/0x300
+[   13.009770]
+[   13.009770] but task is already holding lock:
+[   13.010239] 00000000d663ef86 (bpf_event_mutex){+.+.}, at: bpf_probe_register+0x1d/0x60
+[   13.010877]
+[   13.010877] which lock already depends on the new lock.
+[   13.010877]
+[   13.011532]
+[   13.011532] the existing dependency chain (in reverse order) is:
+[   13.012129]
+[   13.012129] -> #4 (bpf_event_mutex){+.+.}:
+[   13.012582]        perf_event_query_prog_array+0x9b/0x130
+[   13.013016]        _perf_ioctl+0x3aa/0x830
+[   13.013354]        perf_ioctl+0x2e/0x50
+[   13.013668]        do_vfs_ioctl+0x8f/0x6a0
+[   13.014003]        ksys_ioctl+0x70/0x80
+[   13.014320]        __x64_sys_ioctl+0x16/0x20
+[   13.014668]        do_syscall_64+0x4a/0x180
+[   13.015007]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.015469]
+[   13.015469] -> #3 (&cpuctx_mutex){+.+.}:
+[   13.015910]        perf_event_init_cpu+0x5a/0x90
+[   13.016291]        perf_event_init+0x1b2/0x1de
+[   13.016654]        start_kernel+0x2b8/0x42a
+[   13.016995]        secondary_startup_64+0xa4/0xb0
+[   13.017382]
+[   13.017382] -> #2 (pmus_lock){+.+.}:
+[   13.017794]        perf_event_init_cpu+0x21/0x90
+[   13.018172]        cpuhp_invoke_callback+0xb3/0x960
+[   13.018573]        _cpu_up+0xa7/0x140
+[   13.018871]        do_cpu_up+0xa4/0xc0
+[   13.019178]        smp_init+0xcd/0xd2
+[   13.019483]        kernel_init_freeable+0x123/0x24f
+[   13.019878]        kernel_init+0xa/0x110
+[   13.020201]        ret_from_fork+0x24/0x30
+[   13.020541]
+[   13.020541] -> #1 (cpu_hotplug_lock.rw_sem){++++}:
+[   13.021051]        static_key_slow_inc+0xe/0x20
+[   13.021424]        tracepoint_probe_register_prio+0x28c/0x300
+[   13.021891]        perf_trace_event_init+0x11f/0x250
+[   13.022297]        perf_trace_init+0x6b/0xa0
+[   13.022644]        perf_tp_event_init+0x25/0x40
+[   13.023011]        perf_try_init_event+0x6b/0x90
+[   13.023386]        perf_event_alloc+0x9a8/0xc40
+[   13.023754]        __do_sys_perf_event_open+0x1dd/0xd30
+[   13.024173]        do_syscall_64+0x4a/0x180
+[   13.024519]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.024968]
+[   13.024968] -> #0 (tracepoints_mutex){+.+.}:
+[   13.025434]        __mutex_lock+0x86/0x970
+[   13.025764]        tracepoint_probe_register_prio+0x2d/0x300
+[   13.026215]        bpf_probe_register+0x40/0x60
+[   13.026584]        bpf_raw_tracepoint_open.isra.34+0xa4/0x130
+[   13.027042]        __do_sys_bpf+0x94f/0x1a90
+[   13.027389]        do_syscall_64+0x4a/0x180
+[   13.027727]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.028171]
+[   13.028171] other info that might help us debug this:
+[   13.028171]
+[   13.028807] Chain exists of:
+[   13.028807]   tracepoints_mutex --> &cpuctx_mutex --> bpf_event_mutex
+[   13.028807]
+[   13.029666]  Possible unsafe locking scenario:
+[   13.029666]
+[   13.030140]        CPU0                    CPU1
+[   13.030510]        ----                    ----
+[   13.030875]   lock(bpf_event_mutex);
+[   13.031166]                                lock(&cpuctx_mutex);
+[   13.031645]                                lock(bpf_event_mutex);
+[   13.032135]   lock(tracepoints_mutex);
+[   13.032441]
+[   13.032441]  *** DEADLOCK ***
+[   13.032441]
+[   13.032911] 1 lock held by test_progs/246:
+[   13.033239]  #0: 00000000d663ef86 (bpf_event_mutex){+.+.}, at: bpf_probe_register+0x1d/0x60
+[   13.033909]
+[   13.033909] stack backtrace:
+[   13.034258] CPU: 1 PID: 246 Comm: test_progs Not tainted 5.0.0-rc3-00018-g2fa53f892422-dirty #477
+[   13.034964] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+[   13.035657] Call Trace:
+[   13.035859]  dump_stack+0x5f/0x8b
+[   13.036130]  print_circular_bug.isra.37+0x1ce/0x1db
+[   13.036526]  __lock_acquire+0x1158/0x1350
+[   13.036852]  ? lock_acquire+0x98/0x190
+[   13.037154]  lock_acquire+0x98/0x190
+[   13.037447]  ? tracepoint_probe_register_prio+0x2d/0x300
+[   13.037876]  __mutex_lock+0x86/0x970
+[   13.038167]  ? tracepoint_probe_register_prio+0x2d/0x300
+[   13.038600]  ? tracepoint_probe_register_prio+0x2d/0x300
+[   13.039028]  ? __mutex_lock+0x86/0x970
+[   13.039337]  ? __mutex_lock+0x24a/0x970
+[   13.039649]  ? bpf_probe_register+0x1d/0x60
+[   13.039992]  ? __bpf_trace_sched_wake_idle_without_ipi+0x10/0x10
+[   13.040478]  ? tracepoint_probe_register_prio+0x2d/0x300
+[   13.040906]  tracepoint_probe_register_prio+0x2d/0x300
+[   13.041325]  bpf_probe_register+0x40/0x60
+[   13.041649]  bpf_raw_tracepoint_open.isra.34+0xa4/0x130
+[   13.042068]  ? __might_fault+0x3e/0x90
+[   13.042374]  __do_sys_bpf+0x94f/0x1a90
+[   13.042678]  do_syscall_64+0x4a/0x180
+[   13.042975]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.043382] RIP: 0033:0x7f23b10a07f9
+[   13.045155] RSP: 002b:00007ffdef42fdd8 EFLAGS: 00000202 ORIG_RAX: 0000000000000141
+[   13.045759] RAX: ffffffffffffffda RBX: 00007ffdef42ff70 RCX: 00007f23b10a07f9
+[   13.046326] RDX: 0000000000000070 RSI: 00007ffdef42fe10 RDI: 0000000000000011
+[   13.046893] RBP: 00007ffdef42fdf0 R08: 0000000000000038 R09: 00007ffdef42fe10
+[   13.047462] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
+[   13.048029] R13: 0000000000000016 R14: 00007f23b1db4690 R15: 0000000000000000
 
-This causes a bug when device_terminate_all() is called,
-(AT_XDMAC_CHAN_IS_CYCLIC cleared on atchan->status) and then a late End
-of Block interrupt arrives (AT_XDMAC_CIS_BIS), which sets bit 0 of
-atchan->status. Bit 0 is also used for AT_XDMAC_CHAN_IS_CYCLIC, so when
-a new descriptor for a cyclic transfer is created, the driver reports
-the channel as in use:
+Since tracepoints_mutex will be taken in tracepoint_probe_register/unregister()
+there is no need to take bpf_event_mutex too.
+bpf_event_mutex is protecting modifications to prog array used in kprobe/perf bpf progs.
+bpf_raw_tracepoints don't need to take this mutex.
 
-if (test_and_set_bit(AT_XDMAC_CHAN_IS_CYCLIC, &atchan->status)) {
-	dev_err(chan2dev(chan), "channel currently used\n");
-	return NULL;
-}
-
-This patch fixes the bug by adding a different struct member to keep
-the interrupts status separated from the channel status bits.
-
-Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: c4f6699dfcb8 ("bpf: introduce BPF_RAW_TRACEPOINT")
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ kernel/trace/bpf_trace.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 4bf72561667c7..a75b95fac3bd5 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -203,6 +203,7 @@ struct at_xdmac_chan {
- 	u32				save_cim;
- 	u32				save_cnda;
- 	u32				save_cndc;
-+	u32				irq_status;
- 	unsigned long			status;
- 	struct tasklet_struct		tasklet;
- 	struct dma_slave_config		sconfig;
-@@ -1580,8 +1581,8 @@ static void at_xdmac_tasklet(unsigned long data)
- 	struct at_xdmac_desc	*desc;
- 	u32			error_mask;
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 9864a35c8bb57..6c28d519447d1 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1158,22 +1158,12 @@ static int __bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_prog *
  
--	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08lx\n",
--		 __func__, atchan->status);
-+	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08x\n",
-+		__func__, atchan->irq_status);
+ int bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_prog *prog)
+ {
+-	int err;
+-
+-	mutex_lock(&bpf_event_mutex);
+-	err = __bpf_probe_register(btp, prog);
+-	mutex_unlock(&bpf_event_mutex);
+-	return err;
++	return __bpf_probe_register(btp, prog);
+ }
  
- 	error_mask = AT_XDMAC_CIS_RBEIS
- 		     | AT_XDMAC_CIS_WBEIS
-@@ -1589,15 +1590,15 @@ static void at_xdmac_tasklet(unsigned long data)
+ int bpf_probe_unregister(struct bpf_raw_event_map *btp, struct bpf_prog *prog)
+ {
+-	int err;
+-
+-	mutex_lock(&bpf_event_mutex);
+-	err = tracepoint_probe_unregister(btp->tp, (void *)btp->bpf_func, prog);
+-	mutex_unlock(&bpf_event_mutex);
+-	return err;
++	return tracepoint_probe_unregister(btp->tp, (void *)btp->bpf_func, prog);
+ }
  
- 	if (at_xdmac_chan_is_cyclic(atchan)) {
- 		at_xdmac_handle_cyclic(atchan);
--	} else if ((atchan->status & AT_XDMAC_CIS_LIS)
--		   || (atchan->status & error_mask)) {
-+	} else if ((atchan->irq_status & AT_XDMAC_CIS_LIS)
-+		   || (atchan->irq_status & error_mask)) {
- 		struct dma_async_tx_descriptor  *txd;
- 
--		if (atchan->status & AT_XDMAC_CIS_RBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_RBEIS)
- 			dev_err(chan2dev(&atchan->chan), "read bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_WBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_WBEIS)
- 			dev_err(chan2dev(&atchan->chan), "write bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_ROIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_ROIS)
- 			dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
- 
- 		spin_lock_bh(&atchan->lock);
-@@ -1652,7 +1653,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 			atchan = &atxdmac->chan[i];
- 			chan_imr = at_xdmac_chan_read(atchan, AT_XDMAC_CIM);
- 			chan_status = at_xdmac_chan_read(atchan, AT_XDMAC_CIS);
--			atchan->status = chan_status & chan_imr;
-+			atchan->irq_status = chan_status & chan_imr;
- 			dev_vdbg(atxdmac->dma.dev,
- 				 "%s: chan%d: imr=0x%x, status=0x%x\n",
- 				 __func__, i, chan_imr, chan_status);
-@@ -1666,7 +1667,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CDA),
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CUBC));
- 
--			if (atchan->status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
-+			if (atchan->irq_status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
- 				at_xdmac_write(atxdmac, AT_XDMAC_GD, atchan->mask);
- 
- 			tasklet_schedule(&atchan->tasklet);
+ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
 -- 
 2.19.1
 
