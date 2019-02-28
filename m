@@ -2,68 +2,119 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01B5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E77C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F432171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913B12083D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:43:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXNI9TJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732615AbfB1Lnt (ORCPT
+        id S1732636AbfB1Lnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 06:43:49 -0500
-Received: from smtp03.citrix.com ([162.221.156.55]:21287 "EHLO
-        SMTP03.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731013AbfB1Lns (ORCPT
+        Thu, 28 Feb 2019 06:43:55 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54191 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731013AbfB1Lnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 06:43:48 -0500
-X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
-   d="scan'208";a="79311923"
-Subject: Re: [PATCH] xen-netback: fix occasional leak of grant ref mappings
- under memory pressure
-To:     Paul Durrant <Paul.Durrant@citrix.com>,
-        Wei Liu <wei.liu2@citrix.com>
-CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>
-References: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
- <8424fba34a1f43908a6dae3a9308863b@AMSPEX02CL02.citrite.net>
- <20190228110136.somjads2f5ivqhju@zion.uk.xensource.com>
- <e5ef3c0291854b67841b6c532f7651b9@AMSPEX02CL02.citrite.net>
-From:   Igor Druzhinin <igor.druzhinin@citrix.com>
-Message-ID: <447cd231-3ea4-e56d-29b0-6528804c9e9a@citrix.com>
-Date:   Thu, 28 Feb 2019 11:43:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Feb 2019 06:43:53 -0500
+Received: by mail-wm1-f67.google.com with SMTP id e74so8845013wmg.3;
+        Thu, 28 Feb 2019 03:43:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EnQbj64Kf0cnE71mf3HWVpyDgTs7IX1kVCf1sH/lHdI=;
+        b=lXNI9TJnavTHgHq2OUK07L+rTxVFxDZb37SRKMtT2WV8Ly0j6JEgsk/tGj7MLceHSS
+         rNu9C/2QKF590v02PDbRG4sg4UfsqVGnGMcdiGeLVt/q5hGP2kv5nZeQU3noS80EGdML
+         LGuxr3AK/K2Xp3X/6QpKN8eCGM8tra1D13XBKi53QPVCDYYHSJuArG3iO3aJOQiRd8N/
+         syAfmlnFMO8ioC0/9EmiXon8y/pkyTSdYh7NYXxJOdy3XlCDihn72cXms9ug4fegZR9p
+         UxIKKNoW96GhLmd8y2xeldkBj26sRPpk1emqayWxv5Hqoi3xAhK3L17wBEcyCf6ybO5k
+         LXQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EnQbj64Kf0cnE71mf3HWVpyDgTs7IX1kVCf1sH/lHdI=;
+        b=WBZ+uiOtTtVjjC6tVXRoGcxS8pOcz7Y6gUmT/K16pAvZ+XHv5hahrw3GQepltSHGub
+         9JlbMB5cpwUSSoOOOpvCAGxntVaR5z/9go8W1IwCtCaKCdo+M1UUzbGSpQleb6U4xKMp
+         hdHK2Ozbre+5nX61m1jA5d0woNTTy9Tlx/FQp30YMg9GSejn7azsEXy6RKYMpZjyZMWF
+         H5QYnj6PYRa0tcTPgQpThsOSOHlAtGN13JNPXTlW9r4wD9gCjho6Ys/DlT+rqhFw+/8f
+         nIFg4uasWDXt/OSDWkWbQKfyDRON0ahsAkvDfxoKp8+OHu+lRZZB4pqdxYQWXgBPQrXe
+         So+A==
+X-Gm-Message-State: APjAAAUsqV2Kk7mfH5VTqE2KcGqGZwbEXBez3oZ/r1BEKEKHWHkDYCjf
+        HjVxlIFqagKMoebkNB7b974=
+X-Google-Smtp-Source: APXvYqyYIsK7V5krZl3nHkQIE1JEDUCYIEcbySK28hGWHl/xb1cHmjHg1GLTQy3Y9m42aWw0q+wrmQ==
+X-Received: by 2002:a1c:39d5:: with SMTP id g204mr2725316wma.17.1551354230896;
+        Thu, 28 Feb 2019 03:43:50 -0800 (PST)
+Received: from uks1.vyatta.net ([137.221.143.78])
+        by smtp.gmail.com with ESMTPSA id o12sm26022906wrx.53.2019.02.28.03.43.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 03:43:50 -0800 (PST)
+From:   Robert Shearman <robertshearman@gmail.com>
+To:     Peter Rosin <peda@axentia.se>, Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Robert Shearman <robert.shearman@att.com>
+Subject: [PATCH v4 0/3] i2c: mux: pca954x: allow management of device idle state via sysfs
+Date:   Thu, 28 Feb 2019 11:43:40 +0000
+Message-Id: <20190228114343.36443-1-robertshearman@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <e5ef3c0291854b67841b6c532f7651b9@AMSPEX02CL02.citrite.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 11:21, Paul Durrant wrote:
->>> @@ -1153,6 +1152,10 @@ static int xenvif_tx_submit(struct xenvif_queue *queue)
->>>                                 kfree_skb(skb);
->>>                                 continue;
->>>                         }
->>> +
->>> +                       /* Copied all the bits from the frag list. */
->>> +                       skb_frag_list_init(skb);
->>> +                       kfree(nskb);
->>
->> I think you want kfree_skb here?
-> 
-> No. nskb is the frag list... it is unlinked from skb by the call to skb_frag_list_init() and then it can be freed on its own. The skb is what we need to retain, because that now contains all the data.
-> 
+From: Robert Shearman <robert.shearman@att.com>
 
-Are you saying previous code in xenvif_handle_frag_list() incorrectly
-called kfree_skb()?
+The behaviour, by default, to not deselect after each transfer is
+unsafe when there is a device with an address that conflicts with
+another device on another pca954x mux on the same parent bus, and it
+may not be convenient to use devicetree to set the deselect mux,
+e.g. when running on x86_64 when ACPI is used to discover most of the
+device hierarchy.
 
-Igor
+Therefore, provide the ability to set the idle state behaviour using a
+new sysfs file, idle_state as a complement to the method of
+instantiating the device via sysfs.
+
+Changes in v4:
+ - also remove variables that are redundant as a result of platform
+   data removal
+ - improve ABI file description field
+Changes in v3:
+ - remove use of platform data to simplify the idle state by not
+   having per-channel idle states.
+ - correct some comments
+ - fix a style issue regarding use of READ_ONCE
+Changes in v2:
+ - change from exposing deselect mask to idle state with more options
+   and less implementation specific
+ - fix style issues
+ - don't fail the create of the mux device if the device attribute
+   file in sysfs failed to create
+
+Robert Shearman (3):
+  i2c: mux: pca954x: remove support for unused platform data
+  i2c: mux: pca9541: remove support for unused platform data
+  i2c: mux: pca954x: allow management of device idle state via sysfs
+
+ .../ABI/testing/sysfs-bus-i2c-devices-pca954x |  20 ++++
+ drivers/i2c/muxes/i2c-mux-pca9541.c           |   8 +-
+ drivers/i2c/muxes/i2c-mux-pca954x.c           | 106 +++++++++++++-----
+ include/linux/platform_data/pca954x.h         |  48 --------
+ 4 files changed, 100 insertions(+), 82 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-pca954x
+ delete mode 100644 include/linux/platform_data/pca954x.h
+
+-- 
+2.20.1
+
