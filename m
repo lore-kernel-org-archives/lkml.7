@@ -2,58 +2,109 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A08C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AB6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750B82184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5805F218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733098AbfB1Vp4 (ORCPT
+        id S1731222AbfB1Vxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 16:45:56 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:39218 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfB1Vp4 (ORCPT
+        Thu, 28 Feb 2019 16:53:37 -0500
+Received: from smtprelay0117.hostedemail.com ([216.40.44.117]:43535 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726087AbfB1Vxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 16:45:56 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::bf5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1F22914BFF7E2;
-        Thu, 28 Feb 2019 13:45:55 -0800 (PST)
-Date:   Thu, 28 Feb 2019 13:45:52 -0800 (PST)
-Message-Id: <20190228.134552.2241468473442628824.davem@davemloft.net>
-To:     antoine.tenart@bootlin.com
-Cc:     linux@armlinux.org.uk, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        maxime.chevallier@bootlin.com, gregory.clement@bootlin.com,
-        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
-        ymarkman@marvell.com, mw@semihalf.com
-Subject: Re: [PATCH net-next 14/15] net: mvpp2: set the XPCS and MPCS in
- reset when not used
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190228212312.GI4359@kwain>
-References: <20190228132128.30154-15-antoine.tenart@bootlin.com>
-        <20190228.104051.1946425715498350215.davem@davemloft.net>
-        <20190228212312.GI4359@kwain>
-X-Mailer: Mew version 6.8 on Emacs 26.1
+        Thu, 28 Feb 2019 16:53:36 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 8B157100E86C1;
+        Thu, 28 Feb 2019 21:53:35 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sack82_7660e8beb3f32
+X-Filterd-Recvd-Size: 3143
+Received: from XPS-9350 (unknown [172.58.19.222])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 28 Feb 2019 21:53:33 +0000 (UTC)
+Message-ID: <15c6689389503a82394bccb9204650bf20a7a6d3.camel@perches.com>
+Subject: Re: [PATCH v2] wusb: use correct format characters
+From:   Joe Perches <joe@perches.com>
+To:     Louis Taylor <louis@kragniz.eu>, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, ndesaulniers@google.com,
+        jflat@chromium.org
+Date:   Thu, 28 Feb 2019 13:53:31 -0800
+In-Reply-To: <20190228122417.9318-1-louis@kragniz.eu>
+References: <20190228115256.5446-1-louis@kragniz.eu>
+         <20190228122417.9318-1-louis@kragniz.eu>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 28 Feb 2019 13:45:55 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Thu, 28 Feb 2019 22:23:12 +0100
+On Thu, 2019-02-28 at 12:24 +0000, Louis Taylor wrote:
+> When compiling with -Wformat, clang warns:
+> ./include/linux/usb/wusb.h:245:5: warning: format specifies type
+> 'unsigned short' but the argument has type 'u8' (aka 'unsigned char')
+> [-Wformat]
+>   ckhdid->data[0],  ckhdid->data[1],
+>   ^~~~~~~~~~~~~~~
 
-> Right. But here we do need priv to be assigned first in order to assign
-> mpcs and xpcs.
+I think the message is somewhat misguided as all the
+vararg arguments have implicit integer promotions.
 
-Then put the latter assignments into the body of the function.
+> ckhdid->data is unconditionally defined as `u8 data[16]`, so this patch
+> updates the format characters to the correct one for unsigned char types.
+[]
+> diff --git a/include/linux/usb/wusb.h b/include/linux/usb/wusb.h
+[]
+> @@ -240,8 +240,8 @@ static inline size_t ckhdid_printf(char *pr_ckhdid, size_t size,
+>  				   const struct wusb_ckhdid *ckhdid)
+>  {
+>  	return scnprintf(pr_ckhdid, size,
+> -			 "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx "
+> -			 "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx",
+> +			 "%02hhx %02hhx %02hhx %02hhx %02hhx %02hhx %02hhx %02hhx "
+> +			 "%02hhx %02hhx %02hhx %02hhx %02hhx %02hhx %02hhx %02hhx",
+>  			 ckhdid->data[0],  ckhdid->data[1],
+>  			 ckhdid->data[2],  ckhdid->data[3],
+>  			 ckhdid->data[4],  ckhdid->data[5],
+
+Better to use the vsprintf %ph extension insead.
+---
+ include/linux/usb/wusb.h | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+diff --git a/include/linux/usb/wusb.h b/include/linux/usb/wusb.h
+index 9e4a3213f2c2..8c39ddf62951 100644
+--- a/include/linux/usb/wusb.h
++++ b/include/linux/usb/wusb.h
+@@ -239,17 +239,7 @@ enum {
+ static inline size_t ckhdid_printf(char *pr_ckhdid, size_t size,
+ 				   const struct wusb_ckhdid *ckhdid)
+ {
+-	return scnprintf(pr_ckhdid, size,
+-			 "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx "
+-			 "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx",
+-			 ckhdid->data[0],  ckhdid->data[1],
+-			 ckhdid->data[2],  ckhdid->data[3],
+-			 ckhdid->data[4],  ckhdid->data[5],
+-			 ckhdid->data[6],  ckhdid->data[7],
+-			 ckhdid->data[8],  ckhdid->data[9],
+-			 ckhdid->data[10], ckhdid->data[11],
+-			 ckhdid->data[12], ckhdid->data[13],
+-			 ckhdid->data[14], ckhdid->data[15]);
++	return scnprintf(pr_ckhdid, size, "%16ph", ckhdid->data);
+ }
+ 
+ /*
+
+
