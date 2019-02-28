@@ -6,120 +6,133 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA7AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C83C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8DA02133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702602133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:41:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NKKbteQ4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mSLLfCka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbfB1Wjv (ORCPT
+        id S1729269AbfB1Wlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 17:39:51 -0500
-Received: from mail-it1-f194.google.com ([209.85.166.194]:37827 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfB1Wju (ORCPT
+        Thu, 28 Feb 2019 17:41:39 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41033 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728015AbfB1Wlj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 17:39:50 -0500
-Received: by mail-it1-f194.google.com with SMTP id z124so18425259itc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 14:39:49 -0800 (PST)
+        Thu, 28 Feb 2019 17:41:39 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n2so23760428wrw.8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 14:41:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=uHivxThy5oEIoOQZ8HlTW0n9/13W9GJOR3HZiimvqe4=;
-        b=NKKbteQ4fC16pjtShMFPmcABZjmx5xOQ8ubr1qYkSgugFjzH8E5wF5+r24b/Nlhq3W
-         w7HrTSQScJH5Nytju9ij9N49Fw+U/ywqxX2Z3nSVyQjkf5BcT2CpE+4U9Il0Z37D1xW5
-         aMee85VMSq2n27cpw3wZwHeG00xNPKlv3s7Vx1cHjLmgCibNkCzI75T0EQYvFf3s83p2
-         2SlYgZ4gF3vBbol1NjzQSj5tKaC10ZLpNsEzit2bZMqFj1nQKEfxJrvlozU+MOU6e1tz
-         UybCMyBw5TpWcIpN/nyt1VVRRXWkDNGDVixbak1YXZDocFXXprR1EardZ/gsJ5W5v2LX
-         xyPw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VBe4FUsL1XFgwiT4hNs82n3hJ6g3oftAeOVJHGw7Vdo=;
+        b=mSLLfCkaFfsoboAo8H+00qNiRplE64ekIFSd6WHe88N6uv4A/DlR6waGsPWJsJ+YaX
+         GCTLejrcwQFH8DAJjxuOpeS1NZJ22TLexspeJ9qQ5+DlW1ArsQZabFGNa86vwgX/sbha
+         SWArQr5aURAMPu4J+4yu2iyEdI2CTbNAd7hwTqYlsUFApWcqq8FqsUumCYVJ0Wgi291W
+         Ym/A73kZzIkWWxH4cguCwmzyue8yJb5kde9JEx26vo9oYP+ytKTBAgSyHdMGY2vvD2tD
+         dT5kytr7Qn37sOsVUSykSprHzH9cJvnoWVz5ojalkrEAiVfIS78GWAz77y8AvHRPml83
+         x6jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=uHivxThy5oEIoOQZ8HlTW0n9/13W9GJOR3HZiimvqe4=;
-        b=j0LKzolrH4Sp7+wIFDpHe0Ijf+lSOYO9FyrxJt52RT/mbY9+t8/PL6QWoRTdqijTDx
-         +xzuR++PeUFcVSSlgJZR0BDw9meTx3TVZEq0E7Ft+TJNDRRXbpNb1pSduDGq6VdHGts/
-         5qJFziGblTAWelBQ9ikTUJPP7w9VuiV7xlGDyl8SEesmLsen/fDckc69kr6dTVpeK6o8
-         EmTfIuAKFf8H8IPWizeFfhzX9x3AIHBcvoS6+dmrYMSywylazXinYVW56UiB08S905IG
-         yOLZX2JfaJCDO+U0vcgboDjFp/D0HaSPbEdsev1b4Nz9icvpApSr/3NfrjxZHAQrCh4q
-         zXDw==
-X-Gm-Message-State: AHQUAuYAKrojVSz7VvNCdpSoNkeEH68f3fdkfDKZzh5NoDx36aPCBTet
-        PhcenpKmx7m6pyTTPh0HV7gyBQ==
-X-Google-Smtp-Source: AHgI3IZHOn1BV3fCTDaWj0JbPOQYCFPGhCxk4uLfF5Ger+Id7RirKEO093TXxBylha41EKDgbX23cw==
-X-Received: by 2002:a24:43d1:: with SMTP id s200mr1426288itb.118.1551393589187;
-        Thu, 28 Feb 2019 14:39:49 -0800 (PST)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id u197sm3400700itb.9.2019.02.28.14.39.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 14:39:48 -0800 (PST)
-Date:   Thu, 28 Feb 2019 14:39:47 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Alistair Francis <Alistair.Francis@wdc.com>
-cc:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "alistair23@gmail.com" <alistair23@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "of/device: Really only set bus DMA mask when
- appropriate"
-In-Reply-To: <20190228223257.6189-1-alistair.francis@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1902281437380.17965@viisi.sifive.com>
-References: <20190228223257.6189-1-alistair.francis@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VBe4FUsL1XFgwiT4hNs82n3hJ6g3oftAeOVJHGw7Vdo=;
+        b=jyMXtt4hWGzc8lH46NcQK82CMT8tgdMtyDtACOiY87UK1UitKQHi2Y9tnkZPAylJxG
+         5Q0iFQz5OSMh14lXXyjUbnsbVSLo05jh77JsoIdXMWD47LVIua1rvbtl8/m7SskCs5hN
+         ruKGTxnY/y3BHDF1u6Op/IdRVgpgbnm+RYmi8doM1t4SIqAV7982j61S5wEUrf0XdqzZ
+         1+wCTMKDik8Y2M8HbTrlTCiPH0EpKnFEg+p8XEyPZHEdba9hmtmm/HP16nBdGjIbw/72
+         wHQYFE10j4Q8SFSjR9H808f7vy7W96/Zol6KXCRYSPdUNjT6zoCRRQsGgDxnh1yyBB/v
+         OAPw==
+X-Gm-Message-State: APjAAAWJWeU4hc1BAQLOUmtzhGckn7HROIZOBONeeNyvLirUh5uJrIH1
+        2eulpuZAPFYr7DE5S9rX01qq/Ac6OGU=
+X-Google-Smtp-Source: APXvYqy8fbUN5sE1Bka8Z5KZkRLanevE2Nt2N1JR/tEA+qmtSgSpypHcSv1aqxWxiSVTWdOPGwZ+Hg==
+X-Received: by 2002:a5d:548f:: with SMTP id h15mr1119558wrv.238.1551393696465;
+        Thu, 28 Feb 2019 14:41:36 -0800 (PST)
+Received: from [192.168.0.41] (243.212.132.77.rev.sfr.net. [77.132.212.243])
+        by smtp.googlemail.com with ESMTPSA id f4sm20151885wrx.68.2019.02.28.14.41.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 14:41:35 -0800 (PST)
+Subject: Re: [PATCH 5/7] drivers: firmware: psci: Simplify state node parsing
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190228135919.3747-1-ulf.hansson@linaro.org>
+ <20190228135919.3747-6-ulf.hansson@linaro.org>
+ <a66689f2-51ba-6358-f161-66778daa1f09@linaro.org>
+ <CAPDyKFrdwkERTGOkfjCZv-cb0sTvDqtNWY6kKyaeWLHSumRp1A@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <ca30d998-2fe1-7ec9-8387-99c8d3e313bc@linaro.org>
+Date:   Thu, 28 Feb 2019 23:41:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAPDyKFrdwkERTGOkfjCZv-cb0sTvDqtNWY6kKyaeWLHSumRp1A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Alistair,
-
-On Thu, 28 Feb 2019, Alistair Francis wrote:
-
-> This reverts commit 6778be4e520959659b27a441c06a84c9cb009085.
+On 28/02/2019 23:26, Ulf Hansson wrote:
+> On Thu, 28 Feb 2019 at 16:40, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>>
+>> On 28/02/2019 14:59, Ulf Hansson wrote:
+>>> Instead of iterating through all the state nodes in DT, to find out how
+>>> many states that needs to be allocated, let's use the number already known
+>>> by the cpuidle driver. In this way we can drop the iteration altogether.
+>>>
+>>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+>>> ---
+>>>  drivers/firmware/psci/psci.c | 25 ++++++++++++-------------
+>>>  1 file changed, 12 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+>>> index d50b46a0528f..cbfc936d251c 100644
+>>> --- a/drivers/firmware/psci/psci.c
+>>> +++ b/drivers/firmware/psci/psci.c
+>>> @@ -290,26 +290,20 @@ static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
+>>>  static int psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
+>>>                       struct device_node *cpu_node, int cpu)
+>>>  {
+>>> -     int i, ret = 0, count = 0;
+>>> +     int i, ret = 0, num_state_nodes = drv->state_count - 1;
+>>
+>> why -1 ?
 > 
-> Reverting the commit fixes these error messages and an non-functioning
-> USB bus when attaching a USB to PCIe card to a RISC-V board:
->     xhci_hcd 0000:03:00.0: Host took too long to start, waited 16000 microseconds.
->     xhci_hcd 0000:03:00.0: startup error -19
->     xhci_hcd 0000:03:00.0: USB bus 2 deregistered
->     xhci_hcd 0000:03:00.0: WARNING: Host System Error
->     xhci_hcd 0000:03:00.0: remove, state 1
+> Because of the WFI state. The cpuidle-arm driver always carries this
+> state at index 0, which also is never used in
+> psci_cpu_suspend_enter(), where the similar is taken into account.
 > 
-> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-> ---
-> I'm not sure if this is the correct fix, it's possible something else is
-> wrong, but I wanted to get some feedback.
-> 
-> drivers/of/device.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 3717f2a20d0d..8299f8055da7 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -149,11 +149,9 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
->  	 * set by the driver.
->  	 */
->  	mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1);
-> +	dev->bus_dma_mask = mask;
->  	dev->coherent_dma_mask &= mask;
->  	*dev->dma_mask &= mask;
-> -	/* ...but only set bus mask if we found valid dma-ranges earlier */
+> It's a bit of magic, so perhaps someone should post a patch that
+> documents this a bit better in the code, wherever it makes sense.
 
-Does the DT data for the PCIe controller that you're using contain a 
-dma-ranges node?
+Ah yes, right. The first state is already filled with the WFI state in
+the cpuidle-arm.c driver and we must infer the index passed to
+dt_init_idle_driver is 1 because of that.
 
-> -	if (!ret)
-> -		dev->bus_dma_mask = mask;
->  
->  	coherent = of_dma_is_coherent(np);
->  	dev_dbg(dev, "device is%sdma coherent\n",
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
 
-- Paul
+[ ... ]
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
