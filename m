@@ -6,138 +6,134 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A2FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D70C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1246218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75BB620C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=dell.com header.i=@dell.com header.b="pmg8gON8"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LtFNceci";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AC1UzdEB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbfB1Xnv (ORCPT
+        id S1727999AbfB1Xta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:43:51 -0500
-Received: from esa8.dell-outbound.iphmx.com ([68.232.149.218]:11700 "EHLO
-        esa8.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729146AbfB1Xnu (ORCPT
+        Thu, 28 Feb 2019 18:49:30 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:59130 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfB1Xt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:43:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=dell.com; i=@dell.com; q=dns/txt; s=smtpout;
-  t=1551397430; x=1582933430;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=QOSdfByuhtkPKEJ0cSJSD4649XeXi7jkI4EcoSByiAg=;
-  b=pmg8gON89LffyZAmbi5dal4Q1tPlf8MO/7fhRuTgp/TaNVAHQXGG0ha6
-   oCy6YV8pTpK4Cb5PF+dJm/OWxQdveQ2GiVAKCRmA9TSwCqqKaTA025BTA
-   +pAbBsdlfrwqU79pGR1SFV1lQVvpb9JCWG77PiY0deXyYXJvhKncfjw82
-   0=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2FMAADgcXhchieV50NlHAEBAQQBAQc?=
- =?us-ascii?q?EAQGBVAQBAQsBgVWBBoECEhUSCox3jH2BfZY3gWcLAQGEbIQ5NwYNAQMBAQM?=
- =?us-ascii?q?BAwIBAQIQAQEBCgkLCCkvgjoigm8BAQEBAgESKD8FCwIBCBgeEFcCBAENBQg?=
- =?us-ascii?q?agn6BawifQj0Cb4EBiQcBAQGCHoozjl6BEYJkLoROARIBCBeFYQKJaYIpl1g?=
- =?us-ascii?q?HApJiIZMch2+CbpIXAgQCBAUCFIFdgQhxcIM8gjaOJ0ABMY1mgR+BHwEB?=
-X-IPAS-Result: =?us-ascii?q?A2FMAADgcXhchieV50NlHAEBAQQBAQcEAQGBVAQBAQsBg?=
- =?us-ascii?q?VWBBoECEhUSCox3jH2BfZY3gWcLAQGEbIQ5NwYNAQMBAQMBAwIBAQIQAQEBC?=
- =?us-ascii?q?gkLCCkvgjoigm8BAQEBAgESKD8FCwIBCBgeEFcCBAENBQgagn6BawifQj0Cb?=
- =?us-ascii?q?4EBiQcBAQGCHoozjl6BEYJkLoROARIBCBeFYQKJaYIpl1gHApJiIZMch2+Cb?=
- =?us-ascii?q?pIXAgQCBAUCFIFdgQhxcIM8gjaOJ0ABMY1mgR+BHwEB?=
-Received: from mx0a-00154901.pphosted.com (HELO mx0b-00154901.pphosted.com) ([67.231.149.39])
-  by esa8.dell-outbound.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Feb 2019 17:43:49 -0600
-Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SNhnif127358
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 18:43:49 -0500
-Received: from esa6.dell-outbound2.iphmx.com (esa6.dell-outbound2.iphmx.com [68.232.154.99])
-        by mx0b-00154901.pphosted.com with ESMTP id 2qxp1ghpsx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 18:43:49 -0500
-From:   <Austin.Bolen@dell.com>
-To:     <kbusch@kernel.org>, <Austin.Bolen@dell.com>
-Received: from ausxipps310.us.dell.com ([143.166.148.211])
-  by esa6.dell-outbound2.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA256; 01 Mar 2019 05:43:48 +0600
-X-LoopCount0: from 10.166.134.87
-X-IronPort-AV: E=Sophos;i="5.58,425,1544508000"; 
-   d="scan'208";a="324989107"
-CC:     <hch@infradead.org>, <Alex_Gagniuc@Dellteam.com>,
-        <torvalds@linux-foundation.org>, <keith.busch@intel.com>,
-        <sagi@grimberg.me>, <linux-kernel@vger.kernel.org>,
-        <linux-nvme@lists.infradead.org>, <axboe@fb.com>,
-        <mr.nuke.me@gmail.com>, <hch@lst.de>, <jonathan.derrick@intel.com>
-Subject: Re: [PATCH] nvme-pci: Prevent mmio reads if pci channel offline
-Thread-Topic: [PATCH] nvme-pci: Prevent mmio reads if pci channel offline
-Thread-Index: AQHUyksezlXXaxBLsUa+kQskBqUhAw==
-Date:   Thu, 28 Feb 2019 23:43:46 +0000
-Message-ID: <680f55f95e7547bdaffddce49772a5b7@AUSX13MPC131.AMER.DELL.COM>
-References: <CAHk-=wg_e5M0b5aJJf8V_UYaqX12YYA9MEg=gHNp6ALE5fK23w@mail.gmail.com>
- <cbe2ed1562a64609be6538f5816ec1b6@ausx13mps321.AMER.DELL.COM>
- <20190225155501.GI10237@localhost.localdomain>
- <b35ebf928ed743cca6649a191c76957b@ausx13mps321.AMER.DELL.COM>
- <CAHk-=wgRdATtsBzo-LDkWn_sW-PJvq95SahZcsTxxDMPzLWxKA@mail.gmail.com>
- <940d608e1a044a54abcb9d65923951f3@ausx13mps317.AMER.DELL.COM>
- <f6704855445b44639f023a48f3003309@AUSX13MPC131.AMER.DELL.COM>
- <443262761d0e41fbb46a46dab28759c2@AUSX13MPC131.AMER.DELL.COM>
- <20190228141655.GA18319@infradead.org>
- <883e2fad8f6e4791bfee2ec08992da39@AUSX13MPC131.AMER.DELL.COM>
- <20190228232020.GB22003@localhost.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 Feb 2019 18:49:29 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9735F60E5C; Thu, 28 Feb 2019 23:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551397768;
+        bh=1Z/n+pqjJ0cvMY7P/tIrTBaNTOTvLfuaAaYwTvQxo+s=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=LtFNceciwSTW2se/jz/oQ7ANdUnaBd/QcSKgtrm45Q7Ib0xgVk8+N8bMn8US+zFZW
+         PXz9lmRi1AJ+qYIYF2N//l/UMf/Kh7Wi2IxihtUFZGbYOke/8MpastLZscMykg4gID
+         d/sCRBlnXTxGsG52ehKHYMwmPmn29Tw1uu9tvvWY=
+Received: from lmark-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: lmark@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0679C60A00;
+        Thu, 28 Feb 2019 23:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551397767;
+        bh=1Z/n+pqjJ0cvMY7P/tIrTBaNTOTvLfuaAaYwTvQxo+s=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=AC1UzdEBIlxg8lEGs5pC4ikVj9qvEYph3JdtC4qvZq9uCCddn4WwhYqDOWlf56XBF
+         Gvd0THYT+3crxUm3v41IstJO8cot+jfNrcajEExVxwRj4KHgWbGe8+Dq4Fnw7MFLtW
+         u4B0jPwT63Yf4wYo6sHqNJrYQbje9PQrLhLLEiU0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0679C60A00
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=lmark@codeaurora.org
+Date:   Thu, 28 Feb 2019 15:49:26 -0800 (PST)
+From:   Liam Mark <lmark@codeaurora.org>
+X-X-Sender: lmark@lmark-linux.qualcomm.com
+To:     Sumit Semwal <sumit.semwal@linaro.org>,
+        =?ISO-8859-15?Q?=D8rjan_Eide?= <Orjan.Eide@arm.com>
+cc:     Brian Starkey <Brian.Starkey@arm.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "tkjos@android.com" <tkjos@android.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "arve@android.com" <arve@android.com>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>, nd <nd@arm.com>,
+        "maco@android.com" <maco@android.com>,
+        "christian@brauner.io" <christian@brauner.io>
+Subject: Re: [Linaro-mm-sig] [PATCH 2/4] staging: android: ion: Restrict
+ cache maintenance to dma mapped memory
+In-Reply-To: <20190206154021.GC3768@e106893-lin.trondheim.arm.com>
+Message-ID: <alpine.DEB.2.10.1902281541260.16374@lmark-linux.qualcomm.com>
+References: <1547836667-13695-1-git-send-email-lmark@codeaurora.org> <1547836667-13695-3-git-send-email-lmark@codeaurora.org> <69b18f39-8ce0-3c4d-3528-dfab8399f24f@ti.com> <alpine.DEB.2.10.1901181316380.9328@lmark-linux.qualcomm.com>
+ <alpine.DEB.2.10.1901291544001.19412@lmark-linux.qualcomm.com> <20190130113122.fipxgcmgrqggozcm@DESKTOP-E1NTVVP.localdomain> <20190206154021.GC3768@e106893-lin.trondheim.arm.com>
+User-Agent: Alpine 2.10 (DEB 1266 2009-07-14)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280158
+Content-Type: MULTIPART/MIXED; BOUNDARY="-2046127808-1661773238-1551397767=:16374"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/2019 5:20 PM, Keith Busch wrote:=0A=
-> =0A=
-> [EXTERNAL EMAIL]=0A=
-> =0A=
-> On Thu, Feb 28, 2019 at 11:10:11PM +0000, Austin.Bolen@dell.com wrote:=0A=
->> I'd also note that in PCIe, things that intentionally take the link down=
-=0A=
->> like SBR or Link Disable suppress surprise down error reporting.  But=0A=
->> NSSR doesn't have this requirement to suppress surprise down reporting.=
-=0A=
->> I think that's a gap on the part of the NVMe spec.=0A=
-> =0A=
-> SBR and Link Disable are done from the down stream port, though, so the=
-=0A=
-> host can still communicate with the function that took the link down.=0A=
-> That's entirely different than taking the link down from the end device,=
-=0A=
-> so I'm not sure how NVMe can fix that.=0A=
-> =0A=
-=0A=
-Agreed it is different.  Here is one way they could have solved it: host =
-=0A=
-writes magic value to NSSRC but device latches this instead of =0A=
-resetting.  Then require host to do SBR.  When device sees SBR with =0A=
-magic value in NSSRC it does an NSSR.=0A=
-=0A=
-> But I can't even recall why NVMe defined NSSR to require PCIe LTSSM=0A=
-> Detect. That seems entirely unnecessary and is just asking for trouble.=
-=0A=
-> =0A=
-=0A=
-Not sure why but maybe they wanted a full reset of everything including =0A=
-the PCIe block.  I can ask around.  Also agree it is asking for trouble =0A=
-to have device take the link down without parent bridge knowing what's =0A=
-going on.  There are new mechanism being proposed in NVMe that would =0A=
-also allow the device to initiate link down with no co-ordination with =0A=
-the parent bridge so may need to think on ways to avoid this issue for =0A=
-these new similar mechanisms.=0A=
-=0A=
--Austin=0A=
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+---2046127808-1661773238-1551397767=:16374
+Content-Type: TEXT/PLAIN; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
++ Sumit
+
+Hi Sumit,
+
+Do you have any thoughts on this patch? 
+
+It fixes a potential crash in on older kernel and I think limiting 
+begin/end_cpu_access to only apply cache maintenance when the buffer is 
+dma mapped makes sense from a logical perspective and performance 
+perspective.
+
+
+
+On Wed, 6 Feb 2019, Ørjan Eide wrote:
+
+> 
+> I've run some testing, and this patch does indeed fix the crash in
+> dma_sync_sg_for_cpu when it tried to use the 0 dma_address from the sg
+> list.
+> 
+> Tested-by: Ørjan Eide <orjan.eide@arm.com>
+> 
+> I tested this on an older kernel, v4.14, since the dma-mapping code
+> moved, in v4.19, to ignore the dma_address and instead use sg_phys() to
+> get a valid address from the page, which is always valid in the ion sg
+> lists. While this wouldn't crash on newer kernels, it's still good to
+> avoid the unnecessary work when no CMO is needed.
+> 
+
+Isn't a fix like this also required from a stability perspective for 
+future kernels? I understand from your analysis below that the crash has 
+been fixed after 4.19 by using sg_phys to get the address but aren't we 
+breaking the DMA API contract by calling dma_sync_* without first dma 
+mapping the memory, if so then we have no guarantee that future 
+implementations of functions like dma_direct_sync_sg_for_cpu will properly 
+handle calls to dma_sync_* if the memory is not dma mapped.
+
+> Is this patch a candidate for the relevant stable kernels, those that 
+> have this bug exposed to user space via Ion and DMA_BUF_IOCTL_SYNC?
+> 
+
+My belief is that is relevant for older kernels otherwise an unprivileged 
+malicious userspace application may be able to crash the system if they 
+can call DMA_BUF_IOCTL_SYNC at the right time.
+
+BTW thanks Ørjan testing and anaalsyis you have carried out on this 
+change.
+
+Liam
+
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+---2046127808-1661773238-1551397767=:16374--
