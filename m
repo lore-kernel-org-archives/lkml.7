@@ -2,203 +2,175 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8958FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2D4C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5852184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932D42184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="I8m/meDm";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="LFVyfsZ3"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="fcfxUFrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387427AbfB1PA6 (ORCPT
+        id S2387411AbfB1PA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 28 Feb 2019 10:00:58 -0500
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:41378 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726403AbfB1PA5 (ORCPT
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41134 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730851AbfB1PA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Feb 2019 10:00:57 -0500
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SF00xE030926;
-        Thu, 28 Feb 2019 07:00:38 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=9sH0SzOnSRyFjvxZ7Ugm0rBOsxjbK0LcEgtvmcMUmDQ=;
- b=I8m/meDm9giESBvIEYivK4trtlOELC2ah/JQ0D6fHzKoNs/yGSK6RJ8fZvYGA2pawE48
- MeE0BwMuF84viL85n6yhHxrxsDQ8vNoXaNIRPrzEqPZe+VO6vrRIBqREJc6aDJWGKTfi
- G9e0ReZBF7dn8JC2mx8hGMJfWelRrmh/JDsf0lLGSmUvoPyWt4aOmD36Qdrj7F4hqbie
- JsbsB3FbaGeWyFjKC4V5950iG1+EwCBwIaKsJ5bSk6Wotk6ldZ1XVS4oEIZY6/Godl2q
- w/CP6UsRpMFd5VdZZQv7Cpvfzdq4LJcvOSp8+Pho4kpDjduZPTvBQlfeJr7UJ+q7gf9M hA== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2qx4kmt2w5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 28 Feb 2019 07:00:37 -0800
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 28 Feb
- 2019 07:00:36 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.55) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 28 Feb 2019 07:00:36 -0800
+Received: by mail-qt1-f195.google.com with SMTP id v10so23787332qtp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 07:00:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9sH0SzOnSRyFjvxZ7Ugm0rBOsxjbK0LcEgtvmcMUmDQ=;
- b=LFVyfsZ31n7/khCwqbXIotGVCZdS6Onh/ElzfqyFx4kmum5b7b2rL/INToayMf3uJGx1ARQ9e4/7PSzccU3u2wca6A2SYA/4sAGpPbFn5R/wPqiwRW8mc5ng3x49lB6jr+8AMZQoOswVpO1wQsKpZgE9CbQiIeKm6XkLAeXGNqk=
-Received: from DM5PR18MB2134.namprd18.prod.outlook.com (52.132.143.31) by
- DM5PR18MB1193.namprd18.prod.outlook.com (10.173.213.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.16; Thu, 28 Feb 2019 15:00:35 +0000
-Received: from DM5PR18MB2134.namprd18.prod.outlook.com
- ([fe80::213e:9645:39f6:ef3e]) by DM5PR18MB2134.namprd18.prod.outlook.com
- ([fe80::213e:9645:39f6:ef3e%2]) with mapi id 15.20.1665.015; Thu, 28 Feb 2019
- 15:00:35 +0000
-From:   Yan Markman <ymarkman@marvell.com>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "maxime.chevallier@bootlin.com" <maxime.chevallier@bootlin.com>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        "mw@semihalf.com" <mw@semihalf.com>
-Subject: RE: [EXT] [PATCH net-next 15/15] net: mvpp2: set the GMAC, XLG MAC,
- XPCS and MPCS in reset when a port is down
-Thread-Topic: [EXT] [PATCH net-next 15/15] net: mvpp2: set the GMAC, XLG MAC,
- XPCS and MPCS in reset when a port is down
-Thread-Index: AQHUz2kh4BYrBZsvtk+IxXxR5vTQu6X1THwA
-Date:   Thu, 28 Feb 2019 15:00:34 +0000
-Message-ID: <DM5PR18MB2134A10888F49613CC9ECCB7D6750@DM5PR18MB2134.namprd18.prod.outlook.com>
-References: <20190228132128.30154-1-antoine.tenart@bootlin.com>
- <20190228132128.30154-16-antoine.tenart@bootlin.com>
-In-Reply-To: <20190228132128.30154-16-antoine.tenart@bootlin.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [212.199.69.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4462cff9-39ea-4a50-bc9e-08d69d8d7e39
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:DM5PR18MB1193;
-x-ms-traffictypediagnostic: DM5PR18MB1193:
-x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;DM5PR18MB1193;23:6XR4Zk+MbAp3Zanlf5DcKWcIVFdDZEp6loI4xoHOr?=
- =?us-ascii?Q?TCq9TswckDeaYUT9c0uf8hF980MbmFV+Y7cS/ZsHotj5lc5tzhdjzkqd9nsT?=
- =?us-ascii?Q?WW5eKe1baNZ6GU66E62njxEHVNjvr8Cpx/bWxVqwobeV20fOMiwOI7XrOn2r?=
- =?us-ascii?Q?eMJXEeF5rG2Lmt7sOTKtJvB4k0r9QCqUQHI3VocYu+1E2Z1Pr6hYlAYTx60h?=
- =?us-ascii?Q?DEsjUsF3V/l8gPmlrad3aRcJ4vWFryoPqDx7J//3VY3CcE/AHbq3tNiM1u+7?=
- =?us-ascii?Q?/ziNPjj5YDPqiL6QrXRu8JNLrjnUBBRwPwSQ/tHRKhUOZU0ZhlotNOKl2NVL?=
- =?us-ascii?Q?ErqdnjK0QPSZhSgiGdTJ4Srv3uSi49l6ojcy9AAWtJfdtjHfAtZzh3hCPObO?=
- =?us-ascii?Q?+3oxNcsWe9JkC6zm2H95rhADsmUcCFRQJVL0t//HXPDzwXYxg5rY2N8TBSPf?=
- =?us-ascii?Q?uRxicxTA1BypsUj671q7yFqbuxdBA4+RYotyu+aTvlPRhO6W/mE5onoa2OPy?=
- =?us-ascii?Q?NVYCo+RUvjs3sbgwIg2PCmQ/89zWt8cSCyD5XdSqpNfNtllO32a0B9PZXR/e?=
- =?us-ascii?Q?uUdnAwuGEbtBQ46jrj8GmeBrOR9mIBwMe+jJy4XN14VBgdtgkQWwZAJb3DBH?=
- =?us-ascii?Q?MlNCSnHEoxaW0ZPRce7/BXI8gjVEJsTCWYunFWKNN6bJSQfku1AGwNIpEqRj?=
- =?us-ascii?Q?TmjXazIo1QyomLn2pnw+lJlf7dNVQxEE8Zn0wrnzrUyPB+MC/c1izjM93sq/?=
- =?us-ascii?Q?DZiMq71KkxCFdwY5vEmrxSw10EiISUH+VgApAyut9EME4TcUbolqCYorq9T6?=
- =?us-ascii?Q?rRQpMpHCTC/6xOA9Q7gEWCPd3Lh7Zgxk07KFhBh2fomWEYarcqeGZ6gQT2Lw?=
- =?us-ascii?Q?2Vs0zaZMZcfpZQxtrYnfKy/Nc54uHromVbdCaLpmTsbUlu1jdMvRi4zgDFtg?=
- =?us-ascii?Q?qvqTqhN+fMBx0lTy9KvUHLPk2SF0HXuZ6V8WE32kaAnjTJWwyaUbhhBDZI0d?=
- =?us-ascii?Q?YEMee41JIXHl76rntW5g+ZOJMc8GSZNUlinS/4pMVpbgKAfAS6mPuK6MRWL5?=
- =?us-ascii?Q?IBfccubK5YGEvTX95kD6Zwl7S8RPoPqNLoK9f1aLPYLISHlOuY9pPMIbZ6v7?=
- =?us-ascii?Q?5kIAZMYrquJ5ulki6BKvbRmdg47BYKQbAj2goXQdj+bU3JbCfZr4m9/SLOkt?=
- =?us-ascii?Q?kdm+YXa0upyVa4ZDIQn93IwjILmvDzC9lC4n9Nuj5ltySCu9VUsYfknAnlO9?=
- =?us-ascii?Q?oAdeWmCrh/NrC9xK2eJuV4Hb/eKq0EA6oscTTQ48o2OiMyEz37UaoyR0VFUv?=
- =?us-ascii?Q?6wRUmfrRMSP69U4qYfEHdI=3D?=
-x-microsoft-antispam-prvs: <DM5PR18MB1193DF15E322FD8B474F4A52D6750@DM5PR18MB1193.namprd18.prod.outlook.com>
-x-forefront-prvs: 0962D394D2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(366004)(396003)(39860400002)(346002)(13464003)(199004)(189003)(26005)(68736007)(7416002)(2501003)(486006)(186003)(476003)(11346002)(446003)(53546011)(99286004)(66066001)(102836004)(76176011)(7696005)(33656002)(71200400001)(71190400001)(2906002)(478600001)(6436002)(55016002)(229853002)(105586002)(8676002)(14454004)(9686003)(2201001)(4326008)(97736004)(6506007)(106356001)(81166006)(5660300002)(86362001)(7736002)(6246003)(81156014)(8936002)(6116002)(3846002)(52536013)(53936002)(25786009)(316002)(110136005)(74316002)(256004)(54906003)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR18MB1193;H:DM5PR18MB2134.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: HFo7HsMP4JYxZzWPTSLXUm+dZDhLUA4GIaWwgFtTIOZRqIRZ6Sq9eyEXb7u5yEXTm1nq/wtPC3Y22bXiHQkrM4fR2KEQx93JG4McKlweTPXkfEvf7J9zxDu/G4aiGQ7h7zHc8XmAgWQ0Foo5Lg0XaSMeWjHBV3H7IS6T6TEzVDGFm70ksoxWslBttt1br80eKjjioBKfpf6L0QpNIqN9BrmlqAVzw8FnoVgO2/rr+bXmT/FYubszigw7OeOntBb3VtmnT9prfWASxvUI/fSfZppDhUP3iVI9ud2aVlF5s+/lonDYl0hP4eNs4vdubuPUoyD8AQpBY4zwTONPCLOdaSNAVQDnui5JQE8L7H56pdK1KGYFun0KkkfzKC3xI5qR0J6HdBZspAkK1leiBN+SyentN6k+ZScCAchDlITAsZM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=URNHzscQ4qPaUJmS41Sp3RUkVJopCE5QU3VQWfAy40E=;
+        b=fcfxUFrx/N1MBaUtE/U8RR6YEfsLOEuRvK0zDOUeqgKoBrzdNIbhG3iljCtSo5q0H4
+         wtSf8W1cB213EF+MPYb4NjJNFK54xv3wB/SUj/5zMKCrB/qT/SZOZlVkq9vUie6/s170
+         /v+3IvK5wB4f59ckQzb7Qk3SZuyczvveHohZk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=URNHzscQ4qPaUJmS41Sp3RUkVJopCE5QU3VQWfAy40E=;
+        b=Ep/MqAFeqDw/qfaMNDEuvC5A5wFeKd4BkhqKhGuC6j3mTeQm5x8iNf9NUCO7FW/VR7
+         r3HwhKPXZM3xv1uPNBwEl9Kodsw7As0Q9m6WkE3RC0hlCCQX9vN8507dfA3beMgFCMX2
+         WMRCPr3xjYKZpRKUhQPfIBsUhmnPjykS2874HKaaEqIA3hOqyzvGA/3vREJOcjfxXKuY
+         QXge2GULN/qN2KFzKtYMstALAI8abpp6h97as/A2xizAvZ0EqXNIKKIlPH6orD4rU6qs
+         2N+Rp9p6S/snsWUiuBmPMZLZVdGiwYCgYEt4TKDxFwCz6DXnWQzdnATcBfBRTJzA8HCX
+         3yyg==
+X-Gm-Message-State: APjAAAVYTs6qmoucSJNYdKPVU1ZYnYy+LIy3rjDvB7edzFxh5LeuJQuI
+        PuJIkB/C31YOD7EnM6OXFSfnTw==
+X-Google-Smtp-Source: APXvYqzKilytzk378eGD4qTDx1kWARmEnreULgNUEcUhQHobD7w7yarR03QQ7RdG9yyz3WUGj/Fiag==
+X-Received: by 2002:a0c:9acb:: with SMTP id k11mr6562969qvf.197.1551366056148;
+        Thu, 28 Feb 2019 07:00:56 -0800 (PST)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id s76sm6597265qki.42.2019.02.28.07.00.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 07:00:55 -0800 (PST)
+Date:   Thu, 28 Feb 2019 10:00:54 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        paulmck@linux.vnet.ibm.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190228150054.GB156098@google.com>
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+ <20190228173444.54403795211d80ba540b61cb@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4462cff9-39ea-4a50-bc9e-08d69d8d7e39
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 15:00:35.1135
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR18MB1193
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_07:,,
- signatures=0
-X-Proofpoint-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280102
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228173444.54403795211d80ba540b61cb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Thu, Feb 28, 2019 at 05:34:44PM +0900, Masami Hiramatsu wrote:
+> Hi Joel,
+> 
+> On Wed, 27 Feb 2019 14:37:47 -0500
+> "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+> 
+> > Introduce in-kernel headers and other artifacts which are made available
+> > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> > it possible to build kernel modules, run eBPF programs, and other
+> > tracing programs that need to extend the kernel for tracing purposes
+> > without any dependency on the file system having headers and build
+> > artifacts.
+> > 
+> > On Android and embedded systems, it is common to switch kernels but not
+> > have kernel headers available on the file system. Raw kernel headers
+> > also cannot be copied into the filesystem like they can be on other
+> > distros, due to licensing and other issues. There's no linux-headers
+> > package on Android. Further once a different kernel is booted, any
+> > headers stored on the file system will no longer be useful. By storing
+> > the headers as a compressed archive within the kernel, we can avoid these
+> > issues that have been a hindrance for a long time.
+> 
+> Hmm, isn't it easier to add kernel-headers package on Android?
 
-The eth-down/stop may concurrent with pre-scheduled stats_work.
-So it seems better to cancel stats_work first and then make resetS.
+I have already been down that road. In the Android ecosystem, the Android
+teams only provide a "userspace system image" which goes on the system
+partition of the flash (and a couple other images are also provided but
+system is the main one). The system image cannot contain GPL source code. It
+is also not possible to put kernel headers for every kernel version on the
+system images that ship and is not practical. Android boots on 1000s of forked
+kernels. It does not make sense to provide headers on the system image for
+every kernel version and I already had many discussions on the subject with
+the teams, it is something that is just not done. Now for kernel modules,
+there's another image called the "vendor image" which is flashed onto the
+vendor parition, this is where kernel modules go.  This vendor image is not
+provided by Google for non-Pixel devices. So we have no control over what
+goes there BUT we do know that kernel modules that are enabled will go there,
+and we do have control over enforcing that certain kernel modules should be
+built and available as they are mandatory for Android to function properly.
+We would also possibly make it a built-in option as well. Anyway my point is
+keeping it in the kernel is really the easiest and the smartest choice IMO.
 
-Yan Markman
+> > The feature is also buildable as a module just in case the user desires
+> > it not being part of the kernel image. This makes it possible to load
+> > and unload the headers on demand. A tracing program, or a kernel module
+> > builder can load the module, do its operations, and then unload the
+> > module to save kernel memory. The total memory needed is 3.8MB.
+> 
+> But it also requires to install build environment (tools etc.)
+> on the target system...
 
------Original Message-----
-From: Antoine Tenart <antoine.tenart@bootlin.com>=20
-Sent: Thursday, February 28, 2019 3:21 PM
-To: davem@davemloft.net; linux@armlinux.org.uk
-Cc: Antoine Tenart <antoine.tenart@bootlin.com>; netdev@vger.kernel.org; li=
-nux-kernel@vger.kernel.org; thomas.petazzoni@bootlin.com; maxime.chevallier=
-@bootlin.com; gregory.clement@bootlin.com; miquel.raynal@bootlin.com; Nadav=
- Haklai <nadavh@marvell.com>; Stefan Chulski <stefanc@marvell.com>; Yan Mar=
-kman <ymarkman@marvell.com>; mw@semihalf.com
-Subject: [EXT] [PATCH net-next 15/15] net: mvpp2: set the GMAC, XLG MAC, XP=
-CS and MPCS in reset when a port is down
+Yes, that's true. Check the other thread with Masahiro that we are discussing
+this point on and let us continue discussing there:
+https://lore.kernel.org/patchwork/patch/1046307/#1238223
+https://lore.kernel.org/patchwork/patch/1046307/#1238491
 
-External Email
+> > The code to read the headers is based on /proc/config.gz code and uses
+> > the same technique to embed the headers.
+> > 
+> > To build a module, the below steps have been tested on an x86 machine:
+> > modprobe kheaders
+> > rm -rf $HOME/headers
+> > mkdir -p $HOME/headers
+> > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> > cd my-kernel-module
+> > make -C $HOME/headers M=$(pwd) modules
+> > rmmod kheaders
+> 
+> It seems a bit complex, but no difference from compared with carrying
+> kheaders.tar.gz. I think we would better have a psudo filesystem
+> which can mount this compressed header file directly :) Then it becomes
+> simpler, like
+> 
+> modprobe headerfs
+> mkdir $HOME/headers
+> mount -t headerfs $HOME/headers
+> 
+> And this doesn't consume any disk-space.
 
-----------------------------------------------------------------------
-This patch adds calls in the stop() helper to ensure both MACs and
-both PCS blocks are set in reset when the user manually sets a port
-down. This is done so that we have the exact same block reset states at
-boot time and when a port is set down.
+I felt using a compressed tar is really the easiest way because of all the
+tools are already available. There isn't a compressed in-ram filesystem right
+now that I'm aware off that can achieve the kind of high compression ratio
+this patchset does.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+thanks,
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/=
-ethernet/marvell/mvpp2/mvpp2_main.c
-index 29d32cb3d52b..c10fd894c86f 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -3257,6 +3257,7 @@ static void mvpp2_stop_dev(struct mvpp2_port *port)
-=20
- 	if (port->phylink)
- 		phylink_stop(port->phylink);
-+
- 	phy_power_off(port->comphy);
- }
-=20
-@@ -3520,6 +3521,9 @@ static int mvpp2_stop(struct net_device *dev)
- 	mvpp2_cleanup_rxqs(port);
- 	mvpp2_cleanup_txqs(port);
-=20
-+	mvpp2_mac_reset(port);
-+	mvpp22_pcs_reset(port);
-+
- 	cancel_delayed_work_sync(&port->stats_work);
-=20
- 	return 0;
---=20
-2.20.1
+ - Joel
 
