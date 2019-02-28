@@ -2,156 +2,85 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E01BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE3CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02A620C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B102E20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367018;
-	bh=kXAsVo5He1xjUqIp51Hn2a4f8h4TBZ7r4u5mpAlZpQI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sd2PTpnlWlJ0SnbVPX6mjqetgOy0C+W1z9cYtxqP8kbwdqRpV23viq25ajwwMVpOX
-	 TwwtlNND6ML0T9gn1Rl1HOVCv00LKAjwpZ1RkK6C4Og6gDCUn6qKxgJS8V/gVCjLVu
-	 sUhwmKvzTljF/ctHfe2j9fVU9rq+SpsNpQoBYBYg=
+	s=default; t=1551367029;
+	bh=3MMh4dAiHDcmnEGtucW2KmNw3uQwy+xNlJdqWbhzfWw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZIV1xn2+PbWC+gEmgQbRjmeL5HsbqCskqIR4jLKIB2ClHhc6zktReyNeT2Yg78zFg
+	 25iD/9aeXf+5qk45FgYJiCcloMENq5V+ZvV8E8f63gaPzGGoB+sUnB4KgQRg1/98uJ
+	 w0WxTY9YzNdS7NIpfkODmKJKqVFsEXnQgevj3FTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389110AbfB1PQ4 (ORCPT
+        id S2389112AbfB1PRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:16:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53112 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733252AbfB1PQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:16:37 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC27B218D9;
-        Thu, 28 Feb 2019 15:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366996;
-        bh=kXAsVo5He1xjUqIp51Hn2a4f8h4TBZ7r4u5mpAlZpQI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VWDkei5aMNUQcIv1rq8iz1Rz4Kwe/0cJsnMAqdGtzThc+y9ETYAlY5t5VfWym3PS8
-         c/657Pl4lWgf+7KsK3hozujFUh1tHRf9E5sUO2j6AbgEgTMeFIdXfZ+uP0GeTsmcBb
-         8EXip+yh44rW1ZiQoml75H8gNTNDsNhwtPj6HrBE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Clifton <nickc@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 5/5] perf symbols: Filter out hidden symbols from labels
-Date:   Thu, 28 Feb 2019 10:16:27 -0500
-Message-Id: <20190228151628.13364-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190228151628.13364-1-sashal@kernel.org>
-References: <20190228151628.13364-1-sashal@kernel.org>
+        Thu, 28 Feb 2019 10:17:08 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41490 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388373AbfB1PQ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:16:28 -0500
+Received: by mail-ot1-f65.google.com with SMTP id t7so17929074otk.8;
+        Thu, 28 Feb 2019 07:16:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jHJY0kqfI8XUwiYhI7tiTYhxh8BkkmwKL4cZI1Gx17k=;
+        b=ou95UYfyMuV8udPE6SegsIO7A1ubxruQDBJyX3P22FocW/CZjfHhcpP/PEu/XGaS26
+         91iG2GRpUt6/FoBqowlrZBICEo2Qw+ua1ZFpRuee4a3kZMWXFMIFKrubxv+Z1Rz1047a
+         fwT+RRW4X01ijjSBi64MK4BQdgk2TurJrLeW96G3d286di8kOGn15e0lfcoCLFcVl+1R
+         O/gMkE41SemJ01BpQrfbqMX+6VzdiKc4DOFdHsyJU0nSkSDwcx+4wfZTuiPV9z/mAUML
+         9mkHsOM8bgeGZJo4u2lU3eth0WcJ9FVkmEdBppcboqLSr0Uiiqy9bwUHIW9tIfaWF8BN
+         fvvA==
+X-Gm-Message-State: APjAAAVqo21ibsPvJAW5M4IpXcVKZ93nsrZjb1HO3FNxRBA22c9VRSRZ
+        3K4BsAVvsXejriBTzr7U3A==
+X-Google-Smtp-Source: APXvYqzmecG21OSnX6obuwLdWwE6yGQZN/omOCotGHKfahK2/+6R8iW+JWRem4zHxH9C5YcRION2Jg==
+X-Received: by 2002:a05:6830:2096:: with SMTP id y22mr58030otq.266.1551366987387;
+        Thu, 28 Feb 2019 07:16:27 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a14sm7927574otl.46.2019.02.28.07.16.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 07:16:26 -0800 (PST)
+Date:   Thu, 28 Feb 2019 09:16:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: Add vendor prefix for feiyang
+Message-ID: <20190228151626.GA17387@bogus>
+References: <20190212115232.4532-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190212115232.4532-1-jagan@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+On Tue, Feb 12, 2019 at 05:22:32PM +0530, Jagan Teki wrote:
+> Add vendor prefix for feiyang, known as
+> Shenzhen Fly Young Technology Co.,LTD. a known producer for LCD modules.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Note: notation about using 'feiyang' is based on the datasheet 
+> http://files.pine64.org/doc/datasheet/pine64/FY07024DI26A30-D_feiyang_LCD_panel.pdf
+> 
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
+Applied.
 
-When perf is built with the annobin plugin (RHEL8 build) extra symbols
-are added to its binary:
-
-  # nm perf | grep annobin | head -10
-  0000000000241100 t .annobin_annotate.c
-  0000000000326490 t .annobin_annotate.c
-  0000000000249255 t .annobin_annotate.c_end
-  00000000003283a8 t .annobin_annotate.c_end
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
-  00000000001bc400 t .annobin_annotate.c_end.unlikely
-  00000000001bce18 t .annobin_annotate.c.hot
-  00000000001bce18 t .annobin_annotate.c.hot
-  ...
-
-Those symbols have no use for report or annotation and should be
-skipped.  Moreover they interfere with the DWARF unwind test on the PPC
-arch, where they are mixed with checked symbols and then the test fails:
-
-  # perf test dwarf -v
-  59: Test dwarf unwind                                     :
-  --- start ---
-  test child forked, pid 8515
-  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
-  ...
-  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
-  unwind: failed with 'no error'
-
-The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
-
-  # readelf -s ./perf | grep annobin | head -1
-    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
-
-They can still pass the check for the label symbol. Adding check for
-HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
-out such symbols.
-
->   Just to be awkward, if you are going to ignore STV_HIDDEN
->   symbols then you should probably also ignore STV_INTERNAL ones
->   as well...  Annobin does not generate them, but you never know,
->   one day some other tool might create some.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Clifton <nickc@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/util/symbol-elf.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 194300a08197f..04100626ca51a 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -48,6 +48,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
- 	return GELF_ST_TYPE(sym->st_info);
- }
- 
-+static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
-+{
-+	return GELF_ST_VISIBILITY(sym->st_other);
-+}
-+
- #ifndef STT_GNU_IFUNC
- #define STT_GNU_IFUNC 10
- #endif
-@@ -72,7 +77,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
- 	return elf_sym__type(sym) == STT_NOTYPE &&
- 		sym->st_name != 0 &&
- 		sym->st_shndx != SHN_UNDEF &&
--		sym->st_shndx != SHN_ABS;
-+		sym->st_shndx != SHN_ABS &&
-+		elf_sym__visibility(sym) != STV_HIDDEN &&
-+		elf_sym__visibility(sym) != STV_INTERNAL;
- }
- 
- static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
--- 
-2.19.1
-
+Rob
