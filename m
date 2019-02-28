@@ -2,156 +2,126 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D010C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE7FC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F25A2133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD822133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551379706;
+	bh=LtUrXngQUYvD/5hhmNfQGS5wMFk3+eZdUG/gRmddzdo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2AgdjOh4kqiaKVgPfvZKKuGkQvCgo3EGpa0XZhj0CGI491jioBtR6qz5uZetOljgg
+	 TcoGzGT71aISAp2ViMRESnMQf1kY64P5x/ICxKHT6rPNCrD+DrekaUS756pxxcCecq
+	 GBuJzyPU91Hp0hHqdkLvXikfN2il8QnfxUe0wjcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388590AbfB1Srw (ORCPT
+        id S1732601AbfB1SsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:47:52 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:36886 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388466AbfB1Srt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:47:49 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AF644316278D;
-        Thu, 28 Feb 2019 18:47:48 +0000 (UTC)
-Received: from llong.com (ovpn-121-201.rdu2.redhat.com [10.10.121.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E0CE51973C;
-        Thu, 28 Feb 2019 18:47:43 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v12 3/3] ipc: Do cyclic id allocation with ipcmni_extend mode
-Date:   Thu, 28 Feb 2019 13:47:25 -0500
-Message-Id: <1551379645-819-4-git-send-email-longman@redhat.com>
-In-Reply-To: <1551379645-819-1-git-send-email-longman@redhat.com>
-References: <1551379645-819-1-git-send-email-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 28 Feb 2019 18:47:48 +0000 (UTC)
+        Thu, 28 Feb 2019 13:48:25 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34016 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfB1SsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:48:25 -0500
+Received: by mail-oi1-f195.google.com with SMTP id g16so17381998oib.1;
+        Thu, 28 Feb 2019 10:48:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=roqaL1uJJkGE/SVuMmyzeIg//rbsB7+jOOnA0IByL7I=;
+        b=t7fQK2T/yBUym2fM2vLpOf4igz3oRTvmfG0cm2iI1BxpjZ4pDN0xWdeA5JJc4/fT6V
+         rqrOXCRwSP9ymbM+SUTzvgxHwObbE02VcvIbyszI81G4BjkNZMbJDzswGOP4/ldEH4VV
+         gt1Lv+IhfgX3K5lTGoCcSRnOBPzC37IkEh1Xi925dbQ+UKgr9ML5OJHDHVI6ts62hyTm
+         qv3olEuryw9CTolgNIIhmLflRrgNUhys7BMeOH6SCvAxA4kdCJ77IRfPRYMhD5eda68u
+         55cD363BkjyGblqjJOBpqRgn199CF4uiuSdxk6OtoiJrCV+K5WhsTbOA7diNFtVXi1Vv
+         BVag==
+X-Gm-Message-State: AHQUAubd2JxKjW53wNqBOudpSxt0xas0DQ0jIE5jH1kyLu0SfWwnit2p
+        dE2ZT8seyHmsX22J/8CNGw==
+X-Google-Smtp-Source: AHgI3IYq6yI7kg8jKcCd3Ucyo9MhXCG5WVvW0u09VPczg6502VXstUc9eNtthclC0JXhrzZJBUO4cw==
+X-Received: by 2002:aca:ac45:: with SMTP id v66mr737665oie.134.1551379704135;
+        Thu, 28 Feb 2019 10:48:24 -0800 (PST)
+Received: from localhost (ip-184-203-129-180.hstntx.spcsdns.net. [184.203.129.180])
+        by smtp.gmail.com with ESMTPSA id v62sm8308367oie.21.2019.02.28.10.48.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 10:48:23 -0800 (PST)
+Date:   Thu, 28 Feb 2019 12:48:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 4/7] dt-bindings: power: supply: Add docs for Ingenic
+ JZ47xx SoCs battery.
+Message-ID: <20190228184822.GA17624@bogus>
+References: <20190217142914.17433-1-contact@artur-rojek.eu>
+ <20190217142914.17433-4-contact@artur-rojek.eu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190217142914.17433-4-contact@artur-rojek.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For ipcmni_extend mode, the sequence number space is only 7 bits. So
-the chance of id reuse is relatively high compared with the non-extended
-mode.
+On Sun, Feb 17, 2019 at 03:29:13PM +0100, Artur Rojek wrote:
+> Add documentation for the ingenic-battery driver, used on JZ47xx SoCs.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>  .../bindings/power/supply/ingenic,battery.txt | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
+> new file mode 100644
+> index 000000000000..66430bf73815
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
+> @@ -0,0 +1,31 @@
+> +* Ingenic JZ47xx battery bindings
+> +
+> +Required properties:
+> +
+> +- compatible: Must be "ingenic,jz4740-battery".
+> +- io-channels: phandle and IIO specifier pair to the IIO device.
+> +  Format described in iio-bindings.txt.
+> +- monitored-battery: phandle to a "simple-battery" compatible node.
+> +
+> +The "monitored-battery" property must be a phandle to a node using the format
+> +described in battery.txt, with the following properties being required:
+> +
+> +- voltage-min-design-microvolt: Drained battery voltage.
+> +- voltage-max-design-microvolt: Fully charged battery voltage.
+> +
+> +Example:
+> +
+> +#include <dt-bindings/iio/adc/ingenic,adc.h>
+> +
+> +simple_battery: battery {
+> +	compatible = "simple-battery";
+> +	voltage-min-design-microvolt = <3600000>;
+> +	voltage-max-design-microvolt = <4200000>;
+> +};
+> +
+> +ingenic_battery {
+> +	compatible = "ingenic,jz4740-battery";
+> +	io-channels = <&adc INGENIC_ADC_BATTERY>;
+> +	io-channel-names = "battery";
+> +	monitored-battery = <&simple_battery>;
 
-To alleviate this id reuse problem, the id allocation will be done
-cyclically to cycle through all the 24-bit id space before wrapping
-around when in ipcmni_extend mode. This may cause the use of more memory
-in term of the number of xa_nodes allocated as well as potentially more
-cachelines used as the xa_nodes may be spread more sparsely in this case.
+Isn't this just an ADC monitored battery? What's specific to JZ4740?
 
-There is probably a slight memory and performance cost in doing cyclic
-id allocation. For applications that really need more than 32k unique IPC
-identifiers, this is a small price to pay to avoid the id reuse problem.
+Maybe a generic binding is appropriate here?
 
-As a result, the chance of id reuse should be even smaller in the
-ipcmni_extend mode. For users who worry about id reuse, they can
-turn on ipcmni_extend mode, even if they don't need more than 32k
-IPC identifiers.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 5 ++++-
- ipc/ipc_sysctl.c                                | 2 ++
- ipc/util.c                                      | 7 ++++++-
- ipc/util.h                                      | 2 ++
- 4 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 074b775..bb851d0 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1813,7 +1813,10 @@
- 			See Documentation/filesystems/nfs/nfsroot.txt.
- 
- 	ipcmni_extend	[KNL] Extend the maximum number of unique System V
--			IPC identifiers from 32,768 to 16,777,216.
-+			IPC identifiers from 32,768 to 16,777,216. Also do
-+			cyclical identifier allocation through the entire
-+			24-bit identifier space to reduce the chance of
-+			identifier reuse.
- 
- 	irqaffinity=	[SMP] Set the default irq affinity mask
- 			The argument is a cpu list, as described above.
-diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
-index 73b7782..d9ac6ca 100644
---- a/ipc/ipc_sysctl.c
-+++ b/ipc/ipc_sysctl.c
-@@ -122,6 +122,7 @@ static int proc_ipc_sem_dointvec(struct ctl_table *table, int write,
- static int int_max = INT_MAX;
- int ipc_mni = IPCMNI;
- int ipc_mni_shift = IPCMNI_SHIFT;
-+bool ipc_mni_extended;
- 
- static struct ctl_table ipc_kern_table[] = {
- 	{
-@@ -252,6 +253,7 @@ static int __init ipc_mni_extend(char *str)
- {
- 	ipc_mni = IPCMNI_EXTEND;
- 	ipc_mni_shift = IPCMNI_EXTEND_SHIFT;
-+	ipc_mni_extended = true;
- 	pr_info("IPCMNI extended to %d.\n", ipc_mni);
- 	return 0;
- }
-diff --git a/ipc/util.c b/ipc/util.c
-index 0a835a4..78e14ac 100644
---- a/ipc/util.c
-+++ b/ipc/util.c
-@@ -221,7 +221,12 @@ static inline int ipc_idr_alloc(struct ipc_ids *ids, struct kern_ipc_perm *new)
- 	 */
- 
- 	if (next_id < 0) { /* !CHECKPOINT_RESTORE or next_id is unset */
--		idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
-+		if (ipc_mni_extended)
-+			idx = idr_alloc_cyclic(&ids->ipcs_idr, new, 0, ipc_mni,
-+						GFP_NOWAIT);
-+		else
-+			idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
-+
- 		if ((idx <= ids->last_idx) && (++ids->seq > IPCID_SEQ_MAX))
- 			ids->seq = 0;
- 		new->seq = ids->seq;
-diff --git a/ipc/util.h b/ipc/util.h
-index 6a88d51..9f0dd79 100644
---- a/ipc/util.h
-+++ b/ipc/util.h
-@@ -33,6 +33,7 @@
- #ifdef CONFIG_SYSVIPC_SYSCTL
- extern int ipc_mni;
- extern int ipc_mni_shift;
-+extern bool ipc_mni_extended;
- 
- #define IPCMNI_SEQ_SHIFT	ipc_mni_shift
- #define IPCMNI_IDX_MASK		((1 << ipc_mni_shift) - 1)
-@@ -40,6 +41,7 @@
- #else /* CONFIG_SYSVIPC_SYSCTL */
- 
- #define ipc_mni			IPCMNI
-+#define ipc_mni_extended	false
- #define IPCMNI_SEQ_SHIFT	IPCMNI_SHIFT
- #define IPCMNI_IDX_MASK		((1 << IPCMNI_SHIFT) - 1)
- #endif /* CONFIG_SYSVIPC_SYSCTL */
--- 
-1.8.3.1
+Rob
 
