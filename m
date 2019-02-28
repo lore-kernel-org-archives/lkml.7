@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01ADC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2669C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE10820C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FBB20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367707;
-	bh=zYbbeAZ0200g8efW3tFVQSwkKLGIZgHyPPavUzAmpmE=;
+	s=default; t=1551367711;
+	bh=lK/3caKyJKKcBMLqo56YOZ+Rx3kL9qi0N7a3buHyB4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WibgNxkd1pUc/U3Yf8FEBBlCbFy7JPWdf8CQnhNsbgKF+knVVl+j1QxXaMcGBKy+P
-	 aGjR/0lGiD4Ak7dxAKEO/iN1EI2pqRTaSPqwQsu7c/tx26C7dpZ3znxMJDHZBLpVCc
-	 q1ZfsN8b92XBFBKjwPoV6cLECqf+4o9s+afk79IA=
+	b=Aa0FX/0zlgysdUy6Lt1Q1Ar2gOnIvGikNjhluLlyMDS+1zn0+OWZebOtN+ixAgOal
+	 Kl4sDgE1pldUS/ua35AWvnZ9PqwLneCTuqIr7Lj5raM/MwDXP5oC69derKxMo3i0Aw
+	 k4yMDzo5iBmyrkz9pp/SH8HUqBVrRbz1StF1aTOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387850AbfB1PLB (ORCPT
+        id S2389037AbfB1P2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:11:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43836 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:28:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731595AbfB1PK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:10:58 -0500
+        id S2387844AbfB1PLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:11:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9A7C218B0;
-        Thu, 28 Feb 2019 15:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1658C2171F;
+        Thu, 28 Feb 2019 15:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366657;
-        bh=zYbbeAZ0200g8efW3tFVQSwkKLGIZgHyPPavUzAmpmE=;
+        s=default; t=1551366659;
+        bh=lK/3caKyJKKcBMLqo56YOZ+Rx3kL9qi0N7a3buHyB4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmeQKx+N+vqK2qt96vV2EvoYe9ZlM6koavacoxelndtgBwMNlKQge0gTRLaSyb+V5
-         BvNZ/EmvKPPsNYhmEj0JW86LMxGSbNt+3sTw7zyRAeNbmEuOxn9uPt/jmBMuyspXX3
-         beJ8PYnzCmYWIQoeA4rbVKN1wZZAiEjWmdxblpdE=
+        b=TtHxKAYSkGvwixlhVu7mPk/DvgA7Ezaqgd8ru4uviEeGN7GsiJ5eJsCNK3mA3Z+tG
+         XTUwbGy+PvI9Si3aOk9NN3Ws3CmsG1YKSDy0Bg4lK/0SKEG/f0Df4vghbPCiOLpUi+
+         Xs/jWEJwS0UR0RPDnDbGJ5jNGdY6tMxtDGKrmOPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.20 76/81] nvme-pci: fix rapid add remove sequence
-Date:   Thu, 28 Feb 2019 10:08:08 -0500
-Message-Id: <20190228150813.10256-76-sashal@kernel.org>
+Cc:     Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 78/81] qed: Fix EQ full firmware assert.
+Date:   Thu, 28 Feb 2019 10:08:10 -0500
+Message-Id: <20190228150813.10256-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -58,71 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 5c959d73dba6495ec01d04c206ee679d61ccb2b0 ]
+[ Upstream commit 660492bcf4a7561b5fdc13be0ae0b0c0a8c120be ]
 
-A surprise removal may fail to tear down request queues if it is racing
-with the initial asynchronous probe. If that happens, the remove path
-won't see the queue resources to tear down, and the controller reset
-path may create a new request queue on a removed device, but will not
-be able to make forward progress, deadlocking the pci removal.
+When slowpath messages are sent with high rate, the resulting
+events can lead to a FW assert in case they are not handled fast
+enough (Event Queue Full assert). Attempt to send queued slowpath
+messages only after the newly evacuated entries in the EQ ring
+are indicated to FW.
 
-Protect setting up non-blocking resources from a shutdown by holding the
-same mutex, and transition to the CONNECTING state after these resources
-are initialized so the probe path may see the dead controller state
-before dispatching new IO.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202081
-Reported-by: Alex Gagniuc <Alex_Gagniuc@Dellteam.com>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Tested-by: Alex Gagniuc <mr.nuke.me@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_sp.h  |  1 +
+ drivers/net/ethernet/qlogic/qed/qed_spq.c | 15 +++++++--------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index c0d01048ce4de..439b9f4eb246a 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2280,16 +2280,7 @@ static void nvme_reset_work(struct work_struct *work)
- 	if (dev->ctrl.ctrl_config & NVME_CC_ENABLE)
- 		nvme_dev_disable(dev, false);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_sp.h b/drivers/net/ethernet/qlogic/qed/qed_sp.h
+index 3157c0d994417..dae2896e1d8e4 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_sp.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_sp.h
+@@ -380,6 +380,7 @@ void qed_consq_setup(struct qed_hwfn *p_hwfn);
+  * @param p_hwfn
+  */
+ void qed_consq_free(struct qed_hwfn *p_hwfn);
++int qed_spq_pend_post(struct qed_hwfn *p_hwfn);
  
--	/*
--	 * Introduce CONNECTING state from nvme-fc/rdma transports to mark the
--	 * initializing procedure here.
--	 */
--	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
--		dev_warn(dev->ctrl.device,
--			"failed to mark controller CONNECTING\n");
--		goto out;
--	}
--
-+	mutex_lock(&dev->shutdown_lock);
- 	result = nvme_pci_enable(dev);
- 	if (result)
- 		goto out;
-@@ -2308,6 +2299,17 @@ static void nvme_reset_work(struct work_struct *work)
- 	 */
- 	dev->ctrl.max_hw_sectors = NVME_MAX_KB_SZ << 1;
- 	dev->ctrl.max_segments = NVME_MAX_SEGS;
-+	mutex_unlock(&dev->shutdown_lock);
+ /**
+  * @file
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_spq.c b/drivers/net/ethernet/qlogic/qed/qed_spq.c
+index 0a9c5bb0fa486..a721b9348b6ca 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_spq.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_spq.c
+@@ -402,6 +402,11 @@ int qed_eq_completion(struct qed_hwfn *p_hwfn, void *cookie)
+ 
+ 	qed_eq_prod_update(p_hwfn, qed_chain_get_prod_idx(p_chain));
+ 
++	/* Attempt to post pending requests */
++	spin_lock_bh(&p_hwfn->p_spq->lock);
++	rc = qed_spq_pend_post(p_hwfn);
++	spin_unlock_bh(&p_hwfn->p_spq->lock);
 +
-+	/*
-+	 * Introduce CONNECTING state from nvme-fc/rdma transports to mark the
-+	 * initializing procedure here.
-+	 */
-+	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
-+		dev_warn(dev->ctrl.device,
-+			"failed to mark controller CONNECTING\n");
-+		goto out;
-+	}
+ 	return rc;
+ }
  
- 	result = nvme_init_identify(&dev->ctrl);
- 	if (result)
+@@ -744,7 +749,7 @@ static int qed_spq_post_list(struct qed_hwfn *p_hwfn,
+ 	return 0;
+ }
+ 
+-static int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
++int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
+ {
+ 	struct qed_spq *p_spq = p_hwfn->p_spq;
+ 	struct qed_spq_entry *p_ent = NULL;
+@@ -882,7 +887,6 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
+ 	struct qed_spq_entry	*p_ent = NULL;
+ 	struct qed_spq_entry	*tmp;
+ 	struct qed_spq_entry	*found = NULL;
+-	int			rc;
+ 
+ 	if (!p_hwfn)
+ 		return -EINVAL;
+@@ -940,12 +944,7 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
+ 		 */
+ 		qed_spq_return_entry(p_hwfn, found);
+ 
+-	/* Attempt to post pending requests */
+-	spin_lock_bh(&p_spq->lock);
+-	rc = qed_spq_pend_post(p_hwfn);
+-	spin_unlock_bh(&p_spq->lock);
+-
+-	return rc;
++	return 0;
+ }
+ 
+ int qed_consq_alloc(struct qed_hwfn *p_hwfn)
 -- 
 2.19.1
 
