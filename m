@@ -2,67 +2,88 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884D6C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A802AC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551C420842
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7318220842
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730917AbfB1GcA (ORCPT
+        id S1730830AbfB1GgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 01:32:00 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:57815 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfB1GcA (ORCPT
+        Thu, 28 Feb 2019 01:36:13 -0500
+Received: from orcrist.hmeau.com ([104.223.48.154]:40000 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfB1GgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 01:32:00 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id DC724100D940C;
-        Thu, 28 Feb 2019 07:31:57 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 81416D6B92; Thu, 28 Feb 2019 07:31:57 +0100 (CET)
-Date:   Thu, 28 Feb 2019 07:31:57 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Cc:     bhelgaas@google.com, austin_bolen@dell.com,
-        alex_gagniuc@dellteam.com, keith.busch@intel.com,
-        Shyam_Iyer@Dell.com, okaya@kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Oza Pawandeep <poza@codeaurora.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Young <youngcdev@gmail.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: portdrv: Report degraded links via link
- bandwidth notification
-Message-ID: <20190228063157.rl2lywgian2ij5m4@wunner.de>
-References: <20190227205840.26898-1-mr.nuke.me@gmail.com>
+        Thu, 28 Feb 2019 01:36:12 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1gzFId-0005wx-PQ; Thu, 28 Feb 2019 14:36:07 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1gzFIZ-0001sH-3s; Thu, 28 Feb 2019 14:36:03 +0800
+Date:   Thu, 28 Feb 2019 14:36:03 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v4 0/3] add AES support for Exynos5433
+Message-ID: <20190228063603.5qgkmhk4sbp674h5@gondor.apana.org.au>
+References: <CGME20190222122203eucas1p1e87a8066d4348be4beb3ff035ea55828@eucas1p1.samsung.com>
+ <20190222122144.19024-1-k.konieczny@partner.samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190227205840.26898-1-mr.nuke.me@gmail.com>
+In-Reply-To: <20190222122144.19024-1-k.konieczny@partner.samsung.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 02:58:17PM -0600, Alexandru Gagniuc wrote:
-> A warning is generated when a PCIe device is probed with a degraded
-> link, but there was no similar mechanism to warn when the link becomes
-> degraded after probing. The Link Bandwidth Notification provides this
-> mechanism.
+On Fri, Feb 22, 2019 at 01:21:41PM +0100, Kamil Konieczny wrote:
+> Add slimSSS node to DT and crypto AES support for Exynos5433. Tested on
+> Exynos5433 board with crypto run-time self tests and with tcrypt with
+> command insmod tcrypt.ko mode=500 sec=1
 > 
-> Use the link bandwidth notification interrupt to detect bandwidth
-> changes, and rescan the bandwidth, looking for the weakest point. This
-> is the same logic used in probe().
+> Changes since v3:
+> - moved bindings documentation out from samsung-sss.txt into separate file
+>   samsung-slimsss.txt
 > 
-> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> Changes since v2:
+> - address Corentine Labbe note: add "const" to char* in declaration of
+>   struct samsung_aes_variant
+> 
+> Changes since v1:
+> - address Krzysztof Kozlowski review: add missing comma in struct
+>   definition, add goto for error code path, correct indentation,
+>   in documentation add that Exynos5433 has both slimSSS and SSS IPs.
+> 
+> Kamil Konieczny (3):
+>   arm64: dts: exynos: add SlimSSS for Exynos5433
+>   dt-bindings: crypto: document Exynos5433 SlimSSS
+>   crypto: s5p: add AES support for Exynos5433
+> 
+>  .../bindings/crypto/samsung-slimsss.txt       | 19 +++++++
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi    |  9 ++++
+>  drivers/crypto/s5p-sss.c                      | 50 +++++++++++++++++--
+>  3 files changed, 74 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/samsung-slimsss.txt
 
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Patches 2-3 applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
