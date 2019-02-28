@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0E8C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A258C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EBA206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7384206B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367161;
-	bh=8E6k2FzRtsTViumB/9A54g9dWIRV6iQjnr9AuDu8ZKs=;
+	s=default; t=1551367165;
+	bh=sP1dEQjhU45GPdXXpM58ZRLf1iNrlrIJQB10EEO9efM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=txFY3T59y4jwfMYV/SrsJ90R2R+n+ivtJP+Kvbn9Fh0d5y/YM7lCjVv3R8jou7iGC
-	 m6j17jmKGBjK5s2XFPkeAimFO3K/dLv0d6C7vNqnmViyLLuFMCgSBvaMHr+fK1QdU8
-	 oTJNDeyT6e7Wk8cm4VT+DU5pSVaR4jpswFLWaVxg=
+	b=PP3rKdHsFEM/MJzYRBFpiMkWBvKbL3lTOa0C+f8NNcHfM8/MLNdCNJjh4RDILsk0p
+	 aNoNyUYtDxCiLaDBh/yHyZ8erTvGTMNYO9UcoEU7HoxsvSVhwKscst+6xHQ4wDf11E
+	 wR6Cc3DuHbRmd0UIVFRAOyVZRyIdsZMSZNNWci3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388852AbfB1PP0 (ORCPT
+        id S2388921AbfB1PTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:15:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:19:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388801AbfB1PPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:15 -0500
+        id S2388834AbfB1PPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F44218D8;
-        Thu, 28 Feb 2019 15:15:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A9BB218E0;
+        Thu, 28 Feb 2019 15:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366914;
-        bh=8E6k2FzRtsTViumB/9A54g9dWIRV6iQjnr9AuDu8ZKs=;
+        s=default; t=1551366923;
+        bh=sP1dEQjhU45GPdXXpM58ZRLf1iNrlrIJQB10EEO9efM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lGVN7IfQJbGacU4pGv6gYzHydy8o3I+4TD39Sb/BzVieu7GjBJDf3fUmkO0cidqY6
-         qUQc00YyOn+sbxiCiV2cQl3gPteQC8Jc+fkLCs5y6vRV9njUDi7pLytHXDQyuz968q
-         u38RU0cAEdqtlSBCLXjdbIkzvWtjnh3k9CI833Hc=
+        b=QoQKROGC/W1r5Dpy5ZFkkE6iFPosXnZkehiaRvStLYfVzOMsSVLxxtMYRlg4LZyB1
+         h5OUn2Hw1Ql5M0yoWB72gliZZ/lW8oMEbgr6IWt/1C/MxrO43A4xLttU4H9ascPzEV
+         pOBs7G1PT+0ErgsrUDu7YTV5BkJbPU1IB5LwxTIA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 36/36] qed: Consider TX tcs while deriving the max num_queues for PF.
-Date:   Thu, 28 Feb 2019 10:13:37 -0500
-Message-Id: <20190228151337.12176-36-sashal@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/19] usb: phy: fix link errors
+Date:   Thu, 28 Feb 2019 10:15:00 -0500
+Message-Id: <20190228151517.12705-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
-References: <20190228151337.12176-1-sashal@kernel.org>
+In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
+References: <20190228151517.12705-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,44 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit fb1faab74ddef9ec2d841d54e5d0912a097b3abe ]
+[ Upstream commit f2105d42597f4d10e431b195d69e96dccaf9b012 ]
 
-Max supported queues is derived incorrectly in the case of multi-CoS.
-Need to consider TCs while calculating num_queues for PF.
+Fix link errors when CONFIG_FSL_USB2_OTG is enabled and USB_OTG_FSM is
+set to module then the following link error occurs.
 
-Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_ioctl':
+drivers/usb/phy/phy-fsl-usb.c:1083: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:1083:(.text+0x574): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_start_srp':
+drivers/usb/phy/phy-fsl-usb.c:674: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:674:(.text+0x61c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_set_host':
+drivers/usb/phy/phy-fsl-usb.c:593: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:593:(.text+0x7a4): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_start_hnp':
+drivers/usb/phy/phy-fsl-usb.c:695: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:695:(.text+0x858): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `a_wait_enum':
+drivers/usb/phy/phy-fsl-usb.c:274: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:274:(.text+0x16f0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o:drivers/usb/phy/phy-fsl-usb.c:619: more undefined references to `otg_statemachine' follow
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_set_peripheral':
+drivers/usb/phy/phy-fsl-usb.c:619:(.text+0x1fa0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+make[1]: *** [Makefile:1020: vmlinux] Error 1
+make[1]: Target 'Image' not remade because of errors.
+make: *** [Makefile:152: sub-make] Error 2
+make: Target 'Image' not remade because of errors.
+
+Rework so that FSL_USB2_OTG depends on that the USB_OTG_FSM is builtin.
+
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_l2.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/phy/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-index 83c1c4fa102b7..13db311c16e5e 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-@@ -2161,7 +2161,7 @@ static int qed_fill_eth_dev_info(struct qed_dev *cdev,
- 			u16 num_queues = 0;
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index 125cea1c3c8df..19ce615455c1b 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -20,7 +20,7 @@ config AB8500_USB
  
- 			/* Since the feature controls only queue-zones,
--			 * make sure we have the contexts [rx, tx, xdp] to
-+			 * make sure we have the contexts [rx, xdp, tcs] to
- 			 * match.
- 			 */
- 			for_each_hwfn(cdev, i) {
-@@ -2171,7 +2171,8 @@ static int qed_fill_eth_dev_info(struct qed_dev *cdev,
- 				u16 cids;
- 
- 				cids = hwfn->pf_params.eth_pf_params.num_cons;
--				num_queues += min_t(u16, l2_queues, cids / 3);
-+				cids /= (2 + info->num_tc);
-+				num_queues += min_t(u16, l2_queues, cids);
- 			}
- 
- 			/* queues might theoretically be >256, but interrupts'
+ config FSL_USB2_OTG
+ 	bool "Freescale USB OTG Transceiver Driver"
+-	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM && PM
++	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM=y && PM
+ 	depends on USB_GADGET || !USB_GADGET # if USB_GADGET=m, this can't be 'y'
+ 	select USB_PHY
+ 	help
 -- 
 2.19.1
 
