@@ -2,98 +2,91 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A736C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1B2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A207218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC44218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388835AbfB1Sg1 (ORCPT
+        id S2388850AbfB1Sgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:36:27 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53202 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731584AbfB1Sg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:36:26 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83CDC1AC1;
-        Thu, 28 Feb 2019 10:36:25 -0800 (PST)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 319593F5C1;
-        Thu, 28 Feb 2019 10:36:19 -0800 (PST)
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        mhiramat@kernel.org, paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <20190228135343.23kzkilig3bsioov@e107158-lin.cambridge.arm.com>
- <20190228144759.GA156098@google.com>
- <b100f0a2-7966-b6a2-dcd5-ca11abe57ead@arm.com>
- <20190228164801.iahwphx5o2zeks4n@e107158-lin.cambridge.arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <df3c8773-bda1-edcf-757b-9dc1c77cc4cf@arm.com>
-Date:   Thu, 28 Feb 2019 19:36:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190228164801.iahwphx5o2zeks4n@e107158-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Thu, 28 Feb 2019 13:36:36 -0500
+Received: from mga17.intel.com ([192.55.52.151]:7147 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388074AbfB1Sfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:35:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 10:35:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,423,1544515200"; 
+   d="scan'208";a="142459006"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga001.jf.intel.com with ESMTP; 28 Feb 2019 10:35:53 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 4401E301377; Thu, 28 Feb 2019 10:35:53 -0800 (PST)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     acme@kernel.org
+Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v3 09/11] perf tools: Add utility function to print ns time stamps
+Date:   Thu, 28 Feb 2019 10:35:48 -0800
+Message-Id: <20190228183550.14126-10-andi@firstfloor.org>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190228183550.14126-1-andi@firstfloor.org>
+References: <20190228183550.14126-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/19 5:48 PM, Qais Yousef wrote:
-> On 02/28/19 17:04, Dietmar Eggemann wrote:
->> Hi Joel,
->>
->> On 2/28/19 3:47 PM, Joel Fernandes wrote:
->>> On Thu, Feb 28, 2019 at 01:53:43PM +0000, Qais Yousef wrote:
->>>> Hi Joel
->>>>
->>>> On 02/27/19 14:37, Joel Fernandes (Google) wrote:
+From: Andi Kleen <ak@linux.intel.com>
 
-[...]
+Add a utility function to print nanosecond timestamps.
 
->> The reason for me to stay on v4.20 is that with v5.0-rc8 I don't have ebpf
->> 'raw tracepoint' support any more on my arm64 board. But this issue is not
->> related to your patch though.
-> 
-> And this is caused by a38d1107f937 (bpf: support raw tracepoints in modules)
-> which renamed bpf_find_raw_tracepoint() which bcc-tools relies on to detect if
-> raw tracepoints are supported..
-> 
-> https://github.com/iovisor/bcc/blob/master/src/python/bcc/__init__.py#L860
-> 
-> Speaking of fragile depedencies :-)
-> 
-> I guess the check can be extended to check for both symbols - but it'll stay
-> fragile. Not sure if they can do better.
-> 
-> I filed a bug
-> 
-> https://github.com/iovisor/bcc/issues/2240
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/util/time-utils.c | 8 ++++++++
+ tools/perf/util/time-utils.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-This did the trick for me on v5.0-rc8. Thanks, Qais!
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 6193b46050a5..a63bdf4cfd1b 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -404,6 +404,14 @@ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz)
+ 	return scnprintf(buf, sz, "%"PRIu64".%06"PRIu64, sec, usec);
+ }
+ 
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz)
++{
++	u64  sec = timestamp / NSEC_PER_SEC;
++	u64 nsec = timestamp % NSEC_PER_SEC;
++
++	return scnprintf(buf, sz, "%"PRIu64".%09"PRIu64, sec, nsec);
++}
++
+ int fetch_current_timestamp(char *buf, size_t sz)
+ {
+ 	struct timeval tv;
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index 70b177d2b98c..9266cf4a8e58 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -24,6 +24,7 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
+ 				   int num, u64 timestamp);
+ 
+ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz);
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz);
+ 
+ int fetch_current_timestamp(char *buf, size_t sz);
+ 
+-- 
+2.17.2
+
