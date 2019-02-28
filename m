@@ -2,231 +2,233 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B2FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE13AC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1545218D0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D1F20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:42:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (4096-bit key) header.d=wiesinger.com header.i=@wiesinger.com header.b="oSQE+JMq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387886AbfB1Tlw (ORCPT
+        id S2387926AbfB1TmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 14:41:52 -0500
-Received: from mailproxy07.manitu.net ([217.11.48.71]:47680 "EHLO
-        mailproxy07.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbfB1Tlw (ORCPT
+        Thu, 28 Feb 2019 14:42:18 -0500
+Received: from vps01.wiesinger.com ([46.36.37.179]:52214 "EHLO
+        vps01.wiesinger.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727545AbfB1TmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 14:41:52 -0500
-Received: from [192.168.178.20] (aftr-88-217-180-92.dynamic.mnet-online.de [88.217.180.92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: wg@grandegger.com)
-        by mailproxy07.manitu.net (Postfix) with ESMTPSA id E15CCC8115;
-        Thu, 28 Feb 2019 20:42:59 +0100 (CET)
-Subject: Re: [PATCH v5 2/5] can: m_can: Migrate the m_can code to use the
- framework
-To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
-        davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190214182754.30721-1-dmurphy@ti.com>
- <20190214182754.30721-3-dmurphy@ti.com>
- <0f5f732a-945c-da56-1086-00fb2c621331@grandegger.com>
- <639f316a-1190-1e0e-0a1d-6008a1c332d7@ti.com>
-From:   Wolfgang Grandegger <wg@grandegger.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
- 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
- 8QEfHnPzgykCs2DOOQ==
-Message-ID: <bae8adda-8cca-c865-d010-24084e13c2ce@grandegger.com>
-Date:   Thu, 28 Feb 2019 20:41:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Thu, 28 Feb 2019 14:42:17 -0500
+Received: from wiesinger.com (wiesinger.com [84.113.44.87])
+        by vps01.wiesinger.com (Postfix) with ESMTPS id 649D89F294;
+        Thu, 28 Feb 2019 20:42:13 +0100 (CET)
+Received: from [192.168.0.14] ([192.168.0.14])
+        (authenticated bits=0)
+        by wiesinger.com (8.15.2/8.15.2) with ESMTPSA id x1SJfsmP010673
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 28 Feb 2019 20:41:55 +0100
+DKIM-Filter: OpenDKIM Filter v2.11.0 wiesinger.com x1SJfsmP010673
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiesinger.com;
+        s=default; t=1551382915;
+        bh=mQ6B9ieNdz4PAnuOETRKFulbTteDNeeJbQHKd6FtlRo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=oSQE+JMqmGjlHlZvsAUeXSinXzknHpdy5bO14bl78Vcl3jb6Gwln5wZvQRfWEpA7m
+         4gIW0QKVXbwv6n4TRHYbwwTvCyImwl87SOKOEE6mJRjA+cOzrk8mcRPXHjU4Kpb4lR
+         efcQvY8X7X7QHO+WdgFQGfnRmWGsA2VxDmQdpDPePz7UimDpLDbXS7pVzCkvB5LoJq
+         5a+9z4h0r51atE1UY5/IHEb4C5PHJAVnviE6t8KDbpO+7Bl1cMIJc9GFu7xHAhxtsQ
+         zHWWRJmBwiC6+1m8fbDi5XyM3z0P3rGAA9HWUhKBQCm+wq94B4sHYQ7PANtU3UlYGz
+         wM8Ort5LZLfKrKdbj/189DPYdDv0fmLcGrLgTVvh+xZj6N2noZBaLOckyKU58PnliT
+         0B042sx+rKOcvQj0ouqVyvUqqA5z5TpAC9F0xb/XW1K2qumIN2nPFm/Omq6I5FfJdv
+         bkVAshZ3G5yF3xI3Ji6hqzKRHWEbleJ2g6/g6RN89ABRYkh/+iUrwOQvxXAmoHkZ7N
+         zrbG6pVrdR1GUlj2kQzKFdk4/OHy0y2TEZHHqiJzTSvzEcdD4vvtE6v7GNSCMcarns
+         ljTdSjBjEeJJu5AMy9kESQyBYFmsgKNG6V2jk3XqG3bhcb/KqZ2ByV87JyhOLULvth
+         bi1IFIlOrlxYxKaC0QBXKZ0M=
+Subject: Re: Banana Pi-R1 stabil
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
+References: <7b20af72-76ea-a7b1-9939-ca378dc0ed83@wiesinger.com>
+ <20190227092023.nvr34byfjranujfm@flea>
+ <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
+ <20190228093516.abual3564dkvx6un@flea>
+From:   Gerhard Wiesinger <lists@wiesinger.com>
+Message-ID: <91c22ba4-39eb-dd3d-29bd-1bfa7a45e9cd@wiesinger.com>
+Date:   Thu, 28 Feb 2019 20:41:53 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <639f316a-1190-1e0e-0a1d-6008a1c332d7@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190228093516.abual3564dkvx6un@flea>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dan,
-
-Am 28.02.19 um 18:57 schrieb Dan Murphy:
-> Wolfgang
-> 
-> On 2/28/19 11:33 AM, Wolfgang Grandegger wrote:
->> Am 14.02.19 um 19:27 schrieb Dan Murphy:
->>> Migrate the m_can code to use the m_can_platform framework
->>> code.
+On 28.02.2019 10:35, Maxime Ripard wrote:
+> On Wed, Feb 27, 2019 at 07:58:14PM +0100, Gerhard Wiesinger wrote:
+>> On 27.02.2019 10:20, Maxime Ripard wrote:
+>>> On Sun, Feb 24, 2019 at 09:04:57AM +0100, Gerhard Wiesinger wrote:
+>>>> Hello,
+>>>>
+>>>> I've 3 Banana Pi R1, one running with self compiled kernel
+>>>> 4.7.4-200.BPiR1.fc24.armv7hl and old Fedora 25 which is VERY STABLE, the 2
+>>>> others are running with Fedora 29 latest, kernel 4.20.10-200.fc29.armv7hl. I
+>>>> tried a lot of kernels between of around 4.11
+>>>> (kernel-4.11.10-200.fc25.armv7hl) until 4.20.10 but all had crashes without
+>>>> any output on the serial console or kernel panics after a short time of
+>>>> period (minutes, hours, max. days)
+>>>>
+>>>> Latest known working and stable self compiled kernel: kernel
+>>>> 4.7.4-200.BPiR1.fc24.armv7hl:
+>>>>
+>>>> https://www.wiesinger.com/opensource/fedora/kernel/BananaPi-R1/
+>>>>
+>>>> With 4.8.x the DSA b53 switch infrastructure has been introduced which
+>>>> didn't work (until ca8931948344c485569b04821d1f6bcebccd376b and kernel
+>>>> 4.18.x):
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/net/dsa/b53?h=v4.20.12
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/drivers/net/dsa/b53?h=v4.20.12
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/net/dsa/b53?h=v4.20.12&id=ca8931948344c485569b04821d1f6bcebccd376b
+>>>>
+>>>> I has been fixed with kernel 4.18.x:
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/drivers/net/dsa/b53?h=linux-4.18.y
+>>>>
+>>>>
+>>>> So current status is, that kernel crashes regularly, see some samples below.
+>>>> It is typically a "Unable to handle kernel paging request at virtual addres"
+>>>>
+>>>> Another interesting thing: A Banana Pro works well (which has also an
+>>>> Allwinner A20 in the same revision) running same Fedora 29 and latest
+>>>> kernels (e.g. kernel 4.20.10-200.fc29.armv7hl.).
+>>>>
+>>>> Since it happens on 2 different devices and with different power supplies
+>>>> (all with enough power) and also the same type which works well on the
+>>>> working old kernel) a hardware issue is very unlikely.
+>>>>
+>>>> I guess it has something to do with virtual memory.
+>>>>
+>>>> Any ideas?
+>>>> [47322.960193] Unable to handle kernel paging request at virtual addres 5675d0
+>>> That line is a bit suspicious
 >>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
+>>> Anyway, cpufreq is known to cause those kind of errors when the
+>>> voltage / frequency association is not correct.
 >>>
->>> v5 - Updated copyright, change m_can_classdev to m_can_priv, removed extra
->>> KCONFIG flag - https://lore.kernel.org/patchwork/patch/1033095/
+>>> Given the stack trace and that the BananaPro doesn't have cpufreq
+>>> enabled, my first guess would be that it's what's happening. Could you
+>>> try using the performance governor and see if it's more stable?
 >>>
->>>  drivers/net/can/m_can/Kconfig  |   8 +-
->>>  drivers/net/can/m_can/Makefile |   1 +
->>>  drivers/net/can/m_can/m_can.c  | 745 ++++++++++++++++-----------------
->>>  3 files changed, 367 insertions(+), 387 deletions(-)
+>>> If it is, then using this:
+>>> https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-stress-test
 >>>
->>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
->>> index 04f20dd39007..66e31022a5fa 100644
->>> --- a/drivers/net/can/m_can/Kconfig
->>> +++ b/drivers/net/can/m_can/Kconfig
->>> @@ -1,5 +1,11 @@
->>>  config CAN_M_CAN
->>> +	tristate "Bosch M_CAN support"
->>> +	---help---
->>> +	  Say Y here if you want to support for Bosch M_CAN controller.
+>>> will help you find the offending voltage-frequency couple.
+>> For me it looks like they have all the same config regarding cpu governor
+>> (Banana Pro, old kernel stable one, new kernel unstable ones)
+> The Banana Pro doesn't have a regulator set up, so it will only change
+> the frequency, not the voltage.
+>
+>> They all have the ondemand governor set:
 >>
->> Typo?
+>> I set on the 2 unstable "new kernel Banana Pi R1":
 >>
-> 
-> Maybe like you pointed out to update the help.
+>> # Set to max performance
+>> echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+>> echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+> What are the results?
 
-I was just not sure if it's correct English... but you know better!
 
-> 
->>> +
->>> +config CAN_M_CAN_PLATFORM
->>> +	tristate "Bosch M_CAN support for io-mapped devices"
->>>  	depends on HAS_IOMEM
->>> -	tristate "Bosch M_CAN devices"
->>> +	depends on CAN_M_CAN
->>>  	---help---
->>>  	  Say Y here if you want to support for Bosch M_CAN controller.
->>
->> Please update the help.
-> 
-> Ack
->>
->>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
->>> index 8bbd7f24f5be..057bbcdb3c74 100644
->>> --- a/drivers/net/can/m_can/Makefile
->>> +++ b/drivers/net/can/m_can/Makefile
->>> @@ -3,3 +3,4 @@
->>>  #
->>>  
->>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
->>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
->>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
->>> index 9b449400376b..2ceccb870557 100644
->>> --- a/drivers/net/can/m_can/m_can.c
->>> +++ b/drivers/net/can/m_can/m_can.c
-... snip ...
->>> @@ -924,6 +885,9 @@ static irqreturn_t m_can_isr(int irq, void *dev_id)
->>>  		}
->>>  	}
->>>  
->>> +	if (priv->ops->clr_dev_interrupts)
->>> +		priv->ops->clr_dev_interrupts(priv);
->>
->> post_irq _handler?
->>
-> 
-> I can clear them on entry as well
+Stable since more than around 1,5 days. Normally they have been crashed 
+for such a long uptime. So it looks that the performance governor fixes it.
 
-OK!
+I guess crashes occour because of changing CPU voltage and clock changes 
+and invalid data (e.g. also invalid RAM contents might be read, register 
+problems, etc).
 
-...snip...
+Any ideas how to fix it for ondemand mode, too?
 
->>> -	niso_timeout = readl_poll_timeout((priv->base + M_CAN_CCCR), cccr_poll,
->>> -					  (cccr_poll == cccr_reg), 0, 10);
->>> +	for (i = 0; i <= 10; i++) {
->>> +		cccr_poll = m_can_read(priv, M_CAN_CCCR);
->>> +		if (cccr_poll == cccr_reg)
->>> +			niso_timeout = 0;
->>> +	}
->>
->> There is no break and delay in the loop? What was the reason why you
->> can't use readl_poll_timeout()?
->>
-> 
-> OK a break if NISO is supported then and probably could add a 1us delay original code on
-> line 1232 had no delay but timeout at 10us.
-> 
-> readl_poll_timeout is for iomapped devices.  How would this work for peripherial devices?
+But it doesn't explaing that it works with kernel 4.7.4 without any 
+problems.
 
-Well, it takes much more time to read the register via SPI... maybe using
 
-	if (priv->is_peripherial) ...
+>
+>> Running some stress tests are ok (I did that already in the past, but
+>> without setting maximum performance governor).
+> Which stress tests have you been running?
 
-to handle the different timings would make sense here.
 
->>>  
->>>  	/* Clear NISO */
->>>  	cccr_reg &= ~(CCCR_NISO);
->>> @@ -1242,107 +1210,95 @@ static bool m_can_niso_supported(const struct m_can_priv *priv)
->>>  	return !niso_timeout;
->>>  }
-... snip...
+Now:
 
->>> -static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
->>> -				    struct net_device *dev)
->>> +static void m_can_tx_handler(struct m_can_priv *priv)
->>>  {
->>> -	struct m_can_priv *priv = netdev_priv(dev);
->>> -	struct canfd_frame *cf = (struct canfd_frame *)skb->data;
->>> +	struct canfd_frame *cf = (struct canfd_frame *)priv->skb->data;
->>> +	struct net_device *dev = priv->net;
->>> +	struct sk_buff *skb = priv->skb;
->>
->> Maybe "tx_skb" is a clearer member name..
-> 
-> Again this was named skb to minimize deltas from original code.
+while true; do echo "========================================"; echo -n 
+"TEMP     : "; cat /sys/devices/virtual/thermal/thermal_zone0/temp; echo 
+-n "VOLTAGE : "; cat 
+/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/voltage_now; 
+echo -n "CURRENT  : "; cat 
+/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/current_now; 
+echo -n "CPU_FREQ0: "; cat 
+/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; echo -n 
+"CPU_FREQ0: "; cat 
+/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done& 
+stress -c 4 -t 900s
 
-I mean "priv->tx_skb"!
+In the past also:
 
-> skb was passed into the start_xmit function and used throughout the function.
-> 
-> Since there was little delta in this function I opt'd to keep the names as is.
-> 
+while true; do echo "========================================"; echo -n 
+"TEMP     : "; cat /sys/devices/virtual/thermal/thermal_zone0/temp; echo 
+-n "VOLTAGE : "; cat 
+/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/voltage_now; 
+echo -n "CURRENT  : "; cat 
+/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/current_now; 
+echo -n "CPU_FREQ0: "; cat 
+/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; echo -n 
+"CPU_FREQ0: "; cat 
+/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done& 
+stress-ng --cpu 4 --io 2 --vm 1 --vm-bytes 1G --timeout 900s --metrics-brief
 
-Wolfgang.
+while true; do echo "========================================"; echo -n 
+"TEMP     : "; cat /sys/devices/virtual/thermal/thermal_zone0/temp; echo 
+-n "VOLTAGE : "; cat 
+/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/voltage_now; 
+echo -n "CURRENT  : "; cat 
+/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/current_now; 
+echo -n "CPU_FREQ0: "; cat 
+/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; echo -n 
+"CPU_FREQ0: "; cat 
+/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done& 
+./cpuburn-a7
+
+https://www.cyberciti.biz/faq/stress-test-linux-unix-server-with-stress-ng/
+while true; do echo "========================================"; echo -n 
+"TEMP     : "; cat /sys/devices/virtual/thermal/thermal_zone0/temp; echo 
+-n "VOLTAGE : "; cat 
+/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/voltage_now; 
+echo -n "CURRENT  : "; cat 
+/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/current_now; 
+echo -n "CPU_FREQ0: "; cat 
+/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; echo -n 
+"CPU_FREQ0: "; cat 
+/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done& 
+stress -c 2 -i 1 -m 1 --vm-bytes 128M -t 900s
+
+
+But I guess that the problems occour nots on full load but on dynamical 
+switching loads (when CPU voltage and clock changes). Because the 
+Bananas are typically really idle and crash (with the ondemand governor).
+
+
+Thanx.
+
+Ciao,
+
+Gerhard
+
