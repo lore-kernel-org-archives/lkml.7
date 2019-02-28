@@ -2,149 +2,95 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C08AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD82C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9172133D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFE5218E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367832;
-	bh=4u3j2GUjzwUbikH7y5MSpux58vNLlKk5vF1owd59SC8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lInpXzJIhjDRQTs5RSVtDyiY7dxuQapTkynI3RTfxcR4hMQQao35MnLJC1DPXlbig
-	 O30LV3ZJrz7zbfJhiO4qMXNtZjJsm7uUPEkqbwqvJ7Ebof16MC3OYtXlZ9cqVqO/CO
-	 3HREDkQcpDYPptaPS1Ybk7SJ7jcgWjAKr51U7PAg=
+	s=default; t=1551367838;
+	bh=FoUF+5g/73J8ystPvFXKVhNp8xUEcXy9gjnsYmtdFnU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z/ODlJx9+I8bcfU2ZNOYBILGU17LM+Kl2UamJ3N1AN4Mv/Cng6yiXP99iXmbRCA32
+	 TPb7a7hhTnpUHs17JAz7330tYbIs0yQYW1NMTJMY0zvmMugn8bJbulMMg0QhRKw4Sr
+	 4gFnT6Mgim8lcCzmwcog4sFJ3jghSKz7b8Z5aGlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388060AbfB1Paa (ORCPT
+        id S1732987AbfB1Pag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:30:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:30:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387540AbfB1PJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:09:27 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2388199AbfB1Paa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:30:30 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 841AA218AE;
-        Thu, 28 Feb 2019 15:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A3F220C01;
+        Thu, 28 Feb 2019 15:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366566;
-        bh=4u3j2GUjzwUbikH7y5MSpux58vNLlKk5vF1owd59SC8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nEuwOJs+FT72/1M8Lr9gIz71o8cZ7pXoDvP4QZbPRpiDlQr7yKbLQVHng1RABVV9V
-         IZMC5sKUC0djESFyGG18ZodfT2Vzc4rX2OGRU5NpGRaTuTIe30k/SyKgR7CkPEAaqe
-         v5fW/qBqT4wUaOYtWQjbcKIMNXpKUSuJ756TZ5as=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 46/81] bpf: run bpf programs with preemption disabled
-Date:   Thu, 28 Feb 2019 10:07:38 -0500
-Message-Id: <20190228150813.10256-46-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
-References: <20190228150813.10256-1-sashal@kernel.org>
+        s=default; t=1551367829;
+        bh=FoUF+5g/73J8ystPvFXKVhNp8xUEcXy9gjnsYmtdFnU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oXg2BEu9uvyIrGnYY1H2xHSvsBTTC0Bw2O8Xe15B3vtX7uBbYluhjIzV+DkQImNCu
+         l9OShgE8+8QX+elbMFm41ogZTWoWHX0vGLLKtdrulSeAStcD4Y/ZR38/7aVZeTlz8L
+         qYGIFiNscATLsVwmRCma1qDbJCkNoRN02xMalsBo=
+Date:   Thu, 28 Feb 2019 16:30:26 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        paulmck@linux.vnet.ibm.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190228153026.GG8481@kroah.com>
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+ <20190228173444.54403795211d80ba540b61cb@kernel.org>
+ <20190228150054.GB156098@google.com>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228150054.GB156098@google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Starovoitov <ast@kernel.org>
+On Thu, Feb 28, 2019 at 10:00:54AM -0500, Joel Fernandes wrote:
+> > Hmm, isn't it easier to add kernel-headers package on Android?
+> 
+> I have already been down that road. In the Android ecosystem, the Android
+> teams only provide a "userspace system image" which goes on the system
+> partition of the flash (and a couple other images are also provided but
+> system is the main one). The system image cannot contain GPL source code.
 
-[ Upstream commit 6cab5e90ab2bd323c9f3811b6c70a4687df51e27 ]
+Note, that last sentance is not true, it can contain whatever license
+code it wants to, as long as the group doing the distribution abides by
+the license of the code contained in it.
 
-Disabled preemption is necessary for proper access to per-cpu maps
-from BPF programs.
+The split of system and other images has nothing to do with license
+issues, but rather functional requirements.  There _might_ be GPL
+licensed code in the image if it meets a requirement for the proper
+functionality of the system, you never know :)
 
-But the sender side of socket filters didn't have preemption disabled:
-unix_dgram_sendmsg->sk_filter->sk_filter_trim_cap->bpf_prog_run_save_cb->BPF_PROG_RUN
+thanks,
 
-and a combination of af_packet with tun device didn't disable either:
-tpacket_snd->packet_direct_xmit->packet_pick_tx_queue->ndo_select_queue->
-  tun_select_queue->tun_ebpf_select_queue->bpf_prog_run_clear_cb->BPF_PROG_RUN
-
-Disable preemption before executing BPF programs (both classic and extended).
-
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/filter.h | 21 ++++++++++++++++++---
- kernel/bpf/cgroup.c    |  2 +-
- 2 files changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index b776626aeb849..958eddbc44d32 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -591,8 +591,8 @@ static inline u8 *bpf_skb_cb(struct sk_buff *skb)
- 	return qdisc_skb_cb(skb)->data;
- }
- 
--static inline u32 bpf_prog_run_save_cb(const struct bpf_prog *prog,
--				       struct sk_buff *skb)
-+static inline u32 __bpf_prog_run_save_cb(const struct bpf_prog *prog,
-+					 struct sk_buff *skb)
- {
- 	u8 *cb_data = bpf_skb_cb(skb);
- 	u8 cb_saved[BPF_SKB_CB_LEN];
-@@ -611,15 +611,30 @@ static inline u32 bpf_prog_run_save_cb(const struct bpf_prog *prog,
- 	return res;
- }
- 
-+static inline u32 bpf_prog_run_save_cb(const struct bpf_prog *prog,
-+				       struct sk_buff *skb)
-+{
-+	u32 res;
-+
-+	preempt_disable();
-+	res = __bpf_prog_run_save_cb(prog, skb);
-+	preempt_enable();
-+	return res;
-+}
-+
- static inline u32 bpf_prog_run_clear_cb(const struct bpf_prog *prog,
- 					struct sk_buff *skb)
- {
- 	u8 *cb_data = bpf_skb_cb(skb);
-+	u32 res;
- 
- 	if (unlikely(prog->cb_access))
- 		memset(cb_data, 0, BPF_SKB_CB_LEN);
- 
--	return BPF_PROG_RUN(prog, skb);
-+	preempt_disable();
-+	res = BPF_PROG_RUN(prog, skb);
-+	preempt_enable();
-+	return res;
- }
- 
- static __always_inline u32 bpf_prog_run_xdp(const struct bpf_prog *prog,
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 9425c2fb872f7..6c24b1fb2db8e 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -572,7 +572,7 @@ int __cgroup_bpf_run_filter_skb(struct sock *sk,
- 	bpf_compute_and_save_data_end(skb, &saved_data_end);
- 
- 	ret = BPF_PROG_RUN_ARRAY(cgrp->bpf.effective[type], skb,
--				 bpf_prog_run_save_cb);
-+				 __bpf_prog_run_save_cb);
- 	bpf_restore_data_end(skb, saved_data_end);
- 	__skb_pull(skb, offset);
- 	skb->sk = save_sk;
--- 
-2.19.1
-
+greg "not a lawyer but I work with a lot of them all the time" k-h
