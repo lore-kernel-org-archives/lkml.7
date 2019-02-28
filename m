@@ -2,217 +2,147 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF76C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD111C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5203218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F453218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:46:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gf1b45VQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387873AbfB1Rnk (ORCPT
+        id S2387934AbfB1RqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:43:40 -0500
-Received: from mga12.intel.com ([192.55.52.136]:12733 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732473AbfB1Rnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:43:40 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 09:43:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,423,1544515200"; 
-   d="scan'208";a="322958335"
-Received: from chenyu-office.sh.intel.com ([10.239.158.163])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Feb 2019 09:43:37 -0800
-Date:   Fri, 1 Mar 2019 01:52:30 +0800
-From:   Yu Chen <yu.c.chen@intel.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][RFC] ACPI: add "processor.broadcast_ppc" hook to
- broadcast  _PPC to all online CPUs
-Message-ID: <20190228175230.GA31788@chenyu-office.sh.intel.com>
-References: <20190209120232.21582-1-yu.c.chen@intel.com>
- <20190211103307.rccddkso3f5s3yko@vireshk-i7>
- <20190213165538.GB30385@chenyu-office.sh.intel.com>
- <20190214070648.pvsavc46iivub4hy@vireshk-i7>
+        Thu, 28 Feb 2019 12:46:24 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:48598 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732473AbfB1RqX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:46:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1tIRHaljqGjsTO1apj67lwRFzWZnSUB4T1+xsg6UD7c=; b=Gf1b45VQf+eom9qcjvjELnBgk
+        RcZXJUq9jiBZ+fcUB73RGOHANCIX71hjazFHtWz2CAeE3Lb8PJmykQ53+rSRk7cwLVxsbNeTcfSTs
+        91Eh26lFT3SYY8hHf4q5zSzZetk1MSlj9K/O0+zpi4BALwXTJarclL3bKt4oK9OJoF+Edz0E9Plmw
+        1lbyiSERaPL6PyreFqddKdbm7+DlmVBjhNNYo4s9aIPSQB8k4ZSelmw4EsDHuai1U3H5pVlMKJZtd
+        iIfozKsDAqkSvPxLwpOi32SjbOJ/TwPLSUoZruVymDMWOxh1n0RMSxuLX0NJY3Q5cGkmDtLLkmk4y
+        yMRuBQjsw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gzPl2-0007Mj-0p; Thu, 28 Feb 2019 17:46:08 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 834C8202C2DA7; Thu, 28 Feb 2019 18:46:05 +0100 (CET)
+Date:   Thu, 28 Feb 2019 18:46:05 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: Re: [PATCH 1/8] kasan,x86: Frob kasan_report() in an exception
+Message-ID: <20190228174605.GF32494@hirez.programming.kicks-ass.net>
+References: <20190228145450.289603901@infradead.org>
+ <20190228150152.078767622@infradead.org>
+ <CACT4Y+b0WyE5En7BVipZiCMmMaj30kaEu3T68H7+-kVP8gqADA@mail.gmail.com>
+ <20190228154551.GE32494@hirez.programming.kicks-ass.net>
+ <CACT4Y+ZJpDtHdF-NTy9RrhoOPMtko6VeXwkgR1yjFa5VFfGysQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190214070648.pvsavc46iivub4hy@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CACT4Y+ZJpDtHdF-NTy9RrhoOPMtko6VeXwkgR1yjFa5VFfGysQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 14, 2019 at 12:36:48PM +0530, Viresh Kumar wrote:
-> On 14-02-19, 00:55, Yu Chen wrote:
-> > Hi Viresh,
-> > On Mon, Feb 11, 2019 at 04:03:07PM +0530, Viresh Kumar wrote:
-> > > On 09-02-19, 20:02, Chen Yu wrote:
-> > > > On Dell Inc. XPS13 9333, the BIOS changes the value of
-> > > > MSR_IA32_MISC_ENABLE_TURBO_DISABLE at runtime (e.g., when
-> > > > the power source changes), the maximum frequency of the
-> > > > CPU is not updated accordingly. This is due to the policy's
-> > > > cpuinfo.max is not updated when _PPC notifier fires.
-> > > > 
-> > > > Fix this problem by updating the policy's cpuinfo.max
-> > > > and broadcast the _PPC notifier to all online CPUs.
-> > > > 
-> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=200759
-> > > > Reported-and-tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> > > > Originally-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > > > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> > > > ---
-> > > >  drivers/acpi/processor_perflib.c | 16 ++++++++++++++--
-> > > >  drivers/cpufreq/cpufreq.c        |  2 ++
-> > > >  drivers/cpufreq/intel_pstate.c   | 15 ++++++++++++++-
-> > > >  3 files changed, 30 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/acpi/processor_perflib.c b/drivers/acpi/processor_perflib.c
-> > > > index a303fd0e108c..737dbf5aa7f7 100644
-> > > > --- a/drivers/acpi/processor_perflib.c
-> > > > +++ b/drivers/acpi/processor_perflib.c
-> > > > @@ -63,6 +63,10 @@ module_param(ignore_ppc, int, 0644);
-> > > >  MODULE_PARM_DESC(ignore_ppc, "If the frequency of your machine gets wrongly" \
-> > > >  		 "limited by BIOS, this should help");
-> > > >  
-> > > > +static int broadcast_ppc;
-> > > > +module_param(broadcast_ppc, int, 0644);
-> > > > +MODULE_PARM_DESC(broadcast_ppc, "Broadcast the ppc to all online CPUs");
-> > > > +
-> > > >  #define PPC_REGISTERED   1
-> > > >  #define PPC_IN_USE       2
-> > > >  
-> > > > @@ -180,8 +184,16 @@ void acpi_processor_ppc_has_changed(struct acpi_processor *pr, int event_flag)
-> > > >  		else
-> > > >  			acpi_processor_ppc_ost(pr->handle, 0);
-> > > >  	}
-> > > > -	if (ret >= 0)
-> > > > -		cpufreq_update_policy(pr->id);
-> > > > +	if (ret >= 0) {
-> > > > +		if (broadcast_ppc) {
-> > > > +			int cpu;
-> > > > +
-> > > > +			for_each_possible_cpu(cpu)
-> > > > +				cpufreq_update_policy(cpu);
-> > > > +		} else {
-> > > > +			cpufreq_update_policy(pr->id);
-> > > > +		}
-> > > > +	}
-> > > >  }
-> > > >  
-> > > >  int acpi_processor_get_bios_limit(int cpu, unsigned int *limit)
-> > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > > index e35a886e00bc..95e08816b512 100644
-> > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > @@ -2237,6 +2237,8 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
-> > > >  
-> > > >  	policy->min = new_policy->min;
-> > > >  	policy->max = new_policy->max;
-> > > > +	policy->cpuinfo.max_freq = new_policy->cpuinfo.max_freq;
-> > > > +	policy->cpuinfo.min_freq = new_policy->cpuinfo.min_freq;
-> > > >  	trace_cpu_frequency_limits(policy);
-> > > >  
-> > > >  	policy->cached_target_freq = UINT_MAX;
-> > > > diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-> > > > index dd66decf2087..e1881313c396 100644
-> > > > --- a/drivers/cpufreq/intel_pstate.c
-> > > > +++ b/drivers/cpufreq/intel_pstate.c
-> > > > @@ -2081,11 +2081,24 @@ static void intel_pstate_adjust_policy_max(struct cpufreq_policy *policy,
-> > > >  
-> > > >  static int intel_pstate_verify_policy(struct cpufreq_policy *policy)
-> > > >  {
-> > > > +	int max_freq;
-> > > >  	struct cpudata *cpu = all_cpu_data[policy->cpu];
-> > > >  
-> > > >  	update_turbo_state();
-> > > > +	max_freq = intel_pstate_get_max_freq(cpu);
-> > > > +
-> > > > +	if (acpi_ppc && policy->max == policy->cpuinfo.max_freq &&
-> > > 
-> > > Why do have this check for policy->max here ?
-> > >
-> > Thanks for looking at this change, I've replied to another email in detail of
-> > the scenario that, this is due to corner case that if the system boots
-> > with battery and plug the AC after boot up, the cpufreq max limit will not
-> > increase even the turbo has been enabled after the AC plugged.
+On Thu, Feb 28, 2019 at 05:03:09PM +0100, Dmitry Vyukov wrote:
+
+> I am missing some knowledge about SMAP to answer this.
+> In short, these tools insert lots of callbacks into runtime for memory
+> accesses, function entry/exit, atomicops and some other. These
+> callbacks can do things of different complexity.
+> Humm... perhaps we could just disable SMAP for KMSAN/KTSAN. It's
+> possible, right? If we have it enabled with KASAN, that should be
+> enough.
+
+SMAP detects access to _PAGE_USER pages; that is, such access is only
+allowed when EFLAGS.AC=1, otherwise they'll fault.
+
+I again don't know enough about KASAN to say if it does that; but I
+suspect it only tracks kernel memory state.
+
+> Also, what's the actual problem with KASAN+SMAP? Is it warnings from
+> static analysis tool? Or there are also some runtime effects? What
+> effects?
+
+Both; so because of the above semantics, things like copy_to_user() will
+have to do STAC (set EFLAGS.AC=1), then do the actual copies to the user
+addresses, and then CLAC (clear the AC flag again).
+
+The desire is to have AC=1 sections as small as possible, such that as
+much code as possible is ran with AC=0 and will trap on unintended
+accesses.
+
+Also; the scheduler doesn't (but I have a patch for that, but I'd prefer
+to not have to use it) context switch EFLAGS. This means that if we land
+in the scheduler while AC=1, the next task will resume with AC=1.
+
+Consequently, if that task returns to userspace before it gets scheduled
+again, we'll continue our previous task (that left with AC=1) with AC=0
+and it'll then fault where no fault were expected.
+
+Anyway; the objtool annotation basically tracks the EFLAGS.AC state
+(through STAC/CLAC instructions -- no PUSHF/POPF) and disallows any
+CALL/RET while AC=1.
+
+This is where the __asan_{load,store}*() stuff went *splat*. GCC inserts
+those calls in the middle of STAC/CLAC (AC=1) and we then have to mark
+the functions as AC-safe. objtool validates those on the same rules, no
+further CALLs that are not also safe.
+
+Things like __fentry__ are inherently unsafe because they use
+preempt_disable/preempt_enable, where the latter has a CALL
+__preempt_schedule (and is thus very unsafe). Similarly with
+kasan_report(), it does all sorts of things that are not safe to do.
+
+> Is it possible to disable the SMAP runtime checks once we enter
+> kasan_report() past report_enabled() check? We could restrict it to
+> "just finish printing this bug report whatever it takes and then
+> whatever" if it makes things simpler.
+> It would be nice if we could restrict it to something like:
 > 
-> Yeah, but I asked a different question I believe, why is this
-> comparison necessary ?
->
-Sorry for late response, I was caught in another issue.
-
-The reason for why checking if policy->max equals to policy->cpuinfo.max_freq
-is to bypass unnecessary assignment(it turns out to be a hacky
-logic here):
-
-Say, if the system boots up with AC attached, after bootup the cpuinfo.max
-is always the highest, and there is no need to reassign the cpuinfo.max.
-
-However if the system boots up with AC deattached, then the cpuinfo.max
-will not scale up if the AC is attached after bootup.
-
-Thus in former case, the cpuinfo.max does not equals to policy.max, and
-we don't need to update cpuinfo.max. While in latter case, the cpuinfo.max
-might equal to policy.max, and in this situation we need to update the
-cpuinfo.max.
-
-
-Case 1: Boot up AC attached, cpuinfo.max does not equal to policy.max
-
-# Unplug
-
-[   25.775643] CPU 0: _PPC is 6 - frequency  limited
-[   25.775660] intel_pstate: set_policy cpuinfo.max 3000000 policy->max 1700000
-[   25.775666] intel_pstate: cpu:0 max_state 17 min_policy_perf:8 max_policy_perf:17
-[   25.775670] intel_pstate: cpu:0 global_min:8 global_max:30
-[   25.775674] intel_pstate: cpu:0 max_perf_ratio:17 min_perf_ratio:8
-
-"REDUCED FREQUENCY ABOVE AFTER UNPLUG"
-
-
-# Re-plug
-
-[   36.979264] CPU 0: _PPC is 6 - frequency  limited
-[   36.979276] intel_pstate: policy->max > max non turbo frequency
-[   36.979280] intel_pstate: set_policy cpuinfo.max 3000000 policy->max 3000000
-[   36.979283] intel_pstate: cpu:0 max_state 30 min_policy_perf:8 max_policy_perf:30
-[   36.979286] intel_pstate: cpu:0 global_min:8 global_max:30
-[   36.979289] intel_pstate: cpu:0 max_perf_ratio:30 min_perf_ratio:8
-
-
-Case 2: boot up without AC attached, cpuinfo.max equals to policy.max:
-
-
-# Plug
-
-[   52.158810] CPU 0: _PPC is 6 - frequency  limited
-[   52.158822] intel_pstate: set_policy cpuinfo.max 1700000 policy->max 1700000
-[   52.158825] intel_pstate: cpu:0 max_state 30 min_policy_perf:8 max_policy_perf:17
-[   52.158827] intel_pstate: cpu:0 global_min:8 global_max:30
-[   52.158829] intel_pstate: cpu:0 max_perf_ratio:17 min_perf_ratio:8
-
-
-As we see, the check is a little hacky, because it does not do with the logic
-on how to check if the system's cpuinfo.max is abnormal. In v2 version, I've
-removed this check to make the code easier to be understood.
-
-
-Best,
-Yu
-
-> policy->max == policy->cpuinfo.max_freq
+> @@ -291,6 +303,7 @@ void kasan_report(unsigned long addr, size_t size,
+>         if (likely(!report_enabled()))
+>                 return;
+> +       disable_smap();
 > 
-> -- 
-> viresh
+> And then enforce panic at the end of report if smap is enabled.
+
+That would be a CLAC, and the current rules disallow CLAC for AC-safe
+functions.
+
+Furthermore, kasan_report() isn't fatal, right? So it would have to
+restore the state on exit. That makes the validation state much more
+complicated.
+
+Let me try and frob some of the report_enabled() stuff before the #UD.
