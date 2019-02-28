@@ -2,184 +2,125 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FFAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 01:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1BBC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 01:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F67218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 01:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AEF20863
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 01:52:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c1KEhAKO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R8GO7W7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbfB1Bf5 (ORCPT
+        id S1730628AbfB1BwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 20:35:57 -0500
-Received: from mail-oi1-f199.google.com ([209.85.167.199]:42412 "EHLO
-        mail-oi1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730234AbfB1Bf5 (ORCPT
+        Wed, 27 Feb 2019 20:52:17 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:52110 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730254AbfB1BwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 20:35:57 -0500
-Received: by mail-oi1-f199.google.com with SMTP id j205so8362009oih.9
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 17:35:57 -0800 (PST)
+        Wed, 27 Feb 2019 20:52:16 -0500
+Received: by mail-pg1-f202.google.com with SMTP id t26so13658598pgu.18
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 17:52:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=20+mLsEF7OyN/zYxCSZlbEYCsdjr9LEDRYeDS+C5Nhg=;
-        b=c1KEhAKONholropM5y7v7rtz7PQROvN3elAQumQW2EM54G9WENqRrI8qYQtj8D9gNQ
-         AqadJp54NzZck08kg+UNgRpgNTYd+3NGe/xzAzTD1QWxfo7cG3s3T18ksPiu/mpIRw0w
-         F7q2HLlL2Pryj1QJy3dGrZBnjyGehDtjnRF64=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=JBlDBrSfLY1P6rn5pc11N2X4uPwgficU/JHjLghtRss=;
+        b=R8GO7W7r23Ijqx+sj/SCcCtchfLFBXNxXizYnC4yU1vePy6+sgXiZyUCtb6gz2eZQH
+         2ILzls2PR+o2v4jA0ev4g+vzFW2+V0yopnatZnVXNdD50uRQVAXKjUFbs5/Pk0DX5gj3
+         WNMkSuOAXHISxtHpprjLpOuIFAYHPX3LZQPnGBtwDu3ggS1RcfTNqRTpwQ7UFOkbaUCd
+         F+AM8f6o32j2JxxHBiNmefNOIeEUZ/cGfkuXFR9bvw3EdVwU7wk3OB7+SBtu0slEnDI9
+         GE4xrnwDYxRQDvesYJf/n5ijpTt5d+mv1Qq9+Dw2vQBaXpTSvRnjZW3SAo5LlkC3qR4L
+         qPyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=20+mLsEF7OyN/zYxCSZlbEYCsdjr9LEDRYeDS+C5Nhg=;
-        b=YR4G06YK1IqgBz1GMlQEGWPMm0OLQ/Klne2Kc2isSvjegYS93YaisgFiuJnkH9sDlH
-         QzgKiUBQyIX2lXcgPIAeldezK5dsX/QcDx6mZc5hCk58o5GH5iHWb8d+v5rGP8P+BIM8
-         brCybPgD/XDI5ssiwl+jIksk18RTDOagJ/94bHg9RYFHXK76Q22IZt5fiIW7yr5wFxEE
-         C8+qH/Q/b+xb9IXAc8+HJN9ybZwSOn2yDF/G7LsJ1JRTY5v7sFM6vp/QKQNSeKr+06Nj
-         BrVVBvTR90HyAB3ZPwTjVTJNHJRfsupS1L8W63MeE9YCw9dXJicEJ5JF7o9+C/XLhfu9
-         ghzw==
-X-Gm-Message-State: AHQUAuaQmc3abiAtAtXMzSvUE5XNiBFD0MNnVT/rGF5aKGv7CM2lLaqv
-        oMBmZGUUrNEMXBpAGBMG+Gs14t6zn88ggBma
-X-Google-Smtp-Source: AHgI3IZcArc/x5BvpO2wfByxTVoBJrY+TeF20BcdQV/jNNjx0XuPfrRBDeFoCVqU/iF0FQuqkPZE6CX1uo5TjrGl
-X-Received: by 2002:a9d:700f:: with SMTP id k15mr3498224otj.22.1551317756568;
- Wed, 27 Feb 2019 17:35:56 -0800 (PST)
-Date:   Wed, 27 Feb 2019 17:35:41 -0800
-In-Reply-To: <CAMHSBOWZHLnGWXU_z1ouCVuRRWKg_59P5++zwhJOWrWJoNv=GA@mail.gmail.com>
-Message-Id: <20190228013541.76792-1-gwendal@chromium.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=JBlDBrSfLY1P6rn5pc11N2X4uPwgficU/JHjLghtRss=;
+        b=jrmWUwS7yzibI0meWXQKJ/+8P20SVWTsGz+nmmiueqQfU+G87fqEGT+gxpVoU5Y+oi
+         bbyRGNcBjXqGV2xPU5aPIc+bPUtRT7r0/5boktenSz0eU6QGzQGKqwahmO0G2z7kdvzv
+         7t+r/v0pqtDL+pmG72IQ2f8SFiatCS6yqsf3X9shXaVnuZgI2fVrzHBiyYje7CKmNYWw
+         GDzST0GcH9XUg/9+zQ0IXRJ6fQbBGy5atLq+NNnHjWUvQas1bFJWJ1FX/p+faUU3uSsW
+         gFgzhrNsYLa5pgff9KJV8eDGFmUYaCsm86lp2/8sdXLJ/9abEMQIm/7Kb0kLU5N7maaB
+         6rxA==
+X-Gm-Message-State: AHQUAuaa1RcdqDPQyFzp4FlP2KLN2r6t/dFc6lXDT5HOiPvJCVIpqlbs
+        Csk+4SvrQnK+sBvm/nc81782XBd8E3MS
+X-Google-Smtp-Source: AHgI3IZbrqbcz+8aRG2gnfW8Z9zI6GUj9zLgUttkLkxUqm5rP7ZelwWsiRtkWqkWiakubLn6FeT32yhW6YV0
+X-Received: by 2002:a63:4a17:: with SMTP id x23mr2251765pga.55.1551318735620;
+ Wed, 27 Feb 2019 17:52:15 -0800 (PST)
+Date:   Wed, 27 Feb 2019 17:52:10 -0800
+Message-Id: <20190228015210.28880-1-venture@google.com>
 Mime-Version: 1.0
-References: <CAMHSBOWZHLnGWXU_z1ouCVuRRWKg_59P5++zwhJOWrWJoNv=GA@mail.gmail.com>
 X-Mailer: git-send-email 2.21.0.rc2.261.ga7da99ff1b-goog
-Subject: [PATCH v5] mfd: cros_ec_dev: Register cros_ec_accel_legacy driver as
- a subdevice
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     andy.shevchenko@gmail.com, groeck@chromium.org,
-        enric.balletbo@collabora.com, lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: [PATCH v5 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
+From:   Patrick Venture <venture@google.com>
+To:     venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, andrew@aj.id.au, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
 
-With this patch, the cros_ec_ctl driver will register the legacy
-accelerometer driver (named cros_ec_accel_legacy) if it fails to
-register sensors through the usual path cros_ec_sensors_register().
-This legacy device is present on Chromebook devices with older EC
-firmware only supporting deprecated EC commands (Glimmer based devices).
-
-Tested-by: Gwendal Grignou <gwendal@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Patrick Venture <venture@google.com>
 ---
-Changes in v5:
-- Remove unnecessary white lines.
+Changes for v5:
+- None
+Changes for v4:
+- None
+Changes for v3:
+- None
+Changes for v2:
+- Added comment about syscon required parameter.
+---
+ .../bindings/misc/aspeed-p2a-ctrl.txt         | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
 
-Changes in v4:
-- [5/8] Nit: EC -> ECs (Lee Jones)
-- [5/8] Statically define cros_ec_accel_legacy_cells (Lee Jones)
-
-Changes in v3:
-- [5/8] Add the Reviewed-by Andy Shevchenko.
-
-Changes in v2:
-- [5/8] Add the Reviewed-by Gwendal.
-
- drivers/mfd/cros_ec_dev.c | 66 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
-
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index d275deaecb12..64567bd0a081 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -376,6 +376,69 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
- 	kfree(msg);
- }
- 
-+static struct cros_ec_sensor_platform sensor_platforms[] = {
-+	{ .sensor_num = 0 },
-+	{ .sensor_num = 1 }
+diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+new file mode 100644
+index 000000000000..1092d62d1c92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
+@@ -0,0 +1,32 @@
++======================================================================
++Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge Control Driver
++======================================================================
++
++The bridge is available on platforms with the VGA enabled on the Aspeed device.
++In this case, the host has access to a 64KiB window into all of the BMC's
++memory.  The BMC can disable this bridge.  If the bridge is enabled, the host
++has read access to all the regions of memory, however the host only has read
++and write access depending on a register controlled by the BMC.
++
++Required properties:
++===================
++
++ - compatible: must be one of:
++	- "aspeed,ast2400-p2a-ctrl"
++	- "aspeed,ast2500-p2a-ctrl"
++
++ - syscon: handle to syscon device node controlling PCI.
++
++Optional properties:
++===================
++
++- memory-region: A phandle to a reserved_memory region to be used for the PCI
++		to AHB mapping
++
++Example:
++
++p2a: p2a-control@1e6e2000 {
++	compatible = "aspeed,ast2400-p2a-ctrl";
++	memory-region = <&reserved_memory>;
++	syscon = <&syscon>;
 +};
-+
-+static const struct mfd_cell cros_ec_accel_legacy_cells[] = {
-+	{
-+		.name = "cros-ec-accel-legacy",
-+		.id = 0,
-+		.platform_data = &sensor_platforms[0],
-+		.pdata_size = sizeof(struct cros_ec_sensor_platform),
-+	},
-+	{
-+		.name = "cros-ec-accel-legacy",
-+		.id = 1,
-+		.platform_data = &sensor_platforms[1],
-+		.pdata_size = sizeof(struct cros_ec_sensor_platform),
-+	}
-+};
-+
-+static void cros_ec_accel_legacy_register(struct cros_ec_dev *ec)
-+{
-+	struct cros_ec_device *ec_dev = ec->ec_dev;
-+	u8 status;
-+	int ret;
-+
-+	/*
-+	 * ECs that need legacy support are the main EC, directly connected to
-+	 * the AP.
-+	 */
-+	if (ec->cmd_offset != 0)
-+		return;
-+
-+	/*
-+	 * Check if EC supports direct memory reads and if EC has
-+	 * accelerometers.
-+	 */
-+	if (!ec_dev->cmd_readmem)
-+		return;
-+
-+	ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS, 1, &status);
-+	if (ret < 0) {
-+		dev_warn(ec->dev, "EC does not support direct reads.\n");
-+		return;
-+	}
-+
-+	/* Check if EC has accelerometers. */
-+	if (!(status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
-+		dev_info(ec->dev, "EC does not have accelerometers.\n");
-+		return;
-+	}
-+
-+	/*
-+	 * Register 2 accelerometers
-+	 */
-+	ret = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
-+			      cros_ec_accel_legacy_cells,
-+			      ARRAY_SIZE(cros_ec_accel_legacy_cells),
-+			      NULL, 0, NULL);
-+	if (ret)
-+		dev_err(ec_dev->dev, "failed to add EC sensors\n");
-+}
-+
- static const struct mfd_cell cros_ec_cec_cells[] = {
- 	{ .name = "cros-ec-cec" }
- };
-@@ -437,6 +500,9 @@ static int ec_device_probe(struct platform_device *pdev)
- 	/* check whether this EC is a sensor hub. */
- 	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE))
- 		cros_ec_sensors_register(ec);
-+	else
-+		/* Workaroud for older EC firmware */
-+		cros_ec_accel_legacy_register(ec);
- 
- 	/* Check whether this EC instance has CEC host command support */
- 	if (cros_ec_check_features(ec, EC_FEATURE_CEC)) {
 -- 
 2.21.0.rc2.261.ga7da99ff1b-goog
 
