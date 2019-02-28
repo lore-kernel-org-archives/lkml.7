@@ -2,131 +2,97 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A367C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D87C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF74218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0362E218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:32:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dDu/d82Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388227AbfB1U1b (ORCPT
+        id S1733015AbfB1Ucr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 15:27:31 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42123 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732602AbfB1U11 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 15:27:27 -0500
-Received: by mail-qt1-f193.google.com with SMTP id u7so15936999qtg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 12:27:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=stBWwMqpBSCGcZFqSFF0JHMo+oJlyyG8lS4bB2+/gWU=;
-        b=JU+n5rg/1u1JPT0PbELcIA6tpA6P1/uPlDiLo2YLCWvzSB5lVik/IATH2rIwBTSinR
-         0TTizO5mPjEeh72WM9+kdMz/v8t+4SArm99IgH/Rfaab1AtBvA/oDjT6QQTFlGVeLSGc
-         azRiuRGAPM+EMxlYHiaaLQiKsQBS+rvYpxJCNEX3vRtz/Fr4Ys7BSO5vorqI7MvZbibg
-         VIAwEUOIUbW6PACwgr6EbSxT1kgraiRVeE7yWO8Qingd8g5+5fgK//HCApOnAVU5U5AG
-         wRCxAoMuxn/y7y5AjxLjsbcPV4C5eSCojlzvwGmY9WriiMTJB3EaV73JA55OStg5oCZw
-         lOyw==
-X-Gm-Message-State: APjAAAVm3ICwJTdPpooiF8BdyH5Ou4+Tn2GmkkxQdLlEJ4GWA16tjsd2
-        GP8BE2MYK+fQvR+sdOqy0RCOxMdPotfIN3lNS9w=
-X-Google-Smtp-Source: APXvYqzIRoi3bTmtVoQukOcUUIxkJLj2LfvRVJgNj5czLHzeyDTSM6Q8Wwby/GnfrSE54UzDVUocKJBOse4sq4pFGxE=
-X-Received: by 2002:a0c:81ee:: with SMTP id 43mr876035qve.180.1551385646079;
- Thu, 28 Feb 2019 12:27:26 -0800 (PST)
+        Thu, 28 Feb 2019 15:32:47 -0500
+Received: from ozlabs.org ([203.11.71.1]:48121 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbfB1Ucr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 15:32:47 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 449PPQ43lqz9s70;
+        Fri,  1 Mar 2019 07:32:42 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1551385964;
+        bh=7ZUBRTTm81Dii7ohiwqEoFKuY/SfkluhBUrk7dYvQqA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dDu/d82YHd4wN4NANpAgutkG5IUO1nwV40HcXIuQaMiOAmGYz7V/iW+GYsiSQTmIb
+         O1kPh6oXRS0T75SzBPzbcMKC5jb2u63h+TrIvmECEwDkyQ5OJsXHErQquu2TxD3s4C
+         GUGcdiAX/ud94qADMsZZuo6wJM6iQOAbDYDLWUYPpiMPWC15pzkNTCrulL7ObP71Om
+         ACTHRdY4SupKmalH5a4ViiYKSR+zScbENMi8lsb50GvZTkcKVF33wtojSHMEv62HUV
+         dyptIJul3DQ0SXflBxt4qCeCbTfREk4SUvCE69I9RpeU8mM9YtC7mOsddMIHHA3Sl9
+         gGBKV2Yb2jTSw==
+Date:   Fri, 1 Mar 2019 07:32:34 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sheng Lan <lansheng@huawei.com>,
+        Eric Dumazet <edumazet@google.com>
+Subject: linux-next: Fixes tag needs some work in the net tree
+Message-ID: <20190301073217.27931d39@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190212180441.15340-1-keescook@chromium.org> <20190212180441.15340-2-keescook@chromium.org>
-In-Reply-To: <20190212180441.15340-2-keescook@chromium.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 28 Feb 2019 21:27:08 +0100
-Message-ID: <CAK8P3a2xC3OVckPnweSjor3AH5LpSzichKxAjkAcgXDtCf0QmQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gcc-plugins: structleak: Generalize to all variable types
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/bM4IbjYuQmcKHRbQQr/M=Xc"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 7:08 PM Kees Cook <keescook@chromium.org> wrote:
->
-> This adjusts structleak to also work with non-struct types when they
-> are passed by reference, since those variables may leak just like
-> anything else. This is exposed via an improved set of Kconfig options.
-> (This does mean structleak is slightly misnamed now.)
->
-> Building with CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL should give the
-> kernel complete initialization coverage of all stack variables passed
-> by reference, including padding (see lib/test_stackinit.c).
->
-> Using CONFIG_GCC_PLUGIN_STRUCTLEAK_VERBOSE to count added initializations
-> under defconfig:
->
->         ..._BYREF:      5945 added initializations
->         ..._BYREF_ALL: 16606 added initializations
->
-> There is virtually no change to text+data size (both have less than 0.05%
-> growth):
+--Sig_/bM4IbjYuQmcKHRbQQr/M=Xc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I just resumed my randconfig build testing after a longer break, and found
-a regression for stack usage that I bisected to your change. It shows up in a
-variety of files depending on the configuration, so far the worst one is the
-configuration at https://pastebin.com/UK54qbKa that leads to
+Hi all,
 
-../drivers/media/dvb-frontends/stv090x.c: In function 'stv090x_start_search':
-../drivers/media/dvb-frontends/stv090x.c:1595:1: error: the frame size
-of 5320 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
-../drivers/media/dvb-frontends/stv090x.c: In function 'stv090x_optimize_track':
-../drivers/media/dvb-frontends/stv090x.c:3090:1: error: the frame size
-of 5872 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
-../drivers/media/dvb-frontends/stv090x.c: In function 'stv090x_algo':
-../drivers/media/dvb-frontends/stv090x.c:3431:1: error: the frame size
-of 5144 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
- }
+In commit
 
-At least for this specific file, I also see a significant (though not alarming)
-increase in code size:
+  5845f706388a ("net: netem: fix skb length BUG_ON in __skb_to_sgvec")
 
-   text       data        bss        dec        hex    filename
-179196       4632        256     184084      2cf14
-obj-x86/drivers/media/dvb-frontends/stv090x-before.o
- 216740       4632        256     221628      361bc
-obj-x86/drivers/media/dvb-frontends/stv090x-after.o
+Fixes tag
 
-Part of the problem here is definitely interaction with the asan-stack
-sanitizer. Changing asan-stack=1 to asan-stack=0, it looks a lot
-better:
+  Fixes: 35d889d1 ("sch_netem: fix skb leak in netem_enqueue()")
 
-../drivers/media/dvb-frontends/stv090x.c: In function 'stv090x_start_search':
-../drivers/media/dvb-frontends/stv090x.c:1595:1: warning: the frame
-size of 120 bytes is larger than 20 bytes [-Wframe-larger-than=]
-../drivers/media/dvb-frontends/stv090x.c: In function 'stv090x_optimize_track':
-../drivers/media/dvb-frontends/stv090x.c:3090:1: warning: the frame
-size of 168 bytes is larger than 20 bytes [-Wframe-larger-than=]
-../drivers/media/dvb-frontends/stv090x.c: In function 'stv090x_algo':
-../drivers/media/dvb-frontends/stv090x.c:3431:1: warning: the frame
-size of 192 bytes is larger than 20 bytes [-Wframe-larger-than=]
+has these problem(s):
 
-   text       data        bss        dec        hex    filename
-184061       4632        256     188949      2e215
-obj-x86/drivers/media/dvb-frontends/stv090x.o
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
 
-I get similar results with asan-stack=1 but without your plugin, only
-the combination of the two has the explosive stack size growth.
+--=20
+Cheers,
+Stephen Rothwell
 
-I can help analyze this further, but maybe you can have a look first,
-there might be something obvious when you read the input to the
-plugin.
+--Sig_/bM4IbjYuQmcKHRbQQr/M=Xc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-      Arnd
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx4RWIACgkQAVBC80lX
+0Gw8Ygf/UaRvRGAtenDvUlJUKnjMq92Wjj0CTC5JI0qgG8LA5cxCSR1lu6mWl2Gn
+8YELN2PALK6mP9rhzdhVRms3AZ9xmwGJ0+4zH5Hj4jRAWrM+UCxN3bezRlRlzQ8R
+/TDqPZkHuMAy4ge5LI78mJvjNYylD0RL1mh/n519b1ZbE6Z3sbPOJAL+6X64dvAN
+PrAJfaEx33tlSZIAHREe9O4LSFz/ruJaYvC2V4atSbQDoh7QYOoKbSbk1IrR2XjF
+5w0cwFM4TACVxzY6208L7SHMHTjdmaaC4WlBh20Gm9btxbdRRQRBjE2lKwTFbQDP
+JU6Q3gd/9VDX9z66j2debUjFgDa+HQ==
+=YzC3
+-----END PGP SIGNATURE-----
+
+--Sig_/bM4IbjYuQmcKHRbQQr/M=Xc--
