@@ -3,39 +3,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCCAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358A9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74383218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0788C218CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 16:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731968AbfB1QTL (ORCPT
+        id S1732070AbfB1QUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 11:19:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59100 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 11:20:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbfB1QTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 11:19:10 -0500
+        id S1726269AbfB1QUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 11:20:41 -0500
 Received: from vmware.local.home (unknown [38.88.19.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 155852133D;
-        Thu, 28 Feb 2019 16:19:10 +0000 (UTC)
-Date:   Thu, 28 Feb 2019 11:19:08 -0500
+        by mail.kernel.org (Postfix) with ESMTPSA id 12314218B0;
+        Thu, 28 Feb 2019 16:20:41 +0000 (UTC)
+Date:   Thu, 28 Feb 2019 11:20:39 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Al Viro <viro@ZenIV.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing: Fix event filters and triggers to handle
- negative numbers
-Message-ID: <20190228111908.3c949478@vmware.local.home>
-In-Reply-To: <f0929165-bc75-c13a-7a20-43262ef8a496@virtuozzo.com>
-References: <20180823102534.7642-1-ptikhomirov@virtuozzo.com>
-        <20180823204849.3b4aede3@vmware.local.home>
-        <f0929165-bc75-c13a-7a20-43262ef8a496@virtuozzo.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 5/5] tracing/probe: Support user-space dereference
+Message-ID: <20190228112039.3a043e18@vmware.local.home>
+In-Reply-To: <20190228160055.92841d1b482be8c10a50b24b@kernel.org>
+References: <155127853496.32576.3705994926675037747.stgit@devbox>
+        <155127868250.32576.2419537726154240743.stgit@devbox>
+        <20190227213132.50f3cef1@vmware.local.home>
+        <20190228160055.92841d1b482be8c10a50b24b@kernel.org>
 X-Mailer: Claws Mail 3.15.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,37 +54,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019 09:11:37 +0000
-Pavel Tikhomirov <ptikhomirov@virtuozzo.com> wrote:
+On Thu, 28 Feb 2019 16:00:55 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-> ping, looks like the patch was lost
-> 
-> On 8/24/18 3:48 AM, Steven Rostedt wrote:
-> > On Thu, 23 Aug 2018 13:25:34 +0300
-> > Pavel Tikhomirov <ptikhomirov@virtuozzo.com> wrote:
-> >   
-> >> Then tracing syscall exit event it is extremely useful to filter exit
-> >> codes equal to some negative value, to react only to required errors.
-> >> But negative numbers does not work:
-> >>
-> >> [root@snorch sys_exit_read]# echo "ret == -1" > filter
-> >> bash: echo: write error: Invalid argument
-> >> [root@snorch sys_exit_read]# cat filter
-> >> ret == -1
-> >>          ^
-> >> parse_error: Invalid value (did you forget quotes)?  
 > > 
-> > Thanks for the patch. I'll apply it and then start testing it!
+> > "+u0(%si):string will read a string from the address in the register
+> >  %si that is expected to be in user-space. 'ustring' is a shortcut way
+> >  off performing the same task. That is, +0(%si):ustring is equivalent
+> >  to +u0(%si):string."  
+> 
+> Would you mean "of performing"?
 
-?!?
-
-I remember applying this to my git queue (I don't reply like this
-before doing so). Not sure how it got lost. All I can think of is that
-it might have been added with commits that ended up failing the tests,
-and got reverted with that code :-/
-
-I'm currently traveling. Hopefully I remember tomorrow to add this.
-Thanks for pointing this out, and I need to be a bit more careful when
-reverting failed commits :-p
+Yes :-)
 
 -- Steve
