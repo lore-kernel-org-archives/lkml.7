@@ -2,160 +2,126 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BB6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3045DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA522084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085962084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731679AbfB1HQO (ORCPT
+        id S1731660AbfB1HTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:16:14 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:43843 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730951AbfB1HQO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:16:14 -0500
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7FjL02940318
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Feb 2019 23:15:45 -0800
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7FiVw2940315;
-        Wed, 27 Feb 2019 23:15:44 -0800
-Date:   Wed, 27 Feb 2019 23:15:44 -0800
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Bart Van Assche <tipbot@zytor.com>
-Message-ID: <tip-f214737b75b0ee79763b5c058b9d5e83d711348d@git.kernel.org>
-Cc:     torvalds@linux-foundation.org, longman@redhat.com,
-        mingo@kernel.org, johannes@sipsolutions.net, bvanassche@acm.org,
-        will.deacon@arm.com, hpa@zytor.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        paulmck@linux.vnet.ibm.com, tglx@linutronix.de
-Reply-To: akpm@linux-foundation.org, hpa@zytor.com, will.deacon@arm.com,
-          johannes@sipsolutions.net, bvanassche@acm.org,
-          tglx@linutronix.de, mingo@kernel.org, paulmck@linux.vnet.ibm.com,
-          longman@redhat.com, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
-In-Reply-To: <20190214230058.196511-24-bvanassche@acm.org>
-References: <20190214230058.196511-24-bvanassche@acm.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] lockdep/lib/tests: Test dynamic key registration
-Git-Commit-ID: f214737b75b0ee79763b5c058b9d5e83d711348d
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 28 Feb 2019 02:19:15 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41060 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730951AbfB1HTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 02:19:14 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 74B4952B9E1B217665E6;
+        Thu, 28 Feb 2019 15:19:12 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
+ 15:19:04 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] xfrm: policy: Fix out-of-bound array accesses in __xfrm_policy_unlink
+Date:   Thu, 28 Feb 2019 15:18:59 +0800
+Message-ID: <20190228071859.17768-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f214737b75b0ee79763b5c058b9d5e83d711348d
-Gitweb:     https://git.kernel.org/tip/f214737b75b0ee79763b5c058b9d5e83d711348d
-Author:     Bart Van Assche <bvanassche@acm.org>
-AuthorDate: Thu, 14 Feb 2019 15:00:58 -0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 28 Feb 2019 07:55:48 +0100
+From: YueHaibing <yuehaibing@huawei.com>
 
-lockdep/lib/tests: Test dynamic key registration
+UBSAN report this:
 
-Make sure that the lockdep_register_key() and lockdep_unregister_key()
-code is tested when running the lockdep tests.
+UBSAN: Undefined behaviour in net/xfrm/xfrm_policy.c:1289:24
+index 6 is out of range for type 'unsigned int [6]'
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.4.162-514.55.6.9.x86_64+ #13
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+ 0000000000000000 1466cf39b41b23c9 ffff8801f6b07a58 ffffffff81cb35f4
+ 0000000041b58ab3 ffffffff83230f9c ffffffff81cb34e0 ffff8801f6b07a80
+ ffff8801f6b07a20 1466cf39b41b23c9 ffffffff851706e0 ffff8801f6b07ae8
+Call Trace:
+ <IRQ>  [<ffffffff81cb35f4>] __dump_stack lib/dump_stack.c:15 [inline]
+ <IRQ>  [<ffffffff81cb35f4>] dump_stack+0x114/0x1a0 lib/dump_stack.c:51
+ [<ffffffff81d94225>] ubsan_epilogue+0x12/0x8f lib/ubsan.c:164
+ [<ffffffff81d954db>] __ubsan_handle_out_of_bounds+0x16e/0x1b2 lib/ubsan.c:382
+ [<ffffffff82a25acd>] __xfrm_policy_unlink+0x3dd/0x5b0 net/xfrm/xfrm_policy.c:1289
+ [<ffffffff82a2e572>] xfrm_policy_delete+0x52/0xb0 net/xfrm/xfrm_policy.c:1309
+ [<ffffffff82a3319b>] xfrm_policy_timer+0x30b/0x590 net/xfrm/xfrm_policy.c:243
+ [<ffffffff813d3927>] call_timer_fn+0x237/0x990 kernel/time/timer.c:1144
+ [<ffffffff813d8e7e>] __run_timers kernel/time/timer.c:1218 [inline]
+ [<ffffffff813d8e7e>] run_timer_softirq+0x6ce/0xb80 kernel/time/timer.c:1401
+ [<ffffffff8120d6f9>] __do_softirq+0x299/0xe10 kernel/softirq.c:273
+ [<ffffffff8120e676>] invoke_softirq kernel/softirq.c:350 [inline]
+ [<ffffffff8120e676>] irq_exit+0x216/0x2c0 kernel/softirq.c:391
+ [<ffffffff82c5edab>] exiting_irq arch/x86/include/asm/apic.h:652 [inline]
+ [<ffffffff82c5edab>] smp_apic_timer_interrupt+0x8b/0xc0 arch/x86/kernel/apic/apic.c:926
+ [<ffffffff82c5c985>] apic_timer_interrupt+0xa5/0xb0 arch/x86/entry/entry_64.S:735
+ <EOI>  [<ffffffff81188096>] ? native_safe_halt+0x6/0x10 arch/x86/include/asm/irqflags.h:52
+ [<ffffffff810834d7>] arch_safe_halt arch/x86/include/asm/paravirt.h:111 [inline]
+ [<ffffffff810834d7>] default_idle+0x27/0x430 arch/x86/kernel/process.c:446
+ [<ffffffff81085f05>] arch_cpu_idle+0x15/0x20 arch/x86/kernel/process.c:437
+ [<ffffffff8132abc3>] default_idle_call+0x53/0x90 kernel/sched/idle.c:92
+ [<ffffffff8132b32d>] cpuidle_idle_call kernel/sched/idle.c:156 [inline]
+ [<ffffffff8132b32d>] cpu_idle_loop kernel/sched/idle.c:251 [inline]
+ [<ffffffff8132b32d>] cpu_startup_entry+0x60d/0x9a0 kernel/sched/idle.c:299
+ [<ffffffff8113e119>] start_secondary+0x3c9/0x560 arch/x86/kernel/smpboot.c:245
 
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: johannes.berg@intel.com
-Cc: tj@kernel.org
-Link: https://lkml.kernel.org/r/20190214230058.196511-24-bvanassche@acm.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+The issue is triggered as this:
+
+xfrm_add_policy
+    -->verify_newpolicy_info  //check the index provided by user with XFRM_POLICY_MAX
+			      //In my case, the index is 0x6E6BB6, so it pass the check.
+    -->xfrm_policy_construct  //copy the user's policy and set xfrm_policy_timer
+    -->xfrm_policy_insert
+	--> __xfrm_policy_link //use the orgin dir, in my case is 2
+	--> xfrm_gen_index   //generate policy index, there is 0x6E6BB6
+
+then xfrm_policy_timer be fired
+
+xfrm_policy_timer
+   --> xfrm_policy_id2dir  //get dir from (policy index & 7), in my case is 6
+   --> xfrm_policy_delete
+      --> __xfrm_policy_unlink //access policy_count[dir], trigger out of range access
+
+Add xfrm_policy_id2dir check in verify_newpolicy_info, make sure the computed dir is
+valid, to fix the issue.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e682adf021be ("xfrm: Try to honor policy index if it's supplied by user")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- tools/lib/lockdep/include/liblockdep/common.h |  2 ++
- tools/lib/lockdep/include/liblockdep/mutex.h  | 11 ++++++-----
- tools/lib/lockdep/tests/ABBA.c                |  9 +++++++++
- 3 files changed, 17 insertions(+), 5 deletions(-)
+ net/xfrm/xfrm_user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/lockdep/include/liblockdep/common.h b/tools/lib/lockdep/include/liblockdep/common.h
-index d640a9761f09..a81d91d4fc78 100644
---- a/tools/lib/lockdep/include/liblockdep/common.h
-+++ b/tools/lib/lockdep/include/liblockdep/common.h
-@@ -45,6 +45,8 @@ void lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- void lock_release(struct lockdep_map *lock, int nested,
- 			unsigned long ip);
- void lockdep_reset_lock(struct lockdep_map *lock);
-+void lockdep_register_key(struct lock_class_key *key);
-+void lockdep_unregister_key(struct lock_class_key *key);
- extern void debug_check_no_locks_freed(const void *from, unsigned long len);
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index a131f9f..8d4d52f 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1424,7 +1424,7 @@ static int verify_newpolicy_info(struct xfrm_userpolicy_info *p)
+ 	ret = verify_policy_dir(p->dir);
+ 	if (ret)
+ 		return ret;
+-	if (p->index && ((p->index & XFRM_POLICY_MAX) != p->dir))
++	if (p->index && (xfrm_policy_id2dir(p->index) != p->dir))
+ 		return -EINVAL;
  
- #define STATIC_LOCKDEP_MAP_INIT(_name, _key) \
-diff --git a/tools/lib/lockdep/include/liblockdep/mutex.h b/tools/lib/lockdep/include/liblockdep/mutex.h
-index 2073d4e1f2f0..783dd0df06f9 100644
---- a/tools/lib/lockdep/include/liblockdep/mutex.h
-+++ b/tools/lib/lockdep/include/liblockdep/mutex.h
-@@ -7,6 +7,7 @@
- 
- struct liblockdep_pthread_mutex {
- 	pthread_mutex_t mutex;
-+	struct lock_class_key key;
- 	struct lockdep_map dep_map;
- };
- 
-@@ -27,11 +28,10 @@ static inline int __mutex_init(liblockdep_pthread_mutex_t *lock,
- 	return pthread_mutex_init(&lock->mutex, __mutexattr);
- }
- 
--#define liblockdep_pthread_mutex_init(mutex, mutexattr)		\
--({								\
--	static struct lock_class_key __key;			\
--								\
--	__mutex_init((mutex), #mutex, &__key, (mutexattr));	\
-+#define liblockdep_pthread_mutex_init(mutex, mutexattr)			\
-+({									\
-+	lockdep_register_key(&(mutex)->key);				\
-+	__mutex_init((mutex), #mutex, &(mutex)->key, (mutexattr));	\
- })
- 
- static inline int liblockdep_pthread_mutex_lock(liblockdep_pthread_mutex_t *lock)
-@@ -55,6 +55,7 @@ static inline int liblockdep_pthread_mutex_trylock(liblockdep_pthread_mutex_t *l
- static inline int liblockdep_pthread_mutex_destroy(liblockdep_pthread_mutex_t *lock)
- {
- 	lockdep_reset_lock(&lock->dep_map);
-+	lockdep_unregister_key(&lock->key);
- 	return pthread_mutex_destroy(&lock->mutex);
- }
- 
-diff --git a/tools/lib/lockdep/tests/ABBA.c b/tools/lib/lockdep/tests/ABBA.c
-index 623313f54720..543789bc3e37 100644
---- a/tools/lib/lockdep/tests/ABBA.c
-+++ b/tools/lib/lockdep/tests/ABBA.c
-@@ -14,4 +14,13 @@ void main(void)
- 
- 	pthread_mutex_destroy(&b);
- 	pthread_mutex_destroy(&a);
-+
-+	pthread_mutex_init(&a, NULL);
-+	pthread_mutex_init(&b, NULL);
-+
-+	LOCK_UNLOCK_2(a, b);
-+	LOCK_UNLOCK_2(b, a);
-+
-+	pthread_mutex_destroy(&b);
-+	pthread_mutex_destroy(&a);
- }
+ 	return 0;
+-- 
+2.7.0
+
+
