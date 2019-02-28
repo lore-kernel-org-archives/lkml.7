@@ -2,106 +2,130 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5DAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6998C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86AD7218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551374253;
-	bh=QLGDfWIce/E7MTsvYlDTFHRKkYayZZdgX8XtvRq8dJY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zRqto559RAHU1N3GwPWTyB3d+aaDY0y94oiMUpePbxlUIW2/dCKjyHuLf27KhMd+7
-	 9hxKNFxbSfr064RgahiFyp4GJBUOBJi3fH8tKLsX00SbNPAPwEtV+OVfEyaTKCnBz/
-	 USoBjgKb0T+tyJiMkuKtX+gWRdBqGLweuTfsQKWk=
+	by mail.kernel.org (Postfix) with ESMTP id A84BC2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:30:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="S0KHlnB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732883AbfB1RRc (ORCPT
+        id S1732717AbfB1Ra5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:17:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727707AbfB1RRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:17:31 -0500
-Received: from sol.localdomain (c-107-3-167-184.hsd1.ca.comcast.net [107.3.167.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DD2A20857;
-        Thu, 28 Feb 2019 17:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551374250;
-        bh=QLGDfWIce/E7MTsvYlDTFHRKkYayZZdgX8XtvRq8dJY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bDJpDo7o2VcNtpfWF2czCFRTfAjq8hXwS2s7uiSoZFcfrE2HxZc6wYMc0a0vvdbUi
-         o3Y7FahfbyW8N0JIa0HfkK+ju+Dt4/ygXtIu3JsLowB69ysWtS5DOjjzUseLCc1dwr
-         KgLx9Soapm23W+/aTH3+ZxLM9RtgHoOGyGoIIHC0=
-Date:   Thu, 28 Feb 2019 09:17:28 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org,
-        syzbot <syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        penguin-kernel@i-love.sakura.ne.jp,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] kvm: properly check debugfs dentry before using it
-Message-ID: <20190228171727.GA663@sol.localdomain>
-References: <20190228153437.GI8481@kroah.com>
+        Thu, 28 Feb 2019 12:30:57 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:35375 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfB1Ra5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:30:57 -0500
+Received: by mail-it1-f195.google.com with SMTP id 188so16928808itb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 09:30:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fxsfEy8QIwi5UtCMRHdl1vmnvf9J7WKcthBi5S4gM9k=;
+        b=S0KHlnB6ibdEy70rkjjelRCQ4ipwqcaar0MtLGA//5B3Ls3zuvsRXeJmrYpDPOkT7b
+         XX57m5Cyb2TAAugtoIK78lKUSYe2rIONVxFR7JuAwpyc0MkjyorDjT7paQffARkhKYb5
+         WLiiAWh//0KOlSqAuGSZ5SW7YfuzNYSB/tYZc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fxsfEy8QIwi5UtCMRHdl1vmnvf9J7WKcthBi5S4gM9k=;
+        b=n/kz5QjiOPQ8SWzULPt4wwn3mQtr3PVrPb6P8PEvG+/tNqHVZm1kql6PHU3XYkmaUy
+         5d3nVQKRKdSmsr0CJcbglVggdA4h3322eP6eM7LAXvwf7q4agSgvs7+pW2+UNi3lfXVH
+         BtutGrv2mzpo2es4aHVsnVtq1SAj9MT0DxlxEaeVpGnAS7/i+++t9MKlmJ8ZE0b6P0q4
+         zKchMWUYM4iqrURxzCps3MY74WngYEqlmvWxcTMvV/WIIbd5cbTAj1LIcsP3B0nytQ/u
+         ymfY5e9ykKE6ilDwiZRq6N+OG98KL8AZoQ9yfUzmwOZSPSvaNSZyaRAFm7/t7SjR/4d/
+         uDHQ==
+X-Gm-Message-State: AHQUAuZnSAJoTLswGZqTtj7BPX3n+41AIXpe3EHqm+yUbP+bzIgE8qm3
+        qiq4JedJMdWUI0S/jkBkSJU0te+Sw6qUJXiVpAwf1w==
+X-Google-Smtp-Source: AHgI3IYszOofLgE7fLNMTjxiJZVzAU9FtNSowW4N8ZYiBcFQpnRTHBL64NrPJwDEFR2ZztqKVcKcxXeSv/9nzB59djQ=
+X-Received: by 2002:a24:e4d:: with SMTP id 74mr397241ite.32.1551375055773;
+ Thu, 28 Feb 2019 09:30:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190228153437.GI8481@kroah.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190212113808.3040-1-jagan@amarulasolutions.com> <20190228151543.GA18597@bogus>
+In-Reply-To: <20190228151543.GA18597@bogus>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 28 Feb 2019 23:00:44 +0530
+Message-ID: <CAMty3ZDR_Vnutobg=wjzwPZ_pkD4pLA76Lpec9u4OR8OtmuLGA@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: hwmon: Add missing documentation for lm75
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-hwmon@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 04:34:37PM +0100, Greg Kroah-Hartman wrote:
-> debugfs can now report an error code if something went wrong instead of
-> just NULL.  So if the return value is to be used as a "real" dentry, it
-> needs to be checked if it is an error before dereferencing it.
-> 
-> This is now happening because of ff9fb72bc077 ("debugfs: return error
-> values, not NULL").  syzbot has found a way to trigger multiple debugfs
-> files attempting to be created, which fails, and then the error code
-> gets passed to dentry_path_raw() which obviously does not like it.
-> 
-> Reported-by: Eric Biggers <ebiggers@kernel.org>
-> Reported-and-tested-by: syzbot+7857962b4d45e602b8ad@syzkaller.appspotmail.com
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> 
-> Linus, this should go in before 5.0-final is out, as it resolves a
-> problem found by syzbot.  Paolo has given his ack for me to send this
-> directly to you.  If you want this in [GIT PULL] format, I can do that
-> as well.
-> 
->  virt/kvm/kvm_main.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -4044,7 +4044,7 @@ static void kvm_uevent_notify_change(uns
->  	}
->  	add_uevent_var(env, "PID=%d", kvm->userspace_pid);
->  
-> -	if (kvm->debugfs_dentry) {
-> +	if (!IS_ERR_OR_NULL(kvm->debugfs_dentry)) {
->  		char *tmp, *p = kmalloc(PATH_MAX, GFP_KERNEL);
->  
->  		if (p) {
+On Thu, Feb 28, 2019 at 8:45 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Feb 12, 2019 at 05:08:08PM +0530, Jagan Teki wrote:
+> > Add missing dt-binding documentation for lm75 hwmon sensor.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Changes for v2:
+> > -  Add all compatible nodes available in lm75.
+> >
+> >  .../devicetree/bindings/hwmon/lm75.txt        | 37 +++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/hwmon/lm75.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> > new file mode 100644
+> > index 000000000000..12d8cf7cf592
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
+> > @@ -0,0 +1,37 @@
+> > +*LM75 hwmon sensor.
+> > +
+> > +Required properties:
+> > +- compatible: manufacturer and chip name, one of
+> > +             "adi,adt75",
+> > +             "dallas,ds1775",
+> > +             "dallas,ds75",
+> > +             "dallas,ds7505",
+> > +             "gmt,g751",
+> > +             "national,lm75",
+> > +             "national,lm75a",
+> > +             "national,lm75b",
+> > +             "maxim,max6625",
+> > +             "maxim,max6626",
+> > +             "maxim,max31725",
+> > +             "maxim,max31726",
+> > +             "maxim,mcp980x",
+> > +             "st,stds75",
+> > +             "st,stlm75",
+> > +             "microchip,tcn75",
+> > +             "ti,tmp100",
+> > +             "ti,tmp101",
+> > +             "ti,tmp105",
+> > +             "ti,tmp112",
+> > +             "ti,tmp175",
+> > +             "ti,tmp275",
+> > +             "ti,tmp75",
+> > +             "ti,tmp75c",
+>
+> Some of these are in trivial-devices.yaml already. So you either need to
+> remove them from there. Or you can move all these to trivial-devices and
+> benefit from having a schema. I prefer the latter, but either way is
+> fine. You can remove them from trivial-devices.yaml in a separate patch,
+> so:
 
-So what about the other checks of kvm->debugfs_dentry, in
-kvm_destroy_vm_debugfs() and kvm_create_vcpu_debugfs()?
+Thanks, Rob.
 
-- Eric
+I will remove trivial devices from here wrt trivial-devices.yaml in
+separate patch.
+
+Guenter, could you please pick this.
