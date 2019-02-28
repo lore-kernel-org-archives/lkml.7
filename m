@@ -2,178 +2,110 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28C1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE009C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97EFC2184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C63E2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fyrgMu+S";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NiLBJja8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731986AbfB1IhN (ORCPT
+        id S1731259AbfB1IjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:37:13 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45512 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730860AbfB1IhN (ORCPT
+        Thu, 28 Feb 2019 03:39:07 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:59064 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfB1IjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:37:13 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S8b4k0058393
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 03:37:12 -0500
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxb1r3dt4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 03:37:05 -0500
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Thu, 28 Feb 2019 08:35:36 -0000
-Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Feb 2019 08:35:33 -0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1S8ZWVs60686428
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Feb 2019 08:35:32 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 475717805E;
-        Thu, 28 Feb 2019 08:35:32 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D9267805C;
-        Thu, 28 Feb 2019 08:35:29 +0000 (GMT)
-Received: from skywalker.in.ibm.com (unknown [9.124.31.233])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Feb 2019 08:35:29 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     akpm@linux-foundation.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jan Kara <jack@suse.cz>, mpe@ellerman.id.au,
-        Ross Zwisler <zwisler@kernel.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH 1/2] fs/dax: deposit pagetable even when installing zero page
-Date:   Thu, 28 Feb 2019 14:05:21 +0530
-X-Mailer: git-send-email 2.20.1
+        Thu, 28 Feb 2019 03:39:06 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DB24460F3D; Thu, 28 Feb 2019 08:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551343145;
+        bh=6oGjoUb6vPV6mXBqiIySFbbskd5JDkOO7r7AqQsM+8M=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=fyrgMu+SwdzKGBHTSrDkki2Oi8sEYc6Hn54DKIVdM5ybj/pHafKG8YBbvGgyEnc1i
+         MxEI3RgHmLWnKz86V+FYW7IFRKLY+Xjsoo1Ew1eyDKoy6NivMTBCt1L9YvbjpMh0pR
+         REn5TI07BZCIich9Db53cQdbyS3iDkyCLyBi9g+I=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94E2B608CE;
+        Thu, 28 Feb 2019 08:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551343143;
+        bh=6oGjoUb6vPV6mXBqiIySFbbskd5JDkOO7r7AqQsM+8M=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=NiLBJja8px4RzW7V2HuzTLV20UOZj8gds6SLwZIVU/qjzVjBa86j8C+SvZqS1b5ca
+         DmlgM2aJ1fqDLG2TDivC06tbKvXO9y7XRiXXGLH7Xxmt5hQCN+XV+kU/M0YWlnKrZG
+         DFIicHwIxoc9sA+YqY/be5xQs2zFGzT6T9EXAhDU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94E2B608CE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19022808-0016-0000-0000-0000098A1A3A
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010678; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01167493; UDB=6.00609930; IPR=6.00948107;
- MB=3.00025776; MTD=3.00000008; XFM=3.00000015; UTC=2019-02-28 08:35:35
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19022808-0017-0000-0000-0000424C085D
-Message-Id: <20190228083522.8189-1-aneesh.kumar@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280061
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 3/5] mt76: fix a leaked reference by adding a missing
+ of_node_put
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <1550819742-32155-3-git-send-email-wen.yang99@zte.com.cn>
+References: <1550819742-32155-3-git-send-email-wen.yang99@zte.com.cn>
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     linus.walleij@linaro.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, nbd@nbd.name,
+        lorenzo.bianconi83@gmail.com, matthias.bgg@gmail.com,
+        linux-wireless@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, anirudh@xilinx.com,
+        John.Linn@xilinx.com, michal.simek@xilinx.com,
+        wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190228083905.DB24460F3D@smtp.codeaurora.org>
+Date:   Thu, 28 Feb 2019 08:39:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Architectures like ppc64 use the deposited page table to store hardware
-page table slot information. Make sure we deposit a page table when
-using zero page at the pmd level for hash.
+Wen Yang <wen.yang99@zte.com.cn> wrote:
 
-Without this we hit
+> The call to of_find_node_by_phandle returns a node pointer with refcount
+> incremented thus it must be explicitly decremented after the last
+> usage.
+> 
+> Detected by coccinelle with the following warnings:
+> ./drivers/net/wireless/mediatek/mt76/eeprom.c:58:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+> ./drivers/net/wireless/mediatek/mt76/eeprom.c:61:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+> ./drivers/net/wireless/mediatek/mt76/eeprom.c:67:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+> ./drivers/net/wireless/mediatek/mt76/eeprom.c:70:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+> ./drivers/net/wireless/mediatek/mt76/eeprom.c:72:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 48, but without a corresponding object release within this function.
+> 
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: Felix Fietkau <nbd@nbd.name>
+> Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-mediatek@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 
-Unable to handle kernel paging request for data at address 0x00000000
-Faulting instruction address: 0xc000000000082a74
-Oops: Kernel access of bad area, sig: 11 [#1]
-....
+Patch applied to wireless-drivers-next.git, thanks.
 
-NIP [c000000000082a74] __hash_page_thp+0x224/0x5b0
-LR [c0000000000829a4] __hash_page_thp+0x154/0x5b0
-Call Trace:
- hash_page_mm+0x43c/0x740
- do_hash_page+0x2c/0x3c
- copy_from_iter_flushcache+0xa4/0x4a0
- pmem_copy_from_iter+0x2c/0x50 [nd_pmem]
- dax_copy_from_iter+0x40/0x70
- dax_iomap_actor+0x134/0x360
- iomap_apply+0xfc/0x1b0
- dax_iomap_rw+0xac/0x130
- ext4_file_write_iter+0x254/0x460 [ext4]
- __vfs_write+0x120/0x1e0
- vfs_write+0xd8/0x220
- SyS_write+0x6c/0x110
- system_call+0x3c/0x130
+34e022d8b780 mt76: fix a leaked reference by adding a missing of_node_put
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
----
-TODO:
-* Add fixes tag 
-
- fs/dax.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/fs/dax.c b/fs/dax.c
-index 6959837cc465..01bfb2ac34f9 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -33,6 +33,7 @@
- #include <linux/sizes.h>
- #include <linux/mmu_notifier.h>
- #include <linux/iomap.h>
-+#include <asm/pgalloc.h>
- #include "internal.h"
- 
- #define CREATE_TRACE_POINTS
-@@ -1410,7 +1411,9 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
- {
- 	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
- 	unsigned long pmd_addr = vmf->address & PMD_MASK;
-+	struct vm_area_struct *vma = vmf->vma;
- 	struct inode *inode = mapping->host;
-+	pgtable_t pgtable = NULL;
- 	struct page *zero_page;
- 	spinlock_t *ptl;
- 	pmd_t pmd_entry;
-@@ -1425,12 +1428,22 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
- 	*entry = dax_insert_entry(xas, mapping, vmf, *entry, pfn,
- 			DAX_PMD | DAX_ZERO_PAGE, false);
- 
-+	if (arch_needs_pgtable_deposit()) {
-+		pgtable = pte_alloc_one(vma->vm_mm);
-+		if (!pgtable)
-+			return VM_FAULT_OOM;
-+	}
-+
- 	ptl = pmd_lock(vmf->vma->vm_mm, vmf->pmd);
- 	if (!pmd_none(*(vmf->pmd))) {
- 		spin_unlock(ptl);
- 		goto fallback;
- 	}
- 
-+	if (pgtable) {
-+		pgtable_trans_huge_deposit(vma->vm_mm, vmf->pmd, pgtable);
-+		mm_inc_nr_ptes(vma->vm_mm);
-+	}
- 	pmd_entry = mk_pmd(zero_page, vmf->vma->vm_page_prot);
- 	pmd_entry = pmd_mkhuge(pmd_entry);
- 	set_pmd_at(vmf->vma->vm_mm, pmd_addr, vmf->pmd, pmd_entry);
-@@ -1439,6 +1452,8 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
- 	return VM_FAULT_NOPAGE;
- 
- fallback:
-+	if (pgtable)
-+		pte_free(vma->vm_mm, pgtable);
- 	trace_dax_pmd_load_hole_fallback(inode, vmf, zero_page, *entry);
- 	return VM_FAULT_FALLBACK;
- }
 -- 
-2.20.1
+https://patchwork.kernel.org/patch/10825315/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
