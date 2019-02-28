@@ -2,123 +2,168 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B26C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DC2C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA53A2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8BF218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 03:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551323972;
+	bh=xePYJHDagXzcOhYXctzwQW8JZanDVo7BDIflpVHfPE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fHE13w4sB2Z1wtOI2UIFryJmoTIlxBw2dChgF2yWfnqysb+cBifxkS9MBaEZzbCyU
+	 s/MBKqrl9osuX3amLpvyxEEhXQDttGQ8NtQv4J/RFknU1reNOMwqht7wv73BFI0nNp
+	 rfukBRZTpM8j1e9Q/Q8x5t4angbp7qp2b5dLdfTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbfB1DSa (ORCPT
+        id S1730633AbfB1DTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 22:18:30 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4181 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730131AbfB1DS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 22:18:29 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3048ED77087345A0078C;
-        Thu, 28 Feb 2019 11:18:27 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
- 11:18:21 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] xfrm: policy: Fix possible user after free in __xfrm_policy_unlink
-Date:   Thu, 28 Feb 2019 11:16:23 +0800
-Message-ID: <20190228031623.22184-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 27 Feb 2019 22:19:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730131AbfB1DTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 22:19:30 -0500
+Received: from dragon (unknown [139.162.86.229])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A75A2183F;
+        Thu, 28 Feb 2019 03:19:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551323969;
+        bh=xePYJHDagXzcOhYXctzwQW8JZanDVo7BDIflpVHfPE8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lbEZhmOsNZAIOEu1ugj4MGpwIKsf1oyn1S1xz+6c0cg2USnKTrm7s1obnOgnRE7+p
+         J/Agka6rq/a3m+JKjrLk0eFv6fa6uuiQWY8XfZB+8wr49jAOkG9GoQg5xhnVFUGv8g
+         hVMH8XlhcKWIV6KXL1dqcon6bCCCCuMFLXG+HS5o=
+Date:   Thu, 28 Feb 2019 11:18:34 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V7 1/2] arm64: dts: freescale: imx8qxp: add cpu opp table
+Message-ID: <20190228031832.GH26041@dragon>
+References: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551157967-30925-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On Tue, Feb 26, 2019 at 05:17:31AM +0000, Anson Huang wrote:
+> Add i.MX8QXP CPU opp table to support cpufreq.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-UBSAN report this:
+Prefix 'arm64: dts: imx8qxp: ' would already be clear enough.  I dropped
+'freescale' from there and applied patch.
 
-UBSAN: Undefined behaviour in net/xfrm/xfrm_policy.c:1289:24
-index 6 is out of range for type 'unsigned int [6]'
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.4.162-514.55.6.9.x86_64+ #13
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
- 0000000000000000 1466cf39b41b23c9 ffff8801f6b07a58 ffffffff81cb35f4
- 0000000041b58ab3 ffffffff83230f9c ffffffff81cb34e0 ffff8801f6b07a80
- ffff8801f6b07a20 1466cf39b41b23c9 ffffffff851706e0 ffff8801f6b07ae8
-Call Trace:
- <IRQ>  [<ffffffff81cb35f4>] __dump_stack lib/dump_stack.c:15 [inline]
- <IRQ>  [<ffffffff81cb35f4>] dump_stack+0x114/0x1a0 lib/dump_stack.c:51
- [<ffffffff81d94225>] ubsan_epilogue+0x12/0x8f lib/ubsan.c:164
- [<ffffffff81d954db>] __ubsan_handle_out_of_bounds+0x16e/0x1b2 lib/ubsan.c:382
- [<ffffffff82a25acd>] __xfrm_policy_unlink+0x3dd/0x5b0 net/xfrm/xfrm_policy.c:1289
- [<ffffffff82a2e572>] xfrm_policy_delete+0x52/0xb0 net/xfrm/xfrm_policy.c:1309
- [<ffffffff82a3319b>] xfrm_policy_timer+0x30b/0x590 net/xfrm/xfrm_policy.c:243
- [<ffffffff813d3927>] call_timer_fn+0x237/0x990 kernel/time/timer.c:1144
- [<ffffffff813d8e7e>] __run_timers kernel/time/timer.c:1218 [inline]
- [<ffffffff813d8e7e>] run_timer_softirq+0x6ce/0xb80 kernel/time/timer.c:1401
- [<ffffffff8120d6f9>] __do_softirq+0x299/0xe10 kernel/softirq.c:273
- [<ffffffff8120e676>] invoke_softirq kernel/softirq.c:350 [inline]
- [<ffffffff8120e676>] irq_exit+0x216/0x2c0 kernel/softirq.c:391
- [<ffffffff82c5edab>] exiting_irq arch/x86/include/asm/apic.h:652 [inline]
- [<ffffffff82c5edab>] smp_apic_timer_interrupt+0x8b/0xc0 arch/x86/kernel/apic/apic.c:926
- [<ffffffff82c5c985>] apic_timer_interrupt+0xa5/0xb0 arch/x86/entry/entry_64.S:735
- <EOI>  [<ffffffff81188096>] ? native_safe_halt+0x6/0x10 arch/x86/include/asm/irqflags.h:52
- [<ffffffff810834d7>] arch_safe_halt arch/x86/include/asm/paravirt.h:111 [inline]
- [<ffffffff810834d7>] default_idle+0x27/0x430 arch/x86/kernel/process.c:446
- [<ffffffff81085f05>] arch_cpu_idle+0x15/0x20 arch/x86/kernel/process.c:437
- [<ffffffff8132abc3>] default_idle_call+0x53/0x90 kernel/sched/idle.c:92
- [<ffffffff8132b32d>] cpuidle_idle_call kernel/sched/idle.c:156 [inline]
- [<ffffffff8132b32d>] cpu_idle_loop kernel/sched/idle.c:251 [inline]
- [<ffffffff8132b32d>] cpu_startup_entry+0x60d/0x9a0 kernel/sched/idle.c:299
- [<ffffffff8113e119>] start_secondary+0x3c9/0x560 arch/x86/kernel/smpboot.c:245
+> ---
+> No changes since V6.
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 4c3dd95..41bf0ce 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -34,6 +34,9 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			clocks = <&clk IMX_A35_CLK>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_1: cpu@1 {
+> @@ -42,6 +45,9 @@
+>  			reg = <0x0 0x1>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			clocks = <&clk IMX_A35_CLK>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_2: cpu@2 {
+> @@ -50,6 +56,9 @@
+>  			reg = <0x0 0x2>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			clocks = <&clk IMX_A35_CLK>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_3: cpu@3 {
+> @@ -58,6 +67,9 @@
+>  			reg = <0x0 0x3>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&A35_L2>;
+> +			clocks = <&clk IMX_A35_CLK>;
+> +			operating-points-v2 = <&a35_0_opp_table>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		A35_L2: l2-cache0 {
+> @@ -65,6 +77,24 @@
+>  		};
+>  	};
+>  
+> +	a35_0_opp_table: opp-table {
 
-The issue is triggered as this:
+What does the '0' in the label mean?
 
-xfrm_add_policy
-    -->verify_newpolicy_info  //check the index provided by user with XFRM_POLICY_MAX
-			      //In my case, the index is 0x6E6BB6, so it pass the check.
-    -->xfrm_policy_construct  //copy the user's policy and set xfrm_policy_timer
-    -->xfrm_policy_insert
-	--> __xfrm_policy_link //use the orgin dir, in my case is 2
-	--> xfrm_gen_index   //generate policy index, there is 0x6E6BB6
+Shawn
 
-then xfrm_policy_timer be fired
-
-xfrm_policy_timer
-   --> xfrm_policy_id2dir  //get dir from (policy index & 7), in my case is 6
-   --> xfrm_policy_delete
-      --> __xfrm_policy_unlink //access policy_count[dir], trigger out of range access
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e682adf021be ("xfrm: Try to honor policy index if it's supplied by user")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/xfrm/xfrm_policy.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index 8d1a898..b27eb742 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -316,6 +316,8 @@ static void xfrm_policy_timer(struct timer_list *t)
- 		goto out;
- 
- 	dir = xfrm_policy_id2dir(xp->index);
-+	if (dir >= XFRM_POLICY_MAX * 2)
-+		dir = dir & XFRM_POLICY_MAX;
- 
- 	if (xp->lft.hard_add_expires_seconds) {
- 		time64_t tmo = xp->lft.hard_add_expires_seconds +
--- 
-2.7.0
-
-
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp-900000000 {
+> +			opp-hz = /bits/ 64 <900000000>;
+> +			opp-microvolt = <1000000>;
+> +			clock-latency-ns = <150000>;
+> +		};
+> +
+> +		opp-1200000000 {
+> +			opp-hz = /bits/ 64 <1200000000>;
+> +			opp-microvolt = <1100000>;
+> +			clock-latency-ns = <150000>;
+> +			opp-suspend;
+> +		};
+> +	};
+> +
+>  	gic: interrupt-controller@51a00000 {
+>  		compatible = "arm,gic-v3";
+>  		reg = <0x0 0x51a00000 0 0x10000>, /* GIC Dist */
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
