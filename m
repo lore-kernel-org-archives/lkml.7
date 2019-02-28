@@ -3,122 +3,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB31C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13C9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D63218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8F3218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731051AbfB1Vew (ORCPT
+        id S1731584AbfB1VhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 16:34:52 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:41478 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727775AbfB1Vew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 16:34:52 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1C4E33145730;
-        Thu, 28 Feb 2019 21:34:52 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A23D75DD74;
-        Thu, 28 Feb 2019 21:34:49 +0000 (UTC)
-Date:   Thu, 28 Feb 2019 16:34:48 -0500
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, hch@infradead.org,
-        Nikos Tsironis <ntsironis@arrikto.com>
-Cc:     agk@redhat.com, dm-devel@redhat.com, mpatocka@redhat.com,
-        iliastsi@arrikto.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] list_bl: Add hlist_bl_add_before/behind helpers
-Message-ID: <20190228213448.GG23527@redhat.com>
-References: <20181220180651.4879-1-ntsironis@arrikto.com>
- <20181220180651.4879-2-ntsironis@arrikto.com>
- <20190228213201.GB23527@redhat.com>
+        Thu, 28 Feb 2019 16:37:18 -0500
+Received: from gateway32.websitewelcome.com ([192.185.145.170]:39570 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731069AbfB1VhR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 16:37:17 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 27033723C5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:37:17 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id zTMjgNJrhYTGMzTMjgdwfm; Thu, 28 Feb 2019 15:37:17 -0600
+X-Authority-Reason: nr=8
+Received: from [189.250.127.169] (port=60546 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1gzTMh-001rVD-B4; Thu, 28 Feb 2019 15:37:16 -0600
+Date:   Thu, 28 Feb 2019 15:37:14 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] genirq: Mark expected switch fall-through
+Message-ID: <20190228213714.GA9246@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190228213201.GB23527@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 28 Feb 2019 21:34:52 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.169
+X-Source-L: No
+X-Exim-ID: 1gzTMh-001rVD-B4
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.127.169]:60546
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28 2019 at  4:32pm -0500,
-Mike Snitzer <snitzer@redhat.com> wrote:
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
 
-> On Thu, Dec 20 2018 at  1:06pm -0500,
-> Nikos Tsironis <ntsironis@arrikto.com> wrote:
-> 
-> > Add hlist_bl_add_before/behind helpers to add an element before/after an
-> > existing element in a bl_list.
-> > 
-> > Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
-> > Signed-off-by: Ilias Tsitsimpis <iliastsi@arrikto.com>
-> > ---
-> >  include/linux/list_bl.h | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> > 
-> > diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
-> > index 3fc2cc57ba1b..2fd918e5fd48 100644
-> > --- a/include/linux/list_bl.h
-> > +++ b/include/linux/list_bl.h
-> > @@ -86,6 +86,33 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
-> >  	hlist_bl_set_first(h, n);
-> >  }
-> >  
-> > +static inline void hlist_bl_add_before(struct hlist_bl_node *n,
-> > +				       struct hlist_bl_node *next)
-> > +{
-> > +	struct hlist_bl_node **pprev = next->pprev;
-> > +
-> > +	n->pprev = pprev;
-> > +	n->next = next;
-> > +	next->pprev = &n->next;
-> > +
-> > +	/* pprev may be `first`, so be careful not to lose the lock bit */
-> > +	WRITE_ONCE(*pprev,
-> > +		   (struct hlist_bl_node *)
-> > +			((unsigned long)n |
-> > +			 ((unsigned long)*pprev & LIST_BL_LOCKMASK)));
-> > +}
-> > +
-> > +static inline void hlist_bl_add_behind(struct hlist_bl_node *n,
-> > +				       struct hlist_bl_node *prev)
-> > +{
-> > +	n->next = prev->next;
-> > +	n->pprev = &prev->next;
-> > +	WRITE_ONCE(prev->next, n);
-> > +
-> > +	if (n->next)
-> > +		n->next->pprev = &n->next;
-> > +}
-> > +
-> >  static inline void __hlist_bl_del(struct hlist_bl_node *n)
-> >  {
-> >  	struct hlist_bl_node *next = n->next;
-> > -- 
-> > 2.11.0
-> 
-> Hi Paul and Christoph,
-> 
-> You've added your Signed-off-by to include/linux/list_bl.h commits in
-> the past.  I'm not sure how this proposed patch should be handled.
-> 
-> These new hlist_bl_add_{before,behind} changes are a prereq for
-> dm-snapshot changes that Nikos has proposed, please see:
-> https://patchwork.kernel.org/patch/10739265/
-> 
-> Any assistance/review you, or others on LKML, might be able to provide
-> would be appreciated.
+This patch fixes the following warning:
 
-I should've clarified that: I'm asking for the purpose of getting these
-changes staged for Linux 5.2.
+kernel/irq/manage.c: In function ‘irq_do_set_affinity’:
+kernel/irq/manage.c:198:3: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   cpumask_copy(desc->irq_common_data.affinity, mask);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+kernel/irq/manage.c:199:2: note: here
+  case IRQ_SET_MASK_OK_NOCOPY:
+  ^~~~
 
-Mike
+In order to get the warning mentioned above, the following
+line was added to the top Makefile:
+
+KBUILD_CFLAGS  += $(call cc-option,-Wimplicit-fallthrough=3,)
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ kernel/irq/manage.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 9ec34a2a6638..1401afa0d58a 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -196,6 +196,7 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+ 	case IRQ_SET_MASK_OK:
+ 	case IRQ_SET_MASK_OK_DONE:
+ 		cpumask_copy(desc->irq_common_data.affinity, mask);
++		/* fall through */
+ 	case IRQ_SET_MASK_OK_NOCOPY:
+ 		irq_validate_effective_affinity(data);
+ 		irq_set_thread_affinity(desc);
+-- 
+2.21.0
+
