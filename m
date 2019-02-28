@@ -2,131 +2,156 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE99CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CEEC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899CB2184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36F620C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366954;
-	bh=IU8BXeRqGfeflmR7lycoGix76x/12u88OXgqpyAdQ7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jAi6kTpudp0HV3FkOIOU7JUiETNlmKuuvXM67ot1QPZcdaANYh53LLcDld0NFrRd2
-	 n2LPqnzv33jmspPqARILHgXZ8RKWgVaIBK2Z8SpBx1beOpUqjEaEJJi2yFWHJGPS02
-	 CJkTwkHIqyQOsZXo2Dxpjl7fLxR5LIpZVqBZsbpQ=
+	s=default; t=1551366963;
+	bh=7AESMj3mCPlEuU7Z020bBSWSN0/P5vTVrmZdNx0vjBw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fdGLhiDrQ7V5iSUJ6EX/CCW+prO7SfrTE+rP8A0sOSl+4g235cgWs9wF5wlRzzvu+
+	 SW5yhXpS7bV+hMM2oDiC4OrmjKENkTTiZ2iQERXLPKz8Ck7NvTwZGE2un+/uJbLbO/
+	 vbr1GeCZCi9sgONkutmJHJPaQnqWgHEYoMcnikpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388311AbfB1PPx (ORCPT
+        id S2388965AbfB1PQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:15:53 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34913 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388899AbfB1PPp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:45 -0500
-Received: by mail-ot1-f65.google.com with SMTP id z19so17976242otm.2;
-        Thu, 28 Feb 2019 07:15:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0j6joHu15+je8kSpGX+0UlDC66GvtH0yHijikizo0hM=;
-        b=cQ+y457f8MMEkf1NPH6PnLfvRGazLAxrCbgZm32CtkxgjwmckEFZjb/5PvChneRlJg
-         YZC5MM36ipbdi5roBKJvKNTb4/KmzWjSyVw0nZDu6ajvCfEEfc/Vbt9ZlVgSfGXEWZMd
-         KoUs4LYbGb1Su5uEPXg2Y6SAi2t35U8ipHyhEMUrgqT0xTDlL1D+5bz3hbGn66HAR5D/
-         m2kz7z3IMDHpP3lxXOansCsR+nwxi1Bxciw1KGgLJbhL9w6UuxiJOOV+sXaiVG6bJb5T
-         lIjt0c7UmQC/IL0SzrzUFpolvBEOg7cyjSQxHRBxJhbUY0IjbiasjBPFGP+Xw0metXYS
-         guJA==
-X-Gm-Message-State: APjAAAVyjPZuOzTplb37vx9Ta+6R0XsHaXkpD2x/zhQmwR3SSXCFPY+e
-        T4jlznRyfkUCJjj+c8Rxkw==
-X-Google-Smtp-Source: APXvYqx4WqzXTDqLTM1AGOs2KwxXp1XXhFkZX2RCQwVyVMFxRlwPgBLi84yHPOFGh5OXAdq37/GHYQ==
-X-Received: by 2002:a9d:5c82:: with SMTP id a2mr47341oti.3.1551366944246;
-        Thu, 28 Feb 2019 07:15:44 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y12sm7404959otk.80.2019.02.28.07.15.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 07:15:43 -0800 (PST)
-Date:   Thu, 28 Feb 2019 09:15:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: hwmon: Add missing documentation for lm75
-Message-ID: <20190228151543.GA18597@bogus>
-References: <20190212113808.3040-1-jagan@amarulasolutions.com>
+        Thu, 28 Feb 2019 10:16:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388533AbfB1PP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:59 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 090AF218D9;
+        Thu, 28 Feb 2019 15:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551366958;
+        bh=7AESMj3mCPlEuU7Z020bBSWSN0/P5vTVrmZdNx0vjBw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FRU+4CbdH5uaDWt5hJ8xrqQDd3F4YU1gbHR7vHj184bqUfel6dxK2y1IaS7c3mk5P
+         f+GGMYhBMB7KhWDscSBuWOiMdgHus+/L4GbOZyMMDO6L8S41yMtqqqR6URXUpXqGL9
+         r0r28pjoXMbXB8ll90e7yDS3dqMl5nF8VLzGiQ/U=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jiri Olsa <jolsa@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Clifton <nickc@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 15/19] perf symbols: Filter out hidden symbols from labels
+Date:   Thu, 28 Feb 2019 10:15:11 -0500
+Message-Id: <20190228151517.12705-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
+References: <20190228151517.12705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190212113808.3040-1-jagan@amarulasolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 12, 2019 at 05:08:08PM +0530, Jagan Teki wrote:
-> Add missing dt-binding documentation for lm75 hwmon sensor.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
-> Changes for v2:
-> -  Add all compatible nodes available in lm75.
-> 
->  .../devicetree/bindings/hwmon/lm75.txt        | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/lm75.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/lm75.txt b/Documentation/devicetree/bindings/hwmon/lm75.txt
-> new file mode 100644
-> index 000000000000..12d8cf7cf592
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/lm75.txt
-> @@ -0,0 +1,37 @@
-> +*LM75 hwmon sensor.
-> +
-> +Required properties:
-> +- compatible: manufacturer and chip name, one of
-> +		"adi,adt75",
-> +		"dallas,ds1775",
-> +		"dallas,ds75",
-> +		"dallas,ds7505",
-> +		"gmt,g751",
-> +		"national,lm75",
-> +		"national,lm75a",
-> +		"national,lm75b",
-> +		"maxim,max6625",
-> +		"maxim,max6626",
-> +		"maxim,max31725",
-> +		"maxim,max31726",
-> +		"maxim,mcp980x",
-> +		"st,stds75",
-> +		"st,stlm75",
-> +		"microchip,tcn75",
-> +		"ti,tmp100",
-> +		"ti,tmp101",
-> +		"ti,tmp105",
-> +		"ti,tmp112",
-> +		"ti,tmp175",
-> +		"ti,tmp275",
-> +		"ti,tmp75",
-> +		"ti,tmp75c",
+From: Jiri Olsa <jolsa@redhat.com>
 
-Some of these are in trivial-devices.yaml already. So you either need to 
-remove them from there. Or you can move all these to trivial-devices and 
-benefit from having a schema. I prefer the latter, but either way is 
-fine. You can remove them from trivial-devices.yaml in a separate patch, 
-so:
+[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
 
-Acked-by: Rob Herring <robh@kernel.org>
+When perf is built with the annobin plugin (RHEL8 build) extra symbols
+are added to its binary:
 
-Rob
+  # nm perf | grep annobin | head -10
+  0000000000241100 t .annobin_annotate.c
+  0000000000326490 t .annobin_annotate.c
+  0000000000249255 t .annobin_annotate.c_end
+  00000000003283a8 t .annobin_annotate.c_end
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
+  00000000001bc400 t .annobin_annotate.c_end.unlikely
+  00000000001bce18 t .annobin_annotate.c.hot
+  00000000001bce18 t .annobin_annotate.c.hot
+  ...
 
-P.S. Third option is convert this doc to DT schema. Don't tell anyone, 
-but you'll be a the top of my review queue.
+Those symbols have no use for report or annotation and should be
+skipped.  Moreover they interfere with the DWARF unwind test on the PPC
+arch, where they are mixed with checked symbols and then the test fails:
+
+  # perf test dwarf -v
+  59: Test dwarf unwind                                     :
+  --- start ---
+  test child forked, pid 8515
+  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
+  ...
+  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
+  unwind: failed with 'no error'
+
+The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
+
+  # readelf -s ./perf | grep annobin | head -1
+    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
+
+They can still pass the check for the label symbol. Adding check for
+HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
+out such symbols.
+
+>   Just to be awkward, if you are going to ignore STV_HIDDEN
+>   symbols then you should probably also ignore STV_INTERNAL ones
+>   as well...  Annobin does not generate them, but you never know,
+>   one day some other tool might create some.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nick Clifton <nickc@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/util/symbol-elf.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index adbc6c02c3aaa..20ba5a9aeae40 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -85,6 +85,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
+ 	return GELF_ST_TYPE(sym->st_info);
+ }
+ 
++static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
++{
++	return GELF_ST_VISIBILITY(sym->st_other);
++}
++
+ #ifndef STT_GNU_IFUNC
+ #define STT_GNU_IFUNC 10
+ #endif
+@@ -109,7 +114,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
+ 	return elf_sym__type(sym) == STT_NOTYPE &&
+ 		sym->st_name != 0 &&
+ 		sym->st_shndx != SHN_UNDEF &&
+-		sym->st_shndx != SHN_ABS;
++		sym->st_shndx != SHN_ABS &&
++		elf_sym__visibility(sym) != STV_HIDDEN &&
++		elf_sym__visibility(sym) != STV_INTERNAL;
+ }
+ 
+ static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
+-- 
+2.19.1
+
