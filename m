@@ -2,97 +2,191 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD87C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC89C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4921218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7599218A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rcSzwiU6"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ishsd/C0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbfB1CTg (ORCPT
+        id S1730944AbfB1CTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:19:36 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34371 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730696AbfB1CSv (ORCPT
+        Wed, 27 Feb 2019 21:19:55 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:41904 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730649AbfB1CSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:18:51 -0500
-Received: by mail-lj1-f193.google.com with SMTP id l5so15725889lje.1;
-        Wed, 27 Feb 2019 18:18:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d3pqzFscLehpEZ2hqUDAWkPeJa10L+1HyUm9cWmYGvo=;
-        b=rcSzwiU6b7t0TWgGr/ljZx1uqRAcbiy3G+NZh5gJYGUjEm9T1jRad/u/JoZQYaFE7M
-         mYllg9ECQFKBYMwZZLK3TuZ+oahAIwdl5c4d4MaCGlD36ETg3UhvxNmbKN014s1IKYYa
-         1W/k6HgDfHC/ixDa1UQ1XdRj02iR/VMePLxJsEPEXB3U/Xqs2Awy/qpnRta/nRpvGLGI
-         QGn2XSUYiB5X+gex/UT5f0H/bINB3Sxs//n5JorAh/Jd30f5yIm+weJ1Mx7N+yXxZ7ID
-         NR+3cACyQnu9YOI4lDTENeP0FubYF0eVxZvhh/nkG94SoASNnSpmjAUJMas2VuS4pkwJ
-         wJOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d3pqzFscLehpEZ2hqUDAWkPeJa10L+1HyUm9cWmYGvo=;
-        b=oc1nhm8hcUnxSJnjNwfOtGu2rcUkkT/gpDKrB3+UpNMnNBjnk7Kx6Uxakrm+xyqXTp
-         krMvMY3YUiK1U2nXjp/4j0VL6xQsuHSClAlZw+Vy4qYBWSAM5Qk6rXsp8US+9DHICI3e
-         d1vL8Yk+p7DFwYlpWJClj/pFVCs2rqRUDHY4Qbz+k91hWJ00e1g7xKG+WMz/xDzw8f95
-         s5qdt2yw7xQsfbCIkPLN0BX/1C5kXoTLbi+2cJbbjIXfqgeq9Ceiib4LpB3GLN8JssmQ
-         6YWsbL1HCDhz7hXpGNXeooyvamdJ0y5vAtslgtgLyz2S2Pi6nmsVkL455Wmyg7scGj7B
-         tfqQ==
-X-Gm-Message-State: APjAAAXRmxws66flqlyMlpttHgNuILooNBB33pI4wosdM232BL5Aaom4
-        FkpjY/+mtmD9MtvEP5h52MbR/V81D928KQ5C/HT3vA==
-X-Google-Smtp-Source: APXvYqzWe6cri8Gse7rcElCdjKRGVcKpkDf7XevhnZ0e47grzSZTqgx164SdJiDcfcV0hztEDCnR+i66kaEzwq9gNjw=
-X-Received: by 2002:a2e:5b11:: with SMTP id p17mr3028779ljb.37.1551320328941;
- Wed, 27 Feb 2019 18:18:48 -0800 (PST)
+        Wed, 27 Feb 2019 21:18:49 -0500
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x1S2IR5l004720;
+        Thu, 28 Feb 2019 11:18:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x1S2IR5l004720
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1551320308;
+        bh=n7mhpj2aC7Mve2C5o3EJ+uLUinm0cPgyBJ+lD5dirS0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ishsd/C0l9syvAMcejOYpPHGxTmJm2/72m4tLMiDWPDOEBjSsgCBoTWvgBVjzLmQ7
+         b173cgYtygwaXWP7pJ/tbyNxU/OClqklKyOPR1ukfLFasbXg254jdRKR0oe/umyDtE
+         6WJl8UZQ4jF5khjKPu81Iw5W9NEFOIvqa3oHEMFYtE2sWBSoZcrLOUg3u4wErJpH+S
+         g4Y6F2UgOm2seAkebWv6B63nAWAg/hpVFeRQF2/15XwgCqrnb/W/3lFFRg1/G8ltV/
+         4uK+awRFtWQnhmpnMs3PnAihVM6sURAbcoH9UM55lotVGhHf6ilaDVQ3tjfEwy548S
+         yngLVGFboG9JQ==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id u1so16703963uae.12;
+        Wed, 27 Feb 2019 18:18:28 -0800 (PST)
+X-Gm-Message-State: AHQUAuY9OquMMA0oFL+p2pOuaTvQ/bMfkBZw/xK9cWSyx/tu/pxH6uA5
+        SgFcNlLShfbfT+6GtbMuTQ8T1twsWK+4PeIIXqE=
+X-Google-Smtp-Source: AHgI3IbhBk+562qaiz15OAPhPLDC6T88xJ42uk/xzNQ1LvtsiTxZNM51pAkmLgyLs9h83u+0Vm/TbGP+NS3zDJvAepc=
+X-Received: by 2002:a67:7bd3:: with SMTP id w202mr3591054vsc.179.1551320306983;
+ Wed, 27 Feb 2019 18:18:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20190228123136.064f94a4@canb.auug.org.au>
-In-Reply-To: <20190228123136.064f94a4@canb.auug.org.au>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 27 Feb 2019 18:18:37 -0800
-Message-ID: <CAADnVQJXiZyCvDVTN4_Z=CnEo2hb3nxGWg6YhArxN9zrPaC8JQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+In-Reply-To: <20190227193748.132301-1-joel@joelfernandes.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 28 Feb 2019 11:17:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
+Message-ID: <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        qais.yousef@arm.com, Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yonghong Song <yhs@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 5:31 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the bpf-next tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
->
-> kernel/sysctl.c:1238:13: error: 'sysctl_bpf_stats_enabled' undeclared here (not in a function); did you mean 'sysctl_base_table'?
->    .data  = &sysctl_bpf_stats_enabled,
->              ^~~~~~~~~~~~~~~~~~~~~~~~
->              sysctl_base_table
->
-> Caused by commit
->
->   492ecee892c2 ("bpf: enable program stats")
->
-> CONFIG_BPF=y
-> # CONFIG_BPF_SYSCALL is not set
->
-> I applied the following patch for today, but it should be done
-> properly. Also this patch leaves proc_dointvec_minmax_bpf_stats() as an
-> unused function.
+Hi Joel,
 
-thanks for the report.
-working on the fix.
+
+On Thu, Feb 28, 2019 at 4:40 AM Joel Fernandes (Google)
+<joel@joelfernandes.org> wrote:
+>
+> Introduce in-kernel headers and other artifacts which are made available
+> as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> it possible to build kernel modules, run eBPF programs, and other
+> tracing programs that need to extend the kernel for tracing purposes
+> without any dependency on the file system having headers and build
+> artifacts.
+>
+> On Android and embedded systems, it is common to switch kernels but not
+> have kernel headers available on the file system. Raw kernel headers
+> also cannot be copied into the filesystem like they can be on other
+> distros, due to licensing and other issues. There's no linux-headers
+> package on Android. Further once a different kernel is booted, any
+> headers stored on the file system will no longer be useful. By storing
+> the headers as a compressed archive within the kernel, we can avoid these
+> issues that have been a hindrance for a long time.
+>
+> The feature is also buildable as a module just in case the user desires
+> it not being part of the kernel image. This makes it possible to load
+> and unload the headers on demand. A tracing program, or a kernel module
+> builder can load the module, do its operations, and then unload the
+> module to save kernel memory. The total memory needed is 3.8MB.
+>
+> The code to read the headers is based on /proc/config.gz code and uses
+> the same technique to embed the headers.
+
+
+
+Please let me ask a question about the actual use-case.
+
+
+To build embedded systems including Android,
+I use an x86 build machine.
+
+In other words, I cross-compile vmlinux and in-tree modules.
+So,
+
+  target-arch: arm64
+  host-arch:   x86
+
+
+
+> To build a module, the below steps have been tested on an x86 machine:
+> modprobe kheaders
+> rm -rf $HOME/headers
+> mkdir -p $HOME/headers
+> tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> cd my-kernel-module
+> make -C $HOME/headers M=$(pwd) modules
+> rmmod kheaders
+
+I am guessing the user will run these commands
+on the target system.
+In other words, external modules are native-compiled.
+So,
+
+  target-arch: arm64
+  host-arch:   arm64
+
+
+Is this correct?
+
+
+If I understood the assumed use-case correctly,
+kheaders.tar.xw will contain host-programs compiled for x86,
+which will not work on the target system.
+
+
+
+
+Masahiro
+
+
+
+
+> Additional notes:
+> (1)
+> A limitation of module building with this is, since Module.symvers is
+> not available in the archive due to a cyclic dependency with building of
+> the archive into the kernel or module binaries, the modules built using
+> the archive will not contain symbol versioning (modversion). This is
+> usually not an issue since the idea of this patch is to build a kernel
+> module on the fly and load it into the same kernel. An appropriate
+> warning is already printed by the kernel to alert the user of modules
+> not having modversions when built using the archive. For building with
+> modversions, the user can use traditional header packages. For our
+> tracing usecases, we build modules on the fly with this so it is not a
+> concern.
+>
+> (2) I have left IKHD_ST and IKHD_ED markers as is to facilitate
+> future patches that would extract the headers from a kernel or module
+> image.
+>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+
+
+
+--
+Best Regards
+Masahiro Yamada
