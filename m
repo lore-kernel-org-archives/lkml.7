@@ -2,233 +2,88 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE13AC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74683C10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D1F20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:42:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=wiesinger.com header.i=@wiesinger.com header.b="oSQE+JMq"
+	by mail.kernel.org (Postfix) with ESMTP id 3D54B20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551383131;
+	bh=/RwR7Vd4MgBS7yyYqr5ziP9x6V9Gr5SxjCW4IGuOd48=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TvR0VYtiODpBTvxiXFnWh3aZY6keMa6CzI1xhQlCzbLVzDLLevlyzxCU4FGeglRgG
+	 mIbPTeW8fC+DkZbnds6HFCZmk1m/hDYDmu+X2Jqh7xvJYgMTrPGZXxtaauh4o7syxY
+	 leePe+WCkQfd1dzdUH9iRCa2A9c0KfqXzgbWRiwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbfB1TmS (ORCPT
+        id S2387959AbfB1Tpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 14:42:18 -0500
-Received: from vps01.wiesinger.com ([46.36.37.179]:52214 "EHLO
-        vps01.wiesinger.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbfB1TmR (ORCPT
+        Thu, 28 Feb 2019 14:45:30 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41099 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfB1Tp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 14:42:17 -0500
-Received: from wiesinger.com (wiesinger.com [84.113.44.87])
-        by vps01.wiesinger.com (Postfix) with ESMTPS id 649D89F294;
-        Thu, 28 Feb 2019 20:42:13 +0100 (CET)
-Received: from [192.168.0.14] ([192.168.0.14])
-        (authenticated bits=0)
-        by wiesinger.com (8.15.2/8.15.2) with ESMTPSA id x1SJfsmP010673
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 28 Feb 2019 20:41:55 +0100
-DKIM-Filter: OpenDKIM Filter v2.11.0 wiesinger.com x1SJfsmP010673
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiesinger.com;
-        s=default; t=1551382915;
-        bh=mQ6B9ieNdz4PAnuOETRKFulbTteDNeeJbQHKd6FtlRo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=oSQE+JMqmGjlHlZvsAUeXSinXzknHpdy5bO14bl78Vcl3jb6Gwln5wZvQRfWEpA7m
-         4gIW0QKVXbwv6n4TRHYbwwTvCyImwl87SOKOEE6mJRjA+cOzrk8mcRPXHjU4Kpb4lR
-         efcQvY8X7X7QHO+WdgFQGfnRmWGsA2VxDmQdpDPePz7UimDpLDbXS7pVzCkvB5LoJq
-         5a+9z4h0r51atE1UY5/IHEb4C5PHJAVnviE6t8KDbpO+7Bl1cMIJc9GFu7xHAhxtsQ
-         zHWWRJmBwiC6+1m8fbDi5XyM3z0P3rGAA9HWUhKBQCm+wq94B4sHYQ7PANtU3UlYGz
-         wM8Ort5LZLfKrKdbj/189DPYdDv0fmLcGrLgTVvh+xZj6N2noZBaLOckyKU58PnliT
-         0B042sx+rKOcvQj0ouqVyvUqqA5z5TpAC9F0xb/XW1K2qumIN2nPFm/Omq6I5FfJdv
-         bkVAshZ3G5yF3xI3Ji6hqzKRHWEbleJ2g6/g6RN89ABRYkh/+iUrwOQvxXAmoHkZ7N
-         zrbG6pVrdR1GUlj2kQzKFdk4/OHy0y2TEZHHqiJzTSvzEcdD4vvtE6v7GNSCMcarns
-         ljTdSjBjEeJJu5AMy9kESQyBYFmsgKNG6V2jk3XqG3bhcb/KqZ2ByV87JyhOLULvth
-         bi1IFIlOrlxYxKaC0QBXKZ0M=
-Subject: Re: Banana Pi-R1 stabil
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
-References: <7b20af72-76ea-a7b1-9939-ca378dc0ed83@wiesinger.com>
- <20190227092023.nvr34byfjranujfm@flea>
- <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
- <20190228093516.abual3564dkvx6un@flea>
-From:   Gerhard Wiesinger <lists@wiesinger.com>
-Message-ID: <91c22ba4-39eb-dd3d-29bd-1bfa7a45e9cd@wiesinger.com>
-Date:   Thu, 28 Feb 2019 20:41:53 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Thu, 28 Feb 2019 14:45:29 -0500
+Received: by mail-oi1-f194.google.com with SMTP id e7so17502345oia.8;
+        Thu, 28 Feb 2019 11:45:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xklEfVfv14D88Ra+s2gfpz8Nij58iGoBhwr3RtVa6Bs=;
+        b=eeGhnPykV6yjB348xg+5VzX6xEhOOk1mFaJmJvcr0bJVaEOSoN/PaX1ausLa4FVXiR
+         ATfZ0kuaN8rvlB/CfV4QnVmXQ0Tg+gVBjIepLmI7Tped7IS2Wteuir7vZOy8oRb9Ur65
+         XoZsEWveE1Mx3wyoTJT+4CPCmoRFQ6IP7g0SWacKAwwOO/NemtmXTjOJt6ns+x2KraFF
+         QdxoA8D/WfwbaAlX8u96CGWvn+dten7drkimwa7tT64ESKNdRM+PJC+4DnV8laFhkLkz
+         LL0Zqoxz/h5P2PIDBFzq/ss3/PT2bZex8r1m/UFHusO/BYIUB81hngUUboU8yMLWGGJs
+         RqQg==
+X-Gm-Message-State: AHQUAuY4D34tNxH0gD+GVv/nqPft1RDMBaFY6Jhq9qLCiiOLq74JFvm2
+        NQokh92xHgEmMFuHvpagsA==
+X-Google-Smtp-Source: AHgI3Ib16t80D3+xgzGpVh7EGedxveO+EHIanYy8E/l3ymY7WU3Qkz2YdrODmspvsvslP9VY4H3rzQ==
+X-Received: by 2002:aca:ed0f:: with SMTP id l15mr939343oih.76.1551383129069;
+        Thu, 28 Feb 2019 11:45:29 -0800 (PST)
+Received: from localhost ([2607:fb90:20de:307f:59ce:35b2:628:2365])
+        by smtp.gmail.com with ESMTPSA id t66sm8192991oig.39.2019.02.28.11.45.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 11:45:27 -0800 (PST)
+Date:   Thu, 28 Feb 2019 13:45:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     bhelgaas@google.com, Zhiqiang.Hou@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com,
+        kishon@ti.com, lorenzo.pieralisi@arm.com,
+        gregkh@linuxfoundation.org, l.subrahmanya@mobiveil.co.in,
+        arnd@arndb.de, Minghuan.Lian@nxp.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCH 2/6] dt-bindings: add DT binding for the layerscape PCIe
+ GEN4 controller with EP mode
+Message-ID: <20190228194526.GA2716@bogus>
+References: <20190218094643.2692-1-xiaowei.bao@nxp.com>
+ <20190218094643.2692-2-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190228093516.abual3564dkvx6un@flea>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190218094643.2692-2-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.02.2019 10:35, Maxime Ripard wrote:
-> On Wed, Feb 27, 2019 at 07:58:14PM +0100, Gerhard Wiesinger wrote:
->> On 27.02.2019 10:20, Maxime Ripard wrote:
->>> On Sun, Feb 24, 2019 at 09:04:57AM +0100, Gerhard Wiesinger wrote:
->>>> Hello,
->>>>
->>>> I've 3 Banana Pi R1, one running with self compiled kernel
->>>> 4.7.4-200.BPiR1.fc24.armv7hl and old Fedora 25 which is VERY STABLE, the 2
->>>> others are running with Fedora 29 latest, kernel 4.20.10-200.fc29.armv7hl. I
->>>> tried a lot of kernels between of around 4.11
->>>> (kernel-4.11.10-200.fc25.armv7hl) until 4.20.10 but all had crashes without
->>>> any output on the serial console or kernel panics after a short time of
->>>> period (minutes, hours, max. days)
->>>>
->>>> Latest known working and stable self compiled kernel: kernel
->>>> 4.7.4-200.BPiR1.fc24.armv7hl:
->>>>
->>>> https://www.wiesinger.com/opensource/fedora/kernel/BananaPi-R1/
->>>>
->>>> With 4.8.x the DSA b53 switch infrastructure has been introduced which
->>>> didn't work (until ca8931948344c485569b04821d1f6bcebccd376b and kernel
->>>> 4.18.x):
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/net/dsa/b53?h=v4.20.12
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/drivers/net/dsa/b53?h=v4.20.12
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/net/dsa/b53?h=v4.20.12&id=ca8931948344c485569b04821d1f6bcebccd376b
->>>>
->>>> I has been fixed with kernel 4.18.x:
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/log/drivers/net/dsa/b53?h=linux-4.18.y
->>>>
->>>>
->>>> So current status is, that kernel crashes regularly, see some samples below.
->>>> It is typically a "Unable to handle kernel paging request at virtual addres"
->>>>
->>>> Another interesting thing: A Banana Pro works well (which has also an
->>>> Allwinner A20 in the same revision) running same Fedora 29 and latest
->>>> kernels (e.g. kernel 4.20.10-200.fc29.armv7hl.).
->>>>
->>>> Since it happens on 2 different devices and with different power supplies
->>>> (all with enough power) and also the same type which works well on the
->>>> working old kernel) a hardware issue is very unlikely.
->>>>
->>>> I guess it has something to do with virtual memory.
->>>>
->>>> Any ideas?
->>>> [47322.960193] Unable to handle kernel paging request at virtual addres 5675d0
->>> That line is a bit suspicious
->>>
->>> Anyway, cpufreq is known to cause those kind of errors when the
->>> voltage / frequency association is not correct.
->>>
->>> Given the stack trace and that the BananaPro doesn't have cpufreq
->>> enabled, my first guess would be that it's what's happening. Could you
->>> try using the performance governor and see if it's more stable?
->>>
->>> If it is, then using this:
->>> https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-stress-test
->>>
->>> will help you find the offending voltage-frequency couple.
->> For me it looks like they have all the same config regarding cpu governor
->> (Banana Pro, old kernel stable one, new kernel unstable ones)
-> The Banana Pro doesn't have a regulator set up, so it will only change
-> the frequency, not the voltage.
->
->> They all have the ondemand governor set:
->>
->> I set on the 2 unstable "new kernel Banana Pi R1":
->>
->> # Set to max performance
->> echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
->> echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-> What are the results?
+On Mon, 18 Feb 2019 17:46:39 +0800, Xiaowei Bao wrote:
+> Add the documentation for the Device Tree binding for the layerscape
+> PCIe GEN4 controller with EP mode.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> depends on: http://patchwork.ozlabs.org/project/linux-pci/list/?series=88754
+> 
+>  .../bindings/pci/layerscape-pci-gen4.txt           |    5 ++++-
+>  1 files changed, 4 insertions(+), 1 deletions(-)
+> 
 
-
-Stable since more than around 1,5 days. Normally they have been crashed 
-for such a long uptime. So it looks that the performance governor fixes it.
-
-I guess crashes occour because of changing CPU voltage and clock changes 
-and invalid data (e.g. also invalid RAM contents might be read, register 
-problems, etc).
-
-Any ideas how to fix it for ondemand mode, too?
-
-But it doesn't explaing that it works with kernel 4.7.4 without any 
-problems.
-
-
->
->> Running some stress tests are ok (I did that already in the past, but
->> without setting maximum performance governor).
-> Which stress tests have you been running?
-
-
-Now:
-
-while true; do echo "========================================"; echo -n 
-"TEMP     : "; cat /sys/devices/virtual/thermal/thermal_zone0/temp; echo 
--n "VOLTAGE : "; cat 
-/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/voltage_now; 
-echo -n "CURRENT  : "; cat 
-/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/current_now; 
-echo -n "CPU_FREQ0: "; cat 
-/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; echo -n 
-"CPU_FREQ0: "; cat 
-/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done& 
-stress -c 4 -t 900s
-
-In the past also:
-
-while true; do echo "========================================"; echo -n 
-"TEMP     : "; cat /sys/devices/virtual/thermal/thermal_zone0/temp; echo 
--n "VOLTAGE : "; cat 
-/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/voltage_now; 
-echo -n "CURRENT  : "; cat 
-/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/current_now; 
-echo -n "CPU_FREQ0: "; cat 
-/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; echo -n 
-"CPU_FREQ0: "; cat 
-/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done& 
-stress-ng --cpu 4 --io 2 --vm 1 --vm-bytes 1G --timeout 900s --metrics-brief
-
-while true; do echo "========================================"; echo -n 
-"TEMP     : "; cat /sys/devices/virtual/thermal/thermal_zone0/temp; echo 
--n "VOLTAGE : "; cat 
-/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/voltage_now; 
-echo -n "CURRENT  : "; cat 
-/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/current_now; 
-echo -n "CPU_FREQ0: "; cat 
-/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; echo -n 
-"CPU_FREQ0: "; cat 
-/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done& 
-./cpuburn-a7
-
-https://www.cyberciti.biz/faq/stress-test-linux-unix-server-with-stress-ng/
-while true; do echo "========================================"; echo -n 
-"TEMP     : "; cat /sys/devices/virtual/thermal/thermal_zone0/temp; echo 
--n "VOLTAGE : "; cat 
-/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/voltage_now; 
-echo -n "CURRENT  : "; cat 
-/sys/devices/platform/soc@1c00000/1c2ac00.i2c/i2c-0/0-0034/axp20x-ac-power-supply/power_supply/axp20x-ac/current_now; 
-echo -n "CPU_FREQ0: "; cat 
-/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq; echo -n 
-"CPU_FREQ0: "; cat 
-/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_cur_freq; sleep 1; done& 
-stress -c 2 -i 1 -m 1 --vm-bytes 128M -t 900s
-
-
-But I guess that the problems occour nots on full load but on dynamical 
-switching loads (when CPU voltage and clock changes). Because the 
-Bananas are typically really idle and crash (with the ondemand governor).
-
-
-Thanx.
-
-Ciao,
-
-Gerhard
-
+Reviewed-by: Rob Herring <robh@kernel.org>
