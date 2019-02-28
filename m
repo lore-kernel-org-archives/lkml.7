@@ -2,49 +2,52 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA31C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6910C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F82D2063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D09D2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731755AbfB1H6v (ORCPT
+        id S1731802AbfB1H7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:58:51 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:37597 "EHLO
+        Thu, 28 Feb 2019 02:59:10 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:38757 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730399AbfB1H6u (ORCPT
+        with ESMTP id S1730399AbfB1H7J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:58:50 -0500
+        Thu, 28 Feb 2019 02:59:09 -0500
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7vbDW2952079
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7wtDo2952160
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 27 Feb 2019 23:57:37 -0800
+        Wed, 27 Feb 2019 23:58:55 -0800
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7vaRB2952076;
-        Wed, 27 Feb 2019 23:57:36 -0800
-Date:   Wed, 27 Feb 2019 23:57:36 -0800
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7wskd2952157;
+        Wed, 27 Feb 2019 23:58:54 -0800
+Date:   Wed, 27 Feb 2019 23:58:54 -0800
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Alexander Shishkin <tipbot@zytor.com>
-Message-ID: <tip-18736eef12137c59f60cc9f56dc5bea05c92e0eb@git.kernel.org>
-Cc:     mingo@kernel.org, jolsa@redhat.com,
-        alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        malharthi9@gatech.edu, mathieu.poirier@linaro.org, acme@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com
-Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
-          mingo@kernel.org, alexander.shishkin@linux.intel.com,
-          jolsa@redhat.com, acme@redhat.com, mathieu.poirier@linaro.org,
-          malharthi9@gatech.edu, peterz@infradead.org
-In-Reply-To: <20190215115655.63469-2-alexander.shishkin@linux.intel.com>
-References: <20190215115655.63469-2-alexander.shishkin@linux.intel.com>
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-45112e89a8b2b4c9a004147cbfb448b1200cfbf7@git.kernel.org>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        namhyung@kernel.org, tglx@linutronix.de,
+        alexander.shishkin@linux.intel.com, acme@redhat.com,
+        adrian.hunter@intel.com, eranian@google.com,
+        alexey.budankov@linux.intel.com, mingo@kernel.org,
+        ak@linux.intel.com, hpa@zytor.com, jolsa@kernel.org
+Reply-To: alexey.budankov@linux.intel.com, mingo@kernel.org,
+          ak@linux.intel.com, hpa@zytor.com, jolsa@kernel.org,
+          peterz@infradead.org, linux-kernel@vger.kernel.org,
+          namhyung@kernel.org, tglx@linutronix.de,
+          alexander.shishkin@linux.intel.com, acme@redhat.com,
+          adrian.hunter@intel.com, eranian@google.com
+In-Reply-To: <20190221094145.9151-2-jolsa@kernel.org>
+References: <20190221094145.9151-2-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf: Copy parent's address filter offsets on clone
-Git-Commit-ID: 18736eef12137c59f60cc9f56dc5bea05c92e0eb
+Subject: [tip:perf/core] perf data: Move size to struct perf_data_file
+Git-Commit-ID: 45112e89a8b2b4c9a004147cbfb448b1200cfbf7
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -58,62 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  18736eef12137c59f60cc9f56dc5bea05c92e0eb
-Gitweb:     https://git.kernel.org/tip/18736eef12137c59f60cc9f56dc5bea05c92e0eb
-Author:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-AuthorDate: Fri, 15 Feb 2019 13:56:54 +0200
+Commit-ID:  45112e89a8b2b4c9a004147cbfb448b1200cfbf7
+Gitweb:     https://git.kernel.org/tip/45112e89a8b2b4c9a004147cbfb448b1200cfbf7
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Thu, 21 Feb 2019 10:41:29 +0100
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Fri, 22 Feb 2019 16:52:07 -0300
 
-perf: Copy parent's address filter offsets on clone
+perf data: Move size to struct perf_data_file
 
-When a child event is allocated in the inherit_event() path, the VMA
-based filter offsets are not copied from the parent, even though the
-address space mapping of the new task remains the same, which leads to
-no trace for the new task until exec.
+We are about to add support for multiple files, so we need each file to
+keep its size.
 
-Reported-by: Mansour Alharthi <malharthi9@gatech.edu>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Fixes: 375637bc5249 ("perf/core: Introduce address range filtering")
-Link: http://lkml.kernel.org/r/20190215115655.63469-2-alexander.shishkin@linux.intel.com
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190221094145.9151-2-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/core.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ tools/perf/builtin-record.c | 5 ++---
+ tools/perf/util/data.c      | 2 +-
+ tools/perf/util/data.h      | 4 ++--
+ 3 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5aeb4c74fb99..2d89efc0a3e0 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1255,6 +1255,7 @@ static void put_ctx(struct perf_event_context *ctx)
-  *	      perf_event_context::lock
-  *	    perf_event::mmap_mutex
-  *	    mmap_sem
-+ *	      perf_addr_filters_head::lock
-  *
-  *    cpu_hotplug_lock
-  *      pmus_lock
-@@ -10312,6 +10313,20 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 			goto err_per_task;
- 		}
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 6c3719ac901d..e5e9900c9039 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -660,10 +660,9 @@ static int process_sample_event(struct perf_tool *tool,
  
-+		/*
-+		 * Clone the parent's vma offsets: they are valid until exec()
-+		 * even if the mm is not shared with the parent.
-+		 */
-+		if (event->parent) {
-+			struct perf_addr_filters_head *ifh = perf_event_addr_filters(event);
-+
-+			raw_spin_lock_irq(&ifh->lock);
-+			memcpy(event->addr_filters_offs,
-+			       event->parent->addr_filters_offs,
-+			       pmu->nr_addr_filters * sizeof(unsigned long));
-+			raw_spin_unlock_irq(&ifh->lock);
-+		}
-+
- 		/* force hw sync on the address filters */
- 		event->addr_filters_gen = 1;
+ static int process_buildids(struct record *rec)
+ {
+-	struct perf_data *data = &rec->data;
+ 	struct perf_session *session = rec->session;
+ 
+-	if (data->size == 0)
++	if (perf_data__size(&rec->data) == 0)
+ 		return 0;
+ 
+ 	/*
+@@ -851,7 +850,7 @@ record__finish_output(struct record *rec)
+ 		return;
+ 
+ 	rec->session->header.data_size += rec->bytes_written;
+-	data->size = lseek(perf_data__fd(data), 0, SEEK_CUR);
++	data->file.size = lseek(perf_data__fd(data), 0, SEEK_CUR);
+ 
+ 	if (!rec->no_buildid) {
+ 		process_buildids(rec);
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index d8cfc19ddb10..09eceda17fc2 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -82,7 +82,7 @@ static int open_file_read(struct perf_data *data)
+ 		goto out_close;
  	}
+ 
+-	data->size = st.st_size;
++	data->file.size = st.st_size;
+ 	return fd;
+ 
+  out_close:
+diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+index 4828f7feea89..85f9c0dbf982 100644
+--- a/tools/perf/util/data.h
++++ b/tools/perf/util/data.h
+@@ -12,13 +12,13 @@ enum perf_data_mode {
+ struct perf_data_file {
+ 	const char	*path;
+ 	int		 fd;
++	unsigned long	 size;
+ };
+ 
+ struct perf_data {
+ 	struct perf_data_file	 file;
+ 	bool			 is_pipe;
+ 	bool			 force;
+-	unsigned long		 size;
+ 	enum perf_data_mode	 mode;
+ };
+ 
+@@ -44,7 +44,7 @@ static inline int perf_data__fd(struct perf_data *data)
+ 
+ static inline unsigned long perf_data__size(struct perf_data *data)
+ {
+-	return data->size;
++	return data->file.size;
+ }
+ 
+ int perf_data__open(struct perf_data *data);
