@@ -2,858 +2,182 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706F2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505C8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC5120C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367099;
-	bh=dsV2ITo17GQrf7+/wS1iJ3pTVEg5O4uo5NufEwwAVc8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bki1mYIM9UpUeQlXvAgWLtBB3hhfAlwLwS9IjLF6DaNG2lKWOH/4fQQlErxH1mY3D
-	 W4HEVHoi20aEr8I0+AVsaFkLbU0Ur+82aU4nnrvP0BjNtpaK0E+o5j39+Ht3mkkZqD
-	 WoaZBhiucZKCAqpjn9ga40WyP9IzDeAAmzKRVPEY=
+	by mail.kernel.org (Postfix) with ESMTP id 15EF420C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="uie8X7o0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733296AbfB1PSR (ORCPT
+        id S1732254AbfB1PSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:18:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388252AbfB1PPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:54 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 232FD20C01;
-        Thu, 28 Feb 2019 15:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366952;
-        bh=dsV2ITo17GQrf7+/wS1iJ3pTVEg5O4uo5NufEwwAVc8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1Ed9fchLXybf1j8dZzHmbOwP+xuKtOm5uJLrGaoRpGx1/RoxAQC4crUVc/GvhhtO
-         r6aoKEGO36hAJzbamCgui7b710jtuUFgZvOTewpS6rAqtFm9B66sNW+UbnG6S9TwqA
-         pSHk9Nw8rG94uQ434QsmJmGggfPucTe5wvTwGPp8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/19] selftests: netfilter: add simple masq/redirect test cases
-Date:   Thu, 28 Feb 2019 10:15:08 -0500
-Message-Id: <20190228151517.12705-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
-References: <20190228151517.12705-1-sashal@kernel.org>
+        Thu, 28 Feb 2019 10:18:20 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.67]:18817 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726050AbfB1PSO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:18:14 -0500
+Received: from [46.226.52.200] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.eu-west-1.aws.symcld.net id 2D/49-11025-3BBF77C5; Thu, 28 Feb 2019 15:18:11 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1VTf0wTZxjmu7ter9i6s0B4aUBjo8mmXm2JzuM
+  fY2JizqiJ/xjNxLjDnrSxFNI71uo2YSqKiIRoFG1A0QnOsmhoIiDbdCrEAWFiJYN1OIYSlrER
+  BKQZAm7tffjrv+d9n+f53uf98n0MaZykTYzkUySPW3SZ6XjKsVK/hgtOezOtpZHl/MTjcopvq
+  Zwk+RdV7RR/ZmCQ5p+OtGv59sZDBB/pLib4x82VNH/15XWKnxi9o1kXL4z2FmmFW/4nWuHo1G
+  dCMHCcFs5Od2uFisr/kND/731CeNDbSAgTwYVbdZ9onO6sXN+nGsdU09cor1Hnu3XzsLYQnWZ
+  KUDxDsTdIKGup08QKI1tOwJ/Tlwhc/Iag6VkzWYJ0DM3a4MI/oyiGE9n1UNJcRMdEJHuUgrOB
+  Wk2MSGDt0HG3lcAiCRomvqExTodv67tVM8UuhbLiX1RsYHfBUOiR6jWye6HuxjUV69gM6Hk6p
+  g5GbBq8+KpOxSSbDOHBi+r5wLJw5fuHJMZJ8NezVxqMV0BnzyDC2Ay1vf65fhqELp6Y62+BSO
+  gyii0AbBiB/3YwWjDRYhn0dCq4f84Av06OUdjggtEzrXPDUqHmSB+JRSEN1Pz8gMIb7IHnVZ1
+  anHo3HLszosWGhRA4OUBhQxcJt+ufaPA6K6D6u3G6HH3kf2c7/zsUxsuh9tLfpF+9sQXQdn6Q
+  qkZUAH2c5XFmO5Qc0enibFYrZ7Olc7aMNVyGRTzAZVmkfM4ryQpns4he2SLvz9njslvckhJE0
+  Sdoz2vVNaHZkux7KIUhzEmGh+PeTOP8rFz7focoO3Z78l2SfA+lMowZDB1TUW6BR8qWfHudru
+  g7fk0DozcnGhpitEHOE3NkZzam2hHH/Hh5oIo0Uu5ct2RKNthfRkVsTOTId7854vVvCKE0U4I
+  BxcXFGfV5kifHqbzPD6NkBpkTcBK90628mTQcDUFEQ3D9aghFfEuZCpFxY8vB0lb9hpSMecwX
+  XSZt+uzqmW3pcmkwMVwQ+en4Il/gw7XFCR/kN6yzRj4P951vE7qUvsJ6cUby7lhdaN00v+hUg
+  bftypJ9AwVSZsrm2aRt12b6h7+8EPy9TFg8PnazcftIhSW193raH6GOVS5Ll39nsS08dH+ofr
+  am6YerQoWZkh2ibRnpkcX/AfBpUAUIBAAA
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-14.tower-288.messagelabs.com!1551367090!3278129!1
+X-Originating-IP: [104.47.12.55]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 22229 invoked from network); 28 Feb 2019 15:18:10 -0000
+Received: from mail-db3eur04lp2055.outbound.protection.outlook.com (HELO EUR04-DB3-obe.outbound.protection.outlook.com) (104.47.12.55)
+  by server-14.tower-288.messagelabs.com with AES256-SHA256 encrypted SMTP; 28 Feb 2019 15:18:10 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vzs5dHS3DMCdD3WC4fziCjnX9Z0/ta8qnFillddMl0s=;
+ b=uie8X7o03OX3H0PpKNuqmWIDvLcZ6qaXH//YFSmmkEXnc6ftd8ReDN+uAf+nu72ViIjTue7Lz/lemqgh7S6EpO0fKDWXUpfMxMralMmnV/Mv1TNJDqOJmvxS+AYFse5iIgN1VnFylXzFTU6Jj3AdvJOWQ4hlDsFWfqUCwBmJMUE=
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
+ VI1PR10MB2557.EURPRD10.PROD.OUTLOOK.COM (20.178.120.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1643.18; Thu, 28 Feb 2019 15:18:07 +0000
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::11b1:dc26:b933:c0]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::11b1:dc26:b933:c0%2]) with mapi id 15.20.1643.022; Thu, 28 Feb 2019
+ 15:18:07 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>
+CC:     Support Opensource <Support.Opensource@diasemi.com>,
+        "patches@opensource.cirrus.com" <patches@opensource.cirrus.com>,
+        Ashish Jangam <ashish.jangam@kpitcummins.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Paul Kocialkowski <contact@paulk.fr>,
+        Milo Kim <milo.kim@ti.com>, Keerthy <j-keerthy@ti.com>,
+        James Seong-Won Ban <James.Ban.opensource@diasemi.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 03/11] regulator: da9055: Convert to use
+ regulator_set/get_current_limit_regmap
+Thread-Topic: [PATCH 03/11] regulator: da9055: Convert to use
+ regulator_set/get_current_limit_regmap
+Thread-Index: AQHUz2tEgK2HfYyuGU+MoH9/47lKmaX1PWXg
+Date:   Thu, 28 Feb 2019 15:18:07 +0000
+Message-ID: <VI1PR10MB23528759982DFF51AAF475D7FE750@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190228134022.32625-1-axel.lin@ingics.com>
+ <20190228134022.32625-4-axel.lin@ingics.com>
+In-Reply-To: <20190228134022.32625-4-axel.lin@ingics.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 603e67b4-bd56-4832-d92d-08d69d8ff168
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB2557;
+x-ms-traffictypediagnostic: VI1PR10MB2557:
+x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;VI1PR10MB2557;23:tu/cW7te76CChgYZc4jFKRidYnIXNJvfD4QikHEeE?=
+ =?us-ascii?Q?AcUzcWKTJqFrm81RSW//yORv5vuMu/1vjc4de8c+uZRrKHVuaCTt6Y4kEHw3?=
+ =?us-ascii?Q?FFKIAF9HUtJfuFlMmwRieqmmURRzWnf+i9sp5530+kU0fAR41UQiwMhlx+0e?=
+ =?us-ascii?Q?+GTQxWdjBbZdU4WfG9a+uPk1acf29yKMvtfMIp/UgTe0ShintKN7feB0sQQ9?=
+ =?us-ascii?Q?BQyzqL6aIG8wDEwr2SyvKUNl0QGxg2YcPMHhuk8OUrgNYk+FQU6AqkLib4Gv?=
+ =?us-ascii?Q?dpC5nvBxeD4DEBMnHd0FFBjvV4gHawUhyKadQFDJbGtYHJNLGt3vEwlmxYCC?=
+ =?us-ascii?Q?yf7E3nq0uXxTbZwsxXIt6S2kGWi3Vuy3tPm4oKHV4fm9kQd1Ipl7fGLVL/wT?=
+ =?us-ascii?Q?QN3sH2EHfpBAzWftlbEG6JF7YwHSLr9QCJg9C0SLLj3c1IuAb5yUFQR9S/fa?=
+ =?us-ascii?Q?JXWv1SWmem/G0Qbm5PSCy7RwSPutp/8sZeh1Ora+cksyHaG0/lo6BbhBNrmH?=
+ =?us-ascii?Q?y9qt3kTCD+VdZc5GYTZEPBLUNFmJfz3huEY0d8o+iP9OtcbzkNR50tjLiKV/?=
+ =?us-ascii?Q?Usda/fr1ikSOR/wfG53MCsOgR9BKmy7JfJq+jYAcAZqXhRUTWI5RDgUk9ylG?=
+ =?us-ascii?Q?p4i8Ue/hUOni5kcOBN2sffqSxCdmdF5vfBCkFdsz7AKsMSKRBKVfkl61szia?=
+ =?us-ascii?Q?HZ0uKEXmclopfCQPxunTiZ2Y3lHntOXfzxmoB9VP7NfikGzxyT4+XCo//5A5?=
+ =?us-ascii?Q?SAsNLqcP8y14R+26taFyOpIPysP/+xvV3OxgVkr4f8JAITh8Zgf3VCfU/qRA?=
+ =?us-ascii?Q?toHHJWlIa5WnQhhAowQPgctP3w9s5W1ri353md2DAYkEkVLqpJ2x1G715RjI?=
+ =?us-ascii?Q?GjQPylUjSrKOOl90bkvH9Mh9Wuwkto8zDiVOchjOG9rixPLdKEvmF4YTiUjA?=
+ =?us-ascii?Q?gCdPfl6OzW72BTKvMqYHKQmU1hhzSvw3lbMN93FKWf0z387RlCAMhbXogN2N?=
+ =?us-ascii?Q?We4k+M1XWbZ7wLjIwUxWxsd+q1SLpjYBl23tgyRcl0Ni3ZIXZmbCJGsjNnma?=
+ =?us-ascii?Q?tiPe+zJmrJriD7xr23l+dMrQt+04cPOpJGT5sWQJ2itFIM8kXy4zuvyg3XLh?=
+ =?us-ascii?Q?JIExaDgeba0RgnyRoRd/cLmpa1Dhu/++3vT8+pNwgyoaSrcyANTEQ/8qYFA4?=
+ =?us-ascii?Q?48exm/5dHXT+UpAy9W4fnhw35nbDnF1+r1twfgZD+vcO3+GHAo1CKjSIWUd3?=
+ =?us-ascii?Q?ohcdJ8OdEwfgA2s3lk=3D?=
+x-microsoft-antispam-prvs: <VI1PR10MB25574191EFB9258C7019B90AF5750@VI1PR10MB2557.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 0962D394D2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(376002)(366004)(346002)(396003)(136003)(189003)(199004)(6116002)(81156014)(256004)(8936002)(8676002)(305945005)(7736002)(81166006)(7416002)(5660300002)(26005)(105586002)(186003)(6506007)(6346003)(102836004)(86362001)(14454004)(74316002)(9686003)(14444005)(106356001)(6436002)(229853002)(478600001)(55016002)(3846002)(53936002)(7696005)(316002)(446003)(11346002)(54906003)(2906002)(33656002)(68736007)(486006)(66066001)(99286004)(6246003)(4326008)(25786009)(97736004)(110136005)(76176011)(71200400001)(476003)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB2557;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pxMAeNpRE4VvjXV89y0Sh+YlETe81Y7Um6EMzlTkqlCuuRn5Igh7M/qBPD9Pf3QYckcEHqXCwL6fdNJMFOqKG2OlNfRzF2R1ivNb6iMiRX3i9sU7Dy5f1yhTss8Bi201UXWxIN7fjfcLf7lQcttKs6SH2bmgU7xWrtl/FhyzPo/gL16q4CFncX/gTE5E87E5PXX9hjhozSjLSXvj6cx+ZQFlHfSDPkeOn0ny3bEMe5WFCDfJ5uCVai/YXH25hz0npRfOAWiuRiDkT7FAciQPcWS0/P0oVTc0ChMLq0RCola+1GnrMUx2eQHmu/QbydN5rdK4xz41mTTM5DlqfGx4Ldqkq72lpaqDOMHOpN0NLAJrSk3zJT+Nh6Lf9RKvJk9q2M4Zc0lPs2rp7TmBPCv72O43U1IyCf80Dp3JK1Xn+Mw=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 603e67b4-bd56-4832-d92d-08d69d8ff168
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 15:18:07.4747
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2557
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+On 28 February 2019 13:40, Axel Lin,
 
-[ Upstream commit 98bfc3414bda335dbd7fec58bde6266f991801d7 ]
+> Subject: [PATCH 03/11] regulator: da9055: Convert to use
+> regulator_set/get_current_limit_regmap
+>=20
+> Use regulator_set/get_current_limit_regmap helpers to save some code.
 
-Check basic nat/redirect/masquerade for ipv4 and ipv6.
+[...]
 
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/netfilter/Makefile   |   2 +-
- tools/testing/selftests/netfilter/nft_nat.sh | 762 +++++++++++++++++++
- 2 files changed, 763 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/netfilter/nft_nat.sh
+> @@ -329,8 +298,8 @@ static const struct regulator_ops da9055_buck_ops =3D=
+ {
+>  	.get_mode =3D da9055_buck_get_mode,
+>  	.set_mode =3D da9055_buck_set_mode,
+>=20
+> -	.get_current_limit =3D da9055_buck_get_current_limit,
+> -	.set_current_limit =3D da9055_buck_set_current_limit,
+> +	.get_current_limit =3D regulator_get_current_limit_regmap,
+> +	.set_current_limit =3D regulator_set_current_limit_regmap,
+>=20
+>  	.get_voltage_sel =3D da9055_regulator_get_voltage_sel,
+>  	.set_voltage_sel =3D da9055_regulator_set_voltage_sel,
+> @@ -407,6 +376,10 @@ static const struct regulator_ops da9055_ldo_ops =3D=
+ {
+>  		.uV_step =3D (step) * 1000,\
+>  		.linear_min_sel =3D (voffset),\
+>  		.owner =3D THIS_MODULE,\
+> +		.curr_table =3D da9055_current_limits,\
+> +		.n_current_limits =3D ARRAY_SIZE(da9055_current_limits),\
+> +		.csel_reg =3D DA9055_REG_BUCK_LIM,\
+> +		.csel_mask =3D (mbits),\
 
-diff --git a/tools/testing/selftests/netfilter/Makefile b/tools/testing/selftests/netfilter/Makefile
-index 47ed6cef93fb8..c9ff2b47bd1ca 100644
---- a/tools/testing/selftests/netfilter/Makefile
-+++ b/tools/testing/selftests/netfilter/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for netfilter selftests
- 
--TEST_PROGS := nft_trans_stress.sh
-+TEST_PROGS := nft_trans_stress.sh nft_nat.sh
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/netfilter/nft_nat.sh b/tools/testing/selftests/netfilter/nft_nat.sh
-new file mode 100755
-index 0000000000000..8ec76681605cc
---- /dev/null
-+++ b/tools/testing/selftests/netfilter/nft_nat.sh
-@@ -0,0 +1,762 @@
-+#!/bin/bash
-+#
-+# This test is for basic NAT functionality: snat, dnat, redirect, masquerade.
-+#
-+
-+# Kselftest framework requirement - SKIP code is 4.
-+ksft_skip=4
-+ret=0
-+
-+nft --version > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run test without nft tool"
-+	exit $ksft_skip
-+fi
-+
-+ip -Version > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+	echo "SKIP: Could not run test without ip tool"
-+	exit $ksft_skip
-+fi
-+
-+ip netns add ns0
-+ip netns add ns1
-+ip netns add ns2
-+
-+ip link add veth0 netns ns0 type veth peer name eth0 netns ns1
-+ip link add veth1 netns ns0 type veth peer name eth0 netns ns2
-+
-+ip -net ns0 link set lo up
-+ip -net ns0 link set veth0 up
-+ip -net ns0 addr add 10.0.1.1/24 dev veth0
-+ip -net ns0 addr add dead:1::1/64 dev veth0
-+
-+ip -net ns0 link set veth1 up
-+ip -net ns0 addr add 10.0.2.1/24 dev veth1
-+ip -net ns0 addr add dead:2::1/64 dev veth1
-+
-+for i in 1 2; do
-+  ip -net ns$i link set lo up
-+  ip -net ns$i link set eth0 up
-+  ip -net ns$i addr add 10.0.$i.99/24 dev eth0
-+  ip -net ns$i route add default via 10.0.$i.1
-+  ip -net ns$i addr add dead:$i::99/64 dev eth0
-+  ip -net ns$i route add default via dead:$i::1
-+done
-+
-+bad_counter()
-+{
-+	local ns=$1
-+	local counter=$2
-+	local expect=$3
-+
-+	echo "ERROR: $counter counter in $ns has unexpected value (expected $expect)" 1>&2
-+	ip netns exec $ns nft list counter inet filter $counter 1>&2
-+}
-+
-+check_counters()
-+{
-+	ns=$1
-+	local lret=0
-+
-+	cnt=$(ip netns exec $ns nft list counter inet filter ns0in | grep -q "packets 1 bytes 84")
-+	if [ $? -ne 0 ]; then
-+		bad_counter $ns ns0in "packets 1 bytes 84"
-+		lret=1
-+	fi
-+	cnt=$(ip netns exec $ns nft list counter inet filter ns0out | grep -q "packets 1 bytes 84")
-+	if [ $? -ne 0 ]; then
-+		bad_counter $ns ns0out "packets 1 bytes 84"
-+		lret=1
-+	fi
-+
-+	expect="packets 1 bytes 104"
-+	cnt=$(ip netns exec $ns nft list counter inet filter ns0in6 | grep -q "$expect")
-+	if [ $? -ne 0 ]; then
-+		bad_counter $ns ns0in6 "$expect"
-+		lret=1
-+	fi
-+	cnt=$(ip netns exec $ns nft list counter inet filter ns0out6 | grep -q "$expect")
-+	if [ $? -ne 0 ]; then
-+		bad_counter $ns ns0out6 "$expect"
-+		lret=1
-+	fi
-+
-+	return $lret
-+}
-+
-+check_ns0_counters()
-+{
-+	local ns=$1
-+	local lret=0
-+
-+	cnt=$(ip netns exec ns0 nft list counter inet filter ns0in | grep -q "packets 0 bytes 0")
-+	if [ $? -ne 0 ]; then
-+		bad_counter ns0 ns0in "packets 0 bytes 0"
-+		lret=1
-+	fi
-+
-+	cnt=$(ip netns exec ns0 nft list counter inet filter ns0in6 | grep -q "packets 0 bytes 0")
-+	if [ $? -ne 0 ]; then
-+		bad_counter ns0 ns0in6 "packets 0 bytes 0"
-+		lret=1
-+	fi
-+
-+	cnt=$(ip netns exec ns0 nft list counter inet filter ns0out | grep -q "packets 0 bytes 0")
-+	if [ $? -ne 0 ]; then
-+		bad_counter ns0 ns0out "packets 0 bytes 0"
-+		lret=1
-+	fi
-+	cnt=$(ip netns exec ns0 nft list counter inet filter ns0out6 | grep -q "packets 0 bytes 0")
-+	if [ $? -ne 0 ]; then
-+		bad_counter ns0 ns0out6 "packets 0 bytes 0"
-+		lret=1
-+	fi
-+
-+	for dir in "in" "out" ; do
-+		expect="packets 1 bytes 84"
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ${ns}${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns0 $ns$dir "$expect"
-+			lret=1
-+		fi
-+
-+		expect="packets 1 bytes 104"
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ${ns}${dir}6 | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns0 $ns$dir6 "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	return $lret
-+}
-+
-+reset_counters()
-+{
-+	for i in 0 1 2;do
-+		ip netns exec ns$i nft reset counters inet > /dev/null
-+	done
-+}
-+
-+test_local_dnat6()
-+{
-+	local lret=0
-+ip netns exec ns0 nft -f - <<EOF
-+table ip6 nat {
-+	chain output {
-+		type nat hook output priority 0; policy accept;
-+		ip6 daddr dead:1::99 dnat to dead:2::99
-+	}
-+}
-+EOF
-+	if [ $? -ne 0 ]; then
-+		echo "SKIP: Could not add add ip6 dnat hook"
-+		return $ksft_skip
-+	fi
-+
-+	# ping netns1, expect rewrite to netns2
-+	ip netns exec ns0 ping -q -c 1 dead:1::99 > /dev/null
-+	if [ $? -ne 0 ]; then
-+		lret=1
-+		echo "ERROR: ping6 failed"
-+		return $lret
-+	fi
-+
-+	expect="packets 0 bytes 0"
-+	for dir in "in6" "out6" ; do
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ns1${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns0 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	expect="packets 1 bytes 104"
-+	for dir in "in6" "out6" ; do
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns0 ns2$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# expect 0 count in ns1
-+	expect="packets 0 bytes 0"
-+	for dir in "in6" "out6" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns0${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# expect 1 packet in ns2
-+	expect="packets 1 bytes 104"
-+	for dir in "in6" "out6" ; do
-+		cnt=$(ip netns exec ns2 nft list counter inet filter ns0${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns0$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	test $lret -eq 0 && echo "PASS: ipv6 ping to ns1 was NATted to ns2"
-+	ip netns exec ns0 nft flush chain ip6 nat output
-+
-+	return $lret
-+}
-+
-+test_local_dnat()
-+{
-+	local lret=0
-+ip netns exec ns0 nft -f - <<EOF
-+table ip nat {
-+	chain output {
-+		type nat hook output priority 0; policy accept;
-+		ip daddr 10.0.1.99 dnat to 10.0.2.99
-+	}
-+}
-+EOF
-+	# ping netns1, expect rewrite to netns2
-+	ip netns exec ns0 ping -q -c 1 10.0.1.99 > /dev/null
-+	if [ $? -ne 0 ]; then
-+		lret=1
-+		echo "ERROR: ping failed"
-+		return $lret
-+	fi
-+
-+	expect="packets 0 bytes 0"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ns1${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns0 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	expect="packets 1 bytes 84"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns0 ns2$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# expect 0 count in ns1
-+	expect="packets 0 bytes 0"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns0${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# expect 1 packet in ns2
-+	expect="packets 1 bytes 84"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns2 nft list counter inet filter ns0${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns0$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	test $lret -eq 0 && echo "PASS: ping to ns1 was NATted to ns2"
-+
-+	ip netns exec ns0 nft flush chain ip nat output
-+
-+	reset_counters
-+	ip netns exec ns0 ping -q -c 1 10.0.1.99 > /dev/null
-+	if [ $? -ne 0 ]; then
-+		lret=1
-+		echo "ERROR: ping failed"
-+		return $lret
-+	fi
-+
-+	expect="packets 1 bytes 84"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ns1${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+	expect="packets 0 bytes 0"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns0 ns2$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# expect 1 count in ns1
-+	expect="packets 1 bytes 84"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns0${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns0 ns0$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# expect 0 packet in ns2
-+	expect="packets 0 bytes 0"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns2 nft list counter inet filter ns0${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns2$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	test $lret -eq 0 && echo "PASS: ping to ns1 OK after nat output chain flush"
-+
-+	return $lret
-+}
-+
-+
-+test_masquerade6()
-+{
-+	local lret=0
-+
-+	ip netns exec ns0 sysctl net.ipv6.conf.all.forwarding=1 > /dev/null
-+
-+	ip netns exec ns2 ping -q -c 1 dead:1::99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: cannot ping ns1 from ns2 via ipv6"
-+		return 1
-+		lret=1
-+	fi
-+
-+	expect="packets 1 bytes 104"
-+	for dir in "in6" "out6" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns2$dir "$expect"
-+			lret=1
-+		fi
-+
-+		cnt=$(ip netns exec ns2 nft list counter inet filter ns1${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	reset_counters
-+
-+# add masquerading rule
-+ip netns exec ns0 nft -f - <<EOF
-+table ip6 nat {
-+	chain postrouting {
-+		type nat hook postrouting priority 0; policy accept;
-+		meta oif veth0 masquerade
-+	}
-+}
-+EOF
-+	ip netns exec ns2 ping -q -c 1 dead:1::99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: cannot ping ns1 from ns2 with active ipv6 masquerading"
-+		lret=1
-+	fi
-+
-+	# ns1 should have seen packets from ns0, due to masquerade
-+	expect="packets 1 bytes 104"
-+	for dir in "in6" "out6" ; do
-+
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns0${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+
-+		cnt=$(ip netns exec ns2 nft list counter inet filter ns1${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# ns1 should not have seen packets from ns2, due to masquerade
-+	expect="packets 0 bytes 0"
-+	for dir in "in6" "out6" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	ip netns exec ns0 nft flush chain ip6 nat postrouting
-+	if [ $? -ne 0 ]; then
-+		echo "ERROR: Could not flush ip6 nat postrouting" 1>&2
-+		lret=1
-+	fi
-+
-+	test $lret -eq 0 && echo "PASS: IPv6 masquerade for ns2"
-+
-+	return $lret
-+}
-+
-+test_masquerade()
-+{
-+	local lret=0
-+
-+	ip netns exec ns0 sysctl net.ipv4.conf.veth0.forwarding=1 > /dev/null
-+	ip netns exec ns0 sysctl net.ipv4.conf.veth1.forwarding=1 > /dev/null
-+
-+	ip netns exec ns2 ping -q -c 1 10.0.1.99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: canot ping ns1 from ns2"
-+		lret=1
-+	fi
-+
-+	expect="packets 1 bytes 84"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns2$dir "$expect"
-+			lret=1
-+		fi
-+
-+		cnt=$(ip netns exec ns2 nft list counter inet filter ns1${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	reset_counters
-+
-+# add masquerading rule
-+ip netns exec ns0 nft -f - <<EOF
-+table ip nat {
-+	chain postrouting {
-+		type nat hook postrouting priority 0; policy accept;
-+		meta oif veth0 masquerade
-+	}
-+}
-+EOF
-+	ip netns exec ns2 ping -q -c 1 10.0.1.99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: cannot ping ns1 from ns2 with active ip masquerading"
-+		lret=1
-+	fi
-+
-+	# ns1 should have seen packets from ns0, due to masquerade
-+	expect="packets 1 bytes 84"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns0${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+
-+		cnt=$(ip netns exec ns2 nft list counter inet filter ns1${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# ns1 should not have seen packets from ns2, due to masquerade
-+	expect="packets 0 bytes 0"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	ip netns exec ns0 nft flush chain ip nat postrouting
-+	if [ $? -ne 0 ]; then
-+		echo "ERROR: Could not flush nat postrouting" 1>&2
-+		lret=1
-+	fi
-+
-+	test $lret -eq 0 && echo "PASS: IP masquerade for ns2"
-+
-+	return $lret
-+}
-+
-+test_redirect6()
-+{
-+	local lret=0
-+
-+	ip netns exec ns0 sysctl net.ipv6.conf.all.forwarding=1 > /dev/null
-+
-+	ip netns exec ns2 ping -q -c 1 dead:1::99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: cannnot ping ns1 from ns2 via ipv6"
-+		lret=1
-+	fi
-+
-+	expect="packets 1 bytes 104"
-+	for dir in "in6" "out6" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns2$dir "$expect"
-+			lret=1
-+		fi
-+
-+		cnt=$(ip netns exec ns2 nft list counter inet filter ns1${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	reset_counters
-+
-+# add redirect rule
-+ip netns exec ns0 nft -f - <<EOF
-+table ip6 nat {
-+	chain prerouting {
-+		type nat hook prerouting priority 0; policy accept;
-+		meta iif veth1 meta l4proto icmpv6 ip6 saddr dead:2::99 ip6 daddr dead:1::99 redirect
-+	}
-+}
-+EOF
-+	ip netns exec ns2 ping -q -c 1 dead:1::99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: cannot ping ns1 from ns2 with active ip6 redirect"
-+		lret=1
-+	fi
-+
-+	# ns1 should have seen no packets from ns2, due to redirection
-+	expect="packets 0 bytes 0"
-+	for dir in "in6" "out6" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# ns0 should have seen packets from ns2, due to masquerade
-+	expect="packets 1 bytes 104"
-+	for dir in "in6" "out6" ; do
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	ip netns exec ns0 nft delete table ip6 nat
-+	if [ $? -ne 0 ]; then
-+		echo "ERROR: Could not delete ip6 nat table" 1>&2
-+		lret=1
-+	fi
-+
-+	test $lret -eq 0 && echo "PASS: IPv6 redirection for ns2"
-+
-+	return $lret
-+}
-+
-+test_redirect()
-+{
-+	local lret=0
-+
-+	ip netns exec ns0 sysctl net.ipv4.conf.veth0.forwarding=1 > /dev/null
-+	ip netns exec ns0 sysctl net.ipv4.conf.veth1.forwarding=1 > /dev/null
-+
-+	ip netns exec ns2 ping -q -c 1 10.0.1.99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: cannot ping ns1 from ns2"
-+		lret=1
-+	fi
-+
-+	expect="packets 1 bytes 84"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns2$dir "$expect"
-+			lret=1
-+		fi
-+
-+		cnt=$(ip netns exec ns2 nft list counter inet filter ns1${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns2 ns1$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	reset_counters
-+
-+# add redirect rule
-+ip netns exec ns0 nft -f - <<EOF
-+table ip nat {
-+	chain prerouting {
-+		type nat hook prerouting priority 0; policy accept;
-+		meta iif veth1 ip protocol icmp ip saddr 10.0.2.99 ip daddr 10.0.1.99 redirect
-+	}
-+}
-+EOF
-+	ip netns exec ns2 ping -q -c 1 10.0.1.99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: cannot ping ns1 from ns2 with active ip redirect"
-+		lret=1
-+	fi
-+
-+	# ns1 should have seen no packets from ns2, due to redirection
-+	expect="packets 0 bytes 0"
-+	for dir in "in" "out" ; do
-+
-+		cnt=$(ip netns exec ns1 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	# ns0 should have seen packets from ns2, due to masquerade
-+	expect="packets 1 bytes 84"
-+	for dir in "in" "out" ; do
-+		cnt=$(ip netns exec ns0 nft list counter inet filter ns2${dir} | grep -q "$expect")
-+		if [ $? -ne 0 ]; then
-+			bad_counter ns1 ns0$dir "$expect"
-+			lret=1
-+		fi
-+	done
-+
-+	ip netns exec ns0 nft delete table ip nat
-+	if [ $? -ne 0 ]; then
-+		echo "ERROR: Could not delete nat table" 1>&2
-+		lret=1
-+	fi
-+
-+	test $lret -eq 0 && echo "PASS: IP redirection for ns2"
-+
-+	return $lret
-+}
-+
-+
-+# ip netns exec ns0 ping -c 1 -q 10.0.$i.99
-+for i in 0 1 2; do
-+ip netns exec ns$i nft -f - <<EOF
-+table inet filter {
-+	counter ns0in {}
-+	counter ns1in {}
-+	counter ns2in {}
-+
-+	counter ns0out {}
-+	counter ns1out {}
-+	counter ns2out {}
-+
-+	counter ns0in6 {}
-+	counter ns1in6 {}
-+	counter ns2in6 {}
-+
-+	counter ns0out6 {}
-+	counter ns1out6 {}
-+	counter ns2out6 {}
-+
-+	map nsincounter {
-+		type ipv4_addr : counter
-+		elements = { 10.0.1.1 : "ns0in",
-+			     10.0.2.1 : "ns0in",
-+			     10.0.1.99 : "ns1in",
-+			     10.0.2.99 : "ns2in" }
-+	}
-+
-+	map nsincounter6 {
-+		type ipv6_addr : counter
-+		elements = { dead:1::1 : "ns0in6",
-+			     dead:2::1 : "ns0in6",
-+			     dead:1::99 : "ns1in6",
-+			     dead:2::99 : "ns2in6" }
-+	}
-+
-+	map nsoutcounter {
-+		type ipv4_addr : counter
-+		elements = { 10.0.1.1 : "ns0out",
-+			     10.0.2.1 : "ns0out",
-+			     10.0.1.99: "ns1out",
-+			     10.0.2.99: "ns2out" }
-+	}
-+
-+	map nsoutcounter6 {
-+		type ipv6_addr : counter
-+		elements = { dead:1::1 : "ns0out6",
-+			     dead:2::1 : "ns0out6",
-+			     dead:1::99 : "ns1out6",
-+			     dead:2::99 : "ns2out6" }
-+	}
-+
-+	chain input {
-+		type filter hook input priority 0; policy accept;
-+		counter name ip saddr map @nsincounter
-+		icmpv6 type { "echo-request", "echo-reply" } counter name ip6 saddr map @nsincounter6
-+	}
-+	chain output {
-+		type filter hook output priority 0; policy accept;
-+		counter name ip daddr map @nsoutcounter
-+		icmpv6 type { "echo-request", "echo-reply" } counter name ip6 daddr map @nsoutcounter6
-+	}
-+}
-+EOF
-+done
-+
-+sleep 3
-+# test basic connectivity
-+for i in 1 2; do
-+  ip netns exec ns0 ping -c 1 -q 10.0.$i.99 > /dev/null
-+  if [ $? -ne 0 ];then
-+  	echo "ERROR: Could not reach other namespace(s)" 1>&2
-+	ret=1
-+  fi
-+
-+  ip netns exec ns0 ping -c 1 -q dead:$i::99 > /dev/null
-+  if [ $? -ne 0 ];then
-+	echo "ERROR: Could not reach other namespace(s) via ipv6" 1>&2
-+	ret=1
-+  fi
-+  check_counters ns$i
-+  if [ $? -ne 0 ]; then
-+	ret=1
-+  fi
-+
-+  check_ns0_counters ns$i
-+  if [ $? -ne 0 ]; then
-+	ret=1
-+  fi
-+  reset_counters
-+done
-+
-+if [ $ret -eq 0 ];then
-+	echo "PASS: netns routing/connectivity: ns0 can reach ns1 and ns2"
-+fi
-+
-+reset_counters
-+test_local_dnat
-+test_local_dnat6
-+
-+reset_counters
-+test_masquerade
-+test_masquerade6
-+
-+reset_counters
-+test_redirect
-+test_redirect6
-+
-+for i in 0 1 2; do ip netns del ns$i;done
-+
-+exit $ret
--- 
-2.19.1
+Hi Axel,=20
+
+Thanks.
+
+Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
+
+Regards,
+Steve
 
