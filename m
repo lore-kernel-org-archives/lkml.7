@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7874FC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90C5C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5620320857
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B8E20857
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388369AbfB1R7F (ORCPT
+        id S2388386AbfB1R7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:59:05 -0500
-Received: from mga07.intel.com ([134.134.136.100]:62019 "EHLO mga07.intel.com"
+        Thu, 28 Feb 2019 12:59:13 -0500
+Received: from mga14.intel.com ([192.55.52.115]:9164 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbfB1R7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:59:04 -0500
+        id S1726214AbfB1R7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:59:12 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 09:59:03 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 09:59:12 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,423,1544515200"; 
-   d="scan'208";a="147405164"
+   d="scan'208";a="147405226"
 Received: from chenyu-office.sh.intel.com ([10.239.158.163])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2019 09:59:02 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2019 09:59:10 -0800
 From:   Chen Yu <yu.c.chen@intel.com>
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Viresh Kumar <viresh.kumar@linaro.org>,
@@ -35,9 +35,9 @@ To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <len.brown@intel.com>
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         yu.chen.surf@gmail.com, Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH 1/2][RFC v2] ACPI: add "processor.broadcast_ppc" hook to broadcast  _PPC
-Date:   Fri,  1 Mar 2019 02:07:47 +0800
-Message-Id: <ee0250bfc7709ce0a0cc93bf83336133d5e248c4.1551375162.git.yu.c.chen@intel.com>
+Subject: [PATCH 2/2][RFC v2] ACPI: Update cpuinfo.max after bootup if necessary
+Date:   Fri,  1 Mar 2019 02:08:02 +0800
+Message-Id: <bd3c5e04e882e5a4c977211a8d268440b36276a4.1551375162.git.yu.c.chen@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1551375162.git.yu.c.chen@intel.com>
 References: <cover.1551375162.git.yu.c.chen@intel.com>
@@ -46,50 +46,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some problematic platforms, the _PPC notifier is
-only delivered to one CPU, which might cause information
-inconsistent between CPUs within the package. Thus introduce a boot up parameter to broadcast this _PPC notifier onto all
-online CPUs.
+On Dell Inc. XPS13 9333, the BIOS changes the value of
+MSR_IA32_MISC_ENABLE_TURBO_DISABLE at runtime (e.g., when
+the power source changes), the maximum frequency of the
+CPU is not updated accordingly. This is due to the policy's
+cpuinfo.max is not updated when _PPC notifier fires.
 
+Fix this problem by updating the policy's cpuinfo.max when
+necessary.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=200759
+Reported-and-tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Originally-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 ---
- drivers/acpi/processor_perflib.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/cpufreq/cpufreq.c      |  2 ++
+ drivers/cpufreq/intel_pstate.c | 15 +++++++++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/processor_perflib.c b/drivers/acpi/processor_perflib.c
-index a303fd0e108c..737dbf5aa7f7 100644
---- a/drivers/acpi/processor_perflib.c
-+++ b/drivers/acpi/processor_perflib.c
-@@ -63,6 +63,10 @@ module_param(ignore_ppc, int, 0644);
- MODULE_PARM_DESC(ignore_ppc, "If the frequency of your machine gets wrongly" \
- 		 "limited by BIOS, this should help");
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index e35a886e00bc..95e08816b512 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2237,6 +2237,8 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
  
-+static int broadcast_ppc;
-+module_param(broadcast_ppc, int, 0644);
-+MODULE_PARM_DESC(broadcast_ppc, "Broadcast the ppc to all online CPUs");
+ 	policy->min = new_policy->min;
+ 	policy->max = new_policy->max;
++	policy->cpuinfo.max_freq = new_policy->cpuinfo.max_freq;
++	policy->cpuinfo.min_freq = new_policy->cpuinfo.min_freq;
+ 	trace_cpu_frequency_limits(policy);
+ 
+ 	policy->cached_target_freq = UINT_MAX;
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index dd66decf2087..841c74f69f66 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2081,11 +2081,17 @@ static void intel_pstate_adjust_policy_max(struct cpufreq_policy *policy,
+ 
+ static int intel_pstate_verify_policy(struct cpufreq_policy *policy)
+ {
++	int max_freq;
+ 	struct cpudata *cpu = all_cpu_data[policy->cpu];
+ 
+ 	update_turbo_state();
++	max_freq = intel_pstate_get_max_freq(cpu);
 +
- #define PPC_REGISTERED   1
- #define PPC_IN_USE       2
- 
-@@ -180,8 +184,16 @@ void acpi_processor_ppc_has_changed(struct acpi_processor *pr, int event_flag)
- 		else
- 			acpi_processor_ppc_ost(pr->handle, 0);
- 	}
--	if (ret >= 0)
--		cpufreq_update_policy(pr->id);
-+	if (ret >= 0) {
-+		if (broadcast_ppc) {
-+			int cpu;
++	if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
++		policy->cpuinfo.max_freq = policy->max = max_freq;
 +
-+			for_each_possible_cpu(cpu)
-+				cpufreq_update_policy(cpu);
-+		} else {
-+			cpufreq_update_policy(pr->id);
-+		}
-+	}
- }
+ 	cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
+-				     intel_pstate_get_max_freq(cpu));
++				     max_freq);
  
- int acpi_processor_get_bios_limit(int cpu, unsigned int *limit)
+ 	if (policy->policy != CPUFREQ_POLICY_POWERSAVE &&
+ 	    policy->policy != CPUFREQ_POLICY_PERFORMANCE)
+@@ -2192,11 +2198,16 @@ static struct cpufreq_driver intel_pstate = {
+ 
+ static int intel_cpufreq_verify_policy(struct cpufreq_policy *policy)
+ {
++	int max_freq;
+ 	struct cpudata *cpu = all_cpu_data[policy->cpu];
+ 
+ 	update_turbo_state();
++	max_freq = intel_pstate_get_max_freq(cpu);
++
++	if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
++		policy->cpuinfo.max_freq = policy->max = max_freq;
+ 	cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
+-				     intel_pstate_get_max_freq(cpu));
++				     max_freq);
+ 
+ 	intel_pstate_adjust_policy_max(policy, cpu);
+ 
 -- 
 2.17.1
 
