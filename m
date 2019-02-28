@@ -2,163 +2,148 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F40CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE881C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C62214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 737632171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551363409;
+	bh=9xSREEXqSZaSGtv+FaDJsnmwYFQhzVRuYTR57iNggpM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jyCDwHBbVgs0lPl2GRL3hSFNQS3sYypDO2qs2ZEpmsbChnLSUwBaCU1h6vp8lzFKo
+	 BVzOnEomcC0CtKnaFcq59jfbc+zJ7hiCTftC3hplNDyC+IvoyPwseqIHSMRsVel50T
+	 uTmEsTaX1jV4Q4HjAi/uo1C7/gD6+xvw+bDL4hao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732648AbfB1OOY (ORCPT
+        id S1732333AbfB1OQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:14:24 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35612 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732329AbfB1OOX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 09:14:23 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SEDUJW119003
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 09:14:22 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxfhkwjyk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 09:14:22 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 28 Feb 2019 14:14:20 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Feb 2019 14:14:16 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SEEEVP54395094
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Feb 2019 14:14:14 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B484FA4053;
-        Thu, 28 Feb 2019 14:14:14 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 20FE6A4040;
-        Thu, 28 Feb 2019 14:14:14 +0000 (GMT)
-Received: from [9.152.224.140] (unknown [9.152.224.140])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Feb 2019 14:14:14 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v4 1/7] s390: ap: kvm: add PQAP interception for AQIC
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, pasic@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
- <1550849400-27152-2-git-send-email-pmorel@linux.ibm.com>
- <babf7884-35f1-2f2e-34dc-96d9190fd15b@linux.ibm.com>
- <e7ba5cb0-b254-7f73-bc59-ca2456ce7951@linux.ibm.com>
- <9f1d9241-39b9-adbc-d0e9-cb702e609cbc@linux.ibm.com>
- <4dc59125-7f96-cba8-651b-382ed8f8bff8@linux.ibm.com>
- <8526f468-9a4d-68d2-3868-0dad5ce16f46@linux.ibm.com>
- <6058a017-6404-af3c-62ef-2452214ac97c@de.ibm.com>
- <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
- <20190228122251.75b31f62.cohuck@redhat.com>
- <be69498a-c4d3-81e7-b8bf-6931058cee74@linux.ibm.com>
- <20190228145254.2909425e.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Thu, 28 Feb 2019 15:14:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Feb 2019 09:16:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728092AbfB1OQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 09:16:47 -0500
+Received: from dragon (li1566-229.members.linode.com [139.162.86.229])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F10BF214D8;
+        Thu, 28 Feb 2019 14:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551363406;
+        bh=9xSREEXqSZaSGtv+FaDJsnmwYFQhzVRuYTR57iNggpM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nUjyWrZP7KIimTkKuCtHkTEz7N4nI0he2TnJ/aiYRhm0xQm682ahlhEj9oeGNtE2p
+         B0Syo8uVagSdP3LJc8NLuZWDEK3uYoOQ9TBjvB7DAvgSryAc7ILAXA0IyIZYn+Bdkc
+         6gx7k+H9hclYZYqdiVz3CPlI2l3H0gZ/kAGtNZ/w=
+Date:   Thu, 28 Feb 2019 22:15:46 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Angus Ainslie <angus.ainslie@puri.sm>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/3] arm64: dts: imx8mq: Add the buck vdd_arm regulator
+Message-ID: <20190228141543.GA29231@dragon>
+References: <1550254032-16451-1-git-send-email-abel.vesa@nxp.com>
+ <1550254032-16451-3-git-send-email-abel.vesa@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190228145254.2909425e.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19022814-0012-0000-0000-000002FB530E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19022814-0013-0000-0000-00002132FF74
-Message-Id: <261a1e22-3703-21a4-e33d-e737651e7d89@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=871 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280099
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1550254032-16451-3-git-send-email-abel.vesa@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 14:52, Cornelia Huck wrote:
-> On Thu, 28 Feb 2019 14:16:09 +0100
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Fri, Feb 15, 2019 at 06:07:23PM +0000, Abel Vesa wrote:
+> According to the schematics, this is a MP2147 switch converter
+> which is controlled by GPIO1_IO13. When set the gpio is set to
+> high the regulator output is set to 0.9V. When the gpio is set
+> to low the regulator output is set to 1V.
 > 
->> On 28/02/2019 12:22, Cornelia Huck wrote:
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 36 ++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
->>> So, to summarize, the function should do:
->>> - Is userspace supposed to emulate everything (!ECA_APIE)? Return
->>>     -EOPNOTSUPP to hand control to it.
->>> - We are now interpreting the instruction in KVM. Do common checks
->>>     (PSTATE etc.) and inject exceptions, if needed.
->>> - Now look at the fc; if there's a handler for it, call that; if not
->>>     (case does not attempt to call a specific handler, or no handler
->>>     registered), inject a specification exception. (Do we want pre-checks
->>>     like for facility 65 here, or in the handler?)
->>>
->>> That response code 0x01 thingy probably needs to go into the specific
->>> handler function, if anywhere (don't know the semantics, sorry).
->>
->> What do you mean with specific handler function?
->>
->> If you mean a switch around the FC with static function's call, I agree,
->> if you mean a jump into a hook I do not agree.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> index 54737bf..e5da3dd 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> @@ -31,6 +31,35 @@
+>  		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+>  		enable-active-high;
+>  	};
+> +
+> +	buck2_reg: buck2 {
+
+Please follow regulator-xxx naming convention.
+
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_buck2>;
+> +		compatible = "regulator-gpio";
+> +		regulator-name = "vdd_arm";
+> +		regulator-min-microvolt = <900000>;
+> +		regulator-max-microvolt = <1000000>;
+> +		gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+> +		states = <1000000 0x0
+> +			  900000 0x1>;
+> +		enable-active-high;
+
+The property only makes sense when enable-gpio is present?
+
+Shawn
+
+> +	};
+> +};
+> +
+> +&A53_0 {
+> +	cpu-supply = <&buck2_reg>;
+> +};
+> +
+> +&A53_1 {
+> +	cpu-supply = <&buck2_reg>;
+> +};
+> +
+> +&A53_2 {
+> +	cpu-supply = <&buck2_reg>;
+> +};
+> +
+> +&A53_3 {
+> +	cpu-supply = <&buck2_reg>;
+>  };
+>  
+>  &fec1 {
+> @@ -203,6 +232,13 @@
+>  };
+>  
+>  &iomuxc {
+> +	pinctrl_buck2: vddarmgrp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_GPIO1_IO13_GPIO1_IO13		0x19
+> +		>;
+> +
+> +	};
+> +
+>  	pinctrl_fec1: fec1grp {
+>  		fsl,pins = <
+>  			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
+> -- 
+> 2.7.4
 > 
-> Ah, ok; so each case (that we want to handle) should call into a
-> subhandler that does
-> {
-> 	(... check things like facilities ...)
-> 	if (!specific_hook)
-> 		inject_specif_excp_and_return();
-> 	ret = specific_hook();
-> 	if (ret)
-> 		set_resp_code_0x01(); // or in specific_hook()?
-> }
 > 
-> ?
-
-Yes something in this direction.
-
->   
->>>
->>> Question: Will the handlers for the individual fcs need to generate
->>> different exceptions on their own? I.e., do they need to do injections
->>> themselves, or should the calling function possibly inject an exception
->>> on error?
->>
->> There are some specificities.
-> 
-> Ok, should probably done in the subhandlers?
-> 
-> (I hope I don't muddy the waters too much; but basically, I'm poking
-> around with a stick in the dark :)
-> 
-
-No problem, it is OK.
-My first idea was to make only changes associated with PQAP/AQIC.
-We already should have done it for all PQAP functions so it is decided 
-that we will do it now as Christian proposed.
-
-Regards,
-Pierre
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
