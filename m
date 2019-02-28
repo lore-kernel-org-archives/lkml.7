@@ -2,262 +2,128 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF58C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFF6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7DE2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDC8218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:52:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551347575;
+	bh=Quo/ncyBcu9f8EyMJ01167BeFKDVnbj7qd+r6QKekiQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I22WHNGgo0cCeJSxT3Sj/ZcSnf0hWFWMlaul+6t9QlBJyzJW+jmFmWndAM6/dquUo
+	 586mXKha//0HWPf8rQAOfkb2QVHNl3IOz0V3JmaSZQWE/fFV+ptshCouq7NdJ9Y5ZS
+	 AGd7UiXNf/lbEeWQ39a4OWw2Z4/IZ74eWuybxXCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbfB1JwR (ORCPT
+        id S1731843AbfB1Jwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:52:17 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33078 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726810AbfB1JwR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:52:17 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S9nP4Q091958
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:52:09 -0500
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxc3u3fuh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:52:08 -0500
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
-        Thu, 28 Feb 2019 09:52:07 -0000
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Feb 2019 09:52:04 -0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1S9q39T19923098
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Feb 2019 09:52:03 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66361112067;
-        Thu, 28 Feb 2019 09:52:03 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E4E78112063;
-        Thu, 28 Feb 2019 09:52:02 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.35.84])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Feb 2019 09:52:02 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id D25832E2D5F; Thu, 28 Feb 2019 15:22:00 +0530 (IST)
-Date:   Thu, 28 Feb 2019 15:22:00 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-Cc:     Daniel Axtens <dja@axtens.net>, mpe@ellerman.id.au,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        ego@linux.vnet.ibm.com
-Subject: Re: [PATCH] powernv: powercap: Add hard minimum powercap
-Reply-To: ego@linux.vnet.ibm.com
-References: <1551260002-26792-1-git-send-email-shilpa.bhat@linux.vnet.ibm.com>
- <871s3s34jb.fsf@dja-thinkpad.axtens.net>
- <57fc8253-c5c3-6103-77cd-34aa4ec250a3@linux.vnet.ibm.com>
+        Thu, 28 Feb 2019 04:52:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57742 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726165AbfB1Jwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 04:52:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 87261AEB3;
+        Thu, 28 Feb 2019 09:52:51 +0000 (UTC)
+Date:   Thu, 28 Feb 2019 10:52:50 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, kernel-team@fb.com
+Subject: Re: [PATCH] mm: Throttle allocators when failing reclaim over
+ memory.high
+Message-ID: <20190228095250.GA21078@dhcp22.suse.cz>
+References: <20190201011352.GA14370@chrisdown.name>
+ <20190201071757.GE11599@dhcp22.suse.cz>
+ <20190201161233.GA11231@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <57fc8253-c5c3-6103-77cd-34aa4ec250a3@linux.vnet.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-x-cbid: 19022809-0052-0000-0000-0000039229C8
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010679; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01167519; UDB=6.00609945; IPR=6.00948132;
- MB=3.00025777; MTD=3.00000008; XFM=3.00000015; UTC=2019-02-28 09:52:06
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19022809-0053-0000-0000-00005FFF1717
-Message-Id: <20190228095200.GB24751@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280070
+In-Reply-To: <20190201161233.GA11231@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shilpa,
+[Sorry for a late reply]
 
-On Thu, Feb 28, 2019 at 11:25:25AM +0530, Shilpasri G Bhat wrote:
-> Hi,
-> 
-> On 02/28/2019 10:14 AM, Daniel Axtens wrote:
-> > Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com> writes:
+On Fri 01-02-19 11:12:33, Johannes Weiner wrote:
+> On Fri, Feb 01, 2019 at 08:17:57AM +0100, Michal Hocko wrote:
+> > On Thu 31-01-19 20:13:52, Chris Down wrote:
+> > [...]
+> > > The current situation goes against both the expectations of users of
+> > > memory.high, and our intentions as cgroup v2 developers. In
+> > > cgroup-v2.txt, we claim that we will throttle and only under "extreme
+> > > conditions" will memory.high protection be breached. Likewise, cgroup v2
+> > > users generally also expect that memory.high should throttle workloads
+> > > as they exceed their high threshold. However, as seen above, this isn't
+> > > always how it works in practice -- even on banal setups like those with
+> > > no swap, or where swap has become exhausted, we can end up with
+> > > memory.high being breached and us having no weapons left in our arsenal
+> > > to combat runaway growth with, since reclaim is futile.
+> > > 
+> > > It's also hard for system monitoring software or users to tell how bad
+> > > the situation is, as "high" events for the memcg may in some cases be
+> > > benign, and in others be catastrophic. The current status quo is that we
+> > > fail containment in a way that doesn't provide any advance warning that
+> > > things are about to go horribly wrong (for example, we are about to
+> > > invoke the kernel OOM killer).
+> > > 
+> > > This patch introduces explicit throttling when reclaim is failing to
+> > > keep memcg size contained at the memory.high setting. It does so by
+> > > applying an exponential delay curve derived from the memcg's overage
+> > > compared to memory.high.  In the normal case where the memcg is either
+> > > below or only marginally over its memory.high setting, no throttling
+> > > will be performed.
 > > 
-> >> In POWER9, OCC(On-Chip-Controller) provides for hard and soft system
-> >> powercapping range. The hard powercap range is guaranteed while soft
-> >> powercap may or may not be asserted due to various power-thermal
-> >> reasons based on system configuration and workloads. This patch adds
-> >> a sysfs file to export the hard minimum powercap limit to allow the
-> >> user to set the appropriate powercap value that can be managed by the
-> >> system.
-> > 
-> > Maybe it's common terminology and I'm just not aware of it, but what do
-> > you mean by "asserted"? It doesn't appear elsewhere in the documentation
-> > you're patching, and it's not a use of assert that I'm familiar with...
-> > 
-> > Regards,
-> > Daniel
-> > 
+> > How does this play wit the actual OOM when the user expects oom to
+> > resolve the situation because the reclaim is futile and there is nothing
+> > reclaimable except for killing a process?
 > 
-> I meant to say powercap will not be assured in the soft powercap range, i.e,
-> system may or may not be throttled of CPU frequency to remain within the powercap.
+> Hm, can you elaborate on your question a bit?
 > 
-> I can reword the document and commit message.
+> The idea behind memory.high is to throttle allocations long enough for
+> the admin or a management daemon to intervene, but not to trigger the
+> kernel oom killer. It was designed as a replacement for the cgroup1
+> oom_control, but without the deadlock potential, ptrace problems etc.
 
-I agree with Daniel. How about replacing "asserted" with "enforced by
-the OCC"?
+Yes, this makes sense. The high limit reclaim is also documented as a
+best effort resource guarantee. My understanding is that if the workload
+cannot be contained within the high limit then the system cannot do much
+and eventually gives up. Having the full memory unreclaimable is such an
+example. And there is either the global OOM killer or hard limit OOM
+killer to trigger to resolve such a situation.
 
+[...]
+Thanks for describing the usecase.
 
+> Right now, that throttling mechanism works okay with swap enabled, but
+> we cannot enable swap everywhere, or sometimes run out of swap, and
+> then it breaks down and we run into system OOMs.
 > 
-> Thanks and Regards,
-> Shilpa
+> This patch makes sure memory.high *always* implements the throttling
+> semantics described in cgroup-v2.txt, not just most of the time.
 
---
-Thanks and Regards
-gautham.
-
-> 
-> >>
-> >> Signed-off-by: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-> >> ---
-> >>  .../ABI/testing/sysfs-firmware-opal-powercap       | 10 ++++
-> >>  arch/powerpc/platforms/powernv/opal-powercap.c     | 66 +++++++++-------------
-> >>  2 files changed, 37 insertions(+), 39 deletions(-)
-> >>
-> >> diff --git a/Documentation/ABI/testing/sysfs-firmware-opal-powercap b/Documentation/ABI/testing/sysfs-firmware-opal-powercap
-> >> index c9b66ec..65db4c1 100644
-> >> --- a/Documentation/ABI/testing/sysfs-firmware-opal-powercap
-> >> +++ b/Documentation/ABI/testing/sysfs-firmware-opal-powercap
-> >> @@ -29,3 +29,13 @@ Description:	System powercap directory and attributes applicable for
-> >>  		  creates a request for setting a new-powercap. The
-> >>  		  powercap requested must be between powercap-min
-> >>  		  and powercap-max.
-> >> +
-> >> +What:		/sys/firmware/opal/powercap/system-powercap/powercap-hard-min
-> >> +Date:		Feb 2019
-> >> +Contact:	Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
-> >> +Description:	Hard minimum powercap
-> >> +
-> >> +		This file provides the hard minimum powercap limit in
-> >> +		Watts. The powercap value above hard minimum is always
-> >> +		guaranteed to be asserted and the powercap value below
-> >> +		the hard minimum limit may or may not be guaranteed.
-> >> diff --git a/arch/powerpc/platforms/powernv/opal-powercap.c b/arch/powerpc/platforms/powernv/opal-powercap.c
-> >> index d90ee4f..38408e7 100644
-> >> --- a/arch/powerpc/platforms/powernv/opal-powercap.c
-> >> +++ b/arch/powerpc/platforms/powernv/opal-powercap.c
-> >> @@ -139,10 +139,24 @@ static void powercap_add_attr(int handle, const char *name,
-> >>  	attr->handle = handle;
-> >>  	sysfs_attr_init(&attr->attr.attr);
-> >>  	attr->attr.attr.name = name;
-> >> -	attr->attr.attr.mode = 0444;
-> >> +
-> >> +	if (!strncmp(name, "powercap-current", strlen(name))) {
-> >> +		attr->attr.attr.mode = 0664;
-> >> +		attr->attr.store = powercap_store;
-> >> +	} else {
-> >> +		attr->attr.attr.mode = 0444;
-> >> +	}
-> >> +
-> >>  	attr->attr.show = powercap_show;
-> >>  }
-> >>  
-> >> +static const char * const powercap_strs[] = {
-> >> +	"powercap-max",
-> >> +	"powercap-min",
-> >> +	"powercap-current",
-> >> +	"powercap-hard-min",
-> >> +};
-> >> +
-> >>  void __init opal_powercap_init(void)
-> >>  {
-> >>  	struct device_node *powercap, *node;
-> >> @@ -167,60 +181,34 @@ void __init opal_powercap_init(void)
-> >>  
-> >>  	i = 0;
-> >>  	for_each_child_of_node(powercap, node) {
-> >> -		u32 cur, min, max;
-> >> -		int j = 0;
-> >> -		bool has_cur = false, has_min = false, has_max = false;
-> >> +		u32 id;
-> >> +		int j, count = 0;
-> >>  
-> >> -		if (!of_property_read_u32(node, "powercap-min", &min)) {
-> >> -			j++;
-> >> -			has_min = true;
-> >> -		}
-> >> -
-> >> -		if (!of_property_read_u32(node, "powercap-max", &max)) {
-> >> -			j++;
-> >> -			has_max = true;
-> >> -		}
-> >> +		for (j = 0; j < ARRAY_SIZE(powercap_strs); j++)
-> >> +			if (!of_property_read_u32(node, powercap_strs[j], &id))
-> >> +				count++;
-> >>  
-> >> -		if (!of_property_read_u32(node, "powercap-current", &cur)) {
-> >> -			j++;
-> >> -			has_cur = true;
-> >> -		}
-> >> -
-> >> -		pcaps[i].pattrs = kcalloc(j, sizeof(struct powercap_attr),
-> >> +		pcaps[i].pattrs = kcalloc(count, sizeof(struct powercap_attr),
-> >>  					  GFP_KERNEL);
-> >>  		if (!pcaps[i].pattrs)
-> >>  			goto out_pcaps_pattrs;
-> >>  
-> >> -		pcaps[i].pg.attrs = kcalloc(j + 1, sizeof(struct attribute *),
-> >> +		pcaps[i].pg.attrs = kcalloc(count + 1,
-> >> +					    sizeof(struct attribute *),
-> >>  					    GFP_KERNEL);
-> >>  		if (!pcaps[i].pg.attrs) {
-> >>  			kfree(pcaps[i].pattrs);
-> >>  			goto out_pcaps_pattrs;
-> >>  		}
-> >>  
-> >> -		j = 0;
-> >>  		pcaps[i].pg.name = kasprintf(GFP_KERNEL, "%pOFn", node);
-> >> -		if (has_min) {
-> >> -			powercap_add_attr(min, "powercap-min",
-> >> -					  &pcaps[i].pattrs[j]);
-> >> -			pcaps[i].pg.attrs[j] = &pcaps[i].pattrs[j].attr.attr;
-> >> -			j++;
-> >> -		}
-> >> -
-> >> -		if (has_max) {
-> >> -			powercap_add_attr(max, "powercap-max",
-> >> -					  &pcaps[i].pattrs[j]);
-> >> -			pcaps[i].pg.attrs[j] = &pcaps[i].pattrs[j].attr.attr;
-> >> -			j++;
-> >> -		}
-> >> +		for (j = 0; j < ARRAY_SIZE(powercap_strs); j++) {
-> >> +			if (of_property_read_u32(node, powercap_strs[j], &id))
-> >> +				continue;
-> >>  
-> >> -		if (has_cur) {
-> >> -			powercap_add_attr(cur, "powercap-current",
-> >> +			powercap_add_attr(id, powercap_strs[j],
-> >>  					  &pcaps[i].pattrs[j]);
-> >> -			pcaps[i].pattrs[j].attr.attr.mode |= 0220;
-> >> -			pcaps[i].pattrs[j].attr.store = powercap_store;
-> >>  			pcaps[i].pg.attrs[j] = &pcaps[i].pattrs[j].attr.attr;
-> >> -			j++;
-> >>  		}
-> >>  
-> >>  		if (sysfs_create_group(powercap_kobj, &pcaps[i].pg)) {
-> >> -- 
-> >> 1.8.3.1
-> > 
-
+I am not really opposed to the throttling in the absence of a
+reclaimable memory. We do that for the regular allocation paths already
+(should_reclaim_retry). A swapless system with anon memory is very
+likely to oom too quickly and this sounds like a real problem. But I do
+not think that we should throttle the allocation to freeze it
+completely. We should eventually OOM. And that was my question about
+essentially. How much we can/should throttle to give a high limit events
+consumer enough time to intervene. I am sorry to still not have time to
+study the patch more closely but this should be explained in the
+changelog. Are we talking about seconds/minutes or simply freeze each
+allocator to death?
+-- 
+Michal Hocko
+SUSE Labs
