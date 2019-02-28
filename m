@@ -2,102 +2,262 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80DCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF58C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA4A2171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7DE2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732227AbfB1JuN (ORCPT
+        id S1730102AbfB1JwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:50:13 -0500
-Received: from smtp.eu.citrix.com ([185.25.65.24]:51657 "EHLO
-        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfB1JuM (ORCPT
+        Thu, 28 Feb 2019 04:52:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33078 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726810AbfB1JwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:50:12 -0500
-X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
-   d="scan'208";a="86578277"
-Subject: Re: [Xen-devel] [PATCH] xen-netback: fix occasional leak of grant ref
- mappings under memory pressure
-To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
-        <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <paul.durrant@citrix.com>, <wei.liu2@citrix.com>,
-        <davem@davemloft.net>
-References: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
- 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
- 6+ahAA==
-Message-ID: <efd4aa90-e2f4-cd14-7890-6b47f3f94497@citrix.com>
-Date:   Thu, 28 Feb 2019 09:50:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Feb 2019 04:52:17 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S9nP4Q091958
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:52:09 -0500
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxc3u3fuh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 04:52:08 -0500
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
+        Thu, 28 Feb 2019 09:52:07 -0000
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Feb 2019 09:52:04 -0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1S9q39T19923098
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Feb 2019 09:52:03 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 66361112067;
+        Thu, 28 Feb 2019 09:52:03 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4E78112063;
+        Thu, 28 Feb 2019 09:52:02 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.124.35.84])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Feb 2019 09:52:02 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id D25832E2D5F; Thu, 28 Feb 2019 15:22:00 +0530 (IST)
+Date:   Thu, 28 Feb 2019 15:22:00 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+Cc:     Daniel Axtens <dja@axtens.net>, mpe@ellerman.id.au,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        ego@linux.vnet.ibm.com
+Subject: Re: [PATCH] powernv: powercap: Add hard minimum powercap
+Reply-To: ego@linux.vnet.ibm.com
+References: <1551260002-26792-1-git-send-email-shilpa.bhat@linux.vnet.ibm.com>
+ <871s3s34jb.fsf@dja-thinkpad.axtens.net>
+ <57fc8253-c5c3-6103-77cd-34aa4ec250a3@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <57fc8253-c5c3-6103-77cd-34aa4ec250a3@linux.vnet.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+x-cbid: 19022809-0052-0000-0000-0000039229C8
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010679; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01167519; UDB=6.00609945; IPR=6.00948132;
+ MB=3.00025777; MTD=3.00000008; XFM=3.00000015; UTC=2019-02-28 09:52:06
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19022809-0053-0000-0000-00005FFF1717
+Message-Id: <20190228095200.GB24751@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1902280070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 02:03, Igor Druzhinin wrote:
-> Zero-copy callback flag is not yet set on frag list skb at the moment
-> xenvif_handle_frag_list() returns -ENOMEM. This eventually results in
-> leaking grant ref mappings since xenvif_zerocopy_callback() is never
-> called for these fragments. Those eventually build up and cause Xen
-> to kill Dom0 as the slots get reused for new mappings.
+Hi Shilpa,
 
-Its worth pointing out what (debug) Xen notices is dom0 performing
-implicit grant unmap.
+On Thu, Feb 28, 2019 at 11:25:25AM +0530, Shilpasri G Bhat wrote:
+> Hi,
+> 
+> On 02/28/2019 10:14 AM, Daniel Axtens wrote:
+> > Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com> writes:
+> > 
+> >> In POWER9, OCC(On-Chip-Controller) provides for hard and soft system
+> >> powercapping range. The hard powercap range is guaranteed while soft
+> >> powercap may or may not be asserted due to various power-thermal
+> >> reasons based on system configuration and workloads. This patch adds
+> >> a sysfs file to export the hard minimum powercap limit to allow the
+> >> user to set the appropriate powercap value that can be managed by the
+> >> system.
+> > 
+> > Maybe it's common terminology and I'm just not aware of it, but what do
+> > you mean by "asserted"? It doesn't appear elsewhere in the documentation
+> > you're patching, and it's not a use of assert that I'm familiar with...
+> > 
+> > Regards,
+> > Daniel
+> > 
+> 
+> I meant to say powercap will not be assured in the soft powercap range, i.e,
+> system may or may not be throttled of CPU frequency to remain within the powercap.
+> 
+> I can reword the document and commit message.
 
-~Andrew
+I agree with Daniel. How about replacing "asserted" with "enforced by
+the OCC"?
+
+
+> 
+> Thanks and Regards,
+> Shilpa
+
+--
+Thanks and Regards
+gautham.
+
+> 
+> >>
+> >> Signed-off-by: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+> >> ---
+> >>  .../ABI/testing/sysfs-firmware-opal-powercap       | 10 ++++
+> >>  arch/powerpc/platforms/powernv/opal-powercap.c     | 66 +++++++++-------------
+> >>  2 files changed, 37 insertions(+), 39 deletions(-)
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-firmware-opal-powercap b/Documentation/ABI/testing/sysfs-firmware-opal-powercap
+> >> index c9b66ec..65db4c1 100644
+> >> --- a/Documentation/ABI/testing/sysfs-firmware-opal-powercap
+> >> +++ b/Documentation/ABI/testing/sysfs-firmware-opal-powercap
+> >> @@ -29,3 +29,13 @@ Description:	System powercap directory and attributes applicable for
+> >>  		  creates a request for setting a new-powercap. The
+> >>  		  powercap requested must be between powercap-min
+> >>  		  and powercap-max.
+> >> +
+> >> +What:		/sys/firmware/opal/powercap/system-powercap/powercap-hard-min
+> >> +Date:		Feb 2019
+> >> +Contact:	Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
+> >> +Description:	Hard minimum powercap
+> >> +
+> >> +		This file provides the hard minimum powercap limit in
+> >> +		Watts. The powercap value above hard minimum is always
+> >> +		guaranteed to be asserted and the powercap value below
+> >> +		the hard minimum limit may or may not be guaranteed.
+> >> diff --git a/arch/powerpc/platforms/powernv/opal-powercap.c b/arch/powerpc/platforms/powernv/opal-powercap.c
+> >> index d90ee4f..38408e7 100644
+> >> --- a/arch/powerpc/platforms/powernv/opal-powercap.c
+> >> +++ b/arch/powerpc/platforms/powernv/opal-powercap.c
+> >> @@ -139,10 +139,24 @@ static void powercap_add_attr(int handle, const char *name,
+> >>  	attr->handle = handle;
+> >>  	sysfs_attr_init(&attr->attr.attr);
+> >>  	attr->attr.attr.name = name;
+> >> -	attr->attr.attr.mode = 0444;
+> >> +
+> >> +	if (!strncmp(name, "powercap-current", strlen(name))) {
+> >> +		attr->attr.attr.mode = 0664;
+> >> +		attr->attr.store = powercap_store;
+> >> +	} else {
+> >> +		attr->attr.attr.mode = 0444;
+> >> +	}
+> >> +
+> >>  	attr->attr.show = powercap_show;
+> >>  }
+> >>  
+> >> +static const char * const powercap_strs[] = {
+> >> +	"powercap-max",
+> >> +	"powercap-min",
+> >> +	"powercap-current",
+> >> +	"powercap-hard-min",
+> >> +};
+> >> +
+> >>  void __init opal_powercap_init(void)
+> >>  {
+> >>  	struct device_node *powercap, *node;
+> >> @@ -167,60 +181,34 @@ void __init opal_powercap_init(void)
+> >>  
+> >>  	i = 0;
+> >>  	for_each_child_of_node(powercap, node) {
+> >> -		u32 cur, min, max;
+> >> -		int j = 0;
+> >> -		bool has_cur = false, has_min = false, has_max = false;
+> >> +		u32 id;
+> >> +		int j, count = 0;
+> >>  
+> >> -		if (!of_property_read_u32(node, "powercap-min", &min)) {
+> >> -			j++;
+> >> -			has_min = true;
+> >> -		}
+> >> -
+> >> -		if (!of_property_read_u32(node, "powercap-max", &max)) {
+> >> -			j++;
+> >> -			has_max = true;
+> >> -		}
+> >> +		for (j = 0; j < ARRAY_SIZE(powercap_strs); j++)
+> >> +			if (!of_property_read_u32(node, powercap_strs[j], &id))
+> >> +				count++;
+> >>  
+> >> -		if (!of_property_read_u32(node, "powercap-current", &cur)) {
+> >> -			j++;
+> >> -			has_cur = true;
+> >> -		}
+> >> -
+> >> -		pcaps[i].pattrs = kcalloc(j, sizeof(struct powercap_attr),
+> >> +		pcaps[i].pattrs = kcalloc(count, sizeof(struct powercap_attr),
+> >>  					  GFP_KERNEL);
+> >>  		if (!pcaps[i].pattrs)
+> >>  			goto out_pcaps_pattrs;
+> >>  
+> >> -		pcaps[i].pg.attrs = kcalloc(j + 1, sizeof(struct attribute *),
+> >> +		pcaps[i].pg.attrs = kcalloc(count + 1,
+> >> +					    sizeof(struct attribute *),
+> >>  					    GFP_KERNEL);
+> >>  		if (!pcaps[i].pg.attrs) {
+> >>  			kfree(pcaps[i].pattrs);
+> >>  			goto out_pcaps_pattrs;
+> >>  		}
+> >>  
+> >> -		j = 0;
+> >>  		pcaps[i].pg.name = kasprintf(GFP_KERNEL, "%pOFn", node);
+> >> -		if (has_min) {
+> >> -			powercap_add_attr(min, "powercap-min",
+> >> -					  &pcaps[i].pattrs[j]);
+> >> -			pcaps[i].pg.attrs[j] = &pcaps[i].pattrs[j].attr.attr;
+> >> -			j++;
+> >> -		}
+> >> -
+> >> -		if (has_max) {
+> >> -			powercap_add_attr(max, "powercap-max",
+> >> -					  &pcaps[i].pattrs[j]);
+> >> -			pcaps[i].pg.attrs[j] = &pcaps[i].pattrs[j].attr.attr;
+> >> -			j++;
+> >> -		}
+> >> +		for (j = 0; j < ARRAY_SIZE(powercap_strs); j++) {
+> >> +			if (of_property_read_u32(node, powercap_strs[j], &id))
+> >> +				continue;
+> >>  
+> >> -		if (has_cur) {
+> >> -			powercap_add_attr(cur, "powercap-current",
+> >> +			powercap_add_attr(id, powercap_strs[j],
+> >>  					  &pcaps[i].pattrs[j]);
+> >> -			pcaps[i].pattrs[j].attr.attr.mode |= 0220;
+> >> -			pcaps[i].pattrs[j].attr.store = powercap_store;
+> >>  			pcaps[i].pg.attrs[j] = &pcaps[i].pattrs[j].attr.attr;
+> >> -			j++;
+> >>  		}
+> >>  
+> >>  		if (sysfs_create_group(powercap_kobj, &pcaps[i].pg)) {
+> >> -- 
+> >> 1.8.3.1
+> > 
+
