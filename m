@@ -2,94 +2,125 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7CCC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227ADC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4400820830
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D320020850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:39:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RMg7Xw+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732847AbfB1XdL (ORCPT
+        id S1727876AbfB1XjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:33:11 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41520 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfB1XdL (ORCPT
+        Thu, 28 Feb 2019 18:39:22 -0500
+Received: from mail-it1-f193.google.com ([209.85.166.193]:54844 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfB1XjW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:33:11 -0500
-Received: by mail-pf1-f194.google.com with SMTP id d25so10467325pfn.8;
-        Thu, 28 Feb 2019 15:33:11 -0800 (PST)
+        Thu, 28 Feb 2019 18:39:22 -0500
+Received: by mail-it1-f193.google.com with SMTP id w18so17446478itj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:39:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xl/VHkISQds30MIGHXhz8zWSd8eWLcUqDd8bDu0FSX0=;
+        b=RMg7Xw+4t9QRTuf9FotF0lZctWyKUOLgG64u8skhmieVdFpIRZBhQAHZa0m8WsDe9I
+         wdVQMuEDw2q3TpdKJvFtRXG4LFDUx/crMpWN5AR9rPPTPtB8nW2yaWD45+WID0UnZmgm
+         w68vM1nVxr5cvvwRZriKCqTeOfKSZKaSFUCkU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qxbAgDrhTMrGO19Is5jXgpmLBZWR7yKX1z36F+HA7Gc=;
-        b=BJMrVuJEK6+1ukXRyJhrMxlBpzumu/3vcWObk7m8YsO7s3k8yNF1S6qbXDsVji/tHK
-         5cdMF1jBiEd6MQmXNDDbuU1/6mb8MuayAhCQYB/0RuS2WZp6QzzafhQ4mDAregyHzRCU
-         tVofUR1mSh01lhV8Rtcy3nh/amPMUhQEq+GP3VIpuo6PQ9R3vsHLXH9vG8fLl0zzWVBu
-         kcPct1Km77Fs95ON0zt5TjhWG/BJY30qKxAcmLgMXNQ9NUuEQ513Ad0qAaeUbir5Ww/0
-         KHwjhzec/Rt+DNn9yDouEFNxRlRUpWdB0nnhX9NDr89jTHC06ffiCto429fmHm3T7Ebz
-         0Ffw==
-X-Gm-Message-State: AHQUAuagEftJegAYq5Pl64gczjyT+KeDjNw1n1c2PcVUP6psY1rtVCeF
-        XXsltgXYbFYjb0W3iD8Abpg=
-X-Google-Smtp-Source: AHgI3IbACP7OjI/bIMQgmJEQ4n2EtSmaWCL3uu+GhOI+vw4I3cLoCcJTGJobRQWKqxGnOL1PKdArLA==
-X-Received: by 2002:a62:1212:: with SMTP id a18mr2253485pfj.177.1551396790595;
-        Thu, 28 Feb 2019 15:33:10 -0800 (PST)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id s6sm41676104pgm.90.2019.02.28.15.33.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 15:33:09 -0800 (PST)
-Message-ID: <1551396788.31902.213.camel@acm.org>
-Subject: Re: [PATCH] cxgb4: fix undefined behavior in mem.c
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Shaobo He <shaobo@cs.utah.edu>, linux-rdma@vger.kernel.org
-Cc:     Steve Wise <swise@chelsio.com>, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 28 Feb 2019 15:33:08 -0800
-In-Reply-To: <abf425b1-19ba-9cf5-8288-87ac0dbf6ac7@cs.utah.edu>
-References: <1551393519-96595-1-git-send-email-shaobo@cs.utah.edu>
-         <1551394596.31902.209.camel@acm.org>
-         <abf425b1-19ba-9cf5-8288-87ac0dbf6ac7@cs.utah.edu>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xl/VHkISQds30MIGHXhz8zWSd8eWLcUqDd8bDu0FSX0=;
+        b=ZwbBlby/e8rMuLjmQlkSy/cs0R0FEo+RGjmt8Y8sDekrvguD2dOQDd0+BDX+IuoAfF
+         EhWbX1AIqGzYXY+03wLOmQmQeXLxyNst2zq08c5VLpOw29Ufk74l8a4kRbjWffEk11+w
+         +ZDOSS6T1l2z9gJY/Cbs70Tb7bNCtfSpYe02JA3id/JChv3sBr95Kl7y/d9Y6aEyuwTg
+         67P7kizVd4nsVTM2R0PGIewQxZiF4VexHsblYi/Caa89PjLloN34EDO6ExTIkm9vn2WT
+         GciW48hCPdjzpkxnXSzwoNwOGIKDpJO6Yk5TRilhD0v8eTIiXdpB3ybKwpxYC1KI0Z2D
+         Ffiw==
+X-Gm-Message-State: AHQUAubf3tLj4x4eytetwIAzzqP3jotDdCd0meWQDAZxJA9NGIgaJJ6O
+        HRUFkx7rAV0Kf0l0XNNycr6/yfOE5Jh2Ekk9pwa+QQ==
+X-Google-Smtp-Source: AHgI3Ibl/NifKmtLTTiz2V0lEfdzQgZb1fwjmD/Pc2ndKKjjogcakyM8WJb2ybQ16BCwaYArZp+Y2c3c4sk5FslIlVE=
+X-Received: by 2002:a24:328c:: with SMTP id j134mr1698032ita.71.1551397161184;
+ Thu, 28 Feb 2019 15:39:21 -0800 (PST)
+MIME-Version: 1.0
+References: <1550999629-31791-1-git-send-email-rushikesh.s.kadam@intel.com>
+ <CABXOdTdprS1OL534XQq8yHTFDzXdWWODq3VGrSEHYe2wmV5zfg@mail.gmail.com>
+ <CAK+PMK67rWZarOV31n=yYbRMq3wo9vDyMTQ93PFZ7PRUMS66Ng@mail.gmail.com>
+ <CABXOdTdbev2nKNjocqxOyPcGOU8zbWpQ7uALWZdEHL0CXkYDgA@mail.gmail.com>
+ <CAK+PMK5U4YRtJNUbsQu3ARJFxwai7W=DjPfjuX_AZMFcUZ-c_A@mail.gmail.com>
+ <39dc9be2-808e-4800-b4bb-605d5bf94e12@collabora.com> <CAK+PMK4ov8jJh7wZoTErikuztf=eOruG8xYt6umjt35f9EaGaA@mail.gmail.com>
+ <3959820e-cf43-2370-7cea-7afd01b2933c@collabora.com> <CAMHSBOXF_PtSTpcnVcJE7bMRA85TCqZdJL3Md4Z_Cd4Djjkw1A@mail.gmail.com>
+ <CAFqH_53CF2rOVt8G=amQXC2_0mNXZw2m8_kvkM2wMjx6GyWSaQ@mail.gmail.com>
+ <20190228075656.GA9224@smile.fi.intel.com> <CAFqH_53Ued9vyBZDkpEzdFo=hRQs8J7QSQ-o7XRnDc2meb1GiQ@mail.gmail.com>
+In-Reply-To: <CAFqH_53Ued9vyBZDkpEzdFo=hRQs8J7QSQ-o7XRnDc2meb1GiQ@mail.gmail.com>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Thu, 28 Feb 2019 15:39:10 -0800
+Message-ID: <CAPUE2uubM4cADJL6tr84+M47W74r3btVff3LKB6+ELyzSnP5WA@mail.gmail.com>
+Subject: Re: [PATCH] cros_ec: instantiate properly Intel ISH MCU device
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jett Rink <jettrink@chromium.org>,
+        Guenter Roeck <groeck@google.com>,
+        Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Aaron Durbin <adurbin@google.com>,
+        Duncan Laurie <dlaurie@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-02-28 at 16:18 -0700, Shaobo He wrote:
-+AD4 I can't afford a pdf version of the C standard. So I looked at the draft version 
-+AD4 used in the link I put in the commit message. It says (in 6.2.4:2),
-+AD4 
-+AD4 +AGAAYABg
-+AD4 The lifetime of an object is the portion of program execution during which 
-+AD4 storage is guaranteed to be reserved for it. An object exists, has a constant 
-+AD4 address, and retains its last-stored value throughout its lifetime. If an object 
-+AD4 is referred to outside of its lifetime, the behavior is undefined. The value of 
-+AD4 a pointer becomes indeterminate when the object it points to (or just past) 
-+AD4 reaches the end of its lifetime.
-+AD4 +AGAAYABg
-+AD4 I couldn't find the definition of lifetime over a dynamically allocated object 
-+AD4 in the draft of C standard. I refer to this link 
-+AD4 (https://en.cppreference.com/w/c/language/lifetime) which suggests that the 
-+AD4 lifetime of an allocated object ends after the deallocation function is called 
-+AD4 upon it.
-+AD4 
-+AD4 I think maybe the more problematic issue is that the value of a freed pointer is 
-+AD4 intermediate.
+On Thu, Feb 28, 2019 at 4:18 AM Enric Balletbo Serra
+<eballetbo@gmail.com> wrote:
+>
+> Hi Andy,
+> Missatge de Andy Shevchenko <andriy.shevchenko@intel.com> del dia dj.,
+> 28 de febr. 2019 a les 8:57:
+> >
+> > On Thu, Feb 28, 2019 at 12:05:35AM +0100, Enric Balletbo Serra wrote:
+> > > Missatge de Gwendal Grignou <gwendal@chromium.org> del dia dc., 27 de
+> > > febr. 2019 a les 19:37:
+> > > > On Wed, Feb 27, 2019 at 10:08 AM Enric Balletbo i Serra
+> > > > <enric.balletbo@collabora.com> wrote:
+> > > > > On 27/2/19 16:13, Jett Rink wrote:
+> >
+> > > > You're right, the cros_ names are based on what the EC provides.
+> > > > cros_ec for generic EC, fp, tp for fingerprint, touch pad
+> > > > respectively.
+> > > > ish is for standalone sensor hub [it does not have to be Intel Sensor Hub].
+> > > >
+> > >
+> > > Thanks for the explanation. I didn't know that and I assumed the 'i'
+> > > was for 'intel', maybe would be good call cros_ssh or cros_sh to avoid
+> > > confusion?
+> >
+> > i is for Integrated. There is no confusion.
+>
+> Ok, thanks for the clarification. Now that is clear to me I'll send
+> some reviews of this patch in a minute.
+Regarding cros_scp, it may coexist with cros_ec or be standalone. It
+is not clear yet.
 
-In another section of the same draft I found the following:
-
-J.2 Undefined behavior +AFs ... +AF0 The value of a pointer that refers to space
-deallocated by a call to the free or realloc function is used (7.22.3).
-
-Since the C standard explicitly refers to free() and realloc(), does that
-mean that that statement about undefined behavior does not apply to munmap()
-(for user space code) nor to kfree() (for kernel code)?
-
-Bart.
+Gwendal.
+>
+> Best regards,
+> Enric
+>
+> > It seems you misread what was written in [] above.
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+> >
+> >
