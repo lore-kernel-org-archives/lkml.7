@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC1BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D51CC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7C4218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF052171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366621;
-	bh=/giQ7jO9MGgkwh2PuQ3dZC6xA91qL9z+pMyIheIWzjQ=;
+	s=default; t=1551366629;
+	bh=sjRDTeemEjp11k7RyCD/FIsH51xeI8QueAqNRXaYg8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z++idkTmwwr88aXQP9hCpqBggG2Y46O1M+d5qo1fgiG5/dub3QlTKznC9B2Bva9bG
-	 GewiXGzJbNjmUROG0f6/aHT2xwVYLERaf5qLc60+97ghhRpTzD6RziJ5rxI4BekMS6
-	 QLEIwqeYCmDa+bkWzw6iNOOLklGrzbA7oX6zmwQ8=
+	b=MFGCMxdECEfdICmOWqY/qj1wyTb8FY/gtvYMmzkI247Kl7PhVf00pYBUe/1aa9wX1
+	 TDUugQ79HzSi/+aNdYyAF9hSEPjy7+RPPCXIUO6QuZl92s8ff2J2brkdr4FgqBzO7T
+	 FLd+UeupteCUl37kdslcrSgeu3LtoyBrKpLUu8YU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbfB1PKT (ORCPT
+        id S2387727AbfB1PK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:10:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42574 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:10:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387609AbfB1PJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:09:54 -0500
+        id S2387690AbfB1PKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:10:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8129A218B0;
-        Thu, 28 Feb 2019 15:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A757A218AE;
+        Thu, 28 Feb 2019 15:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366593;
-        bh=/giQ7jO9MGgkwh2PuQ3dZC6xA91qL9z+pMyIheIWzjQ=;
+        s=default; t=1551366622;
+        bh=sjRDTeemEjp11k7RyCD/FIsH51xeI8QueAqNRXaYg8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c0gNDqOnAIsfeV5m5ZAdkw+2koaPFaQazjhday03cQ3wsGMbYU104rKsZ+emhLCOF
-         B10IG3bbx+f3UsiQkDEbNmOEkeNihu/94cB3RYSs166tB7nFopCjoO38OlfASPkNZE
-         9Oy88VwjCkjHxebb27+jCNl3g5XTtjtObDuP4EEs=
+        b=SSTj59DGTCYn+urepSBm7rbKjL5r0Unus7h8Xtwz70dAI1Rh8ygdiyEEI+A8ZL91w
+         JB+G3OkpIalOvpS1I9M2f1Vi7VSC9/6AkQasyIpTdmxfUvWixdlYECKXXXwGYoNqfp
+         6ndPt2MAT/Nh5hUFCAiJ6N8JtSzqe21k9lwwPPm4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 54/81] vsock/virtio: fix kernel panic after device hot-unplug
-Date:   Thu, 28 Feb 2019 10:07:46 -0500
-Message-Id: <20190228150813.10256-54-sashal@kernel.org>
+Cc:     Will Deacon <will.deacon@arm.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 60/81] arm64: ptdump: Don't iterate kernel page tables using PTRS_PER_PXX
+Date:   Thu, 28 Feb 2019 10:07:52 -0500
+Message-Id: <20190228150813.10256-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -58,101 +56,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Will Deacon <will.deacon@arm.com>
 
-[ Upstream commit 22b5c0b63f32568e130fa2df4ba23efce3eb495b ]
+[ Upstream commit d23c808c6fc6132e812690648e14c0d6b0cbe273 ]
 
-virtio_vsock_remove() invokes the vsock_core_exit() also if there
-are opened sockets for the AF_VSOCK protocol family. In this way
-the vsock "transport" pointer is set to NULL, triggering the
-kernel panic at the first socket activity.
+When 52-bit virtual addressing is enabled for userspace
+(CONFIG_ARM64_USER_VA_BITS_52=y), the kernel continues to utilise 48-bit
+virtual addressing in TTBR1. Consequently, PTRS_PER_PGD reflects the
+larger page table size for userspace and the pgd pointer for kernel page
+tables is offset before being written to TTBR1.
 
-This patch move the vsock_core_init()/vsock_core_exit() in the
-virtio_vsock respectively in module_init and module_exit functions,
-that cannot be invoked until there are open sockets.
+This means that we can't use PTRS_PER_PGD to iterate over kernel page
+tables unless we apply the same offset, which is fiddly to get right and
+leads to some non-idiomatic walking code. Instead, just follow the usual
+pattern when walking page tables by using a while loop driven by
+pXd_offset() and pXd_addr_end().
 
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1609699
-Reported-by: Yan Fu <yafu@redhat.com>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Qian Cai <cai@lca.pw>
+Tested-by: Qian Cai <cai@lca.pw>
+Acked-by: Steve Capper <steve.capper@arm.com>
+Tested-by: Steve Capper <steve.capper@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/vmw_vsock/virtio_transport.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+ arch/arm64/mm/dump.c | 59 ++++++++++++++++++++++----------------------
+ 1 file changed, 29 insertions(+), 30 deletions(-)
 
-diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-index 5d3cce9e8744d..9dae54698737c 100644
---- a/net/vmw_vsock/virtio_transport.c
-+++ b/net/vmw_vsock/virtio_transport.c
-@@ -75,6 +75,9 @@ static u32 virtio_transport_get_local_cid(void)
+diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
+index fcb1f2a6d7c66..99bb8facb5cbc 100644
+--- a/arch/arm64/mm/dump.c
++++ b/arch/arm64/mm/dump.c
+@@ -286,74 +286,73 @@ static void note_page(struct pg_state *st, unsigned long addr, unsigned level,
+ 
+ }
+ 
+-static void walk_pte(struct pg_state *st, pmd_t *pmdp, unsigned long start)
++static void walk_pte(struct pg_state *st, pmd_t *pmdp, unsigned long start,
++		     unsigned long end)
  {
- 	struct virtio_vsock *vsock = virtio_vsock_get();
+-	pte_t *ptep = pte_offset_kernel(pmdp, 0UL);
+-	unsigned long addr;
+-	unsigned i;
++	unsigned long addr = start;
++	pte_t *ptep = pte_offset_kernel(pmdp, start);
  
-+	if (!vsock)
-+		return VMADDR_CID_ANY;
-+
- 	return vsock->guest_cid;
+-	for (i = 0; i < PTRS_PER_PTE; i++, ptep++) {
+-		addr = start + i * PAGE_SIZE;
++	do {
+ 		note_page(st, addr, 4, READ_ONCE(pte_val(*ptep)));
+-	}
++	} while (ptep++, addr += PAGE_SIZE, addr != end);
  }
  
-@@ -584,10 +587,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
- 
- 	virtio_vsock_update_guest_cid(vsock);
- 
--	ret = vsock_core_init(&virtio_transport.transport);
--	if (ret < 0)
--		goto out_vqs;
--
- 	vsock->rx_buf_nr = 0;
- 	vsock->rx_buf_max_nr = 0;
- 	atomic_set(&vsock->queued_replies, 0);
-@@ -618,8 +617,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
- 	mutex_unlock(&the_virtio_vsock_mutex);
- 	return 0;
- 
--out_vqs:
--	vsock->vdev->config->del_vqs(vsock->vdev);
- out:
- 	kfree(vsock);
- 	mutex_unlock(&the_virtio_vsock_mutex);
-@@ -669,7 +666,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
- 
- 	mutex_lock(&the_virtio_vsock_mutex);
- 	the_virtio_vsock = NULL;
--	vsock_core_exit();
- 	mutex_unlock(&the_virtio_vsock_mutex);
- 
- 	vdev->config->del_vqs(vdev);
-@@ -702,14 +698,28 @@ static int __init virtio_vsock_init(void)
- 	virtio_vsock_workqueue = alloc_workqueue("virtio_vsock", 0, 0);
- 	if (!virtio_vsock_workqueue)
- 		return -ENOMEM;
-+
- 	ret = register_virtio_driver(&virtio_vsock_driver);
- 	if (ret)
--		destroy_workqueue(virtio_vsock_workqueue);
-+		goto out_wq;
-+
-+	ret = vsock_core_init(&virtio_transport.transport);
-+	if (ret)
-+		goto out_vdr;
-+
-+	return 0;
-+
-+out_vdr:
-+	unregister_virtio_driver(&virtio_vsock_driver);
-+out_wq:
-+	destroy_workqueue(virtio_vsock_workqueue);
- 	return ret;
-+
- }
- 
- static void __exit virtio_vsock_exit(void)
+-static void walk_pmd(struct pg_state *st, pud_t *pudp, unsigned long start)
++static void walk_pmd(struct pg_state *st, pud_t *pudp, unsigned long start,
++		     unsigned long end)
  {
-+	vsock_core_exit();
- 	unregister_virtio_driver(&virtio_vsock_driver);
- 	destroy_workqueue(virtio_vsock_workqueue);
+-	pmd_t *pmdp = pmd_offset(pudp, 0UL);
+-	unsigned long addr;
+-	unsigned i;
++	unsigned long next, addr = start;
++	pmd_t *pmdp = pmd_offset(pudp, start);
+ 
+-	for (i = 0; i < PTRS_PER_PMD; i++, pmdp++) {
++	do {
+ 		pmd_t pmd = READ_ONCE(*pmdp);
++		next = pmd_addr_end(addr, end);
+ 
+-		addr = start + i * PMD_SIZE;
+ 		if (pmd_none(pmd) || pmd_sect(pmd)) {
+ 			note_page(st, addr, 3, pmd_val(pmd));
+ 		} else {
+ 			BUG_ON(pmd_bad(pmd));
+-			walk_pte(st, pmdp, addr);
++			walk_pte(st, pmdp, addr, next);
+ 		}
+-	}
++	} while (pmdp++, addr = next, addr != end);
  }
+ 
+-static void walk_pud(struct pg_state *st, pgd_t *pgdp, unsigned long start)
++static void walk_pud(struct pg_state *st, pgd_t *pgdp, unsigned long start,
++		     unsigned long end)
+ {
+-	pud_t *pudp = pud_offset(pgdp, 0UL);
+-	unsigned long addr;
+-	unsigned i;
++	unsigned long next, addr = start;
++	pud_t *pudp = pud_offset(pgdp, start);
+ 
+-	for (i = 0; i < PTRS_PER_PUD; i++, pudp++) {
++	do {
+ 		pud_t pud = READ_ONCE(*pudp);
++		next = pud_addr_end(addr, end);
+ 
+-		addr = start + i * PUD_SIZE;
+ 		if (pud_none(pud) || pud_sect(pud)) {
+ 			note_page(st, addr, 2, pud_val(pud));
+ 		} else {
+ 			BUG_ON(pud_bad(pud));
+-			walk_pmd(st, pudp, addr);
++			walk_pmd(st, pudp, addr, next);
+ 		}
+-	}
++	} while (pudp++, addr = next, addr != end);
+ }
+ 
+ static void walk_pgd(struct pg_state *st, struct mm_struct *mm,
+ 		     unsigned long start)
+ {
+-	pgd_t *pgdp = pgd_offset(mm, 0UL);
+-	unsigned i;
+-	unsigned long addr;
++	unsigned long end = (start < TASK_SIZE_64) ? TASK_SIZE_64 : 0;
++	unsigned long next, addr = start;
++	pgd_t *pgdp = pgd_offset(mm, start);
+ 
+-	for (i = 0; i < PTRS_PER_PGD; i++, pgdp++) {
++	do {
+ 		pgd_t pgd = READ_ONCE(*pgdp);
++		next = pgd_addr_end(addr, end);
+ 
+-		addr = start + i * PGDIR_SIZE;
+ 		if (pgd_none(pgd)) {
+ 			note_page(st, addr, 1, pgd_val(pgd));
+ 		} else {
+ 			BUG_ON(pgd_bad(pgd));
+-			walk_pud(st, pgdp, addr);
++			walk_pud(st, pgdp, addr, next);
+ 		}
+-	}
++	} while (pgdp++, addr = next, addr != end);
+ }
+ 
+ void ptdump_walk_pgd(struct seq_file *m, struct ptdump_info *info)
 -- 
 2.19.1
 
