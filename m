@@ -2,126 +2,118 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BED6C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30180C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A373218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="OKlYpKJq"
+	by mail.kernel.org (Postfix) with ESMTP id 02ADB218B0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551368279;
+	bh=d9Fnt7h8JVsgePf/Xp/5197DVDsk15WNv/erwfjZqyI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vLO9x0BxwdIUhbKOoAHkDrEoNuAE3aQPSHAo3IMy6lky7G1Yc1CVa5Pekf7i2Ijpi
+	 ICw05ScrWZuhQ+cJkCl3W377UtzeojjRy4cbkgS8HKbPn44Ca44YsbdZgu258X1XLw
+	 cjQoRQp8+nkQrDpMHrWZUKgWXQ1UoZtGPP0W7AKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733084AbfB1Php (ORCPT
+        id S2387426AbfB1Ph5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:37:45 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34460 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732663AbfB1Pho (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:37:44 -0500
-Received: by mail-qt1-f194.google.com with SMTP id w4so24016247qtc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 07:37:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v7gzrKezcIwFWzmox7p1htcPZe99ZZKhmzdK3ftXpus=;
-        b=OKlYpKJqBw9BHHRrZOSIls+nwj3zlbcFyeg0IPRaw8UdAajO2bE/VBExoW3JxC7IVC
-         HvDkVhyqO+nldKK++HWCT0R8ypOljUOTJ2u2/9s6Eh78c2xWDsjvKm0VFqRIvq/Pj9fr
-         ef3hjYpwdGW/PDVfWqpTS5/FNimiC0v3bb8NI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v7gzrKezcIwFWzmox7p1htcPZe99ZZKhmzdK3ftXpus=;
-        b=TC7yHlEeq19ngJO3OehFd5lTXJ/knAWrcabke0UE4Aa5dy8hT1hzARzJPk4O0+NmFy
-         hseHgVuNLGSbDO8u3xzp63p8p1OAZhk+IJb5KIKYLljvNGfUhnd6i9K5PDzlvu/ige1R
-         kxzKUN7vXtfRZgkBo7KDGh5m7HktjiBaCYIQ1p5SCJ3MQx1zSHpETA00eHGk78NZwcV4
-         9ezT38oqXowHZQH1EcH5cSjG75HjCihTFQUyoOMRu1DWe5wBItsVUh+Ztlr2xAVPkViM
-         GgQS+uXkix+/CItK358hpGu6iNxfOk/o/CngVnEvNYb5ZlbS8v9fSmxIs3iZsN5LvgVj
-         8isA==
-X-Gm-Message-State: APjAAAX8PHFsOxR3XAUD5rY1cjWoQ+ctuzSxmr3NpG/l5I0tOBy4xR5V
-        GnGOyEZHZFcpyBAgqbaIu+BrcA==
-X-Google-Smtp-Source: AHgI3IbkuulTYVsXwFGsAS3HsZKOH6wBXPPpaz3vmYcZDvUCg/xtF+gV84H5QLDoGkuEgyxQVdUpmQ==
-X-Received: by 2002:ac8:2d68:: with SMTP id o37mr6487503qta.377.1551368263418;
-        Thu, 28 Feb 2019 07:37:43 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id f189sm8129781qkb.79.2019.02.28.07.37.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 07:37:42 -0800 (PST)
-Date:   Thu, 28 Feb 2019 10:37:41 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190228153741.GA168373@google.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <20190228173444.54403795211d80ba540b61cb@kernel.org>
- <20190228150054.GB156098@google.com>
- <20190228153026.GG8481@kroah.com>
+        Thu, 28 Feb 2019 10:37:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732208AbfB1Ph4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:37:56 -0500
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75FA5218D9;
+        Thu, 28 Feb 2019 15:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551368275;
+        bh=d9Fnt7h8JVsgePf/Xp/5197DVDsk15WNv/erwfjZqyI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qatioSbEHWqtsTDpJORUjJz0D1kSBOB6Os61XglmPXRR5qhbi9rp2Ig0mzG7Kr6nT
+         dVtrfMNFfnLygjqmUJGKKiY+lJYCxboroT3zqrEBLr/Ep6K/FYbYNB0lDRd0nwH1gE
+         8Dhi4HtdQxRF/xU8uydpdfhXXKz6wF6R0+GfeGwY=
+Received: by mail-qt1-f170.google.com with SMTP id u7so14751027qtg.9;
+        Thu, 28 Feb 2019 07:37:55 -0800 (PST)
+X-Gm-Message-State: APjAAAVuZq9FsqWhE8a1EtDbe9WgmuciCk+P1xFDHKJX2bzrcQ/BLJY6
+        xcQfGwqDIcA1o/OwklhpStPeHu1ZU4Rmg5buAg==
+X-Google-Smtp-Source: APXvYqx9QcG+QKclLDKNC4bwxAoXMtgqvzvQbLRUOLlwSeWtXHH49hDWkAeqxI8e2DKOMhViR3JpoVBytrPjYs1/cpw=
+X-Received: by 2002:a0c:ecc5:: with SMTP id o5mr6962500qvq.106.1551368274651;
+ Thu, 28 Feb 2019 07:37:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228153026.GG8481@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <80de7a2b537ae3f414b0281736652256f38cf94c.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190223003041.GA16670@bogus> <20190228064923.GA3773@localhost.localdomain>
+In-Reply-To: <20190228064923.GA3773@localhost.localdomain>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 28 Feb 2019 09:37:43 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKBUyygGu9FRb+hye+1DyRgdATm_64+XfsvwEa8AvZhJg@mail.gmail.com>
+Message-ID: <CAL_JsqKBUyygGu9FRb+hye+1DyRgdATm_64+XfsvwEa8AvZhJg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 07/13] devicetree: bindings: Document first ROHM
+ BD70528 bindings
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 04:30:26PM +0100, Greg KH wrote:
-> On Thu, Feb 28, 2019 at 10:00:54AM -0500, Joel Fernandes wrote:
-> > > Hmm, isn't it easier to add kernel-headers package on Android?
-> > 
-> > I have already been down that road. In the Android ecosystem, the Android
-> > teams only provide a "userspace system image" which goes on the system
-> > partition of the flash (and a couple other images are also provided but
-> > system is the main one). The system image cannot contain GPL source code.
-> 
-> Note, that last sentance is not true, it can contain whatever license
-> code it wants to, as long as the group doing the distribution abides by
-> the license of the code contained in it.
-> 
-> The split of system and other images has nothing to do with license
-> issues, but rather functional requirements.  There _might_ be GPL
-> licensed code in the image if it meets a requirement for the proper
-> functionality of the system, you never know :)
+On Thu, Feb 28, 2019 at 12:49 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+>
+> Hello Rob, All
+>
+> Sorry for long delay - I was ill for a few days. Back at the business
+> now =)
+>
+> Rob, maybe dropping the RFC tag has messed your book keeping? This
+> is the latest version:
+> https://lore.kernel.org/lkml/90c3b820baf072a7cc3a21aa50c661774a045158.1550148989.git.matti.vaittinen@fi.rohmeurope.com/
+> and I thought it already had the Reviewed-by tag from you :)
 
-I am not a lawyer either but I know I tried to convince people to allow
-headers (GPL sources) on the system image for this same reason and was told
-that is not something allowed (allowed can also mean "people are Ok with").
+I thought I ignored RFC tag, but could be that. My script (and memory)
+aren't perfect.
 
-In any case, it is not practical to provide headers for every kernel version on
-the system image and maintain them, it will take up too much space and has to
-be periodically packaged. Not to mention that there will be kernel versions
-that are booting Android that simply don't have anyone maintaining headers
-for. So the proposed solution is an easier path.
+> On Fri, Feb 22, 2019 at 06:30:41PM -0600, Rob Herring wrote:
+> > On Tue, Jan 22, 2019 at 11:45:38AM +0200, Matti Vaittinen wrote:
+> > > Document bindings for regulators (3 bucks, 3 LDOs and 2 LED
+> > > drivers) and 4 GPIO pins which can be configured for I/O or
+> > > as interrupt sources withe configurable trigger levels.
+> >
+> > 'dt-bindings: mfd: ...' for the subject.
+>
+> I see at least the patch subject comment is still valid though. Do you
+> want me to change it and resubmit the series?
 
-thanks,
+No, if that's the only thing, it's not important.
 
- - Joel
-
-> 
-> thanks,
-> 
-> greg "not a lawyer but I work with a lot of them all the time" k-h
+Rob
