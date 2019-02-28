@@ -2,130 +2,159 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 619B9C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B09C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313D9218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366967;
-	bh=S9OIPByfbOaatdZWya9AuIpGTzXYusXmEoKeC0lguXM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aOmvGWj4gWwY9LiN7gPK0Y0bWAME9noAfNdGhKoqPxh+nPGWGFfuwewKvLre8BNer
-	 kB4bx6a4zVEs8RvVxtJLjf+mehWBZH/MCamIZ9wHME0QauKmxW7NouU3Ymc3kpy5sO
-	 8hV/kVEJbG/ufi9Ih3WbXphkPpITMU4jPv/cq9LQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7114F218D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:16:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=essensium-com.20150623.gappssmtp.com header.i=@essensium-com.20150623.gappssmtp.com header.b="mGDSIwhB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388952AbfB1PQB (ORCPT
+        id S2388976AbfB1PQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:16:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388223AbfB1PPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:55 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90CC0218D3;
-        Thu, 28 Feb 2019 15:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366954;
-        bh=S9OIPByfbOaatdZWya9AuIpGTzXYusXmEoKeC0lguXM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YeNcoYJodLUo7JZgLwAHcoV3tIKEg1p2L3ylGXGAGFIkxdJXVc+HMvWIdhsey7iW4
-         soApKEl57e0jlC0C5xhtRM6oHAPmvZguyBXyfo9BZ4imyozhEXW4fyrjbrwvqkoZ3V
-         dtwWHL7MI8GNx0LbrOnt+x+Vw0xyQdRvXmN2Wk/8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martynas Pumputis <martynas@weave.works>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/19] netfilter: nf_nat: skip nat clash resolution for same-origin entries
-Date:   Thu, 28 Feb 2019 10:15:09 -0500
-Message-Id: <20190228151517.12705-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
-References: <20190228151517.12705-1-sashal@kernel.org>
+        Thu, 28 Feb 2019 10:16:10 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40958 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387974AbfB1PQI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:16:08 -0500
+Received: by mail-yw1-f66.google.com with SMTP id c67so11300895ywa.7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 07:16:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=essensium-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r7as5UqgEs27F6SS8cdriQYBlVMXNeU/jvVZs93ylnU=;
+        b=mGDSIwhBDolaEvThgIaHMKCCgLEVO/6KaM14o/3Ipfxj//g1c30jiV6oEvq1P8ukNp
+         rFozEB5XaOjIwhklWwc+M9fonZs4c6cDREkR6Bx6YIvwNHZY7fGDit1GGxhjF0FR3g9+
+         59mw/qjudWAP2rusRzjOl2i0fRvlFUh2ybjcBlDeilZ5XxXLr3NBv7Ovmg2XInjb+T7z
+         6XhjetxWk0Qy0dLV5fTEFreLTIMAw0pwCmu/A+KG8F72MmEGbPMlktRSr1G3UVf8B08t
+         40oy7Em2pUiZKJd/7XGDM8xyo5l9h77C9W+zSdr2JFSxq6oIw1+aBjKCh2a8jTintey5
+         q/xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r7as5UqgEs27F6SS8cdriQYBlVMXNeU/jvVZs93ylnU=;
+        b=CZSwh1Eb6s/SPeuTWDX/pP9pLZaSmBigDd0Fxc2K2baLzpuFExu+/NaI07bSfnnbfc
+         ARyRejHIysujINg56irntKwy44rnqq4IESnvKFOPVfRKIM1n9yBoTGybcKAgQGz4I/Nj
+         VIji0nWjVjsa8vOOvK5oplr9RHW7VwuHdNWm6zje1/d8Xe8lDR/ZafrthXpXf/U3ulFI
+         7mX1TPJIwM+eUek+VtpnawRSwX+qBZ68nAwRRqeqJsUG61xdlpzxn/RJS1Z9dVgbTivD
+         dUlgXeEL3pabTb5t4IlwIYrTL/iMMYd6WG85QZC/MMpx9Ollr4weAu3ChS5OAtwdb5Uw
+         6wxw==
+X-Gm-Message-State: APjAAAUmAlPBi5iw7vVkzzIKjGnTDZrt+X5xMCD9/ogX/KMH9DDPrcNr
+        okh22zas/GXVOk1hMAacsEZzbIcwZJ8ozomCv7JUuQ==
+X-Google-Smtp-Source: APXvYqwrzAWVRk6R/ePVTXpwDTKQJ1VVA/7yK//beFQSfkEnfg646C7i9v2C54KKb89LAtrwy+QgOD45ohF1lUQel7Q=
+X-Received: by 2002:a25:c947:: with SMTP id z68mr1277326ybf.522.1551366967287;
+ Thu, 28 Feb 2019 07:16:07 -0800 (PST)
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190226150214.19467-1-patrick.havelange@essensium.com> <20190227235947.GA27130@bogus>
+In-Reply-To: <20190227235947.GA27130@bogus>
+From:   Patrick Havelange <patrick.havelange@essensium.com>
+Date:   Thu, 28 Feb 2019 16:15:55 +0100
+Message-ID: <CAKKE0ZFNm1BNS5xbgo4D1Kp0U+TbL35A9Uk-r245CPVkAuE=XQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] iio:temperature:max31856:Add device tree bind info
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>,
+        Matt Weber <matthew.weber@rockwellcollins.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martynas Pumputis <martynas@weave.works>
+On Thu, Feb 28, 2019 at 12:59 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Feb 26, 2019 at 04:02:13PM +0100, Patrick Havelange wrote:
+> > From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+> >
+> > This patch added device tree binding info for MAX31856 driver.
+> >
+> > Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+> > Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
+> > Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
+> > ---
+> > Changes
+> > v1 -> v2
+> > [Matt
+> >  - Removed comment block and added possibilities of
+> >    thermocouple type in device tree binding doc.
+> >
+> > v2 -> v3
+> >  - Rebased
+> >
+> > v3 -> v4
+> >  - Removed one-shot property related information.
+> >  - Used standard name 'temp-sensor'
+> >
+> > v4 -> v5
+> > [Patrick
+> >  - Rename thermocouple type to maxim,thermocouple-type for DT entry
+> > ---
+> >  .../bindings/iio/temperature/max31856.txt     | 29 +++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/temperature/max31856.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/temperature/max31856.txt b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
+> > new file mode 100644
+> > index 000000000000..b4396069b8fa
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
+> > @@ -0,0 +1,29 @@
+> > +Maxim MAX31856 thermocouple support
+> > +
+> > +https://datasheets.maximintegrated.com/en/ds/MAX31856.pdf
+> > +
+> > +Required properties:
+> > +     - compatible: must be "maxim,max31856"
+> > +     - reg: SPI chip select number for the device
+> > +     - spi-max-frequency: As per datasheet max. supported freq is 5000000
+> > +     - spi-cpha: must be defined for max31856 to enable SPI mode 1
+> > +     - maxim,thermocouple-type: Type of thermocouple (By default is K-Type)
+> > +             0x00 : TYPE_B
+> > +             0x01 : TYPE_E
+> > +             0x02 : TYPE_J
+> > +             0x03 : TYPE_K (default)
+> > +             0x04 : TYPE_N
+> > +             0x05 : TYPE_R
+> > +             0x06 : TYPE_S
+> > +             0x07 : TYPE_T
+>
+> These appear to be standard types. Perhaps this should be a common
+> property instead?
 
-[ Upstream commit 4e35c1cb9460240e983a01745b5f29fe3a4d8e39 ]
+A remark on the v4 of the patch recommended to add a vendor prefix. It
+also mentioned that it could be done as a generic type with a
+translation layer for each driver.
+Maybe this generic type could be introduced in a separate patch, or
+when another driver also uses that kind of thermocouple-type, as there
+is no other use of it for the moment it seems.
 
-It is possible that two concurrent packets originating from the same
-socket of a connection-less protocol (e.g. UDP) can end up having
-different IP_CT_DIR_REPLY tuples which results in one of the packets
-being dropped.
 
-To illustrate this, consider the following simplified scenario:
-
-1. Packet A and B are sent at the same time from two different threads
-   by same UDP socket.  No matching conntrack entry exists yet.
-   Both packets cause allocation of a new conntrack entry.
-2. get_unique_tuple gets called for A.  No clashing entry found.
-   conntrack entry for A is added to main conntrack table.
-3. get_unique_tuple is called for B and will find that the reply
-   tuple of B is already taken by A.
-   It will allocate a new UDP source port for B to resolve the clash.
-4. conntrack entry for B cannot be added to main conntrack table
-   because its ORIGINAL direction is clashing with A and the REPLY
-   directions of A and B are not the same anymore due to UDP source
-   port reallocation done in step 3.
-
-This patch modifies nf_conntrack_tuple_taken so it doesn't consider
-colliding reply tuples if the IP_CT_DIR_ORIGINAL tuples are equal.
-
-[ Florian: simplify patch to not use .allow_clash setting
-  and always ignore identical flows ]
-
-Signed-off-by: Martynas Pumputis <martynas@weave.works>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/netfilter/nf_conntrack_core.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 19b3f4fbea520..df1d5618b008f 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -855,6 +855,22 @@ nf_conntrack_tuple_taken(const struct nf_conntrack_tuple *tuple,
- 		}
- 
- 		if (nf_ct_key_equal(h, tuple, zone, net)) {
-+			/* Tuple is taken already, so caller will need to find
-+			 * a new source port to use.
-+			 *
-+			 * Only exception:
-+			 * If the *original tuples* are identical, then both
-+			 * conntracks refer to the same flow.
-+			 * This is a rare situation, it can occur e.g. when
-+			 * more than one UDP packet is sent from same socket
-+			 * in different threads.
-+			 *
-+			 * Let nf_ct_resolve_clash() deal with this later.
-+			 */
-+			if (nf_ct_tuple_equal(&ignored_conntrack->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
-+					      &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple))
-+				continue;
-+
- 			NF_CT_STAT_INC_ATOMIC(net, found);
- 			rcu_read_unlock();
- 			return 1;
--- 
-2.19.1
-
+>
+> > +
+> > +     Refer to spi/spi-bus.txt for generic SPI slave bindings.
+> > +
+> > + Example:
+> > +     temp-sensor@0 {
+> > +             compatible = "maxim,max31856";
+> > +             reg = <0>;
+> > +             spi-max-frequency = <5000000>;
+> > +             spi-cpha;
+> > +             maxim,thermocouple-type = <0x03>;
+> > +     };
+> > --
+> > 2.19.1
+> >
