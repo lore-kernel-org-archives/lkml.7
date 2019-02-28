@@ -2,103 +2,117 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01160C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBE6C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F9820863
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C44420863
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388467AbfB1SAV (ORCPT
+        id S2388471AbfB1SBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:00:21 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52228 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727499AbfB1SAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:00:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66748EBD;
-        Thu, 28 Feb 2019 10:00:18 -0800 (PST)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB47A3F720;
-        Thu, 28 Feb 2019 10:00:16 -0800 (PST)
-Subject: Re: [PATCH] lib/raid6: use vdupq_n_u8 to avoid endianness warnings
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20190226040345.202047-1-ndesaulniers@google.com>
- <CAKv+Gu-5DvWZL6ogLVNDEvgKe6TENX+5sF1U7QxiyYC8Wx0nXw@mail.gmail.com>
- <CAKwvOdmzb1WF6NU5LYWGXK_O2cbqwMjbWGAa5xk5x+EMz7A1yw@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b3bf85a9-85de-3800-787e-2b00d3edd939@arm.com>
-Date:   Thu, 28 Feb 2019 18:00:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Feb 2019 13:01:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60024 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727499AbfB1SBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:01:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8D93AAEE3;
+        Thu, 28 Feb 2019 18:01:19 +0000 (UTC)
+Message-ID: <a6ecd59f99aa64355ac7c176aa4310d32ce8969e.camel@suse.de>
+Subject: Re: [RFC/RFT] HID: primax: Fix wireless keyboards descriptor
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     "Junge, Terry" <Terry.Junge@plantronics.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     "oneukum@suse.de" <oneukum@suse.de>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 28 Feb 2019 19:01:17 +0100
+In-Reply-To: <BYAPR02MB56078ADD429292DF89F8C694ED750@BYAPR02MB5607.namprd02.prod.outlook.com>
+References: <20190228135556.14713-1-nsaenzjulienne@suse.de>
+         <BYAPR02MB56078ADD429292DF89F8C694ED750@BYAPR02MB5607.namprd02.prod.outlook.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-sMBCKcqsKVCMoOP1O0bd"
+User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdmzb1WF6NU5LYWGXK_O2cbqwMjbWGAa5xk5x+EMz7A1yw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/02/2019 20:44, Nick Desaulniers wrote:
-> On Mon, Feb 25, 2019 at 11:19 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
->>
->> On Tue, 26 Feb 2019 at 05:03, <ndesaulniers@google.com> wrote:
->>>
->>> Clang warns: vector initializers are not compatible with NEON intrinsics
->>> in big endian mode [-Wnonportable-vector-initialization]
->>>
->>> While this is usually the case, it's not an issue for this case since
->>> we're initializing the uint8x16_t (16x uint8_t's) with the same value.
->>>
->>> Instead, use vdupq_n_u8 which both compilers lower into a single movi
->>> instruction: https://godbolt.org/z/vBrgzt
->>>
->>> This avoids the static storage for a constant value.
->>>
->>> Link: https://github.com/ClangBuiltLinux/linux/issues/214
->>> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
->>> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
->>
->> Much better, thanks,
->>
->> Did you double check that the intrinsic exists on 32-bit ARM as well?
->> I assume it does, but please make sure if you haven't yet.
-> 
-> Thanks for the review!
-> Looking through Clang's generated arm_neon.h, vdupq_n_u8 seems to have
-> 2 definitions predicated on __LITTLE_ENDIAN__ (not __arch64__ or
-> __ARM_ARCH >= 8 like some of the other types and functions).
-> 
-> So NEON got some additions in v8?  Is there a doc that lists them?
-> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0491g/BABDBBJB.html
-> is where I found vdupq_n_u8, but it doesn't seem to mention
-> compatibility (so I assume it's been around since the introduction of
-> NEON?).
 
-FWIW the most recent 'proper' spec document I know of is this one:
+--=-sMBCKcqsKVCMoOP1O0bd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-http://infocenter.arm.com/help/topic/com.arm.doc.ihi0073b/index.html
+On Thu, 2019-02-28 at 17:02 +0000, Junge, Terry wrote:
+> This could also be a parser error. In the HID specification section 6.2.2=
+.8 it
+> states that the last declared Usage Page is applied to Usages when the Ma=
+in
+> item is encountered.
+>=20
+> "If the bSize field =3D 1 or 2 then the Usage is interpreted as an unsign=
+ed
+> value
+> that selects a Usage ID on the currently defined Usage Page. When the par=
+ser
+> encounters a main item it concatenates the last declared Usage Page with =
+a
+> Usage to form a complete usage value. Extended usages can be used to
+> override the currently defined Usage Page for individual usages."
+>=20
+
+Hi Terry, thanks for the comment.
+Just for the record the paragraph I cited on my patch is the following:
+
+	6.2.2.7 Global Items
+
+	[...]
+
+	Usage Page: Unsigned integer specifying the current Usage Page. Since a
+	usage are 32 bit values, Usage Page items can be used to conserve space
+	in a report descriptor by setting the high order 16 bits of a
+	subsequent usages. Any usage that follows which is defines* 16 bits or
+	less is interpreted as a Usage ID and concatenated with the Usage Page
+	to form a 32 bit Usage.
+
+	* This is a spec errata, I belive it should say "defined"
+
+As you can see they use the word "follows" which in my opinion contradicts =
+the
+paragraph you pointed out. That said I may be wrong, I'm not too good at
+reading specs :).
+
+I checked the HID parser and it's indeed written assuming local items are
+preceded by a Usage Page. I'd be glad to fix it there, but it would be nice=
+ to
+have the mantainer's opinion on the matter first.
+
+Regards,
+Nicolas
 
 
-Apparently we have a more interactive playground on the new site, too:
+--=-sMBCKcqsKVCMoOP1O0bd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-https://developer.arm.com/technologies/neon/intrinsics
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlx4Ie0ACgkQlfZmHno8
+x/52awf/WZptAHHAqEqvRBY6vygjAgTG8kFUHLgKricp4qNT5WGpkrFYndGxP1hO
+iTLcXh+7pNdivfWAaey37Ysyk3rDQdm3klBL1EJHVjXDe1YPy5v5WP3rbcf3egX7
+qnm1cKxS+kpPhBSX5aP0IFcQ9asaOVzkqiOUqpt4rk7qHawSiM8amTlVZ28zCekX
+IVY7zjRzK4rFOgg64JKboeikPc40pNkIs+IN4DbR+WwRan6qKLaIlNN318jD5LpL
+2ejUNMUSklYs4KlpeljEtqr8AxFmDMhlMXP+D48neu8Kw0EA4MZTKIcr1JkLgYlm
+xdLyiah062rcqzs/wxG34zyrn3nNgA==
+=+hun
+-----END PGP SIGNATURE-----
 
-Robin.
+--=-sMBCKcqsKVCMoOP1O0bd--
+
