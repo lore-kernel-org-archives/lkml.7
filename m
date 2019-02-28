@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E03C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EF8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72AAE218E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D030218EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366921;
-	bh=N4Ew9XoxKp+IGvSWGN+qNWPGRKQOjHlUBFikc9RhiE4=;
+	s=default; t=1551366930;
+	bh=Im3aHS6oxlXzPIH/pCVKeu3p0c7+6ALu7ydEyhNNPTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pJUdLrZPV3dbF7qmV2YZE0imxAfIztRobvEehmL92LIlymjr9gypz+EDYyLkeRmiw
-	 rkZw6w4zTFXMZyNIk26u6aAG5sVGELWteDCU8ZE2BI5ZBuxe5/cw7m/bGihcuEFTus
-	 L6KcDQCJrIgY7CIC9lVTXOBPuMmfK4gLFFOBm3gI=
+	b=1FHPaS3jqt3KZBdVbRR1kmkDU8FGx74CVMhKV5En7iQaZRAcAV264wDTprNhQ3Mzn
+	 ZShxZwzcfO8SDtbfjJqAcJ0k/tbwu1MjMqsXKPah7Mp2yQynMozUeUjQrmJiMm+WK+
+	 btuypLXdWdBByN5fj5iHTjGs7ygzb1mGNG7ARAWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388804AbfB1PPP (ORCPT
+        id S2388861AbfB1PP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:15:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50530 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:15:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388786AbfB1PPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:12 -0500
+        id S2388829AbfB1PPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F49E218D9;
-        Thu, 28 Feb 2019 15:15:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1436E218D3;
+        Thu, 28 Feb 2019 15:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366911;
-        bh=N4Ew9XoxKp+IGvSWGN+qNWPGRKQOjHlUBFikc9RhiE4=;
+        s=default; t=1551366922;
+        bh=Im3aHS6oxlXzPIH/pCVKeu3p0c7+6ALu7ydEyhNNPTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pyORccdp69JVzVH9NgGkVBlsTagBd+I8MI7OPcIjIN14HBZtl3h4HyfK5kpqa+rIV
-         RmciTcNHvG0sTOkZfTb0wgJ2XZDq6TMABf7LuFT9hD2zHjjc7df828zBeWxTP/Z8dz
-         Tdw6n7Qo4mAGvtyXbhqzo7wDeJ1TczAX5Q8j9cZs=
+        b=0FLaBrkboznj+44ehdEbQZjN51qMwo19P7ieZPJzcIWOVNFktl/rlKVYvwTnccHCq
+         yP81OSgy3sVrBY7v1+KH8qzGOeMl6LsmoG9jXvJfkshC2MdOQYpp3/LRCxN93AKDgO
+         86GasyGMuANUdNwo4s1UCMOttUiKOcvYc4WLhCro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 34/36] fs: ratelimit __find_get_block_slow() failure message.
-Date:   Thu, 28 Feb 2019 10:13:35 -0500
-Message-Id: <20190228151337.12176-34-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/19] arm64: dts: add msm8996 compatible to gicv3
+Date:   Thu, 28 Feb 2019 10:14:59 -0500
+Message-Id: <20190228151517.12705-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
-References: <20190228151337.12176-1-sashal@kernel.org>
+In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
+References: <20190228151517.12705-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,76 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 43636c804df0126da669c261fc820fb22f62bfc2 ]
+[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
 
-When something let __find_get_block_slow() hit all_mapped path, it calls
-printk() for 100+ times per a second. But there is no need to print same
-message with such high frequency; it is just asking for stall warning, or
-at least bloating log files.
+Add compatible to gicv3 node to enable quirk required to restrict writing
+to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
 
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.873324][T15342] b_state=0x00000029, b_size=512
-  [  399.878403][T15342] device loop0 blocksize: 4096
-  [  399.883296][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.890400][T15342] b_state=0x00000029, b_size=512
-  [  399.895595][T15342] device loop0 blocksize: 4096
-  [  399.900556][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.907471][T15342] b_state=0x00000029, b_size=512
-  [  399.912506][T15342] device loop0 blocksize: 4096
+With this quirk MSM8996 can at least boot out of mainline, which can help
+community to work with boards based on MSM8996.
 
-This patch reduces frequency to up to once per a second, in addition to
-concatenating three lines into one.
+Without this patch Qualcomm DB820c board reboots on mainline.
 
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8, b_state=0x00000029, b_size=512, device loop0 blocksize: 4096
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/buffer.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index b96f3b98a6ef9..8086cc8ff0bc2 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -208,6 +208,7 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	struct buffer_head *head;
- 	struct page *page;
- 	int all_mapped = 1;
-+	static DEFINE_RATELIMIT_STATE(last_warned, HZ, 1);
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 2c93de7fffe50..bdea2d6fde94a 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -219,7 +219,7 @@
+ 		compatible = "simple-bus";
  
- 	index = block >> (PAGE_SHIFT - bd_inode->i_blkbits);
- 	page = find_get_page_flags(bd_mapping, index, FGP_ACCESSED);
-@@ -235,15 +236,15 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	 * file io on the block device and getblk.  It gets dealt with
- 	 * elsewhere, don't buffer_error if we had some unmapped buffers
- 	 */
--	if (all_mapped) {
--		printk("__find_get_block_slow() failed. "
--			"block=%llu, b_blocknr=%llu\n",
--			(unsigned long long)block,
--			(unsigned long long)bh->b_blocknr);
--		printk("b_state=0x%08lx, b_size=%zu\n",
--			bh->b_state, bh->b_size);
--		printk("device %pg blocksize: %d\n", bdev,
--			1 << bd_inode->i_blkbits);
-+	ratelimit_set_flags(&last_warned, RATELIMIT_MSG_ON_RELEASE);
-+	if (all_mapped && __ratelimit(&last_warned)) {
-+		printk("__find_get_block_slow() failed. block=%llu, "
-+		       "b_blocknr=%llu, b_state=0x%08lx, b_size=%zu, "
-+		       "device %pg blocksize: %d\n",
-+		       (unsigned long long)block,
-+		       (unsigned long long)bh->b_blocknr,
-+		       bh->b_state, bh->b_size, bdev,
-+		       1 << bd_inode->i_blkbits);
- 	}
- out_unlock:
- 	spin_unlock(&bd_mapping->private_lock);
+ 		intc: interrupt-controller@9bc0000 {
+-			compatible = "arm,gic-v3";
++			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+ 			#redistributor-regions = <1>;
 -- 
 2.19.1
 
