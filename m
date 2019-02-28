@@ -4,40 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C25C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5512DC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A378420857
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 255FC218AE
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 17:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551374159;
-	bh=sozJU/5OlzrK/deFVRBigGuvn3Yn9Yat/RlMQ7ceFSA=;
+	s=default; t=1551374175;
+	bh=VYq8fxJu0libeGzq/JPTURequJLCJPHqKm+QOUm5Xto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+R0rROesfW8tUTryiuBKJKz3IfvLkjCXt1gP0gNKqRUoY/2/vAM1La1kEDs9vKxf
-	 q+Vlq4gtcibnuZ+W3qnyE70VV2CLY6LeDmB4Z9KbPJHj2SIBSRa2sTC9QC3jadaw8L
-	 BIQvXK5/PTfSxrfAJLLo49Ilr0EIc5GevM1tB8pc=
+	b=ecCwHNU/WMeDPQLWOa7nuBUlJLozXXPHoR3W61Mdhc/jPQAXRyQ35Ek6Bm64tqZWW
+	 pfrJ9W6Ok+eCbPMUlYmGVo8/oPmI/a0bLCU1pWtB2AwxWXdB7K74uLgZXqM4SLFYtS
+	 83Hz91n4tugfR3/9KTEVE/Nph6hRx8DTiLZQR6bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388229AbfB1RP6 (ORCPT
+        id S2387630AbfB1RNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 12:15:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58380 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 12:13:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387738AbfB1RNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 12:13:37 -0500
+        id S2387557AbfB1RNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 12:13:17 -0500
 Received: from lerouge.home (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99BE218D8;
-        Thu, 28 Feb 2019 17:13:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8A09218D8;
+        Thu, 28 Feb 2019 17:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551374016;
-        bh=sozJU/5OlzrK/deFVRBigGuvn3Yn9Yat/RlMQ7ceFSA=;
+        s=default; t=1551373995;
+        bh=VYq8fxJu0libeGzq/JPTURequJLCJPHqKm+QOUm5Xto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WWGFW4dlNAunUxQ24fb1LqJiGASnNRuKOgj7s610PqCc9HEvYUuQVZdtqa8bHmrs/
-         PFnRp7AmihbREqdvCmtihC8Y3Fierx5SCgvz9sOclv3+EjmIKy0JgZhXxNrsZxLR+n
-         lnpJLhM94q616k8ESpiQir6BDOZpniUmlMaqC0+A=
+        b=ZMbx25TTgy6ltDcZvbR0AX1EEU3lU4iXGeGax718J8p7JZpcKFTtfAbtxucojj16L
+         GWo0Xr+0dvJM7EeTWRD8jArtp6rIM/Hs1M7d4pgZF5pgzmHng5CCquLzYW2bhfx0A2
+         56UdlADbyxT9mAMUbKrZe3CRyySbvNddk1ueyeWM=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Frederic Weisbecker <frederic@kernel.org>,
@@ -52,9 +53,9 @@ Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Pavan Kondeti <pkondeti@codeaurora.org>,
         Ingo Molnar <mingo@kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 13/37] softirq: Macrofy softirq vectors
-Date:   Thu, 28 Feb 2019 18:12:18 +0100
-Message-Id: <20190228171242.32144-14-frederic@kernel.org>
+Subject: [PATCH 07/37] locking/lockdep: Prepare valid_state() to handle plain masks
+Date:   Thu, 28 Feb 2019 18:12:12 +0100
+Message-Id: <20190228171242.32144-8-frederic@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190228171242.32144-1-frederic@kernel.org>
 References: <20190228171242.32144-1-frederic@kernel.org>
@@ -65,8 +66,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the softirq vectors through macros so that we can later include
-them in the automated definition of lockdep usage states.
+mark_lock_irq() is going to deal with lock usages that gather multiple
+softirq vectors at once. Therefore the validation through valid_state()
+will need to handle expanded usage masks.
+
+So enhance valid_state() to that purpose.
 
 Reviewed-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
@@ -81,59 +85,82 @@ Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- include/linux/interrupt.h      | 17 ++++-------------
- include/linux/softirq_vector.h | 12 ++++++++++++
- 2 files changed, 16 insertions(+), 13 deletions(-)
- create mode 100644 include/linux/softirq_vector.h
+ kernel/locking/lockdep.c | 39 ++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 34 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
-index c672f34235e7..e871f361f1f1 100644
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -474,21 +474,12 @@ extern bool force_irqthreads;
-    tasklets are more than enough. F.e. all serial device BHs et
-    al. should be converted to tasklets, not to softirqs.
-  */
--
- enum
- {
--	HI_SOFTIRQ=0,
--	TIMER_SOFTIRQ,
--	NET_TX_SOFTIRQ,
--	NET_RX_SOFTIRQ,
--	BLOCK_SOFTIRQ,
--	IRQ_POLL_SOFTIRQ,
--	TASKLET_SOFTIRQ,
--	SCHED_SOFTIRQ,
--	HRTIMER_SOFTIRQ, /* Unused, but kept as tools rely on the
--			    numbering. Sigh! */
--	RCU_SOFTIRQ,    /* Preferable RCU should always be the last softirq */
--
-+#define SOFTIRQ_VECTOR(__SVEC) \
-+	__SVEC##_SOFTIRQ,
-+#include <linux/softirq_vector.h>
-+#undef SOFTIRQ_VECTOR
- 	NR_SOFTIRQS
- };
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index ac1efd16f3e7..2321b5e16cdf 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -487,7 +487,21 @@ static inline u64 lock_flag(enum lock_usage_bit bit)
  
-diff --git a/include/linux/softirq_vector.h b/include/linux/softirq_vector.h
-new file mode 100644
-index 000000000000..c0308cbc916f
---- /dev/null
-+++ b/include/linux/softirq_vector.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+ static u64 lock_usage_mask(struct lock_usage *usage)
+ {
+-	return lock_flag(usage->bit);
++	u64 vectors = usage->vector;
++	u64 mask = 0ULL;
++	int nr;
 +
-+SOFTIRQ_VECTOR(HI)
-+SOFTIRQ_VECTOR(TIMER)
-+SOFTIRQ_VECTOR(NET_TX)
-+SOFTIRQ_VECTOR(NET_RX)
-+SOFTIRQ_VECTOR(BLOCK)
-+SOFTIRQ_VECTOR(IRQ_POLL)
-+SOFTIRQ_VECTOR(TASKLET)
-+SOFTIRQ_VECTOR(SCHED)
-+SOFTIRQ_VECTOR(HRTIMER)
-+SOFTIRQ_VECTOR(RCU)    /* Preferable RCU should always be the last softirq */
++	if (!vectors)
++		return lock_flag(usage->bit);
++
++	/* Only softirqs can have non-zero vectors */
++	WARN_ON_ONCE(usage->bit < LOCK_USED_IN_SOFTIRQ ||
++		     usage->bit > LOCK_ENABLED_SOFTIRQ_READ);
++
++	for_each_bit_nr(vectors, nr)
++		mask |= lock_flag(usage->bit) << (4 * nr);
++
++	return mask;
+ }
+ 
+ static char get_usage_char(struct lock_class *class, enum lock_usage_bit bit)
+@@ -2558,10 +2572,23 @@ print_usage_bug(struct task_struct *curr, struct held_lock *this,
+  */
+ static inline int
+ valid_state(struct task_struct *curr, struct held_lock *this,
+-	    enum lock_usage_bit new_bit, enum lock_usage_bit bad_bit)
++	    u64 new_mask, u64 bad_mask)
+ {
+-	if (unlikely(hlock_class(this)->usage_mask & lock_flag(bad_bit)))
++	u64 bad_intersec;
++
++	bad_intersec = hlock_class(this)->usage_mask & bad_mask;
++
++	if (unlikely(bad_intersec)) {
++		enum lock_usage_bit new_bit, bad_bit;
++		int err;
++
++		err = find_exclusive_match(new_mask,
++					   bad_intersec, &new_bit, &bad_bit);
++		if (WARN_ON_ONCE(err < 0))
++			return err;
++
+ 		return print_usage_bug(curr, this, bad_bit, new_bit);
++	}
+ 	return 1;
+ }
+ 
+@@ -2753,7 +2780,8 @@ mark_lock_irq(struct task_struct *curr, struct held_lock *this,
+ 	 * Validate that this particular lock does not have conflicting
+ 	 * usage states.
+ 	 */
+-	if (!valid_state(curr, this, new_usage->bit, excl_usage.bit))
++	if (!valid_state(curr, this, lock_usage_mask(new_usage),
++			 lock_usage_mask(&excl_usage)))
+ 		return 0;
+ 
+ 	/*
+@@ -2769,7 +2797,8 @@ mark_lock_irq(struct task_struct *curr, struct held_lock *this,
+ 	 */
+ 	if (!read) {
+ 		excl_usage.bit += LOCK_USAGE_READ_MASK;
+-		if (!valid_state(curr, this, new_usage->bit, excl_usage.bit))
++		if (!valid_state(curr, this, lock_usage_mask(new_usage),
++				 lock_usage_mask(&excl_usage)))
+ 			return 0;
+ 
+ 		if (STRICT_READ_CHECKS &&
 -- 
 2.21.0
 
