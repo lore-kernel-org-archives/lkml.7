@@ -2,88 +2,85 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74683C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F08C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D54B20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551383131;
-	bh=/RwR7Vd4MgBS7yyYqr5ziP9x6V9Gr5SxjCW4IGuOd48=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TvR0VYtiODpBTvxiXFnWh3aZY6keMa6CzI1xhQlCzbLVzDLLevlyzxCU4FGeglRgG
-	 mIbPTeW8fC+DkZbnds6HFCZmk1m/hDYDmu+X2Jqh7xvJYgMTrPGZXxtaauh4o7syxY
-	 leePe+WCkQfd1dzdUH9iRCa2A9c0KfqXzgbWRiwU=
+	by mail.kernel.org (Postfix) with ESMTP id B96E520C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 19:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387959AbfB1Tpa (ORCPT
+        id S2387971AbfB1TrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 14:45:30 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41099 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfB1Tp3 (ORCPT
+        Thu, 28 Feb 2019 14:47:09 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:37780 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfB1TrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 14:45:29 -0500
-Received: by mail-oi1-f194.google.com with SMTP id e7so17502345oia.8;
-        Thu, 28 Feb 2019 11:45:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xklEfVfv14D88Ra+s2gfpz8Nij58iGoBhwr3RtVa6Bs=;
-        b=eeGhnPykV6yjB348xg+5VzX6xEhOOk1mFaJmJvcr0bJVaEOSoN/PaX1ausLa4FVXiR
-         ATfZ0kuaN8rvlB/CfV4QnVmXQ0Tg+gVBjIepLmI7Tped7IS2Wteuir7vZOy8oRb9Ur65
-         XoZsEWveE1Mx3wyoTJT+4CPCmoRFQ6IP7g0SWacKAwwOO/NemtmXTjOJt6ns+x2KraFF
-         QdxoA8D/WfwbaAlX8u96CGWvn+dten7drkimwa7tT64ESKNdRM+PJC+4DnV8laFhkLkz
-         LL0Zqoxz/h5P2PIDBFzq/ss3/PT2bZex8r1m/UFHusO/BYIUB81hngUUboU8yMLWGGJs
-         RqQg==
-X-Gm-Message-State: AHQUAuY4D34tNxH0gD+GVv/nqPft1RDMBaFY6Jhq9qLCiiOLq74JFvm2
-        NQokh92xHgEmMFuHvpagsA==
-X-Google-Smtp-Source: AHgI3Ib16t80D3+xgzGpVh7EGedxveO+EHIanYy8E/l3ymY7WU3Qkz2YdrODmspvsvslP9VY4H3rzQ==
-X-Received: by 2002:aca:ed0f:: with SMTP id l15mr939343oih.76.1551383129069;
-        Thu, 28 Feb 2019 11:45:29 -0800 (PST)
-Received: from localhost ([2607:fb90:20de:307f:59ce:35b2:628:2365])
-        by smtp.gmail.com with ESMTPSA id t66sm8192991oig.39.2019.02.28.11.45.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 11:45:27 -0800 (PST)
-Date:   Thu, 28 Feb 2019 13:45:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     bhelgaas@google.com, Zhiqiang.Hou@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com,
-        kishon@ti.com, lorenzo.pieralisi@arm.com,
-        gregkh@linuxfoundation.org, l.subrahmanya@mobiveil.co.in,
-        arnd@arndb.de, Minghuan.Lian@nxp.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCH 2/6] dt-bindings: add DT binding for the layerscape PCIe
- GEN4 controller with EP mode
-Message-ID: <20190228194526.GA2716@bogus>
-References: <20190218094643.2692-1-xiaowei.bao@nxp.com>
- <20190218094643.2692-2-xiaowei.bao@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190218094643.2692-2-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 28 Feb 2019 14:47:08 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::bf5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0C14E14BF64D0;
+        Thu, 28 Feb 2019 11:47:08 -0800 (PST)
+Date:   Thu, 28 Feb 2019 11:47:07 -0800 (PST)
+Message-Id: <20190228.114707.11382969767373748.davem@davemloft.net>
+To:     andrew@lunn.ch
+Cc:     f.suligoi@asem.it, jeffrey.t.kirsher@intel.com,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] net: e1000e: add MAC address kernel cmd line
+ parameter
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190228192958.GA24085@lunn.ch>
+References: <20190228163729.GB17912@lunn.ch>
+        <6a7a37813e71420b929c769dd1e77664@asem.it>
+        <20190228192958.GA24085@lunn.ch>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 28 Feb 2019 11:47:08 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Feb 2019 17:46:39 +0800, Xiaowei Bao wrote:
-> Add the documentation for the Device Tree binding for the layerscape
-> PCIe GEN4 controller with EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> depends on: http://patchwork.ozlabs.org/project/linux-pci/list/?series=88754
-> 
->  .../bindings/pci/layerscape-pci-gen4.txt           |    5 ++++-
->  1 files changed, 4 insertions(+), 1 deletions(-)
-> 
+From: Andrew Lunn <andrew@lunn.ch>
+Date: Thu, 28 Feb 2019 20:29:58 +0100
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> On Thu, Feb 28, 2019 at 05:13:27PM +0000, Flavio Suligoi wrote:
+>> > > Hi Andrew,
+>> > >
+>> > > we produce a lot of boards and we have to change the MAC address,
+>> > > from u-boot, for every board.  So I must save in the u-boot
+>> > > environment (SPI NOR flash) the MAC address for every board.
+>> > 
+>> > Hi Flavio
+>> > 
+>> > u-boot should be able to write the MAC address in the correct part of
+>> > device tree. Boards have been doing this a long time.
+>> > 
+>> > Module parameters are considered bad. You should only do it if you
+>> > have no other option. Here you do have another options, so it is going
+>> > to be a hard sell getting David to access your patch.
+>> > 
+>> > You will have more success by adding a call to
+>> > eth_platform_get_mac_address() to the e1000e driver.
+>> 
+>> You have right, and thanks for your suggestions, 
+>> but with a kernel parameter I can use the same method
+>> for any board where the NVM is missed, independently of any architecture
+>> (with or without the device tree presence - ARM or x86 or others).
+> 
+> Hi Flavio
+> 
+> Well, lets wait for David to say what he thinks about the module
+> parameter.
+
+I already rejected this, no way... Drivers that already have the
+unacceptable module parameter are no an argument for spreading this
+mistake further.
