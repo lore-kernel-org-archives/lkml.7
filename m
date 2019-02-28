@@ -2,224 +2,112 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18F8C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390B7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F51218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:41:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zODHxJ0/"
+	by mail.kernel.org (Postfix) with ESMTP id 030BD2133D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551364924;
+	bh=0j7VLRsjdyL1RWs15bN8fpT8ougGXqtBh0dJZ46cKto=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cFe28U17KLjbY6GVgyhGQSYDsQcjhjitYLpPc7drW0xtTccBh73n1/7DdVXW29xNF
+	 3Ssx3Fb4Qym2hrdAGqJM/RXq5gnG0OaUOPs+u7kY+C22tFmwvIghWqOFqCAZ12Oeen
+	 e8ecd6XNgzwcY02IKt8Vgy6quqIT9d7KAZ/40pnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732682AbfB1Ols (ORCPT
+        id S1732927AbfB1OmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:41:48 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37440 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbfB1Olr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 09:41:47 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x1SEfTWM115140;
-        Thu, 28 Feb 2019 08:41:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1551364889;
-        bh=PrJaCcs2AbICKqJIKvTvH4NOxph+19+zP5+iWZOmDjY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=zODHxJ0/r7eruppnOEBErq3FiGoHDJWfUeszP9ViuXhi8DoaVMqzIaF8SvN38rdOe
-         WzpJIlPzjnogMD6UaS+OUZi/Wa8DxP15aMlY7SoBUojnyTjpQtwEPDJi6mLWMXIxDb
-         i4xOyIEuhGDI2ZIOvaKBIugWkZM22lxGr11ajVn8=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x1SEfThp090575
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Feb 2019 08:41:29 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Thu, 28
- Feb 2019 08:41:28 -0600
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Thu, 28 Feb 2019 08:41:27 -0600
-Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x1SEfQdf026300;
-        Thu, 28 Feb 2019 08:41:26 -0600
-Subject: Re: hdmi-codec: modifying params in hw_params() callback
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190228121516.swd3vweisgcxlvld@shell.armlinux.org.uk>
- <421c1217-6ff6-6ca2-8169-db026284fb29@ti.com>
- <20190228131059.i4nffuylja5p6tjv@shell.armlinux.org.uk>
- <d2fd3be9-2dc4-511d-0755-24d6949ce967@ti.com>
- <20190228143912.imjsc2ynnltydeny@shell.armlinux.org.uk>
-From:   Jyri Sarha <jsarha@ti.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <5b8aa94b-934a-380c-33d2-c381c6673279@ti.com>
-Date:   Thu, 28 Feb 2019 16:41:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 Feb 2019 09:42:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725896AbfB1OmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 09:42:02 -0500
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FAE8218D0;
+        Thu, 28 Feb 2019 14:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551364921;
+        bh=0j7VLRsjdyL1RWs15bN8fpT8ougGXqtBh0dJZ46cKto=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qJT5JZeaZH4mKnSLNFCdDF4DhMqxFZ/VxFGrWHXd2TuOr0M0KAy4wfFLeu0Xp852g
+         YDC60WDEkF9OgWTLfZlLQizPlqtrBodbBI/RR2nWvzhQEiF9YmdJbTSc9Rcy2xpEIa
+         teILwjIULSXrZU5MB9HG8EO2BjU6K4auRMkkYGeU=
+Received: by mail-qt1-f169.google.com with SMTP id w4so23770214qtc.1;
+        Thu, 28 Feb 2019 06:42:01 -0800 (PST)
+X-Gm-Message-State: APjAAAV6WhiONS8vjW+q81xZhpVXMHxpvaL5VIJcqQfQjT7qVuHyj/ew
+        GcnkuLk1FKVouBA9rlqHJg5U8xN4uUE8jvQZhA==
+X-Google-Smtp-Source: APXvYqw156MbwVHJjOmPiRVmtA6RR/wp6AYn6Kxa96TKSlH0SMU+Fv8wUmXJFpF4AhReJtl5oRIePkRFdDJ4uRA6eXI=
+X-Received: by 2002:a0c:bd15:: with SMTP id m21mr6620502qvg.246.1551364920462;
+ Thu, 28 Feb 2019 06:42:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190228143912.imjsc2ynnltydeny@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
+ <1551260094-32570-2-git-send-email-amelie.delaunay@st.com>
+ <20190227235535.GA24395@bogus> <c54c4fd8-b97f-a70b-4805-fd3d217f5050@st.com>
+In-Reply-To: <c54c4fd8-b97f-a70b-4805-fd3d217f5050@st.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 28 Feb 2019 08:41:49 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ+orZUitUvMtKJ8ww4hnn9eacy5Xak+oTO_MGrgSGJpw@mail.gmail.com>
+Message-ID: <CAL_JsqJ+orZUitUvMtKJ8ww4hnn9eacy5Xak+oTO_MGrgSGJpw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander
+ (STMFX) core bindings
+To:     Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 16:39, Russell King - ARM Linux admin wrote:
-> On Thu, Feb 28, 2019 at 04:35:29PM +0200, Jyri Sarha wrote:
->> On 28/02/2019 15:10, Russell King - ARM Linux admin wrote:
->>> On Thu, Feb 28, 2019 at 02:54:29PM +0200, Jyri Sarha wrote:
->>>> On 28/02/2019 14:15, Russell King - ARM Linux admin wrote:
->>>>> Hi all,
->>>>>
->>>>> While looking at hdmi-codec issues, I spotted this code:
->>>>>
->>>>> static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
->>>>>                                 struct snd_pcm_hw_params *params,
->>>>>                                 struct snd_soc_dai *dai)
->>>>> {
->>>>> ...
->>>>>         if (params_width(params) > 24)
->>>>>                 params->msbits = 24;
->>>>>
->>>>> params->msbits is a parameter that is negotiated and refined by
->>>>> libasound, and is part of the ALSA constraint system.  The "Writing an
->>>>> ALSA driver" documentation says about the hw_params callback:
->>>>>
->>>>> "This is called when the hardware parameter (``hw_params``) is set up
->>>>>  by the application, that is, once when the buffer size, the period
->>>>>  size, the format, etc. are defined for the pcm substream."
->>>>>
->>>>> which suggests we should only be reading the parameters, not writing
->>>>> to them.
->>>>>
->>>>> What's more is that the msbits is a parameter that is refined with
->>>>> userspace, so surely the above should be a declared constraint?
->>>>>
->>>>
->>>> Certainly not a constraint. While HDMI can only pass up to 24-bit per
->>>> sample audio the most (or at least the two I have worked with) encoders
->>>> can take 32-bit wide (and probably wider) samples trough i2s. So the
->>>> system can play 32-bit samples, just the 4 LSB is ignored.
->>>
->>> You have not explained why "not a constraint".  From the explanation
->>> that Mark gave me on IRC, msbits is the number of bits that the codec
->>> respects, whereas the sample bits is the number of bits in the sample.
->>> If sample bits - msbits != 0, then that is the number of bits ignored.
->>> Mark basically described it as "feel free to send me more than 24 bits
->>> but I'm ignoring the LSBs".
->>>
->>> If the msbits is limited to 24, then userspace gets to know about that
->>> limitation when negotiating with ALSA if it is a constraint.  If it
->>> isn't a constraint, userspace has no way to know.
->>>
->>>> Actually there is very little difference between the case of playing
->>>> 32-bit stereo audio with matching i2s bclk ratio, and playing 24-bit
->>>> stereo audio with 64-bit bclk ratio. Especially when the 4 LSB is anyway
->>>> ignored like in HDMI audio case.
->>>
->>> You mean 8 LSB throughout the above two paragraphs.
->>>
->>>>> Digging a bit deeper, ASoC passes a private copy of the params to each
->>>>> codec - a copy is made, then fixups for TDM slots are applied, followed
->>>>> by any topology fixups by the DAI link (be_hw_params_fixup) before the
->>>>> codec driver's hw_params() callback is made.  Afterwards, ASoC reads
->>>>> back the rate, channels and physical (memory) width and stores them
->>>>> in the codec's DAI structure.  The msbits are not read.
->>>>>
->>>>> hdmi-codec also seems to do nothing with the msbits parameter other
->>>>> than the above code.
->>>>>
->>>>> So, all in all, it seems that the above code limiting msbits is
->>>>> redundant - nothing will read this modified value.  Can we kill it?
->>>>>
->>>>
->>>> It certainly looks that way, so yes. In any case struct
->>>> snd_soc_dai_driver .playback.sig_bits = 24 should be all that is needed.
->>>
->>> This sets a constraint to limit msbits to 24 for any sample width
->>> in core ASoC code, doing exactly what you said "certainly not" to
->>> above.
->>>
->>> It also means that the quoted code in hdmi-codec's hw_params() is
->>> redundant for another reason.
->>>
->>> See the description of:
->>> snd_pcm_hw_constraint_msbits() in sound/core/pcm_lib.c,
->>> soc_pcm_set_msb() and soc_pcm_apply_msb() in sound/soc/soc-pcm.c.
->>>
->>> Can you please clarify, because there seems to be some confusion.
->>>
->>
->> If I understand right, the only confusion here is around the term
->> "constraint". I did not follow that you meant in strictly alsa-term. Yes
->> we should set msbits pcm_lib constraint to 24 (as hdmi-codec aready
->> does), because HDMI interface can not deliver more than 24 bits per
->> sample, and any extra LSB bit will be ignored.
-> 
-> Right, so we can remove the above code then?
-> 
+On Thu, Feb 28, 2019 at 2:54 AM Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+>
+> On 2/28/19 12:55 AM, Rob Herring wrote:
+> > On Wed, 27 Feb 2019 10:34:46 +0100, Amelie Delaunay wrote:
+> >> This patch adds documentation of device tree bindings for the
+> >> STMicroelectronics Multi-Function eXpander (STMFX) MFD core.
+> >>
+> >> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> >> ---
+> >>   Documentation/devicetree/bindings/mfd/stmfx.txt | 28 +++++++++++++++++++++++++
+> >>   1 file changed, 28 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+> >>
+> >
+> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > there's no need to repost patches *only* to add the tags. The upstream
+> > maintainer will do that for acks received on the version they apply.
+> >
+> > If a tag was not added on purpose, please state why and what changed.
+> >
+>
+> I'm sorry Rob, I forgot to add your Reviewed-by on this patch, which is
+> identical to v3.
+>
+> I reposted the whole series, due to changes in MFD driver with side
+> effect in pinctrl driver, but bindings (MFD and pinctrl) didn't change
+> between the two versions. I stated the changes in cover letter.
+>
+> Should I have removed the bindings patches from the series ?
 
-Yes, you correctly pointed out that this piece of code does nothing and
-is conceptually wrong:
+No, as the series should be applied together. You just need to add the
+Reviewed-by so I can ignore it.
 
-        if (params_width(params) > 24)
-                params->msbits = 24;
-
-Yes. It can be removed.
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Rob
