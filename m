@@ -2,103 +2,122 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3522C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2967C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4843F2184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:39:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LJPhTa9O"
+	by mail.kernel.org (Postfix) with ESMTP id 9AD742184A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 14:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732377AbfB1Ojr (ORCPT
+        id S1732335AbfB1Oks convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 09:39:47 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:53982 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730388AbfB1Ojr (ORCPT
+        Thu, 28 Feb 2019 09:40:48 -0500
+Received: from smtp.eu.citrix.com ([185.25.65.24]:13361 "EHLO
+        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbfB1Okr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 09:39:47 -0500
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x1SEdhIG014817
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 23:39:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x1SEdhIG014817
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1551364784;
-        bh=vqBEZCQiWIroU1NjDU7+o8Bhv78NU69t71qRenVlVJs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LJPhTa9O6GdsRgzeuuSy93W1kaBkSFQil05DpjpcrAh2n/ZAliAfhKTXxuUOzfIFX
-         6Zv1oivqSramjbkFlCxn++cpbXYjPm6IuUTDA3roO4oizddSQb3gfDp60RM6PPcavV
-         JZWQo3P9U9Z/0Q3DXoKnqWpZfZVe3TZLONOwidqGMLZVhp2SX5o1eLLTi/UrxeHGOS
-         JmZ+/tjx9XEpmi+Xr4FqrKdKoaNhceC9rkuXj2+pC6CPM7SwnPgBG7cuwzwR5tNAhP
-         MTSdJC//udTFdYXvCbZhcsKq1LJzOw7UXZ814vo+ShPEtbLtdROZcUGbkZn0LCA0Mm
-         yWnb3cysmfCoA==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id g1so8199499uae.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 06:39:43 -0800 (PST)
-X-Gm-Message-State: AHQUAuYlrFgA40f4Ctn2b87ykrtj9T4x63VVBA35LiIPZ3ym3BiXxbBn
-        VTH9MPkxkgvXfPeOvrD731ekItRnSS/6pp8jV2k=
-X-Google-Smtp-Source: AHgI3IYfhj+lxZyJq+HxHZQv2W6amH4JTnvaZyfApEsMWIAiS/4gZe+yzDp7yRLfE37ddrNzhErQ4D7eWOK6D43Z0fs=
-X-Received: by 2002:a9f:314d:: with SMTP id n13mr5368163uab.6.1551364782745;
- Thu, 28 Feb 2019 06:39:42 -0800 (PST)
+        Thu, 28 Feb 2019 09:40:47 -0500
+X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
+   d="scan'208";a="86594368"
+From:   Paul Durrant <Paul.Durrant@citrix.com>
+To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Wei Liu <wei.liu2@citrix.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Igor Druzhinin <igor.druzhinin@citrix.com>
+Subject: RE: [PATCH] xen-netback: don't populate the hash cache on XenBus
+ disconnect
+Thread-Topic: [PATCH] xen-netback: don't populate the hash cache on XenBus
+ disconnect
+Thread-Index: AQHUz2+BjTCxFagJ+UKEtkI4Hu6u+KX1RzXw
+Date:   Thu, 28 Feb 2019 14:37:20 +0000
+Message-ID: <14a0367a270f47d88a4c19ca1945e3ea@AMSPEX02CL02.citrite.net>
+References: <1551363086-29652-1-git-send-email-igor.druzhinin@citrix.com>
+In-Reply-To: <1551363086-29652-1-git-send-email-igor.druzhinin@citrix.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <1551354739-6648-1-git-send-email-wdjjwb@163.com>
-In-Reply-To: <1551354739-6648-1-git-send-email-wdjjwb@163.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 28 Feb 2019 23:39:06 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQbQz=QjBrY5QgAS9iHT_Cmi=Kr9H22UMwnyOeTrDDnsg@mail.gmail.com>
-Message-ID: <CAK7LNAQbQz=QjBrY5QgAS9iHT_Cmi=Kr9H22UMwnyOeTrDDnsg@mail.gmail.com>
-Subject: Re: [PATCH] include/linux/types.h: use "unsigned int" instead of "unsigned"
-To:     WangBo <wdjjwb@163.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>, wang.bo116@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 9:21 PM WangBo <wdjjwb@163.com> wrote:
->
-> Use "unsigned int" instead of  "unsigned" ,it make code more clear.
->
-> Signed-off-by: WangBo <wang.bo116@zte.com.cn>
+> -----Original Message-----
+> From: Igor Druzhinin [mailto:igor.druzhinin@citrix.com]
+> Sent: 28 February 2019 14:11
+> To: xen-devel@lists.xenproject.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> Cc: Wei Liu <wei.liu2@citrix.com>; Paul Durrant <Paul.Durrant@citrix.com>; davem@davemloft.net; Igor
+> Druzhinin <igor.druzhinin@citrix.com>
+> Subject: [PATCH] xen-netback: don't populate the hash cache on XenBus disconnect
+> 
+> Occasionally, during the disconnection procedure on XenBus which
+> includes hash cache deinitialization there might be some packets
+> still in-flight on other processors. Handling of these packets includes
+> hashing and hash cache population that finally results in hash cache
+> data structure corruption.
+> 
+> In order to avoid this we prevent hashing of those packets if there
+> are no queues initialized. In that case RCU protection of queues guards
+> the hash cache as well.
+> 
+> Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-
+Reviewed-by: Paul Durrant <paul.durrant@citrix.com>
 
 > ---
->  include/linux/types.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/types.h b/include/linux/types.h
-> index c2615d6..cc0dbbe 100644
-> --- a/include/linux/types.h
-> +++ b/include/linux/types.h
-> @@ -155,9 +155,9 @@ typedef u64 dma_addr_t;
->  typedef u32 dma_addr_t;
->  #endif
->
-> -typedef unsigned __bitwise gfp_t;
-> -typedef unsigned __bitwise slab_flags_t;
-> -typedef unsigned __bitwise fmode_t;
-> +typedef unsigned int __bitwise gfp_t;
-> +typedef unsigned int __bitwise slab_flags_t;
-> +typedef unsigned int __bitwise fmode_t;
->
->  #ifdef CONFIG_PHYS_ADDR_T_64BIT
->  typedef u64 phys_addr_t;
+> 
+> Found this while applying the previous patch to our patchqueue. Seems it
+> never went to the mailing list and, to my knowledge, the problem is still
+> present. From my recollection, it only happened on stress frontend on/off
+> test with Windows guests (since only those detach the frontend completely).
+> So better late than never.
+> 
+> ---
+>  drivers/net/xen-netback/hash.c      | 2 ++
+>  drivers/net/xen-netback/interface.c | 7 +++++++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/net/xen-netback/hash.c b/drivers/net/xen-netback/hash.c
+> index 0ccb021..10d580c 100644
+> --- a/drivers/net/xen-netback/hash.c
+> +++ b/drivers/net/xen-netback/hash.c
+> @@ -454,6 +454,8 @@ void xenvif_init_hash(struct xenvif *vif)
+>  	if (xenvif_hash_cache_size == 0)
+>  		return;
+> 
+> +	BUG_ON(vif->hash.cache.count);
+> +
+>  	spin_lock_init(&vif->hash.cache.lock);
+>  	INIT_LIST_HEAD(&vif->hash.cache.list);
+>  }
+> diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
+> index 182d677..6da1251 100644
+> --- a/drivers/net/xen-netback/interface.c
+> +++ b/drivers/net/xen-netback/interface.c
+> @@ -153,6 +153,13 @@ static u16 xenvif_select_queue(struct net_device *dev, struct sk_buff *skb,
+>  {
+>  	struct xenvif *vif = netdev_priv(dev);
+>  	unsigned int size = vif->hash.size;
+> +	unsigned int num_queues;
+> +
+> +	/* If queues are not set up internally - always return 0
+> +	 * as the packet going to be dropped anyway */
+> +	num_queues = READ_ONCE(vif->num_queues);
+> +	if (num_queues < 1)
+> +		return 0;
+> 
+>  	if (vif->hash.alg == XEN_NETIF_CTRL_HASH_ALGORITHM_NONE)
+>  		return fallback(dev, skb, NULL) % dev->real_num_tx_queues;
 > --
 > 2.7.4
->
->
 
-
--- 
-Best Regards
-Masahiro Yamada
