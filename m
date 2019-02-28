@@ -2,220 +2,89 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3A1C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08B7C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E32E21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD12C21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="UeOUYm2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbfB1JJw (ORCPT
+        id S1732151AbfB1JKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:09:52 -0500
-Received: from mga12.intel.com ([192.55.52.136]:30583 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfB1JJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:09:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 01:09:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,422,1544515200"; 
-   d="scan'208";a="148002348"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Feb 2019 01:09:51 -0800
-Received: from [10.251.86.205] (abudanko-mobl.ccr.corp.intel.com [10.251.86.205])
-        by linux.intel.com (Postfix) with ESMTP id 42CDE58040E;
-        Thu, 28 Feb 2019 01:09:49 -0800 (PST)
-Subject: [PATCH v4 06/10] perf util: introduce Zstd based streaming
- compression API
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <dc1e22bb-fc17-bb9d-0ea4-579bdcd2d204@linux.intel.com>
-Date:   Thu, 28 Feb 2019 12:09:48 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 28 Feb 2019 04:10:07 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34023 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfB1JKG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 04:10:06 -0500
+Received: by mail-pf1-f195.google.com with SMTP id u9so9437044pfn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 01:10:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OSiNA37Tf2ku65YCF81ErKBIY65FlNaIyw/AvC347Xo=;
+        b=UeOUYm2EDIasSXX8n7AwcaB+Y26QXgo3ne3OzqntONrs1JkxtZgawnQj2dtYYkDHVU
+         Dk9SRWhE2Zn3J37KmIh+EUhbZoF86KeaVVo9ka4Kr7bTYzrum5R/69d6qTayukOZbqNh
+         g83AMKHX0koZsNFEOg8eUYBa9+WLxzSfDO8meN66lRKz1l6KYHxmIYZ8wFf4d/WvI6yY
+         beCJIagJa4zUYoB0lErUaCZDjXGsVrMK5ku8BtK7eVGRS+y/04teHjn53n5WpHxS8zoj
+         66QLu6CdcCpgNKB4zjxxPpR4wjv5/pQ/+51edHIN1iVBLLOJQv5mem1/0eqqIBDvvxGK
+         Dqjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OSiNA37Tf2ku65YCF81ErKBIY65FlNaIyw/AvC347Xo=;
+        b=QAHgszsdDT5XUXZRFGPon3ZSoi7lP+nOT6HwxY0zBTH3aBfcmNNp++XHmP8nrkj3u5
+         H29nOMdTlYqjewJMFpzLW5bw3/1TTg2wC0ghWSV/bZ9xRa+isbp2/762f4M03oijEgW3
+         yPKTGoygCdPuyAHfKBtjnweP8W75xA5i39hLVUex+ooB4mXqWrqJbovraKhdikS2SLXc
+         I2cBWhdsUDYMuV6l/3dMCe9WJ2XbAnYONelWbK1c35Rl1JWkydnYKmepDzMUuiL4OkVn
+         978fmWv6K6K3GbHg6NR1R37A/YUwBAvmjdKDqpA5MUEwnhopC+ZOylONgY13hpkqjnQU
+         VY5w==
+X-Gm-Message-State: AHQUAuaZFHB772uP/w87aNuRqrNTcsmun88Qx+/Hel9sySan+f8bIasD
+        tQD9PVBxWhhVkGxLY66FcVf9Qg==
+X-Google-Smtp-Source: AHgI3IYHtjehm1QAhRvPxVr5EyR64Fp215g1nfipbbU76hd+jMINZqhs2RcqK2vqB4E0AFNpjKv0rw==
+X-Received: by 2002:a65:64d9:: with SMTP id t25mr7513251pgv.244.1551345005773;
+        Thu, 28 Feb 2019 01:10:05 -0800 (PST)
+Received: from kshutemo-mobl1.localdomain ([134.134.139.83])
+        by smtp.gmail.com with ESMTPSA id s78sm10692486pfa.134.2019.02.28.01.10.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 01:10:05 -0800 (PST)
+Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
+        id 8F1B33000E5; Thu, 28 Feb 2019 12:10:01 +0300 (+03)
+Date:   Thu, 28 Feb 2019 12:10:01 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, keescook@chromium.org, thgarnie@google.com
+Subject: Re: [PATCH v2 0/2] x86/mm/KASLR: Change the granularity of
+ randomization to PUD size in 5-level
+Message-ID: <20190228091001.5wvkwe7cqkf2euzc@kshutemo-mobl1>
+References: <20190228003522.9957-1-bhe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228003522.9957-1-bhe@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 28, 2019 at 08:35:20AM +0800, Baoquan He wrote:
+>  arch/x86/mm/kaslr.c | 92 ++++++++++++++++++++-------------------------
+>  1 file changed, 40 insertions(+), 52 deletions(-)
 
-Implemented functions are based on Zstd streaming compression
-API. The functions are used in runtime to compress data that
-come from mmaped kernel buffer data and then stored into a trace.
+What tree is it against?
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/util/Build      |  2 +
- tools/perf/util/compress.h | 18 ++++++++
- tools/perf/util/zstd.c     | 95 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 115 insertions(+)
- create mode 100644 tools/perf/util/zstd.c
+I cannot apply on current Linus' tree or tip/master.
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8dd3102301ea..920ee8bebd83 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -145,6 +145,8 @@ perf-y += scripting-engines/
- 
- perf-$(CONFIG_ZLIB) += zlib.o
- perf-$(CONFIG_LZMA) += lzma.o
-+perf-y += zstd.o
-+
- perf-y += demangle-java.o
- perf-y += demangle-rust.o
- 
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index 892e92e7e7fc..e0987616db94 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -2,6 +2,11 @@
- #ifndef PERF_COMPRESS_H
- #define PERF_COMPRESS_H
- 
-+#include <stdbool.h>
-+#ifdef HAVE_ZSTD_SUPPORT
-+#include <zstd.h>
-+#endif
-+
- #ifdef HAVE_ZLIB_SUPPORT
- int gzip_decompress_to_file(const char *input, int output_fd);
- bool gzip_is_compressed(const char *input);
-@@ -12,4 +17,17 @@ int lzma_decompress_to_file(const char *input, int output_fd);
- bool lzma_is_compressed(const char *input);
- #endif
- 
-+struct zstd_data {
-+#ifdef HAVE_ZSTD_SUPPORT
-+	ZSTD_CStream	*cstream;
-+#endif
-+};
-+
-+int zstd_init(struct zstd_data *data, int level);
-+int zstd_fini(struct zstd_data *data);
-+
-+size_t zstd_compress_stream_to_records(struct zstd_data *data,
-+	void *dst, size_t dst_size, void *src, size_t src_size,	size_t max_record_size,
-+	size_t process_header(void *record, size_t increment));
-+
- #endif /* PERF_COMPRESS_H */
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-new file mode 100644
-index 000000000000..e5d44d0f6b5d
---- /dev/null
-+++ b/tools/perf/util/zstd.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <string.h>
-+
-+#include "util/compress.h"
-+#include "util/debug.h"
-+
-+#ifdef HAVE_ZSTD_SUPPORT
-+
-+int zstd_init(struct zstd_data *data, int level)
-+{
-+	size_t ret;
-+
-+	data->cstream = ZSTD_createCStream();
-+	if (data->cstream == NULL) {
-+		pr_err("Couldn't create compression stream.\n");
-+		return -1;
-+	}
-+
-+	ret = ZSTD_initCStream(data->cstream, level);
-+	if (ZSTD_isError(ret)) {
-+		pr_err("Failed to initialize compression stream: %s\n", ZSTD_getErrorName(ret));
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+int zstd_fini(struct zstd_data *data)
-+{
-+	if (data->cstream) {
-+		ZSTD_freeCStream(data->cstream);
-+		data->cstream = NULL;
-+	}
-+
-+	return 0;
-+}
-+
-+size_t zstd_compress_stream_to_records(struct zstd_data *data,
-+	void *dst, size_t dst_size, void *src, size_t src_size,	size_t max_record_size,
-+	size_t process_header(void *record, size_t increment))
-+{
-+	size_t ret, size, compressed = 0;
-+	ZSTD_inBuffer input = { src, src_size, 0 };
-+	ZSTD_outBuffer output;
-+	void *record;
-+
-+	while (input.pos < input.size) {
-+		record = dst;
-+		size = process_header(record, 0);
-+		compressed += size;
-+		dst += size;
-+		dst_size -= size;
-+		output = (ZSTD_outBuffer){ dst, (dst_size > max_record_size) ?
-+						max_record_size : dst_size, 0 };
-+		ret = ZSTD_compressStream(data->cstream, &output, &input);
-+		ZSTD_flushStream(data->cstream, &output);
-+		if (ZSTD_isError(ret)) {
-+			pr_err("failed to compress %ld bytes: %s\n",
-+				(long)src_size, ZSTD_getErrorName(ret));
-+			memcpy(dst, src, src_size);
-+			return src_size;
-+		}
-+		size = output.pos;
-+		size = process_header(record, size);
-+		compressed += size;
-+		dst += size;
-+		dst_size -= size;
-+	}
-+
-+	return compressed;
-+}
-+
-+#else /* !HAVE_ZSTD_SUPPORT */
-+
-+int zstd_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+int zstd_fini(struct zstd_data *data __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+size_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
-+		void *dst __maybe_unused, size_t dst_size __maybe_unused,
-+		void *src __maybe_unused, size_t src_size __maybe_unused,
-+		size_t max_record_size __maybe_unused,
-+		size_t process_header(void *record, size_t increment) __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+#endif
+-- 
+ Kirill A. Shutemov
