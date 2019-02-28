@@ -2,51 +2,53 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 085B3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA26C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD27720C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68EDB20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551367079;
-	bh=uixFJaDp4PZFJ0lNA4QTioBP5XIBV+Vc1vj5Pgo80zA=;
+	s=default; t=1551367086;
+	bh=qIpnS2pq/WGI8aKIt+lKAPOe/48G/rc05SQ+aPVFkyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JqyQqiNbVMKwhC/hyQ3KwAB+r3WSeCZcp/qefDMycDpxu78O47fdnofWTSsjVe8I1
-	 9QTsVGwgMEBfGnyiHaCSoP7xazUXqfq6Wy3v/CKx1+jZ5AJNKcRIeO+uvPcoNJ8d0L
-	 bRNusrPp06XqWyVSBCvx2wCh+hhpfLW1t4bFcxTU=
+	b=avyETvMWjgfZj+wOb1O2MedLAp+MOxxJyT9HQ1VNlo8CphnAaZTAc6VcGg2B310R2
+	 ZbgWThjw1IiwRFCT6b7EE7BCaLol4xItrHhwcLKLCbog0eRjHiMKf8A4lWUDGYN57I
+	 /Fmp2lVASUpxf78srUwHWvt5lfC4ii0krk5DUh9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388941AbfB1PQA (ORCPT
+        id S1732983AbfB1PSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:16:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51954 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:18:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732586AbfB1PP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:56 -0500
+        id S2388938AbfB1PQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:16:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCEAC2184A;
-        Thu, 28 Feb 2019 15:15:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99486218D3;
+        Thu, 28 Feb 2019 15:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366955;
-        bh=uixFJaDp4PZFJ0lNA4QTioBP5XIBV+Vc1vj5Pgo80zA=;
+        s=default; t=1551366959;
+        bh=qIpnS2pq/WGI8aKIt+lKAPOe/48G/rc05SQ+aPVFkyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d2jr/x4Lap7tJayNVBj0JOLWPfXNq2KnAROy134QoTLWLoZiVHLtSx7Zp+UWrIWAJ
-         OUZrsuhhwvrMqyFXfV74EJ2E5Hwa7vhiGg79tndRmUoojcnWfZMzIOI+/5f2wy8O4G
-         SEIecIhA4SGxec4Wd1KJiDY0GHaxgGpYFpBLFUqE=
+        b=0gitHQg2A44s7W6y+pjvGh2BuCgEa3oEWx0/s4VgDPTJ6Ka5vtkCRCDpvhOj+Bw/e
+         n/kQpL+LP1rXuNm2U/8cUCEXJcbsy9H5owHBH9Q8P3rMFfhJf8cz4/fAmwZkeEQB2R
+         PhjTAswtFKXNATRONAbG0PkszYytZv+/TBITnQgQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/19] s390/qeth: fix use-after-free in error path
-Date:   Thu, 28 Feb 2019 10:15:10 -0500
-Message-Id: <20190228151517.12705-14-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 16/19] perf trace: Support multiple "vfs_getname" probes
+Date:   Thu, 28 Feb 2019 10:15:12 -0500
+Message-Id: <20190228151517.12705-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
 References: <20190228151517.12705-1-sashal@kernel.org>
@@ -58,70 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit afa0c5904ba16d59b0454f7ee4c807dae350f432 ]
+[ Upstream commit 6ab3bc240ade47a0f52bc16d97edd9accbe0024e ]
 
-The error path in qeth_alloc_qdio_buffers() that takes care of
-cleaning up the Output Queues is buggy. It first frees the queue, but
-then calls qeth_clear_outq_buffers() with that very queue struct.
+With a suitably defined "probe:vfs_getname" probe, 'perf trace' can
+"beautify" its output, so syscalls like open() or openat() can print the
+"filename" argument instead of just its hex address, like:
 
-Make the call to qeth_clear_outq_buffers() part of the free action
-(in the correct order), and while at it fix the naming of the helper.
+  $ perf trace -e open -- touch /dev/null
+  [...]
+       0.590 ( 0.014 ms): touch/18063 open(filename: /dev/null, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+  [...]
 
-Fixes: 0da9581ddb0f ("qeth: exploit asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The output without such beautifier looks like:
+
+     0.529 ( 0.011 ms): touch/18075 open(filename: 0xc78cf288, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+However, when the vfs_getname probe expands to multiple probes and it is
+not the first one that is hit, the beautifier fails, as following:
+
+     0.326 ( 0.010 ms): touch/18072 open(filename: , flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+Fix it by hooking into all the expanded probes (inlines), now, for instance:
+
+  [root@quaco ~]# perf probe -l
+    probe:vfs_getname    (on getname_flags:73@fs/namei.c with pathname)
+    probe:vfs_getname_1  (on getname_flags:73@fs/namei.c with pathname)
+  [root@quaco ~]# perf trace -e open* sleep 1
+       0.010 ( 0.005 ms): sleep/5588 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC)   = 3
+       0.029 ( 0.006 ms): sleep/5588 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: RDONLY|CLOEXEC)   = 3
+       0.194 ( 0.008 ms): sleep/5588 openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: RDONLY|CLOEXEC) = 3
+  [root@quaco ~]#
+
+Works, further verified with:
+
+  [root@quaco ~]# perf test vfs
+  65: Use vfs_getname probe to get syscall args filenames   : Ok
+  66: Add vfs_getname probe to get syscall args filenames   : Ok
+  67: Check open filename arg using perf trace + vfs_getname: Ok
+  [root@quaco ~]#
+
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-mv8kolk17xla1smvmp3qabv1@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ tools/perf/builtin-trace.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 8f77fc0630ce0..86a02592b982c 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2449,11 +2449,12 @@ static int qeth_init_qdio_out_buf(struct qeth_qdio_out_q *q, int bidx)
- 	return rc;
- }
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 0fd8bfb77f652..6e568d361edf7 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2059,19 +2059,30 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
  
--static void qeth_free_qdio_out_buf(struct qeth_qdio_out_q *q)
-+static void qeth_free_output_queue(struct qeth_qdio_out_q *q)
+ static bool perf_evlist__add_vfs_getname(struct perf_evlist *evlist)
  {
- 	if (!q)
- 		return;
+-	struct perf_evsel *evsel = perf_evsel__newtp("probe", "vfs_getname");
++	bool found = false;
++	struct perf_evsel *evsel, *tmp;
++	struct parse_events_error err = { .idx = 0, };
++	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
  
-+	qeth_clear_outq_buffers(q, 1);
- 	qdio_free_buffers(q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
- 	kfree(q);
+-	if (IS_ERR(evsel))
++	if (ret)
+ 		return false;
+ 
+-	if (perf_evsel__field(evsel, "pathname") == NULL) {
++	evlist__for_each_entry_safe(evlist, evsel, tmp) {
++		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
++			continue;
++
++		if (perf_evsel__field(evsel, "pathname")) {
++			evsel->handler = trace__vfs_getname;
++			found = true;
++			continue;
++		}
++
++		list_del_init(&evsel->node);
++		evsel->evlist = NULL;
+ 		perf_evsel__delete(evsel);
+-		return false;
+ 	}
+ 
+-	evsel->handler = trace__vfs_getname;
+-	perf_evlist__add(evlist, evsel);
+-	return true;
++	return found;
  }
-@@ -2526,10 +2527,8 @@ static int qeth_alloc_qdio_buffers(struct qeth_card *card)
- 		card->qdio.out_qs[i]->bufs[j] = NULL;
- 	}
- out_freeoutq:
--	while (i > 0) {
--		qeth_free_qdio_out_buf(card->qdio.out_qs[--i]);
--		qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--	}
-+	while (i > 0)
-+		qeth_free_output_queue(card->qdio.out_qs[--i]);
- 	kfree(card->qdio.out_qs);
- 	card->qdio.out_qs = NULL;
- out_freepool:
-@@ -2562,10 +2561,8 @@ static void qeth_free_qdio_buffers(struct qeth_card *card)
- 	qeth_free_buffer_pool(card);
- 	/* free outbound qdio_qs */
- 	if (card->qdio.out_qs) {
--		for (i = 0; i < card->qdio.no_out_queues; ++i) {
--			qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--			qeth_free_qdio_out_buf(card->qdio.out_qs[i]);
--		}
-+		for (i = 0; i < card->qdio.no_out_queues; i++)
-+			qeth_free_output_queue(card->qdio.out_qs[i]);
- 		kfree(card->qdio.out_qs);
- 		card->qdio.out_qs = NULL;
- 	}
+ 
+ static struct perf_evsel *perf_evsel__new_pgfault(u64 config)
 -- 
 2.19.1
 
