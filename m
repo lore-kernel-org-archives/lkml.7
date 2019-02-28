@@ -2,171 +2,138 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A626CC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4113CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70565206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551394623;
-	bh=0xGCQmLekdN16fDGUN/dV7pLZwARg8WAvilA2Qut8d4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Z4Ju3zTrA/yBgpVoOr5IA5Wo9eWmwyHB2oSlKx1UNtLOdGoRrLlzqORVLSYlWkd8G
-	 BinR5PSJwYKvEyWV6VMsJC8xbsjzQ3rakLdBFS2zs4kMtUGeNzETI9IcUxLXqHtRuL
-	 RqpmvZirGfnUhTiMHZRNio9qAUmago0cLAwJvzIg=
+	by mail.kernel.org (Postfix) with ESMTP id 0D3B220851
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:05:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="iMKKcH1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732569AbfB1W5B (ORCPT
+        id S1729668AbfB1XEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 17:57:01 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46914 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbfB1W5B (ORCPT
+        Thu, 28 Feb 2019 18:04:38 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39206 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfB1XEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 17:57:01 -0500
-Received: by mail-ot1-f67.google.com with SMTP id c18so19239635otl.13;
-        Thu, 28 Feb 2019 14:57:00 -0800 (PST)
+        Thu, 28 Feb 2019 18:04:38 -0500
+Received: by mail-io1-f67.google.com with SMTP id x3so18052232ior.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 15:04:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=gmKEt95/bKerSzneuZjTxHAhkZtg6bph+MZYvRvMaE0=;
+        b=iMKKcH1teYSrhuXMA5msAb49RrO2FvVesrVlcxUMxIv2b2n8o7XPeQyx00E8zOVgdg
+         sA5EM0XZzi/k58Y9KNMKjYg7cW9EXdZ/SHJhRrKsDByA2IPmdR1FBScBBkgZaclWah/l
+         KqqnEsPegpdFttU/Qx2HlRxY+5iviPo+BYSk+edBDcikG+eVkozGhYbL7jQWImezUvbH
+         Oodk7MRNHZS69syX78o7uMTub/LuBc5CMIZvS1zvYSxOdkit6xd4zJMjlv0ZIBYiNd0u
+         pcIcpaLuaOC0Nr9o/IgqIOeNkNZyZZysVBN8rOc8bAI9+Ew7uhA+GdWVmhHg8LENHRah
+         aL9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cRJsSnyF/XTs3NecXPZWkb0YNUZklytRPh8uab7VC1g=;
-        b=FfbrW2pFMY9mSC7fnOQPrrV2l3kyBAPHgQ+E0sfjnp5lhGk96hlazg4YSTnt0Ivb7R
-         /gOh8aHqJSoLg9en5xjhNH3cOxq0l6eSxBkaJJULoOffnrlpxDcs71Hln/h1fG4RL53Z
-         YfdbXYRPSwdgRF5KORNl3GPqhjbz0bRjf4LV+wMGT2G8h8AatopvOobCzUOoAlm3aO5Z
-         j2y9JEXnOGPzpvxweliCde6IvGpNLTbwuEiGiiXmLupfoMH1KqHPVmQ8w0PHq3ZeInYr
-         O9q+6KwW7I0me5PrLGvKQvjukFa1LmLsr3aUJnohVVKaGN7qc0l8UdGBz2MP5RY7O763
-         E+Ow==
-X-Gm-Message-State: APjAAAX4P+qLXNkERweHFO6kiUf2JHkikKMhqCFOZIHwoEhxwCerf+KY
-        X7cUl4WXN5WQHjHRsIxzBdjBmcMHQEdMdmpYSHY=
-X-Google-Smtp-Source: APXvYqzxbNhesdcsjooXdprohaBMaMze6H6r5jXmM9pfKxUB0LBnIgJaymJDTkQJSSsirl5PMDfUspRS9CbPSvb3F0w=
-X-Received: by 2002:a9d:7cd3:: with SMTP id r19mr1443384otn.139.1551394619852;
- Thu, 28 Feb 2019 14:56:59 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=gmKEt95/bKerSzneuZjTxHAhkZtg6bph+MZYvRvMaE0=;
+        b=Z/pYHR/mDJUITaIoBA3CjVZaoIbIFpJG+BtxXWQpGogBvZTeD8ccIPXNYDSNCrcE5u
+         s2RTuDHnokxORjEuHQqPpmO5F9LvliUb/o1hVOh7hnQ0x2NAwL6ia/Fm1dkzjejlgKjp
+         9eYy4RWlxFhuYgaCFzr99BV6y13dhXLV74GVpoOH7dLCihIbzdLSm5vGou6AKDCIsLbv
+         8g2lXQ64KwG8g0NbRGo9we5ziMVDVepCHNwGiSSyQn4nH2dFovHSy+RiDpACn6BAykgZ
+         ltBVYhoAcOxdcRXh1UXKlQPGJ6VuTcFyzTkgPmU67C0K8M4+Ma7uc94ipSoNA5nwxmAx
+         3FWg==
+X-Gm-Message-State: APjAAAW2dDSqQ3ODy5PMT/8vMmXFS301i1hYu1UTVAFuN1DpAee4UKCt
+        JLiBb5Dgxs13AYieGizHoowgog==
+X-Google-Smtp-Source: APXvYqz4f5ZN5H+9U9fRvdvL5J1x6Nw+Px9y4Ao+FXNlLRGrppjsrlQWPzGR9bA1DRwxwjrI5MBh4g==
+X-Received: by 2002:a6b:b644:: with SMTP id g65mr1103203iof.198.1551395077046;
+        Thu, 28 Feb 2019 15:04:37 -0800 (PST)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id f142sm3594011itc.15.2019.02.28.15.04.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 15:04:36 -0800 (PST)
+Date:   Thu, 28 Feb 2019 15:04:35 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Alistair Francis <alistair23@gmail.com>
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Revert "of/device: Really only set bus DMA mask when
+ appropriate"
+In-Reply-To: <CAKmqyKND0ruL+cTLoMzV2oG5BOdHDzAzWkKrW5eqLAP2Q6smvQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1902281452270.17965@viisi.sifive.com>
+References: <20190228223257.6189-1-alistair.francis@wdc.com> <alpine.DEB.2.21.9999.1902281437380.17965@viisi.sifive.com> <CAKmqyKND0ruL+cTLoMzV2oG5BOdHDzAzWkKrW5eqLAP2Q6smvQ@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <cover.1551375162.git.yu.c.chen@intel.com> <bd3c5e04e882e5a4c977211a8d268440b36276a4.1551375162.git.yu.c.chen@intel.com>
-In-Reply-To: <bd3c5e04e882e5a4c977211a8d268440b36276a4.1551375162.git.yu.c.chen@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 28 Feb 2019 23:56:48 +0100
-Message-ID: <CAJZ5v0g4CGfAMH0pM-wWSt6pXZrw3ckqBbbUzNwjqScwRjrK3g@mail.gmail.com>
-Subject: Re: [PATCH 2/2][RFC v2] ACPI: Update cpuinfo.max after bootup if necessary
-To:     Chen Yu <yu.c.chen@intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yu Chen <yu.chen.surf@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 6:59 PM Chen Yu <yu.c.chen@intel.com> wrote:
->
-> On Dell Inc. XPS13 9333, the BIOS changes the value of
-> MSR_IA32_MISC_ENABLE_TURBO_DISABLE at runtime (e.g., when
-> the power source changes), the maximum frequency of the
-> CPU is not updated accordingly. This is due to the policy's
-> cpuinfo.max is not updated when _PPC notifier fires.
->
-> Fix this problem by updating the policy's cpuinfo.max when
-> necessary.
->
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=200759
-> Reported-and-tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> Originally-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> ---
->  drivers/cpufreq/cpufreq.c      |  2 ++
->  drivers/cpufreq/intel_pstate.c | 15 +++++++++++++--
->  2 files changed, 15 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index e35a886e00bc..95e08816b512 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -2237,6 +2237,8 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
->
->         policy->min = new_policy->min;
->         policy->max = new_policy->max;
-> +       policy->cpuinfo.max_freq = new_policy->cpuinfo.max_freq;
-> +       policy->cpuinfo.min_freq = new_policy->cpuinfo.min_freq;
->         trace_cpu_frequency_limits(policy);
->
->         policy->cached_target_freq = UINT_MAX;
-> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-> index dd66decf2087..841c74f69f66 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -2081,11 +2081,17 @@ static void intel_pstate_adjust_policy_max(struct cpufreq_policy *policy,
->
->  static int intel_pstate_verify_policy(struct cpufreq_policy *policy)
->  {
-> +       int max_freq;
->         struct cpudata *cpu = all_cpu_data[policy->cpu];
->
->         update_turbo_state();
-> +       max_freq = intel_pstate_get_max_freq(cpu);
-> +
-> +       if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
-> +               policy->cpuinfo.max_freq = policy->max = max_freq;
+On Thu, 28 Feb 2019, Alistair Francis wrote:
 
-Updating cpuinfo.max_freq here only causes the current limit to be
-reported via sysfs, because intel_pstate doesn't actually use
-cpuinfo.max_freq for anything and the core doesn't enforce it as a
-limit.
+> On Thu, Feb 28, 2019 at 2:39 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> > On Thu, 28 Feb 2019, Alistair Francis wrote:
+> > > This reverts commit 6778be4e520959659b27a441c06a84c9cb009085.
+> > >
+> > > Reverting the commit fixes these error messages and an non-functioning
+> > > USB bus when attaching a USB to PCIe card to a RISC-V board:
+> > >     xhci_hcd 0000:03:00.0: Host took too long to start, waited 16000 microseconds.
+> > >     xhci_hcd 0000:03:00.0: startup error -19
+> > >     xhci_hcd 0000:03:00.0: USB bus 2 deregistered
+> > >     xhci_hcd 0000:03:00.0: WARNING: Host System Error
+> > >     xhci_hcd 0000:03:00.0: remove, state 1
+> > >
+> > > Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+> > > ---
+> > > I'm not sure if this is the correct fix, it's possible something else is
+> > > wrong, but I wanted to get some feedback.
+> > >
+> > > drivers/of/device.c | 4 +---
+> > >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/of/device.c b/drivers/of/device.c
+> > > index 3717f2a20d0d..8299f8055da7 100644
+> > > --- a/drivers/of/device.c
+> > > +++ b/drivers/of/device.c
+> > > @@ -149,11 +149,9 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+> > >        * set by the driver.
+> > >        */
+> > >       mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1);
+> > > +     dev->bus_dma_mask = mask;
+> > >       dev->coherent_dma_mask &= mask;
+> > >       *dev->dma_mask &= mask;
+> > > -     /* ...but only set bus mask if we found valid dma-ranges earlier */
+> >
+> > Does the DT data for the PCIe controller that you're using contain a
+> > dma-ranges node?
+> 
+> Ah, no it does not. It only has ranges and bus-range [1].
+> 
+> Any idea what the dma-ranges should be?
+> 
+> 1: https://github.com/riscv/opensbi/blob/master/platform/sifive/fu540/HiFiveUnleashed-MicroSemi-Expansion.dts#L407
 
-All of the computations in the active mode in the driver actually use
-the current limit anyway AFAICS.
+Not off the top of my head, but this may help:
 
-> +
->         cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
-> -                                    intel_pstate_get_max_freq(cpu));
-> +                                    max_freq);
->
->         if (policy->policy != CPUFREQ_POLICY_POWERSAVE &&
->             policy->policy != CPUFREQ_POLICY_PERFORMANCE)
-> @@ -2192,11 +2198,16 @@ static struct cpufreq_driver intel_pstate = {
->
->  static int intel_cpufreq_verify_policy(struct cpufreq_policy *policy)
->  {
-> +       int max_freq;
->         struct cpudata *cpu = all_cpu_data[policy->cpu];
->
->         update_turbo_state();
-> +       max_freq = intel_pstate_get_max_freq(cpu);
-> +
-> +       if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
-> +               policy->cpuinfo.max_freq = policy->max = max_freq;
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/booting-without-of.txt#n1389
 
-In this case (passive mode) updating cpuinfo.max_freq will actually
-cause governors to use the new value in computations, so the P-state
-selection will work somewhat differently, but that isn't really
-consistent with what acpi-cpufreq does and with setting no_turbo in
-the intel_pstate sysfs to 1 without this patch.
+You might also consider grepping through existing DT data for examples of 
+dma-ranges usage.
 
-With acpi-cpufreq cpuinfo.max_freq is always the max frequency in the
-_PSS table regardless of what the _PSS limit is.  Also setting
-no_turbo to 1 in intel_pstate without this patch doesn't cause
-cpuinfo.max_freq to change and I don't really think that it should.
+N.B., I have no direct knowledge of this, but have been told that some of 
+the MicroSemi PCIe controllers can only bus-master into a 32-bit region.  
+If this is a MicroSemi controller, that would need to be reflected in 
+dma-ranges.
 
-I would be tempted to always initialize cpuinfo.max_freq to the max
-turbo frequency, but there is a concern about systems in which
-MSR_IA32_MISC_ENABLE_TURBO_DISABLE is never set on the fly (just in
-the BIOS setup as it should be) and where it doesn't make sense to
-consider turbo frequencies at all.
 
->         cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
-> -                                    intel_pstate_get_max_freq(cpu));
-> +                                    max_freq);
->
->         intel_pstate_adjust_policy_max(policy, cpu);
->
-> --
-
-It looks like I need to think about this a bit more.
+- Paul
