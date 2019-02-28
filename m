@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCD3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3C2C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFF12184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A9C20C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366940;
-	bh=FXLKFSA/VdXiYEG3KbX150uebKRr6XvbVooFfrxv4wo=;
+	s=default; t=1551366945;
+	bh=Ui/7h9JFlbrLYPlec1qdhESNoTusVvdaz6Pj1c9Z9Wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vH2kFSpOB4ndEJNWi5xZZC6mJk4pjR4sWyhJaQdTyMFnVgj8w+XHrlRbiKTAJxnmY
-	 rLosOQcEZIf2L/RHQYaLnmSy6Bsh7vTIm1kcbllGMli0DmPJiKArENoWIwvCegcTLb
-	 Qxaos0TN6HgS6uWdt4m9+u5G7dKfsIbRl6cTQxmg=
+	b=uaNKduda+npNeqtheL7ljm4YNAVeghOBELPXN7GZQ61hvCjF8XbihKdRsW0GtND52
+	 z9POUsIfpJhaIJu9KPWebcM+WNbXz7VkKOt5ZQ83ZFgq1EAhBLbADj4uSAsGHlulT+
+	 pTWO2g8IzDe4RkmtvTBLd2hvCaEznjYzVLtJLc2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388906AbfB1PPj (ORCPT
+        id S2388917AbfB1PPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:15:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51236 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:15:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388268AbfB1PPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:15:32 -0500
+        id S2388899AbfB1PPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1102E218D3;
-        Thu, 28 Feb 2019 15:15:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90D1E20C01;
+        Thu, 28 Feb 2019 15:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366930;
-        bh=FXLKFSA/VdXiYEG3KbX150uebKRr6XvbVooFfrxv4wo=;
+        s=default; t=1551366937;
+        bh=Ui/7h9JFlbrLYPlec1qdhESNoTusVvdaz6Pj1c9Z9Wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3SeYCVQbTag3nzdGJkraQ5LhTbbxFWQkTbzJHGOYJCfkWnEawuO18nZTEx0vEzcp
-         lbrk5WfvS3XMDx5h2g8m6IM2ZK0g28OaGMkn0ckG/JTjSXEW2uz2KuuR0go51FOaOg
-         DU4fZxPMfGbA3az73D21KFMnobe1Xj8CNhnbBxAo=
+        b=18n0SU0fnt4PBcz1if01TV97S6X8LWbPqx1vOl4pym+uj2TirSVrUy/nIBbmx8Z9y
+         3aTA0bfpAPNqjPPx4M4fWZicPVoQWsc+oLNtssyMRR47VNGt8YC86cxWScw3pSt5nA
+         Gx2UxTsyqvqbRJMjkF0ebDBop3i81R2TW4YBOiGk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/19] dmaengine: dmatest: Abort test in case of mapping error
-Date:   Thu, 28 Feb 2019 10:15:06 -0500
-Message-Id: <20190228151517.12705-10-sashal@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 11/19] selftests: netfilter: fix config fragment CONFIG_NF_TABLES_INET
+Date:   Thu, 28 Feb 2019 10:15:07 -0500
+Message-Id: <20190228151517.12705-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
 References: <20190228151517.12705-1-sashal@kernel.org>
@@ -58,121 +58,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-[ Upstream commit 6454368a804c4955ccd116236037536f81e5b1f1 ]
+[ Upstream commit 952b72f89ae23b316da8c1021b18d0c388ad6cc4 ]
 
-In case of mapping error the DMA addresses are invalid and continuing
-will screw system memory or potentially something else.
+In selftests the config fragment for netfilter was added as
+NF_TABLES_INET=y and this patch correct it as CONFIG_NF_TABLES_INET=y
 
-[  222.480310] dmatest: dma0chan7-copy0: summary 1 tests, 3 failures 6 iops 349 KB/s (0)
-...
-[  240.912725] check: Corrupted low memory at 00000000c7c75ac9 (2940 phys) = 5656000000000000
-[  240.921998] check: Corrupted low memory at 000000005715a1cd (2948 phys) = 279f2aca5595ab2b
-[  240.931280] check: Corrupted low memory at 000000002f4024c0 (2950 phys) = 5e5624f349e793cf
-...
-
-Abort any test if mapping failed.
-
-Fixes: 4076e755dbec ("dmatest: convert to dmaengine_unmap_data")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmatest.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ tools/testing/selftests/netfilter/config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index ebe72a4665875..7dd46cf5ed845 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -583,11 +583,9 @@ static int dmatest_func(void *data)
- 			srcs[i] = um->addr[i] + src_off;
- 			ret = dma_mapping_error(dev->dev, um->addr[i]);
- 			if (ret) {
--				dmaengine_unmap_put(um);
- 				result("src mapping error", total_tests,
- 				       src_off, dst_off, len, ret);
--				failed_tests++;
--				continue;
-+				goto error_unmap_continue;
- 			}
- 			um->to_cnt++;
- 		}
-@@ -602,11 +600,9 @@ static int dmatest_func(void *data)
- 					       DMA_BIDIRECTIONAL);
- 			ret = dma_mapping_error(dev->dev, dsts[i]);
- 			if (ret) {
--				dmaengine_unmap_put(um);
- 				result("dst mapping error", total_tests,
- 				       src_off, dst_off, len, ret);
--				failed_tests++;
--				continue;
-+				goto error_unmap_continue;
- 			}
- 			um->bidi_cnt++;
- 		}
-@@ -643,12 +639,10 @@ static int dmatest_func(void *data)
- 		}
- 
- 		if (!tx) {
--			dmaengine_unmap_put(um);
- 			result("prep error", total_tests, src_off,
- 			       dst_off, len, ret);
- 			msleep(100);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
- 
- 		done->done = false;
-@@ -657,12 +651,10 @@ static int dmatest_func(void *data)
- 		cookie = tx->tx_submit(tx);
- 
- 		if (dma_submit_error(cookie)) {
--			dmaengine_unmap_put(um);
- 			result("submit error", total_tests, src_off,
- 			       dst_off, len, ret);
- 			msleep(100);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
- 		dma_async_issue_pending(chan);
- 
-@@ -675,16 +667,14 @@ static int dmatest_func(void *data)
- 			dmaengine_unmap_put(um);
- 			result("test timed out", total_tests, src_off, dst_off,
- 			       len, 0);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		} else if (status != DMA_COMPLETE) {
- 			dmaengine_unmap_put(um);
- 			result(status == DMA_ERROR ?
- 			       "completion error status" :
- 			       "completion busy status", total_tests, src_off,
- 			       dst_off, len, ret);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
- 
- 		dmaengine_unmap_put(um);
-@@ -727,6 +717,12 @@ static int dmatest_func(void *data)
- 			verbose_result("test passed", total_tests, src_off,
- 				       dst_off, len, 0);
- 		}
-+
-+		continue;
-+
-+error_unmap_continue:
-+		dmaengine_unmap_put(um);
-+		failed_tests++;
- 	}
- 	ktime = ktime_sub(ktime_get(), ktime);
- 	ktime = ktime_sub(ktime, comparetime);
+diff --git a/tools/testing/selftests/netfilter/config b/tools/testing/selftests/netfilter/config
+index 1017313e41a85..59caa8f71cd80 100644
+--- a/tools/testing/selftests/netfilter/config
++++ b/tools/testing/selftests/netfilter/config
+@@ -1,2 +1,2 @@
+ CONFIG_NET_NS=y
+-NF_TABLES_INET=y
++CONFIG_NF_TABLES_INET=y
 -- 
 2.19.1
 
