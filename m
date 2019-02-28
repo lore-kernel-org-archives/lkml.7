@@ -2,191 +2,78 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC89C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D724CC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7599218A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:19:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ishsd/C0"
+	by mail.kernel.org (Postfix) with ESMTP id 9EFE0218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbfB1CTz (ORCPT
+        id S1730678AbfB1CUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:19:55 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:41904 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730649AbfB1CSt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:18:49 -0500
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x1S2IR5l004720;
-        Thu, 28 Feb 2019 11:18:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x1S2IR5l004720
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1551320308;
-        bh=n7mhpj2aC7Mve2C5o3EJ+uLUinm0cPgyBJ+lD5dirS0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ishsd/C0l9syvAMcejOYpPHGxTmJm2/72m4tLMiDWPDOEBjSsgCBoTWvgBVjzLmQ7
-         b173cgYtygwaXWP7pJ/tbyNxU/OClqklKyOPR1ukfLFasbXg254jdRKR0oe/umyDtE
-         6WJl8UZQ4jF5khjKPu81Iw5W9NEFOIvqa3oHEMFYtE2sWBSoZcrLOUg3u4wErJpH+S
-         g4Y6F2UgOm2seAkebWv6B63nAWAg/hpVFeRQF2/15XwgCqrnb/W/3lFFRg1/G8ltV/
-         4uK+awRFtWQnhmpnMs3PnAihVM6sURAbcoH9UM55lotVGhHf6ilaDVQ3tjfEwy548S
-         yngLVGFboG9JQ==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id u1so16703963uae.12;
-        Wed, 27 Feb 2019 18:18:28 -0800 (PST)
-X-Gm-Message-State: AHQUAuY9OquMMA0oFL+p2pOuaTvQ/bMfkBZw/xK9cWSyx/tu/pxH6uA5
-        SgFcNlLShfbfT+6GtbMuTQ8T1twsWK+4PeIIXqE=
-X-Google-Smtp-Source: AHgI3IbhBk+562qaiz15OAPhPLDC6T88xJ42uk/xzNQ1LvtsiTxZNM51pAkmLgyLs9h83u+0Vm/TbGP+NS3zDJvAepc=
-X-Received: by 2002:a67:7bd3:: with SMTP id w202mr3591054vsc.179.1551320306983;
- Wed, 27 Feb 2019 18:18:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20190227193748.132301-1-joel@joelfernandes.org>
-In-Reply-To: <20190227193748.132301-1-joel@joelfernandes.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 28 Feb 2019 11:17:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
-Message-ID: <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wed, 27 Feb 2019 21:20:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730341AbfB1CUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 21:20:50 -0500
+Received: from vmware.local.home (unknown [208.91.3.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F18D5218A2;
+        Thu, 28 Feb 2019 02:20:49 +0000 (UTC)
+Date:   Wed, 27 Feb 2019 21:20:47 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 4/5] tracing/probe: Add ustring type for user-space
+ string
+Message-ID: <20190227212047.42811004@vmware.local.home>
+In-Reply-To: <155127865291.32576.4103083638486429600.stgit@devbox>
+References: <155127853496.32576.3705994926675037747.stgit@devbox>
+        <155127865291.32576.4103083638486429600.stgit@devbox>
+X-Mailer: Claws Mail 3.15.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
+On Wed, 27 Feb 2019 23:44:13 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-
-On Thu, Feb 28, 2019 at 4:40 AM Joel Fernandes (Google)
-<joel@joelfernandes.org> wrote:
->
-> Introduce in-kernel headers and other artifacts which are made available
-> as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> it possible to build kernel modules, run eBPF programs, and other
-> tracing programs that need to extend the kernel for tracing purposes
-> without any dependency on the file system having headers and build
-> artifacts.
->
-> On Android and embedded systems, it is common to switch kernels but not
-> have kernel headers available on the file system. Raw kernel headers
-> also cannot be copied into the filesystem like they can be on other
-> distros, due to licensing and other issues. There's no linux-headers
-> package on Android. Further once a different kernel is booted, any
-> headers stored on the file system will no longer be useful. By storing
-> the headers as a compressed archive within the kernel, we can avoid these
-> issues that have been a hindrance for a long time.
->
-> The feature is also buildable as a module just in case the user desires
-> it not being part of the kernel image. This makes it possible to load
-> and unload the headers on demand. A tracing program, or a kernel module
-> builder can load the module, do its operations, and then unload the
-> module to save kernel memory. The total memory needed is 3.8MB.
->
-> The code to read the headers is based on /proc/config.gz code and uses
-> the same technique to embed the headers.
-
-
-
-Please let me ask a question about the actual use-case.
-
-
-To build embedded systems including Android,
-I use an x86 build machine.
-
-In other words, I cross-compile vmlinux and in-tree modules.
-So,
-
-  target-arch: arm64
-  host-arch:   x86
-
-
-
-> To build a module, the below steps have been tested on an x86 machine:
-> modprobe kheaders
-> rm -rf $HOME/headers
-> mkdir -p $HOME/headers
-> tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> cd my-kernel-module
-> make -C $HOME/headers M=$(pwd) modules
-> rmmod kheaders
-
-I am guessing the user will run these commands
-on the target system.
-In other words, external modules are native-compiled.
-So,
-
-  target-arch: arm64
-  host-arch:   arm64
-
-
-Is this correct?
-
-
-If I understood the assumed use-case correctly,
-kheaders.tar.xw will contain host-programs compiled for x86,
-which will not work on the target system.
-
-
-
-
-Masahiro
-
-
-
-
-> Additional notes:
-> (1)
-> A limitation of module building with this is, since Module.symvers is
-> not available in the archive due to a cyclic dependency with building of
-> the archive into the kernel or module binaries, the modules built using
-> the archive will not contain symbol versioning (modversion). This is
-> usually not an issue since the idea of this patch is to build a kernel
-> module on the fly and load it into the same kernel. An appropriate
-> warning is already printed by the kernel to alert the user of modules
-> not having modversions when built using the archive. For building with
-> modversions, the user can use traditional header packages. For our
-> tracing usecases, we build modules on the fly with this so it is not a
-> concern.
->
-> (2) I have left IKHD_ST and IKHD_ED markers as is to facilitate
-> future patches that would extract the headers from a kernel or module
-> image.
->
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Add "ustring" type for fetching user-space string from kprobe event.
+> User can specify ustring type at uprobe event, and it is same as
+> "string" for uprobe.
+> 
+> Note that probe-event provides this option but it doesn't choose the
+> correct type automatically since we have not way to decide the address
+> is in user-space or not on some arch (and on some other arch, you can
+> fetch the string by "string" type). So user must carefully check the
+> target code (e.g. if you see __user on the target variable) and
+> use this new type.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 > ---
+>  Changes in v2:
+>  - Use strnlen_user() instead of open code for fetch_store_strlen_user().
 
 
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
---
-Best Regards
-Masahiro Yamada
+-- Steve
