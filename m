@@ -2,162 +2,109 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DB5C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6274CC4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69C0218D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36671218D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 21:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733268AbfB1Vz0 (ORCPT
+        id S1732037AbfB1V4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 16:55:26 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:34903 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfB1Vz0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 16:55:26 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id CDB7F20053;
-        Thu, 28 Feb 2019 22:55:20 +0100 (CET)
-Date:   Thu, 28 Feb 2019 22:55:19 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Claudiu.Beznea@microchip.com
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, bbrezillon@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Sandeep.Sheriker@microchip.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 6/7] drm: atmel-hlcdc: enable sys_clk during
- initalization.
-Message-ID: <20190228215519.GE30188@ravnborg.org>
-References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
- <1551284609-14594-7-git-send-email-claudiu.beznea@microchip.com>
+        Thu, 28 Feb 2019 16:56:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47648 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726088AbfB1V4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 16:56:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 04C3AADD6;
+        Thu, 28 Feb 2019 21:56:47 +0000 (UTC)
+Subject: Re: [PATCH v2 2/4] mm: remove zone_lru_lock() function access
+ ->lru_lock directly
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+References: <20190228083329.31892-1-aryabinin@virtuozzo.com>
+ <20190228083329.31892-2-aryabinin@virtuozzo.com>
+ <44ffadb4-4235-76c9-332f-680dda5da521@nvidia.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <67a79bb9-12b5-e668-abb1-ef91a9cbfea8@suse.cz>
+Date:   Thu, 28 Feb 2019 22:56:35 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1551284609-14594-7-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=XYAwZIGsAAAA:8 a=e5mUnYsNAAAA:8
-        a=2RQu7XLWcUR9zxScWdkA:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
-        a=CjuIK1q_8ugA:10 a=E8ToXWR_bxluHZ7gmE-Z:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <44ffadb4-4235-76c9-332f-680dda5da521@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Claudiu
-
-On Wed, Feb 27, 2019 at 04:24:40PM +0000, Claudiu.Beznea@microchip.com wrote:
-> From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+On 2/28/2019 10:44 PM, John Hubbard wrote:
+> Instead of removing that function, let's change it, and add another
+> (since you have two cases: either a page* or a pgdat* is available),
+> and move it to where it can compile, like this:
 > 
-> For SAM9X60 SoC, sys_clk is through lcd_gclk clock source and this
-> needs to be enabled before enabling lcd_clk.
-
-We have "ownership" of the clocks in the mfd device.
-So it would make more sense to let the mfd device handle
-the base clocks.
-In other words - what about pushing enable of perigh_clk and sys_clk to
-the mfd driver.
-
-This may have the nice side-effect that we avoid
-that both the drm driver and the pwm driver enable/disable the periph_clk
-as it is today.
-
-Another comment - fixed_clksrc is used to determine if sys_clk is enabled.
-But that flag is about the clksource selection, and it is just a coincidence
-that the same flag can be used here.
-Why we cannot always enable sys_clk? Do we need to do this only
-for sam9x60?
-IF yes, then add a new falg. If no, then skip the flag.
-
-	Sam
-
-
 > 
-> Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
-> [claudiu.beznea@microchip.com: add fixed_clksrc checks]
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-> index 0be13eceedba..8bf51f853721 100644
-> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c
-> @@ -625,10 +625,18 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
->  	dc->hlcdc = dev_get_drvdata(dev->dev->parent);
->  	dev->dev_private = dc;
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 80bb6408fe73..cea3437f5d68 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1167,6 +1167,16 @@ static inline pg_data_t *page_pgdat(const struct page *page)
+>         return NODE_DATA(page_to_nid(page));
+>  }
 >  
-> +	if (dc->desc->fixed_clksrc) {
-> +		ret = clk_prepare_enable(dc->hlcdc->sys_clk);
-> +		if (ret) {
-> +			dev_err(dev->dev, "failed to enable sys_clk\n");
-> +			goto err_destroy_wq;
-> +		}
-> +	}
+> +static inline spinlock_t *zone_lru_lock(pg_data_t *pgdat)
+
+In that case it should now be named node_lru_lock(). zone_lru_lock() was a
+wrapper introduced to make the conversion of per-zone to per-node lru_lock smoother.
+
+> +{
+> +       return &pgdat->lru_lock;
+> +}
 > +
->  	ret = clk_prepare_enable(dc->hlcdc->periph_clk);
->  	if (ret) {
->  		dev_err(dev->dev, "failed to enable periph_clk\n");
-> -		goto err_destroy_wq;
-> +		goto err_sys_clk_disable;
->  	}
+> +static inline spinlock_t *zone_lru_lock_from_page(struct page *page)
+
+Ditto. Or maybe even page_node_lru_lock()?
+
+> +{
+> +       return zone_lru_lock(page_pgdat(page));
+> +}
+> +
+>  #ifdef SECTION_IN_PAGE_FLAGS
+>  static inline void set_page_section(struct page *page, unsigned long section)
+>  {
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 842f9189537b..e03042fe1d88 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -728,11 +728,6 @@ typedef struct pglist_data {
 >  
->  	pm_runtime_enable(dev->dev);
-> @@ -664,6 +672,9 @@ static int atmel_hlcdc_dc_load(struct drm_device *dev)
->  err_periph_clk_disable:
->  	pm_runtime_disable(dev->dev);
->  	clk_disable_unprepare(dc->hlcdc->periph_clk);
-> +err_sys_clk_disable:
-> +	if (dc->desc->fixed_clksrc)
-> +		clk_disable_unprepare(dc->hlcdc->sys_clk);
->  
->  err_destroy_wq:
->  	destroy_workqueue(dc->wq);
-> @@ -688,6 +699,8 @@ static void atmel_hlcdc_dc_unload(struct drm_device *dev)
->  
->  	pm_runtime_disable(dev->dev);
->  	clk_disable_unprepare(dc->hlcdc->periph_clk);
-> +	if (dc->desc->fixed_clksrc)
-> +		clk_disable_unprepare(dc->hlcdc->sys_clk);
->  	destroy_workqueue(dc->wq);
->  }
->  
-> @@ -805,6 +818,8 @@ static int atmel_hlcdc_dc_drm_suspend(struct device *dev)
->  	regmap_read(regmap, ATMEL_HLCDC_IMR, &dc->suspend.imr);
->  	regmap_write(regmap, ATMEL_HLCDC_IDR, dc->suspend.imr);
->  	clk_disable_unprepare(dc->hlcdc->periph_clk);
-> +	if (dc->desc->fixed_clksrc)
-> +		clk_disable_unprepare(dc->hlcdc->sys_clk);
->  
->  	return 0;
->  }
-> @@ -814,6 +829,8 @@ static int atmel_hlcdc_dc_drm_resume(struct device *dev)
->  	struct drm_device *drm_dev = dev_get_drvdata(dev);
->  	struct atmel_hlcdc_dc *dc = drm_dev->dev_private;
->  
-> +	if (dc->desc->fixed_clksrc)
-> +		clk_prepare_enable(dc->hlcdc->sys_clk);
->  	clk_prepare_enable(dc->hlcdc->periph_clk);
->  	regmap_write(dc->hlcdc->regmap, ATMEL_HLCDC_IER, dc->suspend.imr);
->  
-> -- 
-> 2.7.4
+>  #define node_start_pfn(nid)    (NODE_DATA(nid)->node_start_pfn)
+>  #define node_end_pfn(nid) pgdat_end_pfn(NODE_DATA(nid))
+> -static inline spinlock_t *zone_lru_lock(struct zone *zone)
+> -{
+> -       return &zone->zone_pgdat->lru_lock;
+> -}
+> -
+>  static inline struct lruvec *node_lruvec(struct pglist_data *pgdat)
+>  {
+>         return &pgdat->lruvec;
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> 
+> Like it?
+> 
+> thanks,
+> 
+
