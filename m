@@ -2,103 +2,94 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CB9C4360F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7CCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E26218D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:31:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEaIHPAi"
+	by mail.kernel.org (Postfix) with ESMTP id 4400820830
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 23:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732858AbfB1Xbp (ORCPT
+        id S1732847AbfB1XdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 18:31:45 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44419 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732367AbfB1Xbo (ORCPT
+        Thu, 28 Feb 2019 18:33:11 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41520 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfB1XdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 18:31:44 -0500
-Received: by mail-pf1-f195.google.com with SMTP id a3so10452308pff.11;
-        Thu, 28 Feb 2019 15:31:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ntjfVa+jngHFHVKJwKRWVLjgGzUEmZ1zbsiDrkIYxIo=;
-        b=nEaIHPAiZtM905nJguLEKVXr7X5kW/qtIUC85tbg8CikmJxHmMelCHiR7nh6x0nwJO
-         X9sYO8xgJ0qu5sP/c62jYFtdPyaxbc1j+WrZqZpK4W0gbe9TkQLDW9B79pMEmjOt9Ub6
-         51pmu5PBL+b4Re2l7EhfIrKq2yq3Hhn53GjizKeME/JSdXIPZLtB3uFi0ymJM15+K1h/
-         SF/FIzKQ3mV+lvDYU/LRdESUIwiXqQTHMfE/5x//kYZZw1O1ve9+tBieXRfyBi01eVlH
-         /JDLDWPYeZWxQZJ4m13SMqcVkntIMMLcnOc8Yb8nSv6U0LswkOGxN8nRecMI6UFcSt3q
-         Y73g==
+        Thu, 28 Feb 2019 18:33:11 -0500
+Received: by mail-pf1-f194.google.com with SMTP id d25so10467325pfn.8;
+        Thu, 28 Feb 2019 15:33:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ntjfVa+jngHFHVKJwKRWVLjgGzUEmZ1zbsiDrkIYxIo=;
-        b=LDPV/cKASy9DqlqlbKeRgEbVpDM+pCcp+EggwUqu3DqN9OJ7oYtstBCK0pw8+CxKIF
-         KPJjwqvb3KYqhIXdcUa9JkT4TyOMuP8Sdp9izD/5evwkRy9EXeJ3KGLkTtTI7OlzxscA
-         4mZQ2J19aMJTAZAsU4fEDijPqfMLg16edtHmix2rmHWpj5H3udelWJLylmMjM+2rnOIQ
-         AZt2Ie7J6xptxj6MaAHvEHnmThW8lU3OKyBhX3c6ZNFq3M8twSGhS03It1q4dQGbB8pv
-         X6BP+cczMF9WdsgLPf/VDGMRLDMTRVzJms0La6J8WrVsvPsKmg5z0TBksCLcjoBq5qFX
-         518Q==
-X-Gm-Message-State: APjAAAWax1MjSqNjs02Jtx0aQEqq2tJVG20q2onYvQJhXHowxtg7FcU0
-        SjyMB3i190rTX2ntUsxh02wwYcwQ
-X-Google-Smtp-Source: APXvYqzG2TvvEDbj+fCX6zqbl0k8Tw/WLcjYDPXGjKGC5u02DNYV2Vr/JbaOSLtTlJ/agl/GsfwCcA==
-X-Received: by 2002:a63:144:: with SMTP id 65mr1808067pgb.38.1551396703305;
-        Thu, 28 Feb 2019 15:31:43 -0800 (PST)
-Received: from ?IPv6:2601:282:800:fd80:426:ff55:d0ef:2e52? ([2601:282:800:fd80:426:ff55:d0ef:2e52])
-        by smtp.googlemail.com with ESMTPSA id o5sm45932039pfi.118.2019.02.28.15.31.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 15:31:42 -0800 (PST)
-Subject: Re: [PATCH] net: ipv6: check net in ip6_call_ra_chain
-To:     David Miller <davem@davemloft.net>, fruggeri@arista.com
-Cc:     yoshfuji@linux-ipv6.org, kuznet@ms2.inr.ac.ru, maxim@arista.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20190228190146.802CD95C016B@us180.sjc.aristanetworks.com>
- <20190228.130213.1481374802407995712.davem@davemloft.net>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <171e33d9-ee82-6a62-693e-5d585e4eca28@gmail.com>
-Date:   Thu, 28 Feb 2019 16:31:40 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190228.130213.1481374802407995712.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qxbAgDrhTMrGO19Is5jXgpmLBZWR7yKX1z36F+HA7Gc=;
+        b=BJMrVuJEK6+1ukXRyJhrMxlBpzumu/3vcWObk7m8YsO7s3k8yNF1S6qbXDsVji/tHK
+         5cdMF1jBiEd6MQmXNDDbuU1/6mb8MuayAhCQYB/0RuS2WZp6QzzafhQ4mDAregyHzRCU
+         tVofUR1mSh01lhV8Rtcy3nh/amPMUhQEq+GP3VIpuo6PQ9R3vsHLXH9vG8fLl0zzWVBu
+         kcPct1Km77Fs95ON0zt5TjhWG/BJY30qKxAcmLgMXNQ9NUuEQ513Ad0qAaeUbir5Ww/0
+         KHwjhzec/Rt+DNn9yDouEFNxRlRUpWdB0nnhX9NDr89jTHC06ffiCto429fmHm3T7Ebz
+         0Ffw==
+X-Gm-Message-State: AHQUAuagEftJegAYq5Pl64gczjyT+KeDjNw1n1c2PcVUP6psY1rtVCeF
+        XXsltgXYbFYjb0W3iD8Abpg=
+X-Google-Smtp-Source: AHgI3IbACP7OjI/bIMQgmJEQ4n2EtSmaWCL3uu+GhOI+vw4I3cLoCcJTGJobRQWKqxGnOL1PKdArLA==
+X-Received: by 2002:a62:1212:: with SMTP id a18mr2253485pfj.177.1551396790595;
+        Thu, 28 Feb 2019 15:33:10 -0800 (PST)
+Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
+        by smtp.gmail.com with ESMTPSA id s6sm41676104pgm.90.2019.02.28.15.33.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 15:33:09 -0800 (PST)
+Message-ID: <1551396788.31902.213.camel@acm.org>
+Subject: Re: [PATCH] cxgb4: fix undefined behavior in mem.c
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Shaobo He <shaobo@cs.utah.edu>, linux-rdma@vger.kernel.org
+Cc:     Steve Wise <swise@chelsio.com>, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Thu, 28 Feb 2019 15:33:08 -0800
+In-Reply-To: <abf425b1-19ba-9cf5-8288-87ac0dbf6ac7@cs.utah.edu>
+References: <1551393519-96595-1-git-send-email-shaobo@cs.utah.edu>
+         <1551394596.31902.209.camel@acm.org>
+         <abf425b1-19ba-9cf5-8288-87ac0dbf6ac7@cs.utah.edu>
+Content-Type: text/plain; charset="UTF-7"
+X-Mailer: Evolution 3.26.2-1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/19 2:02 PM, David Miller wrote:
-> From: fruggeri@arista.com (Francesco Ruggeri)
-> Date: Thu, 28 Feb 2019 11:01:46 -0800
-> 
->> ip6_call_ra_chain is called when IPv6 packet with Router Alert option
->> is forwarded.
->> It needs to check if the net of the socket is the same as the net of the
->> input device, otherwise the packet gets delivered to every IPv6 socket
->> listening for Router Alerts, no matter which network namespace it is in.
->>
->> Suggested-by: Maxim Martynov <maxim@arista.com>
->> Signed-off-by: Maxim Martynov <maxim@arista.com>
->> Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-> 
-> Right now someone using such a tool does get all RAs in the system.
-> 
-> Your change not only breaks them, but also gives them no method by
-> which to keep obtaining the same behavior.
-> 
-> I don't know what to do or suggest in this situation, but right now
-> I'm putting this patch on hold.
-> 
+On Thu, 2019-02-28 at 16:18 -0700, Shaobo He wrote:
++AD4 I can't afford a pdf version of the C standard. So I looked at the draft version 
++AD4 used in the link I put in the commit message. It says (in 6.2.4:2),
++AD4 
++AD4 +AGAAYABg
++AD4 The lifetime of an object is the portion of program execution during which 
++AD4 storage is guaranteed to be reserved for it. An object exists, has a constant 
++AD4 address, and retains its last-stored value throughout its lifetime. If an object 
++AD4 is referred to outside of its lifetime, the behavior is undefined. The value of 
++AD4 a pointer becomes indeterminate when the object it points to (or just past) 
++AD4 reaches the end of its lifetime.
++AD4 +AGAAYABg
++AD4 I couldn't find the definition of lifetime over a dynamically allocated object 
++AD4 in the draft of C standard. I refer to this link 
++AD4 (https://en.cppreference.com/w/c/language/lifetime) which suggests that the 
++AD4 lifetime of an allocated object ends after the deallocation function is called 
++AD4 upon it.
++AD4 
++AD4 I think maybe the more problematic issue is that the value of a freed pointer is 
++AD4 intermediate.
 
-need an equivalent to NETLINK_LISTEN_ALL_NSID
+In another section of the same draft I found the following:
+
+J.2 Undefined behavior +AFs ... +AF0 The value of a pointer that refers to space
+deallocated by a call to the free or realloc function is used (7.22.3).
+
+Since the C standard explicitly refers to free() and realloc(), does that
+mean that that statement about undefined behavior does not apply to munmap()
+(for user space code) nor to kfree() (for kernel code)?
+
+Bart.
