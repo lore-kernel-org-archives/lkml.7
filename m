@@ -2,81 +2,123 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBDBC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DA8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A187A2083D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D184B21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 11:51:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cE5jRrFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731576AbfB1LuB (ORCPT
+        id S1731975AbfB1Lv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 06:50:01 -0500
-Received: from smtp.eu.citrix.com ([185.25.65.24]:57271 "EHLO
-        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbfB1LuA (ORCPT
+        Thu, 28 Feb 2019 06:51:58 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45315 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbfB1Lv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 06:50:00 -0500
-X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
-   d="scan'208";a="86583885"
-From:   Paul Durrant <Paul.Durrant@citrix.com>
-To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
-        Wei Liu <wei.liu2@citrix.com>
-CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Subject: RE: [PATCH] xen-netback: fix occasional leak of grant ref mappings
- under memory pressure
-Thread-Topic: [PATCH] xen-netback: fix occasional leak of grant ref mappings
- under memory pressure
-Thread-Index: AQHUzwnalyGnLUhGt0OYo7x3WDkwmKX09AIQgAAHGACAABYNsP//9bsAgAAR2wA=
-Date:   Thu, 28 Feb 2019 11:49:15 +0000
-Message-ID: <271c9beb91a74ded8e62d1cfc540976c@AMSPEX02CL02.citrite.net>
-References: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
- <8424fba34a1f43908a6dae3a9308863b@AMSPEX02CL02.citrite.net>
- <20190228110136.somjads2f5ivqhju@zion.uk.xensource.com>
- <e5ef3c0291854b67841b6c532f7651b9@AMSPEX02CL02.citrite.net>
- <447cd231-3ea4-e56d-29b0-6528804c9e9a@citrix.com>
-In-Reply-To: <447cd231-3ea4-e56d-29b0-6528804c9e9a@citrix.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 28 Feb 2019 06:51:57 -0500
+Received: by mail-lf1-f68.google.com with SMTP id h10so14986413lfc.12;
+        Thu, 28 Feb 2019 03:51:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=kLHxOfuK4MGjEo3FgfQ9bLETvktCll1491FafIfmPxQ=;
+        b=cE5jRrFoF7UmpSA5DB86soljtGF3nqYThuSzGfkriCubnj8Xa8O/cSUP+gf83fR+Yh
+         o2cq7iwR7zH1VfQnN3AmZGPKSigRa5ExdZwNMYZgutTKTVURONE50TBS/toHfNFaWA5s
+         rRII6QxfIQ7QQ9t6Q/YSnWPT1JCbjeq52Gt//CCuE9K0G4oZ4OsRZ6CJmok5QygY0ZMe
+         38RPgC8D71hRp7A2l9Br0CigQ2SLGIPtDA2s+15XLkf4HGnvzG1XtN5OWSawHyniZlfa
+         ahNES1ZWcXyh+HVtCNDeIlJBzuUFkgyxWwT8iQvk0NhZ+5N0nu2cXgkdqO5VRV5cRJhU
+         b2JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=kLHxOfuK4MGjEo3FgfQ9bLETvktCll1491FafIfmPxQ=;
+        b=BduXWIjsun24qYKc/u2cabor/yF/9yx/wHW1rbKkyg8tGN9QrZFqgkfABHDoGcxhDe
+         YNmh73ewwkEk+5nMiPPAAb7uJLzJ78hEcvW7QJOXw3ea6JLE9BR+G1dNMhHXdLgRwWOd
+         V50EijhHYfw/b3XGtZUwKiRZEIV9dCWKanUOZzbBbnGuxDUC7nNYFgkHcMmmmedhRrRj
+         25SnSTzhqV08k8uDpyHjRdEpXktV2h5mOeRW/tIW73glCcp/37FIXa9tRqB5pphyAKMk
+         o+H7RG2yZZcuP8WSDUpsQBEVk8MIBLOrRy4jo2Kf1tdWnR9yfYWFMoxfPxAra6Mqpk5j
+         mW0A==
+X-Gm-Message-State: AHQUAua0JL2Sh3ZfW4kAErjwINArFkJKRrV9aC21ztB6lFIYjDz8VwKg
+        jKo2AeWKp5cEzbSsmjjCdgg=
+X-Google-Smtp-Source: AHgI3IaBoXuqwLxeALITsrrPLFEXJhREV9lCt6aeotCm38INtY+jJdmQ6yG0y2WEKEtkzzAAl/2OpQ==
+X-Received: by 2002:ac2:4436:: with SMTP id w22mr3901408lfl.155.1551354715102;
+        Thu, 28 Feb 2019 03:51:55 -0800 (PST)
+Received: from [10.17.182.20] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id e21sm1476902lfc.90.2019.02.28.03.51.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 03:51:54 -0800 (PST)
+Subject: Re: [PATCH] xen, fbfront: mark expected switch fall-through
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        xen-devel <xen-devel@lists.xenproject.org>
+References: <20190227205303.GA1231@embeddedor>
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+Message-ID: <f8ff03de-9d7c-233a-cd86-37269667db0c@gmail.com>
+Date:   Thu, 28 Feb 2019 13:51:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <20190227205303.GA1231@embeddedor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBJZ29yIERydXpoaW5pbiBbbWFp
-bHRvOmlnb3IuZHJ1emhpbmluQGNpdHJpeC5jb21dDQo+IFNlbnQ6IDI4IEZlYnJ1YXJ5IDIwMTkg
-MTE6NDQNCj4gVG86IFBhdWwgRHVycmFudCA8UGF1bC5EdXJyYW50QGNpdHJpeC5jb20+OyBXZWkg
-TGl1IDx3ZWkubGl1MkBjaXRyaXguY29tPg0KPiBDYzogeGVuLWRldmVsQGxpc3RzLnhlbnByb2pl
-Y3Qub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOw0KPiBkYXZlbUBkYXZlbWxvZnQubmV0DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIHhlbi1u
-ZXRiYWNrOiBmaXggb2NjYXNpb25hbCBsZWFrIG9mIGdyYW50IHJlZiBtYXBwaW5ncyB1bmRlciBt
-ZW1vcnkgcHJlc3N1cmUNCj4gDQo+IE9uIDI4LzAyLzIwMTkgMTE6MjEsIFBhdWwgRHVycmFudCB3
-cm90ZToNCj4gPj4+IEBAIC0xMTUzLDYgKzExNTIsMTAgQEAgc3RhdGljIGludCB4ZW52aWZfdHhf
-c3VibWl0KHN0cnVjdCB4ZW52aWZfcXVldWUgKnF1ZXVlKQ0KPiA+Pj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBrZnJlZV9za2Ioc2tiKTsNCj4gPj4+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgY29udGludWU7DQo+ID4+PiAgICAgICAgICAgICAgICAgICAgICAgICB9
-DQo+ID4+PiArDQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAvKiBDb3BpZWQgYWxsIHRo
-ZSBiaXRzIGZyb20gdGhlIGZyYWcgbGlzdC4gKi8NCj4gPj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIHNrYl9mcmFnX2xpc3RfaW5pdChza2IpOw0KPiA+Pj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAga2ZyZWUobnNrYik7DQo+ID4+DQo+ID4+IEkgdGhpbmsgeW91IHdhbnQga2ZyZWVfc2tiIGhl
-cmU/DQo+ID4NCj4gPiBOby4gbnNrYiBpcyB0aGUgZnJhZyBsaXN0Li4uIGl0IGlzIHVubGlua2Vk
-IGZyb20gc2tiIGJ5IHRoZSBjYWxsIHRvIHNrYl9mcmFnX2xpc3RfaW5pdCgpIGFuZCB0aGVuIGl0
-DQo+IGNhbiBiZSBmcmVlZCBvbiBpdHMgb3duLiBUaGUgc2tiIGlzIHdoYXQgd2UgbmVlZCB0byBy
-ZXRhaW4sIGJlY2F1c2UgdGhhdCBub3cgY29udGFpbnMgYWxsIHRoZSBkYXRhLg0KPiA+DQo+IA0K
-PiBBcmUgeW91IHNheWluZyBwcmV2aW91cyBjb2RlIGluIHhlbnZpZl9oYW5kbGVfZnJhZ19saXN0
-KCkgaW5jb3JyZWN0bHkNCj4gY2FsbGVkIGtmcmVlX3NrYigpPw0KDQpObywgaXQgY29ycmVjdGx5
-IGNhbGxlZCBrZnJlZV9za2IoKSBvbiBuc2tiIGluIHRoZSBzdWNjZXNzIGNhc2UuIFdoYXQgV2Vp
-IGFuZCBteXNlbGYgd291bGQgcHJlZmVyIGlzIHRoYXQgd2UgaGF2ZSBhIHNpbmdsZSBwbGFjZSB0
-aGF0IHRoZSBmcmFnIGxpc3QgaXMgZnJlZWQgaW4gYm90aCB0aGUgc3VjY2VzcyBhbmQgZXJyb3Ig
-Y2FzZXMuDQoNCiAgUGF1bA0KDQo+IA0KPiBJZ29yDQo=
++Xen-devel list
+
+On 2/27/19 10:53 PM, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+>
+> This patch fixes the following warning:
+>
+> drivers/video/fbdev/xen-fbfront.c: In function ‘xenfb_backend_changed’:
+> drivers/video/fbdev/xen-fbfront.c:678:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     if (dev->state == XenbusStateClosed)
+>        ^
+> drivers/video/fbdev/xen-fbfront.c:681:2: note: here
+>    case XenbusStateClosing:
+>    ^~~~
+>
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+>
+> Notice that, in this particular case, the code comment is modified
+> in accordance with what GCC is expecting to find.
+>
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>   drivers/video/fbdev/xen-fbfront.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/video/fbdev/xen-fbfront.c b/drivers/video/fbdev/xen-fbfront.c
+> index 6a4bbc9e1fb0..a3d6b6db221b 100644
+> --- a/drivers/video/fbdev/xen-fbfront.c
+> +++ b/drivers/video/fbdev/xen-fbfront.c
+> @@ -677,7 +677,7 @@ static void xenfb_backend_changed(struct xenbus_device *dev,
+>   	case XenbusStateClosed:
+>   		if (dev->state == XenbusStateClosed)
+>   			break;
+> -		/* Missed the backend's CLOSING state -- fallthrough */
+> +		/* fall through - Missed the backend's CLOSING state. */
+>   	case XenbusStateClosing:
+>   		xenbus_frontend_closed(dev);
+>   		break;
+
