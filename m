@@ -3,87 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65566C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E75C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9352171F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A732171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 08:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731789AbfB1Ixn (ORCPT
+        id S1731887AbfB1IyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 03:53:43 -0500
-Received: from mga03.intel.com ([134.134.136.65]:40441 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730930AbfB1Ixm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 03:53:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 00:53:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,422,1544515200"; 
-   d="scan'208";a="303218114"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
-  by orsmga005.jf.intel.com with ESMTP; 28 Feb 2019 00:53:40 -0800
-Subject: Re: [PATCH] xhci: use iopoll for xhci_handshake
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     rrangel@chromium.org, Mathias Nyman <mathias.nyman@intel.com>,
-        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190227221917.62567-1-djkurtz@chromium.org>
- <20190228070950.GB27446@kroah.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <7a6c5fb8-1097-c648-958e-d6547cfa8f72@linux.intel.com>
-Date:   Thu, 28 Feb 2019 10:55:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190228070950.GB27446@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 28 Feb 2019 03:54:15 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:53341 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726038AbfB1IyO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 03:54:14 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1S8kUN6006542;
+        Thu, 28 Feb 2019 09:53:43 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2qtvtxbk62-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 28 Feb 2019 09:53:43 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3159434;
+        Thu, 28 Feb 2019 08:53:42 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E24752AFE;
+        Thu, 28 Feb 2019 08:53:41 +0000 (GMT)
+Received: from SFHDAG3NODE2.st.com (10.75.127.8) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 28 Feb
+ 2019 09:53:41 +0100
+Received: from SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96]) by
+ SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96%20]) with mapi id
+ 15.00.1347.000; Thu, 28 Feb 2019 09:53:42 +0100
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH v4 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander
+ (STMFX) core bindings
+Thread-Topic: [PATCH v4 1/9] dt-bindings: mfd: Add ST Multi-Function eXpander
+ (STMFX) core bindings
+Thread-Index: AQHUzn+7ctlJbELl/ka5VHobvW4qYaX0QhmAgACWWIA=
+Date:   Thu, 28 Feb 2019 08:53:42 +0000
+Message-ID: <c54c4fd8-b97f-a70b-4805-fd3d217f5050@st.com>
+References: <1551260094-32570-1-git-send-email-amelie.delaunay@st.com>
+ <1551260094-32570-2-git-send-email-amelie.delaunay@st.com>
+ <20190227235535.GA24395@bogus>
+In-Reply-To: <20190227235535.GA24395@bogus>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <57CB0BFA4FFC6546A2026BD7801F867B@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.2.2019 9.09, Greg Kroah-Hartman wrote:
-> On Wed, Feb 27, 2019 at 03:19:17PM -0700, Daniel Kurtz wrote:
->> In cases such as xhci_abort_cmd_ring(), xhci_handshake() is called with
->> a spin lock held (and local interrupts disabled) with a huge 5 second
->> timeout.  This can translates to 5 million calls to udelay(1).  By its
->> very nature, udelay() is not meant to be precise, it only guarantees to
->> delay a minimum of 1 microsecond. Therefore the actual delay of
->> xhci_handshake() can be significantly longer.  If the average udelay(1)
->> is greater than 2.2 us, the total time in xhci_handshake() - with
->> interrupts disabled can be > 11 seconds triggering the kernel's soft lockup
->> detector.
->>
->> To avoid this, let's replace the open coded io polling loop with one from
->> iopoll.h that uses a loop timed with the more presumably reliable ktime
->> infrastructure.
->>
->> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-> 
-> Looks sane to me, nice fixup.
-> 
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Is this causing problems on older kernels/devices today such that we
-> should backport this?
-> 
-
-A very similar patch was submitted some weeks ago by Andrey Smirnov.
-
-https://lore.kernel.org/lkml/20190208014816.21869-1-andrew.smirnov@gmail.com/
-
-His commit message only mentions that readl_poll_timeout_atomic() does the same job,
-not about any issues with the loop,  so I was going to send it forward to usb-next
-after 5.1-rc (to 5.2).
-
--Mathias
+T24gMi8yOC8xOSAxMjo1NSBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFdlZCwgMjcgRmVi
+IDIwMTkgMTA6MzQ6NDYgKzAxMDAsIEFtZWxpZSBEZWxhdW5heSB3cm90ZToNCj4+IFRoaXMgcGF0
+Y2ggYWRkcyBkb2N1bWVudGF0aW9uIG9mIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUNCj4+
+IFNUTWljcm9lbGVjdHJvbmljcyBNdWx0aS1GdW5jdGlvbiBlWHBhbmRlciAoU1RNRlgpIE1GRCBj
+b3JlLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEFtZWxpZSBEZWxhdW5heSA8YW1lbGllLmRlbGF1
+bmF5QHN0LmNvbT4NCj4+IFJldmlld2VkLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlq
+QGxpbmFyby5vcmc+DQo+PiBBY2tlZC1mb3ItTUZELWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0Bs
+aW5hcm8ub3JnPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tZmQvc3RtZngudHh0IHwgMjggKysrKysrKysrKysrKysrKysrKysrKysrKw0KPj4gICAxIGZp
+bGUgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKQ0KPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zdG1meC50eHQNCj4+DQo+IA0KPiBQ
+bGVhc2UgYWRkIEFja2VkLWJ5L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5nIG5ldyB2ZXJz
+aW9ucy4gSG93ZXZlciwNCj4gdGhlcmUncyBubyBuZWVkIHRvIHJlcG9zdCBwYXRjaGVzICpvbmx5
+KiB0byBhZGQgdGhlIHRhZ3MuIFRoZSB1cHN0cmVhbQ0KPiBtYWludGFpbmVyIHdpbGwgZG8gdGhh
+dCBmb3IgYWNrcyByZWNlaXZlZCBvbiB0aGUgdmVyc2lvbiB0aGV5IGFwcGx5Lg0KPiANCj4gSWYg
+YSB0YWcgd2FzIG5vdCBhZGRlZCBvbiBwdXJwb3NlLCBwbGVhc2Ugc3RhdGUgd2h5IGFuZCB3aGF0
+IGNoYW5nZWQuDQo+IA0KDQpJJ20gc29ycnkgUm9iLCBJIGZvcmdvdCB0byBhZGQgeW91ciBSZXZp
+ZXdlZC1ieSBvbiB0aGlzIHBhdGNoLCB3aGljaCBpcyANCmlkZW50aWNhbCB0byB2My4NCg0KSSBy
+ZXBvc3RlZCB0aGUgd2hvbGUgc2VyaWVzLCBkdWUgdG8gY2hhbmdlcyBpbiBNRkQgZHJpdmVyIHdp
+dGggc2lkZSANCmVmZmVjdCBpbiBwaW5jdHJsIGRyaXZlciwgYnV0IGJpbmRpbmdzIChNRkQgYW5k
+IHBpbmN0cmwpIGRpZG4ndCBjaGFuZ2UgDQpiZXR3ZWVuIHRoZSB0d28gdmVyc2lvbnMuIEkgc3Rh
+dGVkIHRoZSBjaGFuZ2VzIGluIGNvdmVyIGxldHRlci4NCg0KU2hvdWxkIEkgaGF2ZSByZW1vdmVk
+IHRoZSBiaW5kaW5ncyBwYXRjaGVzIGZyb20gdGhlIHNlcmllcyA/
