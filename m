@@ -7,208 +7,140 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA97BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CF3C10F06
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F502186A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA842186A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 04:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XA/fguBj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GpfUFdX6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730527AbfB1EYL (ORCPT
+        id S1730710AbfB1EYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 23:24:11 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43220 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727672AbfB1EYK (ORCPT
+        Wed, 27 Feb 2019 23:24:14 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:36107 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727672AbfB1EYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 23:24:10 -0500
-Received: by mail-pl1-f193.google.com with SMTP id m10so9069446plt.10;
-        Wed, 27 Feb 2019 20:24:09 -0800 (PST)
+        Wed, 27 Feb 2019 23:24:13 -0500
+Received: by mail-it1-f195.google.com with SMTP id v83so13725138itf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Feb 2019 20:24:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hondb2Ic3gDonFR8/NUO3xcJ7vQ4YJ5I/Ejp68ypJwU=;
-        b=XA/fguBjlepNWHzCNeRAsUSys966l5OS//NRnjvm7U7DShRPhMGPzcyhRn09ixrFHO
-         Dk+jhpgvyLvaO88QSl5Eu6b/nJu9J7w4uU5Q7pzAi+FkqfT43la37vxbjHl1M59+b6ve
-         ZcwDgHmOySseLs2fM6u5uCWE68pZf8/HDzMf4GE6EZqhhyOC7wgRGo2nFuLN5mK0Dnyb
-         naXB9RrKUxP0VgUokn8b/yXrdUm2FXKa/d2DGcXyuc+O5YPO8NluxBE7fOEUeCHQ/Nce
-         BmaDbgSlUnMqtfyCZtdjAd2jJpOsQaDGG2mT+YODlbNiGbkfh2vxSojkIh6Q2liRwq2B
-         Kzng==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=81eof6++k5NBO6d1q02mkQrIOj5UeKpK1uU8m3BZpcw=;
+        b=GpfUFdX6xkKIM4OzgVvxStDKXt7KDFzJ7x6K2SJF3U8KTH5P5JsxGhVu/sSpieuMVJ
+         tiPHlyw3/NjbrRiFlKjqzuK43N2joNLu2bOJst9e43H8RKYGctS2P61lDAH62pfuKfNX
+         R+bX0xynCynM9OdKvTpKznv/h3SZtkyo5YfEZklAubs3CRLwbvZUoYvXXz68eWBigIRd
+         /gqbjS+42h92BpnFpHPZSCRR7sgBdWXcCGe0GpR5KmHsiZdzw4nhnutD6XbBkqHdLNMN
+         gwJ4FuYtDfx+XCwnpcKvSQ9Kp7j6MVGUtGKsobwiSq1VeGxhhLIGZFC18DOVaDJSXmsz
+         7L3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=hondb2Ic3gDonFR8/NUO3xcJ7vQ4YJ5I/Ejp68ypJwU=;
-        b=kXsksG39gEebMfZOWy9zXjiQowN2vbJb7xZXH9Yy/7od2ZbsGs0RKuu+MzFpUYZnPl
-         tJpYHP4vh/R/l9HRozS1i1is/1bmY42Yl0DRDAb2G/UhGNMneIOLJWxfTSOKBTtqwmF0
-         tzeIpYmwvzSml6DflekG6oC/pSesHhWlSs0aVVbxIDg0btikrXD4bXRGrdIk2a+ZED6w
-         Ckh9bRkvRzB6Dlg5kyPHNJ9htGUVceEQAYRjUk80VMNzIt+9TTcnLdq2EjgVmDzb6Jko
-         5Hkw3Vb+7mcRrWUfuEAmMyevUGvOWvX49xRHIQnC3CD5fHmB/N4DbURpjUZfnEVM+yuz
-         vGUA==
-X-Gm-Message-State: AHQUAuYP5xx39Ugl2WGy27t8NTp9ZvHkZmKXPK0utpFebZwYXauWamQm
-        jfNKo6aifVi+e5J3w73dmJs=
-X-Google-Smtp-Source: AHgI3IbZ0Ximz7hKP5Ps/GNsOc6jSUV3NrzL414DOHhDFCfSBDKbnscRSsRA2mcKEYcp4nvFxMMIVg==
-X-Received: by 2002:a17:902:7686:: with SMTP id m6mr5927778pll.262.1551327849347;
-        Wed, 27 Feb 2019 20:24:09 -0800 (PST)
-Received: from [10.230.1.150] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id h3sm19550105pgv.38.2019.02.27.20.24.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Feb 2019 20:24:08 -0800 (PST)
-Subject: Re: [PATCH net-next 1/6] net: core: dev_addr_lists: add VID to device
- address
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, davem@davemloft.net,
-        grygorii.strashko@ti.com
-Cc:     linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiri@mellanox.com,
-        ilias.apalodimas@linaro.org
-References: <20190226184556.16082-1-ivan.khoronzhuk@linaro.org>
- <20190226184556.16082-2-ivan.khoronzhuk@linaro.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- w0j9Sw==
-Message-ID: <462e8b28-fc15-9321-2144-038a18e37170@gmail.com>
-Date:   Wed, 27 Feb 2019 20:24:00 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=81eof6++k5NBO6d1q02mkQrIOj5UeKpK1uU8m3BZpcw=;
+        b=T9Kcbk4SPpeaZ3RzvLUS6UzFkkCn977D+RSIRFq6JRw25qtZXQ/3ildfar8MhLd1M9
+         9E7bf29mvAzdkXxOP+hWaGwBR4szzqVuoaEPHTmaEkrrBv9HNM2q3dqXvpVDiphsnwAB
+         ms3VC/kqjhhXsHNuGpl6P7qLg5bUwGzFq7i8lUb3Rz7FcyG/Rbnw6nILBXilG5rh9hZP
+         UgOeejr1DxVLwGMPVr+jcSkY4ON6Iqkl+W4yG8b9d2Lp5nfFmkuvpBObHPPe7nULAWPA
+         bzJwez9ryDKvzzD1feluFWXWjU5pRbClfUQPDwLPFicCYv2NpdifoG4WLd/oiaJRls9A
+         dAAQ==
+X-Gm-Message-State: AHQUAuYbeeRKqv9+tPNBNAUFOK1GUjAhlY9qhi16OK74tG3OH679bpIb
+        i4bqp/sBgyfmvohUklGEs0AZV0yfqXzP2kzs6iFO/+C64xo=
+X-Google-Smtp-Source: AHgI3IYRuBoKgRSl2tlKNOVsudrmQogt8629tvAKSf3jTukDkUhZSP9p94zwVTIh3L312BdBybu9cNqQsetznCcpixU=
+X-Received: by 2002:a24:54c5:: with SMTP id t188mr1766210ita.58.1551327852353;
+ Wed, 27 Feb 2019 20:24:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190226184556.16082-2-ivan.khoronzhuk@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1551253922-3307-1-git-send-email-wangxiongfeng2@huawei.com>
+In-Reply-To: <1551253922-3307-1-git-send-email-wangxiongfeng2@huawei.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Wed, 27 Feb 2019 20:24:01 -0800
+Message-ID: <CABeXuvoJ3oKRp0z=CO_8kPhZ+-AHGwTaDBqzK2FuC_v5t6kU=A@mail.gmail.com>
+Subject: Re: [PATCH v2] posix-cpu-timers: Avoid undefined behaviour in timespec64_to_ns()
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/2019 10:45 AM, Ivan Khoronzhuk wrote:
-> Despite this is supposed to be used for Ethernet VLANs, not Ethernet
-> addresses with space for VID also can reuse this, so VID is considered
-> as virtual ID extension, not belonging strictly to Ethernet VLAN VIDs,
-> and overall change can be named individual virtual device filtering
-> (IVDF).
-> 
-> This patch adds VID tag at the end of each address. The actual
-> reserved address size is 32 bytes. For Ethernet addresses with 6 bytes
-> long that's possible to add tag w/o increasing address size. Thus,
-> each address for the case has 32 - 6 = 26 bytes to hold additional
-> info, say VID for virtual device addresses.
-> 
-> Therefore, when addresses are synced to the address list of parent
-> device the address list of latter can contain separate addresses for
-> virtual devices. It allows to track separate address tables for
-> virtual devices if they present and the device can be placed on
-> any place of device tree as the address is propagated to to the end
-> real device thru *_sync()/ndo_set_rx_mode() APIs. Also it simplifies
-> handling VID addresses at real device when it supports IVDF.
-> 
-> If parent device doesn't want to have virtual addresses in its address
-> space the vid_len has to be 0, thus its address space is "shrunk" to
-> the state as before this patch. For now it's 0 for every device. It
-> allows two devices with and w/o IVDF to be part of same bond device
-> for instance.
-> 
-> The end real device supporting IVDF can retrieve VID tag from an
-> address and set it for a given virtual device only. By default, vid 0
-> is used for real devices to distinguish it from virtual addresses.
-> 
-> See next patches to see how it's used.
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+On Tue, Feb 26, 2019 at 11:52 PM Xiongfeng Wang
+<wangxiongfeng2@huawei.com> wrote:
+>
+> When I ran Syzkaller testsuite, I got the following call trace.
+> ================================================================================
+> UBSAN: Undefined behaviour in ./include/linux/time64.h:120:27
+> signed integer overflow:
+> 8243129037239968815 * 1000000000 cannot be represented in type 'long long int'
+> CPU: 5 PID: 28854 Comm: syz-executor.1 Not tainted 4.19.24 #4
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xca/0x13e lib/dump_stack.c:113
+>  ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
+>  handle_overflow+0x193/0x1e2 lib/ubsan.c:190
+>  timespec64_to_ns include/linux/time64.h:120 [inline]
+>  posix_cpu_timer_set+0x95a/0xb70 kernel/time/posix-cpu-timers.c:687
+>  do_timer_settime+0x198/0x2a0 kernel/time/posix-timers.c:892
+>  __do_sys_timer_settime kernel/time/posix-timers.c:918 [inline]
+>  __se_sys_timer_settime kernel/time/posix-timers.c:904 [inline]
+>  __x64_sys_timer_settime+0x18d/0x260 kernel/time/posix-timers.c:904
+>  do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x462eb9
+> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007f14e4127c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000df
+> RAX: ffffffffffffffda RBX: 000000000073bfa0 RCX: 0000000000462eb9
+> RDX: 0000000020000080 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f14e41286bc
+> R13: 00000000004c54cc R14: 0000000000704278 R15: 00000000ffffffff
+> ================================================================================
+>
+> It is because 'it_interval.tv_sec' is larger than 'KTIME_SEC_MAX' and
+> 'it_interval.tv_sec * NSEC_PER_SEC' overflows in 'timespec64_to_ns()'.
+>
+> This patch use 'timespec64_valid_restrict()' to check whether
+> 'it_interval.tv_sec' is larger than 'KTIME_SEC_MAX'.
+>
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 > ---
+>  kernel/time/posix-timers.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+> index 0e84bb7..97b773c 100644
+> --- a/kernel/time/posix-timers.c
+> +++ b/kernel/time/posix-timers.c
+> @@ -853,8 +853,8 @@ static int do_timer_settime(timer_t timer_id, int flags,
+>         unsigned long flag;
+>         int error = 0;
+>
+> -       if (!timespec64_valid(&new_spec64->it_interval) ||
+> -           !timespec64_valid(&new_spec64->it_value))
+> +       if (!timespec64_valid_strict(&new_spec64->it_interval) ||
+> +           !timespec64_valid_strict(&new_spec64->it_value))
+>                 return -EINVAL;
+>
+>         if (old_spec64)
 
-[snip]
+sys_timer_settime() is a POSIX interface:
+http://pubs.opengroup.org/onlinepubs/7908799/xsh/timer_settime.html
 
+The timer_settime() function will fail if:
 
-> @@ -1889,6 +1890,7 @@ struct net_device {
->  	unsigned char		perm_addr[MAX_ADDR_LEN];
->  	unsigned char		addr_assign_type;
->  	unsigned char		addr_len;
-> +	unsigned char		vid_len;
+[EINVAL] The timerid argument does not correspond to an id returned by
+timer_create() but not yet deleted by timer_delete().
 
-Have not compiled or tested this patch series yet, but did you check
-that adding this member does not change the structure layout (you can
-use pahole for that purpose).
+[EINVAL] A value structure specified a nanosecond value less than zero
+or greater than or equal to 1000 million.
 
->  	unsigned short		neigh_priv_len;
->  	unsigned short          dev_id;
->  	unsigned short          dev_port;
-> @@ -4141,8 +4143,10 @@ int dev_addr_init(struct net_device *dev);
->  
->  /* Functions used for unicast addresses handling */
->  int dev_uc_add(struct net_device *dev, const unsigned char *addr);
-> +int dev_vid_uc_add(struct net_device *dev, const unsigned char *addr);
->  int dev_uc_add_excl(struct net_device *dev, const unsigned char *addr);
->  int dev_uc_del(struct net_device *dev, const unsigned char *addr);
-> +int dev_vid_uc_del(struct net_device *dev, const unsigned char *addr);
->  int dev_uc_sync(struct net_device *to, struct net_device *from);
->  int dev_uc_sync_multiple(struct net_device *to, struct net_device *from);
->  void dev_uc_unsync(struct net_device *to, struct net_device *from);
-> diff --git a/net/core/dev_addr_lists.c b/net/core/dev_addr_lists.c
-> index a6723b306717..e3c80e044b8c 100644
-> --- a/net/core/dev_addr_lists.c
-> +++ b/net/core/dev_addr_lists.c
-> @@ -545,6 +545,26 @@ int dev_addr_del(struct net_device *dev, const unsigned char *addr,
->  }
->  EXPORT_SYMBOL(dev_addr_del);
->  
-> +static int get_addr_len(struct net_device *dev)
-> +{
-> +	return dev->addr_len + dev->vid_len;
-> +}
-> +
-> +static int set_vid_addr(struct net_device *dev, const unsigned char *addr,
-> +			unsigned char *naddr)
+So we cannot return EINVAL here if we want to maintain POSIX compatibility.
+Maybe we should check for limit and saturate here at the syscall interface?
 
-Having some kernel doc comments here would be nice to indicate that the
-return value is dev->addr_len, it was not obvious until I saw in the
-next function how you used it.
-
-> +{
-> +	int i;
-> +
-> +	if (!dev->vid_len)
-> +		return dev->addr_len;
-> +
-> +	memcpy(naddr, addr, dev->addr_len);
-> +	for (i = 0; i < dev->vid_len; i++)
-> +		naddr[dev->addr_len + i] = 0;
-
-memset(naddr + dev->addr_len, 0, dev->vid_len) would be more compact and
-maybe a little less error prone too?
--- 
-Florian
+-Deepa
