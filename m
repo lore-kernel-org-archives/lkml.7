@@ -2,128 +2,151 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F62C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14C9C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF1820851
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767EC20851
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 22:24:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RIE2jzyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732587AbfB1WUt (ORCPT
+        id S1728414AbfB1WXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 17:20:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46292 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732272AbfB1WUp (ORCPT
+        Thu, 28 Feb 2019 17:23:43 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42285 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfB1WXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 17:20:45 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x1SME4ix020063
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 17:20:44 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxp0nej9v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 17:20:43 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 28 Feb 2019 22:20:42 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Feb 2019 22:20:40 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x1SMKdkE16777366
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Feb 2019 22:20:39 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 335A5A4065;
-        Thu, 28 Feb 2019 22:20:39 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C8D1A4060;
-        Thu, 28 Feb 2019 22:20:38 +0000 (GMT)
-Received: from dhcp-9-31-103-153.watson.ibm.com (unknown [9.31.103.153])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Feb 2019 22:20:38 +0000 (GMT)
-Subject: Re: [PULL REQUEST] Lock down patches
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Matthew Garrett <mjg59@google.com>, jmorris@namei.org
-Cc:     LSM List <linux-security-module@vger.kernel.org>,
+        Thu, 28 Feb 2019 17:23:42 -0500
+Received: by mail-lf1-f66.google.com with SMTP id p1so16481882lfk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 14:23:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qtgftd5WMGLwdWpKZuUrLbmAgWOt1sYmFEGm2x+QBbY=;
+        b=RIE2jzyiRxwQwUE2NIUrDU8+8CcC4A+jzPuG0P/C3KxK9xLsW49EYgFfCNA8j/tkUn
+         FiFl0XLZ3FYFoQnQMs9Gc7AZExDtESduoD6r6j3h98eQZAJeTMghGMp+B9cN2OcshmLk
+         tgYhB4UrY4TT1TJPOTIwJ2I2WYVM86QePgyNc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qtgftd5WMGLwdWpKZuUrLbmAgWOt1sYmFEGm2x+QBbY=;
+        b=Q1kS7m1Cfnvhq5FlK6uoJRvGBTz0Lzt0ZMxYn+f1vb+2yRZBv0nXCLy3E+HamyYy88
+         YhWtmp3nNiuosooKafp9cxEGDmAr7JPpnqIJJoIPYelO5N/JsYVKrQa1g365ZVzstUnI
+         U5AqcT+LdYg5RbHoSoTPNh6yLNoOE6ceKGHWbzxyKVENqaKtlFvCp10BUlSihinMMlSZ
+         PVTft3MhS3uFz9d0cd8im1GuWhrn6mAwfBYFnHxjGIvZA8da6gSKwzbPYYnTP2fM/vPM
+         pUnmgWA7N1LWgnuK7/UivsKeMJxnUum3FrLGGIQ8ODXnd0yf9s9HueXmwM0LgStET33z
+         PFoA==
+X-Gm-Message-State: APjAAAUXJt18iPbQhPnCdwmYqnUIpPi/HKqlTDndAfSU9DEBQzuqKK6t
+        OodN/tLiRd2yY7RpdIp9iEk/HR/lI5lbYQ==
+X-Google-Smtp-Source: APXvYqzLtDBZfmM2GD/UaaOd4x3d8MvB7xHBx5vDepe4R9GiquJTU57wWr0efJoDs6ztvjZk0z1fqA==
+X-Received: by 2002:ac2:43ad:: with SMTP id t13mr1013062lfl.93.1551392619280;
+        Thu, 28 Feb 2019 14:23:39 -0800 (PST)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
+        by smtp.gmail.com with ESMTPSA id x19sm4800320lfe.42.2019.02.28.14.23.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 14:23:38 -0800 (PST)
+Received: by mail-lf1-f52.google.com with SMTP id g12so16464770lfb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 14:23:38 -0800 (PST)
+X-Received: by 2002:a19:c507:: with SMTP id w7mr1098004lfe.56.1551392617706;
+ Thu, 28 Feb 2019 14:23:37 -0800 (PST)
+MIME-Version: 1.0
+References: <20190228115256.5446-1-louis@kragniz.eu> <20190228122417.9318-1-louis@kragniz.eu>
+ <15c6689389503a82394bccb9204650bf20a7a6d3.camel@perches.com>
+In-Reply-To: <15c6689389503a82394bccb9204650bf20a7a6d3.camel@perches.com>
+From:   Jon Flatley <jflat@chromium.org>
+Date:   Thu, 28 Feb 2019 14:23:25 -0800
+X-Gmail-Original-Message-ID: <CACJJ=pzfSMgJbt5zKzgN-AcugkYRuGhbB88tsTX7k+-qPnS0jA@mail.gmail.com>
+Message-ID: <CACJJ=pzfSMgJbt5zKzgN-AcugkYRuGhbB88tsTX7k+-qPnS0jA@mail.gmail.com>
+Subject: Re: [PATCH v2] wusb: use correct format characters
+To:     Joe Perches <joe@perches.com>
+Cc:     Louis Taylor <louis@kragniz.eu>, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-Date:   Thu, 28 Feb 2019 17:20:38 -0500
-In-Reply-To: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
-References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jon Flatley <jflat@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19022822-0008-0000-0000-000002C63AD1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19022822-0009-0000-0000-000022328E05
-Message-Id: <1551392438.10911.227.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-02-28 at 13:28 -0800, Matthew Garrett wrote:
-> Hi James,
-> 
-> David is low on cycles at the moment, so I'm taking over for this time
-> round. This patchset introduces an optional kernel lockdown feature,
-> intended to strengthen the boundary between UID 0 and the kernel. When
-> enabled and active (by enabling the config option and passing the
-> "lockdown" option on the kernel command line), various pieces of
-> kernel functionality are restricted. Applications that rely on
-> low-level access to either hardware or the kernel may cease working as
-> a result - therefore this should not be enabled without appropriate
-> evaluation beforehand.
-> 
-> The majority of mainstream distributions have been carrying variants
-> of this patchset for many years now, so there's value in providing a
-> unified upstream implementation to reduce the delta. This PR probably
-> doesn't meet every distribution requirement, but gets us much closer
-> to not requiring external patches.
-> 
-> This PR is mostly the same as the previous attempt, but with the
-> following changes:
+Thanks for the patch and comments.
 
-Where/when was this latest version of the patches posted?
+On Thu, Feb 28, 2019 at 1:53 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Thu, 2019-02-28 at 12:24 +0000, Louis Taylor wrote:
+> > When compiling with -Wformat, clang warns:
+> > ./include/linux/usb/wusb.h:245:5: warning: format specifies type
+> > 'unsigned short' but the argument has type 'u8' (aka 'unsigned char')
+> > [-Wformat]
+> >   ckhdid->data[0],  ckhdid->data[1],
+> >   ^~~~~~~~~~~~~~~
+>
+> I think the message is somewhat misguided as all the
+> vararg arguments have implicit integer promotions.
 
-> 
-> 1) The integration between EFI secure boot and the lockdown state has
-> been removed
-> 2) A new CONFIG_KERNEL_LOCK_DOWN_FORCE kconfig option has been added,
-> which will always enable lockdown regardless of the kernel command
-> line
-> 3) The integration with IMA has been dropped for now. Requiring the
-> use of the IMA secure boot policy when lockdown is enabled isn't
-> practical for most distributions at the moment, as there's still not a
-> great deal of infrastructure for shipping packages with appropriate
-> IMA signatures, and it makes it complicated for end users to manage
-> custom IMA policies.
+That's a fair point, but Clang checks the arguments against their
+format specifier before they're promoted when using -Wformat. When
+considering integer promotions it's difficult to say if this is
+"wrong", but since 'unsigned char' corresponds to the "hh" length
+specifier I don't think this is misguided. Otherwise, why use the "h"
+length specifier at all?
+>
+> > ckhdid->data is unconditionally defined as `u8 data[16]`, so this patch
+> > updates the format characters to the correct one for unsigned char types.
+> []
+> > diff --git a/include/linux/usb/wusb.h b/include/linux/usb/wusb.h
+> []
+> > @@ -240,8 +240,8 @@ static inline size_t ckhdid_printf(char *pr_ckhdid, size_t size,
+> >                                  const struct wusb_ckhdid *ckhdid)
+> >  {
+> >       return scnprintf(pr_ckhdid, size,
+> > -                      "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx "
+> > -                      "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx",
+> > +                      "%02hhx %02hhx %02hhx %02hhx %02hhx %02hhx %02hhx %02hhx "
+> > +                      "%02hhx %02hhx %02hhx %02hhx %02hhx %02hhx %02hhx %02hhx",
+> >                        ckhdid->data[0],  ckhdid->data[1],
+> >                        ckhdid->data[2],  ckhdid->data[3],
+> >                        ckhdid->data[4],  ckhdid->data[5],
+>
+> Better to use the vsprintf %ph extension insead.
 
-I'm all in favor of dropping the original attempt to coordinate
-between the kexec PE and IMA kernel image signatures and the kernel
-appended and IMA modules signatures, but there has been quite a bit of
-work recently coordinating the different types of signatures.
-
-Preventing systems which do use IMA for signature verification, should
-not limit their ability to enable "lock down".  Does this version of
-the "lock down" patches coordinate the different kexec kernel image
-and kernel module signature verification methods? 
-
-Mimi
-
+Agreed, so I guess my previous comment is irrelevant in this scenario.
+> ---
+>  include/linux/usb/wusb.h | 12 +-----------
+>  1 file changed, 1 insertion(+), 11 deletions(-)
+>
+> diff --git a/include/linux/usb/wusb.h b/include/linux/usb/wusb.h
+> index 9e4a3213f2c2..8c39ddf62951 100644
+> --- a/include/linux/usb/wusb.h
+> +++ b/include/linux/usb/wusb.h
+> @@ -239,17 +239,7 @@ enum {
+>  static inline size_t ckhdid_printf(char *pr_ckhdid, size_t size,
+>                                    const struct wusb_ckhdid *ckhdid)
+>  {
+> -       return scnprintf(pr_ckhdid, size,
+> -                        "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx "
+> -                        "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx",
+> -                        ckhdid->data[0],  ckhdid->data[1],
+> -                        ckhdid->data[2],  ckhdid->data[3],
+> -                        ckhdid->data[4],  ckhdid->data[5],
+> -                        ckhdid->data[6],  ckhdid->data[7],
+> -                        ckhdid->data[8],  ckhdid->data[9],
+> -                        ckhdid->data[10], ckhdid->data[11],
+> -                        ckhdid->data[12], ckhdid->data[13],
+> -                        ckhdid->data[14], ckhdid->data[15]);
+> +       return scnprintf(pr_ckhdid, size, "%16ph", ckhdid->data);
+>  }
+>
+>  /*
+>
+>
