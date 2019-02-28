@@ -2,242 +2,134 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BC4C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B715C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4223420863
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E728F218A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 02:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730745AbfB1CbJ (ORCPT
+        id S1730785AbfB1Cbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 21:31:09 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39992 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730663AbfB1CbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 21:31:09 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 12EB2E7DAF95DE31DB53;
-        Thu, 28 Feb 2019 10:31:07 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Thu, 28 Feb 2019
- 10:31:00 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <joe@perches.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] appletalk: Fix use-after-free in atalk_proc_exit
-Date:   Thu, 28 Feb 2019 10:30:33 +0800
-Message-ID: <20190228023033.26248-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 27 Feb 2019 21:31:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730663AbfB1Cbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 21:31:37 -0500
+Received: from vmware.local.home (unknown [208.91.3.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5486220863;
+        Thu, 28 Feb 2019 02:31:35 +0000 (UTC)
+Date:   Wed, 27 Feb 2019 21:31:32 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 5/5] tracing/probe: Support user-space dereference
+Message-ID: <20190227213132.50f3cef1@vmware.local.home>
+In-Reply-To: <155127868250.32576.2419537726154240743.stgit@devbox>
+References: <155127853496.32576.3705994926675037747.stgit@devbox>
+        <155127868250.32576.2419537726154240743.stgit@devbox>
+X-Mailer: Claws Mail 3.15.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On Wed, 27 Feb 2019 23:44:42 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-KASAN report this:
+>  
+> +.. _user_mem_access:
+> +User Memory Access
+> +------------------
+> +Kprobe events supports user-space memory access. For that purpose, you can use
+> +either user-space dereference syntax or 'ustring' type.
+> +
+> +user-space dereference syntax allows you to access a field of a data structure
 
-BUG: KASAN: use-after-free in pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
-Read of size 8 at addr ffff8881f41fe5b0 by task syz-executor.0/2806
+  "The user-space"
 
-CPU: 0 PID: 2806 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
- remove_proc_entry+0xe8/0x420 fs/proc/generic.c:667
- atalk_proc_exit+0x18/0x820 [appletalk]
- atalk_exit+0xf/0x5a [appletalk]
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb2de6b9c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200001c0
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb2de6ba6bc
-R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
+> +n user-space. This is done by "u" prefix with dereference syntax. For example,
 
-Allocated by task 2806:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
- slab_post_alloc_hook mm/slab.h:444 [inline]
- slab_alloc_node mm/slub.c:2739 [inline]
- slab_alloc mm/slub.c:2747 [inline]
- kmem_cache_alloc+0xcf/0x250 mm/slub.c:2752
- kmem_cache_zalloc include/linux/slab.h:730 [inline]
- __proc_create+0x30f/0xa20 fs/proc/generic.c:408
- proc_mkdir_data+0x47/0x190 fs/proc/generic.c:469
- 0xffffffffc10c01bb
- 0xffffffffc10c0166
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 2806:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
- slab_free_hook mm/slub.c:1409 [inline]
- slab_free_freelist_hook mm/slub.c:1436 [inline]
- slab_free mm/slub.c:2986 [inline]
- kmem_cache_free+0xa6/0x2a0 mm/slub.c:3002
- pde_put+0x6e/0x80 fs/proc/generic.c:647
- remove_proc_entry+0x1d3/0x420 fs/proc/generic.c:684
- 0xffffffffc10c031c
- 0xffffffffc10c0166
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881f41fe500
- which belongs to the cache proc_dir_entry of size 256
-The buggy address is located 176 bytes inside of
- 256-byte region [ffff8881f41fe500, ffff8881f41fe600)
-The buggy address belongs to the page:
-page:ffffea0007d07f80 count:1 mapcount:0 mapping:ffff8881f6e69a00 index:0x0
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6e69a00
-raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881f41fe480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff8881f41fe500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881f41fe580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                     ^
- ffff8881f41fe600: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
- ffff8881f41fe680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-It should check the return value of atalk_proc_init,otherwise
-atalk_exit will trgger use-after-free in pde_subdir_find
-while unload the module.This patch fix error cleanup path of atalk_init
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: fix error cleanup path of atalk_init
----
- include/linux/atalk.h            |  2 +-
- net/appletalk/ddp.c              | 37 +++++++++++++++++++++++++++++++------
- net/appletalk/sysctl_net_atalk.c |  5 ++++-
- 3 files changed, 36 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/atalk.h b/include/linux/atalk.h
-index 23f8055..5a90f28 100644
---- a/include/linux/atalk.h
-+++ b/include/linux/atalk.h
-@@ -158,7 +158,7 @@ extern int sysctl_aarp_retransmit_limit;
- extern int sysctl_aarp_resolve_time;
- 
- #ifdef CONFIG_SYSCTL
--extern void atalk_register_sysctl(void);
-+extern int atalk_register_sysctl(void);
- extern void atalk_unregister_sysctl(void);
- #else
- #define atalk_register_sysctl()		do { } while(0)
-diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
-index 9b6bc5a..795fbc6 100644
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1910,12 +1910,16 @@ static const char atalk_err_snap[] __initconst =
- /* Called by proto.c on kernel start up */
- static int __init atalk_init(void)
- {
--	int rc = proto_register(&ddp_proto, 0);
-+	int rc;
- 
--	if (rc != 0)
-+	rc = proto_register(&ddp_proto, 0);
-+	if (rc)
- 		goto out;
- 
--	(void)sock_register(&atalk_family_ops);
-+	rc = sock_register(&atalk_family_ops);
-+	if (rc)
-+		goto out_proto;
-+
- 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
- 	if (!ddp_dl)
- 		printk(atalk_err_snap);
-@@ -1923,12 +1927,33 @@ static int __init atalk_init(void)
- 	dev_add_pack(&ltalk_packet_type);
- 	dev_add_pack(&ppptalk_packet_type);
- 
--	register_netdevice_notifier(&ddp_notifier);
-+	rc = register_netdevice_notifier(&ddp_notifier);
-+	if (rc)
-+		goto out_sock;
-+
- 	aarp_proto_init();
--	atalk_proc_init();
--	atalk_register_sysctl();
-+	rc = atalk_proc_init();
-+	if (rc)
-+		goto out_aarp;
-+
-+	rc = atalk_register_sysctl();
-+	if (rc)
-+		goto out_proc;
- out:
- 	return rc;
-+out_proc:
-+	atalk_proc_exit();
-+out_aarp:
-+	aarp_cleanup_module();
-+	unregister_netdevice_notifier(&ddp_notifier);
-+out_sock:
-+	dev_remove_pack(&ppptalk_packet_type);
-+	dev_remove_pack(&ltalk_packet_type);
-+	unregister_snap_client(ddp_dl);
-+	sock_unregister(PF_APPLETALK);
-+out_proto:
-+	proto_unregister(&ddp_proto);
-+	goto out;
- }
- module_init(atalk_init);
- 
-diff --git a/net/appletalk/sysctl_net_atalk.c b/net/appletalk/sysctl_net_atalk.c
-index c744a85..d945b7c 100644
---- a/net/appletalk/sysctl_net_atalk.c
-+++ b/net/appletalk/sysctl_net_atalk.c
-@@ -45,9 +45,12 @@ static struct ctl_table atalk_table[] = {
- 
- static struct ctl_table_header *atalk_table_header;
- 
--void atalk_register_sysctl(void)
-+int __init atalk_register_sysctl(void)
- {
- 	atalk_table_header = register_net_sysctl(&init_net, "net/appletalk", atalk_table);
-+	if (!atalk_table_header)
-+		return -ENOMEM;
-+	return 0;
- }
- 
- void atalk_unregister_sysctl(void)
--- 
-2.7.0
+ in user-space?   "This is done by adding the "u" prefix to the dereference syntax"
 
 
+> ++u4(%si) means read a user memory from the user-space address %si+4. You can
+
+ "means it will read memory from the address in the register %si offset
+ by 4, and that memory is expected to be in user-space."
+
+
+> +use this for string too, e.g. +u0(%si):string means that the read a user space
+
+	"for strings too"
+
+> +string from the address where %si register points. 'ustring' is a kind of
+> +short-cut. You can use +0(%si):ustring instead of that.
+
+"+u0(%si):string will read a string from the address in the register
+ %si that is expected to be in user-space. 'ustring' is a shortcut way
+ off performing the same task. That is, +0(%si):ustring is equivalent
+ to +u0(%si):string."
+
+
+> +
+> +Note that kprobe-event provides user-memory access syntax, but it
+> doesn't +use it transparently. This means if you use normal
+> dereference or string type +for user memory, it might fail, and
+> always fails on some arch. So user has to +check if the targe data is
+> in kernel or in user space carefully. 
+>  Per-Probe Event Filtering
+>  -------------------------
+> diff --git a/Documentation/trace/uprobetracer.rst
+> b/Documentation/trace/uprobetracer.rst index
+> 4c3bfde2ba47..6144423b2368 100644 ---
+> a/Documentation/trace/uprobetracer.rst +++
+> b/Documentation/trace/uprobetracer.rst @@ -42,16 +42,17 @@ Synopsis
+> of uprobe_tracer @+OFFSET	: Fetch memory at OFFSET (OFFSET
+> from same file as PATH) $stackN	: Fetch Nth entry of stack (N
+> >= 0) $stack	: Fetch stack address.
+> -   $retval	: Fetch return value.(*)
+> +   $retval	: Fetch return value.(\*1)
+>     $comm	: Fetch current task comm.
+> -   +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(**)
+> +   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS
+> address.(\*2)(\*3) NAME=FETCHARG     : Set NAME as the argument name
+> of FETCHARG. FETCHARG:TYPE     : Set TYPE as the type of FETCHARG.
+> Currently, basic types (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal
+> types (x8/x16/x32/x64), "string" and bitfield are supported.
+>  
+> -  (*) only for return probe.
+> -  (**) this is useful for fetching a field of data structures.
+> +  (\*1) only for return probe.
+> +  (\*2) this is useful for fetching a field of data structures.
+> +  (\*3) Unlike kprobe event, "u" prefix will be just ignored.
+
+					"will just be ignored."
+
+>  
+>  Types
+>  -----
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 4cacbb0e1538..5408a82a015d 100644
+
+
+-- Steve
