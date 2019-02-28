@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3C2C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EAEC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64A9C20C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04A020C01
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366945;
-	bh=Ui/7h9JFlbrLYPlec1qdhESNoTusVvdaz6Pj1c9Z9Wg=;
+	s=default; t=1551366949;
+	bh=j4xO8ieHayLvGJjdIPnCHMk40tAW0kTHh90+LsUQ++g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uaNKduda+npNeqtheL7ljm4YNAVeghOBELPXN7GZQ61hvCjF8XbihKdRsW0GtND52
-	 z9POUsIfpJhaIJu9KPWebcM+WNbXz7VkKOt5ZQ83ZFgq1EAhBLbADj4uSAsGHlulT+
-	 pTWO2g8IzDe4RkmtvTBLd2hvCaEznjYzVLtJLc2U=
+	b=P+nwCxZcIMRXlI1viLnwx1t2uh77mmqEq2eeZnOvdk0GSsYHGnq/AfPToylBytc1g
+	 5GiF/JNANLNsFka5jgUOM8xUP/pmjZMLceje2DUBoj8RV4NM629/g3BMlrpeR/SiTa
+	 wI5JHe4lfX1IrImxyis1bp+W11+bRrno7HimhkcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388917AbfB1PPo (ORCPT
+        id S2388445AbfB1PPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:15:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388899AbfB1PPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Feb 2019 10:15:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388281AbfB1PP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:15:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90D1E20C01;
-        Thu, 28 Feb 2019 15:15:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B1B1218E0;
+        Thu, 28 Feb 2019 15:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366937;
-        bh=Ui/7h9JFlbrLYPlec1qdhESNoTusVvdaz6Pj1c9Z9Wg=;
+        s=default; t=1551366928;
+        bh=j4xO8ieHayLvGJjdIPnCHMk40tAW0kTHh90+LsUQ++g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=18n0SU0fnt4PBcz1if01TV97S6X8LWbPqx1vOl4pym+uj2TirSVrUy/nIBbmx8Z9y
-         3aTA0bfpAPNqjPPx4M4fWZicPVoQWsc+oLNtssyMRR47VNGt8YC86cxWScw3pSt5nA
-         Gx2UxTsyqvqbRJMjkF0ebDBop3i81R2TW4YBOiGk=
+        b=m3IcUlpsC8BaN3XKKQnrnriOophy54nrUK92mJNcCrD7JNdIsW7eZDwIV/RMvNRzh
+         gVtc6J1Uyk/T/WdxYGzDLsmBHwdQhLTrELIAtrirmE0rK6YZlCW1/VdGY4vvCDaBXP
+         uQLb2rqwII3Y3A9JZnryU54ljW4FDWfehDAQfYNQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/19] selftests: netfilter: fix config fragment CONFIG_NF_TABLES_INET
-Date:   Thu, 28 Feb 2019 10:15:07 -0500
-Message-Id: <20190228151517.12705-11-sashal@kernel.org>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/19] vsock/virtio: fix kernel panic after device hot-unplug
+Date:   Thu, 28 Feb 2019 10:15:04 -0500
+Message-Id: <20190228151517.12705-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151517.12705-1-sashal@kernel.org>
 References: <20190228151517.12705-1-sashal@kernel.org>
@@ -58,29 +58,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit 952b72f89ae23b316da8c1021b18d0c388ad6cc4 ]
+[ Upstream commit 22b5c0b63f32568e130fa2df4ba23efce3eb495b ]
 
-In selftests the config fragment for netfilter was added as
-NF_TABLES_INET=y and this patch correct it as CONFIG_NF_TABLES_INET=y
+virtio_vsock_remove() invokes the vsock_core_exit() also if there
+are opened sockets for the AF_VSOCK protocol family. In this way
+the vsock "transport" pointer is set to NULL, triggering the
+kernel panic at the first socket activity.
 
-Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+This patch move the vsock_core_init()/vsock_core_exit() in the
+virtio_vsock respectively in module_init and module_exit functions,
+that cannot be invoked until there are open sockets.
+
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1609699
+Reported-by: Yan Fu <yafu@redhat.com>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/netfilter/config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/vmw_vsock/virtio_transport.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/netfilter/config b/tools/testing/selftests/netfilter/config
-index 1017313e41a85..59caa8f71cd80 100644
---- a/tools/testing/selftests/netfilter/config
-+++ b/tools/testing/selftests/netfilter/config
-@@ -1,2 +1,2 @@
- CONFIG_NET_NS=y
--NF_TABLES_INET=y
-+CONFIG_NF_TABLES_INET=y
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+index 936d7eee62d03..6cbc08d82e7fd 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -71,6 +71,9 @@ static u32 virtio_transport_get_local_cid(void)
+ {
+ 	struct virtio_vsock *vsock = virtio_vsock_get();
+ 
++	if (!vsock)
++		return VMADDR_CID_ANY;
++
+ 	return vsock->guest_cid;
+ }
+ 
+@@ -495,10 +498,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+ 
+ 	virtio_vsock_update_guest_cid(vsock);
+ 
+-	ret = vsock_core_init(&virtio_transport.transport);
+-	if (ret < 0)
+-		goto out_vqs;
+-
+ 	vsock->rx_buf_nr = 0;
+ 	vsock->rx_buf_max_nr = 0;
+ 	atomic_set(&vsock->queued_replies, 0);
+@@ -526,8 +525,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+ 	return 0;
+ 
+-out_vqs:
+-	vsock->vdev->config->del_vqs(vsock->vdev);
+ out:
+ 	kfree(vsock);
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+@@ -567,7 +564,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+ 
+ 	mutex_lock(&the_virtio_vsock_mutex);
+ 	the_virtio_vsock = NULL;
+-	vsock_core_exit();
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+ 
+ 	vdev->config->del_vqs(vdev);
+@@ -600,14 +596,28 @@ static int __init virtio_vsock_init(void)
+ 	virtio_vsock_workqueue = alloc_workqueue("virtio_vsock", 0, 0);
+ 	if (!virtio_vsock_workqueue)
+ 		return -ENOMEM;
++
+ 	ret = register_virtio_driver(&virtio_vsock_driver);
+ 	if (ret)
+-		destroy_workqueue(virtio_vsock_workqueue);
++		goto out_wq;
++
++	ret = vsock_core_init(&virtio_transport.transport);
++	if (ret)
++		goto out_vdr;
++
++	return 0;
++
++out_vdr:
++	unregister_virtio_driver(&virtio_vsock_driver);
++out_wq:
++	destroy_workqueue(virtio_vsock_workqueue);
+ 	return ret;
++
+ }
+ 
+ static void __exit virtio_vsock_exit(void)
+ {
++	vsock_core_exit();
+ 	unregister_virtio_driver(&virtio_vsock_driver);
+ 	destroy_workqueue(virtio_vsock_workqueue);
+ }
 -- 
 2.19.1
 
