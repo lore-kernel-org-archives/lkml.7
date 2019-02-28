@@ -2,73 +2,79 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5345C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB024C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B03E218D0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BD120850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 20:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388158AbfB1UwU (ORCPT
+        id S2388308AbfB1UwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 28 Feb 2019 15:52:23 -0500
+Received: from mga17.intel.com ([192.55.52.151]:16411 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388176AbfB1UwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Feb 2019 15:52:20 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:59537 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387795AbfB1UwT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 15:52:19 -0500
-X-Originating-IP: 86.202.231.219
-Received: from localhost (lfbn-lyo-1-149-219.w86-202.abo.wanadoo.fr [86.202.231.219])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id DB0EA240002;
-        Thu, 28 Feb 2019 20:52:14 +0000 (UTC)
-Date:   Thu, 28 Feb 2019 21:52:14 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Claudiu.Beznea@microchip.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
-        bbrezillon@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
-        thierry.reding@gmail.com, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/7] add LCD support for SAM9X60
-Message-ID: <20190228205214.GD23094@piout.net>
-References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
- <20190228182119.GA28318@ravnborg.org>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 12:52:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,424,1544515200"; 
+   d="scan'208";a="130192185"
+Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
+  by orsmga003.jf.intel.com with ESMTP; 28 Feb 2019 12:52:19 -0800
+From:   sathyanarayanan.kuppuswamy@linux.intel.com
+To:     bhelgaas@google.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robert.moore@intel.com, erik.schmauss@intel.com, ruscur@russell.cc
+Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        keith.busch@intel.com,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v1 0/3] Add Error Disconnect Recover (EDR) support.
+Date:   Thu, 28 Feb 2019 12:49:46 -0800
+Message-Id: <cover.1551382061.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228182119.GA28318@ravnborg.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 19:21:19+0100, Sam Ravnborg wrote:
-> Hi Claudiu
-> 
-> On Wed, Feb 27, 2019 at 04:24:11PM +0000, Claudiu.Beznea@microchip.com wrote:
-> > From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> > 
-> > Hi,
-> > 
-> > These patches adds support for SAM9X60's LCD controller.
-> Can you elaborate a little more which chips that are relevant.
-> To be able to look into the right data-sheet, while reviewing.
-> Link to data-sheet would be nice too.
-> 
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-sam9x60 is the chip name (i.e. x is not a wildcard). I don't think the
-datasheet is finished/public yet.
+This patchset adds support for following features:
 
+1. Error Disconnect Recover (EDR) support.
+2. _OSC based negotiation support for DPC.
+
+You can find EDR spec in the following link.
+
+https://members.pcisig.com/wg/PCI-SIG/document/12614
+
+Kuppuswamy Sathyanarayanan (3):
+  PCI/ACPI: Add _OSC based negotiation support for DPC
+  ACPI: Add Error Disconnect Recover (EDR) ACPI notifier support
+  PCI/DPC: Add Error Disconnect Recover (EDR) support
+
+ drivers/acpi/acpica/utdecode.c  |   3 +-
+ drivers/acpi/bus.c              |   5 +-
+ drivers/acpi/pci_root.c         |   6 +
+ drivers/pci/pcie/Kconfig        |  10 +
+ drivers/pci/pcie/dpc.c          | 326 ++++++++++++++++++++++++++++++--
+ drivers/pci/pcie/portdrv_core.c |   8 +-
+ drivers/pci/probe.c             |   1 +
+ include/acpi/actypes.h          |   3 +-
+ include/linux/acpi.h            |   3 +-
+ include/linux/pci.h             |   1 +
+ 10 files changed, 347 insertions(+), 19 deletions(-)
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
+
