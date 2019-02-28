@@ -2,80 +2,102 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE43C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80DCC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D27A218C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:48:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ptIE6cLm"
+	by mail.kernel.org (Postfix) with ESMTP id ADA4A2171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732251AbfB1JsD (ORCPT
+        id S1732227AbfB1JuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:48:03 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:39404 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfB1JsD (ORCPT
+        Thu, 28 Feb 2019 04:50:13 -0500
+Received: from smtp.eu.citrix.com ([185.25.65.24]:51657 "EHLO
+        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfB1JuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:48:03 -0500
-Received: by mail-ua1-f68.google.com with SMTP id s15so18256062uap.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 01:48:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Qg42lEb92IAFtEM163V3IbIWP2EydgJg/Abq5iGNqM=;
-        b=ptIE6cLmEsjwglLkzHm84BELBoscHobXcahmFGODBiSV5Dub0DxvCKOLzgeFqeDRBk
-         wxgniaCEjiKXDuD9oWLSftiowNnZR8zzWWq5FFTkTY2GGhAvezSA3HBHX5pXdvyuJdBY
-         Ljd5nTGASR4qDUh6b4Lz2Mbj/CJuf1635xv0eS7vUHTAP2gmEiFpy8CR16igl64PqJLO
-         tqhsouJwQhRo97Qnk+e97xfNqp2IFMc6hNalYXctB1ne6vwb/Rp4UW68vUix2E57NwGq
-         1Bv1ezBucSfzlVLhafJ0uRiog/PO0toKcO/DbtZ1epPCJ6x0+2WfK3THL4dCkXFJ59b/
-         h9Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Qg42lEb92IAFtEM163V3IbIWP2EydgJg/Abq5iGNqM=;
-        b=OPMsvCoOkaRzPAjiqCGJmh7lfvHDmZPEFfGg1mr0LdJIisv9HJkFJKz4R5L9IphJ5z
-         YiJoBZoBWIOpGWmnX4dzOtgXNS6nm+On7ds1F6+5bqaomSmC2M5KMnQ1UYTfcc5qB2kd
-         nyiWmXdJe+r+bu4dLpoWmhXVO8obX51paa1CQD+nXpKoCFRspCw4OZrw7WS17TIm9z/F
-         jGKJDY+FOpQERiN3QO8e4B15xpvYnKl0ff35FajEof16J1S1wbNYxS55GPxOt2sP7Pds
-         dfkMkaH7BQhpt5p/pxRgSN3K9JVruano96kGEa6TkZhEfFKBr9aQZ210cmWRG1Q4aMWB
-         Nb1A==
-X-Gm-Message-State: AHQUAuYnf86XE/wzQ3yqGyDmg0e8/fF8Rw/FeorAZ3pYgPhS5u/+pymG
-        oT3K1OwIgIwYDbV96a/72Ay2JcQWX3vSNCrJUOMtLg==
-X-Google-Smtp-Source: AHgI3IbieWuFzWBVrJAOMs70fBWl4NgvXptn9ixvMXAmcWkYCRhKxU0tU+8PZK7k8NifnV/8FzA0qjwBCGhEaWu+IvE=
-X-Received: by 2002:a67:6849:: with SMTP id d70mr4339854vsc.61.1551347282008;
- Thu, 28 Feb 2019 01:48:02 -0800 (PST)
+        Thu, 28 Feb 2019 04:50:12 -0500
+X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
+   d="scan'208";a="86578277"
+Subject: Re: [Xen-devel] [PATCH] xen-netback: fix occasional leak of grant ref
+ mappings under memory pressure
+To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        <xen-devel@lists.xenproject.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <paul.durrant@citrix.com>, <wei.liu2@citrix.com>,
+        <davem@davemloft.net>
+References: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
+ 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
+ 6+ahAA==
+Message-ID: <efd4aa90-e2f4-cd14-7890-6b47f3f94497@citrix.com>
+Date:   Thu, 28 Feb 2019 09:50:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190228084624.25288-1-oded.gabbay@gmail.com> <20190228084624.25288-12-oded.gabbay@gmail.com>
- <20190228093140.GA32514@kroah.com>
-In-Reply-To: <20190228093140.GA32514@kroah.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Thu, 28 Feb 2019 11:47:35 +0200
-Message-ID: <CAFCwf12GCWn-xJHcCU=Fk4eY9s=zRz0bvEW0nU4OVSd=kQCTKg@mail.gmail.com>
-Subject: Re: [PATCH 11/15] habanalabs: print pointer using %p
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 11:31 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Feb 28, 2019 at 10:46:20AM +0200, Oded Gabbay wrote:
-> > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
->
-> I can't take patches without any changelog text :(
->
-ah, didn't know it was required for even this trivial change.
-I'll resend this and another patch that is without commit message.
+On 28/02/2019 02:03, Igor Druzhinin wrote:
+> Zero-copy callback flag is not yet set on frag list skb at the moment
+> xenvif_handle_frag_list() returns -ENOMEM. This eventually results in
+> leaking grant ref mappings since xenvif_zerocopy_callback() is never
+> called for these fragments. Those eventually build up and cause Xen
+> to kill Dom0 as the slots get reused for new mappings.
 
-Oded
+Its worth pointing out what (debug) Xen notices is dom0 performing
+implicit grant unmap.
+
+~Andrew
