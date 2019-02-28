@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5A0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EFFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23AE8218B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A58218C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366650;
-	bh=ZC0ayv0ydAdqCXKrU3ZRnCY2Zk7ZR/Z+idjQeIM7mEU=;
+	s=default; t=1551366657;
+	bh=4Nq9v+zD/GCFwg3BOuE3Am2hRzkO1TCnF0KI1u//SzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tL2fvJdqTa2gLwXVwcjSekHW3H3TgxF1J0YFkxxslU9FxL+juoM6nPNOFkvO65eim
-	 MFU8NIoWc187xMa8tEDsYr1ckqCP9ypKpMtYCSgka8of44GYX3couD8YBosX4R1BG7
-	 VdbL4K/b772agrrbLakGPafDW9dNQQeIvIJsIYds=
+	b=tgx9AWJz8+5KVYjKHyHUUdoz+2Sik12dSk0WEqddnr/leGjw+dZ1pTKgvDAZ5hp7K
+	 7T17OxtfLjg93cJ09YndJCwWTH2SkrOJV/m57P9cA/geH8EM9bDJoB066bOmHFuJX6
+	 kUX1StNEzG43OjqAh+2rNQeK3U3GRLdMkDJ8QkqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387800AbfB1PKs (ORCPT
+        id S2387820AbfB1PK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:10:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43558 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:10:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732666AbfB1PKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:10:44 -0500
+        id S2387807AbfB1PKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:10:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA31E218AE;
-        Thu, 28 Feb 2019 15:10:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3212218B0;
+        Thu, 28 Feb 2019 15:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366643;
-        bh=ZC0ayv0ydAdqCXKrU3ZRnCY2Zk7ZR/Z+idjQeIM7mEU=;
+        s=default; t=1551366652;
+        bh=4Nq9v+zD/GCFwg3BOuE3Am2hRzkO1TCnF0KI1u//SzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AVHLIkKCwokHn46WO6qvhv36ux8ZDELuO2CWFHeJh1aMwaS8UwqtHg9We6qJ5HM+2
-         18m0jeTYQQlFAPe9GGcDatCMymlNxhwtAxhMVWPNHI4koDJV6J0LrmzntZ02Cvs3E3
-         K4g7kC639c0wiwwEqhVoCNPRgda82IeTagQA07iM=
+        b=vW5dGOQH/9/UL0ow0JF9M0x0Nu3VRawT0DRgd9VeQxPH7vYCHJWADzWyvEJaEvCA+
+         Bgj23Yjp2qDaiKLMfwlYjCovSXSyrvbDxhLq6wTm4RAK9z2mhd345ruR+4wzEWAScO
+         kJ5C0RJPFQnXqm+dk2AppVNILFo42q9mCf9FhlhQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 69/81] Revert "scsi: libfc: Add WARN_ON() when deleting rports"
-Date:   Thu, 28 Feb 2019 10:08:01 -0500
-Message-Id: <20190228150813.10256-69-sashal@kernel.org>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.20 73/81] drm/omap: dsi: Fix OF platform depopulate
+Date:   Thu, 28 Feb 2019 10:08:05 -0500
+Message-Id: <20190228150813.10256-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -57,42 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Lagerwall <ross.lagerwall@citrix.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit d8f6382a7d026989029e2e50c515df954488459b ]
+[ Upstream commit 0940c52742de0d2f70ba687bfd5fe8aa38c5f27d ]
 
-This reverts commit bbc0f8bd88abefb0f27998f40a073634a3a2db89.
+Commit edb715dffdee ("drm/omap: dss: dsi: Move initialization code from
+bind to probe") moved the of_platform_populate() call from dsi_bind() to
+dsi_probe(), but failed to move the corresponding
+of_platform_depopulate() from dsi_unbind() to dsi_remove(). This results
+in OF child devices being potentially removed multiple times. Fix it by
+placing the of_platform_depopulate() call where it belongs.
 
-It added a warning whose intent was to check whether the rport was still
-linked into the peer list. It doesn't work as intended and gives false
-positive warnings for two reasons:
-
-1) If the rport is never linked into the peer list it will not be
-considered empty since the list_head is never initialized.
-
-2) If the rport is deleted from the peer list using list_del_rcu(), then
-the list_head is in an undefined state and it is not considered empty.
-
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: edb715dffdee ("drm/omap: dss: dsi: Move initialization code from bind to probe")
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190111035120.20668-4-laurent.pinchart@ideasonboard.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_rport.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/omapdrm/dss/dsi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_rport.c b/drivers/scsi/libfc/fc_rport.c
-index 1e1c0f1b9e69d..8ed2113f5a1e2 100644
---- a/drivers/scsi/libfc/fc_rport.c
-+++ b/drivers/scsi/libfc/fc_rport.c
-@@ -184,7 +184,6 @@ void fc_rport_destroy(struct kref *kref)
- 	struct fc_rport_priv *rdata;
+diff --git a/drivers/gpu/drm/omapdrm/dss/dsi.c b/drivers/gpu/drm/omapdrm/dss/dsi.c
+index 277f9dd2ec8ca..b5685018d8302 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dsi.c
++++ b/drivers/gpu/drm/omapdrm/dss/dsi.c
+@@ -5104,8 +5104,6 @@ static void dsi_unbind(struct device *dev, struct device *master, void *data)
+ 	dss_debugfs_remove_file(dsi->debugfs.irqs);
+ 	dss_debugfs_remove_file(dsi->debugfs.regs);
  
- 	rdata = container_of(kref, struct fc_rport_priv, kref);
--	WARN_ON(!list_empty(&rdata->peers));
- 	kfree_rcu(rdata, rcu);
- }
- EXPORT_SYMBOL(fc_rport_destroy);
+-	of_platform_depopulate(dev);
+-
+ 	WARN_ON(dsi->scp_clk_refcount > 0);
+ 
+ 	dss_pll_unregister(&dsi->pll);
+@@ -5457,6 +5455,8 @@ static int dsi_remove(struct platform_device *pdev)
+ 
+ 	dsi_uninit_output(dsi);
+ 
++	of_platform_depopulate(&pdev->dev);
++
+ 	pm_runtime_disable(&pdev->dev);
+ 
+ 	if (dsi->vdds_dsi_reg != NULL && dsi->vdds_dsi_enabled) {
 -- 
 2.19.1
 
