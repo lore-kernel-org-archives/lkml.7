@@ -4,63 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01018C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98A1C4360F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4BC821850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CA920842
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 06:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbfB1GXb (ORCPT
+        id S1730624AbfB1G3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 01:23:31 -0500
-Received: from orcrist.hmeau.com ([104.223.48.154]:39638 "EHLO
+        Thu, 28 Feb 2019 01:29:44 -0500
+Received: from orcrist.hmeau.com ([104.223.48.154]:39786 "EHLO
         deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbfB1GXb (ORCPT
+        with ESMTP id S1725899AbfB1G3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 01:23:31 -0500
+        Thu, 28 Feb 2019 01:29:44 -0500
 Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
         by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1gzF6H-0005a6-VO; Thu, 28 Feb 2019 14:23:21 +0800
+        id 1gzFCJ-0005hF-3d; Thu, 28 Feb 2019 14:29:35 +0800
 Received: from herbert by gondobar with local (Exim 4.89)
         (envelope-from <herbert@gondor.apana.org.au>)
-        id 1gzF6D-0000Lv-8a; Thu, 28 Feb 2019 14:23:17 +0800
-Date:   Thu, 28 Feb 2019 14:23:17 +0800
+        id 1gzFCG-0001cG-6I; Thu, 28 Feb 2019 14:29:32 +0800
+Date:   Thu, 28 Feb 2019 14:29:32 +0800
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Arnaud Ebalard <arno@natisbad.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] crypto: marvell - Remove set but not used variable
- 'ivsize'
-Message-ID: <20190228062317.m7dl2duf5mbc7yge@gondor.apana.org.au>
-References: <20190218085947.3800-1-yuehaibing@huawei.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Kamil Konieczny <k.konieczny@partner.samsung.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: s5p-sss - Use AES_BLOCK_SIZE define instead of
+ number
+Message-ID: <20190228062932.kd7g7pa76umul5rb@gondor.apana.org.au>
+References: <1550577663-10251-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190218085947.3800-1-yuehaibing@huawei.com>
+In-Reply-To: <1550577663-10251-1-git-send-email-krzk@kernel.org>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 08:59:47AM +0000, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
+On Tue, Feb 19, 2019 at 01:01:03PM +0100, Krzysztof Kozlowski wrote:
+> Replace hard coded AES block size with define.
 > 
-> drivers/crypto/marvell/cipher.c: In function 'mv_cesa_skcipher_dma_req_init':
-> drivers/crypto/marvell/cipher.c:325:15: warning:
->  variable 'ivsize' set but not used [-Wunused-but-set-variable]
-> 
-> It's not used any more after 0c99620f0ac1 ("crypto: marvell - Use an unique
-> pool to copy results of requests")
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/crypto/marvell/cipher.c | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/crypto/s5p-sss.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 
 Patch applied.  Thanks.
 -- 
