@@ -2,117 +2,174 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A6BC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EAFC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E7D21850
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:43:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nsHDUH01"
+	by mail.kernel.org (Postfix) with ESMTP id CA84E21850
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732228AbfB1JnL (ORCPT
+        id S1732205AbfB1JrH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:43:11 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14778 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfB1JnK (ORCPT
+        Thu, 28 Feb 2019 04:47:07 -0500
+Received: from smtp.eu.citrix.com ([185.25.65.24]:51518 "EHLO
+        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfB1JrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:43:10 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c77ad370000>; Thu, 28 Feb 2019 01:43:19 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 28 Feb 2019 01:43:10 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 28 Feb 2019 01:43:10 -0800
-Received: from [10.24.230.224] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 Feb
- 2019 09:43:06 +0000
-Subject: Re: [PATCH] sched/cputime: Remove unnecessary assignment statement
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <snikam@nvidia.com>,
-        <bnihalani@nvidia.com>, <byan@nvidia.com>,
-        <sgurrappadi@nvidia.com>, <treding@nvidia.com>, <talho@nvidia.com>
-References: <1551248002-27303-1-git-send-email-ketanp@nvidia.com>
- <20190227103230.GM32494@hirez.programming.kicks-ass.net>
-From:   Ketan Patil <ketanp@nvidia.com>
-X-Nvconfidentiality: Public
-Message-ID: <9bce6378-2221-f358-dc97-f15ee7ab546b@nvidia.com>
-Date:   Thu, 28 Feb 2019 15:12:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190227103230.GM32494@hirez.programming.kicks-ass.net>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+        Thu, 28 Feb 2019 04:47:06 -0500
+X-IronPort-AV: E=Sophos;i="5.58,423,1544486400"; 
+   d="scan'208";a="86578168"
+From:   Paul Durrant <Paul.Durrant@citrix.com>
+To:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Wei Liu <wei.liu2@citrix.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Igor Druzhinin <igor.druzhinin@citrix.com>
+Subject: RE: [PATCH] xen-netback: fix occasional leak of grant ref mappings
+ under memory pressure
+Thread-Topic: [PATCH] xen-netback: fix occasional leak of grant ref mappings
+ under memory pressure
+Thread-Index: AQHUzwnalyGnLUhGt0OYo7x3WDkwmKX09AIQ
+Date:   Thu, 28 Feb 2019 09:46:57 +0000
+Message-ID: <8424fba34a1f43908a6dae3a9308863b@AMSPEX02CL02.citrite.net>
+References: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
+In-Reply-To: <1551319382-32595-1-git-send-email-igor.druzhinin@citrix.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551346999; bh=hmVqqkIuaRpOxFpQRZZp/ZZZRrKqSJXrAOIwDCjT8MM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Transfer-Encoding:Content-Language;
-        b=nsHDUH01bim0Rq33rcGduYBI4N6fpqAJsfPmyDCe6eEk2SAmF2peGkVvsEgrwRTQW
-         h+uWCqEWC6dAPhqGUTZ86uI2sDCdFSBbbG0rvETdCoL2o7g9CTjnPmVg1j8au5y/6a
-         3yRZ1/1+NnDPBbG9XGaIX3heRSN7tA1e7ZkcG2+GdSehPrsO0T7Gy1OpdiQ3G+4hp+
-         yIDOGPsdzIqWZu5elX24IvYmikjApah8S4ZZV+ygYlVddnxYB0xx5yT0XZ221dTM/0
-         prlrTxvTNnlpsv0YOkn0wcznGwO91c+ftW2C4blTH1IHtO8EUpSfLt70oC8AeWb4l1
-         fg6KfEtCgctKA==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The coverity tool has detected this issue as an unused value, since
+> -----Original Message-----
+> From: Igor Druzhinin [mailto:igor.druzhinin@citrix.com]
+> Sent: 28 February 2019 02:03
+> To: xen-devel@lists.xenproject.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> Cc: Wei Liu <wei.liu2@citrix.com>; Paul Durrant <Paul.Durrant@citrix.com>; davem@davemloft.net; Igor
+> Druzhinin <igor.druzhinin@citrix.com>
+> Subject: [PATCH] xen-netback: fix occasional leak of grant ref mappings under memory pressure
+> 
+> Zero-copy callback flag is not yet set on frag list skb at the moment
+> xenvif_handle_frag_list() returns -ENOMEM. This eventually results in
+> leaking grant ref mappings since xenvif_zerocopy_callback() is never
+> called for these fragments. Those eventually build up and cause Xen
+> to kill Dom0 as the slots get reused for new mappings.
+> 
+> That behavior is observed under certain workloads where sudden spikes
+> of page cache usage for writes coexist with active atomic skb allocations.
+> 
+> Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+> ---
+>  drivers/net/xen-netback/netback.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
+> index 80aae3a..2023317 100644
+> --- a/drivers/net/xen-netback/netback.c
+> +++ b/drivers/net/xen-netback/netback.c
+> @@ -1146,9 +1146,12 @@ static int xenvif_tx_submit(struct xenvif_queue *queue)
+> 
+>  		if (unlikely(skb_has_frag_list(skb))) {
+>  			if (xenvif_handle_frag_list(queue, skb)) {
+> +				struct sk_buff *nskb =
+> +						skb_shinfo(skb)->frag_list;
+>  				if (net_ratelimit())
+>  					netdev_err(queue->vif->dev,
+>  						   "Not enough memory to consolidate frag_list!\n");
+> +				xenvif_skb_zerocopy_prepare(queue, nskb);
+>  				xenvif_skb_zerocopy_prepare(queue, skb);
+>  				kfree_skb(skb);
+>  				continue;
 
-the code assigns the value to utime variable and then after the jump, the
+Whilst this fix will do the job, I think it would be better to get rid of the kfree_skb() from inside xenvif_handle_frag_list() and always deal with it here rather than having it happen in two different places. Something like the following...
 
-value of utime again gets updated, hence the previous value is not at all
+---8<---
+diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
+index 80aae3a32c2a..093c7b860772 100644
+--- a/drivers/net/xen-netback/netback.c
++++ b/drivers/net/xen-netback/netback.c
+@@ -1027,13 +1027,13 @@ static void xenvif_tx_build_gops(struct xenvif_queue *queue,
+ /* Consolidate skb with a frag_list into a brand new one with local pages on
+  * frags. Returns 0 or -ENOMEM if can't allocate new pages.
+  */
+-static int xenvif_handle_frag_list(struct xenvif_queue *queue, struct sk_buff *skb)
++static int xenvif_handle_frag_list(struct xenvif_queue *queue, struct sk_buff *diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
+index 80aae3a32c2a..093c7b860772 100644
+--- a/drivers/net/xen-netback/netback.c
++++ b/drivers/net/xen-netback/netback.c
+@@ -1027,13 +1027,13 @@ static void xenvif_tx_build_gops(struct xenvif_queue *qu
+eue,
+ /* Consolidate skb with a frag_list into a brand new one with local pages on
+  * frags. Returns 0 or -ENOMEM if can't allocate new pages.
+  */
+-static int xenvif_handle_frag_list(struct xenvif_queue *queue, struct sk_buff *
+skb)
++static int xenvif_handle_frag_list(struct xenvif_queue *queue, struct sk_buff *
+skb,
++                                  struct sk_buff *nskb)
+ {
+        unsigned int offset = skb_headlen(skb);
+        skb_frag_t frags[MAX_SKB_FRAGS];
+        int i, f;
+        struct ubuf_info *uarg;
+-       struct sk_buff *nskb = skb_shinfo(skb)->frag_list;
 
-useful and this patch removes that first assignment.
+        queue->stats.tx_zerocopy_sent += 2;
+        queue->stats.tx_frag_overflow++;
+@@ -1072,11 +1072,6 @@ static int xenvif_handle_frag_list(struct xenvif_queue *q
+ueue, struct sk_buff *s
+                skb_frag_size_set(&frags[i], len);
+        }
 
-On 27/02/19 4:02 PM, Peter Zijlstra wrote:
-> On Wed, Feb 27, 2019 at 11:43:22AM +0530, Ketan Patil wrote:
->> The original code assigns the value from rtime to utime variable,
->> and then jumps to the update label. And the value of utime is then
->> updated, so the earlier value of utime is not used. Hence remove
->> that unnecessary assignment statement.
->>
->> This fixes one of the coverity defects.
-> Why does coverity care? I like the way the code is now, it makes
-> conceptual sense. Removing that assignment makes the code harder to read
-> and less symmetric (see the utime case right below).
->
-> Any sensible compiler will 'fix' this for us anyway.
->
->> Based on work by Ishan Mittal <imittal@nvidia.com>
->> Signed-off-by: Ketan Patil <ketanp@nvidia.com>
->> ---
->>   kernel/sched/cputime.c | 4 +---
->>   1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
->> index ba4a143..ad64771 100644
->> --- a/kernel/sched/cputime.c
->> +++ b/kernel/sched/cputime.c
->> @@ -616,10 +616,8 @@ void cputime_adjust(struct task_cputime *curr, struct prev_cputime *prev,
->>   	 * Once a task gets some ticks, the monotonicy code at 'update:'
->>   	 * will ensure things converge to the observed ratio.
->>   	 */
->> -	if (stime == 0) {
->> -		utime = rtime;
->> +	if (stime == 0)
->>   		goto update;
->> -	}
->>   
->>   	if (utime == 0) {
->>   		stime = rtime;
+-       /* Copied all the bits from the frag list -- free it. */
+-       skb_frag_list_init(skb);
+-       xenvif_skb_zerocopy_prepare(queue, nskb);
+-       kfree_skb(nskb);
+-
+        /* Release all the original (foreign) frags. */
+        for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
+                skb_frag_unref(skb, f);
+@@ -1145,7 +1140,11 @@ static int xenvif_tx_submit(struct xenvif_queue *queue)
+                xenvif_fill_frags(queue, skb);
+
+                if (unlikely(skb_has_frag_list(skb))) {
+-                       if (xenvif_handle_frag_list(queue, skb)) {
++                       struct sk_buff *nskb = skb_shinfo(skb)->frag_list;
++
++                       xenvif_skb_zerocopy_prepare(queue, nskb);
++
++                       if (xenvif_handle_frag_list(queue, skb, nskb)) {
+                                if (net_ratelimit())
+                                        netdev_err(queue->vif->dev,
+                                                   "Not enough memory to consolidate frag_list!\n");
+@@ -1153,6 +1152,10 @@ static int xenvif_tx_submit(struct xenvif_queue *queue)
+                                kfree_skb(skb);
+                                continue;
+                        }
++
++                       /* Copied all the bits from the frag list. */
++                       skb_frag_list_init(skb);
++                       kfree(nskb);
+                }
+
+                skb->dev      = queue->vif->dev;
+---8<---
+
+What do you think?
+
+  Paul
+
+> --
+> 2.7.4
+
