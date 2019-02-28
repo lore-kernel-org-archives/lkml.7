@@ -2,93 +2,118 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1917BC10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCF8C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E001F20842
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2438D20842
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 09:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732020AbfB1JBe (ORCPT
+        id S1732027AbfB1JCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 04:01:34 -0500
-Received: from orcrist.hmeau.com ([104.223.48.154]:46662 "EHLO
-        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfB1JBd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 04:01:33 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1gzHZI-0000T7-LN; Thu, 28 Feb 2019 17:01:28 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1gzHZF-000281-OV; Thu, 28 Feb 2019 17:01:25 +0800
-Date:   Thu, 28 Feb 2019 17:01:25 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] X.509: Parse public key parameters from x509 for
- akcipher
-Message-ID: <20190228090125.6n62v4oxpwl5yzv4@gondor.apana.org.au>
-References: <20190106133608.820-1-vt@altlinux.org>
- <20190106133608.820-2-vt@altlinux.org>
- <20190209214240.56gq7ivn3pw3bssf@altlinux.org>
- <20190210184628.yupsxgjlaicwbxg6@altlinux.org>
- <20190219043732.x3sbwzqlz4ikntxo@gondor.apana.org.au>
- <20190224064840.hii4ccjksjdnewae@altlinux.org>
- <20190228061444.3escryzoit3idtwg@gondor.apana.org.au>
- <20190228070449.gjwoq4c2b3x5grie@altlinux.org>
- <20190228075141.s6mftb44yuylbzys@gondor.apana.org.au>
- <20190228082801.2aofw23r2shzwy4n@altlinux.org>
+        Thu, 28 Feb 2019 04:02:13 -0500
+Received: from mga17.intel.com ([192.55.52.151]:31877 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfB1JCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 04:02:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 01:02:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,422,1544515200"; 
+   d="scan'208";a="150701979"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Feb 2019 01:02:12 -0800
+Received: from [10.251.86.205] (abudanko-mobl.ccr.corp.intel.com [10.251.86.205])
+        by linux.intel.com (Postfix) with ESMTP id 6CF9F5804B4;
+        Thu, 28 Feb 2019 01:02:10 -0800 (PST)
+Subject: [PATCH v4 03/10] perf session: define bytes_transferred and
+ bytes_compressed metrics
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <914ab056-1488-2b05-8d2a-aa530c01d334@linux.intel.com>
+Date:   Thu, 28 Feb 2019 12:02:09 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228082801.2aofw23r2shzwy4n@altlinux.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 11:28:01AM +0300, Vitaly Chikunov wrote:
-> On Thu, Feb 28, 2019 at 03:51:41PM +0800, Herbert Xu wrote:
-> > On Thu, Feb 28, 2019 at 10:04:49AM +0300, Vitaly Chikunov wrote:
-> > > 
-> > > It seems that you insist on set_params to be removed and both key and
-> > > params to be passed into set_{pub,priv}_key. This means reworking all
-> > > existing RSA drivers and callers, right? Can you please confirm that
-> > > huge rework to avoid misunderstanding?
-> > 
-> > I don't understand why we even need to touch the existing RSA
-> > drivers.  Nothing needs to change as far as they're concerned.
-> > 
-> > Only the new algorithms would need to decode the extra parameters
-> > in the key stream.
-> 
->         int (*set_pub_key)(struct crypto_akcipher *tfm, const void *key,
->                            unsigned int keylen);
->         int (*set_priv_key)(struct crypto_akcipher *tfm, const void *key,
->                             unsigned int keylen);
-> 
-> So you want `keylen' not to cover parameters data, but parameters
-> actually present in key after `keylen' bytes (in come packed format)?
-> (And if there is no parameters appended, there is still appended some
-> marker, like 0, to signify that there is no parameters.)
-> 
-> This looks a bit counter-intuitive usage of arguments (as argument
-> signifying length does not cover all arguments data), is this ok to you?
 
-This is how we handle things in DH as well as other places such
-as authenc.
+Define bytes_transferred and bytes_compressed metrics to calculate
+comp_ratio=transferred/compressed in the end of the data collection.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+bytes_transferred accumulates the amount of bytes that was captured from
+the mmaped kernel buffers for compression. bytes_compressed accumulates
+the amount of bytes that was received after applying compression to
+move to a storage.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/builtin-record.c | 8 ++++++++
+ tools/perf/util/env.h       | 1 +
+ tools/perf/util/session.h   | 2 ++
+ 3 files changed, 11 insertions(+)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 61818cbce443..6d78a7720698 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1449,6 +1449,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	record__mmap_read_all(rec, true);
+ 	record__aio_mmap_read_sync(rec);
+ 
++	if (!quiet && rec->session->bytes_transferred && rec->session->bytes_compressed) {
++		float ratio = (float)rec->session->bytes_transferred/(float)rec->session->bytes_compressed;
++
++		session->header.env.comp_ratio = ratio + 0.5;
++		fprintf(stderr,	"[ perf record: Compressed %.3f MB to %.3f MB, ratio is %.3f ]\n",
++			rec->session->bytes_transferred / 1024.0 / 1024.0, rec->session->bytes_compressed / 1024.0 / 1024.0, ratio);
++	}
++
+ 	if (forks) {
+ 		int exit_status;
+ 
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index d01b8355f4ca..fb39e9af128f 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -64,6 +64,7 @@ struct perf_env {
+ 	struct memory_node	*memory_nodes;
+ 	unsigned long long	 memory_bsize;
+ 	u64                     clockid_res_ns;
++	u32                     comp_ratio;
+ };
+ 
+ extern struct perf_env perf_env;
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index d96eccd7d27f..0e14884f28b2 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -35,6 +35,8 @@ struct perf_session {
+ 	struct ordered_events	ordered_events;
+ 	struct perf_data	*data;
+ 	struct perf_tool	*tool;
++	u64			bytes_transferred;
++	u64			bytes_compressed;
+ };
+ 
+ struct perf_tool;
