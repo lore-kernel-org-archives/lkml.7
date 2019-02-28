@@ -1,149 +1,101 @@
-Return-Path: <SRS0=HyMZ=RC=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C846DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F00C00319
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8451E21783
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 Feb 2019 23:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF397218AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 00:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551311991;
-	bh=/kMUpwEL7W5EwJGbccgHrRzWdBSZU+KQ8QdN1WzCqeI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iNab3JZw5kr97H8tQ4Djnzsz8eLmCg2DJjF7qvu/1pIGau53vfSY3AD/6MSm5QIbV
-	 FEh/uX1LCzEW2MWtoxrO7Op5HBVY/B8jeBOPVmFEdZsZyHx5DhI+eFljHnizSBMXoC
-	 w7d8SLyb/RRZaKk1f/sAZfwurPP1xrf7U4mAXYSY=
+	s=default; t=1551312091;
+	bh=q1T5iaEa2b4R1Gj+EQUVl8fwuZfLBtUF45gOHNybkwc=;
+	h=To:References:Cc:Subject:From:In-Reply-To:Date:List-ID:From;
+	b=oPxAdANpZX9hD1njFRBeAvDBjnpFavLGU/EKoIoPevRON7Z+9nn0fv+HNvx4gGW7K
+	 JsPBxuwvX9zmpQmtAMNIkxHJDL+i+GLNtIYP3CJjEoF/GAbglVNg+w/GVAPaGKy2R9
+	 7Ekj/JSgd52QNF0Cq2udeNP3iWvneF5HVRqIXcms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfB0X7u (ORCPT
+        id S1730582AbfB1ABb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 Feb 2019 18:59:50 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42569 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728397AbfB0X7u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 Feb 2019 18:59:50 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i5so16047334oto.9;
-        Wed, 27 Feb 2019 15:59:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iuw7ppTeRBVeO4grX4blVXww60pr9qTi6AWNXrLdORw=;
-        b=MpNUR1CWGgxG+LkWB3r18rO2NiNCbWhSDBIOmWH9HtkwmhmxNWKDqWyoCRoZDkm3no
-         yPLaLqzXbrmQ98M872+dU/zQGrkuU8sfczdCne49s2EPK2Xvc0V2Fp/sUd4MeKcKLJkd
-         Ioca7+WB0uPxDY0A4F/gfPpAcU4saKTykW1mIeqpu5FpA8u8macO7Zxh5Q3ouqdBtJsX
-         AjMJKtXksYyoGE6aKufp14Ph+5m8/kb4bken00JpSZ40wYewJ2gfrOSWl8m8fZqXY41c
-         CcRwF/ZtSNuPh8K9iz84eOrgdlXtnZ7JVWlpDyeHdlMcD/58dfME+z7hK8WpjqsZdB9A
-         ijQw==
-X-Gm-Message-State: AHQUAuYVk+x5J0Xqul/UBv7MbhNu2qaCXxIncO5gNsHyv9DrXy5MqiAy
-        3Nmf864rl69jxGh/QritWDQ0tSw=
-X-Google-Smtp-Source: AHgI3IaqRRZfYlSHBSfWVfRBX0w00XIdPZD7MQgBq9zlJTssbqv7k6XQmiozAcNSSdCn8CJKaV9qhw==
-X-Received: by 2002:a9d:80e:: with SMTP id 14mr3874736oty.108.1551311988816;
-        Wed, 27 Feb 2019 15:59:48 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p188sm7722013oia.58.2019.02.27.15.59.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 Feb 2019 15:59:47 -0800 (PST)
-Date:   Wed, 27 Feb 2019 17:59:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Patrick Havelange <patrick.havelange@essensium.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>,
-        Matt Weber <matthew.weber@rockwellcollins.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] iio:temperature:max31856:Add device tree bind info
-Message-ID: <20190227235947.GA27130@bogus>
-References: <20190226150214.19467-1-patrick.havelange@essensium.com>
+        Wed, 27 Feb 2019 19:01:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728397AbfB1ABa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 Feb 2019 19:01:30 -0500
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A64321850;
+        Thu, 28 Feb 2019 00:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551312089;
+        bh=q1T5iaEa2b4R1Gj+EQUVl8fwuZfLBtUF45gOHNybkwc=;
+        h=To:References:Cc:Subject:From:In-Reply-To:Date:From;
+        b=zDfH4MMVgN14ka7lGXfzzT6yY2UOpwoM08CbnIi2qMsfzFPy/UNF1wP2A5b/g9iRr
+         PwUhxPaX9PMXbmoWzrOiLO2YgO8u71Zefm+U8ke7OoXBMqttzWVLRLqMM5NeX+IBF5
+         UTrQgTHzCmkHGL4IJB+ltUYcHyGkireIt0QMTuqg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190226150214.19467-1-patrick.havelange@essensium.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+To:     "arnd@arndb.de" <arnd@arndb.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel-owner@vger.kernel.org" 
+        <linux-kernel-owner@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "oss@buserror.net" <oss@buserror.net>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "viresh.kumar@lina ro.org" <viresh.kumar@linaro.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+References: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com>
+Message-ID: <155131208867.260864.6630901066653352400@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Cc:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: Re: [PATCH v1 0/4] arm64: dts: NXP: add basic dts file for LX2160A SoC
+From:   Stephen Boyd <sboyd@kernel.org>
+In-Reply-To: <1551132245-6089-1-git-send-email-vabhav.sharma@nxp.com>
+Date:   Wed, 27 Feb 2019 16:01:28 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 26, 2019 at 04:02:13PM +0100, Patrick Havelange wrote:
-> From: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> 
-> This patch added device tree binding info for MAX31856 driver.
-> 
-> Signed-off-by: Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
-> Signed-off-by: Matt Weber <matthew.weber@rockwellcollins.com>
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> ---
-> Changes
-> v1 -> v2
-> [Matt
->  - Removed comment block and added possibilities of
->    thermocouple type in device tree binding doc.
-> 
-> v2 -> v3
->  - Rebased
-> 
-> v3 -> v4
->  - Removed one-shot property related information.
->  - Used standard name 'temp-sensor'
-> 
-> v4 -> v5
-> [Patrick
->  - Rename thermocouple type to maxim,thermocouple-type for DT entry
-> ---
->  .../bindings/iio/temperature/max31856.txt     | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/max31856.txt b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> new file mode 100644
-> index 000000000000..b4396069b8fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/temperature/max31856.txt
-> @@ -0,0 +1,29 @@
-> +Maxim MAX31856 thermocouple support
-> +
-> +https://datasheets.maximintegrated.com/en/ds/MAX31856.pdf
-> +
-> +Required properties:
-> +	- compatible: must be "maxim,max31856"
-> +	- reg: SPI chip select number for the device
-> +	- spi-max-frequency: As per datasheet max. supported freq is 5000000
-> +	- spi-cpha: must be defined for max31856 to enable SPI mode 1
-> +	- maxim,thermocouple-type: Type of thermocouple (By default is K-Type)
-> +		0x00 : TYPE_B
-> +		0x01 : TYPE_E
-> +		0x02 : TYPE_J
-> +		0x03 : TYPE_K (default)
-> +		0x04 : TYPE_N
-> +		0x05 : TYPE_R
-> +		0x06 : TYPE_S
-> +		0x07 : TYPE_T
+Quoting Vabhav Sharma (2019-02-26 02:10:46)
+> These patches were reviewed and acked but dropped during merge window.
+> Patchwork link was https://lore.kernel.org/patchwork/cover/1004155/
+>=20
+> Changes for v1:
+> - Updated lx2160a clockgen in alphabetical order
+>=20
+> Vabhav Sharma (2):
+>   dt-bindings: arm64: add compatible for LX2160A
+>   soc/fsl/guts: Add definition for LX2160A
+>=20
+> Yogesh Gaur (2):
+>   clk: qoriq: increase array size of cmux_to_group
+>   clk: qoriq: Add clockgen support for lx2160a
 
-These appear to be standard types. Perhaps this should be a common 
-property instead?
+Who do you want to apply these patches?
 
-> +
-> +	Refer to spi/spi-bus.txt for generic SPI slave bindings.
-> +
-> + Example:
-> +	temp-sensor@0 {
-> +		compatible = "maxim,max31856";
-> +		reg = <0>;
-> +		spi-max-frequency = <5000000>;
-> +		spi-cpha;
-> +		maxim,thermocouple-type = <0x03>;
-> +	};
-> -- 
-> 2.19.1
-> 
