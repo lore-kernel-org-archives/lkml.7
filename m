@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55DDC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEAEC10F00
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA0D218AE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DF12171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 10:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="gw8CpdqL"
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="Dn+UFXxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732410AbfB1KbG (ORCPT
+        id S1732444AbfB1KbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 05:31:06 -0500
+        Thu, 28 Feb 2019 05:31:08 -0500
 Received: from mail-eopbgr80119.outbound.protection.outlook.com ([40.107.8.119]:56544
         "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726918AbfB1KbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 05:31:05 -0500
+        id S1727666AbfB1KbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 05:31:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qiKfOEoD7LWvT6XVeHYGuetm6Dw1yMRQvisIUR8he/Q=;
- b=gw8CpdqL/fO8y6rdBy9mQ+HUpeCpQGIfEojTxMObaQE2dtQd+BHhAKnlEg2M0jBH+hXL20zXGqiC1OmRobk4thbZxvaW8L2cxp2ktkB6Y+7Ws9GkWZZWILBzP2tdJF8+Nc7R+68gKmE7rOdI/9n7eZiLzcjKoStecahBOoI+V4o=
+ bh=E6z81K0W96j894STLgudBmvoVYJfCsaxejDMwLE4FwQ=;
+ b=Dn+UFXxOliSd+BXsMHsN8DAx7Us7GCi2tt38+Aj/S4bJtQHPWeF5Wh7c7Aq3RSRz4YX9/vBN1s5u2sMoEzwemX48wbKvOgxpy+U2kqpDUsgJanHJkQMwNHkOnTrju4AuVc6kVihN2kU1DUfHAbkPAxhy6jIs7BCVAJT4N+PGtfU=
 Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (20.178.126.212) by
  VI1PR10MB0509.EURPRD10.PROD.OUTLOOK.COM (10.167.201.139) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.16; Thu, 28 Feb 2019 10:30:41 +0000
+ 15.20.1665.16; Thu, 28 Feb 2019 10:30:42 +0000
 Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::d49:d85b:58bf:cd5b]) by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::d49:d85b:58bf:cd5b%6]) with mapi id 15.20.1643.022; Thu, 28 Feb 2019
- 10:30:41 +0000
+ 10:30:42 +0000
 From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 To:     Qiang Zhao <qiang.zhao@nxp.com>, Leo Li <leoyang.li@nxp.com>
 CC:     Scott Wood <oss@buserror.net>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Timur Tabi <timur@freescale.com>,
         Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
-Subject: [PATCH 2/4] soc/fsl/qe: qe.c: reduce static memory footprint by 1.7K
-Thread-Topic: [PATCH 2/4] soc/fsl/qe: qe.c: reduce static memory footprint by
- 1.7K
-Thread-Index: AQHUz1CnAOIVCpxVHkiuxkUMgN/E7A==
-Date:   Thu, 28 Feb 2019 10:30:41 +0000
-Message-ID: <20190228103026.9566-3-rasmus.villemoes@prevas.dk>
+Subject: [PATCH 3/4] soc/fsl/qe: qe.c: introduce qe_get_device_node helper
+Thread-Topic: [PATCH 3/4] soc/fsl/qe: qe.c: introduce qe_get_device_node
+ helper
+Thread-Index: AQHUz1Co2oHyD1DDBUuzX0GX5in8aw==
+Date:   Thu, 28 Feb 2019 10:30:42 +0000
+Message-ID: <20190228103026.9566-4-rasmus.villemoes@prevas.dk>
 References: <338677b2-ef74-2afc-4542-c66f1acdb7e5@prevas.dk>
  <20190228103026.9566-1-rasmus.villemoes@prevas.dk>
 In-Reply-To: <20190228103026.9566-1-rasmus.villemoes@prevas.dk>
@@ -63,46 +64,46 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.20.1
 x-originating-ip: [81.216.59.226]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0fa6443e-1e30-42f0-3f86-08d69d67c9c3
+x-ms-office365-filtering-correlation-id: 48be3bbf-95a1-475c-c52d-08d69d67ca54
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB0509;
 x-ms-traffictypediagnostic: VI1PR10MB0509:
-x-microsoft-antispam-prvs: <VI1PR10MB050996E6A602E9BEEFF9C2788A750@VI1PR10MB0509.EURPRD10.PROD.OUTLOOK.COM>
+x-microsoft-antispam-prvs: <VI1PR10MB050901B21BDD5AC31972E6FC8A750@VI1PR10MB0509.EURPRD10.PROD.OUTLOOK.COM>
 x-forefront-prvs: 0962D394D2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39850400004)(376002)(366004)(346002)(396003)(189003)(199004)(476003)(446003)(11346002)(2616005)(8936002)(44832011)(8976002)(106356001)(42882007)(486006)(68736007)(186003)(50226002)(107886003)(105586002)(54906003)(74482002)(110136005)(316002)(5660300002)(97736004)(1076003)(72206003)(2906002)(52116002)(71190400001)(6486002)(305945005)(478600001)(256004)(71200400001)(53936002)(14444005)(99286004)(6436002)(66066001)(6512007)(6116002)(81156014)(81166006)(102836004)(4326008)(25786009)(6506007)(386003)(26005)(76176011)(7736002)(36756003)(8676002)(14454004)(3846002)(2004002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB0509;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39850400004)(376002)(366004)(346002)(396003)(189003)(199004)(476003)(446003)(11346002)(2616005)(8936002)(44832011)(8976002)(106356001)(42882007)(486006)(68736007)(186003)(50226002)(107886003)(105586002)(54906003)(74482002)(110136005)(316002)(5660300002)(97736004)(1076003)(72206003)(2906002)(52116002)(71190400001)(6486002)(305945005)(478600001)(256004)(71200400001)(53936002)(99286004)(6436002)(66066001)(6512007)(6116002)(81156014)(81166006)(102836004)(4326008)(25786009)(6506007)(386003)(26005)(76176011)(7736002)(36756003)(8676002)(14454004)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB0509;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: prevas.se does not designate
  permitted sender hosts)
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;VI1PR10MB0509;23:c/tvSpQ1+lKObDsKaK296uh1iKVUeRGa26Pp1BQ?=
- =?iso-8859-1?Q?CCGx+kx+XsTRy2ucE+br9y2Sm4ZnzSPbKU9HPQpCrJeaj6zdlJcOkJAaPh?=
- =?iso-8859-1?Q?CZ6bqVQUGBxyJOGyPGPbzzf7AObw3k3XHgwZgTuYxUNpEGYiP2/IV9CYtw?=
- =?iso-8859-1?Q?0VMjdd7TLY7rP17s1rY6xBmEzyjDca81/obs+bB6jIglm9+g0GWKv2g2s7?=
- =?iso-8859-1?Q?LPndQYcSS7ovu2ZC8Y3jScitDb+85Ev4/RcauCjWijwW9cZmcSptHn3t05?=
- =?iso-8859-1?Q?tdVJLOeldRCQrwn2D3jg8I89kmWGEKhhJhdb072z7Yjw7qnR8WrG3ysD+i?=
- =?iso-8859-1?Q?+Y5alx7jCPQEfGjgNhOU+m50Mr7YxXqeN2w0xHN2q1WXxDAoRBH/Nkm1tQ?=
- =?iso-8859-1?Q?2/b6Bc9G3X8xLApU29PkSpS5SfwEhqjM4Bfa7TXjetsYR1jTgd1bIsYxT9?=
- =?iso-8859-1?Q?DDksGz+nG4q1hcT+aiZFY0duLtq4XcIV+zlVADgiTuj2k86+79iBFHLHqJ?=
- =?iso-8859-1?Q?AGa4+NJ4lPhefGlxysIHU+KxW4dM8CbLPoA+jouYNzBUB2tMnnBCA+bHKf?=
- =?iso-8859-1?Q?cb2bV1XhprcXoXTt8irrxC6beemMRIQllrKu8rtw1l7ps59ue4AUsRTIpl?=
- =?iso-8859-1?Q?v3Rk5u3303Aqq9dQObDmZJKsgOEqV7bKLoG136X0MPTd0gRIVdNNlCPvvI?=
- =?iso-8859-1?Q?ApoFJ9fvRtQ3rQLt2g0UzsfJ1VdPjrxbh1Gjqo63KFrLPDVlr8nOnUDvfn?=
- =?iso-8859-1?Q?LK13ohI12f+IahTLyjsrrvIzg8VwBUDtJpOqfsTJCAmNdv9zFn9fmqYzzI?=
- =?iso-8859-1?Q?D2yYu/jkatxk340qPpk1yXZlKBTCktqMGWOH70Qos8B/NYc6CKuVgt7xuM?=
- =?iso-8859-1?Q?JKNqFSeF2U0TV21AplsjC98NAQqFefwv+mi6i62eyHz/ZLQ9hp7k9b5OZ4?=
- =?iso-8859-1?Q?VWiLtxmP2ST5Ajxxp2CiLbbFpYK22ap5RJgcdD/iPZpAvkSEtfUiah2qdx?=
- =?iso-8859-1?Q?EiwPLCVAeMSyHbg/ojI6gd4qIzkHwqhtMzl29ILkRXESDoLnotyDv+WXwH?=
- =?iso-8859-1?Q?hIO/es6Xvabk6dpaZNXbnfNwUfFlV3d/zW4cm+FGZOE/73J75LFFH+QWTW?=
- =?iso-8859-1?Q?ezs+AyA554BFnGtA/4oXYmSkR83RCY/GbNXVgnaPzpfLHa7lYkzZAqLQcf?=
- =?iso-8859-1?Q?g86FcOspuhob+4+QyOgqmym7IyczcKMrrucCk9WM+e1tgpAuahuv6oEnui?=
- =?iso-8859-1?Q?g/t55bDlwbUCFmQEb+LbLs3hg6vRaOqlTVVjKqYS3HXwtDDFyGfGFIYjxJ?=
- =?iso-8859-1?Q?7qo/E0qJRQG/FdVSKNNivt/bpJOTG3jPzQ3vP4ckdEBRCX7ElqG+AYnDzG?=
- =?iso-8859-1?Q?4TSNGlz9/tVsRpDi/u10cSfn7fzAWvNKVL38I8iMeE7OKYDpEYQ=3D=3D?=
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;VI1PR10MB0509;23:AVJKJ1jIfBMN8nqRtuLBFKpypqkQ2bxXs4QI8V2?=
+ =?iso-8859-1?Q?bTBccqaRxZnhMcauAbzH3dIqwt/QK1ExKKTIYRhRJ6l4d59DivtnaExZbu?=
+ =?iso-8859-1?Q?Qg4eo4YWUL5VkEbt83+uReSaaiGA7aXPAn8hGY8ah81JD5XECzFFKI+Wh3?=
+ =?iso-8859-1?Q?9uvnYuITLCDrP9e4VQ4kEOWq9j0CDIkUqL/LIif0TXY4cZUJ8s4kf9ld4k?=
+ =?iso-8859-1?Q?cCBCmUS873x8IvWyad3COkNR4vIGna2jjhQdk3AFRO42ZTwNC+EME7GH6N?=
+ =?iso-8859-1?Q?28o2ZHm9HjMULAck17GSfIsQe6vF3FhONPW3eZd3feMrXFhDOh/v7wlMnz?=
+ =?iso-8859-1?Q?j05r4IDVQwBNTPK6pbQl+pid/jAcBvHadVS7idLL75TkQeUgU4t0UAGnNG?=
+ =?iso-8859-1?Q?aY7VJ8M2Vya+t0xq6uQVnX5HNwDtByf6yga6WP2IGq19N8GsK2oqo6ZRpK?=
+ =?iso-8859-1?Q?0+VY0Lymcrgcy29iFbFbcG+43N1HK968dDXKx0Q7aN+iI3Z3Q991RHfM8i?=
+ =?iso-8859-1?Q?g9xhZU/HGBNrYuH/83Zl7lZQhjZbIeBCxmkmiZK/5Ci/v5ijPXsDId2wVA?=
+ =?iso-8859-1?Q?NQ7FqZ0XZiVFZ+vrvwh5HEiI5zbCBtVM2rtZAmqnJlqRNMPq9Caj9ILdVd?=
+ =?iso-8859-1?Q?hzfmegnIj8Xo8HZe/3VVXA2rLv9RbW6jzjhlaVP2SQPlhSeQh6XWyD1DF+?=
+ =?iso-8859-1?Q?WBH8MSFdF2teSgb/Ai+F5e7IUbtHkCcUojC+1/YwU2lATDjJN+9XdMmPm5?=
+ =?iso-8859-1?Q?a70X/hxkxRFW/7jw3HtKNmvXo0Q598eYFhPW3/aN3JxYO/bxYaUEKOonOC?=
+ =?iso-8859-1?Q?EzAJMwwu7Ag+QuuoZgAU/9kiJxAu0PUUtiv16R6zF0GAcjkMEGcU/7DB/n?=
+ =?iso-8859-1?Q?guRinrWzwll9/pLv0lkr+mEEA++74NTr8oRmvGo4mIw+PDOTLNETLJrd2S?=
+ =?iso-8859-1?Q?Gw7w+OfuKCNtRN9rzvy1ebEyGXk1/4BDunck/swD3hfPhgKrOZKjO6xJ90?=
+ =?iso-8859-1?Q?2gSclQyTzL7h3+Usr3Qo+LWzX+a21ExQHLn0hIWo5FhQxKo7XjIjOWPIMh?=
+ =?iso-8859-1?Q?Nke3IOlZZYftmKI2Gf9XYMghy/B+/zFGiWEGaC9WqMIJ63FqRwdBDCs57g?=
+ =?iso-8859-1?Q?tEuHwuaGu+kNqCL5mYkL+RrK70rJG3H49CXCXGjupgM6a1vHtvA5VXIrEg?=
+ =?iso-8859-1?Q?LFXE6iiT8v/pUoLDfP5BVU5WIGtZ7DQqitytXYtkfZzTkm++Qmlt5M2IF7?=
+ =?iso-8859-1?Q?akiNKhqrtuNr6zbGhWUTmw9Y4bKwI10hwe0sxxnOAQ5Vd/e3p2cuzBLcPV?=
+ =?iso-8859-1?Q?IGd8BySa/vgoteWN8OMC4E92AK3KsDA8chIdY0o9RnUYGoB/sOeXAwJlsU?=
+ =?iso-8859-1?Q?yysZbonQ=3D?=
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: q/hLy4F0sAld+yopBovsRKuMS9F6X6w2vWe4Q28b2Fo21alVcn88Q6U1iP6IDooJmemxOV2m9bmZoawaZbdWEQZOZrSH7H3S5/PSUCcjLp7c6pKLS7kIY5Tw8dwbUpxBEC5vF5tLYABBJu6gYkifLYQgkCl92onuo/9/NBYkl3UAw3Ntskdn85nON0zkHSBemrNXWWvVKOmImmAiCGVfNabrx0W05xdSTP1vu4noWcYvj6lMvrjV1EWf6+bHuXLynvPlPPw1Fa3YE63aVpCjoZ3yJHsgG+gIlIXgbAW4SBlzy/tBS2Te4GgB7AxAIR4XTJnwddxVR9Tq46TubwsFnuPeW4ZhQ5FXVZmEyw57ePRcPv1IAYborbVItFgfj0uB2FtO1qCiIjEHvV4C7igEG82PQV+ymHjZSn0Uie6UfJI=
+x-microsoft-antispam-message-info: olPirPRai45qVcbXyD2RlrcLKdWOaDkH2DJiLlVU1F5WZ8BYdn1mlM5R52+pffxQ4tpabDSFZMPGNttMo5qRWyYvsIAbzl3fS4/KuKvbNC+v7SxuTq8kXy8HerhAso48OCeB0SiFFq+l+Ati2TjET2kuwWD77twRQEj65cN8ShGppHLPdFiPBc5deXBkuiAmaScjz4LBFhpt6f6mGt7sxkmf6rhgK+t0K4uCiM3jICXkx+LmNXqW4xITFvG2Rvyjtb2JACy52WlAQw9yDKGleK8xgn1AIYsnLGVKt6gcWqxympR9FWg6f2GJmzWuiNm19jilCwJasspEQyVZ1B5nabmUcWIrso25tFc5YB/3q1VLYSp8K2+XdUlEoAmgLFBVLWjq/vaQNwVY09po9PSwCdMCmw0CDUwc3qRZk/iLlNQ=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0fa6443e-1e30-42f0-3f86-08d69d67c9c3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 10:30:40.6278
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48be3bbf-95a1-475c-c52d-08d69d67ca54
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2019 10:30:41.5815
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
@@ -113,112 +114,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current array of struct qe_snum use 256*4 bytes for just keeping
-track of the free/used state of each index, and the struct layout
-means there's another 768 bytes of padding. If we just unzip that
-structure, the array of snum values just use 256 bytes, while the
-free/inuse state can be tracked in a 32 byte bitmap.
-
-So this reduces the .data footprint by 1760 bytes. It also serves as
-preparation for introducing another DT binding for specifying the snum
-values.
+The 'try of_find_compatible_node(NULL, NULL, "fsl,qe"), fall back to
+of_find_node_by_type(NULL, "qe")' pattern is repeated five
+times. Factor it into a common helper.
 
 Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 ---
- drivers/soc/fsl/qe/qe.c | 37 ++++++++++++-------------------------
- 1 file changed, 12 insertions(+), 25 deletions(-)
+ drivers/soc/fsl/qe/qe.c | 71 +++++++++++++++++------------------------
+ 1 file changed, 29 insertions(+), 42 deletions(-)
 
 diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
-index 4b6aa6b3b685..9b9737a583ef 100644
+index 9b9737a583ef..71beeb72eee4 100644
 --- a/drivers/soc/fsl/qe/qe.c
 +++ b/drivers/soc/fsl/qe/qe.c
-@@ -14,6 +14,7 @@
-  * Free Software Foundation;  either version 2 of the  License, or (at you=
-r
-  * option) any later version.
-  */
-+#include <linux/bitmap.h>
- #include <linux/errno.h>
- #include <linux/sched.h>
- #include <linux/kernel.h>
-@@ -43,25 +44,14 @@ static DEFINE_SPINLOCK(qe_lock);
- DEFINE_SPINLOCK(cmxgcr_lock);
- EXPORT_SYMBOL(cmxgcr_lock);
-=20
--/* QE snum state */
--enum qe_snum_state {
--	QE_SNUM_STATE_USED,
--	QE_SNUM_STATE_FREE
--};
--
--/* QE snum */
--struct qe_snum {
--	u8 num;
--	enum qe_snum_state state;
--};
--
- /* We allocate this here because it is used almost exclusively for
-  * the communication processor devices.
-  */
- struct qe_immap __iomem *qe_immr;
- EXPORT_SYMBOL(qe_immr);
-=20
--static struct qe_snum snums[QE_NUM_OF_SNUM];	/* Dynamically allocated SNUM=
-s */
-+static u8 snums[QE_NUM_OF_SNUM];	/* Dynamically allocated SNUMs */
-+static DECLARE_BITMAP(snum_state, QE_NUM_OF_SNUM);
- static unsigned int qe_num_of_snum;
+@@ -56,6 +56,20 @@ static unsigned int qe_num_of_snum;
 =20
  static phys_addr_t qebase =3D -1;
-@@ -308,6 +298,7 @@ static void qe_snums_init(void)
- 	};
- 	const u8 *snum_init;
 =20
-+	bitmap_zero(snum_state, QE_NUM_OF_SNUM);
- 	qe_num_of_snum =3D qe_get_num_of_snums();
++static struct device_node *qe_get_device_node(void)
++{
++	struct device_node *qe;
++
++	/*
++	 * Newer device trees have an "fsl,qe" compatible property for the QE
++	 * node, but we still need to support older device trees.
++	 */
++	qe =3D of_find_compatible_node(NULL, NULL, "fsl,qe");
++	if (qe)
++		return qe;
++	return of_find_node_by_type(NULL, "qe");
++}
++
+ static phys_addr_t get_qe_base(void)
+ {
+ 	struct device_node *qe;
+@@ -65,12 +79,9 @@ static phys_addr_t get_qe_base(void)
+ 	if (qebase !=3D -1)
+ 		return qebase;
 =20
- 	if (qe_num_of_snum =3D=3D 76)
-@@ -315,10 +306,8 @@ static void qe_snums_init(void)
- 	else
- 		snum_init =3D snum_init_46;
-=20
--	for (i =3D 0; i < qe_num_of_snum; i++) {
--		snums[i].num =3D snum_init[i];
--		snums[i].state =3D QE_SNUM_STATE_FREE;
+-	qe =3D of_find_compatible_node(NULL, NULL, "fsl,qe");
+-	if (!qe) {
+-		qe =3D of_find_node_by_type(NULL, "qe");
+-		if (!qe)
+-			return qebase;
 -	}
-+	for (i =3D 0; i < qe_num_of_snum; i++)
-+		snums[i] =3D snum_init[i];
- }
++	qe =3D qe_get_device_node();
++	if (!qe)
++		return qebase;
 =20
- int qe_get_snum(void)
-@@ -328,12 +317,10 @@ int qe_get_snum(void)
- 	int i;
+ 	ret =3D of_address_to_resource(qe, 0, &res);
+ 	if (!ret)
+@@ -164,12 +175,9 @@ unsigned int qe_get_brg_clk(void)
+ 	if (brg_clk)
+ 		return brg_clk;
 =20
- 	spin_lock_irqsave(&qe_lock, flags);
--	for (i =3D 0; i < qe_num_of_snum; i++) {
--		if (snums[i].state =3D=3D QE_SNUM_STATE_FREE) {
--			snums[i].state =3D QE_SNUM_STATE_USED;
--			snum =3D snums[i].num;
--			break;
--		}
-+	i =3D find_first_zero_bit(snum_state, qe_num_of_snum);
-+	if (i < qe_num_of_snum) {
-+		set_bit(i, snum_state);
-+		snum =3D snums[i];
- 	}
- 	spin_unlock_irqrestore(&qe_lock, flags);
+-	qe =3D of_find_compatible_node(NULL, NULL, "fsl,qe");
+-	if (!qe) {
+-		qe =3D of_find_node_by_type(NULL, "qe");
+-		if (!qe)
+-			return brg_clk;
+-	}
++	qe =3D qe_get_device_node();
++	if (!qe)
++		return brg_clk;
 =20
-@@ -346,8 +333,8 @@ void qe_put_snum(u8 snum)
- 	int i;
+ 	prop =3D of_get_property(qe, "brg-frequency", &size);
+ 	if (prop && size =3D=3D sizeof(*prop))
+@@ -563,16 +571,9 @@ struct qe_firmware_info *qe_get_firmware_info(void)
 =20
- 	for (i =3D 0; i < qe_num_of_snum; i++) {
--		if (snums[i].num =3D=3D snum) {
--			snums[i].state =3D QE_SNUM_STATE_FREE;
-+		if (snums[i] =3D=3D snum) {
-+			clear_bit(i, snum_state);
- 			break;
- 		}
- 	}
+ 	initialized =3D 1;
+=20
+-	/*
+-	 * Newer device trees have an "fsl,qe" compatible property for the QE
+-	 * node, but we still need to support older device trees.
+-	*/
+-	qe =3D of_find_compatible_node(NULL, NULL, "fsl,qe");
+-	if (!qe) {
+-		qe =3D of_find_node_by_type(NULL, "qe");
+-		if (!qe)
+-			return NULL;
+-	}
++	qe =3D qe_get_device_node();
++	if (!qe)
++		return NULL;
+=20
+ 	/* Find the 'firmware' child node */
+ 	for_each_child_of_node(qe, fw) {
+@@ -622,16 +623,9 @@ unsigned int qe_get_num_of_risc(void)
+ 	unsigned int num_of_risc =3D 0;
+ 	const u32 *prop;
+=20
+-	qe =3D of_find_compatible_node(NULL, NULL, "fsl,qe");
+-	if (!qe) {
+-		/* Older devices trees did not have an "fsl,qe"
+-		 * compatible property, so we need to look for
+-		 * the QE node by name.
+-		 */
+-		qe =3D of_find_node_by_type(NULL, "qe");
+-		if (!qe)
+-			return num_of_risc;
+-	}
++	qe =3D qe_get_device_node();
++	if (!qe)
++		return num_of_risc;
+=20
+ 	prop =3D of_get_property(qe, "fsl,qe-num-riscs", &size);
+ 	if (prop && size =3D=3D sizeof(*prop))
+@@ -651,16 +645,9 @@ unsigned int qe_get_num_of_snums(void)
+ 	const u32 *prop;
+=20
+ 	num_of_snums =3D 28; /* The default number of snum for threads is 28 */
+-	qe =3D of_find_compatible_node(NULL, NULL, "fsl,qe");
+-	if (!qe) {
+-		/* Older devices trees did not have an "fsl,qe"
+-		 * compatible property, so we need to look for
+-		 * the QE node by name.
+-		 */
+-		qe =3D of_find_node_by_type(NULL, "qe");
+-		if (!qe)
+-			return num_of_snums;
+-	}
++	qe =3D qe_get_device_node();
++	if (!qe)
++		return num_of_snums;
+=20
+ 	prop =3D of_get_property(qe, "fsl,qe-num-snums", &size);
+ 	if (prop && size =3D=3D sizeof(*prop)) {
 --=20
 2.20.1
 
