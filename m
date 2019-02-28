@@ -2,89 +2,92 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CD0C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1358C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B225218D0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8517920863
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 18:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551379356;
-	bh=oLvNdA/M/UKLXZYqQYq+ZFgHkuM+Rc/ZO2DPIBogeu8=;
-	h=In-Reply-To:To:Subject:References:From:Cc:Date:List-ID:From;
-	b=m1kEE0+8FLfMdfXGHIaabzRpysdRwpeQL0/wUE+MU02cSplHEbbQn1CXFGczBrG0D
-	 8AiRNFxaxl4B4PAvdkeLl3tV2OhpZKY2m5xJIVWD8jOlV6LYdpWvd4RS8v3GP9k+Pm
-	 lV3VFQzmF4oRg/Nll8x64oPg1FNsIt1oExDptEqQ=
+	s=default; t=1551379396;
+	bh=oGZxk7gh7LpBvxqzz00uR5qdulbNCWHBryOyQKPfFA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QbQD2Q5cEj5jZInE+M3vP+3bDJ/BTb0VD0q3PLDPvgeBCScmu2A/Fto2sIC0RHL2M
+	 8B1oS29MdsLAnjdHlCJgNk26vhvlltDmdMIjkPGqyl6cAfB14MaG81KmP24qQCbOwX
+	 D3m23OocclKyGmI4JLG+qRI6wdY8VQLoodsyujh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388210AbfB1Smf (ORCPT
+        id S2388236AbfB1SnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 13:42:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfB1Sme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 13:42:34 -0500
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E4D20863;
-        Thu, 28 Feb 2019 18:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551379353;
-        bh=oLvNdA/M/UKLXZYqQYq+ZFgHkuM+Rc/ZO2DPIBogeu8=;
-        h=In-Reply-To:To:Subject:References:From:Cc:Date:From;
-        b=NHhvjKfZ0S2SmY3fzFrEisgq9iBjLgtBixr81bonO7/cd74Bl0bXj7JRTKH0BPZOB
-         gpvHNZiaGqy+E/OauSBFdEhVavO5AMwE8Z+JSeLwNjjzEbIn90ZvlqHJZpUw0SxYnw
-         rCLAgD6VYA+TfR4L6Np3MB8QERrXRxY6H8PVtZtg=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1550884678.20534.0@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v9 14/27] pwm: jz4740: Improve algorithm of clock calculation
-Message-ID: <155137935225.16805.10412318501940648799@swboyd.mtv.corp.google.com>
-References: <20181227181319.31095-1-paul@crapouillou.net> <20181227181319.31095-15-paul@crapouillou.net> <20190105195725.cuxfge6zkpbt3cyk@pengutronix.de> <1546722339.30174.0@crapouillou.net> <20190105212711.s765knwwerceytvk@pengutronix.de> <1547129096.16183.0@crapouillou.net> <1550884678.20534.0@crapouillou.net>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Thu, 28 Feb 2019 13:43:15 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42540 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfB1SnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 13:43:14 -0500
+Received: by mail-oi1-f196.google.com with SMTP id s16so17325529oih.9;
+        Thu, 28 Feb 2019 10:43:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HkVMGgbmGk9sgrPgpr/Iv1gtz8ptUq5AA2J/mHjztW4=;
+        b=JOQfHA4fpHPpbzl6CWJVr4FouxY1r5s5dg0uEF0h2TDxJn1Ec0PGhCnv23fVUX72c7
+         fu48+cKvQwsLx/7ZXE2i9x0TWZLpvQVCydNbQghu1GOz9h6/MYjagRK5RuCkkABjbkNV
+         n/WdbOIEauDstcn+ltQmb0XcwgvC2c0w9CivW92ndug4Ks5yxjqwFs3FimteCxvbej5w
+         pgXcgsgzrUHEg+//+zVlvc/m8hzLBAmmdq/cYxYZHQ7AL3nJaFDn066MMkjXyBSAReL1
+         3RZe/+oboQjUYBvxDwS8Qm24NciP/7eAve6E0IY3NeA/Kv3dZpuc9AGOiGzuiUrsoXWi
+         Wc+Q==
+X-Gm-Message-State: AHQUAuYo7jWwIugZ0RUZ94CvLTFlxHXDMm0b2opn9/K/m4eeVi2lBwea
+        ETo+GspXmqY0XxhcuVp0Tg==
+X-Google-Smtp-Source: AHgI3IbIYLkQrOtdTtuD2HI5RxDaL8jFaGrKON73U1qyH7jj/1pgYDZzXGddlbfZpQLqAsyiox6Hug==
+X-Received: by 2002:aca:a904:: with SMTP id s4mr794192oie.20.1551379393757;
+        Thu, 28 Feb 2019 10:43:13 -0800 (PST)
+Received: from localhost (ip-184-203-129-180.hstntx.spcsdns.net. [184.203.129.180])
+        by smtp.gmail.com with ESMTPSA id n6sm6071609oif.12.2019.02.28.10.43.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 10:43:13 -0800 (PST)
+Date:   Thu, 28 Feb 2019 12:43:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ryder Lee <ryder.lee@kernel.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-clk@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>
-User-Agent: alot/0.8
-Date:   Thu, 28 Feb 2019 10:42:32 -0800
+        Weijie Gao <weijie.gao@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/3] dt-bindings: mediatek: update bindings for MT7629 SoC
+Message-ID: <20190228184311.GA15417@bogus>
+References: <56a2c38c9efa41be940858e19501fe07fbd5120e.1550233614.git.ryder.lee@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56a2c38c9efa41be940858e19501fe07fbd5120e.1550233614.git.ryder.lee@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Paul Cercueil (2019-02-22 17:17:58)
-> Bump.
->=20
-> What should I do here?
->=20
+On Sun, 17 Feb 2019 21:50:30 +0800, Ryder Lee wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> This updates bindings for MT7629 SoC, which includes very basic items
+> such as system timer, UART, sysirq and scpsys unit.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt     | 5 +++--
+>  Documentation/devicetree/bindings/serial/mtk-uart.txt                | 3 ++-
+>  Documentation/devicetree/bindings/soc/mediatek/scpsys.txt            | 3 ++-
+>  3 files changed, 7 insertions(+), 4 deletions(-)
+> 
 
-I thought I replied to the list but maybe it got rejected because my MUA
-is currently failing hard at sending 8-bit mails without
-using quoted printable. Let me remove all non-ascii characters from this
-mail!
-
-If someone has the mail please rebounce it to the list. Otherwise, I
-think I basically said this is OK because clk_round_rate() semantics are
-specifically vague here to allow the implementation to decide how rates
-are rounded (up, down, closest, etc). As long as the whole rate space is
-searched with a +1 or a -1 style of search it should be work. We're not
-going to add round_up() or round_down() APIs as far as I'm concerned,
-and you can look on the list to see previous proposals on that topic to
-get some background on why they aren't liked.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
