@@ -2,246 +2,675 @@ Return-Path: <SRS0=g5d9=RD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5A9C10F00
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E8EC43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E8E2184A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551340789;
-	bh=NcIlYuUhM73vAOXf20/GEHGjl7NNca2Pi8H7hzWo9ws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dvzVwXtGTvPAkvqBPBzgDVYIBb+wPeUAg1l+bZAJsCZL1NlF0F7isfcnmZVI7F5bh
-	 5p1DiTVS/ryJAX5hpMm0+NnWRTlBc2kIsr9pUR6Vr0DUNibKhM8SxYa2UKlH1w6AH0
-	 z1YrdYkEmmKEPgfnZdr8X+kOtVmLUaf7FKBUzNOk=
+	by mail.kernel.org (Postfix) with ESMTP id C9AB12171F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 07:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731810AbfB1H7r (ORCPT
+        id S1731826AbfB1H7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 02:59:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730399AbfB1H7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 02:59:47 -0500
-Received: from sol.localdomain (c-107-3-167-184.hsd1.ca.comcast.net [107.3.167.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F74E2171F;
-        Thu, 28 Feb 2019 07:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551340785;
-        bh=NcIlYuUhM73vAOXf20/GEHGjl7NNca2Pi8H7hzWo9ws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P8MJ9Ex5F5gXPWEz4et8QYGzzSZx5js4/w8OhKN8hAQ8nCp/gh3bmcoa4KHZOzoLa
-         rXtBXB8Inc6TYRXhmxl+YA3WlcNPU2gVf0tCLzklqu9Ok3VRf4V0DLaPudJnVVDl8J
-         v45RhjBZUzxlHsGILftONi2P4xc5SU5cCOjXlvF8=
-Date:   Wed, 27 Feb 2019 23:59:43 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
-        nborisov@suse.com, Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Mike Kravetz <kravetz@us.ibm.com>
-Subject: Re: BUG: Bad page state (5)
-Message-ID: <20190228075943.GG699@sol.localdomain>
-References: <0000000000006a12bd0581ca4145@google.com>
- <20190213122331.632a4eb1a12b738ef9633855@linux-foundation.org>
- <20190226182129.GA218103@gmail.com>
- <20190227205323.GA186986@gmail.com>
- <CACT4Y+ZK5MrJ3GZ-sxihNpRaun4aMOxkRqmLqQJxYEgD2cnfZQ@mail.gmail.com>
+        Thu, 28 Feb 2019 02:59:52 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:44061 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730399AbfB1H7u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 02:59:50 -0500
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x1S7xXcb2952197
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 27 Feb 2019 23:59:33 -0800
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x1S7xWOs2952193;
+        Wed, 27 Feb 2019 23:59:32 -0800
+Date:   Wed, 27 Feb 2019 23:59:32 -0800
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-2d4f27999b8877409f326682fd8cc40c52f47cea@git.kernel.org>
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        tglx@linutronix.de, hpa@zytor.com, jolsa@kernel.org,
+        alexey.budankov@linux.intel.com, adrian.hunter@intel.com,
+        linux-kernel@vger.kernel.org, acme@redhat.com, mingo@kernel.org,
+        namhyung@kernel.org, ak@linux.intel.com, eranian@google.com
+Reply-To: alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
+          adrian.hunter@intel.com, mingo@kernel.org, namhyung@kernel.org,
+          ak@linux.intel.com, eranian@google.com, peterz@infradead.org,
+          tglx@linutronix.de, hpa@zytor.com, jolsa@kernel.org,
+          alexander.shishkin@linux.intel.com, acme@redhat.com
+In-Reply-To: <20190221094145.9151-3-jolsa@kernel.org>
+References: <20190221094145.9151-3-jolsa@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf data: Add global path holder
+Git-Commit-ID: 2d4f27999b8877409f326682fd8cc40c52f47cea
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZK5MrJ3GZ-sxihNpRaun4aMOxkRqmLqQJxYEgD2cnfZQ@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 07:53:09AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> On Wed, Feb 27, 2019 at 9:53 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Tue, Feb 26, 2019 at 10:21:30AM -0800, Eric Biggers wrote:
-> > > On Wed, Feb 13, 2019 at 12:23:31PM -0800, Andrew Morton wrote:
-> > > > On Wed, 13 Feb 2019 09:56:04 -0800 syzbot <syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com> wrote:
-> > > >
-> > > > > Hello,
-> > > > >
-> > > > > syzbot found the following crash on:
-> > > > >
-> > > > > HEAD commit:    c4f3ef3eb53f Add linux-next specific files for 20190213
-> > > > > git tree:       linux-next
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1130a124c00000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=9ec67976eb2df882
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=2cd2887ea471ed6e6995
-> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ecdaa8c00000
-> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ebe178c00000
-> > > > >
-> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+2cd2887ea471ed6e6995@syzkaller.appspotmail.com
-> > > >
-> > > > It looks like a a memfd page was freed with a non-NULL ->mapping.
-> > > >
-> > > > Joel touched the memfd code with "mm/memfd: add an F_SEAL_FUTURE_WRITE
-> > > > seal to memfd" but it would be surprising if syzbot tickled that code?
-> > > >
-> > > >
-> > > > > BUG: Bad page state in process udevd  pfn:472f0
-> > > > > name:"memfd:"
-> > > > > page:ffffea00011cbc00 count:0 mapcount:0 mapping:ffff88800df2ad40 index:0xf
-> > > > > shmem_aops
-> > > > > flags: 0x1fffc000008000c(uptodate|dirty|swapbacked)
-> > > > > raw: 01fffc000008000c ffffea0000ac4f08 ffff8880a85af890 ffff88800df2ad40
-> > > > > raw: 000000000000000f 0000000000000000 00000000ffffffff 0000000000000000
-> > > > > page dumped because: non-NULL mapping
-> > > > > Modules linked in:
-> > > > > CPU: 1 PID: 7586 Comm: udevd Not tainted 5.0.0-rc6-next-20190213 #34
-> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > > Google 01/01/2011
-> > > > > Call Trace:
-> > > > >   __dump_stack lib/dump_stack.c:77 [inline]
-> > > > >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> > > > >   bad_page.cold+0xda/0xff mm/page_alloc.c:586
-> > > > >   free_pages_check_bad+0x142/0x1a0 mm/page_alloc.c:1014
-> > > > >   free_pages_check mm/page_alloc.c:1023 [inline]
-> > > > >   free_pages_prepare mm/page_alloc.c:1113 [inline]
-> > > > >   free_pcp_prepare mm/page_alloc.c:1138 [inline]
-> > > > >   free_unref_page_prepare mm/page_alloc.c:2991 [inline]
-> > > > >   free_unref_page_list+0x31d/0xc40 mm/page_alloc.c:3060
-> > > > > name:"memfd:"
-> > > > >   release_pages+0x60d/0x1940 mm/swap.c:791
-> > > > >   pagevec_lru_move_fn+0x218/0x2a0 mm/swap.c:213
-> > > > >   __pagevec_lru_add mm/swap.c:917 [inline]
-> > > > >   lru_add_drain_cpu+0x2f7/0x520 mm/swap.c:581
-> > > > >   lru_add_drain+0x20/0x60 mm/swap.c:652
-> > > > >   exit_mmap+0x290/0x530 mm/mmap.c:3134
-> > > > >   __mmput kernel/fork.c:1047 [inline]
-> > > > >   mmput+0x15f/0x4c0 kernel/fork.c:1068
-> > > > >   exec_mmap fs/exec.c:1046 [inline]
-> > > > >   flush_old_exec+0x8d9/0x1c20 fs/exec.c:1279
-> > > > >   load_elf_binary+0x9bc/0x53f0 fs/binfmt_elf.c:864
-> > > > >   search_binary_handler fs/exec.c:1656 [inline]
-> > > > >   search_binary_handler+0x17f/0x570 fs/exec.c:1634
-> > > > >   exec_binprm fs/exec.c:1698 [inline]
-> > > > >   __do_execve_file.isra.0+0x1394/0x23f0 fs/exec.c:1818
-> > > > >   do_execveat_common fs/exec.c:1865 [inline]
-> > > > >   do_execve fs/exec.c:1882 [inline]
-> > > > >   __do_sys_execve fs/exec.c:1958 [inline]
-> > > > >   __se_sys_execve fs/exec.c:1953 [inline]
-> > > > >   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
-> > > > >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> > > > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > > RIP: 0033:0x7fc7001ba207
-> > > > > Code: Bad RIP value.
-> > > > > RSP: 002b:00007ffe06aa13b8 EFLAGS: 00000206 ORIG_RAX: 000000000000003b
-> > > > > RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fc7001ba207
-> > > > > RDX: 0000000001fd5fd0 RSI: 00007ffe06aa14b0 RDI: 00007ffe06aa24c0
-> > > > > RBP: 0000000000625500 R08: 0000000000001c49 R09: 0000000000001c49
-> > > > > R10: 0000000000000000 R11: 0000000000000206 R12: 0000000001fd5fd0
-> > > > > R13: 0000000000000007 R14: 0000000001fc6250 R15: 0000000000000005
-> > > > > BUG: Bad page state in process udevd  pfn:2b13c
-> > > > > page:ffffea0000ac4f00 count:0 mapcount:0 mapping:ffff88800df2ad40 index:0xe
-> > > > > shmem_aops
-> > > > > flags: 0x1fffc000008000c(uptodate|dirty|swapbacked)
-> > > > > raw: 01fffc000008000c ffff8880a85af890 ffff8880a85af890 ffff88800df2ad40
-> > > > > raw: 000000000000000e 0000000000000000 00000000ffffffff 0000000000000000
-> > > > > page dumped because: non-NULL mapping
-> > > > > Modules linked in:
-> > > > > CPU: 1 PID: 7586 Comm: udevd Tainted: G    B
-> > > > > 5.0.0-rc6-next-20190213 #34
-> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > > Google 01/01/2011
-> > > > > Call Trace:
-> > > > >   __dump_stack lib/dump_stack.c:77 [inline]
-> > > > >   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-> > > > >   bad_page.cold+0xda/0xff mm/page_alloc.c:586
-> > > > > name:"memfd:"
-> > > > >   free_pages_check_bad+0x142/0x1a0 mm/page_alloc.c:1014
-> > > > >   free_pages_check mm/page_alloc.c:1023 [inline]
-> > > > >   free_pages_prepare mm/page_alloc.c:1113 [inline]
-> > > > >   free_pcp_prepare mm/page_alloc.c:1138 [inline]
-> > > > >   free_unref_page_prepare mm/page_alloc.c:2991 [inline]
-> > > > >   free_unref_page_list+0x31d/0xc40 mm/page_alloc.c:3060
-> > > > >   release_pages+0x60d/0x1940 mm/swap.c:791
-> > > > >   pagevec_lru_move_fn+0x218/0x2a0 mm/swap.c:213
-> > > > >   __pagevec_lru_add mm/swap.c:917 [inline]
-> > > > >   lru_add_drain_cpu+0x2f7/0x520 mm/swap.c:581
-> > > > >   lru_add_drain+0x20/0x60 mm/swap.c:652
-> > > > >   exit_mmap+0x290/0x530 mm/mmap.c:3134
-> > > > >   __mmput kernel/fork.c:1047 [inline]
-> > > > >   mmput+0x15f/0x4c0 kernel/fork.c:1068
-> > > > >   exec_mmap fs/exec.c:1046 [inline]
-> > > > >   flush_old_exec+0x8d9/0x1c20 fs/exec.c:1279
-> > > > >   load_elf_binary+0x9bc/0x53f0 fs/binfmt_elf.c:864
-> > > > >   search_binary_handler fs/exec.c:1656 [inline]
-> > > > >   search_binary_handler+0x17f/0x570 fs/exec.c:1634
-> > > > >   exec_binprm fs/exec.c:1698 [inline]
-> > > > >   __do_execve_file.isra.0+0x1394/0x23f0 fs/exec.c:1818
-> > > > >   do_execveat_common fs/exec.c:1865 [inline]
-> > > > >   do_execve fs/exec.c:1882 [inline]
-> > > > >   __do_sys_execve fs/exec.c:1958 [inline]
-> > > > >   __se_sys_execve fs/exec.c:1953 [inline]
-> > > > >   __x64_sys_execve+0x8f/0xc0 fs/exec.c:1953
-> > > > >   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> > > > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > > > RIP: 0033:0x7fc7001ba207
-> > > > > Code: Bad RIP value.
-> > > > > RSP: 002b:00007ffe06aa13b8 EFLAGS: 00000206 ORIG_RAX: 000000000000003b
-> > > > > RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fc7001ba207
-> > > > > RDX: 0000000001fd5fd0 RSI: 00007ffe06aa14b0 RDI: 00007ffe06aa24c0
-> > > > > RBP: 0000000000625500 R08: 0000000000001c49 R09: 0000000000001c49
-> > > > > R10: 0000000000000000 R11: 0000000000000206 R12: 0000000001fd5fd0
-> > > > > R13: 0000000000000007 R14: 0000000001fc6250 R15: 0000000000000005
-> > > > >
-> > > > >
-> > > > > ---
-> > > > > This bug is generated by a bot. It may contain errors.
-> > > > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > > > >
-> > > > > syzbot will keep track of this bug report. See:
-> > > > > https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
-> > > > > syzbot.
-> > > > > syzbot can test patches for this bug, for details see:
-> > > > > https://goo.gl/tpsmEJ#testing-patches
-> > > >
-> > >
-> > > It's apparently the bug in the io_uring patchset I reported yesterday (well, I
-> > > stole it from another open syzbot bug...) and Jens is already planning to fix:
-> > > https://marc.info/?l=linux-api&m=155115288114046&w=2.  Reproducer is similar,
-> > > and the crash bisects down to the same commit from the io_uring patchset:
-> > > "block: implement bio helper to add iter bvec pages to bio".
-> > >
-> >
-> > Fixed in next-20190227.  The fix was folded into "block: implement bio helper to
-> > add iter bvec pages to bio".  Telling syzbot to invalidate this bug report:
-> >
-> > #syz invalid
-> 
-> Was this discovered separately? We could also add Reported-by (or
-> Tested-by) tag to the commit.
-> 
+Commit-ID:  2d4f27999b8877409f326682fd8cc40c52f47cea
+Gitweb:     https://git.kernel.org/tip/2d4f27999b8877409f326682fd8cc40c52f47cea
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Thu, 21 Feb 2019 10:41:30 +0100
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Fri, 22 Feb 2019 16:52:07 -0300
 
-My report was based on a crash from the syzbot dashboard.  However, there's no
-fixing commit, as the fix was folded into the original patch.  I.e. the mainline
-git history (if/when the io_uring stuff is actually merged) won't show the bug
-ever being introduced.  Thus Reported-by isn't appropriate, and I used '#syz
-invalid' instead of '#syz fix'.  Nor did syzbot specifically test the new
-version of the patch beyond fuzzing the next day's linux-next...  So while I
-personally might have added an informal note in the commit message, I don't
-think those formal tags make sense for folded-in linux-next fixes like this.
+perf data: Add global path holder
 
-- Eric
+Add a 'path' member to 'struct perf_data'. It will keep the configured
+path for the data (const char *). The path in struct perf_data_file is
+now dynamically allocated (duped) from it.
+
+This scheme is useful/used in following patches where struct
+perf_data::path holds the 'configure' directory path and struct
+perf_data_file::path holds the allocated path for specific files.
+
+Also it actually makes the code little simpler.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190221094145.9151-3-jolsa@kernel.org
+[ Fixup data-convert-bt.c missing conversion ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-annotate.c      |  4 ++--
+ tools/perf/builtin-buildid-cache.c |  4 ++--
+ tools/perf/builtin-buildid-list.c  |  8 +++-----
+ tools/perf/builtin-c2c.c           |  4 ++--
+ tools/perf/builtin-diff.c          | 12 ++++++------
+ tools/perf/builtin-evlist.c        |  4 +---
+ tools/perf/builtin-inject.c        | 10 ++++------
+ tools/perf/builtin-kmem.c          |  2 +-
+ tools/perf/builtin-kvm.c           |  8 +++-----
+ tools/perf/builtin-lock.c          |  8 +++-----
+ tools/perf/builtin-mem.c           |  8 +++-----
+ tools/perf/builtin-record.c        |  6 +++---
+ tools/perf/builtin-report.c        |  6 +++---
+ tools/perf/builtin-sched.c         | 16 ++++++----------
+ tools/perf/builtin-script.c        | 12 +++++-------
+ tools/perf/builtin-stat.c          |  6 +++---
+ tools/perf/builtin-timechart.c     |  8 +++-----
+ tools/perf/builtin-trace.c         |  8 +++-----
+ tools/perf/util/data-convert-bt.c  |  4 ++--
+ tools/perf/util/data.c             | 39 ++++++++++++++++++++++++++------------
+ tools/perf/util/data.h             |  3 ++-
+ 21 files changed, 87 insertions(+), 93 deletions(-)
+
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 7f3c3fea67b4..67f9d9ffacfb 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -441,7 +441,7 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 	}
+ 
+ 	if (total_nr_samples == 0) {
+-		ui__error("The %s file has no samples!\n", session->data->file.path);
++		ui__error("The %s data has no samples!\n", session->data->path);
+ 		goto out;
+ 	}
+ 
+@@ -578,7 +578,7 @@ int cmd_annotate(int argc, const char **argv)
+ 	if (quiet)
+ 		perf_quiet_option();
+ 
+-	data.file.path = input_name;
++	data.path = input_name;
+ 
+ 	annotate.session = perf_session__new(&data, false, &annotate.tool);
+ 	if (annotate.session == NULL)
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index 115110a4796a..10457b10e568 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -416,8 +416,8 @@ int cmd_buildid_cache(int argc, const char **argv)
+ 		nsi = nsinfo__new(ns_id);
+ 
+ 	if (missing_filename) {
+-		data.file.path = missing_filename;
+-		data.force     = force;
++		data.path  = missing_filename;
++		data.force = force;
+ 
+ 		session = perf_session__new(&data, false, NULL);
+ 		if (session == NULL)
+diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+index 78abbe8d9d5f..f403e19488b5 100644
+--- a/tools/perf/builtin-buildid-list.c
++++ b/tools/perf/builtin-buildid-list.c
+@@ -52,11 +52,9 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
+ {
+ 	struct perf_session *session;
+ 	struct perf_data data = {
+-		.file      = {
+-			.path = input_name,
+-		},
+-		.mode      = PERF_DATA_MODE_READ,
+-		.force     = force,
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = force,
+ 	};
+ 
+ 	symbol__elf_init();
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index efaaab23c6fd..4272763a5e96 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2750,8 +2750,8 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	if (!input_name || !strlen(input_name))
+ 		input_name = "perf.data";
+ 
+-	data.file.path = input_name;
+-	data.force     = symbol_conf.force;
++	data.path  = input_name;
++	data.force = symbol_conf.force;
+ 
+ 	err = setup_display(display);
+ 	if (err)
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 751e1971456b..58fe0e88215c 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -708,7 +708,7 @@ static void data__fprintf(void)
+ 
+ 	data__for_each_file(i, d)
+ 		fprintf(stdout, "#  [%d] %s %s\n",
+-			d->idx, d->data.file.path,
++			d->idx, d->data.path,
+ 			!d->idx ? "(Baseline)" : "");
+ 
+ 	fprintf(stdout, "#\n");
+@@ -779,14 +779,14 @@ static int __cmd_diff(void)
+ 	data__for_each_file(i, d) {
+ 		d->session = perf_session__new(&d->data, false, &tool);
+ 		if (!d->session) {
+-			pr_err("Failed to open %s\n", d->data.file.path);
++			pr_err("Failed to open %s\n", d->data.path);
+ 			ret = -1;
+ 			goto out_delete;
+ 		}
+ 
+ 		ret = perf_session__process_events(d->session);
+ 		if (ret) {
+-			pr_err("Failed to process %s\n", d->data.file.path);
++			pr_err("Failed to process %s\n", d->data.path);
+ 			goto out_delete;
+ 		}
+ 
+@@ -1289,9 +1289,9 @@ static int data_init(int argc, const char **argv)
+ 	data__for_each_file(i, d) {
+ 		struct perf_data *data = &d->data;
+ 
+-		data->file.path = use_default ? defaults[i] : argv[i];
+-		data->mode      = PERF_DATA_MODE_READ,
+-		data->force     = force,
++		data->path  = use_default ? defaults[i] : argv[i];
++		data->mode  = PERF_DATA_MODE_READ,
++		data->force = force,
+ 
+ 		d->idx  = i;
+ 	}
+diff --git a/tools/perf/builtin-evlist.c b/tools/perf/builtin-evlist.c
+index e06e822ce634..6e4f63b0da4a 100644
+--- a/tools/perf/builtin-evlist.c
++++ b/tools/perf/builtin-evlist.c
+@@ -23,9 +23,7 @@ static int __cmd_evlist(const char *file_name, struct perf_attr_details *details
+ 	struct perf_session *session;
+ 	struct perf_evsel *pos;
+ 	struct perf_data data = {
+-		.file      = {
+-			.path = file_name,
+-		},
++		.path      = file_name,
+ 		.mode      = PERF_DATA_MODE_READ,
+ 		.force     = details->force,
+ 	};
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 9bb1f35d5cb7..24086b7f1b14 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -770,10 +770,8 @@ int cmd_inject(int argc, const char **argv)
+ 		.input_name  = "-",
+ 		.samples = LIST_HEAD_INIT(inject.samples),
+ 		.output = {
+-			.file      = {
+-				.path = "-",
+-			},
+-			.mode      = PERF_DATA_MODE_WRITE,
++			.path = "-",
++			.mode = PERF_DATA_MODE_WRITE,
+ 		},
+ 	};
+ 	struct perf_data data = {
+@@ -786,7 +784,7 @@ int cmd_inject(int argc, const char **argv)
+ 			    "Inject build-ids into the output stream"),
+ 		OPT_STRING('i', "input", &inject.input_name, "file",
+ 			   "input file name"),
+-		OPT_STRING('o', "output", &inject.output.file.path, "file",
++		OPT_STRING('o', "output", &inject.output.path, "file",
+ 			   "output file name"),
+ 		OPT_BOOLEAN('s', "sched-stat", &inject.sched_stat,
+ 			    "Merge sched-stat and sched-switch for getting events "
+@@ -834,7 +832,7 @@ int cmd_inject(int argc, const char **argv)
+ 
+ 	inject.tool.ordered_events = inject.sched_stat;
+ 
+-	data.file.path = inject.input_name;
++	data.path = inject.input_name;
+ 	inject.session = perf_session__new(&data, true, &inject.tool);
+ 	if (inject.session == NULL)
+ 		return -1;
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index b80ec0883537..fa520f4b8095 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -1949,7 +1949,7 @@ int cmd_kmem(int argc, const char **argv)
+ 		return __cmd_record(argc, argv);
+ 	}
+ 
+-	data.file.path = input_name;
++	data.path = input_name;
+ 
+ 	kmem_session = session = perf_session__new(&data, false, &perf_kmem);
+ 	if (session == NULL)
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 3d4cbc4e87c7..dbb6f737a3e2 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -1080,11 +1080,9 @@ static int read_events(struct perf_kvm_stat *kvm)
+ 		.ordered_events		= true,
+ 	};
+ 	struct perf_data file = {
+-		.file      = {
+-			.path = kvm->file_name,
+-		},
+-		.mode      = PERF_DATA_MODE_READ,
+-		.force     = kvm->force,
++		.path  = kvm->file_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = kvm->force,
+ 	};
+ 
+ 	kvm->tool = eops;
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 6e0189df2b3b..b9810a8d350a 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -866,11 +866,9 @@ static int __cmd_report(bool display_info)
+ 		.ordered_events	 = true,
+ 	};
+ 	struct perf_data data = {
+-		.file      = {
+-			.path = input_name,
+-		},
+-		.mode      = PERF_DATA_MODE_READ,
+-		.force     = force,
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = force,
+ 	};
+ 
+ 	session = perf_session__new(&data, false, &eops);
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index ba7e8d87dec3..f45c8b502f63 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -239,11 +239,9 @@ static int process_sample_event(struct perf_tool *tool,
+ static int report_raw_events(struct perf_mem *mem)
+ {
+ 	struct perf_data data = {
+-		.file      = {
+-			.path = input_name,
+-		},
+-		.mode      = PERF_DATA_MODE_READ,
+-		.force     = mem->force,
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = mem->force,
+ 	};
+ 	int ret;
+ 	struct perf_session *session = perf_session__new(&data, false,
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index e5e9900c9039..f3f7f3100336 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -918,7 +918,7 @@ record__switch_output(struct record *rec, bool at_exit)
+ 
+ 	if (!quiet)
+ 		fprintf(stderr, "[ perf record: Dump %s.%s ]\n",
+-			data->file.path, timestamp);
++			data->path, timestamp);
+ 
+ 	/* Output tracking events */
+ 	if (!at_exit) {
+@@ -1461,7 +1461,7 @@ out_child:
+ 
+ 		fprintf(stderr,	"[ perf record: Captured and wrote %.3f MB %s%s%s ]\n",
+ 			perf_data__size(data) / 1024.0 / 1024.0,
+-			data->file.path, postfix, samples);
++			data->path, postfix, samples);
+ 	}
+ 
+ out_delete_session:
+@@ -1862,7 +1862,7 @@ static struct option __record_options[] = {
+ 	OPT_STRING('C', "cpu", &record.opts.target.cpu_list, "cpu",
+ 		    "list of cpus to monitor"),
+ 	OPT_U64('c', "count", &record.opts.user_interval, "event period to sample"),
+-	OPT_STRING('o', "output", &record.data.file.path, "file",
++	OPT_STRING('o', "output", &record.data.path, "file",
+ 		    "output file name"),
+ 	OPT_BOOLEAN_SET('i', "no-inherit", &record.opts.no_inherit,
+ 			&record.opts.no_inherit_set,
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 2e8c74d6430c..1532ebde6c4b 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -899,7 +899,7 @@ static int __cmd_report(struct report *rep)
+ 		rep->nr_entries += evsel__hists(pos)->nr_entries;
+ 
+ 	if (rep->nr_entries == 0) {
+-		ui__error("The %s file has no samples!\n", data->file.path);
++		ui__error("The %s data has no samples!\n", data->path);
+ 		return 0;
+ 	}
+ 
+@@ -1207,8 +1207,8 @@ int cmd_report(int argc, const char **argv)
+ 			input_name = "perf.data";
+ 	}
+ 
+-	data.file.path = input_name;
+-	data.force     = symbol_conf.force;
++	data.path  = input_name;
++	data.force = symbol_conf.force;
+ 
+ repeat:
+ 	session = perf_session__new(&data, false, &report.tool);
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 640558e9352e..275f2d92a7bf 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1785,11 +1785,9 @@ static int perf_sched__read_events(struct perf_sched *sched)
+ 	};
+ 	struct perf_session *session;
+ 	struct perf_data data = {
+-		.file      = {
+-			.path = input_name,
+-		},
+-		.mode      = PERF_DATA_MODE_READ,
+-		.force     = sched->force,
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = sched->force,
+ 	};
+ 	int rc = -1;
+ 
+@@ -2958,11 +2956,9 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 		{ "sched:sched_migrate_task", timehist_migrate_task_event, },
+ 	};
+ 	struct perf_data data = {
+-		.file      = {
+-			.path = input_name,
+-		},
+-		.mode      = PERF_DATA_MODE_READ,
+-		.force     = sched->force,
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = sched->force,
+ 	};
+ 
+ 	struct perf_session *session;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 373ea151dc60..5b1543f42290 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2951,10 +2951,8 @@ int find_scripts(char **scripts_array, char **scripts_path_array)
+ 	DIR *scripts_dir, *lang_dir;
+ 	struct perf_session *session;
+ 	struct perf_data data = {
+-		.file      = {
+-			.path = input_name,
+-		},
+-		.mode      = PERF_DATA_MODE_READ,
++		.path = input_name,
++		.mode = PERF_DATA_MODE_READ,
+ 	};
+ 	char *temp;
+ 	int i = 0;
+@@ -3427,8 +3425,8 @@ int cmd_script(int argc, const char **argv)
+ 	argc = parse_options_subcommand(argc, argv, options, script_subcommands, script_usage,
+ 			     PARSE_OPT_STOP_AT_NON_OPTION);
+ 
+-	data.file.path = input_name;
+-	data.force     = symbol_conf.force;
++	data.path  = input_name;
++	data.force = symbol_conf.force;
+ 
+ 	if (argc > 1 && !strncmp(argv[0], "rec", strlen("rec"))) {
+ 		rec_script_path = get_script_path(argv[1], RECORD_SUFFIX);
+@@ -3654,7 +3652,7 @@ int cmd_script(int argc, const char **argv)
+ 			goto out_delete;
+ 		}
+ 
+-		input = open(data.file.path, O_RDONLY);	/* input_name */
++		input = open(data.path, O_RDONLY);	/* input_name */
+ 		if (input < 0) {
+ 			err = -errno;
+ 			perror("failed to open file");
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index bb24f9c17f9a..7b8f09b0b8bf 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1322,7 +1322,7 @@ static int __cmd_record(int argc, const char **argv)
+ 			     PARSE_OPT_STOP_AT_NON_OPTION);
+ 
+ 	if (output_name)
+-		data->file.path = output_name;
++		data->path = output_name;
+ 
+ 	if (stat_config.run_count != 1 || forever) {
+ 		pr_err("Cannot use -r option with perf stat record.\n");
+@@ -1523,8 +1523,8 @@ static int __cmd_report(int argc, const char **argv)
+ 			input_name = "perf.data";
+ 	}
+ 
+-	perf_stat.data.file.path = input_name;
+-	perf_stat.data.mode      = PERF_DATA_MODE_READ;
++	perf_stat.data.path = input_name;
++	perf_stat.data.mode = PERF_DATA_MODE_READ;
+ 
+ 	session = perf_session__new(&perf_stat.data, false, &perf_stat.tool);
+ 	if (session == NULL)
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 775b99833e51..9b98687a27b9 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -1602,11 +1602,9 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
+ 		{ "syscalls:sys_exit_select",		process_exit_poll },
+ 	};
+ 	struct perf_data data = {
+-		.file      = {
+-			.path = input_name,
+-		},
+-		.mode      = PERF_DATA_MODE_READ,
+-		.force     = tchart->force,
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = tchart->force,
+ 	};
+ 
+ 	struct perf_session *session = perf_session__new(&data, false,
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 1a11fe656afc..f5b3a1e9c1dd 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3154,11 +3154,9 @@ static int trace__replay(struct trace *trace)
+ 		{ "probe:vfs_getname",	     trace__vfs_getname, },
+ 	};
+ 	struct perf_data data = {
+-		.file      = {
+-			.path = input_name,
+-		},
+-		.mode      = PERF_DATA_MODE_READ,
+-		.force     = trace->force,
++		.path  = input_name,
++		.mode  = PERF_DATA_MODE_READ,
++		.force = trace->force,
+ 	};
+ 	struct perf_session *session;
+ 	struct perf_evsel *evsel;
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index 2a36fab76994..26af43ad9ddd 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -1578,7 +1578,7 @@ int bt_convert__perf2ctf(const char *input, const char *path,
+ {
+ 	struct perf_session *session;
+ 	struct perf_data data = {
+-		.file      = { .path = input, .fd = -1 },
++		.path	   = input,
+ 		.mode      = PERF_DATA_MODE_READ,
+ 		.force     = opts->force,
+ 	};
+@@ -1650,7 +1650,7 @@ int bt_convert__perf2ctf(const char *input, const char *path,
+ 
+ 	fprintf(stderr,
+ 		"[ perf data convert: Converted '%s' into CTF data '%s' ]\n",
+-		data.file.path, path);
++		data.path, path);
+ 
+ 	fprintf(stderr,
+ 		"[ perf data convert: Converted and wrote %.3f MB (%" PRIu64 " samples",
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 09eceda17fc2..e16d06ed1100 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -19,11 +19,11 @@ static bool check_pipe(struct perf_data *data)
+ 	int fd = perf_data__is_read(data) ?
+ 		 STDIN_FILENO : STDOUT_FILENO;
+ 
+-	if (!data->file.path) {
++	if (!data->path) {
+ 		if (!fstat(fd, &st) && S_ISFIFO(st.st_mode))
+ 			is_pipe = true;
+ 	} else {
+-		if (!strcmp(data->file.path, "-"))
++		if (!strcmp(data->path, "-"))
+ 			is_pipe = true;
+ 	}
+ 
+@@ -37,13 +37,13 @@ static int check_backup(struct perf_data *data)
+ {
+ 	struct stat st;
+ 
+-	if (!stat(data->file.path, &st) && st.st_size) {
++	if (!stat(data->path, &st) && st.st_size) {
+ 		/* TODO check errors properly */
+ 		char oldname[PATH_MAX];
+ 		snprintf(oldname, sizeof(oldname), "%s.old",
+-			 data->file.path);
++			 data->path);
+ 		unlink(oldname);
+-		rename(data->file.path, oldname);
++		rename(data->path, oldname);
+ 	}
+ 
+ 	return 0;
+@@ -115,8 +115,22 @@ static int open_file(struct perf_data *data)
+ 	fd = perf_data__is_read(data) ?
+ 	     open_file_read(data) : open_file_write(data);
+ 
++	if (fd < 0) {
++		free(data->file.path);
++		return -1;
++	}
++
+ 	data->file.fd = fd;
+-	return fd < 0 ? -1 : 0;
++	return 0;
++}
++
++static int open_file_dup(struct perf_data *data)
++{
++	data->file.path = strdup(data->path);
++	if (!data->file.path)
++		return -ENOMEM;
++
++	return open_file(data);
+ }
+ 
+ int perf_data__open(struct perf_data *data)
+@@ -124,14 +138,15 @@ int perf_data__open(struct perf_data *data)
+ 	if (check_pipe(data))
+ 		return 0;
+ 
+-	if (!data->file.path)
+-		data->file.path = "perf.data";
++	if (!data->path)
++		data->path = "perf.data";
+ 
+-	return open_file(data);
++	return open_file_dup(data);
+ }
+ 
+ void perf_data__close(struct perf_data *data)
+ {
++	free(data->file.path);
+ 	close(data->file.fd);
+ }
+ 
+@@ -159,15 +174,15 @@ int perf_data__switch(struct perf_data *data,
+ 	if (perf_data__is_read(data))
+ 		return -EINVAL;
+ 
+-	if (asprintf(&new_filepath, "%s.%s", data->file.path, postfix) < 0)
++	if (asprintf(&new_filepath, "%s.%s", data->path, postfix) < 0)
+ 		return -ENOMEM;
+ 
+ 	/*
+ 	 * Only fire a warning, don't return error, continue fill
+ 	 * original file.
+ 	 */
+-	if (rename(data->file.path, new_filepath))
+-		pr_warning("Failed to rename %s to %s\n", data->file.path, new_filepath);
++	if (rename(data->path, new_filepath))
++		pr_warning("Failed to rename %s to %s\n", data->path, new_filepath);
+ 
+ 	if (!at_exit) {
+ 		close(data->file.fd);
+diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+index 85f9c0dbf982..2bce28117ccf 100644
+--- a/tools/perf/util/data.h
++++ b/tools/perf/util/data.h
+@@ -10,12 +10,13 @@ enum perf_data_mode {
+ };
+ 
+ struct perf_data_file {
+-	const char	*path;
++	char		*path;
+ 	int		 fd;
+ 	unsigned long	 size;
+ };
+ 
+ struct perf_data {
++	const char		*path;
+ 	struct perf_data_file	 file;
+ 	bool			 is_pipe;
+ 	bool			 force;
