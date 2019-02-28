@@ -6,50 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCF3C43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AA4C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DA420C01
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20BC4218D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551366847;
-	bh=LvNXt+y9U4EHTHvmUBBk2je8AVU4ijZ5HMPDhHll3RQ=;
+	s=default; t=1551366856;
+	bh=R4Ibw4xwOaOwUXtb89iDuGlYMo8gQCFV4j1HHjQffYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=emHFQG4WPZJagfpfjTQCdJmKaRAnv7CSHJugmaPOndBHEMcEY3QH1goSDMqAIBQM8
-	 HPAbo6MG4YNTWruw8IQzbnIc6PmgBuJBJb7rwTlv1shP07vg2zT13EAFLRMRJHzp3r
-	 0exHStEv0CM1f0xoxFDD4gQfLHBT5fpXPqrjGbA8=
+	b=tX1PF5E+nCcLR1pU5SWBlkUcgF0R+faG1VW6bZXDZWytIYFfoMUNMInif6qHvwxus
+	 SpEXb8mi2DEejfFgmPGjHo7sPh2st2tkOrHQ2H0a7Z+NpQ0eT5APnBuo47ZJp+xxf4
+	 Kgm8pOZ7kJUPq6pUZmgUVsqysAsgcEqMvLAPPzF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388616AbfB1POG (ORCPT
+        id S2388253AbfB1POP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:14:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48454 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:14:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388595AbfB1POC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:14:02 -0500
+        id S2388621AbfB1POJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:14:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28259218EA;
-        Thu, 28 Feb 2019 15:14:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AED220C01;
+        Thu, 28 Feb 2019 15:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366842;
-        bh=LvNXt+y9U4EHTHvmUBBk2je8AVU4ijZ5HMPDhHll3RQ=;
+        s=default; t=1551366848;
+        bh=R4Ibw4xwOaOwUXtb89iDuGlYMo8gQCFV4j1HHjQffYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Alc35aXPHi7y1mLqk8dJYd2g4fhJyiWPpf7zFAFrkWmmkyK6oj0BznI8F7WeA7tTf
-         1fcTs2Ana8I4LnZB+kxdX3F+qvUaqn6x5HOZafQo7cXlzO0sLwrVcJZFn89e9mNJao
-         TXT3LER2gEPACXVAEzMEeno+1yoTVf0IjoFHbBAw=
+        b=NhfVoGMzxzk7m4137IdcQnthBnQf1xT3yy0tyBn7LpTwio1lkM72FVxPbv5omqT2N
+         Nf7nNLKIpj5gca7jInk7hE7b83cW17yJ7Ar9IdrH7IUWA7L1EbPxyLBrEJYSOvYGiH
+         M5jmtNT0cOJhl1QafA8JkeUmyOBnvd7xkEAK9cCQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <jose.abreu@synopsys.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Joao Pinto <jpinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 14/36] net: stmmac: Disable EEE mode earlier in XMIT callback
-Date:   Thu, 28 Feb 2019 10:13:15 -0500
-Message-Id: <20190228151337.12176-14-sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 16/36] relay: check return of create_buf_file() properly
+Date:   Thu, 28 Feb 2019 10:13:17 -0500
+Message-Id: <20190228151337.12176-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228151337.12176-1-sashal@kernel.org>
 References: <20190228151337.12176-1-sashal@kernel.org>
@@ -61,50 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <jose.abreu@synopsys.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit e2cd682deb231ba6f80524bb84e57e7138261149 ]
+[ Upstream commit 2c1cf00eeacb784781cf1c9896b8af001246d339 ]
 
-In stmmac xmit callback we use a different flow for TSO packets but TSO
-xmit callback is not disabling the EEE mode.
+If create_buf_file() returns an error, don't try to reference it later
+as a valid dentry pointer.
 
-Fix this by disabling earlier the EEE mode, i.e. before calling the TSO
-xmit callback.
+This problem was exposed when debugfs started to return errors instead
+of just NULL for some calls when they do not succeed properly.
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Also, the check for WARN_ON(dentry) was just wrong :)
+
+Reported-by: Kees Cook <keescook@chromium.org>
+Reported-and-tested-by: syzbot+16c3a70e1e9b29346c43@syzkaller.appspotmail.com
+Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Rientjes <rientjes@google.com>
+Fixes: ff9fb72bc077 ("debugfs: return error values, not NULL")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/relay.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index bed71e295d9ff..cd6d0045c39f6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3017,6 +3017,9 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/kernel/relay.c b/kernel/relay.c
+index 1537158c67b38..61d37e6da22dd 100644
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -427,6 +427,8 @@ static struct dentry *relay_create_buf_file(struct rchan *chan,
+ 	dentry = chan->cb->create_buf_file(tmpname, chan->parent,
+ 					   S_IRUSR, buf,
+ 					   &chan->is_global);
++	if (IS_ERR(dentry))
++		dentry = NULL;
  
- 	tx_q = &priv->tx_queue[queue];
+ 	kfree(tmpname);
  
-+	if (priv->tx_path_in_lpi_mode)
-+		stmmac_disable_eee_mode(priv);
-+
- 	/* Manage oversized TCP frames for GMAC4 device */
- 	if (skb_is_gso(skb) && priv->tso) {
- 		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
-@@ -3044,9 +3047,6 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 		return NETDEV_TX_BUSY;
+@@ -460,7 +462,7 @@ static struct rchan_buf *relay_open_buf(struct rchan *chan, unsigned int cpu)
+ 		dentry = chan->cb->create_buf_file(NULL, NULL,
+ 						   S_IRUSR, buf,
+ 						   &chan->is_global);
+-		if (WARN_ON(dentry))
++		if (IS_ERR_OR_NULL(dentry))
+ 			goto free_buf;
  	}
- 
--	if (priv->tx_path_in_lpi_mode)
--		stmmac_disable_eee_mode(priv);
--
- 	entry = tx_q->cur_tx;
- 	first_entry = entry;
  
 -- 
 2.19.1
