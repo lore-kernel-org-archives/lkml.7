@@ -6,47 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BFAC43381
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E36C43381
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864FD206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C556206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 Feb 2019 15:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551368066;
-	bh=DUnOeCFvpzCOS6PjhCHMNZtzPbgQJJyWkFYb5HLC++Q=;
+	s=default; t=1551368075;
+	bh=ftXPPQJsRKWtxHialoCsdMGo2gpEfIYT3UMYjQZT1vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jyTJXCFBvD13R7ZZYQnj0a1c5LhclftB0YcAylEo8LzsjRflGDSmr4VSx6WJaPBIq
-	 PBGJCb85PzrXzHyfRgLez91eOIofq11uNdTTaNb69rM0IAntdywKkChk3R14zDBVjf
-	 NM9iryoom7LMJXUPD+y4JJFPFSyVXVPnNQPQ7j9k=
+	b=03Allp4ykx48/hdxOzxjN1/lxDdlAhFaDQC29rFZ3GT5LOqoYWqp14fdQgAxWVR7L
+	 qeHg2LbTBghkgEq2STdOOQ4rm3qXbI4FUcI6rM9UBK/CHxqIyBdgcplx6XqxDh+r05
+	 CwUCayPg0dzXjuCLiDaMnjKv6gKqsduln4GQeCg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732886AbfB1PeZ (ORCPT
+        id S1732940AbfB1Ped (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 10:34:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
+        Thu, 28 Feb 2019 10:34:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732800AbfB1PI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 10:08:27 -0500
+        id S1732718AbfB1PI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 10:08:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20083218C3;
-        Thu, 28 Feb 2019 15:08:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 365B6218B0;
+        Thu, 28 Feb 2019 15:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551366506;
-        bh=DUnOeCFvpzCOS6PjhCHMNZtzPbgQJJyWkFYb5HLC++Q=;
+        s=default; t=1551366505;
+        bh=ftXPPQJsRKWtxHialoCsdMGo2gpEfIYT3UMYjQZT1vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S6AUPb1pdkv5enFFgoFmAOMVuaITjOAYubb5trs6Goh8Hp9yGW5Xvt1IdvHrXV/zi
-         zZmI5QhD4wbpF3U2cy/GhZugr4quQ1obr7mTVWpa0M99pf3Wx0+v5ZwTfbU205sXT7
-         f37wmUkZLxbIGWr581UECfbe/aLprdSamiESwHxA=
+        b=uTIJ8rFb5KnWJ9E7+g2r0e8V4nNF6O4SfTsnUVom1Q1MjGpsjwzEjzybd/h9yvJW7
+         7SfK7qdk01vGjmkAfLAJYBzQka3ggU9kQfMQ1cBKHtDOUnkkA28o/3mSL4OnQ/kWcH
+         QHh2EqeD4HdpAhityH+wXXHtzXvucIgWAvecfhTg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 09/81] ARM: dts: imx6sx: correct backward compatible of gpt
-Date:   Thu, 28 Feb 2019 10:07:01 -0500
-Message-Id: <20190228150813.10256-9-sashal@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 08/81] signal: Make siginmask safe when passed a signal of 0
+Date:   Thu, 28 Feb 2019 10:07:00 -0500
+Message-Id: <20190228150813.10256-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190228150813.10256-1-sashal@kernel.org>
 References: <20190228150813.10256-1-sashal@kernel.org>
@@ -58,36 +56,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <anson.huang@nxp.com>
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-[ Upstream commit ba0f4560526ba19300c07ed5a3c1df7592815dc6 ]
+[ Upstream commit ee17e5d6201c66492a0e8053190fca2ed2b8457d ]
 
-i.MX6SX has same GPT type as i.MX6DL, in GPT driver, it uses
-below TIMER_OF_DECLARE, so the backward compatible should be
-"fsl,imx6dl-gpt", correct it.
+Eric Biggers reported:
+> The following commit, which went into v4.20, introduced undefined behavior when
+> sys_rt_sigqueueinfo() is called with sig=0:
+>
+> commit 4ce5f9c9e7546915c559ffae594e6d73f918db00
+> Author: Eric W. Biederman <ebiederm@xmission.com>
+> Date:   Tue Sep 25 12:59:31 2018 +0200
+>
+>     signal: Use a smaller struct siginfo in the kernel
+>
+> In sig_specific_sicodes(), used from known_siginfo_layout(), the expression
+> '1ULL << ((sig)-1)' is undefined as it evaluates to 1ULL << 4294967295.
+>
+> Reproducer:
+>
+> #include <signal.h>
+> #include <sys/syscall.h>
+> #include <unistd.h>
+>
+> int main(void)
+> {
+> 	siginfo_t si = { .si_code = 1 };
+> 	syscall(__NR_rt_sigqueueinfo, 0, 0, &si);
+> }
+>
+> UBSAN report for v5.0-rc1:
+>
+> UBSAN: Undefined behaviour in kernel/signal.c:2946:7
+> shift exponent 4294967295 is too large for 64-bit type 'long unsigned int'
+> CPU: 2 PID: 346 Comm: syz_signal Not tainted 5.0.0-rc1 #25
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x70/0xa5 lib/dump_stack.c:113
+>  ubsan_epilogue+0xd/0x40 lib/ubsan.c:159
+>  __ubsan_handle_shift_out_of_bounds+0x12c/0x170 lib/ubsan.c:425
+>  known_siginfo_layout+0xae/0xe0 kernel/signal.c:2946
+>  post_copy_siginfo_from_user kernel/signal.c:3009 [inline]
+>  __copy_siginfo_from_user+0x35/0x60 kernel/signal.c:3035
+>  __do_sys_rt_sigqueueinfo kernel/signal.c:3553 [inline]
+>  __se_sys_rt_sigqueueinfo kernel/signal.c:3549 [inline]
+>  __x64_sys_rt_sigqueueinfo+0x31/0x70 kernel/signal.c:3549
+>  do_syscall_64+0x4c/0x1b0 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x433639
+> Code: c4 18 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 27 00 00 c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fffcb289fc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000081
+> RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000433639
+> RDX: 00007fffcb289fd0 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: 00000000006b2018 R08: 000000000000004d R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401560
+> R13: 00000000004015f0 R14: 0000000000000000 R15: 0000000000000000
 
-TIMER_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
+I have looked at the other callers of siginmask and they all appear to
+in locations where sig can not be zero.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+I have looked at the code generation of adding an extra test against
+zero and gcc was able with a simple decrement instruction to combine
+the two tests together. So the at most adding this test cost a single
+cpu cycle.  In practice that decrement instruction was already present
+as part of the mask comparison, so the only change was when the
+instruction was executed.
+
+So given that it is cheap, and obviously correct to update siginmask
+to verify the signal is not zero.  Fix this issue there to avoid any
+future problems.
+
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: 4ce5f9c9e754 ("signal: Use a smaller struct siginfo in the kernel")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sx.dtsi | 2 +-
+ include/linux/signal.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 95a3c1cb877db..89ba48f4273b2 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -462,7 +462,7 @@
- 			};
+diff --git a/include/linux/signal.h b/include/linux/signal.h
+index f428e86f48007..b5d99482d3fe1 100644
+--- a/include/linux/signal.h
++++ b/include/linux/signal.h
+@@ -388,7 +388,7 @@ extern bool unhandled_signal(struct task_struct *tsk, int sig);
+ #endif
  
- 			gpt: gpt@2098000 {
--				compatible = "fsl,imx6sx-gpt", "fsl,imx31-gpt";
-+				compatible = "fsl,imx6sx-gpt", "fsl,imx6dl-gpt";
- 				reg = <0x02098000 0x4000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
+ #define siginmask(sig, mask) \
+-	((sig) < SIGRTMIN && (rt_sigmask(sig) & (mask)))
++	((sig) > 0 && (sig) < SIGRTMIN && (rt_sigmask(sig) & (mask)))
+ 
+ #define SIG_KERNEL_ONLY_MASK (\
+ 	rt_sigmask(SIGKILL)   |  rt_sigmask(SIGSTOP))
 -- 
 2.19.1
 
