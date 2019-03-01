@@ -2,142 +2,285 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB80C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6183C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4D320857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:46:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JM+27wJy"
+	by mail.kernel.org (Postfix) with ESMTP id 8697920818
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551458877;
+	bh=Ov/xAgVdNJpIF4FUnflAeXjj1q5516Jm24OSZf5JjpU=;
+	h=To:Cc:From:Subject:Date:List-ID:From;
+	b=NaeCO9n8moJq1CCjnkVQRbNcIborSNmod5rOfIqvVwNlUyK+pJTUXsH16jfxsaXiY
+	 nPsWJq0ow7CeDczvv4Pqv+24F+xsiwID5XiLB8EUl3P8NNRa3Xgh3CDjWS3EQoZvsL
+	 P8bOuGjZ97tmjpE2vAWfSlODegYv/xXODS/75YZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389171AbfCAQqB (ORCPT
+        id S2389140AbfCAQr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:46:01 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33030 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728517AbfCAQqB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:46:01 -0500
-Received: by mail-wr1-f65.google.com with SMTP id i12so26641256wrw.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:46:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XVjxnJ++Y8X+uS2vpURGAPjkEdwS8EqouJumi+2009s=;
-        b=JM+27wJyO274PiVrQRVM+DZhKBjGPhHcbHLImIFFwR8Mm0LenFEjfzdCn9oknGbCZx
-         MdppzTexY6/VQv/3a2UYhOeZ6HuqArmvC+UHVwMRMbIJVBIVG1w+IQWi/VG6oeGROoBj
-         k1JDNkRBphtaxwwHOeCB17VrIdu+Hbfjn2+9oUdeEuC8S2O+J3i+UF+anRTIY+FaOkP2
-         yLqdwcV6dnpJK9DVE7iCyxP18nd6f4mOxZMHSj6azaNab7x2kaFa9wcZLp7drSWFHHAq
-         DhSxW9+Q4lhzjByWS9VqNTXZsLxs247ScR8YbY9O5RjYvsRKc142hB32XycKNFtajqEK
-         o5fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XVjxnJ++Y8X+uS2vpURGAPjkEdwS8EqouJumi+2009s=;
-        b=XtF/5dJVuisduAKdun1IoO8vM+zggdOv7hT+PkjTAuvcjgUlUxUhMI70kOAuCOohBI
-         rWl8S4muWGVgCMi0hX+Uji/GTtHJzDPC7KwEXBYNI2SMOrSaDDZSjb4hjercbmQBK9n2
-         Cvp/hv5tcnMRAVRAAIAaVW5d63FIWXX3Xlk3rjyBAjQSeg1L8TNdxCtlBz9h7Nxe/t75
-         JixGWk6+0FqLEHUeSadwjZibLRlRFm89v0AsTXErc5VWp9BPR4MzX030LyWRDr5ZDs0H
-         Tt5jQAx/6h7wK1EV6OfrObbysJtp1QeVcnbbzO0VgrgCzxKjn++gIJsPtPwXn8zx5KQi
-         egOw==
-X-Gm-Message-State: APjAAAU2b4tm53hpMq24ipLJUSNjyL0c/nPiEcaNbbyLm9tG6jMwHcbH
-        pXnLw4sHx2nH19nTOEErS6aLYdL6gm72XQeFx0YcXA==
-X-Google-Smtp-Source: APXvYqwlN92e8UHz+MnQ1ksoMeUuP/P/iC3lxq4B0U7FLJgWSSIDL7scOme9bpQAJF/CjhMqQOS/YaqOM7xHLG1FSwo=
-X-Received: by 2002:adf:c543:: with SMTP id s3mr3874801wrf.192.1551458759221;
- Fri, 01 Mar 2019 08:45:59 -0800 (PST)
+        Fri, 1 Mar 2019 11:47:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728285AbfCAQrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:47:55 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2289420818;
+        Fri,  1 Mar 2019 16:47:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551458874;
+        bh=Ov/xAgVdNJpIF4FUnflAeXjj1q5516Jm24OSZf5JjpU=;
+        h=To:Cc:From:Subject:Date:From;
+        b=E3cEfKMPYfdBV+MS/LIDVLaDVbEBGC9LlbjPYihDSlQeiDdE5K6E0fBMJVjwXymTP
+         PUHrbszRRGgpGTpeotAm8mMD++DdurDm5nqEYg8/iBmQO57rhzBfE6ScaIrcGZXNyU
+         b6I2LIjsjtTCOzi7lxY+24mgaJbKah7xqLZJXuHE=
+To:     rafael@kernel.org
+Cc:     Thomas Renninger <trenn@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, shuah <shuah@kernel.org>
+From:   shuah <shuah@kernel.org>
+Subject: [GIT PULL] cpupower update for Linux 5.1-rc1
+Message-ID: <cc753578-75ba-2030-553d-f7d7d16955ef@kernel.org>
+Date:   Fri, 1 Mar 2019 09:47:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <1551362893-100023-1-git-send-email-lipengcheng8@huawei.com>
-In-Reply-To: <1551362893-100023-1-git-send-email-lipengcheng8@huawei.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 1 Mar 2019 08:45:47 -0800
-Message-ID: <CALAqxLUNG6wyQGVoenTqCU1dD=001hjqMRh=3xEiJsn2BXWWYw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: hi3660-hikey960: Add i2s & sound device
-To:     Pengcheng Li <lipengcheng8@huawei.com>
-Cc:     Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Zhuangluan Su <suzhuangluan@hisilicon.com>,
-        Kongfei <kongfei@hisilicon.com>,
-        Liyuequan <liyuequan@hisilicon.com>,
-        "Qianli (A)" <cash.qianli@hisilicon.com>,
-        "huangli (I)" <huangli295@hisilicon.com>,
-        Hantanglei <hantanglei@huawei.com>,
-        wangyoulin <wangyoulin1@hisilicon.com>,
-        ninggaoyu <ninggaoyu@hisilicon.com>,
-        "xuwei (O)" <xuwei5@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed;
+ boundary="------------39D89896C1EFD2AB028F8C2B"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 6:24 AM Pengcheng Li <lipengcheng8@huawei.com> wrote:
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> index 186251f..457cebc 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -27,6 +27,35 @@
->                 /* rewrite this at bootloader */
->                 reg = <0x0 0x0 0x0 0x0>;
->         };
-> +
-> +       i2s2: hi3660_i2s {
-> +               compatible = "hisilicon,hi3660-i2s-1.0";
-> +               reg = <0x0 0xe804f800 0x0 0x400>,
-> +                       <0x0 0xe804e000 0x0 0x400>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&i2s2_pmx_func &i2s2_cfg_func>;
-> +               dmas = <&asp_dmac 18 &asp_dmac 19>;
-> +               dma-names = "rx", "tx";
-> +               #sound-dai-cells = <0>;
-> +       };
-> +
-> +       sound {
-> +               compatible = "simple-audio-card";
-> +               simple-audio-card,name = "hikey-hdmi";
-> +               simple-audio-card,format = "i2s";
-> +
-> +               simple-audio-card,bitclock-master = <&sound_master>;
-> +               simple-audio-card,frame-master = <&sound_master>;
-> +
-> +               sound_master: simple-audio-card,cpu {
-> +                       sound-dai = <&i2s2>;
-> +               };
-> +
-> +               simple-audio-card,codec {
-> +                       sound-dai = <&adv7533>;
-> +               };
-> +       };
-> +
->  };
+This is a multi-part message in MIME format.
+--------------39D89896C1EFD2AB028F8C2B
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hey Pengcheng,
-  Thanks for sending this out!   I've noticed one small issue with
-this dts patch compared to the previous iterations.
+Hi Rafael,
 
-When building I hit the following errors:
-arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts:292.27-294.5:
-Warning (sound_dai_property): /sound/simple-audio-card,codec: Missing
-property '#sound-dai-cells' in node /soc/i2c@ffd72000/adv7533@39 or
-bad phandle (referred from sound-dai[0])
+Please pull the following cpupower update for Linux 5.1-rc1.
 
-Which seems to us missing the sound-dai-cells addition to the adv7511
-node we had the first chunk of the patch here:
-https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey960-mainline-WIP&id=4279d58b622acd686b4d17fbf378ace1c467763e
+This cpupower update for Linux 5.1-rc1 consists of a patch to add
+support to display boost frequency separately from Abhishek Goel.
 
-thanks
--john
+diff is attached.
+
+thanks,
+-- Shuah
+
+
+----------------------------------------------------------------
+The following changes since commit d13937116f1e82bf508a6325111b322c30c85eb9:
+
+   Linux 5.0-rc6 (2019-02-10 14:42:20 -0800)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux 
+tags/linux-cpupower-5.1-rc1
+
+for you to fetch changes up to ae2917093fb60bdc1ed3e5757b74801420569a9a:
+
+   tools/power/cpupower: Display boost frequency separately (2019-02-13 
+09:26:17 -0700)
+
+----------------------------------------------------------------
+linux-cpupower-5.1-rc1
+
+This cpupower update for Linux 5.1-rc1 consists of a patch to add
+support to display boost frequency separately from Abhishek Goel.
+
+----------------------------------------------------------------
+Abhishek Goel (1):
+       tools/power/cpupower: Display boost frequency separately
+
+  tools/power/cpupower/lib/cpufreq.c        | 19 ++++++++------
+  tools/power/cpupower/lib/cpufreq.h        | 16 ++++++------
+  tools/power/cpupower/utils/cpufreq-info.c | 42 
++++++++++++++++++++++++--------
+  3 files changed, 50 insertions(+), 27 deletions(-)
+----------------------------------------------------------------
+
+--------------39D89896C1EFD2AB028F8C2B
+Content-Type: text/x-patch;
+ name="linux-cpupower-5.1-rc1.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="linux-cpupower-5.1-rc1.diff"
+
+diff --git a/tools/power/cpupower/lib/cpufreq.c b/tools/power/cpupower/lib/cpufreq.c
+index 0c0f3e3f0d80..80650497fb80 100644
+--- a/tools/power/cpupower/lib/cpufreq.c
++++ b/tools/power/cpupower/lib/cpufreq.c
+@@ -333,17 +333,20 @@ void cpufreq_put_available_governors(struct cpufreq_available_governors *any)
+ }
+ 
+ 
+-struct cpufreq_available_frequencies
+-*cpufreq_get_available_frequencies(unsigned int cpu)
++struct cpufreq_frequencies
++*cpufreq_get_frequencies(const char *type, unsigned int cpu)
+ {
+-	struct cpufreq_available_frequencies *first = NULL;
+-	struct cpufreq_available_frequencies *current = NULL;
++	struct cpufreq_frequencies *first = NULL;
++	struct cpufreq_frequencies *current = NULL;
+ 	char one_value[SYSFS_PATH_MAX];
+ 	char linebuf[MAX_LINE_LEN];
++	char fname[MAX_LINE_LEN];
+ 	unsigned int pos, i;
+ 	unsigned int len;
+ 
+-	len = sysfs_cpufreq_read_file(cpu, "scaling_available_frequencies",
++	snprintf(fname, MAX_LINE_LEN, "scaling_%s_frequencies", type);
++
++	len = sysfs_cpufreq_read_file(cpu, fname,
+ 				linebuf, sizeof(linebuf));
+ 	if (len == 0)
+ 		return NULL;
+@@ -389,9 +392,9 @@ struct cpufreq_available_frequencies
+ 	return NULL;
+ }
+ 
+-void cpufreq_put_available_frequencies(struct cpufreq_available_frequencies
+-				*any) {
+-	struct cpufreq_available_frequencies *tmp, *next;
++void cpufreq_put_frequencies(struct cpufreq_frequencies *any)
++{
++	struct cpufreq_frequencies *tmp, *next;
+ 
+ 	if (!any)
+ 		return;
+diff --git a/tools/power/cpupower/lib/cpufreq.h b/tools/power/cpupower/lib/cpufreq.h
+index 60beaf5ed2ea..775738269cbf 100644
+--- a/tools/power/cpupower/lib/cpufreq.h
++++ b/tools/power/cpupower/lib/cpufreq.h
+@@ -28,10 +28,10 @@ struct cpufreq_available_governors {
+ 	struct cpufreq_available_governors *first;
+ };
+ 
+-struct cpufreq_available_frequencies {
++struct cpufreq_frequencies {
+ 	unsigned long frequency;
+-	struct cpufreq_available_frequencies *next;
+-	struct cpufreq_available_frequencies *first;
++	struct cpufreq_frequencies *next;
++	struct cpufreq_frequencies *first;
+ };
+ 
+ 
+@@ -129,14 +129,14 @@ void cpufreq_put_available_governors(
+  *
+  * Only present on _some_ ->target() cpufreq drivers. For information purposes
+  * only. Please free allocated memory by calling
+- * cpufreq_put_available_frequencies after use.
++ * cpufreq_put_frequencies after use.
+  */
+ 
+-struct cpufreq_available_frequencies
+-*cpufreq_get_available_frequencies(unsigned int cpu);
++struct cpufreq_frequencies
++*cpufreq_get_frequencies(const char *type, unsigned int cpu);
+ 
+-void cpufreq_put_available_frequencies(
+-		struct cpufreq_available_frequencies *first);
++void cpufreq_put_frequencies(
++		struct cpufreq_frequencies *first);
+ 
+ 
+ /* determine affected CPUs
+diff --git a/tools/power/cpupower/utils/cpufreq-info.c b/tools/power/cpupower/utils/cpufreq-info.c
+index c3f39d5128ee..10290b308797 100644
+--- a/tools/power/cpupower/utils/cpufreq-info.c
++++ b/tools/power/cpupower/utils/cpufreq-info.c
+@@ -161,19 +161,12 @@ static void print_duration(unsigned long duration)
+ 	return;
+ }
+ 
+-/* --boost / -b */
+-
+-static int get_boost_mode(unsigned int cpu)
++static int get_boost_mode_x86(unsigned int cpu)
+ {
+ 	int support, active, b_states = 0, ret, pstate_no, i;
+ 	/* ToDo: Make this more global */
+ 	unsigned long pstates[MAX_HW_PSTATES] = {0,};
+ 
+-	if (cpupower_cpu_info.vendor != X86_VENDOR_AMD &&
+-	    cpupower_cpu_info.vendor != X86_VENDOR_HYGON &&
+-	    cpupower_cpu_info.vendor != X86_VENDOR_INTEL)
+-		return 0;
+-
+ 	ret = cpufreq_has_boost_support(cpu, &support, &active, &b_states);
+ 	if (ret) {
+ 		printf(_("Error while evaluating Boost Capabilities"
+@@ -248,6 +241,33 @@ static int get_boost_mode(unsigned int cpu)
+ 	return 0;
+ }
+ 
++/* --boost / -b */
++
++static int get_boost_mode(unsigned int cpu)
++{
++	struct cpufreq_frequencies *freqs;
++
++	if (cpupower_cpu_info.vendor == X86_VENDOR_AMD ||
++	    cpupower_cpu_info.vendor == X86_VENDOR_HYGON ||
++	    cpupower_cpu_info.vendor == X86_VENDOR_INTEL)
++		return get_boost_mode_x86(cpu);
++
++	freqs = cpufreq_get_frequencies("boost", cpu);
++	if (freqs) {
++		printf(_("  boost frequency steps: "));
++		while (freqs->next) {
++			print_speed(freqs->frequency);
++			printf(", ");
++			freqs = freqs->next;
++		}
++		print_speed(freqs->frequency);
++		printf("\n");
++		cpufreq_put_frequencies(freqs);
++	}
++
++	return 0;
++}
++
+ /* --freq / -f */
+ 
+ static int get_freq_kernel(unsigned int cpu, unsigned int human)
+@@ -456,7 +476,7 @@ static int get_latency(unsigned int cpu, unsigned int human)
+ 
+ static void debug_output_one(unsigned int cpu)
+ {
+-	struct cpufreq_available_frequencies *freqs;
++	struct cpufreq_frequencies *freqs;
+ 
+ 	get_driver(cpu);
+ 	get_related_cpus(cpu);
+@@ -464,7 +484,7 @@ static void debug_output_one(unsigned int cpu)
+ 	get_latency(cpu, 1);
+ 	get_hardware_limits(cpu, 1);
+ 
+-	freqs = cpufreq_get_available_frequencies(cpu);
++	freqs = cpufreq_get_frequencies("available", cpu);
+ 	if (freqs) {
+ 		printf(_("  available frequency steps:  "));
+ 		while (freqs->next) {
+@@ -474,7 +494,7 @@ static void debug_output_one(unsigned int cpu)
+ 		}
+ 		print_speed(freqs->frequency);
+ 		printf("\n");
+-		cpufreq_put_available_frequencies(freqs);
++		cpufreq_put_frequencies(freqs);
+ 	}
+ 
+ 	get_available_governors(cpu);
+
+--------------39D89896C1EFD2AB028F8C2B--
