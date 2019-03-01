@@ -2,131 +2,118 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FBAC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79833C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C702087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:56:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GafHS9ec"
+	by mail.kernel.org (Postfix) with ESMTP id 52AF72087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732781AbfCAI4Q (ORCPT
+        id S1733000AbfCAI5A convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:56:16 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36300 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfCAI4P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:56:15 -0500
-Received: by mail-pl1-f195.google.com with SMTP id k2so11168959plt.3;
-        Fri, 01 Mar 2019 00:56:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RTJhdzszh+3e5Q1RkYoiwnZzWya7sTas3a2TjMKw8sA=;
-        b=GafHS9ecvConHGU3Y1sqZh6lFfqN+8yYX3GWUAMxoQIzoUKtDD24IPTUZ1KAu6JJ6v
-         gsZFm9zZOxCpXAbr0dUYZ7j3v3Do5ysd2eoi2rYi6Zceg4kazrsWmT7PsApeWW4TG3Rs
-         +KfhUdbyuIVKWJ+3BI5QvdElkG6JTx6zkTgFaA5GOQveZNEuDhjg9rhjsQ50ZOiSlyVv
-         b/alEvVeoXyui7fwtAs52cWut3X4goySxDZ8R5CKltTMifq1GuhGH+EkjG5XOBxdBPbM
-         f1o/CLK1mrh6camUJMI6aPFt/q9m84rQIDrFrmKZVSVkMutknM0oHAunE74i4JtRT3m5
-         3o0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RTJhdzszh+3e5Q1RkYoiwnZzWya7sTas3a2TjMKw8sA=;
-        b=X9NZCJCChqWnsXiZjBzNhJ4JuF6m6Eh/tcP7GXkCKH/8zp1fDYPDqiuh+4GnX2BEpE
-         jxVH2GNTbPnNfjjErFj+59y9o4YPTLJ+Sr3pQhFEZf/wYQY9QV9QkoI3Q8NLC0Na4fxb
-         YZYoiDx9fDNN46mnkmS3BEcsP84D3SOJ3izRN55t83MbwijkKaUuAAANDSVSELXNLovb
-         zK9G2R0M3FIufNHKsDQ7gAFXUC4FXR5WQayoLWGW24Z3mHKSs+1sFdeccYUgmcO6Xp1k
-         bNV5IlZ8EllcrcuYWp+geB51c6iARzBTJFQ6c2WzS/CvM8UC4ty2V9TQRddpPUFbO2/0
-         c0hw==
-X-Gm-Message-State: APjAAAUVYDjCttbTTCYoZ8tp4KxoSLES40rnLHrb2nj2LIwzl82r7vVb
-        4Dx14zzYa20/hq6EJ352g+0=
-X-Google-Smtp-Source: APXvYqyLn4WdG5MxDWwh+rwgd8wpE7sEgJ/+hRr/adqaX/l7WPpagexAA3ZLdQxaVGFecqs4/SKOlw==
-X-Received: by 2002:a17:902:586:: with SMTP id f6mr4299378plf.185.1551430574894;
-        Fri, 01 Mar 2019 00:56:14 -0800 (PST)
-Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id u26sm28049553pfn.166.2019.03.01.00.56.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 00:56:13 -0800 (PST)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Trent Piepho <tpiepho@impinj.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: imx6: Don't request "pci_aux" clock on i.MX7
-Date:   Fri,  1 Mar 2019 00:55:59 -0800
-Message-Id: <20190301085559.18736-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 1 Mar 2019 03:57:00 -0500
+Received: from mxhk.zte.com.cn ([63.217.80.70]:8802 "EHLO mxhk.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbfCAI5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 03:57:00 -0500
+Received: from mse01.zte.com.cn (unknown [10.30.3.20])
+        by Forcepoint Email with ESMTPS id 6DC6C3FD8DD54C244F7B;
+        Fri,  1 Mar 2019 16:56:56 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse01.zte.com.cn with ESMTP id x218ul86086315;
+        Fri, 1 Mar 2019 16:56:47 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019030116572652-2498911 ;
+          Fri, 1 Mar 2019 16:57:26 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     liviu.dudau@arm.com
+Cc:     sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
+        linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kgene@kernel.org, krzk@kernel.org,
+        linux-samsung-soc@vger.kernel.org, michal.simek@xilinx.com,
+        afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        dinguyen@kernel.org, heiko@sntech.de,
+        linux-rockchip@lists.infradead.org, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
+        avifishman70@gmail.com, tmaimon77@gmail.com, venture@google.com,
+        yuenn@google.com, brendanhiggins@google.com,
+        openbmc@lists.ozlabs.org, xuwei5@hisilicon.com,
+        maxime.ripard@bootlin.com, wens@csie.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
+        linux-renesas-soc@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de,
+        fabio.estevam@nxp.com, linux-imx@nxp.com, wang.yi59@zte.com.cn,
+        Wen Yang <wen.yang99@zte.com.cn>
+Subject: [PATCH 01/15] ARM: actions: fix a leaked reference by addingmissing of_node_put
+Date:   Fri, 1 Mar 2019 16:56:42 +0800
+Message-Id: <1551430616-42014-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-03-01 16:57:26,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-03-01 16:56:32
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse01.zte.com.cn x218ul86086315
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clock in question is not present on i.MX7, so move the code
-requesting it into i.MX8MQ-only path.
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Fixes: eeb61c4e8530 ("PCI: imx6: Add code to request/control
-"pcie_aux" clock for i.MX8MQ")
-Reported-by: Trent Piepho <tpiepho@impinj.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Trent Piepho <tpiepho@impinj.com>
-Cc: linux-imx@nxp.com
+Detected by coccinelle with the following warnings:
+./arch/arm/mach-actions/platsmp.c:112:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 103, but without a corresponding object release within this function.
+./arch/arm/mach-actions/platsmp.c:124:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 115, but without a corresponding object release within this function.
+./arch/arm/mach-actions/platsmp.c:137:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 128, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "Andreas Färber" <afaerber@suse.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/arm/mach-actions/platsmp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 08f1ee050c73..5fe364a9959d 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1100,8 +1100,14 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
- 		}
- 		break;
--	case IMX7D:
- 	case IMX8MQ:
-+		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
-+		if (IS_ERR(imx6_pcie->pcie_aux)) {
-+			dev_err(dev, "pcie_aux clock source missing or invalid\n");
-+			return PTR_ERR(imx6_pcie->pcie_aux);
-+		}
-+		/* fall through */
-+	case IMX7D:
- 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
- 			imx6_pcie->controller_id = 1;
+diff --git a/arch/arm/mach-actions/platsmp.c b/arch/arm/mach-actions/platsmp.c
+index 4fd479c..1a8e078 100644
+--- a/arch/arm/mach-actions/platsmp.c
++++ b/arch/arm/mach-actions/platsmp.c
+@@ -107,6 +107,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+ 	}
  
-@@ -1118,12 +1124,6 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 			dev_err(dev, "Failed to get PCIE APPS reset control\n");
- 			return PTR_ERR(imx6_pcie->apps_reset);
+ 	timer_base_addr = of_iomap(node, 0);
++	of_node_put(node);
+ 	if (!timer_base_addr) {
+ 		pr_err("%s: could not map timer registers\n", __func__);
+ 		return;
+@@ -119,6 +120,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+ 	}
+ 
+ 	sps_base_addr = of_iomap(node, 0);
++	of_node_put(node);
+ 	if (!sps_base_addr) {
+ 		pr_err("%s: could not map sps registers\n", __func__);
+ 		return;
+@@ -132,6 +134,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
  		}
--
--		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
--		if (IS_ERR(imx6_pcie->pcie_aux)) {
--			dev_err(dev, "pcie_aux clock source missing or invalid\n");
--			return PTR_ERR(imx6_pcie->pcie_aux);
--		}
- 		break;
- 	default:
- 		break;
+ 
+ 		scu_base_addr = of_iomap(node, 0);
++		of_node_put(node);
+ 		if (!scu_base_addr) {
+ 			pr_err("%s: could not map scu registers\n", __func__);
+ 			return;
 -- 
-2.20.1
+2.9.5
 
