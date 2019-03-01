@@ -2,124 +2,190 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF2EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50BAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558B020851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:35:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LkTOTtHf"
+	by mail.kernel.org (Postfix) with ESMTP id 76ED420851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732008AbfCAKfP (ORCPT
+        id S1728508AbfCAKiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 05:35:15 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:55330 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfCAKfP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 05:35:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3Rw/cbOesAa6oP4mwjsqfUjsIumr/hIqFPOBQRbLEiI=; b=LkTOTtHf3ETbZTHtnCwJPu5UW
-        P+aDKWWdo/Agg0PyfuQq/SFuM2kI7oLn0Ca3KWk2bkg1o1fyPFKNkGwC6pZ9QIHSLqTF4YLibjGTJ
-        fNEFEAKai8eCKC+hzs317YOwJQ+DZp9yT0r3lagendJnyfI5v19fPpd4/Z6A2/1NjfB1C/zito8ag
-        JZpc8Xuil1YY0gNukSKWF7NAovgWoH9UcteVqAtBBa5z+wrHRIdF4bfHTtHle5y10fRixDhTPRwIT
-        X1kmhyLe7eX9qAL9axJnk8PmohRgORvap/Y44cPWWJL9JzVjGwiFrleLj2rxQjwFdTs5SJ71lm6gF
-        aGaDqRF4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1gzfVI-0006Uh-Ag; Fri, 01 Mar 2019 10:34:56 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A53562025BA4C; Fri,  1 Mar 2019 11:34:52 +0100 (CET)
-Date:   Fri, 1 Mar 2019 11:34:52 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
+        Fri, 1 Mar 2019 05:38:01 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:32826 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727938AbfCAKiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 05:38:00 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26407EBD;
+        Fri,  1 Mar 2019 02:38:00 -0800 (PST)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C60A3F575;
+        Fri,  1 Mar 2019 02:37:57 -0800 (PST)
+Subject: Re: [kvmtool PATCH v6 6/6] arm/kvm: arm64: Add a vcpu feature for
+ pointer authentication
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: Re: [PATCH 6/8] i915,uaccess: Fix redundant CLAC
-Message-ID: <20190301103452.GQ32534@hirez.programming.kicks-ass.net>
-References: <20190228145450.289603901@infradead.org>
- <20190228150152.540038736@infradead.org>
- <CAHk-=wgsSXxL5c2Lbmbai=bcCgN0G=jPO+gWhQ3a+wx-LTaFkQ@mail.gmail.com>
- <20190228175114.GG32494@hirez.programming.kicks-ass.net>
- <20190228180154.GO32534@hirez.programming.kicks-ass.net>
- <CAHk-=whJww5smbSU2VzvcR7tajNqp=i9ZBYHK3RvwVXbs+V_JQ@mail.gmail.com>
- <20190228190111.GI32494@hirez.programming.kicks-ass.net>
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <1550568271-5319-1-git-send-email-amit.kachhap@arm.com>
+ <1550568271-5319-7-git-send-email-amit.kachhap@arm.com>
+ <20190221155409.GA3567@e103592.cambridge.arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <048f772a-1faf-5fa3-d82c-25212a5104af@arm.com>
+Date:   Fri, 1 Mar 2019 16:07:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228190111.GI32494@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190221155409.GA3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 08:01:11PM +0100, Peter Zijlstra wrote:
-> On Thu, Feb 28, 2019 at 10:29:25AM -0800, Linus Torvalds wrote:
-> > On Thu, Feb 28, 2019 at 10:02 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > Weird, that jump is from C, not from a .fixup table. objtool _should_
-> > > see that and complain if there is a AC=1 path that reaches RET.
-> > 
-> > No, unsafe_put_user() actually does the "asm goto" thing, so the jump
-> > is literally hidden as an exception entry. And apparently objtool
-> > doesn't follow exceptions (which *normally* doesn't matter for code
-> > liveness analysis since they normally jump back to right after the
-> > excepting instruction, but maybe it misses some exception handling
-> > code because of it?).
-> > 
-> > You may have looked at unsafe_get_user(), which does indeed make the
-> > branch as C code, because gcc currently does not allow outputs from
-> > "asm goto" statements (which "get" obviously needs).
+Hi,
+
+On 2/21/19 9:24 PM, Dave Martin wrote:
+> On Tue, Feb 19, 2019 at 02:54:31PM +0530, Amit Daniel Kachhap wrote:
+>> This is a runtime capabality for KVM tool to enable Armv8.3 Pointer
+>> Authentication in guest kernel. A command line option --ptrauth is
+>> required for this.
+>>
+>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> ---
+>>   arm/aarch32/include/kvm/kvm-cpu-arch.h    | 1 +
+>>   arm/aarch64/include/asm/kvm.h             | 1 +
+>>   arm/aarch64/include/kvm/kvm-config-arch.h | 4 +++-
+>>   arm/aarch64/include/kvm/kvm-cpu-arch.h    | 1 +
+>>   arm/include/arm-common/kvm-config-arch.h  | 1 +
+>>   arm/kvm-cpu.c                             | 6 ++++++
+>>   include/linux/kvm.h                       | 1 +
+>>   7 files changed, 14 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arm/aarch32/include/kvm/kvm-cpu-arch.h b/arm/aarch32/include/kvm/kvm-cpu-arch.h
+>> index d28ea67..520ea76 100644
+>> --- a/arm/aarch32/include/kvm/kvm-cpu-arch.h
+>> +++ b/arm/aarch32/include/kvm/kvm-cpu-arch.h
+>> @@ -13,4 +13,5 @@
+>>   #define ARM_CPU_ID		0, 0, 0
+>>   #define ARM_CPU_ID_MPIDR	5
+>>   
+>> +#define ARM_VCPU_PTRAUTH_FEATURE	0
+>>   #endif /* KVM__KVM_CPU_ARCH_H */
+>> diff --git a/arm/aarch64/include/asm/kvm.h b/arm/aarch64/include/asm/kvm.h
+>> index 97c3478..1068fd1 100644
+>> --- a/arm/aarch64/include/asm/kvm.h
+>> +++ b/arm/aarch64/include/asm/kvm.h
+>> @@ -102,6 +102,7 @@ struct kvm_regs {
+>>   #define KVM_ARM_VCPU_EL1_32BIT		1 /* CPU running a 32bit VM */
+>>   #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
+>>   #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
+>> +#define KVM_ARM_VCPU_PTRAUTH		4 /* CPU uses pointer authentication */
+>>   
+>>   struct kvm_vcpu_init {
+>>   	__u32 target;
+>> diff --git a/arm/aarch64/include/kvm/kvm-config-arch.h b/arm/aarch64/include/kvm/kvm-config-arch.h
+>> index 04be43d..2074684 100644
+>> --- a/arm/aarch64/include/kvm/kvm-config-arch.h
+>> +++ b/arm/aarch64/include/kvm/kvm-config-arch.h
+>> @@ -8,7 +8,9 @@
+>>   			"Create PMUv3 device"),				\
+>>   	OPT_U64('\0', "kaslr-seed", &(cfg)->kaslr_seed,			\
+>>   			"Specify random seed for Kernel Address Space "	\
+>> -			"Layout Randomization (KASLR)"),
+>> +			"Layout Randomization (KASLR)"),		\
+>> +	OPT_BOOLEAN('\0', "ptrauth", &(cfg)->has_ptrauth,		\
+>> +			"Enable address authentication"),
 > 
-> Indeed I did. But it looks like objtool actually does parse .fixup. What
-> appears to go wrong is the 'visited' marker for backward jumps.
+> Nit: doesn't this enable address *and* generic authentication?  The
+> discussion on what capababilities and enables the ABI exposes probably
+> needs to conclude before we can finalise this here.
+ok.
 > 
-> If we've been there with AC=0 first, and then backjump with AC=1, things
-> go missing.
+> However, I would recommend that we provide a single option here that
+> turns both address authentication and generic authentication on, even
+> if the ABI treats them independently.  This is expected to be the common
+> case by far.
+ok
 > 
-> I've also now confused myself on how it branches from alternatives. It
-> looks like it now considers paths that take the STAC alternative, and
-> exit through the NOP alternative (which should be CLAC) and then hit
-> RET with AC=1.
+> We can always add more fine-grained options later if it turns out to be
+> necessary.
+Mark suggested to provide 2 flags [1] for Address and Generic 
+authentication so I was thinking of adding 2 features like,
+
++#define KVM_ARM_VCPU_PTRAUTH_ADDR		4 /* CPU uses pointer address 
+authentication */
++#define KVM_ARM_VCPU_PTRAUTH_GENERIC		5 /* CPU uses pointer generic 
+authentication */
+
+And supply both of them concatenated in VCPU_INIT stage. Kernel KVM 
+would expect both feature requested together.
+
+[1]: https://www.spinics.net/lists/arm-kernel/msg709181.html
 > 
-> I'll get this sorted, eventually..
+>>   #include "arm-common/kvm-config-arch.h"
+>>   
+>> diff --git a/arm/aarch64/include/kvm/kvm-cpu-arch.h b/arm/aarch64/include/kvm/kvm-cpu-arch.h
+>> index a9d8563..496ece8 100644
+>> --- a/arm/aarch64/include/kvm/kvm-cpu-arch.h
+>> +++ b/arm/aarch64/include/kvm/kvm-cpu-arch.h
+>> @@ -17,4 +17,5 @@
+>>   #define ARM_CPU_CTRL		3, 0, 1, 0
+>>   #define ARM_CPU_CTRL_SCTLR_EL1	0
+>>   
+>> +#define ARM_VCPU_PTRAUTH_FEATURE	(1UL << KVM_ARM_VCPU_PTRAUTH)
+>>   #endif /* KVM__KVM_CPU_ARCH_H */
+>> diff --git a/arm/include/arm-common/kvm-config-arch.h b/arm/include/arm-common/kvm-config-arch.h
+>> index 5734c46..5badcbd 100644
+>> --- a/arm/include/arm-common/kvm-config-arch.h
+>> +++ b/arm/include/arm-common/kvm-config-arch.h
+>> @@ -10,6 +10,7 @@ struct kvm_config_arch {
+>>   	bool		aarch32_guest;
+>>   	bool		has_pmuv3;
+>>   	u64		kaslr_seed;
+>> +	bool		has_ptrauth;
+>>   	enum irqchip_type irqchip;
+>>   	u64		fw_addr;
+>>   };
+>> diff --git a/arm/kvm-cpu.c b/arm/kvm-cpu.c
+>> index 7780251..4ac80f8 100644
+>> --- a/arm/kvm-cpu.c
+>> +++ b/arm/kvm-cpu.c
+>> @@ -68,6 +68,12 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
+>>   		vcpu_init.features[0] |= (1UL << KVM_ARM_VCPU_PSCI_0_2);
+>>   	}
+>>   
+>> +	/* Set KVM_ARM_VCPU_PTRAUTH if available */
+>> +	if (kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH)) {
+>> +		if (kvm->cfg.arch.has_ptrauth)
+>> +			vcpu_init.features[0] |= ARM_VCPU_PTRAUTH_FEATURE;
+>> +	}
+>> +
+> 
+> I'm not too keen on requiring a dummy #define for AArch32 here.  How do
+> we handle other subarch-specific feature flags?  Is there something we
+> can reuse?
+I will check it.
 
-Ha!
-
-Original file:
-
-CC      drivers/gpu/drm/i915/i915_gem_execbuffer.o
-drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x3c: redundant UACCESS disable
-drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x66: redundant UACCESS disable
-
-With the dodgy patch:
-
-CC      drivers/gpu/drm/i915/i915_gem_execbuffer.o
-drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: eb_relocate_slow()+0x1f9: call to kvfree() with UACCESS enabled
-drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x315: call to kvfree() with UACCESS enabled
-
-
-Let me do an allmodconfig build to see how much pain is caused by that
-redundant CLAC warning.
+Thanks,
+Amit D
+> 
+> (For SVE I didn''t have a proper solution for this yet: my kvmtool
+> patches are still a dirty hack...)
+> 
+> [...]
+> 
+> Cheers
+> ---Dave
+> 
