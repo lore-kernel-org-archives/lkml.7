@@ -2,104 +2,267 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0256AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7611C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A242186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:56:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4ZzkTeu"
+	by mail.kernel.org (Postfix) with ESMTP id 958832084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbfCAG4z (ORCPT
+        id S1730988AbfCAG5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 01:56:55 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39584 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfCAG4z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 01:56:55 -0500
-Received: by mail-wm1-f67.google.com with SMTP id z84so11146814wmg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 22:56:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EnJpbJX/w2+VAaY+0Mw8fEugcfDzQ6872JX5Qhk7Qs4=;
-        b=X4ZzkTeuLYXTQ5R2VsG6OaSfWrTUrST63QLVbfpyaZyhVBsZWNl+j6bBemzUaHwIRq
-         PRPnVME/mKiFYyjutpnEM5Wlukw8vWBnD81MO8BsRpMIw5g7banx6ixYHpS0BEyF/jl2
-         nCDwJtaQ6Y1TuipOxVHJXxdQE3hfobcOuzqxrrW5+d5Uo+0CzcziihIs7sQowHAuNBh/
-         cSE2JseOoGHndA+oqKJ59Luk7lenu0gyvNhkVMfFI2Ler2kZK1iPQinJETsWchMoV0/5
-         8+RLzW5baBaXxPYU7uxt2mFpfS5reKB1JXI9rPWxcOSpXwQGursQN8h6N1AOAODefaS2
-         Ke/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EnJpbJX/w2+VAaY+0Mw8fEugcfDzQ6872JX5Qhk7Qs4=;
-        b=RrDCTthYF8gJGHyBnJh0zm/wQ2k/i+67xwfkEqCsb3AEFHivMxdOrjIDDet5fa+zuK
-         vssfSIiYYRI1ZAqz62BhgPxLJOMYNFGkUVpBB6cwg8tIn4Heaf7ypcss5K+LplquRO7V
-         aKm7gWhPFZ135tkaI8/dEOFl7AjLTy3QTOVB/V67piOx3lwK+n77tXUpPmnXayk9d9Pp
-         NwzBFwGXQd7vv/iIAXw+efdv4GPlVbclKLaPlQBq8x0P51sdkONeeRHJRsPTNxs+7hKJ
-         UGHcxei7RpKAXnosgIZIycLQnNkAAeo6NQeuxIaiGMkXLKVRX8NW1iGfRFWjkQDaRipy
-         +7MA==
-X-Gm-Message-State: AHQUAuYeVoHUAu9EJ24PEudfOir0lHLRtMgJ2bhJdZRNRO7x2p7gXaui
-        M4kQlVBsEvEPSBtXYQjpHw==
-X-Google-Smtp-Source: AHgI3IYjQLp480/EaDIKB/qf+RHAFdcKetVFPvW1zDfPb5TlT/T5RHhZaDPaUsTBU/V4HWQ8w+Hv5Q==
-X-Received: by 2002:a1c:4e09:: with SMTP id g9mr1977499wmh.56.1551423413407;
-        Thu, 28 Feb 2019 22:56:53 -0800 (PST)
-Received: from avx2 ([46.53.240.236])
-        by smtp.gmail.com with ESMTPSA id k6sm29850497wrq.82.2019.02.28.22.56.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 22:56:52 -0800 (PST)
-Date:   Fri, 1 Mar 2019 09:56:50 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        wang.bo116@zte.com.cn, WangBo <wdjjwb@163.com>
-Subject: Re: +
- include-linux-typesh-use-unsigned-int-instead-of-unsigned.patch added to -mm
- tree
-Message-ID: <20190301065650.GA10954@avx2>
-References: <20190228174109.MrWZN%akpm@linux-foundation.org>
- <20190228211126.GA28901@avx2>
- <CAK7LNAQv4giq5r4AKv4Ff1KP7k7US2Sdt=m1ZAXsDmKWKhZ9vQ@mail.gmail.com>
+        Fri, 1 Mar 2019 01:57:12 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58582 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728047AbfCAG5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 01:57:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B32BDEBD;
+        Thu, 28 Feb 2019 22:57:11 -0800 (PST)
+Received: from [172.20.0.134] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D80833F5C1;
+        Thu, 28 Feb 2019 22:57:10 -0800 (PST)
+Subject: Re: [PATCH v5 04/10] arm64: Advertise mitigation of Spectre-v2, or
+ lack thereof
+To:     Jeremy Linton <jeremy.linton@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
+        suzuki.poulose@arm.com, Dave.Martin@arm.com,
+        shankerd@codeaurora.org, julien.thierry@arm.com,
+        mlangsdo@redhat.com, stefan.wahren@i2e.com,
+        linux-kernel@vger.kernel.org
+References: <20190227010544.597579-1-jeremy.linton@arm.com>
+ <20190227010544.597579-5-jeremy.linton@arm.com>
+From:   Andre Przywara <andre.przywara@arm.com>
+Message-ID: <cb2721df-a2c5-24ae-0841-5f481a03293a@foss.arm.com>
+Date:   Fri, 1 Mar 2019 00:57:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQv4giq5r4AKv4Ff1KP7k7US2Sdt=m1ZAXsDmKWKhZ9vQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190227010544.597579-5-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 09:13:27AM +0900, Masahiro Yamada wrote:
-> On Fri, Mar 1, 2019 at 7:08 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> >
-> > On Thu, Feb 28, 2019 at 09:41:09AM -0800, akpm@linux-foundation.org wrote:
-> > > --- a/include/linux/types.h~include-linux-typesh-use-unsigned-int-instead-of-unsigned
-> > > +++ a/include/linux/types.h
-> > > @@ -155,9 +155,9 @@ typedef u64 dma_addr_t;
-> > >  typedef u32 dma_addr_t;
-> > >  #endif
-> > >
-> > > -typedef unsigned __bitwise gfp_t;
-> > > -typedef unsigned __bitwise slab_flags_t;
-> > > -typedef unsigned __bitwise fmode_t;
-> > > +typedef unsigned int __bitwise gfp_t;
-> > > +typedef unsigned int __bitwise slab_flags_t;
-> > > +typedef unsigned int __bitwise fmode_t;
-> >
-> > I don't know if this is desireable. Switching to "unsigned" is better:
-> > 1 less token and less 80 column pressure.
-> 
-> 
-> 
-> See the following commit.
+Hi,
 
-Ah, checkpatch.pl, how could we live without it.
+On 2/26/19 7:05 PM, Jeremy Linton wrote:
+> From: Marc Zyngier <marc.zyngier@arm.com>
+> 
+> We currently have a list of CPUs affected by Spectre-v2, for which
+> we check that the firmware implements ARCH_WORKAROUND_1. It turns
+> out that not all firmwares do implement the required mitigation,
+> and that we fail to let the user know about it.
+> 
+> Instead, let's slightly revamp our checks, and rely on a whitelist
+> of cores that are known to be non-vulnerable, and let the user know
+> the status of the mitigation in the kernel log.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> [This makes more sense in front of the sysfs patch]
+> [Pick pieces of that patch into this and move it earlier]
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+
+Indeed a whitelist is much better.
+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre.
+
+> ---
+>   arch/arm64/kernel/cpu_errata.c | 108 +++++++++++++++++----------------
+>   1 file changed, 56 insertions(+), 52 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> index ad58958becb6..c8972255b365 100644
+> --- a/arch/arm64/kernel/cpu_errata.c
+> +++ b/arch/arm64/kernel/cpu_errata.c
+> @@ -131,9 +131,9 @@ static void __copy_hyp_vect_bpi(int slot, const char *hyp_vecs_start,
+>   	__flush_icache_range((uintptr_t)dst, (uintptr_t)dst + SZ_2K);
+>   }
+>   
+> -static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
+> -				      const char *hyp_vecs_start,
+> -				      const char *hyp_vecs_end)
+> +static void install_bp_hardening_cb(bp_hardening_cb_t fn,
+> +				    const char *hyp_vecs_start,
+> +				    const char *hyp_vecs_end)
+>   {
+>   	static DEFINE_RAW_SPINLOCK(bp_lock);
+>   	int cpu, slot = -1;
+> @@ -177,23 +177,6 @@ static void __install_bp_hardening_cb(bp_hardening_cb_t fn,
+>   }
+>   #endif	/* CONFIG_KVM_INDIRECT_VECTORS */
+>   
+> -static void  install_bp_hardening_cb(const struct arm64_cpu_capabilities *entry,
+> -				     bp_hardening_cb_t fn,
+> -				     const char *hyp_vecs_start,
+> -				     const char *hyp_vecs_end)
+> -{
+> -	u64 pfr0;
+> -
+> -	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
+> -		return;
+> -
+> -	pfr0 = read_cpuid(ID_AA64PFR0_EL1);
+> -	if (cpuid_feature_extract_unsigned_field(pfr0, ID_AA64PFR0_CSV2_SHIFT))
+> -		return;
+> -
+> -	__install_bp_hardening_cb(fn, hyp_vecs_start, hyp_vecs_end);
+> -}
+> -
+>   #include <uapi/linux/psci.h>
+>   #include <linux/arm-smccc.h>
+>   #include <linux/psci.h>
+> @@ -228,31 +211,27 @@ static int __init parse_nospectre_v2(char *str)
+>   }
+>   early_param("nospectre_v2", parse_nospectre_v2);
+>   
+> -static void
+> -enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
+> +/*
+> + * -1: No workaround
+> + *  0: No workaround required
+> + *  1: Workaround installed
+> + */
+> +static int detect_harden_bp_fw(void)
+>   {
+>   	bp_hardening_cb_t cb;
+>   	void *smccc_start, *smccc_end;
+>   	struct arm_smccc_res res;
+>   	u32 midr = read_cpuid_id();
+>   
+> -	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
+> -		return;
+> -
+> -	if (__nospectre_v2) {
+> -		pr_info_once("spectrev2 mitigation disabled by command line option\n");
+> -		return;
+> -	}
+> -
+>   	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
+> -		return;
+> +		return -1;
+>   
+>   	switch (psci_ops.conduit) {
+>   	case PSCI_CONDUIT_HVC:
+>   		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+>   				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
+>   		if ((int)res.a0 < 0)
+> -			return;
+> +			return -1;
+>   		cb = call_hvc_arch_workaround_1;
+>   		/* This is a guest, no need to patch KVM vectors */
+>   		smccc_start = NULL;
+> @@ -263,23 +242,23 @@ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
+>   		arm_smccc_1_1_smc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
+>   				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
+>   		if ((int)res.a0 < 0)
+> -			return;
+> +			return -1;
+>   		cb = call_smc_arch_workaround_1;
+>   		smccc_start = __smccc_workaround_1_smc_start;
+>   		smccc_end = __smccc_workaround_1_smc_end;
+>   		break;
+>   
+>   	default:
+> -		return;
+> +		return -1;
+>   	}
+>   
+>   	if (((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR) ||
+>   	    ((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR_V1))
+>   		cb = qcom_link_stack_sanitization;
+>   
+> -	install_bp_hardening_cb(entry, cb, smccc_start, smccc_end);
+> +	install_bp_hardening_cb(cb, smccc_start, smccc_end);
+>   
+> -	return;
+> +	return 1;
+>   }
+>   #endif	/* CONFIG_HARDEN_BRANCH_PREDICTOR */
+>   
+> @@ -521,24 +500,49 @@ cpu_enable_cache_maint_trap(const struct arm64_cpu_capabilities *__unused)
+>   	CAP_MIDR_RANGE_LIST(midr_list)
+>   
+>   #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
+> -
+>   /*
+> - * List of CPUs where we need to issue a psci call to
+> - * harden the branch predictor.
+> + * List of CPUs that do not need any Spectre-v2 mitigation at all.
+>    */
+> -static const struct midr_range arm64_bp_harden_smccc_cpus[] = {
+> -	MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
+> -	MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
+> -	MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
+> -	MIDR_ALL_VERSIONS(MIDR_CORTEX_A75),
+> -	MIDR_ALL_VERSIONS(MIDR_BRCM_VULCAN),
+> -	MIDR_ALL_VERSIONS(MIDR_CAVIUM_THUNDERX2),
+> -	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR_V1),
+> -	MIDR_ALL_VERSIONS(MIDR_QCOM_FALKOR),
+> -	MIDR_ALL_VERSIONS(MIDR_NVIDIA_DENVER),
+> -	{},
+> +static const struct midr_range spectre_v2_safe_list[] = {
+> +	MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
+> +	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
+> +	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
+> +	{ /* sentinel */ }
+>   };
+>   
+> +static bool __maybe_unused
+> +check_branch_predictor(const struct arm64_cpu_capabilities *entry, int scope)
+> +{
+> +	int need_wa;
+> +
+> +	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
+> +
+> +	/* If the CPU has CSV2 set, we're safe */
+> +	if (cpuid_feature_extract_unsigned_field(read_cpuid(ID_AA64PFR0_EL1),
+> +						 ID_AA64PFR0_CSV2_SHIFT))
+> +		return false;
+> +
+> +	/* Alternatively, we have a list of unaffected CPUs */
+> +	if (is_midr_in_range_list(read_cpuid_id(), spectre_v2_safe_list))
+> +		return false;
+> +
+> +	/* Fallback to firmware detection */
+> +	need_wa = detect_harden_bp_fw();
+> +	if (!need_wa)
+> +		return false;
+> +
+> +	/* forced off */
+> +	if (__nospectre_v2) {
+> +		pr_info_once("spectrev2 mitigation disabled by command line option\n");
+> +		return false;
+> +	}
+> +
+> +	if (need_wa < 0)
+> +		pr_warn_once("ARM_SMCCC_ARCH_WORKAROUND_1 missing from firmware\n");
+> +
+> +	return (need_wa > 0);
+> +}
+> +
+>   #endif
+>   
+>   #ifdef CONFIG_HARDEN_EL2_VECTORS
+> @@ -717,8 +721,8 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+>   #ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
+>   	{
+>   		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
+> -		.cpu_enable = enable_smccc_arch_workaround_1,
+> -		ERRATA_MIDR_RANGE_LIST(arm64_bp_harden_smccc_cpus),
+> +		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
+> +		.matches = check_branch_predictor,
+>   	},
+>   #endif
+>   #ifdef CONFIG_HARDEN_EL2_VECTORS
+> 
