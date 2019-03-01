@@ -2,291 +2,74 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB6FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A25FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F2E2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F522085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551455219;
+	bh=wn4shBjv4kR9CPry+pyJA07oaTWXrN/IAMXCw0EBtso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=InsMrQXXU0MrBWyFHGQQGNeo937jTlrvYJpq3S8C0Sp6fNi29b5ofZH3UslogPm0U
+	 pSGBmn1YYtnPHn67FQc4jGsXCZSF2vBKgyYJbnvxMn/FxWJ0NOwE6QpDgRiUi+4sw+
+	 4ZCOEbYTMmFpMZsjL/RVW7JZtE+cbGTD80ai4ybI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbfCAPqg (ORCPT
+        id S2387963AbfCAPq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 10:46:36 -0500
-Received: from mga12.intel.com ([192.55.52.136]:44416 "EHLO mga12.intel.com"
+        Fri, 1 Mar 2019 10:46:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbfCAPqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 10:46:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 07:46:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,428,1544515200"; 
-   d="scan'208";a="138275566"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 01 Mar 2019 07:46:35 -0800
-Received: from [10.252.14.197] (abudanko-mobl.ccr.corp.intel.com [10.252.14.197])
-        by linux.intel.com (Postfix) with ESMTP id E0211580487;
-        Fri,  1 Mar 2019 07:46:32 -0800 (PST)
-Subject: [PATCH v5 04/10] perf record: implement COMPRESSED event record and
- its attributes
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <fb4d9e55-84b7-7c18-2f72-f9d67da7e03f@linux.intel.com>
-Date:   Fri, 1 Mar 2019 18:46:31 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1728172AbfCAPq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 10:46:57 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9510A20851;
+        Fri,  1 Mar 2019 15:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551455217;
+        bh=wn4shBjv4kR9CPry+pyJA07oaTWXrN/IAMXCw0EBtso=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OUa07itjb/M5bIjvwjQqPOrfR7eRR61Yl6gfiUH2rlkqqbgE9kvhmXWhsHkuuhVqt
+         Hb8iixBgC5yJgTSUMvqy8oFIyRQn3Xyj/8dIJdw/ASCcwDpPPfX/L6+HYrnsfl6F7d
+         U32qbPZBCfYSIKnxzsu+7wLBFv0Li/dP3iDslLDQ=
+Date:   Fri, 1 Mar 2019 16:46:54 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@microsoft.com, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Hyper-V commits for v5.1
+Message-ID: <20190301154654.GA4270@kroah.com>
+References: <20190301151621.486D92084F@mail.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190301151621.486D92084F@mail.kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 01, 2019 at 10:16:20AM -0500, Sasha Levin wrote:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA512
+> 
+> The following changes since commit 8834f5600cf3c8db365e18a3d5cac2c2780c81e5:
+> 
+>   Linux 5.0-rc5 (2019-02-03 13:48:04 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
 
-Implemented PERF_RECORD_COMPRESSED event, related data types, header
-feature and functions to write, read and print feature attributes
-from the trace header section.
+pulled and pushed out, thanks.
 
-comp_mmap_len preserves the size of mmaped kernel buffer that was used
-during collection. comp_mmap_len size is used on loading stage as the
-size of decomp buffer for decompression of COMPRESSED events content.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-record.c |  9 ++++++
- tools/perf/perf.h           |  1 +
- tools/perf/util/env.h       | 10 +++++++
- tools/perf/util/event.c     |  1 +
- tools/perf/util/event.h     |  7 +++++
- tools/perf/util/header.c    | 55 ++++++++++++++++++++++++++++++++++++-
- tools/perf/util/header.h    |  1 +
- 7 files changed, 83 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index ab121bc27c6d..9eae28d77291 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -357,6 +357,11 @@ static int record__mmap_flush_parse(const struct option *opt,
- 	return 0;
- }
- 
-+static int record__comp_enabled(struct record *rec)
-+{
-+	return rec->opts.comp_level > 0;
-+}
-+
- static int process_synthesized_event(struct perf_tool *tool,
- 				     union perf_event *event,
- 				     struct perf_sample *sample __maybe_unused,
-@@ -872,6 +877,9 @@ static void record__init_features(struct record *rec)
- 	if (!(rec->opts.use_clockid && rec->opts.clockid_res_ns))
- 		perf_header__clear_feat(&session->header, HEADER_CLOCKID);
- 
-+	if (!record__comp_enabled(rec))
-+		perf_header__clear_feat(&session->header, HEADER_COMPRESSED);
-+
- 	perf_header__clear_feat(&session->header, HEADER_STAT);
- }
- 
-@@ -1210,6 +1218,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		err = -1;
- 		goto out_child;
- 	}
-+	session->header.env.comp_mmap_len = session->evlist->mmap_len;
- 
- 	err = bpf__apply_obj_config();
- 	if (err) {
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index 7886cc9771cf..2c6caad45b10 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -86,6 +86,7 @@ struct record_opts {
- 	int	     nr_cblocks;
- 	int	     affinity;
- 	int	     mmap_flush;
-+	unsigned int comp_level;
- };
- 
- enum perf_affinity {
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index fb39e9af128f..7990d63ab764 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -65,6 +65,16 @@ struct perf_env {
- 	unsigned long long	 memory_bsize;
- 	u64                     clockid_res_ns;
- 	u32                     comp_ratio;
-+	u32			comp_ver;
-+	u32			comp_type;
-+	u32			comp_level;
-+	u32			comp_mmap_len;
-+};
-+
-+enum perf_compress_type {
-+	PERF_COMP_NONE = 0,
-+	PERF_COMP_ZSTD,
-+	PERF_COMP_MAX
- };
- 
- extern struct perf_env perf_env;
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index ba7be74fad6e..d1ad6c419724 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -68,6 +68,7 @@ static const char *perf_event__names[] = {
- 	[PERF_RECORD_EVENT_UPDATE]		= "EVENT_UPDATE",
- 	[PERF_RECORD_TIME_CONV]			= "TIME_CONV",
- 	[PERF_RECORD_HEADER_FEATURE]		= "FEATURE",
-+	[PERF_RECORD_COMPRESSED]		= "COMPRESSED",
- };
- 
- static const char *perf_ns__names[] = {
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 36ae7e92dab1..8a13aefe734e 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -254,6 +254,7 @@ enum perf_user_event_type { /* above any possible kernel type */
- 	PERF_RECORD_EVENT_UPDATE		= 78,
- 	PERF_RECORD_TIME_CONV			= 79,
- 	PERF_RECORD_HEADER_FEATURE		= 80,
-+	PERF_RECORD_COMPRESSED			= 81,
- 	PERF_RECORD_HEADER_MAX
- };
- 
-@@ -626,6 +627,11 @@ struct feature_event {
- 	char				data[];
- };
- 
-+struct compressed_event {
-+	struct perf_event_header	header;
-+	char				data[];
-+};
-+
- union perf_event {
- 	struct perf_event_header	header;
- 	struct mmap_event		mmap;
-@@ -659,6 +665,7 @@ union perf_event {
- 	struct feature_event		feat;
- 	struct ksymbol_event		ksymbol_event;
- 	struct bpf_event		bpf_event;
-+	struct compressed_event		pack;
- };
- 
- void perf_event__print_totals(void);
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 01b324c275b9..5dadc6e4df76 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1244,6 +1244,30 @@ static int write_mem_topology(struct feat_fd *ff __maybe_unused,
- 	return ret;
- }
- 
-+static int write_compressed(struct feat_fd *ff __maybe_unused,
-+			    struct perf_evlist *evlist __maybe_unused)
-+{
-+	int ret;
-+
-+	ret = do_write(ff, &(ff->ph->env.comp_ver), sizeof(ff->ph->env.comp_ver));
-+	if (ret)
-+		return ret;
-+
-+	ret = do_write(ff, &(ff->ph->env.comp_type), sizeof(ff->ph->env.comp_type));
-+	if (ret)
-+		return ret;
-+
-+	ret = do_write(ff, &(ff->ph->env.comp_level), sizeof(ff->ph->env.comp_level));
-+	if (ret)
-+		return ret;
-+
-+	ret = do_write(ff, &(ff->ph->env.comp_ratio), sizeof(ff->ph->env.comp_ratio));
-+	if (ret)
-+		return ret;
-+
-+	return do_write(ff, &(ff->ph->env.comp_mmap_len), sizeof(ff->ph->env.comp_mmap_len));
-+}
-+
- static void print_hostname(struct feat_fd *ff, FILE *fp)
- {
- 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
-@@ -1531,6 +1555,13 @@ static void print_cache(struct feat_fd *ff, FILE *fp __maybe_unused)
- 	}
- }
- 
-+static void print_compressed(struct feat_fd *ff, FILE *fp)
-+{
-+	fprintf(fp, "# compressed : %s, level = %d, ratio = %d\n",
-+		ff->ph->env.comp_type == PERF_COMP_ZSTD ? "Zstd" : "Unknown",
-+		ff->ph->env.comp_level, ff->ph->env.comp_ratio);
-+}
-+
- static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
- {
- 	const char *delimiter = "# pmu mappings: ";
-@@ -2373,6 +2404,27 @@ static int process_clockid(struct feat_fd *ff,
- 	return 0;
- }
- 
-+static int process_compressed(struct feat_fd *ff,
-+			      void *data __maybe_unused)
-+{
-+	if (do_read_u32(ff, &(ff->ph->env.comp_ver)))
-+		return -1;
-+
-+	if (do_read_u32(ff, &(ff->ph->env.comp_type)))
-+		return -1;
-+
-+	if (do_read_u32(ff, &(ff->ph->env.comp_level)))
-+		return -1;
-+
-+	if (do_read_u32(ff, &(ff->ph->env.comp_ratio)))
-+		return -1;
-+
-+	if (do_read_u32(ff, &(ff->ph->env.comp_mmap_len)))
-+		return -1;
-+
-+	return 0;
-+}
-+
- struct feature_ops {
- 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
- 	void (*print)(struct feat_fd *ff, FILE *fp);
-@@ -2432,7 +2484,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPN(CACHE,		cache,		true),
- 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
- 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
--	FEAT_OPR(CLOCKID,       clockid,        false)
-+	FEAT_OPR(CLOCKID,       clockid,        false),
-+	FEAT_OPR(COMPRESSED,	compressed,	false)
- };
- 
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 0d553ddca0a3..ee867075dc64 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -39,6 +39,7 @@ enum {
- 	HEADER_SAMPLE_TIME,
- 	HEADER_MEM_TOPOLOGY,
- 	HEADER_CLOCKID,
-+	HEADER_COMPRESSED,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
--- 
-2.20.1
-
+greg k-h
