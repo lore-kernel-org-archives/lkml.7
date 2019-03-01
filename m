@@ -6,112 +6,224 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997ACC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32732C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 721842087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A912087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387522AbfCAIsx (ORCPT
+        id S1732870AbfCAItU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:48:53 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21729 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726957AbfCAIsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:48:17 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x218lESg021269;
-        Fri, 1 Mar 2019 09:48:08 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qtv6dajg6-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 01 Mar 2019 09:48:08 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8B41F38;
-        Fri,  1 Mar 2019 08:48:07 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 43BBB2B18;
-        Fri,  1 Mar 2019 08:48:07 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 1 Mar 2019
- 09:48:07 +0100
-Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
- (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 1 Mar 2019
- 09:48:06 +0100
-From:   Ludovic Barre <ludovic.Barre@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH  7/7] ARM: dts: stm32: add sdmmc1 support on stm32mp157a dk1 board
-Date:   Fri, 1 Mar 2019 09:47:48 +0100
-Message-ID: <1551430068-9456-8-git-send-email-ludovic.Barre@st.com>
+        Fri, 1 Mar 2019 03:49:20 -0500
+Received: from mga04.intel.com ([192.55.52.120]:55522 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbfCAItT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 03:49:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 00:49:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,426,1544515200"; 
+   d="scan'208";a="151096993"
+Received: from shbuild999.sh.intel.com ([10.239.147.118])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2019 00:49:16 -0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org
+Cc:     Feng Tang <feng.tang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v6] panic: Avoid the extra noise dmesg
+Date:   Fri,  1 Mar 2019 16:49:46 +0800
+Message-Id: <1551430186-24169-1-git-send-email-feng.tang@intel.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551430068-9456-1-git-send-email-ludovic.Barre@st.com>
-References: <1551430068-9456-1-git-send-email-ludovic.Barre@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.237]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_07:,,
- signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+When kernel panic happens, it will first print the panic call stack,
+then the ending msg like:
 
-This patch adds sdmmc1 support on stm32mp157a dk1 board.
+[   35.743249] ---[ end Kernel panic - not syncing: Fatal exception
+[   35.749975] ------------[ cut here ]------------
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+The above message are very useful for debugging.
+
+But if system is configured to not reboot on panic, say the "panic_timeout"
+parameter equals 0, it will likely print out many noisy message like
+WARN() call stack for each and every CPU except the panic one, messages
+like below:
+
+	WARNING: CPU: 1 PID: 280 at kernel/sched/core.c:1198 set_task_cpu+0x183/0x190
+	Call Trace:
+	<IRQ>
+	try_to_wake_up
+	default_wake_function
+	autoremove_wake_function
+	__wake_up_common
+	__wake_up_common_lock
+	__wake_up
+	wake_up_klogd_work_func
+	irq_work_run_list
+	irq_work_tick
+	update_process_times
+	tick_sched_timer
+	__hrtimer_run_queues
+	hrtimer_interrupt
+	smp_apic_timer_interrupt
+	apic_timer_interrupt
+
+For people working in console mode, the screen will first show the panic
+call stack, but immediately overridden by these noisy extra messages, which
+makes debugging much more difficult, as the original context gets lost on
+screen.
+
+Also these noisy messages will confuse some users, as I have seen many bug
+reporters posted the noisy message into bugzilla, instead of the real panic
+call stack and context.
+
+Adding a flag "suppress_printk" which gets set in panic() to avoid those
+noisy messages, without changing current kernel behavior that both panic
+blinking and sysrq magic key can work as is, suggested by Petr Mladek.
+
+To verify this, make sure kernel is not configured to reboot on panic and
+in console
+ # echo c > /proc/sysrq-trigger
+to see if console only prints out the panic call stack.
+
+Suggested-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Change log:
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 873a80e..e774a34 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -36,6 +36,14 @@
- 			default-state = "off";
- 		};
- 	};
-+
-+	v3v3: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "v3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
- };
+  v6:
+    - change the flag name from "panic_suppress_printk" to
+      suppress_printk, as suggested by Andrew Morton
+
+  v5:
+    - use a flag to notify printk not to print unimportant
+      messages, while keeping panic blinking and sysrq working,
+      as suggested by Petr Mladek
+
+  v4:
+    - make the local_irq_enable conditional and default off
+    to cover possible use of interrupt/scheduling, as
+    mentioned by Sergey and Petr
+
+  v3:
+    - Make the change log clearer as suggested by Andrew Morton
+
+  v2:
+    - Move the solution from hacking arch/scheduler code back
+    to panic.c
+
+ drivers/tty/sysrq.c    |  6 ++++++
+ include/linux/printk.h |  2 ++
+ kernel/panic.c         |  3 +++
+ kernel/printk/printk.c | 10 ++++++++++
+ 4 files changed, 21 insertions(+)
+
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index 1f03078..ddc2d8a 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -527,8 +527,12 @@ void __handle_sysrq(int key, bool check_mask)
+ {
+ 	struct sysrq_key_op *op_p;
+ 	int orig_log_level;
++	int orig_suppress_printk;
+ 	int i;
  
- &ethernet0 {
-@@ -70,6 +78,18 @@
- 	status = "okay";
- };
- 
-+&sdmmc1 {
-+	pinctrl-names = "default", "opendrain", "sleep";
-+	pinctrl-0 = <&sdmmc1_b4_pins_a>;
-+	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-+	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
-+	broken-cd;
-+	st,neg-edge;
-+	bus-width = <4>;
-+	vmmc-supply = <&v3v3>;
-+	status = "okay";
-+};
++	orig_suppress_printk = suppress_printk;
++	suppress_printk = 0;
 +
- &uart4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart4_pins_a>;
+ 	rcu_sysrq_start();
+ 	rcu_read_lock();
+ 	/*
+@@ -574,6 +578,8 @@ void __handle_sysrq(int key, bool check_mask)
+ 	}
+ 	rcu_read_unlock();
+ 	rcu_sysrq_end();
++
++	suppress_printk = orig_suppress_printk;
+ }
+ 
+ void handle_sysrq(int key)
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 77740a5..a010cdf 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -83,6 +83,8 @@ static inline void console_verbose(void)
+ extern char devkmsg_log_str[];
+ struct ctl_table;
+ 
++extern int suppress_printk;
++
+ struct va_format {
+ 	const char *fmt;
+ 	va_list *va;
+diff --git a/kernel/panic.c b/kernel/panic.c
+index f121e6b..960fdfa 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -326,6 +326,9 @@ void panic(const char *fmt, ...)
+ 	}
+ #endif
+ 	pr_emerg("---[ end Kernel panic - not syncing: %s ]---\n", buf);
++
++	/* Do not scroll important messages printed above */
++	suppress_printk = 1;
+ 	local_irq_enable();
+ 	for (i = 0; ; i += PANIC_TIMER_STEP) {
+ 		touch_softlockup_watchdog();
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index d3d1703..8f1c19f 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -85,6 +85,12 @@ static DEFINE_SEMAPHORE(console_sem);
+ struct console *console_drivers;
+ EXPORT_SYMBOL_GPL(console_drivers);
+ 
++/*
++ * System may need to suppress printk message under certain
++ * circumstances, like after kernel panic happens.
++ */
++int __read_mostly suppress_printk;
++
+ #ifdef CONFIG_LOCKDEP
+ static struct lockdep_map console_lock_dep_map = {
+ 	.name = "console_lock"
+@@ -1899,6 +1905,10 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 	unsigned long flags;
+ 	u64 curr_log_seq;
+ 
++	/* Suppress unimportant messages after panic happens */
++	if (unlikely(suppress_printk))
++		return 0;
++
+ 	if (level == LOGLEVEL_SCHED) {
+ 		level = LOGLEVEL_DEFAULT;
+ 		in_sched = true;
 -- 
 2.7.4
 
