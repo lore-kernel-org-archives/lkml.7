@@ -2,149 +2,191 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624DBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D5AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310B92084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i3avGKMK"
+	by mail.kernel.org (Postfix) with ESMTP id 5BD432084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389076AbfCAQT4 (ORCPT
+        id S2389085AbfCAQU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:19:56 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:33147 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfCAQT4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:19:56 -0500
-Received: by mail-yw1-f65.google.com with SMTP id i204so11926779ywb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:19:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NyNvvLOrq4bS1vRrEN+IwY+NXTZUKqr6H8s9M2rYM1w=;
-        b=i3avGKMKHqknwPf9BJCu69IfL9tZ0qg18zrtDFNbU3sJ4U9HItflZczodCiyCmob8K
-         ir2dsep8yveNFNdcvsYSDogB5xEY/tM5Wu8ep1pB9BqjkqI3zAvgsHnsr7JKTZ/JqWKa
-         UKQPUAYz5ZIVAlFIuDFn9kfdNsFQ7zXQUjrQ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NyNvvLOrq4bS1vRrEN+IwY+NXTZUKqr6H8s9M2rYM1w=;
-        b=iOYbjEalJdgFUtN4wl2YcZjLVQ4Ut4tXEnPI7yYTT1mLkUlR2hQSWobfpMOsN1Hhrv
-         Z/BY/M698NUl+4amot6+rZ5XFPsDNYamjbOTo1kPpYZRAJV3eFCSxjb4TzdpMolgYLHy
-         3poPh6NAdYQYEM3LtG9Wn0QDmbs1hSObsrzJOG2WzjUJH+4++YjuQrI7h9s2bwNILo8k
-         hw0AVUMNOd3tONHVD7+y9BHwWkNSePuOMxSCc2FumlDxArgzTLbMYwA9P1TMx58ZU7XI
-         VWp+fFwNWNGTj3Cg+1w33oZeNQ6oGzcI/mZKZ4aEPbgN6WS5UI9u+S9Egqyu5z7BKRyK
-         +K5Q==
-X-Gm-Message-State: APjAAAVSYxv6lf2HRgaSsags5qVsVgMIKRMJM+RRVljYgRTVRZp21BG+
-        k6qu6NrR8njZFS5fWXN3AFTKOCoa2J6g05uDPYZ4kA==
-X-Google-Smtp-Source: APXvYqzxULbURa+dNCMv7eBxu+VsJVbRcRww6NuQGnBM7l7AwmmSCdm62TMpIoBjnQOcrFvjFkAsdJzU83PlicQ6EzA=
-X-Received: by 2002:a25:c184:: with SMTP id r126mr4630890ybf.441.1551457195114;
- Fri, 01 Mar 2019 08:19:55 -0800 (PST)
+        Fri, 1 Mar 2019 11:20:56 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38308 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbfCAQU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:20:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9846F80D;
+        Fri,  1 Mar 2019 08:20:55 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 850033F575;
+        Fri,  1 Mar 2019 08:20:53 -0800 (PST)
+Date:   Fri, 1 Mar 2019 16:20:51 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
+        marc.zyngier@arm.com, suzuki.poulose@arm.com, Dave.Martin@arm.com,
+        shankerd@codeaurora.org, julien.thierry@arm.com,
+        mlangsdo@redhat.com, stefan.wahren@i2e.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/10] arm64: add sysfs vulnerability show for meltdown
+Message-ID: <20190301162050.GB28687@arrakis.emea.arm.com>
+References: <20190227010544.597579-1-jeremy.linton@arm.com>
+ <20190227010544.597579-4-jeremy.linton@arm.com>
+ <c98ff98e-30e2-596b-39c5-8505ddef9496@foss.arm.com>
+ <9cfb9cff-6a26-fff7-9374-82eea0f63a21@arm.com>
 MIME-Version: 1.0
-References: <1551428454-596-1-git-send-email-rushikesh.s.kadam@intel.com> <18369e10-4611-2237-d58c-e6526dc74544@collabora.com>
-In-Reply-To: <18369e10-4611-2237-d58c-e6526dc74544@collabora.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Fri, 1 Mar 2019 08:19:43 -0800
-Message-ID: <CAMHSBOVrKCWzSPxH-EPqRZoZSWkX7S43rJ4vzWv38j1OKhvM3A@mail.gmail.com>
-Subject: Re: [PATCH v3] mfd: cros_ec: instantiate properly CrOS ISH MCU device
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Jett Rink <jettrink@chromium.org>, andriy.shevchenko@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9cfb9cff-6a26-fff7-9374-82eea0f63a21@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 1:50 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Rushikesh,
->
-> On 1/3/19 9:20, Rushikesh S Kadam wrote:
-> > Integrated Sensor Hub (ISH) is also a MCU running EC
-> > having feature bit EC_FEATURE_ISH. Instantiate it as
-> > a special CrOS EC device with device name 'cros_ish'.
-> >
-> > Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-> > ---
-> > v3
-> > - Dropped "Intel" in commments in cros_ec header file. CrOS EC ISH
-> >   device is a generic ISH. This was missed earlier.
-> > v2
-> > - Addressed review comments to term the CrOS EC device as a generic
-> >   Integrated Sensor Hub.
-> > v1
-> > - Initial version.
-> >
-> >  drivers/mfd/cros_ec_dev.c            | 13 +++++++++++++
-> >  include/linux/mfd/cros_ec.h          |  1 +
-> >  include/linux/mfd/cros_ec_commands.h |  2 ++
-> >  3 files changed, 16 insertions(+)
-> >
-> > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> > index 2d0fee4..46963c2 100644
-> > --- a/drivers/mfd/cros_ec_dev.c
-> > +++ b/drivers/mfd/cros_ec_dev.c
-> > @@ -415,6 +415,19 @@ static int ec_device_probe(struct platform_device *pdev)
-> >       cdev_init(&ec->cdev, &fops);
-> >
-> >       /*
-> > +      * Check whether this is actually an Integrated Sensor Hub (ISH)
-> > +      * rather than an EC.
-> > +      */
-> > +     if (cros_ec_check_features(ec, EC_FEATURE_ISH)) {
-> > +             dev_info(dev, "CrOS ISH MCU detected.\n");
-> > +             /*
-> > +              * Help userspace differentiating ECs from ISH MCU,
-> > +              * regardless of the probing order.
-> > +              */
-> > +             ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
-> > +     }
-> > +
-> > +     /*
-> >        * Add the class device
-> >        * Link to the character device for creating the /dev entry
-> >        * in devtmpfs.
-> > diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-> > index de8b588..00c5765 100644
-> > --- a/include/linux/mfd/cros_ec.h
-> > +++ b/include/linux/mfd/cros_ec.h
-> > @@ -24,6 +24,7 @@
-> >
-> >  #define CROS_EC_DEV_NAME "cros_ec"
-> >  #define CROS_EC_DEV_PD_NAME "cros_pd"
-> > +#define CROS_EC_DEV_ISH_NAME "cros_ish"
-> >
-> >  /*
-> >   * The EC is unresponsive for a time after a reboot command.  Add a
-> > diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-> > index fc91082..43bee4f 100644
-> > --- a/include/linux/mfd/cros_ec_commands.h
-> > +++ b/include/linux/mfd/cros_ec_commands.h
-> > @@ -856,6 +856,8 @@ enum ec_feature_code {
-> >       EC_FEATURE_RTC = 27,
-> >       /* EC supports CEC commands */
-> >       EC_FEATURE_CEC = 35,
-> > +     /* The MCU is an Integrated Sensor Hub */
-> > +     EC_FEATURE_ISH = 40,
-> >  };
-> >
-> >  #define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
-> >
->
-> Acked-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>>
+On Fri, Mar 01, 2019 at 10:12:09AM -0600, Jeremy Linton wrote:
+> On 3/1/19 1:11 AM, Andre Przywara wrote:
+> > On 2/26/19 7:05 PM, Jeremy Linton wrote:
+> > > Display the mitigation status if active, otherwise
+> > > assume the cpu is safe unless it doesn't have CSV3
+> > > and isn't in our whitelist.
+> > > 
+> > > Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> > > ---
+> > >   arch/arm64/kernel/cpufeature.c | 47 ++++++++++++++++++++++++++--------
+> > >   1 file changed, 37 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/kernel/cpufeature.c
+> > > b/arch/arm64/kernel/cpufeature.c
+> > > index f6d84e2c92fe..d31bd770acba 100644
+> > > --- a/arch/arm64/kernel/cpufeature.c
+> > > +++ b/arch/arm64/kernel/cpufeature.c
+> > > @@ -944,7 +944,7 @@ has_useable_cnp(const struct
+> > > arm64_cpu_capabilities *entry, int scope)
+> > >       return has_cpuid_feature(entry, scope);
+> > >   }
+> > > -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+> > > +static bool __meltdown_safe = true;
+> > >   static int __kpti_forced; /* 0: not forced, >0: forced on, <0:
+> > > forced off */
+> > >   static bool unmap_kernel_at_el0(const struct
+> > > arm64_cpu_capabilities *entry,
+> > > @@ -963,6 +963,16 @@ static bool unmap_kernel_at_el0(const struct
+> > > arm64_cpu_capabilities *entry,
+> > >           { /* sentinel */ }
+> > >       };
+> > >       char const *str = "command line option";
+> > > +    bool meltdown_safe;
+> > > +
+> > > +    meltdown_safe = is_midr_in_range_list(read_cpuid_id(),
+> > > kpti_safe_list);
+> > > +
+> > > +    /* Defer to CPU feature registers */
+> > > +    if (has_cpuid_feature(entry, scope))
+> > > +        meltdown_safe = true;
+> > > +
+> > > +    if (!meltdown_safe)
+> > > +        __meltdown_safe = false;
+> > >       /*
+> > >        * For reasons that aren't entirely clear, enabling KPTI on Cavium
+> > > @@ -974,6 +984,11 @@ static bool unmap_kernel_at_el0(const struct
+> > > arm64_cpu_capabilities *entry,
+> > >           __kpti_forced = -1;
+> > >       }
+> > > +    if (!IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0)) {
+> > > +        pr_info_once("kernel page table isolation disabled by
+> > > CONFIG\n");
+> > > +        return false;
+> > > +    }
+> > > +
+> > >       /* Forced? */
+> > >       if (__kpti_forced) {
+> > >           pr_info_once("kernel page table isolation forced %s by %s\n",
+> > > @@ -985,14 +1000,10 @@ static bool unmap_kernel_at_el0(const struct
+> > > arm64_cpu_capabilities *entry,
+> > >       if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
+> > >           return kaslr_offset() > 0;
+> > > -    /* Don't force KPTI for CPUs that are not vulnerable */
+> > > -    if (is_midr_in_range_list(read_cpuid_id(), kpti_safe_list))
+> > > -        return false;
+> > > -
+> > > -    /* Defer to CPU feature registers */
+> > > -    return !has_cpuid_feature(entry, scope);
+> > > +    return !meltdown_safe;
+> > >   }
+> > > +#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+> > >   static void
+> > >   kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+> > >   {
+> > > @@ -1022,6 +1033,13 @@ kpti_install_ng_mappings(const struct
+> > > arm64_cpu_capabilities *__unused)
+> > >       return;
+> > >   }
+> > > +#else
+> > > +static void
+> > > +kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+> > > +{
+> > > +}
+> > > +#endif    /* CONFIG_UNMAP_KERNEL_AT_EL0 */
+> > > +
+> > >   static int __init parse_kpti(char *str)
+> > >   {
+> > > @@ -1035,7 +1053,6 @@ static int __init parse_kpti(char *str)
+> > >       return 0;
+> > >   }
+> > >   early_param("kpti", parse_kpti);
+> > > -#endif    /* CONFIG_UNMAP_KERNEL_AT_EL0 */
+> > >   #ifdef CONFIG_ARM64_HW_AFDBM
+> > >   static inline void __cpu_enable_hw_dbm(void)
+> > > @@ -1286,7 +1303,6 @@ static const struct arm64_cpu_capabilities
+> > > arm64_features[] = {
+> > >           .field_pos = ID_AA64PFR0_EL0_SHIFT,
+> > >           .min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
+> > >       },
+> > > -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+> > >       {
+> > >           .desc = "Kernel page table isolation (KPTI)",
+> > >           .capability = ARM64_UNMAP_KERNEL_AT_EL0,
+> > > @@ -1302,7 +1318,6 @@ static const struct arm64_cpu_capabilities
+> > > arm64_features[] = {
+> > >           .matches = unmap_kernel_at_el0,
+> > >           .cpu_enable = kpti_install_ng_mappings,
+> > >       },
+> > > -#endif
+> > >       {
+> > >           /* FP/SIMD is not implemented */
+> > >           .capability = ARM64_HAS_NO_FPSIMD,
+> > > @@ -2063,3 +2078,15 @@ static int __init enable_mrs_emulation(void)
+> > >   }
+> > >   core_initcall(enable_mrs_emulation);
+> > > +
+> > > +ssize_t cpu_show_meltdown(struct device *dev, struct
+> > > device_attribute *attr,
+> > > +        char *buf)
+> > > +{
+> > > +    if (arm64_kernel_unmapped_at_el0())
+> > > +        return sprintf(buf, "Mitigation: KPTI\n");
+> > > +
+> > > +    if (__meltdown_safe)
+> > > +        return sprintf(buf, "Not affected\n");
+> > 
+> > Shall those two checks be swapped? So it doesn't report about a KPTI
+> > mitigation if the CPU is safe, but we enable KPTI because of KASLR
+> > having enabled it? Or is that a different knob?
+> 
+> Hmmm, I think having it this way reflects the fact that the machine is
+> mitigated independent of whether it needed it. The force on case is similar.
+> The machine may not have needed the mitigation but it was forced on.
+
+So is this patchset about showing vulnerabilities _and_ mitigations or
+just one of them?
+
+-- 
+Catalin
