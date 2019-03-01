@@ -2,118 +2,80 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1119C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E488C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B102D2083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7EC2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551456931;
-	bh=OYbSvu8htsvxMMTaECqiDpWvsWfJarNKG6pzPJt4ljE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kiz5km9UP+1fnbuwkBophrM3rGDMiC3aKGBMaye2CBtBnKDFTyW3OTLvxZYkOQKP0
-	 6nlfuT0GQbbtwEAvfGe9Fr6PUHtVfMdk+/TLAb5RvG+ciSzk92AvscN5L9ITftasWI
-	 sf0udZrBFBJJWfAZflX7dn7slsb9kKoWl+Ehxw9A=
+	s=default; t=1551456990;
+	bh=NDfzO3SfCEkr6OgBJ8krWyr3OpPO03Oo4mGMgNjzxLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ki+RAB5H6pcoaw5n9XQHnRVr4v6a8fOgKtrB06rByQKGLdiE83B2NpsoQAF+yzDLX
+	 vYesXOja0b7i20Euz0789lZB8OlsIJNFgM0Qrm3Zza6dGrEGGozSBDsolyQn3oG1k8
+	 FbzJ8NUtoMvIaENPju4dGBQuqtfGp7/HBvOF3nxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388953AbfCAQPa (ORCPT
+        id S2388987AbfCAQQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:15:30 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44801 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfCAQP3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:15:29 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q128so20856158ljb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:15:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TB2WNfItDh5tDSnagxb0cKOBLcV9amE7pWTa29E2ntc=;
-        b=TvC7HZfqXEiJ064TzP5lEIHq/SsMlkQR+LcoWNsAuJSkuy3rv38sLqYDqdQHrAJGsZ
-         OJTIcDDYj6hPDNkwTOCEEiboyxKk57MrljN0dawYPBwkn6Lt7164X4HJ1ZbJrajWK4aX
-         dNlBINxU9LnkytaKMNc2c2chaPbKEZRIDAx4c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TB2WNfItDh5tDSnagxb0cKOBLcV9amE7pWTa29E2ntc=;
-        b=EDIroaZ7rfS2j+b4jfv8Bvgh7pHNBmW/pNujwVoVS57xt939AB5cf4RZJkH4lxNvh5
-         D61hazWXCDaBz2o8d1pPLou/jKAPq0mpyG/jr54Av6HHfcbTLEzOtfyTaRtHN4nUGQSg
-         KxyoS82IejpplT8YTJ8lZzLfoiBFliLjyYwwRSP0JoF+T26+5bnmuf27xGJq5RTZhJz5
-         RoBGxBkmh/7X8U6RCp/Gevea5ndFT+Vs7gqfqn/UTonhWkvvymh8KFtAdYN+6fi0HZLN
-         CpB2xrH2/7xymuPhBglgJhpQCrjrRFYo841+ZE95Wdr9YS2QHwL5K9fBFSUmGQrR/nXu
-         F91w==
-X-Gm-Message-State: APjAAAW8Anb8VI8FIF8JfK7z0boJ/d3hc3lCfCyw6bxslWSgO3y/yoaX
-        LTg5uBB83pbqqoWpTVz3JgyE3vI3xAA=
-X-Google-Smtp-Source: APXvYqy/mDns/3nXvDRuuggbD9kAixJceY6imc/UQl7I9TTf0kwxWL7W52ikygjBT3/jmF8oO3D1ng==
-X-Received: by 2002:a2e:5518:: with SMTP id j24mr3254057ljb.80.1551456927211;
-        Fri, 01 Mar 2019 08:15:27 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id 77sm541269ljc.88.2019.03.01.08.15.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 08:15:26 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id a17so20855766ljd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:15:25 -0800 (PST)
-X-Received: by 2002:a2e:7a03:: with SMTP id v3mr3273103ljc.22.1551456925561;
- Fri, 01 Mar 2019 08:15:25 -0800 (PST)
+        Fri, 1 Mar 2019 11:16:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727952AbfCAQQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:16:27 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6AED2083D;
+        Fri,  1 Mar 2019 16:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551456987;
+        bh=NDfzO3SfCEkr6OgBJ8krWyr3OpPO03Oo4mGMgNjzxLI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bR7RMxPW4Bdr0VFnrxQBGzY05MRV8xjQn6qWoyX3KHa0k7nHZn17nOA2zgPLagnhq
+         SlCu4b2lEr3IJUEjdPdsCK6ajyR4P981pkO/qsT5O02r5Ctp/RMq4QQeXEsvWONzve
+         braArX0iA1rxItg0QW0KBHD7hUoSFSsfQqypau5k=
+Date:   Fri, 1 Mar 2019 17:16:24 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
+Message-ID: <20190301161624.GA19937@kroah.com>
+References: <1544732471-6730-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TYXPR01MB1775A4A3AF86097F284C4A08C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190228145450.289603901@infradead.org> <20190228150152.540038736@infradead.org>
- <CAHk-=wgsSXxL5c2Lbmbai=bcCgN0G=jPO+gWhQ3a+wx-LTaFkQ@mail.gmail.com>
- <20190228175114.GG32494@hirez.programming.kicks-ass.net> <20190228180154.GO32534@hirez.programming.kicks-ass.net>
- <CAHk-=whJww5smbSU2VzvcR7tajNqp=i9ZBYHK3RvwVXbs+V_JQ@mail.gmail.com>
- <20190228190111.GI32494@hirez.programming.kicks-ass.net> <20190301103452.GQ32534@hirez.programming.kicks-ass.net>
- <20190301122745.GR32534@hirez.programming.kicks-ass.net> <20190301125718.GS32534@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190301125718.GS32534@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 1 Mar 2019 08:15:09 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whi3C93GP3urxAMZcEP3cqHP9Z1F54b8H9P-e47=BB73g@mail.gmail.com>
-Message-ID: <CAHk-=whi3C93GP3urxAMZcEP3cqHP9Z1F54b8H9P-e47=BB73g@mail.gmail.com>
-Subject: Re: [PATCH 6/8] i915,uaccess: Fix redundant CLAC
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYXPR01MB1775A4A3AF86097F284C4A08C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 4:57 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Or.. we move the thing to assembly. Of course, I suck at (writing) asm,
-> so the below is probably broken in various ways.
+On Fri, Mar 01, 2019 at 11:25:33AM +0000, Fabrizio Castro wrote:
+> Hello Greg,
+> 
+> I am sorry to bother you.
+> Do you think you take this patch?
 
-Looks sane, and makes sense. I feel that the old "mixed C and asm" was
-much worse.
+device tree bindings need an ack from the DT maintainers before I can
+take them.  Also, this is for xhci, the xhci maintainer is responsible
+for those, not me :)
 
-My only comment is that I think you should remove the ENTRY() one,
-because you don't actually want that symbol to be global any more,
-because I think it's all from inside copy_user_64.S now.
+thanks,
 
-So just
-
-     ALIGN
-     copy_user_handle_tail:
-          .. code goes here..
-
-Hmm?
-
-               Linus
+greg k-h
