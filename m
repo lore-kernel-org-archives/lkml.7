@@ -2,149 +2,203 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18084C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A00FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55452084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63EF218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551423800;
+	bh=FPijZllBu5a7gpOenCVYmY8UC/Q7eD6ly4oHVzasmmM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=llNXLffgYD0g7qieQK+XVn+9BpIJbvoRIYWD41c/rM4jhDKBdeZEhafS0tkgQyUaq
+	 eHo0dO7ZlIVBqacZynPExABCGGfmzIdTTMutlD2b7lytvxiDtSi25u3mSnN+8Eu1MQ
+	 fnTCcC1ZI2QzE8VlnqSKgVE3ktusjuNGLVSzmFfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfCAHCj (ORCPT
+        id S1731818AbfCAHDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 02:02:39 -0500
-Received: from foss.arm.com ([217.140.101.70]:58788 "EHLO foss.arm.com"
+        Fri, 1 Mar 2019 02:03:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbfCAHCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 02:02:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85980EBD;
-        Thu, 28 Feb 2019 23:02:38 -0800 (PST)
-Received: from [172.20.0.134] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BCE53F5C1;
-        Thu, 28 Feb 2019 23:02:37 -0800 (PST)
-Subject: Re: [PATCH v5 08/10] arm64: Always enable ssb vulnerability detection
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
-        suzuki.poulose@arm.com, Dave.Martin@arm.com,
-        shankerd@codeaurora.org, julien.thierry@arm.com,
-        mlangsdo@redhat.com, stefan.wahren@i2e.com,
-        linux-kernel@vger.kernel.org
-References: <20190227010544.597579-1-jeremy.linton@arm.com>
- <20190227010544.597579-9-jeremy.linton@arm.com>
-From:   Andre Przywara <andre.przywara@arm.com>
-Message-ID: <5c76075d-1889-ff75-0567-f3e2df7079f4@foss.arm.com>
-Date:   Fri, 1 Mar 2019 01:02:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190227010544.597579-9-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        id S1725290AbfCAHDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 02:03:16 -0500
+Received: from devbox (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B4892084F;
+        Fri,  1 Mar 2019 07:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551423795;
+        bh=FPijZllBu5a7gpOenCVYmY8UC/Q7eD6ly4oHVzasmmM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ytGsC9tlAlLY1wRTzjvgWqUcxUZgnQUspZ5TUmI/9TJxHaJEiaax6/8KBrw5YJxvN
+         SfVjhn2RiF/iRK51MuMGaArzaO1AFG+Kp79o4HiZ5ILaVDYVdN2qhbqmVOmUqaSybE
+         n8cXGishrYBa9g6jMjiH9nRCk5OX/Yw4PRVdT1yQ=
+Date:   Fri, 1 Mar 2019 16:03:09 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        paulmck@linux.vnet.ibm.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-Id: <20190301160309.2ddadeeb4aadbab4cdc88171@kernel.org>
+In-Reply-To: <20190301032611.GA78818@google.com>
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+        <20190228173444.54403795211d80ba540b61cb@kernel.org>
+        <20190228150054.GB156098@google.com>
+        <20190301112826.ced40b59fb7e8118fa5b40d6@kernel.org>
+        <20190301032611.GA78818@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Joel,
 
-On 2/26/19 7:05 PM, Jeremy Linton wrote:
-> The ssb detection logic is necessary regardless of whether
-> the vulnerability mitigation code is built into the kernel.
-> Break it out so that the CONFIG option only controls the
-> mitigation logic and not the vulnerability detection.
+On Thu, 28 Feb 2019 22:26:11 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
+
+> On Fri, Mar 01, 2019 at 11:28:26AM +0900, Masami Hiramatsu wrote:
+> > Hi Joel,
 > 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->   arch/arm64/include/asm/cpufeature.h |  4 ----
->   arch/arm64/kernel/cpu_errata.c      | 11 +++++++----
->   2 files changed, 7 insertions(+), 8 deletions(-)
+> Hi Masami,
 > 
-> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-> index dfcfba725d72..c2b60a021437 100644
-> --- a/arch/arm64/include/asm/cpufeature.h
-> +++ b/arch/arm64/include/asm/cpufeature.h
-> @@ -628,11 +628,7 @@ static inline int arm64_get_ssbd_state(void)
->   #endif
->   }
->   
-> -#ifdef CONFIG_ARM64_SSBD
->   void arm64_set_ssbd_mitigation(bool state);
-> -#else
-> -static inline void arm64_set_ssbd_mitigation(bool state) {}
-> -#endif
->   
->   extern int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
->   
-> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-> index 0f6e8f5d67bc..5f5611d17dc1 100644
-> --- a/arch/arm64/kernel/cpu_errata.c
-> +++ b/arch/arm64/kernel/cpu_errata.c
-> @@ -276,7 +276,6 @@ static int detect_harden_bp_fw(void)
->   	return 1;
->   }
->   
-> -#ifdef CONFIG_ARM64_SSBD
->   DEFINE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
->   
->   int ssbd_state __read_mostly = ARM64_SSBD_KERNEL;
-> @@ -347,6 +346,7 @@ void __init arm64_enable_wa2_handling(struct alt_instr *alt,
->   		*updptr = cpu_to_le32(aarch64_insn_gen_nop());
->   }
->   
-> +#ifdef CONFIG_ARM64_SSBD
->   void arm64_set_ssbd_mitigation(bool state)
->   {
->   	if (this_cpu_has_cap(ARM64_SSBS)) {
-> @@ -371,6 +371,12 @@ void arm64_set_ssbd_mitigation(bool state)
->   		break;
->   	}
->   }
-> +#else
-> +void arm64_set_ssbd_mitigation(bool state)
-> +{
-> +	pr_info_once("SSBD, disabled by kernel configuration\n");
-
-Is there a stray comma or is the continuation of some previous printout?
-
-Regardless of that it looks good and compiles with both 
-CONFIG_ARM64_SSBD defined or not:
-
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-
-Cheers,
-Andre.
-
-> +}
-> +#endif	/* CONFIG_ARM64_SSBD */
->   
->   static bool has_ssbd_mitigation(const struct arm64_cpu_capabilities *entry,
->   				    int scope)
-> @@ -468,7 +474,6 @@ static bool has_ssbd_mitigation(const struct arm64_cpu_capabilities *entry,
->   
->   	return required;
->   }
-> -#endif	/* CONFIG_ARM64_SSBD */
->   
->   static void __maybe_unused
->   cpu_enable_cache_maint_trap(const struct arm64_cpu_capabilities *__unused)
-> @@ -760,14 +765,12 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
->   		ERRATA_MIDR_RANGE_LIST(arm64_harden_el2_vectors),
->   	},
->   #endif
-> -#ifdef CONFIG_ARM64_SSBD
->   	{
->   		.desc = "Speculative Store Bypass Disable",
->   		.capability = ARM64_SSBD,
->   		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
->   		.matches = has_ssbd_mitigation,
->   	},
-> -#endif
->   #ifdef CONFIG_ARM64_ERRATUM_1188873
->   	{
->   		/* Cortex-A76 r0p0 to r2p0 */
+> > On Thu, 28 Feb 2019 10:00:54 -0500
+> > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > 
+> > > > Hmm, isn't it easier to add kernel-headers package on Android?
+> > > 
+> > > I have already been down that road. In the Android ecosystem, the Android
+> > > teams only provide a "userspace system image" which goes on the system
+> > > partition of the flash (and a couple other images are also provided but
+> > > system is the main one). The system image cannot contain GPL source code. It
+> > > is also not possible to put kernel headers for every kernel version on the
+> > > system images that ship and is not practical. Android boots on 1000s of forked
+> > > kernels. It does not make sense to provide headers on the system image for
+> > > every kernel version and I already had many discussions on the subject with
+> > > the teams, it is something that is just not done. Now for kernel modules,
+> > > there's another image called the "vendor image" which is flashed onto the
+> > > vendor parition, this is where kernel modules go.  This vendor image is not
+> > > provided by Google for non-Pixel devices. So we have no control over what
+> > > goes there BUT we do know that kernel modules that are enabled will go there,
+> > > and we do have control over enforcing that certain kernel modules should be
+> > > built and available as they are mandatory for Android to function properly.
+> > > We would also possibly make it a built-in option as well. Anyway my point is
+> > > keeping it in the kernel is really the easiest and the smartest choice IMO.
+> > 
+> > Sorry, I'm not convinced yet. This sounds like "because Android decided not
+> > to put the header files on vendor partition, but kernel module is OK"
+> > Why don't google ask vendors to put their kernel headers (or header tarball)
+> > on vendor partition instead?
 > 
+> May be Google can do that, but I think you missed the point of the patches.
+> Making it a module is not mandatory, people can build it into the kernel as
+> well (CONFIG_IKHEADERS_PROC=y). In this case, the proc entry will be
+> available on boot without any dependency on the filesystem. If you go through
+> the other threads such as folks from ARM who replied, they just boot a kernel
+> image for debug purpose and want headers on device available without any
+> additional step of copying headers to the filesystem. And folks from Google
+> also said that they wanted a built-in option.
+
+Agreed. Making it built-in is reasonable, since it will not involves any
+other files. :) 
+
+> There are many usecases for this, I have often run into issues with Linux
+> over the years not only with Android, but other distros, where I boot custom
+> kernels with no linux-headers package. This is quite painful. It is
+> convenient to have it as /proc file since the file is dependent on kernel
+> being booted up and this will work across all Linux distros and systems. I
+> feel that if you can keep an open mind about it, you will see that a lot of
+> people will use this feature if it is accepted and there is a lot of positive
+> feedback in earlier posts of this set.
+
+I don't complain about having headers for custom boot kernel. I agree with you
+that having kernel headers for debugging is always good. :)
+So google recommends built-in, it is reasonable.
+
+> > > > > The code to read the headers is based on /proc/config.gz code and uses
+> > > > > the same technique to embed the headers.
+> > > > > 
+> > > > > To build a module, the below steps have been tested on an x86 machine:
+> > > > > modprobe kheaders
+> > > > > rm -rf $HOME/headers
+> > > > > mkdir -p $HOME/headers
+> > > > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> > > > > cd my-kernel-module
+> > > > > make -C $HOME/headers M=$(pwd) modules
+> > > > > rmmod kheaders
+> > > > 
+> > > > It seems a bit complex, but no difference from compared with carrying
+> > > > kheaders.tar.gz. I think we would better have a psudo filesystem
+> > > > which can mount this compressed header file directly :) Then it becomes
+> > > > simpler, like
+> > > > 
+> > > > modprobe headerfs
+> > > > mkdir $HOME/headers
+> > > > mount -t headerfs $HOME/headers
+> > > > 
+> > > > And this doesn't consume any disk-space.
+> > > 
+> > > I felt using a compressed tar is really the easiest way because of all the
+> > > tools are already available.
+> > 
+> > As I asked above, if the pure tarball is useful, you can simply ask vendors
+> > to put the header tarball on their vendor directory. I feel making it as
+> > a module is not a right way.
+> 
+> I don't see what is the drawback of making it a module, it makes it well
+> integrated into kernel build and ecosystem. I also didn't see any
+> justification you're providing about why it cannot be a module. If you go
+> through this and earlier threads, a lot of people are Ok with having a module
+> option. And I asked several top kernel maintainers at LPC and many people
+> suggested having it as a module.
+
+I meant, if we have a tarball, we don't need any operation of loading/unloading
+kmodules. But if we have this as built-in, yes, this would be much easier to
+deploy it to device.
+
+Anyway, having that option (make it as a module) is not bad. IMHO, that may
+be more complicated than just have a tarball file, but it is a user's choice.
+
+OK, now I understand it.
+
+> > > There isn't a compressed in-ram filesystem right
+> > > now that I'm aware off that can achieve the kind of high compression ratio
+> > > this patchset does.
+> > 
+> > I think if linux can support something like tarfs(or compressed initramfs)
+> > in kernel, it gives linux an improvement not only a hack. :-)
+> 
+> Agreed, that sounds like a good idea. I will consider doing it once the
+> series in its current form can be accepted. I am saying so since this series
+> is simple, and I can do that as a next step since that idea will take a lot
+> of time to implement. But I am keen on doing it.
+
+I look forward to it :-)
+
+Thank you!
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
