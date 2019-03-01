@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB03C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3CDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3298E20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8CC2084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388592AbfCAPJB (ORCPT
+        id S2388084AbfCAPNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 10:09:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41174 "EHLO mx1.suse.de"
+        Fri, 1 Mar 2019 10:13:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41688 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727492AbfCAPJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 10:09:01 -0500
+        id S1727952AbfCAPNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 10:13:02 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C1A9BAC91;
-        Fri,  1 Mar 2019 15:08:59 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id B5733AD05;
+        Fri,  1 Mar 2019 15:13:00 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 46E4D1E13E2; Fri,  1 Mar 2019 16:08:59 +0100 (CET)
-Date:   Fri, 1 Mar 2019 16:08:59 +0100
+        id 6AAD51E13E2; Fri,  1 Mar 2019 16:13:00 +0100 (CET)
+Date:   Fri, 1 Mar 2019 16:13:00 +0100
 From:   Jan Kara <jack@suse.cz>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] ext2 and udf fixes for v5.1-rc1
-Message-ID: <20190301150859.GA15758@quack2.suse.cz>
+Subject: [GIT PULL] Fanotify changes for v5.1-rc1
+Message-ID: <20190301151300.GB15758@quack2.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -44,53 +44,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
   could you please pull from
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git fs_for_v5.1-rc1
+git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git fsnotify_for_v5.1-rc1
 
-to get a couple of fixes for udf and ext2. Namely:
-* fix making ext2 mountable (again) with 64k blocksize
-* fix for ext2 statx(2) handling
-* fix for udf handling of corrupted filesystem so that it doesn't get
-  corrupted even further
-* couple smaller ext2 and udf cleanups
+to get support for fanotify directory events and changes to make waiting
+for fanotify permission event response killable.
 
-Top of the tree is 52b9666efd8b. The full shortlog is:
+Top of the tree is b51905798195. The full shortlog is:
 
-Chengguang Xu (1):
-      ext2: set proper return code
+Amir Goldstein (17):
+      fsnotify: annotate directory entry modification events
+      fsnotify: remove dirent events from FS_EVENTS_POSS_ON_CHILD mask
+      fsnotify: send all event types to super block marks
+      fsnotify: move mask out of struct fsnotify_event
+      fanotify: rename struct fanotify_{,perm_}event_info
+      fanotify: open code fill_event_metadata()
+      fanotify: encode file identifier for FAN_REPORT_FID
+      fanotify: copy event fid info to user
+      fanotify: enable FAN_REPORT_FID init flag
+      fanotify: cache fsid in fsnotify_mark_connector
+      vfs: add vfs_get_fsid() helper
+      fanotify: use vfs_get_fsid() helper instead of vfs_statfs()
+      fsnotify: report FS_ISDIR flag with MOVE_SELF and DELETE_SELF events
+      fanotify: check FS_ISDIR flag instead of d_is_dir()
+      fanotify: support events with data type FSNOTIFY_EVENT_INODE
+      fanotify: add support for create/attrib/move/delete events
+      fanotify: report FAN_ONDIR to listener with FAN_REPORT_FID
 
-Jan Kara (3):
-      ext2: Set superblock revision when enabling xattr feature
-      ext2: Fix underflow in ext2_max_size()
-      udf: Drop pointless check from udf_sync_fs()
-
-Liu Xiang (3):
-      ext2: Remove redundant check on s_inode_size
-      ext2: Remove redundant check for finding no group
-      ext2: Fix a typo in comment
-
-Mathieu Malaterre (1):
-      ext2: Annotate implicit fall through in __ext2_truncate_blocks
-
-Steve Magnani (3):
-      udf: factor out LVID finalization for reuse
-      udf: finalize integrity descriptor before writeback
-      udf: disallow RW mount without valid integrity descriptor
-
-yangerkun (1):
-      ext2: support statx syscall
+Jan Kara (8):
+      fanotify: Select EXPORTFS
+      fanotify: Fold dequeue_event() into process_access_response()
+      fanotify: Move locking inside get_one_event()
+      fsnotify: Create function to remove event from notification list
+      fanotify: Simplify cleaning of access_list
+      fanotify: Track permission event state
+      fanotify: Use interruptible wait when waiting for permission events
+      fanotify: Make waits for fanotify events only killable
 
 The diffstat is
 
- fs/ext2/ext2.h    |  1 +
- fs/ext2/file.c    |  1 +
- fs/ext2/ialloc.c  |  2 --
- fs/ext2/inode.c   | 30 +++++++++++++++++++++++++++++-
- fs/ext2/namei.c   |  2 ++
- fs/ext2/super.c   | 44 ++++++++++++++++++++++++++++----------------
- fs/ext2/symlink.c |  2 ++
- fs/ext2/xattr.c   |  1 +
- fs/udf/super.c    | 51 +++++++++++++++++++++++++++++++++------------------
- 9 files changed, 97 insertions(+), 37 deletions(-)
+ fs/notify/fanotify/Kconfig           |   1 +
+ fs/notify/fanotify/fanotify.c        | 267 +++++++++++++++++++++----
+ fs/notify/fanotify/fanotify.h        | 116 +++++++++--
+ fs/notify/fanotify/fanotify_user.c   | 373 ++++++++++++++++++++++++-----------
+ fs/notify/fsnotify.c                 |  15 +-
+ fs/notify/inotify/inotify.h          |   1 +
+ fs/notify/inotify/inotify_fsnotify.c |  18 +-
+ fs/notify/inotify/inotify_user.c     |   5 +-
+ fs/notify/mark.c                     |  42 +++-
+ fs/notify/notification.c             |  42 ++--
+ fs/statfs.c                          |  14 ++
+ include/linux/fanotify.h             |  26 ++-
+ include/linux/fsnotify.h             |  73 +++++--
+ include/linux/fsnotify_backend.h     |  67 ++++---
+ include/linux/statfs.h               |   3 +
+ include/uapi/linux/fanotify.h        |  29 +++
+ 16 files changed, 828 insertions(+), 264 deletions(-)
 
 							Thanks
 								Honza
