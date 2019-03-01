@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA849C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD50C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C488C2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88899218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387635AbfCAI5f (ORCPT
+        id S2387667AbfCAI5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:57:35 -0500
-Received: from out1.zte.com.cn ([202.103.147.172]:60416 "EHLO mxct.zte.com.cn"
+        Fri, 1 Mar 2019 03:57:45 -0500
+Received: from mxhk.zte.com.cn ([63.217.80.70]:64990 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387574AbfCAI5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:57:34 -0500
+        id S1733163AbfCAI5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 03:57:44 -0500
 Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id 0048A6929E0059AF8023;
-        Fri,  1 Mar 2019 16:57:31 +0800 (CST)
+        by Forcepoint Email with ESMTPS id C29D6D8B7D8DE248F00F;
+        Fri,  1 Mar 2019 16:57:41 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x218vKSM087213;
-        Fri, 1 Mar 2019 16:57:20 +0800 (GMT-8)
+        by mse01.zte.com.cn with ESMTP id x218vUSR087466;
+        Fri, 1 Mar 2019 16:57:30 +0800 (GMT-8)
         (envelope-from wen.yang99@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019030116575888-2499047 ;
-          Fri, 1 Mar 2019 16:57:58 +0800 
+          with ESMTP id 2019030116580955-2499096 ;
+          Fri, 1 Mar 2019 16:58:09 +0800 
 From:   Wen Yang <wen.yang99@zte.com.cn>
 To:     liviu.dudau@arm.com
 Cc:     sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
@@ -50,18 +50,18 @@ Cc:     sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
         s.hauer@pengutronix.de, kernel@pengutronix.de,
         fabio.estevam@nxp.com, linux-imx@nxp.com, wang.yi59@zte.com.cn,
         Wen Yang <wen.yang99@zte.com.cn>
-Subject: [PATCH 11/15] ARM: versatile: fix a leaked reference by addingmissing of_node_put
-Date:   Fri, 1 Mar 2019 16:56:52 +0800
-Message-Id: <1551430616-42014-11-git-send-email-wen.yang99@zte.com.cn>
+Subject: [PATCH 15/15] ARM: axxia: fix a leaked reference by addingmissing of_node_put
+Date:   Fri, 1 Mar 2019 16:56:56 +0800
+Message-Id: <1551430616-42014-15-git-send-email-wen.yang99@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1551430616-42014-1-git-send-email-wen.yang99@zte.com.cn>
 References: <1551430616-42014-1-git-send-email-wen.yang99@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-01 16:57:58,
+ 21, 2013) at 2019-03-01 16:58:09,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-01 16:57:04,
-        Serialize complete at 2019-03-01 16:57:04
-X-MAIL: mse01.zte.com.cn x218vKSM087213
+ 2019-03-01 16:57:15,
+        Serialize complete at 2019-03-01 16:57:15
+X-MAIL: mse01.zte.com.cn x218vUSR087466
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -72,47 +72,29 @@ incremented thus it must be explicitly decremented after the last
 usage.
 
 Detected by coccinelle with the following warnings:
-./arch/arm/mach-versatile/versatile_dt.c:315:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 302, but without a corresponding object release within this function.
-./arch/arm/mach-versatile/versatile_dt.c:320:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 302, but without a corresponding object release within this function.
+./arch/arm/mach-axxia/platsmp.c:46:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 40, but without a corresponding object release within this function.
+./arch/arm/mach-axxia/platsmp.c:53:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 40, but without a corresponding object release within this function.
 
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: Russell King <linux@armlinux.org.uk>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/mach-versatile/versatile_dt.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/mach-axxia/platsmp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
-index e9d6068..028463a 100644
---- a/arch/arm/mach-versatile/versatile_dt.c
-+++ b/arch/arm/mach-versatile/versatile_dt.c
-@@ -312,12 +312,12 @@ static void __init versatile_dt_pci_init(void)
- 		 * driver had it so we will keep it.
- 		 */
- 		writel(1, versatile_sys_base + VERSATILE_SYS_PCICTL_OFFSET);
--		return;
-+		goto out_put_node;
- 	}
+diff --git a/arch/arm/mach-axxia/platsmp.c b/arch/arm/mach-axxia/platsmp.c
+index 502e3df..c706a11 100644
+--- a/arch/arm/mach-axxia/platsmp.c
++++ b/arch/arm/mach-axxia/platsmp.c
+@@ -42,6 +42,7 @@ static int axxia_boot_secondary(unsigned int cpu, struct task_struct *idle)
+ 		return -ENOENT;
  
- 	newprop = kzalloc(sizeof(*newprop), GFP_KERNEL);
- 	if (!newprop)
--		return;
-+		goto out_put_node;
+ 	syscon = of_iomap(syscon_np, 0);
++	of_node_put(syscon_np);
+ 	if (!syscon)
+ 		return -ENOMEM;
  
- 	newprop->name = kstrdup("status", GFP_KERNEL);
- 	newprop->value = kstrdup("disabled", GFP_KERNEL);
-@@ -325,6 +325,9 @@ static void __init versatile_dt_pci_init(void)
- 	of_update_property(np, newprop);
- 
- 	pr_info("Not plugged into PCI backplane!\n");
-+
-+out_put_node:
-+	of_node_put(np);
- }
- 
- static void __init versatile_dt_init(void)
 -- 
 2.9.5
 
