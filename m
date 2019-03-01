@@ -2,140 +2,228 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83BCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEC4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7730C20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519F420850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:16:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="Vr6bf0IL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733008AbfCALHt (ORCPT
+        id S1733251AbfCALQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:07:49 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33218 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727932AbfCALHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:07:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA117EBD;
-        Fri,  1 Mar 2019 03:07:48 -0800 (PST)
-Received: from [10.1.197.2] (ostrya.cambridge.arm.com [10.1.197.2])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1AE83F575;
-        Fri,  1 Mar 2019 03:07:46 -0800 (PST)
-Subject: Re: [PATCH RFC 1/1] iommu: set the default iommu-dma mode as
- non-strict
-To:     "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-References: <20190131135211.6732-1-thunder.leizhen@huawei.com>
- <94b9b0c9-1a24-63ba-5abe-5f6d79fed415@arm.com>
- <dc06dfd0-0ab6-6f0b-64c6-2587a2a55798@huawei.com>
- <5C78B89C.7040100@huawei.com>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <e567cf93-4e34-e15e-9d98-5834bc63e234@arm.com>
-Date:   Fri, 1 Mar 2019 11:07:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 1 Mar 2019 06:16:34 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52734 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727932AbfCALQe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 06:16:34 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m1so12206766wml.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 03:16:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kragniz.eu; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Cm2xSot7H/olf7uiYvr9ICVuca5jG8v4koRvKNfds50=;
+        b=Vr6bf0IL5rldkVenrPm6yR29raVONgvWt07u6jIC38Wcn8xwd67oYZBsUqqEw5Hc0d
+         OpQC7IJyFYucxNHvaWhRhh04FXXTzgt4KZEw2TFuRydWye0FdmfnfQqmeG8+xg6lqvCK
+         yB0YNPUK3AQW3F0spnphDsdfI41MlIF+r4bss=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Cm2xSot7H/olf7uiYvr9ICVuca5jG8v4koRvKNfds50=;
+        b=f4IBe81ooLvdra08QkvrtNXPwhKbWxu5w+si1lMmn+pog9Ni6P9pnx1nQz/4HA2XFo
+         Z+WS4/tWz/iJH3V7PVaZlSoc5CBnlsW8Pgsq+UGmDvCne8ejTsrZKkuDRCVlU35CUE2r
+         c0Lh8Q3+DGOAXrGmatQPH8bERbQEbmx9woBGH57YJeaJYAD4qcnu8gCuQV3ZaCD4ESjl
+         h2othJUbRNg7LYpMZsFTTqlDq6YmXXhth1Lrc6JA9wl084VOw8HpIJ+WUYJuLg8KCEnH
+         6+uhGXydCkjASFKAkVf5vekUEc291CJArQAaD687hsf8/6iWAX5dRER30fbaROwcM02m
+         P+ig==
+X-Gm-Message-State: APjAAAWRHFuLfabUfMmCc5dIswH6fwjBBbmlzxH+E/t9nLI6ZOWbj3VJ
+        SCO3y8+jiAW5/sRT419uVpL73A==
+X-Google-Smtp-Source: AHgI3IauNYWV45cwKkAdozAPjLsSh2KsIZmNHq47bIZfXoGcTbdBer2PEwOsFiVv8ha9Ih3kNKmM4g==
+X-Received: by 2002:a1c:e084:: with SMTP id x126mr2923588wmg.39.1551438991671;
+        Fri, 01 Mar 2019 03:16:31 -0800 (PST)
+Received: from gmail.com ([95.149.160.3])
+        by smtp.gmail.com with ESMTPSA id u4sm10602151wmb.25.2019.03.01.03.16.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Mar 2019 03:16:31 -0800 (PST)
+Date:   Fri, 1 Mar 2019 11:15:45 +0000
+From:   Louis Taylor <louis@kragniz.eu>
+To:     Joe Perches <joe@perches.com>
+Cc:     Jon Flatley <jflat@chromium.org>, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH] wusb: Remove unnecessary static function ckhdid_printf
+Message-ID: <20190301111543.GA6028@gmail.com>
+References: <20190228115256.5446-1-louis@kragniz.eu>
+ <20190228122417.9318-1-louis@kragniz.eu>
+ <15c6689389503a82394bccb9204650bf20a7a6d3.camel@perches.com>
+ <CACJJ=pzfSMgJbt5zKzgN-AcugkYRuGhbB88tsTX7k+-qPnS0jA@mail.gmail.com>
+ <1450785b937f4a2b5f98c8548986b162684a719b.camel@perches.com>
+ <CACJJ=pz50c3oovHbKkjDDF=pabAj_9RtKGWvtpwx4nO+E_EtJg@mail.gmail.com>
+ <3f515cdb5cb6f77acb5cd8029bacd0be782eed64.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <5C78B89C.7040100@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f515cdb5cb6f77acb5cd8029bacd0be782eed64.camel@perches.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leizhen,
-
-On 01/03/2019 04:44, Leizhen (ThunderTown) wrote:
+On Thu, Feb 28, 2019 at 08:38:16PM -0800, Joe Perches wrote:
+> This static inline is unnecessary and can be removed
+> by using the vsprintf %ph extension.
 > 
+> This reduces overall object size by more than 2K.
 > 
-> On 2019/2/26 20:36, Hanjun Guo wrote:
->> Hi Jean,
->>
->> On 2019/1/31 22:55, Jean-Philippe Brucker wrote:
->>> Hi,
->>>
->>> On 31/01/2019 13:52, Zhen Lei wrote:
->>>> Currently, many peripherals are faster than before. For example, the top
->>>> speed of the older netcard is 10Gb/s, and now it's more than 25Gb/s. But
->>>> when iommu page-table mapping enabled, it's hard to reach the top speed
->>>> in strict mode, because of frequently map and unmap operations. In order
->>>> to keep abreast of the times, I think it's better to set non-strict as
->>>> default.
->>>
->>> Most users won't be aware of this relaxation and will have their system
->>> vulnerable to e.g. thunderbolt hotplug. See for example 4.3 Deferred
->>> Invalidation in
->>> http://www.cs.technion.ac.il/users/wwwb/cgi-bin/tr-get.cgi/2018/MSC/MSC-2018-21.pdf
-> Hi Jean,
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/usb/wusbcore/cbaf.c       | 15 ++++-----------
+>  drivers/usb/wusbcore/dev-sysfs.c  |  5 ++---
+>  drivers/usb/wusbcore/devconnect.c |  2 +-
+>  drivers/usb/wusbcore/wusbhc.c     |  6 +-----
+>  include/linux/usb/wusb.h          | 16 ----------------
+>  5 files changed, 8 insertions(+), 36 deletions(-)
 > 
->    In fact, we have discussed the vulnerable of deferred invalidation before upstream
-> the non-strict patches. The attacks maybe possible because of an untrusted device or
-> the mistake of the device driver. And we limited the VFIO to still use strict mode.
->    As mentioned in the pdf, limit the freed memory with deferred invalidation only to
-> be reused by the device, can mitigate the vulnerability. But it's too hard to implement
-> it now.
->    A compromise maybe we only apply non-strict to (1) dma_free_coherent, because the
-> memory is controlled by DMA common module, so we can make the memory to be freed after
-> the global invalidation in the timer handler. (2) And provide some new APIs related to
-> iommu_unmap_page/sg, these new APIs deferred invalidation. And the candiate device
-> drivers update the APIs if they want to improve performance. (3) Make sure that only
-> the trusted devices and trusted drivers can apply (1) and (2). For example, the driver
-> must be built into kernel Image.
+> diff --git a/drivers/usb/wusbcore/cbaf.c b/drivers/usb/wusbcore/cbaf.c
+> index 222228c5c1e1..af77064c7456 100644
+> --- a/drivers/usb/wusbcore/cbaf.c
+> +++ b/drivers/usb/wusbcore/cbaf.c
+> @@ -302,10 +302,8 @@ static ssize_t cbaf_wusb_chid_show(struct device *dev,
+>  {
+>  	struct usb_interface *iface = to_usb_interface(dev);
+>  	struct cbaf *cbaf = usb_get_intfdata(iface);
+> -	char pr_chid[WUSB_CKHDID_STRSIZE];
+>  
+> -	ckhdid_printf(pr_chid, sizeof(pr_chid), &cbaf->chid);
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", pr_chid);
+> +	return sprintf(buf, "%16ph\n", cbaf->chid.data);
+>  }
+>  
+>  static ssize_t cbaf_wusb_chid_store(struct device *dev,
+> @@ -415,10 +413,8 @@ static ssize_t cbaf_wusb_cdid_show(struct device *dev,
+>  {
+>  	struct usb_interface *iface = to_usb_interface(dev);
+>  	struct cbaf *cbaf = usb_get_intfdata(iface);
+> -	char pr_cdid[WUSB_CKHDID_STRSIZE];
+>  
+> -	ckhdid_printf(pr_cdid, sizeof(pr_cdid), &cbaf->cdid);
+> -	return scnprintf(buf, PAGE_SIZE, "%s\n", pr_cdid);
+> +	return sprintf(buf, "%16ph\n", cbaf->cdid.data);
+>  }
+>  
+>  static ssize_t cbaf_wusb_cdid_store(struct device *dev,
+> @@ -503,7 +499,6 @@ static int cbaf_cc_upload(struct cbaf *cbaf)
+>  	int result;
+>  	struct device *dev = &cbaf->usb_iface->dev;
+>  	struct wusb_cbaf_cc_data *ccd;
+> -	char pr_cdid[WUSB_CKHDID_STRSIZE];
+>  
+>  	ccd =  cbaf->buffer;
+>  	*ccd = cbaf_cc_data_defaults;
+> @@ -513,10 +508,8 @@ static int cbaf_cc_upload(struct cbaf *cbaf)
+>  	ccd->BandGroups = cpu_to_le16(cbaf->host_band_groups);
+>  
+>  	dev_dbg(dev, "Trying to upload CC:\n");
+> -	ckhdid_printf(pr_cdid, sizeof(pr_cdid), &ccd->CHID);
+> -	dev_dbg(dev, "  CHID       %s\n", pr_cdid);
+> -	ckhdid_printf(pr_cdid, sizeof(pr_cdid), &ccd->CDID);
+> -	dev_dbg(dev, "  CDID       %s\n", pr_cdid);
+> +	dev_dbg(dev, "  CHID       %16ph\n", ccd->CHID.data);
+> +	dev_dbg(dev, "  CDID       %16ph\n", ccd->CDID.data);
+>  	dev_dbg(dev, "  Bandgroups 0x%04x\n", cbaf->host_band_groups);
+>  
+>  	result = usb_control_msg(
+> diff --git a/drivers/usb/wusbcore/dev-sysfs.c b/drivers/usb/wusbcore/dev-sysfs.c
+> index 85a1acf3a729..67b0a4c412b2 100644
+> --- a/drivers/usb/wusbcore/dev-sysfs.c
+> +++ b/drivers/usb/wusbcore/dev-sysfs.c
+> @@ -50,10 +50,9 @@ static ssize_t wusb_cdid_show(struct device *dev,
+>  	wusb_dev = wusb_dev_get_by_usb_dev(to_usb_device(dev));
+>  	if (wusb_dev == NULL)
+>  		return -ENODEV;
+> -	result = ckhdid_printf(buf, PAGE_SIZE, &wusb_dev->cdid);
+> -	strcat(buf, "\n");
+> +	result = sprintf(buf, "%16ph\n", wusb_dev->cdid.data);
+>  	wusb_dev_put(wusb_dev);
+> -	return result + 1;
+> +	return result;
+>  }
+>  static DEVICE_ATTR_RO(wusb_cdid);
+>  
+> diff --git a/drivers/usb/wusbcore/devconnect.c b/drivers/usb/wusbcore/devconnect.c
+> index fcb06aef2675..a93837d57d53 100644
+> --- a/drivers/usb/wusbcore/devconnect.c
+> +++ b/drivers/usb/wusbcore/devconnect.c
+> @@ -532,7 +532,7 @@ static void wusbhc_handle_dn_connect(struct wusbhc *wusbhc,
+>  	}
+>  
+>  	dnc = container_of(dn_hdr, struct wusb_dn_connect, hdr);
+> -	ckhdid_printf(pr_cdid, sizeof(pr_cdid), &dnc->CDID);
+> +	sprintf(pr_cdid, "%16ph", dnc->CDID.data);
+>  	dev_info(dev, "DN CONNECT: device %s @ %x (%s) wants to %s\n",
+>  		 pr_cdid,
+>  		 wusb_dn_connect_prev_dev_addr(dnc),
+> diff --git a/drivers/usb/wusbcore/wusbhc.c b/drivers/usb/wusbcore/wusbhc.c
+> index e5ba6140c1ba..d0b404d258e8 100644
+> --- a/drivers/usb/wusbcore/wusbhc.c
+> +++ b/drivers/usb/wusbcore/wusbhc.c
+> @@ -80,17 +80,13 @@ static ssize_t wusb_chid_show(struct device *dev,
+>  {
+>  	struct wusbhc *wusbhc = usbhc_dev_to_wusbhc(dev);
+>  	const struct wusb_ckhdid *chid;
+> -	ssize_t result = 0;
+>  
+>  	if (wusbhc->wuie_host_info != NULL)
+>  		chid = &wusbhc->wuie_host_info->CHID;
+>  	else
+>  		chid = &wusb_ckhdid_zero;
+>  
+> -	result += ckhdid_printf(buf, PAGE_SIZE, chid);
+> -	result += sprintf(buf + result, "\n");
+> -
+> -	return result;
+> +	return sprintf(buf, "%16ph\n", chid->data);
+>  }
+>  
+>  /*
+> diff --git a/include/linux/usb/wusb.h b/include/linux/usb/wusb.h
+> index 9e4a3213f2c2..65adee629106 100644
+> --- a/include/linux/usb/wusb.h
+> +++ b/include/linux/usb/wusb.h
+> @@ -236,22 +236,6 @@ enum {
+>  	WUSB_TRUST_TIMEOUT_MS = 4000,	/* [WUSB] section 4.15.1 */
+>  };
+>  
+> -static inline size_t ckhdid_printf(char *pr_ckhdid, size_t size,
+> -				   const struct wusb_ckhdid *ckhdid)
+> -{
+> -	return scnprintf(pr_ckhdid, size,
+> -			 "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx "
+> -			 "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx",
+> -			 ckhdid->data[0],  ckhdid->data[1],
+> -			 ckhdid->data[2],  ckhdid->data[3],
+> -			 ckhdid->data[4],  ckhdid->data[5],
+> -			 ckhdid->data[6],  ckhdid->data[7],
+> -			 ckhdid->data[8],  ckhdid->data[9],
+> -			 ckhdid->data[10], ckhdid->data[11],
+> -			 ckhdid->data[12], ckhdid->data[13],
+> -			 ckhdid->data[14], ckhdid->data[15]);
+> -}
 
-Do we have a notion of untrusted kernel drivers? A userspace driver
-(VFIO) is untrusted, ok. But a malicious driver loaded into the kernel
-address space would have much easier ways to corrupt the system than to
-exploit lazy mode...
+This removes the original clang warning and seems like a nice cleanup.
 
-For (3), I agree that we should at least disallow lazy mode if
-pci_dev->untrusted is set. At the moment it means that we require the
-strictest IOMMU configuration for external-facing PCI ports, but it can
-be extended to blacklist other vulnerable devices or locations.
+Reviewed-by: Louis Taylor <louis@kragniz.eu>
 
-If you do (3) then maybe we don't need (1) and (2), which require a
-tonne of work in the DMA and IOMMU layers (but would certainly be nice
-to see, since it would also help handle ATS invalidation timeouts)
-
-Thanks,
-Jean
-
->    So that some high-end trusted devices use non-strict mode, and keep others still using
-> strict mode. The drivers who want to use non-strict mode, should change to use new APIs
-> by themselves.
-> 
-> 
->>>
->>> Why not keep the policy to secure by default, as we do for
->>> iommu.passthrough? And maybe add something similar to
->>> CONFIG_IOMMU_DEFAULT_PASSTRHOUGH? It's easy enough for experts to pass a
->>> command-line argument or change the default config.
->>
->> Sorry for the late reply, it was Chinese new year, and we had a long discussion
->> internally, we are fine to add a Kconfig but not sure OS vendors will set it
->> to default y.
->>
->> OS vendors seems not happy to pass a command-line argument, to be honest,
->> this is our motivation to enable non-strict as default. Hope OS vendors
->> can see this email thread, and give some input here.
->>
->> Thanks
->> Hanjun
->>
->>
->> .
->>
-> 
-
+Cheers,
+Louis
