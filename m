@@ -2,112 +2,161 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08986C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D51C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61532085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:24:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="krqo598Q"
+	by mail.kernel.org (Postfix) with ESMTP id 18FC7218B0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551407315;
+	bh=3r7LDN99AtOgf3aUEAmOBEPGqH4rCbezf2u14v7BmaI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VlcZQlq/Qr6pU41lnSOkszfxwdLfDH814KDX93wnsa5YNF2UT5Nl31c+hAcQHY3x+
+	 Ri+kl1G17kRP3bpIW3T9OVnXfTakQZdtXVOuTIm5R0l63Jrr1C/XlOZUjNrGx0Ge7J
+	 udZLHi1c0MO1LRvIYEDKhc/59fAukZZzc62rQQZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbfCACYA (ORCPT
+        id S1731039AbfCAC2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 21:24:00 -0500
-Received: from ozlabs.org ([203.11.71.1]:53425 "EHLO ozlabs.org"
+        Thu, 28 Feb 2019 21:28:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbfCACYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 21:24:00 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725896AbfCAC2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 21:28:33 -0500
+Received: from devnote (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 449YBd4cqsz9s4V;
-        Fri,  1 Mar 2019 13:23:53 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1551407037;
-        bh=oZlwRUfuxCc354Fb3zW6x4JC89IDxaOzMO5/ibazr68=;
-        h=Date:From:To:Cc:Subject:From;
-        b=krqo598QrR4VMVPcnj2kfRRrQ51q/EgJzdycSwLdbAM5ayWXGgYQNHhRe12UHuAf+
-         tFLrWLqtVGgBeC+X+1h0f9L7AyjKy5vb6H+RCA49uiuZjPUQlVb8pMlmpDi6tNvLtB
-         WlZHey7xrP4ijhVAc3M8Vlf9sSYzhfEULNWic2eQdp2McG4BBO7UfVEQLr+fE6BtW7
-         gQYpizJO3hVFLvDvq3udgxOjZ+/hUlWoVwKT9paALsYLoM1dL2QTzObKz5KskDgDcz
-         n/CXKGhRqdMYm4RofdGJ4urj2DjLzQAMPL/AN3LZNooTmX27WeiXR6XLhRKGdTISG1
-         d9+Pid/m02iQw==
-Date:   Fri, 1 Mar 2019 13:23:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mario Kleiner <mario.kleiner.de@gmail.com>,
-        David Francis <David.Francis@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: linux-next: manual merge of the drm tree with the drm-fixes tree
-Message-ID: <20190301132351.6f4e815f@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/UfcNgO3NRzprj7em811gPnl"; protocol="application/pgp-signature"
+        by mail.kernel.org (Postfix) with ESMTPSA id 54AA020863;
+        Fri,  1 Mar 2019 02:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551407311;
+        bh=3r7LDN99AtOgf3aUEAmOBEPGqH4rCbezf2u14v7BmaI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MIBX/Wka7GdLd3NzBPKuyZcoeVkBINW2XGxXfkscX541WIiPbgY2xIm0s4cA4uLdt
+         +uXCAZUFC4MwbCmjUDwklrvJ3NZyeG/mVZ9hkKWx2Ode8v6Xzcw5Vy5/5BM1tFPRJg
+         ARl/U/enFGsQSI8y+9DPbKyC+rvAsC2A0YwM4iXU=
+Date:   Fri, 1 Mar 2019 11:28:26 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        paulmck@linux.vnet.ibm.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-Id: <20190301112826.ced40b59fb7e8118fa5b40d6@kernel.org>
+In-Reply-To: <20190228150054.GB156098@google.com>
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+        <20190228173444.54403795211d80ba540b61cb@kernel.org>
+        <20190228150054.GB156098@google.com>
+X-Mailer: Sylpheed 3.5.0 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UfcNgO3NRzprj7em811gPnl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Joel,
 
-Hi all,
+On Thu, 28 Feb 2019 10:00:54 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-Today's linux-next merge of the drm tree got a conflict in:
+> > Hmm, isn't it easier to add kernel-headers package on Android?
+> 
+> I have already been down that road. In the Android ecosystem, the Android
+> teams only provide a "userspace system image" which goes on the system
+> partition of the flash (and a couple other images are also provided but
+> system is the main one). The system image cannot contain GPL source code. It
+> is also not possible to put kernel headers for every kernel version on the
+> system images that ship and is not practical. Android boots on 1000s of forked
+> kernels. It does not make sense to provide headers on the system image for
+> every kernel version and I already had many discussions on the subject with
+> the teams, it is something that is just not done. Now for kernel modules,
+> there's another image called the "vendor image" which is flashed onto the
+> vendor parition, this is where kernel modules go.  This vendor image is not
+> provided by Google for non-Pixel devices. So we have no control over what
+> goes there BUT we do know that kernel modules that are enabled will go there,
+> and we do have control over enforcing that certain kernel modules should be
+> built and available as they are mandatory for Android to function properly.
+> We would also possibly make it a built-in option as well. Anyway my point is
+> keeping it in the kernel is really the easiest and the smartest choice IMO.
 
-  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+Sorry, I'm not convinced yet. This sounds like "because Android decided not
+to put the header files on vendor partition, but kernel module is OK"
+Why don't google ask vendors to put their kernel headers (or header tarball)
+on vendor partition instead?
 
-between commit:
+> 
+> > > The feature is also buildable as a module just in case the user desires
+> > > it not being part of the kernel image. This makes it possible to load
+> > > and unload the headers on demand. A tracing program, or a kernel module
+> > > builder can load the module, do its operations, and then unload the
+> > > module to save kernel memory. The total memory needed is 3.8MB.
+> > 
+> > But it also requires to install build environment (tools etc.)
+> > on the target system...
+> 
+> Yes, that's true. Check the other thread with Masahiro that we are discussing
+> this point on and let us continue discussing there:
+> https://lore.kernel.org/patchwork/patch/1046307/#1238223
+> https://lore.kernel.org/patchwork/patch/1046307/#1238491
+> 
+> > > The code to read the headers is based on /proc/config.gz code and uses
+> > > the same technique to embed the headers.
+> > > 
+> > > To build a module, the below steps have been tested on an x86 machine:
+> > > modprobe kheaders
+> > > rm -rf $HOME/headers
+> > > mkdir -p $HOME/headers
+> > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> > > cd my-kernel-module
+> > > make -C $HOME/headers M=$(pwd) modules
+> > > rmmod kheaders
+> > 
+> > It seems a bit complex, but no difference from compared with carrying
+> > kheaders.tar.gz. I think we would better have a psudo filesystem
+> > which can mount this compressed header file directly :) Then it becomes
+> > simpler, like
+> > 
+> > modprobe headerfs
+> > mkdir $HOME/headers
+> > mount -t headerfs $HOME/headers
+> > 
+> > And this doesn't consume any disk-space.
+> 
+> I felt using a compressed tar is really the easiest way because of all the
+> tools are already available.
 
-  d63716658ac1 ("drm/amd/display: Use vrr friendly pageflip throttling in D=
-C.")
+As I asked above, if the pure tarball is useful, you can simply ask vendors
+to put the header tarball on their vendor directory. I feel making it as
+a module is not a right way.
 
-from the drm-fixes tree and commits:
+> There isn't a compressed in-ram filesystem right
+> now that I'm aware off that can achieve the kind of high compression ratio
+> this patchset does.
 
-  8a48b44cd00f ("drm/amd/display: Call into DC once per multiplane flip")
-  bc7f670ee04c ("drm/amd/display: Perform plane updates only when needed")
+I think if linux can support something like tarfs(or compressed initramfs)
+in kernel, it gives linux an improvement not only a hack. :-)
 
-from the drm tree.
-
-I had no idea how to resolve this, so I just effectively reverted the
-drm-fixes commit.
-
-I fixed it up (see above) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Thank you,
 
 
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/UfcNgO3NRzprj7em811gPnl
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx4l7cACgkQAVBC80lX
-0Gwk2gf/db06P2eC151aw7EZr+PzAu18jkqbNDEMzeVWYd+7oMjcmlY2BEnQA040
-Z+uL90Lu24M0ar8lCwRpvq6A7KJG0IzhgudHYG0K6JzWwP+MmJsUYZT1rzTpLcuy
-EsNRI00+UQTK51LsSTYdToQsMNX2maasDtlZzYtkXoooRB8oRsytyiDaGBAVA/pb
-C4IvTeYqtDGC/viJ+0oqHaUUEVf9uuipXaThUlt8XO/l7RSs2ytQfqPfXExmpEoL
-PMEgSBG26etYrNTpZoR6ksmR728W3cozR5jl20eLGsRT8lgMIPyIivu5v5xUo0Oo
-xT0MmQdddaFU0oDPBz5NkW6zoDM4Tg==
-=NNfy
------END PGP SIGNATURE-----
-
---Sig_/UfcNgO3NRzprj7em811gPnl--
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
