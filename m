@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF84C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACF4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFF12084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598E72084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f/jn/p56";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Re8o/xGQ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Fs5ra9RA";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ognx3leD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfCATjg (ORCPT
+        id S1727810AbfCATjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 14:39:36 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:42822 "EHLO
+        Fri, 1 Mar 2019 14:39:39 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:42872 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfCATjf (ORCPT
+        with ESMTP id S1726215AbfCATjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 14:39:35 -0500
+        Fri, 1 Mar 2019 14:39:36 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8D7BE6115B; Fri,  1 Mar 2019 19:39:03 +0000 (UTC)
+        id CB8ED6115A; Fri,  1 Mar 2019 19:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551469173;
-        bh=wBZB+LFIv8r0uTFu6MNzs2A3S+65mKQ9oZ1KI8mimLg=;
+        s=default; t=1551469175;
+        bh=tXlDTiZ8Yze+sJs1VdJaFbhH91zYS29F71MrhySNETc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/jn/p56Zv/WVlZp6nB/4xlbOfSzMcJs3Bw4dzgrb5yrY5opQ1W6DU+6nIBqlWSz3
-         JxQ3EYv6jfu/YqJcd4HwaAgi5P7dS+tas6ZNahDqKnA+Tdzn0KLLheU47qFD9H+reU
-         YZD2d4Ev7py2cTHBaTyl2IIzPLlT8uY16vkbkbkU=
+        b=Fs5ra9RAPAIZDvSfcdRrDElH3DJ0HOm9Sg5FljyCsolYwedckSOwvySg2yVMODW8F
+         EeaSt5Amgb1zzuNwCYnHcD7iCu0u17cpvX/3uF0A5ZlS/+0Ca+pAb6goYKi3EXm4FU
+         dr1hHLeAKB+ow+ICerFJeYV9LmIgR3cKblqox0OA=
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0EA9F617A3;
-        Fri,  1 Mar 2019 19:38:56 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BF098618F3;
+        Fri,  1 Mar 2019 19:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551469138;
-        bh=wBZB+LFIv8r0uTFu6MNzs2A3S+65mKQ9oZ1KI8mimLg=;
+        s=default; t=1551469140;
+        bh=tXlDTiZ8Yze+sJs1VdJaFbhH91zYS29F71MrhySNETc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Re8o/xGQPGqb8QmQKRwUj+Um7m7Z/0gNZ5vhXhdiwQZQNdIabkc6SpYeZhMx2+zdf
-         J4TLjoMYGwsD8vRwfyO7EeQRgSTNlRST0GDalmD1Z2b5rsmbBNUkOP9uoEv1jeuvDq
-         NRqQ1j9u96MhnTbkV/g8CFnEOgOCJtUmt2hfvMto=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0EA9F617A3
+        b=ognx3leDWjQQqlqjkb1JPlKy9uo//PCSBy8WelE/Xb3Ul0pREys86PR63/pFXvFol
+         O+lo2fHA4zAoXFNv/gZdqmOtz8RzfQ7+9yFCrfH/Hj/UGLl6SmKFF/YcETKVTGWSMs
+         7TgXwLSylYS7CDToJBhpRSkFscpMrl/MiS0AKLSA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BF098618F3
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -57,9 +57,9 @@ Cc:     jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
         Rob Clark <robdclark@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [RFC PATCH v1 10/15] drm/msm: Add support for IOMMU auxiliary domains
-Date:   Fri,  1 Mar 2019 12:38:32 -0700
-Message-Id: <1551469117-3404-11-git-send-email-jcrouse@codeaurora.org>
+Subject: [RFC PATCH v1 11/15] drm/msm: Add a helper function for a per-instance address space
+Date:   Fri,  1 Mar 2019 12:38:33 -0700
+Message-Id: <1551469117-3404-12-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org>
 References: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org>
@@ -68,158 +68,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for creating a auxiliary domain from the IOMMU device to
-implement per-instance pagetables. Also add a helper function to
-return the pagetable base address (ttbr) and asid to the caller so
-that the GPU target code can set up the pagetable switch.
+Add a helper function to create a GEM address space attached to
+an iommu auxiliary domain for a per-instance pagetable.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- drivers/gpu/drm/msm/msm_iommu.c | 97 +++++++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/msm/msm_mmu.h   |  4 ++
- 2 files changed, 101 insertions(+)
+ drivers/gpu/drm/msm/msm_drv.h     |  4 +++
+ drivers/gpu/drm/msm/msm_gem_vma.c | 53 +++++++++++++++++++++++----------------
+ 2 files changed, 36 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 1926329..adf9f18 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -21,9 +21,21 @@
- struct msm_iommu {
- 	struct msm_mmu base;
- 	struct iommu_domain *domain;
-+	u64 ttbr;
-+	u32 asid;
- };
- #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index 3140e8f..4423be0 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -258,6 +258,10 @@ struct msm_gem_address_space *
+ msm_gem_address_space_create_a2xx(struct device *dev, struct msm_gpu *gpu,
+ 		const char *name, uint64_t va_start, uint64_t va_end);
  
-+/*
-+ * The asid is currently unused for arm-smmu-v2 since all the pagetable
-+ * switching does a TLBIALL but still assign a somewhat unique number per
-+ * instance to leave open the possibility of being smarter about it
-+ *
-+ * Accepted range is 32 to 255 (starting at 32 gives a cushion for the asids
-+ * assigned to the real context banks in the arm-smmu driver.
-+ */
-+static int msm_iommu_asid = 32;
++struct msm_gem_address_space *
++msm_gem_address_space_create_instance(struct device *dev, const char *name,
++		u64 va_start, u64 va_end);
 +
- static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
- 		unsigned long iova, int flags, void *arg)
- {
-@@ -34,6 +46,47 @@ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
+ int msm_register_mmu(struct drm_device *dev, struct msm_mmu *mmu);
+ void msm_unregister_mmu(struct drm_device *dev, struct msm_mmu *mmu);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index 49c0482..4364bf8 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -136,14 +136,12 @@ int msm_gem_init_vma(struct msm_gem_address_space *aspace,
  	return 0;
  }
  
-+static int msm_iommu_aux_attach(struct msm_mmu *mmu, const char * const *names,
-+			    int cnt)
-+{
-+	struct msm_iommu *iommu = to_msm_iommu(mmu);
-+	int ret;
-+
-+	/* Attach the aux device */
-+	ret = iommu_aux_attach_device(iommu->domain, mmu->dev);
-+	if (ret)
-+		return ret;
-+
-+	/* Get the base address of the pagetable */
-+	ret = iommu_domain_get_attr(iommu->domain, DOMAIN_ATTR_PTBASE,
-+		&iommu->ttbr);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Assign an asid for the instance even though the code doesn't
-+	 * currently support per-asid TLB invalidation. There isn't any
-+	 * protection on this so two instances could in theory end up with the
-+	 * same ASID but that would have very minor performance implications if
-+	 * per-ASID TLB invalidation were to be enabled in the future
-+	 */
-+	iommu->asid = msm_iommu_asid++;
-+
-+	if (msm_iommu_asid > 0xff)
-+		msm_iommu_asid = 32;
-+
-+	return 0;
-+}
-+
-+static void msm_iommu_aux_detach(struct msm_mmu *mmu, const char * const *names,
-+			     int cnt)
-+{
-+	struct msm_iommu *iommu = to_msm_iommu(mmu);
-+
-+	iommu->ttbr = 0;
-+	iommu->asid = 0;
-+}
-+
- static int msm_iommu_attach(struct msm_mmu *mmu, const char * const *names,
- 			    int cnt)
+-
+-struct msm_gem_address_space *
+-msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
+-		const char *name)
++static struct msm_gem_address_space *
++msm_gem_address_space_new(struct msm_mmu *mmu, const char *name,
++		u64 va_start, u64 va_end)
  {
-@@ -86,6 +139,50 @@ static const struct msm_mmu_funcs funcs = {
- 		.destroy = msm_iommu_destroy,
- };
+ 	struct msm_gem_address_space *aspace;
+-	u64 size = domain->geometry.aperture_end -
+-		domain->geometry.aperture_start;
++	u64 size = va_end - va_start;
  
-+static const struct msm_mmu_funcs aux_funcs = {
-+		.attach = msm_iommu_aux_attach,
-+		.detach = msm_iommu_aux_detach,
-+		.map = msm_iommu_map,
-+		.unmap = msm_iommu_unmap,
-+		.destroy = msm_iommu_destroy,
-+};
-+
-+bool msm_iommu_get_ptinfo(struct msm_mmu *mmu, u64 *ttbr, u32 *asid)
-+{
-+	struct msm_iommu *iommu = to_msm_iommu(mmu);
-+
-+	if (!iommu->ttbr)
-+		return false;
-+
-+	if (ttbr)
-+		*ttbr = iommu->ttbr;
-+	if (asid)
-+		*asid = iommu->asid;
-+
-+	return true;
-+}
-+
-+
-+struct msm_mmu *msm_iommu_new_instance(struct device *dev)
-+{
-+	struct msm_iommu *iommu;
-+
-+	iommu = kzalloc(sizeof(*iommu), GFP_KERNEL);
-+	if (!iommu)
-+		return ERR_PTR(-ENOMEM);
-+
-+	/* Create a new domain that will be attached as an aux domain */
-+	iommu->domain = iommu_domain_alloc(&platform_bus_type);
-+	if (!iommu->domain) {
-+		kfree(iommu);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	msm_mmu_init(&iommu->base, dev, &aux_funcs);
-+
-+	return &iommu->base;
-+}
-+
- struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
- {
- 	struct msm_iommu *iommu;
-diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
-index d21b266..f430903 100644
---- a/drivers/gpu/drm/msm/msm_mmu.h
-+++ b/drivers/gpu/drm/msm/msm_mmu.h
-@@ -46,6 +46,10 @@ static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
- struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
- struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu);
+ 	aspace = kzalloc(sizeof(*aspace), GFP_KERNEL);
+ 	if (!aspace)
+@@ -151,10 +149,9 @@ msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
  
-+struct msm_mmu *msm_iommu_new_instance(struct device *dev);
+ 	spin_lock_init(&aspace->lock);
+ 	aspace->name = name;
+-	aspace->mmu = msm_iommu_new(dev, domain);
++	aspace->mmu = mmu;
+ 
+-	drm_mm_init(&aspace->mm, (domain->geometry.aperture_start >> PAGE_SHIFT),
+-		size >> PAGE_SHIFT);
++	drm_mm_init(&aspace->mm, (va_start >> PAGE_SHIFT), size >> PAGE_SHIFT);
+ 
+ 	kref_init(&aspace->kref);
+ 
+@@ -162,24 +159,38 @@ msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
+ }
+ 
+ struct msm_gem_address_space *
++msm_gem_address_space_create(struct device *dev, struct iommu_domain *domain,
++		const char *name)
++{
++	struct msm_mmu *mmu = msm_iommu_new(dev, domain);
 +
-+bool msm_iommu_get_ptinfo(struct msm_mmu *mmu, u64 *ttbr, u32 *asid);
++	if (IS_ERR(mmu))
++		return ERR_CAST(mmu);
 +
- static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
- 		int (*handler)(void *arg, unsigned long iova, int flags))
++	return msm_gem_address_space_new(mmu, name,
++		domain->geometry.aperture_start, domain->geometry.aperture_end);
++}
++
++struct msm_gem_address_space *
+ msm_gem_address_space_create_a2xx(struct device *dev, struct msm_gpu *gpu,
+ 		const char *name, uint64_t va_start, uint64_t va_end)
  {
+-	struct msm_gem_address_space *aspace;
+-	u64 size = va_end - va_start;
++	struct msm_mmu *mmu = msm_gpummu_new(dev, gpu);
+ 
+-	aspace = kzalloc(sizeof(*aspace), GFP_KERNEL);
+-	if (!aspace)
+-		return ERR_PTR(-ENOMEM);
++	if (IS_ERR(mmu))
++		return ERR_CAST(mmu);
+ 
+-	spin_lock_init(&aspace->lock);
+-	aspace->name = name;
+-	aspace->mmu = msm_gpummu_new(dev, gpu);
++	return msm_gem_address_space_new(mmu, name, va_start, va_end);
++}
+ 
+-	drm_mm_init(&aspace->mm, (va_start >> PAGE_SHIFT),
+-		size >> PAGE_SHIFT);
++struct msm_gem_address_space *
++msm_gem_address_space_create_instance(struct device *dev, const char *name,
++		u64 va_start, u64 va_end)
++{
++	struct msm_mmu *mmu = msm_iommu_new_instance(dev);
+ 
+-	kref_init(&aspace->kref);
++	if (IS_ERR(mmu))
++		return ERR_CAST(mmu);
+ 
+-	return aspace;
++	return msm_gem_address_space_new(mmu, name, va_start, va_end);
+ }
 -- 
 2.7.4
 
