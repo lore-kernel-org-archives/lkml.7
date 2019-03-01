@@ -2,129 +2,155 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7001C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58917C10F00
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7D1218FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C772085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="MOHJiXeG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rtzlD+QI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732660AbfCAAtQ (ORCPT
+        id S1732830AbfCAAyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 19:49:16 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33951 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726678AbfCAAtP (ORCPT
+        Thu, 28 Feb 2019 19:54:33 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42000 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbfCAAyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 19:49:15 -0500
-Received: by mail-qt1-f196.google.com with SMTP id w4so25957035qtc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 16:49:14 -0800 (PST)
+        Thu, 28 Feb 2019 19:54:33 -0500
+Received: by mail-oi1-f195.google.com with SMTP id s16so18138442oih.9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 16:54:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=3zaAc4AkyYlmNHrBEr4XOgXYMne+k8U/cWFaLP79Juw=;
-        b=MOHJiXeGPN8iY0eIT5lF3Mxy5lun1L4+DZDbqOBS02rxnV+dZ1SiS6KZkGj++5xet+
-         ZakVbbOHwWlivX0cZ4Vj441ijOwVIiRMfSVqrrgVxC+yP2MZ2HWJJ/TcfYGm55ht0hRo
-         BjoXpyhEw3ppAAa8buPCteihj7kxVqNG6QYWfZBTNcQCOQ1wBFfkB+DxbAKc+Xl6jEYb
-         kAyJH65nsKLaORU7CRygORAqKpaOpWs9zH8zYLlm3i+nZtuYRVXx7YL54B/2v+qQ0F11
-         Xk6sQNKaXlPuyNQL7ti1oxL2MDAUgOMK/YUHUGOiyCg8fTITWaQltlTvSlPJi9uEerol
-         Ozww==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8mgdYbmYAMxrxPxkrDEDYUV9PcZHWAxATjOJ8ZwA2PY=;
+        b=rtzlD+QIneyB0PN0/wgylHtsOTlKgeP3E3qAfQguv23CnsMgcECXL4G0Hp7A22axRA
+         oyKxrcV04W/FJ9UBx6qSMDHArEwGtBfnfMloqqdXKB9LBug439hCANVLXzLZo7b1I8Ic
+         +NRtDNaAWwHg1IZbnnMIZz38amNeU2ZrJMyHR73AKgAu98R41bDTMkfZFrxuvOq5xXN5
+         +pEHxDgNvuVcPCkqwQZ9VKnWnR9SemLGg2aHUPg3HtIO2NqFxj1azIf5KXhcg9Rwp4Cd
+         CVYwjpt2y28NiFsC9I8RBIueBYv+KdeI5CYJtmjsBi4QMjqxqTT2JtPJM1ExEZ/+DGbA
+         rGsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3zaAc4AkyYlmNHrBEr4XOgXYMne+k8U/cWFaLP79Juw=;
-        b=eawcmqXHxxh+9SkEUVyQMbQ0kqZ0ZLToDHfBaVdLIXeMkzmrsWu4VneKUwkUVGj3l+
-         NSRQGhZBDa5qFkW7HSdZaIsU6c9A6z3/Rf0rl3pAZlOZSydyERle0RUglXIANUPeEQ3L
-         Hf1pPlmX69FwxRD5KLPnlHYAAVN9jh4Agv3mqDqNpj7AL3XkSVUHcFMJfENLD9Kj8s2y
-         1eJqusYng5DbN3U7WoLR3wdvdjvU2VvJyrjuURK+sHNwzronTR+Xu/VRL4qnlNMh06bS
-         WxHFkrZWP/DTu1KKeHEoanKsNJVAYGK+A4abja5WlmhJu8ekIW2JcJtMyGvXmvjNHod+
-         O3Sg==
-X-Gm-Message-State: APjAAAXiqzckZEgXlxm6NhXfC+xlr0CRtjWufD1LvsnFgCJw98rvnkVZ
-        wvOa9QjfLfUEpxtm5tAMtHFA0Q==
-X-Google-Smtp-Source: APXvYqwLalUyIj1++3RJLmJq+1Z9CujJWMbxVlRb9u6ZUDzfDCT+f3+pu+iAuj3b4e3ATUMDdQG6NA==
-X-Received: by 2002:ac8:3464:: with SMTP id v33mr1839555qtb.65.1551401354288;
-        Thu, 28 Feb 2019 16:49:14 -0800 (PST)
-Received: from ovpn-120-151.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v26sm12683985qtk.22.2019.02.28.16.49.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 16:49:13 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     willy@infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/hugepages: fix "orig_pud" set but not used
-Date:   Thu, 28 Feb 2019 19:49:03 -0500
-Message-Id: <20190301004903.89514-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8mgdYbmYAMxrxPxkrDEDYUV9PcZHWAxATjOJ8ZwA2PY=;
+        b=OYlj63CmGJh0KUDreJLyYn+thzmycgOrna2RDNj9SygRBwb1QGllA6Bdlv+KsoZGBI
+         L8/UcF0KO6At1EkWfFj+wfAsHqzbr+U/77ihBl2Z81AALMoPITYooHoF0M+Bw8FcYNaN
+         vsw0f63WklbTqO5po1FI3JjYeRdPcy+F9rUlKijv+AYI8sydDe2+o864JcStoZfW9uvO
+         p0acJ4iGBoxg2oVpij6bcHldz2LF9Cfs3lDeOVflMcnRmVwjiebBmhfYIYzbqP7pTaf8
+         uGFPFQvO/xbBnL0DOwyV/u7qrRN2rF1NuhogyQokrUKsxfk+AJk5UqkUPT+mjPxOsXgx
+         P9Bg==
+X-Gm-Message-State: AHQUAubQeMFR92QrIw2YPxalzIK4SEC1cKEACqCi31En/t3dkAMa6729
+        Ea74nBKV3vENN3oJ7+g+C8TNYxRXBAkmzMr7WPew8w==
+X-Google-Smtp-Source: AHgI3IbqmUIfqsBaoYBqvf3sGrxahpjE8Ht9DkwYj1SzEI7fYaiAtXazN0U6LPuX6kQ/WbrLUNQ/Fefg91mnRKoD4EI=
+X-Received: by 2002:aca:cc4d:: with SMTP id c74mr1689814oig.157.1551401671766;
+ Thu, 28 Feb 2019 16:54:31 -0800 (PST)
+MIME-Version: 1.0
+References: <0000000000001aab8b0582689e11@google.com> <20190221113624.284fe267e73752639186a563@linux-foundation.org>
+ <CAG48ez14jBF3uJH8qP+JrXtiQnQ2S+y9wHVpQ0mEXbmAVqKgWg@mail.gmail.com>
+ <alpine.DEB.2.21.1902281248400.1821@nanos.tec.linutronix.de> <CAG48ez2huzOwKvH5qVGaGeWOKRDX8qr_9keHBcZCyBaw85ed-g@mail.gmail.com>
+In-Reply-To: <CAG48ez2huzOwKvH5qVGaGeWOKRDX8qr_9keHBcZCyBaw85ed-g@mail.gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 1 Mar 2019 01:54:05 +0100
+Message-ID: <CAG48ez3UdLSikuCqEUnVJH3wVRjj95fzO-3HUO7=5bkaftd3jw@mail.gmail.com>
+Subject: Re: missing stack trace entry on NULL pointer call [was: Re: BUG:
+ unable to handle kernel NULL pointer dereference in __generic_file_write_iter]
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        syzbot <syzbot+ca95b2b7aef9e7cbd6ab@syzkaller.appspotmail.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>, hannes@cmpxchg.org,
+        Hugh Dickins <hughd@google.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent
-hugepages") introduced pudp_huge_get_and_clear_full() but no one uses
-its return code, so just make it void.
+On Thu, Feb 28, 2019 at 5:34 PM Jann Horn <jannh@google.com> wrote:
+>
+> On Thu, Feb 28, 2019 at 1:57 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > On Thu, 28 Feb 2019, Jann Horn wrote:
+> > > +Josh for unwinding, +x86 folks
+> > > On Wed, Feb 27, 2019 at 11:43 PM Andrew Morton
+> > > <akpm@linux-foundation.org> wrote:
+> > > > On Thu, 21 Feb 2019 06:52:04 -0800 syzbot <syzbot+ca95b2b7aef9e7cbd6ab@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > > Hello,
+> > > > >
+> > > > > syzbot found the following crash on:
+> > > > >
+> > > > > HEAD commit:    4aa9fc2a435a Revert "mm, memory_hotplug: initialize struct..
+> > > > > git tree:       upstream
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1101382f400000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=4fceea9e2d99ac20
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=ca95b2b7aef9e7cbd6ab
+> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > >
+> > > > > Unfortunately, I don't have any reproducer for this crash yet.
+> > > >
+> > > > Not understanding.  That seems to be saying that we got a NULL pointer
+> > > > deref in __generic_file_write_iter() at
+> > > >
+> > > >                 written = generic_perform_write(file, from, iocb->ki_pos);
+> > > >
+> > > > which isn't possible.
+> > > >
+> > > > I'm not seeing recent changes in there which could have caused this.  Help.
+> > >
+> > > +
+> > >
+> > > Maybe the problem is that the frame pointer unwinder isn't designed to
+> > > cope with NULL function pointers - or more generally, with an
+> > > unwinding operation that starts before the function's frame pointer
+> > > has been set up?
+> > >
+> > > Unwinding starts at show_trace_log_lvl(). That begins with
+> > > unwind_start(), which calls __unwind_start(), which uses
+> > > get_frame_pointer(), which just returns regs->bp. But that frame
+> > > pointer points to the part of the stack that's storing the address of
+> > > the caller of the function that called NULL; the caller of NULL is
+> > > skipped, as far as I can tell.
+> > >
+> > > What's kind of annoying here is that we don't have a proper frame set
+> > > up yet, we only have half a stack frame (saved RIP but no saved RBP).
+> >
+> > That wreckage is related to the fact that the indirect calls are going
+> > through __x86_indirect_thunk_$REG. I just verified on a VM with some other
+> > callback NULL'ed that the resulting backtrace is not really helpful.
+> >
+> > So in that case generic_perform_write() has two indirect calls:
+> >
+> >   mapping->a_ops->write_begin() and ->write_end()
+>
+> Does the indirect thunk thing really make any difference? When you
+> arrive at RIP=NULL, RSP points to a saved instruction pointer, just
+> like when indirect calls are compiled normally.
+>
+> I just compiled kernels with artificial calls to a NULL function
+> pointer (in prctl_set_seccomp()), with retpoline disabled, with both
+> unwinders. The ORC unwinder shows a call trace with "?" everywhere
+> that doesn't show the caller:
+[...]
+> So I think this doesn't really have anything to do with
+> __x86_indirect_thunk_$REG, and the best possible fix might be to teach
+> the unwinders that RIP==NULL means "pretend that RIP is *real_RSP and
+> that RSP is real_RSP+8, and report *real_RSP as the first element of
+> the backtrace".
 
-mm/huge_memory.c: In function 'zap_huge_pud':
-mm/huge_memory.c:1982:8: warning: variable 'orig_pud' set but not used
-[-Wunused-but-set-variable]
-  pud_t orig_pud;
-        ^~~~~~~~
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- include/asm-generic/pgtable.h | 8 ++++----
- mm/huge_memory.c              | 4 +---
- 2 files changed, 5 insertions(+), 7 deletions(-)
-
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index 05e61e6c843f..17b789557afe 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -167,11 +167,11 @@ static inline pmd_t pmdp_huge_get_and_clear_full(struct mm_struct *mm,
- #endif
- 
- #ifndef __HAVE_ARCH_PUDP_HUGE_GET_AND_CLEAR_FULL
--static inline pud_t pudp_huge_get_and_clear_full(struct mm_struct *mm,
--					    unsigned long address, pud_t *pudp,
--					    int full)
-+static inline void pudp_huge_get_and_clear_full(struct mm_struct *mm,
-+						unsigned long address,
-+						pud_t *pudp, int full)
- {
--	return pudp_huge_get_and_clear(mm, address, pudp);
-+	pudp_huge_get_and_clear(mm, address, pudp);
- }
- #endif
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index faf357eaf0ce..9f57a1173e6a 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1979,7 +1979,6 @@ spinlock_t *__pud_trans_huge_lock(pud_t *pud, struct vm_area_struct *vma)
- int zap_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 		 pud_t *pud, unsigned long addr)
- {
--	pud_t orig_pud;
- 	spinlock_t *ptl;
- 
- 	ptl = __pud_trans_huge_lock(pud, vma);
-@@ -1991,8 +1990,7 @@ int zap_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 	 * pgtable_trans_huge_withdraw after finishing pudp related
- 	 * operations.
- 	 */
--	orig_pud = pudp_huge_get_and_clear_full(tlb->mm, addr, pud,
--			tlb->fullmm);
-+	pudp_huge_get_and_clear_full(tlb->mm, addr, pud, tlb->fullmm);
- 	tlb_remove_pud_tlb_entry(tlb, pud, addr);
- 	if (vma_is_dax(vma)) {
- 		spin_unlock(ptl);
--- 
-2.17.2 (Apple Git-113)
-
+Cooking up some patches now...
