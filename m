@@ -2,109 +2,113 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528ADC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7884DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2936920850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1ED2083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:58:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrJX56bw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388675AbfCAO6V (ORCPT
+        id S2388686AbfCAO65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:58:21 -0500
-Received: from mga06.intel.com ([134.134.136.31]:32203 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732668AbfCAO6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:58:21 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 06:58:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,427,1544515200"; 
-   d="scan'208";a="128242057"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Mar 2019 06:58:19 -0800
-Date:   Fri, 1 Mar 2019 06:58:19 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
- enabled in Guest
-Message-ID: <20190301145819.GC22584@linux.intel.com>
-References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-7-weijiang.yang@intel.com>
- <20190228161715.GF6166@linux.intel.com>
- <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
+        Fri, 1 Mar 2019 09:58:57 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35051 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbfCAO65 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:58:57 -0500
+Received: by mail-wm1-f66.google.com with SMTP id y15so12558247wma.0;
+        Fri, 01 Mar 2019 06:58:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uiL9Rnh3blwXuAKNU6QmBdtMIcWhOJmlAYKqNemhIFk=;
+        b=ZrJX56bw0KZ/G7xznZT4ItP5sRIG7QRMD3Tj7jwov8+W+OeJ3Rj9bhKVgMoOXFs+gO
+         60WA9wEyi7XwavtGXFAlljEGPlbiMEmVh9LPVphsigOeDBpkpkUWpdKsTsw4hRFAzfMK
+         tSBiX3pIm6Av2mDL8z+tFH8XW7wfxh+WAlLw1stLstkqiMsuSahUqQuuy7J134I/R+Gh
+         1S79gJyZepsBTCyKAgdez3RjjaE9lRPpl4OGQ31JSty+59DIBcVWZZ3DcJZJ/n8Cp3vd
+         WIv9L+EcWoQWQXJjku25hPKvTGyw5sL+UEVobDHUedUgPPKmktJfCTfZxoDdVG4x8w6+
+         f5Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uiL9Rnh3blwXuAKNU6QmBdtMIcWhOJmlAYKqNemhIFk=;
+        b=Sa2YuKGkXznVEbD4uTuMdL9nYyGMPA8Np5KEFZp/v/MKJH6q8GGgVnTyFFPLl4+kBa
+         i8skhYf17QcJFn3xXD1wY0Zu3Q3gXucQaZrLdiHaEQT2oq4DIiPnlm0lGpEMMpiU0MJW
+         Gg6YwflgaGLsCIYKyqdRqceg7cG4/qTVFPNkBycWdw/qECUxN4VOe56CaoqTJ2GqhQ57
+         eWGB6UMn8YQ5oQw38pM88BZHuTsk2DvabmHK4ot6KYPSkKL3NTyzD4azGKbCS0vd19TS
+         78LJU9yBM/KneFIx4XlltZqai29EUPcyWmUzaUAFQ0LbQl0mwjZrEKtyZpkH3fU6qIQ/
+         14cw==
+X-Gm-Message-State: AHQUAuaQNVyK6glYjEVZeH5K8axLSDWF7F7FVf7NhKK4YEGa9Ga8iUxN
+        bmbp6B6HoEQ9mepQqjwPeUQ=
+X-Google-Smtp-Source: AHgI3IZ6WjeBhL0obV2RJmXLQ/43Gir8C3ggByc6SdwIZcldGGfDYDMhaM7egXpfS++ivCrDFwEmXw==
+X-Received: by 2002:a7b:cc86:: with SMTP id p6mr3338194wma.32.1551452335241;
+        Fri, 01 Mar 2019 06:58:55 -0800 (PST)
+Received: from laptop.criteois.lan ([91.199.242.236])
+        by smtp.gmail.com with ESMTPSA id d9sm24400372wrn.72.2019.03.01.06.58.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Mar 2019 06:58:53 -0800 (PST)
+From:   Erwan Velu <erwanaliasr1@gmail.com>
+X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
+To:     elliott@hpe.com
+Cc:     Erwan Velu <e.velu@criteo.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        esc.storagedev@microsemi.com (open list:MICROSEMI SMART ARRAY SMARTPQI
+        DRIVER (smartpqi)),
+        linux-scsi@vger.kernel.org (open list:MICROSEMI SMART ARRAY SMARTPQI
+        DRIVER (smartpqi)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] scsi: smartpqi_init: Reporting 'logical unit failure'
+Date:   Fri,  1 Mar 2019 15:58:32 +0100
+Message-Id: <20190301145832.12735-1-e.velu@criteo.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190227163133.26283-1-e.velu@criteo.com>
+References: <20190227163133.26283-1-e.velu@criteo.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 04:38:44PM +0800, Yang Weijiang wrote:
-> On Thu, Feb 28, 2019 at 08:17:15AM -0800, Sean Christopherson wrote:
-> > On Mon, Feb 25, 2019 at 09:27:14PM +0800, Yang Weijiang wrote:
-> > > "Load Guest CET state" bit controls whether guest CET states
-> > > will be loaded at Guest entry. Before doing that, KVM needs
-> > > to check if CPU CET feature is available.
-> > > 
-> > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > > ---
-> > >  arch/x86/kvm/vmx.c | 32 ++++++++++++++++++++++++++++++++
-> > >  1 file changed, 32 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> > > index 89ee086e1729..d32cee9ee079 100644
-> > > --- a/arch/x86/kvm/vmx.c
-> > > +++ b/arch/x86/kvm/vmx.c
-> > > @@ -55,6 +55,7 @@
-> > >  #include <asm/mmu_context.h>
-> > >  #include <asm/spec-ctrl.h>
-> > >  #include <asm/mshyperv.h>
-> > > +#include <asm/cet.h>
-> > >  
-> > >  #include "trace.h"
-> > >  #include "pmu.h"
-> > > @@ -4065,6 +4066,20 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
-> > >  	return !(val & ~valid_bits);
-> > >  }
-> > >  
-> > > +static int vmx_guest_cet_cap(struct kvm_vcpu *vcpu)
-> > > +{
-> > > +	u32 eax, ebx, ecx, edx;
-> > > +
-> > > +	/*
-> > > +	 * Guest CET can work as long as HW supports the feature, independent
-> > > +	 * to Host SW enabling status.
-> > > +	 */
-> > > +	cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
-> > > +
-> > > +	return ((ecx & bit(X86_FEATURE_SHSTK)) |
-> > > +		(edx & bit(X86_FEATURE_IBT))) ? 1 : 0;
-> > 
-> > Given the holes in the (current) architecture/spec, I think KVM has to
-> > require both features to be supported in the guest to allow CR4.CET to
-> > be enabled.
-> The reason why I use a "OR" here is to keep CET enabling control the
-> same as that on host, right now on host, users can select to enable  SHSTK or IBT
-> feature by disabling the unexpected one. It's free to select SHSTK & IBT
-> or SHSTK | IBT.
+When the HARDWARE_ERROR/0x3e/0x1 case is triggered, the logical volume is offlined.
+When reading the kernel log, the reason why the device got offlined isn't reported to the user.
+This situation makes difficult for admins to estimate the root cause of the issue they analize.
 
-Which is not the same as SHSTK != IBT in *hardware*, which is effectively
-what this is allowing for the guest.  The problem is that the architecture
-doesn't cleanly separate the two features, i.e. we'd have a virtualization
-hole where the guest could touch state for a disabled feature.
+Reading this part of the code makes clear this is because driver received a HARDWARE_ERROR/0x3e/0x1 which is a 'logical unit failure'.
+This patch is just about reporting the reason behind the offlining to ease the analyse.
 
-Regardless, the guest would still be able to selectively enable each CET
-feature, it would just never see a model where SHSTK != IBT.
+Signed-off-by: Erwan Velu <e.velu@criteo.com>
+---
+ drivers/scsi/smartpqi/smartpqi_init.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index f564af8949e8..dfc4a6813440 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -2764,6 +2764,12 @@ static void pqi_process_raid_io_error(struct pqi_io_request *io_request)
+ 				sshdr.sense_key == HARDWARE_ERROR &&
+ 				sshdr.asc == 0x3e &&
+ 				sshdr.ascq == 0x1) {
++			struct pqi_ctrl_info *ctrl_info = shost_to_hba(scmd->device->host);
++			struct pqi_scsi_dev *device = scmd->device->hostdata;
++
++			dev_err_ratelimited(&ctrl_info->pci_dev->dev, "received 'logical unit failure' from controller for scsi %d:%d:%d:%d\n",
++							ctrl_info->scsi_host->host_no, device->bus,
++							device->target, device->lun);
+ 			pqi_take_device_offline(scmd->device, "RAID");
+ 			host_byte = DID_NO_CONNECT;
+ 		}
+-- 
+2.20.1
+
