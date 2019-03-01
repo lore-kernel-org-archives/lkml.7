@@ -2,88 +2,145 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9344AC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED14C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4562084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27A712084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389018AbfCAQGo (ORCPT
+        id S2388962AbfCAQHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:06:44 -0500
-Received: from vmicros1.altlinux.org ([194.107.17.57]:49976 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbfCAQGn (ORCPT
+        Fri, 1 Mar 2019 11:07:20 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60352 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727952AbfCAQHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:06:43 -0500
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 86BFC72CA65;
-        Fri,  1 Mar 2019 19:06:39 +0300 (MSK)
-Received: from altlinux.org (sole.flsd.net [185.75.180.6])
-        by imap.altlinux.org (Postfix) with ESMTPSA id 63AC34A4AE7;
-        Fri,  1 Mar 2019 19:06:39 +0300 (MSK)
-Date:   Fri, 1 Mar 2019 19:06:38 +0300
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] X.509: Parse public key parameters from x509 for
- akcipher
-Message-ID: <20190301160638.z266z767m4ky3ohk@altlinux.org>
-Mail-Followup-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190210184628.yupsxgjlaicwbxg6@altlinux.org>
- <20190219043732.x3sbwzqlz4ikntxo@gondor.apana.org.au>
- <20190224064840.hii4ccjksjdnewae@altlinux.org>
- <20190228061444.3escryzoit3idtwg@gondor.apana.org.au>
- <20190228070449.gjwoq4c2b3x5grie@altlinux.org>
- <20190228075141.s6mftb44yuylbzys@gondor.apana.org.au>
- <20190228082801.2aofw23r2shzwy4n@altlinux.org>
- <20190228090125.6n62v4oxpwl5yzv4@gondor.apana.org.au>
- <20190228103337.sbjujn27qkkgxqt2@altlinux.org>
- <20190228103715.ijvimcfysiguiwty@gondor.apana.org.au>
+        Fri, 1 Mar 2019 11:07:20 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1397327DC83;
+        Fri,  1 Mar 2019 16:07:18 +0000 (GMT)
+Date:   Fri, 1 Mar 2019 17:07:15 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Tokunori Ikegami" <ikegami_to@yahoo.co.jp>
+Cc:     "'liujian \(CE\)'" <liujian56@huawei.com>,
+        "'Tokunori Ikegami'" <ikegami.t@gmail.com>,
+        <keescook@chromium.org>, <bbrezillon@kernel.org>,
+        <ikegami@allied-telesis.co.jp>, <richard@nod.at>,
+        <linux-kernel@vger.kernel.org>, <marek.vasut@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <computersforpeace@gmail.com>,
+        <dwmw2@infradead.org>, <vigneshr@ti.com>
+Subject: Re: [PATCH v3] cfi: fix deadloop in cfi_cmdset_0002.c
+ do_write_buffer
+Message-ID: <20190301170715.68d89e84@collabora.com>
+In-Reply-To: <005a01d4d03e$39b0e0f0$ad12a2d0$@yahoo.co.jp>
+References: <1551189648-58073-1-git-send-email-liujian56@huawei.com>
+        <016001d4cf71$865e7b60$931b7220$@gmail.com>
+        <4F88C5DDA1E80143B232E89585ACE27D0264F137@DGGEMM528-MBX.china.huawei.com>
+        <20190228164228.734ede80@collabora.com>
+        <005a01d4d03e$39b0e0f0$ad12a2d0$@yahoo.co.jp>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <20190228103715.ijvimcfysiguiwty@gondor.apana.org.au>
-User-Agent: NeoMutt/20171215-106-ac61c7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Herbert,
+Hi Ikegami,
 
-On Thu, Feb 28, 2019 at 06:37:15PM +0800, Herbert Xu wrote:
-> On Thu, Feb 28, 2019 at 01:33:37PM +0300, Vitaly Chikunov wrote:
-> >
-> > To make the same for set_{pub,priv}_key it will require patching RSA
-> > drivers anyway, since length of the key is stored just once as keylen
-> > argument.
+On Fri, 1 Mar 2019 23:51:16 +0900
+"Tokunori Ikegami" <ikegami_to@yahoo.co.jp> wrote:
+
+> > Except this version no longer does what Vignesh suggested. See how you
+> > no longer test if chip_good() is true if time_after() returns true. So,
+> > imagine the thread entering this function is preempted just after the
+> > first chip_good() test, and resumed a few ms later. time_after() will
+> > return true, but chip_good() might also return true, and you ignore it.  
 > 
-> No we don't need to use the same format for different algorithms.
-> RSA should stay as is.
+> I think that the following 3 versions will be worked for time_after() as a same result and follow the Vignesh-san suggestion.
 
-I will rework as you suggest. But, just want to state that I disagree
-with this approach of implicitly appending parameters data to the key
-stream without any argument signifying it or length covering it. This
-fitting into the old API is also somewhat disagree to your words that
-we could change internal API:
+Let me show you how they are different:
 
-On Thu, Feb 28, 2019 at 02:14:44PM +0800, Herbert Xu wrote:
-> On Sun, Feb 24, 2019 at 09:48:40AM +0300, Vitaly Chikunov wrote:
-> ...
-> This compatibility does not matter.  We can always add translating
-> layers into the crypto API to deal with this.  The only ABI that
-> matters is the one to user-space.
+> 
+> 1. Original Vignesh-san suggestion
+> 
+> 	if (chip_good(map, adr, datum)) {
+> 		xip_enable(map, chip, adr);
+> 		goto op_done;
+> 	}
+
+--> thread preempted here
+==> chip_good() test becomes valid here
+--> thread resumed here, but timeout has expired
+
+> 
+> 	if (time_after(jiffies, timeo)) {
+
+you enter this branch
+
+> 		/* Test chip_good() if TRUE incorrectly again so write failure by time_after() can be avoided. */
+> 		if (chip_good(map, adr, datum)) {
+
+chip_good() returns true
+
+> 			xip_enable(map, chip, adr);
+> 			goto op_done;
+> 		}
+> 		break;
+> 	}
+> 
+> 2. Liujian-san v3 patch
+> 
+> 	/* Test chip_good() if FALSE correctly so write failure by time_after() can be avoided. */
+
+--> thread preempted here
+==> chip_good() test becomes valid here
+--> thread resumed here, but timeout has expired
+
+> 	if (time_after(jiffies, timeo) && !chip_good(map, adr))
+
+You do not enter this branch because the chip_good() test is done once
+more in case of timeout.
+
+> 		break;
+> 
+> 	if (chip_good(map, adr, datum)) {
+> 		xip_enable(map, chip, adr);
+> 		goto op_done;
+> 	}
+> 
+> 3. My idea
+> 
+> 	/* Save current jiffies value before chip_good() to avoid write failure by time_after() without testing chip_good() again. */
+> 	unsigned long now = jiffies;
+> 
+> 	if (chip_good(map, adr, datum)) {
+> 		xip_enable(map, chip, adr);
+> 		goto op_done;
+> 	}
+> 
+
+--> thread preempted here
+==> chip_good() test becomes valid here
+--> thread resumed here, but timeout has expired
+
+> 	if (time_after(now, timeo))
+
+You do enter this branch, and erroneously report a failure.
+
+> 		break;
+> 
+
+See now why your version is not correct?
+
+Regards,
+
+Boris
