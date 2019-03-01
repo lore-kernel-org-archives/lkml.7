@@ -2,137 +2,154 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53253C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA794C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17CB02083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:49:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="mziFkhcP"
+	by mail.kernel.org (Postfix) with ESMTP id A8E242083E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387809AbfCALt4 (ORCPT
+        id S2387842AbfCALuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:49:56 -0500
-Received: from mail-eopbgr1400134.outbound.protection.outlook.com ([40.107.140.134]:32201
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725978AbfCALt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:49:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector1-bp-renesas-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6WpMtV5UhVHNQbDJUFyklkZLL70zEDgCQj9N17zkoRY=;
- b=mziFkhcPjDEsNNSN/yqWAFOm2RnmetZ3QVpvExqHDr1bF5Oo46FZDbF2h8rTqsHDYXzp9OILs/UZECjh4zpKfWC/F5AW/ayOaVsseE+D7fCFBoZmbsJITVaK0ztyoMA7jlFhQFtiHv+PDlzHcwFXXGKM6qJMXfhbewTQvAUD55A=
-Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com (52.133.168.140) by
- TYXPR01MB1504.jpnprd01.prod.outlook.com (52.133.166.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.20; Fri, 1 Mar 2019 11:49:49 +0000
-Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com
- ([fe80::88d2:545c:9212:c8cf]) by TYXPR01MB1775.jpnprd01.prod.outlook.com
- ([fe80::88d2:545c:9212:c8cf%5]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
- 11:49:49 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Fri, 1 Mar 2019 06:50:10 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37844 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725978AbfCALuJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 06:50:09 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x21Bo0hu032443
+        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 06:50:08 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2qy1x4pv01-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:50:07 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Fri, 1 Mar 2019 11:50:05 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 1 Mar 2019 11:49:58 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x21Bnvjh59637792
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 1 Mar 2019 11:49:57 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 988DF4C04E;
+        Fri,  1 Mar 2019 11:49:57 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72BA84C04A;
+        Fri,  1 Mar 2019 11:49:55 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.204.73])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  1 Mar 2019 11:49:55 +0000 (GMT)
+Date:   Fri, 1 Mar 2019 13:49:53 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Steven Price <steven.price@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: RE: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0
- support
-Thread-Topic: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0
- support
-Thread-Index: AQHUkyD6AD0W0/GlCEuZuz1ywyu8ZqX3I0OQ
-Date:   Fri, 1 Mar 2019 11:49:49 +0000
-Message-ID: <TYXPR01MB1775847A1B243C0B30C69CFBC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
-References: <1544732284-5951-1-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1544732284-5951-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e695b9d-67f7-4029-d24a-08d69e3c0282
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:TYXPR01MB1504;
-x-ms-traffictypediagnostic: TYXPR01MB1504:
-x-microsoft-exchange-diagnostics: 1;TYXPR01MB1504;20:PP4bemFPh2lrblySJGGCvxeacoFqJF7OSxXBBEUFqJwbCGpfeW1aYRAUDPVyuqZjyzC5zveFQ0L5QQw+0KpD9XIux3/FpArwGnisXGauF1FJLKX1gZLLX1tqPi0aCdqMCwFROyoXOSNJCGV57aYVmOx1CaGz2/azRTTC9DdE+CU=
-x-microsoft-antispam-prvs: <TYXPR01MB15041FF0C3988D9218567F23C0760@TYXPR01MB1504.jpnprd01.prod.outlook.com>
-x-forefront-prvs: 09634B1196
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(396003)(136003)(346002)(199004)(189003)(33656002)(71190400001)(7696005)(71200400001)(66066001)(105586002)(54906003)(7416002)(99286004)(97736004)(3846002)(106356001)(6116002)(76176011)(316002)(7736002)(6916009)(55016002)(81166006)(5660300002)(256004)(44832011)(9686003)(53936002)(305945005)(6246003)(25786009)(81156014)(446003)(6506007)(11346002)(26005)(86362001)(53546011)(186003)(486006)(52536013)(4326008)(476003)(229853002)(478600001)(2906002)(6436002)(8676002)(68736007)(8936002)(14454004)(74316002)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1504;H:TYXPR01MB1775.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sxQnnfielzfWRSL1ggH7q89dxhPKQ5f1AarjGgH7BR5pKOgrBNxx9n1yccbEayOzg+lplqXWygDMfy8x2YHgGB14jtRmvM+AiJSqIfnore+OMXjtaQcg209jVfvSii9ObMQmPpusqQECeppng8DOCmdbRYnjd82hhXakuQPGWw8MIFFVR95TdhyjlnvQJM/UeS5hqtARK6or7pW/ABCPxw0jqf/fdv32zmYVhnd+wogHYZ74WpEjW1MRc+F2HxKUZAliK3D0aP+o40U33c7GpGKJStKN6d0nOpEE9TGfIjYi4WpUNliF97z9aaXvADnLHOuZwEo8rb8FxEOK4emMy7V4SaqtXm0C44if3ePnpnGOBGsNUen/2qUdTC5kbku7zLcpaDiycJgfIbAGUvu9YoMB4B/yp9/JpYehM4awrqg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v2 03/13] mm: Add generic p?d_large() macros
+References: <20190221113502.54153-1-steven.price@arm.com>
+ <20190221113502.54153-4-steven.price@arm.com>
+ <20190221142812.oa53lfnnfmsuh6ys@kshutemo-mobl1>
+ <a3076d01-41b3-d59b-e98c-a0fd9ba5d3f5@arm.com>
+ <20190221145706.zqwfdoyiirn3lc7y@kshutemo-mobl1>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e695b9d-67f7-4029-d24a-08d69e3c0282
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 11:49:49.5247
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1504
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190221145706.zqwfdoyiirn3lc7y@kshutemo-mobl1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19030111-0012-0000-0000-000002FBBE8F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030111-0013-0000-0000-000021336E7D
+Message-Id: <20190301114953.GD5156@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903010084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Marc,
+Hi Kirill,
 
-I am sorry to bother you.
-Do you think you can take this patch?
+On Thu, Feb 21, 2019 at 05:57:06PM +0300, Kirill A. Shutemov wrote:
+> On Thu, Feb 21, 2019 at 02:46:18PM +0000, Steven Price wrote:
+> > On 21/02/2019 14:28, Kirill A. Shutemov wrote:
+> > > On Thu, Feb 21, 2019 at 11:34:52AM +0000, Steven Price wrote:
+> > >> From: James Morse <james.morse@arm.com>
+> > >>
+> > >> Exposing the pud/pgd levels of the page tables to walk_page_range() means
+> > >> we may come across the exotic large mappings that come with large areas
+> > >> of contiguous memory (such as the kernel's linear map).
+> > >>
+> > >> For architectures that don't provide p?d_large() macros, provided a
+> > >> does nothing default.
+> > > 
+> > > Nak, sorry.
+> > > 
+> > > Power will get broken by the patch. It has pmd_large() inline function,
+> > > that will be overwritten by the define from this patch.
+> > > 
+> > > I believe it requires more ground work on arch side in general.
+> > > All architectures that has huge page support has to provide these helpers
+> > > (and matching defines) before you can use it in a generic code.
+> > 
+> > Sorry about that, I had compile tested on power, but obviously not the
+> > right config to actually see the breakage.
+> 
+> I don't think you'll catch it at compile-time. It would silently override
+> the helper with always-false.
 
-Thanks,
-Fab
+Can you explain why the compiler would override the helper define in, e.g.
+arch/powerpc/include/asm/pgtable.h with the generic (0)?
+Actually, I've tried to compile this on power with deliberately adding
+errors to both power-specific and the generic definition of pmd_large and
+the compilation failed the way I expected in the power-specific helper.
+ 
+> > I'll do some grepping - hopefully this is just a case of exposing the
+> > functions/defines that already exist for those architectures.
+> 
+> I see the same type of breakage on s390 and sparc.
+> 
+> > Note that in terms of the new page walking code, these new defines are
+> > only used when walking a page table without a VMA (which isn't currently
+> > done), so architectures which don't use p?d_large currently will work
+> > fine with the generic versions. They only need to provide meaningful
+> > definitions when switching to use the walk-without-a-VMA functionality.
+> 
+> How other architectures would know that they need to provide the helpers
+> to get walk-without-a-VMA functionality? This looks very fragile to me.
+> 
+> -- 
+>  Kirill A. Shutemov
 
-> From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@vg=
-er.kernel.org> On Behalf Of Fabrizio Castro
-> Sent: 13 December 2018 20:18
-> Subject: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0 su=
-pport
->=20
-> Document RZ/G2E (R8A774C0) SoC bindings.
->=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt =
-| 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renes=
-as,irqc.txt
-> b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-> index 8de96a4..f977ea7 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc=
-.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc=
-.txt
-> @@ -16,6 +16,7 @@ Required properties:
->      - "renesas,irqc-r8a7793" (R-Car M2-N)
->      - "renesas,irqc-r8a7794" (R-Car E2)
->      - "renesas,intc-ex-r8a774a1" (RZ/G2M)
-> +    - "renesas,intc-ex-r8a774c0" (RZ/G2E)
->      - "renesas,intc-ex-r8a7795" (R-Car H3)
->      - "renesas,intc-ex-r8a7796" (R-Car M3-W)
->      - "renesas,intc-ex-r8a77965" (R-Car M3-N)
-> --
-> 2.7.4
+-- 
+Sincerely yours,
+Mike.
 
