@@ -3,369 +3,211 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0FFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34E4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2862087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D92E2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733128AbfCAJfg (ORCPT
+        id S1733301AbfCAJf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 04:35:36 -0500
-Received: from foss.arm.com ([217.140.101.70]:60344 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727697AbfCAJff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 04:35:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A927EBD;
-        Fri,  1 Mar 2019 01:35:34 -0800 (PST)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D01FF3F575;
-        Fri,  1 Mar 2019 01:35:31 -0800 (PST)
-Subject: Re: [PATCH v6 3/6] arm64/kvm: context-switch ptrauth registers
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1550568271-5319-1-git-send-email-amit.kachhap@arm.com>
- <1550568271-5319-4-git-send-email-amit.kachhap@arm.com>
- <20190221155339.GX3567@e103592.cambridge.arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <645b5fc6-8f5f-7a8b-f749-5e7e9f44154c@arm.com>
-Date:   Fri, 1 Mar 2019 15:05:29 +0530
+        Fri, 1 Mar 2019 04:35:59 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44838 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733133AbfCAJf6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 04:35:58 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x219T7Z0114306
+        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 04:35:57 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qy1tk9bwt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 04:35:57 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 1 Mar 2019 09:35:54 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 1 Mar 2019 09:35:51 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x219ZnF627525144
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Mar 2019 09:35:49 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75ECB11C054;
+        Fri,  1 Mar 2019 09:35:49 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E329711C04A;
+        Fri,  1 Mar 2019 09:35:48 +0000 (GMT)
+Received: from [9.152.224.140] (unknown [9.152.224.140])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  1 Mar 2019 09:35:48 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v4 5/7] s390: ap: implement PAPQ AQIC interception in
+ kernel
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
+        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
+ <1550849400-27152-6-git-send-email-pmorel@linux.ibm.com>
+ <a7be3d71-6392-4ff3-5bd5-60429b8a61c0@de.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Fri, 1 Mar 2019 10:35:48 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190221155339.GX3567@e103592.cambridge.arm.com>
+In-Reply-To: <a7be3d71-6392-4ff3-5bd5-60429b8a61c0@de.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030109-0008-0000-0000-000002C66DFC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030109-0009-0000-0000-00002232C2C3
+Message-Id: <44146ea5-8bdf-e986-6e6d-9cbfc104ba37@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903010066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2/21/19 9:23 PM, Dave Martin wrote:
-> On Tue, Feb 19, 2019 at 02:54:28PM +0530, Amit Daniel Kachhap wrote:
->> From: Mark Rutland <mark.rutland@arm.com>
+On 28/02/2019 21:20, Christian Borntraeger wrote:
+> 
+> 
+> On 22.02.2019 16:29, Pierre Morel wrote:
+>> We register the AP PQAP instruction hook during the open
+>> of the mediated device. And unregister it on release.
 >>
->> When pointer authentication is supported, a guest may wish to use it.
->> This patch adds the necessary KVM infrastructure for this to work, with
->> a semi-lazy context switch of the pointer auth state.
+>> In the AP PQAP instruction hook, if we receive a demand to
+>> enable IRQs,
+>> - we retrieve the vfio_ap_queue based on the APQN we receive
+>>    in REG1,
+>> - we retrieve the page of the guest address, (NIB), from
+>>    register REG2
+>> - we the mediated device to use the VFIO pinning infratrsucture
+>>    to pin the page of the guest address,
+>> - we retrieve the pointer to KVM to register the guest ISC
+>>    and retrieve the host ISC
+>> - finaly we activate GISA
 >>
->> Pointer authentication feature is only enabled when VHE is built
->> in the kernel and present into CPU implementation so only VHE code
->> paths are modified.
+>> If we receive a demand to disable IRQs,
+>> - we deactivate GISA
+>> - unregister from the GIB
+>> - unping the NIB
 >>
->> When we schedule a vcpu, we disable guest usage of pointer
->> authentication instructions and accesses to the keys. While these are
->> disabled, we avoid context-switching the keys. When we trap the guest
->> trying to use pointer authentication functionality, we change to eagerly
->> context-switching the keys, and enable the feature. The next time the
->> vcpu is scheduled out/in, we start again. However the host key registers
->> are saved in vcpu load stage as they remain constant for each vcpu
->> schedule.
->>
->> Pointer authentication consists of address authentication and generic
->> authentication, and CPUs in a system might have varied support for
->> either. Where support for either feature is not uniform, it is hidden
->> from guests via ID register emulation, as a result of the cpufeature
->> framework in the host.
->>
->> Unfortunately, address authentication and generic authentication cannot
->> be trapped separately, as the architecture provides a single EL2 trap
->> covering both. If we wish to expose one without the other, we cannot
->> prevent a (badly-written) guest from intermittently using a feature
->> which is not uniformly supported (when scheduled on a physical CPU which
->> supports the relevant feature). Hence, this patch expects both type of
->> authentication to be present in a cpu.
->>
->> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
->> [Only VHE, key switch from from assembly, kvm_supports_ptrauth
->> checks, save host key in vcpu_load]
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Christoffer Dall <christoffer.dall@arm.com>
->> Cc: kvmarm@lists.cs.columbia.edu
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 >> ---
->>   arch/arm/include/asm/kvm_host.h   |   1 +
->>   arch/arm64/include/asm/kvm_host.h |  23 +++++++++
->>   arch/arm64/include/asm/kvm_hyp.h  |   7 +++
->>   arch/arm64/kernel/traps.c         |   1 +
->>   arch/arm64/kvm/handle_exit.c      |  21 +++++---
->>   arch/arm64/kvm/hyp/Makefile       |   1 +
->>   arch/arm64/kvm/hyp/entry.S        |  17 +++++++
->>   arch/arm64/kvm/hyp/ptrauth-sr.c   | 101 ++++++++++++++++++++++++++++++++++++++
->>   arch/arm64/kvm/sys_regs.c         |  37 +++++++++++++-
->>   virt/kvm/arm/arm.c                |   2 +
->>   10 files changed, 201 insertions(+), 10 deletions(-)
->>   create mode 100644 arch/arm64/kvm/hyp/ptrauth-sr.c
-> 
-> [...]
-> 
->> diff --git a/arch/arm64/kvm/hyp/ptrauth-sr.c b/arch/arm64/kvm/hyp/ptrauth-sr.c
->> new file mode 100644
->> index 0000000..528ee6e
->> --- /dev/null
->> +++ b/arch/arm64/kvm/hyp/ptrauth-sr.c
->> @@ -0,0 +1,101 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * arch/arm64/kvm/hyp/ptrauth-sr.c: Guest/host ptrauth save/restore
->> + *
->> + * Copyright 2018 Arm Limited
->> + * Author: Mark Rutland <mark.rutland@arm.com>
->> + *         Amit Daniel Kachhap <amit.kachhap@arm.com>
->> + */
->> +#include <linux/compiler.h>
->> +#include <linux/kvm_host.h>
->> +
->> +#include <asm/cpucaps.h>
->> +#include <asm/cpufeature.h>
->> +#include <asm/kvm_asm.h>
->> +#include <asm/kvm_hyp.h>
->> +#include <asm/pointer_auth.h>
->> +
->> +static __always_inline bool __ptrauth_is_enabled(struct kvm_vcpu *vcpu)
->> +{
->> +	return IS_ENABLED(CONFIG_ARM64_PTR_AUTH) &&
->> +			vcpu->arch.ctxt.hcr_el2 & (HCR_API | HCR_APK);
->> +}
->> +
->> +#define __ptrauth_save_key(regs, key)						\
->> +({										\
->> +	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
->> +	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
->> +})
->> +
->> +static __always_inline void __ptrauth_save_state(struct kvm_cpu_context *ctxt)
-> 
-> Why __always_inline?
-> 
->> +{
->> +	__ptrauth_save_key(ctxt->sys_regs, APIA);
->> +	__ptrauth_save_key(ctxt->sys_regs, APIB);
->> +	__ptrauth_save_key(ctxt->sys_regs, APDA);
->> +	__ptrauth_save_key(ctxt->sys_regs, APDB);
->> +	__ptrauth_save_key(ctxt->sys_regs, APGA);
->> +}
->> +
->> +#define __ptrauth_restore_key(regs, key) 					\
->> +({										\
->> +	write_sysreg_s(regs[key ## KEYLO_EL1], SYS_ ## key ## KEYLO_EL1);	\
->> +	write_sysreg_s(regs[key ## KEYHI_EL1], SYS_ ## key ## KEYHI_EL1);	\
->> +})
->> +
->> +static __always_inline void __ptrauth_restore_state(struct kvm_cpu_context *ctxt)
-> 
-> Same here.  I would hope these just need to be marked with the correct
-> function attribute to disable ptrauth by the compiler.  I don't see why
-> it makes a difference whether it's inline or not.
-> 
-> If the compiler semantics are not sufficiently clear, make it a macro.
-ok.
-> 
-> (Bikeshedding here, so it you feel this has already been discussed to
-> death I'm happy for this to stay as-is.)
-> 
->> +{
->> +	__ptrauth_restore_key(ctxt->sys_regs, APIA);
->> +	__ptrauth_restore_key(ctxt->sys_regs, APIB);
->> +	__ptrauth_restore_key(ctxt->sys_regs, APDA);
->> +	__ptrauth_restore_key(ctxt->sys_regs, APDB);
->> +	__ptrauth_restore_key(ctxt->sys_regs, APGA);
->> +}
->> +
->> +/**
->> + * This function changes the key so assign Pointer Authentication safe
->> + * GCC attribute if protected by it.
->> + */
-> 
-> (I'd have preferred to keep __noptrauth here and define it do nothing for
-> now.  But I'll defer to others on that, since this has already been
-> discussed...)
-
-ok __noptrauth annotation will make it clear. I will add it for all C 
-error prone functions in the next iteration.
-> 
->> +void __ptrauth_switch_to_guest(struct kvm_vcpu *vcpu,
->> +				  struct kvm_cpu_context *host_ctxt,
->> +				  struct kvm_cpu_context *guest_ctxt)
->> +{
->> +	if (!__ptrauth_is_enabled(vcpu))
->> +		return;
->> +
->> +	__ptrauth_restore_state(guest_ctxt);
->> +}
->> +
->> +/**
->> + * This function changes the key so assign Pointer Authentication safe
->> + * GCC attribute if protected by it.
->> + */
->> +void __ptrauth_switch_to_host(struct kvm_vcpu *vcpu,
->> +				 struct kvm_cpu_context *guest_ctxt,
->> +				 struct kvm_cpu_context *host_ctxt)
->> +{
->> +	if (!__ptrauth_is_enabled(vcpu))
->> +		return;
->> +
->> +	__ptrauth_save_state(guest_ctxt);
->> +	__ptrauth_restore_state(host_ctxt);
->> +}
->> +
->> +/**
->> + * kvm_arm_vcpu_ptrauth_reset - resets ptrauth for vcpu schedule
->> + *
->> + * @vcpu: The VCPU pointer
->> + *
->> + * This function may be used to disable ptrauth and use it in a lazy context
->> + * via traps. However host key registers are saved here as they dont change
->> + * during host/guest switch.
->> + */
->> +void kvm_arm_vcpu_ptrauth_reset(struct kvm_vcpu *vcpu)
-> 
-> I feel this is not a good name.  It sounds too much like it resets the
-> registers as part of vcpu reset, whereas really it's doing something
-> completely different.
-> 
-> (Do you reset the regs anywhere btw?  I may have missed it...)
-No there is not reset of registers. May be name like 
-kvm_arm_vcpu_ptrauth_setup_lazy would be better.
-> 
->> +{
->> +	struct kvm_cpu_context *host_ctxt;
->> +
->> +	if (kvm_supports_ptrauth()) {
->> +		kvm_arm_vcpu_ptrauth_disable(vcpu);
->> +		host_ctxt = vcpu->arch.host_cpu_context;
->> +		__ptrauth_save_state(host_ctxt);
->> +	}
->> +}
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index a6c9381..12529df 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -986,6 +986,32 @@ static bool access_pmuserenr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->>   	{ SYS_DESC(SYS_PMEVTYPERn_EL0(n)),					\
->>   	  access_pmu_evtyper, reset_unknown, (PMEVTYPER0_EL0 + n), }
->>   
->> +
->> +void kvm_arm_vcpu_ptrauth_enable(struct kvm_vcpu *vcpu)
->> +{
->> +	vcpu->arch.ctxt.hcr_el2 |= (HCR_API | HCR_APK);
-> 
-> Pedantic nit: surplus ().
-> 
-> (Although opinions differ, and keeping them looks more symmetric with
-> kvm_arm_vcpu_ptrauth_disable() -- either way, the code can stay as-is if
-> you prefer.)
-ok.
-> 
->> +}
->> +
->> +void kvm_arm_vcpu_ptrauth_disable(struct kvm_vcpu *vcpu)
->> +{
->> +	vcpu->arch.ctxt.hcr_el2 &= ~(HCR_API | HCR_APK);
->> +}
->> +
->> +static bool trap_ptrauth(struct kvm_vcpu *vcpu,
->> +			 struct sys_reg_params *p,
->> +			 const struct sys_reg_desc *rd)
->> +{
->> +	kvm_arm_vcpu_ptrauth_trap(vcpu);
->> +	return false;
-> 
-> Can we ever get here?  Won't PAC traps always be handled via
-> handle_exit()?
-> 
-> Or can we also take sysreg access traps when the guest tries to access
-> the ptrauth key registers?
-
-When Guest kernel forks thread then the key registers are accessed to 
-fill them with ptrauth keys and hcr_el2(APK bit) is not appropriately 
-set at that moment. This causes trap to EL2 and the above function is 
-invoked.
-> 
-> (I'm now wondering how this works for SVE.)
-Not sure. Need to check.
-> 
->> +}
->> +
->> +#define __PTRAUTH_KEY(k)						\
->> +	{ SYS_DESC(SYS_## k), trap_ptrauth, reset_unknown, k }
->> +
->> +#define PTRAUTH_KEY(k)							\
->> +	__PTRAUTH_KEY(k ## KEYLO_EL1),					\
->> +	__PTRAUTH_KEY(k ## KEYHI_EL1)
->> +
->>   static bool access_cntp_tval(struct kvm_vcpu *vcpu,
->>   		struct sys_reg_params *p,
->>   		const struct sys_reg_desc *r)
->> @@ -1045,9 +1071,10 @@ static u64 read_id_reg(struct sys_reg_desc const *r, bool raz)
->>   					 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
->>   					 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
->>   					 (0xfUL << ID_AA64ISAR1_GPI_SHIFT);
->> -		if (val & ptrauth_mask)
->> +		if (!kvm_supports_ptrauth()) {
-> 
-> Don't we now always print this when ptrauth is not supported?
-> 
-> Previously we only printed a message in the interesting case, i.e.,
-> where the host supports ptrauch but we cannot offer it to the guest.
-Yes agreed. I will add proper checks here to skip prints for non ptrauth 
-hosts.
-
-Thanks,
-Amit D
-> 
->>   			kvm_debug("ptrauth unsupported for guests, suppressing\n");
->> -		val &= ~ptrauth_mask;
->> +			val &= ~ptrauth_mask;
->> +		}
->>   	} else if (id == SYS_ID_AA64MMFR1_EL1) {
->>   		if (val & (0xfUL << ID_AA64MMFR1_LOR_SHIFT))
->>   			kvm_debug("LORegions unsupported for guests, suppressing\n");
->> @@ -1316,6 +1343,12 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->>   	{ SYS_DESC(SYS_TTBR1_EL1), access_vm_reg, reset_unknown, TTBR1_EL1 },
->>   	{ SYS_DESC(SYS_TCR_EL1), access_vm_reg, reset_val, TCR_EL1, 0 },
->>   
->> +	PTRAUTH_KEY(APIA),
->> +	PTRAUTH_KEY(APIB),
->> +	PTRAUTH_KEY(APDA),
->> +	PTRAUTH_KEY(APDB),
->> +	PTRAUTH_KEY(APGA),
->> +
->>   	{ SYS_DESC(SYS_AFSR0_EL1), access_vm_reg, reset_unknown, AFSR0_EL1 },
->>   	{ SYS_DESC(SYS_AFSR1_EL1), access_vm_reg, reset_unknown, AFSR1_EL1 },
->>   	{ SYS_DESC(SYS_ESR_EL1), access_vm_reg, reset_unknown, ESR_EL1 },
->> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
->> index 2032a66..d7e003f 100644
->> --- a/virt/kvm/arm/arm.c
->> +++ b/virt/kvm/arm/arm.c
->> @@ -388,6 +388,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->>   		vcpu_clear_wfe_traps(vcpu);
->>   	else
->>   		vcpu_set_wfe_traps(vcpu);
->> +
->> +	kvm_arm_vcpu_ptrauth_reset(vcpu);
+>>   arch/s390/include/asm/kvm_host.h      |   1 +
+>>   drivers/s390/crypto/ap_bus.h          |   1 +
+>>   drivers/s390/crypto/vfio_ap_ops.c     | 199 +++++++++++++++++++++++++++++++++-
+>>   drivers/s390/crypto/vfio_ap_private.h |   1 +
+>>   4 files changed, 199 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+>> index 49cc8b0..5f3bb8c 100644
+>> --- a/arch/s390/include/asm/kvm_host.h
+>> +++ b/arch/s390/include/asm/kvm_host.h
+>> @@ -720,6 +720,7 @@ struct kvm_s390_cpu_model {
+>>   struct kvm_s390_crypto {
+>>   	struct kvm_s390_crypto_cb *crycb;
+>>   	int (*pqap_hook)(struct kvm_vcpu *vcpu);
+>> +	void *vfio_private;
+>>   	__u32 crycbd;
+>>   	__u8 aes_kw;
+>>   	__u8 dea_kw;
+>> diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
+>> index bfc66e4..323f2aa 100644
+>> --- a/drivers/s390/crypto/ap_bus.h
+>> +++ b/drivers/s390/crypto/ap_bus.h
+>> @@ -43,6 +43,7 @@ static inline int ap_test_bit(unsigned int *ptr, unsigned int nr)
+>>   #define AP_RESPONSE_BUSY		0x05
+>>   #define AP_RESPONSE_INVALID_ADDRESS	0x06
+>>   #define AP_RESPONSE_OTHERWISE_CHANGED	0x07
+>> +#define AP_RESPONSE_INVALID_GISA	0x08
+>>   #define AP_RESPONSE_Q_FULL		0x10
+>>   #define AP_RESPONSE_NO_PENDING_REPLY	0x10
+>>   #define AP_RESPONSE_INDEX_TOO_BIG	0x11
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>> index 1b5130a..0196065 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -43,7 +43,7 @@ struct vfio_ap_queue *vfio_ap_get_queue(int apqn, struct list_head *l)
+>>   	return NULL;
 >>   }
 >>   
->>   void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->> -- 
->> 2.7.4
->>
->> _______________________________________________
->> kvmarm mailing list
->> kvmarm@lists.cs.columbia.edu
->> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
+>> -static int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
+>> +int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
+>>   {
+>>   	struct ap_queue_status status;
+>>   	int retry = 20;
+>> @@ -75,6 +75,27 @@ static int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
+>>   	return -EBUSY;
+>>   }
+>>   
+>> +/**
+>> + * vfio_ap_free_irq:
+>> + * @q: The vfio_ap_queue
+>> + *
+>> + * Unpin the guest NIB
+>> + * Unregister the ISC from the GIB alert
+>> + * Clear the vfio_ap_queue intern fields
+>> + */
+>> +static void vfio_ap_free_irq(struct vfio_ap_queue *q)
+>> +{
+>> +	if (!q)
+>> +		return;
+>> +	if (q->g_pfn)
+>> +		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev), &q->g_pfn, 1);
+>> +	if (q->isc)
+>> +		kvm_s390_gisc_unregister(q->matrix_mdev->kvm, q->isc);
+>> +	q->nib = 0;
+>> +	q->isc = 0;
+>> +	q->g_pfn = 0;
+>> +}
+> 
+> Pierre, unless there is some magic, I think we need to free the gisa stuff before kvm exit.
+> 
+> Imagine a malicious userspace that setups everything fine, but then closes all kvm file
+> descriptors but not the vfio file descriptor. This might result in random access to the
+> memory that contained the gisa potentially resulting in random memory overwrites.
+> 
+> the problem is that kvm_destroy_vm calls kvm_arch_destroy_vm(kvm) before it calls
+> kvm_destroy_devices(kvm); So we already free the gisa before we do the unregister call.
+> 
+> What about calling kvm_get_kvm/put from some of the callbacks in the right places.
+> 
+> Debugging random memory overwrites is a PITA, so we either should document why I cannot
+> happen (even with malicious userspace) or simply fix the refcounting.
+> 
+
+OK, understood.
+I think we can do something simple by using kvm_get/kvm_put, as you 
+suggested, in the vfio KVM notifier to ensure the order of the calls and 
+also unregister the GISA at this moment.
+I will investigate in this direction.
+
+Thanks
+Pierre
+
+
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
