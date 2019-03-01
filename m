@@ -2,211 +2,139 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD92C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ADDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F87F20675
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C020120675
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:45:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Opr5/aCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388751AbfCAOpI (ORCPT
+        id S2388778AbfCAOp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:45:08 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:41808 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727951AbfCAOpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:45:07 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9D21FA0B9A;
-        Fri,  1 Mar 2019 14:45:06 +0000 (UTC)
-Received: from localhost (ovpn-12-50.pek2.redhat.com [10.72.12.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5D15460A9A;
-        Fri,  1 Mar 2019 14:45:05 +0000 (UTC)
-Date:   Fri, 1 Mar 2019 22:45:02 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, keescook@chromium.org, thgarnie@google.com
-Subject: Re: [PATCH v2 0/2] x86/mm/KASLR: Change the granularity of
- randomization to PUD size in 5-level
-Message-ID: <20190301144502.GV14858@MiWiFi-R3L-srv>
-References: <20190228003522.9957-1-bhe@redhat.com>
- <20190228091001.5wvkwe7cqkf2euzc@kshutemo-mobl1>
- <20190228092346.GQ14858@MiWiFi-R3L-srv>
- <20190228095503.jy44nwqhtmr4qeaq@kshutemo-mobl1>
- <20190228100419.GS14858@MiWiFi-R3L-srv>
- <20190228103051.dvqiy2slwwt56ag2@kshutemo-mobl1>
+        Fri, 1 Mar 2019 09:45:57 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:56517 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388299AbfCAOp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:45:56 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190301144555euoutp01d4f6e079975c286b3c23e788ffa86376~H3Pg61tls2769327693euoutp01i
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2019 14:45:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190301144555euoutp01d4f6e079975c286b3c23e788ffa86376~H3Pg61tls2769327693euoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1551451555;
+        bh=xUKGahBStRpVDvuKCNi90H4mrzoc2f5GUFxLNjnLP3I=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Opr5/aCosuni2pTDOIIsoWoylyN8DMSo286V2omkLfN4VB4PFI6zY3pKakCAo3WII
+         Phzio9CHg6sd9w1MoDA2XzhYynKInfKMJ7eefkr5Oplr4Qt21TZT0uHj+1VFBheq1+
+         nmHu3yJ4bjL/qtQK8GW0NrBOnAOzgMLP26tRMti4=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190301144554eucas1p29d5bfe928ec7e48c7483e73b505067bd~H3PgjZg2n0954409544eucas1p2T;
+        Fri,  1 Mar 2019 14:45:54 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 31.A1.04441.2A5497C5; Fri,  1
+        Mar 2019 14:45:54 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190301144553eucas1p18099a26127761a8c1d13bb5ec7a0390b~H3Pfh03mv1598015980eucas1p1m;
+        Fri,  1 Mar 2019 14:45:53 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190301144553eusmtrp1ce9a6d1bd686d1fe578e3b68a0011e74~H3PfTqq6-2538925389eusmtrp1o;
+        Fri,  1 Mar 2019 14:45:53 +0000 (GMT)
+X-AuditID: cbfec7f2-5c9ff70000001159-87-5c7945a2a272
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 92.45.04284.1A5497C5; Fri,  1
+        Mar 2019 14:45:53 +0000 (GMT)
+Received: from [106.120.53.102] (unknown [106.120.53.102]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190301144553eusmtip2dd1fb1ee6fd88fa7704d1c8a32bf24df~H3PfCmSIh2127821278eusmtip2N;
+        Fri,  1 Mar 2019 14:45:53 +0000 (GMT)
+Subject: Re: [PATCH] fbdev: omap2: fix warnings in dss core
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <5ceb8653-055d-e4eb-a705-0bfd243e132c@samsung.com>
+Date:   Fri, 1 Mar 2019 15:45:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+        Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228103051.dvqiy2slwwt56ag2@kshutemo-mobl1>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 01 Mar 2019 14:45:07 +0000 (UTC)
+In-Reply-To: <20190213084721.29624-1-anders.roxell@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnleLIzCtJLcpLzFFi42LZduznOd1FrpUxBjMmq1vcmvKbyeLK1/ds
+        Fif6PrBaXN41h81i9pJ+FgdWjzvX9rB53O8+zuTxeZNcAHMUl01Kak5mWWqRvl0CV8bb7Y1s
+        BSc4Kl4+aWJuYOxn72Lk5JAQMJHYuG0faxcjF4eQwApGif/TtjNCOF8YJbbsWMwO4XxmlJg0
+        eQorTMuKU5egEssZJR7928oG4bxnlLj6+ypTFyMHh7CAtcSqHzUgDSICOhJzX59nBrGZBWok
+        jr7eBbabTcBKYmL7KkaQcl4BO4m2R+YgYRYBFYm1Hy+zgoRFBSIk+s+og4R5BQQlTs58wgJi
+        cwJVb9+xiw1iorxE89bZzCAXSAg0s0vM+3SVBaRXQsBFYluLK8TJwhKvjm+B+lhG4vTkHhaI
+        +umMEm9+LYVy1jNKrDlzjAmiylri8PGLYEcwC2hKrN+lDxF2lHg36xITxHw+iRtvBSFu4JOY
+        tG06M0SYV6KjTQiiWk1iw7INbDBru3auhCrxkNj/K3ACo+IsJI/NQvLMLIS1CxiZVzGKp5YW
+        56anFhvmpZbrFSfmFpfmpesl5+duYgQmj9P/jn/awfj1UtIhRgEORiUe3gqtyhgh1sSy4src
+        Q4wSHMxKIrwzLIFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeasZHkQLCaQnlqRmp6YWpBbBZJk4
+        OKUaGIUnz9T9e/OP6o1lBg8+rl957YTil5irQX2zZgZutvKPeRkVdanp/TE172YT5VvVJUbR
+        TPY29+Y6bdovOXXuA60UQVnTtTY8Ih3t388f3jvb74qjVuGT/S31kdN2SvgnVuc8nvrGtI8l
+        s+rnXvWZa0xci/+v8F6sw7dvp91D3zVb1996/L8oco8SS3FGoqEWc1FxIgCijBi+GgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42I5/e/4Pd2FrpUxBmfvqVjcmvKbyeLK1/ds
+        Fif6PrBaXN41h81i9pJ+FgdWjzvX9rB53O8+zuTxeZNcAHOUnk1RfmlJqkJGfnGJrVK0oYWR
+        nqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsbb7Y1sBSc4Kl4+aWJuYOxn72Lk5JAQ
+        MJFYceoSkM3FISSwlFFi0cnXbF2MHEAJGYnj68sgaoQl/lzrYoOoecsoMeH2EhaQGmEBa4lV
+        P2pAakQEdCTmvj7PDFEzkVHiyeUPYAuYBWokmlqvgNlsAlYSE9tXMYL08grYSbQ9MgcJswio
+        SKz9eJkVxBYViJC49bCDBcTmFRCUODnzCZjNCVS+fccuNoiR6hJ/5l1ihrDlJZq3zmaewCg4
+        C0nLLCRls5CULWBkXsUoklpanJueW2yoV5yYW1yal66XnJ+7iREYGduO/dy8g/HSxuBDjAIc
+        jEo8vBValTFCrIllxZW5hxglOJiVRHhnWAKFeFMSK6tSi/Lji0pzUosPMZoCPTGRWUo0OR8Y
+        tXkl8YamhuYWlobmxubGZhZK4rznDSqjhATSE0tSs1NTC1KLYPqYODilGhjlfigqdy2/FHqP
+        JcUoQk5HRPl/IHvkjIhL728I2RuZnYhK8L0R1muVLvYggp3fUqlW7eoPo0+7zBiu32pc/415
+        heqWn0GfNQ78/Z//qe/RhkUyy4RfbNn6YeHRk/rM+d/+HJzTvU2Ca7pSk3mUTfefErm3LY3P
+        +HMv75/EdvzGdPH8LeY8/ueVWIozEg21mIuKEwHVBOuRogIAAA==
+X-CMS-MailID: 20190301144553eucas1p18099a26127761a8c1d13bb5ec7a0390b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190213084828epcas3p2d7f70d63c5e267197de5513ae96b4fc2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190213084828epcas3p2d7f70d63c5e267197de5513ae96b4fc2
+References: <CGME20190213084828epcas3p2d7f70d63c5e267197de5513ae96b4fc2@epcas3p2.samsung.com>
+        <20190213084721.29624-1-anders.roxell@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kirill,
 
-I updated patch per your comments. While I kept the 'paddr' variable and
-the '0' initilization stuffs. My thought is there are two kinds of mapping
-in the handling, so keeping these names from old codes can make it more
-understandable. What do you think?
+On 02/13/2019 09:47 AM, Anders Roxell wrote:
+> Commit 60d2fa0dad06 ("fbdev: omap2: no need to check return value of
+> debugfs_create functions") changed the declaration of the return value
+> of function dss_debugfs_create_file() and the following two warnings
+> appeared:
+> 
+> drivers/video/fbdev/omap2/omapfb/dss/core.c: In function ‘dss_debugfs_create_file’:
+> drivers/video/fbdev/omap2/omapfb/dss/core.c:139:9: warning: ‘return’ with a value,
+>  in function returning void
+>   return 0;
+>          ^
+> drivers/video/fbdev/omap2/omapfb/dss/core.c: In function ‘omap_dss_probe’:
+> drivers/video/fbdev/omap2/omapfb/dss/core.c:172:6: warning: unused variable ‘r’
+>  [-Wunused-variable]
+>   int r;
+>       ^
+> 
+> Rework so function dss_debugfs_create_file() that is declared to return
+> void don't 'return 0' and remove the declaration of the unused variable
+> 'r'.
+> 
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 
-Kind               Physical address            Virtual address
-----------------------------------------------------------------
-Direct mapping     paddr                vaddr = paddr+PAGE_OFFSET
-1:1 mapping        paddr                    paddr
+Patch queued for v5.1, thanks.
 
-Thanks
-Baoquan
-
-From 52c6c80b2e3ffe153902800793c0e732c3c6bf1d Mon Sep 17 00:00:00 2001
-From: Baoquan He <bhe@redhat.com>
-Date: Thu, 21 Feb 2019 11:46:59 +0800
-Subject: [PATCH] x86/mm/KASLR: Only build one PUD entry of area for real mode
- trampoline
-
-The current code builds identity mapping for real mode treampoline by
-borrowing page tables from the direct mapping section if KASLR is
-enabled. It will copy present entries of the first PUD table in 4-level
-paging mode, or the first P4D table in 5-level paging mode.
-
-However, there's only a very small area under low 1 MB reserved
-for real mode trampoline in reserve_real_mode(). Makes no sense
-to build up so large area of mapping for it. Since the randomization
-granularity in 4-level is 1 GB, and 512 GB in 5-level, only copying
-one PUD entry is enough.
-
-Hence, only copy one PUD entry of area where physical address 0
-resides. And this is preparation for later changing the randomization
-granularity of 5-level paging mode from 512 GB to 1 GB.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/x86/mm/kaslr.c | 79 ++++++++++++++++++---------------------------
- 1 file changed, 32 insertions(+), 47 deletions(-)
-
-diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index 3f452ffed7e9..c6fab7a77439 100644
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -147,74 +147,59 @@ void __init kernel_randomize_memory(void)
- 
- static void __meminit init_trampoline_pud(void)
- {
--	unsigned long paddr, paddr_next;
-+	pud_t *pud_page_tramp, *pud, *pud_tramp;
-+	p4d_t *p4d_page_tramp, *p4d, *p4d_tramp;
-+	unsigned long paddr, vaddr;
- 	pgd_t *pgd;
--	pud_t *pud_page, *pud_page_tramp;
--	int i;
- 
- 	pud_page_tramp = alloc_low_page();
- 
- 	paddr = 0;
--	pgd = pgd_offset_k((unsigned long)__va(paddr));
--	pud_page = (pud_t *) pgd_page_vaddr(*pgd);
-+	vaddr = (unsigned long)__va(paddr);
-+	pgd = pgd_offset_k(vaddr);
- 
--	for (i = pud_index(paddr); i < PTRS_PER_PUD; i++, paddr = paddr_next) {
--		pud_t *pud, *pud_tramp;
--		unsigned long vaddr = (unsigned long)__va(paddr);
-+	p4d = p4d_offset(pgd, vaddr);
-+	pud = pud_offset(p4d, vaddr);
- 
--		pud_tramp = pud_page_tramp + pud_index(paddr);
--		pud = pud_page + pud_index(vaddr);
--		paddr_next = (paddr & PUD_MASK) + PUD_SIZE;
-+	pud_tramp = pud_page_tramp + pud_index(paddr);
-+	*pud_tramp = *pud;
- 
--		*pud_tramp = *pud;
--	}
--
--	set_pgd(&trampoline_pgd_entry,
--		__pgd(_KERNPG_TABLE | __pa(pud_page_tramp)));
--}
--
--static void __meminit init_trampoline_p4d(void)
--{
--	unsigned long paddr, paddr_next;
--	pgd_t *pgd;
--	p4d_t *p4d_page, *p4d_page_tramp;
--	int i;
--
--	p4d_page_tramp = alloc_low_page();
--
--	paddr = 0;
--	pgd = pgd_offset_k((unsigned long)__va(paddr));
--	p4d_page = (p4d_t *) pgd_page_vaddr(*pgd);
--
--	for (i = p4d_index(paddr); i < PTRS_PER_P4D; i++, paddr = paddr_next) {
--		p4d_t *p4d, *p4d_tramp;
--		unsigned long vaddr = (unsigned long)__va(paddr);
-+	if (pgtable_l5_enabled()) {
-+		p4d_page_tramp = alloc_low_page();
- 
- 		p4d_tramp = p4d_page_tramp + p4d_index(paddr);
--		p4d = p4d_page + p4d_index(vaddr);
--		paddr_next = (paddr & P4D_MASK) + P4D_SIZE;
- 
--		*p4d_tramp = *p4d;
--	}
-+		set_p4d(p4d_tramp,
-+			__p4d(_KERNPG_TABLE | __pa(pud_page_tramp)));
- 
--	set_pgd(&trampoline_pgd_entry,
--		__pgd(_KERNPG_TABLE | __pa(p4d_page_tramp)));
-+		set_pgd(&trampoline_pgd_entry,
-+			__pgd(_KERNPG_TABLE | __pa(p4d_page_tramp)));
-+	} else {
-+		set_pgd(&trampoline_pgd_entry,
-+			__pgd(_KERNPG_TABLE | __pa(pud_page_tramp)));
-+	}
- }
- 
- /*
-- * Create PGD aligned trampoline table to allow real mode initialization
-- * of additional CPUs. Consume only 1 low memory page.
-+ * Real mode trampoline only occupies a small area under low 1 MB
-+ * (please check codes in reserve_real_mode() for details). For
-+ * APs' booting up, we just borrow as few page tables as possible
-+ * from the direct physical mapping to build 1:1 mapping to cover
-+ * that area. In case KASLR disabled, the 1st PGD entry of the
-+ * direct mapping is copied directly. If KASLR is enabled, only
-+ * copy the 1st PUD entry where physical address 0 resides since
-+ * the granularity of randomization is PUD size in 4-level, and
-+ * P4D size in 5-level.
-+ *
-+ * This consumes one low memory page in 4-level case, and extra one
-+ * in 5-level.
-  */
- void __meminit init_trampoline(void)
- {
--
- 	if (!kaslr_memory_enabled()) {
- 		init_trampoline_default();
- 		return;
- 	}
- 
--	if (pgtable_l5_enabled())
--		init_trampoline_p4d();
--	else
--		init_trampoline_pud();
-+	init_trampoline_pud();
- }
--- 
-2.17.2
-
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
