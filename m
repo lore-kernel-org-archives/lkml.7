@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79469C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEFAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC7C2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399E52186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfCAFgV (ORCPT
+        id S1727368AbfCAFiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 00:36:21 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42558 "EHLO
+        Fri, 1 Mar 2019 00:38:00 -0500
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42655 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726036AbfCAFgV (ORCPT
+        with ESMTP id S1725913AbfCAFiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 00:36:21 -0500
+        Fri, 1 Mar 2019 00:38:00 -0500
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from parav@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 1 Mar 2019 07:36:14 +0200
+        with ESMTPS (AES256-SHA encrypted); 1 Mar 2019 07:37:57 +0200
 Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x215aAAo010150;
-        Fri, 1 Mar 2019 07:36:11 +0200
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x215brYV016903;
+        Fri, 1 Mar 2019 07:37:54 +0200
 From:   Parav Pandit <parav@mellanox.com>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         michal.lkml@markovi.net, davem@davemloft.net,
         gregkh@linuxfoundation.org, jiri@mellanox.com
 Cc:     parav@mellanox.com
-Subject: [PATCH net-next 0/8] Introducing subdev bus and devlink extension
-Date:   Thu, 28 Feb 2019 23:35:39 -0600
-Message-Id: <1551418547-12736-1-git-send-email-parav@mellanox.com>
+Subject: [RFC net-next 0/8] Introducing subdev bus and devlink extension
+Date:   Thu, 28 Feb 2019 23:37:44 -0600
+Message-Id: <1551418672-12822-1-git-send-email-parav@mellanox.com>
 X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -176,6 +176,7 @@ devlink user (iproute2/devlink)
 Alternatives considered:
 ------------------------
 Will discuss separately if needed to keep this RFC short.
+
 
 Parav Pandit (8):
   subdev: Introducing subdev bus
