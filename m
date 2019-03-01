@@ -2,121 +2,79 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F9DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526C9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 671AD20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272D92084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:48:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733100AbfCAMgV convert rfc822-to-8bit (ORCPT
+        id S1732304AbfCAMst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 07:36:21 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:2028 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfCAMgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 07:36:21 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 230D29C170;
-        Fri,  1 Mar 2019 12:36:20 +0000 (UTC)
-Received: from gondolin (ovpn-117-66.ams2.redhat.com [10.36.117.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 58C02620D2;
-        Fri,  1 Mar 2019 12:36:12 +0000 (UTC)
-Date:   Fri, 1 Mar 2019 13:36:09 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     pmorel@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>,
-        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, pasic@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v4 1/7] s390: ap: kvm: add PQAP interception for AQIC
-Message-ID: <20190301133609.3ee469dc.cohuck@redhat.com>
-In-Reply-To: <f4b3dec4-cdf6-85df-309e-b542ba83230a@de.ibm.com>
-References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
-        <1550849400-27152-2-git-send-email-pmorel@linux.ibm.com>
-        <babf7884-35f1-2f2e-34dc-96d9190fd15b@linux.ibm.com>
-        <e7ba5cb0-b254-7f73-bc59-ca2456ce7951@linux.ibm.com>
-        <9f1d9241-39b9-adbc-d0e9-cb702e609cbc@linux.ibm.com>
-        <4dc59125-7f96-cba8-651b-382ed8f8bff8@linux.ibm.com>
-        <8526f468-9a4d-68d2-3868-0dad5ce16f46@linux.ibm.com>
-        <6058a017-6404-af3c-62ef-2452214ac97c@de.ibm.com>
-        <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
-        <20190228122251.75b31f62.cohuck@redhat.com>
-        <be69498a-c4d3-81e7-b8bf-6931058cee74@linux.ibm.com>
-        <20190228145254.2909425e.cohuck@redhat.com>
-        <261a1e22-3703-21a4-e33d-e737651e7d89@linux.ibm.com>
-        <3fedbde5-ef83-c67e-6352-fd492f258009@linux.ibm.com>
-        <f4b3dec4-cdf6-85df-309e-b542ba83230a@de.ibm.com>
-Organization: Red Hat GmbH
+        Fri, 1 Mar 2019 07:48:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44698 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726001AbfCAMst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 07:48:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1E094AEBD;
+        Fri,  1 Mar 2019 12:48:48 +0000 (UTC)
+Date:   Fri, 1 Mar 2019 13:48:47 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] printk: Remove no longer used LOG_PREFIX.
+Message-ID: <20190301124847.q6goqvcb7yhm6q6k@pathway.suse.cz>
+References: <1550829580-9189-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <b830aae9-766f-54d2-840b-f70da3d1215d@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 01 Mar 2019 12:36:20 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b830aae9-766f-54d2-840b-f70da3d1215d@i-love.sakura.ne.jp>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 Mar 2019 13:05:54 +0100
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+On Fri 2019-03-01 19:31:59, Tetsuo Handa wrote:
+> Can this patch go to Linux 5.1?
 
-> On 01.03.2019 13:03, Pierre Morel wrote:
-> > On 28/02/2019 15:14, Pierre Morel wrote:  
-> >> On 28/02/2019 14:52, Cornelia Huck wrote:  
-> >>> On Thu, 28 Feb 2019 14:16:09 +0100
-> >>> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >>>  
-> >>>> On 28/02/2019 12:22, Cornelia Huck wrote:  
-> >>>  
-> >>>>> So, to summarize, the function should do:
-> >>>>> - Is userspace supposed to emulate everything (!ECA_APIE)? Return
-> >>>>>     -EOPNOTSUPP to hand control to it.
-> >>>>> - We are now interpreting the instruction in KVM. Do common checks
-> >>>>>     (PSTATE etc.) and inject exceptions, if needed.
-> >>>>> - Now look at the fc; if there's a handler for it, call that; if not
-> >>>>>     (case does not attempt to call a specific handler, or no handler
-> >>>>>     registered), inject a specification exception. (Do we want pre-checks
-> >>>>>     like for facility 65 here, or in the handler?)
-> >>>>>
-> >>>>> That response code 0x01 thingy probably needs to go into the specific
-> >>>>> handler function, if anywhere (don't know the semantics, sorry).  
-> >>>>
-> >>>> What do you mean with specific handler function?
-> >>>>
-> >>>> If you mean a switch around the FC with static function's call, I agree,
-> >>>> if you mean a jump into a hook I do not agree.  
-> >>>
-> >>> Ah, ok; so each case (that we want to handle) should call into a
-> >>> subhandler that does
-> >>> {
-> >>>     (... check things like facilities ...)
-> >>>     if (!specific_hook)
-> >>>         inject_specif_excp_and_return();
-> >>>     ret = specific_hook();
-> >>>     if (ret)
-> >>>         set_resp_code_0x01(); // or in specific_hook()?
-> >>> }
-> >>>
-> >>> ?  
-> >>
-> >> Yes something in this direction.  
+I am going to look at it the following week. I do not think that
+it is necessary to hurry a clean up of old stuff up into 5.1.
+
+I believe that it is correct. But it is not a typo fix. For example,
+I want to double check what was the history of KERN_DEFAULT defined
+as "d". It existed since ages...
+
+Best Regards,
+Petr
+
+> On 2019/02/22 18:59, Tetsuo Handa wrote:
+> > When commit 5becfb1df5ac8e49 ("kmsg: merge continuation records while
+> > printing") introduced LOG_PREFIX, we used KERN_DEFAULT etc. as a flag
+> > for setting LOG_PREFIX in order to tell whether to call cont_add()
+> > (i.e. whether to append the message to "struct cont").
 > > 
-> > Sorry, after reflection, no, we do not want to change the previous behavior so we only handle the AQIC case.  
-> 
-> I think what you wanted to say is the following:
-> Today (without the patch set) we will answer PQAP with an exception.
-> With this patch set we want to handle FC==3, but nothing else. So for anything FC!=3 we
-> will continue to return an exception?
-> 
-> Correct?
-> 
-
-That sounds reasonable; but I don't see how this conflicts with my
-proposal? Just don't introduce a subfunction for fc != 3...
+> > But since commit 4bcc595ccd80decb ("printk: reinstate KERN_CONT for
+> > printing continuation lines") inverted the behavior (i.e. don't append
+> > the message to "struct cont" unless KERN_CONT is specified) and commit
+> > 5aa068ea4082b39e ("printk: remove games with previous record flags")
+> > removed the last LOG_PREFIX check, setting LOG_PREFIX via KERN_DEFAULT
+> > etc. is no longer meaningful.
+> > 
+> > Therefore, we can remove LOG_PREFIX and make KERN_DEFAULT empty string.
+> > 
+> > Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> > ---
+> >  include/linux/kern_levels.h | 2 +-
+> >  include/linux/printk.h      | 1 -
+> >  kernel/printk/printk.c      | 6 +-----
+> >  3 files changed, 2 insertions(+), 7 deletions(-)
