@@ -2,100 +2,119 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AA5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823ACC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E454F2083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E72C2083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9uoAXRf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4RD2EOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfCAX11 (ORCPT
+        id S1726609AbfCAXaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 18:27:27 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35808 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfCAX11 (ORCPT
+        Fri, 1 Mar 2019 18:30:13 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55467 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfCAXaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 18:27:27 -0500
-Received: by mail-pg1-f194.google.com with SMTP id e17so10093714pgd.2;
-        Fri, 01 Mar 2019 15:27:26 -0800 (PST)
+        Fri, 1 Mar 2019 18:30:12 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q187so14005181wme.5;
+        Fri, 01 Mar 2019 15:30:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CxMSec5AAtG8cchuHxOJ8OypYLZfqDq4LNUDOOaJjUA=;
-        b=X9uoAXRfwenhnt8LTzzikS/SKYVE0drhKmZ7pka/+x2jl8s1SM2JZtrLEpdlpgJScn
-         Sx3Rq2uDsJY3NyyMcQcjDicPPFsknNYothU0A8b+wasMh/acgO/mn20MYLcifvaXrG90
-         v8/VQ/hJd9VwU8o54i8E51mBXyYRl3DQB11H+GmDc0hiKuBYpqTUQECLqj5ns+XiwhPV
-         Pxl+yavAl/BRelnaHBS1cwzHkwvU0sDCfjTdhaHinGN2XP21IXULGr4Y57gmw2+DVo2B
-         gaWX63qa9rL77FhoAlYOjKdFvdBp5pq38vAeNsG/rJThg1Poe+6ilTl7ugi8DVwG4lMl
-         /lbw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gQBoDmCD8InlcftL2FFK0oDOOCsdTH5YyavHlmMeLTU=;
+        b=H4RD2EOPtj+J1Riv8UfYDmejm7XT86tIL43eoYGTyjttJ0KfJonsfQ8X+pEPU8AQao
+         zdsUwO7Fhb+FFlh2cTwYJ5LpSz6tr7IttuxNT1RQhVNEf3bgQSwiXH3Arq4EO7xAhlYz
+         5Xb3fAsQSw693eE0JqIyxPWGL/91gsymtpyyJVPnZeeqlG2wGXRQNFZijw3pBPR1i5VQ
+         qFD+oTEnyLEfPwG/QD/iYQnqBLh8iFwyVyADdTQzOGJshUtNRCahOkr+kqSDTfuFTlt8
+         SyLwuMaRutddZxyh+fM0r90FWO4acOYH8eJ2vBjlbkG4S+qqgh1TavdPV3vZnKhKXKKk
+         k06g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CxMSec5AAtG8cchuHxOJ8OypYLZfqDq4LNUDOOaJjUA=;
-        b=hWI7GFVglsj2fLqdtcTotjseb3ASLGBDVrXdQboOgjfVgnftpjCOn/fsooeQkKCzvU
-         /vQGdbip7cVMSYDOgQbdevVuWXTnP16JVBu3Z7U6sWK89z1IeUZXgFf2DTrSFxfuZaBn
-         pQLvOnZr6ejbXy//LP++oMaNRH0lRuvn4rYvwVL+TiIWdjUBHAYgAVugGFwko6hs4FGq
-         py2Iq2qSYg72Gl7yd7vigLDen2fa9M7hRhdbp+ESfCqyk2wYvyr5o8qWLEu807GrswhI
-         pMLHVae9+VjsONPAuNUA4aSp+I2K/R1LURSa1E7RLoWllO3+lntXEAOIWhh0Fv4l54mg
-         KtQQ==
-X-Gm-Message-State: AHQUAuaTmH73ONE0e8pcrsh8fjAgR6Gb/JK6adxP7CPfhneupFQgXAB4
-        WnUFmzXiZfKRzFBNtrYNXaiyLC0e
-X-Google-Smtp-Source: AHgI3IYnUExlCtfQo+7EuyNOsLopWhv9SZJpICuL6fJBoSM3Bh2DEo+aV9yh3Kk18iTZe8BDhOXI/Q==
-X-Received: by 2002:a62:bd09:: with SMTP id a9mr8119475pff.61.1551482845824;
-        Fri, 01 Mar 2019 15:27:25 -0800 (PST)
-Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id j197sm38618108pgc.76.2019.03.01.15.27.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 15:27:24 -0800 (PST)
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     Tim Harvey <tharvey@gateworks.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] media: imx: vdic: Fix wrong CSI group ID
-Date:   Fri,  1 Mar 2019 15:27:17 -0800
-Message-Id: <20190301232717.4125-1-slongerbeam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gQBoDmCD8InlcftL2FFK0oDOOCsdTH5YyavHlmMeLTU=;
+        b=ABkCuAPx7Du43rvkIQC6wNdhHhuloTUmppoMDNicoMCrB0qn3luiW88uFawWl5n4i9
+         ZbaN58N34MdC8eLT1T2h2CmPPVUWJzGbo8bqgl2JfoTso8R48nxqLVhfsxBDcY6mXdik
+         Ouku6d/3N1kgECavKusmxnqs72z8x5MyRA43KuEFdoF6CKd3HDug4+kFulRZzRNWmXHC
+         zI/N68O76Nmf89F6vmvT22TdY+3LEfrrmuwYGspUBIWV0XRxiTNxyxY+9ABAzGwO9umP
+         m7dGSASZ18SAXbS5mEkAjwWDijua/XQM5CsbPqa56j7GRfkYe34qhJO9u+/eobbAmZVQ
+         Pj0A==
+X-Gm-Message-State: AHQUAuZ2rSkjvNahRUQGSTOT1qF/9bH5OI5k2x9lLwxdmbGVbEY3wJiS
+        vEwiY6iaRCO6Yest3DlzULQllJ0RbhI5DXsBJ8g=
+X-Google-Smtp-Source: APXvYqw5J9nP9Wv35RdKav1p1ycSAvPSQ52V0tN8Wt59NTdue0GmxsxvLKglC5dQY7SQbvY1ueBdo/8O2VnfKq9CND4=
+X-Received: by 2002:a1c:47:: with SMTP id 68mr4388333wma.89.1551483010430;
+ Fri, 01 Mar 2019 15:30:10 -0800 (PST)
+MIME-Version: 1.0
+References: <20190301132351.6f4e815f@canb.auug.org.au>
+In-Reply-To: <20190301132351.6f4e815f@canb.auug.org.au>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 1 Mar 2019 18:29:58 -0500
+Message-ID: <CADnq5_PXqjcQeH1vh9ftpPfoCzD5SfdcXQSqAh2BPgrs1V28LQ@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the drm tree with the drm-fixes tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Francis <David.Francis@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX7 capture support forgot to change the group ID for the CSI
-to the IPU CSI in VDIC sub-device, it was left at the i.MX7 CSI
-group ID.
+On Thu, Feb 28, 2019 at 9:24 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the drm tree got a conflict in:
+>
+>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>
+> between commit:
+>
+>   d63716658ac1 ("drm/amd/display: Use vrr friendly pageflip throttling in DC.")
+>
+> from the drm-fixes tree and commits:
+>
+>   8a48b44cd00f ("drm/amd/display: Call into DC once per multiplane flip")
+>   bc7f670ee04c ("drm/amd/display: Perform plane updates only when needed")
+>
+> from the drm tree.
+>
+> I had no idea how to resolve this, so I just effectively reverted the
+> drm-fixes commit.
+>
+> I fixed it up (see above) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-Fixes: 67673ed55084 ("media: staging/imx: rearrange group id to take in account IPU")
+d63716658ac1 ("drm/amd/display: Use vrr friendly pageflip throttling
+in DC.") should be reverted and this should be applied instead for
+drm-next:
+https://cgit.freedesktop.org/~agd5f/linux/commit/?h=drm-next-5.2-wip&id=5d5f43c235d02e4d8e9d50d012f3b21f380486eb
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
----
- drivers/staging/media/imx/imx-media-vdic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Alex
 
-diff --git a/drivers/staging/media/imx/imx-media-vdic.c b/drivers/staging/media/imx/imx-media-vdic.c
-index 2808662e2597..d36f6936c365 100644
---- a/drivers/staging/media/imx/imx-media-vdic.c
-+++ b/drivers/staging/media/imx/imx-media-vdic.c
-@@ -744,7 +744,7 @@ static int vdic_link_setup(struct media_entity *entity,
- 		remote_sd = media_entity_to_v4l2_subdev(remote->entity);
- 
- 		/* direct pad must connect to a CSI */
--		if (!(remote_sd->grp_id & IMX_MEDIA_GRP_ID_CSI) ||
-+		if (!(remote_sd->grp_id & IMX_MEDIA_GRP_ID_IPU_CSI) ||
- 		    remote->index != CSI_SRC_PAD_DIRECT) {
- 			ret = -EINVAL;
- 			goto out;
--- 
-2.17.1
-
+>
+>
+>
+> --
+> Cheers,
+> Stephen Rothwell
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
