@@ -2,177 +2,100 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F439C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2127BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDA62083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="MPmgRrCf"
+	by mail.kernel.org (Postfix) with ESMTP id E547820840
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389309AbfCAQ51 (ORCPT
+        id S2389278AbfCAQ7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:57:27 -0500
-Received: from mail-it1-f195.google.com ([209.85.166.195]:53922 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389270AbfCAQ51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:57:27 -0500
-Received: by mail-it1-f195.google.com with SMTP id v2so21150155ith.3
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:57:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N0qix8KStCrr38pwzys0Ft4SlHFjFr2KiDnwm8gEhec=;
-        b=MPmgRrCf00md36nzoiRMD1mlnNqlWfkv50AzWGv3ymKIHoLHQ7PjByAnrDKu0CiOZe
-         eIoMDnsmyajODcGv6qmesRFHPMKAP+wAebTWkylI7CZVcy3cedYbb+nTb6+J1jfgHLby
-         mDpUfBWRgPgkVwBPBTW3nCwLs2SBVlpgz94EA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N0qix8KStCrr38pwzys0Ft4SlHFjFr2KiDnwm8gEhec=;
-        b=onmODHJbjHH8xaeYcrN2tG4gkmqcWSo5mADMJEUDGmgd7yJOoNvDDS4Tpdwv61T037
-         H8oVipVJcSDo79AYKbnonJkesLZSVpU6snNTkCalANsevgpq1NXkfhELIaGViQUiM6OG
-         HPj1ozMN2bVOG53QVaQWh+leq2WGkBquW6xlBxZGZ20vZy/6EnjshwbkHBHMkSvjirJJ
-         txh08PgK15uJkhplPP7bmPfhkVNKn5xh0ZTUgSDSYy6ZaYojd6rWa6RUVHoU3We16WSu
-         S1yahO7G5BgkkduSlLp+nfvsJs2eESNaBbXKJY+NHrOTZfcMf+AyyKWXmX+4DiqS+AML
-         nHVg==
-X-Gm-Message-State: APjAAAUfwaaDf4XFrBo/Xy/eJgr2tKU7DjBsTpAgRGbnssHM+sYLiwxd
-        SHnIcQ9YxW7qVsqRDrSxaQk3RbqxCFFHNDpQjAQ3ow==
-X-Google-Smtp-Source: AHgI3IYSms3Wn+JaUx/Lx/ywH3JHQLGlh4Ejw1H7LDS0ljBcZ9i31C58ixU0YHmGolTyf7c9UfpfiUa8bChZnsmtxJA=
-X-Received: by 2002:a24:3655:: with SMTP id l82mr3820535itl.107.1551459445988;
- Fri, 01 Mar 2019 08:57:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20190226060240.8783-1-jagan@amarulasolutions.com>
- <20190226060240.8783-2-jagan@amarulasolutions.com> <20190227153346.dwd3stsbsvf7rwly@flea>
- <CAMty3ZDSZvaxMjcQJLNaTDJQ5OjJ9NbjpOJKWMUE5PhRCzYvqw@mail.gmail.com> <20190301145724.vhvyoqkkxdflg2g7@flea>
-In-Reply-To: <20190301145724.vhvyoqkkxdflg2g7@flea>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Fri, 1 Mar 2019 22:27:14 +0530
-Message-ID: <CAMty3ZCUSsN71Q5h_nj6de0Smhqht1S5zq0pLKUqpwq=85XqXw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: allwinner: a64: Add Oceanic A64-5inMFD initial support
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Fri, 1 Mar 2019 11:59:16 -0500
+Received: from foss.arm.com ([217.140.101.70]:39128 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389170AbfCAQ7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:59:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6B7080D;
+        Fri,  1 Mar 2019 08:59:15 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CD8F3F575;
+        Fri,  1 Mar 2019 08:59:10 -0800 (PST)
+Date:   Fri, 1 Mar 2019 16:59:08 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Will Deacon <will.deacon@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ryan Pannell <ryan@osukl.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula@amarulasolutions.com
-Content-Type: text/plain; charset="UTF-8"
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v10 07/12] fs, arm64: untag user pointers in
+ fs/userfaultfd.c
+Message-ID: <20190301165908.GA130541@arrakis.emea.arm.com>
+References: <cover.1550839937.git.andreyknvl@google.com>
+ <8343cd77ca301df15839796f3b446b75ce5ffbbf.1550839937.git.andreyknvl@google.com>
+ <73f2f3fe-9a66-22a1-5aae-c282779a75f5@intel.com>
+ <CAAeHK+yQU8khtOoyDKqmHterCa16P7oWe9AMiPnrxE+Gyb_7aw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+yQU8khtOoyDKqmHterCa16P7oWe9AMiPnrxE+Gyb_7aw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 8:27 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Wed, Feb 27, 2019 at 09:49:23PM +0530, Jagan Teki wrote:
-> > On Wed, Feb 27, 2019 at 9:03 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Tue, Feb 26, 2019 at 11:32:40AM +0530, Jagan Teki wrote:
-> > > > Oceanic A64-5inMFD is a 5 inch Multi function display baseboard
-> > > > designed to mount SoPine SOM.
-> > > >
-> > > > Key features:
-> > > > - Allwinner A64 Cortex-A53
-> > > > - Mali-400MP2 GPU
-> > > > - AXP803 PMIC
-> > > > - 2GB DDR3 RAM
-> > > > - SD Slot
-> > > > - SPI-NOR flash
-> > > > - EMAC, RTL8211E
-> > > > - MCP2515 CAN
-> > > > - MIPI-DSI
-> > > > - Goodix 911 CTP
-> > > > - USB Host
-> > > > - 12V DC power supply
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > ---
-> > > >  arch/arm64/boot/dts/allwinner/Makefile        |  1 +
-> > > >  .../allwinner/sun50i-a64-oceanic-5inmfd.dts   | 46 +++++++++++++++++++
-> > > >  2 files changed, 47 insertions(+)
-> > > >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-> > > > index a5fb1eaa8acf..ec39fe856117 100644
-> > > > --- a/arch/arm64/boot/dts/allwinner/Makefile
-> > > > +++ b/arch/arm64/boot/dts/allwinner/Makefile
-> > > > @@ -2,6 +2,7 @@
-> > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-amarula-relic.dtb
-> > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb sun50i-a64-bananapi-m64-icn6211.dtb
-> > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
-> > > > +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-oceanic-5inmfd.dtb
-> > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-olinuxino.dtb
-> > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
-> > > >  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-lts.dtb
-> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
-> > > > new file mode 100644
-> > > > index 000000000000..d73d1f55acb9
-> > > > --- /dev/null
-> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5inmfd.dts
-> > > > @@ -0,0 +1,46 @@
-> > > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > > +/*
-> > > > + * Copyright (C) 2019 Oceanic Systems (UK) Ltd.
-> > > > + * Copyright (C) 2019 Amarula Solutions B.V.
-> > > > + * Author: Jagan Teki <jagan@amarulasolutions.com>
-> > > > + */
-> > > > +
-> > > > +/dts-v1/;
-> > > > +
-> > > > +#include "sun50i-a64-sopine.dtsi"
-> > > > +
-> > > > +/ {
-> > > > +     model = "Oceanic A64-5inMFD";
-> > > > +     compatible = "oceanic,a64-5inmfd", "allwinner,sun50i-a64";
-> > >
-> > > The name of the DT is Oceanic 5inMFD, while you call the board
-> > > A64-5inMFD here, which name is the actual name?
+On Tue, Feb 26, 2019 at 03:39:08PM +0100, Andrey Konovalov wrote:
+> On Sat, Feb 23, 2019 at 12:06 AM Dave Hansen <dave.hansen@intel.com> wrote:
 > >
-> > Yes, this is something that we discussed during "Amarula A64-Relic"
-> > naming convention.
+> > On 2/22/19 4:53 AM, Andrey Konovalov wrote:
+> > > userfaultfd_register() and userfaultfd_unregister() use provided user
+> > > pointers for vma lookups, which can only by done with untagged pointers.
 > >
-> > Since these boards are not famous like teres-i we agreed to add vendor
-> > name after sun50i-a64- followed by real board name.
-> >
-> > Here A64 already covered during sun50i-a64- so the dts name simply the
-> > <vendor_name>-<real_board_name>
->
-> For the DT name, yeah, we want that pattern.
->
-> For the compatible and model, we want to use the model name.
+> > So, we have to patch all these sites before the tagged values get to the
+> > point of hitting the vma lookup functions.  Dumb question: Why don't we
+> > just patch the vma lookup functions themselves instead of all of these
+> > callers?
+> 
+> That might be a working approach as well. We'll still need to fix up
+> places where the vma fields are accessed directly. Catalin, what do
+> you think?
 
-Entire model name after <vendor_name>, ?
+Most callers of find_vma*() always follow it by a check of
+vma->vma_start against some tagged address ('end' in the
+userfaultfd_(un)register()) case. So it's not sufficient to untag it in
+find_vma().
 
-model = "Oceanic A64-5inMFD";
-compatible = "oceanic,a64-5inmfd", "allwinner,sun50i-a64";
-
-is this not sufficient?
-
-Let me understand with respective few existing stuff.
-
-model = "Amarula A64-Relic";
-compatible = "amarula,a64-relic", "allwinner,sun50i-a64";
-
-model = "Olimex A64 Teres-I"
-compatible = "olimex,a64-teres-i", "allwinner,sun50i-a64";
-
-model = "FriendlyARM NanoPi A64";
-compatible = "friendlyarm,nanopi-a64", "allwinner,sun50i-a64";
-
-model = "Olimex A64-Olinuxino";
-compatible = "olimex,a64-olinuxino", "allwinner,sun50i-a64"
-
-Would you comment, what is the different with respect to my change?
+-- 
+Catalin
