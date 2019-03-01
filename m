@@ -2,29 +2,29 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D81C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C403C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F0620850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F7520850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388327AbfCAOED (ORCPT
+        id S2388361AbfCAOEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:04:03 -0500
-Received: from foss.arm.com ([217.140.101.70]:35464 "EHLO foss.arm.com"
+        Fri, 1 Mar 2019 09:04:07 -0500
+Received: from foss.arm.com ([217.140.101.70]:35504 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbfCAOED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:04:03 -0500
+        id S2388333AbfCAOEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:04:05 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91DF4A78;
-        Fri,  1 Mar 2019 06:04:01 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1930E165C;
+        Fri,  1 Mar 2019 06:04:05 -0800 (PST)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 54CD83F720;
-        Fri,  1 Mar 2019 06:03:58 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D23CF3F720;
+        Fri,  1 Mar 2019 06:04:01 -0800 (PST)
 From:   Will Deacon <will.deacon@arm.com>
 To:     linux-arch@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
@@ -44,276 +44,153 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Ingo Molnar <mingo@kernel.org>,
         Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 00/20] Remove Mysterious Macro Intended to Obscure Weird Behaviours (mmiowb())
-Date:   Fri,  1 Mar 2019 14:03:28 +0000
-Message-Id: <20190301140348.25175-1-will.deacon@arm.com>
+Subject: [PATCH 01/20] asm-generic/mmiowb: Add generic implementation of mmiowb() tracking
+Date:   Fri,  1 Mar 2019 14:03:29 +0000
+Message-Id: <20190301140348.25175-2-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190301140348.25175-1-will.deacon@arm.com>
+References: <20190301140348.25175-1-will.deacon@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everybody,
+In preparation for removing all explicit mmiowb() calls from driver
+code, implement a tracking system in asm-generic based loosely on the
+PowerPC implementation. This allows architectures with a non-empty
+mmiowb() definition to have the barrier automatically inserted in
+spin_unlock() following a critical section containing an I/O write.
 
-This is a non-RFC posting of the RFC previously posted here:
-
-  https://lwn.net/ml/linux-kernel/20190222185026.10973-1-will.deacon@arm.com/
-
-There have been some significant changes since then, including:
-
-  * Reduced mmiowb_spin_{lock,unlock}() overhead
-  * Support for the arch code to provide the mmiowb_state storage
-  * Moved PowerPC over to the generic algorithm
-  * Now compiles on x86 and some obscure ia64 configurations
-  * A bunch of minor tweaks
-
-As before, this is based on a couple of other I/O-related series that I have
-pending:
-
-  https://lkml.org/lkml/2019/2/22/484	// Queued by paulmck, pending review
-  https://lkml.org/lkml/2019/2/22/500	// Queued in arm64
-
-so I've pushed the whole lot out on a branch for your comfort and convenience:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git io
-
-Feedback welcome,
-
-Will
-
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Daniel Lustig <dlustig@nvidia.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Maciej W. Rozycki" <macro@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Tony Luck <tony.luck@intel.com>
-
---->8
-
-Will Deacon (20):
-  asm-generic/mmiowb: Add generic implementation of mmiowb() tracking
-  arch: Use asm-generic header for asm/mmiowb.h
-  mmiowb: Hook up mmiowb helpers to spinlocks and generic I/O accessors
-  ARM/io: Remove useless definition of mmiowb()
-  arm64/io: Remove useless definition of mmiowb()
-  x86/io: Remove useless definition of mmiowb()
-  nds32/io: Remove useless definition of mmiowb()
-  m68k/io: Remove useless definition of mmiowb()
-  sh/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
-  mips/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
-  ia64/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
-  powerpc/mmiowb: Hook up mmwiob() implementation to asm-generic code
-  riscv/mmiowb: Hook up mmwiob() implementation to asm-generic code
-  Documentation: Kill all references to mmiowb()
-  drivers: Remove useless trailing comments from mmiowb() invocations
-  drivers: Remove explicit invocations of mmiowb()
-  scsi/qla1280: Remove stale comment about mmiowb()
-  i40iw: Redefine i40iw_mmiowb() to do nothing
-  net/ethernet/silan/sc92031: Remove stale comment about mmiowb()
-  arch: Remove dummy mmiowb() definitions from arch code
-
- Documentation/driver-api/device-io.rst             |  45 ---------
- Documentation/driver-api/pci/p2pdma.rst            |   4 -
- Documentation/memory-barriers.txt                  | 103 +--------------------
- arch/alpha/include/asm/Kbuild                      |   1 +
- arch/alpha/include/asm/io.h                        |   2 -
- arch/arc/include/asm/Kbuild                        |   1 +
- arch/arm/include/asm/Kbuild                        |   1 +
- arch/arm/include/asm/io.h                          |   2 -
- arch/arm64/include/asm/Kbuild                      |   1 +
- arch/arm64/include/asm/io.h                        |   2 -
- arch/c6x/include/asm/Kbuild                        |   1 +
- arch/csky/include/asm/Kbuild                       |   1 +
- arch/h8300/include/asm/Kbuild                      |   1 +
- arch/hexagon/include/asm/Kbuild                    |   1 +
- arch/hexagon/include/asm/io.h                      |   2 -
- arch/ia64/include/asm/io.h                         |  17 ----
- arch/ia64/include/asm/mmiowb.h                     |  25 +++++
- arch/ia64/include/asm/spinlock.h                   |   2 +
- arch/m68k/include/asm/Kbuild                       |   1 +
- arch/m68k/include/asm/io_mm.h                      |   2 -
- arch/microblaze/include/asm/Kbuild                 |   1 +
- arch/mips/include/asm/io.h                         |   3 -
- arch/mips/include/asm/mmiowb.h                     |  11 +++
- arch/mips/include/asm/spinlock.h                   |  15 +++
- arch/nds32/include/asm/Kbuild                      |   1 +
- arch/nds32/include/asm/io.h                        |   2 -
- arch/nios2/include/asm/Kbuild                      |   1 +
- arch/openrisc/include/asm/Kbuild                   |   1 +
- arch/parisc/include/asm/Kbuild                     |   1 +
- arch/parisc/include/asm/io.h                       |   2 -
- arch/powerpc/Kconfig                               |   1 +
- arch/powerpc/include/asm/io.h                      |  33 +------
- arch/powerpc/include/asm/mmiowb.h                  |  18 ++++
- arch/powerpc/include/asm/paca.h                    |   6 +-
- arch/powerpc/include/asm/spinlock.h                |  17 ----
- arch/powerpc/xmon/xmon.c                           |   5 +-
- arch/riscv/Kconfig                                 |   1 +
- arch/riscv/include/asm/io.h                        |  15 +--
- arch/riscv/include/asm/mmiowb.h                    |  14 +++
- arch/s390/include/asm/Kbuild                       |   1 +
- arch/sh/include/asm/io.h                           |   3 -
- arch/sh/include/asm/mmiowb.h                       |  12 +++
- arch/sh/include/asm/spinlock-llsc.h                |   2 +
- arch/sparc/include/asm/Kbuild                      |   1 +
- arch/sparc/include/asm/io_64.h                     |   2 -
- arch/um/include/asm/Kbuild                         |   1 +
- arch/unicore32/include/asm/Kbuild                  |   1 +
- arch/x86/include/asm/Kbuild                        |   1 +
- arch/x86/include/asm/io.h                          |   2 -
- arch/xtensa/include/asm/Kbuild                     |   1 +
- drivers/crypto/cavium/nitrox/nitrox_reqmgr.c       |   4 -
- drivers/dma/txx9dmac.c                             |   3 -
- drivers/firewire/ohci.c                            |   1 -
- drivers/gpu/drm/i915/intel_hdmi.c                  |  10 --
- drivers/ide/tx4939ide.c                            |   2 -
- drivers/infiniband/hw/hfi1/chip.c                  |   3 -
- drivers/infiniband/hw/hfi1/pio.c                   |   1 -
- drivers/infiniband/hw/hns/hns_roce_hw_v1.c         |   2 -
- drivers/infiniband/hw/i40iw/i40iw_osdep.h          |   2 +-
- drivers/infiniband/hw/mlx4/qp.c                    |   6 --
- drivers/infiniband/hw/mlx5/qp.c                    |   1 -
- drivers/infiniband/hw/mthca/mthca_cmd.c            |   6 --
- drivers/infiniband/hw/mthca/mthca_cq.c             |   5 -
- drivers/infiniband/hw/mthca/mthca_qp.c             |  17 ----
- drivers/infiniband/hw/mthca/mthca_srq.c            |   6 --
- drivers/infiniband/hw/qedr/verbs.c                 |  12 ---
- drivers/infiniband/hw/qib/qib_iba6120.c            |   4 -
- drivers/infiniband/hw/qib/qib_iba7220.c            |   3 -
- drivers/infiniband/hw/qib/qib_iba7322.c            |   3 -
- drivers/infiniband/hw/qib/qib_sd7220.c             |   4 -
- drivers/media/pci/dt3155/dt3155.c                  |   8 --
- drivers/memstick/host/jmb38x_ms.c                  |   4 -
- drivers/misc/ioc4.c                                |   2 -
- drivers/misc/mei/hw-me.c                           |   3 -
- drivers/misc/tifm_7xx1.c                           |   1 -
- drivers/mmc/host/alcor.c                           |   1 -
- drivers/mmc/host/sdhci.c                           |  13 ---
- drivers/mmc/host/tifm_sd.c                         |   3 -
- drivers/mmc/host/via-sdmmc.c                       |  10 --
- drivers/mtd/nand/raw/r852.c                        |   2 -
- drivers/mtd/nand/raw/txx9ndfmc.c                   |   1 -
- drivers/net/ethernet/aeroflex/greth.c              |   1 -
- drivers/net/ethernet/alacritech/slicoss.c          |   4 -
- drivers/net/ethernet/amazon/ena/ena_com.c          |   1 -
- drivers/net/ethernet/atheros/atlx/atl1.c           |   1 -
- drivers/net/ethernet/atheros/atlx/atl2.c           |   1 -
- drivers/net/ethernet/broadcom/bnx2.c               |   4 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c    |   2 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h    |   4 -
- .../net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c    |   1 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c   |  29 ------
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_sp.c     |   1 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c  |   2 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c   |   4 -
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |   3 -
- drivers/net/ethernet/broadcom/tg3.c                |   6 --
- .../net/ethernet/cavium/liquidio/cn66xx_device.c   |  10 --
- .../net/ethernet/cavium/liquidio/octeon_device.c   |   1 -
- drivers/net/ethernet/cavium/liquidio/octeon_droq.c |   4 -
- .../net/ethernet/cavium/liquidio/request_manager.c |   1 -
- drivers/net/ethernet/intel/e1000/e1000_main.c      |   5 -
- drivers/net/ethernet/intel/e1000e/netdev.c         |   7 --
- drivers/net/ethernet/intel/fm10k/fm10k_iov.c       |   2 -
- drivers/net/ethernet/intel/fm10k/fm10k_main.c      |   5 -
- drivers/net/ethernet/intel/i40e/i40e_txrx.c        |   5 -
- drivers/net/ethernet/intel/iavf/iavf_txrx.c        |   5 -
- drivers/net/ethernet/intel/ice/ice_txrx.c          |   5 -
- drivers/net/ethernet/intel/igb/igb_main.c          |   5 -
- drivers/net/ethernet/intel/igbvf/netdev.c          |   4 -
- drivers/net/ethernet/intel/igc/igc_main.c          |   5 -
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c      |   5 -
- drivers/net/ethernet/marvell/sky2.c                |   4 -
- drivers/net/ethernet/mellanox/mlx4/catas.c         |   4 -
- drivers/net/ethernet/mellanox/mlx4/cmd.c           |  13 ---
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c      |   1 -
- drivers/net/ethernet/myricom/myri10ge/myri10ge.c   |   2 -
- drivers/net/ethernet/neterion/s2io.c               |   2 -
- drivers/net/ethernet/neterion/vxge/vxge-main.c     |   5 -
- drivers/net/ethernet/neterion/vxge/vxge-traffic.c  |   4 -
- drivers/net/ethernet/qlogic/qed/qed_int.c          |  13 ---
- drivers/net/ethernet/qlogic/qed/qed_spq.c          |   3 -
- drivers/net/ethernet/qlogic/qede/qede_ethtool.c    |   8 --
- drivers/net/ethernet/qlogic/qede/qede_fp.c         |   8 --
- drivers/net/ethernet/qlogic/qla3xxx.c              |   1 -
- drivers/net/ethernet/qlogic/qlge/qlge.h            |   1 -
- drivers/net/ethernet/qlogic/qlge/qlge_main.c       |   1 -
- drivers/net/ethernet/realtek/r8169.c               |   5 -
- drivers/net/ethernet/renesas/ravb_main.c           |   9 --
- drivers/net/ethernet/renesas/ravb_ptp.c            |   3 -
- drivers/net/ethernet/renesas/sh_eth.c              |   1 -
- drivers/net/ethernet/sfc/falcon/io.h               |   2 -
- drivers/net/ethernet/sfc/io.h                      |   2 -
- drivers/net/ethernet/silan/sc92031.c               |  15 ---
- drivers/net/ethernet/via/via-rhine.c               |   3 -
- drivers/net/ethernet/wiznet/w5100.c                |   6 --
- drivers/net/ethernet/wiznet/w5300.c                |  15 ---
- drivers/net/wireless/ath/ath5k/base.c              |   4 -
- drivers/net/wireless/ath/ath5k/mac80211-ops.c      |   2 -
- drivers/net/wireless/broadcom/b43/main.c           |   7 --
- drivers/net/wireless/broadcom/b43/sysfs.c          |   1 -
- drivers/net/wireless/broadcom/b43legacy/ilt.c      |   2 -
- drivers/net/wireless/broadcom/b43legacy/main.c     |  20 ----
- drivers/net/wireless/broadcom/b43legacy/phy.c      |   1 -
- drivers/net/wireless/broadcom/b43legacy/pio.h      |   1 -
- drivers/net/wireless/broadcom/b43legacy/radio.c    |   4 -
- drivers/net/wireless/broadcom/b43legacy/sysfs.c    |   1 -
- drivers/net/wireless/intel/iwlegacy/common.h       |   7 --
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c    |   1 -
- drivers/ntb/hw/idt/ntb_hw_idt.c                    |   7 --
- drivers/ntb/test/ntb_perf.c                        |   3 -
- drivers/scsi/bfa/bfa.h                             |   3 +-
- drivers/scsi/bfa/bfa_hw_cb.c                       |   2 -
- drivers/scsi/bfa/bfa_hw_ct.c                       |   2 -
- drivers/scsi/bnx2fc/bnx2fc_hwi.c                   |   2 -
- drivers/scsi/bnx2i/bnx2i_hwi.c                     |   3 -
- drivers/scsi/megaraid/megaraid_sas_base.c          |   1 -
- drivers/scsi/megaraid/megaraid_sas_fusion.c        |   1 -
- drivers/scsi/mpt3sas/mpt3sas_base.c                |   1 -
- drivers/scsi/qedf/qedf_io.c                        |   1 -
- drivers/scsi/qedi/qedi_fw.c                        |   1 -
- drivers/scsi/qla1280.c                             |  15 ---
- drivers/ssb/pci.c                                  |   1 -
- drivers/ssb/pcmcia.c                               |   4 -
- drivers/staging/comedi/drivers/mite.c              |   3 -
- drivers/staging/comedi/drivers/ni_660x.c           |   2 -
- drivers/staging/comedi/drivers/ni_mio_common.c     |   1 -
- drivers/staging/comedi/drivers/ni_pcidio.c         |   2 -
- drivers/staging/comedi/drivers/ni_tio.c            |   1 -
- drivers/staging/comedi/drivers/s626.c              |   2 -
- drivers/tty/serial/men_z135_uart.c                 |   1 -
- drivers/tty/serial/serial_txx9.c                   |   1 -
- drivers/usb/early/xhci-dbc.c                       |   4 -
- drivers/usb/host/xhci-dbgcap.c                     |   2 -
- include/asm-generic/io.h                           |   7 +-
- include/asm-generic/mmiowb.h                       |  63 +++++++++++++
- include/asm-generic/mmiowb_types.h                 |  12 +++
- include/linux/qed/qed_if.h                         |   2 -
- include/linux/spinlock.h                           |  11 ++-
- kernel/Kconfig.locks                               |   7 ++
- kernel/locking/spinlock.c                          |   7 ++
- kernel/locking/spinlock_debug.c                    |   6 +-
- sound/soc/txx9/txx9aclc-ac97.c                     |   1 -
- 182 files changed, 247 insertions(+), 783 deletions(-)
- create mode 100644 arch/ia64/include/asm/mmiowb.h
- create mode 100644 arch/mips/include/asm/mmiowb.h
- create mode 100644 arch/powerpc/include/asm/mmiowb.h
- create mode 100644 arch/riscv/include/asm/mmiowb.h
- create mode 100644 arch/sh/include/asm/mmiowb.h
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+---
+ include/asm-generic/mmiowb.h       | 63 ++++++++++++++++++++++++++++++++++++++
+ include/asm-generic/mmiowb_types.h | 12 ++++++++
+ kernel/Kconfig.locks               |  7 +++++
+ kernel/locking/spinlock.c          |  7 +++++
+ 4 files changed, 89 insertions(+)
  create mode 100644 include/asm-generic/mmiowb.h
  create mode 100644 include/asm-generic/mmiowb_types.h
 
+diff --git a/include/asm-generic/mmiowb.h b/include/asm-generic/mmiowb.h
+new file mode 100644
+index 000000000000..9439ff037b2d
+--- /dev/null
++++ b/include/asm-generic/mmiowb.h
+@@ -0,0 +1,63 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_GENERIC_MMIOWB_H
++#define __ASM_GENERIC_MMIOWB_H
++
++/*
++ * Generic implementation of mmiowb() tracking for spinlocks.
++ *
++ * If your architecture doesn't ensure that writes to an I/O peripheral
++ * within two spinlocked sections on two different CPUs are seen by the
++ * peripheral in the order corresponding to the lock handover, then you
++ * need to follow these FIVE easy steps:
++ *
++ * 	1. Implement mmiowb() (and arch_mmiowb_state() if you're fancy)
++ *	   in asm/mmiowb.h, then #include this file
++ *	2. Ensure your I/O write accessors call mmiowb_set_pending()
++ *	3. Select ARCH_HAS_MMIOWB
++ *	4. Untangle the resulting mess of header files
++ *	5. Complain to your architects
++ */
++#ifdef CONFIG_MMIOWB
++
++#include <linux/compiler.h>
++#include <asm-generic/mmiowb_types.h>
++
++#ifndef arch_mmiowb_state
++#include <asm/percpu.h>
++#include <asm/smp.h>
++
++DECLARE_PER_CPU(struct mmiowb_state, __mmiowb_state);
++#define __mmiowb_state()	this_cpu_ptr(&__mmiowb_state)
++#else
++#define __mmiowb_state()	arch_mmiowb_state()
++#endif	/* arch_mmiowb_state */
++
++static inline void mmiowb_set_pending(void)
++{
++	struct mmiowb_state *ms = __mmiowb_state();
++	ms->mmiowb_pending = ms->nesting_count;
++}
++
++static inline void mmiowb_spin_lock(void)
++{
++	struct mmiowb_state *ms = __mmiowb_state();
++	ms->nesting_count++;
++}
++
++static inline void mmiowb_spin_unlock(void)
++{
++	struct mmiowb_state *ms = __mmiowb_state();
++
++	if (unlikely(ms->mmiowb_pending)) {
++		ms->mmiowb_pending = 0;
++		mmiowb();
++	}
++
++	ms->nesting_count--;
++}
++#else
++#define mmiowb_set_pending()		do { } while (0)
++#define mmiowb_spin_lock()		do { } while (0)
++#define mmiowb_spin_unlock()		do { } while (0)
++#endif	/* CONFIG_MMIOWB */
++#endif	/* __ASM_GENERIC_MMIOWB_H */
+diff --git a/include/asm-generic/mmiowb_types.h b/include/asm-generic/mmiowb_types.h
+new file mode 100644
+index 000000000000..8eb0095655e7
+--- /dev/null
++++ b/include/asm-generic/mmiowb_types.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_GENERIC_MMIOWB_TYPES_H
++#define __ASM_GENERIC_MMIOWB_TYPES_H
++
++#include <linux/types.h>
++
++struct mmiowb_state {
++	u16	nesting_count;
++	u16	mmiowb_pending;
++};
++
++#endif	/* __ASM_GENERIC_MMIOWB_TYPES_H */
+diff --git a/kernel/Kconfig.locks b/kernel/Kconfig.locks
+index 84d882f3e299..82fa481ecb78 100644
+--- a/kernel/Kconfig.locks
++++ b/kernel/Kconfig.locks
+@@ -248,3 +248,10 @@ config ARCH_USE_QUEUED_RWLOCKS
+ config QUEUED_RWLOCKS
+ 	def_bool y if ARCH_USE_QUEUED_RWLOCKS
+ 	depends on SMP
++
++config ARCH_HAS_MMIOWB
++	bool
++
++config MMIOWB
++	def_bool y if ARCH_HAS_MMIOWB
++	depends on SMP
+diff --git a/kernel/locking/spinlock.c b/kernel/locking/spinlock.c
+index 936f3d14dd6b..0ff08380f531 100644
+--- a/kernel/locking/spinlock.c
++++ b/kernel/locking/spinlock.c
+@@ -22,6 +22,13 @@
+ #include <linux/debug_locks.h>
+ #include <linux/export.h>
+ 
++#ifdef CONFIG_MMIOWB
++#ifndef arch_mmiowb_state
++DEFINE_PER_CPU(struct mmiowb_state, __mmiowb_state);
++EXPORT_PER_CPU_SYMBOL(__mmiowb_state);
++#endif
++#endif
++
+ /*
+  * If lockdep is enabled then we use the non-preemption spin-ops
+  * even on CONFIG_PREEMPT, because lockdep assumes that interrupts are
 -- 
 2.11.0
 
