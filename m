@@ -7,39 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7938C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFB2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CBD20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFF720857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="WsfDQmwZ"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="QPadmG25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbfCAD7U (ORCPT
+        id S1731709AbfCAD7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 22:59:20 -0500
-Received: from mail.nic.cz ([217.31.204.67]:53115 "EHLO mail.nic.cz"
+        Thu, 28 Feb 2019 22:59:49 -0500
+Received: from mail.nic.cz ([217.31.204.67]:53122 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727920AbfCAD7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727945AbfCAD7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 Feb 2019 22:59:19 -0500
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 79ABA63323;
+        by mail.nic.cz (Postfix) with ESMTP id 90E66634E4;
         Fri,  1 Mar 2019 04:59:16 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1551412756; bh=xAfGaCBiJ/vfBIX69l+J1CGUUOEjRlsQiWtBpFmpPsc=;
+        t=1551412756; bh=HMWCZNg1pA+ShkG/SVbAu3uYNZ0SC9KpCw9eGEjTR+o=;
         h=From:To:Date;
-        b=WsfDQmwZp6Ehm4GS5hSGCsV+1N4XDFaRNR/9ZsWFYbIaiUANqL/Y7xDwGJcnp0lZe
-         9JEfwmlMkSQmF194YtF25JTtKgC7fF4PeHkotUdKRA/kp4HA8kgUYcnBlrlzybZ+4p
-         m55kdKGmfUJzC4AAvKagOH3R/litaZXLwOt4BvKI=
+        b=QPadmG25Nf+OYpsvhKBU3Flc0qLTN2Nw2+0aWv5dvvgEUED0JxkCXUUL+PfRLrMJT
+         II34e83iUpx20E6kVfpCb5r/MbHOm0Hr3FimMNkQRsRmlEwK3+3hH0SiDXyK1ThHOY
+         BvXQ/9j8fcOl//QWvqfiyS9YP6Kz1vZXDpZAUE3c=
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v3 bus+gpio 2/5] dt-bindings: bus: Document moxtet bus binding
-Date:   Fri,  1 Mar 2019 04:58:49 +0100
-Message-Id: <20190301035852.26780-3-marek.behun@nic.cz>
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v3 bus+gpio 3/5] bus: moxtet: Add sysfs documentation
+Date:   Fri,  1 Mar 2019 04:58:50 +0100
+Message-Id: <20190301035852.26780-4-marek.behun@nic.cz>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190301035852.26780-1-marek.behun@nic.cz>
 References: <20190301035852.26780-1-marek.behun@nic.cz>
@@ -53,60 +52,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds device tree binding documentation for the Moxtet bus, a bus
-via which the different modules connected to the Turris Mox router can
-be configured.
+Add sysfs ABI documentation for the attribute files module_id,
+module_name, input_value and output_value of Moxtet devices.
 
 Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
 ---
- .../devicetree/bindings/bus/moxtet.txt        | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/moxtet.txt
+ .../ABI/testing/sysfs-bus-moxtet-devices      | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-moxtet-devices
 
-diff --git a/Documentation/devicetree/bindings/bus/moxtet.txt b/Documentation/devicetree/bindings/bus/moxtet.txt
+diff --git a/Documentation/ABI/testing/sysfs-bus-moxtet-devices b/Documentation/ABI/testing/sysfs-bus-moxtet-devices
 new file mode 100644
-index 000000000000..2bb998cbd3ad
+index 000000000000..80bae358a90c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/moxtet.txt
-@@ -0,0 +1,36 @@
-+Turris Mox module configuration bus (over SPI)
++++ b/Documentation/ABI/testing/sysfs-bus-moxtet-devices
+@@ -0,0 +1,25 @@
++What:		/sys/bus/moxtet/devices/moxtet-<name>.<addr>/module_id
++Date:		March 2019
++KernelVersion:	5.2
++Contact:	Marek Behún <marek.behun@nic.cz>
++Description:	(R) Moxtet module ID. Format: %x
 +
-+Required properties:
-+ - compatible		: Should be "cznic,moxtet".
-+ - #address-cells	: Has to be 1
-+ - #size-cells		: Has to be 0
-+ - spi-cpol		: Required inverted clock polarity
-+ - spi-cpha		: Required shifted clock phase
-+For other required and optional properties of SPI slave nodes please refer to
-+../spi/spi-bus.txt.
++What:		/sys/bus/moxtet/devices/moxtet-<name>.<addr>/module_name
++Date:		March 2019
++KernelVersion:	5.2
++Contact:	Marek Behún <marek.behun@nic.cz>
++Description:	(R) Moxtet module name. Format: string
 +
-+Required properties of subnodes:
-+ - reg			: Should be position on the Moxtet bus
++What:		/sys/bus/moxtet/devices/moxtet-<name>.<addr>/input_value
++Date:		March 2019
++KernelVersion:	5.2
++Contact:	Marek Behún <marek.behun@nic.cz>
++Description:	(R) Read input value from module at this Moxtet address.
++		Format: %x
 +
-+The driver finds the devices connected to the bus by itself, but it may be
-+needed to reference some of them from other parts of the device tree. In that
-+case the devices can be defined as subnodes of the moxtet node.
-+
-+Example:
-+
-+	moxtet@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "cznic,moxtet";
-+		reg = <1>;
-+		spi-max-frequency = <10000000>;
-+		spi-cpol;
-+		spi-cpha;
-+
-+		moxtet_sfp: gpio@0 {
-+			compatible = "cznic,moxtet-sfp";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			reg = <0>;
-+		}
-+	};
++What:		/sys/bus/moxtet/devices/moxtet-<name>.<addr>/output_value
++Date:		March 2019
++KernelVersion:	5.2
++Contact:	Marek Behún <marek.behun@nic.cz>
++Description:	(RW) Read last written value or write value to the module on
++		this Moxtet address. Format: %x
 -- 
 2.19.2
 
