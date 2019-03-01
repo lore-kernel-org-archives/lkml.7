@@ -2,92 +2,134 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C336C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E114C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568D72084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:36:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gQj4Avdv"
+	by mail.kernel.org (Postfix) with ESMTP id D9B7B2084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387868AbfCAOgX (ORCPT
+        id S2388337AbfCAOgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:36:23 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46868 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbfCAOgX (ORCPT
+        Fri, 1 Mar 2019 09:36:36 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:55741 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387965AbfCAOgg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:36:23 -0500
-Received: by mail-lj1-f194.google.com with SMTP id v16so20554348ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:36:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=iFuRM1e0ejwb6fpxvPreeV1M5e1Ea2ARe9z2xeG6Sfg=;
-        b=gQj4AvdvQmYIo4Eyqly/iG+ajrdjfn6D7rwJcbtGLk6wsGUbcq6klMmRTJNokg/566
-         /1LMYoH9rP0YlySTQd4pObIQ9+t1E7fpaDOStnUSRPYaZUT4B32+YnvQaUNaoDlP7GXT
-         3agjZ+qe30Nq3dPFPCR86EwckrWwnqSpIGA3iGAHWV3+k6/nD4FPM0Z/sJQBG4DcxPBx
-         DCMCm6/O6LhQcZiGZ+mU3WuL1LhHHR/09xN59Njv35hYEvSZAeqc0Qq2zaLxNT/5oAaW
-         GduAhPsr+/nPVZs0sONvHVr4l+0Erv9Rs+rIbQ2MNxdHUXGI+TJ5NOibjAJUbK3IajRn
-         JpAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=iFuRM1e0ejwb6fpxvPreeV1M5e1Ea2ARe9z2xeG6Sfg=;
-        b=ow3Ba5NTJFSISX3uLEkODOl+Bof6y3OSvpNxBKiZ/jaeAj5ctO3hIExgH/9Nk6c2k9
-         2V9H9rvWkc9cXL23uXGB5w8N5NRif/PvHtgzXBVGZJAfC9sdeCVbdRvweNnm5TErN/vx
-         MKIWW8WJ5qKM6S+Ee2+dCD3d41RLwdjAz5jYbFdcF6KVjoIt53IDM5Z0e/GMBhssnzhK
-         K1Yh10d92kscoGm6EsPVAEQZIuvciyp+xd9J9GGImeH0ow/0w4IqIkz7D/m/NQFvB28d
-         GrUn3+38TZcUsJZXDqPP6llYICLIamfuqXdZeLUe4xq2crzk4qLXFGziAbvRYfBqvtOe
-         YgbQ==
-X-Gm-Message-State: APjAAAVPw+IJm+nYXtdGuNhdWMttYssb6V3g0DdV9G8o7yEltOedLtas
-        dTqpAepnL4jf9fOGa6chfmBMf4MVZiTa4LxwZR5ukutbN9g=
-X-Google-Smtp-Source: APXvYqwVTvuWxuk79fAeVTUWDv7BbtZWo4Vlcj6xb0bBpVKfTRp4bpq+5OS26vEHotMnwHW9A7B3R+VUNL1xptrRnbE=
-X-Received: by 2002:a2e:90cd:: with SMTP id o13mr2868528ljg.153.1551450980891;
- Fri, 01 Mar 2019 06:36:20 -0800 (PST)
+        Fri, 1 Mar 2019 09:36:36 -0500
+Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E2EBF240014;
+        Fri,  1 Mar 2019 14:36:32 +0000 (UTC)
+Date:   Fri, 1 Mar 2019 15:36:32 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
+Message-ID: <20190301143632.kzlr4jphq3rceos6@flea>
+References: <20190228212840.24964-1-andreas@kemnade.info>
 MIME-Version: 1.0
-References: <20190301035852.26780-1-marek.behun@nic.cz> <20190301035852.26780-6-marek.behun@nic.cz>
-In-Reply-To: <20190301035852.26780-6-marek.behun@nic.cz>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 1 Mar 2019 15:36:09 +0100
-Message-ID: <CACRpkdYpjjpVNUXRgT=XY758FGtDYow2fvwpah37T_GjTvLauQ@mail.gmail.com>
-Subject: Re: [PATCH v3 bus+gpio 5/5] dt-bindings: gpio: Document GPIOs via
- Moxtet bus
-To:     =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
-Cc:     Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ib4bul6sb7rzbemi"
+Content-Disposition: inline
+In-Reply-To: <20190228212840.24964-1-andreas@kemnade.info>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 4:59 AM Marek Beh=C3=BAn <marek.behun@nic.cz> wrote:
 
-> This patch adds documentation of the device tree bindings for GPIOs
-> on the devices connected via Moxtet bus.
->
-> Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
+--ib4bul6sb7rzbemi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Hi,
 
-> +               compatible =3D "cznic,moxtet-gpio";
+Thanks for your patch
 
-Is cznic registered in
-Documentation/devicetree/bindings/vendor-prefixes.txt?
+On Thu, Feb 28, 2019 at 10:28:40PM +0100, Andreas Kemnade wrote:
+> The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
+> with broadcom internals attached to UART1 and some gpios.
+> This addition is in line with similar boards
+>=20
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+>  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 29 ++++++++++++++++=
+++++++
+>  1 file changed, 29 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/=
+arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> index 1db2541135a7..39e206fac4e3 100644
+> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> @@ -69,6 +69,8 @@
+>  		compatible =3D "mmc-pwrseq-simple";
+>  		pinctrl-names =3D "default";
+>  		reset-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+> +		clocks =3D <&rtc 1>;
+> +		clock-names =3D "ext_clock";
+>  	};
+>  };
+> =20
+> @@ -122,7 +124,34 @@
+>  &uart1 {
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
+> +	uart-has-rtscts;
+>  	status =3D "okay";
+> +
+> +	bluetooth {
+> +		compatible =3D "brcm,bcm43438-bt";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&bt_pins_out>, <&bt_pins_in>;
+> +		clocks =3D <&rtc 1>;
+> +		clock-names =3D "lpo";
+> +		vbat-supply =3D <&reg_vcc3v3>;
+> +		vddio-supply =3D <&reg_vcc3v3>;
+> +		device-wakeup-gpios =3D <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
+> +		host-wakeup-gpios =3D <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
+> +		shutdown-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+> +	};
+> +
+> +};
+> +
+> +&pio {
+> +	bt_pins_out: bt_out {
+> +		pins =3D "PG12", "PG13";
+> +		function =3D "gpio_out";
+> +	};
+> +
+> +	bt_pins_in: bt_in {
+> +		pins =3D "PG11";
+> +		function =3D "gpio_in";
+> +	};
 
-Yours,
-Linus Walleij
+You don't need any of those pinctrl nodes, GPIOs work fine without.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ib4bul6sb7rzbemi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXHlDcAAKCRDj7w1vZxhR
+xWn6AP0cj7wtgn87Bf2OYGSm3A4wakfamsXePzKGD2jOfh+OUQD+PQr/iYkj+OYv
+6IvLK6H+eNF9wjDGYohNflqd7siYuwo=
+=Wkrh
+-----END PGP SIGNATURE-----
+
+--ib4bul6sb7rzbemi--
