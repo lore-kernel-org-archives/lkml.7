@@ -2,189 +2,140 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DA1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83BCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C3720851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7730C20851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733141AbfCALFZ (ORCPT
+        id S1733008AbfCALHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:05:25 -0500
-Received: from foss.arm.com ([217.140.101.70]:33166 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfCALFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:05:24 -0500
+        Fri, 1 Mar 2019 06:07:49 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33218 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727932AbfCALHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 06:07:49 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF57EEBD;
-        Fri,  1 Mar 2019 03:05:23 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.17])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 890203F575;
-        Fri,  1 Mar 2019 03:05:19 -0800 (PST)
-Date:   Fri, 1 Mar 2019 11:05:16 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com,
-        dietmar.eggemann@arm.com
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190301110516.6ec7ekslugg6ubzg@e107158-lin.cambridge.arm.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <20190228173444.54403795211d80ba540b61cb@kernel.org>
- <20190228150054.GB156098@google.com>
- <20190301112826.ced40b59fb7e8118fa5b40d6@kernel.org>
- <20190301032611.GA78818@google.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA117EBD;
+        Fri,  1 Mar 2019 03:07:48 -0800 (PST)
+Received: from [10.1.197.2] (ostrya.cambridge.arm.com [10.1.197.2])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1AE83F575;
+        Fri,  1 Mar 2019 03:07:46 -0800 (PST)
+Subject: Re: [PATCH RFC 1/1] iommu: set the default iommu-dma mode as
+ non-strict
+To:     "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>
+References: <20190131135211.6732-1-thunder.leizhen@huawei.com>
+ <94b9b0c9-1a24-63ba-5abe-5f6d79fed415@arm.com>
+ <dc06dfd0-0ab6-6f0b-64c6-2587a2a55798@huawei.com>
+ <5C78B89C.7040100@huawei.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <e567cf93-4e34-e15e-9d98-5834bc63e234@arm.com>
+Date:   Fri, 1 Mar 2019 11:07:26 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <5C78B89C.7040100@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190301032611.GA78818@google.com>
-User-Agent: NeoMutt/20171215
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/28/19 22:26, Joel Fernandes wrote:
-> On Fri, Mar 01, 2019 at 11:28:26AM +0900, Masami Hiramatsu wrote:
-> > Hi Joel,
-> 
-> Hi Masami,
-> 
-> > On Thu, 28 Feb 2019 10:00:54 -0500
-> > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > 
-> > > > Hmm, isn't it easier to add kernel-headers package on Android?
-> > > 
-> > > I have already been down that road. In the Android ecosystem, the Android
-> > > teams only provide a "userspace system image" which goes on the system
-> > > partition of the flash (and a couple other images are also provided but
-> > > system is the main one). The system image cannot contain GPL source code. It
-> > > is also not possible to put kernel headers for every kernel version on the
-> > > system images that ship and is not practical. Android boots on 1000s of forked
-> > > kernels. It does not make sense to provide headers on the system image for
-> > > every kernel version and I already had many discussions on the subject with
-> > > the teams, it is something that is just not done. Now for kernel modules,
-> > > there's another image called the "vendor image" which is flashed onto the
-> > > vendor parition, this is where kernel modules go.  This vendor image is not
-> > > provided by Google for non-Pixel devices. So we have no control over what
-> > > goes there BUT we do know that kernel modules that are enabled will go there,
-> > > and we do have control over enforcing that certain kernel modules should be
-> > > built and available as they are mandatory for Android to function properly.
-> > > We would also possibly make it a built-in option as well. Anyway my point is
-> > > keeping it in the kernel is really the easiest and the smartest choice IMO.
-> > 
-> > Sorry, I'm not convinced yet. This sounds like "because Android decided not
-> > to put the header files on vendor partition, but kernel module is OK"
-> > Why don't google ask vendors to put their kernel headers (or header tarball)
-> > on vendor partition instead?
-> 
-> May be Google can do that, but I think you missed the point of the patches.
-> Making it a module is not mandatory, people can build it into the kernel as
-> well (CONFIG_IKHEADERS_PROC=y). In this case, the proc entry will be
-> available on boot without any dependency on the filesystem. If you go through
-> the other threads such as folks from ARM who replied, they just boot a kernel
-> image for debug purpose and want headers on device available without any
-> additional step of copying headers to the filesystem. And folks from Google
-> also said that they wanted a built-in option.
+Hi Leizhen,
 
-Yes I do see this patch a useful addition. When you need the header and you're
-dealing with multiple devices and kernel trees and versions - having the
-headers part of the kernel just makes it easier to use them when you need them.
-Especially sometimes when you change a config option (like enabling a new
-syscall e.g: bpf) it's very easy to forget that the headers has changed as well
-and you need to push an updated copy.
+On 01/03/2019 04:44, Leizhen (ThunderTown) wrote:
+> 
+> 
+> On 2019/2/26 20:36, Hanjun Guo wrote:
+>> Hi Jean,
+>>
+>> On 2019/1/31 22:55, Jean-Philippe Brucker wrote:
+>>> Hi,
+>>>
+>>> On 31/01/2019 13:52, Zhen Lei wrote:
+>>>> Currently, many peripherals are faster than before. For example, the top
+>>>> speed of the older netcard is 10Gb/s, and now it's more than 25Gb/s. But
+>>>> when iommu page-table mapping enabled, it's hard to reach the top speed
+>>>> in strict mode, because of frequently map and unmap operations. In order
+>>>> to keep abreast of the times, I think it's better to set non-strict as
+>>>> default.
+>>>
+>>> Most users won't be aware of this relaxation and will have their system
+>>> vulnerable to e.g. thunderbolt hotplug. See for example 4.3 Deferred
+>>> Invalidation in
+>>> http://www.cs.technion.ac.il/users/wwwb/cgi-bin/tr-get.cgi/2018/MSC/MSC-2018-21.pdf
+> Hi Jean,
+> 
+>    In fact, we have discussed the vulnerable of deferred invalidation before upstream
+> the non-strict patches. The attacks maybe possible because of an untrusted device or
+> the mistake of the device driver. And we limited the VFIO to still use strict mode.
+>    As mentioned in the pdf, limit the freed memory with deferred invalidation only to
+> be reused by the device, can mitigate the vulnerability. But it's too hard to implement
+> it now.
+>    A compromise maybe we only apply non-strict to (1) dma_free_coherent, because the
+> memory is controlled by DMA common module, so we can make the memory to be freed after
+> the global invalidation in the timer handler. (2) And provide some new APIs related to
+> iommu_unmap_page/sg, these new APIs deferred invalidation. And the candiate device
+> drivers update the APIs if they want to improve performance. (3) Make sure that only
+> the trusted devices and trusted drivers can apply (1) and (2). For example, the driver
+> must be built into kernel Image.
 
-FWIW most of the time I run on non-android systems for development/debugging
-purposes. I use the built-in version although I can see a module version
-helpful too. You can save some space if your kernel image partition is small
-and it's easy to install the module along with all other modules when
-rebuilding the kernel than remembering to update the headers. It's a (very)
-nice convenience.
+Do we have a notion of untrusted kernel drivers? A userspace driver
+(VFIO) is untrusted, ok. But a malicious driver loaded into the kernel
+address space would have much easier ways to corrupt the system than to
+exploit lazy mode...
 
---
-Qais Yousef
+For (3), I agree that we should at least disallow lazy mode if
+pci_dev->untrusted is set. At the moment it means that we require the
+strictest IOMMU configuration for external-facing PCI ports, but it can
+be extended to blacklist other vulnerable devices or locations.
 
+If you do (3) then maybe we don't need (1) and (2), which require a
+tonne of work in the DMA and IOMMU layers (but would certainly be nice
+to see, since it would also help handle ATS invalidation timeouts)
+
+Thanks,
+Jean
+
+>    So that some high-end trusted devices use non-strict mode, and keep others still using
+> strict mode. The drivers who want to use non-strict mode, should change to use new APIs
+> by themselves.
 > 
-> There are many usecases for this, I have often run into issues with Linux
-> over the years not only with Android, but other distros, where I boot custom
-> kernels with no linux-headers package. This is quite painful. It is
-> convenient to have it as /proc file since the file is dependent on kernel
-> being booted up and this will work across all Linux distros and systems. I
-> feel that if you can keep an open mind about it, you will see that a lot of
-> people will use this feature if it is accepted and there is a lot of positive
-> feedback in earlier posts of this set.
 > 
-> > > > > The code to read the headers is based on /proc/config.gz code and uses
-> > > > > the same technique to embed the headers.
-> > > > > 
-> > > > > To build a module, the below steps have been tested on an x86 machine:
-> > > > > modprobe kheaders
-> > > > > rm -rf $HOME/headers
-> > > > > mkdir -p $HOME/headers
-> > > > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> > > > > cd my-kernel-module
-> > > > > make -C $HOME/headers M=$(pwd) modules
-> > > > > rmmod kheaders
-> > > > 
-> > > > It seems a bit complex, but no difference from compared with carrying
-> > > > kheaders.tar.gz. I think we would better have a psudo filesystem
-> > > > which can mount this compressed header file directly :) Then it becomes
-> > > > simpler, like
-> > > > 
-> > > > modprobe headerfs
-> > > > mkdir $HOME/headers
-> > > > mount -t headerfs $HOME/headers
-> > > > 
-> > > > And this doesn't consume any disk-space.
-> > > 
-> > > I felt using a compressed tar is really the easiest way because of all the
-> > > tools are already available.
-> > 
-> > As I asked above, if the pure tarball is useful, you can simply ask vendors
-> > to put the header tarball on their vendor directory. I feel making it as
-> > a module is not a right way.
+>>>
+>>> Why not keep the policy to secure by default, as we do for
+>>> iommu.passthrough? And maybe add something similar to
+>>> CONFIG_IOMMU_DEFAULT_PASSTRHOUGH? It's easy enough for experts to pass a
+>>> command-line argument or change the default config.
+>>
+>> Sorry for the late reply, it was Chinese new year, and we had a long discussion
+>> internally, we are fine to add a Kconfig but not sure OS vendors will set it
+>> to default y.
+>>
+>> OS vendors seems not happy to pass a command-line argument, to be honest,
+>> this is our motivation to enable non-strict as default. Hope OS vendors
+>> can see this email thread, and give some input here.
+>>
+>> Thanks
+>> Hanjun
+>>
+>>
+>> .
+>>
 > 
-> I don't see what is the drawback of making it a module, it makes it well
-> integrated into kernel build and ecosystem. I also didn't see any
-> justification you're providing about why it cannot be a module. If you go
-> through this and earlier threads, a lot of people are Ok with having a module
-> option. And I asked several top kernel maintainers at LPC and many people
-> suggested having it as a module.
-> 
-> > > There isn't a compressed in-ram filesystem right
-> > > now that I'm aware off that can achieve the kind of high compression ratio
-> > > this patchset does.
-> > 
-> > I think if linux can support something like tarfs(or compressed initramfs)
-> > in kernel, it gives linux an improvement not only a hack. :-)
-> 
-> Agreed, that sounds like a good idea. I will consider doing it once the
-> series in its current form can be accepted. I am saying so since this series
-> is simple, and I can do that as a next step since that idea will take a lot
-> of time to implement. But I am keen on doing it.
-> 
-> thanks,
-> 
->  - Joel
-> 
+
