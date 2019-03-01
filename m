@@ -2,103 +2,129 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C51C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BFFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22AA120818
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0Xjuktk"
+	by mail.kernel.org (Postfix) with ESMTP id F0E2A20818
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389427AbfCAR2I (ORCPT
+        id S2389442AbfCAR2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:28:08 -0500
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:34019 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbfCAR2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:28:08 -0500
-Received: by mail-ot1-f46.google.com with SMTP id 98so21684891oty.1;
-        Fri, 01 Mar 2019 09:28:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d8r6807PpZ/TrsR3U6y8O/oH0JFdHC7CmGaGmHjEVpI=;
-        b=T0XjuktkrikDrLTLkcCCbiWcnwmlt+e2gANDJHiMllCpSSwvHrj28+WkNCpXGkc1Qn
-         TnUEw5m2KOcWlEBZRcsZciCwrwSWMHewYOiO0iSzLTOWf/2bY8rlYLoH2C7gnOP6uXce
-         MTwLbHz6uM/ado2gcRkUmas82nYu5E7r8Gi+T5rCMyoItk1J9ci9VPX+eo0E+HAYxnri
-         BMPQbjhs8XIqkUOtxjzQYSGOsQr9lLI6nDXmYcK6vRHbaVxbpFhbFUZgY0LcGhRploJJ
-         AY3ddapJbaZO2pSmptDcOysw8WGifvnMi37hlS3nfLZMho0TD4XkyhArXGQlwFeJTUWO
-         SHMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d8r6807PpZ/TrsR3U6y8O/oH0JFdHC7CmGaGmHjEVpI=;
-        b=JV0i0m7l6frbbRGpLTNMUSJmP67YyifYoAXnmW7pHVGR8KFVg49/3EcWlBXcykWxEo
-         KBDkk9jdVDcd441jkeR5XYjXV9QfMXP03JEtlgG5jDt4aOL4uH8DKIedXS2Gv39XaloJ
-         NDYrukHHT98ej00ex5Wm1Nka3esdn488P8Qv+1+8ae9wyhkJbDo127VtrfaoXnFLW2ic
-         pLfNvNnJgoq/JIoLi4cmKqlEPvSMD2t3DQ53Dw92HPrZtbvATpUx521vINMD/qKKDb5a
-         UmPXf4X2Nvdoxa+Pip5YGgDIPUlfGSIVzXd1YgaG2/GqzOohzncL7zjF15fdebBEHuvw
-         2TPw==
-X-Gm-Message-State: APjAAAVLoqeWKPzjX6i4xmDUeyG+uNZYsEXbsKYEl6JXC0IMoa2bxtN6
-        cxZMEEUKIo1Y1z07a71igB+GjlQO
-X-Google-Smtp-Source: APXvYqyPRpFfpzhLuJUqA3CUY2x3YUwBHwpPGarQsf+tzdpzr/nVLFJekZugYflZNU4478KEEq87rg==
-X-Received: by 2002:a9d:6d0c:: with SMTP id o12mr4263183otp.256.1551461287138;
-        Fri, 01 Mar 2019 09:28:07 -0800 (PST)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id l64sm9263092oif.44.2019.03.01.09.28.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 09:28:05 -0800 (PST)
-Subject: Re: Realtek r8822be kernel module does not negotiate 802.11ac
- connection
-To:     "David R. Bergstein" <david.r.bergstein@gmail.com>,
-        Tony Chuang <yhchuang@realtek.com>
-Cc:     Pkshih <pkshih@realtek.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <51d62a31-7cde-e815-bdee-4ef5433007aa@gmail.com>
- <F7CD281DE3E379468C6D07993EA72F84D17AF74C@RTITMBSVM04.realtek.com.tw>
- <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <e68c6aae-8d71-266a-81fe-d078ac1ef38c@lwfinger.net>
-Date:   Fri, 1 Mar 2019 11:28:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 1 Mar 2019 12:28:18 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39500 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728274AbfCAR2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 12:28:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F032680D;
+        Fri,  1 Mar 2019 09:28:14 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E1A03F575;
+        Fri,  1 Mar 2019 09:28:13 -0800 (PST)
+Date:   Fri, 1 Mar 2019 17:28:10 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/7] drivers: firmware: psci: Simplify state node parsing
+Message-ID: <20190301172810.GR15517@lakrids.cambridge.arm.com>
+References: <20190228135919.3747-1-ulf.hansson@linaro.org>
+ <20190228135919.3747-6-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228135919.3747-6-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/28/19 8:32 PM, David R. Bergstein wrote:
-> Tony,
+On Thu, Feb 28, 2019 at 02:59:17PM +0100, Ulf Hansson wrote:
+> Instead of iterating through all the state nodes in DT, to find out how
+> many states that needs to be allocated, let's use the number already known
+> by the cpuidle driver. In this way we can drop the iteration altogether.
 > 
-> Thanks for your response.  Can you advise as to the availability of the
-> new rtw88 driver?  As it appears to be under development, I could not
-> locate a copy of the code for local compilation.
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>  drivers/firmware/psci/psci.c | 25 ++++++++++++-------------
+>  1 file changed, 12 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index d50b46a0528f..cbfc936d251c 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -290,26 +290,20 @@ static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
+>  static int psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
+>  			struct device_node *cpu_node, int cpu)
+>  {
+> -	int i, ret = 0, count = 0;
+> +	int i, ret = 0, num_state_nodes = drv->state_count - 1;
+>  	u32 *psci_states;
+>  	struct device_node *state_node;
+>  
+> -	/* Count idle states */
+> -	while ((state_node = of_parse_phandle(cpu_node, "cpu-idle-states",
+> -					      count))) {
+> -		count++;
+> -		of_node_put(state_node);
+> -	}
+> -
 
-David,
+To be honest, I'd rather not tighten the coupling with the cpuidle
+driver here. For example, I'm not that happy with the PSCI backend
+having to know the driver has a specific WFI state.
 
-Use the command 'git clone http://github.com/lwfinger/rtlwifi_new.git -b rtw88' 
-to get a copy of the new driver for RTL8822BE and RTL8822CE in a stand-alone 
-form. All that is needed is 'cd rtlwifi_new && make && sudo make install'. This 
-version will build on kernels v4.4 and newer. As I have time, I will be 
-backporting to kernels at least as old as 4.0.
+IIUC we could get rid of the explicit counting with something like:
 
-I would appreciate your comments and bug reports.
+	count = of_parse_phandle_with_args(cpu_node, "cpu-idle-states", NULL);
 
-Larry
+... but I'm not sure that the overall change is a simplification.
 
+Does this change make it easier to plumb in something in future?
 
+Thanks,
+Mark.
+
+> -	if (!count)
+> -		return -ENODEV;
+> -
+> -	psci_states = kcalloc(count, sizeof(*psci_states), GFP_KERNEL);
+> +	psci_states = kcalloc(num_state_nodes, sizeof(*psci_states),
+> +			GFP_KERNEL);
+>  	if (!psci_states)
+>  		return -ENOMEM;
+>  
+> -	for (i = 0; i < count; i++) {
+> +	for (i = 0; i < num_state_nodes; i++) {
+>  		state_node = of_parse_phandle(cpu_node, "cpu-idle-states", i);
+> +		if (!state_node)
+> +			break;
+> +
+>  		ret = psci_dt_parse_state_node(state_node, &psci_states[i]);
+>  		of_node_put(state_node);
+>  
+> @@ -319,6 +313,11 @@ static int psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
+>  		pr_debug("psci-power-state %#x index %d\n", psci_states[i], i);
+>  	}
+>  
+> +	if (i != num_state_nodes) {
+> +		ret = -ENODEV;
+> +		goto free_mem;
+> +	}
+> +
+>  	/* Idle states parsed correctly, initialize per-cpu pointer */
+>  	per_cpu(psci_power_state, cpu) = psci_states;
+>  	return 0;
+> -- 
+> 2.17.1
+> 
