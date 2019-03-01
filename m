@@ -2,271 +2,147 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B20BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88509C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3299F2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5142186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:09:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fz9mVTBR"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="KmKlQvnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387793AbfCAKHd (ORCPT
+        id S1731348AbfCAKJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 05:07:33 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45439 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387518AbfCAKHb (ORCPT
+        Fri, 1 Mar 2019 05:09:32 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:45520 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfCAKJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 05:07:31 -0500
-Received: by mail-io1-f68.google.com with SMTP id x9so19078913iog.12
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 02:07:30 -0800 (PST)
+        Fri, 1 Mar 2019 05:09:31 -0500
+X-IronPort-AV: E=Sophos;i="5.58,427,1544511600"; 
+   d="scan'208";a="25445212"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES128-SHA; 01 Mar 2019 03:09:31 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.37) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Fri, 1 Mar 2019 03:09:30 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LG6JncRnG3r386DmLZKM+48qPJD8K/l3MztsfA3x/jo=;
-        b=Fz9mVTBRSYCdK4UbA6m9P33P6LmXhX4eIFSAEUxj+ZuGFr+wckhSAk2cDRFMG061gz
-         j+LpoSPU2dv7s/BHYgSSQUG9YWwV7kELzbyhwrWrIWTqbTLwuS+kolhzFBnEXsU+zBU8
-         Bn5u8Y9KHh614FdQYz3oRRWxSZKlIQLmHTdRuGBOSJZyzQQcTaNr5Rcn5fBNMoJUzpKE
-         neolS3HIDU4xs6lawC7yOYZShXW698axYMawHuOpOB6WoLGC3GQ6VlvK4M1qGEOhLew3
-         LXqr+n6AZQyG3Nd78x1kSw+UfZpbPpO+SigiMbC3MfACt49u0LXGLLU4u6jUrxiS7l7a
-         bKSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LG6JncRnG3r386DmLZKM+48qPJD8K/l3MztsfA3x/jo=;
-        b=uVawH4xU43x5C6ReM4tykPsiw5QF/a9kjWPzMJvDzQJec1vfDUyJDTA4Gy1Aw498MB
-         PqI6ajRBWs8zgUzt0HEQY9ij8PfxMtBk62xXNj8C75MV/+dbcKP0rPnhHFUJVn+mXicc
-         Azh5HTiBTvxo6SKqt70Nn99pl8GQSS2E7EUAg9NB8jpysq9pH64RBoZLCcvGtP2bldCn
-         6/2Px89mKPZXrk+A8+88UqFMcs7ZVdOSACN34MedwGYLzAL/iJiwoqa+INKl66cZhPtN
-         cwwBOacYzNoLXfDXciiDrn5FIZBsXtmf8XlH10dtbnChRfkKHJg0xaxVXaFDwiX0nEiQ
-         FOvg==
-X-Gm-Message-State: APjAAAUBkqQYHhmb6KcHDqyhOe/foFDTQvhmf2rxA7BLGrVv7Khc2XzY
-        SgarP4j8E2L39khnPbtRX4pJYBOyyxMvzlRWg6uKcQ==
-X-Google-Smtp-Source: APXvYqxUmQo9kpVdDWmzhD9BTr3n7nBKuiIPJYSWaS7ZVutkXZ7FB8YfDHzFJ4rhvk2pd6RkJBK3kefmewF2tgZp1XQ=
-X-Received: by 2002:a6b:7b02:: with SMTP id l2mr2322929iop.60.1551434849469;
- Fri, 01 Mar 2019 02:07:29 -0800 (PST)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l0NVVGRFKHsGo0L3Z8u+tHa58DefkjX4CRzgxHaLBag=;
+ b=KmKlQvnD7XGJVkUxoKLdZCIMY44qlsB+an6wWz2xm89ojoS9HDT53sh1h5teS9yAn2pch7a6Bv3ogVQYmWgGRHvGa5DenR3BAE3w2GbA3J56h+SMmBNUTs4ZGdjt/4gMnXKosdSaSvVTNFa04oB/+v1IH8dsgI0XyYnUTdKYHps=
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
+ MWHPR11MB0079.namprd11.prod.outlook.com (10.164.204.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.16; Fri, 1 Mar 2019 10:09:26 +0000
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::54fe:95ed:b0cf:55a6]) by MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::54fe:95ed:b0cf:55a6%8]) with mapi id 15.20.1643.022; Fri, 1 Mar 2019
+ 10:09:26 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <sam@ravnborg.org>, <alexandre.belloni@bootlin.com>
+CC:     <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <Nicolas.Ferre@microchip.com>,
+        <Ludovic.Desroches@microchip.com>, <bbrezillon@kernel.org>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>, <thierry.reding@gmail.com>,
+        <devicetree@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/7] add LCD support for SAM9X60
+Thread-Topic: [PATCH 0/7] add LCD support for SAM9X60
+Thread-Index: AQHUzrje9T8RC8FLgkilJXdcaQrjR6X1h1qAgAAqKwCAAAXrgIAA2MMA
+Date:   Fri, 1 Mar 2019 10:09:26 +0000
+Message-ID: <9ca1bee4-a2b8-6a0f-2d75-857b9096eabe@microchip.com>
+References: <1551284609-14594-1-git-send-email-claudiu.beznea@microchip.com>
+ <20190228182119.GA28318@ravnborg.org> <20190228205214.GD23094@piout.net>
+ <20190228211325.GA30188@ravnborg.org>
+In-Reply-To: <20190228211325.GA30188@ravnborg.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR02CA0069.eurprd02.prod.outlook.com
+ (2603:10a6:802:14::40) To MWHPR11MB1549.namprd11.prod.outlook.com
+ (2603:10b6:301:c::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20190301120914881
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 355eeec9-64cb-4a5d-a034-08d69e2dfc48
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR11MB0079;
+x-ms-traffictypediagnostic: MWHPR11MB0079:
+x-microsoft-exchange-diagnostics: =?utf-8?B?MTtNV0hQUjExTUIwMDc5OzIzOi9SRnN5dXg3NFVNbnJlK21ZbDhmNms5WjBw?=
+ =?utf-8?B?RUJ0TVpwTDBISXB5NldwVzRyMVJ6ZFVjeWhWODQrK3hIeUE2MFdSMGtBSTRJ?=
+ =?utf-8?B?Q0JUNFdvVGN1UEp4N2szUnNzbkhnWnY2Z0d3QVNEOW5LYTVDY3pqbEtmbkdJ?=
+ =?utf-8?B?L2did3IwMkNPMlROUlJTcXIwM0x6dHJ4R3NxZnMrVG9JT2tIMEswN21rYnpo?=
+ =?utf-8?B?UFBDbDdqYlhFeHVNNkR0aW5saDZ4RVJGNDArSDRvdzVwdzFNcEZ3RHV0eG1G?=
+ =?utf-8?B?MWtpUTJkTWpuWUExdzVtczV5SUFNL3ZQbGk4b2xoTU9qWDB2U3NFMHUxWXB5?=
+ =?utf-8?B?WXhXREdzY2hBeFgrUW1TNTRDbmFWdi83R0lwOFhQZ0hwNWwvMjlTTTZBQm05?=
+ =?utf-8?B?QWtDa1hXclFIOERZOE5zL1c2ZEJzNVBVOTR4dmdYSzlreTl1MVJuVU5JU0Jq?=
+ =?utf-8?B?Z00rOFdCODBlbHJydWVreVhlMXZCU0poek1DYkNGK0VERlVJb2t0YXlWc2lm?=
+ =?utf-8?B?ZlhyeUxjTTViVTJlS3JFTHFYNE83R3lZWkk5SUJqcnllNlFEZDJrd3BNWldF?=
+ =?utf-8?B?WE5tZG8raE81cldwVXpTSUk4NXlHZkQ4TXdKM2FYNzBpS0RXNkNwZEtSS2VR?=
+ =?utf-8?B?d1ltd0hZZzhNcmVmQkdNVnQ0Qi90cjFucmRkTFBIbTcxZzdYME1kMVE2MlNu?=
+ =?utf-8?B?bUFHZmZoVStxYXZTMEl3NFRwaVVRR3c4RC9hR0RXR1ozY0UxNXc1bkRMazNq?=
+ =?utf-8?B?Q3p0b3B5Ty9VUFJoc3R2RFRGNzlqQUdvUnVKL2kyMWZ2TjFNdnNqVHJxenQz?=
+ =?utf-8?B?Q0tqVzFzWVlweGJzbVlxRDlDZktEY3JFNG9kTlpiUnRoNGpLK3AyUnQ3RjU3?=
+ =?utf-8?B?ZnNNc0VrM3dMR1lLS0tHVzRyOXE4aTF2Y09Cbm8wZDlOTVU5OTZ2U0E1OWpK?=
+ =?utf-8?B?enptVjloOHFLNHFrdXdmTW41UXJDS0ZFT1IrNkxzemsvQU1ZNHF3UUxBdG03?=
+ =?utf-8?B?dHNFQ3RuTW15YUpncUI2WFA3SmVwcCtQTmw3TmQ4bTV2OUdlc3JlR3VtNWxv?=
+ =?utf-8?B?TFE5VDVKYlJNazdqWE52blhoUERUQkN0YjR0bXc5ZkxLb05PYWQ5Rkt5VUhB?=
+ =?utf-8?B?emFMQXg2b2wwSU9NU3dNVXo1WVZjeUt4Z1lnOGdTN1JXWUNsQnNCZ1F5WnVs?=
+ =?utf-8?B?ZVJneXZlUlI5dzI5VUJyQytlRjhXeTdkbW45WnhjdFliNTh0NDAxOFRyNWFo?=
+ =?utf-8?B?R2VBSEl2dm5wK1NiYnBuTmJCbyt0K3VEeFJuRWxheHAwNUs5Nk1CWkdWNXBQ?=
+ =?utf-8?B?djVVTXlkalFWbzdmNWR6WmJtZ1JCdjJSNjZjcVNnbVk1S2NFOW1RUVdnQ1lE?=
+ =?utf-8?B?N24vWGV3QThEY0x1c242MldVVFpXL1ZFeXgrN1V4L3ZqTkRrNGQrQUNZUTlB?=
+ =?utf-8?B?bjNSUDBJQjExNlJWWU5PejN4Y0ZlZjJMQXE5VEVGQ0dkYXp0L2diL28xME04?=
+ =?utf-8?B?UnZINUgraU1LRm9kaEx3SERJQmRGWG5PMmZRVGlPNGVqMDBsTDVXSFd3dG92?=
+ =?utf-8?B?akFPZHNQLzNld0wvS05mbkJtNFltL0l1N1hCWVYyUVBtN3RlY1p4Vkk3ZUhm?=
+ =?utf-8?B?a1Z0UEkvNU1Bd05VVUplU2paQXVBSDB0NmhBN1hLcTE0dkFja1Z1NmcvUjVI?=
+ =?utf-8?B?UGVUbm5tTGM1RklCQUcycUFLeUJaNnlZa1dRUlp0bUNrMm45VFBYSGRtRmlU?=
+ =?utf-8?B?RFBwa05GSHRvVkFSUW50enJBQ1VhZW9ZRnQ3RHFHY3dueGJtN00wYlppVEtu?=
+ =?utf-8?B?eTVLYXZ4TW8xMHZxQkpua1dBWHdBSk1iUEtsOGVFdFp3V0FsU2JDbFYrQlRy?=
+ =?utf-8?Q?Op67LvtJjxc=3D?=
+x-microsoft-antispam-prvs: <MWHPR11MB00794CC3AC4E7BFD4B700FDA87760@MWHPR11MB0079.namprd11.prod.outlook.com>
+x-forefront-prvs: 09634B1196
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(396003)(346002)(136003)(199004)(189003)(256004)(6512007)(72206003)(2906002)(476003)(4326008)(14454004)(11346002)(486006)(3846002)(6116002)(25786009)(478600001)(6486002)(6436002)(446003)(53936002)(2616005)(76176011)(6246003)(6346003)(52116002)(26005)(316002)(102836004)(6506007)(186003)(229853002)(386003)(86362001)(53546011)(110136005)(54906003)(31696002)(71190400001)(36756003)(71200400001)(31686004)(8676002)(81156014)(81166006)(4744005)(8936002)(68736007)(7736002)(305945005)(5660300002)(106356001)(93886005)(105586002)(97736004)(7416002)(66066001)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB0079;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Claudiu.Beznea@microchip.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: kFEf2YTrZiLZUkg5CJx8/UV+fT3DkmylFAKx8NMcL3wF9SoHoX/XjmO9Mh3bDHb1mpOSOgUN4+AN9QZK8yFFubje8kbGANAD8qiSwcDVteWAdAId81MKs621Go94hIjcbRSOL8K4xd62opNSy/Zx9dyLmS5AHTmUywEE744DVsEakiU2zMDsFmpmyDmt75m8vvrt3i1zZjnH62dz0wV7qZmJQ/zWpymZ0gazffyaY2KdyTto9dFUAWGvCIldszoOm5zNQB9QAbcgsdQvi8RnxNFMVqd+M9ISJRRxRtvO8bgw0PDPRinJ3h0iclyBHefzBgxZs4f2AP2PZM+URoE38K1QVOWpl+M0sSc7qtXg86WSe4evbxuLvlTJdE1Kl8GdYSJQYK9uuuwwinrEwYoLK3hVe6cfrmmVHadgjb/c+/M=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FA669EBF19CAF24BBEE2053E638DEB34@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CGME20190222122204eucas1p1ee66c9d937bdf328588ececb1f005526@eucas1p1.samsung.com>
- <20190222122144.19024-1-k.konieczny@partner.samsung.com> <20190222122144.19024-4-k.konieczny@partner.samsung.com>
- <CAJKOXPdgcQPriU7nT3K_DyB+NniLDf6b8993qu9zwW_dEuYogw@mail.gmail.com>
-In-Reply-To: <CAJKOXPdgcQPriU7nT3K_DyB+NniLDf6b8993qu9zwW_dEuYogw@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 1 Mar 2019 11:07:17 +0100
-Message-ID: <CAKv+Gu8EhppjBbBa3KDheb_YGFVZ0JBxe=mf8Fpq68PWazcyrQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] crypto: s5p: add AES support for Exynos5433
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 355eeec9-64cb-4a5d-a034-08d69e2dfc48
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 10:09:21.5929
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB0079
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 Mar 2019 at 10:56, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Fri, 22 Feb 2019 at 13:22, Kamil Konieczny
-> <k.konieczny@partner.samsung.com> wrote:
-> >
-> > Add AES crypto HW acceleration for Exynos5433, with the help of SlimSSS IP.
-> >
-> > Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> > ---
-> >  drivers/crypto/s5p-sss.c | 50 ++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 46 insertions(+), 4 deletions(-)
-> > diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
-> > index 0064be0e3941..3f45cc5cb94a 100644
-> > --- a/drivers/crypto/s5p-sss.c
-> > +++ b/drivers/crypto/s5p-sss.c
-> > @@ -232,6 +232,7 @@
-> >   * struct samsung_aes_variant - platform specific SSS driver data
-> >   * @aes_offset: AES register offset from SSS module's base.
-> >   * @hash_offset: HASH register offset from SSS module's base.
-> > + * @clk_names: names of clocks needed to run SSS IP
-> >   *
-> >   * Specifies platform specific configuration of SSS module.
-> >   * Note: A structure for driver specific platform data is used for future
-> > @@ -240,6 +241,7 @@
-> >  struct samsung_aes_variant {
-> >         unsigned int                    aes_offset;
-> >         unsigned int                    hash_offset;
-> > +       const char                      *clk_names[];
-> >  };
-> >
-> >  struct s5p_aes_reqctx {
-> > @@ -296,6 +298,7 @@ struct s5p_aes_ctx {
-> >  struct s5p_aes_dev {
-> >         struct device                   *dev;
-> >         struct clk                      *clk;
-> > +       struct clk                      *pclk;
-> >         void __iomem                    *ioaddr;
-> >         void __iomem                    *aes_ioaddr;
-> >         int                             irq_fc;
-> > @@ -384,11 +387,19 @@ struct s5p_hash_ctx {
-> >  static const struct samsung_aes_variant s5p_aes_data = {
-> >         .aes_offset     = 0x4000,
-> >         .hash_offset    = 0x6000,
-> > +       .clk_names      = { "secss", },
-> >  };
-> >
-> >  static const struct samsung_aes_variant exynos_aes_data = {
-> >         .aes_offset     = 0x200,
-> >         .hash_offset    = 0x400,
-> > +       .clk_names      = { "secss", },
-> > +};
-> > +
-> > +static const struct samsung_aes_variant exynos5433_slim_aes_data = {
-> > +       .aes_offset     = 0x400,
-> > +       .hash_offset    = 0x800,
-> > +       .clk_names      = { "pclk", "aclk", },
-> >  };
-> >
-> >  static const struct of_device_id s5p_sss_dt_match[] = {
-> > @@ -400,6 +411,10 @@ static const struct of_device_id s5p_sss_dt_match[] = {
-> >                 .compatible = "samsung,exynos4210-secss",
-> >                 .data = &exynos_aes_data,
-> >         },
-> > +       {
-> > +               .compatible = "samsung,exynos5433-slim-sss",
-> > +               .data = &exynos5433_slim_aes_data,
-> > +       },
-> >         { },
-> >  };
-> >  MODULE_DEVICE_TABLE(of, s5p_sss_dt_match);
-> > @@ -2208,18 +2223,39 @@ static int s5p_aes_probe(struct platform_device *pdev)
-> >                         return PTR_ERR(pdata->ioaddr);
-> >         }
-> >
-> > -       pdata->clk = devm_clk_get(dev, "secss");
-> > +       pdata->clk = devm_clk_get(dev, variant->clk_names[0]);
-> >         if (IS_ERR(pdata->clk)) {
-> > -               dev_err(dev, "failed to find secss clock source\n");
-> > +               dev_err(dev, "failed to find secss clock %s\n",
-> > +                       variant->clk_names[0]);
-> >                 return -ENOENT;
-> >         }
-> >
-> >         err = clk_prepare_enable(pdata->clk);
-> >         if (err < 0) {
-> > -               dev_err(dev, "Enabling SSS clk failed, err %d\n", err);
-> > +               dev_err(dev, "Enabling clock %s failed, err %d\n",
-> > +                       variant->clk_names[0], err);
-> >                 return err;
-> >         }
-> >
-> > +       if (variant->clk_names[1]) {
-> > +               pdata->pclk = devm_clk_get(dev, variant->clk_names[1]);
->
-> I see on today's linux next:
-> [ 6.391256] Unable to handle kernel paging request at virtual address 00004000
-> on all my Exynos boards (U3, XU, XU3, HC1).
-> I did not do a bisect yet but it might be connected with this commit.
->
-> The call trace is:
-> (strcmp) from [<c0774014>] (of_property_match_string+0x58/0xd0)
-> (of_property_match_string) from [<c04d3d2c>] (__of_clk_get_by_name+0x5c/0x130)
-> (__of_clk_get_by_name) from [<c04d3fa0>] (clk_get+0x34/0x70)
-> (clk_get) from [<c04d3680>] (devm_clk_get+0x38/0x74)
-> (devm_clk_get) from [<c075c248>] (s5p_aes_probe+0xd4/0x4a0)
-> (s5p_aes_probe) from [<c059dbc4>] (platform_drv_probe+0x6c/0xa4)
-> (platform_drv_probe) from [<c059b4c8>] (really_probe+0x280/0x414)
-> (really_probe) from [<c059b810>] (driver_probe_device+0x78/0x1c0)
-> (driver_probe_device) from [<c059bbb8>] (device_driver_attach+0x58/0x60)
-> (device_driver_attach) from [<c059bcbc>] (__driver_attach+0xfc/0x160)
-> (__driver_attach) from [<c059928c>] (bus_for_each_dev+0x68/0xb4)
-> (bus_for_each_dev) from [<c059a5c4>] (bus_add_driver+0x158/0x214)
-> (bus_add_driver) from [<c059cb94>] (driver_register+0x78/0x110)
-> (driver_register) from [<c01031f8>] (do_one_initcall+0x8c/0x404)
->
-> Full log:
-> https://krzk.eu/#/builders/21/builds/1153/steps/12/logs/serial0
->
-> The s5p_aes_probe address points here.
->
-
-It seems that dereferencing clk_names[1] of struct samsung_aes_variant
-exynos_aes_data
-
-> > +       .clk_names      = { "secss", },
-
-returns the first member of
-
-> >  static const struct samsung_aes_variant s5p_aes_data = {
-> >         .aes_offset     = 0x4000,
-
-since the array has only one entry in this case, and so the second,
-non-existing entry overlaps with the next data item in the object
-file.
-
-So the fix would be to use
-
-.clk_names      = { "secss", NULL },
-
-instead (or define the array to have 2 members)
-
-
->
-> >
-> > +               if (IS_ERR(pdata->pclk)) {
-> > +                       dev_err(dev, "failed to find clock %s\n",
-> > +                               variant->clk_names[1]);
-> > +                       err = -ENOENT;
-> > +                       goto err_clk;
-> > +               }
-> > +
-> > +               err = clk_prepare_enable(pdata->pclk);
-> > +               if (err < 0) {
-> > +                       dev_err(dev, "Enabling clock %s failed, err %d\n",
-> > +                               variant->clk_names[0], err);
-> > +                       goto err_clk;
-> > +               }
-> > +       } else {
-> > +               pdata->pclk = NULL;
-> > +       }
-> > +
-> >         spin_lock_init(&pdata->lock);
-> >         spin_lock_init(&pdata->hash_lock);
-> >
-> > @@ -2295,8 +2331,11 @@ static int s5p_aes_probe(struct platform_device *pdev)
-> >         tasklet_kill(&pdata->tasklet);
-> >
-> >  err_irq:
-> > -       clk_disable_unprepare(pdata->clk);
-> > +       if (pdata->pclk)
-> > +               clk_disable_unprepare(pdata->pclk);
-> >
-> > +err_clk:
-> > +       clk_disable_unprepare(pdata->clk);
-> >         s5p_dev = NULL;
-> >
-> >         return err;
-> > @@ -2323,6 +2362,9 @@ static int s5p_aes_remove(struct platform_device *pdev)
-> >                 pdata->use_hash = false;
-> >         }
-> >
-> > +       if (pdata->pclk)
-> > +               clk_disable_unprepare(pdata->pclk);
-> > +
-> >         clk_disable_unprepare(pdata->clk);
-> >         s5p_dev = NULL;
-> >
-> > --
-> > 2.20.1
-> >
+DQoNCk9uIDI4LjAyLjIwMTkgMjM6MTMsIFNhbSBSYXZuYm9yZyB3cm90ZToNCj4gSGkgQWxleGFu
+ZHJlLg0KPiANCj4+Pj4NCj4+Pj4gVGhlc2UgcGF0Y2hlcyBhZGRzIHN1cHBvcnQgZm9yIFNBTTlY
+NjAncyBMQ0QgY29udHJvbGxlci4NCj4+PiBDYW4geW91IGVsYWJvcmF0ZSBhIGxpdHRsZSBtb3Jl
+IHdoaWNoIGNoaXBzIHRoYXQgYXJlIHJlbGV2YW50Lg0KPj4+IFRvIGJlIGFibGUgdG8gbG9vayBp
+bnRvIHRoZSByaWdodCBkYXRhLXNoZWV0LCB3aGlsZSByZXZpZXdpbmcuDQo+Pj4gTGluayB0byBk
+YXRhLXNoZWV0IHdvdWxkIGJlIG5pY2UgdG9vLg0KPj4+DQo+Pg0KPj4gc2FtOXg2MCBpcyB0aGUg
+Y2hpcCBuYW1lIChpLmUuIHggaXMgbm90IGEgd2lsZGNhcmQpLiBJIGRvbid0IHRoaW5rIHRoZQ0K
+Pj4gZGF0YXNoZWV0IGlzIGZpbmlzaGVkL3B1YmxpYyB5ZXQuDQo+IA0KPiBUaGFua3MuIEkgd2ls
+bCB0YWtlIGEgbG9vayBhdCB0aGUgcGF0Y2hlcyBidXQgbm90IGtub3dpbmcNCj4gdGhlIHNwZWNp
+ZmljcyBvZiB0aGUgaW1wbGVtZW50YXRpb24vSVAgd2lsbCBtYWtlcyB0aGlzIGxlc3MgdmFsdWVh
+YmxlLg0KDQpBdCB0aGlzIG1vbWVudCwgYXMgQWxleGFuZHJlIHNwZWNpZmllZCwgdGhlIGRhdGFz
+aGVldCBpcyBub3QgcHVibGlzaGVkLg0KDQpUaGFuayB5b3UsDQpDbGF1ZGl1IEJlem5lYQ0KDQo+
+IA0KPiAJU2FtDQo+IA0K
