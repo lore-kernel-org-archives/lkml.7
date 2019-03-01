@@ -2,172 +2,420 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51818C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CD1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F42352087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40B92084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:24:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="CSk+uBcT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SaBCWRVl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfCAUUE (ORCPT
+        id S1726042AbfCAUYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 15:20:04 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34384 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfCAUUD (ORCPT
+        Fri, 1 Mar 2019 15:24:49 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:53561 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfCAUYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 15:20:03 -0500
-Received: by mail-qt1-f196.google.com with SMTP id w4so29352620qtc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 12:20:02 -0800 (PST)
+        Fri, 1 Mar 2019 15:24:49 -0500
+Received: by mail-it1-f195.google.com with SMTP id v2so22119583ith.3;
+        Fri, 01 Mar 2019 12:24:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=JI1qe6LwZbBi1liwMWqrJTVtZaUOSNxajd+HQwYL8nc=;
-        b=CSk+uBcTE5pXmdr+ATojNgQGYE7Z9e+bG0ebtCV8A2HabddTdIPjsLUn2WViNBnoUU
-         eWbWG2ouIS01RsrRMhxv5mHNFL7H6u2xhoEJAkindPG630YI3XHNi0wA0L7Y6UBKaUkI
-         ZYBBvrxu4Cb6CvBDbbdkwZnCl6XfW8o31JxJ42CvwmyXDIYNl78urNbxAHbPrpdbahC8
-         ysBN9visHhJUKTF6VNq7SYizq1R6TxuouF4TFDd1RWDQ31GMSGf1RIwQ6427qOE/oAwq
-         fOkNmnI0VXgtHByUY10MsmWxLDJGFjbhHuS58GWNiPk2HC4KZlmvvUV2x/qnBsBdYpKT
-         zs1Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GJj2wOKvJo8ufJt4xbCc59sLxKQHn8Mf6u3ohbviSec=;
+        b=SaBCWRVlo5BD3l3oYPXXF8aPbJVACKa/Z3imoxRpvMpV8J4zj0hLOcj/MkGoRo8N/x
+         yAL9T6UNlj8BQ8iUEcdclsYi17DK6HyVVSWJBePmb7GmOxzs6y9cZ7+pJ33dZt2Qs4J6
+         5bmSRd/gCC4RTZxkjpS/mfVgA9ZniyWPOj0zbRqqdti+YhLBje6IESA8XJzlM5O9BgAt
+         Rhu+zlwED+WFrSQTSot3k9yKRIiX3CZEYLObtHRwZGaRlcU/Ir9aHAIYJrrKeHSmDT60
+         CsFBdcL8tWxP/F6kcsJFcvPeHpylxGoOjxmhwoWFyC9fFvWujUlpDhBl+4BV3iYiCQ4b
+         L2+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JI1qe6LwZbBi1liwMWqrJTVtZaUOSNxajd+HQwYL8nc=;
-        b=I/6UaL2ZpWVJ5U5AWs9tsl9dc669D3DsNGoLEdl492UwEEXiBWr01MZ9VA/4UiQnyD
-         0zuASdhVG/adGzApGMVLmTWsUlrJt9lHiIG2FNj/2t6Tg5NH6s7lWZ2KRCOtumP9g4n0
-         spon2GzmTHGxA9Zu+/FchDu9FZsXuokS1WiVMCH2UCXUIOnCjsy9+S76Kyu5p2q4JXcb
-         pewz8X2Z/cssJzHJ3/A2uGi08gJyyMDptMbh3Mbk5p83WiOXCPP6Y6ZNZ/jKbjBpiVHl
-         ewwqem/IsF0mNJNJjA5Ea/sIel2F3MfYo602XzRudWPPgNvErGowRSnr5fPQYDj63wPJ
-         Xfbw==
-X-Gm-Message-State: APjAAAX7h33lMFBV1QWoYuu8rzzYASPnuGK0bEjwKHUKnYSh8f+hwjA0
-        Rr0YJm3S1OoJTkQb681Vwcad8TR2aqY=
-X-Google-Smtp-Source: APXvYqwZCGdeaKOOUZqSvmSjEYpFrJtYsvXXR9Q3oYLE36B8fDzO0ulMsHBbTgdnA6eWcUiehIUn5Q==
-X-Received: by 2002:ac8:3464:: with SMTP id v33mr5571861qtb.65.1551471602258;
-        Fri, 01 Mar 2019 12:20:02 -0800 (PST)
-Received: from ovpn-120-151.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id y11sm20006138qky.2.2019.03.01.12.20.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 12:20:01 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     mhocko@kernel.org, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] mm/hotplug: fix an imbalance with DEBUG_PAGEALLOC
-Date:   Fri,  1 Mar 2019 15:19:50 -0500
-Message-Id: <20190301201950.96637-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GJj2wOKvJo8ufJt4xbCc59sLxKQHn8Mf6u3ohbviSec=;
+        b=rRalL5olXz/DAQ5PkeGv6qjEYA+R2NIbBW9BxkQIaewE8onZBROQ2q8wJxoE03DByZ
+         UIypPRKVvLJtajYJx448km2HRcU+Woyv6FRD4Y4SDyj6E2dOzmVGTXj9nAysSHm6PSri
+         o2jS02/HH5KWs/z18WJOV6dKnXPIRmt4SUvLwksvjqXtuezGXDq7vWnKsNBnH4J2RMa0
+         qvYZOZkCgPh60qpjo4E9/m7zE14w4CHbb+AFiV6XqNFqItuDkHnXbq3Og1mIXvN0cflx
+         ECar5f4fGh/pmioJ6Av4J8H/n3lgJMGOphZjIE5KgGF7FDsdi1Z1gZ9+4Xk9i4xrvKkh
+         o73Q==
+X-Gm-Message-State: AHQUAuZ6aUY8X9ndGmCIuWE42+FMv2wOks/q35KF/TwtsfkvlLCcXbEL
+        jehqXrBTLQrUF7fmQ6ZpIWE56jpqMChPUmw3RXs=
+X-Google-Smtp-Source: AHgI3IYFXhqVduFJEQlsPWtHoqftoCre8irN+tHG5ZIK3mA1aZYeoMkKD7ox4Z0egX4aJ/StCE8ttlIU0r7R8i7JwBY=
+X-Received: by 2002:a24:7d88:: with SMTP id b130mr4492539itc.163.1551471887484;
+ Fri, 01 Mar 2019 12:24:47 -0800 (PST)
+MIME-Version: 1.0
+References: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org> <1551469117-3404-16-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1551469117-3404-16-git-send-email-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 1 Mar 2019 15:24:35 -0500
+Message-ID: <CAF6AEGtcSN_t8X07PnP92=KBaWtwOVf2H3Gd2PDC3rFRkKZ73g@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 15/15] drm/msm/a5xx: Support per-instance pagetables
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dianders@chromimum.org,
+        "Kristian H. Kristensen" <hoegsberg@google.com>,
+        baolu.lu@linux.intel.com, Sean Paul <sean@poorly.run>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When onlining a memory block with DEBUG_PAGEALLOC, it unmaps the pages
-in the block from kernel, However, it does not map those pages while
-offlining at the beginning. As the result, it triggers a panic below
-while onlining on ppc64le as it checks if the pages are mapped before
-unmapping. However, the imbalance exists for all arches where
-double-unmappings could happen. Therefore, let kernel map those pages in
-generic_online_page() before they have being freed into the page
-allocator for the first time where it will set the page count to one.
+On Fri, Mar 1, 2019 at 2:39 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Add support for per-instance pagetables for 5XX targets. Create a support
+> buffer for preemption to hold the SMMU pagetable information for a
+> preempted ring, enable TTBR1 to support split pagetables and add the
+> necessary PM4 commands to trigger a pagetable switch at the beginning
+> of a user command.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.c     | 120 +++++++++++++++++++++++++++++-
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.h     |  19 +++++
+>  drivers/gpu/drm/msm/adreno/a5xx_preempt.c |  70 +++++++++++++----
+>  3 files changed, 192 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+> index 3d6f414..9294fd5 100644
+> --- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
+> @@ -202,6 +202,59 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
+>         msm_gpu_retire(gpu);
+>  }
+>
+> +static void a5xx_set_pagetable(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
+> +       struct msm_file_private *ctx)
+> +{
+> +       u64 ttbr;
+> +       u32 asid;
+> +
+> +       if (!msm_iommu_get_ptinfo(ctx->aspace->mmu, &ttbr, &asid))
+> +               return;
+> +
+> +       ttbr = ttbr | ((u64) asid) << 48;
+> +
+> +       /* Turn off protected mode */
+> +       OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
+> +       OUT_RING(ring, 0);
+> +
+> +       /* Turn on APIV mode to access critical regions */
+> +       OUT_PKT4(ring, REG_A5XX_CP_CNTL, 1);
+> +       OUT_RING(ring, 1);
+> +
+> +       /* Make sure the ME is synchronized before staring the update */
+> +       OUT_PKT7(ring, CP_WAIT_FOR_ME, 0);
+> +
+> +       /* Execute the table update */
+> +       OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 3);
+> +       OUT_RING(ring, lower_32_bits(ttbr));
+> +       OUT_RING(ring, upper_32_bits(ttbr));
+> +       OUT_RING(ring, 0);
+> +
+> +       /*
+> +        * Write the new TTBR0 to the preemption records - this will be used to
+> +        * reload the pagetable if the current ring gets preempted out.
+> +        */
+> +       OUT_PKT7(ring, CP_MEM_WRITE, 4);
+> +       OUT_RING(ring, lower_32_bits(rbmemptr(ring, ttbr0)));
+> +       OUT_RING(ring, upper_32_bits(rbmemptr(ring, ttbr0)));
+> +       OUT_RING(ring, lower_32_bits(ttbr));
+> +       OUT_RING(ring, upper_32_bits(ttbr));
+> +
+> +       /* Invalidate the draw state so we start off fresh */
+> +       OUT_PKT7(ring, CP_SET_DRAW_STATE, 3);
+> +       OUT_RING(ring, 0x40000);
 
-On the other hand, it works fine during the boot, because at least for
-IBM POWER8, it does,
+CP_SET_DRAW_STATE__0_DISABLE_ALL_GROUPS?
 
-early_setup
-  early_init_mmu
-    harsh__early_init_mmu
-      htab_initialize [1]
-        htab_bolt_mapping [2]
+> +       OUT_RING(ring, 1);
 
-where it effectively map all memblock regions just like
-kernel_map_linear_page(), so later mem_init() -> memblock_free_all()
-will unmap them just fine without any imbalance. On other arches without
-this imbalance checking, it still unmap them once at the most.
+was that really meant to be 1, not 0, for the low 32b of the state
+object address?
 
-[1]
-for_each_memblock(memory, reg) {
-        base = (unsigned long)__va(reg->base);
-        size = reg->size;
+BR,
+-R
 
-        DBG("creating mapping for region: %lx..%lx (prot: %lx)\n",
-                base, size, prot);
-
-        BUG_ON(htab_bolt_mapping(base, base + size, __pa(base),
-                prot, mmu_linear_psize, mmu_kernel_ssize));
-        }
-
-[2] linear_map_hash_slots[paddr >> PAGE_SHIFT] = ret | 0x80;
-
-kernel BUG at arch/powerpc/mm/hash_utils_64.c:1815!
-Oops: Exception in kernel mode, sig: 5 [#1]
-LE SMP NR_CPUS=256 DEBUG_PAGEALLOC NUMA pSeries
-CPU: 2 PID: 4298 Comm: bash Not tainted 5.0.0-rc7+ #15
-NIP:  c000000000062670 LR: c00000000006265c CTR: 0000000000000000
-REGS: c0000005bf8a75b0 TRAP: 0700   Not tainted  (5.0.0-rc7+)
-MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 28422842
-XER: 00000000
-CFAR: c000000000804f44 IRQMASK: 1
-GPR00: c00000000006265c c0000005bf8a7840 c000000001518200 c0000000013cbcc8
-GPR04: 0000000000080004 0000000000000000 00000000ccc457e0 c0000005c4e341d8
-GPR08: 0000000000000000 0000000000000001 c000000007f4f800 0000000000000001
-GPR12: 0000000000002200 c000000007f4e100 0000000000000000 0000000139c29710
-GPR16: 0000000139c29714 0000000139c29788 c0000000013cbcc8 0000000000000000
-GPR20: 0000000000034000 c0000000016e05e8 0000000000000000 0000000000000001
-GPR24: 0000000000bf50d9 800000000000018e 0000000000000000 c0000000016e04b8
-GPR28: f000000000d00040 0000006420a2f217 f000000000d00000 00ea1b2170340000
-NIP [c000000000062670] __kernel_map_pages+0x2e0/0x4f0
-LR [c00000000006265c] __kernel_map_pages+0x2cc/0x4f0
-Call Trace:
-[c0000005bf8a7840] [c00000000006265c] __kernel_map_pages+0x2cc/0x4f0
-(unreliable)
-[c0000005bf8a78d0] [c00000000028c4a0] free_unref_page_prepare+0x2f0/0x4d0
-[c0000005bf8a7930] [c000000000293144] free_unref_page+0x44/0x90
-[c0000005bf8a7970] [c00000000037af24] __online_page_free+0x84/0x110
-[c0000005bf8a79a0] [c00000000037b6e0] online_pages_range+0xc0/0x150
-[c0000005bf8a7a00] [c00000000005aaa8] walk_system_ram_range+0xc8/0x120
-[c0000005bf8a7a50] [c00000000037e710] online_pages+0x280/0x5a0
-[c0000005bf8a7b40] [c0000000006419e4] memory_subsys_online+0x1b4/0x270
-[c0000005bf8a7bb0] [c000000000616720] device_online+0xc0/0xf0
-[c0000005bf8a7bf0] [c000000000642570] state_store+0xc0/0x180
-[c0000005bf8a7c30] [c000000000610b2c] dev_attr_store+0x3c/0x60
-[c0000005bf8a7c50] [c0000000004c0a50] sysfs_kf_write+0x70/0xb0
-[c0000005bf8a7c90] [c0000000004bf40c] kernfs_fop_write+0x10c/0x250
-[c0000005bf8a7ce0] [c0000000003e4b18] __vfs_write+0x48/0x240
-[c0000005bf8a7d80] [c0000000003e4f68] vfs_write+0xd8/0x210
-[c0000005bf8a7dd0] [c0000000003e52f0] ksys_write+0x70/0x120
-[c0000005bf8a7e20] [c00000000000b000] system_call+0x5c/0x70
-Instruction dump:
-7fbd5278 7fbd4a78 3e42ffeb 7bbd0640 3a523ac8 7e439378 487a2881 60000000
-e95505f0 7e6aa0ae 6a690080 7929c9c2 <0b090000> 7f4aa1ae 7e439378 487a28dd
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v2: map pages in kernel at the beginning of online path instead of the offline
-    path to avoid possible issues pointed out by Michal.
-
- mm/memory_hotplug.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 1ad28323fb9f..736e107e2197 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -660,6 +660,7 @@ static void generic_online_page(struct page *page)
- {
- 	__online_page_set_limits(page);
- 	__online_page_increment_counters(page);
-+	kernel_map_pages(page, 1, 1);
- 	__online_page_free(page);
- }
- 
--- 
-2.17.2 (Apple Git-113)
-
+> +       OUT_RING(ring, 0);
+> +
+> +       /* Turn off APRIV */
+> +       OUT_PKT4(ring, REG_A5XX_CP_CNTL, 1);
+> +       OUT_RING(ring, 0);
+> +
+> +       /* Turn off protected mode */
+> +       OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
+> +       OUT_RING(ring, 1);
+> +}
+> +
+>  static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+>         struct msm_file_private *ctx)
+>  {
+> @@ -217,6 +270,8 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+>                 return;
+>         }
+>
+> +       a5xx_set_pagetable(gpu, ring, ctx);
+> +
+>         OUT_PKT7(ring, CP_PREEMPT_ENABLE_GLOBAL, 1);
+>         OUT_RING(ring, 0x02);
+>
+> @@ -1456,21 +1511,77 @@ static unsigned long a5xx_gpu_busy(struct msm_gpu *gpu)
+>         return (unsigned long)busy_time;
+>  }
+>
+> +static struct msm_gem_address_space *a5xx_new_address_space(struct msm_gpu *gpu)
+> +{
+> +       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+> +       struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
+> +       struct msm_gem_address_space *aspace;
+> +       int ret;
+> +
+> +       /* Return the default pagetable if per instance tables don't work */
+> +       if (!a5xx_gpu->per_instance_tables)
+> +               return gpu->aspace;
+> +
+> +       aspace = msm_gem_address_space_create_instance(&gpu->pdev->dev,
+> +               "gpu", 0x100000000ULL, 0x1ffffffffULL);
+> +       if (IS_ERR(aspace))
+> +               return aspace;
+> +
+> +       ret = aspace->mmu->funcs->attach(aspace->mmu, NULL, 0);
+> +       if (ret) {
+> +               /* -ENODEV means that aux domains aren't supported */
+> +               if (ret == -ENODEV)
+> +                       return gpu->aspace;
+> +
+> +               return ERR_PTR(ret);
+> +       }
+> +
+> +       return aspace;
+> +}
+> +
+>  static struct msm_gem_address_space *
+>  a5xx_create_address_space(struct msm_gpu *gpu)
+>  {
+> +       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+> +       struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
+> +       struct device *dev = &gpu->pdev->dev;
+>         struct msm_gem_address_space *aspace;
+>         struct iommu_domain *iommu;
+> -       int ret;
+> +       int ret, val = 1;
+> +
+> +       a5xx_gpu->per_instance_tables = false;
+>
+>         iommu = iommu_domain_alloc(&platform_bus_type);
+>         if (!iommu)
+>                 return NULL;
+>
+> -       iommu->geometry.aperture_start = 0x100000000ULL;
+> -       iommu->geometry.aperture_end = 0x1ffffffffULL;
+> +       /* Try to enable split pagetables */
+> +       if (iommu_domain_set_attr(iommu, DOMAIN_ATTR_SPLIT_TABLES, &val)) {
+> +               /*
+> +                * If split pagetables aren't available we won't be able to do
+> +                * per-instance pagetables so set up the global va space at our
+> +                * susual location
+> +                */
+> +               iommu->geometry.aperture_start = 0x100000000ULL;
+> +               iommu->geometry.aperture_end = 0x1ffffffffULL;
+> +       } else {
+> +               /*
+> +                * If split pagetables are available then we might be able to do
+> +                * per-instance pagetables. Put the default va-space in TTBR1 to
+> +                * prepare
+> +                */
+> +               iommu->geometry.aperture_start = 0xfffffff100000000ULL;
+> +               iommu->geometry.aperture_end = 0xfffffff1ffffffffULL;
+> +
+> +               /*
+> +                * If both split pagetables and aux domains are supported we can
+> +                * do per_instance pagetables
+> +                */
+> +               a5xx_gpu->per_instance_tables =
+> +                       iommu_dev_has_feature(dev, IOMMU_DEV_FEAT_AUX);
+> +       }
+>
+> -       aspace = msm_gem_address_space_create(&gpu->pdev->dev, iommu, "gpu");
+> +       aspace = msm_gem_address_space_create(dev, iommu, "gpu");
+>         if (IS_ERR(aspace)) {
+>                 iommu_domain_free(iommu);
+>                 DRM_DEV_ERROR(gpu->dev->dev, "failed to init mmu: %ld\n",
+> @@ -1510,6 +1621,7 @@ static const struct adreno_gpu_funcs funcs = {
+>                 .gpu_state_get = a5xx_gpu_state_get,
+>                 .gpu_state_put = a5xx_gpu_state_put,
+>                 .create_address_space = a5xx_create_address_space,
+> +               .new_address_space = a5xx_new_address_space,
+>         },
+>         .get_timestamp = a5xx_get_timestamp,
+>  };
+> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
+> index 7d71860..82ceb9b 100644
+> --- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
+> @@ -45,6 +45,11 @@ struct a5xx_gpu {
+>
+>         atomic_t preempt_state;
+>         struct timer_list preempt_timer;
+> +       struct a5xx_smmu_info *smmu_info;
+> +       struct drm_gem_object *smmu_info_bo;
+> +       uint64_t smmu_info_iova;
+> +
+> +       bool per_instance_tables;
+>  };
+>
+>  #define to_a5xx_gpu(x) container_of(x, struct a5xx_gpu, base)
+> @@ -132,6 +137,20 @@ struct a5xx_preempt_record {
+>   */
+>  #define A5XX_PREEMPT_COUNTER_SIZE (16 * 4)
+>
+> +/*
+> + * This is a global structure that the preemption code uses to switch in the
+> + * pagetable for the preempted process - the code switches in whatever we
+> + * after preempting in a new ring.
+> + */
+> +struct a5xx_smmu_info {
+> +       uint32_t  magic;
+> +       uint32_t  _pad4;
+> +       uint64_t  ttbr0;
+> +       uint32_t  asid;
+> +       uint32_t  contextidr;
+> +};
+> +
+> +#define A5XX_SMMU_INFO_MAGIC 0x3618CDA3UL
+>
+>  int a5xx_power_init(struct msm_gpu *gpu);
+>  void a5xx_gpmu_ucode_init(struct msm_gpu *gpu);
+> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
+> index 3d62310..1050409 100644
+> --- a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
+> +++ b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
+> @@ -12,6 +12,7 @@
+>   */
+>
+>  #include "msm_gem.h"
+> +#include "msm_mmu.h"
+>  #include "a5xx_gpu.h"
+>
+>  /*
+> @@ -145,6 +146,15 @@ void a5xx_preempt_trigger(struct msm_gpu *gpu)
+>         a5xx_gpu->preempt[ring->id]->wptr = get_wptr(ring);
+>         spin_unlock_irqrestore(&ring->lock, flags);
+>
+> +       /* Do read barrier to make sure we have updated pagetable info */
+> +       rmb();
+> +
+> +       /* Set the SMMU info for the preemption */
+> +       if (a5xx_gpu->smmu_info) {
+> +               a5xx_gpu->smmu_info->ttbr0 = ring->memptrs->ttbr0;
+> +               a5xx_gpu->smmu_info->contextidr = 0;
+> +       }
+> +
+>         /* Set the address of the incoming preemption record */
+>         gpu_write64(gpu, REG_A5XX_CP_CONTEXT_SWITCH_RESTORE_ADDR_LO,
+>                 REG_A5XX_CP_CONTEXT_SWITCH_RESTORE_ADDR_HI,
+> @@ -221,9 +231,10 @@ void a5xx_preempt_hw_init(struct msm_gpu *gpu)
+>                 a5xx_gpu->preempt[i]->rbase = gpu->rb[i]->iova;
+>         }
+>
+> -       /* Write a 0 to signal that we aren't switching pagetables */
+> +       /* Tell the CP where to find the smmu_info buffer*/
+>         gpu_write64(gpu, REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_LO,
+> -               REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_HI, 0);
+> +               REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_HI,
+> +               a5xx_gpu->smmu_info_iova);
+>
+>         /* Reset the preemption state */
+>         set_preempt_state(a5xx_gpu, PREEMPT_NONE);
+> @@ -271,6 +282,34 @@ void a5xx_preempt_fini(struct msm_gpu *gpu)
+>
+>         for (i = 0; i < gpu->nr_rings; i++)
+>                 msm_gem_kernel_put(a5xx_gpu->preempt_bo[i], gpu->aspace, true);
+> +
+> +       msm_gem_kernel_put(a5xx_gpu->smmu_info_bo, gpu->aspace, true);
+> +}
+> +
+> +static int a5xx_smmu_info_init(struct msm_gpu *gpu)
+> +{
+> +       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+> +       struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
+> +       struct a5xx_smmu_info *ptr;
+> +       struct drm_gem_object *bo;
+> +       u64 iova;
+> +
+> +       if (!a5xx_gpu->per_instance_tables)
+> +               return 0;
+> +
+> +       ptr = msm_gem_kernel_new(gpu->dev, sizeof(struct a5xx_smmu_info),
+> +               MSM_BO_UNCACHED, gpu->aspace, &bo, &iova);
+> +
+> +       if (IS_ERR(ptr))
+> +               return PTR_ERR(ptr);
+> +
+> +       ptr->magic = A5XX_SMMU_INFO_MAGIC;
+> +
+> +       a5xx_gpu->smmu_info_bo = bo;
+> +       a5xx_gpu->smmu_info_iova = iova;
+> +       a5xx_gpu->smmu_info = ptr;
+> +
+> +       return 0;
+>  }
+>
+>  void a5xx_preempt_init(struct msm_gpu *gpu)
+> @@ -284,17 +323,22 @@ void a5xx_preempt_init(struct msm_gpu *gpu)
+>                 return;
+>
+>         for (i = 0; i < gpu->nr_rings; i++) {
+> -               if (preempt_init_ring(a5xx_gpu, gpu->rb[i])) {
+> -                       /*
+> -                        * On any failure our adventure is over. Clean up and
+> -                        * set nr_rings to 1 to force preemption off
+> -                        */
+> -                       a5xx_preempt_fini(gpu);
+> -                       gpu->nr_rings = 1;
+> -
+> -                       return;
+> -               }
+> +               if (preempt_init_ring(a5xx_gpu, gpu->rb[i]))
+> +                       goto fail;
+>         }
+>
+> -       timer_setup(&a5xx_gpu->preempt_timer, a5xx_preempt_timer, 0);
+> +       if (a5xx_smmu_info_init(gpu))
+> +               goto fail;
+> +
+> +       timer_setup(&a5xx_gpu->preempt_timer, a5xx_preempt_timer,
+> +               (unsigned long) a5xx_gpu);
+> +
+> +       return;
+> +fail:
+> +       /*
+> +        * On any failure our adventure is over. Clean up and
+> +        * set nr_rings to 1 to force preemption off
+> +        */
+> +       a5xx_preempt_fini(gpu);
+> +       gpu->nr_rings = 1;
+>  }
+> --
+> 2.7.4
+>
