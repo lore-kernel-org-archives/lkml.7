@@ -2,164 +2,180 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076ACC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62D2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4CC22084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866222084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:00:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D1BsrdId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388428AbfCAP7u convert rfc822-to-8bit (ORCPT
+        id S2388894AbfCAQAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 10:59:50 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:57310 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbfCAP7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 10:59:49 -0500
-Received: from p57b77bb0.dip0.t-ipconnect.de ([87.183.123.176] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1gzkZL-0004qR-0V; Fri, 01 Mar 2019 16:59:27 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Randy Li <ayaka@soulik.info>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] phy: rockchip-emmc: Allow to set drive impedance via DTS.
-Date:   Fri, 01 Mar 2019 16:59:25 +0100
-Message-ID: <2706069.0FZLJLT2V8@phil>
-In-Reply-To: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
-References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
+        Fri, 1 Mar 2019 11:00:01 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40502 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727952AbfCAQAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:00:01 -0500
+Received: by mail-oi1-f195.google.com with SMTP id x187so19842124oia.7
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:00:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W190I+yoZEdd0KSL3BGOC3ZLIzOQOJXLBGSLLzpQAP4=;
+        b=D1BsrdIdDshr3lU3gfVOE8cWWYRYUjDEQgGH9NiJbfFJwB1YF6tozpgqwimx10vxfe
+         GjR0RYGPwzA9u2R7ruiXCLWlxFNEIV8MVOSYQEieDl9Zz9dG1tIOnoF/q4D/tNsE4Kvl
+         Q+r6rPcHv8u+xB6cFdJcZjdD8UGCG7uZ1tF1QZHjtbvfe5u25bQVSyguY/bR43l8hduq
+         GMuKbLTYsBSCfhRWcB+Fh++mcNGXZ+fvulxxljhaAvcz1z9gxZPREiYGkEw7RR0NP64P
+         G81ZryfeTlBmYDshM4kIhWSXRtIlKwmDmMt/KPQzCD0WvbMX22sVKEPbTp0KH3zNcdvb
+         v5Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W190I+yoZEdd0KSL3BGOC3ZLIzOQOJXLBGSLLzpQAP4=;
+        b=eoxRBB7eDWjB3wkpUpgdjjaTwfXP8uLhYNsKhlcFhSZn4dkSFcW5GyUbsOfONlHZAZ
+         Fqs/V9Zk9aItavwxhAp0wPyMuwbJ/1sJhNjz1oMLXPEUGoGSiNtUNuQbyoYX/kBLZcg6
+         XknHp/9D8lTx3vGUkmQGO+4xBcPH2b6xuxJni8ncEoMY8bBIfib1PWReWUgS4PzXut5X
+         aYWdx4aoGCdEf1bFclwBXcLJXV/LOMD8uPllr42R96/VOOWH9VQOfxGuRatLZL5+J73+
+         v4j7B16zQYDFTD3g2j1kDDvzhA87ofCpeid/JY2fpocJVlwqCMOV/b6mAsuuBhqGMZbH
+         8j1g==
+X-Gm-Message-State: AHQUAuZhE58vLWRVivgHVnmFNcmwHb0CD7BJBV2Yj3toW43lQBCiQRv3
+        AphFI+f9VYH8pshyjjGdC3gdIWg/2hKPLqg3BzpS1yU0
+X-Google-Smtp-Source: AHgI3IacCeOjW33h8cstkaxyTXVKE5e1GxGf51NtRlghqz9L3It1fwf9yIQb+hIJss4zgKfkFMDc6RzL88/G63pl1u0=
+X-Received: by 2002:aca:cc4d:: with SMTP id c74mr3791791oig.157.1551455999605;
+ Fri, 01 Mar 2019 07:59:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+References: <20190301031201.7416-1-jannh@google.com> <20190301153258.GD22584@linux.intel.com>
+In-Reply-To: <20190301153258.GD22584@linux.intel.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 1 Mar 2019 16:59:33 +0100
+Message-ID: <CAG48ez1LEKEd695bnoZ71k5EZ6ZxRc5wH3vfkbLA-XkMq1-_jw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/unwind: handle NULL pointer calls better in frame unwinder
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        syzbot <syzbot+ca95b2b7aef9e7cbd6ab@syzkaller.appspotmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Fri, Mar 1, 2019 at 4:33 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+> On Fri, Mar 01, 2019 at 04:12:00AM +0100, Jann Horn wrote:
+> > When the frame unwinder is invoked for an oops caused by a call to NULL,
+> > it currently skips the parent function because BP still points to the
+> > parent's stack frame; the (nonexistent) current function only has the first
+> > half of a stack frame, and BP doesn't point to it yet.
+> >
+> > Add a special case for IP==0 that calculates a fake BP from SP, then uses
+> > the real BP for the next frame.
+> >
+> > Note that this handles first_frame specially: We return information about
+> > the parent function as long as the saved IP is >=first_frame, even if the
+> > fake BP points below it.
+> >
+> > With an artificially-added NULL call in prctl_set_seccomp(), before this
+> > patch, the trace is:
+> >
+> > Call Trace:
+> >  ? prctl_set_seccomp+0x3a/0x50
+> >  __x64_sys_prctl+0x457/0x6f0
+> >  ? __ia32_sys_prctl+0x750/0x750
+> >  do_syscall_64+0x72/0x160
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > After this patch, the trace is:
+> >
+> > Call Trace:
+> >  prctl_set_seccomp+0x3a/0x50
+> >  __x64_sys_prctl+0x457/0x6f0
+> >  ? __ia32_sys_prctl+0x750/0x750
+> >  do_syscall_64+0x72/0x160
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> >
+> > Signed-off-by: Jann Horn <jannh@google.com>
+> > ---
+> >  arch/x86/include/asm/unwind.h  |  6 ++++++
+> >  arch/x86/kernel/unwind_frame.c | 25 ++++++++++++++++++++++---
+> >  2 files changed, 28 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/unwind.h b/arch/x86/include/asm/unwind.h
+> > index 1f86e1b0a5cd..499578f7e6d7 100644
+> > --- a/arch/x86/include/asm/unwind.h
+> > +++ b/arch/x86/include/asm/unwind.h
+> > @@ -23,6 +23,12 @@ struct unwind_state {
+> >  #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
+> >       bool got_irq;
+> >       unsigned long *bp, *orig_sp, ip;
+> > +     /*
+> > +      * If non-NULL: The current frame is incomplete and doesn't contain a
+> > +      * valid BP. When looking for the next frame, use this instead of the
+> > +      * non-existent saved BP.
+> > +      */
+> > +     unsigned long *next_bp;
+> >       struct pt_regs *regs;
+> >  #else
+> >       unsigned long *sp;
+> > diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
+> > index 3dc26f95d46e..9b9fd4826e7a 100644
+> > --- a/arch/x86/kernel/unwind_frame.c
+> > +++ b/arch/x86/kernel/unwind_frame.c
+> > @@ -320,10 +320,14 @@ bool unwind_next_frame(struct unwind_state *state)
+> >       }
+> >
+> >       /* Get the next frame pointer: */
+> > -     if (state->regs)
+> > +     if (state->next_bp) {
+> > +             next_bp = state->next_bp;
+> > +             state->next_bp = NULL;
+> > +     } else if (state->regs) {
+> >               next_bp = (unsigned long *)state->regs->bp;
+> > -     else
+> > +     } else {
+> >               next_bp = (unsigned long *)READ_ONCE_TASK_STACK(state->task, *state->bp);
+> > +     }
+> >
+> >       /* Move to the next frame if it's safe: */
+> >       if (!update_stack_state(state, next_bp))
+> > @@ -398,6 +402,21 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+> >
+> >       bp = get_frame_pointer(task, regs);
+> >
+> > +     /*
+> > +      * If we crash with IP==0, the last successfully executed instruction
+> > +      * was probably an indirect function call with a NULL function pointer.
+> > +      * That means that SP points into the middle of an incomplete frame:
+> > +      * *SP is a return pointer, and *(SP-sizeof(unsigned long)) is where we
+> > +      * would have written a frame pointer if we hadn't crashed.
+> > +      * Pretend that the frame is complete and that BP points to it, but save
+> > +      * the real BP so that we can use it when looking for the next frame.
+> > +      */
+> > +     if (regs && regs->ip == 0 &&
+>
+> Would it make sense to do 'regs->ip < PAGE_SIZE', a la show_fault_oops()?
+> E.g. to handle bugs where a function pointer gets loaded with NULL+offset.
 
-Am Freitag, 1. März 2019, 16:33:43 CET schrieb Christoph Muellner:
-> The rockchip-emmc PHY can be configured with different
-> drive impedance values. Currenlty a value of 50 Ohm is
-> hard coded into the driver.
-> 
-> This patch introduces the DTS property 'drive-impedance-ohm'
-> for the rockchip-emmc phy node, which uses the value from the DTS
-> to setup the drive impedance accordingly.
-> 
-> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-> ---
->  drivers/phy/rockchip/phy-rockchip-emmc.c | 38 ++++++++++++++++++++++++++++++--
-
-looks good on first glance, but is missing an addition to the emmc-phy
-devicetree binding in
-	Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-
-
-Heiko
-
->  1 file changed, 36 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
-> index 19bf84f0bc67..5413fa73dd45 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-emmc.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
-> @@ -87,6 +87,7 @@ struct rockchip_emmc_phy {
->  	unsigned int	reg_offset;
->  	struct regmap	*reg_base;
->  	struct clk	*emmcclk;
-> +	unsigned int drive_impedance;
->  };
->  
->  static int rockchip_emmc_phy_power(struct phy *phy, bool on_off)
-> @@ -281,10 +282,10 @@ static int rockchip_emmc_phy_power_on(struct phy *phy)
->  {
->  	struct rockchip_emmc_phy *rk_phy = phy_get_drvdata(phy);
->  
-> -	/* Drive impedance: 50 Ohm */
-> +	/* Drive impedance: from DTS */
->  	regmap_write(rk_phy->reg_base,
->  		     rk_phy->reg_offset + GRF_EMMCPHY_CON6,
-> -		     HIWORD_UPDATE(PHYCTRL_DR_50OHM,
-> +		     HIWORD_UPDATE(rk_phy->drive_impedance,
->  				   PHYCTRL_DR_MASK,
->  				   PHYCTRL_DR_SHIFT));
->  
-> @@ -314,6 +315,28 @@ static const struct phy_ops ops = {
->  	.owner		= THIS_MODULE,
->  };
->  
-> +static u32 convert_drive_impedance_ohm(struct platform_device *pdev, u32 dr_ohm)
-> +{
-> +	switch (dr_ohm) {
-> +	case 100:
-> +		return PHYCTRL_DR_100OHM;
-> +	case 66:
-> +		return PHYCTRL_DR_66OHM;
-> +	case 50:
-> +		return PHYCTRL_DR_50OHM;
-> +	case 40:
-> +		return PHYCTRL_DR_40OHM;
-> +	case 33:
-> +		return PHYCTRL_DR_33OHM;
-> +	}
-> +
-> +	dev_warn(&pdev->dev,
-> +		"Invalid value %u for drive-impedance-ohm. "
-> +		"Falling back to 50 Ohm.\n",
-> +		dr_ohm);
-> +	return PHYCTRL_DR_50OHM;
-> +}
-> +
->  static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -322,6 +345,7 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->  	struct phy_provider *phy_provider;
->  	struct regmap *grf;
->  	unsigned int reg_offset;
-> +	u32 val;
->  
->  	if (!dev->parent || !dev->parent->of_node)
->  		return -ENODEV;
-> @@ -345,6 +369,16 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->  	rk_phy->reg_offset = reg_offset;
->  	rk_phy->reg_base = grf;
->  
-> +	if (of_property_read_u32(dev->of_node, "drive-impedance-ohm", &val)) {
-> +		dev_info(dev,
-> +			"Missing drive-impedance-ohm property in node %s "
-> +			"Falling back to 50 Ohm.\n",
-> +			dev->of_node->name);
-> +		rk_phy->drive_impedance = PHYCTRL_DR_50OHM;
-> +	} else {
-> +		rk_phy->drive_impedance = convert_drive_impedance_ohm(pdev, val);
-> +	}
-> +
->  	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
->  	if (IS_ERR(generic_phy)) {
->  		dev_err(dev, "failed to create PHY\n");
-> 
-
-
-
-
+I don't think near-NULL function pointers make sense or are likely to
+occur in practice. Near-NULL pointer dereferences happen when you add
+a struct member offset to a NULL pointer, or something like that; but
+functions are never inline in structs/arrays, so there isn't really a
+reason to compute a function pointer by adding an offset to a (NULL)
+pointer.
