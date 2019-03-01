@@ -2,70 +2,150 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CCEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 248D5C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8687F2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B1B20851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387840AbfCANhf (ORCPT
+        id S2387881AbfCANjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 08:37:35 -0500
-Received: from mail.us.es ([193.147.175.20]:53958 "EHLO mail.us.es"
+        Fri, 1 Mar 2019 08:39:03 -0500
+Received: from foss.arm.com ([217.140.101.70]:35066 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730726AbfCANhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 08:37:34 -0500
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id B3D25191917
-        for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2019 14:37:32 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id A37D7DA87D
-        for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2019 14:37:32 +0100 (CET)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 9F128DA863; Fri,  1 Mar 2019 14:37:32 +0100 (CET)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id AC0B4DA7F4;
-        Fri,  1 Mar 2019 14:37:30 +0100 (CET)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Fri, 01 Mar 2019 14:37:30 +0100 (CET)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [31.4.223.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 7FD254265A2F;
-        Fri,  1 Mar 2019 14:37:30 +0100 (CET)
-Date:   Fri, 1 Mar 2019 14:37:29 +0100
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfilter: xt_IDLETIMER: fix sysfs callback function type
-Message-ID: <20190301133729.e2phowh7bg7qd6th@salvia>
-References: <20190227181910.229008-1-samitolvanen@google.com>
+        id S1727697AbfCANjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 08:39:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3BB9A78;
+        Fri,  1 Mar 2019 05:39:02 -0800 (PST)
+Received: from [10.1.196.62] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 564053F5C1;
+        Fri,  1 Mar 2019 05:38:59 -0800 (PST)
+Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0
+ support
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>
+References: <1544732284-5951-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TYXPR01MB1775847A1B243C0B30C69CFBC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <dde90e93-e8ca-acd2-ffd0-976c51ec309f@arm.com>
+Date:   Fri, 1 Mar 2019 13:38:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190227181910.229008-1-samitolvanen@google.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <TYXPR01MB1775847A1B243C0B30C69CFBC0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 10:19:10AM -0800, Sami Tolvanen wrote:
-> Use struct device_attribute instead of struct idletimer_tg_attr, and
-> the correct callback function type to avoid indirect call mismatches
-> with Control Flow Integrity checking.
+On 01/03/2019 11:49, Fabrizio Castro wrote:
+> Hello Marc,
+> 
+> I am sorry to bother you.
+> Do you think you can take this patch?
 
-Applied, thanks.
+It already missed the boat for the merge window, as I sent the pull
+request last week. Please resend it after -rc1, and I'll pick it up.
+
+Thanks,
+
+	M.
+
+> 
+> Thanks,
+> Fab
+> 
+>> From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@vger.kernel.org> On Behalf Of Fabrizio Castro
+>> Sent: 13 December 2018 20:18
+>> Subject: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0 support
+>>
+>> Document RZ/G2E (R8A774C0) SoC bindings.
+>>
+>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>> ---
+>>  Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+>> b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+>> index 8de96a4..f977ea7 100644
+>> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+>> @@ -16,6 +16,7 @@ Required properties:
+>>      - "renesas,irqc-r8a7793" (R-Car M2-N)
+>>      - "renesas,irqc-r8a7794" (R-Car E2)
+>>      - "renesas,intc-ex-r8a774a1" (RZ/G2M)
+>> +    - "renesas,intc-ex-r8a774c0" (RZ/G2E)
+>>      - "renesas,intc-ex-r8a7795" (R-Car H3)
+>>      - "renesas,intc-ex-r8a7796" (R-Car M3-W)
+>>      - "renesas,intc-ex-r8a77965" (R-Car M3-N)
+>> --
+>> 2.7.4
+> 
+
+
+-- 
+Jazz is not dead. It just smells funny...
