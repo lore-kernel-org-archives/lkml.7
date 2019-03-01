@@ -2,128 +2,151 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D229BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF525C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D5320848
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:08:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M8diKhbY"
+	by mail.kernel.org (Postfix) with ESMTP id 9965620848
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:08:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387794AbfCATIE (ORCPT
+        id S2388044AbfCATIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 14:08:04 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44944 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733009AbfCATIE (ORCPT
+        Fri, 1 Mar 2019 14:08:50 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:51154 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733009AbfCATIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 14:08:04 -0500
-Received: by mail-pl1-f196.google.com with SMTP id c4so11890326pls.11
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 11:08:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k+6GPnEcEAUhLS3vR+WsAU+G3Ji2ikNeu0iNdflTt0U=;
-        b=M8diKhbYhBiiqaK5tkrUv3E655iRMtRIIB5et1fIUFuGnxNUgMX9MwU1Ejd6wyjFJN
-         dLoHEdYig/95Rnif8yIlxvqJwHwGkCnJe3GWNAB9gIlwP4p9o8W9A1l1HuL9J5M6maxD
-         U+YqYVMSaAsHyPsg+0s7uhiU+7vRtaxMe+U8A9cLfJo2UX9qDYPRVOac1VfcgblTSO2H
-         hBHslCyJQpK/2h8bhs5Jdz6di1iNq/KDgaWMa+r59VJRvRnXXxnI/TyvffV/pZAhoNDP
-         ziODU6ACQw8ND0SYqtr2UJO3VFjmMJRz+Nykkv0r++gxZV4v88FpRBEkiTQx9S6VpMOF
-         LY+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k+6GPnEcEAUhLS3vR+WsAU+G3Ji2ikNeu0iNdflTt0U=;
-        b=ly2yBgOZJJZYhXLY4Q5r05FfuoxPBxxNhM5QHLqspbXrIXvHEFWOJwYTjMPl/1tZAK
-         cwGAcuOtT1p1lnh6quiXKHna3+OjHbgq3jC6i3D1hxrJ8TwoBNZOyMB13z6biC/BdkSn
-         C7tCuNtuAKb+AT4tlI+9M6e92FMuK4OTf6xfrrNUB4UdEfZaAftNt8LRI9dvu4NONsET
-         thlmSM+CeVyWYQaO+fLlqHHwcaJt2fY6dudnVjguqLZSHxA4cqsBCqN0+bFzC+c2JEsZ
-         HeVarQQHoOXhZY8BbgW3dm3QMLaapdlnwLZURsf+YYOYihsyDyGf/8t3w/DHvtHcBDU0
-         jKTw==
-X-Gm-Message-State: APjAAAXegwMDuUiV2ruI1mFPigx5gi8e8kjXYHFcL6RFSywJgsbVwezx
-        zE07ryEwy0FD4D2iNwNad4Ia+yNZWIc=
-X-Google-Smtp-Source: APXvYqxJ9JiJwheLjVBW2F+Sv9/yTfOgzdGLxiCiOUzDUyfooKU8W3S7Tl8hddK1/d7UTjcmMgRBjw==
-X-Received: by 2002:a17:902:7798:: with SMTP id o24mr7068288pll.212.1551467283711;
-        Fri, 01 Mar 2019 11:08:03 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k74sm51942940pfb.172.2019.03.01.11.08.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 11:08:02 -0800 (PST)
-Date:   Fri, 1 Mar 2019 11:08:42 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Cc:     andy.gross@linaro.org, david.brown@linaro.org,
-        gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rafael@kernel.org, vkoul@kernel.org
-Subject: Re: [PATCH v4 2/5] base: soc: Export soc_device_register/unregister
- APIs
-Message-ID: <20190301190842.GB27005@builder>
-References: <20190225065044.11023-1-vaishali.thakkar@linaro.org>
- <20190225065044.11023-3-vaishali.thakkar@linaro.org>
+        Fri, 1 Mar 2019 14:08:50 -0500
+X-UUID: 5a9cd98d316d4f8ab8fc00f4beb55898-20190302
+X-UUID: 5a9cd98d316d4f8ab8fc00f4beb55898-20190302
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1314447922; Sat, 02 Mar 2019 03:08:45 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 2 Mar 2019 03:08:43 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 2 Mar 2019 03:08:43 +0800
+Message-ID: <1551467323.5127.1.camel@mtkswgap22>
+Subject: Re: [PATCH net-next] drivers: net: Remove unnecessary semicolon
+From:   Sean Wang <sean.wang@mediatek.com>
+To:     Yue Haibing <yuehaibing@huawei.com>
+CC:     <davem@davemloft.net>, <andrew@lunn.ch>,
+        <vivien.didelot@gmail.com>, <matthias.bgg@gmail.com>,
+        <benve@cisco.com>, <_govind@gmx.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
+Date:   Sat, 2 Mar 2019 03:08:43 +0800
+In-Reply-To: <20190301080900.6656-1-yuehaibing@huawei.com>
+References: <20190301080900.6656-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190225065044.11023-3-vaishali.thakkar@linaro.org>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+X-TM-SNTS-SMTP: 0E59B96B09661E98650F0C97611817BAE6F3138A6AFB3D84C79523A47C32C3662000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 24 Feb 22:50 PST 2019, Vaishali Thakkar wrote:
-
-> From: Vinod Koul <vkoul@kernel.org>
+On Fri, 2019-03-01 at 16:09 +0800, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
 > 
-> Qcom Socinfo driver can be built as a module, so
-> export these two APIs.
+> drivers/net/dsa/mt7530.c:649:3-4: Unneeded semicolon
+> drivers/net/ethernet/cisco/enic/enic_clsf.c:35:2-3: Unneeded semicolon
+> drivers/net/ethernet/faraday/ftgmac100.c:1640:2-3: Unneeded semicolon
+> drivers/net/ethernet/mediatek/mtk_eth_soc.c:229:2-3: Unneeded semicolon
+> drivers/net/usb/sr9700.c:437:2-3: Unneeded semicolon
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Vaishali Thakkar <vaishali.thakkar@linaro.org>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Remove unneeded semicolon.
+> 
+> Generated by: scripts/coccinelle/misc/semicolon.cocci
+> 
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Acked-by: Sean Wang <sean.wang@mediatek.com> for mt7530 and mtk_eth_soc 
 
-Regards,
-Bjorn
+thanks!
 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
-> Changes since v3:
-> 	- Add Greg's reviewed-by
-> Changes since v2:
-> 	- Reorder patches [patch 5->patch 2]
-> Changes since v1:
-> 	- None
-> ---
->  drivers/base/soc.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/net/dsa/mt7530.c                    | 2 +-
+>  drivers/net/ethernet/cisco/enic/enic_clsf.c | 3 ++-
+>  drivers/net/ethernet/faraday/ftgmac100.c    | 2 +-
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 2 +-
+>  drivers/net/usb/sr9700.c                    | 2 +-
+>  5 files changed, 6 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/base/soc.c b/drivers/base/soc.c
-> index b0933b9fe67f..7c0c5ca5953d 100644
-> --- a/drivers/base/soc.c
-> +++ b/drivers/base/soc.c
-> @@ -164,6 +164,7 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
->  out1:
->  	return ERR_PTR(ret);
->  }
-> +EXPORT_SYMBOL_GPL(soc_device_register);
+> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+> index 0390c5e..7357b4f 100644
+> --- a/drivers/net/dsa/mt7530.c
+> +++ b/drivers/net/dsa/mt7530.c
+> @@ -646,7 +646,7 @@ static void mt7530_adjust_link(struct dsa_switch *ds, int port,
+>  		case SPEED_100:
+>  			mcr |= PMCR_FORCE_SPEED_100;
+>  			break;
+> -		};
+> +		}
 >  
->  /* Ensure soc_dev->attr is freed prior to calling soc_device_unregister. */
->  void soc_device_unregister(struct soc_device *soc_dev)
-> @@ -173,6 +174,7 @@ void soc_device_unregister(struct soc_device *soc_dev)
->  	device_unregister(&soc_dev->dev);
->  	early_soc_dev_attr = NULL;
->  }
-> +EXPORT_SYMBOL_GPL(soc_device_unregister);
+>  		if (phydev->link)
+>  			mcr |= PMCR_FORCE_LNK;
+> diff --git a/drivers/net/ethernet/cisco/enic/enic_clsf.c b/drivers/net/ethernet/cisco/enic/enic_clsf.c
+> index 99038df..9900993 100644
+> --- a/drivers/net/ethernet/cisco/enic/enic_clsf.c
+> +++ b/drivers/net/ethernet/cisco/enic/enic_clsf.c
+> @@ -32,7 +32,8 @@ int enic_addfltr_5t(struct enic *enic, struct flow_keys *keys, u16 rq)
+>  		break;
+>  	default:
+>  		return -EPROTONOSUPPORT;
+> -	};
+> +	}
+> +
+>  	data.type = FILTER_IPV4_5TUPLE;
+>  	data.u.ipv4.src_addr = ntohl(keys->addrs.v4addrs.src);
+>  	data.u.ipv4.dst_addr = ntohl(keys->addrs.v4addrs.dst);
+> diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
+> index 3e5e971..b17b79e 100644
+> --- a/drivers/net/ethernet/faraday/ftgmac100.c
+> +++ b/drivers/net/ethernet/faraday/ftgmac100.c
+> @@ -1637,7 +1637,7 @@ static int ftgmac100_setup_mdio(struct net_device *netdev)
+>  		reg = ioread32(priv->base + FTGMAC100_OFFSET_REVR);
+>  		reg &= ~FTGMAC100_REVR_NEW_MDIO_INTERFACE;
+>  		iowrite32(reg, priv->base + FTGMAC100_OFFSET_REVR);
+> -	};
+> +	}
 >  
->  static int __init soc_bus_register(void)
->  {
-> -- 
-> 2.17.1
-> 
+>  	/* Get PHY mode from device-tree */
+>  	if (np) {
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> index 94d4663..549d364 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> @@ -226,7 +226,7 @@ static void mtk_phy_link_adjust(struct net_device *dev)
+>  	case SPEED_100:
+>  		mcr |= MAC_MCR_SPEED_100;
+>  		break;
+> -	};
+> +	}
+>  
+>  	if (MTK_HAS_CAPS(mac->hw->soc->caps, MTK_GMAC1_TRGMII) &&
+>  	    !mac->id && !mac->trgmii)
+> diff --git a/drivers/net/usb/sr9700.c b/drivers/net/usb/sr9700.c
+> index 6ac232e..e04c8054 100644
+> --- a/drivers/net/usb/sr9700.c
+> +++ b/drivers/net/usb/sr9700.c
+> @@ -434,7 +434,7 @@ static int sr9700_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+>  		usbnet_skb_return(dev, sr_skb);
+>  
+>  		skb_pull(skb, len + SR_RX_OVERHEAD);
+> -	};
+> +	}
+>  
+>  	return 0;
+>  }
+
+
