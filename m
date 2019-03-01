@@ -2,168 +2,102 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF12C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154B6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A80A2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98722085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:09:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="A3iwn/B5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbfCAAF2 (ORCPT
+        id S1730812AbfCAAJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 19:05:28 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727806AbfCAAF2 (ORCPT
+        Thu, 28 Feb 2019 19:09:29 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40071 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731073AbfCAAJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 19:05:28 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2104xqZ030980
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 19:05:27 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxsf20wdt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 19:05:27 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 1 Mar 2019 00:05:25 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 1 Mar 2019 00:05:22 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2105L3i32505966
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Mar 2019 00:05:22 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF757AE057;
-        Fri,  1 Mar 2019 00:05:21 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45636AE04D;
-        Fri,  1 Mar 2019 00:05:21 +0000 (GMT)
-Received: from dhcp-9-31-103-153.watson.ibm.com (unknown [9.31.103.153])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 Mar 2019 00:05:21 +0000 (GMT)
-Subject: Re: [PULL REQUEST] Lock down patches
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     jmorris@namei.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-Date:   Thu, 28 Feb 2019 19:05:20 -0500
-In-Reply-To: <CACdnJuvwnh0PKr5jUTm2h=P5-u-oLgBjvThX+DxcegShXReCdA@mail.gmail.com>
-References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
-         <1551392438.10911.227.camel@linux.ibm.com>
-         <CACdnJuvwnh0PKr5jUTm2h=P5-u-oLgBjvThX+DxcegShXReCdA@mail.gmail.com>
+        Thu, 28 Feb 2019 19:09:29 -0500
+Received: by mail-qk1-f194.google.com with SMTP id h28so13273820qkk.7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 16:09:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g0bEwvUEFK1J8CZ2fvgvp4/COBWyjjoGx4ZMNvvVzOc=;
+        b=A3iwn/B5hHT8VVvop9P/dLzTrqF9PEl5lvECFfMRhkr1okOqGTp1MMODsDof8+2jwy
+         p44XZcRw5/Vdsx3Bc8UOKheNkbLTCvDg3oO96BRQEK9E8zKeq2Ved5v/tJE1Ee3aYaby
+         qvwfk3A6GdHAGTJ74xhIpUPHwryWJTSSf+dzh88qZixy+xjsMsEYnyh4CN3oQU5y2asc
+         HpGgIjsxAZn8xi49SqBihWd79qF6kLbCpB1E3LqQpJsZXM1941h7j+o3bJ2IGXQ9clC0
+         3ui90MogtXGm7rzyXTUn+r4xzEMWBOQ3o3HfKlMJKfrspScNhSAt2pNnLDpZRcvFties
+         JS2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g0bEwvUEFK1J8CZ2fvgvp4/COBWyjjoGx4ZMNvvVzOc=;
+        b=aGJmrOuEGTPKFuFFfX6syP1PqueA0kq5/YmIWz1GbN5ZLnVAnYeGxHUEgkzwWQ6Q1u
+         sNJoSJOBesnm/3mhiWsIDR/ZaQ3Rd+oUVcBsda6DJH2wRW2mflksPOE7PQApcsTthNkY
+         ZXgXEhy0nC6LcFsKCb4Cp3uYpL4s9lSFI6e2FUfEdSJp4NNBVRiyZI5hjLPab85VzJVd
+         Na/eY74v4//+Teh8DgnKLkTSYbzZYCG6Ua/tHx9sdq7re9/acd9/NZ9SONDTlLDSO+SM
+         rE/hlr3S+BCQFoFlChS7/UFDh3UvDdtRxXzYptT63dClRWP0DQvgbtNKwjCr6LlJhTNY
+         otMA==
+X-Gm-Message-State: APjAAAXLiMVeoGMpg/pbILgrmuXKWmW6gdTmXnF4nVLLNBKMaoW1I7zL
+        Wuz0FuvyhmEzPlhJefIJ/MvL39SUO+iDFhjtbvEH3g==
+X-Google-Smtp-Source: APXvYqzrgnJezCXbqiGfhto3glxDayJFxKfAWdnoVkoYtS745qBUjT24/8l/NN3W67ky63iS5J6a1ybEytQfNA3a4dE=
+X-Received: by 2002:a37:66c8:: with SMTP id a191mr1731696qkc.281.1551398968232;
+ Thu, 28 Feb 2019 16:09:28 -0800 (PST)
+MIME-Version: 1.0
+References: <20190228190146.802CD95C016B@us180.sjc.aristanetworks.com>
+ <20190228.130213.1481374802407995712.davem@davemloft.net> <171e33d9-ee82-6a62-693e-5d585e4eca28@gmail.com>
+In-Reply-To: <171e33d9-ee82-6a62-693e-5d585e4eca28@gmail.com>
+From:   Francesco Ruggeri <fruggeri@arista.com>
+Date:   Thu, 28 Feb 2019 16:09:17 -0800
+Message-ID: <CA+HUmGhBBJ+bTdAQK0bAReW0-fFWRzrx73Og_9Qa9ftDhrUWRw@mail.gmail.com>
+Subject: Re: [PATCH] net: ipv6: check net in ip6_call_ra_chain
+To:     David Ahern <dsahern@gmail.com>
+Cc:     David Miller <davem@davemloft.net>, yoshfuji@linux-ipv6.org,
+        kuznet@ms2.inr.ac.ru, Maxim Martynov <maxim@arista.com>,
+        linux-kernel@vger.kernel.org, netdev <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030100-0020-0000-0000-0000031C9675
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030100-0021-0000-0000-0000216E0ACD
-Message-Id: <1551398720.10911.270.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-02-28_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1902280160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-02-28 at 15:13 -0800, Matthew Garrett wrote:
-> On Thu, Feb 28, 2019 at 2:20 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > On Thu, 2019-02-28 at 13:28 -0800, Matthew Garrett wrote:
-> > > This PR is mostly the same as the previous attempt, but with the
-> > > following changes:
+On Thu, Feb 28, 2019 at 3:31 PM David Ahern <dsahern@gmail.com> wrote:
+>
+> On 2/28/19 2:02 PM, David Miller wrote:
+> > From: fruggeri@arista.com (Francesco Ruggeri)
+> > Date: Thu, 28 Feb 2019 11:01:46 -0800
 > >
-> > Where/when was this latest version of the patches posted?
-> 
-> They should have followed this, but git-send-email choked on some
-> reviewed-by: lines so I'm just trying to sort that out.
-
-I'm a little perplexed as to why you would send a pull request, before
-re-posting the patches with the changes for review.
-
-> 
-> > >
-> > > 1) The integration between EFI secure boot and the lockdown state has
-> > > been removed
-> > > 2) A new CONFIG_KERNEL_LOCK_DOWN_FORCE kconfig option has been added,
-> > > which will always enable lockdown regardless of the kernel command
-> > > line
-> > > 3) The integration with IMA has been dropped for now. Requiring the
-> > > use of the IMA secure boot policy when lockdown is enabled isn't
-> > > practical for most distributions at the moment, as there's still not a
-> > > great deal of infrastructure for shipping packages with appropriate
-> > > IMA signatures, and it makes it complicated for end users to manage
-> > > custom IMA policies.
+> >> ip6_call_ra_chain is called when IPv6 packet with Router Alert option
+> >> is forwarded.
+> >> It needs to check if the net of the socket is the same as the net of the
+> >> input device, otherwise the packet gets delivered to every IPv6 socket
+> >> listening for Router Alerts, no matter which network namespace it is in.
+> >>
+> >> Suggested-by: Maxim Martynov <maxim@arista.com>
+> >> Signed-off-by: Maxim Martynov <maxim@arista.com>
+> >> Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
 > >
-> > I'm all in favor of dropping the original attempt to coordinate
-> > between the kexec PE and IMA kernel image signatures and the kernel
-> > appended and IMA modules signatures, but there has been quite a bit of
-> > work recently coordinating the different types of signatures.
+> > Right now someone using such a tool does get all RAs in the system.
 > >
-> > Preventing systems which do use IMA for signature verification, should
-> > not limit their ability to enable "lock down".  Does this version of
-> > the "lock down" patches coordinate the different kexec kernel image
-> > and kernel module signature verification methods?
-> 
-> It's a little more complicated than this. We can't just rely on IMA
-> appraisal - it has to be based on digital signatures, and the existing
-> patch only made that implicit by enabling the secure_boot policy.  
+> > Your change not only breaks them, but also gives them no method by
+> > which to keep obtaining the same behavior.
+> >
+> > I don't know what to do or suggest in this situation, but right now
+> > I'm putting this patch on hold.
+> >
+>
+> need an equivalent to NETLINK_LISTEN_ALL_NSID
 
-Right, which is the reason the IMA architecture specific policy
-requires file signatures. [1][2]
+If that would be acceptable, we can look into it.
 
-> I
-> think we do want to integrate these, but there's a few things we need
-> to take into account:
-> 
-> 1) An integrated solution can't depend on xattrs, both because of the
-> lagging support for distributing those signatures but also because we
-> need to support filesystems that don't support xattrs
-
-That's not a valid reason for preventing systems that do use IMA for
-verifying the kexec kernel image signature or kernel module signatures
-from enabling "lock down".  This just means that there needs to be
-some coordination between the different signature verification
-methods. [1][2]
-
-> 2) An integrated solution can't depend on the current secure_boot
-> policy because that requires signed IMA policy updates, but
-> distributions have no way of knowing what IMA policy end users require
-
-Both the "CONFIG_IMA_APPRAISE_REQUIRE_KEXEC_SIGS" and the IMA
-architecture policy rules persist after loading a custom policy.
- Neither of them require loading or signing a custom policy.
-
-> In any case, I do agree that we should aim to make this more
-> reasonable - having orthogonal signing code doesn't benefit anyone.
-> Once there's solid agreement on that we can extend this support.
-> 
-
-Having multiple signature verification methods is going to be around
-for a while.  The solution is to coordinate the signature verification
-methods, without requiring both types of signatures. [1][2]
-
-[For distros that do enable IMA, enabling the IMA architecture
-specific policy enforces the kexec kernel image and kernel modules
-signature verification.]
-
-Mimi
-
-[1] Subject: [PATCH v2 0/5] selftests/ima: add kexec and kernel module tests
-[2] Patches available from the "next-queued-testing" branch
-https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/
-
+Thanks,
+Francesco
