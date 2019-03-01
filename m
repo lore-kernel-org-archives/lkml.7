@@ -2,66 +2,101 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43902C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4678EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE55204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B17920857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:53:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="kJpmr1vC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388086AbfCASwa (ORCPT
+        id S2388458AbfCASx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 13:52:30 -0500
-Received: from foss.arm.com ([217.140.101.70]:40508 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbfCASwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 13:52:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16EA280D;
-        Fri,  1 Mar 2019 10:52:30 -0800 (PST)
-Received: from beelzebub.austin.arm.com (beelzebub.austin.arm.com [10.118.12.119])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9B2A63F575;
-        Fri,  1 Mar 2019 10:52:29 -0800 (PST)
-From:   Jeremy Linton <jeremy.linton@arm.com>
-To:     linux-acpi@vger.kernel.org
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, sudeep.holla@arm.com,
-        Lorenzo.Pieralisi@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH] ACPI/PPTT: Simplify leaf node detection.
-Date:   Fri,  1 Mar 2019 12:52:21 -0600
-Message-Id: <20190301185221.608501-1-jeremy.linton@arm.com>
-X-Mailer: git-send-email 2.17.2
+        Fri, 1 Mar 2019 13:53:27 -0500
+Received: from mail.andi.de1.cc ([85.214.239.24]:40152 "EHLO
+        h2641619.stratoserver.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728499AbfCASx1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 13:53:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Message-Id:Date:Subject:Cc:To:From:Sender:
+        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Xmii2DYBLYEKgyM1Mxh0i8K7QVLFqLzjtZe4FCQS/Ig=; b=kJpmr1vClTsC4yQj8lvIiSzIOZ
+        2PHPx6qH6NsSmIU0GWPk3UIxDekbmzJQlnhKqvfH64H6py98lVWsfZN9VKoGfmNPfwYUkOyDLt6F0
+        363thBxRMQWBrK+Z5H17GYVCNBA0ACcQYIpQs7MD+inRcvwl7plWLKHP8GQifFEs96RE=;
+Received: from p200300ccfbcd34001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:fbcd:3400:1a3d:a2ff:febf:d33a] helo=aktux)
+        by h2641619.stratoserver.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1gznHY-0001k2-7A; Fri, 01 Mar 2019 19:53:16 +0100
+Received: from andi by aktux with local (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1gznHZ-00070a-Hy; Fri, 01 Mar 2019 19:53:17 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v2] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
+Date:   Fri,  1 Mar 2019 19:52:12 +0100
+Message-Id: <20190301185212.26837-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACPI 6.3 bumps the PPTT table revision and adds a LEAF_NODE flag.
-This allows us to avoid a second pass through the table to assure
-that the node in question is a leaf.
+The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
+with broadcom internals attached to UART1 and some gpios.
+This addition is in line with similar boards
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- drivers/acpi/pptt.c | 3 +++
- 1 file changed, 3 insertions(+)
+changes in v2: remove pinctrl things
+ arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-index ad31c50de3be..065c4fc245d1 100644
---- a/drivers/acpi/pptt.c
-+++ b/drivers/acpi/pptt.c
-@@ -209,6 +209,9 @@ static int acpi_pptt_leaf_node(struct acpi_table_header *table_hdr,
- 	struct acpi_pptt_processor *cpu_node;
- 	u32 proc_sz;
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+index 1db2541135a7..57432d0500b1 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -69,6 +69,8 @@
+ 		compatible = "mmc-pwrseq-simple";
+ 		pinctrl-names = "default";
+ 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++		clocks = <&rtc 1>;
++		clock-names = "ext_clock";
+ 	};
+ };
  
-+	if (table_hdr->revision > 1)
-+		return (node->flags & ACPI_PPTT_ACPI_LEAF_NODE);
+@@ -122,7 +124,20 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
+ 	status = "okay";
 +
- 	table_end = (unsigned long)table_hdr + table_hdr->length;
- 	node_entry = ACPI_PTR_DIFF(node, table_hdr);
- 	entry = ACPI_ADD_PTR(struct acpi_subtable_header, table_hdr,
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		clocks = <&rtc 1>;
++		clock-names = "lpo";
++		vbat-supply = <&reg_vcc3v3>;
++		vddio-supply = <&reg_vcc3v3>;
++		device-wakeup-gpios = <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
++		host-wakeup-gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
++		shutdown-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
++	};
++
+ };
+ 
+ &usb_otg {
 -- 
-2.20.1
+2.11.0
 
