@@ -2,100 +2,104 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999F3C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84860C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B52220851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:22:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5XycFZb"
+	by mail.kernel.org (Postfix) with ESMTP id 4600820850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551450281;
+	bh=iralU0eBxL7L+mvQ4RE6z9p0eNqSQV8RFb4CBd4vlJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TYRZfMRt8C5Whj4yXvCnl4YImDILK89ktdeyfnW7gFX3E1uz1UM7/WikfwY89GZj5
+	 T131PDLrDJYG7N/6346qGuIgQNe4XQVS9EFgM3haFEqDW/rl6um0m1jnFw/VHknTgJ
+	 iLnpmJ//pS6MjJH9rfK/rClf52pcA6ekCeSgq8uI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388453AbfCAOWX (ORCPT
+        id S2388494AbfCAOYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:22:23 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45117 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387704AbfCAOWW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:22:22 -0500
-Received: by mail-io1-f68.google.com with SMTP id x9so19627710iog.12
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:22:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:message-id:subject:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=hmRSS6AvPyS9Pv9m9t7V3lwTU9sgIgzy1G9yhAg4sRU=;
-        b=X5XycFZbTUF4MWc194RbcoHDCb3llsKYUCxr7FPfcC33G1O9fw2nvbxu1arXnlHrW3
-         jPwpL6myb+DOFCHJUB/hH3oHaY0nNKyWTWncL6Xgkf6yFmTVTkxMVYPaijhgXyQibo3U
-         ww6sNwrQzZx4lRes37+lJNqNLAke6nHehW1l76uoRtlyf+1mNpp9Uo8aYDA8SQrwlwR+
-         gTRM3UMnpSwl2YlhiX96aODtdO/gdAYo6FSfmTz6kPtjLUHRBY7iIQSmz4PuIqixuHwP
-         VzfxTUWOBlZ9IMzWAmFaGRYVYKRSu1h+Ny36RaUMmjJO18ApcMXmmT4bzSBALPDXhzvK
-         8pTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:subject:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=hmRSS6AvPyS9Pv9m9t7V3lwTU9sgIgzy1G9yhAg4sRU=;
-        b=ObeWL1EgdF89BHE24k9o4kUiNM1EbRtKlrEYgEVogWRpEa6sc1ZMEaFqHVVEd940ap
-         Ds04qKIcLjrb+5uavfn0f0EXtyke/6M88WG8R3yV+QguhInHLKFUJECctp3ZtiPgPRhN
-         TGmsl/feN2XlyTPRYXcvGX/021I4+hzDApK0DKFV6KtzAmlqtC67Y1eOX66wvb4PvVxy
-         5JOEsnb/vrzJxPL0I4WosgatUQtc0eoOBqRZFHT+hXbLRkvjmiGDouxDBns5axaM7nlM
-         pFwJz9ZSrjGuVq2y77Rv4hhlKxAgu6vHwdvozH1G+WzFa99219+byrTc6XA5sAIsfKhC
-         eOjw==
-X-Gm-Message-State: APjAAAX23ZS24efVRPnkZzrmyTdB6n/fjgkTqFNcSPgwvzodFWneVXcQ
-        ntQnTbMlefHUGbA+G8LoDaY=
-X-Google-Smtp-Source: APXvYqxYiKqWaZRBKGzf8L69G223Bk+xYa9v4rpLJKyiYO+O/hmYilZwBA1sIaeY2b9RiViO38ssQQ==
-X-Received: by 2002:a5e:c70b:: with SMTP id f11mr2697621iop.39.1551450141214;
-        Fri, 01 Mar 2019 06:22:21 -0800 (PST)
-Received: from ola-842mrw1.ad.garmin.com ([204.77.163.55])
-        by smtp.googlemail.com with ESMTPSA id a18sm8425928iol.68.2019.03.01.06.22.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 06:22:20 -0800 (PST)
-From:   Joshua Watt <jpewhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-Message-ID: <3cc19ef13bdc605a4c2222dcdb262b8e06b38e77.camel@gmail.com>
-Subject: Re: [PATCH] drm/virtio: Allow userspace to mmap() framebuffer
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
+        Fri, 1 Mar 2019 09:24:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48162 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387536AbfCAOYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:24:39 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 207482084F;
+        Fri,  1 Mar 2019 14:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551450278;
+        bh=iralU0eBxL7L+mvQ4RE6z9p0eNqSQV8RFb4CBd4vlJE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lRwuh2miFv6poQHWlj+N3a9pxVcrrS9ZHcNFw8zTBBTaLms+6mSzoR78cSUxOVBBD
+         EzMAC/gjN3kqwlNKaAx4NuX8/gAQkuU+ol1+qD1iUgLptyQWp/YEgEKBQ3idnyz++T
+         0PiP9MDN+UYuk+uP1VonH7Y7d47XsHwmJPVL6n34=
+Date:   Fri, 1 Mar 2019 15:24:35 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>, svendev@arcx.com,
+        robh+dt@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org,
+        mark.rutland@arm.com, treding@nvidia.com, david@lechnology.com,
+        noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu,
+        michal.vokac@ysoft.com, arnd@arndb.de, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        stuyoder@gmail.com, maxime.ripard@bootlin.com,
         linux-kernel@vger.kernel.org
-Date:   Fri, 01 Mar 2019 08:22:19 -0600
-In-Reply-To: <20190301055135.qqph6ggypjvhuoan@sirius.home.kraxel.org>
-References: <20190228164741.15590-1-JPEWhacker@gmail.com>
-         <20190301055135.qqph6ggypjvhuoan@sirius.home.kraxel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+Subject: Re: [PATCH v7 1/6] fieldbus_dev: add Fieldbus Device subsystem.
+Message-ID: <20190301142435.GA12361@kroah.com>
+References: <20190122152109.30488-1-TheSven73@googlemail.com>
+ <20190122152109.30488-2-TheSven73@googlemail.com>
+ <20190122165658.GH26416@windriver.com>
+ <2f4406b5-9970-211e-beef-a8b6ad60b99e@suse.de>
+ <20190122185246.GA922@kroah.com>
+ <20190301133456.GA7456@amd>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190301133456.GA7456@amd>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-01 at 06:51 +0100, Gerd Hoffmann wrote:
-> On Thu, Feb 28, 2019 at 10:47:41AM -0600, Joshua Watt wrote:
-> > Reports the size of the virtgpu framebuffer to userspace and
-> > installs
-> > the deferred I/O handlers so that userspace can mmap() and write to
-> > it.
+On Fri, Mar 01, 2019 at 02:34:56PM +0100, Pavel Machek wrote:
 > 
-> Fixed already, as side effect of switching virtio to the generic
-> fbdev
-> emulation.  Patches are in the drm-misc-next branch and should land
-> upstream in the 5.1 merge window.
-
-Excellent. I gave it a try and that did what I needed. Thanks!
-
+> > > > 
+> > > >> +
+> > > >> +MODULE_AUTHOR("Sven Van Asbroeck <TheSven73@googlemail.com>");
+> > > >> +MODULE_AUTHOR("Jonathan Stiles <jonathans@arcx.com>");
+> > > >> +MODULE_DESCRIPTION("Fieldbus Device Driver Core");
+> > > >> +MODULE_LICENSE("GPL v2");
+> > > 
+> > > Sven, as this code appears to be all by ArcX people, any chance you can
+> > > make it just GPL (SPDX GPL-2.0-or-later)? Only reason to have it v2-only
+> > 
+> > SPDX "GPL-2.0+" please.
+> > 
+> > > would be if this code was derived from v2-only code that can't be
+> > > relicensed anymore.
+> > 
+> > Are you _sure_ you want v2+?  I ask as I am forced to :)
 > 
-> cheers,
->   Gerd
-> 
--- 
-Joshua Watt <JPEWhacker@gmail.com>
+> And I find it pretty nasty. You are trying to push people away from
+> GPL V2+, which is not cool.
 
+People do not usually realize what they are agreeing to when they say
+"or later" based on the discussions I always end up having.
+
+Do you really trust that GPL v9 is going to look anything like v2?  :)
+
+Anyway, no big deal, just asking as it is good to be sure, especially
+when odds are, code for this was copied from non + code.
+
+thanks,
+
+greg k-h
