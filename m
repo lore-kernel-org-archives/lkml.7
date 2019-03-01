@@ -2,87 +2,112 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2939C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B503FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C952084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551457458;
-	bh=Xh6/dspfEwc85QLun1LjQdXH+HajQ8nXAFFcW91WVj0=;
-	h=Subject:From:To:Cc:Date:List-ID:From;
-	b=RlNPcUoOJh/9zShLzaeQbHI5IpTi+xpDjw+JVn1wV7iRmY2eWH1CkIe5NROqcixKk
-	 S6LkSRyaO1DnfKwMpgdONLMkr0BgOTAHmYKKrep6LZdeoGafe9tUEOGDYHAR8sSaon
-	 tc7fPqR7GQY2hnHpZFplB7+urtoDfE4LxQ5NDVQ4=
+	by mail.kernel.org (Postfix) with ESMTP id 8A91D2083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389143AbfCAQYR (ORCPT
+        id S2389126AbfCAQ0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:24:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54004 "EHLO mail.kernel.org"
+        Fri, 1 Mar 2019 11:26:22 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:19092 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388450AbfCAQYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:24:16 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728449AbfCAQ0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:26:22 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C3572083D;
-        Fri,  1 Mar 2019 16:24:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551457456;
-        bh=Xh6/dspfEwc85QLun1LjQdXH+HajQ8nXAFFcW91WVj0=;
-        h=Subject:From:To:Cc:Date:From;
-        b=kuroZxf7jt2G56jSMRxrNCW7IEH2VTGREE93T9Ydb9HISNCRO8BGhRITcGpl2LZ/c
-         5a9QgMlpiK58i1CxmiC3k6m8O16g4nsjZQEnvzpKEnjMDYV0fSQpUiz/XdoprG4pIO
-         CDROIbE6O8K+qk/aESkrPGGNGHSNrHlQKvPoF7Q8=
-Message-ID: <1551457454.3033.13.camel@kernel.org>
-Subject: [ANNOUNCE] 3.18.136-rt114
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Julia Cartwright <julia@ni.com>
-Date:   Fri, 01 Mar 2019 10:24:14 -0600
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id 5AE7430EBE9A;
+        Fri,  1 Mar 2019 16:24:23 +0000 (UTC)
+Received: from treble (ovpn-122-204.rdu2.redhat.com [10.10.122.204])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E48165D9C5;
+        Fri,  1 Mar 2019 16:24:19 +0000 (UTC)
+Date:   Fri, 1 Mar 2019 10:24:18 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+ca95b2b7aef9e7cbd6ab@syzkaller.appspotmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/unwind: add hardcoded ORC entry for NULL
+Message-ID: <20190301162418.sbhth5tycd6znxin@treble>
+References: <20190301031201.7416-1-jannh@google.com>
+ <20190301031201.7416-2-jannh@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190301031201.7416-2-jannh@google.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 01 Mar 2019 16:24:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT Folks!
+On Fri, Mar 01, 2019 at 04:12:01AM +0100, Jann Horn wrote:
+> When the ORC unwinder is invoked for an oops caused by IP==0,
+> it currently has no idea what to do because there is no debug information
+> for the stack frame of NULL.
+> 
+> But if RIP is NULL, it is very likely that the last successfully executed
+> instruction was an indirect CALL/JMP, and it is possible to unwind out in
+> the same way as for the first instruction of a normal function. Hardcode
+> a corresponding ORC entry.
+> 
+> 
+> With an artificially-added NULL call in prctl_set_seccomp(), before this
+> patch, the trace is:
+> 
+> Call Trace:
+>  ? __x64_sys_prctl+0x402/0x680
+>  ? __ia32_sys_prctl+0x6e0/0x6e0
+>  ? __do_page_fault+0x457/0x620
+>  ? do_syscall_64+0x6d/0x160
+>  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> After this patch, the trace looks like this:
+> 
+> Call Trace:
+>  __x64_sys_prctl+0x402/0x680
+>  ? __ia32_sys_prctl+0x6e0/0x6e0
+>  ? __do_page_fault+0x457/0x620
+>  do_syscall_64+0x6d/0x160
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> prctl_set_seccomp() still doesn't show up in the trace because for some
+> reason, tail call optimization is only disabled in builds that use the
+> frame pointer unwinder.
+> 
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-I'm pleased to announce the 3.18.136-rt114 stable release.
+Thanks for the patches!
 
-This release is just an update to the new stable 3.18.136 version
-and no RT specific changes have been made.
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-You can get this release via the git tree at:
+> Is there a reason why the top-level Makefile only sets
+> -fno-optimize-sibling-calls if CONFIG_FRAME_POINTER is set?
+> I suspect that this is just a historical thing, because reliable
+> unwinding didn't work without frame pointers until ORC came along.
+> I'm not quite sure how best to express "don't do tail optimization if
+> either frame pointers are used or ORC is used" in a Makefile, and
+> whether we want an indirection through Kconfig for that, so I'm not
+> doing anything about it in this series.
+> Can someone send a patch to deal with it properly?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+Why would sibling calls be a problem for ORC?  Once a function does a
+sibling call, it has effectively returned and shouldn't show up on the
+stack trace anyway.
 
-  branch: v3.18-rt
-  Head SHA1: f9004c22ef50febe6b537b63e6c42072ebda259b
-
-Or to build 3.18.136-rt114 directly, the following patches should be applied:
-
-  http://www.kernel.org/pub/linux/kernel/v3.x/linux-3.18.tar.xz
-
-  http://www.kernel.org/pub/linux/kernel/v3.x/patch-3.18.136.xz
-
-  http://www.kernel.org/pub/linux/kernel/projects/rt/3.18/patch-3.18.136-rt114.patch.xz
-
-
-Enjoy!
-   
-   Tom
+-- 
+Josh
