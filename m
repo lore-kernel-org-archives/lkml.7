@@ -2,79 +2,101 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526C9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73B4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272D92084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A80B2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732304AbfCAMst (ORCPT
+        id S1732939AbfCAMuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 07:48:49 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44698 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726001AbfCAMst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 07:48:49 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1E094AEBD;
-        Fri,  1 Mar 2019 12:48:48 +0000 (UTC)
-Date:   Fri, 1 Mar 2019 13:48:47 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] printk: Remove no longer used LOG_PREFIX.
-Message-ID: <20190301124847.q6goqvcb7yhm6q6k@pathway.suse.cz>
-References: <1550829580-9189-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <b830aae9-766f-54d2-840b-f70da3d1215d@i-love.sakura.ne.jp>
+        Fri, 1 Mar 2019 07:50:14 -0500
+Received: from mga06.intel.com ([134.134.136.31]:25314 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbfCAMuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 07:50:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 04:50:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,427,1544515200"; 
+   d="scan'208";a="151149153"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.172])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2019 04:50:08 -0800
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>, jani.nikula@intel.com,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: [PATCH] log2: make is_power_of_2() integer constant expression when possible
+Date:   Fri,  1 Mar 2019 14:52:07 +0200
+Message-Id: <20190301125207.30973-1-jani.nikula@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b830aae9-766f-54d2-840b-f70da3d1215d@i-love.sakura.ne.jp>
-User-Agent: NeoMutt/20170421 (1.8.2)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-03-01 19:31:59, Tetsuo Handa wrote:
-> Can this patch go to Linux 5.1?
+While is_power_of_2() is an inline function and likely gets optimized
+for compile time constant arguments, it still doesn't produce an integer
+constant expression that could be used in, say, static data
+initialization or case labels.
 
-I am going to look at it the following week. I do not think that
-it is necessary to hurry a clean up of old stuff up into 5.1.
+Make is_power_of_2() an integer constant expression when possible,
+otherwise using the inline function to avoid multiple evaluation of the
+parameter.
 
-I believe that it is correct. But it is not a typo fix. For example,
-I want to double check what was the history of KERN_DEFAULT defined
-as "d". It existed since ages...
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 
-Best Regards,
-Petr
+---
 
-> On 2019/02/22 18:59, Tetsuo Handa wrote:
-> > When commit 5becfb1df5ac8e49 ("kmsg: merge continuation records while
-> > printing") introduced LOG_PREFIX, we used KERN_DEFAULT etc. as a flag
-> > for setting LOG_PREFIX in order to tell whether to call cont_add()
-> > (i.e. whether to append the message to "struct cont").
-> > 
-> > But since commit 4bcc595ccd80decb ("printk: reinstate KERN_CONT for
-> > printing continuation lines") inverted the behavior (i.e. don't append
-> > the message to "struct cont" unless KERN_CONT is specified) and commit
-> > 5aa068ea4082b39e ("printk: remove games with previous record flags")
-> > removed the last LOG_PREFIX check, setting LOG_PREFIX via KERN_DEFAULT
-> > etc. is no longer meaningful.
-> > 
-> > Therefore, we can remove LOG_PREFIX and make KERN_DEFAULT empty string.
-> > 
-> > Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> > ---
-> >  include/linux/kern_levels.h | 2 +-
-> >  include/linux/printk.h      | 1 -
-> >  kernel/printk/printk.c      | 6 +-----
-> >  3 files changed, 2 insertions(+), 7 deletions(-)
+The alternative would be to define both a function and a macro version
+of is_power_of_2(), and let the callers decide what to use.
+---
+ include/linux/log2.h | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/log2.h b/include/linux/log2.h
+index 2af7f77866d0..035932f52aeb 100644
+--- a/include/linux/log2.h
++++ b/include/linux/log2.h
+@@ -37,6 +37,14 @@ int __ilog2_u64(u64 n)
+ }
+ #endif
+ 
++#define __IS_POWER_OF_2(__n) ((__n) != 0 && (((__n) & ((__n) - 1)) == 0))
++
++static inline __attribute__((const))
++bool __is_power_of_2(unsigned long n)
++{
++	return __IS_POWER_OF_2(n);
++}
++
+ /**
+  * is_power_of_2() - check if a value is a power of two
+  * @n: the value to check
+@@ -45,11 +53,8 @@ int __ilog2_u64(u64 n)
+  * *not* considered a power of two.
+  * Return: true if @n is a power of 2, otherwise false.
+  */
+-static inline __attribute__((const))
+-bool is_power_of_2(unsigned long n)
+-{
+-	return (n != 0 && ((n & (n - 1)) == 0));
+-}
++#define is_power_of_2(n) \
++	__builtin_choose_expr(__builtin_constant_p(n), __IS_POWER_OF_2(n), __is_power_of_2(n))
+ 
+ /**
+  * __roundup_pow_of_two() - round up to nearest power of two
+-- 
+2.20.1
+
