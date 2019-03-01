@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8384BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 22:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED82C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 22:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548A42083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 22:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCEE82083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 22:17:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NOOi7xqp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+4rrtjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfCAWRf (ORCPT
+        id S1727710AbfCAWRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 17:17:35 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45112 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfCAWRf (ORCPT
+        Fri, 1 Mar 2019 17:17:44 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42841 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfCAWRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 17:17:35 -0500
-Received: by mail-pl1-f193.google.com with SMTP id r14so12098031pls.12;
-        Fri, 01 Mar 2019 14:17:35 -0800 (PST)
+        Fri, 1 Mar 2019 17:17:43 -0500
+Received: by mail-pf1-f196.google.com with SMTP id n74so12046029pfi.9;
+        Fri, 01 Mar 2019 14:17:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
         bh=cpycp2Sh95C4wqU8MRRKTO3KivBo2LtrfQuXil6DXU0=;
-        b=NOOi7xqpi21TC0E7ALf0ZvCwFuh9Rq3JmXUhqZQsMknz9U9cLwtVsOnKMGPJjfyywZ
-         TTLp4N6VMvKeLt+M4NZUxtclA5k83XyqFcG1UZ5xPEVf7oTEkvTpV4ffl8Tw3K7dpmFg
-         rpNajQ9yRstFV5iuUGx8Tnqlu/p2+UNuKFBUD+y3siRBQguB++frR3InrugayCPsOU7k
-         y2rA3Gj8enkWvirNZ7A9GPMGDLztrmyLC/Kei13ZV9liV7tvu6Cu88pH6fyOZkyHwOYO
-         67uji0eDGd5gpRR06PoaYErSJdTqoBRUK2etGNBNumwk5ZgEmEsJb9YZLsGZYfV5Shue
-         0g3g==
+        b=j+4rrtjjmkgdz7tpCe/F7GSWvRVCp538JnjGBElOro88v0RjdtG185X85eqOX4gRlQ
+         Hh+n3qsflUTxLiDNNRu527BbdhPzY8N0ibv/dq/8I1yw8CNXd9iNe7EuoRW2fD3xWLN+
+         3PC4U3HqmB4ZTXzpmmHlwyH4fdgW+85PVCJt7QsIlT1YUsdEoPqdJ2oyh1jX28MXAYz2
+         Jqki+bzDJ+yWTQxtaWd3pEVoSh6wxNh2SRxKPP7jX5H/KvJ6HfdGknwMmohQwh14bZvR
+         2fyL+GOaCEQ0UBLHRIiLHHaybSqFoEygP6fmxdnTXfsjGt3/ZJO2Ne5b8qiWZTr4m+RB
+         obpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=cpycp2Sh95C4wqU8MRRKTO3KivBo2LtrfQuXil6DXU0=;
-        b=PcOS0CEC1SS7mTuZLgua34K/u1gQlKjliXL8c2edbl80xDDmpdDZDXbhTlq3ljn+KC
-         VSkSfp86kFI+uz89zDxx3lELOniKgzvNdlvstZn9z5INrooRE8Kh6c45dM70Yws3qZZq
-         B7aqg9F91r9TvEGdhibLvES/jdDnvvn8cFm5N7N/v3N8SGtgI95qD0Vo2shhhNgTrHNb
-         8E8yl7fZDA4NAWqDcB+yEPzE3q3BpCdKVMK4N3fgXv/5LheEUPkWm4WHAMCUQxgwdNj4
-         Q/efuqsGSoHF3XSiYD7HrbjW4N2cOGle0b2hndKNdC5hKcMbYHtcCDnl8kbh/e0ZzRsF
-         R6CQ==
-X-Gm-Message-State: APjAAAWDE4jDdF2lvOqHBR9z2gTOvK0i+Le3gAaD1aWEcZ1w7YSSrrTg
-        WeSaZv3hReovj2HriqZ1sKi5c93W
-X-Google-Smtp-Source: APXvYqwq1zF0VVm/ayheptRE5rsC/9rWVqXZJM5LxqVPAmbAehG19URBsTLVl4JVpK+UL3lPUE8DrA==
-X-Received: by 2002:a17:902:6b8c:: with SMTP id p12mr8018404plk.282.1551478654468;
-        Fri, 01 Mar 2019 14:17:34 -0800 (PST)
+        b=kMVP11aVxJnJR+9KcZdrQFoSWFLw5n7sBA8IHrgRvg+9KktAmw9HMofrgQOPhkxtBL
+         jDpH6jCRuqwUOvp23XqonZ02TJHERa9mRJA54LchZN1MWKPV1OhmzayAh1mMiANjegp3
+         J7pBw7eM5ErDqy/Ti+agUXVF99ZcYbyAldoMmfjtkECiV4G9rDJplR7xP4Krp3vei5Hk
+         j/zVufqJHAlrQqzB4QzYPH+3yDCz4xcFRnadg7lAHzwFk7gL4s52srJjJLYuzbLlILeF
+         nnO4B0bBtWFGHKLaV8les9gRBuphApBURST3CL6nM/bC2IbHV8t5Yty5qyZVz0UaDTB2
+         8eDQ==
+X-Gm-Message-State: APjAAAVcuAbWJ4NRa9pem3h9W4yQT8pqHSiv0+sMyaMnr+08uqp/oyDW
+        yOdMLljQhN9gVq9N7oEArQaqNmO8
+X-Google-Smtp-Source: APXvYqyAHcGoOfAPdNO4yU/5XHLgWTmX+Fq5VsUNmLquJa4l+xDEgPXF52vDhRjw4bCwpu7ILCGYbg==
+X-Received: by 2002:a63:1a5d:: with SMTP id a29mr6602214pgm.369.1551478662715;
+        Fri, 01 Mar 2019 14:17:42 -0800 (PST)
 Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id v6sm32404909pgb.2.2019.03.01.14.17.33
+        by smtp.gmail.com with ESMTPSA id l28sm29681680pfi.186.2019.03.01.14.17.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 14:17:33 -0800 (PST)
+        Fri, 01 Mar 2019 14:17:41 -0800 (PST)
 Subject: Re: [PATCH] bpf: enable program stats
 To:     Guenter Roeck <linux@roeck-us.net>,
         Alexei Starovoitov <ast@kernel.org>
 Cc:     Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20190301220323.GA13770@roeck-us.net>
-From:   Eric Dumazet <erdnetdev@gmail.com>
-Message-ID: <4b40a893-7385-915b-378c-ad10c015780f@gmail.com>
-Date:   Fri, 1 Mar 2019 14:17:32 -0800
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <47e1aa53-61c9-653e-3958-3e47082887d0@gmail.com>
+Date:   Fri, 1 Mar 2019 14:17:40 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
  Thunderbird/52.9.1
 MIME-Version: 1.0
