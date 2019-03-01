@@ -2,111 +2,164 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A4FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75690C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3552083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551440760;
-	bh=uQiqb/8HsrWZDUs5nbzoHaOMDoaNPvBxnFDv3PloHiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i35gN8WArIpyTGfL+kpEn6CgB67mNgetUXT8QaVFMxQa3t1USfhMUT67sT11R6EVQ
-	 JjrR6F52tZR7oJN3MxVJvTMMd+j+fYankO6tgieqoJTfDebVjdIKcRnMDR6bMTba2q
-	 5m9bJ2NbAs6hqqHmWFniu6Y76EP/p5QJO7YLdge0=
+	by mail.kernel.org (Postfix) with ESMTP id 437F82083E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387668AbfCALp7 (ORCPT
+        id S2387738AbfCALqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:45:59 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46772 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfCALp7 (ORCPT
+        Fri, 1 Mar 2019 06:46:20 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50800 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387677AbfCALqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:45:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=T6pXHKNa+ACXCXsUuVIA/K9jwD+fxsERuqC5A6ON50c=; b=lUTdB8kF9sCjBt8oRzoqjZkIt
-        sGcKFwfzbePvy3qmykp1v76FCrTI+N+gFkC2IBMANuYYzdC2Botq2iRTEwavgBOWuozlPjAbGJLQ4
-        yitkW7tuiG/n+bxl2BfQSljUuApSG9u1TxAntY/umXEhoFQ58h1ZvYbNmrdBZuVLQVNd4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1gzgbU-00027o-6q; Fri, 01 Mar 2019 11:45:24 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 5C0F11126E96; Fri,  1 Mar 2019 11:45:23 +0000 (GMT)
-Date:   Fri, 1 Mar 2019 11:45:23 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        guillaume.tucker@collabora.com, matthew.hart@linaro.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Adrian Reber <adrian@lisas.de>,
+        Fri, 1 Mar 2019 06:46:20 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x21Bj2p1138866
+        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 06:46:16 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qy2cj5cj3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:46:13 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Fri, 1 Mar 2019 11:46:10 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 1 Mar 2019 11:46:03 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x21Bk2Cb32505906
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Mar 2019 11:46:02 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4E71CA404D;
+        Fri,  1 Mar 2019 11:46:02 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B5AB8A4051;
+        Fri,  1 Mar 2019 11:45:57 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.204.73])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  1 Mar 2019 11:45:57 +0000 (GMT)
+Date:   Fri, 1 Mar 2019 13:45:54 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
         Linux MM <linux-mm@kvack.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
-Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
-Message-ID: <20190301114523.GA7429@sirena.org.uk>
-References: <5c6702da.1c69fb81.12a14.4ece@mx.google.com>
- <20190215104325.039dbbd9c3bfb35b95f9247b@linux-foundation.org>
- <20190215185151.GG7897@sirena.org.uk>
- <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
- <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
- <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v3 09/34] m68k: mm: Add p?d_large() definitions
+References: <20190227170608.27963-1-steven.price@arm.com>
+ <20190227170608.27963-10-steven.price@arm.com>
+ <CAMuHMdXCjuurBiFzQBeLPUFu=mmSowvb=37XyWmF_=xVhkQm4g@mail.gmail.com>
+ <20190228113653.GB3766@rapoport-lnx>
+ <CAMuHMdU5gn6ftAHNwHNPDoUy_JvcZLcXbkk1hvUmYxtfJRfTTQ@mail.gmail.com>
+ <a17f5ad7-9fba-9d51-4d6e-7a9effe81e4e@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
-X-Cookie: Yow!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a17f5ad7-9fba-9d51-4d6e-7a9effe81e4e@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19030111-0012-0000-0000-000002FBBE46
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030111-0013-0000-0000-000021336E2C
+Message-Id: <20190301114553.GC5156@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903010083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 28, 2019 at 12:04:08PM +0000, Steven Price wrote:
+> On 28/02/2019 11:53, Geert Uytterhoeven wrote:
+> > Hi Mike,
+> > 
+> > On Thu, Feb 28, 2019 at 12:37 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >> On Wed, Feb 27, 2019 at 08:27:40PM +0100, Geert Uytterhoeven wrote:
+> >>> On Wed, Feb 27, 2019 at 6:07 PM Steven Price <steven.price@arm.com> wrote:
+> >>>> walk_page_range() is going to be allowed to walk page tables other than
+> >>>> those of user space. For this it needs to know when it has reached a
+> >>>> 'leaf' entry in the page tables. This information is provided by the
+> >>>> p?d_large() functions/macros.
+> >>>>
+> >>>> For m68k, we don't support large pages, so add stubs returning 0
+> >>>>
+> >>>> CC: Geert Uytterhoeven <geert@linux-m68k.org>
+> >>>> CC: linux-m68k@lists.linux-m68k.org
+> >>>> Signed-off-by: Steven Price <steven.price@arm.com>
+> >>>
+> >>> Thanks for your patch!
+> >>>
+> >>>>  arch/m68k/include/asm/mcf_pgtable.h      | 2 ++
+> >>>>  arch/m68k/include/asm/motorola_pgtable.h | 2 ++
+> >>>>  arch/m68k/include/asm/pgtable_no.h       | 1 +
+> >>>>  arch/m68k/include/asm/sun3_pgtable.h     | 2 ++
+> >>>>  4 files changed, 7 insertions(+)
+> >>>
+> >> Maybe I'm missing something, but why the stubs have to be defined in
+> >> arch/*/include/asm/pgtable.h rather than in include/asm-generic/pgtable.h?
+> > 
+> > That would even make more sense, given most architectures don't
+> > support huge pages.
+> 
+> Where the architecture has folded a level stubs are provided by the
+> asm-generic layer, see this later patch:
+> 
+> https://lore.kernel.org/lkml/20190227170608.27963-25-steven.price@arm.com/
+> 
+> However just because an architecture port doesn't (currently) support
+> huge pages doesn't mean that the architecture itself can't have large[1]
+> mappings at higher levels of the page table. For instance an
+> architecture might use large pages for the linear map but not support
+> huge page mappings for user space.
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Well, I doubt m68k can support large mappings at higher levels at all.
+This, IMHO, applies to many other architectures and spreading p?d_large all
+over those architecture seems wrong to me...
 
-On Thu, Feb 28, 2019 at 03:14:38PM -0800, Andrew Morton wrote:
+> My previous posting of this series attempted to define generic versions
+> of p?d_large(), but it was pointed out to me that this was fragile and
+> having a way of knowing whether the page table was a 'leaf' is actually
+> useful, so I've attempted to implement for all architectures. See the
+> discussion here:
+> https://lore.kernel.org/lkml/20190221113502.54153-1-steven.price@arm.com/T/#mf0bd0155f185a19681b48a288be212ed1596e85d
 
-> hm, does bot@kernelci.org actually read emails?  Let's try info@ as well..
+I'll reply on that thread, somehow I missed it then.
+ 
+> Steve
+> 
 
-bot@ isn't reading mails but it copies people who can look at stuff on
-what it sends out.
+-- 
+Sincerely yours,
+Mike.
 
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlx5G1AACgkQJNaLcl1U
-h9DjOAf+PPHQ/BVl5TBqjfMNMuiPCeaKRG1c8zsb8fiR194RFwgdwNGWRE8HcRXk
-AN30FaxyXFI+y7WhlvBmJj3kCLHiP1ZXpDFU7XOpFLEcPdSqjMyYZttxSM5Dztdg
-s5M58t9V3ic2Panl7J+yq2e2U3aC8NRui2v8RgsEaXNo++uKkEHRbQy5O8+sp57B
-ScsEjIa6hWFmy0XZBOSAWSCo+ev7nIiqTdV7EFcYyD9B/TGzJQKvExT5qqq8NYDy
-N2U7xhc4a3pWHmtfkyAYfG9MZw8e1nlnoRZqOETEApoI7T1XG0af2C2CyenZ/YER
-MQQzHE5/oVawoiZ1dtzvnsn32Nfl3Q==
-=VHFA
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
