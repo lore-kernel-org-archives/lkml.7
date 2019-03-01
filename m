@@ -2,179 +2,100 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ECDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AA5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4069205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E454F2083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:27:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="LrEuuV+I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9uoAXRf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfCAXYL (ORCPT
+        id S1726922AbfCAX11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 18:24:11 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43239 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfCAXYK (ORCPT
+        Fri, 1 Mar 2019 18:27:27 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35808 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfCAX11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 18:24:10 -0500
-Received: by mail-oi1-f195.google.com with SMTP id i8so20896410oib.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 15:24:10 -0800 (PST)
+        Fri, 1 Mar 2019 18:27:27 -0500
+Received: by mail-pg1-f194.google.com with SMTP id e17so10093714pgd.2;
+        Fri, 01 Mar 2019 15:27:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e/UacENV4WbTWn1Wv4mMZSa64/NkU5mKPQz23H0xeho=;
-        b=LrEuuV+IJvMczvVVPcuvT5TWXSzjpQ/ZEYOa3ATCb0IGPlZI6PBIoEIhD2d4SaF+6B
-         ER4xENxMb5DXuN+04gnHDtjX7ExDvGPsuVvFpMJMyjeRIeGALodtjrGulXXKqcGTMzO+
-         ZejNO74xfPy6yS1rGx6ZriPwFoa0Cpw5R1BUdKxm6MugC+Istff/AfN79pWSWddriD5v
-         yEwAnelOnso5ntUkTpx5I+jqkZNhQlR7MG55obCnTDDjMEOb7394kwg+WZs7lZL8OSf0
-         2oIHnrQK4+Fm1PgC1yStNInxU+VT8HkTBW5Nb9RPWVn7QrSnte0JCEYrQGYp1oRj7EyU
-         xQQQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CxMSec5AAtG8cchuHxOJ8OypYLZfqDq4LNUDOOaJjUA=;
+        b=X9uoAXRfwenhnt8LTzzikS/SKYVE0drhKmZ7pka/+x2jl8s1SM2JZtrLEpdlpgJScn
+         Sx3Rq2uDsJY3NyyMcQcjDicPPFsknNYothU0A8b+wasMh/acgO/mn20MYLcifvaXrG90
+         v8/VQ/hJd9VwU8o54i8E51mBXyYRl3DQB11H+GmDc0hiKuBYpqTUQECLqj5ns+XiwhPV
+         Pxl+yavAl/BRelnaHBS1cwzHkwvU0sDCfjTdhaHinGN2XP21IXULGr4Y57gmw2+DVo2B
+         gaWX63qa9rL77FhoAlYOjKdFvdBp5pq38vAeNsG/rJThg1Poe+6ilTl7ugi8DVwG4lMl
+         /lbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e/UacENV4WbTWn1Wv4mMZSa64/NkU5mKPQz23H0xeho=;
-        b=TF3gj+0NeOocgFUhK05iryrmtdVN85gFDrxH722wEPE5qFtihTSq6tOrvaDFZj+pi9
-         F3sIINvRZbdgEEVBxmwuKv/iKI8YNmZ8KklajkOI0WYqBmXChzz2+xYfiXZ2X/9JEDO2
-         wQx0IkITsAUjfQC385NkoThapRm6AwAVJzwBWqrRDEcVd76RVPj1btK24OapFnmI8waD
-         f0QuPvdBxZAy5Acos9P1y+wmTPlqU6NZOA7D/3vxV9T0YJvBAE1YHC0tgXzjqhkfYahO
-         CyrJ2qiCugfQBHY9vdEIyTXKAZ/3sR5kTFMN/FHxEVCtRRufcVn/5m47zXC/RCDM+v+o
-         Zg+A==
-X-Gm-Message-State: APjAAAUN6nus4hjL4BNUNwI0vXuyc5ton5Pz86Pw7aVeQj8ZnFfRdr2S
-        yG0b0kqIUeJ75TD6FErs5mDiWBcJHHVAMIc0gx97VQ==
-X-Google-Smtp-Source: APXvYqxYvcFwspRUzJfzOBv3qA35nU7UHDvw0dm0OA2N3TnJ0A6UpkfhFLloJaDEc2+G0X+4yC4DtRjHLHdFvHFwRjE=
-X-Received: by 2002:aca:cc0f:: with SMTP id c15mr5285857oig.105.1551482649622;
- Fri, 01 Mar 2019 15:24:09 -0800 (PST)
-MIME-Version: 1.0
-References: <5c6702da.1c69fb81.12a14.4ece@mx.google.com> <20190215104325.039dbbd9c3bfb35b95f9247b@linux-foundation.org>
- <20190215185151.GG7897@sirena.org.uk> <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
- <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
- <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
- <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
- <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com> <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
- <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com>
-In-Reply-To: <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 1 Mar 2019 15:23:58 -0800
-Message-ID: <CAPcyv4hMNiiM11ULjbOnOf=9N=yCABCRsAYLpjXs+98bRoRpCA@mail.gmail.com>
-Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CxMSec5AAtG8cchuHxOJ8OypYLZfqDq4LNUDOOaJjUA=;
+        b=hWI7GFVglsj2fLqdtcTotjseb3ASLGBDVrXdQboOgjfVgnftpjCOn/fsooeQkKCzvU
+         /vQGdbip7cVMSYDOgQbdevVuWXTnP16JVBu3Z7U6sWK89z1IeUZXgFf2DTrSFxfuZaBn
+         pQLvOnZr6ejbXy//LP++oMaNRH0lRuvn4rYvwVL+TiIWdjUBHAYgAVugGFwko6hs4FGq
+         py2Iq2qSYg72Gl7yd7vigLDen2fa9M7hRhdbp+ESfCqyk2wYvyr5o8qWLEu807GrswhI
+         pMLHVae9+VjsONPAuNUA4aSp+I2K/R1LURSa1E7RLoWllO3+lntXEAOIWhh0Fv4l54mg
+         KtQQ==
+X-Gm-Message-State: AHQUAuaTmH73ONE0e8pcrsh8fjAgR6Gb/JK6adxP7CPfhneupFQgXAB4
+        WnUFmzXiZfKRzFBNtrYNXaiyLC0e
+X-Google-Smtp-Source: AHgI3IYnUExlCtfQo+7EuyNOsLopWhv9SZJpICuL6fJBoSM3Bh2DEo+aV9yh3Kk18iTZe8BDhOXI/Q==
+X-Received: by 2002:a62:bd09:: with SMTP id a9mr8119475pff.61.1551482845824;
+        Fri, 01 Mar 2019 15:27:25 -0800 (PST)
+Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
+        by smtp.googlemail.com with ESMTPSA id j197sm38618108pgc.76.2019.03.01.15.27.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Mar 2019 15:27:24 -0800 (PST)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     Tim Harvey <tharvey@gateworks.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] media: imx: vdic: Fix wrong CSI group ID
+Date:   Fri,  1 Mar 2019 15:27:17 -0800
+Message-Id: <20190301232717.4125-1-slongerbeam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 1:05 PM Guillaume Tucker
-<guillaume.tucker@collabora.com> wrote:
->
-> On 01/03/2019 20:41, Andrew Morton wrote:
-> > On Fri, 1 Mar 2019 09:25:24 +0100 Guillaume Tucker <guillaume.tucker@collabora.com> wrote:
-> >
-> >>>>> Michal had asked if the free space accounting fix up addressed this
-> >>>>> boot regression? I was awaiting word on that.
-> >>>>
-> >>>> hm, does bot@kernelci.org actually read emails?  Let's try info@ as well..
-> >>
-> >> bot@kernelci.org is not person, it's a send-only account for
-> >> automated reports.  So no, it doesn't read emails.
-> >>
-> >> I guess the tricky point here is that the authors of the commits
-> >> found by bisections may not always have the hardware needed to
-> >> reproduce the problem.  So it needs to be dealt with on a
-> >> case-by-case basis: sometimes they do have the hardware,
-> >> sometimes someone else on the list or on CC does, and sometimes
-> >> it's better for the people who have access to the test lab which
-> >> ran the KernelCI test to deal with it.
-> >>
-> >> This case seems to fall into the last category.  As I have access
-> >> to the Collabora lab, I can do some quick checks to confirm
-> >> whether the proposed patch does fix the issue.  I hadn't realised
-> >> that someone was waiting for this to happen, especially as the
-> >> BeagleBone Black is a very common platform.  Sorry about that,
-> >> I'll take a look today.
-> >>
-> >> It may be a nice feature to be able to give access to the
-> >> KernelCI test infrastructure to anyone who wants to debug an
-> >> issue reported by KernelCI or verify a fix, so they won't need to
-> >> have the hardware locally.  Something to think about for the
-> >> future.
-> >
-> > Thanks, that all sounds good.
-> >
-> >>>> Is it possible to determine whether this regression is still present in
-> >>>> current linux-next?
-> >>
-> >> I'll try to re-apply the patch that caused the issue, then see if
-> >> the suggested change fixes it.  As far as the current linux-next
-> >> master branch is concerned, KernelCI boot tests are passing fine
-> >> on that platform.
-> >
-> > They would, because I dropped
-> > mm-shuffle-default-enable-all-shuffling.patch, so your tests presumably
-> > now have shuffling disabled.
-> >
-> > Is it possible to add the below to linux-next and try again?
->
-> I've actually already done that, and essentially the issue can
-> still be reproduced by applying that patch.  See this branch:
->
->   https://gitlab.collabora.com/gtucker/linux/commits/next-20190301-beaglebone-black-debug
->
-> next-20190301 boots fine but the head fails, using
-> multi_v7_defconfig + SMP=n in both cases and
-> SHUFFLE_PAGE_ALLOCATOR=y enabled in the 2nd case as a result
-> of the change in the default value.
->
-> The change suggested by Michal Hocko on Feb 15th has now been
-> applied in linux-next, it's part of this commit but as
-> explained above it does not actually resolve the boot failure:
->
->   98cf198ee8ce mm: move buddy list manipulations into helpers
->
-> I can send more details on Monday and do a bit of debugging to
-> help narrowing down the problem.  Please let me know if
-> there's anything in particular that would seem be worth
-> trying.
->
+The i.MX7 capture support forgot to change the group ID for the CSI
+to the IPU CSI in VDIC sub-device, it was left at the i.MX7 CSI
+group ID.
 
-Thanks for taking a look!
+Fixes: 67673ed55084 ("media: staging/imx: rearrange group id to take in account IPU")
 
-Some questions when you get a chance:
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+---
+ drivers/staging/media/imx/imx-media-vdic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Is there an early-printk facility that can be turned on to see how far
-we get in the boot?
+diff --git a/drivers/staging/media/imx/imx-media-vdic.c b/drivers/staging/media/imx/imx-media-vdic.c
+index 2808662e2597..d36f6936c365 100644
+--- a/drivers/staging/media/imx/imx-media-vdic.c
++++ b/drivers/staging/media/imx/imx-media-vdic.c
+@@ -744,7 +744,7 @@ static int vdic_link_setup(struct media_entity *entity,
+ 		remote_sd = media_entity_to_v4l2_subdev(remote->entity);
+ 
+ 		/* direct pad must connect to a CSI */
+-		if (!(remote_sd->grp_id & IMX_MEDIA_GRP_ID_CSI) ||
++		if (!(remote_sd->grp_id & IMX_MEDIA_GRP_ID_IPU_CSI) ||
+ 		    remote->index != CSI_SRC_PAD_DIRECT) {
+ 			ret = -EINVAL;
+ 			goto out;
+-- 
+2.17.1
 
-Do any of the QEMU machine types [1] approximate this board? I.e. so I
-might be able to independently debug.
-
-Were there any boot *successes* on ARM with shuffling enabled? I.e.
-clues about what's different about the specific memory setup for
-beagle-bone-black.
-
-Thanks for the help!
-
-[1]: https://wiki.qemu.org/Documentation/Platforms/ARM
