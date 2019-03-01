@@ -2,166 +2,103 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F22AC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C51C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0627520850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22AA120818
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Le5Ueu53"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0Xjuktk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389424AbfCARWB (ORCPT
+        id S2389427AbfCAR2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:22:01 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43379 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388088AbfCARWB (ORCPT
+        Fri, 1 Mar 2019 12:28:08 -0500
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:34019 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbfCAR2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:22:01 -0500
-Received: by mail-qt1-f196.google.com with SMTP id y4so28594245qtc.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 09:22:00 -0800 (PST)
+        Fri, 1 Mar 2019 12:28:08 -0500
+Received: by mail-ot1-f46.google.com with SMTP id 98so21684891oty.1;
+        Fri, 01 Mar 2019 09:28:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U/9thOjurA+lIRFK0bp+ZG70JtmlEraTbsN+PJD2O9I=;
-        b=Le5Ueu53kunQMlXpyqwk2e4kYM6t5IvX9AiUfdGQPxrJ+VxZfmHQWHOJuSdMOPIR34
-         PQ6VZS1rE/d5mtizV/jGDXMz0UYRflhcUPSg5ynGCSn8TDqDFvpGOx85DqwQtavqgkFR
-         +TzA2XnKhu3cb9avBoiHXkJ4xszJSyLbVco+s=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=d8r6807PpZ/TrsR3U6y8O/oH0JFdHC7CmGaGmHjEVpI=;
+        b=T0XjuktkrikDrLTLkcCCbiWcnwmlt+e2gANDJHiMllCpSSwvHrj28+WkNCpXGkc1Qn
+         TnUEw5m2KOcWlEBZRcsZciCwrwSWMHewYOiO0iSzLTOWf/2bY8rlYLoH2C7gnOP6uXce
+         MTwLbHz6uM/ado2gcRkUmas82nYu5E7r8Gi+T5rCMyoItk1J9ci9VPX+eo0E+HAYxnri
+         BMPQbjhs8XIqkUOtxjzQYSGOsQr9lLI6nDXmYcK6vRHbaVxbpFhbFUZgY0LcGhRploJJ
+         AY3ddapJbaZO2pSmptDcOysw8WGifvnMi37hlS3nfLZMho0TD4XkyhArXGQlwFeJTUWO
+         SHMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U/9thOjurA+lIRFK0bp+ZG70JtmlEraTbsN+PJD2O9I=;
-        b=ih1tEKn3OV+vcB905h5nQSgPuwrwXWxqQHErPu8l75TiNPadiqXnGlTivu4dQH8Pue
-         fwUgpggoHzM+PMiMvUNH1ouInqVbX35Chp75I3yMSCt9sf8xmIR2q0pJ3+uTStlHLo8B
-         +F77niH0ZJmlDFsMPNb9V7zN7rOuAKl5OiANJeIMHPqqpmRcrJpN+GNoPHR2DCLy0BJ7
-         8Pof1lPz2nEh7IRaug6j33nlqyNGzkyhr9nmT+KikwmKqRmi0lNqz+e0hZN2JO8VZJN3
-         xyu00R3k59tKQVwgm8L3o/OFn37WoIHsM3v78sXm8p+NHbBZxXVlxT+7XKcPWPEebRDC
-         XoFw==
-X-Gm-Message-State: APjAAAX/OnDNfW7wsWuyi8OTIw6dvmKif8AafK/grbk+tSf+INIuvLUF
-        b6rqk+tGndu+bnS5OMB/KypBxg==
-X-Google-Smtp-Source: APXvYqx8qELjvvbvGFW2ax0aQPeF/drI8AnPQBY3nP2jPcGHy8fpGhR7rluWFXj7RpbHZCvxdQ0R2w==
-X-Received: by 2002:ac8:2bc1:: with SMTP id n1mr4777281qtn.176.1551460919817;
-        Fri, 01 Mar 2019 09:21:59 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id j139sm12403640qke.26.2019.03.01.09.21.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 09:21:58 -0800 (PST)
-Date:   Fri, 1 Mar 2019 12:21:58 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
-        atishp04@gmail.com, dancol@google.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        paulmck@linux.vnet.ibm.com,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, rdunlap@infradead.org, rostedt@goodmis.org,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190301172158.GB217990@google.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <20190228173444.54403795211d80ba540b61cb@kernel.org>
- <20190228150054.GB156098@google.com>
- <20190301112826.ced40b59fb7e8118fa5b40d6@kernel.org>
- <20190301032611.GA78818@google.com>
- <20190301160309.2ddadeeb4aadbab4cdc88171@kernel.org>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d8r6807PpZ/TrsR3U6y8O/oH0JFdHC7CmGaGmHjEVpI=;
+        b=JV0i0m7l6frbbRGpLTNMUSJmP67YyifYoAXnmW7pHVGR8KFVg49/3EcWlBXcykWxEo
+         KBDkk9jdVDcd441jkeR5XYjXV9QfMXP03JEtlgG5jDt4aOL4uH8DKIedXS2Gv39XaloJ
+         NDYrukHHT98ej00ex5Wm1Nka3esdn488P8Qv+1+8ae9wyhkJbDo127VtrfaoXnFLW2ic
+         pLfNvNnJgoq/JIoLi4cmKqlEPvSMD2t3DQ53Dw92HPrZtbvATpUx521vINMD/qKKDb5a
+         UmPXf4X2Nvdoxa+Pip5YGgDIPUlfGSIVzXd1YgaG2/GqzOohzncL7zjF15fdebBEHuvw
+         2TPw==
+X-Gm-Message-State: APjAAAVLoqeWKPzjX6i4xmDUeyG+uNZYsEXbsKYEl6JXC0IMoa2bxtN6
+        cxZMEEUKIo1Y1z07a71igB+GjlQO
+X-Google-Smtp-Source: APXvYqyPRpFfpzhLuJUqA3CUY2x3YUwBHwpPGarQsf+tzdpzr/nVLFJekZugYflZNU4478KEEq87rg==
+X-Received: by 2002:a9d:6d0c:: with SMTP id o12mr4263183otp.256.1551461287138;
+        Fri, 01 Mar 2019 09:28:07 -0800 (PST)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id l64sm9263092oif.44.2019.03.01.09.28.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Mar 2019 09:28:05 -0800 (PST)
+Subject: Re: Realtek r8822be kernel module does not negotiate 802.11ac
+ connection
+To:     "David R. Bergstein" <david.r.bergstein@gmail.com>,
+        Tony Chuang <yhchuang@realtek.com>
+Cc:     Pkshih <pkshih@realtek.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <51d62a31-7cde-e815-bdee-4ef5433007aa@gmail.com>
+ <F7CD281DE3E379468C6D07993EA72F84D17AF74C@RTITMBSVM04.realtek.com.tw>
+ <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <e68c6aae-8d71-266a-81fe-d078ac1ef38c@lwfinger.net>
+Date:   Fri, 1 Mar 2019 11:28:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190301160309.2ddadeeb4aadbab4cdc88171@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 04:03:09PM +0900, Masami Hiramatsu wrote:
-> Hi Joel,
+On 2/28/19 8:32 PM, David R. Bergstein wrote:
+> Tony,
 > 
-> On Thu, 28 Feb 2019 22:26:11 -0500
-> Joel Fernandes <joel@joelfernandes.org> wrote:
-> 
-> > On Fri, Mar 01, 2019 at 11:28:26AM +0900, Masami Hiramatsu wrote:
-[..]
-> > There are many usecases for this, I have often run into issues with Linux
-> > over the years not only with Android, but other distros, where I boot custom
-> > kernels with no linux-headers package. This is quite painful. It is
-> > convenient to have it as /proc file since the file is dependent on kernel
-> > being booted up and this will work across all Linux distros and systems. I
-> > feel that if you can keep an open mind about it, you will see that a lot of
-> > people will use this feature if it is accepted and there is a lot of positive
-> > feedback in earlier posts of this set.
-> 
-> I don't complain about having headers for custom boot kernel. I agree with you
-> that having kernel headers for debugging is always good. :)
-> So google recommends built-in, it is reasonable.
+> Thanks for your response.  Can you advise as to the availability of the
+> new rtw88 driver?  As it appears to be under development, I could not
+> locate a copy of the code for local compilation.
 
-Ok, thanks :)
+David,
 
-> > > > > > The code to read the headers is based on /proc/config.gz code and uses
-> > > > > > the same technique to embed the headers.
-> > > > > > 
-> > > > > > To build a module, the below steps have been tested on an x86 machine:
-> > > > > > modprobe kheaders
-> > > > > > rm -rf $HOME/headers
-> > > > > > mkdir -p $HOME/headers
-> > > > > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> > > > > > cd my-kernel-module
-> > > > > > make -C $HOME/headers M=$(pwd) modules
-> > > > > > rmmod kheaders
-> > > > > 
-> > > > > It seems a bit complex, but no difference from compared with carrying
-> > > > > kheaders.tar.gz. I think we would better have a psudo filesystem
-> > > > > which can mount this compressed header file directly :) Then it becomes
-> > > > > simpler, like
-> > > > > 
-> > > > > modprobe headerfs
-> > > > > mkdir $HOME/headers
-> > > > > mount -t headerfs $HOME/headers
-> > > > > 
-> > > > > And this doesn't consume any disk-space.
-> > > > 
-> > > > I felt using a compressed tar is really the easiest way because of all the
-> > > > tools are already available.
-> > > 
-> > > As I asked above, if the pure tarball is useful, you can simply ask vendors
-> > > to put the header tarball on their vendor directory. I feel making it as
-> > > a module is not a right way.
-> > 
-> > I don't see what is the drawback of making it a module, it makes it well
-> > integrated into kernel build and ecosystem. I also didn't see any
-> > justification you're providing about why it cannot be a module. If you go
-> > through this and earlier threads, a lot of people are Ok with having a module
-> > option. And I asked several top kernel maintainers at LPC and many people
-> > suggested having it as a module.
-> 
-> I meant, if we have a tarball, we don't need any operation of loading/unloading
-> kmodules. But if we have this as built-in, yes, this would be much easier to
-> deploy it to device.
-> 
-> Anyway, having that option (make it as a module) is not bad. IMHO, that may
-> be more complicated than just have a tarball file, but it is a user's choice.
-> 
-> OK, now I understand it.
+Use the command 'git clone http://github.com/lwfinger/rtlwifi_new.git -b rtw88' 
+to get a copy of the new driver for RTL8822BE and RTL8822CE in a stand-alone 
+form. All that is needed is 'cd rtlwifi_new && make && sudo make install'. This 
+version will build on kernels v4.4 and newer. As I have time, I will be 
+backporting to kernels at least as old as 4.0.
 
-Sounds good. :) Just sent out v4.
+I would appreciate your comments and bug reports.
 
-thanks,
+Larry
 
- - Joel
 
