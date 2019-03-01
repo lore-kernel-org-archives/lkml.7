@@ -2,212 +2,201 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34E4C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DCEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D92E2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D361B2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="fsLaLx6Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733301AbfCAJf7 (ORCPT
+        id S2387413AbfCAJhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 04:35:59 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44838 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733133AbfCAJf6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 04:35:58 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x219T7Z0114306
-        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 04:35:57 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qy1tk9bwt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 04:35:57 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 1 Mar 2019 09:35:54 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 1 Mar 2019 09:35:51 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x219ZnF627525144
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Mar 2019 09:35:49 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 75ECB11C054;
-        Fri,  1 Mar 2019 09:35:49 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E329711C04A;
-        Fri,  1 Mar 2019 09:35:48 +0000 (GMT)
-Received: from [9.152.224.140] (unknown [9.152.224.140])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 Mar 2019 09:35:48 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v4 5/7] s390: ap: implement PAPQ AQIC interception in
- kernel
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
- <1550849400-27152-6-git-send-email-pmorel@linux.ibm.com>
- <a7be3d71-6392-4ff3-5bd5-60429b8a61c0@de.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Fri, 1 Mar 2019 10:35:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 1 Mar 2019 04:37:54 -0500
+Received: from mail-eopbgr690078.outbound.protection.outlook.com ([40.107.69.78]:8992
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727697AbfCAJhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 04:37:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lKFc99TszkQPWD0BXLhaOJ/CnMlOpCo1QkwGE2QZKNs=;
+ b=fsLaLx6QDGfdPNfTNnpQSwaUW5nDzZOwRI5VyMMOK4yXWxNRPVMU2G58H199J1GVPncp4TCB7QkzPlDRslp3OVBB5Mvj70bW2XyyL1h+9acwN1LQjxYy+N0/lz+oVOyVjyy1bY2pnvbIZfW2qlnfZlIFMKLIr+Z4x9CMQi+Z2Oc=
+Received: from BL0PR02CA0071.namprd02.prod.outlook.com (2603:10b6:207:3d::48)
+ by BN6PR02MB2753.namprd02.prod.outlook.com (2603:10b6:404:fa::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1643.18; Fri, 1 Mar
+ 2019 09:37:49 +0000
+Received: from CY1NAM02FT064.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::204) by BL0PR02CA0071.outlook.office365.com
+ (2603:10b6:207:3d::48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1665.18 via Frontend
+ Transport; Fri, 1 Mar 2019 09:37:48 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ CY1NAM02FT064.mail.protection.outlook.com (10.152.74.64) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1643.11
+ via Frontend Transport; Fri, 1 Mar 2019 09:37:48 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:57423 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1gzebz-0001DO-Sn; Fri, 01 Mar 2019 01:37:47 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1gzebu-0007rT-Ok; Fri, 01 Mar 2019 01:37:42 -0800
+Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x219bbiB025540;
+        Fri, 1 Mar 2019 01:37:37 -0800
+Received: from [172.19.2.152] (helo=xsjsatishna40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <rajan.vaja@xilinx.com>)
+        id 1gzebp-0007qc-3b; Fri, 01 Mar 2019 01:37:37 -0800
+From:   Rajan Vaja <rajan.vaja@xilinx.com>
+To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
+        <michals@xilinx.com>
+CC:     <rajan.vaja@xilinx.com>, <linux-kernel@vger.kernel.org>,
+        <JOLLYS@xilinx.com>, <anirudh@xilinx.com>,
+        <linux-serial@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2] tty: xilinx_uartps: Correct return value in probe
+Date:   Fri, 1 Mar 2019 01:37:08 -0800
+Message-ID: <1551433028-25207-1-git-send-email-rajan.vaja@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1543927882-15091-1-git-send-email-rajan.vaja@xilinx.com>
+References: <1543927882-15091-1-git-send-email-rajan.vaja@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(376002)(396003)(346002)(136003)(2980300002)(189003)(199004)(47776003)(54906003)(305945005)(110136005)(81156014)(16586007)(316002)(8936002)(356004)(2201001)(106466001)(6666004)(50226002)(63266004)(6636002)(44832011)(486006)(8676002)(126002)(81166006)(4326008)(2616005)(476003)(14444005)(106002)(50466002)(48376002)(51416003)(76176011)(72206003)(446003)(36386004)(11346002)(478600001)(77096007)(336012)(426003)(186003)(5660300002)(26005)(2906002)(7696005)(36756003)(9786002)(107986001)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2753;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:xapps1.xilinx.com,unknown-60-100.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-In-Reply-To: <a7be3d71-6392-4ff3-5bd5-60429b8a61c0@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030109-0008-0000-0000-000002C66DFC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030109-0009-0000-0000-00002232C2C3
-Message-Id: <44146ea5-8bdf-e986-6e6d-9cbfc104ba37@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903010066
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5f5659b3-3e2a-482b-8cb4-08d69e299131
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:BN6PR02MB2753;
+X-MS-TrafficTypeDiagnostic: BN6PR02MB2753:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Exchange-Diagnostics: 1;BN6PR02MB2753;20:4G8l6+A7QZ6jKfZF+MSRe1eTe91dfkm3nKcwUUHaNx/cu4A33Ynji/wKkoW3iSfPreVeELbUSczgDZhUekMG3kxO9AjmH1tn5FDqp95rDRK9ZxEYuKM9u/xOm/xy/9380NEGQXrovmNvcQbUPYClEX4hm4FMdCRYJf7s1PousHJtsLYIuDexHQmKxL57TWcz9LptV8HT9kTsNEAggqi9O9+IL8DTyrnbM2fNBLFNGQ7J6D3nQK+LseUbPs97s5mBm5RMXaPSfkqCVVsXiWUVBSxA5e/JA45GnA0eC9fCw0pKVgcjDWMJ4hQQyibYgSeoWBZbyZ2SqUkG7kp4mOc8MTZIjND+k23O4Mid19buUJtq7zCfftXobXgNph99XrXE8lHKrDTTH5Yg5rQ3HAO4mjXnAQXngWXq03Q217W+i8vKTdtdlnCu32hkHGCee0PWHy7FBLFfHCNUUUKpjAb+xaBRDA7mRJDmI6rq6m4uJEBouIKwEaLLYpGR9TnDlg+B
+X-Microsoft-Antispam-PRVS: <BN6PR02MB2753AD9C2BF865C0F13BFEBCB7760@BN6PR02MB2753.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 09634B1196
+X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1;BN6PR02MB2753;23:+oJfQsy9bXgQA9lYfAO1o25ssSuu9LfJ3/l2qGzmK?=
+ =?us-ascii?Q?oNvMrTOmNJx8SC1AJdApu28oyF4boAUAJ3KwqptwrJiQC7ByJXgtqWNgd7xS?=
+ =?us-ascii?Q?Ee4lpKs2Rs2ABEmAYa+Hd6Ij5O4mW+yLaDD3du2eXTYm62aTFKja8/7zI7Xu?=
+ =?us-ascii?Q?nDJ4fa6wEAA1JryXx4AK4PiF+f2omwFa+GFoCR1CenvB5ZnzrINDY9Bcl1lG?=
+ =?us-ascii?Q?fN1aToMtsnFVhUwpcc+2xKlyva6iXWdu0tFNHnXndgP1fqtIMSK1zBzrXfQL?=
+ =?us-ascii?Q?j1OPu4Ua+VS86COvePcB9VvkR2WYdqh9QxFo3A+xjdSVTavx0MFaf917KEgT?=
+ =?us-ascii?Q?oLKISzVuOim1KXLI5I2DW/8rMP52cPZr9GwTLXjqlZFT2GcA/W/O8NDUVWff?=
+ =?us-ascii?Q?0VD4hjzHYcrrXfUpTp1z8REfjRMPL7y+MUx7b1HnnpVkIt7Wxi0OIRovDlax?=
+ =?us-ascii?Q?BowuiIIsRSYbVymDbhFcdJq4/Jb5s42vs/IzWNarFabt3waSicO4oMzHJUCp?=
+ =?us-ascii?Q?wMn9K/gVIfqAieg8zseAd+YkDbRGzDF+oWkCem+/juO/womYmDdE88ggTCE/?=
+ =?us-ascii?Q?o7mEo61M7F7dGvf3YIcmMjjdiEHG+a+5M6sYnE8s7n+9b8HwTNV9IS56OX9y?=
+ =?us-ascii?Q?CXUAv+wXuAGB4pmTKfUmDMSISHeQRCPaAIW9EUGT/FvonmREeSvrrE4TyQhb?=
+ =?us-ascii?Q?Vbzvaxef5Zru6DmJtHmnfszdLwekkI8x+mpkPsM6FwID+ymabupMGR+nXKIZ?=
+ =?us-ascii?Q?GfyFaJ2Fc9+qSDqKm6o8cBQVw1CZ6GHt+9KpIiPRNxSGpoZ5+3A8c6XwJSWC?=
+ =?us-ascii?Q?7ZqPOyeDQwiAILJnM3rPd5W5guViOY+9ghoB9d7kQd7HEX4xt0xsvfJCznbD?=
+ =?us-ascii?Q?JTQtFnoYFUuFcZhCdnc9WHP+tLIk6pbOqFy3uaLAJVBfLSW2AQDRKpX6iCuQ?=
+ =?us-ascii?Q?P5DaYuRETiIxbVxo6tJ53mTxb6t4gCSErZkZLKe1seJATpGiGlTPY+o6GkZh?=
+ =?us-ascii?Q?gxBlQTNRnMumBJBt/99E+U6id94IuqAV2L0Rpp0X/7FntPNmZ6Q1L5160IuS?=
+ =?us-ascii?Q?Zyw+iRtSrXXXF6TrH6Hmz2QrkpAy1pG6AGcsq6j4/J2Bci0OpNs+GK/h45T6?=
+ =?us-ascii?Q?5uirvowKLIRvBngjpJ+HTkGCZtV55msS8YkbeTV0vx2z2qf6Yod4EqsSNhCJ?=
+ =?us-ascii?Q?DPBd6VWPSIUN1lPduMrVXYB/pKd2hx/Zc6p?=
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: qCuNd6tsJxgUGP4zfu8oVV7HXuqDY/CMRL2ToSbjvGsNUUDU9UL5+eNHeiXKs0zkQ5vlV02W7xaLD9Onh5r+QV1bmfe8WuQ1U+DPuwI/e9O2IXIA+mkeVcmvWWPW2vMm/JtrUjHaDmbBS929lE2KtX7qTuPrdp85S6hAX/x+FvqRqkj/nggIsCGul0G5/itNNE6LB++NT8U7HfXWXFJ+NhWGjxTVhLrwdB4NNt7TfnV3P1AnBWCwcl2NN2kDJs9P3Hc5IqulxbR4v9TcLSQBzErPbQJU1IkkV6Hp5jXjb4ERPvRjwvEPSqurpHuLjllQewV0EXalO3TZmOIuJU1wqoBuqS6+9nZPRaos+flXF8fpTc5TaXqQjZnZZCaY9XF6xJYFSKrs2W3iPO0QaAH69qBgCZzlo8B2r5vZFCHKv14=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2019 09:37:48.3364
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f5659b3-3e2a-482b-8cb4-08d69e299131
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2753
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 21:20, Christian Borntraeger wrote:
-> 
-> 
-> On 22.02.2019 16:29, Pierre Morel wrote:
->> We register the AP PQAP instruction hook during the open
->> of the mediated device. And unregister it on release.
->>
->> In the AP PQAP instruction hook, if we receive a demand to
->> enable IRQs,
->> - we retrieve the vfio_ap_queue based on the APQN we receive
->>    in REG1,
->> - we retrieve the page of the guest address, (NIB), from
->>    register REG2
->> - we the mediated device to use the VFIO pinning infratrsucture
->>    to pin the page of the guest address,
->> - we retrieve the pointer to KVM to register the guest ISC
->>    and retrieve the host ISC
->> - finaly we activate GISA
->>
->> If we receive a demand to disable IRQs,
->> - we deactivate GISA
->> - unregister from the GIB
->> - unping the NIB
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   arch/s390/include/asm/kvm_host.h      |   1 +
->>   drivers/s390/crypto/ap_bus.h          |   1 +
->>   drivers/s390/crypto/vfio_ap_ops.c     | 199 +++++++++++++++++++++++++++++++++-
->>   drivers/s390/crypto/vfio_ap_private.h |   1 +
->>   4 files changed, 199 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
->> index 49cc8b0..5f3bb8c 100644
->> --- a/arch/s390/include/asm/kvm_host.h
->> +++ b/arch/s390/include/asm/kvm_host.h
->> @@ -720,6 +720,7 @@ struct kvm_s390_cpu_model {
->>   struct kvm_s390_crypto {
->>   	struct kvm_s390_crypto_cb *crycb;
->>   	int (*pqap_hook)(struct kvm_vcpu *vcpu);
->> +	void *vfio_private;
->>   	__u32 crycbd;
->>   	__u8 aes_kw;
->>   	__u8 dea_kw;
->> diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
->> index bfc66e4..323f2aa 100644
->> --- a/drivers/s390/crypto/ap_bus.h
->> +++ b/drivers/s390/crypto/ap_bus.h
->> @@ -43,6 +43,7 @@ static inline int ap_test_bit(unsigned int *ptr, unsigned int nr)
->>   #define AP_RESPONSE_BUSY		0x05
->>   #define AP_RESPONSE_INVALID_ADDRESS	0x06
->>   #define AP_RESPONSE_OTHERWISE_CHANGED	0x07
->> +#define AP_RESPONSE_INVALID_GISA	0x08
->>   #define AP_RESPONSE_Q_FULL		0x10
->>   #define AP_RESPONSE_NO_PENDING_REPLY	0x10
->>   #define AP_RESPONSE_INDEX_TOO_BIG	0x11
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
->> index 1b5130a..0196065 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -43,7 +43,7 @@ struct vfio_ap_queue *vfio_ap_get_queue(int apqn, struct list_head *l)
->>   	return NULL;
->>   }
->>   
->> -static int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
->> +int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
->>   {
->>   	struct ap_queue_status status;
->>   	int retry = 20;
->> @@ -75,6 +75,27 @@ static int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
->>   	return -EBUSY;
->>   }
->>   
->> +/**
->> + * vfio_ap_free_irq:
->> + * @q: The vfio_ap_queue
->> + *
->> + * Unpin the guest NIB
->> + * Unregister the ISC from the GIB alert
->> + * Clear the vfio_ap_queue intern fields
->> + */
->> +static void vfio_ap_free_irq(struct vfio_ap_queue *q)
->> +{
->> +	if (!q)
->> +		return;
->> +	if (q->g_pfn)
->> +		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev), &q->g_pfn, 1);
->> +	if (q->isc)
->> +		kvm_s390_gisc_unregister(q->matrix_mdev->kvm, q->isc);
->> +	q->nib = 0;
->> +	q->isc = 0;
->> +	q->g_pfn = 0;
->> +}
-> 
-> Pierre, unless there is some magic, I think we need to free the gisa stuff before kvm exit.
-> 
-> Imagine a malicious userspace that setups everything fine, but then closes all kvm file
-> descriptors but not the vfio file descriptor. This might result in random access to the
-> memory that contained the gisa potentially resulting in random memory overwrites.
-> 
-> the problem is that kvm_destroy_vm calls kvm_arch_destroy_vm(kvm) before it calls
-> kvm_destroy_devices(kvm); So we already free the gisa before we do the unregister call.
-> 
-> What about calling kvm_get_kvm/put from some of the callbacks in the right places.
-> 
-> Debugging random memory overwrites is a PITA, so we either should document why I cannot
-> happen (even with malicious userspace) or simply fix the refcounting.
-> 
+Existing driver checks for alternate clock if devm_clk_get() fails
+and returns error code for last clock failure. If xilinx_uartps is
+called before clock driver, devm_clk_get() returns -EPROBE_DEFER.
+In this case, probe should not check for alternate clock as main
+clock is already present in DTS and return -EPROBE_DEFER only.
 
-OK, understood.
-I think we can do something simple by using kvm_get/kvm_put, as you 
-suggested, in the vfio KVM notifier to ensure the order of the calls and 
-also unregister the GISA at this moment.
-I will investigate in this direction.
+This patch fixes it by not checking for alternate clock when main
+clock get returns -EPROBE_DEFER.
 
-Thanks
-Pierre
+Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+---
+Changes in v2:
+  * Handle dynamic port allocation error cases
+---
+ drivers/tty/serial/xilinx_uartps.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-
-
-
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index 094f295..f7ae73e 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1547,27 +1547,33 @@ static int cdns_uart_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	cdns_uart_data->pclk = devm_clk_get(&pdev->dev, "pclk");
++	if (PTR_ERR(cdns_uart_data->pclk) == -EPROBE_DEFER) {
++		rc = PTR_ERR(cdns_uart_data->pclk);
++		goto err_out_unregister_driver;
++	}
++
+ 	if (IS_ERR(cdns_uart_data->pclk)) {
+ 		cdns_uart_data->pclk = devm_clk_get(&pdev->dev, "aper_clk");
+-		if (!IS_ERR(cdns_uart_data->pclk))
+-			dev_err(&pdev->dev, "clock name 'aper_clk' is deprecated.\n");
++		if (IS_ERR(cdns_uart_data->pclk)) {
++			rc = PTR_ERR(cdns_uart_data->pclk);
++			goto err_out_unregister_driver;
++		}
++		dev_err(&pdev->dev, "clock name 'aper_clk' is deprecated.\n");
+ 	}
+-	if (IS_ERR(cdns_uart_data->pclk)) {
+-		dev_err(&pdev->dev, "pclk clock not found.\n");
+-		rc = PTR_ERR(cdns_uart_data->pclk);
++
++	cdns_uart_data->uartclk = devm_clk_get(&pdev->dev, "uart_clk");
++	if (PTR_ERR(cdns_uart_data->uartclk) == -EPROBE_DEFER) {
++		rc = PTR_ERR(cdns_uart_data->uartclk);
+ 		goto err_out_unregister_driver;
+ 	}
+ 
+-	cdns_uart_data->uartclk = devm_clk_get(&pdev->dev, "uart_clk");
+ 	if (IS_ERR(cdns_uart_data->uartclk)) {
+ 		cdns_uart_data->uartclk = devm_clk_get(&pdev->dev, "ref_clk");
+-		if (!IS_ERR(cdns_uart_data->uartclk))
+-			dev_err(&pdev->dev, "clock name 'ref_clk' is deprecated.\n");
+-	}
+-	if (IS_ERR(cdns_uart_data->uartclk)) {
+-		dev_err(&pdev->dev, "uart_clk clock not found.\n");
+-		rc = PTR_ERR(cdns_uart_data->uartclk);
+-		goto err_out_unregister_driver;
++		if (IS_ERR(cdns_uart_data->uartclk)) {
++			rc = PTR_ERR(cdns_uart_data->uartclk);
++			goto err_out_unregister_driver;
++		}
++		dev_err(&pdev->dev, "clock name 'ref_clk' is deprecated.\n");
+ 	}
+ 
+ 	rc = clk_prepare_enable(cdns_uart_data->pclk);
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+2.7.4
 
