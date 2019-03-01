@@ -2,57 +2,49 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460FDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8561C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1518D2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FBD42186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfCAGwe (ORCPT
+        id S1727989AbfCAGy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 01:52:34 -0500
-Received: from mga04.intel.com ([192.55.52.120]:48665 "EHLO mga04.intel.com"
+        Fri, 1 Mar 2019 01:54:29 -0500
+Received: from foss.arm.com ([217.140.101.70]:58474 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbfCAGwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 01:52:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 22:52:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,426,1544515200"; 
-   d="scan'208";a="303501791"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 28 Feb 2019 22:52:33 -0800
-Received: from [10.251.86.205] (abudanko-mobl.ccr.corp.intel.com [10.251.86.205])
-        by linux.intel.com (Postfix) with ESMTP id EFFB358011C;
-        Thu, 28 Feb 2019 22:52:30 -0800 (PST)
-Subject: Re: [PATCH v4 01/10] feature: implement libzstd check, LIBZSTD_DIR
- and NO_LIBZSTD defines
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
- <e729df84-1b0e-d402-c03e-c1729d4ec43d@linux.intel.com>
- <20190228184612.GF9508@kernel.org>
- <33eb224d-3974-ebaa-20b7-9dbb66711839@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <60b8c13f-75c8-8402-74ad-95f10ec631cd@linux.intel.com>
-Date:   Fri, 1 Mar 2019 09:52:28 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        id S1725290AbfCAGy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 01:54:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EFDCEBD;
+        Thu, 28 Feb 2019 22:54:28 -0800 (PST)
+Received: from [172.20.0.134] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A8A23F5C1;
+        Thu, 28 Feb 2019 22:54:27 -0800 (PST)
+Subject: Re: [PATCH v5 01/10] arm64: Provide a command line to disable
+ spectre_v2 mitigation
+To:     Jeremy Linton <jeremy.linton@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
+        suzuki.poulose@arm.com, Dave.Martin@arm.com,
+        shankerd@codeaurora.org, julien.thierry@arm.com,
+        mlangsdo@redhat.com, stefan.wahren@i2e.com,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org
+References: <20190227010544.597579-1-jeremy.linton@arm.com>
+ <20190227010544.597579-2-jeremy.linton@arm.com>
+From:   Andre Przywara <andre.przywara@arm.com>
+Message-ID: <c993f3c5-a2c1-98c8-7b63-2c7b22aeeb23@foss.arm.com>
+Date:   Fri, 1 Mar 2019 00:54:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <33eb224d-3974-ebaa-20b7-9dbb66711839@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190227010544.597579-2-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,96 +52,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 28.02.2019 23:11, Alexey Budankov wrote:
+On 2/26/19 7:05 PM, Jeremy Linton wrote:
+> There are various reasons, including bencmarking, to disable spectrev2
+> mitigation on a machine. Provide a command-line to do so.
 > 
-> On 28.02.2019 21:46, Arnaldo Carvalho de Melo wrote:
->> Em Thu, Feb 28, 2019 at 11:59:01AM +0300, Alexey Budankov escreveu:
->>> +++ b/tools/build/Makefile.feature
->>> @@ -66,7 +66,8 @@ FEATURE_TESTS_BASIC :=                  \
->>>          sched_getcpu			\
->>>          sdt				\
->>>          setns				\
->>> -        libaio
->>> +        libaio				\
->>> +        libzstd
->>
->> Since you added this as a basic feature to test, add this when you
->> resubmit, so that 'perf -vv' tells us that this basic feature is indeed
->> present.
-> 
-> Yes, will do. Actually came to similar idea when 
-> observed your test report in pull requests:
-> 
-> # perf version --build-options
->   perf version 5.0.rc5.gde667c
->                    dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
->       dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
->                    glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
->                     gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
->            syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
->                   libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
->                   libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
->                  libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
->   numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
->                  libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
->                libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
->                 libslang: [ on  ]  # HAVE_SLANG_SUPPORT
->                libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
->                libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
->       libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
->                     zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
->                     lzma: [ on  ]  # HAVE_LZMA_SUPPORT
->                get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
->                      bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-> 
-> and it misses HAVE_ZSTD_SUPPORT define.
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 
-implemented this:
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 
-tools/perf/perf -vv
-perf version 4.13.rc5.g20492c
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-                  gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT		<=
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT		<=
+Cheers,
+Andre.
 
-~Alexey
-
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> ---
+>   Documentation/admin-guide/kernel-parameters.txt |  8 ++++----
+>   arch/arm64/kernel/cpu_errata.c                  | 13 +++++++++++++
+>   2 files changed, 17 insertions(+), 4 deletions(-)
 > 
-> Thanks,
-> Alexey
-> 
->>
->>
->> diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
->> index 50df168be326..d41197fc8cef 100644
->> --- a/tools/perf/builtin-version.c
->> +++ b/tools/perf/builtin-version.c
->> @@ -78,6 +78,7 @@ static void library_status(void)
->>  	STATUS(HAVE_LZMA_SUPPORT, lzma);
->>  	STATUS(HAVE_AUXTRACE_SUPPORT, get_cpuid);
->>  	STATUS(HAVE_LIBBPF_SUPPORT, bpf);
->> +	STATUS(HAVE_ZSTD_SUPPORT, bpf);
->>  }
->>  
->>  int cmd_version(int argc, const char **argv)
->>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 858b6c0b9a15..4d4d6a9537ae 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2842,10 +2842,10 @@
+>   			check bypass). With this option data leaks are possible
+>   			in the system.
+>   
+> -	nospectre_v2	[X86,PPC_FSL_BOOK3E] Disable all mitigations for the Spectre variant 2
+> -			(indirect branch prediction) vulnerability. System may
+> -			allow data leaks with this option, which is equivalent
+> -			to spectre_v2=off.
+> +	nospectre_v2	[X86,PPC_FSL_BOOK3E,ARM64] Disable all mitigations for
+> +			the Spectre variant 2 (indirect branch prediction)
+> +			vulnerability. System may allow data leaks with this
+> +			option.
+>   
+>   	nospec_store_bypass_disable
+>   			[HW] Disable all mitigations for the Speculative Store Bypass vulnerability
+> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> index 9950bb0cbd52..d2b2c69d31bb 100644
+> --- a/arch/arm64/kernel/cpu_errata.c
+> +++ b/arch/arm64/kernel/cpu_errata.c
+> @@ -220,6 +220,14 @@ static void qcom_link_stack_sanitization(void)
+>   		     : "=&r" (tmp));
+>   }
+>   
+> +static bool __nospectre_v2;
+> +static int __init parse_nospectre_v2(char *str)
+> +{
+> +	__nospectre_v2 = true;
+> +	return 0;
+> +}
+> +early_param("nospectre_v2", parse_nospectre_v2);
+> +
+>   static void
+>   enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
+>   {
+> @@ -231,6 +239,11 @@ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
+>   	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
+>   		return;
+>   
+> +	if (__nospectre_v2) {
+> +		pr_info_once("spectrev2 mitigation disabled by command line option\n");
+> +		return;
+> +	}
+> +
+>   	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
+>   		return;
+>   
 > 
