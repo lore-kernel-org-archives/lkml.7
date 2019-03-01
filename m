@@ -2,274 +2,131 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F872C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FBAC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C97CF2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C702087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:56:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="EgI6t+UO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GafHS9ec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732383AbfCAIzK (ORCPT
+        id S1732781AbfCAI4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:55:10 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39100 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbfCAIzJ (ORCPT
+        Fri, 1 Mar 2019 03:56:16 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36300 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfCAI4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:55:09 -0500
-Received: by mail-ed1-f66.google.com with SMTP id p27so19348209edc.6
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 00:55:08 -0800 (PST)
+        Fri, 1 Mar 2019 03:56:15 -0500
+Received: by mail-pl1-f195.google.com with SMTP id k2so11168959plt.3;
+        Fri, 01 Mar 2019 00:56:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6JSj88hu2XntZH+r/9g9XYQars3muYppbN70BI4AiSM=;
-        b=EgI6t+UOodnsmhx5WYqEuMC1u7kkC44U30Dcdzcj24sqj0zU2mEjjjo6AjYaGVM73V
-         XsiqV3F7zVOZXRO93ZrJizFLf08JssaxOB+hFoUSc0+xgSnPete42XEvWw1uPoBd0dN/
-         TjUtGX27SFyfaL2R3rgR2HZTUPeHRGnCRAmz4=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RTJhdzszh+3e5Q1RkYoiwnZzWya7sTas3a2TjMKw8sA=;
+        b=GafHS9ecvConHGU3Y1sqZh6lFfqN+8yYX3GWUAMxoQIzoUKtDD24IPTUZ1KAu6JJ6v
+         gsZFm9zZOxCpXAbr0dUYZ7j3v3Do5ysd2eoi2rYi6Zceg4kazrsWmT7PsApeWW4TG3Rs
+         +KfhUdbyuIVKWJ+3BI5QvdElkG6JTx6zkTgFaA5GOQveZNEuDhjg9rhjsQ50ZOiSlyVv
+         b/alEvVeoXyui7fwtAs52cWut3X4goySxDZ8R5CKltTMifq1GuhGH+EkjG5XOBxdBPbM
+         f1o/CLK1mrh6camUJMI6aPFt/q9m84rQIDrFrmKZVSVkMutknM0oHAunE74i4JtRT3m5
+         3o0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=6JSj88hu2XntZH+r/9g9XYQars3muYppbN70BI4AiSM=;
-        b=E9ssZ8dhghby3MYn73H2yO4AWjcPs9wDg51q2AUwG3Zqymr3+cOeC1pz/ZOpM/3yto
-         EBqngXf/FT3aOSMN8EmDpja6G1Fz27PESi0Tyi/h/6wHu11R0flRLQ2bOhJWsL5Q8oby
-         sPUjLg2UZGEBX3stoH72WuBdpr3fPwMVw8HXJTshPFnmYBCnw/3oEETJCB2oPbGO/YKB
-         SxKxTIfCaIWnQr8VUXzjrfaV84F1VtCKUZSyg4zuVnP4r8rDlZLWojLiuZBNVQrpzc/q
-         2ORahe6k9hQiLlZWOisjGLxGla1wWinkb5FDkZpn+lVStX8cgXVxt1CWqXODYGrhDIxl
-         bitA==
-X-Gm-Message-State: APjAAAWYoDuAq9BPh8JrZBACzEXNuCxFK+JNhmFYxuzkEkbVUvvd2sZg
-        V7QQHGUtZ2uxVB8TQZxYlMZYOQ==
-X-Google-Smtp-Source: APXvYqwpKe4onHsyeu8lzM1whULTPhJ0l7teuN5TnDSTMEdUeUexIv2Rcp0Ei7uUDUwWyl0mpxNFPg==
-X-Received: by 2002:a50:b4e6:: with SMTP id x35mr3248822edd.123.1551430507212;
-        Fri, 01 Mar 2019 00:55:07 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id a58sm5810068eda.91.2019.03.01.00.55.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RTJhdzszh+3e5Q1RkYoiwnZzWya7sTas3a2TjMKw8sA=;
+        b=X9NZCJCChqWnsXiZjBzNhJ4JuF6m6Eh/tcP7GXkCKH/8zp1fDYPDqiuh+4GnX2BEpE
+         jxVH2GNTbPnNfjjErFj+59y9o4YPTLJ+Sr3pQhFEZf/wYQY9QV9QkoI3Q8NLC0Na4fxb
+         YZYoiDx9fDNN46mnkmS3BEcsP84D3SOJ3izRN55t83MbwijkKaUuAAANDSVSELXNLovb
+         zK9G2R0M3FIufNHKsDQ7gAFXUC4FXR5WQayoLWGW24Z3mHKSs+1sFdeccYUgmcO6Xp1k
+         bNV5IlZ8EllcrcuYWp+geB51c6iARzBTJFQ6c2WzS/CvM8UC4ty2V9TQRddpPUFbO2/0
+         c0hw==
+X-Gm-Message-State: APjAAAUVYDjCttbTTCYoZ8tp4KxoSLES40rnLHrb2nj2LIwzl82r7vVb
+        4Dx14zzYa20/hq6EJ352g+0=
+X-Google-Smtp-Source: APXvYqyLn4WdG5MxDWwh+rwgd8wpE7sEgJ/+hRr/adqaX/l7WPpagexAA3ZLdQxaVGFecqs4/SKOlw==
+X-Received: by 2002:a17:902:586:: with SMTP id f6mr4299378plf.185.1551430574894;
+        Fri, 01 Mar 2019 00:56:14 -0800 (PST)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id u26sm28049553pfn.166.2019.03.01.00.56.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 00:55:05 -0800 (PST)
-Date:   Fri, 1 Mar 2019 09:55:03 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Hyun Kwon <hyun.kwon@xilinx.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Hyun Kwon <hyunk@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefano Stabellini <stefanos@xilinx.com>,
-        Sonal Santan <sonals@xilinx.com>,
-        Cyril Chemparathy <cyrilc@xilinx.com>,
-        Jiaying Liang <jliang@xilinx.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Michal Simek <michals@xilinx.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-Subject: Re: [PATCH RFC 1/1] uio: Add dma-buf import ioctls
-Message-ID: <20190301085503.GV2665@phenom.ffwll.local>
-Mail-Followup-To: Hyun Kwon <hyun.kwon@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefano Stabellini <stefanos@xilinx.com>,
-        Sonal Santan <sonals@xilinx.com>,
-        Cyril Chemparathy <cyrilc@xilinx.com>,
-        Jiaying Liang <jliang@xilinx.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>,
-        Michal Simek <michals@xilinx.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>
-References: <1550953697-7288-1-git-send-email-hyun.kwon@xilinx.com>
- <1550953697-7288-2-git-send-email-hyun.kwon@xilinx.com>
- <20190226115311.GA4094@kroah.com>
- <CAKMK7uE=dSyo5vdjtQf=k1rdoegiBgSozCOotXLSW2VAkz2Ldw@mail.gmail.com>
- <20190226221817.GB10631@smtp.xilinx.com>
- <CAKMK7uFay0mjHFhQqmQ7fneS2B0xNW_Nv4AWqp-FK1NnHVe5uw@mail.gmail.com>
- <20190228003606.GA1063@smtp.xilinx.com>
- <20190228100146.GK2665@phenom.ffwll.local>
- <20190301001856.GA20971@smtp.xilinx.com>
+        Fri, 01 Mar 2019 00:56:13 -0800 (PST)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Trent Piepho <tpiepho@impinj.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: imx6: Don't request "pci_aux" clock on i.MX7
+Date:   Fri,  1 Mar 2019 00:55:59 -0800
+Message-Id: <20190301085559.18736-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190301001856.GA20971@smtp.xilinx.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 04:18:57PM -0800, Hyun Kwon wrote:
-> Hi Daniel,
-> 
-> On Thu, 2019-02-28 at 02:01:46 -0800, Daniel Vetter wrote:
-> > On Wed, Feb 27, 2019 at 04:36:06PM -0800, Hyun Kwon wrote:
-> > > Hi Daniel,
-> > > 
-> > > On Wed, 2019-02-27 at 06:13:45 -0800, Daniel Vetter wrote:
-> > > > On Tue, Feb 26, 2019 at 11:20 PM Hyun Kwon <hyun.kwon@xilinx.com> wrote:
-> > > > >
-> > > > > Hi Daniel,
-> > > > >
-> > > > > Thanks for the comment.
-> > > > >
-> > > > > On Tue, 2019-02-26 at 04:06:13 -0800, Daniel Vetter wrote:
-> > > > > > On Tue, Feb 26, 2019 at 12:53 PM Greg Kroah-Hartman
-> > > > > > <gregkh@linuxfoundation.org> wrote:
-> > > > > > >
-> > > > > > > On Sat, Feb 23, 2019 at 12:28:17PM -0800, Hyun Kwon wrote:
-> > > > > > > > Add the dmabuf map / unmap interfaces. This allows the user driver
-> > > > > > > > to be able to import the external dmabuf and use it from user space.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> > > > > > > > ---
-> > > > > > > >  drivers/uio/Makefile         |   2 +-
-> > > > > > > >  drivers/uio/uio.c            |  43 +++++++++
-> > > > > > > >  drivers/uio/uio_dmabuf.c     | 210 +++++++++++++++++++++++++++++++++++++++++++
-> > > > > > > >  drivers/uio/uio_dmabuf.h     |  26 ++++++
-> > > > > > > >  include/uapi/linux/uio/uio.h |  33 +++++++
-> > > > > > > >  5 files changed, 313 insertions(+), 1 deletion(-)
-> > > > > > > >  create mode 100644 drivers/uio/uio_dmabuf.c
-> > > > > > > >  create mode 100644 drivers/uio/uio_dmabuf.h
-> > > > > > > >  create mode 100644 include/uapi/linux/uio/uio.h
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-> > > > > > > > index c285dd2..5da16c7 100644
-> > > > > > > > --- a/drivers/uio/Makefile
-> > > > > > > > +++ b/drivers/uio/Makefile
-> > > > > > > > @@ -1,5 +1,5 @@
-> 
-> [snip]
-> 
-> > > > > > Frankly looks like a ploy to sidestep review by graphics folks. We'd
-> > > > > > ask for the userspace first :-)
-> > > > >
-> > > > > Please refer to pull request [1].
-> > > > >
-> > > > > For any interest in more details, the libmetal is the abstraction layer
-> > > > > which provides platform independent APIs. The backend implementation
-> > > > > can be selected per different platforms: ex, rtos, linux,
-> > > > > standalone (xilinx),,,. For Linux, it supports UIO / vfio as of now.
-> > > > > The actual user space drivers sit on top of libmetal. Such drivers can be
-> > > > > found in [2]. This is why I try to avoid any device specific code in
-> > > > > Linux kernel.
-> > > > >
-> > > > > >
-> > > > > > Also, exporting dma_addr to userspace is considered a very bad idea.
-> > > > >
-> > > > > I agree, hence the RFC to pick some brains. :-) Would it make sense
-> > > > > if this call doesn't export the physicall address, but instead takes
-> > > > > only the dmabuf fd and register offsets to be programmed?
-> > > > >
-> > > > > > If you want to do this properly, you need a minimal in-kernel memory
-> > > > > > manager, and those tend to be based on top of drm_gem.c and merged
-> > > > > > through the gpu tree. The last place where we accidentally leaked a
-> > > > > > dma addr for gpu buffers was in the fbdev code, and we plugged that
-> > > > > > one with
-> > > > >
-> > > > > Could you please help me understand how having a in-kernel memory manager
-> > > > > helps? Isn't it just moving same dmabuf import / paddr export functionality
-> > > > > in different modules: kernel memory manager vs uio. In fact, Xilinx does have
-> > > > > such memory manager based on drm gem in downstream. But for this time we took
-> > > > > the approach of implementing this through generic dmabuf allocator, ION, and
-> > > > > enabling the import capability in the UIO infrastructure instead.
-> > > > 
-> > > > There's a group of people working on upstreaming a xilinx drm driver
-> > > > already. Which driver are we talking about? Can you pls provide a link
-> > > > to that xilinx drm driver?
-> > > > 
-> > > 
-> > > The one I was pushing [1] is implemented purely for display, and not
-> > > intended for anything other than that as of now. What I'm refering to above
-> > > is part of Xilinx FPGA (acceleration) runtime [2]. As far as I know,
-> > > it's planned to be upstreamed, but not yet started. The Xilinx runtime
-> > > software has its own in-kernel memory manager based on drm_cma_gem with
-> > > its own ioctls [3].
-> > > 
-> > > Thanks,
-> > > -hyun
-> > > 
-> > > [1] https://patchwork.kernel.org/patch/10513001/
-> > > [2] https://github.com/Xilinx/XRT
-> > > [3] https://github.com/Xilinx/XRT/tree/master/src/runtime_src/driver/zynq/drm
-> > 
-> > I've done a very quick look only, and yes this is kinda what I'd expect.
-> > Doing a small drm gem driver for an fpga/accelarator that needs lots of
-> > memories is the right architecture, since at the low level of kernel
-> > interfaces a gpu really isn't anything else than an accelarater.
-> > 
-> > And from a very cursory look the gem driver you mentioned (I only scrolled
-> > through the ioctl handler quickly) looks reasonable.
-> 
-> Thanks for taking time to look and share input. But still I'd like to
-> understand why it's more reasonable if the similar ioctl exists with drm
-> than with uio. Is it because such drm ioctl is vendor specific?
+The clock in question is not present on i.MX7, so move the code
+requesting it into i.MX8MQ-only path.
 
-We do have quite a pile of shared infrastructure in drm beyond just the
-vendor specific ioctl. So putting accelerator drivers there makes sense,
-whether the programming is a GPU, some neural network folder, an FPGA or
-something else. The one issue is that we require open source userspace
-together with your driver, since just the accelerator shim in the kernel
-alone is fairly useless (both for review and for doing anything with it).
+Fixes: eeb61c4e8530 ("PCI: imx6: Add code to request/control
+"pcie_aux" clock for i.MX8MQ")
+Reported-by: Trent Piepho <tpiepho@impinj.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Trent Piepho <tpiepho@impinj.com>
+Cc: linux-imx@nxp.com
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-But there's also some kernel maintainers who disagree and happily take
-drivers originally written for drm and then rewritten for non-drm for
-upstream to avoid the drm folks (or at least it very much looks like that,
-and happens fairly regularly).
-
-Cheers, Daniel
-
-> 
-> Thanks,
-> -hyun
-> 
-> > -Daniel
-> > > 
-> > > > Thanks, Daniel
-> > > > 
-> > > > > Thanks,
-> > > > > -hyun
-> > > > >
-> > > > > [1] https://github.com/OpenAMP/libmetal/pull/82/commits/951e2762bd487c98919ad12f2aa81773d8fe7859
-> > > > > [2] https://github.com/Xilinx/embeddedsw/tree/master/XilinxProcessorIPLib/drivers
-> > > > >
-> > > > > >
-> > > > > > commit 4be9bd10e22dfc7fc101c5cf5969ef2d3a042d8a (tag:
-> > > > > > drm-misc-next-fixes-2018-10-03)
-> > > > > > Author: Neil Armstrong <narmstrong@baylibre.com>
-> > > > > > Date:   Fri Sep 28 14:05:55 2018 +0200
-> > > > > >
-> > > > > >     drm/fb_helper: Allow leaking fbdev smem_start
-> > > > > >
-> > > > > > Together with cuse the above patch should be enough to implement a drm
-> > > > > > driver entirely in userspace at least.
-> > > > > >
-> > > > > > Cheers, Daniel
-> > > > > > --
-> > > > > > Daniel Vetter
-> > > > > > Software Engineer, Intel Corporation
-> > > > > > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
-> > > > 
-> > > > 
-> > > > 
-> > > > -- 
-> > > > Daniel Vetter
-> > > > Software Engineer, Intel Corporation
-> > > > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
-> > 
-> > -- 
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 08f1ee050c73..5fe364a9959d 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1100,8 +1100,14 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
+ 		}
+ 		break;
+-	case IMX7D:
+ 	case IMX8MQ:
++		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
++		if (IS_ERR(imx6_pcie->pcie_aux)) {
++			dev_err(dev, "pcie_aux clock source missing or invalid\n");
++			return PTR_ERR(imx6_pcie->pcie_aux);
++		}
++		/* fall through */
++	case IMX7D:
+ 		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+ 			imx6_pcie->controller_id = 1;
+ 
+@@ -1118,12 +1124,6 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 			dev_err(dev, "Failed to get PCIE APPS reset control\n");
+ 			return PTR_ERR(imx6_pcie->apps_reset);
+ 		}
+-
+-		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
+-		if (IS_ERR(imx6_pcie->pcie_aux)) {
+-			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+-			return PTR_ERR(imx6_pcie->pcie_aux);
+-		}
+ 		break;
+ 	default:
+ 		break;
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.20.1
+
