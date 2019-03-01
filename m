@@ -2,113 +2,123 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CAAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E7BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4632186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD90A2186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfCAEG4 (ORCPT
+        id S1728022AbfCAEJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 23:06:56 -0500
-Received: from mga12.intel.com ([192.55.52.136]:27130 "EHLO mga12.intel.com"
+        Thu, 28 Feb 2019 23:09:30 -0500
+Received: from mga02.intel.com ([134.134.136.20]:47609 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfCAEG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 23:06:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1726066AbfCAEJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 23:09:30 -0500
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 20:06:56 -0800
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 20:09:29 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,425,1544515200"; 
-   d="scan'208";a="303469197"
-Received: from rajeev-desktop.iind.intel.com ([10.223.84.39])
-  by orsmga005.jf.intel.com with ESMTP; 28 Feb 2019 20:06:53 -0800
-From:   Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-To:     lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org
-Cc:     linux-kernel@vger.kernel.org, rushikesh.s.kadam@intel.com,
-        gwendal@google.com, jettrink@chromium.org,
-        andriy.shevchenko@intel.com
-Subject: [PATCH v2] mfd: cros_ec: instantiate properly CrOS ISH MCU device
-Date:   Fri,  1 Mar 2019 09:36:11 +0530
-Message-Id: <1551413171-27290-1-git-send-email-rushikesh.s.kadam@intel.com>
-X-Mailer: git-send-email 1.9.1
+   d="scan'208";a="147543536"
+Received: from shbuild888.sh.intel.com (HELO localhost) ([10.239.147.114])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Feb 2019 20:09:26 -0800
+Date:   Fri, 1 Mar 2019 12:11:31 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH v5] panic: Avoid the extra noise dmesg
+Message-ID: <20190301041131.ypg6oaxhzyrgkkfu@shbuild888>
+References: <1550815226-34194-1-git-send-email-feng.tang@intel.com>
+ <20190222060959.pe3u4yvcjw6yj347@shbuild888>
+ <20190228120014.19c0ab9227809341c1d5acc6@linux-foundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228120014.19c0ab9227809341c1d5acc6@linux-foundation.org>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Integrated Sensor Hub (ISH) is also a MCU running EC
-having feature bit EC_FEATURE_ISH. Instantiate it as
-a special CrOS EC device with device name 'cros_ish'.
+Hi Andrew,
 
-Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
----
-v2
-- Addressed review comments to term the CrOS EC device as a generic
-  Integrated Sensor Hub. 
-v1
-- Initial version.
+Thanks for the review!
 
- drivers/mfd/cros_ec_dev.c            | 13 +++++++++++++
- include/linux/mfd/cros_ec.h          |  1 +
- include/linux/mfd/cros_ec_commands.h |  2 ++
- 3 files changed, 16 insertions(+)
+On Thu, Feb 28, 2019 at 12:00:14PM -0800, Andrew Morton wrote:
+> On Fri, 22 Feb 2019 14:09:59 +0800 Feng Tang <feng.tang@intel.com> wrote:
+> 
+> > When kernel panic happens, it will first print the panic call stack,
+> > then the ending msg like:
+> > 
+> > [   35.743249] ---[ end Kernel panic - not syncing: Fatal exception
+> > [   35.749975] ------------[ cut here ]------------
+> > 
+> > The above message are very useful for debugging.
+> > 
+> > But if system is configured to not reboot on panic, say the "panic_timeout"
+> > parameter equals 0, it will likely print out many noisy message like
+> > WARN() call stack for each and every CPU except the panic one, messages
+> > like below:
+> > 
+> > 	WARNING: CPU: 1 PID: 280 at kernel/sched/core.c:1198 set_task_cpu+0x183/0x190
+> > 	Call Trace:
+> > 	<IRQ>
+> > 	try_to_wake_up
+> > 	default_wake_function
+> > 	autoremove_wake_function
+> > 	__wake_up_common
+> > 	__wake_up_common_lock
+> > 	__wake_up
+> > 	wake_up_klogd_work_func
+> > 	irq_work_run_list
+> > 	irq_work_tick
+> > 	update_process_times
+> > 	tick_sched_timer
+> > 	__hrtimer_run_queues
+> > 	hrtimer_interrupt
+> > 	smp_apic_timer_interrupt
+> > 	apic_timer_interrupt
+> 
+> It's a fairly ugly-looking patch but I am inclined to agree.
 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index 2d0fee4..46963c2 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -415,6 +415,19 @@ static int ec_device_probe(struct platform_device *pdev)
- 	cdev_init(&ec->cdev, &fops);
- 
- 	/*
-+	 * Check whether this is actually an Integrated Sensor Hub (ISH)
-+	 * rather than an EC.
-+	 */
-+	if (cros_ec_check_features(ec, EC_FEATURE_ISH)) {
-+		dev_info(dev, "CrOS ISH MCU detected.\n");
-+		/*
-+		 * Help userspace differentiating ECs from ISH MCU,
-+		 * regardless of the probing order.
-+		 */
-+		ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
-+	}
-+
-+	/*
- 	 * Add the class device
- 	 * Link to the character device for creating the /dev entry
- 	 * in devtmpfs.
-diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-index de8b588..00c5765 100644
---- a/include/linux/mfd/cros_ec.h
-+++ b/include/linux/mfd/cros_ec.h
-@@ -24,6 +24,7 @@
- 
- #define CROS_EC_DEV_NAME "cros_ec"
- #define CROS_EC_DEV_PD_NAME "cros_pd"
-+#define CROS_EC_DEV_ISH_NAME "cros_ish"
- 
- /*
-  * The EC is unresponsive for a time after a reboot command.  Add a
-diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index fc91082..9276c3c 100644
---- a/include/linux/mfd/cros_ec_commands.h
-+++ b/include/linux/mfd/cros_ec_commands.h
-@@ -856,6 +856,8 @@ enum ec_feature_code {
- 	EC_FEATURE_RTC = 27,
- 	/* EC supports CEC commands */
- 	EC_FEATURE_CEC = 35,
-+	/* The MCU is an Intel Integrated Sensor Hub */
-+	EC_FEATURE_ISH = 40,
- };
- 
- #define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
--- 
-1.9.1
+Yes, it's ugly :) we've changed 3 methods to tackle this.
+
+> The panicing CPU is spinning and blinking a LED and all CPUs have
+> interrupts enabled and the system is known to be in a messed up state. 
+> All sorts of kernel code could emit all sorts of output in such
+> circumstances.  So a global printk-killing knob seems appropriate.
+> 
+> Thoughts:
+> 
+> - why do the suppression in vprintk_emit()?  Doing it right at entry
+>   to printk() seems cleaner, more explicit?
+
+Yes, I put it in printk() in one earlier post, and Petr suggested to
+put it into vprintk_emit so that it works for all printk() interfaces,
+like the devkmsg_write -> printk_emit -> vprintk_emit path.
+
+> 
+> - Other code sites may wish to suppress all printks.  Perhaps
+>   `panic_suppress_printk' should just be called `suppress_printk'?
+Ok, then I'll move the definition from panic.c to printk code.
+
+Thanks,
+Feng
 
