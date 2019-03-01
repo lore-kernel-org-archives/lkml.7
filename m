@@ -2,118 +2,115 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11A2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07614C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF62E20854
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j5E0/huI"
+	by mail.kernel.org (Postfix) with ESMTP id D0BA92084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388638AbfCAOen (ORCPT
+        id S2388663AbfCAOev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:34:43 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40680 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388610AbfCAOek (ORCPT
+        Fri, 1 Mar 2019 09:34:51 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35377 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbfCAOev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:34:40 -0500
-Received: by mail-lf1-f66.google.com with SMTP id a8so12380486lfi.7
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:34:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rBapgXqkl4L1Kp5k3gMreZSqISZL1TQmMdeWE1ORKa4=;
-        b=j5E0/huIa/W0dzMeMjpnXH7v/2YP9ugqSIwpGCTl2kRlsVfd830ziOSM+tEGAjen1f
-         lrmFZIf2ME7R9jfuFJMLvSW8V5M6fOHMEaOwE155Hxbo9nfks40+1ybuUrSc2qbNu6vW
-         DT4q0f2WXWkSTbxXszKyVfYf3omHXVXzCjZUfwQOSkMYfaQuNATqfQxJs9/PEx2mSjjF
-         /St6yh11eRzlH3rqPns7DHREtqGNu4+5Yho3ivjey7FazvMMCUvQFzBe+89KrHk8uHxh
-         vhyUGQNuN/DvA8qL9TfCzQ01oP7VcuOgf/bEbQpN4bP534tqfT6zFu99qhxO/iuUpoWj
-         MPtA==
+        Fri, 1 Mar 2019 09:34:51 -0500
+Received: by mail-qt1-f193.google.com with SMTP id p48so27952904qtk.2;
+        Fri, 01 Mar 2019 06:34:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rBapgXqkl4L1Kp5k3gMreZSqISZL1TQmMdeWE1ORKa4=;
-        b=iCIOAV17Y4h4v3B9bLYvyXIOl2JXe/IEHNN8vxTONRZi/5n0Nc/nDpdbznsWnQaUxN
-         lJeR+PlvyM+R1qqbOaqIq7CHH1v3z+latW2WH0O6+BSoX5ToO6biSvwGdStSC46vpLQa
-         1VHHzVhLtM1LifscF0WippGFXND8TDkUzp63pyaF8gX4GOVJoPOduEcDx9DfQKC0ZfZa
-         Lo3QtC6cvlEcVTvkBYBxxatLRq9sasXS6ScxhxM84iu2MGfu4iTWu8d9p0kwlkVzDltb
-         c/3Db7baAqWH2kicCrh+ZKARL2/4N5/0BXBoUWEU1iueF3PPnte+sGD8Nx2xo7fGjDww
-         fa5g==
-X-Gm-Message-State: APjAAAW5jDVC26XbcP2HA5gBTFDqBEXqIjFyP+siEUo7VOpTB7A8fUsP
-        EVFEAEn/Qf09HZkoOlJktdh5b8X6rBdxGTaSj+4lMg==
-X-Google-Smtp-Source: APXvYqxnG3LWV6GEtylHjCvETKPwlLvaWtlPQP0A5n1QUVPV+F0ZOcUKlnuANnvO/u3jrydNaGmyU0t4B4QXMc+PGOY=
-X-Received: by 2002:a19:5611:: with SMTP id k17mr3090530lfb.168.1551450878177;
- Fri, 01 Mar 2019 06:34:38 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=Kr2iK0Z6/1Tz0QsjFgK/N3Hq6/jd9uhO1G2ZTUfj0LE=;
+        b=RPKeNk+HLcZ/aRpTiFIml0i45NQwhP9p2pkSvs03FtAJOihWAVxODcIFrs2/zs2kMe
+         UvXUtbf36422BIEQmc880nluLcRvYcvCzNb/YK45QPGE9nit5OCb38N1A1qwEaMyTgK/
+         M+xQrTZ7WA47nt6KprRuw8Ab11CB+D1JypYkQuA7m0xbAviWLXC3o+Ys4Y8DlRqJtkri
+         3YP5Y51FHtYAuF05UY1uInSpXPyMASCg2NbCo2m3oom2PLBJm2mJft/ruBTQDerRn3Le
+         fapeUkY2l/p4sQx1I05Zdj0QAyzP8WrCNudvmDCXJzoMCjgtdyK0y3B+2IeK225emKjS
+         Dyyw==
+X-Gm-Message-State: APjAAAVbdenw9OKMIlX9DyehXRLYT1r6Qab5aoebjebJRz4KxOlpiqqo
+        6KzZOCsuxG2aefsY5rBdyEliGnlm1cjnxr6nDVo=
+X-Google-Smtp-Source: APXvYqwWWqvTdsX44+5p40uVKnelBgmU87iGjG24eLVoXZTUeKTDLppMmPdD5pwYlt9ncEQsMTA3Mlr/9H9cEfOgNM0=
+X-Received: by 2002:a0c:81ee:: with SMTP id 43mr3923579qve.180.1551450890521;
+ Fri, 01 Mar 2019 06:34:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20190301035852.26780-1-marek.behun@nic.cz> <20190301035852.26780-4-marek.behun@nic.cz>
-In-Reply-To: <20190301035852.26780-4-marek.behun@nic.cz>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 1 Mar 2019 15:34:26 +0100
-Message-ID: <CACRpkdam_CYGtph16McpQQ_WwohpZr+Rzi1B=re4UrGxXmSEqg@mail.gmail.com>
-Subject: Re: [PATCH v3 bus+gpio 3/5] bus: moxtet: Add sysfs documentation
-To:     =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
-Cc:     Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1551243056-10521-1-git-send-email-sugaya.taichi@socionext.com>
+In-Reply-To: <1551243056-10521-1-git-send-email-sugaya.taichi@socionext.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 1 Mar 2019 15:34:34 +0100
+Message-ID: <CAK8P3a2oLYWR7uXcg-aL5MR0U24yk0ftoBahVuVCoq5Z3NyoAA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] Add basic support for Socionext Milbeaut M10V SoC
+To:     Sugaya Taichi <sugaya.taichi@socionext.com>
+Cc:     DTML <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        soc@kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Takao Orito <orito.takao@socionext.com>,
+        Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
+        Shinji Kanematsu <kanematsu.shinji@socionext.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 4:59 AM Marek Beh=C3=BAn <marek.behun@nic.cz> wrote:
-
-> Add sysfs ABI documentation for the attribute files module_id,
-> module_name, input_value and output_value of Moxtet devices.
+On Wed, Feb 27, 2019 at 5:51 AM Sugaya Taichi
+<sugaya.taichi@socionext.com> wrote:
 >
-> Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
+> Hi,
+>
+> Here is the series of patches the initial support for SC2000(M10V) of
+> Milbeaut SoCs. "M10V" is the internal name of SC2000, so commonly used in
+> source code.
+>
+> SC2000 is a SoC of the Milbeaut series. equipped with a DSP optimized for
+> computer vision. It also features advanced functionalities such as 360-degree,
+> real-time spherical stitching with multi cameras, image stabilization for
+> without mechanical gimbals, and rolling shutter correction. More detail is
+> below:
+> https://www.socionext.com/en/products/assp/milbeaut/SC2000.html
+>
+> Specifications for developers are below:
+>  - Quad-core 32bit Cortex-A7 on ARMv7-A architecture
+>  - NEON support
+>  - DSP
+>  - GPU
+>  - MAX 3GB DDR3
+>  - Cortex-M0 for power control
+>  - NAND Flash Interface
+>  - SD UHS-I
+>  - SD UHS-II
+>  - SDIO
+>  - USB2.0 HOST / Device
+>  - USB3.0 HOST / Device
+>  - PCI express Gen2
+>  - Ethernet Engine
+>  - I2C
+>  - UART
+>  - SPI
+>  - PWM
+>
+> Support is quite minimal for now, since it only includes timer, clock,
+> pictrl and serial controller drivers, so we can only boot to userspace
+> through initramfs. Support for the other peripherals  will come eventually.
 
-(...)
-> +++ b/Documentation/ABI/testing/sysfs-bus-moxtet-devices
-> @@ -0,0 +1,25 @@
-> +What:          /sys/bus/moxtet/devices/moxtet-<name>.<addr>/module_id
-> +Date:          March 2019
-> +KernelVersion: 5.2
-> +Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
-> +Description:   (R) Moxtet module ID. Format: %x
-> +
-> +What:          /sys/bus/moxtet/devices/moxtet-<name>.<addr>/module_name
-> +Date:          March 2019
-> +KernelVersion: 5.2
-> +Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
-> +Description:   (R) Moxtet module name. Format: string
+I've merged these all into the arm/newsoc branch now, with the
+exception of the patch that Greg has already taken.
 
-These look good.
+I'll do a little more build testing before that branch will be sent,
+but I expect it will be fine.
 
-> +What:          /sys/bus/moxtet/devices/moxtet-<name>.<addr>/input_value
-> +Date:          March 2019
-> +KernelVersion: 5.2
-> +Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
-> +Description:   (R) Read input value from module at this Moxtet address.
-> +               Format: %x
-> +
-> +What:          /sys/bus/moxtet/devices/moxtet-<name>.<addr>/output_value
-> +Date:          March 2019
-> +KernelVersion: 5.2
-> +Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
-> +Description:   (RW) Read last written value or write value to the module=
- on
-> +               this Moxtet address. Format: %x
-
-What is the usecase for these?
-
-If this is for debugging it should be in debugfs rather than in sysfs.
-
-If it is here for random userspace drivers, we need some good explanation
-as to why they can't just be kernel drivers.
-
-Yours,
-Linus Walleij
+     Arnd
