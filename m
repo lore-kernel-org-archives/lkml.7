@@ -2,124 +2,115 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D3FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80242C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF962084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFB920851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DDOKuiSA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoB5OG1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733133AbfCANaV (ORCPT
+        id S1728369AbfCANdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 08:30:21 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40074 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728243AbfCANaV (ORCPT
+        Fri, 1 Mar 2019 08:33:01 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46736 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbfCANdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 08:30:21 -0500
-Received: by mail-lj1-f195.google.com with SMTP id w6so20372243ljd.7
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 05:30:19 -0800 (PST)
+        Fri, 1 Mar 2019 08:33:01 -0500
+Received: by mail-ed1-f67.google.com with SMTP id f2so19987216edy.13;
+        Fri, 01 Mar 2019 05:32:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w/XJDPgZr92xbE7yFFhPob5maKvzEO0Ch9NxM0VD/tA=;
-        b=DDOKuiSAybrLJ9HTTyxnqDUYKXjm/K4uQyuMsw6fxtSlsimcQPnh5ydyQ3xHrqNBtj
-         Myl/3Ef6pxTs3apyhr0wqKC1c97E93vv1JJ1SvB5LnW2ph+Tyc6uw6+231N51HjXY7/8
-         FuJbDswOwSPQo/JCFei/uxNAwLpXvrdQJQehhNcL6KzEzP/6OZcxpMsxQ6CXg6I5PHNa
-         PUdyPg0Oe3Khbdo68+M7g7W5M75WXSDzighDnyuCURZwjo/QpQHbgb8vcy34GCcLVO9v
-         sgnh76Y8n9Pav3vNyMPBSoAVX7yoV77yW3TjE6PdjBn/ORpP8c5UiUIL/9ceMgW1UYSf
-         KFtg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8uq/wMcFYQs+gVp4kdYwgE/5XLhXoJwwKfHFMkxwYXI=;
+        b=OoB5OG1mQu6VINLmW2ag+MSb54n2b6VD1OZDD/fcztNk4eZ2Lj2U5pL7TGH22xf/BP
+         ehFErmOG8nWGAKYhvcCxVVFWzW+wI37DanBMpVsdfy4iGTVKhE55nXejz5IJDcAkKxPN
+         UWJl22Slfmk4UjOw8nBgWcsvnFhd0kAk7Xq8VdrKZu0vasFYK1JH28L3L95XYUyCPB7B
+         Pgsa9u0peaGZZJ5yHDytnFICaLzJawjPwnJvk7TykSMp7JSF9cYWnh2f01lNgfwG3hkC
+         al/AcUwXbZB+5cO9TsOp1hdFDUwwB1/menfxGZhuRHcLWPg7/oFNrbmqmrxA1HHY/FlB
+         0BCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w/XJDPgZr92xbE7yFFhPob5maKvzEO0Ch9NxM0VD/tA=;
-        b=HVpJfaNgMw1V5YqAKhKz7oaspGQAC92ykrSV3VExXY50I7cVLKoTqYnabk412CsNoZ
-         fQ2v5WQoPWkqmVHCCZI57LuC0DERSC4Q4TvIg0jhlsX10xgHCwEFY8fEtX3zGgyy2S63
-         N1X/JSCODpVMy5FXZ84KjYexUk28UJCUTgy3E7ilN0x2Vc3pmaqibsIwMJvDjaHS/JQ3
-         7alRgjZozQ5rlhBHlWGcQ6+UuhAkd14GEvR2MlRnQy1B7zCJSOtz+jfiIUqevg7sjMkQ
-         LJf1Aab7EsOgwy1X4nChcNu2FK9EQK71FlNNINu6TnUymoE0grQSrtPHGmZ5MjMGF7I9
-         ggsA==
-X-Gm-Message-State: APjAAAVRgj7nkE+z3vOldJaCq4L80j0Fv2XCvhxCGbFKu88H0AcVf2qM
-        5+SnbfKkKxfzWI0LJD7HPRC7a8FZCa3lkM7Lbz/ZQA==
-X-Google-Smtp-Source: APXvYqzQBL4m/JhwTqQVZZDw5PN823UelfkF5SqwestEOA1FGFQe7QDjXsZTb/laUfbMj1HJu1EZEe6HumI04LW7sZU=
-X-Received: by 2002:a2e:6a18:: with SMTP id f24mr2839458ljc.97.1551447019150;
- Fri, 01 Mar 2019 05:30:19 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8uq/wMcFYQs+gVp4kdYwgE/5XLhXoJwwKfHFMkxwYXI=;
+        b=iyS4ZF/7aUu5Ga6FtIs8BjdNVJ3yEfyUIteAd45PEkUCHRT3F46TOAYyuzYt8ALlBH
+         jWKun06Q3ale2YwL+GLwsBmgToICZe2UVcXe+RVUHMbT07Pr/r7117ZUaczPlR+hr8QW
+         YXPHAAbrXEEMyb2kNRtPXPf1HGa3Q3ROK7sXzjLN+HyaDgB0xCuKKI2KYhbBCww1qLGU
+         wDuUmCL2BryGsww/wBPu84qZuO0WJhIy9UIYaa9IO+k1U1qbu1fIwjZ/8cb79rO5xwMd
+         7qVFANaQbrjdYGo8YbD8c9wmpsGSaymQuCHeDVa7R4yURu6UyH0kML0BDpmiO2MRBoHh
+         9iMA==
+X-Gm-Message-State: APjAAAW2cDvSkU8r1MfnRofxcds83FgJlhcT2runvrF7dp3nvX1Z5zLa
+        POnbhIFw3IhsY17DRr6JjRc=
+X-Google-Smtp-Source: APXvYqwdBQDnLlpl3kiidCFHuvInhkW7SXDRf5AYTyykbHNXEVlT24uHmEJd9tCPKOgGxVBgdS5hQg==
+X-Received: by 2002:a50:b639:: with SMTP id b54mr4167532ede.229.1551447179143;
+        Fri, 01 Mar 2019 05:32:59 -0800 (PST)
+Received: from dell5510 ([62.201.25.198])
+        by smtp.gmail.com with ESMTPSA id f5sm2203633ejf.25.2019.03.01.05.32.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Mar 2019 05:32:57 -0800 (PST)
+Date:   Fri, 1 Mar 2019 14:32:56 +0100
+From:   Petr Vorel <petr.vorel@gmail.com>
+To:     Arseny Maslennikov <ar@cs.msu.ru>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Riku Voipio <riku.voipio@linaro.org>
+Subject: Re: [PATCH] scripts/package/mkdebian: expose KCONFIG_CONFIG to
+ debian/rules
+Message-ID: <20190301133254.GA20771@dell5510>
+Reply-To: Petr Vorel <petr.vorel@gmail.com>
+References: <20190221215901.23970-1-ar@cs.msu.ru>
+ <20190221215901.23970-3-ar@cs.msu.ru>
 MIME-Version: 1.0
-References: <1551430616-42014-1-git-send-email-wen.yang99@zte.com.cn> <1551430616-42014-11-git-send-email-wen.yang99@zte.com.cn>
-In-Reply-To: <1551430616-42014-11-git-send-email-wen.yang99@zte.com.cn>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 1 Mar 2019 14:30:07 +0100
-Message-ID: <CACRpkdbRfagzAr6zRBtEJ0Z2fvLhiMsy8CPsuiFswf0NjzvCRw@mail.gmail.com>
-Subject: Re: [PATCH 11/15] ARM: versatile: fix a leaked reference by
- addingmissing of_node_put
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        avifishman70@gmail.com, Tomer Maimon <tmaimon77@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Xu Wei <xuwei5@hisilicon.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>, wang.yi59@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190221215901.23970-3-ar@cs.msu.ru>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 9:57 AM Wen Yang <wen.yang99@zte.com.cn> wrote:
+Hi,
 
-> The call to of_get_next_child returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
->
-> Detected by coccinelle with the following warnings:
-> ./arch/arm/mach-versatile/versatile_dt.c:315:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 302, but without a corresponding object release within this function.
-> ./arch/arm/mach-versatile/versatile_dt.c:320:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 302, but without a corresponding object release within this function.
->
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+> If KCONFIG_CONFIG is passed to `make deb-pkg` as a makeflag or
+> environment variable, the source tarball produced contains whatever
+> specified by that variable instead of the usual `.config'.
 
-Patch applied. Will send upstream next kernel cycle or so.
+> While `make deb-pkg' yields a correct Debian binary package (at least
+> on amd64), the generated source package's debian/rules does not pass
+> KCONFIG_CONFIG to make(1), thus rendering the source package unable to
+> be rebuilt.
 
-Yours,
-Linus Walleij
+> Steps to reproduce the kind of failure being fixed:
+> 1)  Produce a source and binary package with:
+> 	% KCONFIG_CONFIG=my.config make deb-pkg
+> 2)  In the parent directory:
+> 	% dpkg-source -x linux-*.dsc
+> 3)  In the unpacked source directory:
+> 	% debuild -i -us -uc
+
+> Here is an excerpt from an example output of `debuild -i -us -uc':
+
+> make[2]: *** No rule to make target '.config', needed by 'kernel/config_data.gz'.  Stop.
+> make[1]: *** [Makefile:1043: kernel] Error 2
+> make[1]: Leaving directory '/home/ar/linux-kernel/deb/linux-5.0.0-rc5-tks-gitd6ff78479ec5-57-5.0.0-rc5-tks-gitd6ff78479ec5-57'
+> make: *** [debian/rules:4: build] Error 2
+> dpkg-buildpackage: error: debian/rules build subprocess returned exit status 2
+> debuild: fatal error at line 1182:
+> dpkg-buildpackage -us -uc -ui -i failed
+
+Reviewed-by: Petr Vorel <petr.vorel@gmail.com>
+
+
+Kind regards,
+Petr
