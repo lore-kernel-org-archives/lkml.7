@@ -2,129 +2,99 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BFFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A202C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E2A20818
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08E6820818
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:28:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gTkbjbLH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389442AbfCAR2S (ORCPT
+        id S2389455AbfCAR21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:28:18 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39500 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbfCAR2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:28:15 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F032680D;
-        Fri,  1 Mar 2019 09:28:14 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E1A03F575;
-        Fri,  1 Mar 2019 09:28:13 -0800 (PST)
-Date:   Fri, 1 Mar 2019 17:28:10 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        Fri, 1 Mar 2019 12:28:27 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35015 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733255AbfCAR2W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 12:28:22 -0500
+Received: by mail-pf1-f196.google.com with SMTP id j5so11737531pfa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 09:28:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:to:subject
+         :message-id:references:from:cc:user-agent:date;
+        bh=mtTiAgUXgiDg0Ju2GcPu+saGxj9IwBSraOIw5qCV7kY=;
+        b=gTkbjbLHOC/nieuIT+kBv44ds5kXVpPTMmTcfTS4XBMiPA8Ks/5ohjLb0B5FMjUNzE
+         ZvhjlR9wrTuxQ3Xdbpq9DD/VWEUfxEiTBNlIwA6w89tH4nG3Cg/bROcYF9lyoGbXKacF
+         Puviq8zaqyOPu3Lo0f4GlCTFPusZfOV52pNo0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:to:subject:message-id:references:from:cc:user-agent
+         :date;
+        bh=mtTiAgUXgiDg0Ju2GcPu+saGxj9IwBSraOIw5qCV7kY=;
+        b=IKd70pt3kwyUaAY554L3u8jLU+4ua1ZBgGKuybD6yNnPUT8guShPq8WRbm+MPnV7Cw
+         SR1Bac3c4lz8ltpOuQYiQQhRiJKbbhHWW/b07C0WcR5k9wMJQgSaPrSdLVm0/1GFIzG+
+         HyZXE2Nt4eFYyGTTuoXClcH/jROARQQThORqBFLZg0hDZRhcl30HRghQDr5M/NN7Pwas
+         20XyAqXhKrFXMAj4BI0z0NZQsPu2qbZ7P7N5R1WJ52lwx8Iz6AYIz8gzYIQUnu3hwc8J
+         nhUHdjElORcYnOlA1z94YmG1lR0hS7gywkSHVGodjv+8W3FuXr+o4udxqUF/a3MKNCYL
+         rx0g==
+X-Gm-Message-State: APjAAAXfNGxaLHzRUrVAs3opC0BTT5Jaa41dtoGHoRNcW+49TyfIWiVQ
+        vj0E13E9AxNnxoDHtWt9uP03gA==
+X-Google-Smtp-Source: APXvYqzPRcioNyWgs6+R8h3coUILeyB7EoZ2KdwUWQSYVoNSN7+ioGA0bieollGi4iQFLKdjeX3oXA==
+X-Received: by 2002:a63:470a:: with SMTP id u10mr5956403pga.17.1551461301053;
+        Fri, 01 Mar 2019 09:28:21 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id h11sm16748713pgq.57.2019.03.01.09.28.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Mar 2019 09:28:20 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190228135919.3747-8-ulf.hansson@linaro.org>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>, linux-pm@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 7/7] drivers: firmware: psci: Announce support for OS initiated suspend mode
+Message-ID: <155146129938.16805.4528027710288083607@swboyd.mtv.corp.google.com>
+References: <20190228135919.3747-1-ulf.hansson@linaro.org> <20190228135919.3747-8-ulf.hansson@linaro.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] drivers: firmware: psci: Simplify state node parsing
-Message-ID: <20190301172810.GR15517@lakrids.cambridge.arm.com>
-References: <20190228135919.3747-1-ulf.hansson@linaro.org>
- <20190228135919.3747-6-ulf.hansson@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228135919.3747-6-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+User-Agent: alot/0.8
+Date:   Fri, 01 Mar 2019 09:28:19 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 02:59:17PM +0100, Ulf Hansson wrote:
-> Instead of iterating through all the state nodes in DT, to find out how
-> many states that needs to be allocated, let's use the number already known
-> by the cpuidle driver. In this way we can drop the iteration altogether.
-> 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  drivers/firmware/psci/psci.c | 25 ++++++++++++-------------
->  1 file changed, 12 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index d50b46a0528f..cbfc936d251c 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -290,26 +290,20 @@ static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
->  static int psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
->  			struct device_node *cpu_node, int cpu)
->  {
-> -	int i, ret = 0, count = 0;
-> +	int i, ret = 0, num_state_nodes = drv->state_count - 1;
->  	u32 *psci_states;
->  	struct device_node *state_node;
->  
-> -	/* Count idle states */
-> -	while ((state_node = of_parse_phandle(cpu_node, "cpu-idle-states",
-> -					      count))) {
-> -		count++;
-> -		of_node_put(state_node);
-> -	}
-> -
+Quoting Ulf Hansson (2019-02-28 05:59:19)
+> PSCI firmware v1.0+, supports two different modes for CPU_SUSPEND. The
+> Platform Coordinated mode, which is the default and mandatory mode, while
+> support for the OS initiated (OSI) mode is optional.
+>=20
+> In some cases it's interesting for the user/developer to know if the OSI
+> mode is supported by the PSCI FW. Therefore, let's print a message to the
+> log, if that is the case.
 
-To be honest, I'd rather not tighten the coupling with the cpuidle
-driver here. For example, I'm not that happy with the PSCI backend
-having to know the driver has a specific WFI state.
+I don't see anything wrong with the patch besides the potential for the
+logs to wrap and the informational message to be lost, but would it be
+possible to express the PSCI features that are supported in sysfs at
+/sys/firmware/psci/ somehow? It may be useful for a user to know that
+their firmware has PSCI support and that it has a certain set of
+features available, like OSI vs. PC, or both. I don't know of any use
+that userspace would have though, besides maybe the CPU state residency
+counters being used by some sort of statistics collecting program or
+just plain knowing that certain PSCI features are present, so perhaps it
+could just be done in debugfs for now until a real user exists.
 
-IIUC we could get rid of the explicit counting with something like:
-
-	count = of_parse_phandle_with_args(cpu_node, "cpu-idle-states", NULL);
-
-... but I'm not sure that the overall change is a simplification.
-
-Does this change make it easier to plumb in something in future?
-
-Thanks,
-Mark.
-
-> -	if (!count)
-> -		return -ENODEV;
-> -
-> -	psci_states = kcalloc(count, sizeof(*psci_states), GFP_KERNEL);
-> +	psci_states = kcalloc(num_state_nodes, sizeof(*psci_states),
-> +			GFP_KERNEL);
->  	if (!psci_states)
->  		return -ENOMEM;
->  
-> -	for (i = 0; i < count; i++) {
-> +	for (i = 0; i < num_state_nodes; i++) {
->  		state_node = of_parse_phandle(cpu_node, "cpu-idle-states", i);
-> +		if (!state_node)
-> +			break;
-> +
->  		ret = psci_dt_parse_state_node(state_node, &psci_states[i]);
->  		of_node_put(state_node);
->  
-> @@ -319,6 +313,11 @@ static int psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
->  		pr_debug("psci-power-state %#x index %d\n", psci_states[i], i);
->  	}
->  
-> +	if (i != num_state_nodes) {
-> +		ret = -ENODEV;
-> +		goto free_mem;
-> +	}
-> +
->  	/* Idle states parsed correctly, initialize per-cpu pointer */
->  	per_cpu(psci_power_state, cpu) = psci_states;
->  	return 0;
-> -- 
-> 2.17.1
-> 
