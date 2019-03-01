@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C98C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12BCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E0120842
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8858320842
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389936AbfCASAY (ORCPT
+        id S2389943AbfCASAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 13:00:24 -0500
-Received: from vmicros1.altlinux.org ([194.107.17.57]:40344 "EHLO
+        Fri, 1 Mar 2019 13:00:34 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:40188 "EHLO
         vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388293AbfCAR7e (ORCPT
+        with ESMTP id S2389760AbfCAR73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:59:34 -0500
+        Fri, 1 Mar 2019 12:59:29 -0500
 Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id CA76272CCBD;
-        Fri,  1 Mar 2019 20:59:30 +0300 (MSK)
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 4393172CCB8;
+        Fri,  1 Mar 2019 20:59:26 +0300 (MSK)
 Received: from beacon.altlinux.org (unknown [185.6.174.98])
-        by imap.altlinux.org (Postfix) with ESMTPSA id 1D2664A4AE7;
-        Fri,  1 Mar 2019 20:59:30 +0300 (MSK)
+        by imap.altlinux.org (Postfix) with ESMTPSA id 1C3F94A4AE7;
+        Fri,  1 Mar 2019 20:59:26 +0300 (MSK)
 From:   Vitaly Chikunov <vt@altlinux.org>
 To:     Herbert Xu <herbert@gondor.apana.org.au>,
         David Howells <dhowells@redhat.com>,
@@ -33,9 +33,9 @@ To:     Herbert Xu <herbert@gondor.apana.org.au>,
         Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
         linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 07/11] crypto: Kconfig - create Public-key cryptography section
-Date:   Fri,  1 Mar 2019 20:59:14 +0300
-Message-Id: <20190301175918.29694-8-vt@altlinux.org>
+Subject: [PATCH v7 02/11] crypto: akcipher - check the presence of callback before the call
+Date:   Fri,  1 Mar 2019 20:59:09 +0300
+Message-Id: <20190301175918.29694-3-vt@altlinux.org>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190301175918.29694-1-vt@altlinux.org>
 References: <20190301175918.29694-1-vt@altlinux.org>
@@ -46,79 +46,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Group RSA, DH, and ECDH into Public-key cryptography config section.
+Because with introduction of EC-RDSA and change in workings of RSA in
+regard to sign/verify, akcipher could have not all callbacks defined,
+check the presence of callbacks before calling them to increase
+robustness.
 
 Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
 ---
- crypto/Kconfig | 48 +++++++++++++++++++++++++-----------------------
- 1 file changed, 25 insertions(+), 23 deletions(-)
+ include/crypto/akcipher.h | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index bbab6bf33519..370cbdca87a7 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -113,29 +113,6 @@ config CRYPTO_ACOMP
- 	select CRYPTO_ALGAPI
- 	select CRYPTO_ACOMP2
+diff --git a/include/crypto/akcipher.h b/include/crypto/akcipher.h
+index 2d690494568c..f537fad1989f 100644
+--- a/include/crypto/akcipher.h
++++ b/include/crypto/akcipher.h
+@@ -268,7 +268,10 @@ static inline unsigned int crypto_akcipher_maxsize(struct crypto_akcipher *tfm)
+ {
+ 	struct akcipher_alg *alg = crypto_akcipher_alg(tfm);
  
--config CRYPTO_RSA
--	tristate "RSA algorithm"
--	select CRYPTO_AKCIPHER
--	select CRYPTO_MANAGER
--	select MPILIB
--	select ASN1
--	help
--	  Generic implementation of the RSA public key algorithm.
--
--config CRYPTO_DH
--	tristate "Diffie-Hellman algorithm"
--	select CRYPTO_KPP
--	select MPILIB
--	help
--	  Generic implementation of the Diffie-Hellman algorithm.
--
--config CRYPTO_ECDH
--	tristate "ECDH algorithm"
--	select CRYPTO_KPP
--	select CRYPTO_RNG_DEFAULT
--	help
--	  Generic implementation of the ECDH algorithm
--
- config CRYPTO_MANAGER
- 	tristate "Cryptographic algorithm manager"
- 	select CRYPTO_MANAGER2
-@@ -253,6 +230,31 @@ config CRYPTO_GLUE_HELPER_X86
- config CRYPTO_ENGINE
- 	tristate
+-	return alg->max_size(tfm);
++	if (alg->max_size)
++		return alg->max_size(tfm);
++	else
++		return 0;
+ }
  
-+comment "Public-key cryptography"
-+
-+config CRYPTO_RSA
-+	tristate "RSA algorithm"
-+	select CRYPTO_AKCIPHER
-+	select CRYPTO_MANAGER
-+	select MPILIB
-+	select ASN1
-+	help
-+	  Generic implementation of the RSA public key algorithm.
-+
-+config CRYPTO_DH
-+	tristate "Diffie-Hellman algorithm"
-+	select CRYPTO_KPP
-+	select MPILIB
-+	help
-+	  Generic implementation of the Diffie-Hellman algorithm.
-+
-+config CRYPTO_ECDH
-+	tristate "ECDH algorithm"
-+	select CRYPTO_KPP
-+	select CRYPTO_RNG_DEFAULT
-+	help
-+	  Generic implementation of the ECDH algorithm
-+
- comment "Authenticated Encryption with Associated Data"
+ /**
+@@ -287,10 +290,11 @@ static inline int crypto_akcipher_encrypt(struct akcipher_request *req)
+ 	struct akcipher_alg *alg = crypto_akcipher_alg(tfm);
+ 	struct crypto_alg *calg = tfm->base.__crt_alg;
+ 	unsigned int src_len = req->src_len;
+-	int ret;
++	int ret = -ENOSYS;
  
- config CRYPTO_CCM
+ 	crypto_stats_get(calg);
+-	ret = alg->encrypt(req);
++	if (alg->encrypt)
++		ret = alg->encrypt(req);
+ 	crypto_stats_akcipher_encrypt(src_len, ret, calg);
+ 	return ret;
+ }
+@@ -311,10 +315,11 @@ static inline int crypto_akcipher_decrypt(struct akcipher_request *req)
+ 	struct akcipher_alg *alg = crypto_akcipher_alg(tfm);
+ 	struct crypto_alg *calg = tfm->base.__crt_alg;
+ 	unsigned int src_len = req->src_len;
+-	int ret;
++	int ret = -ENOSYS;
+ 
+ 	crypto_stats_get(calg);
+-	ret = alg->decrypt(req);
++	if (alg->decrypt)
++		ret = alg->decrypt(req);
+ 	crypto_stats_akcipher_decrypt(src_len, ret, calg);
+ 	return ret;
+ }
+@@ -334,10 +339,11 @@ static inline int crypto_akcipher_sign(struct akcipher_request *req)
+ 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+ 	struct akcipher_alg *alg = crypto_akcipher_alg(tfm);
+ 	struct crypto_alg *calg = tfm->base.__crt_alg;
+-	int ret;
++	int ret = -ENOSYS;
+ 
+ 	crypto_stats_get(calg);
+-	ret = alg->sign(req);
++	if (alg->sign)
++		ret = alg->sign(req);
+ 	crypto_stats_akcipher_sign(ret, calg);
+ 	return ret;
+ }
+@@ -357,10 +363,11 @@ static inline int crypto_akcipher_verify(struct akcipher_request *req)
+ 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
+ 	struct akcipher_alg *alg = crypto_akcipher_alg(tfm);
+ 	struct crypto_alg *calg = tfm->base.__crt_alg;
+-	int ret;
++	int ret = -ENOSYS;
+ 
+ 	crypto_stats_get(calg);
+-	ret = alg->verify(req);
++	if (alg->verify)
++		ret = alg->verify(req);
+ 	crypto_stats_akcipher_verify(ret, calg);
+ 	return ret;
+ }
 -- 
 2.11.0
 
