@@ -2,265 +2,180 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0536C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5C5C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC7620840
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656B220840
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551459608;
+	bh=L5vtetHrEy9oal9REsCsxQSvlO9Q456lbnteWlGnOIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bpnPH0BTmG51E5dAkIJnGNntnOMbN9v8yYUjM9r7S+hUXDpw/EzYqwe6qYnb/9XUf
+	 StHUSeHRJUwVZVNeJxXtU+s6r8G7iBkDyUNVeZLZTaLSFhfP3oJ3M/aluD/k73px8L
+	 TenLBkEsBUkAbvY+o7aVxUOJ2NdkPL6CJZoORvLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389324AbfCAQ7r (ORCPT
+        id S2389329AbfCARAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:59:47 -0500
-Received: from mga17.intel.com ([192.55.52.151]:38832 "EHLO mga17.intel.com"
+        Fri, 1 Mar 2019 12:00:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbfCAQ7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:59:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 08:59:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,428,1544515200"; 
-   d="scan'208";a="121870014"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 01 Mar 2019 08:59:44 -0800
-Received: from [10.254.83.214] (kliang2-mobl1.ccr.corp.intel.com [10.254.83.214])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2389182AbfCARAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 12:00:06 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 499A65805B4;
-        Fri,  1 Mar 2019 08:59:43 -0800 (PST)
-Subject: Re: [RFC] perf/x86/rapl: Getting zero on energy-cores event
-To:     Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20190301114250.GA23459@krava>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <5fcaf3ae-00d3-f635-74bd-8b81a089133f@linux.intel.com>
-Date:   Fri, 1 Mar 2019 11:59:40 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E2020857;
+        Fri,  1 Mar 2019 17:00:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551459605;
+        bh=L5vtetHrEy9oal9REsCsxQSvlO9Q456lbnteWlGnOIQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EUyX9ZkfolsvavE0N7lY29W2RxFT9Hr72sJ/v4ojB5iRXvjP3h1xbagIBJEyBlC6e
+         IphJVjq3Fz80Y0q/RgeWLeHp7UGPGXDgQLHY+1qqLFuZG5G0xEu5rZh7b3bsd4j6md
+         F3jKzp2hgo8NqFUe2KvxNCIjCtGK2bVDLe5h0Fco=
+Date:   Fri, 1 Mar 2019 18:00:02 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>
+Subject: Re: [RFC net-next 1/8] subdev: Introducing subdev bus
+Message-ID: <20190301170002.GB24452@kroah.com>
+References: <1551418672-12822-1-git-send-email-parav@mellanox.com>
+ <1551418672-12822-2-git-send-email-parav@mellanox.com>
+ <20190301071727.GA8975@kroah.com>
+ <AM4PR0501MB22601B097AF53AAFD59CB8B6D1760@AM4PR0501MB2260.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190301114250.GA23459@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM4PR0501MB22601B097AF53AAFD59CB8B6D1760@AM4PR0501MB2260.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/1/2019 6:42 AM, Jiri Olsa wrote:
-> hi,
-> I'm getting zero counts for energy-cores event on broadwell-x
-> server (model 0x4f)
+On Fri, Mar 01, 2019 at 04:35:46PM +0000, Parav Pandit wrote:
+> Hi Greg,
 > 
-> I checked intel_rapl powercap driver and it won't export the
-> counter if it rdmsr returns zero on it
+> > -----Original Message-----
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Sent: Friday, March 1, 2019 1:17 AM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > michal.lkml@markovi.net; davem@davemloft.net; Jiri Pirko
+> > <jiri@mellanox.com>
+> > Subject: Re: [RFC net-next 1/8] subdev: Introducing subdev bus
+> > 
+> > On Thu, Feb 28, 2019 at 11:37:45PM -0600, Parav Pandit wrote:
+> > > Introduce a new subdev bus which holds sub devices created from a
+> > > primary device. These devices are named as 'subdev'.
+> > > A subdev is identified similarly to pci device using 16-bit vendor id
+> > > and device id.
+> > > Unlike PCI devices, scope of subdev is limited to Linux kernel.
+> > 
+> > But these are limited to only PCI devices, right?
+> > 
+> For Mellanox use case yes, its limited to PCI devices.
 > 
-> the SDM also says the rdmsr returns zero for some models
+> > This sounds a lot like that ARM proposal a week or so ago that asked for
+> > something like this, are you working with them to make sure your proposal
+> > works for them as well?  (sorry, can't find where that was announced, it was
+> > online somewhere...)
+> > 
+> We were not aware of it, mostly because we are either on net side of mailing lists (netdev, rdma, virt etc).
+> ARM proposal likely on linux-kernel, I guess.
+> I will lookup that proposal and surely see if both of us can use common infrastructure.
 > 
-> I made changes on perf rapl pmu below to remove sysfs events
-> if their rdmsr returns zero just to ilustrate the case
+> > > A central entry that assigns unique subdev vendor and device id is:
+> > > include/linux/subdev_ids.h enums. Enum are chosen over define macro so
+> > > that two vendors do not end up with vendor id in kernel development
+> > > process.
+> > 
+> > Why not just make it dynamic with on static ids?
+> > 
+> Can you please elaborate?
+> Do you mean we should use something similar to pci_add_dynid() with enhancement to catch duplicate id addition?
+
+I have no idea what I wrote here, sorry :)
+
+I was trying to say something like "using an enumerated type going to
+rely on a central authority for your "dynamic" bus, why is that needed
+at all"?
+
+> > > subdev bus holds subdevices of multiple devices. A typical created
+> > > subdev for a PCI device in sysfs tree appears under their parent's
+> > > device as using core's default device naming scheme:
+> > >
+> > > subdev<instance_id>.
+> > > i.e.
+> > > subdev0
+> > > subdev1
+> > >
+> > > $ ls -l /sys/bus/pci/devices/0000:05:00.0 [..]
+> > > drwxr-xr-x 4 root root        0 Feb 13 15:57 subvdev0
+> > > drwxr-xr-x 4 root root        0 Feb 13 15:57 subvdev1
+> > >
+> > > Device model view:
+> > > ------------------
+> > >                +------+    +------+       +------+
+> > >                |subdev|    |subdev|       |subdev|
+> > >           -----|  1   |----|  2   |-------|  3   |----------
+> > >           |    +--|---+    +-|----+       +--|---+         |
+> > >           --------|----------|---subdev bus--|--------------
+> > >                   |          |               |
+> > >                +--+----+-----+           +---+---+
+> > >                |pcidev |                 |pcidev |
+> > >           -----|   A   |-----------------|   B   |----------
+> > >           |    +-------+                 +-------+         |
+> > >           -------------------pci bus------------------------
+> > 
+> > To be clear, "subdev bus" is just a logical grouping, there is no physical
+> > backing "bus" here at all, right?
+> > 
+> Yep. that's correct.
 > 
-> I think there's probably better fix, but I'm not sure if
-> there's a reason for zero counters to be exposed..?
+> > What is going to "bind" to subdev devices?  PCI drivers?  Or new types of
+> > drivers?
+> > 
+> Devices are placed on subdev bus using devlink interface. And drivers which registers using subdev_register_driver(), their probe() method will be called.
 
-+Stephane, who is the author.
+But it's just a virtual mapping, what "good" does this provide anyone?
+You are still sharing the same backing device here, what does this
+logical split buy you?
 
-I'm OK to hide the zero counters.
+> So yes, those are PCI vendor driver.
+> I tried to capture this in cover-letter.
+> At present users didn't ask to map this subdev to VM, but there is very high chance that once we have this without PCI SR-IOV, they would like to extend to VMs too.
+> So in that case devlink will have option to say, add 'passthrough' device, and in that case instead of vendor's pci driver, some high level vfio type driver will bind to it.
+> That is just the anticipation, but we haven't really worked out this fully.
+> But this model allows to do so.
 
+I think mfd is what you want to do here, instead of creating your own
+bus type.
 
-> 
-> thoughts? thanks,
-> jirka
-> 
-> 
-> ---
-> diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-> index 94dc564146ca..effb9a9d2368 100644
-> --- a/arch/x86/events/intel/rapl.c
-> +++ b/arch/x86/events/intel/rapl.c
-> @@ -54,6 +54,7 @@
->   #include <linux/module.h>
->   #include <linux/slab.h>
->   #include <linux/perf_event.h>
-> +#include <linux/nospec.h>
->   #include <asm/cpu_device_id.h>
->   #include <asm/intel-family.h>
->   #include "../perf_event.h"
-> @@ -346,10 +347,18 @@ static void rapl_pmu_event_del(struct perf_event *event, int flags)
->   	rapl_pmu_event_stop(event, PERF_EF_UPDATE);
->   }
->   
-> +static unsigned int event_msr[NR_RAPL_DOMAINS] = {
-> +	MSR_PP0_ENERGY_STATUS,
-> +	MSR_PKG_ENERGY_STATUS,
-> +	MSR_DRAM_ENERGY_STATUS,
-> +	MSR_PP1_ENERGY_STATUS,
-> +	MSR_PLATFORM_ENERGY_STATUS,
-> +};
-> +
->   static int rapl_pmu_event_init(struct perf_event *event)
->   {
->   	u64 cfg = event->attr.config & RAPL_EVENT_MASK;
-> -	int bit, msr, ret = 0;
-> +	int bit, ret = 0;
->   	struct rapl_pmu *pmu;
->   
->   	/* only look at RAPL events */
-> @@ -365,33 +374,12 @@ static int rapl_pmu_event_init(struct perf_event *event)
->   
->   	event->event_caps |= PERF_EV_CAP_READ_ACTIVE_PKG;
->   
-> -	/*
-> -	 * check event is known (determines counter)
-> -	 */
-> -	switch (cfg) {
-> -	case INTEL_RAPL_PP0:
-> -		bit = RAPL_IDX_PP0_NRG_STAT;
-> -		msr = MSR_PP0_ENERGY_STATUS;
-> -		break;
-> -	case INTEL_RAPL_PKG:
-> -		bit = RAPL_IDX_PKG_NRG_STAT;
-> -		msr = MSR_PKG_ENERGY_STATUS;
-> -		break;
-> -	case INTEL_RAPL_RAM:
-> -		bit = RAPL_IDX_RAM_NRG_STAT;
-> -		msr = MSR_DRAM_ENERGY_STATUS;
-> -		break;
-> -	case INTEL_RAPL_PP1:
-> -		bit = RAPL_IDX_PP1_NRG_STAT;
-> -		msr = MSR_PP1_ENERGY_STATUS;
-> -		break;
-> -	case INTEL_RAPL_PSYS:
-> -		bit = RAPL_IDX_PSYS_NRG_STAT;
-> -		msr = MSR_PLATFORM_ENERGY_STATUS;
-> -		break;
-> -	default:
-> +	if (!cfg || cfg >= NR_RAPL_DOMAINS)
->   		return -EINVAL;
-> -	}
-> +
-> +	cfg = array_index_nospec(cfg, NR_RAPL_DOMAINS);
-> +	bit = cfg - 1;
-> +
->   	/* check event supported */
->   	if (!(rapl_cntr_mask & (1 << bit)))
->   		return -EINVAL;
-> @@ -406,7 +394,7 @@ static int rapl_pmu_event_init(struct perf_event *event)
->   		return -EINVAL;
->   	event->cpu = pmu->cpu;
->   	event->pmu_private = pmu;
-> -	event->hw.event_base = msr;
-> +	event->hw.event_base = event_msr[bit];
->   	event->hw.config = cfg;
->   	event->hw.idx = bit;
->   
-> @@ -435,11 +423,27 @@ static struct attribute_group rapl_pmu_attr_group = {
->   	.attrs = rapl_pmu_attrs,
->   };
->   
-> -RAPL_EVENT_ATTR_STR(energy-cores, rapl_cores, "event=0x01");
-> -RAPL_EVENT_ATTR_STR(energy-pkg  ,   rapl_pkg, "event=0x02");
-> -RAPL_EVENT_ATTR_STR(energy-ram  ,   rapl_ram, "event=0x03");
-> -RAPL_EVENT_ATTR_STR(energy-gpu  ,   rapl_gpu, "event=0x04");
-> -RAPL_EVENT_ATTR_STR(energy-psys,   rapl_psys, "event=0x05");
-> +static ssize_t
-> +rapl_event_sysfs_show(struct device *dev, struct device_attribute *attr,
-> +		      char *page)
-> +{
-> +	struct perf_pmu_events_attr *pmu_attr =
-> +		container_of(attr, struct perf_pmu_events_attr, attr);
-> +
-> +	return sprintf(page, "event=%llu\n", pmu_attr->id);
-> +}
-> +
-> +#define RAPL_EVENT_ATTR(_name, v, _id)					\
-> +static struct perf_pmu_events_attr event_attr_##v = {			\
-> +	.attr	= __ATTR(_name, 0444, rapl_event_sysfs_show, NULL),	\
-> +	.id	= RAPL_IDX_##_id##_NRG_STAT,				\
-> +};
-> +
-> +RAPL_EVENT_ATTR(energy-cores,  rapl_cores,  PP0);
-> +RAPL_EVENT_ATTR(energy-pkg  ,    rapl_pkg,  PKG);
-> +RAPL_EVENT_ATTR(energy-ram  ,    rapl_ram,  RAM);
-> +RAPL_EVENT_ATTR(energy-gpu  ,    rapl_gpu,  PP1);
-> +RAPL_EVENT_ATTR(energy-psys ,   rapl_psys, PSYS);
->   
->   RAPL_EVENT_ATTR_STR(energy-cores.unit, rapl_cores_unit, "Joules");
->   RAPL_EVENT_ATTR_STR(energy-pkg.unit  ,   rapl_pkg_unit, "Joules");
-> @@ -780,6 +784,59 @@ static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
->   
->   MODULE_DEVICE_TABLE(x86cpu, rapl_cpu_match);
->   
-> +static void __init remove_name(struct attribute **attrs, const char *name)
-> +{
-> +	struct device_attribute *attr;
-> +	int i, j;
-> +
-> +	for (i = 0; attrs[i]; i++) {
-> +		attr = (struct device_attribute *) attrs[i];
-> +
-> +		if (strncmp(name, attr->attr.name, strlen(name)))
-> +			continue;
-> +
-> +		for (j = i; attrs[j]; j++)
-> +			attrs[j] = attrs[j + 1];
-> +
-> +		/* Check the shifted attr. */
-> +		i--;
-> +	}
-> +}
-> +
-> +static void __init check_events(struct attribute **attrs)
-> +{
-> +	struct perf_pmu_events_attr *pmu_attr;
-> +	struct device_attribute *attr;
-> +	int i, j;
-> +
-> +	for (i = 0; attrs[i]; i++) {
-> +		u64 val = 0;
-> +		u64 bit;
-> +
-> +		attr     = (struct device_attribute *) attrs[i];
-> +		pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
-> +
-> +		if (pmu_attr->event_str)
-> +			continue;
-> +
-> +		bit = pmu_attr->id;
-> +
-> +		if (WARN_ON_ONCE(bit >= NR_RAPL_DOMAINS))
-> +			continue;
-> +
-> +		if (!rdmsrl_safe(event_msr[bit], &val) && val)
-> +			continue;
-> +
-> +		remove_name(&attrs[i + 1], attr->attr.name);
+> > > +int subdev_add_dev(struct subdev *subdev, struct device *parent_dev,
+> > > +		   enum subdev_vendor_id vid, enum subdev_device_id did) {
+> > > +	u32 id = 0;
+> > > +	int ret;
+> > > +
+> > > +	if (!parent_dev)
+> > > +		return -EINVAL;
+> > 
+> > No root devices?
+> > 
+> I didn't get the comment. Intent of this check is subdev must have parent. Parent type doesn't matter.
 
-In perf cstate, we check and insert the available events for sysfs attrs
-I think we should use the same way here. It's better to factor out a 
-common function for both cstate and rapl.
+You do not allow a subdev to sit at the "root" of the device tree.
+That's fine, it was just a comment, it's your choice.
 
+thanks,
 
-Peter,
-
-The cstate, rapl and uncore are similar. I think it should be the right 
-direction to abstract several common functions for them.
-Here, the sysfs attrs is an example.
-The common topology related functions I proposed is another example.
-https://lore.kernel.org/lkml/9631a92f-5b24-26a6-e160-4e4c0b4697c1@linux.intel.com/
-
-Thanks,
-Kan
+greg k-h
