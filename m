@@ -2,92 +2,136 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BA9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB27C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA3FE218E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC13320851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="NtMM4BuX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388920AbfCAOxl (ORCPT
+        id S2388936AbfCAOxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:53:41 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60286 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388894AbfCAOxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:53:40 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A4157B8B77475910A7BD;
-        Fri,  1 Mar 2019 22:53:35 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.408.0; Fri, 1 Mar 2019 22:53:32 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <netdev@vger.kernel.org>, <davem@davemloft.net>,
-        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net] net: sit: fix memory leak in sit_init_net()
-Date:   Fri, 1 Mar 2019 23:06:40 +0800
-Message-ID: <20190301150640.85941-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 1 Mar 2019 09:53:46 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42640 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388894AbfCAOxp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:53:45 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b2so11557626pgl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:53:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2NCNDzjIcVY2rYuh6d/4cyK6U/CBx5FFhf0iLZq9gKQ=;
+        b=NtMM4BuXwoY2fUJAoT15nHQhytu27YTjmXdb2LiHmatybi/0jpsy/wvjwEhk4g9bzS
+         wFN10V54d6eORENpaVhlXqYHbdePxwDKrejJAan7RKnGzfBasT06P79FyN78rBiqecr5
+         Ubp89mL80zPvLgCxvj78pGQXzbqASdkwOZQAUybHoY6eRDNf/5SBfxmQqd5liEtR49KJ
+         PPVoHMLrsOrR5oXmkJh5sQzUX4K4q1P00RIGLp7wxtMI/9b1LbDmM+YQzCRo6OKzAXV1
+         l08GKi6SgMiqtlgI3t7qSkJQUb4IMHRPAxSzifdKRG+S+W1hOWf7QYzR2vvVDad4XRqy
+         q2HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2NCNDzjIcVY2rYuh6d/4cyK6U/CBx5FFhf0iLZq9gKQ=;
+        b=ErbC0u2PM1NsfQnlr7rCkU+GNpgsQe25Hd39OvzGgQ9/zsTKe6zRQ0Cbp67m9/v3KU
+         4DdaVN0NJCDz4yaiMwHBvSq18dxpQjIUHriuX7QaAHISZ4QAbGoXQfkALh+17f23bNYe
+         DowMFTGe6tGO0n8jMdRnhSMstJ09gU0U1eHjNOeagsLfAJDLuXr59yPvOg7AF7y44IFH
+         TgWPJEEDaQHqrBLy009uPAuF38Eu667+5yfaIn3U1RF+xJq/aGOlfxEn5MqgNSi5l7t2
+         JieyjaQIrFDZWvk6wO8RYk+5YdAS9yFnWpvj2YoPBasIvr0oGtucrx4ZN4uZuZhOTZr2
+         EFZA==
+X-Gm-Message-State: APjAAAXL3CnWP325fSt2hnD8IslWO+JYj8R44a21RBWLZNjpKRQl589H
+        +gTxNYwCVNQZckhQh84yifYUTQ==
+X-Google-Smtp-Source: APXvYqxl2iZsn6//J0wrG/3ybvbgDGkMYanAeLzu2sf6kvGIiJxjJafW+KP6+YAJjf31kxBrhwYDeg==
+X-Received: by 2002:a65:60d8:: with SMTP id r24mr5211842pgv.6.1551452024075;
+        Fri, 01 Mar 2019 06:53:44 -0800 (PST)
+Received: from cisco ([2601:282:901:dd7b:316c:2a55:1ab5:9f1c])
+        by smtp.gmail.com with ESMTPSA id l12sm26584812pgk.40.2019.03.01.06.53.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Mar 2019 06:53:43 -0800 (PST)
+Date:   Fri, 1 Mar 2019 07:53:41 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>, linux-man@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jann Horn <jann@thejh.net>, Oleg Nesterov <oleg@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Containers <containers@lists.linux-foundation.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Akihiro Suda <suda.akihiro@lab.ntt.co.jp>
+Subject: Re: [PATCH 2/2] seccomp.2: document userspace notification
+Message-ID: <20190301145341.GD7413@cisco>
+References: <20181213001106.15268-1-tycho@tycho.ws>
+ <20181213001106.15268-3-tycho@tycho.ws>
+ <2cea5fec-e73e-5749-18af-15c35a4bd23c@gmail.com>
+ <e7a5abd9-f7b7-e077-221a-4c3ef7b818df@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7a5abd9-f7b7-e077-221a-4c3ef7b818df@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If register_netdev() is failed to register sitn->fb_tunnel_dev,
-it will go to err_reg_dev and forget to free netdev(sitn->fb_tunnel_dev).
+On Thu, Feb 28, 2019 at 02:25:55PM +0100, Michael Kerrisk (man-pages) wrote:
+> > 7. The monitoring process can use the information in the
+> >    'struct seccomp_notif' to make a determination about the
+> >    system call being made by the target process. This
+> >    structure includes a 'data' field that is the same
+> >    'struct seccomp_data' that is passed to a BPF filter.
+> > 
+> >    In addition, the monitoring process may make use of other 
+> >    information that is available from user space. For example, 
+> >    it may inspect the memory of the target process (whose PID
+> >    is provided in the 'struct seccomp_notif') using
+> >    /proc/PID/mem, which includes inspecting the values
+> >    pointed to by system call arguments (whose location is
+> >    available 'seccomp_notif.data.args). However, when using
+> >    the target process PID in this way, one must guard against
+> >    PID re-use race conditions using the seccomp()
+> >    SECCOMP_IOCTL_NOTIF_ID_VALID operation.
+> > 
+> > 8. Having arrived at a decision about the target process's
+> >    system call, the monitoring process can inform the kernel
+> >    of its decision using the operation
+> > 
+> >        ioctl(listenfd, SECCOMP_IOCTL_NOTIF_SEND, respptr)
+> > 
+> >    where the third argument is a pointer to a
+> >    'struct seccomp_notif_resp'. [Some more details
+> >    needed here, but I still don't yet understand fully
+> >    the semantics of the 'error' and 'val' fields.]
+> 
+> So clearly, I misunderstood these last two steps.
+> 
+> (7) is something like: discover information in userspace
+> as required; perform userspace actions if appropriate
+> (perhaps doing the system call operation "on behalf of" the
+> target process).
+> 
+> 
+> (8) is something like:
+>    set 'error' and 'val' to return info to the target process:
+>     * error != 0 ==> make it look like the syscall failed,
+>       with 'errno' set to that value
+>     * error == 0 ==> make it look like the syscall succeeded 
+>       and returned 'val'
+> 
+> Right?
 
-BUG: memory leak
-unreferenced object 0xffff888378daad00 (size 512):
-  comm "syz-executor.1", pid 4006, jiffies 4295121142 (age 16.115s)
-  hex dump (first 32 bytes):
-    00 e6 ed c0 83 88 ff ff 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-backtrace:
-    [<00000000d6dcb63e>] kvmalloc include/linux/mm.h:577 [inline]
-    [<00000000d6dcb63e>] kvzalloc include/linux/mm.h:585 [inline]
-    [<00000000d6dcb63e>] netif_alloc_netdev_queues net/core/dev.c:8380 [inline]
-    [<00000000d6dcb63e>] alloc_netdev_mqs+0x600/0xcc0 net/core/dev.c:8970
-    [<00000000867e172f>] sit_init_net+0x295/0xa40 net/ipv6/sit.c:1848
-    [<00000000871019fa>] ops_init+0xad/0x3e0 net/core/net_namespace.c:129
-    [<00000000319507f6>] setup_net+0x2ba/0x690 net/core/net_namespace.c:314
-    [<0000000087db4f96>] copy_net_ns+0x1dc/0x330 net/core/net_namespace.c:437
-    [<0000000057efc651>] create_new_namespaces+0x382/0x730 kernel/nsproxy.c:107
-    [<00000000676f83de>] copy_namespaces+0x2ed/0x3d0 kernel/nsproxy.c:165
-    [<0000000030b74bac>] copy_process.part.27+0x231e/0x6db0 kernel/fork.c:1919
-    [<00000000fff78746>] copy_process kernel/fork.c:1713 [inline]
-    [<00000000fff78746>] _do_fork+0x1bc/0xe90 kernel/fork.c:2224
-    [<000000001c2e0d1c>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-    [<00000000ec48bd44>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<0000000039acff8a>] 0xffffffffffffffff
+Yep, exactly.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- net/ipv6/sit.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
-index e8a1dabef803..09e440e8dfae 100644
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -1873,6 +1873,7 @@ static int __net_init sit_init_net(struct net *net)
- 
- err_reg_dev:
- 	ipip6_dev_free(sitn->fb_tunnel_dev);
-+	free_netdev(sitn->fb_tunnel_dev);
- err_alloc_dev:
- 	return err;
- }
--- 
-2.20.1
-
+Tycho
