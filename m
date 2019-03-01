@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D0BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEAEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D145420851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C860220850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388486AbfCAOEc (ORCPT
+        id S2388511AbfCAOEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:04:32 -0500
-Received: from foss.arm.com ([217.140.101.70]:35752 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388460AbfCAOE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:04:26 -0500
+        Fri, 1 Mar 2019 09:04:36 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35828 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388460AbfCAOEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:04:34 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B2B81993;
-        Fri,  1 Mar 2019 06:04:26 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7558E16A3;
+        Fri,  1 Mar 2019 06:04:33 -0800 (PST)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 271A63F720;
-        Fri,  1 Mar 2019 06:04:23 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3A34C3F720;
+        Fri,  1 Mar 2019 06:04:30 -0800 (PST)
 From:   Will Deacon <will.deacon@arm.com>
 To:     linux-arch@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
@@ -44,9 +44,9 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Ingo Molnar <mingo@kernel.org>,
         Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 07/20] nds32/io: Remove useless definition of mmiowb()
-Date:   Fri,  1 Mar 2019 14:03:35 +0000
-Message-Id: <20190301140348.25175-8-will.deacon@arm.com>
+Subject: [PATCH 09/20] sh/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
+Date:   Fri,  1 Mar 2019 14:03:37 +0000
+Message-Id: <20190301140348.25175-10-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190301140348.25175-1-will.deacon@arm.com>
 References: <20190301140348.25175-1-will.deacon@arm.com>
@@ -55,27 +55,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mmiowb() only makes sense for SMP platforms, so we can remove it
-entirely for nds32.
+The mmiowb() macro is horribly difficult to use and drivers will continue
+to work most of the time if they omit a call when it is required.
 
+Rather than rely on driver authors getting this right, push mmiowb() into
+arch_spin_unlock() for sh. If this is deemed to be a performance issue,
+a subsequent optimisation could make use of ARCH_HAS_MMIOWB to elide
+the barrier in cases where no I/O writes were performed inside the
+critical section.
+
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 ---
- arch/nds32/include/asm/io.h | 2 --
- 1 file changed, 2 deletions(-)
+ arch/sh/include/asm/Kbuild          |  1 -
+ arch/sh/include/asm/io.h            |  3 ---
+ arch/sh/include/asm/mmiowb.h        | 12 ++++++++++++
+ arch/sh/include/asm/spinlock-llsc.h |  2 ++
+ 4 files changed, 14 insertions(+), 4 deletions(-)
+ create mode 100644 arch/sh/include/asm/mmiowb.h
 
-diff --git a/arch/nds32/include/asm/io.h b/arch/nds32/include/asm/io.h
-index 71cd226d6863..5ef8ae5ba833 100644
---- a/arch/nds32/include/asm/io.h
-+++ b/arch/nds32/include/asm/io.h
-@@ -55,8 +55,6 @@ static inline u32 __raw_readl(const volatile void __iomem *addr)
- #define __iormb()               rmb()
- #define __iowmb()               wmb()
+diff --git a/arch/sh/include/asm/Kbuild b/arch/sh/include/asm/Kbuild
+index e3f6926c4b86..a6ef3fee5f85 100644
+--- a/arch/sh/include/asm/Kbuild
++++ b/arch/sh/include/asm/Kbuild
+@@ -13,7 +13,6 @@ generic-y += local.h
+ generic-y += local64.h
+ generic-y += mcs_spinlock.h
+ generic-y += mm-arch-hooks.h
+-generic-y += mmiowb.h
+ generic-y += parport.h
+ generic-y += percpu.h
+ generic-y += preempt.h
+diff --git a/arch/sh/include/asm/io.h b/arch/sh/include/asm/io.h
+index 4f7f235f15f8..c28e37a344ad 100644
+--- a/arch/sh/include/asm/io.h
++++ b/arch/sh/include/asm/io.h
+@@ -229,9 +229,6 @@ __BUILD_IOPORT_STRING(q, u64)
  
--#define mmiowb()        __asm__ __volatile__ ("msync all" : : : "memory");
+ #define IO_SPACE_LIMIT 0xffffffff
+ 
+-/* synco on SH-4A, otherwise a nop */
+-#define mmiowb()		wmb()
 -
- /*
-  * {read,write}{b,w,l,q}_relaxed() are like the regular version, but
-  * are not guaranteed to provide ordering against spinlocks or memory
+ /* We really want to try and get these to memcpy etc */
+ void memcpy_fromio(void *, const volatile void __iomem *, unsigned long);
+ void memcpy_toio(volatile void __iomem *, const void *, unsigned long);
+diff --git a/arch/sh/include/asm/mmiowb.h b/arch/sh/include/asm/mmiowb.h
+new file mode 100644
+index 000000000000..535d59735f1d
+--- /dev/null
++++ b/arch/sh/include/asm/mmiowb.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_SH_MMIOWB_H
++#define __ASM_SH_MMIOWB_H
++
++#include <asm/barrier.h>
++
++/* synco on SH-4A, otherwise a nop */
++#define mmiowb()			wmb()
++
++#include <asm-generic/mmiowb.h>
++
++#endif	/* __ASM_SH_MMIOWB_H */
+diff --git a/arch/sh/include/asm/spinlock-llsc.h b/arch/sh/include/asm/spinlock-llsc.h
+index 786ee0fde3b0..7fd929cd2e7a 100644
+--- a/arch/sh/include/asm/spinlock-llsc.h
++++ b/arch/sh/include/asm/spinlock-llsc.h
+@@ -47,6 +47,8 @@ static inline void arch_spin_unlock(arch_spinlock_t *lock)
+ {
+ 	unsigned long tmp;
+ 
++	/* This could be optimised with ARCH_HAS_MMIOWB */
++	mmiowb();
+ 	__asm__ __volatile__ (
+ 		"mov		#1, %0 ! arch_spin_unlock	\n\t"
+ 		"mov.l		%0, @%1				\n\t"
 -- 
 2.11.0
 
