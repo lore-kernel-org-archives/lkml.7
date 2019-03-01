@@ -2,202 +2,124 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83B7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3822C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B61B120851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D032087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730889AbfCAEiU (ORCPT
+        id S1728064AbfCAEo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 23:38:20 -0500
-Received: from smtprelay0045.hostedemail.com ([216.40.44.45]:58211 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726347AbfCAEiU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 23:38:20 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id A5536180A8142;
-        Fri,  1 Mar 2019 04:38:18 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: iron22_e2f37b8d995d
-X-Filterd-Recvd-Size: 6531
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  1 Mar 2019 04:38:17 +0000 (UTC)
-Message-ID: <3f515cdb5cb6f77acb5cd8029bacd0be782eed64.camel@perches.com>
-Subject: [PATCH] wusb: Remove unnecessary static function ckhdid_printf
-From:   Joe Perches <joe@perches.com>
-To:     Jon Flatley <jflat@chromium.org>
-Cc:     Louis Taylor <louis@kragniz.eu>, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 28 Feb 2019 20:38:16 -0800
-In-Reply-To: <CACJJ=pz50c3oovHbKkjDDF=pabAj_9RtKGWvtpwx4nO+E_EtJg@mail.gmail.com>
-References: <20190228115256.5446-1-louis@kragniz.eu>
-         <20190228122417.9318-1-louis@kragniz.eu>
-         <15c6689389503a82394bccb9204650bf20a7a6d3.camel@perches.com>
-         <CACJJ=pzfSMgJbt5zKzgN-AcugkYRuGhbB88tsTX7k+-qPnS0jA@mail.gmail.com>
-         <1450785b937f4a2b5f98c8548986b162684a719b.camel@perches.com>
-         <CACJJ=pz50c3oovHbKkjDDF=pabAj_9RtKGWvtpwx4nO+E_EtJg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        Thu, 28 Feb 2019 23:44:28 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4751 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726189AbfCAEo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 23:44:27 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 327C565CE8DC18230449;
+        Fri,  1 Mar 2019 12:44:22 +0800 (CST)
+Received: from [127.0.0.1] (10.177.23.164) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Fri, 1 Mar 2019
+ 12:44:13 +0800
+Subject: Re: [PATCH RFC 1/1] iommu: set the default iommu-dma mode as
+ non-strict
+To:     Hanjun Guo <guohanjun@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        "Robin Murphy" <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190131135211.6732-1-thunder.leizhen@huawei.com>
+ <94b9b0c9-1a24-63ba-5abe-5f6d79fed415@arm.com>
+ <dc06dfd0-0ab6-6f0b-64c6-2587a2a55798@huawei.com>
+CC:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Chengchuanning (Hisi-Turing)" <chengchuanning@hisilicon.com>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <5C78B89C.7040100@huawei.com>
+Date:   Fri, 1 Mar 2019 12:44:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
+MIME-Version: 1.0
+In-Reply-To: <dc06dfd0-0ab6-6f0b-64c6-2587a2a55798@huawei.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.23.164]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This static inline is unnecessary and can be removed
-by using the vsprintf %ph extension.
 
-This reduces overall object size by more than 2K.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/usb/wusbcore/cbaf.c       | 15 ++++-----------
- drivers/usb/wusbcore/dev-sysfs.c  |  5 ++---
- drivers/usb/wusbcore/devconnect.c |  2 +-
- drivers/usb/wusbcore/wusbhc.c     |  6 +-----
- include/linux/usb/wusb.h          | 16 ----------------
- 5 files changed, 8 insertions(+), 36 deletions(-)
+On 2019/2/26 20:36, Hanjun Guo wrote:
+> Hi Jean,
+> 
+> On 2019/1/31 22:55, Jean-Philippe Brucker wrote:
+>> Hi,
+>>
+>> On 31/01/2019 13:52, Zhen Lei wrote:
+>>> Currently, many peripherals are faster than before. For example, the top
+>>> speed of the older netcard is 10Gb/s, and now it's more than 25Gb/s. But
+>>> when iommu page-table mapping enabled, it's hard to reach the top speed
+>>> in strict mode, because of frequently map and unmap operations. In order
+>>> to keep abreast of the times, I think it's better to set non-strict as
+>>> default.
+>>
+>> Most users won't be aware of this relaxation and will have their system
+>> vulnerable to e.g. thunderbolt hotplug. See for example 4.3 Deferred
+>> Invalidation in
+>> http://www.cs.technion.ac.il/users/wwwb/cgi-bin/tr-get.cgi/2018/MSC/MSC-2018-21.pdf
+Hi Jean,
 
-diff --git a/drivers/usb/wusbcore/cbaf.c b/drivers/usb/wusbcore/cbaf.c
-index 222228c5c1e1..af77064c7456 100644
---- a/drivers/usb/wusbcore/cbaf.c
-+++ b/drivers/usb/wusbcore/cbaf.c
-@@ -302,10 +302,8 @@ static ssize_t cbaf_wusb_chid_show(struct device *dev,
- {
- 	struct usb_interface *iface = to_usb_interface(dev);
- 	struct cbaf *cbaf = usb_get_intfdata(iface);
--	char pr_chid[WUSB_CKHDID_STRSIZE];
- 
--	ckhdid_printf(pr_chid, sizeof(pr_chid), &cbaf->chid);
--	return scnprintf(buf, PAGE_SIZE, "%s\n", pr_chid);
-+	return sprintf(buf, "%16ph\n", cbaf->chid.data);
- }
- 
- static ssize_t cbaf_wusb_chid_store(struct device *dev,
-@@ -415,10 +413,8 @@ static ssize_t cbaf_wusb_cdid_show(struct device *dev,
- {
- 	struct usb_interface *iface = to_usb_interface(dev);
- 	struct cbaf *cbaf = usb_get_intfdata(iface);
--	char pr_cdid[WUSB_CKHDID_STRSIZE];
- 
--	ckhdid_printf(pr_cdid, sizeof(pr_cdid), &cbaf->cdid);
--	return scnprintf(buf, PAGE_SIZE, "%s\n", pr_cdid);
-+	return sprintf(buf, "%16ph\n", cbaf->cdid.data);
- }
- 
- static ssize_t cbaf_wusb_cdid_store(struct device *dev,
-@@ -503,7 +499,6 @@ static int cbaf_cc_upload(struct cbaf *cbaf)
- 	int result;
- 	struct device *dev = &cbaf->usb_iface->dev;
- 	struct wusb_cbaf_cc_data *ccd;
--	char pr_cdid[WUSB_CKHDID_STRSIZE];
- 
- 	ccd =  cbaf->buffer;
- 	*ccd = cbaf_cc_data_defaults;
-@@ -513,10 +508,8 @@ static int cbaf_cc_upload(struct cbaf *cbaf)
- 	ccd->BandGroups = cpu_to_le16(cbaf->host_band_groups);
- 
- 	dev_dbg(dev, "Trying to upload CC:\n");
--	ckhdid_printf(pr_cdid, sizeof(pr_cdid), &ccd->CHID);
--	dev_dbg(dev, "  CHID       %s\n", pr_cdid);
--	ckhdid_printf(pr_cdid, sizeof(pr_cdid), &ccd->CDID);
--	dev_dbg(dev, "  CDID       %s\n", pr_cdid);
-+	dev_dbg(dev, "  CHID       %16ph\n", ccd->CHID.data);
-+	dev_dbg(dev, "  CDID       %16ph\n", ccd->CDID.data);
- 	dev_dbg(dev, "  Bandgroups 0x%04x\n", cbaf->host_band_groups);
- 
- 	result = usb_control_msg(
-diff --git a/drivers/usb/wusbcore/dev-sysfs.c b/drivers/usb/wusbcore/dev-sysfs.c
-index 85a1acf3a729..67b0a4c412b2 100644
---- a/drivers/usb/wusbcore/dev-sysfs.c
-+++ b/drivers/usb/wusbcore/dev-sysfs.c
-@@ -50,10 +50,9 @@ static ssize_t wusb_cdid_show(struct device *dev,
- 	wusb_dev = wusb_dev_get_by_usb_dev(to_usb_device(dev));
- 	if (wusb_dev == NULL)
- 		return -ENODEV;
--	result = ckhdid_printf(buf, PAGE_SIZE, &wusb_dev->cdid);
--	strcat(buf, "\n");
-+	result = sprintf(buf, "%16ph\n", wusb_dev->cdid.data);
- 	wusb_dev_put(wusb_dev);
--	return result + 1;
-+	return result;
- }
- static DEVICE_ATTR_RO(wusb_cdid);
- 
-diff --git a/drivers/usb/wusbcore/devconnect.c b/drivers/usb/wusbcore/devconnect.c
-index fcb06aef2675..a93837d57d53 100644
---- a/drivers/usb/wusbcore/devconnect.c
-+++ b/drivers/usb/wusbcore/devconnect.c
-@@ -532,7 +532,7 @@ static void wusbhc_handle_dn_connect(struct wusbhc *wusbhc,
- 	}
- 
- 	dnc = container_of(dn_hdr, struct wusb_dn_connect, hdr);
--	ckhdid_printf(pr_cdid, sizeof(pr_cdid), &dnc->CDID);
-+	sprintf(pr_cdid, "%16ph", dnc->CDID.data);
- 	dev_info(dev, "DN CONNECT: device %s @ %x (%s) wants to %s\n",
- 		 pr_cdid,
- 		 wusb_dn_connect_prev_dev_addr(dnc),
-diff --git a/drivers/usb/wusbcore/wusbhc.c b/drivers/usb/wusbcore/wusbhc.c
-index e5ba6140c1ba..d0b404d258e8 100644
---- a/drivers/usb/wusbcore/wusbhc.c
-+++ b/drivers/usb/wusbcore/wusbhc.c
-@@ -80,17 +80,13 @@ static ssize_t wusb_chid_show(struct device *dev,
- {
- 	struct wusbhc *wusbhc = usbhc_dev_to_wusbhc(dev);
- 	const struct wusb_ckhdid *chid;
--	ssize_t result = 0;
- 
- 	if (wusbhc->wuie_host_info != NULL)
- 		chid = &wusbhc->wuie_host_info->CHID;
- 	else
- 		chid = &wusb_ckhdid_zero;
- 
--	result += ckhdid_printf(buf, PAGE_SIZE, chid);
--	result += sprintf(buf + result, "\n");
--
--	return result;
-+	return sprintf(buf, "%16ph\n", chid->data);
- }
- 
- /*
-diff --git a/include/linux/usb/wusb.h b/include/linux/usb/wusb.h
-index 9e4a3213f2c2..65adee629106 100644
---- a/include/linux/usb/wusb.h
-+++ b/include/linux/usb/wusb.h
-@@ -236,22 +236,6 @@ enum {
- 	WUSB_TRUST_TIMEOUT_MS = 4000,	/* [WUSB] section 4.15.1 */
- };
- 
--static inline size_t ckhdid_printf(char *pr_ckhdid, size_t size,
--				   const struct wusb_ckhdid *ckhdid)
--{
--	return scnprintf(pr_ckhdid, size,
--			 "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx "
--			 "%02hx %02hx %02hx %02hx %02hx %02hx %02hx %02hx",
--			 ckhdid->data[0],  ckhdid->data[1],
--			 ckhdid->data[2],  ckhdid->data[3],
--			 ckhdid->data[4],  ckhdid->data[5],
--			 ckhdid->data[6],  ckhdid->data[7],
--			 ckhdid->data[8],  ckhdid->data[9],
--			 ckhdid->data[10], ckhdid->data[11],
--			 ckhdid->data[12], ckhdid->data[13],
--			 ckhdid->data[14], ckhdid->data[15]);
--}
--
- /*
-  * WUSB Crypto stuff (WUSB1.0[6])
-  */
+   In fact, we have discussed the vulnerable of deferred invalidation before upstream
+the non-strict patches. The attacks maybe possible because of an untrusted device or
+the mistake of the device driver. And we limited the VFIO to still use strict mode.
+   As mentioned in the pdf, limit the freed memory with deferred invalidation only to
+be reused by the device, can mitigate the vulnerability. But it's too hard to implement
+it now.
+   A compromise maybe we only apply non-strict to (1) dma_free_coherent, because the
+memory is controlled by DMA common module, so we can make the memory to be freed after
+the global invalidation in the timer handler. (2) And provide some new APIs related to
+iommu_unmap_page/sg, these new APIs deferred invalidation. And the candiate device
+drivers update the APIs if they want to improve performance. (3) Make sure that only
+the trusted devices and trusted drivers can apply (1) and (2). For example, the driver
+must be built into kernel Image.
+   So that some high-end trusted devices use non-strict mode, and keep others still using
+strict mode. The drivers who want to use non-strict mode, should change to use new APIs
+by themselves.
 
+
+>>
+>> Why not keep the policy to secure by default, as we do for
+>> iommu.passthrough? And maybe add something similar to
+>> CONFIG_IOMMU_DEFAULT_PASSTRHOUGH? It's easy enough for experts to pass a
+>> command-line argument or change the default config.
+> 
+> Sorry for the late reply, it was Chinese new year, and we had a long discussion
+> internally, we are fine to add a Kconfig but not sure OS vendors will set it
+> to default y.
+> 
+> OS vendors seems not happy to pass a command-line argument, to be honest,
+> this is our motivation to enable non-strict as default. Hope OS vendors
+> can see this email thread, and give some input here.
+> 
+> Thanks
+> Hanjun
+> 
+> 
+> .
+> 
+
+-- 
+Thanks!
+BestRegards
 
