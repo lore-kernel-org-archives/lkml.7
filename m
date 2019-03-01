@@ -2,118 +2,141 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE544C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19277C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0AC2083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551441025;
-	bh=8UVC6OHIwdcazfIJj3sm5OshMYauX1dxmV71jZvkR+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A7gLoSn9YDntMt8JKS+i9MKvrM5LYZy3maartkp++XiAvqwYNyN6K1Xx+PHOQyCwU
-	 H3HdCCFJlxFh2/eUs89PbOW7xP1oMYwhbpkcj1nA+ZILB79IWH7F1vwX7wvzCsEh8f
-	 gZeCQRHzz8l1m24ts90RXnh6R38EDmxPq2KMTvz4=
+	by mail.kernel.org (Postfix) with ESMTP id DC6062083E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387892AbfCALuY (ORCPT
+        id S2387913AbfCALxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:50:24 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54176 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387854AbfCALuX (ORCPT
+        Fri, 1 Mar 2019 06:53:16 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44174 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387478AbfCALxQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:50:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8UVC6OHIwdcazfIJj3sm5OshMYauX1dxmV71jZvkR+g=; b=f4ltOCsTRazPqxmyv16YF27/3
-        GWWiKWZtrOV8+B2TtA+qOlmThBixRr4SqcH+DoHnR9+1Lq55/LVzUWtS3Y69yRZBkvABiiXVAv3Uv
-        /3dApNah9ALDa1iGfwSg60s7Wi2zOhXd/TTVWe4ZZCrH4XiXerJG349ChIZXlOmlpgPoQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1gzgfu-00028G-V8; Fri, 01 Mar 2019 11:49:59 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 87CCF1126E96; Fri,  1 Mar 2019 11:49:58 +0000 (GMT)
-Date:   Fri, 1 Mar 2019 11:49:58 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
-Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
-Message-ID: <20190301114958.GB7429@sirena.org.uk>
-References: <5c6702da.1c69fb81.12a14.4ece@mx.google.com>
- <20190215104325.039dbbd9c3bfb35b95f9247b@linux-foundation.org>
- <20190215185151.GG7897@sirena.org.uk>
- <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
- <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
- <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
- <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
- <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com>
- <20190301104011.GB5156@rapoport-lnx>
+        Fri, 1 Mar 2019 06:53:16 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x21BnMeK009718
+        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 06:53:14 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2qy3e6akm5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:53:14 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Fri, 1 Mar 2019 11:53:12 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 1 Mar 2019 11:53:06 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x21Br55c31522890
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Mar 2019 11:53:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41070A404D;
+        Fri,  1 Mar 2019 11:53:05 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 127F4A4040;
+        Fri,  1 Mar 2019 11:53:03 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.204.73])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  1 Mar 2019 11:53:02 +0000 (GMT)
+Date:   Fri, 1 Mar 2019 13:53:01 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Steven Price <steven.price@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v2 03/13] mm: Add generic p?d_large() macros
+References: <20190221113502.54153-1-steven.price@arm.com>
+ <20190221113502.54153-4-steven.price@arm.com>
+ <20190221142812.oa53lfnnfmsuh6ys@kshutemo-mobl1>
+ <a3076d01-41b3-d59b-e98c-a0fd9ba5d3f5@arm.com>
+ <20190221145706.zqwfdoyiirn3lc7y@kshutemo-mobl1>
+ <e0c7fc0c-7924-1106-a7a3-fc12136b7b82@arm.com>
+ <20190221210618.voyfs5cnafpvgedh@kshutemo-mobl1>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vGgW1X5XWziG23Ko"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190301104011.GB5156@rapoport-lnx>
-X-Cookie: Yow!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190221210618.voyfs5cnafpvgedh@kshutemo-mobl1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19030111-0016-0000-0000-0000025C7989
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030111-0017-0000-0000-000032B6ED0A
+Message-Id: <20190301115300.GE5156@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=939 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903010084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Him Kirill,
 
---vGgW1X5XWziG23Ko
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, Feb 22, 2019 at 12:06:18AM +0300, Kirill A. Shutemov wrote:
+> On Thu, Feb 21, 2019 at 05:16:46PM +0000, Steven Price wrote:
+> > >> Note that in terms of the new page walking code, these new defines are
+> > >> only used when walking a page table without a VMA (which isn't currently
+> > >> done), so architectures which don't use p?d_large currently will work
+> > >> fine with the generic versions. They only need to provide meaningful
+> > >> definitions when switching to use the walk-without-a-VMA functionality.
+> > > 
+> > > How other architectures would know that they need to provide the helpers
+> > > to get walk-without-a-VMA functionality? This looks very fragile to me.
+> > 
+> > Yes, you've got a good point there. This would apply to the p?d_large
+> > macros as well - any arch which (inadvertently) uses the generic version
+> > is likely to be fragile/broken.
+> > 
+> > I think probably the best option here is to scrap the generic versions
+> > altogether and simply introduce a ARCH_HAS_PXD_LARGE config option which
+> > would enable the new functionality to those arches that opt-in. Do you
+> > think this would be less fragile?
+> 
+> These helpers are useful beyond pagewalker.
+> 
+> Can we actually do some grinding and make *all* archs to provide correct
+> helpers? Yes, it's tedious, but not that bad.
 
-On Fri, Mar 01, 2019 at 12:40:11PM +0200, Mike Rapoport wrote:
+Many architectures simply cannot support non-leaf entries at the higher
+levels. I think letting the use a generic helper actually does make sense.
+ 
+> I think we could provide generic helpers for folded levels in
+> <asm-generic/pgtable-nop?d.h> and rest has to be provided by the arch.
+> Architectures that support only 2 level paging would need to provide
+> pgd_large(), with 3 -- pmd_large() and so on.
+> 
+> -- 
+>  Kirill A. Shutemov
 
-> Another thing to consider is adding "earlyprintk debug" to the kernel
-> command line for the boot tests.
+-- 
+Sincerely yours,
+Mike.
 
-We probably don't want to do that on all the tests since it does
-occasionally change timing enough to "fix" things but doing a final boot
-with the failing commit and earlyprintk turned on is definitely a good
-idea.
-
---vGgW1X5XWziG23Ko
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlx5HGUACgkQJNaLcl1U
-h9BTkQf/VrjYWVkvN4y2fMqvKBsYfN7JSwOOYZywThA3uYBAEhgyQgEQU9gfCFZG
-GCArUfZPSoLF+QKmaRiH/otILLye8aZDOLfrye3mxgyjtGkOGGQ/MKg1ez+2tKJ5
-l/hD+wsMILytbH95oBmXw4GeCKc/7xnBNSAKMBf17X57IIgP5G8qdVxqEFxJc7N/
-W9cKcQInyoqMCv4zgu+A6H3cvtYPkArOyoXfaobPn08evl9nj2foLmaJ59jBB3fR
-Qsaf10R/O4Wj1lZQx6hLZGGHNIkBNmx1eNdKhCthLbsFs/isfEQo4IFkZ2t2B7ZT
-FhMt4KB/mtFOrf0uwjZXISDKJ8dGGQ==
-=owaE
------END PGP SIGNATURE-----
-
---vGgW1X5XWziG23Ko--
