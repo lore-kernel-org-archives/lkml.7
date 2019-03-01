@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E036C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF85CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6131D2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2F42087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387977AbfCAKzh (ORCPT
+        id S1728262AbfCAKzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 05:55:37 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:37257 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387849AbfCAKz0 (ORCPT
+        Fri, 1 Mar 2019 05:55:38 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:52291 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387877AbfCAKzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 05:55:26 -0500
+        Fri, 1 Mar 2019 05:55:32 -0500
 X-Originating-IP: 90.88.147.150
 Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id CEEFDE001D;
-        Fri,  1 Mar 2019 10:55:22 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 6796040010;
+        Fri,  1 Mar 2019 10:55:27 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net
 Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
@@ -33,9 +33,9 @@ Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
         nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
         linux@armlinux.org.uk
-Subject: [PATCH net-next v2 10/15] net: mvpp2: only update the XLG configuration when needed
-Date:   Fri,  1 Mar 2019 11:52:12 +0100
-Message-Id: <20190301105217.15764-11-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v2 12/15] net: mvpp2: rework the XLG MAC reset handling
+Date:   Fri,  1 Mar 2019 11:52:14 +0100
+Message-Id: <20190301105217.15764-13-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190301105217.15764-1-antoine.tenart@bootlin.com>
 References: <20190301105217.15764-1-antoine.tenart@bootlin.com>
@@ -46,49 +46,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch improves the XLG configuration function, to only update the
-XLG configuration register when a change is needed. This helps not
-writing over and over the same XLG configuration each time phylink
-request the MAC to be configured. This mimics the GMAC configuration
-function.
+This patch reworks the way the XLG MAC is set in reset: the XLG MAC is
+set in reset at probe time and taken out of this state only when used.
+The idea is to move forward a situation where only the blocks used are
+taken out of reset. This also has the effect to handle the GMAC and the
+XLG MAC in a similar way (the GMAC already is set in reset at boot
+time).
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 27 ++++++++++++-------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index b27966355df9..59ee9e7545b0 100644
+index 9138baa392d8..958a17328725 100644
 --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
 +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -4506,10 +4506,11 @@ static void mvpp2_mac_an_restart(struct net_device *dev)
- static void mvpp2_xlg_config(struct mvpp2_port *port, unsigned int mode,
- 			     const struct phylink_link_state *state)
+@@ -1189,8 +1189,7 @@ static void mvpp2_port_enable(struct mvpp2_port *port)
+ 	/* Only GOP port 0 has an XLG MAC */
+ 	if (port->gop_id == 0 && mvpp2_is_xlg(port->phy_interface)) {
+ 		val = readl(port->base + MVPP22_XLG_CTRL0_REG);
+-		val |= MVPP22_XLG_CTRL0_PORT_EN |
+-		       MVPP22_XLG_CTRL0_MAC_RESET_DIS;
++		val |= MVPP22_XLG_CTRL0_PORT_EN;
+ 		val &= ~MVPP22_XLG_CTRL0_MIB_CNT_DIS;
+ 		writel(val, port->base + MVPP22_XLG_CTRL0_REG);
+ 	} else {
+@@ -1210,10 +1209,6 @@ static void mvpp2_port_disable(struct mvpp2_port *port)
+ 		val = readl(port->base + MVPP22_XLG_CTRL0_REG);
+ 		val &= ~MVPP22_XLG_CTRL0_PORT_EN;
+ 		writel(val, port->base + MVPP22_XLG_CTRL0_REG);
+-
+-		/* Disable & reset should be done separately */
+-		val &= ~MVPP22_XLG_CTRL0_MAC_RESET_DIS;
+-		writel(val, port->base + MVPP22_XLG_CTRL0_REG);
+ 	}
+ 
+ 	val = readl(port->base + MVPP2_GMAC_CTRL_0_REG);
+@@ -1370,10 +1365,10 @@ static int mvpp2_ethtool_get_sset_count(struct net_device *dev, int sset)
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static void mvpp2_port_reset(struct mvpp2_port *port)
++static void mvpp2_mac_reset_assert(struct mvpp2_port *port)
  {
--	u32 ctrl0, ctrl4;
-+	u32 old_ctrl0, ctrl0;
-+	u32 old_ctrl4, ctrl4;
+-	u32 val;
+ 	unsigned int i;
++	u32 val;
  
--	ctrl0 = readl(port->base + MVPP22_XLG_CTRL0_REG);
--	ctrl4 = readl(port->base + MVPP22_XLG_CTRL4_REG);
-+	old_ctrl0 = ctrl0 = readl(port->base + MVPP22_XLG_CTRL0_REG);
-+	old_ctrl4 = ctrl4 = readl(port->base + MVPP22_XLG_CTRL4_REG);
+ 	/* Read the GOP statistics to reset the hardware counters */
+ 	for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_regs); i++)
+@@ -1382,6 +1377,12 @@ static void mvpp2_port_reset(struct mvpp2_port *port)
+ 	val = readl(port->base + MVPP2_GMAC_CTRL_2_REG) |
+ 	      MVPP2_GMAC_PORT_RESET_MASK;
+ 	writel(val, port->base + MVPP2_GMAC_CTRL_2_REG);
++
++	if (port->priv->hw_version == MVPP22 && port->gop_id == 0) {
++		val = readl(port->base + MVPP22_XLG_CTRL0_REG) &
++		      ~MVPP22_XLG_CTRL0_MAC_RESET_DIS;
++		writel(val, port->base + MVPP22_XLG_CTRL0_REG);
++	}
+ }
  
+ /* Change maximum receive size of the port */
+@@ -4512,6 +4513,8 @@ static void mvpp2_xlg_config(struct mvpp2_port *port, unsigned int mode,
+ 	old_ctrl0 = ctrl0 = readl(port->base + MVPP22_XLG_CTRL0_REG);
+ 	old_ctrl4 = ctrl4 = readl(port->base + MVPP22_XLG_CTRL4_REG);
+ 
++	ctrl0 |= MVPP22_XLG_CTRL0_MAC_RESET_DIS;
++
  	if (state->pause & MLO_PAUSE_TX)
  		ctrl0 |= MVPP22_XLG_CTRL0_TX_FLOW_CTRL_EN;
-@@ -4525,8 +4526,10 @@ static void mvpp2_xlg_config(struct mvpp2_port *port, unsigned int mode,
- 	ctrl4 |= MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC |
- 		 MVPP22_XLG_CTRL4_EN_IDLE_CHECK;
- 
--	writel(ctrl0, port->base + MVPP22_XLG_CTRL0_REG);
--	writel(ctrl4, port->base + MVPP22_XLG_CTRL4_REG);
-+	if (old_ctrl0 != ctrl0)
-+		writel(ctrl0, port->base + MVPP22_XLG_CTRL0_REG);
-+	if (old_ctrl4 != ctrl4)
-+		writel(ctrl4, port->base + MVPP22_XLG_CTRL4_REG);
+ 	else
+@@ -4530,6 +4533,12 @@ static void mvpp2_xlg_config(struct mvpp2_port *port, unsigned int mode,
+ 		writel(ctrl0, port->base + MVPP22_XLG_CTRL0_REG);
+ 	if (old_ctrl4 != ctrl4)
+ 		writel(ctrl4, port->base + MVPP22_XLG_CTRL4_REG);
++
++	if (!(old_ctrl0 & MVPP22_XLG_CTRL0_MAC_RESET_DIS)) {
++		while (!(readl(port->base + MVPP22_XLG_CTRL0_REG) &
++			 MVPP22_XLG_CTRL0_MAC_RESET_DIS))
++			continue;
++	}
  }
  
  static void mvpp2_gmac_config(struct mvpp2_port *port, unsigned int mode,
+@@ -4947,7 +4956,7 @@ static int mvpp2_port_probe(struct platform_device *pdev,
+ 
+ 	mvpp2_port_periodic_xon_disable(port);
+ 
+-	mvpp2_port_reset(port);
++	mvpp2_mac_reset_assert(port);
+ 
+ 	port->pcpu = alloc_percpu(struct mvpp2_port_pcpu);
+ 	if (!port->pcpu) {
 -- 
 2.20.1
 
