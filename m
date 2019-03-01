@@ -2,100 +2,106 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA063C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D692FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3492084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F542084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:38:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="CXOdZ1qk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="btq4ZZXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388699AbfCAOiC (ORCPT
+        id S2388719AbfCAOiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:38:02 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42276 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387418AbfCAOiC (ORCPT
+        Fri, 1 Mar 2019 09:38:21 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:57054 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728357AbfCAOiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:38:02 -0500
-Received: by mail-qt1-f193.google.com with SMTP id u7so18748856qtg.9
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:38:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=u8p6LEaICK87ZAl5dajNGBnd4suIRJImycTZiVBF6mk=;
-        b=CXOdZ1qkJEFpDrXmIdbDFbUBBQDnKKwxBoNzQ/nl3UExKo92Qa5WMRtSjviMKpm2rv
-         SFoAwTu2thb0beEIxDaXIYP7hZRt9TAWPTy3RW9m6utlnE/sNtmF3tBU7yr5biidOdS1
-         CO0cgbA2BXHGnDZTJRrviplkxPAbjiz4PgAL9bneX/QvIEMs/unePVw0WOAz+mapodzN
-         hQLgQxaYUNtpH4TrOzljElp03YViaHMFr/8yYAzXxLPhu5EnN72Fghckv+RmBkv8Fuxi
-         59CTQYerYdDzTr/vEKgECB9mHb9kaPaFTTp4+PlThUbZlRvcN0BDSDjruZ7JdkjD04vv
-         7yLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=u8p6LEaICK87ZAl5dajNGBnd4suIRJImycTZiVBF6mk=;
-        b=Szvj4f6wY/4oF8pn0lNO1/3AKwdyA8gsL9eN0i2A5SkpyMLtjWO7mcyNHyvH+BMhCY
-         9x5e2J5usyHSNmVr5LRtcNdG5V/ykIXUtKSwWnwaENeN0jLja3bWW7QFwb9Bk270Rnpx
-         XdmP+pIE37O0l/aZA3bzJJS7BvW2IEsjPbDCEcqe9SA+4w7YkbMImW8cuBScfcmXJKwM
-         aJsjUc0ARtl/apRfpmc27nZsYVptPe26I7K4NDLP1EKpq33Hx+4E5Z6nU4zuvQxZ39o/
-         mqw+y90XiYIdN8w/g5jEx+P4yXdGnxCvzRF78ra6+Q7mfLFmKg7JPZpZneN9Dnqj2WEA
-         6QGQ==
-X-Gm-Message-State: APjAAAWBycGrFthC5UBqeW1LkJkfsBcOQZx9UhPZPFJ/IZppn8e0qEZE
-        g4tF99a4duAt1ktgMaj4Cghnkg==
-X-Google-Smtp-Source: APXvYqx0h4cstO+ZyRZVh/m5x9n5LEmfz45jN+4/fx3DH9aqCGTQtRrGaf8xOiVauN2qra/2xB3BKA==
-X-Received: by 2002:ac8:1a56:: with SMTP id q22mr4123143qtk.59.1551451081078;
-        Fri, 01 Mar 2019 06:38:01 -0800 (PST)
-Received: from ovpn-120-151.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id z126sm15936977qkz.8.2019.03.01.06.38.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 06:38:00 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
-        vdavydov.dev@gmail.com
-Cc:     guro@fb.com, jrdr.linux@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] memcg: fix a bad line
-Date:   Fri,  1 Mar 2019 09:37:34 -0500
-Message-Id: <20190301143734.94393-1-cai@lca.pw>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Fri, 1 Mar 2019 09:38:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=D20FS/b3C+Uzm8zEFff2tzX0CzvSgkdyaf9/2GVvBys=; b=btq4ZZXHkJ41xA7TUZ3ii55LR
+        S6VqS3rmxwXXcjW58IAaWPomDiCVk6nTKEVEp28XJ9dcrx9SOfXqwbBu2gr3HbR2+5Q0zL1TQMh2N
+        oKP3uVTrHLnPAxf1IAP8OazXFH7/5DOZdl/CxP2Gnz9dEx6OG6g76Kg1jBe0Tb/AUxaK610uQ1yzG
+        BOcC6O77mtPf6/n4OfL26lEdTvyS/uJnAG22LdoK4ieca3ZZm9RLjD8SYlwG7FcfYamWRp5FvLfwP
+        F/olqGHu+akZqSty5F9gtXVosOU/2qfx3q6yTs8u6zAJQUuUmnPyKm8e06VWphyh0eCZf8s1I6Q1R
+        d9kln29Qg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1gzjIY-0000E3-9a; Fri, 01 Mar 2019 14:38:02 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F414F29AAFFEA; Fri,  1 Mar 2019 15:38:00 +0100 (CET)
+Date:   Fri, 1 Mar 2019 15:38:00 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [PATCH 6/8] i915,uaccess: Fix redundant CLAC
+Message-ID: <20190301143800.GT32534@hirez.programming.kicks-ass.net>
+References: <20190228145450.289603901@infradead.org>
+ <20190228150152.540038736@infradead.org>
+ <CAHk-=wgsSXxL5c2Lbmbai=bcCgN0G=jPO+gWhQ3a+wx-LTaFkQ@mail.gmail.com>
+ <20190228175114.GG32494@hirez.programming.kicks-ass.net>
+ <20190228180154.GO32534@hirez.programming.kicks-ass.net>
+ <CAHk-=whJww5smbSU2VzvcR7tajNqp=i9ZBYHK3RvwVXbs+V_JQ@mail.gmail.com>
+ <20190228190111.GI32494@hirez.programming.kicks-ass.net>
+ <20190301103452.GQ32534@hirez.programming.kicks-ass.net>
+ <20190301122745.GR32534@hirez.programming.kicks-ass.net>
+ <20190301125718.GS32534@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190301125718.GS32534@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 230671533d64 ("mm: memory.low hierarchical behavior") missed
-an asterisk in one of the comments.
+On Fri, Mar 01, 2019 at 01:57:18PM +0100, Peter Zijlstra wrote:
+> On Fri, Mar 01, 2019 at 01:27:45PM +0100, Peter Zijlstra wrote:
+> > arch/x86/lib/usercopy_64.o: warning: objtool: .altinstr_replacement+0x30: redundant UACCESS disable
+> 
+> > The usercopy one is difficult, that's copy_user_handle_tail(), it is
+> > buggered though, because that lacks notrace and thus has a __fentry__
+> > call in.
+> > 
+> > Also, afaict all exception jumps into copy_user_handle_tail() will have
+> > AC=1, but the __{get,put}_user_nocheck() things do STAC/CLAC all over
+> > again.
+> > 
+> > So what do we do? Annotate that we start with AC=1 and then immediately
+> > do the clac, and then let __{get,put}_user_nocheck() do their own thing?
+> > or make it use the unsafe stuff?
+> 
+> Or.. we move the thing to assembly. Of course, I suck at (writing) asm,
+> so the below is probably broken in various ways.
 
-mm/memcontrol.c:5774: warning: bad line:                | 0, otherwise.
+The advantage is that it now all lives in the same .o file and objtool
+can actually follow and find the complete control flow.
 
-Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+I've made it ENDPROC() such that it becomes STT_FUNC and objtool does
+all the normal things. I've also moved the ALIGN_DESTINATION macro into
+the .S file.
 
-v2: improve the commit message.
-
- mm/memcontrol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index af7f18b32389..d4b96dc4bd8a 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5747,7 +5747,7 @@ struct cgroup_subsys memory_cgrp_subsys = {
-  *
-  *             | memory.current, if memory.current < memory.low
-  * low_usage = |
--	       | 0, otherwise.
-+ *	       | 0, otherwise.
-  *
-  *
-  * Such definition of the effective memory.low provides the expected
--- 
-2.17.2 (Apple Git-113)
-
+Andy, do we have a sensible self-test for this path?
