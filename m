@@ -2,270 +2,143 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE7EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2975C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18DF20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BY12FPWU"
+	by mail.kernel.org (Postfix) with ESMTP id 9C89A20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733232AbfCASft (ORCPT
+        id S1728512AbfCAShG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 13:35:49 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38855 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfCASfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 13:35:48 -0500
-Received: by mail-oi1-f195.google.com with SMTP id q81so20294305oic.5
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 10:35:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=D0GDFSZmWDjvNe//7F78fEk7xv42+6p+PAugrPkX5mI=;
-        b=BY12FPWUfOsgC4vPrdHNGIRQwIfNZA70zHY2l7BDOPg7gc1TALsEzhwUs23uiagrwk
-         EhAgVpvCSz+vp1t4Qx8iUcqhLHFZGXpYQohSKks7P2rwSkMbaeaqBXihowmMehLFm0Mg
-         ChhvXQ8b66mBaNfH9Fx8YyK7qPT98IDfhqOF77WWdl2mJ+VPLPCUi9jwC4xisLTu6YEm
-         vwcoovmee8QkJsEWQEIg82X0AAIiI4+9SzozLucge9rGTGUMgOSAukAG9y7lkJUdUkvg
-         ep3+5soIcEfd/KjfZnTHxbrmff3NltOBgfMbnI+jxWVvy3aaJhB++tFhyU/nG2Xd82k7
-         LlkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D0GDFSZmWDjvNe//7F78fEk7xv42+6p+PAugrPkX5mI=;
-        b=VSlU2JLsif20OaonSInBCcOC4zDpyKANi5qUvx871Qxl/vHnLg6dYHSYY4VZTw0b8f
-         6qk+WQ2OPg2hqnRHiNKsu7DJOVCfQqg1aUGsHBr2NjpPiWTXUPbXJxPvMlubnM/0/+x5
-         3zOWNu1yFgeEosoOTLtSBXLkqidMIB5poehXmbZGQyQsgVoAm+j7tKD30BIznrSmSevT
-         GdlYGhtycqLXVGn2o5NLr8Lb2xJ3U2qh/aZ6JZseYU/M6TDLmDnrOR2R8MI8ZxM+GdyW
-         0nm6ncwTiuNFk4hbxXO/HlwDb0mM3tBzdEQ46KQIydIhQZ8t9XJqRI6pacqU9zBjgfOx
-         7ZKw==
-X-Gm-Message-State: AHQUAuarmkxgpp4j05/SG9NsfkwGo9Pb1djCFgj+mLSA5NCFAb9BhsZr
-        C7bbmOrtKWgl/sBFEOJmSedWtTYfSnkReRklw2rFX1Q1
-X-Google-Smtp-Source: AHgI3IZojpM9yjcniUfJ8heCdD/3JZnxPz5RPtU6qnDteCEYqHUw0kTs9IbjgErl/abrjS1r8AklGz8Lx2FzXYu3+Oc=
-X-Received: by 2002:aca:4205:: with SMTP id p5mr4269758oia.15.1551465347203;
- Fri, 01 Mar 2019 10:35:47 -0800 (PST)
+        Fri, 1 Mar 2019 13:37:06 -0500
+Received: from mga04.intel.com ([192.55.52.120]:27834 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726835AbfCAShG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 13:37:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 10:37:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,428,1544515200"; 
+   d="scan'208";a="303646974"
+Received: from unknown (HELO [10.7.201.142]) ([10.7.201.142])
+  by orsmga005.jf.intel.com with ESMTP; 01 Mar 2019 10:37:04 -0800
+Subject: Re: [PATCH v10 07/12] fs, arm64: untag user pointers in
+ fs/userfaultfd.c
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1550839937.git.andreyknvl@google.com>
+ <8343cd77ca301df15839796f3b446b75ce5ffbbf.1550839937.git.andreyknvl@google.com>
+ <73f2f3fe-9a66-22a1-5aae-c282779a75f5@intel.com>
+ <CAAeHK+yQU8khtOoyDKqmHterCa16P7oWe9AMiPnrxE+Gyb_7aw@mail.gmail.com>
+ <20190301165908.GA130541@arrakis.emea.arm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <fb721f0b-fad7-2310-4f17-8bf046413d40@intel.com>
+Date:   Fri, 1 Mar 2019 10:37:04 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190225142606.gov32asdq3qe375q@smtp.gmail.com>
- <20190228101107.GL2665@phenom.ffwll.local> <20190228140341.GG20097@intel.com>
- <CAKkTe8Ei2fbz4L2noLvGWMCsHy1f7sadOV-horjNsGBEHt=q3w@mail.gmail.com> <20190301152558.GR20097@intel.com>
-In-Reply-To: <20190301152558.GR20097@intel.com>
-From:   Shayenne Moura <shayenneluzmoura@gmail.com>
-Date:   Fri, 1 Mar 2019 15:35:35 -0300
-Message-ID: <CAKkTe8HbgkVm1i2xAFT6ecgv2jFjyoqrSEYUpx_40Uj=ogKYPQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/vkms: Solve bug on kms_crc_cursor tests
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190301165908.GA130541@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em sex, 1 de mar de 2019 =C3=A0s 12:26, Ville Syrj=C3=A4l=C3=A4
-<ville.syrjala@linux.intel.com> escreveu:
->
-> On Fri, Mar 01, 2019 at 11:55:11AM -0300, Shayenne Moura wrote:
-> > Em qui, 28 de fev de 2019 =C3=A0s 11:03, Ville Syrj=C3=A4l=C3=A4
-> > <ville.syrjala@linux.intel.com> escreveu:
-> > >
-> > > On Thu, Feb 28, 2019 at 11:11:07AM +0100, Daniel Vetter wrote:
-> > > > On Mon, Feb 25, 2019 at 11:26:06AM -0300, Shayenne Moura wrote:
-> > > > > vkms_crc_work_handle needs the value of the actual frame to
-> > > > > schedule the workqueue that calls periodically the vblank
-> > > > > handler and the destroy state functions. However, the frame
-> > > > > value returned from vkms_vblank_simulate is updated and
-> > > > > diminished in vblank_get_timestamp because it is not in a
-> > > > > vblank interrupt, and return an inaccurate value.
-> > > > >
-> > > > > Solve this getting the actual vblank frame directly from the
-> > > > > vblank->count inside the `struct drm_crtc`, instead of using
-> > > > > the `drm_accurate_vblank_count` function.
-> > > > >
-> > > > > Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
-> > > >
-> > > > Sorry for the delay, I'm a bit swamped right now :-/
-> > > >
-> > > > Debug work you're doing here is really impressive! But I have no id=
-ea
-> > > > what's going on. It doesn't look like it's just papering over a bug=
- (like
-> > > > the in_vblank_irq check we've discussed on irc), but I also have no=
- idea
-> > > > why it works.
-> > > >
-> > > > I'll pull in Ville, he understands this better than me.
-> > >
-> > > It's not entirely clear what we're trying to fix. From what I can see
-> > > the crc work seems to be in no way synchronized with page flips, so
-> > > I'm not sure how all this is really supposed to work.
-> > >
-> >
-> > Hi, Ville!
-> >
-> > Thank you for the review! :)
-> >
-> > I do not understand well what crc code is doing, but the issue that I f=
-ound
-> > is related to the vblank timestamp and frame count.
-> >
-> > When vkms handles the crc_cursor it uses the start frame and end frame
-> > values to verify if it needs to call the function 'drm_crtc_add_crc_ent=
-ry()'
-> > for each frame.
-> >
-> > However, when getting the frame count, the code is calling the function
-> > drm_update_vblank_count(dev, pipe, false) and, because of the 'false',
-> > subtracting the actual vblank timestamp (consequently, the frame count
-> > value), causing conflicts.
->
-> The in_vblank_irq behavour looks sane to me. What are these conflicts?
->
+On 3/1/19 8:59 AM, Catalin Marinas wrote:
+>>> So, we have to patch all these sites before the tagged values get to the
+>>> point of hitting the vma lookup functions.  Dumb question: Why don't we
+>>> just patch the vma lookup functions themselves instead of all of these
+>>> callers?
+>> That might be a working approach as well. We'll still need to fix up
+>> places where the vma fields are accessed directly. Catalin, what do
+>> you think?
+> Most callers of find_vma*() always follow it by a check of
+> vma->vma_start against some tagged address ('end' in the
+> userfaultfd_(un)register()) case. So it's not sufficient to untag it in
+> find_vma().
 
-The entire history was:
- - I sent the patch with bugfix for vblank extra frame. The patch changed
-   our function vkms_get_vblank_timestamp() to look like this:
-
-bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
-                   int *max_error, ktime_t *vblank_time,
-                   bool in_vblank_irq)
-{
-    struct vkms_device *vkmsdev =3D drm_device_to_vkms_device(dev);
-    struct vkms_output *output =3D &vkmsdev->output;
-
-    *vblank_time =3D output->vblank_hrtimer.node.expires;
-
-+   if (!in_vblank_irq)
-+        *vblank_time -=3D output->period_ns;
-
-    return true;
-}
-
- - This patch solve the issue that I was looking for (extra vblank
-frames on kms_flip).
-
- - However, kms_cursor_crc tests, which passed before my patch, started to =
-fail.
-
- - Debugging them, I found that the problem was inside of function
-`vkms_vblank_simulate()`
-when it was handling the crc_enabled (inside  if (state && output->crc_enab=
-led))
-and inside the function vkms_crc_work_handle() too.
-
- - Following the steps:
-1. Inside vkms_vblank_simulate() we call drm_crtc_accurate_vblank_count()
-2. In its turn, drm_crtc_accurate_vblank_count() calls the function
-   drm_update_vblank_count(dev, pipe, false).  /* This false is default */
-3. Finally, the =E2=80=9Cfalse=E2=80=9D used in drm_update_vblank_count(), =
-will be
-  passed to vkms_get_vblank_timestamp() and the condition =E2=80=9Cif
-  (!in_vblank_irq)=E2=80=9D will be executed multiple times (we don=E2=80=
-=99t want it).
-
- - Inside vkms_crc, the issue is that the returned frame value change for
-every call of drm_crtc_accurate_vblank_count() because
-in_vblank_irq =3D=3D false.
-
- - To solve this, I used the value already calculated on vblank->count,
-instead of using the helper function that updates the value.
-
-Shayenne
-
-> >
-> > Does it make sense? I am not sure about this crc code behavior.
-> >
-> > Shayenne
-> >
-> > > > -Daniel
-> > > >
-> > > > > ---
-> > > > >  drivers/gpu/drm/vkms/vkms_crc.c  | 4 +++-
-> > > > >  drivers/gpu/drm/vkms/vkms_crtc.c | 4 +++-
-> > > > >  2 files changed, 6 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vk=
-ms/vkms_crc.c
-> > > > > index d7b409a3c0f8..09a8b00ef1f1 100644
-> > > > > --- a/drivers/gpu/drm/vkms/vkms_crc.c
-> > > > > +++ b/drivers/gpu/drm/vkms/vkms_crc.c
-> > > > > @@ -161,6 +161,8 @@ void vkms_crc_work_handle(struct work_struct =
-*work)
-> > > > >     struct vkms_output *out =3D drm_crtc_to_vkms_output(crtc);
-> > > > >     struct vkms_device *vdev =3D container_of(out, struct vkms_de=
-vice,
-> > > > >                                             output);
-> > > > > +   unsigned int pipe =3D drm_crtc_index(crtc);
-> > > > > +   struct drm_vblank_crtc *vblank =3D &crtc->dev->vblank[pipe];
-> > > > >     struct vkms_crc_data *primary_crc =3D NULL;
-> > > > >     struct vkms_crc_data *cursor_crc =3D NULL;
-> > > > >     struct drm_plane *plane;
-> > > > > @@ -196,7 +198,7 @@ void vkms_crc_work_handle(struct work_struct =
-*work)
-> > > > >     if (primary_crc)
-> > > > >             crc32 =3D _vkms_get_crc(primary_crc, cursor_crc);
-> > > > >
-> > > > > -   frame_end =3D drm_crtc_accurate_vblank_count(crtc);
-> > > > > +   frame_end =3D vblank->count;
-> > > > >
-> > > > >     /* queue_work can fail to schedule crc_work; add crc for
-> > > > >      * missing frames
-> > > > > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/v=
-kms/vkms_crtc.c
-> > > > > index 8a9aeb0a9ea8..9bf3268e2e92 100644
-> > > > > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
-> > > > > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
-> > > > > @@ -10,6 +10,8 @@ static enum hrtimer_restart vkms_vblank_simulat=
-e(struct hrtimer *timer)
-> > > > >                                               vblank_hrtimer);
-> > > > >     struct drm_crtc *crtc =3D &output->crtc;
-> > > > >     struct vkms_crtc_state *state =3D to_vkms_crtc_state(crtc->st=
-ate);
-> > > > > +   unsigned int pipe =3D drm_crtc_index(crtc);
-> > > > > +   struct drm_vblank_crtc *vblank =3D &crtc->dev->vblank[pipe];
-> > > > >     u64 ret_overrun;
-> > > > >     bool ret;
-> > > > >
-> > > > > @@ -20,7 +22,7 @@ static enum hrtimer_restart vkms_vblank_simulat=
-e(struct hrtimer *timer)
-> > > > >             DRM_ERROR("vkms failure on handling vblank");
-> > > > >
-> > > > >     if (state && output->crc_enabled) {
-> > > > > -           u64 frame =3D drm_crtc_accurate_vblank_count(crtc);
-> > > > > +           u64 frame =3D vblank->count;
-> > > > >
-> > > > >             /* update frame_start only if a queued vkms_crc_work_=
-handle()
-> > > > >              * has read the data
-> > > > > --
-> > > > > 2.17.1
-> > > > >
-> > > >
-> > > > --
-> > > > Daniel Vetter
-> > > > Software Engineer, Intel Corporation
-> > > > http://blog.ffwll.ch
-> > > > _______________________________________________
-> > > > dri-devel mailing list
-> > > > dri-devel@lists.freedesktop.org
-> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > >
-> > > --
-> > > Ville Syrj=C3=A4l=C3=A4
-> > > Intel
->
-> --
-> Ville Syrj=C3=A4l=C3=A4
-> Intel
+If that's truly the common case, sounds like we should have a find_vma()
+that does the vma_end checking as well.  Then at least the common case
+would not have to worry about tagging.
