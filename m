@@ -2,99 +2,165 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03CDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81316C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CEC2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E29B206DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387807AbfCAI6O (ORCPT
+        id S1732956AbfCAJC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:58:14 -0500
-Received: from out1.zte.com.cn ([202.103.147.172]:33176 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387546AbfCAI6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:58:13 -0500
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id 47EEFEA8356A865F93A0;
-        Fri,  1 Mar 2019 16:57:40 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x218vRpU087389;
-        Fri, 1 Mar 2019 16:57:27 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019030116580665-2499079 ;
-          Fri, 1 Mar 2019 16:58:06 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     liviu.dudau@arm.com
-Cc:     sudeep.holla@arm.com, lorenzo.pieralisi@arm.com,
-        linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kgene@kernel.org, krzk@kernel.org,
-        linux-samsung-soc@vger.kernel.org, michal.simek@xilinx.com,
-        afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        dinguyen@kernel.org, heiko@sntech.de,
-        linux-rockchip@lists.infradead.org, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
-        avifishman70@gmail.com, tmaimon77@gmail.com, venture@google.com,
-        yuenn@google.com, brendanhiggins@google.com,
-        openbmc@lists.ozlabs.org, xuwei5@hisilicon.com,
-        maxime.ripard@bootlin.com, wens@csie.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
-        linux-renesas-soc@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de,
-        fabio.estevam@nxp.com, linux-imx@nxp.com, wang.yi59@zte.com.cn,
-        Wen Yang <wen.yang99@zte.com.cn>
-Subject: [PATCH 14/15] arm64: cpu_ops: fix a leaked reference by addingmissing of_node_put
-Date:   Fri, 1 Mar 2019 16:56:55 +0800
-Message-Id: <1551430616-42014-14-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1551430616-42014-1-git-send-email-wen.yang99@zte.com.cn>
-References: <1551430616-42014-1-git-send-email-wen.yang99@zte.com.cn>
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-03-01 16:58:06,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-03-01 16:57:12,
-        Serialize complete at 2019-03-01 16:57:12
-X-MAIL: mse01.zte.com.cn x218vRpU087389
+        Fri, 1 Mar 2019 04:02:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59468 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725951AbfCAJC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 04:02:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 173D8AF76;
+        Fri,  1 Mar 2019 09:02:26 +0000 (UTC)
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        guillaume.tucker@collabora.com, matthew.hart@linaro.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <5c6702da.1c69fb81.12a14.4ece@mx.google.com>
+ <20190215104325.039dbbd9c3bfb35b95f9247b@linux-foundation.org>
+ <20190215185151.GG7897@sirena.org.uk>
+ <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
+ <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <07d4e843-8023-2041-22a7-b5b589f4d2c0@suse.cz>
+Date:   Fri, 1 Mar 2019 10:02:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call to of_get_next_child returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+On 2/27/19 1:04 AM, Dan Williams wrote:
+> On Tue, Feb 26, 2019 at 4:00 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>>
+>> On Fri, 15 Feb 2019 18:51:51 +0000 Mark Brown <broonie@kernel.org> wrote:
+>>
+>>> On Fri, Feb 15, 2019 at 10:43:25AM -0800, Andrew Morton wrote:
+>>>> On Fri, 15 Feb 2019 10:20:10 -0800 (PST) "kernelci.org bot" <bot@kernelci.org> wrote:
+>>>
+>>>>>   Details:    https://kernelci.org/boot/id/5c666ea959b514b017fe6017
+>>>>>   Plain log:  https://storage.kernelci.org//next/master/next-20190215/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-collabora/boot-am335x-boneblack.txt
+>>>>>   HTML log:   https://storage.kernelci.org//next/master/next-20190215/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-collabora/boot-am335x-boneblack.html
+>>>
+>>>> Thanks.
+>>>
+>>>> But what actually went wrong?  Kernel doesn't boot?
+>>>
+>>> The linked logs show the kernel dying early in boot before the console
+>>> comes up so yeah.  There should be kernel output at the bottom of the
+>>> logs.
+>>
+>> I assume Dan is distracted - I'll keep this patchset on hold until we
+>> can get to the bottom of this.
+> 
+> Michal had asked if the free space accounting fix up addressed this
+> boot regression? I was awaiting word on that.
 
-Detected by coccinelle with the following warnings:
-./arch/arm64/kernel/cpu_ops.c:102:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 69, but without a corresponding object release within this function.
+I'm afraid it couldn't have. Bisection identified the "enable all
+shuffling" patch, but the free area mis-accounting happened regardless
+of shuffling being enabled. And if dropping the "enable all shuffling"
+patch stopped the problem even before the misacounting fix was merged,
+that's another confirmation.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm64/kernel/cpu_ops.c | 1 +
- 1 file changed, 1 insertion(+)
+Is it possible that the platform silently depends on large contiguous
+areas without a proper CMA reservation, and the shuffling fragments
+them? Or maybe the CMA reservation happens too late?
 
-diff --git a/arch/arm64/kernel/cpu_ops.c b/arch/arm64/kernel/cpu_ops.c
-index ea00124..00f8b86 100644
---- a/arch/arm64/kernel/cpu_ops.c
-+++ b/arch/arm64/kernel/cpu_ops.c
-@@ -85,6 +85,7 @@ static const char *__init cpu_read_enable_method(int cpu)
- 				pr_err("%pOF: missing enable-method property\n",
- 					dn);
- 		}
-+		of_node_put(dn);
- 	} else {
- 		enable_method = acpi_get_enable_method(cpu);
- 		if (!enable_method) {
--- 
-2.9.5
+> I assume you're not willing to entertain a "depends
+> NOT_THIS_ARM_BOARD" hack in the meantime?
+> 
 
