@@ -2,134 +2,100 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E114C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA063C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B7B2084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3492084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:38:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="CXOdZ1qk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388337AbfCAOgg (ORCPT
+        id S2388699AbfCAOiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:36:36 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:55741 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387965AbfCAOgg (ORCPT
+        Fri, 1 Mar 2019 09:38:02 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42276 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387418AbfCAOiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:36:36 -0500
-Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id E2EBF240014;
-        Fri,  1 Mar 2019 14:36:32 +0000 (UTC)
-Date:   Fri, 1 Mar 2019 15:36:32 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: sun8i: h3: bluetooth for Banana Pi M2 Zero board
-Message-ID: <20190301143632.kzlr4jphq3rceos6@flea>
-References: <20190228212840.24964-1-andreas@kemnade.info>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ib4bul6sb7rzbemi"
-Content-Disposition: inline
-In-Reply-To: <20190228212840.24964-1-andreas@kemnade.info>
-User-Agent: NeoMutt/20180716
+        Fri, 1 Mar 2019 09:38:02 -0500
+Received: by mail-qt1-f193.google.com with SMTP id u7so18748856qtg.9
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:38:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=u8p6LEaICK87ZAl5dajNGBnd4suIRJImycTZiVBF6mk=;
+        b=CXOdZ1qkJEFpDrXmIdbDFbUBBQDnKKwxBoNzQ/nl3UExKo92Qa5WMRtSjviMKpm2rv
+         SFoAwTu2thb0beEIxDaXIYP7hZRt9TAWPTy3RW9m6utlnE/sNtmF3tBU7yr5biidOdS1
+         CO0cgbA2BXHGnDZTJRrviplkxPAbjiz4PgAL9bneX/QvIEMs/unePVw0WOAz+mapodzN
+         hQLgQxaYUNtpH4TrOzljElp03YViaHMFr/8yYAzXxLPhu5EnN72Fghckv+RmBkv8Fuxi
+         59CTQYerYdDzTr/vEKgECB9mHb9kaPaFTTp4+PlThUbZlRvcN0BDSDjruZ7JdkjD04vv
+         7yLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=u8p6LEaICK87ZAl5dajNGBnd4suIRJImycTZiVBF6mk=;
+        b=Szvj4f6wY/4oF8pn0lNO1/3AKwdyA8gsL9eN0i2A5SkpyMLtjWO7mcyNHyvH+BMhCY
+         9x5e2J5usyHSNmVr5LRtcNdG5V/ykIXUtKSwWnwaENeN0jLja3bWW7QFwb9Bk270Rnpx
+         XdmP+pIE37O0l/aZA3bzJJS7BvW2IEsjPbDCEcqe9SA+4w7YkbMImW8cuBScfcmXJKwM
+         aJsjUc0ARtl/apRfpmc27nZsYVptPe26I7K4NDLP1EKpq33Hx+4E5Z6nU4zuvQxZ39o/
+         mqw+y90XiYIdN8w/g5jEx+P4yXdGnxCvzRF78ra6+Q7mfLFmKg7JPZpZneN9Dnqj2WEA
+         6QGQ==
+X-Gm-Message-State: APjAAAWBycGrFthC5UBqeW1LkJkfsBcOQZx9UhPZPFJ/IZppn8e0qEZE
+        g4tF99a4duAt1ktgMaj4Cghnkg==
+X-Google-Smtp-Source: APXvYqx0h4cstO+ZyRZVh/m5x9n5LEmfz45jN+4/fx3DH9aqCGTQtRrGaf8xOiVauN2qra/2xB3BKA==
+X-Received: by 2002:ac8:1a56:: with SMTP id q22mr4123143qtk.59.1551451081078;
+        Fri, 01 Mar 2019 06:38:01 -0800 (PST)
+Received: from ovpn-120-151.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id z126sm15936977qkz.8.2019.03.01.06.38.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Mar 2019 06:38:00 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
+        vdavydov.dev@gmail.com
+Cc:     guro@fb.com, jrdr.linux@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] memcg: fix a bad line
+Date:   Fri,  1 Mar 2019 09:37:34 -0500
+Message-Id: <20190301143734.94393-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit 230671533d64 ("mm: memory.low hierarchical behavior") missed
+an asterisk in one of the comments.
 
---ib4bul6sb7rzbemi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+mm/memcontrol.c:5774: warning: bad line:                | 0, otherwise.
 
-Hi,
+Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
-Thanks for your patch
+v2: improve the commit message.
 
-On Thu, Feb 28, 2019 at 10:28:40PM +0100, Andreas Kemnade wrote:
-> The Banana Pi M2 Zero board has an AP6212 BT+Wifi combo chip
-> with broadcom internals attached to UART1 and some gpios.
-> This addition is in line with similar boards
->=20
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
->  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 29 ++++++++++++++++=
-++++++
->  1 file changed, 29 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/=
-arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> index 1db2541135a7..39e206fac4e3 100644
-> --- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> @@ -69,6 +69,8 @@
->  		compatible =3D "mmc-pwrseq-simple";
->  		pinctrl-names =3D "default";
->  		reset-gpios =3D <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-> +		clocks =3D <&rtc 1>;
-> +		clock-names =3D "ext_clock";
->  	};
->  };
-> =20
-> @@ -122,7 +124,34 @@
->  &uart1 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-> +	uart-has-rtscts;
->  	status =3D "okay";
-> +
-> +	bluetooth {
-> +		compatible =3D "brcm,bcm43438-bt";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&bt_pins_out>, <&bt_pins_in>;
-> +		clocks =3D <&rtc 1>;
-> +		clock-names =3D "lpo";
-> +		vbat-supply =3D <&reg_vcc3v3>;
-> +		vddio-supply =3D <&reg_vcc3v3>;
-> +		device-wakeup-gpios =3D <&pio 6 13 GPIO_ACTIVE_HIGH>; /* PG13 */
-> +		host-wakeup-gpios =3D <&pio 6 11 GPIO_ACTIVE_HIGH>; /* PG11 */
-> +		shutdown-gpios =3D <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-> +	};
-> +
-> +};
-> +
-> +&pio {
-> +	bt_pins_out: bt_out {
-> +		pins =3D "PG12", "PG13";
-> +		function =3D "gpio_out";
-> +	};
-> +
-> +	bt_pins_in: bt_in {
-> +		pins =3D "PG11";
-> +		function =3D "gpio_in";
-> +	};
+ mm/memcontrol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You don't need any of those pinctrl nodes, GPIOs work fine without.
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index af7f18b32389..d4b96dc4bd8a 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5747,7 +5747,7 @@ struct cgroup_subsys memory_cgrp_subsys = {
+  *
+  *             | memory.current, if memory.current < memory.low
+  * low_usage = |
+-	       | 0, otherwise.
++ *	       | 0, otherwise.
+  *
+  *
+  * Such definition of the effective memory.low provides the expected
+-- 
+2.17.2 (Apple Git-113)
 
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ib4bul6sb7rzbemi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXHlDcAAKCRDj7w1vZxhR
-xWn6AP0cj7wtgn87Bf2OYGSm3A4wakfamsXePzKGD2jOfh+OUQD+PQr/iYkj+OYv
-6IvLK6H+eNF9wjDGYohNflqd7siYuwo=
-=Wkrh
------END PGP SIGNATURE-----
-
---ib4bul6sb7rzbemi--
