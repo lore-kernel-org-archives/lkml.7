@@ -2,146 +2,113 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34EBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6F7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD9A20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:43:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="He60ngLB"
+	by mail.kernel.org (Postfix) with ESMTP id F0DCD20851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732845AbfCAHnE (ORCPT
+        id S1732853AbfCAHql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 02:43:04 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:54644 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732630AbfCAHnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 02:43:04 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x217dNld138152;
-        Fri, 1 Mar 2019 07:42:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=6lfOGVAAUB6OA/1HcHLRzwr8artXT5fP2lKwYELpOYc=;
- b=He60ngLB7NccrPGHNHTA25ymjq9FsnMSwBzlQoRajbi42JYEwA0lFdSOEkxc7jh40Ngs
- HtXVO78AxY1Bqh9vqDNd5vUOojQEiByaoWFWAaUrr+C/Lfdj7o0lDSPy4tYakBM7e5qf
- vEsBy1A+Rg1PLsyGwq6vwNauP/b45qZLk1QW3R7nEGn5Bp6LoyD0gQTNOUZii5ykWvoS
- U3m0vEaqU48Xnanx4CLr+2kPX6zk+3/dX6mH4MoeSQRxE3HnqgAJT4ff0BV08NsA25pM
- 4cUIO+XHf1EzUprkks5K8lGZp4/CyWSvq370yFavs3Cbl+heoI+uqVDHaN195J9ZiJG3 Hw== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by userp2130.oracle.com with ESMTP id 2qtwkunte7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 01 Mar 2019 07:42:19 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x217gITS020966
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 Mar 2019 07:42:18 GMT
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x217gGtH013925;
-        Fri, 1 Mar 2019 07:42:16 GMT
-Received: from kadam (/41.202.241.19)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 Feb 2019 23:42:16 -0800
-Date:   Fri, 1 Mar 2019 10:42:02 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
-Cc:     "lars@metafoo.de" <lars@metafoo.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "renatogeh@gmail.com" <renatogeh@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>
-Subject: Re: [PATCH v4 1/9] staging: iio: ad7780: add gain & filter gpio
- support
-Message-ID: <20190301074024.GA9828@kadam>
-References: <cover.1551358569.git.renatogeh@gmail.com>
- <b83c0558a600cb44677b0d06f31e014be550b8bf.1551358569.git.renatogeh@gmail.com>
- <4f945f058c8536a2731c4de3e0b9227a41cd2891.camel@analog.com>
+        Fri, 1 Mar 2019 02:46:41 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55522 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732630AbfCAHql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 02:46:41 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7C2AE9FC675B8F1EC746;
+        Fri,  1 Mar 2019 15:46:38 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Fri, 1 Mar 2019
+ 15:46:33 +0800
+Message-ID: <5C78E357.5060808@huawei.com>
+Date:   Fri, 1 Mar 2019 15:46:31 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4f945f058c8536a2731c4de3e0b9227a41cd2891.camel@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9181 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903010054
+To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "hughd@google.com" <hughd@google.com>,
+        "mhocko@kernel.org" <mhocko@kernel.org>
+Subject: Re: [PATCH] mm: hwpoison: fix thp split handing in soft_offline_in_use_page()
+References: <1551179880-65331-1-git-send-email-zhongjiang@huawei.com> <20190226135156.mifspmbdyr6m3hff@kshutemo-mobl1> <5C754E78.4050804@huawei.com> <20190301072919.GA3027@hori.linux.bs1.fc.nec.co.jp>
+In-Reply-To: <20190301072919.GA3027@hori.linux.bs1.fc.nec.co.jp>
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 06:56:14AM +0000, Ardelean, Alexandru wrote:
-> On Thu, 2019-02-28 at 11:23 -0300, Renato Lui Geh wrote:
-> > 
-> > 
-> > Previously, the AD7780 driver only supported gpio for the 'powerdown'
-> > pin. This commit adds suppport for the 'gain' and 'filter' pin.
-> > 
-> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-> > Signed-off-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
-> > Co-developed-by: Giuliano Belinassi <giuliano.belinassi@usp.br>
-> > ---
-> > Changes in v3:
-> >  - Renamed ad7780_chip_info's filter to odr
-> >  - Renamed ad778x_filter to ad778x_odr_avail
-> >  - Changed vref variable from unsigned int to unsigned long long to avoid
-> >    overflow
-> >  - Removed unnecessary AD_SD_CHANNEL macro
-> > Changes in v4:
-> >  - Removed useless macro
-> >  - Added default case for switch to suppress warning
-> >  - Removed chunks belonging to filter reading, adding these as a
-> >    patch for itself
-> > 
-> >  drivers/staging/iio/adc/ad7780.c | 90 +++++++++++++++++++++++++++++---
-> >  1 file changed, 84 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/staging/iio/adc/ad7780.c
-> > b/drivers/staging/iio/adc/ad7780.c
-> > index c4a85789c2db..87fbcf510d45 100644
-> > --- a/drivers/staging/iio/adc/ad7780.c
-> > +++ b/drivers/staging/iio/adc/ad7780.c
-> > @@ -39,6 +39,12 @@
-> >  #define AD7170_PATTERN         (AD7780_PAT0 | AD7170_PAT2)
-> >  #define AD7170_PATTERN_MASK    (AD7780_PAT0 | AD7780_PAT1 | AD7170_PAT2)
-> > 
-> > +#define AD7780_GAIN_MIDPOINT   64
-> > +#define AD7780_FILTER_MIDPOINT 13350
-> > +
-> > +static const unsigned int ad778x_gain[2]      = { 1, 128 };
-> > +static const unsigned int ad778x_odr_avail[2] = { 10000, 16700 };
-> 
-> ad778x_odr_avail[2] is not used in this patch, so it should probably go
-> into the next one 
-> (i.e. staging: iio: ad7780: add filter reading to ad778x )
-> 
-> one good way of catching stuff like this is to do interactive rebase and
-> compile your driver on each patch to see if the compiler catches this;
-> i suspect the compiler would have thrown an error for this change
-> 
+On 2019/3/1 15:29, Naoya Horiguchi wrote:
+> On Tue, Feb 26, 2019 at 10:34:32PM +0800, zhong jiang wrote:
+>> On 2019/2/26 21:51, Kirill A. Shutemov wrote:
+>>> On Tue, Feb 26, 2019 at 07:18:00PM +0800, zhong jiang wrote:
+>>>> From: zhongjiang <zhongjiang@huawei.com>
+>>>>
+>>>> When soft_offline_in_use_page() runs on a thp tail page after pmd is plit,
+>>> s/plit/split/
+>>>
+>>>> we trigger the following VM_BUG_ON_PAGE():
+>>>>
+>>>> Memory failure: 0x3755ff: non anonymous thp
+>>>> __get_any_page: 0x3755ff: unknown zero refcount page type 2fffff80000000
+>>>> Soft offlining pfn 0x34d805 at process virtual address 0x20fff000
+>>>> page:ffffea000d360140 count:0 mapcount:0 mapping:0000000000000000 index:0x1
+>>>> flags: 0x2fffff80000000()
+>>>> raw: 002fffff80000000 ffffea000d360108 ffffea000d360188 0000000000000000
+>>>> raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
+>>>> page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
+>>>> ------------[ cut here ]------------
+>>>> kernel BUG at ./include/linux/mm.h:519!
+>>>>
+>>>> soft_offline_in_use_page() passed refcount and page lock from tail page to
+>>>> head page, which is not needed because we can pass any subpage to
+>>>> split_huge_page().
+>>> I don't see a description of what is going wrong and why change will fixed
+>>> it. From the description, it appears as it's cosmetic-only change.
+>>>
+>>> Please elaborate.
+>> When soft_offline_in_use_page runs on a thp tail page after pmd is split,  
+>> and we pass the head page to split_huge_page, Unfortunately, the tail page
+>> can be free or count turn into zero.
+> I guess that you have the similar fix on memory_failure() in your mind:
+>
+>   commit c3901e722b2975666f42748340df798114742d6d
+>   Author: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+>   Date:   Thu Nov 10 10:46:23 2016 -0800
+>   
+>       mm: hwpoison: fix thp split handling in memory_failure()
+>
+> So it seems that I somehow missed fixing soft offline when I wrote commit
+> c3901e722b29, and now you find and fix that. Thank you very much.
+> If you resend the patch with fixing typo, can you add some reference to
+> c3901e722b29 in the patch description to show the linkage?
+> And you can add the following tags:
+Yep, I find that that is a similar issue. hence I refer to that description in the patch you
+had mentioned.
 
-GCC (v7.3) doesn't complain about unused variables if they're const.
+I will add the above desprition you had mentioned in V2.
 
-regards,
-dan carpenter
+Thanks,
+zhong jiang
+> Fixes: 61f5d698cc97 ("mm: re-enable THP")
+> Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+>
+> Thanks,
+> Naoya Horiguchi
+>
+> .
+>
+
 
