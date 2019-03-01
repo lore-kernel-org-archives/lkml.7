@@ -2,205 +2,227 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9498C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC2DC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E95218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926992084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G4CPjcvB"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jlitbj2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbfCAGY6 (ORCPT
+        id S1728154AbfCAGZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 01:24:58 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39406 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfCAGY4 (ORCPT
+        Fri, 1 Mar 2019 01:25:59 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:41369 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfCAGZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 01:24:56 -0500
-Received: by mail-pl1-f195.google.com with SMTP id b65so7949006plb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 22:24:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3DFH9A64SknMlWuqRsGigvNh6nJnuZv0yy/7Ja82OxA=;
-        b=G4CPjcvBv4cz96reYJ+ifIifq5mmB4np63b07pIqN4y6UesrsXOq0jzUF/MYBJadvi
-         hEAZEu55llp/C1lBvnk1YUtHke0g4y8HCDrMZsDERgJYfwqdqHZVCZMEJZlBLGtF24mD
-         NyCgT50podPsi6kp4elYMWsY+uoLDGRnNREAb6Ag/TS99bp4YUr71/FGKMqJAXqjxXOV
-         v7udUrPAmUFvANLomz6vyCu25jgknSuYZFBToN18wgpOnibjPpDbE93zHxQhSj63ssH3
-         Rm4ry0ozA0KE5AcJFgF8wZNxi3MDscastGevcDIKdjYd3d/9VFe4JWiFziDvH2Qe4Xqh
-         2h7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=3DFH9A64SknMlWuqRsGigvNh6nJnuZv0yy/7Ja82OxA=;
-        b=P5MhmPJOXVg6ri/2ZxJ+PMsm2M6G57CDMepOTjnUudYidGt/nfC7eWVEMIEhldMPRc
-         UMQlOJh4/2ullJvTFEW5spMv2r2YUb4rlwkFk68p5XsxbQJYuEjl9SOjipbXV/qHGv8o
-         R0d/nE838pACjYLxVNuCN/CnWki3EwexEST2uudNIfTlSucF6n9R5J2qE1bBkRX6SBAb
-         qlUe4XxGOkNLEW020WoXKS65TmtSJX4YfjhRjy7q7hvU1gMTRngaxVGa8X43UrdR1Eem
-         8GAtCmSo7Fvh+AwFy0ToQ31t7nFsIxRk9TcTf5BiwnLZcYLOJzX+8Oe+QJqWhgBNcwaG
-         0Q4A==
-X-Gm-Message-State: APjAAAVgUM0Uk5c41nKm+zPYIXUsmIdCAUay41I2n8PuQoHbgEWc37H5
-        /3ppGY/eETfdIUeBIntCd/E=
-X-Google-Smtp-Source: APXvYqwTKPRZ0kkuDyl80bl1AWb8Wpd4x33/ZE5wiUlE1M+q/SKLO2pyvL6/iz6iJGZ95CfHSFyEIw==
-X-Received: by 2002:a17:902:788d:: with SMTP id q13mr3851492pll.154.1551421495329;
-        Thu, 28 Feb 2019 22:24:55 -0800 (PST)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id x8sm42023713pfe.1.2019.02.28.22.24.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Feb 2019 22:24:54 -0800 (PST)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     vbabka@suse.cz, mhocko@suse.com, jrdr.linux@gmail.com
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, shaoyafang@didiglobal.com,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH] mm: vmscan: drop may_writepage and classzone_idx from direct reclaim begin template
-Date:   Fri,  1 Mar 2019 14:24:12 +0800
-Message-Id: <1551421452-5385-2-git-send-email-laoar.shao@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1551421452-5385-1-git-send-email-laoar.shao@gmail.com>
-References: <1551421452-5385-1-git-send-email-laoar.shao@gmail.com>
+        Fri, 1 Mar 2019 01:25:59 -0500
+X-Greylist: delayed 101229 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Mar 2019 01:25:57 EST
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x216PgT9019527;
+        Fri, 1 Mar 2019 15:25:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x216PgT9019527
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1551421543;
+        bh=CPTIQj4MJjEqWQPvI7EAGkqlSEzE35Ksp0rPBhizPpc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jlitbj2tuEj96fvC7Iv3DwItUhmOGKWjIgTFjL75XOg+Mzinqmo+OcJMUw26T4X/R
+         sY13fXi5UYPLsCNBOKPdpWiCmwsY0cASLEeYd+nmqOD/VVF06OGzAVSzf82meTSGmg
+         ucyiftFJRGgDJhHmtVIiMdd8d6iSD8nuGBSTtibSG7+4xOu9edu7tvUAzRuTfCL5Fs
+         lu0OVMQHXmzDwRsRT7Gczfi50xMwwIlZ7MsfZeCe7oW0z0hOnMW8fNdqvC2u7RSC6L
+         TCaF6nSK1rbG4Pq6jecL/3jzWSMD+aRtQg+QNG1bNJfvaKRy9g8n3pVofN6R/Hze/p
+         2H6u50rqdNHUA==
+X-Nifty-SrcIP: [209.85.222.49]
+Received: by mail-ua1-f49.google.com with SMTP id s15so21449771uap.6;
+        Thu, 28 Feb 2019 22:25:43 -0800 (PST)
+X-Gm-Message-State: APjAAAVOpB/6OK5GsF3WCxSbRKQ9X1HqhN4Ootinau7AsM6fRaYCeoep
+        M1dZ3CGCV+xKefWJlPMUhH/sQQRpydCCGnOE3kE=
+X-Google-Smtp-Source: APXvYqyO9icQE5soySUmzB8GfMt5HnNE/JNtqj1SEDSugKyv8JvaVQ7JQ4VBi120aSeFDO3UmQZl00jja98Q29etx3I=
+X-Received: by 2002:ab0:2a01:: with SMTP id o1mr1643096uar.42.1551421542201;
+ Thu, 28 Feb 2019 22:25:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+ <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com> <20190228144306.GA138215@google.com>
+In-Reply-To: <20190228144306.GA138215@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 1 Mar 2019 15:25:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARTHJP=HzyBg_oBBL4whpxHXeijqk=zKLYpt=1GBLNGAA@mail.gmail.com>
+Message-ID: <CAK7LNARTHJP=HzyBg_oBBL4whpxHXeijqk=zKLYpt=1GBLNGAA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        qais.yousef@arm.com, Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are three tracepoints using this template, which are
-mm_vmscan_direct_reclaim_begin,
-mm_vmscan_memcg_reclaim_begin,
-mm_vmscan_memcg_softlimit_reclaim_begin.
+On Fri, Mar 1, 2019 at 12:06 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> On Thu, Feb 28, 2019 at 11:17:51AM +0900, Masahiro Yamada wrote:
+> > Hi Joel,
+> >
+> >
+> > On Thu, Feb 28, 2019 at 4:40 AM Joel Fernandes (Google)
+> > <joel@joelfernandes.org> wrote:
+> > >
+> > > Introduce in-kernel headers and other artifacts which are made available
+> > > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> > > it possible to build kernel modules, run eBPF programs, and other
+> > > tracing programs that need to extend the kernel for tracing purposes
+> > > without any dependency on the file system having headers and build
+> > > artifacts.
+> > >
+> > > On Android and embedded systems, it is common to switch kernels but not
+> > > have kernel headers available on the file system. Raw kernel headers
+> > > also cannot be copied into the filesystem like they can be on other
+> > > distros, due to licensing and other issues. There's no linux-headers
+> > > package on Android. Further once a different kernel is booted, any
+> > > headers stored on the file system will no longer be useful. By storing
+> > > the headers as a compressed archive within the kernel, we can avoid these
+> > > issues that have been a hindrance for a long time.
+> > >
+> > > The feature is also buildable as a module just in case the user desires
+> > > it not being part of the kernel image. This makes it possible to load
+> > > and unload the headers on demand. A tracing program, or a kernel module
+> > > builder can load the module, do its operations, and then unload the
+> > > module to save kernel memory. The total memory needed is 3.8MB.
+> > >
+> > > The code to read the headers is based on /proc/config.gz code and uses
+> > > the same technique to embed the headers.
+> >
+> >
+> >
+> > Please let me ask a question about the actual use-case.
+> >
+> >
+> > To build embedded systems including Android,
+> > I use an x86 build machine.
+> >
+> > In other words, I cross-compile vmlinux and in-tree modules.
+> > So,
+> >
+> >   target-arch: arm64
+> >   host-arch:   x86
+> >
+> >
+> >
+> > > To build a module, the below steps have been tested on an x86 machine:
+> > > modprobe kheaders
+> > > rm -rf $HOME/headers
+> > > mkdir -p $HOME/headers
+> > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> > > cd my-kernel-module
+> > > make -C $HOME/headers M=$(pwd) modules
+> > > rmmod kheaders
+> >
+> > I am guessing the user will run these commands
+> > on the target system.
+> > In other words, external modules are native-compiled.
+> > So,
+> >
+> >   target-arch: arm64
+> >   host-arch:   arm64
+> >
+> >
+> > Is this correct?
+> >
+> >
+> > If I understood the assumed use-case correctly,
+> > kheaders.tar.xw will contain host-programs compiled for x86,
+> > which will not work on the target system.
+> >
+>
+> You are right, the above commands in the commit message work only if the
+> host/target are same arch due to scripts.
+>
+> However we can build with arm64 device connected to a host, like this (which
+> I tested):
+>
+> adb shell modprobe kheaders; adb pull /proc/kheaders.tar.xz
+> rm -rf $HOME/headers; mkdir -p $HOME/headers
+> tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> cd my-kernel-module
+> make -C $HOME/headers M=$(pwd) ARCH=arm64 CROSS_COMPILE=aarch64- modules
+> adb push test.ko /data/; adb shell rmmod kheaders
+>
+> The other way we can make this work is using x86 usermode emulation inside a
+> chroot on the Android device which will make the earlier commands work. One
+> thing to note is that Android also runs on x86 hardware so the commands in
+> the commit message will work even for x86 Android targets already.
+>
+> Also note that this the "module building" part is really only one of the
+> usecases. eBPF is another which needs the headers - and the headers are vast
+> majority of the archive. Headers take 3.1MB out of 3.6MB of the archive on
+> arm64 builds.
+>
+> How do you want to proceed here, should I mention these points in the commit
+> message?
 
-Regarding mm_vmscan_direct_reclaim_begin,
-sc.may_writepage is !laptop_mode, that's a static setting, and
-reclaim_idx is derived from gfp_mask which is already show in this
-tracepoint.
 
-Regarding mm_vmscan_memcg_reclaim_begin,
-may_writepage is !laptop_mode too, and reclaim_idx is (MAX_NR_ZONES-1),
-which are both static value.
 
-mm_vmscan_memcg_softlimit_reclaim_begin is the same with
-mm_vmscan_memcg_reclaim_begin.
+I do not request a re-spin just for a matter of commit log,
+but this version produces an empty tarball.
+So, you will have a chance to update the patch anyway.
 
-So we can drop them all.
+In the next version, it would be nice to note that
+"external modules must be built on the same host arch
+as built vmlinux".
 
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
----
- include/trace/events/vmscan.h | 26 ++++++++++----------------
- mm/vmscan.c                   | 14 +++-----------
- 2 files changed, 13 insertions(+), 27 deletions(-)
 
-diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-index a1cb913..153d90c 100644
---- a/include/trace/events/vmscan.h
-+++ b/include/trace/events/vmscan.h
-@@ -105,51 +105,45 @@
- 
- DECLARE_EVENT_CLASS(mm_vmscan_direct_reclaim_begin_template,
- 
--	TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
-+	TP_PROTO(int order, gfp_t gfp_flags),
- 
--	TP_ARGS(order, may_writepage, gfp_flags, classzone_idx),
-+	TP_ARGS(order, gfp_flags),
- 
- 	TP_STRUCT__entry(
- 		__field(	int,	order		)
--		__field(	int,	may_writepage	)
- 		__field(	gfp_t,	gfp_flags	)
--		__field(	int,	classzone_idx	)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->order		= order;
--		__entry->may_writepage	= may_writepage;
- 		__entry->gfp_flags	= gfp_flags;
--		__entry->classzone_idx	= classzone_idx;
- 	),
- 
--	TP_printk("order=%d may_writepage=%d gfp_flags=%s classzone_idx=%d",
-+	TP_printk("order=%d gfp_flags=%s",
- 		__entry->order,
--		__entry->may_writepage,
--		show_gfp_flags(__entry->gfp_flags),
--		__entry->classzone_idx)
-+		show_gfp_flags(__entry->gfp_flags))
- );
- 
- DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_direct_reclaim_begin,
- 
--	TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
-+	TP_PROTO(int order, gfp_t gfp_flags),
- 
--	TP_ARGS(order, may_writepage, gfp_flags, classzone_idx)
-+	TP_ARGS(order, gfp_flags)
- );
- 
- #ifdef CONFIG_MEMCG
- DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_reclaim_begin,
- 
--	TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
-+	TP_PROTO(int order, gfp_t gfp_flags),
- 
--	TP_ARGS(order, may_writepage, gfp_flags, classzone_idx)
-+	TP_ARGS(order, gfp_flags)
- );
- 
- DEFINE_EVENT(mm_vmscan_direct_reclaim_begin_template, mm_vmscan_memcg_softlimit_reclaim_begin,
- 
--	TP_PROTO(int order, int may_writepage, gfp_t gfp_flags, int classzone_idx),
-+	TP_PROTO(int order, gfp_t gfp_flags),
- 
--	TP_ARGS(order, may_writepage, gfp_flags, classzone_idx)
-+	TP_ARGS(order, gfp_flags)
- );
- #endif /* CONFIG_MEMCG */
- 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index ac4806f..cdc0305 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -3304,10 +3304,7 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
- 	if (throttle_direct_reclaim(sc.gfp_mask, zonelist, nodemask))
- 		return 1;
- 
--	trace_mm_vmscan_direct_reclaim_begin(order,
--				sc.may_writepage,
--				sc.gfp_mask,
--				sc.reclaim_idx);
-+	trace_mm_vmscan_direct_reclaim_begin(order, sc.gfp_mask);
- 
- 	nr_reclaimed = do_try_to_free_pages(zonelist, &sc);
- 
-@@ -3338,9 +3335,7 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
- 			(GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK);
- 
- 	trace_mm_vmscan_memcg_softlimit_reclaim_begin(sc.order,
--						      sc.may_writepage,
--						      sc.gfp_mask,
--						      sc.reclaim_idx);
-+						      sc.gfp_mask);
- 
- 	/*
- 	 * NOTE: Although we can get the priority field, using it
-@@ -3389,10 +3384,7 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
- 
- 	zonelist = &NODE_DATA(nid)->node_zonelists[ZONELIST_FALLBACK];
- 
--	trace_mm_vmscan_memcg_reclaim_begin(0,
--					    sc.may_writepage,
--					    sc.gfp_mask,
--					    sc.reclaim_idx);
-+	trace_mm_vmscan_memcg_reclaim_begin(0, sc.gfp_mask);
- 
- 	psi_memstall_enter(&pflags);
- 	noreclaim_flag = memalloc_noreclaim_save();
+
+
+Let me ask one more question.
+
+I guess this patch is motivated by
+how difficult to convey kernel headers
+from vendors to users.
+
+In that situation, how will the user find
+the right compiler to use for building external modules?
+
+
+
+
+Greg KH said:
+
+We don't ever support the system of loading a module built with anything
+other than the _exact_ same compiler than the kernel was.
+
+
+For the full context, see this:
+https://lore.kernel.org/patchwork/patch/836247/#1031547
+
+
 -- 
-1.8.3.1
-
+Best Regards
+Masahiro Yamada
