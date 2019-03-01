@@ -2,66 +2,66 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89407C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11A2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5708C2087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF62E20854
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="huVCOPQt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j5E0/huI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388544AbfCAOej (ORCPT
+        id S2388638AbfCAOen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:34:39 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40666 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732420AbfCAOei (ORCPT
+        Fri, 1 Mar 2019 09:34:43 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40680 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388610AbfCAOek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:34:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id g20so11653431wmh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:34:37 -0800 (PST)
+        Fri, 1 Mar 2019 09:34:40 -0500
+Received: by mail-lf1-f66.google.com with SMTP id a8so12380486lfi.7
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:34:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=AzFdI4Ntgdj97NpgFu1Pq76ZwiCCfhzfWbTnGLzmdoQ=;
-        b=huVCOPQttUFCzUU0qCt7hcrvx7oj3fKY/KikGZx1sk6HqGcdMi1I4gPxFh7Ic9rB3u
-         +JNNU226XzPNSShC9xiNV97IExCOBg1B1JUzjp4ah9CsM8E3Z1h6QNTDAG2QYBONQawq
-         09AgF1p/RG2YNOc7mGV5fO/F3wr724YgebXkWYCbtah81zVuWZU2wm7HIIWIzjFEtoCM
-         K/AXyhXqPQd/GN6WX669GUP71JUWH2KmyYYDVKfpwq+qxxrpi8DcWnwxMVWHDTd2Oe0q
-         RmMpZnONkKAiLApZQrTeu4uD7QnzYWk2/XjOhM4/pcYs6fh9cPrZe3vEa6fDMjF220Og
-         tVyg==
+        bh=rBapgXqkl4L1Kp5k3gMreZSqISZL1TQmMdeWE1ORKa4=;
+        b=j5E0/huIa/W0dzMeMjpnXH7v/2YP9ugqSIwpGCTl2kRlsVfd830ziOSM+tEGAjen1f
+         lrmFZIf2ME7R9jfuFJMLvSW8V5M6fOHMEaOwE155Hxbo9nfks40+1ybuUrSc2qbNu6vW
+         DT4q0f2WXWkSTbxXszKyVfYf3omHXVXzCjZUfwQOSkMYfaQuNATqfQxJs9/PEx2mSjjF
+         /St6yh11eRzlH3rqPns7DHREtqGNu4+5Yho3ivjey7FazvMMCUvQFzBe+89KrHk8uHxh
+         vhyUGQNuN/DvA8qL9TfCzQ01oP7VcuOgf/bEbQpN4bP534tqfT6zFu99qhxO/iuUpoWj
+         MPtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AzFdI4Ntgdj97NpgFu1Pq76ZwiCCfhzfWbTnGLzmdoQ=;
-        b=Y2OM2Fv2eQw6jkTdYlEvJ1z6jDwzJg31eekayDEDLuTfTiylZ2RUEvlxEjusfGxVEs
-         Z+Za20xc6qWnSSFNQkx1dNUjbmzriAX/sctFkFEYTRNtUTTa6gXnp6gjrrGDuYeKc7cB
-         tlqMoDQIGJZz2fvJdBfjKBAFrnxfB8/knwlGPo7zc/l4fR/K3qIG3LWTU2JysUSkh+pP
-         ABeyhkh0N2bO5mjZd7WNj1xeZ2JsQzAvnbJK2IKs+GW3aMkPhZaLn9YautDT+p70r3uW
-         +N614diaX37Rk5uPXM5bMf2GxJMLFvYAy6ezf4PfVyzi83P3YtUCEkpyq47blglkD6vQ
-         PgLQ==
-X-Gm-Message-State: APjAAAV/sMRunV1jvDBlC4m3g0aZiawrcU+yTYJXQy/nElSkZ6bVjXep
-        BH69aLKIUUsdTzqJPZsOqnApSchKdK2I9feDCQMEEw==
-X-Google-Smtp-Source: AHgI3IZ5L2ZtjE5GWfu+b4LVWVTc58GkJZmXVJl/lkAxeSQtEy6vedWYbn4M8QWVnkCqM3skdkM82Z8IjOOWCHN7Ois=
-X-Received: by 2002:a1c:96ce:: with SMTP id y197mr3464632wmd.126.1551450876504;
- Fri, 01 Mar 2019 06:34:36 -0800 (PST)
+        bh=rBapgXqkl4L1Kp5k3gMreZSqISZL1TQmMdeWE1ORKa4=;
+        b=iCIOAV17Y4h4v3B9bLYvyXIOl2JXe/IEHNN8vxTONRZi/5n0Nc/nDpdbznsWnQaUxN
+         lJeR+PlvyM+R1qqbOaqIq7CHH1v3z+latW2WH0O6+BSoX5ToO6biSvwGdStSC46vpLQa
+         1VHHzVhLtM1LifscF0WippGFXND8TDkUzp63pyaF8gX4GOVJoPOduEcDx9DfQKC0ZfZa
+         Lo3QtC6cvlEcVTvkBYBxxatLRq9sasXS6ScxhxM84iu2MGfu4iTWu8d9p0kwlkVzDltb
+         c/3Db7baAqWH2kicCrh+ZKARL2/4N5/0BXBoUWEU1iueF3PPnte+sGD8Nx2xo7fGjDww
+         fa5g==
+X-Gm-Message-State: APjAAAW5jDVC26XbcP2HA5gBTFDqBEXqIjFyP+siEUo7VOpTB7A8fUsP
+        EVFEAEn/Qf09HZkoOlJktdh5b8X6rBdxGTaSj+4lMg==
+X-Google-Smtp-Source: APXvYqxnG3LWV6GEtylHjCvETKPwlLvaWtlPQP0A5n1QUVPV+F0ZOcUKlnuANnvO/u3jrydNaGmyU0t4B4QXMc+PGOY=
+X-Received: by 2002:a19:5611:: with SMTP id k17mr3090530lfb.168.1551450878177;
+ Fri, 01 Mar 2019 06:34:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20190301062432.2322-1-axel.lin@ingics.com> <201903011929.WkN8JU5R%fengguang.wu@intel.com>
-In-Reply-To: <201903011929.WkN8JU5R%fengguang.wu@intel.com>
-From:   Axel Lin <axel.lin@ingics.com>
-Date:   Fri, 1 Mar 2019 22:34:31 +0800
-Message-ID: <CAFRkauDMAeEaptv5UZBGND=-58q-E0ssMaZjVw5XOUYZ2gTsrQ@mail.gmail.com>
-Subject: Re: [PATCH] regulator: lp87565: Convert to use regulator_set/get_current_limit_regmap
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, Mark Brown <broonie@kernel.org>,
-        Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190301035852.26780-1-marek.behun@nic.cz> <20190301035852.26780-4-marek.behun@nic.cz>
+In-Reply-To: <20190301035852.26780-4-marek.behun@nic.cz>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 1 Mar 2019 15:34:26 +0100
+Message-ID: <CACRpkdam_CYGtph16McpQQ_WwohpZr+Rzi1B=re4UrGxXmSEqg@mail.gmail.com>
+Subject: Re: [PATCH v3 bus+gpio 3/5] bus: moxtet: Add sysfs documentation
+To:     =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
+Cc:     Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,26 +69,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kbuild test robot <lkp@intel.com> =E6=96=BC 2019=E5=B9=B43=E6=9C=881=E6=97=
-=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=887:32=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Axel,
->
-> Thank you for the patch! Yet something to improve:
->
-> [auto build test ERROR on regulator/for-next]
-> [also build test ERROR on next-20190228]
-> [cannot apply to v5.0-rc8]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help improve the system]
+On Fri, Mar 1, 2019 at 4:59 AM Marek Beh=C3=BAn <marek.behun@nic.cz> wrote:
 
-This patch needs patch1 and patch2 of https://lkml.org/lkml/2019/2/28/482
+> Add sysfs ABI documentation for the attribute files module_id,
+> module_name, input_value and output_value of Moxtet devices.
+>
+> Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
 
-I sent it today because I think Keerthy can review and test it together
-with my another fix for lp87565.
-I didn't realize kbuild will pick up the patch automatically.
-I should wait until the required patches get merged then send this
-patch. Sorry for the mess.
+(...)
+> +++ b/Documentation/ABI/testing/sysfs-bus-moxtet-devices
+> @@ -0,0 +1,25 @@
+> +What:          /sys/bus/moxtet/devices/moxtet-<name>.<addr>/module_id
+> +Date:          March 2019
+> +KernelVersion: 5.2
+> +Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
+> +Description:   (R) Moxtet module ID. Format: %x
+> +
+> +What:          /sys/bus/moxtet/devices/moxtet-<name>.<addr>/module_name
+> +Date:          March 2019
+> +KernelVersion: 5.2
+> +Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
+> +Description:   (R) Moxtet module name. Format: string
 
-Regards,
-Axel
+These look good.
+
+> +What:          /sys/bus/moxtet/devices/moxtet-<name>.<addr>/input_value
+> +Date:          March 2019
+> +KernelVersion: 5.2
+> +Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
+> +Description:   (R) Read input value from module at this Moxtet address.
+> +               Format: %x
+> +
+> +What:          /sys/bus/moxtet/devices/moxtet-<name>.<addr>/output_value
+> +Date:          March 2019
+> +KernelVersion: 5.2
+> +Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
+> +Description:   (RW) Read last written value or write value to the module=
+ on
+> +               this Moxtet address. Format: %x
+
+What is the usecase for these?
+
+If this is for debugging it should be in debugfs rather than in sysfs.
+
+If it is here for random userspace drivers, we need some good explanation
+as to why they can't just be kernel drivers.
+
+Yours,
+Linus Walleij
