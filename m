@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676DCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F6DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7D02186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF9D2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387841AbfCAKzX (ORCPT
+        id S2387872AbfCAKz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 05:55:23 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:51131 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387803AbfCAKzU (ORCPT
+        Fri, 1 Mar 2019 05:55:27 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:41765 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387836AbfCAKzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 05:55:20 -0500
+        Fri, 1 Mar 2019 05:55:23 -0500
 X-Originating-IP: 90.88.147.150
 Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 8DD90FF814;
-        Fri,  1 Mar 2019 10:55:16 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id A3B95C0012;
+        Fri,  1 Mar 2019 10:55:20 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net
 Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
@@ -33,9 +33,9 @@ Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
         nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
         linux@armlinux.org.uk
-Subject: [PATCH net-next v2 07/15] net: mvpp2: fix the computation of the RXQs
-Date:   Fri,  1 Mar 2019 11:52:09 +0100
-Message-Id: <20190301105217.15764-8-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v2 09/15] net: mvpp2: always disable both MACs when disabling a port
+Date:   Fri,  1 Mar 2019 11:52:11 +0100
+Message-Id: <20190301105217.15764-10-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190301105217.15764-1-antoine.tenart@bootlin.com>
 References: <20190301105217.15764-1-antoine.tenart@bootlin.com>
@@ -46,91 +46,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch fixes the computation of RXQs being used by the PPv2 driver,
-which is set depending on the PPv2 engine version and the queue mode
-used. There are three cases:
+This patch modifies the port_disable() helper to always disable both the
+GMAC and the XLG MAC when called. At boot time we do not know of a port
+was enabled in the firmware/bootloader, and if so what mode was used
+(hence which of the two MACs was used).
 
-- PPv2.1: 1 RXQ per CPU.
-- PPV2.2 with MVPP2_QDIST_MULTI_MODE: 1 RXQ per CPU.
-- PPv2.2 with MVPP2_QDIST_SINGLE_MODE: 1 RXQ is shared between the CPUs.
+This also help in implementing a logic where all blocks are disabled
+when not used, and only enabled regarding the current mode used on a
+given port.
 
-The PPv2 engine supports a maximum of 32 queues per port. This patch
-adds a check so that we do not overstep this maximum.
-
-It appeared the calculation was broken for PPv2.1 engines since
-f8c6ba8424b0, as PPv2.1 ports ended up with a single RXQ while they
-needed 4. This patch fixes it.
-
-Fixes: f8c6ba8424b0 ("net: mvpp2: use only one rx queue per port per CPU")
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  4 ++--
- .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 23 ++++++++++++-------
- 2 files changed, 17 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-index 17ff330cce5f..687e011de5ef 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-@@ -549,8 +549,8 @@
- #define MVPP2_MAX_TSO_SEGS		300
- #define MVPP2_MAX_SKB_DESCS		(MVPP2_MAX_TSO_SEGS * 2 + MAX_SKB_FRAGS)
- 
--/* Default number of RXQs in use */
--#define MVPP2_DEFAULT_RXQ		1
-+/* Max number of RXQs per port */
-+#define MVPP2_PORT_MAX_RXQ		32
- 
- /* Max number of Rx descriptors */
- #define MVPP2_MAX_RXD_MAX		1024
 diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 24cee6cbe309..9c6200a59910 100644
+index 11284918d907..b27966355df9 100644
 --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
 +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -4062,8 +4062,8 @@ static int mvpp2_multi_queue_vectors_init(struct mvpp2_port *port,
- 			snprintf(irqname, sizeof(irqname), "hif%d", i);
- 
- 		if (queue_mode == MVPP2_QDIST_MULTI_MODE) {
--			v->first_rxq = i * MVPP2_DEFAULT_RXQ;
--			v->nrxqs = MVPP2_DEFAULT_RXQ;
-+			v->first_rxq = i;
-+			v->nrxqs = 1;
- 		} else if (queue_mode == MVPP2_QDIST_SINGLE_MODE &&
- 			   i == (port->nqvecs - 1)) {
- 			v->first_rxq = 0;
-@@ -4156,8 +4156,7 @@ static int mvpp2_port_init(struct mvpp2_port *port)
- 	    MVPP2_MAX_PORTS * priv->max_port_rxqs)
- 		return -EINVAL;
- 
--	if (port->nrxqs % MVPP2_DEFAULT_RXQ ||
--	    port->nrxqs > priv->max_port_rxqs || port->ntxqs > MVPP2_MAX_TXQ)
-+	if (port->nrxqs > priv->max_port_rxqs || port->ntxqs > MVPP2_MAX_TXQ)
- 		return -EINVAL;
- 
- 	/* Disable port */
-@@ -4778,10 +4777,18 @@ static int mvpp2_port_probe(struct platform_device *pdev,
+@@ -1214,11 +1214,11 @@ static void mvpp2_port_disable(struct mvpp2_port *port)
+ 		/* Disable & reset should be done separately */
+ 		val &= ~MVPP22_XLG_CTRL0_MAC_RESET_DIS;
+ 		writel(val, port->base + MVPP22_XLG_CTRL0_REG);
+-	} else {
+-		val = readl(port->base + MVPP2_GMAC_CTRL_0_REG);
+-		val &= ~(MVPP2_GMAC_PORT_EN_MASK);
+-		writel(val, port->base + MVPP2_GMAC_CTRL_0_REG);
  	}
++
++	val = readl(port->base + MVPP2_GMAC_CTRL_0_REG);
++	val &= ~(MVPP2_GMAC_PORT_EN_MASK);
++	writel(val, port->base + MVPP2_GMAC_CTRL_0_REG);
+ }
  
- 	ntxqs = MVPP2_MAX_TXQ;
--	if (priv->hw_version == MVPP22 && queue_mode == MVPP2_QDIST_MULTI_MODE)
--		nrxqs = MVPP2_DEFAULT_RXQ * num_possible_cpus();
--	else
--		nrxqs = MVPP2_DEFAULT_RXQ;
-+	if (priv->hw_version == MVPP22 && queue_mode == MVPP2_QDIST_SINGLE_MODE) {
-+		nrxqs = 1;
-+	} else {
-+		/* According to the PPv2.2 datasheet and our experiments on
-+		 * PPv2.1, RX queues have an allocation granularity of 4 (when
-+		 * more than a single one on PPv2.2).
-+		 * Round up to nearest multiple of 4.
-+		 */
-+		nrxqs = (num_possible_cpus() + 3) & ~0x3;
-+		if (nrxqs > MVPP2_PORT_MAX_RXQ)
-+			nrxqs = MVPP2_PORT_MAX_RXQ;
-+	}
- 
- 	dev = alloc_etherdev_mqs(sizeof(*port), ntxqs, nrxqs);
- 	if (!dev)
+ /* Set IEEE 802.3x Flow Control Xon Packet Transmission Mode */
 -- 
 2.20.1
 
