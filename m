@@ -2,115 +2,139 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80242C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42A0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFB920851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoB5OG1m"
+	by mail.kernel.org (Postfix) with ESMTP id 9314B20851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbfCANdB (ORCPT
+        id S2387569AbfCANdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 08:33:01 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46736 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbfCANdB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 08:33:01 -0500
-Received: by mail-ed1-f67.google.com with SMTP id f2so19987216edy.13;
-        Fri, 01 Mar 2019 05:32:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8uq/wMcFYQs+gVp4kdYwgE/5XLhXoJwwKfHFMkxwYXI=;
-        b=OoB5OG1mQu6VINLmW2ag+MSb54n2b6VD1OZDD/fcztNk4eZ2Lj2U5pL7TGH22xf/BP
-         ehFErmOG8nWGAKYhvcCxVVFWzW+wI37DanBMpVsdfy4iGTVKhE55nXejz5IJDcAkKxPN
-         UWJl22Slfmk4UjOw8nBgWcsvnFhd0kAk7Xq8VdrKZu0vasFYK1JH28L3L95XYUyCPB7B
-         Pgsa9u0peaGZZJ5yHDytnFICaLzJawjPwnJvk7TykSMp7JSF9cYWnh2f01lNgfwG3hkC
-         al/AcUwXbZB+5cO9TsOp1hdFDUwwB1/menfxGZhuRHcLWPg7/oFNrbmqmrxA1HHY/FlB
-         0BCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8uq/wMcFYQs+gVp4kdYwgE/5XLhXoJwwKfHFMkxwYXI=;
-        b=iyS4ZF/7aUu5Ga6FtIs8BjdNVJ3yEfyUIteAd45PEkUCHRT3F46TOAYyuzYt8ALlBH
-         jWKun06Q3ale2YwL+GLwsBmgToICZe2UVcXe+RVUHMbT07Pr/r7117ZUaczPlR+hr8QW
-         YXPHAAbrXEEMyb2kNRtPXPf1HGa3Q3ROK7sXzjLN+HyaDgB0xCuKKI2KYhbBCww1qLGU
-         wDuUmCL2BryGsww/wBPu84qZuO0WJhIy9UIYaa9IO+k1U1qbu1fIwjZ/8cb79rO5xwMd
-         7qVFANaQbrjdYGo8YbD8c9wmpsGSaymQuCHeDVa7R4yURu6UyH0kML0BDpmiO2MRBoHh
-         9iMA==
-X-Gm-Message-State: APjAAAW2cDvSkU8r1MfnRofxcds83FgJlhcT2runvrF7dp3nvX1Z5zLa
-        POnbhIFw3IhsY17DRr6JjRc=
-X-Google-Smtp-Source: APXvYqwdBQDnLlpl3kiidCFHuvInhkW7SXDRf5AYTyykbHNXEVlT24uHmEJd9tCPKOgGxVBgdS5hQg==
-X-Received: by 2002:a50:b639:: with SMTP id b54mr4167532ede.229.1551447179143;
-        Fri, 01 Mar 2019 05:32:59 -0800 (PST)
-Received: from dell5510 ([62.201.25.198])
-        by smtp.gmail.com with ESMTPSA id f5sm2203633ejf.25.2019.03.01.05.32.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 05:32:57 -0800 (PST)
-Date:   Fri, 1 Mar 2019 14:32:56 +0100
-From:   Petr Vorel <petr.vorel@gmail.com>
-To:     Arseny Maslennikov <ar@cs.msu.ru>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>
-Subject: Re: [PATCH] scripts/package/mkdebian: expose KCONFIG_CONFIG to
- debian/rules
-Message-ID: <20190301133254.GA20771@dell5510>
-Reply-To: Petr Vorel <petr.vorel@gmail.com>
-References: <20190221215901.23970-1-ar@cs.msu.ru>
- <20190221215901.23970-3-ar@cs.msu.ru>
+        Fri, 1 Mar 2019 08:33:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52316 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727418AbfCANds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 08:33:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 13973AFF2;
+        Fri,  1 Mar 2019 13:33:45 +0000 (UTC)
+Subject: Re: [PATCH v4 4/4] hugetlb: allow to free gigantic pages regardless
+ of the configuration
+To:     Alexandre Ghiti <alex@ghiti.fr>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20190228063604.15298-1-alex@ghiti.fr>
+ <20190228063604.15298-5-alex@ghiti.fr>
+ <9a385cc8-581c-55cf-4a85-10b5c4dd178c@intel.com>
+ <31212559-d397-88fb-eaec-60f6417436c8@oracle.com>
+ <6c842251-1bed-4d79-bf6d-997006ec72e2@intel.com>
+ <6ea4119a-0ecb-511d-3aab-269004245a08@oracle.com>
+ <1cfaca88-a219-d057-3ab8-37fb1c1687d6@ghiti.fr>
+ <f7c94eb5-d496-7e24-d44f-17eaff287012@ghiti.fr>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <027de1e2-a9cd-8ba7-859b-ee803937340a@suse.cz>
+Date:   Fri, 1 Mar 2019 14:33:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190221215901.23970-3-ar@cs.msu.ru>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <f7c94eb5-d496-7e24-d44f-17eaff287012@ghiti.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 3/1/19 2:21 PM, Alexandre Ghiti wrote:
+> I collected mistakes here: domain name expired and no mailing list added :)
+> Really sorry about that, I missed the whole discussion (if any).
+> Could someone forward it to me (if any) ? Thanks !
 
-> If KCONFIG_CONFIG is passed to `make deb-pkg` as a makeflag or
-> environment variable, the source tarball produced contains whatever
-> specified by that variable instead of the usual `.config'.
-
-> While `make deb-pkg' yields a correct Debian binary package (at least
-> on amd64), the generated source package's debian/rules does not pass
-> KCONFIG_CONFIG to make(1), thus rendering the source package unable to
-> be rebuilt.
-
-> Steps to reproduce the kind of failure being fixed:
-> 1)  Produce a source and binary package with:
-> 	% KCONFIG_CONFIG=my.config make deb-pkg
-> 2)  In the parent directory:
-> 	% dpkg-source -x linux-*.dsc
-> 3)  In the unpacked source directory:
-> 	% debuild -i -us -uc
-
-> Here is an excerpt from an example output of `debuild -i -us -uc':
-
-> make[2]: *** No rule to make target '.config', needed by 'kernel/config_data.gz'.  Stop.
-> make[1]: *** [Makefile:1043: kernel] Error 2
-> make[1]: Leaving directory '/home/ar/linux-kernel/deb/linux-5.0.0-rc5-tks-gitd6ff78479ec5-57-5.0.0-rc5-tks-gitd6ff78479ec5-57'
-> make: *** [debian/rules:4: build] Error 2
-> dpkg-buildpackage: error: debian/rules build subprocess returned exit status 2
-> debuild: fatal error at line 1182:
-> dpkg-buildpackage -us -uc -ui -i failed
-
-Reviewed-by: Petr Vorel <petr.vorel@gmail.com>
-
-
-Kind regards,
-Petr
+Bounced you David and Mike's discussion (4 messages total). AFAICS that
+was all.
