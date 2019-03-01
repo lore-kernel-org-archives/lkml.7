@@ -2,335 +2,172 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AD5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B3EC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49742085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551462914;
-	bh=2E1HMCGW6dh1ojWpLf+YuxDxLlGwJNUi1SBJ4ihj2y0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SDMNX0eq07C0FUYarIOYh5UpOZaj09adFEo+mhIfltv82+aROL7NK2VRzVOv52L+B
-	 54U5c9qof6AAkcASUwDKSw9bty5hSGNmdIRC61O6uyEHACC+KxG60d2rJx9OdMeHPy
-	 Ysc+6Gu3HV2svTwOkMw6QW31KsS1zxynIFP+whug=
+	by mail.kernel.org (Postfix) with ESMTP id 562292084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYrBaECQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389682AbfCARzN (ORCPT
+        id S2389693AbfCARzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:55:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727952AbfCARzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:55:12 -0500
-Received: from localhost (unknown [104.132.1.80])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B07720857;
-        Fri,  1 Mar 2019 17:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551462911;
-        bh=2E1HMCGW6dh1ojWpLf+YuxDxLlGwJNUi1SBJ4ihj2y0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xtRXBHb4Gnvwx+Tb2wmAW9s5is/399LNURCn/nR96SktCam+AxTWuZrFHurRPhr9/
-         fiDDN4vfWzcyTYXqW0hqBxJxvqCXs8qoOOQIN4zKqOvAPyZtYBwgOpK1PUvCeJeR9K
-         O7htOrRN4+16B6XwajzviLxjNICQMSz5lnaIQTV8=
-Date:   Fri, 1 Mar 2019 09:55:10 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH v4] f2fs: add bio cache for IPU
-Message-ID: <20190301175510.GB8246@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190219081529.5106-1-yuchao0@huawei.com>
- <51637fbc-2b55-8215-952e-b155487cc63d@huawei.com>
+        Fri, 1 Mar 2019 12:55:17 -0500
+Received: from mail-qt1-f170.google.com ([209.85.160.170]:46675 "EHLO
+        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727952AbfCARzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 12:55:15 -0500
+Received: by mail-qt1-f170.google.com with SMTP id z25so28693639qti.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 09:55:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CBDhpnXyGSGfWXFqaK2HaAwdsce6nJ709696QI9uoAc=;
+        b=MYrBaECQvEomvvPOkx7LH4IONN9HAQmlC+FVuwkkMzKHAm8pXLm5VcewFtKy6dOSka
+         rcB1eFu/G3iQAq1vDfCVC0tVaK+wev95E9baNF7zOCt2ziTE6/ZGKrq53N6DpOQOL3y4
+         ncQggEFofxYLcaaqzfGBN6hpCtzAkkGdiYPvsnUP7Ht9oa8Pv6aY0vAwFKW5jCKpglAH
+         PcSR3ytrpFU//XmWwTP8X8Fm8Hcs0EdRKhVywGK5jqtB9k/4/6I6q2VXnZYweYYRUUS9
+         lALzeYErcjuPFcYddQOtx4G5y131I2DMXEHzVIdNQS63mGe5XP/Hys+m5RClCafXC4uD
+         hYqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CBDhpnXyGSGfWXFqaK2HaAwdsce6nJ709696QI9uoAc=;
+        b=pYOC1yCeiW0HM9lVVvFp9nx1SSWAR/JyVePDyhQVR1AEH5etTFz/4bn/vpH5xtT9cF
+         3z8Og47WJvx34Uuj5UMLIReaEi7zRCC92atPPnBIr+vy9oc940NcZkj19S/cZuR+LFYX
+         0trgO6b4h82PlZJ2M6dZ1woDEwkgztNRGzhdmE1ngQzW15YaQb1stEWp/vZOlJTIjA7u
+         sWzIcHVpYrWnWV5/e5/Ok5zs8he6lWis7UhlJF41tFLcPsfU73t6HFnyiEYSQr5oo1rF
+         9nwcBrIOGCIIQ2SLZ0SNPwJvp9zykvASP2q3Ve4BI+V+n9DEJqWPN+XMRI0Ot0fGOj2i
+         VvmA==
+X-Gm-Message-State: APjAAAW5werZ6qkf/iXIklpYywcgC4scawJrngrDOcBKrCeZ8YjHSmpY
+        kfF1t8Thjr957ZA7vVFboHqvwMk8Vlc=
+X-Google-Smtp-Source: APXvYqyPDfoX+FbBWhJavevDxaAdqLVFHMGoov57Zmn4HEi94O9+O7Lkg/X1XcX4KsM0XgILwyZOqw==
+X-Received: by 2002:aed:221c:: with SMTP id n28mr4767899qtc.21.1551462914048;
+        Fri, 01 Mar 2019 09:55:14 -0800 (PST)
+Received: from quaco.ghostprotocols.net (177-59-143-241.3g.claro.net.br. [177.59.143.241])
+        by smtp.gmail.com with ESMTPSA id v26sm13996161qtk.22.2019.03.01.09.55.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Mar 2019 09:55:13 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 445684039C; Fri,  1 Mar 2019 14:55:09 -0300 (-03)
+Date:   Fri, 1 Mar 2019 14:55:09 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/8] perf scripts python: exported-sql-viewer.py: Factor
+ out TreeWindowBase
+Message-ID: <20190301175509.GP13100@kernel.org>
+References: <20190228130031.23064-1-adrian.hunter@intel.com>
+ <20190228130031.23064-6-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <51637fbc-2b55-8215-952e-b155487cc63d@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <20190228130031.23064-6-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/28, Chao Yu wrote:
-> Ping,
+Em Thu, Feb 28, 2019 at 03:00:28PM +0200, Adrian Hunter escreveu:
+> Factor out a base class TreeWindowBase from CallGraphWindow, so that
+> TreeWindowBase can be reused.
 
-Ditto.
+Thanks, applied.
 
+- Arnaldo
+ 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  .../scripts/python/exported-sql-viewer.py     | 50 ++++++++++++-------
+>  1 file changed, 31 insertions(+), 19 deletions(-)
 > 
-> On 2019/2/19 16:15, Chao Yu wrote:
-> > SQLite in Wal mode may trigger sequential IPU write in db-wal file, after
-> > commit d1b3e72d5490 ("f2fs: submit bio of in-place-update pages"), we
-> > lost the chance of merging page in inner managed bio cache, result in
-> > submitting more small-sized IO.
-> > 
-> > So let's add temporary bio in writepages() to cache mergeable write IO as
-> > much as possible.
-> > 
-> > Test case:
-> > 1. xfs_io -f /mnt/f2fs/file -c "pwrite 0 65536" -c "fsync"
-> > 2. xfs_io -f /mnt/f2fs/file -c "pwrite 0 65536" -c "fsync"
-> > 
-> > Before:
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65544, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65552, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65560, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65568, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65576, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65584, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65592, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65600, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65608, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65616, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65624, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65632, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65640, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65648, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65656, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65664, size = 4096
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), NODE, sector = 57352, size = 4096
-> > 
-> > After:
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65544, size = 65536
-> > f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), NODE, sector = 57368, size = 4096
-> > 
-> > Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> > ---
-> > v4:
-> > - fix to set *bio to NULL in f2fs_submit_ipu_bio()
-> > - spread f2fs_submit_ipu_bio()
-> > - fix to count dirty encrypted page correctly in f2fs_merge_page_bio()
-> > - remove redundant assignment of fio->last_block
-> >  fs/f2fs/data.c    | 88 ++++++++++++++++++++++++++++++++++++++++++-----
-> >  fs/f2fs/f2fs.h    |  3 ++
-> >  fs/f2fs/segment.c |  5 ++-
-> >  3 files changed, 86 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> > index 35910ff23582..e4c183e85de8 100644
-> > --- a/fs/f2fs/data.c
-> > +++ b/fs/f2fs/data.c
-> > @@ -296,20 +296,20 @@ static void __submit_merged_bio(struct f2fs_bio_info *io)
-> >  	io->bio = NULL;
-> >  }
-> >  
-> > -static bool __has_merged_page(struct f2fs_bio_info *io, struct inode *inode,
-> > +static bool __has_merged_page(struct bio *bio, struct inode *inode,
-> >  						struct page *page, nid_t ino)
-> >  {
-> >  	struct bio_vec *bvec;
-> >  	struct page *target;
-> >  	int i;
-> >  
-> > -	if (!io->bio)
-> > +	if (!bio)
-> >  		return false;
-> >  
-> >  	if (!inode && !page && !ino)
-> >  		return true;
-> >  
-> > -	bio_for_each_segment_all(bvec, io->bio, i) {
-> > +	bio_for_each_segment_all(bvec, bio, i) {
-> >  
-> >  		if (bvec->bv_page->mapping)
-> >  			target = bvec->bv_page;
-> > @@ -360,7 +360,7 @@ static void __submit_merged_write_cond(struct f2fs_sb_info *sbi,
-> >  			struct f2fs_bio_info *io = sbi->write_io[btype] + temp;
-> >  
-> >  			down_read(&io->io_rwsem);
-> > -			ret = __has_merged_page(io, inode, page, ino);
-> > +			ret = __has_merged_page(io->bio, inode, page, ino);
-> >  			up_read(&io->io_rwsem);
-> >  		}
-> >  		if (ret)
-> > @@ -429,6 +429,61 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
-> >  	return 0;
-> >  }
-> >  
-> > +int f2fs_merge_page_bio(struct f2fs_io_info *fio)
-> > +{
-> > +	struct bio *bio = *fio->bio;
-> > +	struct page *page = fio->encrypted_page ?
-> > +			fio->encrypted_page : fio->page;
-> > +
-> > +	if (!f2fs_is_valid_blkaddr(fio->sbi, fio->new_blkaddr,
-> > +			__is_meta_io(fio) ? META_GENERIC : DATA_GENERIC))
-> > +		return -EFAULT;
-> > +
-> > +	trace_f2fs_submit_page_bio(page, fio);
-> > +	f2fs_trace_ios(fio, 0);
-> > +
-> > +	if (bio && (*fio->last_block + 1 != fio->new_blkaddr ||
-> > +			!__same_bdev(fio->sbi, fio->new_blkaddr, bio))) {
-> > +		__submit_bio(fio->sbi, bio, fio->type);
-> > +		bio = NULL;
-> > +	}
-> > +alloc_new:
-> > +	if (!bio) {
-> > +		bio = __bio_alloc(fio->sbi, fio->new_blkaddr, fio->io_wbc,
-> > +				BIO_MAX_PAGES, false, fio->type, fio->temp);
-> > +		bio_set_op_attrs(bio, fio->op, fio->op_flags);
-> > +	}
-> > +
-> > +	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
-> > +		__submit_bio(fio->sbi, bio, fio->type);
-> > +		bio = NULL;
-> > +		goto alloc_new;
-> > +	}
-> > +
-> > +	if (fio->io_wbc)
-> > +		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
-> > +
-> > +	inc_page_count(fio->sbi, WB_DATA_TYPE(page));
-> > +
-> > +	*fio->last_block = fio->new_blkaddr;
-> > +	*fio->bio = bio;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +void f2fs_submit_ipu_bio(struct f2fs_sb_info *sbi, struct bio **bio,
-> > +							struct page *page)
-> > +{
-> > +	if (!bio)
-> > +		return;
-> > +
-> > +	if (!__has_merged_page(*bio, NULL, page, 0))
-> > +		return;
-> > +
-> > +	__submit_bio(sbi, *bio, DATA);
-> > +	*bio = NULL;
-> > +}
-> > +
-> >  void f2fs_submit_page_write(struct f2fs_io_info *fio)
-> >  {
-> >  	struct f2fs_sb_info *sbi = fio->sbi;
-> > @@ -1854,6 +1909,8 @@ int f2fs_do_write_data_page(struct f2fs_io_info *fio)
-> >  }
-> >  
-> >  static int __write_data_page(struct page *page, bool *submitted,
-> > +				struct bio **bio,
-> > +				sector_t *last_block,
-> >  				struct writeback_control *wbc,
-> >  				enum iostat_type io_type)
-> >  {
-> > @@ -1879,6 +1936,8 @@ static int __write_data_page(struct page *page, bool *submitted,
-> >  		.need_lock = LOCK_RETRY,
-> >  		.io_type = io_type,
-> >  		.io_wbc = wbc,
-> > +		.bio = bio,
-> > +		.last_block = last_block,
-> >  	};
-> >  
-> >  	trace_f2fs_writepage(page, DATA);
-> > @@ -1976,10 +2035,13 @@ static int __write_data_page(struct page *page, bool *submitted,
-> >  	}
-> >  
-> >  	unlock_page(page);
-> > -	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode))
-> > +	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode)) {
-> > +		f2fs_submit_ipu_bio(sbi, bio, page);
-> >  		f2fs_balance_fs(sbi, need_balance_fs);
-> > +	}
-> >  
-> >  	if (unlikely(f2fs_cp_error(sbi))) {
-> > +		f2fs_submit_ipu_bio(sbi, bio, page);
-> >  		f2fs_submit_merged_write(sbi, DATA);
-> >  		submitted = NULL;
-> >  	}
-> > @@ -2006,7 +2068,7 @@ static int __write_data_page(struct page *page, bool *submitted,
-> >  static int f2fs_write_data_page(struct page *page,
-> >  					struct writeback_control *wbc)
-> >  {
-> > -	return __write_data_page(page, NULL, wbc, FS_DATA_IO);
-> > +	return __write_data_page(page, NULL, NULL, NULL, wbc, FS_DATA_IO);
-> >  }
-> >  
-> >  /*
-> > @@ -2022,6 +2084,8 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
-> >  	int done = 0;
-> >  	struct pagevec pvec;
-> >  	struct f2fs_sb_info *sbi = F2FS_M_SB(mapping);
-> > +	struct bio *bio = NULL;
-> > +	sector_t last_block;
-> >  	int nr_pages;
-> >  	pgoff_t uninitialized_var(writeback_index);
-> >  	pgoff_t index;
-> > @@ -2098,17 +2162,20 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
-> >  			}
-> >  
-> >  			if (PageWriteback(page)) {
-> > -				if (wbc->sync_mode != WB_SYNC_NONE)
-> > +				if (wbc->sync_mode != WB_SYNC_NONE) {
-> >  					f2fs_wait_on_page_writeback(page,
-> >  							DATA, true, true);
-> > -				else
-> > +					f2fs_submit_ipu_bio(sbi, &bio, page);
-> > +				} else {
-> >  					goto continue_unlock;
-> > +				}
-> >  			}
-> >  
-> >  			if (!clear_page_dirty_for_io(page))
-> >  				goto continue_unlock;
-> >  
-> > -			ret = __write_data_page(page, &submitted, wbc, io_type);
-> > +			ret = __write_data_page(page, &submitted, &bio,
-> > +					&last_block, wbc, io_type);
-> >  			if (unlikely(ret)) {
-> >  				/*
-> >  				 * keep nr_to_write, since vfs uses this to
-> > @@ -2157,6 +2224,9 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
-> >  	if (nwritten)
-> >  		f2fs_submit_merged_write_cond(F2FS_M_SB(mapping), mapping->host,
-> >  								NULL, 0, DATA);
-> > +	/* submit cached bio of IPU write */
-> > +	if (bio)
-> > +		__submit_bio(sbi, bio, DATA);
-> >  
-> >  	return ret;
-> >  }
-> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > index 46db3ed87c84..7c4355927d28 100644
-> > --- a/fs/f2fs/f2fs.h
-> > +++ b/fs/f2fs/f2fs.h
-> > @@ -1048,6 +1048,8 @@ struct f2fs_io_info {
-> >  	bool retry;		/* need to reallocate block address */
-> >  	enum iostat_type io_type;	/* io type */
-> >  	struct writeback_control *io_wbc; /* writeback control */
-> > +	struct bio **bio;		/* bio for ipu */
-> > +	sector_t *last_block;		/* last block number in bio */
-> >  	unsigned char version;		/* version of the node */
-> >  };
-> >  
-> > @@ -3105,6 +3107,7 @@ void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
-> >  				nid_t ino, enum page_type type);
-> >  void f2fs_flush_merged_writes(struct f2fs_sb_info *sbi);
-> >  int f2fs_submit_page_bio(struct f2fs_io_info *fio);
-> > +int f2fs_merge_page_bio(struct f2fs_io_info *fio);
-> >  void f2fs_submit_page_write(struct f2fs_io_info *fio);
-> >  struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
-> >  			block_t blk_addr, struct bio *bio);
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index b2167d53fb9d..66838ab2f21e 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -3196,7 +3196,10 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
-> >  
-> >  	stat_inc_inplace_blocks(fio->sbi);
-> >  
-> > -	err = f2fs_submit_page_bio(fio);
-> > +	if (fio->bio)
-> > +		err = f2fs_merge_page_bio(fio);
-> > +	else
-> > +		err = f2fs_submit_page_bio(fio);
-> >  	if (!err)
-> >  		update_device_state(fio);
-> >  
-> > 
+> diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+> index 09ce73b07d35..df854f0a69f0 100755
+> --- a/tools/perf/scripts/python/exported-sql-viewer.py
+> +++ b/tools/perf/scripts/python/exported-sql-viewer.py
+> @@ -693,28 +693,16 @@ class VBox():
+>  	def Widget(self):
+>  		return self.vbox
+>  
+> -# Context-sensitive call graph window
+> -
+> -class CallGraphWindow(QMdiSubWindow):
+> -
+> -	def __init__(self, glb, parent=None):
+> -		super(CallGraphWindow, self).__init__(parent)
+> +# Tree window base
+>  
+> -		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
+> +class TreeWindowBase(QMdiSubWindow):
+>  
+> -		self.view = QTreeView()
+> -		self.view.setModel(self.model)
+> -
+> -		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
+> -			self.view.setColumnWidth(c, w)
+> -
+> -		self.find_bar = FindBar(self, self)
+> -
+> -		self.vbox = VBox(self.view, self.find_bar.Widget())
+> -
+> -		self.setWidget(self.vbox.Widget())
+> +	def __init__(self, parent=None):
+> +		super(TreeWindowBase, self).__init__(parent)
+>  
+> -		AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
+> +		self.model = None
+> +		self.view = None
+> +		self.find_bar = None
+>  
+>  	def DisplayFound(self, ids):
+>  		if not len(ids):
+> @@ -747,6 +735,30 @@ class CallGraphWindow(QMdiSubWindow):
+>  		if not found:
+>  			self.find_bar.NotFound()
+>  
+> +
+> +# Context-sensitive call graph window
+> +
+> +class CallGraphWindow(TreeWindowBase):
+> +
+> +	def __init__(self, glb, parent=None):
+> +		super(CallGraphWindow, self).__init__(parent)
+> +
+> +		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
+> +
+> +		self.view = QTreeView()
+> +		self.view.setModel(self.model)
+> +
+> +		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
+> +			self.view.setColumnWidth(c, w)
+> +
+> +		self.find_bar = FindBar(self, self)
+> +
+> +		self.vbox = VBox(self.view, self.find_bar.Widget())
+> +
+> +		self.setWidget(self.vbox.Widget())
+> +
+> +		AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
+> +
+>  # Child data item  finder
+>  
+>  class ChildDataItemFinder():
+> -- 
+> 2.17.1
+
+-- 
+
+- Arnaldo
