@@ -2,82 +2,162 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177CDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F23C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E140F218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E738A2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:39:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sG3dZWqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733130AbfCAIgO (ORCPT
+        id S1732879AbfCAIjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:36:14 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:36050 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728495AbfCAIgN (ORCPT
+        Fri, 1 Mar 2019 03:39:05 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42817 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728017AbfCAIjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:36:13 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x218TQAw025042;
-        Fri, 1 Mar 2019 02:33:46 -0600
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail3.cirrus.com ([87.246.76.56])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2qxhmcjb19-1;
-        Fri, 01 Mar 2019 02:33:46 -0600
-Received: from EX17.ad.cirrus.com (ex17.ad.cirrus.com [172.20.9.81])
-        by mail3.cirrus.com (Postfix) with ESMTP id 54FA7611C8B0;
-        Fri,  1 Mar 2019 02:34:00 -0600 (CST)
-Received: from imbe.wolfsonmicro.main (198.61.95.81) by EX17.ad.cirrus.com
- (172.20.9.81) with Microsoft SMTP Server id 14.3.408.0; Fri, 1 Mar 2019
- 08:33:45 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com
- [198.61.86.93])        by imbe.wolfsonmicro.main (8.14.4/8.14.4) with ESMTP id
- x218XfIP015454;        Fri, 1 Mar 2019 08:33:41 GMT
-Date:   Fri, 1 Mar 2019 08:33:41 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Axel Lin <axel.lin@ingics.com>
-CC:     Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        <patches@opensource.cirrus.com>,
-        Ashish Jangam <ashish.jangam@kpitcummins.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Paul Kocialkowski <contact@paulk.fr>,
-        Milo Kim <milo.kim@ti.com>, Keerthy <j-keerthy@ti.com>,
-        James Ban <James.Ban.opensource@diasemi.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 11/11] regulator: wm831x-dcdc: Convert to use
- regulator_set/get_current_limit_regmap
-Message-ID: <20190301083341.GF46536@ediswmail.ad.cirrus.com>
-References: <20190228134022.32625-1-axel.lin@ingics.com>
- <20190228134022.32625-12-axel.lin@ingics.com>
+        Fri, 1 Mar 2019 03:39:04 -0500
+Received: by mail-lf1-f68.google.com with SMTP id p1so17392791lfk.9
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 00:39:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qnyFKua0Ma32Sx5B0QpXHBKkuP+Q5Kg1stVhtIDMIX8=;
+        b=sG3dZWqgA5FRR3DHZ21C2LtXUuYzUbMwmm40oOBmGxStSvL9weTGNbaiKykOuPAiVK
+         1Hf7pzcpFz0Hacot/mz3PFr3tmM+afJ4FnE6mDxgzMp8CW9hzV4LYlgIqxa0r55i65P2
+         TOcRqJ3/LGPJmAoCJcuqytQ9iXbcN7NbLENL2ugxRyHVGj5MUqUu1+wphbzsXfTJpkqz
+         02mOx+pa4iFrGsCsf5/DUEPYnN8fL8eEDiDghOtjBoGUm46D0m3UduPIrfvoUwOkCeDL
+         8SbeMq1k4cMEWrfPQWZJaVAE49CMpgEKiIzwaTXSV/q755DNphwffmzIJKKAvvVYn68W
+         0zwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qnyFKua0Ma32Sx5B0QpXHBKkuP+Q5Kg1stVhtIDMIX8=;
+        b=WMQGXQTLUy0lAoSQlMKRcG1Ci28ZRkf14L1846yH625roNQcMyMEo/79R6Fj51IMhH
+         ThKN4qP0p0DO/QgnUnV+FubP3iiYL00omGyhzg7xpM6XZc36gTaoHmMPcF5rtJ9TS/LY
+         mEY8/9k4QM2RrsBmM7hiF4zOaX3lVGLYqt+E2a1ZeszAJojfoFH0UF4Ast5cHIlXlGHX
+         vf7r4OthNqdAG7Oq1SIOX/xKqo7GM8a3jnLhcQzGwCxA4zZRtxZ8kMwHLrb+1j/hD2Cp
+         Ep9kw5FhAnOKDdi+zaUEXCNnSU3u3TXEJjqusUGacEZH3Pwgkr7SXxWyDbaw8eed6iK+
+         tKQQ==
+X-Gm-Message-State: APjAAAX6uo7oaYVSCX4PBg24vLo5ris1vYNFCWgB8RvEbn2PfRowHgV+
+        WZFaNddrOrEdjhpmCqsQgrYKdLK4DX9HiOXK4J0=
+X-Google-Smtp-Source: APXvYqy5PcgDQYb1oYkgk2pPVnrAPHJ6sZPWqn5OfCb3xjll6lhXw3UFaD6I9nG2MYc8DKEueHBjx++6JBbPWVnh6dw=
+X-Received: by 2002:a19:c616:: with SMTP id w22mr2281551lff.31.1551429542532;
+ Fri, 01 Mar 2019 00:39:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190228134022.32625-12-axel.lin@ingics.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=868 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903010060
+References: <1551421452-5385-1-git-send-email-laoar.shao@gmail.com>
+In-Reply-To: <1551421452-5385-1-git-send-email-laoar.shao@gmail.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Fri, 1 Mar 2019 14:08:50 +0530
+Message-ID: <CAFqt6zZAjt2gmYPT_KPosfeDKnWNeBJoveKEytOJZeDHh=ZjzA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: vmscan: add tracepoints for node reclaim
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+        shaoyafang@didiglobal.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 09:40:22PM +0800, Axel Lin wrote:
-> Use regulator_set/get_current_limit_regmap helpers to save some code.
-> 
-> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+On Fri, Mar 1, 2019 at 11:54 AM Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> In the page alloc fast path, it may do node reclaim, which may cause
+> latency spike.
+> We should add tracepoint for this event, and also measure the latency
+> it causes.
+>
+> So bellow two tracepoints are introduced,
+>         mm_vmscan_node_reclaim_begin
+>         mm_vmscan_node_reclaim_end
+>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+
+Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+(for the comment on v1).
+
 > ---
-
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-
-Thanks,
-Charles
+>  include/trace/events/vmscan.h | 32 ++++++++++++++++++++++++++++++++
+>  mm/vmscan.c                   |  6 ++++++
+>  2 files changed, 38 insertions(+)
+>
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> index a1cb913..c1ddf28 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -465,6 +465,38 @@
+>                 __entry->ratio,
+>                 show_reclaim_flags(__entry->reclaim_flags))
+>  );
+> +
+> +TRACE_EVENT(mm_vmscan_node_reclaim_begin,
+> +
+> +       TP_PROTO(int nid, int order, gfp_t gfp_flags),
+> +
+> +       TP_ARGS(nid, order, gfp_flags),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(int, nid)
+> +               __field(int, order)
+> +               __field(gfp_t, gfp_flags)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->nid = nid;
+> +               __entry->order = order;
+> +               __entry->gfp_flags = gfp_flags;
+> +       ),
+> +
+> +       TP_printk("nid=%d order=%d gfp_flags=%s",
+> +               __entry->nid,
+> +               __entry->order,
+> +               show_gfp_flags(__entry->gfp_flags))
+> +);
+> +
+> +DEFINE_EVENT(mm_vmscan_direct_reclaim_end_template, mm_vmscan_node_reclaim_end,
+> +
+> +       TP_PROTO(unsigned long nr_reclaimed),
+> +
+> +       TP_ARGS(nr_reclaimed)
+> +);
+> +
+>  #endif /* _TRACE_VMSCAN_H */
+>
+>  /* This part must be outside protection */
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index ac4806f..2bee5d1 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -4241,6 +4241,9 @@ static int __node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned in
+>                 .reclaim_idx = gfp_zone(gfp_mask),
+>         };
+>
+> +       trace_mm_vmscan_node_reclaim_begin(pgdat->node_id, order,
+> +                                          sc.gfp_mask);
+> +
+>         cond_resched();
+>         fs_reclaim_acquire(sc.gfp_mask);
+>         /*
+> @@ -4267,6 +4270,9 @@ static int __node_reclaim(struct pglist_data *pgdat, gfp_t gfp_mask, unsigned in
+>         current->flags &= ~PF_SWAPWRITE;
+>         memalloc_noreclaim_restore(noreclaim_flag);
+>         fs_reclaim_release(sc.gfp_mask);
+> +
+> +       trace_mm_vmscan_node_reclaim_end(sc.nr_reclaimed);
+> +
+>         return sc.nr_reclaimed >= nr_pages;
+>  }
+>
+> --
+> 1.8.3.1
+>
