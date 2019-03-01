@@ -2,90 +2,183 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E50C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92368C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D81120851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:23:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VC3Z4uSS"
+	by mail.kernel.org (Postfix) with ESMTP id 557D820851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388631AbfCAPXN (ORCPT
+        id S2388689AbfCAP0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 10:23:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34964 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbfCAPXN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 10:23:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=RENNXA18DGifZQijxXwuGGbhsgk/71mdLoQmjbY05Nc=; b=VC3Z4uSSzfkZ0eLvEX4mMNZTu
-        omZdTJujAQ+XNQzpNcMIF3d4ZYcJWrVkfl8xTfcnxvmWzL7NqKOZYUSan/UHmqjfXBPgUy6zt1QcR
-        YNEJM9V/45O4630BXRJXtiJjaB7InNS48Yz5px/UcdcQ9DN84nAlszhnSBcoJu0tQloFNdlwNGCTr
-        VgXm4PvtWSqs+LwPJnlpdciVYtUrdawtQJCSpkDnXSALZGwIl6F41Zpvv2eFFe/4+SGgnUZ23ATKS
-        zGp9/j2qTrE/nztJ1sFFbDaChpb3HRNjKRzby/XAF8b0pZSkhWR/ttRmUwrb4uo1ObUIlMb1g7kmo
-        Ut8By4Q8g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1gzk0A-0000SH-Qx; Fri, 01 Mar 2019 15:23:06 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4074F203CCAB3; Fri,  1 Mar 2019 16:23:05 +0100 (CET)
-Date:   Fri, 1 Mar 2019 16:23:05 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: [PATCH 1/8] kasan,x86: Frob kasan_report() in an exception
-Message-ID: <20190301152305.GJ32494@hirez.programming.kicks-ass.net>
-References: <20190228145450.289603901@infradead.org>
- <20190228150152.078767622@infradead.org>
- <CACT4Y+b0WyE5En7BVipZiCMmMaj30kaEu3T68H7+-kVP8gqADA@mail.gmail.com>
- <20190301144556.GY32477@hirez.programming.kicks-ass.net>
- <CACT4Y+ZyXAJiKtzoWxY-u7e9HaL7iM9tnFXnFZd7Hdy4uHEOyA@mail.gmail.com>
+        Fri, 1 Mar 2019 10:26:03 -0500
+Received: from mga14.intel.com ([192.55.52.115]:22353 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbfCAP0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 10:26:03 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 07:26:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,428,1544515200"; 
+   d="scan'208";a="120142363"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 01 Mar 2019 07:25:59 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 01 Mar 2019 17:25:58 +0200
+Date:   Fri, 1 Mar 2019 17:25:58 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Shayenne Moura <shayenneluzmoura@gmail.com>
+Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/vkms: Solve bug on kms_crc_cursor tests
+Message-ID: <20190301152558.GR20097@intel.com>
+References: <20190225142606.gov32asdq3qe375q@smtp.gmail.com>
+ <20190228101107.GL2665@phenom.ffwll.local>
+ <20190228140341.GG20097@intel.com>
+ <CAKkTe8Ei2fbz4L2noLvGWMCsHy1f7sadOV-horjNsGBEHt=q3w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZyXAJiKtzoWxY-u7e9HaL7iM9tnFXnFZd7Hdy4uHEOyA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKkTe8Ei2fbz4L2noLvGWMCsHy1f7sadOV-horjNsGBEHt=q3w@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 04:06:17PM +0100, Dmitry Vyukov wrote:
-> It involves asm, hardware exceptions, UD2 instructions. It also seems
-> to use arch-dependent code in arch-independent files: there is no RSI
-> on other arches, does this compile on non-x86?
+On Fri, Mar 01, 2019 at 11:55:11AM -0300, Shayenne Moura wrote:
+> Em qui, 28 de fev de 2019 às 11:03, Ville Syrjälä
+> <ville.syrjala@linux.intel.com> escreveu:
+> >
+> > On Thu, Feb 28, 2019 at 11:11:07AM +0100, Daniel Vetter wrote:
+> > > On Mon, Feb 25, 2019 at 11:26:06AM -0300, Shayenne Moura wrote:
+> > > > vkms_crc_work_handle needs the value of the actual frame to
+> > > > schedule the workqueue that calls periodically the vblank
+> > > > handler and the destroy state functions. However, the frame
+> > > > value returned from vkms_vblank_simulate is updated and
+> > > > diminished in vblank_get_timestamp because it is not in a
+> > > > vblank interrupt, and return an inaccurate value.
+> > > >
+> > > > Solve this getting the actual vblank frame directly from the
+> > > > vblank->count inside the `struct drm_crtc`, instead of using
+> > > > the `drm_accurate_vblank_count` function.
+> > > >
+> > > > Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
+> > >
+> > > Sorry for the delay, I'm a bit swamped right now :-/
+> > >
+> > > Debug work you're doing here is really impressive! But I have no idea
+> > > what's going on. It doesn't look like it's just papering over a bug (like
+> > > the in_vblank_irq check we've discussed on irc), but I also have no idea
+> > > why it works.
+> > >
+> > > I'll pull in Ville, he understands this better than me.
+> >
+> > It's not entirely clear what we're trying to fix. From what I can see
+> > the crc work seems to be in no way synchronized with page flips, so
+> > I'm not sure how all this is really supposed to work.
+> >
+> 
+> Hi, Ville!
+> 
+> Thank you for the review! :)
+> 
+> I do not understand well what crc code is doing, but the issue that I found
+> is related to the vblank timestamp and frame count.
+> 
+> When vkms handles the crc_cursor it uses the start frame and end frame
+> values to verify if it needs to call the function 'drm_crtc_add_crc_entry()'
+> for each frame.
+> 
+> However, when getting the frame count, the code is calling the function
+> drm_update_vblank_count(dev, pipe, false) and, because of the 'false',
+> subtracting the actual vblank timestamp (consequently, the frame count
+> value), causing conflicts.
 
-> > +#ifndef kasan_report
-> > +#define kasan_report(addr, size, is_write, ip) __kasan_report(addr, size, is_write, ip)
-> > +#endif
+The in_vblank_irq behavour looks sane to me. What are these conflicts?
 
-Should build; but I've not tried yet.
+> 
+> Does it make sense? I am not sure about this crc code behavior.
+> 
+> Shayenne
+> 
+> > > -Daniel
+> > >
+> > > > ---
+> > > >  drivers/gpu/drm/vkms/vkms_crc.c  | 4 +++-
+> > > >  drivers/gpu/drm/vkms/vkms_crtc.c | 4 +++-
+> > > >  2 files changed, 6 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vkms/vkms_crc.c
+> > > > index d7b409a3c0f8..09a8b00ef1f1 100644
+> > > > --- a/drivers/gpu/drm/vkms/vkms_crc.c
+> > > > +++ b/drivers/gpu/drm/vkms/vkms_crc.c
+> > > > @@ -161,6 +161,8 @@ void vkms_crc_work_handle(struct work_struct *work)
+> > > >     struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
+> > > >     struct vkms_device *vdev = container_of(out, struct vkms_device,
+> > > >                                             output);
+> > > > +   unsigned int pipe = drm_crtc_index(crtc);
+> > > > +   struct drm_vblank_crtc *vblank = &crtc->dev->vblank[pipe];
+> > > >     struct vkms_crc_data *primary_crc = NULL;
+> > > >     struct vkms_crc_data *cursor_crc = NULL;
+> > > >     struct drm_plane *plane;
+> > > > @@ -196,7 +198,7 @@ void vkms_crc_work_handle(struct work_struct *work)
+> > > >     if (primary_crc)
+> > > >             crc32 = _vkms_get_crc(primary_crc, cursor_crc);
+> > > >
+> > > > -   frame_end = drm_crtc_accurate_vblank_count(crtc);
+> > > > +   frame_end = vblank->count;
+> > > >
+> > > >     /* queue_work can fail to schedule crc_work; add crc for
+> > > >      * missing frames
+> > > > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > index 8a9aeb0a9ea8..9bf3268e2e92 100644
+> > > > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > @@ -10,6 +10,8 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+> > > >                                               vblank_hrtimer);
+> > > >     struct drm_crtc *crtc = &output->crtc;
+> > > >     struct vkms_crtc_state *state = to_vkms_crtc_state(crtc->state);
+> > > > +   unsigned int pipe = drm_crtc_index(crtc);
+> > > > +   struct drm_vblank_crtc *vblank = &crtc->dev->vblank[pipe];
+> > > >     u64 ret_overrun;
+> > > >     bool ret;
+> > > >
+> > > > @@ -20,7 +22,7 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+> > > >             DRM_ERROR("vkms failure on handling vblank");
+> > > >
+> > > >     if (state && output->crc_enabled) {
+> > > > -           u64 frame = drm_crtc_accurate_vblank_count(crtc);
+> > > > +           u64 frame = vblank->count;
+> > > >
+> > > >             /* update frame_start only if a queued vkms_crc_work_handle()
+> > > >              * has read the data
+> > > > --
+> > > > 2.17.1
+> > > >
+> > >
+> > > --
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > http://blog.ffwll.ch
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> > --
+> > Ville Syrjälä
+> > Intel
 
-I'll push the lot out to 0day, that'll yell loudly if I messed that up.
-
-But yes, I'll try some annotation, see what that looks like.
+-- 
+Ville Syrjälä
+Intel
