@@ -2,344 +2,193 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDBAC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07170C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05FF720851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FEC20850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:57:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dRULPZq4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="C71mKaib"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UnAyYovy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388315AbfCAO4I (ORCPT
+        id S2388411AbfCAO5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:56:08 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:33376 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbfCAO4H (ORCPT
+        Fri, 1 Mar 2019 09:57:16 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46728 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388216AbfCAO5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:56:07 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 299FF60907; Fri,  1 Mar 2019 14:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551452166;
-        bh=rwixTeJdGjUFssSrS1Lo6IWiLdJgj+MVq+Flw3CXVKk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dRULPZq4o5p1vkJrU4Yl962eWGcQcYB2zBcP/BWJQAQDlbqr/1kOt8JuMeF/uImFK
-         QHdhJgaHDaIoOpHBchxpMApwT0oN9PQqk96hWi41aQWoHtPAR8TCIgQsyvx6SmWRPD
-         WNQTuVoYVrvfXNLMC4BzNie46pqhZWtC6vtUpnps=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9AD6D602A7;
-        Fri,  1 Mar 2019 14:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551452165;
-        bh=rwixTeJdGjUFssSrS1Lo6IWiLdJgj+MVq+Flw3CXVKk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=C71mKaibk9134fW76EkemXKgc5uhMotv51a+swN77gxe84pbskmSPjANoZbwcbHrH
-         YEtPnuCEMcOxlAogxIAN3PRp2m0MPLBN+bJF7gPqX43QfZDngkJQWEcJ5YwrEV84lk
-         O2a/l+ok8pWpoZTFZG2+ilKAQ1lOqMQvpMK4ZAqw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9AD6D602A7
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: pull-request: wireless-drivers-next 2019-03-01
-Date:   Fri, 01 Mar 2019 16:55:59 +0200
-Message-ID: <8736o6hce8.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 1 Mar 2019 09:57:15 -0500
+Received: by mail-io1-f66.google.com with SMTP id k21so19710857ior.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:57:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+Z/AjI8w5/EIDAz8NClnqUK8HG1NzPIWWkFfoBIT1zM=;
+        b=UnAyYovyPVxfxZ1F8+yuk265C7Reimmna0hhdZcqcSou45Usu8pxjjjX/2dh+RKIt6
+         9ocZi1RODLaRgDZvactcbbKErDvqAo2JWSgPcPsOufRxAcCBnDsCxUJrgFH9Jg2MOhwN
+         i8QW+ABtvgVuf6VnB5YxaeNl1jXCI132779jgZJ6UPhFiLMmrnpqhDnfr7RBjO1yJqs6
+         niDQ43s/stqQI8gZhQ4CuwfXF0zYvaUjaK+K879ZfFxfJ4V14g6ISsEgxYepGKfj3GvY
+         OJzcit22ZHez0iJMRNmmOBJtN3MOTeDVcvBsvfMoeqczr6Mvd1rQchefR99KpZW+Y8Z/
+         spLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Z/AjI8w5/EIDAz8NClnqUK8HG1NzPIWWkFfoBIT1zM=;
+        b=jamkq4thpznhVv6Yyk684xO6UG6/cQ0OhIB72IoD1My6WrXeKyN1rgKl+K/JGf0ZhN
+         48d7TrpFQferFCQPAn2f9EpX53pK+Ni7fHf/97GpeFV6FxxMtqwySrJZwo05n1XctcsJ
+         WgfnNqqfUYnl0XsLuKN2xDp/KPfotAVSPy8rKv4OozRws264NJUAPgf63GIp3lJGdfCo
+         B3C5W318rNNamY+2fdgjqmvbIj+MaD8AFB3HwKlyvebUoEwPxwWmMDWsFYl2AoBtVgUI
+         72/MxYyvq2p+kjKMvPKeezT8AETJlJC/TIrX7qlLYdasWmya08pEoL8VHqoR9a6XgWjy
+         N4yg==
+X-Gm-Message-State: APjAAAU3h4shmG32eYLqyn81fQuqhHtlGz/hRqLta6wrDfIFYxh2+HdT
+        uoNWNaewzk2XFnJ9MN0uVkfksPBk0rkHwnJz0pidIw==
+X-Google-Smtp-Source: APXvYqwi8fJFb6F2kRRGHXvnecMLUZcMLDdWd2qPfkvgevEiNViLPQDiiNWZ7xUx5lzHnVWcnzKTqEeSSIhYS4AVxsQ=
+X-Received: by 2002:a6b:7b02:: with SMTP id l2mr3018249iop.60.1551452234275;
+ Fri, 01 Mar 2019 06:57:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190301134033.2100-1-tiwai@suse.de> <CAKv+Gu_d7fZuFmu6e5v4WFta11qVRkaKZWdt4X33JRLe3BwHZw@mail.gmail.com>
+ <s5ha7ieels3.wl-tiwai@suse.de> <CAKv+Gu91QeeFHXfp4ShM2z1hbypwnoRKzZQQ3Sktk1sASXvR6Q@mail.gmail.com>
+ <s5h5zt2el6d.wl-tiwai@suse.de>
+In-Reply-To: <s5h5zt2el6d.wl-tiwai@suse.de>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 1 Mar 2019 15:57:03 +0100
+Message-ID: <CAKv+Gu-gp+Hvd-ZcZC-ZRQOHpinj_mXx-L6fTUkKWSXd0UwC+g@mail.gmail.com>
+Subject: Re: [PATCH] efi: Downgrade "EFI_MEMMAP is not enabled" message
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     "Lee, Chun-Yi" <jlee@suse.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On Fri, 1 Mar 2019 at 15:14, Takashi Iwai <tiwai@suse.de> wrote:
+>
+> On Fri, 01 Mar 2019 15:02:23 +0100,
+> Ard Biesheuvel wrote:
+> >
+> > On Fri, 1 Mar 2019 at 15:01, Takashi Iwai <tiwai@suse.de> wrote:
+> > >
+> > > On Fri, 01 Mar 2019 14:53:39 +0100,
+> > > Ard Biesheuvel wrote:
+> > > >
+> > > > On Fri, 1 Mar 2019 at 14:40, Takashi Iwai <tiwai@suse.de> wrote:
+> > > > >
+> > > > > Since 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes
+> > > > > when mapping the FB"), efifb_probe() checks its memory range via
+> > > > > efi_mem_desc_lookup(), and this leads to a spurious error message
+> > > > > "EFI_MEMMAP is not enabled" at every boot on KVM.  This is quite
+> > > > > annoying since the error message appears even if you set "quiet" boot
+> > > > > option.
+> > > > >
+> > > > > Actually there are only a few places that call efi_mem_desc_lookup()
+> > > > > function, and the other callers do give the explicit error messages
+> > > > > when the function returns an error in anyway.  That is, the error
+> > > > > message in the function is more or less moot.
+> > > > >
+> > > > > So let's downgrade the error message for stop annoying users.
+> > > > >
+> > > > > Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+> > > > > Bugzilla: https://bugzilla.suse.com/show_bug.cgi?id=1127339
+> > > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > > > ---
+> > > > >  drivers/firmware/efi/efi.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > > > > index 55b77c576c42..50ac33097458 100644
+> > > > > --- a/drivers/firmware/efi/efi.c
+> > > > > +++ b/drivers/firmware/efi/efi.c
+> > > > > @@ -409,7 +409,7 @@ int efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
+> > > > >         efi_memory_desc_t *md;
+> > > > >
+> > > > >         if (!efi_enabled(EFI_MEMMAP)) {
+> > > > > -               pr_err_once("EFI_MEMMAP is not enabled.\n");
+> > > > > +               pr_debug("EFI_MEMMAP is not enabled.\n");
+> > > > >                 return -EINVAL;
+> > > > >         }
+> > > > >
+> > > >
+> > > > efifb_probe() only calls efi_mem_desc_lookup() if
+> > > > screen_info.orig_video_isVGA == VIDEO_TYPE_EFI, which only gets
+> > > > assigned on a EFI boot.
+> > > >
+> > > > So even though I don't object to the patch as is, I would like to
+> > > > understand where this error message is coming from, given that it
+> > > > means that you are running on a UEFI system without the EFI memory
+> > > > map.
+> > > >
+> > > > Is this system booting via GRUB in EFI mode?
+> > >
+> > > No, it's booted in legacy boot mode.  But the primary fb is efifb, and
+> > > that's why the message appears.
+> > >
+> >
+> > So how are we ending up with
+> >
+> > screen_info.orig_video_isVGA == VIDEO_TYPE_EFI
+> >
+> > ??
+>
+> Ah, sorry, my description was too ambiguous.
+>
+> Actually our GRUB2 default setup boots the Linux kernel with linuxefi.
+> What I meant was that I invoked qemu-kvm without any -bios option, so
+> it's no EFI BIOS.
+>
 
-as Linus gave us one more week here are few more patches to net-next for
-5.1. Please let me know if there are any problems.
+Some from the link here
 
-Kalle
+https://openqa.opensuse.org/tests/864184/file/journal_check-full_journal.log
 
-The following changes since commit bd16693f359bbab8776541c06a6df32f3996638e:
+I got
 
-  net: fix double-free in bpf_lwt_xmit_reroute (2019-02-24 22:24:50 -0800)
+Feb 27 13:13:41 linux-e2c3 kernel: efifb: probing for efifb
+Feb 27 13:13:41 linux-e2c3 kernel: efi: EFI_MEMMAP is not enabled.
+Feb 27 13:13:41 linux-e2c3 kernel: fbcon: Taking over console
+Feb 27 13:13:41 linux-e2c3 kernel: efifb: No BGRT, not showing boot graphics
+Feb 27 13:13:41 linux-e2c3 kernel: efifb: framebuffer at 0xfc000000,
+using 1408k, total 1408k
+Feb 27 13:13:41 linux-e2c3 kernel: efifb: mode is 800x600x24,
+linelength=2400, pages=1
+Feb 27 13:13:41 linux-e2c3 kernel: efifb: scrolling: redraw
+Feb 27 13:13:41 linux-e2c3 kernel: efifb: Truecolor: size=0:8:8:8,
+shift=0:16:8:0
+Feb 27 13:13:41 linux-e2c3 kernel: Console: switching to colour frame
+buffer device 100x37
+Feb 27 13:13:41 linux-e2c3 kernel: fb0: EFI VGA frame buffer device
 
-are available in the git repository at:
+So if we are doing legacy, there is something else that is taking,
+GRUB perhaps, that is taking the framebuffer parameters and putting
+them in screen_info and marking them as VIDEO_TYPE_EFI.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next=
-.git tags/wireless-drivers-next-for-davem-2019-03-01
+If this is a reasonable thing to do, it implies that the efifb driver
+may run on otherwise non-EFI systems, and if this is the case, I'd
+rather fix it like this:
 
-for you to fetch changes up to 501faf710230b67e470b314868110357cf3a554d:
+diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+index ba906876cc45..9e529cc2b4ff 100644
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -464,7 +464,8 @@ static int efifb_probe(struct platform_device *dev)
+        info->apertures->ranges[0].base = efifb_fix.smem_start;
+        info->apertures->ranges[0].size = size_remap;
 
-  Merge ath-next from git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/a=
-th.git (2019-02-28 11:50:40 +0200)
+-       if (!efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
++       if (efi_enabled(EFI_BOOT) &&
++           !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+                if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+                    (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+                        pr_err("efifb: video memory @ 0x%lx spans
+multiple EFI memory regions\n",
 
-----------------------------------------------------------------
-wireless-drivers-next patches for 5.1
-
-Last set of patches. A new hardware support for mt76 otherwise quite
-normal.
-
-Major changes:
-
-mt76
-
-* add driver for MT7603E/MT7628
-
-ath10k
-
-* more preparation for SDIO support
-
-wil6210
-
-* support up to 20 stations in AP mode
-
-----------------------------------------------------------------
-Abhishek Ambure (3):
-      ath10k: add support for ack rssi value of management tx packets
-      ath10k: add support for ack rssi value of data tx packets
-      ath10k: update the max num of peers supported for WCN3990
-
-Ahmad Masri (2):
-      wil6210: support up to 20 stations in AP mode
-      wil6210: accessing 802.3 addresses via utility functions
-
-Alagu Sankar (3):
-      ath10k: sdio: set hi_acs_flags
-      ath10k: sdio: disable fwlog prints
-      ath10k: don't report unset rssi values to mac80211
-
-Alexei Avshalom Lazar (1):
-      wil6210: check null pointer in _wil_cfg80211_merge_extra_ies
-
-Andrea Greco (1):
-      ath9k: debugfs: Fix SPUR-DOWN field
-
-Colin Ian King (1):
-      rsi: fix missing null pointer check from a failed ieee80211_probereq_=
-get call
-
-Dedy Lansky (2):
-      wil6210: add option to drop Tx packets when Tx ring is full
-      wil6210: fix invalid sta statistics update
-
-Felix Fietkau (11):
-      mt76: mt76x02: fix TSF sync mode
-      mt76: mt76x02: fix beacon timer drift adjustment
-      mt76: mt76x02: fix beacon timer issue
-      mt76: mt76x02: only reset beacon drift counter when enabling beacons
-      mt76: mt76x02: issue watchdog reset on MCU request timeout
-      mt76: mt76x02: fix ED/CCA enabling/disabling
-      mt76: mt76x2: unify mt76x2[u]_mac_resume
-      mt76: mt76x02: set MT_TXOP_HLDR_TX40M_BLK_EN for mt76x2
-      mt76: add driver callback for when a sta is associated
-      dt-bindings: net: mt76: update binding for mt7603 driver
-      mt76: add driver for MT7603E and MT7628/7688
-
-Kalle Valo (2):
-      Merge tag 'mt76-for-kvalo-2019-02-26' of https://github.com/nbd168/wi=
-reless
-      Merge ath-next from git://git.kernel.org/.../kvalo/ath.git
-
-Larry Finger (8):
-      rtlwifi: Fix errors in spacing in wifi.h
-      rtlwifi: Fix problems with block comments in wifi.h
-      rtlwifi: Fix alignment errors in wifi.h
-      rtlwifi: Fix blank line errors in main header files
-      rtlwifi: Fix all blank line irregularities in main code files
-      rtlwifi: rtl8192ce: Fix missing blank lines
-      rtlwifi: rtl8192cu: Fix problems with blank lines
-      rtlwifi: rtl8192com: Fix blank line problems
-
-Lorenzo Bianconi (6):
-      mt76: usb: fix warning in mt76u_buf_free
-      mt76: usb: introduce mt76u_fill_bulk_urb routine
-      mt76: usb: simplify rx buffer allocation
-      mt76: usb: simplify mt76u_tx_build_sg routine
-      mt76: usb: check urb->num_sgs limit in mt76u_process_rx_entry
-      mt76: remove no longer used routine declarations
-
-Maya Erez (2):
-      wil6210: remove rtap_include_phy_info module param
-      wil6210: ignore HALP ICR if already handled
-
-Rafa=C5=82 Mi=C5=82ecki (2):
-      brcmfmac: fix size of the struct msgbuf_ring_status
-      brcmfmac: print firmware reported general status errors
-
-Rakesh Pillai (2):
-      ath10k: fix descriptor size in ce tx completion for WCN3990
-      ath10k: enhance logging for vdev pdev & peer set param
-
-Stanislaw Gruszka (3):
-      mt76usb: allow mt76u_bulk_msg be used for reads
-      mt76usb: use synchronous msg for mcu command responses
-      mt76usb: remove usb_mcu.c
-
-Surabhi Vishnoi (6):
-      ath10k: Fix length of wmi tlv command for protected mgmt frames
-      ath10k: Fix the incorrect updation of NSS data in tx stats
-      ath10k: Fix the wrong updation of BW in tx_stats debugfs entry
-      ath10k: Fix the wrong updation of SGI in tx_stats debugfs
-      ath10k: Fix the wrong calculation ht_idx and idx of rate table for tx=
-_stats
-      ath10k: Fill rx duration for each peer in fw_stats for WCN3990
-
-Toke H=C3=B8iland-J=C3=B8rgensen (1):
-      ath9k: Make sure to zero status.tx_time before reporting TX status
-
-Wen Gong (2):
-      ath10k: sdio: reset chip on power_down()
-      ath10k: remove the calibration data fetch for sdio
-
-Wen Yang (1):
-      mt76: fix a leaked reference by adding a missing of_node_put
-
-Yu Wang (1):
-      ath10k: correct the format of host memory chunks in wmi init command
-
-YueHaibing (4):
-      ath9k: remove set but not used variable 'acq'
-      rtlwifi: rtl8723be: Remove set but not used variable 'b_last_is_cur_r=
-dlstate'
-      rtlwifi: rtl8723ae: Remove set but not used variable 'bt_retry_cnt'
-      rtlwifi: rtl8192se: Remove set but not used variable 'seg_ptr'
-
- .../bindings/net/wireless/mediatek,mt76.txt        |   19 +
- drivers/net/wireless/ath/ath10k/ce.c               |   66 +-
- drivers/net/wireless/ath/ath10k/ce.h               |    2 +
- drivers/net/wireless/ath/ath10k/core.c             |   29 +-
- drivers/net/wireless/ath/ath10k/core.h             |    2 +-
- drivers/net/wireless/ath/ath10k/debug.c            |    3 +
- drivers/net/wireless/ath/ath10k/debugfs_sta.c      |    7 +-
- drivers/net/wireless/ath/ath10k/htt.h              |   86 +
- drivers/net/wireless/ath/ath10k/htt_rx.c           |   50 +-
- drivers/net/wireless/ath/ath10k/hw.c               |   32 +-
- drivers/net/wireless/ath/ath10k/hw.h               |   28 +-
- drivers/net/wireless/ath/ath10k/sdio.c             |   24 +-
- drivers/net/wireless/ath/ath10k/wmi-tlv.c          |  109 +-
- drivers/net/wireless/ath/ath10k/wmi-tlv.h          |   45 +
- drivers/net/wireless/ath/ath10k/wmi.c              |   44 +-
- drivers/net/wireless/ath/ath10k/wmi.h              |   21 +-
- drivers/net/wireless/ath/ath9k/debug.c             |    2 +-
- drivers/net/wireless/ath/ath9k/recv.c              |    9 +-
- drivers/net/wireless/ath/ath9k/xmit.c              |    3 +
- drivers/net/wireless/ath/wil6210/cfg80211.c        |   20 +-
- drivers/net/wireless/ath/wil6210/debugfs.c         |   23 +-
- drivers/net/wireless/ath/wil6210/interrupt.c       |   12 +-
- drivers/net/wireless/ath/wil6210/main.c            |   13 +-
- drivers/net/wireless/ath/wil6210/rx_reorder.c      |   10 +-
- drivers/net/wireless/ath/wil6210/trace.h           |    3 +-
- drivers/net/wireless/ath/wil6210/txrx.c            |  254 +--
- drivers/net/wireless/ath/wil6210/txrx.h            |   51 +-
- drivers/net/wireless/ath/wil6210/txrx_edma.c       |   11 +-
- drivers/net/wireless/ath/wil6210/wil6210.h         |   16 +-
- drivers/net/wireless/ath/wil6210/wmi.c             |   83 +-
- .../wireless/broadcom/brcm80211/brcmfmac/msgbuf.c  |   26 +-
- drivers/net/wireless/mediatek/mt76/Kconfig         |    1 +
- drivers/net/wireless/mediatek/mt76/Makefile        |    3 +-
- drivers/net/wireless/mediatek/mt76/eeprom.c        |   24 +-
- drivers/net/wireless/mediatek/mt76/mac80211.c      |    5 +
- drivers/net/wireless/mediatek/mt76/mt76.h          |   29 +-
- drivers/net/wireless/mediatek/mt76/mt7603/Kconfig  |    9 +
- drivers/net/wireless/mediatek/mt76/mt7603/Makefile |    6 +
- drivers/net/wireless/mediatek/mt76/mt7603/beacon.c |  186 +++
- drivers/net/wireless/mediatek/mt76/mt7603/core.c   |   73 +
- .../net/wireless/mediatek/mt76/mt7603/debugfs.c    |   56 +
- drivers/net/wireless/mediatek/mt76/mt7603/dma.c    |  215 +++
- drivers/net/wireless/mediatek/mt76/mt7603/eeprom.c |  168 ++
- drivers/net/wireless/mediatek/mt76/mt7603/eeprom.h |   86 +
- drivers/net/wireless/mediatek/mt76/mt7603/init.c   |  578 +++++++
- drivers/net/wireless/mediatek/mt76/mt7603/mac.c    | 1749 ++++++++++++++++=
-++++
- drivers/net/wireless/mediatek/mt76/mt7603/mac.h    |  242 +++
- drivers/net/wireless/mediatek/mt76/mt7603/main.c   |  709 ++++++++
- drivers/net/wireless/mediatek/mt76/mt7603/mcu.c    |  483 ++++++
- drivers/net/wireless/mediatek/mt76/mt7603/mcu.h    |  110 ++
- drivers/net/wireless/mediatek/mt76/mt7603/mt7603.h |  253 +++
- drivers/net/wireless/mediatek/mt76/mt7603/pci.c    |   80 +
- drivers/net/wireless/mediatek/mt76/mt7603/regs.h   |  774 +++++++++
- drivers/net/wireless/mediatek/mt76/mt7603/soc.c    |   85 +
- drivers/net/wireless/mediatek/mt76/mt76x0/init.c   |    2 +
- drivers/net/wireless/mediatek/mt76/mt76x0/main.c   |    2 +
- drivers/net/wireless/mediatek/mt76/mt76x0/phy.c    |    6 +-
- drivers/net/wireless/mediatek/mt76/mt76x0/usb.c    |   16 -
- drivers/net/wireless/mediatek/mt76/mt76x02.h       |    1 +
- drivers/net/wireless/mediatek/mt76/mt76x02_mac.c   |    9 +-
- drivers/net/wireless/mediatek/mt76/mt76x02_mcu.c   |    1 +
- drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c  |   42 +-
- .../net/wireless/mediatek/mt76/mt76x02_usb_mcu.c   |   36 +-
- drivers/net/wireless/mediatek/mt76/mt76x02_util.c  |    9 +-
- drivers/net/wireless/mediatek/mt76/mt76x2/mac.c    |    3 +
- drivers/net/wireless/mediatek/mt76/mt76x2/mac.h    |    8 +-
- .../net/wireless/mediatek/mt76/mt76x2/mt76x2u.h    |    1 -
- .../net/wireless/mediatek/mt76/mt76x2/pci_init.c   |    7 -
- .../net/wireless/mediatek/mt76/mt76x2/pci_phy.c    |    7 +-
- drivers/net/wireless/mediatek/mt76/mt76x2/usb.c    |   11 -
- .../net/wireless/mediatek/mt76/mt76x2/usb_init.c   |    5 -
- .../net/wireless/mediatek/mt76/mt76x2/usb_mac.c    |   13 +-
- .../net/wireless/mediatek/mt76/mt76x2/usb_main.c   |    5 +-
- .../net/wireless/mediatek/mt76/mt76x2/usb_phy.c    |    3 +-
- drivers/net/wireless/mediatek/mt76/usb.c           |  154 +-
- drivers/net/wireless/mediatek/mt76/usb_mcu.c       |   57 -
- drivers/net/wireless/realtek/rtlwifi/base.c        |    7 +-
- drivers/net/wireless/realtek/rtlwifi/core.c        |    8 +
- drivers/net/wireless/realtek/rtlwifi/efuse.c       |    8 +-
- drivers/net/wireless/realtek/rtlwifi/ps.c          |    1 +
- drivers/net/wireless/realtek/rtlwifi/rc.c          |    2 +
- drivers/net/wireless/realtek/rtlwifi/regd.c        |    1 -
- .../wireless/realtek/rtlwifi/rtl8192c/dm_common.c  |    6 +-
- .../wireless/realtek/rtlwifi/rtl8192c/fw_common.c  |    5 +-
- .../net/wireless/realtek/rtlwifi/rtl8192c/main.c   |    1 -
- .../wireless/realtek/rtlwifi/rtl8192c/phy_common.c |    1 +
- .../net/wireless/realtek/rtlwifi/rtl8192ce/hw.c    |    7 +-
- .../net/wireless/realtek/rtlwifi/rtl8192ce/phy.c   |    1 +
- .../net/wireless/realtek/rtlwifi/rtl8192ce/table.c |    1 -
- .../net/wireless/realtek/rtlwifi/rtl8192ce/trx.c   |    8 +
- .../net/wireless/realtek/rtlwifi/rtl8192cu/hw.c    |    9 +-
- .../net/wireless/realtek/rtlwifi/rtl8192cu/hw.h    |    4 -
- .../net/wireless/realtek/rtlwifi/rtl8192cu/mac.c   |    8 +-
- .../net/wireless/realtek/rtlwifi/rtl8192cu/mac.h   |    3 -
- .../net/wireless/realtek/rtlwifi/rtl8192cu/trx.c   |    7 +
- .../net/wireless/realtek/rtlwifi/rtl8192cu/trx.h   |    2 -
- .../net/wireless/realtek/rtlwifi/rtl8192se/fw.c    |    6 +-
- .../wireless/realtek/rtlwifi/rtl8723ae/hal_btc.c   |    2 -
- .../net/wireless/realtek/rtlwifi/rtl8723be/dm.c    |    3 -
- drivers/net/wireless/realtek/rtlwifi/usb.c         |    3 +
- drivers/net/wireless/realtek/rtlwifi/usb.h         |    5 +-
- drivers/net/wireless/realtek/rtlwifi/wifi.h        |  351 ++--
- drivers/net/wireless/rsi/rsi_91x_mgmt.c            |    4 +
- 103 files changed, 7121 insertions(+), 768 deletions(-)
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/Kconfig
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/Makefile
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/beacon.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/core.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/debugfs.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/dma.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/eeprom.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/eeprom.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/init.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/mac.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/mac.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/main.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/mcu.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/mcu.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/mt7603.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/pci.c
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/regs.h
- create mode 100644 drivers/net/wireless/mediatek/mt76/mt7603/soc.c
- delete mode 100644 drivers/net/wireless/mediatek/mt76/usb_mcu.c
-
---=20
-Kalle Valo
+Could you please confirm whether this works around the issue as well?
