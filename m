@@ -2,70 +2,96 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364A1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14256C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F195F218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551407604;
-	bh=Kwke71XTGmX7EGnKWHiqzO556ravtOvwv8Amf8v/rc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=epyHLCQcUjsoeAshDXEKtTBqSDlPWbj8ka5HFPvCyuQZIvDNqQMS+WvxhEo2iPuAw
-	 ewU0oqQwj3DHLKQIAxuy/C/VC0pZr6hijxHPdKVgOs63l2dq9xcmG3JLPGAo6uo9gw
-	 Hzv3LJhn1TjukI/QtTnv53IrndRHFQI6MJOPVSTE=
+	by mail.kernel.org (Postfix) with ESMTP id D657020643
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731657AbfCACdW (ORCPT
+        id S1731786AbfCACeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 21:33:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbfCACdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 21:33:22 -0500
-Received: from dragon (61-216-91-114.HINET-IP.hinet.net [61.216.91.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4C3320863;
-        Fri,  1 Mar 2019 02:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551407601;
-        bh=Kwke71XTGmX7EGnKWHiqzO556ravtOvwv8Amf8v/rc8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pFhRoion3+7LJhC9xFDfeSsXdugfYebV4GNH+R5hlhqX6JzyBltNFeUAhJd6aCdya
-         uodvU6dT84g2ZkATsYChThdypFZDUexVO14B1YGzFQwgvYEWTi5VGI5tSmdeBCS2gC
-         dSCq3fcjADcjvaJrJI0ULSievkimbqlod1+30IPA=
-Date:   Fri, 1 Mar 2019 10:32:27 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: imx: gpcv2: Make use of regmap_read_poll_timeout()
-Message-ID: <20190301023226.GM26041@dragon>
-References: <20190220021429.4910-1-andrew.smirnov@gmail.com>
+        Thu, 28 Feb 2019 21:34:16 -0500
+Received: from orcrist.hmeau.com ([104.223.48.154]:51904 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbfCACeQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 21:34:16 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1gzY03-0007Aw-OZ; Fri, 01 Mar 2019 10:34:11 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1gzY01-0003Ha-BG; Fri, 01 Mar 2019 10:34:09 +0800
+Date:   Fri, 1 Mar 2019 10:34:09 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     David Howells <dhowells@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 04/10] crypto: akcipher - new verify API for public
+ key algorithms
+Message-ID: <20190301023409.e2zgemssjjrrty4t@gondor.apana.org.au>
+References: <20190228183923.5klzwli5zmeew54j@altlinux.org>
+ <20190224060828.2527-5-vt@altlinux.org>
+ <20190224060828.2527-1-vt@altlinux.org>
+ <14843.1551377934@warthog.procyon.org.uk>
+ <17533.1551380529@warthog.procyon.org.uk>
+ <20190228190741.fv2qxwwtlpdffhwq@altlinux.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190220021429.4910-1-andrew.smirnov@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190228190741.fv2qxwwtlpdffhwq@altlinux.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 19, 2019 at 06:14:29PM -0800, Andrey Smirnov wrote:
-> Replace explicit polling loop with a call to
-> regmap_read_poll_timeout() to avoid code repetition. Also fix
-> misspelled "failed" while at it.
+On Thu, Feb 28, 2019 at 10:07:42PM +0300, Vitaly Chikunov wrote:
+> David,
 > 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+> On Thu, Feb 28, 2019 at 07:02:09PM +0000, David Howells wrote:
+> > | > It's not clear that sig->digest is guaranteed to be kmalloc memory.
+> > 
+> > Well, public_key_signature_free() will go bang if it's not kfree'able.
+> 
+> Well, I had similar argument, FYI:
+> 
+> | On Fri, Feb 01, 2019 at 10:09:23AM +0300, Vitaly Chikunov wrote:
+> | > On Fri, Feb 01, 2019 at 02:26:55PM +0800, Herbert Xu wrote:
+> | > >
+> | > > It's not clear that sig->digest is guaranteed to be kmalloc memory.
+> | > > In any case, it's best not to mix unrelated changes in a single
+> | > > patch.  So please keep the kmalloc on output and then copy
+> | > > sig->digest into it and put output into the SG list.
+> | >
+> | > It is not guaranteed that sig->s will be kmalloc memory either. (Except
+> | > we know it for sure like we know the same about sig->digest).
+> | >
+> | > You can see in public_key_signature_free() that both fields are kfree'd
+> | > together.
+> | >
+> | > So, I don't understand why we should treat sig->digest differently than
+> | > sig->s.
+> | >
+> | > I was just removing kmalloc'ed output as crypto_akcipher_verify() does
+> | > not need any output anymore. So, it's not some sort of mixing unrelated
+> | > changes, from my point of view.
+> 
+> But then I thought Herbert knows better and implemented his suggestion.
+> 
+> Now I have contradictory requests from two maintainers.
 
-Applied, thanks.
+My main point is to not include unrelated changes into your patch.
+If you want to eliminate the copy that's fine, but please do it in
+a separate patch.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
