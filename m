@@ -2,87 +2,93 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022C2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDA1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC80B20675
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284A220851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388626AbfCAOwr convert rfc822-to-8bit (ORCPT
+        id S2388816AbfCAOxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:52:47 -0500
-Received: from unicorn.mansr.com ([81.2.72.234]:54588 "EHLO unicorn.mansr.com"
+        Fri, 1 Mar 2019 09:53:11 -0500
+Received: from mga04.intel.com ([192.55.52.120]:11229 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbfCAOwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:52:47 -0500
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 95D4115632; Fri,  1 Mar 2019 14:52:45 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Jeroen Hofstee <jhofstee@victronenergy.com>,
-        netdev@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "open list\:TI ETHERNET SWITCH DRIVER \(CPSW\)" 
-        <linux-omap@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] net: cpsw: fix obtaining mac address for am3517
-References: <1477668756-2651-1-git-send-email-jhofstee@victronenergy.com>
-        <20161028155213.2t3nwwe3lqaynaer@atomide.com>
-        <d8ad5cab-5183-cddf-fa9a-4e7b9b8c9377@victronenergy.com>
-        <20161028181914.mskebckucukzhxhz@atomide.com>
-Date:   Fri, 01 Mar 2019 14:52:45 +0000
-In-Reply-To: <20161028181914.mskebckucukzhxhz@atomide.com> (Tony Lindgren's
-        message of "Fri, 28 Oct 2016 11:19:14 -0700")
-Message-ID: <yw1ximx26402.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1728171AbfCAOxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:53:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 06:53:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,427,1544515200"; 
+   d="scan'208";a="138262931"
+Received: from mylly.fi.intel.com (HELO [10.237.72.68]) ([10.237.72.68])
+  by orsmga002.jf.intel.com with ESMTP; 01 Mar 2019 06:53:08 -0800
+Subject: Re: [PATCH v5 2/2] i2c: designware: Add support for an interface
+ clock
+To:     Gareth Williams <gareth.williams.jx@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org
+Cc:     Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+References: <1551361930-24434-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1551361930-24434-3-git-send-email-gareth.williams.jx@renesas.com>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <080b8edd-168e-d71a-b4c2-985460a51e53@linux.intel.com>
+Date:   Fri, 1 Mar 2019 16:53:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1551361930-24434-3-git-send-email-gareth.williams.jx@renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony Lindgren <tony@atomide.com> writes:
+On 2/28/19 3:52 PM, Gareth Williams wrote:
+> From: Phil Edworthy <phil.edworthy@renesas.com>
+> 
+> The Synopsys I2C Controller has an interface clock, but most SoCs hide
+> this away. However, on some SoCs you need to explicitly enable the
+> interface clock in order to access the registers. Therefore, add
+> support for an optional interface clock.
+> 
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+> v5:
+>   - Updated comments to reference "interface clock" instead of
+>     "peripheral clock".
+>   - Corrected spelling in commit message, changing "explicity" to
+>     "explicitly".
+> v4:
+>   - Updated comments to reference "peripheral clock"
+>     instead of "bus clock".
+>   - Added Wolfram's Acked-by
+> v3:
+>   - busclk renamed to pclk.
+>   - Added comment with dw_i2c_dev struct definition describing pclk.
+>   - Added enable rollback of first clock if second fails to enable.
+> v2:
+>   - Use new devm_clk_get_optional() function as it simplifies handling when
+>     the optional clock is not present.
+> ---
+>   drivers/i2c/busses/i2c-designware-common.c  | 18 ++++++++++++++++--
+>   drivers/i2c/busses/i2c-designware-core.h    |  2 ++
+>   drivers/i2c/busses/i2c-designware-platdrv.c |  5 +++++
+>   3 files changed, 23 insertions(+), 2 deletions(-)
+> 
+Build & boot tested on linux-next that has the required commit
+60b8f0ddf1a9 ("clk: Add (devm_)clk_get_optional() functions").
 
-> * Jeroen Hofstee <jhofstee@victronenergy.com> [161028 11:19]:
->> Hello Tony,
->> 
->> On 28-10-16 17:52, Tony Lindgren wrote:
->> > * Jeroen Hofstee <jhofstee@victronenergy.com> [161028 08:33]:
->> > > Commit b6745f6e4e63 ("drivers: net: cpsw: davinci_emac: move reading mac
->> > > id to common file") did not only move the code for an am3517, it also
->> > > added the slave parameter, resulting in an invalid (all zero) mac address
->> > > being returned for an am3517, since it only has a single emac and the slave
->> > > parameter is pointing to the second. So simply always read the first and
->> > > valid mac-address for a ti,am3517-emac.
->> > And others davinci_emac.c users can have more than one. So is the
->> > reason the slave parameter points to the second instance because
->> > of the location in the hardware?
->> 
->> Sort of, the slave parameter gets determined by the fact if there is one
->> or two register range(s) associated with the davinci_emac. In davinci_emac.c
->> 
->>     res_ctrl = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->>     ...
->>     rc = davinci_emac_try_get_mac(pdev, res_ctrl ? 0 : 1,
->>                           priv->mac_addr);
->> 
->> So it there are two ranges, the slave param becomes 0. It there is only one,
->> it
->> will be 1. Since the am3517 only has a single regs entry it ends up with
->> slave 1,
->> while there is only a single davinci_emac.
->
-> OK thanks for clarifying it:
->
-> Acked-by: Tony Lindgren <tony@atomide.com>
-
-What happened to this patch?
-
--- 
-Måns Rullgård
+Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
