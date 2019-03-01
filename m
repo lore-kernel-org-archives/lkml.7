@@ -2,106 +2,238 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34B0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 21:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35135C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 21:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A004D20840
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 21:57:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="VWCIfWP2"
+	by mail.kernel.org (Postfix) with ESMTP id 036782084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 21:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfCAV5e (ORCPT
+        id S1727374AbfCAV55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 16:57:34 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33011 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfCAV5d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 16:57:33 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y10so12124881plp.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 13:57:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jx3z/ytyz5m19uf5/3OhEnIdJ4HeALh1pApg6ERgUjQ=;
-        b=VWCIfWP27qc4osBHSUj5kLtCbj1ntVG+T4U8cTziGn3o5lyIecEuKchHhsbnqL+CwA
-         13YMR2ZMV7TGE1fULeo/DFlO8tnOmgddd8Pf9Ah2yxBmTgTuxFIuJfYCzPIJHD2cXTnO
-         Qqak5FoFfvofzU+xzZijTG3UsxrKz5JVFvIgBNUqxH2Pj1LvDc/JGatqsqlqIk/aCh1M
-         MoFY+8OhY3uy8AhjCMqOxtlMiN0zGyZDV6+oOJVShbNAs7Oy2DEe3uUvT7ck+CK5Su7b
-         68NTf+tY2uHldMNd5Gtkp7V5WTaz0lxFiMGKLvUyWIS/BHQU3bC/H4sIF36rozN6FoGJ
-         mJOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jx3z/ytyz5m19uf5/3OhEnIdJ4HeALh1pApg6ERgUjQ=;
-        b=UU73D241tTziAGUur+EVET2I758PhDGI49qzxcpeKdQaSJeYXL2ziIuRQP/2q8Skn3
-         vUFyFOMMHoYX+UbqsO+ikoGj2ubPQTY/pSyJ2Kv1wW4DUgR4bUfm0KDZgOVc+LXWrn/O
-         98sns9XNXTeNm3H1sVEpdRR7PMRB2FcftD/NoIM/XSZTaRa9Fe3MsJiGEdVP7TXnzzH+
-         XtYNY+NyxA2IpXpnKAMCPKS9vD8LrkEqF7xkuPcyTjg8Y/gL8fGvPYVepwgv5iGOof+Y
-         eYENKvLfmo56DMsuUYG+PtszwKUqbezEv2T+OTqn9qXDfeQRakgGopn4Ee+nzQmJh/hA
-         ZYrA==
-X-Gm-Message-State: APjAAAVXaGY+DFIJL1xNN5xgwm/Tbz/I3ecFWkx4Pdd9iQOcgBJlCp88
-        OvnDLRwz3gQCI9kk/7k32mr5pQ==
-X-Google-Smtp-Source: APXvYqynodEY5jKFUK2x2PS4hoYz1An80WXto1OjEKBWf+zdX8l5qOU4JRwZr0ket6b24/Q9y39L3w==
-X-Received: by 2002:a17:902:12e:: with SMTP id 43mr7841762plb.31.1551477452908;
-        Fri, 01 Mar 2019 13:57:32 -0800 (PST)
-Received: from kshutemo-mobl1.localdomain ([134.134.139.82])
-        by smtp.gmail.com with ESMTPSA id u14sm23818699pfm.66.2019.03.01.13.57.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 13:57:32 -0800 (PST)
-Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
-        id ADD193007CA; Sat,  2 Mar 2019 00:57:28 +0300 (+03)
-Date:   Sat, 2 Mar 2019 00:57:28 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Steven Price <steven.price@arm.com>
-Cc:     linux-mm@kvack.org, Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 1 Mar 2019 16:57:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfCAV54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 16:57:56 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 553C020840;
+        Fri,  1 Mar 2019 21:57:54 +0000 (UTC)
+Date:   Fri, 1 Mar 2019 16:57:52 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
-Subject: Re: [PATCH v3 08/34] ia64: mm: Add p?d_large() definitions
-Message-ID: <20190301215728.nk7466zohdlgelcb@kshutemo-mobl1>
-References: <20190227170608.27963-1-steven.price@arm.com>
- <20190227170608.27963-9-steven.price@arm.com>
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH v6] panic: Avoid the extra noise dmesg
+Message-ID: <20190301165752.08119f0a@gandalf.local.home>
+In-Reply-To: <1551430186-24169-1-git-send-email-feng.tang@intel.com>
+References: <1551430186-24169-1-git-send-email-feng.tang@intel.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190227170608.27963-9-steven.price@arm.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 05:05:42PM +0000, Steven Price wrote:
-> walk_page_range() is going to be allowed to walk page tables other than
-> those of user space. For this it needs to know when it has reached a
-> 'leaf' entry in the page tables. This information is provided by the
-> p?d_large() functions/macros.
+On Fri,  1 Mar 2019 16:49:46 +0800
+Feng Tang <feng.tang@intel.com> wrote:
+
+> When kernel panic happens, it will first print the panic call stack,
+> then the ending msg like:
 > 
-> For ia64 leaf entries are always at the lowest level, so implement
-> stubs returning 0.
+> [   35.743249] ---[ end Kernel panic - not syncing: Fatal exception
+> [   35.749975] ------------[ cut here ]------------
+> 
+> The above message are very useful for debugging.
+> 
+> But if system is configured to not reboot on panic, say the "panic_timeout"
+> parameter equals 0, it will likely print out many noisy message like
+> WARN() call stack for each and every CPU except the panic one, messages
+> like below:
+> 
+> 	WARNING: CPU: 1 PID: 280 at kernel/sched/core.c:1198 set_task_cpu+0x183/0x190
+> 	Call Trace:
+> 	<IRQ>
+> 	try_to_wake_up
+> 	default_wake_function
+> 	autoremove_wake_function
+> 	__wake_up_common
+> 	__wake_up_common_lock
+> 	__wake_up
+> 	wake_up_klogd_work_func
+> 	irq_work_run_list
+> 	irq_work_tick
+> 	update_process_times
+> 	tick_sched_timer
+> 	__hrtimer_run_queues
+> 	hrtimer_interrupt
+> 	smp_apic_timer_interrupt
+> 	apic_timer_interrupt
+> 
+> For people working in console mode, the screen will first show the panic
+> call stack, but immediately overridden by these noisy extra messages, which
+> makes debugging much more difficult, as the original context gets lost on
+> screen.
+> 
+> Also these noisy messages will confuse some users, as I have seen many bug
+> reporters posted the noisy message into bugzilla, instead of the real panic
+> call stack and context.
+> 
+> Adding a flag "suppress_printk" which gets set in panic() to avoid those
+> noisy messages, without changing current kernel behavior that both panic
+> blinking and sysrq magic key can work as is, suggested by Petr Mladek.
+> 
+> To verify this, make sure kernel is not configured to reboot on panic and
+> in console
+>  # echo c > /proc/sysrq-trigger
+> to see if console only prints out the panic call stack.
+> 
 
-Are you sure about this? I see pte_mkhuge defined for ia64 and Kconfig
-contains hugetlb references.
+Looks good to me.
 
--- 
- Kirill A. Shutemov
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+Andrew, you want to take this patch?
+
+-- Steve
+
+> Suggested-by: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Feng Tang <feng.tang@intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jslaby@suse.com>
+> Cc: Sasha Levin <sashal@kernel.org>
+> ---
+> Change log:
+> 
+>   v6:
+>     - change the flag name from "panic_suppress_printk" to
+>       suppress_printk, as suggested by Andrew Morton
+> 
+>   v5:
+>     - use a flag to notify printk not to print unimportant
+>       messages, while keeping panic blinking and sysrq working,
+>       as suggested by Petr Mladek
+> 
+>   v4:
+>     - make the local_irq_enable conditional and default off
+>     to cover possible use of interrupt/scheduling, as
+>     mentioned by Sergey and Petr
+> 
+>   v3:
+>     - Make the change log clearer as suggested by Andrew Morton
+> 
+>   v2:
+>     - Move the solution from hacking arch/scheduler code back
+>     to panic.c
+> 
+>  drivers/tty/sysrq.c    |  6 ++++++
+>  include/linux/printk.h |  2 ++
+>  kernel/panic.c         |  3 +++
+>  kernel/printk/printk.c | 10 ++++++++++
+>  4 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index 1f03078..ddc2d8a 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -527,8 +527,12 @@ void __handle_sysrq(int key, bool check_mask)
+>  {
+>  	struct sysrq_key_op *op_p;
+>  	int orig_log_level;
+> +	int orig_suppress_printk;
+>  	int i;
+>  
+> +	orig_suppress_printk = suppress_printk;
+> +	suppress_printk = 0;
+> +
+>  	rcu_sysrq_start();
+>  	rcu_read_lock();
+>  	/*
+> @@ -574,6 +578,8 @@ void __handle_sysrq(int key, bool check_mask)
+>  	}
+>  	rcu_read_unlock();
+>  	rcu_sysrq_end();
+> +
+> +	suppress_printk = orig_suppress_printk;
+>  }
+>  
+>  void handle_sysrq(int key)
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index 77740a5..a010cdf 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -83,6 +83,8 @@ static inline void console_verbose(void)
+>  extern char devkmsg_log_str[];
+>  struct ctl_table;
+>  
+> +extern int suppress_printk;
+> +
+>  struct va_format {
+>  	const char *fmt;
+>  	va_list *va;
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index f121e6b..960fdfa 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -326,6 +326,9 @@ void panic(const char *fmt, ...)
+>  	}
+>  #endif
+>  	pr_emerg("---[ end Kernel panic - not syncing: %s ]---\n", buf);
+> +
+> +	/* Do not scroll important messages printed above */
+> +	suppress_printk = 1;
+>  	local_irq_enable();
+>  	for (i = 0; ; i += PANIC_TIMER_STEP) {
+>  		touch_softlockup_watchdog();
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index d3d1703..8f1c19f 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -85,6 +85,12 @@ static DEFINE_SEMAPHORE(console_sem);
+>  struct console *console_drivers;
+>  EXPORT_SYMBOL_GPL(console_drivers);
+>  
+> +/*
+> + * System may need to suppress printk message under certain
+> + * circumstances, like after kernel panic happens.
+> + */
+> +int __read_mostly suppress_printk;
+> +
+>  #ifdef CONFIG_LOCKDEP
+>  static struct lockdep_map console_lock_dep_map = {
+>  	.name = "console_lock"
+> @@ -1899,6 +1905,10 @@ asmlinkage int vprintk_emit(int facility, int level,
+>  	unsigned long flags;
+>  	u64 curr_log_seq;
+>  
+> +	/* Suppress unimportant messages after panic happens */
+> +	if (unlikely(suppress_printk))
+> +		return 0;
+> +
+>  	if (level == LOGLEVEL_SCHED) {
+>  		level = LOGLEVEL_DEFAULT;
+>  		in_sched = true;
+
