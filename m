@@ -2,104 +2,89 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2931C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAFCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BBB2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOw3HGUv"
+	by mail.kernel.org (Postfix) with ESMTP id 36BC72186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbfCAGys (ORCPT
+        id S1728856AbfCAGyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 01:54:48 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43208 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfCAGyr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 01:54:47 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q17so10961500pfh.10;
-        Thu, 28 Feb 2019 22:54:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=oXEfPEGL+Zj75A5a3F8V80z9LeMcoj/Klqsodz0w0Eo=;
-        b=DOw3HGUvyL8LkrkxcIwaECvG5vd+yUTfNIJM5C6+dybHFL0DMuu5191QjD3KhLjETT
-         ENcwZb1K4hqigvIsGR7MyGcIWVZlKYtDNpwJB+ad+qNPD6TngKT69XEnYF9tvNclyi0s
-         WEVNBmc3fjbXt1ndqpdUmjXgXszS6MnKAvXN7u1yjjwk5mHb8W4INCaCqswfea1aI3Bk
-         zaWy0kA4Vdj3al27bFK8Z+3UmYOvwJt4hDZ9rY9CHb02DZWYMZXgIPCsDb92Z7eN6wOq
-         eKw2lvFgx7XLENb3Iu/09sixuheUiqXBzcl0xjD/Z8BRX0dvTs5lFFxNe9J/Av63QmbH
-         JvcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=oXEfPEGL+Zj75A5a3F8V80z9LeMcoj/Klqsodz0w0Eo=;
-        b=Ie46g3f6yTgH3ImS2B/ICwYOyym/LoXapD83Hro1kjMmgnnhCOb9gl2yBtC1WQ69Vh
-         FIFYy41dwG9sah4Ld+7Bik6pDL75svApQhFe7LT217ygHvjAqov4qzLR18IzmcfDgyj2
-         yiRmHVVqSjmgSDXuSGgR23qoUdCjEXc0N1Kb5JLAT1tFMpdI45HyLxbuY/eCIMTYX4yS
-         T391QhYsK89tx/Mrt2oUtTAQRVoytHB9WxhweA4SDbgPAStdz6j/d6dCn+etyQG3+UJL
-         6dC/ckTcuiGDAfDL8hjKi5WxMGLbvYCWLbCLX3LGV3eHKVaEY0nWiyL73btEPD2DUxrt
-         n/3A==
-X-Gm-Message-State: AHQUAuZLIobiEVYWBQIJJYvhDFe6iNRBjgh1c1Aig1hRWKceq2IJYFu9
-        rZ+LCZupwWO5v37AQfyWTCk=
-X-Google-Smtp-Source: AHgI3IYqJ2/1pxz/XxLtGjRL5eqzEUSI95cTJPkqnQJzFH9WXViShXguZHcx30uhm3begF46omTckQ==
-X-Received: by 2002:aa7:8597:: with SMTP id w23mr3925636pfn.87.1551423286942;
-        Thu, 28 Feb 2019 22:54:46 -0800 (PST)
-Received: from maya190131 ([52.247.206.249])
-        by smtp.gmail.com with ESMTPSA id s4sm19649505pfe.16.2019.02.28.22.54.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 22:54:46 -0800 (PST)
-Date:   Fri, 1 Mar 2019 06:54:45 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, kys@microsoft.com,
-        sthemmin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
-        jasowang@redhat.com, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        haiyangz@microsoft.com, vkuznets@redhat.com,
-        marcelo.cerri@canonical.com
-Subject: [PATCH v5 0/3] PCI: hv: Refactor hv_irq_unmask() to use hv_vpset and
- cpumask_to_vpset()
-Message-ID: <cover.1551421809.git.m.maya.nakamura@gmail.com>
+        Fri, 1 Mar 2019 01:54:55 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58530 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725290AbfCAGyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 01:54:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBF46EBD;
+        Thu, 28 Feb 2019 22:54:54 -0800 (PST)
+Received: from [172.20.0.134] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 102F53F5C1;
+        Thu, 28 Feb 2019 22:54:54 -0800 (PST)
+From:   Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v5 02/10] arm64: add sysfs vulnerability show for spectre
+ v1
+To:     Jeremy Linton <jeremy.linton@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
+        suzuki.poulose@arm.com, Dave.Martin@arm.com,
+        shankerd@codeaurora.org, julien.thierry@arm.com,
+        mlangsdo@redhat.com, stefan.wahren@i2e.com,
+        linux-kernel@vger.kernel.org, Mian Yousaf Kaukab <ykaukab@suse.de>
+References: <20190227010544.597579-1-jeremy.linton@arm.com>
+ <20190227010544.597579-3-jeremy.linton@arm.com>
+Message-ID: <273a277e-15ee-234f-94a5-bf2a021ca75c@foss.arm.com>
+Date:   Fri, 1 Mar 2019 00:54:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190227010544.597579-3-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset removes a duplicate definition of VP set (hv_vp_set) and
-uses the common definition (hv_vpset) that is used in other places. It
-changes the order of the members in struct hv_pcibus_device due to
-flexible array in hv_vpset.
+Hi,
 
-It also removes the duplicate implementation of cpumask_to_vpset(), uses
-the shared implementation, and exports hv_max_vp_index, which is
-required by cpumask_to_vpset().
+On 2/26/19 7:05 PM, Jeremy Linton wrote:
+> From: Mian Yousaf Kaukab <ykaukab@suse.de>
+> 
+> spectre v1, has been mitigated, and the mitigation is
+> always active.
+> 
+> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> ---
+>   arch/arm64/kernel/cpu_errata.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+> index d2b2c69d31bb..ad58958becb6 100644
+> --- a/arch/arm64/kernel/cpu_errata.c
+> +++ b/arch/arm64/kernel/cpu_errata.c
+> @@ -755,3 +755,9 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+>   	{
+>   	}
+>   };
+> +
+> +ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr,
+> +		char *buf)
 
-It adds __aligned(8) to struct retarget_msi_interrupt because Hyper-V
-requires that hypercall arguments be aligned on an 8 byte boundary. This
-is now a new patch, separate from one of the previous patches.
+w/s issue, but it's not critical:
 
-Maya Nakamura (3):
-  PCI: hv: Add __aligned(8) to struct retarget_msi_interrupt
-  PCI: hv: Replace hv_vp_set with hv_vpset
-  PCI: hv: Refactor hv_irq_unmask() to use cpumask_to_vpset()
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 
- arch/x86/hyperv/hv_init.c           |  1 +
- drivers/pci/controller/pci-hyperv.c | 61 +++++++++++++----------------
- 2 files changed, 29 insertions(+), 33 deletions(-)
+Cheers,
+Andre
 
--- 
-2.17.1
-
+> +{
+> +	return sprintf(buf, "Mitigation: __user pointer sanitization\n");
+> +}
+> 
