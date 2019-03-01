@@ -2,98 +2,116 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DEBC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDDFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E152186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FB12186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387441AbfCAIPq convert rfc822-to-8bit (ORCPT
+        id S1732116AbfCAIVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:15:46 -0500
-Received: from smtp.asem.it ([151.1.184.197]:64184 "EHLO smtp.asem.it"
+        Fri, 1 Mar 2019 03:21:39 -0500
+Received: from mga18.intel.com ([134.134.136.126]:19903 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732008AbfCAIPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:15:45 -0500
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 5.5.0)
-        with ESMTP id SG003724702.MSG 
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 09:15:39 +0100S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Fri, 1
- Mar 2019 09:15:39 +0100
-Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
- mapi id 15.01.1261.035; Fri, 1 Mar 2019 09:15:39 +0100
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     David Miller <davem@davemloft.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-CC:     "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-Subject: RE: [PATCH v3] net: e1000e: add MAC address kernel cmd line parameter
-Thread-Topic: [PATCH v3] net: e1000e: add MAC address kernel cmd line
- parameter
-Thread-Index: AQHUz2za8U5Pv4cZVkOebP6EQ2CVPqX1RhaAgAAUBLD///4SgIAAFXBwgAAawQCAAATLgIAA4SNg
-Date:   Fri, 1 Mar 2019 08:15:39 +0000
-Message-ID: <a9381ec45e9b4e5a8388c8414aadda98@asem.it>
-References: <20190228163729.GB17912@lunn.ch>
-        <6a7a37813e71420b929c769dd1e77664@asem.it>
-        <20190228192958.GA24085@lunn.ch>
- <20190228.114707.11382969767373748.davem@davemloft.net>
-In-Reply-To: <20190228.114707.11382969767373748.davem@davemloft.net>
-Accept-Language: it-IT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.17.161]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A0B0207.5C78EA2C.0052,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+        id S1727755AbfCAIVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 03:21:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 00:21:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,426,1544515200"; 
+   d="scan'208";a="148331971"
+Received: from rajeev-desktop.iind.intel.com ([10.223.84.39])
+  by fmsmga004.fm.intel.com with ESMTP; 01 Mar 2019 00:21:36 -0800
+From:   Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+To:     lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org
+Cc:     linux-kernel@vger.kernel.org, rushikesh.s.kadam@intel.com,
+        gwendal@google.com, jettrink@chromium.org,
+        andriy.shevchenko@intel.com
+Subject: [PATCH v3] mfd: cros_ec: instantiate properly CrOS ISH MCU device
+Date:   Fri,  1 Mar 2019 13:50:54 +0530
+Message-Id: <1551428454-596-1-git-send-email-rushikesh.s.kadam@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >> > Hi Flavio
-> >> >
-> >> > u-boot should be able to write the MAC address in the correct part of
-> >> > device tree. Boards have been doing this a long time.
-> >> >
-> >> > Module parameters are considered bad. You should only do it if you
-> >> > have no other option. Here you do have another options, so it is
-> going
-> >> > to be a hard sell getting David to access your patch.
-> >> >
-> >> > You will have more success by adding a call to
-> >> > eth_platform_get_mac_address() to the e1000e driver.
-> >>
-> >> You have right, and thanks for your suggestions,
-> >> but with a kernel parameter I can use the same method
-> >> for any board where the NVM is missed, independently of any
-> architecture
-> >> (with or without the device tree presence - ARM or x86 or others).
-> >
-> > Hi Flavio
-> >
-> > Well, lets wait for David to say what he thinks about the module
-> > parameter.
-> 
-> I already rejected this, no way... Drivers that already have the
-> unacceptable module parameter are no an argument for spreading this
-> mistake further.
+Integrated Sensor Hub (ISH) is also a MCU running EC
+having feature bit EC_FEATURE_ISH. Instantiate it as
+a special CrOS EC device with device name 'cros_ish'.
 
-Hi David and Andrew,
+Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+---
+v3
+- Dropped "Intel" in commments in cros_ec header file. CrOS EC ISH
+  device is a generic ISH. This was missed earlier. 
+v2
+- Addressed review comments to term the CrOS EC device as a generic
+  Integrated Sensor Hub. 
+v1
+- Initial version.
 
-ok, thank you for your suggestions and your time!
+ drivers/mfd/cros_ec_dev.c            | 13 +++++++++++++
+ include/linux/mfd/cros_ec.h          |  1 +
+ include/linux/mfd/cros_ec_commands.h |  2 ++
+ 3 files changed, 16 insertions(+)
 
-Flavio
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index 2d0fee4..46963c2 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -415,6 +415,19 @@ static int ec_device_probe(struct platform_device *pdev)
+ 	cdev_init(&ec->cdev, &fops);
+ 
+ 	/*
++	 * Check whether this is actually an Integrated Sensor Hub (ISH)
++	 * rather than an EC.
++	 */
++	if (cros_ec_check_features(ec, EC_FEATURE_ISH)) {
++		dev_info(dev, "CrOS ISH MCU detected.\n");
++		/*
++		 * Help userspace differentiating ECs from ISH MCU,
++		 * regardless of the probing order.
++		 */
++		ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
++	}
++
++	/*
+ 	 * Add the class device
+ 	 * Link to the character device for creating the /dev entry
+ 	 * in devtmpfs.
+diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+index de8b588..00c5765 100644
+--- a/include/linux/mfd/cros_ec.h
++++ b/include/linux/mfd/cros_ec.h
+@@ -24,6 +24,7 @@
+ 
+ #define CROS_EC_DEV_NAME "cros_ec"
+ #define CROS_EC_DEV_PD_NAME "cros_pd"
++#define CROS_EC_DEV_ISH_NAME "cros_ish"
+ 
+ /*
+  * The EC is unresponsive for a time after a reboot command.  Add a
+diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
+index fc91082..43bee4f 100644
+--- a/include/linux/mfd/cros_ec_commands.h
++++ b/include/linux/mfd/cros_ec_commands.h
+@@ -856,6 +856,8 @@ enum ec_feature_code {
+ 	EC_FEATURE_RTC = 27,
+ 	/* EC supports CEC commands */
+ 	EC_FEATURE_CEC = 35,
++	/* The MCU is an Integrated Sensor Hub */
++	EC_FEATURE_ISH = 40,
+ };
+ 
+ #define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
+-- 
+1.9.1
+
