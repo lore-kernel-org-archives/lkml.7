@@ -2,152 +2,189 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F06C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D8CC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B24E206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67F52084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:59:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqolMy8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731103AbfCAG6w (ORCPT
+        id S1731741AbfCAG7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 01:58:52 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58654 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfCAG6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 01:58:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B1B7EBD;
-        Thu, 28 Feb 2019 22:58:51 -0800 (PST)
-Received: from [172.20.0.134] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7097B3F5C1;
-        Thu, 28 Feb 2019 22:58:50 -0800 (PST)
-Subject: Re: [PATCH v5 06/10] arm64: Always enable spectrev2 vulnerability
- detection
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
-        suzuki.poulose@arm.com, Dave.Martin@arm.com,
-        shankerd@codeaurora.org, julien.thierry@arm.com,
-        mlangsdo@redhat.com, stefan.wahren@i2e.com,
-        linux-kernel@vger.kernel.org
-References: <20190227010544.597579-1-jeremy.linton@arm.com>
- <20190227010544.597579-7-jeremy.linton@arm.com>
-From:   Andre Przywara <andre.przywara@arm.com>
-Message-ID: <0fce2637-ca61-778f-8cf0-a28183758b52@foss.arm.com>
-Date:   Fri, 1 Mar 2019 00:58:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 1 Mar 2019 01:59:04 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45281 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfCAG7E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 01:59:04 -0500
+Received: by mail-pf1-f194.google.com with SMTP id v21so10962327pfm.12;
+        Thu, 28 Feb 2019 22:59:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lxHEGr8Rvtq7t1KsqNMkVb0LIFYzkot5HpT7rZKbRXI=;
+        b=QqolMy8doEGGdSTh214EmmlHAGldFRA/BFZRtvGdWDEJ0UzgsRGzoG76W64EE4Mbf8
+         o5HX6KqzriFYgFz8Du9ZsC9PcnM4oOlXNby8RwAjbGt2g9kicLFGJv5pk3aZjnPAN9T8
+         wMbyU/7TSfdZFA/pn4ikUMs5AqZounZcK1OGbXR/b904r9LdkUTQjxuHFPnKtCd4Uf0W
+         TAmjnHoMQzBppCQpdx03Q61AiGqWTKpi3y7LYAnPv6oSnmb7bFU2ILqHLKMCyiOPiZJi
+         tTgnr9J+8tYCNz4dF9Mc1x23wgD6NKznYjbldp8JxVIv/Ti4pc/pR8rIeCY7WvjCaZt1
+         HRpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lxHEGr8Rvtq7t1KsqNMkVb0LIFYzkot5HpT7rZKbRXI=;
+        b=g2u1C0BIdmysVLJxhsWDESFOsTCuiXRW2A5r8S2A5X1qLT7ryHaYlCUoxI4unRjkS2
+         d/ICbGdYMmXLvva/8OuBR9gdF8DnYEreBFPwl6uTR8MTC74r6YBaC7sVOW7PQso9ePUv
+         I+2jP5I2+8CzK2YZKv4g51aofvTHn6ouCBFjEnppNyRNdkxE3OUcZ1xMnu1LUqKrcvj4
+         OwjJ7vA7A+06eS05m6f237lA24g9jTtZA/v7szvD/D6sgEkTssOwhESBikEDc4//aC9B
+         +iuHijfguYRDTakDv2RgDyg9Ue4opUXHZp2hiem4kpng9bZaggMlBVLMMkoJ2vqY0BdN
+         xE1g==
+X-Gm-Message-State: APjAAAWaDa6zCw1g2d4iqUJaQ3uCGBgjjoXfS0jTAJn9nHbqnVKWchlT
+        jXb53DBWhkmsnEhnaLE0hUM=
+X-Google-Smtp-Source: APXvYqzNnKFJVME5kC8VM5QKcI3nFyBh7GsbiHBihmmQEDrxsxGLcZA6Hro/La4b4qHlGrzcuTQ/vg==
+X-Received: by 2002:a63:f310:: with SMTP id l16mr3413484pgh.72.1551423543421;
+        Thu, 28 Feb 2019 22:59:03 -0800 (PST)
+Received: from maya190131 ([52.247.206.249])
+        by smtp.gmail.com with ESMTPSA id t10sm51389521pfa.151.2019.02.28.22.59.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 22:59:02 -0800 (PST)
+Date:   Fri, 1 Mar 2019 06:59:02 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, kys@microsoft.com,
+        sthemmin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
+        jasowang@redhat.com, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        haiyangz@microsoft.com, vkuznets@redhat.com,
+        marcelo.cerri@canonical.com
+Subject: [PATCH v5 2/3] PCI: hv: Replace hv_vp_set with hv_vpset
+Message-ID: <d18b5c492df84fcf4a55954ffc508dd937a44eed.1551421809.git.m.maya.nakamura@gmail.com>
+References: <cover.1551421809.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190227010544.597579-7-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1551421809.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Remove a duplicate definition of VP set (hv_vp_set) and use the common
+definition (hv_vpset) that is used in other places.
 
-On 2/26/19 7:05 PM, Jeremy Linton wrote:
-> The sysfs patches need to display machine vulnerability
-> status regardless of kernel config. Prepare for that
-> by breaking out the vulnerability/mitigation detection
-> code from the logic which implements the mitigation.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->   arch/arm64/kernel/cpu_errata.c | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-> index 77f021e78a28..a27e1ee750e1 100644
-> --- a/arch/arm64/kernel/cpu_errata.c
-> +++ b/arch/arm64/kernel/cpu_errata.c
-> @@ -109,12 +109,12 @@ cpu_enable_trap_ctr_access(const struct arm64_cpu_capabilities *__unused)
->   
->   atomic_t arm64_el2_vector_last_slot = ATOMIC_INIT(-1);
->   
-> -#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
->   #include <asm/mmu_context.h>
->   #include <asm/cacheflush.h>
->   
->   DEFINE_PER_CPU_READ_MOSTLY(struct bp_hardening_data, bp_hardening_data);
->   
-> +
+Change the order of the members in struct hv_pcibus_device so that the
+declaration of retarget_msi_interrupt_params is the last member. Struct
+hv_vpset, which contains a flexible array, is nested two levels deep in
+struct hv_pcibus_device via retarget_msi_interrupt_params.
 
-extra empty line
+Add a comment that retarget_msi_interrupt_params should be the last
+member of struct hv_pcibus_device.
 
-Apart from that picky and unimportant nit it looks alright and compiles 
-with and without CONFIG_HARDEN_BRANCH_PREDICTOR being defined.
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+Changes in v5:
+ - Remove the code added in v4.
+ - Delete the v4 code change related comment from the commit message.
+ - Add the Reviewed-by and Tested-by tags.
 
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Changes in v4:
+ - Add __aligned(8) to struct retarget_msi_interrupt.
+ - Update the commit message.
 
-Cheers,
-Andre.
+Change in v3:
+ - Correct the v2 change log.
 
->   #ifdef CONFIG_KVM_INDIRECT_VECTORS
->   extern char __smccc_workaround_1_smc_start[];
->   extern char __smccc_workaround_1_smc_end[];
-> @@ -270,11 +270,11 @@ static int detect_harden_bp_fw(void)
->   	    ((midr & MIDR_CPU_MODEL_MASK) == MIDR_QCOM_FALKOR_V1))
->   		cb = qcom_link_stack_sanitization;
->   
-> -	install_bp_hardening_cb(cb, smccc_start, smccc_end);
-> +	if (IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR))
-> +		install_bp_hardening_cb(cb, smccc_start, smccc_end);
->   
->   	return 1;
->   }
-> -#endif	/* CONFIG_HARDEN_BRANCH_PREDICTOR */
->   
->   #ifdef CONFIG_ARM64_SSBD
->   DEFINE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
-> @@ -513,7 +513,6 @@ cpu_enable_cache_maint_trap(const struct arm64_cpu_capabilities *__unused)
->   	.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,			\
->   	CAP_MIDR_RANGE_LIST(midr_list)
->   
-> -#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
->   /*
->    * List of CPUs that do not need any Spectre-v2 mitigation at all.
->    */
-> @@ -545,6 +544,11 @@ check_branch_predictor(const struct arm64_cpu_capabilities *entry, int scope)
->   	if (!need_wa)
->   		return false;
->   
-> +	if (!IS_ENABLED(CONFIG_HARDEN_BRANCH_PREDICTOR)) {
-> +		pr_warn_once("spectrev2 mitigation disabled by configuration\n");
-> +		return false;
-> +	}
-> +
->   	/* forced off */
->   	if (__nospectre_v2) {
->   		pr_info_once("spectrev2 mitigation disabled by command line option\n");
-> @@ -557,8 +561,6 @@ check_branch_predictor(const struct arm64_cpu_capabilities *entry, int scope)
->   	return (need_wa > 0);
->   }
->   
-> -#endif
-> -
->   #ifdef CONFIG_HARDEN_EL2_VECTORS
->   
->   static const struct midr_range arm64_harden_el2_vectors[] = {
-> @@ -732,13 +734,11 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
->   		ERRATA_MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
->   	},
->   #endif
-> -#ifdef CONFIG_HARDEN_BRANCH_PREDICTOR
->   	{
->   		.capability = ARM64_HARDEN_BRANCH_PREDICTOR,
->   		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
->   		.matches = check_branch_predictor,
->   	},
-> -#endif
->   #ifdef CONFIG_HARDEN_EL2_VECTORS
->   	{
->   		.desc = "EL2 vector hardening",
-> 
+Change in v2:
+ - Update the commit message.
+
+ drivers/pci/controller/pci-hyperv.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 73862eef09ec..d71695db1ba0 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -393,12 +393,6 @@ struct hv_interrupt_entry {
+ 
+ #define HV_VP_SET_BANK_COUNT_MAX	5 /* current implementation limit */
+ 
+-struct hv_vp_set {
+-	u64	format;			/* 0 (HvGenericSetSparse4k) */
+-	u64	valid_banks;
+-	u64	masks[HV_VP_SET_BANK_COUNT_MAX];
+-};
+-
+ /*
+  * flags for hv_device_interrupt_target.flags
+  */
+@@ -410,7 +404,7 @@ struct hv_device_interrupt_target {
+ 	u32	flags;
+ 	union {
+ 		u64		 vp_mask;
+-		struct hv_vp_set vp_set;
++		struct hv_vpset vp_set;
+ 	};
+ };
+ 
+@@ -460,12 +454,16 @@ struct hv_pcibus_device {
+ 	struct msi_controller msi_chip;
+ 	struct irq_domain *irq_domain;
+ 
+-	/* hypercall arg, must not cross page boundary */
+-	struct retarget_msi_interrupt retarget_msi_interrupt_params;
+-
+ 	spinlock_t retarget_msi_interrupt_lock;
+ 
+ 	struct workqueue_struct *wq;
++
++	/* hypercall arg, must not cross page boundary */
++	struct retarget_msi_interrupt retarget_msi_interrupt_params;
++
++	/*
++	 * Don't put anything here: retarget_msi_interrupt_params must be last
++	 */
+ };
+ 
+ /*
+@@ -955,12 +953,13 @@ static void hv_irq_unmask(struct irq_data *data)
+ 		 */
+ 		params->int_target.flags |=
+ 			HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
+-		params->int_target.vp_set.valid_banks =
++		params->int_target.vp_set.valid_bank_mask =
+ 			(1ull << HV_VP_SET_BANK_COUNT_MAX) - 1;
+ 
+ 		/*
+ 		 * var-sized hypercall, var-size starts after vp_mask (thus
+-		 * vp_set.format does not count, but vp_set.valid_banks does).
++		 * vp_set.format does not count, but vp_set.valid_bank_mask
++		 * does).
+ 		 */
+ 		var_size = 1 + HV_VP_SET_BANK_COUNT_MAX;
+ 
+@@ -974,7 +973,7 @@ static void hv_irq_unmask(struct irq_data *data)
+ 				goto exit_unlock;
+ 			}
+ 
+-			params->int_target.vp_set.masks[cpu_vmbus / 64] |=
++			params->int_target.vp_set.bank_contents[cpu_vmbus / 64]	|=
+ 				(1ULL << (cpu_vmbus & 63));
+ 		}
+ 	} else {
+-- 
+2.17.1
+
