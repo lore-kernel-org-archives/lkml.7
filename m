@@ -2,211 +2,149 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C527EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBC0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89BFA20818
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="n+9+4dsX"
+	by mail.kernel.org (Postfix) with ESMTP id 8576120830
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732878AbfCAMDN (ORCPT
+        id S2388004AbfCAMD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 07:03:13 -0500
-Received: from mail-eopbgr1400124.outbound.protection.outlook.com ([40.107.140.124]:35098
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726195AbfCAMDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 07:03:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector1-bp-renesas-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BGiuni9977cVA3YIVyDyvPu/UMQjFarYlomOmwl2wSc=;
- b=n+9+4dsXnc8EOhYTS2Yt0yAZ76KNsb5JJRPkV1NvUroPuhvrtpGH3zGa7YeGx6Bi1Z4FKHMANkDChU415jz9FFqg/Jk/njEjmFBNAblN+8+OaouolFA6L+Lg4VBMUTeuPnUJR4kNg7S3ZIu2LGIdz+AT9VKNG3CDrAnmq1/7Huw=
-Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com (52.133.168.140) by
- TYXPR01MB1535.jpnprd01.prod.outlook.com (52.133.166.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.20; Fri, 1 Mar 2019 12:03:07 +0000
-Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com
- ([fe80::88d2:545c:9212:c8cf]) by TYXPR01MB1775.jpnprd01.prod.outlook.com
- ([fe80::88d2:545c:9212:c8cf%5]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
- 12:03:07 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     =?iso-8859-2?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
-        Simon Horman <horms@verge.net.au>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <treding@nvidia.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Johan Hovold <johan@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Ben Whitten <ben.whitten@gmail.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>,
-        Lukasz Majewski <lukma@denx.de>
-Subject: RE: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
-Thread-Topic: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
-Thread-Index: AQHUrcqn7iCjVkUVBUihzBp2UqLnOqXfpZYQgAD02QCAACZkAIAWMKTg
-Date:   Fri, 1 Mar 2019 12:03:06 +0000
-Message-ID: <TYXPR01MB1775ECF6D79FCA2C0040DA06C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <TY1PR01MB1770A46D7FA45A8AFA923DADC0670@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190215075226.413d55dc@jawa> <c2eb829b-96a7-20cb-913f-ce4214f2156c@suse.de>
-In-Reply-To: <c2eb829b-96a7-20cb-913f-ce4214f2156c@suse.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 644f6e3d-148d-4369-7f65-08d69e3dddc7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:TYXPR01MB1535;
-x-ms-traffictypediagnostic: TYXPR01MB1535:
-x-ms-exchange-purlcount: 1
-x-microsoft-exchange-diagnostics: 1;TYXPR01MB1535;20:u08jSO4RuaMbo2R6DP4uvOnN2mr1oZMtm6FLoOPuNJfs96iEoM45eHpZSoJgFEsf4dve5e576fs0lT/3IRxCM1PIdl1sOumsTq1jO8CggHfqilufgoufB5CQbYWlikr6Gldv54qyQHHcvSPVVCvk23Rjv9fFmygFygOLH6/iFCw=
-x-microsoft-antispam-prvs: <TYXPR01MB153523BB83A1FBED9158658EC0760@TYXPR01MB1535.jpnprd01.prod.outlook.com>
-x-forefront-prvs: 09634B1196
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39860400002)(376002)(396003)(366004)(189003)(199004)(106356001)(11346002)(446003)(52536013)(186003)(66066001)(7736002)(305945005)(8936002)(486006)(68736007)(476003)(44832011)(7416002)(74316002)(86362001)(25786009)(81156014)(81166006)(97736004)(256004)(8676002)(5660300002)(3846002)(6116002)(71200400001)(71190400001)(4326008)(53936002)(6306002)(102836004)(26005)(7696005)(76176011)(9686003)(93886005)(53386004)(229853002)(55016002)(316002)(54906003)(110136005)(6436002)(6246003)(33656002)(99286004)(105586002)(53546011)(6506007)(2906002)(14454004)(478600001)(966005);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1535;H:TYXPR01MB1775.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aEtn4I2uM8G0UJxCgFwvuG21PuX40V8LblODEE3ZjRsHNsXvzsuiDfDe1kTJJbFP5w5/qLSBhnVrPuP/TqdppjfPCr5HJH9OK6dhHxNFPE6NjWce4gm+NJiP5Axdp53cFZNibFOduqJaYj5Lh8GopC7vTACwQI97DyNsTHZ11TYsVFK6mUmvXpvxVTRHFjvBqQws5LebU5TIpu2azVYuOxpbPzAkeYy1Eia3hXcczt4kc8BoekeQT49rj/yrx1yz4iHKpTQBd85uEFNfFD11RmDScHPCxF7b2JQKpForwg5JUsYVnaMS1KAupMCqY3KBFyFtA6SH5I5m3xVhfCdQC9nEYkqCfUaDfcTopXQ2sAbK27UJKfWWyr1pF49jjcyBiFqqUgWo1Y0S3O9+EmLjm+CJzPb8ht0yO1tT7F8r3rs=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 1 Mar 2019 07:03:57 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54026 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732687AbfCAMD4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 07:03:56 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x21C3p2o092265
+        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 07:03:55 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qy1h3s2a1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 07:03:54 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 1 Mar 2019 12:03:45 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 1 Mar 2019 12:03:43 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x21C3fsY32440366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Mar 2019 12:03:41 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79EDF11C04A;
+        Fri,  1 Mar 2019 12:03:41 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E607711C050;
+        Fri,  1 Mar 2019 12:03:40 +0000 (GMT)
+Received: from [9.152.224.140] (unknown [9.152.224.140])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  1 Mar 2019 12:03:40 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v4 1/7] s390: ap: kvm: add PQAP interception for AQIC
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        alex.williamson@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, pasic@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
+ <1550849400-27152-2-git-send-email-pmorel@linux.ibm.com>
+ <babf7884-35f1-2f2e-34dc-96d9190fd15b@linux.ibm.com>
+ <e7ba5cb0-b254-7f73-bc59-ca2456ce7951@linux.ibm.com>
+ <9f1d9241-39b9-adbc-d0e9-cb702e609cbc@linux.ibm.com>
+ <4dc59125-7f96-cba8-651b-382ed8f8bff8@linux.ibm.com>
+ <8526f468-9a4d-68d2-3868-0dad5ce16f46@linux.ibm.com>
+ <6058a017-6404-af3c-62ef-2452214ac97c@de.ibm.com>
+ <2391adc2-6611-034c-61c5-feb46e2a751b@de.ibm.com>
+ <20190228122251.75b31f62.cohuck@redhat.com>
+ <be69498a-c4d3-81e7-b8bf-6931058cee74@linux.ibm.com>
+ <20190228145254.2909425e.cohuck@redhat.com>
+ <261a1e22-3703-21a4-e33d-e737651e7d89@linux.ibm.com>
+Date:   Fri, 1 Mar 2019 13:03:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 644f6e3d-148d-4369-7f65-08d69e3dddc7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 12:03:06.7884
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1535
+In-Reply-To: <261a1e22-3703-21a4-e33d-e737651e7d89@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030112-4275-0000-0000-000003158B53
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030112-4276-0000-0000-00003823D579
+Message-Id: <3fedbde5-ef83-c67e-6352-fd492f258009@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=939 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903010085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you Andreas.
+On 28/02/2019 15:14, Pierre Morel wrote:
+> On 28/02/2019 14:52, Cornelia Huck wrote:
+>> On Thu, 28 Feb 2019 14:16:09 +0100
+>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>
+>>> On 28/02/2019 12:22, Cornelia Huck wrote:
+>>
+>>>> So, to summarize, the function should do:
+>>>> - Is userspace supposed to emulate everything (!ECA_APIE)? Return
+>>>>     -EOPNOTSUPP to hand control to it.
+>>>> - We are now interpreting the instruction in KVM. Do common checks
+>>>>     (PSTATE etc.) and inject exceptions, if needed.
+>>>> - Now look at the fc; if there's a handler for it, call that; if not
+>>>>     (case does not attempt to call a specific handler, or no handler
+>>>>     registered), inject a specification exception. (Do we want 
+>>>> pre-checks
+>>>>     like for facility 65 here, or in the handler?)
+>>>>
+>>>> That response code 0x01 thingy probably needs to go into the specific
+>>>> handler function, if anywhere (don't know the semantics, sorry).
+>>>
+>>> What do you mean with specific handler function?
+>>>
+>>> If you mean a switch around the FC with static function's call, I agree,
+>>> if you mean a jump into a hook I do not agree.
+>>
+>> Ah, ok; so each case (that we want to handle) should call into a
+>> subhandler that does
+>> {
+>>     (... check things like facilities ...)
+>>     if (!specific_hook)
+>>         inject_specif_excp_and_return();
+>>     ret = specific_hook();
+>>     if (ret)
+>>         set_resp_code_0x01(); // or in specific_hook()?
+>> }
+>>
+>> ?
+> 
+> Yes something in this direction.
 
-> From: Andreas F=E4rber <afaerber@suse.de>
-> Sent: 15 February 2019 09:10
-> Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Lin=
-ux.
->=20
-> Hi Lukasz and Fabrizio,
->=20
-> Am 15.02.19 um 07:52 schrieb Lukasz Majewski:
-> > The best approach is to run:
-> >
-> > git format patch -1 <your patch sha>
-> >
-> > And then
-> >
-> > scripts/get_maintainer.pl 0001-xxxxxxx
-> >
-> > You shall see the the list of people to send the patch.
->=20
-> No, that does not answer his question. And please don't top-post.
->=20
-> >> Who is the best person for taking this patch?
->=20
-> The answer is: whomever is taking dt-bindings patches in the following
-> 10 patches that make use of this prefix, once you have a Reviewed-by
-> from Rob. So, most likely the Renesas kernel maintainer(s), i.e. Simon,
-> which differs from get_maintainers.pl of vendor-prefixes.txt.
+Sorry, after reflection, no, we do not want to change the previous 
+behavior so we only handle the AQIC case.
 
-Simon, do you think you can take this patch?
+Regards,
+Pierre
 
-Thanks,
-Fab
 
->=20
-> Regards,
-> Andreas
->=20
-> >>> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >>> Sent: 16 January 2019 18:38
-> >>> Subject: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon
-> >>> Linux.
-> >>>
-> >>> From: Biju Das <biju.das@bp.renesas.com>
-> >>>
-> >>> Add Silicon Linux to the list of devicetree vendor prefixes.
-> >>>
-> >>> Website: http://www.si-linux.co.jp
-> >>>
-> >>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> >>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >>> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >>>  1 file changed, 1 insertion(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> >>> b/Documentation/devicetree/bindings/vendor-prefixes.txt index
-> >>> 4b1a2a8..02a7037 100644 ---
-> >>> a/Documentation/devicetree/bindings/vendor-prefixes.txt +++
-> >>> b/Documentation/devicetree/bindings/vendor-prefixes.txt @@ -344,6
-> >>> +344,7 @@ sgxSGX Sensortech sharpSharp Corporation
-> >>>  shimafujiShimafuji Electric, Inc.
-> >>>  si-enSi-En Technology Ltd.
-> >>> +si-linuxSilicon Linux Corporation
-> >>>  sifiveSiFive, Inc.
-> >>>  sigmaSigma Designs, Inc.
-> >>>  siiSeiko Instruments, Inc.
-> >>> --
-> >>> 2.7.4
-> >>
-> >>
-> >>
-> >> Renesas Electronics Europe GmbH,Geschaeftsfuehrer/President : Michael
-> >> Hannawald, Sitz der Gesellschaft/Registered office: Duesseldorf,
-> >> Arcadiastrasse 10, 40472 Duesseldorf,
-> >> Germany,Handelsregister/Commercial Register: Duesseldorf, HRB 3708
-> >> USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WEEE
-> >> reg. no.: DE 14978647
-> >
-> >
-> >
-> >
-> > Best regards,
-> >
-> > Lukasz Majewski
-> >
-> > --
-> >
-> > DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> > Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.d=
-e
-> >
->=20
->=20
-> --
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-> GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
-> HRB 21284 (AG N=FCrnberg)
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
