@@ -2,116 +2,130 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDDFC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDF0C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FB12186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6085A218B0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732116AbfCAIVj (ORCPT
+        id S1732613AbfCAIZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:21:39 -0500
-Received: from mga18.intel.com ([134.134.136.126]:19903 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727755AbfCAIVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:21:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 00:21:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,426,1544515200"; 
-   d="scan'208";a="148331971"
-Received: from rajeev-desktop.iind.intel.com ([10.223.84.39])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Mar 2019 00:21:36 -0800
-From:   Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
-To:     lee.jones@linaro.org, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org
-Cc:     linux-kernel@vger.kernel.org, rushikesh.s.kadam@intel.com,
-        gwendal@google.com, jettrink@chromium.org,
-        andriy.shevchenko@intel.com
-Subject: [PATCH v3] mfd: cros_ec: instantiate properly CrOS ISH MCU device
-Date:   Fri,  1 Mar 2019 13:50:54 +0530
-Message-Id: <1551428454-596-1-git-send-email-rushikesh.s.kadam@intel.com>
-X-Mailer: git-send-email 1.9.1
+        Fri, 1 Mar 2019 03:25:30 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56706 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbfCAIZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 03:25:30 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 078D1260D0B
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
+References: <5c6702da.1c69fb81.12a14.4ece@mx.google.com>
+ <20190215104325.039dbbd9c3bfb35b95f9247b@linux-foundation.org>
+ <20190215185151.GG7897@sirena.org.uk>
+ <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
+ <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+ <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
+ <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com>
+Date:   Fri, 1 Mar 2019 09:25:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Integrated Sensor Hub (ISH) is also a MCU running EC
-having feature bit EC_FEATURE_ISH. Instantiate it as
-a special CrOS EC device with device name 'cros_ish'.
+On 01/03/2019 00:55, Dan Williams wrote:
+> On Thu, Feb 28, 2019 at 3:14 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>>
+>> On Tue, 26 Feb 2019 16:04:04 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
+>>
+>>> On Tue, Feb 26, 2019 at 4:00 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>>>>
+>>>> On Fri, 15 Feb 2019 18:51:51 +0000 Mark Brown <broonie@kernel.org> wrote:
+>>>>
+>>>>> On Fri, Feb 15, 2019 at 10:43:25AM -0800, Andrew Morton wrote:
+>>>>>> On Fri, 15 Feb 2019 10:20:10 -0800 (PST) "kernelci.org bot" <bot@kernelci.org> wrote:
+>>>>>
+>>>>>>>   Details:    https://kernelci.org/boot/id/5c666ea959b514b017fe6017
+>>>>>>>   Plain log:  https://storage.kernelci.org//next/master/next-20190215/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-collabora/boot-am335x-boneblack.txt
+>>>>>>>   HTML log:   https://storage.kernelci.org//next/master/next-20190215/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-collabora/boot-am335x-boneblack.html
+>>>>>
+>>>>>> Thanks.
+>>>>>
+>>>>>> But what actually went wrong?  Kernel doesn't boot?
+>>>>>
+>>>>> The linked logs show the kernel dying early in boot before the console
+>>>>> comes up so yeah.  There should be kernel output at the bottom of the
+>>>>> logs.
+>>>>
+>>>> I assume Dan is distracted - I'll keep this patchset on hold until we
+>>>> can get to the bottom of this.
+>>>
+>>> Michal had asked if the free space accounting fix up addressed this
+>>> boot regression? I was awaiting word on that.
+>>
+>> hm, does bot@kernelci.org actually read emails?  Let's try info@ as well..
 
-Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
----
-v3
-- Dropped "Intel" in commments in cros_ec header file. CrOS EC ISH
-  device is a generic ISH. This was missed earlier. 
-v2
-- Addressed review comments to term the CrOS EC device as a generic
-  Integrated Sensor Hub. 
-v1
-- Initial version.
+bot@kernelci.org is not person, it's a send-only account for
+automated reports.  So no, it doesn't read emails.
 
- drivers/mfd/cros_ec_dev.c            | 13 +++++++++++++
- include/linux/mfd/cros_ec.h          |  1 +
- include/linux/mfd/cros_ec_commands.h |  2 ++
- 3 files changed, 16 insertions(+)
+I guess the tricky point here is that the authors of the commits
+found by bisections may not always have the hardware needed to
+reproduce the problem.  So it needs to be dealt with on a
+case-by-case basis: sometimes they do have the hardware,
+sometimes someone else on the list or on CC does, and sometimes
+it's better for the people who have access to the test lab which
+ran the KernelCI test to deal with it.
 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index 2d0fee4..46963c2 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -415,6 +415,19 @@ static int ec_device_probe(struct platform_device *pdev)
- 	cdev_init(&ec->cdev, &fops);
- 
- 	/*
-+	 * Check whether this is actually an Integrated Sensor Hub (ISH)
-+	 * rather than an EC.
-+	 */
-+	if (cros_ec_check_features(ec, EC_FEATURE_ISH)) {
-+		dev_info(dev, "CrOS ISH MCU detected.\n");
-+		/*
-+		 * Help userspace differentiating ECs from ISH MCU,
-+		 * regardless of the probing order.
-+		 */
-+		ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
-+	}
-+
-+	/*
- 	 * Add the class device
- 	 * Link to the character device for creating the /dev entry
- 	 * in devtmpfs.
-diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-index de8b588..00c5765 100644
---- a/include/linux/mfd/cros_ec.h
-+++ b/include/linux/mfd/cros_ec.h
-@@ -24,6 +24,7 @@
- 
- #define CROS_EC_DEV_NAME "cros_ec"
- #define CROS_EC_DEV_PD_NAME "cros_pd"
-+#define CROS_EC_DEV_ISH_NAME "cros_ish"
- 
- /*
-  * The EC is unresponsive for a time after a reboot command.  Add a
-diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index fc91082..43bee4f 100644
---- a/include/linux/mfd/cros_ec_commands.h
-+++ b/include/linux/mfd/cros_ec_commands.h
-@@ -856,6 +856,8 @@ enum ec_feature_code {
- 	EC_FEATURE_RTC = 27,
- 	/* EC supports CEC commands */
- 	EC_FEATURE_CEC = 35,
-+	/* The MCU is an Integrated Sensor Hub */
-+	EC_FEATURE_ISH = 40,
- };
- 
- #define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
--- 
-1.9.1
+This case seems to fall into the last category.  As I have access
+to the Collabora lab, I can do some quick checks to confirm
+whether the proposed patch does fix the issue.  I hadn't realised
+that someone was waiting for this to happen, especially as the
+BeagleBone Black is a very common platform.  Sorry about that,
+I'll take a look today.
 
+It may be a nice feature to be able to give access to the
+KernelCI test infrastructure to anyone who wants to debug an
+issue reported by KernelCI or verify a fix, so they won't need to
+have the hardware locally.  Something to think about for the
+future.
+
+>> Is it possible to determine whether this regression is still present in
+>> current linux-next?
+
+I'll try to re-apply the patch that caused the issue, then see if
+the suggested change fixes it.  As far as the current linux-next
+master branch is concerned, KernelCI boot tests are passing fine
+on that platform.
+
+Guillaume
