@@ -2,115 +2,154 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CDBC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3344C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC4720838
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E47C20838
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:46:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551411961;
+	bh=9pE6BmrMT5M3/Gn9lBUsShN184ArQx3VDrhzm+gdT6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KpBs1pZECROoSGTTniFf+sHqRpyoTiVWRdToQjqAPeYRjqgyGotG0O+TyqRSRA1Vl
+	 asid778SKM3lZadd8621KK8U9ZW7DykVerNnD/89VEl6RhmSHZg3wsYgUPgMJjWmSV
+	 1iGCc0X0gzmU/Qfq49Pwg+n+Dq0m8w69+txI0zT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbfCADpL (ORCPT
+        id S1730842AbfCADpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 22:45:11 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4750 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725973AbfCADpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 22:45:11 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 88391ED452ED4D1769F6;
-        Fri,  1 Mar 2019 11:45:07 +0800 (CST)
-Received: from huawei.com (10.175.107.192) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Fri, 1 Mar 2019
- 11:44:58 +0800
-From:   Zhipeng Xie <xiezhipeng1@huawei.com>
-To:     <dmitry.torokhov@gmail.com>, <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel.openeuler@huawei.com>, <euleros@huawei.com>,
-        <huawei.libin@huawei.com>, <yangyingliang@huawei.com>,
-        <xiezhipeng1@huawei.com>
-Subject: [PATCH] Input: fix oops in input_to_handler
-Date:   Fri, 1 Mar 2019 12:13:27 +0800
-Message-ID: <1551413607-32036-1-git-send-email-xiezhipeng1@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Thu, 28 Feb 2019 22:45:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729772AbfCADpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 22:45:41 -0500
+Received: from localhost (lfbn-1-18527-45.w90-101.abo.wanadoo.fr [90.101.69.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C9C320838;
+        Fri,  1 Mar 2019 03:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551411940;
+        bh=9pE6BmrMT5M3/Gn9lBUsShN184ArQx3VDrhzm+gdT6w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d4UbDQxDuc/V4YQ4OjFdGdOiS9WcqZPN5leBOHENWGetOWqyjeendyQ8JfiOBQi/x
+         D6qH8wOuGklPIqPkydBS85nLFct6S40xhkiyDgraqU61FnIEzh/jQgRpZ/+0sPX4eZ
+         CBwZiSzeNqBRozavDndCNHRuMPAvAYTp7CyFJtMM=
+Date:   Fri, 1 Mar 2019 04:45:37 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH 00/37] softirq: Per vector masking v3
+Message-ID: <20190301034536.GA19200@lenoir>
+References: <20190228171242.32144-1-frederic@kernel.org>
+ <CAHk-=wh5MQiXNUBCN6VKNGRR2gDekhXpaTc914D3y4=dHpmh4Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.107.192]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh5MQiXNUBCN6VKNGRR2gDekhXpaTc914D3y4=dHpmh4Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-we got the following boot crash:
+On Thu, Feb 28, 2019 at 09:33:15AM -0800, Linus Torvalds wrote:
+> On Thu, Feb 28, 2019 at 9:12 AM Frederic Weisbecker <frederic@kernel.org> wrote:
+> >
+> > So this set should hopefully address all reviews from the v2, and
+> > fix all reports from the extremely useful (as always) Kbuild testing
+> > bot. It also completes support for all archs.
+> 
+> The one thing I'd still like to see is some actual performance
+> (latency?) numbers.
+> 
+> Maybe they were hiding somewhere in the pile and my quick scan missed
+> them. But the main argument for this was that we've had the occasional
+> latency issues with softirqs blocking (eg the USB v4l frame dropping
+> etc), and I did that SOFTIRQ_NOW_MASK because it helped one particular
+> case.
+> 
+> And you don't seem to have removed that hack, and I'd really like to
+> see that that thing isn't needed any more.
+> 
+> Because otherwise the whole series seems a bit pointless, don't you
+> think? If it doesn't fix that fundamental issue, then what's the point
+> of all this churn..
 
-	[   36.086344] Internal error: Oops: 96000004 [#1] SMP
-	[   36.091371] CPU: 32 PID: 0 Comm: swapper/32 Tainted: G           OE     4.19.25-vhulk1901.1.0.h111.aarch64 #1
-	[   36.101444] Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.58 10/24/2018
-	[   36.108860] pstate: 20000085 (nzCv daIf -PAN -UAO)
-	[   36.113727] pc : input_to_handler+0x2c/0x148
-	[   36.118058] lr : input_pass_values.part.2+0x148/0x168
-	[   36.123177] sp : ffff000100103ba0
-	[   36.126535] x29: ffff000100103ba0 x28: ffff801fb2ac5958
-	[   36.131924] x27: ffff000009799000 x26: 0000000000000001
-	[   36.137375] x25: 0000000000000000 x24: ffff801fb5b57c00
-	[   36.142822] x23: 000000020987f3d0 x22: ffff801faf427e00
-	[   36.148211] x21: 0000000000000003 x20: 0000000000000003
-	[   36.153599] x19: ffff801faf427e00 x18: 000000000000000e
-	[   36.158986] x17: 000000000000000e x16: 0000000000000007
-	[   36.164374] x15: 0000000000000001 x14: 0000000000000019
-	[   36.169762] x13: 0000000000000033 x12: 000000000000004c
-	[   36.175150] x11: 0000000000000068 x10: ffff000008dfa290
-	[   36.180538] x9 : 000000000000007d x8 : 0000000000000000
-	[   36.185925] x7 : 0000000000000053 x6 : 0000000000000000
-	[   36.191313] x5 : 0000000000000000 x4 : 0000000000000000
-	[   36.196700] x3 : 0000000000000010 x2 : 0000000000000003
-	[   36.202088] x1 : ffff801fb5b57c00 x0 : ffff000008a120a0
-	[   36.207477] Process swapper/32 (pid: 0, stack limit = 0x0000000032f86b58)
-	[   36.214361] Call trace:
-	[   36.216840]  input_to_handler+0x2c/0x148
-	[   36.220816]  input_pass_values.part.2+0x148/0x168
-	[   36.225582]  input_handle_event+0x130/0x5b8
-	[   36.229823]  i6.242013]  hid_input_report+0x128/0x1b0
-	[   36.246076]  hid_irq_in+0x240/0x298
-	[   36.249613]  __usb_hcd_giveback_urb+0x9c/0x130
-	[   36.257460]  usb_giveback_urb_bh+0xf4/0x198
-	[   36.265127]  tasklet_action_common.isra.6+0x94/0x160
-	[   36.273458]  tasklet_hi_action+0x2c/0x38
-	[   36.280597]  __do_softirq+0x118/0x314
-	[   36.287494]  irq_exit+0xa4/0xe8
-	[   36.293682]  __handle_domain_irq+0x6c/0xc0
-	[   36.300783]  gic_handle_irq+0x6c/0x170
-	[   36.307296]  el1_irq+0xb8/0x140
-	[   36.313283]  arch_cpu_idle+0x38/0x1c0
-	[   36.319776]  default_idle_call+0x24/0x44
-	[   36.326527]  do_idle+0x1ec/0x2d0
-	[   36.332503]  cpu_startup_entry+0x28/0x30
-	[   36.339161]  secondary_start_kernel+0x194/0x1d8
+Numbers are indeed missing. In fact this patchset mostly just brings an
+infrastructure. We have yet to pinpoint the most latency-inducing
+softirq disabled sites and make them disable only the vectors that
+are involved in a given lock.
 
-We need to check the input_handler before referencing its members.
+And last but not least, this patchset allows us to soft-interrupt
+code that disabled other vectors but it doesn't yet allow us to
+soft-interrupt a vector itself. Not much is needed to allow that
+from the softirq core code. But we can't do that blindly. For example
+TIMER_SOFTIRQ, HRTIMER_SOFTIRQ, TASKLET_SOFTIRQ, NET_RX_SOFTIRQ
+can't interrupt each others because some locks can be taken on all
+of them (the socket lock for example). Although so many vectors
+involved for a single lock is probably rare but still...
 
-Signed-off-by: Zhipeng Xie <xiezhipeng1@huawei.com>
----
- drivers/input/input.c | 3 +++
- 1 file changed, 3 insertions(+)
+The only solution I see to make vectors interruptible is to proceed
+the same way as we do for softirq disabled sections: proceed case
+by case on a per handler basis. Hopefully we can operate per subsystem
+and we don't need to start from drivers.
 
-diff --git a/drivers/input/input.c b/drivers/input/input.c
-index 3304aaa..b768d14 100644
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -100,6 +100,9 @@ static unsigned int input_to_handler(struct input_handle *handle,
- 	struct input_value *end = vals;
- 	struct input_value *v;
- 
-+	if (!handler)
-+		return 0;
-+
- 	if (handler->filter) {
- 		for (v = vals; v != vals + count; v++) {
- 			if (handler->filter(handle, v->type, v->code, v->value))
--- 
-1.7.12.4
+So the idea is the following: if the lock A can be taken from both TIMER_SOFTIRQ
+and BLOCK_SOFTIRQ, we do this from the timer handler for example:
 
+         __do_softirq() {
+	     // all vectors disabled
+	     run_timers {
+	         random_timer_callback() {
+                     bh = local_bh_enable_mask(~(TIMER_SOFTIRQ | BLOCK_SOFTIRQ));
+                     spin_lock(&A);
+                     do_some_work();
+                     spin_unlock(&A);
+                     local_bh_disable_mask(bh);
+		 }
+            }
+         }
+
+Sounds tedious but that's the only way I can imagine to make that correct.
+
+Another way could be for locks to piggyback the vectors they are involved in
+on initialization:
+
+DEFINE_SPINLOCK_SOFTIRQ(A, TIMER_SOFTIRQ | BLOCK_SOFTIRQ);
+
+Then callsites can just use:
+
+    bh = spin_lock_softirq(A);
+    ....
+    spin_unlock_softirq(A, bh);
+
+Then the lock function always arrange to only disable TIMER_SOFTIRQ | BLOCK_SOFTIRQ
+if not nesting, whether we are in a vector or not. The only drawback is for the
+relevant spin_lock_t to carry those init flags.
+
+> 
+> See commit 3c53776e29f8 ("Mark HI and TASKLET softirq synchronous"),
+> which also has a couple of people listed who could hopefully re-test
+> the v4l latency thing with whatever USB capture dongle it was that
+> showed the issue.
+
+So in this case for example, I'll need to check the callbacks involved
+and make them disable only the vectors that need to be disabled.
+
+I should try to reproduce the issue myself.
+
+Thanks.
