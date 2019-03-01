@@ -2,94 +2,93 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58DEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89407C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66C0720663
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5708C2087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="od2YN6UY"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="huVCOPQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387588AbfCAO3A (ORCPT
+        id S2388544AbfCAOej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:29:00 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42174 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727052AbfCAO3A (ORCPT
+        Fri, 1 Mar 2019 09:34:39 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40666 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732420AbfCAOei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:29:00 -0500
-Received: by mail-lj1-f195.google.com with SMTP id d14so20538808ljl.9
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:28:59 -0800 (PST)
+        Fri, 1 Mar 2019 09:34:38 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g20so11653431wmh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:34:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=f9iT7k/0SY7wktRs7jQ6KW6acCQnct+rF3bMnszUFjU=;
-        b=od2YN6UYNKJUpYL9AK7wxGbvHJvh4vFRVwQVZhVyGCehvPM7NElOWRR3l/kHo+Vofm
-         sp2Dq114RZtuReeqRmsydJYG8sSqGjGD2cWMnFYzemQJqZjcH6oK3sqRLV/4o/iywthx
-         XS3bP1cfVFpJZeySsL1iok2lwKGJzcuEIKDUsdhzTdU7E5b6fkIiqUXRMDHZq0Q9eLMe
-         JeYjOwUzFrSroQTQImr/CvGqa46c5mmwbom0IdQmtlGQ0GNP9Nyv0UkeC3NF5Q2qVQ9h
-         NpZXUBjwjRdUiXnn5kx8mypsub73Q9KXnPxLucQZm6PPmGPU6fWFcPR+KT3I1WhYU5pf
-         WKoQ==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AzFdI4Ntgdj97NpgFu1Pq76ZwiCCfhzfWbTnGLzmdoQ=;
+        b=huVCOPQttUFCzUU0qCt7hcrvx7oj3fKY/KikGZx1sk6HqGcdMi1I4gPxFh7Ic9rB3u
+         +JNNU226XzPNSShC9xiNV97IExCOBg1B1JUzjp4ah9CsM8E3Z1h6QNTDAG2QYBONQawq
+         09AgF1p/RG2YNOc7mGV5fO/F3wr724YgebXkWYCbtah81zVuWZU2wm7HIIWIzjFEtoCM
+         K/AXyhXqPQd/GN6WX669GUP71JUWH2KmyYYDVKfpwq+qxxrpi8DcWnwxMVWHDTd2Oe0q
+         RmMpZnONkKAiLApZQrTeu4uD7QnzYWk2/XjOhM4/pcYs6fh9cPrZe3vEa6fDMjF220Og
+         tVyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=f9iT7k/0SY7wktRs7jQ6KW6acCQnct+rF3bMnszUFjU=;
-        b=qe8caSfVbS1yG6lftUVupKPW3NfXFZVv32MFNNr3IkY/4s3RWmmFMRgJPZm2kFeD8g
-         3MdYHFi9XPIoQr0CDTbCywSY8ccMzwKIPr3ntu2szPR9748SEj58j2wGFLcvJ9i290Id
-         A1P8Q8/XWqHRfFvb0kz7awkQyYVQ0feloUM4Q2v2DWAaFbyzRn2aGKEUPyKiPT25Nw4p
-         co/NHXjQ6sUASGJjduEtWrNOs8CYmPPcYd7qRh1/2D0p6ucFUUrvM6LcRtJI0poTjrCN
-         1yr8A9XpvRU2886S0Ok3sI6zyHbtd7Vr8h/giaRZLSeyWakkePIzc9h9UlhKexg05R08
-         ncwQ==
-X-Gm-Message-State: APjAAAWLIxiK/2GLfitLdzGTwpcd40+3MANaUr7prAhgZvvruoyUNMCY
-        GJQrHohaIu9OkbkweNSemes=
-X-Google-Smtp-Source: APXvYqxH24p6XmqIj/tHGOdMJXjfxLJLyjBSusqpM0XHFJrjnzSWxFJNnOaS8Xlbc0lsWXr4tKSobg==
-X-Received: by 2002:a2e:9056:: with SMTP id n22mr2829450ljg.132.1551450538283;
-        Fri, 01 Mar 2019 06:28:58 -0800 (PST)
-Received: from localhost.localdomain (bzq-109-64-85-100.red.bezeqint.net. [109.64.85.100])
-        by smtp.googlemail.com with ESMTPSA id y20sm260232lfg.44.2019.03.01.06.28.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 06:28:57 -0800 (PST)
-From:   Oryan Perlmutter <oryan.perl1997@gmail.com>
-To:     martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        trivial@kernel.org
-Cc:     Oryan Perlmutter <oryan.perl1997@gmail.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Coding style fixes on vme_user.c trivial
-Date:   Fri,  1 Mar 2019 16:27:25 +0200
-Message-Id: <20190301142726.23969-1-oryan.perl1997@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AzFdI4Ntgdj97NpgFu1Pq76ZwiCCfhzfWbTnGLzmdoQ=;
+        b=Y2OM2Fv2eQw6jkTdYlEvJ1z6jDwzJg31eekayDEDLuTfTiylZ2RUEvlxEjusfGxVEs
+         Z+Za20xc6qWnSSFNQkx1dNUjbmzriAX/sctFkFEYTRNtUTTa6gXnp6gjrrGDuYeKc7cB
+         tlqMoDQIGJZz2fvJdBfjKBAFrnxfB8/knwlGPo7zc/l4fR/K3qIG3LWTU2JysUSkh+pP
+         ABeyhkh0N2bO5mjZd7WNj1xeZ2JsQzAvnbJK2IKs+GW3aMkPhZaLn9YautDT+p70r3uW
+         +N614diaX37Rk5uPXM5bMf2GxJMLFvYAy6ezf4PfVyzi83P3YtUCEkpyq47blglkD6vQ
+         PgLQ==
+X-Gm-Message-State: APjAAAV/sMRunV1jvDBlC4m3g0aZiawrcU+yTYJXQy/nElSkZ6bVjXep
+        BH69aLKIUUsdTzqJPZsOqnApSchKdK2I9feDCQMEEw==
+X-Google-Smtp-Source: AHgI3IZ5L2ZtjE5GWfu+b4LVWVTc58GkJZmXVJl/lkAxeSQtEy6vedWYbn4M8QWVnkCqM3skdkM82Z8IjOOWCHN7Ois=
+X-Received: by 2002:a1c:96ce:: with SMTP id y197mr3464632wmd.126.1551450876504;
+ Fri, 01 Mar 2019 06:34:36 -0800 (PST)
+MIME-Version: 1.0
+References: <20190301062432.2322-1-axel.lin@ingics.com> <201903011929.WkN8JU5R%fengguang.wu@intel.com>
+In-Reply-To: <201903011929.WkN8JU5R%fengguang.wu@intel.com>
+From:   Axel Lin <axel.lin@ingics.com>
+Date:   Fri, 1 Mar 2019 22:34:31 +0800
+Message-ID: <CAFRkauDMAeEaptv5UZBGND=-58q-E0ssMaZjVw5XOUYZ2gTsrQ@mail.gmail.com>
+Subject: Re: [PATCH] regulator: lp87565: Convert to use regulator_set/get_current_limit_regmap
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, Mark Brown <broonie@kernel.org>,
+        Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/staging/devices: Coding style fixes found at file vme_user.c.
+kbuild test robot <lkp@intel.com> =E6=96=BC 2019=E5=B9=B43=E6=9C=881=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=887:32=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Axel,
+>
+> Thank you for the patch! Yet something to improve:
+>
+> [auto build test ERROR on regulator/for-next]
+> [also build test ERROR on next-20190228]
+> [cannot apply to v5.0-rc8]
+> [if your patch is applied to the wrong git tree, please drop us a note to=
+ help improve the system]
 
-Signed-off-by: Oryan Perlmutter <oryan.perl1997@gmail.com>
----
- drivers/staging/vme/devices/vme_user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch needs patch1 and patch2 of https://lkml.org/lkml/2019/2/28/482
 
-diff --git a/drivers/staging/vme/devices/vme_user.c b/drivers/staging/vme/devices/vme_user.c
-index 6a33aaa1a49f..4c7db4f5f15e 100644
---- a/drivers/staging/vme/devices/vme_user.c
-+++ b/drivers/staging/vme/devices/vme_user.c
-@@ -506,7 +506,7 @@ static int vme_user_match(struct vme_dev *vdev)
- 	int cur_slot = vme_slot_num(vdev);
- 
- 	for (i = 0; i < bus_num; i++)
--		if ((cur_bus == bus[i]) && (cur_slot == vdev->num))
-+		if (cur_bus == bus[i] && cur_slot == vdev->num)
- 			return 1;
- 
- 	return 0;
--- 
-2.17.1
+I sent it today because I think Keerthy can review and test it together
+with my another fix for lp87565.
+I didn't realize kbuild will pick up the patch automatically.
+I should wait until the required patches get merged then send this
+patch. Sorry for the mess.
 
+Regards,
+Axel
