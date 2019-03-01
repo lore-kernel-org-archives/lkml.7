@@ -2,123 +2,500 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54103C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC91C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA8120848
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE7A20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:54:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JpUZjUNa"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="SHRf5dB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbfCATvD (ORCPT
+        id S1726126AbfCATx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 14:51:03 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43418 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfCATvD (ORCPT
+        Fri, 1 Mar 2019 14:53:58 -0500
+Received: from rcdn-iport-4.cisco.com ([173.37.86.75]:23515 "EHLO
+        rcdn-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfCATx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 14:51:03 -0500
-Received: by mail-pg1-f194.google.com with SMTP id l11so11900451pgq.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 11:51:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TIeh58av+oczFebD9H/A96Nf5dNjFu0r9dI+Pf1oUbI=;
-        b=JpUZjUNaB58YJC+3yf7Rvi1U2QyP5U3ckMzUaWlThgwaGwmU6MM+bPRSc4FJ4nSVc2
-         qntywIXY3Jr0IU4JV7We/rFPz08P0KSZ/9HsgkHOYZhAW1/Str5nuAJl2MIDJI+LC+LW
-         92v4P6IkyQdsWvoFcn4ultko41I2NpQbL4ygxzGgmUwoCPlGLcQYOk8rv9YsC0I5g3Q/
-         +2F2uCvm1CSiRq/x/N8bJKHwwbYlvDmLNrxESJ3eMd+8zH1Q/rSfc0gSSImCzEn5YR7D
-         4PtS0dpsT/0PGjcSdgEEzDatktM7HtJOGSOsrp4wLT2Pz/Qtp1BgYmsaL+ET3dF2UAvt
-         7f4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TIeh58av+oczFebD9H/A96Nf5dNjFu0r9dI+Pf1oUbI=;
-        b=N5D0Clafg8ohwzp7kXOMGKyk1ffuBbUCqORuzGBP+O13ojAgnNdoEnM/k57AtP+gZY
-         IrIw1P9o3lBhrLqyCa0YM0HD7s0y3ZxvvDQnyesKX1YmhP7jmbcOwelYR9bzSObPw/Xy
-         8YOxMpFsBuyBvsOZRbA7Rr45BvTiTbsWCGZ9M2AJfnKQYWLm4JIKN0+2LHPxCu1G7CXd
-         tQjjOhqkPAAPyzYEZmUAn9keaxgFOV+T1flsMr+efb+Q/d77DuYMC92V2u8djTidoAku
-         NmBnmJEAkXLnLxcZlUzURq7jqW1Jxoi7ktAb5QWjHmZE/lPMtLPEXcX0zCX+w10Y2tB8
-         d09A==
-X-Gm-Message-State: APjAAAUH8alcGk2BFKTNLAQEwALFwPG3w0o920CG06D9qk5U8wNCWi2O
-        IIyGit3DlT/x2Gp8As0XyRaL6g==
-X-Google-Smtp-Source: AHgI3IYO0/yGzuTaZylvOmzk9OrhrZv6NMRUWCF+B6QcdBkNcMYvSomlJOCMDf8TyU7bpWU7firCUw==
-X-Received: by 2002:a62:7602:: with SMTP id r2mr7215313pfc.191.1551469862175;
-        Fri, 01 Mar 2019 11:51:02 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s4sm22457444pfe.16.2019.03.01.11.51.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 11:51:01 -0800 (PST)
-Date:   Fri, 1 Mar 2019 11:51:40 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Cc:     andy.gross@linaro.org, david.brown@linaro.org,
-        gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rafael@kernel.org, vkoul@kernel.org
-Subject: Re: [PATCH v4 5/5] soc: qcom: socinfo: Expose image information
-Message-ID: <20190301195140.GE27005@builder>
-References: <20190225065044.11023-1-vaishali.thakkar@linaro.org>
- <20190225065044.11023-6-vaishali.thakkar@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190225065044.11023-6-vaishali.thakkar@linaro.org>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+        Fri, 1 Mar 2019 14:53:58 -0500
+X-Greylist: delayed 560 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Mar 2019 14:53:55 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=12702; q=dns/txt;
+  s=iport; t=1551470034; x=1552679634;
+  h=from:to:cc:subject:date:message-id;
+  bh=vP7r5v5r+hVEgevozqOTYs/5aZaL8r4xUEfZiuJrrJ4=;
+  b=SHRf5dB5MAkYTLD39StOQCUEJ+HFH0dTGIWB46f4U7mEY+nVCg1TSqig
+   Ym6FpWWuhHZbLqtmgqgJO2hulaVNcb76U1JSR4gcaoou1MBa4J+A3y3OE
+   BVp5K53li8UJ2ZJZ8EMxN7ZScsrF1NNeDMnBzz5uKmPdzNIYx1P2q3zcQ
+   w=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AmAAC/inlc/5NdJa1kHAEBAQQBAQc?=
+ =?us-ascii?q?EAQGBUQcBAQsBggSBayeMIqV3gXsNhGyEIyI0CQ0BAwEBAwEDAm0ohkopgRU?=
+ =?us-ascii?q?TgyKBdQGsfoovFId0hEMXgUA/gRGNUiICihGZaQmCQJAvAheTIZ0mgUc4gVY?=
+ =?us-ascii?q?zGggbFYMnkF0/M5BKAQE?=
+X-IronPort-AV: E=Sophos;i="5.58,428,1544486400"; 
+   d="scan'208";a="526979981"
+Received: from rcdn-core-11.cisco.com ([173.37.93.147])
+  by rcdn-iport-4.cisco.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 19:44:39 +0000
+Received: from sjc-ads-2388.cisco.com (sjc-ads-2388.cisco.com [171.70.63.76])
+        by rcdn-core-11.cisco.com (8.15.2/8.15.2) with ESMTP id x21JiWLl018182;
+        Fri, 1 Mar 2019 19:44:38 GMT
+From:   Daniel Walker <danielwa@cisco.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, xe-linux-external@cisco.com,
+        Daniel Walker <dwalker@fifo99.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] powerpc: convert config files to generic cmdline
+Date:   Fri,  1 Mar 2019 19:44:31 +0000
+Message-Id: <1551469472-53043-4-git-send-email-danielwa@cisco.com>
+X-Mailer: git-send-email 2.7.4
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 171.70.63.76, sjc-ads-2388.cisco.com
+X-Outbound-Node: rcdn-core-11.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 24 Feb 22:50 PST 2019, Vaishali Thakkar wrote:
-> +#define IMAGE_SHOW_OEM(attr)						 \
-> +static int show_ ##attr## _oem(struct seq_file *seq, void *p)		 \
-> +{									 \
-> +	struct smem_image_version *image_version = seq->private;	 \
-> +	seq_puts(seq, image_version->oem);				 \
-> +	seq_puts(seq, "\n");						 \
-> +	return 0;							 \
-> +}									 \
-> +static int open_ ##attr## _oem(struct inode *inode, struct file *file)	 \
-> +{									 \
-> +	return single_open(file, show_ ##attr## _oem, inode->i_private); \
-> +}									 \
-> +									 \
-> +static const struct file_operations qcom_ ##attr## _oem_ops = {		 \
-> +	.open = open_ ##attr## _oem,					 \
-> +	.read = seq_read,						 \
-> +	.llseek = seq_lseek,						 \
-> +	.release = single_release,					 \
-> +}
-> +
-> +#define DEBUGFS_IMAGE_OEM(fname, attr, index)				 \
-> +debugfs_create_file(__stringify(fname), 0400, qcom_socinfo->attr,	 \
-> +		    &smem_image_version[index], &qcom_ ##attr## _oem_ops)
-> +
-> +#define IMAGE_SHOW(name)	  \
-> +	IMAGE_SHOW_NAME(name);    \
-> +	IMAGE_SHOW_VARIANT(name); \
-> +	IMAGE_SHOW_OEM(name)	  \
-> +
-> +IMAGE_SHOW(boot);
+This is a scripted mass convert of the config files to use
+the new generic cmdline. There is a bit of a trim effect here.
+It would seems that some of the config haven't been trimmed in
+a while.
 
-Given that you pass &smem_image_version[index] as "data" it seems that
-these instances will only differ in the function name. So you should be
-able to have one set of these functions to handle all the images.
+The script used to convert is as follows,
 
-> +IMAGE_SHOW(tz);
-> +IMAGE_SHOW(rpm);
-> +IMAGE_SHOW(apps);
-> +IMAGE_SHOW(mpss);
-> +IMAGE_SHOW(adsp);
-> +IMAGE_SHOW(cnss);
-> +IMAGE_SHOW(video);
-> +
+if [[ -z "$1" || -z "$2" ]]; then
+        echo "Two arguments are needed."
+        exit 1
+fi
+mkdir $1
+cp $2 $1/.config
+sed -i 's/CONFIG_CMDLINE=/CONFIG_CMDLINE_PREPEND=/g' $1/.config
+make ARCH=$1 O=$1 olddefconfig
+make ARCH=$1 O=$1 savedefconfig
+cp $1/defconfig $2
+rm -Rf $1
 
-Regards,
-Bjorn
+Cc: xe-linux-external@cisco.com
+Cc: Daniel Walker <dwalker@fifo99.com>
+Signed-off-by: Daniel Walker <danielwa@cisco.com>
+---
+ arch/powerpc/configs/44x/fsp2_defconfig       | 29 ++++++++--------
+ arch/powerpc/configs/44x/iss476-smp_defconfig | 24 +++++++-------
+ arch/powerpc/configs/44x/warp_defconfig       | 12 +++----
+ arch/powerpc/configs/holly_defconfig          | 12 +++----
+ arch/powerpc/configs/mvme5100_defconfig       | 25 +++++++-------
+ arch/powerpc/configs/skiroot_defconfig        | 48 +++++++++++++--------------
+ arch/powerpc/configs/storcenter_defconfig     | 15 ++++-----
+ 7 files changed, 80 insertions(+), 85 deletions(-)
+
+diff --git a/arch/powerpc/configs/44x/fsp2_defconfig b/arch/powerpc/configs/44x/fsp2_defconfig
+index bae6b26bcfba..bafea495c9b8 100644
+--- a/arch/powerpc/configs/44x/fsp2_defconfig
++++ b/arch/powerpc/configs/44x/fsp2_defconfig
+@@ -1,8 +1,6 @@
+-CONFIG_44x=y
+ # CONFIG_SWAP is not set
+ CONFIG_SYSVIPC=y
+ # CONFIG_CROSS_MEMORY_ATTACH is not set
+-# CONFIG_FHANDLE is not set
+ CONFIG_NO_HZ=y
+ CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_IKCONFIG=y
+@@ -13,25 +11,26 @@ CONFIG_BLK_DEV_INITRD=y
+ # CONFIG_RD_XZ is not set
+ # CONFIG_RD_LZO is not set
+ # CONFIG_RD_LZ4 is not set
++# CONFIG_FHANDLE is not set
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_BPF_SYSCALL=y
+ CONFIG_EMBEDDED=y
+ CONFIG_PROFILING=y
+-CONFIG_OPROFILE=y
+-CONFIG_MODULES=y
+-CONFIG_MODULE_UNLOAD=y
+-# CONFIG_BLK_DEV_BSG is not set
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE_PREPEND="ip=on rw"
++CONFIG_44x=y
+ CONFIG_PPC_47x=y
+ # CONFIG_EBONY is not set
+ CONFIG_FSP2=y
+ CONFIG_476FPE_ERR46=y
+-CONFIG_SWIOTLB=y
+ CONFIG_KEXEC=y
+ CONFIG_CRASH_DUMP=y
+-CONFIG_CMDLINE_BOOL=y
+-CONFIG_CMDLINE="ip=on rw"
+ # CONFIG_SUSPEND is not set
+ # CONFIG_PCI is not set
++CONFIG_OPROFILE=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++# CONFIG_BLK_DEV_BSG is not set
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+ CONFIG_UNIX=y
+@@ -112,6 +111,12 @@ CONFIG_NFS_V3_ACL=y
+ CONFIG_NFS_V4=y
+ CONFIG_ROOT_NFS=y
+ CONFIG_NLS_DEFAULT="n"
++CONFIG_CRYPTO_CBC=y
++CONFIG_CRYPTO_ECB=y
++CONFIG_CRYPTO_PCBC=y
++CONFIG_CRYPTO_MD5=y
++CONFIG_CRYPTO_DES=y
++# CONFIG_CRYPTO_HW is not set
+ CONFIG_XZ_DEC=y
+ CONFIG_PRINTK_TIME=y
+ CONFIG_MESSAGE_LOGLEVEL_DEFAULT=3
+@@ -119,9 +124,3 @@ CONFIG_DYNAMIC_DEBUG=y
+ CONFIG_DEBUG_INFO=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DETECT_HUNG_TASK=y
+-CONFIG_CRYPTO_CBC=y
+-CONFIG_CRYPTO_ECB=y
+-CONFIG_CRYPTO_PCBC=y
+-CONFIG_CRYPTO_MD5=y
+-CONFIG_CRYPTO_DES=y
+-# CONFIG_CRYPTO_HW is not set
+diff --git a/arch/powerpc/configs/44x/iss476-smp_defconfig b/arch/powerpc/configs/44x/iss476-smp_defconfig
+index d24bfa6ecd62..775b25178714 100644
+--- a/arch/powerpc/configs/44x/iss476-smp_defconfig
++++ b/arch/powerpc/configs/44x/iss476-smp_defconfig
+@@ -1,5 +1,3 @@
+-CONFIG_44x=y
+-CONFIG_SMP=y
+ CONFIG_SYSVIPC=y
+ CONFIG_POSIX_MQUEUE=y
+ CONFIG_LOG_BUF_SHIFT=14
+@@ -7,21 +5,23 @@ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_EXPERT=y
+ CONFIG_KALLSYMS_ALL=y
+ CONFIG_PROFILING=y
+-CONFIG_OPROFILE=y
+-CONFIG_MODULES=y
+-CONFIG_MODULE_UNLOAD=y
+-# CONFIG_BLK_DEV_BSG is not set
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE_PREPEND="root=/dev/issblk0"
++CONFIG_44x=y
++CONFIG_SMP=y
+ CONFIG_PPC_47x=y
+ # CONFIG_EBONY is not set
+ CONFIG_ISS4xx=y
+ CONFIG_HZ_100=y
+ CONFIG_MATH_EMULATION=y
+ CONFIG_IRQ_ALL_CPUS=y
+-CONFIG_CMDLINE_BOOL=y
+-CONFIG_CMDLINE="root=/dev/issblk0"
+ # CONFIG_PCI is not set
+ CONFIG_ADVANCED_OPTIONS=y
+ CONFIG_DYNAMIC_MEMSTART=y
++CONFIG_OPROFILE=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++# CONFIG_BLK_DEV_BSG is not set
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+ CONFIG_UNIX=y
+@@ -62,13 +62,13 @@ CONFIG_PROC_KCORE=y
+ CONFIG_TMPFS=y
+ CONFIG_CRAMFS=y
+ # CONFIG_NETWORK_FILESYSTEMS is not set
+-CONFIG_DEBUG_INFO=y
+-CONFIG_MAGIC_SYSRQ=y
+-CONFIG_DETECT_HUNG_TASK=y
+-CONFIG_PPC_EARLY_DEBUG=y
+ CONFIG_CRYPTO_CBC=y
+ CONFIG_CRYPTO_ECB=y
+ CONFIG_CRYPTO_PCBC=y
+ CONFIG_CRYPTO_MD5=y
+ CONFIG_CRYPTO_DES=y
+ # CONFIG_CRYPTO_HW is not set
++CONFIG_DEBUG_INFO=y
++CONFIG_MAGIC_SYSRQ=y
++CONFIG_DETECT_HUNG_TASK=y
++CONFIG_PPC_EARLY_DEBUG=y
+diff --git a/arch/powerpc/configs/44x/warp_defconfig b/arch/powerpc/configs/44x/warp_defconfig
+index 6c02f53271cd..4b76897e323f 100644
+--- a/arch/powerpc/configs/44x/warp_defconfig
++++ b/arch/powerpc/configs/44x/warp_defconfig
+@@ -1,4 +1,3 @@
+-CONFIG_44x=y
+ CONFIG_LOCALVERSION="-pika"
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_SYSVIPC=y
+@@ -7,16 +6,17 @@ CONFIG_IKCONFIG_PROC=y
+ CONFIG_LOG_BUF_SHIFT=14
+ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_EXPERT=y
+-CONFIG_MODULES=y
+-CONFIG_MODULE_UNLOAD=y
+-# CONFIG_BLK_DEV_BSG is not set
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE_PREPEND="ip=on"
++CONFIG_44x=y
+ # CONFIG_EBONY is not set
+ CONFIG_WARP=y
+ CONFIG_PPC4xx_GPIO=y
+ CONFIG_HZ_1000=y
+-CONFIG_CMDLINE_BOOL=y
+-CONFIG_CMDLINE="ip=on"
+ # CONFIG_PCI is not set
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++# CONFIG_BLK_DEV_BSG is not set
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+ CONFIG_UNIX=y
+diff --git a/arch/powerpc/configs/holly_defconfig b/arch/powerpc/configs/holly_defconfig
+index 71d8d2430b6c..0f233b4f78eb 100644
+--- a/arch/powerpc/configs/holly_defconfig
++++ b/arch/powerpc/configs/holly_defconfig
+@@ -4,18 +4,18 @@ CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_LOG_BUF_SHIFT=14
+ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_EXPERT=y
+-CONFIG_MODULES=y
+-# CONFIG_BLK_DEV_BSG is not set
+-CONFIG_PARTITION_ADVANCED=y
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE_PREPEND="console=ttyS0,115200"
+ # CONFIG_PPC_CHRP is not set
+ # CONFIG_PPC_PMAC is not set
+ CONFIG_EMBEDDED6xx=y
+ CONFIG_PPC_HOLLY=y
+ CONFIG_GEN_RTC=y
+-CONFIG_BINFMT_MISC=y
+-CONFIG_CMDLINE_BOOL=y
+-CONFIG_CMDLINE="console=ttyS0,115200"
+ # CONFIG_SECCOMP is not set
++CONFIG_MODULES=y
++# CONFIG_BLK_DEV_BSG is not set
++CONFIG_PARTITION_ADVANCED=y
++CONFIG_BINFMT_MISC=y
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+ CONFIG_UNIX=y
+diff --git a/arch/powerpc/configs/mvme5100_defconfig b/arch/powerpc/configs/mvme5100_defconfig
+index 63e38c7220f1..29913bf3fb6e 100644
+--- a/arch/powerpc/configs/mvme5100_defconfig
++++ b/arch/powerpc/configs/mvme5100_defconfig
+@@ -11,19 +11,19 @@ CONFIG_LOG_BUF_SHIFT=14
+ # CONFIG_NET_NS is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ # CONFIG_COMPAT_BRK is not set
+-CONFIG_MODULES=y
+-CONFIG_MODULE_UNLOAD=y
+-# CONFIG_BLK_DEV_BSG is not set
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE_PREPEND="console=ttyS0,9600 ip=dhcp root=/dev/nfs"
+ # CONFIG_PPC_CHRP is not set
+ # CONFIG_PPC_PMAC is not set
+ CONFIG_EMBEDDED6xx=y
+ CONFIG_MVME5100=y
+ CONFIG_KVM_GUEST=y
+ CONFIG_HZ_100=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++# CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+ # CONFIG_COMPACTION is not set
+-CONFIG_CMDLINE_BOOL=y
+-CONFIG_CMDLINE="console=ttyS0,9600 ip=dhcp root=/dev/nfs"
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+ CONFIG_UNIX=y
+@@ -46,7 +46,6 @@ CONFIG_NF_CONNTRACK_TFTP=m
+ CONFIG_NETFILTER_XT_MATCH_MAC=m
+ CONFIG_NETFILTER_XT_MATCH_PKTTYPE=m
+ CONFIG_NETFILTER_XT_MATCH_STATE=m
+-CONFIG_NF_CONNTRACK_IPV4=m
+ CONFIG_IP_NF_IPTABLES=m
+ CONFIG_IP_NF_FILTER=m
+ CONFIG_IP_NF_TARGET_REJECT=m
+@@ -111,13 +110,6 @@ CONFIG_NLS_CODEPAGE_437=m
+ CONFIG_NLS_CODEPAGE_932=m
+ CONFIG_NLS_ISO8859_1=m
+ CONFIG_NLS_UTF8=m
+-CONFIG_CRC_CCITT=m
+-CONFIG_CRC_T10DIF=y
+-CONFIG_XZ_DEC=y
+-CONFIG_MAGIC_SYSRQ=y
+-CONFIG_DEBUG_KERNEL=y
+-CONFIG_DETECT_HUNG_TASK=y
+-CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=20
+ CONFIG_CRYPTO_CBC=y
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_MD5=y
+@@ -128,3 +120,10 @@ CONFIG_CRYPTO_DES=y
+ CONFIG_CRYPTO_SERPENT=m
+ CONFIG_CRYPTO_TWOFISH=m
+ CONFIG_CRYPTO_DEFLATE=m
++CONFIG_CRC_CCITT=m
++CONFIG_CRC_T10DIF=y
++CONFIG_XZ_DEC=y
++CONFIG_MAGIC_SYSRQ=y
++CONFIG_DEBUG_KERNEL=y
++CONFIG_DETECT_HUNG_TASK=y
++CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=20
+diff --git a/arch/powerpc/configs/skiroot_defconfig b/arch/powerpc/configs/skiroot_defconfig
+index cfdd08897a06..bf31334efbce 100644
+--- a/arch/powerpc/configs/skiroot_defconfig
++++ b/arch/powerpc/configs/skiroot_defconfig
+@@ -1,8 +1,3 @@
+-CONFIG_PPC64=y
+-CONFIG_ALTIVEC=y
+-CONFIG_VSX=y
+-CONFIG_NR_CPUS=2048
+-CONFIG_CPU_LITTLE_ENDIAN=y
+ CONFIG_KERNEL_XZ=y
+ # CONFIG_SWAP is not set
+ CONFIG_SYSVIPC=y
+@@ -29,15 +24,13 @@ CONFIG_EXPERT=y
+ CONFIG_PERF_EVENTS=y
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_SLAB_FREELIST_HARDENED=y
+-CONFIG_JUMP_LABEL=y
+-CONFIG_STRICT_KERNEL_RWX=y
+-CONFIG_MODULES=y
+-CONFIG_MODULE_UNLOAD=y
+-CONFIG_MODULE_SIG=y
+-CONFIG_MODULE_SIG_FORCE=y
+-CONFIG_MODULE_SIG_SHA512=y
+-CONFIG_PARTITION_ADVANCED=y
+-# CONFIG_IOSCHED_DEADLINE is not set
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE_PREPEND="console=tty0 console=hvc0 ipr.fast_reboot=1 quiet"
++CONFIG_PPC64=y
++CONFIG_ALTIVEC=y
++CONFIG_VSX=y
++CONFIG_NR_CPUS=2048
++CONFIG_CPU_LITTLE_ENDIAN=y
+ # CONFIG_PPC_VAS is not set
+ # CONFIG_PPC_PSERIES is not set
+ # CONFIG_PPC_OF_BOOT_TRAMPOLINE is not set
+@@ -47,15 +40,22 @@ CONFIG_HZ_100=y
+ CONFIG_KEXEC=y
+ CONFIG_IRQ_ALL_CPUS=y
+ CONFIG_NUMA=y
+-# CONFIG_COMPACTION is not set
+-# CONFIG_MIGRATION is not set
+-# CONFIG_BOUNCE is not set
+ CONFIG_PPC_64K_PAGES=y
+ CONFIG_SCHED_SMT=y
+-CONFIG_CMDLINE_BOOL=y
+-CONFIG_CMDLINE="console=tty0 console=hvc0 ipr.fast_reboot=1 quiet"
+ # CONFIG_SECCOMP is not set
+ # CONFIG_PPC_MEM_KEYS is not set
++CONFIG_JUMP_LABEL=y
++CONFIG_STRICT_KERNEL_RWX=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_MODULE_SIG=y
++CONFIG_MODULE_SIG_FORCE=y
++CONFIG_MODULE_SIG_SHA512=y
++CONFIG_PARTITION_ADVANCED=y
++# CONFIG_IOSCHED_DEADLINE is not set
++# CONFIG_COMPACTION is not set
++# CONFIG_MIGRATION is not set
++# CONFIG_BOUNCE is not set
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+ CONFIG_UNIX=y
+@@ -139,7 +139,6 @@ CONFIG_ACENIC_OMIT_TIGON_I=y
+ CONFIG_TIGON3=m
+ CONFIG_BNX2X=m
+ # CONFIG_NET_VENDOR_BROCADE is not set
+-# CONFIG_NET_CADENCE is not set
+ # CONFIG_NET_VENDOR_CAVIUM is not set
+ CONFIG_CHELSIO_T1=m
+ # CONFIG_NET_VENDOR_CISCO is not set
+@@ -155,7 +154,6 @@ CONFIG_IGB=m
+ CONFIG_IXGB=m
+ CONFIG_IXGBE=m
+ CONFIG_I40E=m
+-CONFIG_S2IO=m
+ # CONFIG_NET_VENDOR_MARVELL is not set
+ CONFIG_MLX4_EN=m
+ # CONFIG_MLX4_CORE_GEN2 is not set
+@@ -163,11 +161,11 @@ CONFIG_MLX5_CORE=m
+ # CONFIG_NET_VENDOR_MICREL is not set
+ CONFIG_MYRI10GE=m
+ # CONFIG_NET_VENDOR_NATSEMI is not set
++CONFIG_S2IO=m
+ # CONFIG_NET_VENDOR_NETRONOME is not set
+ # CONFIG_NET_VENDOR_NI is not set
+ # CONFIG_NET_VENDOR_NVIDIA is not set
+ # CONFIG_NET_VENDOR_OKI is not set
+-# CONFIG_NET_PACKET_ENGINE is not set
+ CONFIG_QLGE=m
+ CONFIG_NETXEN_NIC=m
+ # CONFIG_NET_VENDOR_QUALCOMM is not set
+@@ -268,6 +266,9 @@ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ASCII=y
+ CONFIG_NLS_ISO8859_1=y
+ CONFIG_NLS_UTF8=y
++CONFIG_ENCRYPTED_KEYS=y
++# CONFIG_CRYPTO_ECHAINIV is not set
++# CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC16=y
+ CONFIG_CRC_ITU_T=y
+ CONFIG_LIBCRC32C=y
+@@ -289,6 +290,3 @@ CONFIG_WQ_WATCHDOG=y
+ # CONFIG_RUNTIME_TESTING_MENU is not set
+ CONFIG_XMON=y
+ CONFIG_XMON_DEFAULT=y
+-CONFIG_ENCRYPTED_KEYS=y
+-# CONFIG_CRYPTO_ECHAINIV is not set
+-# CONFIG_CRYPTO_HW is not set
+diff --git a/arch/powerpc/configs/storcenter_defconfig b/arch/powerpc/configs/storcenter_defconfig
+index 74bca2eccd0f..8c849339bfe5 100644
+--- a/arch/powerpc/configs/storcenter_defconfig
++++ b/arch/powerpc/configs/storcenter_defconfig
+@@ -2,19 +2,19 @@ CONFIG_SYSVIPC=y
+ CONFIG_LOG_BUF_SHIFT=14
+ CONFIG_EXPERT=y
+ # CONFIG_KALLSYMS is not set
+-CONFIG_MODULES=y
+-CONFIG_MODULE_UNLOAD=y
+-# CONFIG_BLK_DEV_BSG is not set
+-CONFIG_PARTITION_ADVANCED=y
++CONFIG_CMDLINE_BOOL=y
++CONFIG_CMDLINE_PREPEND="console=ttyS0,115200"
+ # CONFIG_PPC_CHRP is not set
+ # CONFIG_PPC_PMAC is not set
+ CONFIG_EMBEDDED6xx=y
+ CONFIG_STORCENTER=y
+ CONFIG_HZ_100=y
+-CONFIG_BINFMT_MISC=y
+-CONFIG_CMDLINE_BOOL=y
+-CONFIG_CMDLINE="console=ttyS0,115200"
+ # CONFIG_SECCOMP is not set
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++# CONFIG_BLK_DEV_BSG is not set
++CONFIG_PARTITION_ADVANCED=y
++CONFIG_BINFMT_MISC=y
+ CONFIG_NET=y
+ CONFIG_PACKET=m
+ CONFIG_UNIX=y
+@@ -81,5 +81,4 @@ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ISO8859_1=y
+ CONFIG_NLS_UTF8=y
+ CONFIG_CRC_T10DIF=y
+-# CONFIG_ENABLE_WARN_DEPRECATED is not set
+ # CONFIG_ENABLE_MUST_CHECK is not set
+-- 
+2.14.1
+
