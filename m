@@ -2,113 +2,213 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6F7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD0DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DCD20851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCF620851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:50:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="kLEdl5J0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732853AbfCAHql (ORCPT
+        id S1732866AbfCAHud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 02:46:41 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55522 "EHLO huawei.com"
+        Fri, 1 Mar 2019 02:50:33 -0500
+Received: from mail-eopbgr00114.outbound.protection.outlook.com ([40.107.0.114]:19940
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732630AbfCAHql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 02:46:41 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7C2AE9FC675B8F1EC746;
-        Fri,  1 Mar 2019 15:46:38 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Fri, 1 Mar 2019
- 15:46:33 +0800
-Message-ID: <5C78E357.5060808@huawei.com>
-Date:   Fri, 1 Mar 2019 15:46:31 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
-MIME-Version: 1.0
-To:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-CC:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        id S1727344AbfCAHuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 02:50:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gjX1UQvmpzcWf1z6CqcAVxFiG9803aN148UYZSqFvCs=;
+ b=kLEdl5J0L3wSNBD0XW8BcdUH1UnkRjwXPOTXbKvcRSUDw6bWoMuEhEEkOjFGWzr1bRupqri2MOxbwUvEGRpBycDrmaU7P/+wijdfV6PGl2/EbNZOvv6uvs1XAgVzA1WvvuaMR+RHEBHkQSkfb2K2Ap374tZJvbU2IP7U7MfnaiQ=
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (20.178.126.212) by
+ VI1PR10MB0478.EURPRD10.PROD.OUTLOOK.COM (10.167.201.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1643.15; Fri, 1 Mar 2019 07:50:26 +0000
+Received: from VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::d49:d85b:58bf:cd5b]) by VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::d49:d85b:58bf:cd5b%6]) with mapi id 15.20.1643.022; Fri, 1 Mar 2019
+ 07:50:26 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Qiang Zhao <qiang.zhao@nxp.com>, Leo Li <leoyang.li@nxp.com>
+CC:     Scott Wood <oss@buserror.net>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "hughd@google.com" <hughd@google.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>
-Subject: Re: [PATCH] mm: hwpoison: fix thp split handing in soft_offline_in_use_page()
-References: <1551179880-65331-1-git-send-email-zhongjiang@huawei.com> <20190226135156.mifspmbdyr6m3hff@kshutemo-mobl1> <5C754E78.4050804@huawei.com> <20190301072919.GA3027@hori.linux.bs1.fc.nec.co.jp>
-In-Reply-To: <20190301072919.GA3027@hori.linux.bs1.fc.nec.co.jp>
-Content-Type: text/plain; charset="ISO-2022-JP"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
-X-CFilter-Loop: Reflected
+        Timur Tabi <timur@freescale.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [PATCH 4/4] soc/fsl/qe: qe.c: support fsl,qe-snums property
+Thread-Topic: [PATCH 4/4] soc/fsl/qe: qe.c: support fsl,qe-snums property
+Thread-Index: AQHUz1Co/Wp6EPz520CpARAl4seE16X2IT0AgABG+4A=
+Date:   Fri, 1 Mar 2019 07:50:25 +0000
+Message-ID: <5528c093-12d2-16d3-1afd-73393d8d3b2f@prevas.dk>
+References: <338677b2-ef74-2afc-4542-c66f1acdb7e5@prevas.dk>
+ <20190228103026.9566-1-rasmus.villemoes@prevas.dk>
+ <20190228103026.9566-5-rasmus.villemoes@prevas.dk>
+ <VI1PR04MB324774864C3B7B44C41C232191760@VI1PR04MB3247.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR04MB324774864C3B7B44C41C232191760@VI1PR04MB3247.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1P192CA0010.EURP192.PROD.OUTLOOK.COM (2603:10a6:3:fe::20)
+ To VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:803:e3::20)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [81.216.59.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 57f4b1fb-9a2b-48df-d128-08d69e1a90f6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:VI1PR10MB0478;
+x-ms-traffictypediagnostic: VI1PR10MB0478:
+x-microsoft-antispam-prvs: <VI1PR10MB0478C31D74157191059DB4208A760@VI1PR10MB0478.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 09634B1196
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(346002)(39850400004)(376002)(396003)(13464003)(40224003)(199004)(189003)(53546011)(53936002)(8976002)(6116002)(316002)(76176011)(72206003)(8936002)(25786009)(3846002)(36756003)(52116002)(6512007)(4326008)(386003)(99286004)(54906003)(2906002)(102836004)(93886005)(14454004)(107886003)(6246003)(6436002)(256004)(110136005)(186003)(74482002)(486006)(11346002)(42882007)(31686004)(97736004)(66066001)(71200400001)(5660300002)(229853002)(6506007)(2616005)(71190400001)(446003)(8676002)(105586002)(476003)(26005)(31696002)(68736007)(305945005)(6486002)(106356001)(81166006)(478600001)(7736002)(44832011)(81156014)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB0478;H:VI1PR10MB2672.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-microsoft-exchange-diagnostics: =?utf-8?B?MTtWSTFQUjEwTUIwNDc4OzIzOkR2VEZjb3lScDhzemZPYzVkc2pXdHYwR3hm?=
+ =?utf-8?B?QXQwUVZxUGZPWjJST2xjV3dOYTZtZlhxa2VRVUZqYzAxaFpMNWxtKzJNT29X?=
+ =?utf-8?B?TlpKNzBqL0lvaWdDcE10bjNvcnpkZDNWUkFFcktVZnNoZGtWZ2pmQll3TlVH?=
+ =?utf-8?B?MVlsbmUrcXViZmRLZ3N3RjZxMFdPNHp4bU5xeE94Nm9QNGxDRTdzWVhJS01X?=
+ =?utf-8?B?N0NWN3gveGxxWVFPSHJlMHFncG8vaWl1aHVUUVhzN000Vk9WbE0wRTJya2M3?=
+ =?utf-8?B?dGljQ3NjY2xMUURjUVlwdnRBZGhqYmMrSC9zL0JJMHdoa3ZZZU5MMDB4WmEy?=
+ =?utf-8?B?UHFmWXRrWmtRKzVLZXE1akhqTldETHduRkRVaHVZSHQrZGhvTVh5ZlpZOGs0?=
+ =?utf-8?B?cWo1bU9MODk0OVI1dmNndlJzQ3ltSmFtYzVsSDdxa09BNlA4REc1ck9DR1BJ?=
+ =?utf-8?B?eVFaWWphNGt4VTQvOVh2N1Z0a094VXVTREtaZS91ZndkWGJXWTg0VEVBdkF5?=
+ =?utf-8?B?YSswWW5TamNaSWpMSXNwYm5qNXJsdnYzdEF2Y0w3b2Q2ZGkzZHY4VlZPdm5n?=
+ =?utf-8?B?a3crZU9xZUVRd0svRng1QjRldHAwSGZoRmdzUlZrUDBUV05uNVdLRE9oVlhy?=
+ =?utf-8?B?Rnk5RS9rQ0ErbGxPTWc3MlFPNUZXdTMvbHM0bUNLMTNkRUMyOGpkdXc0MGlE?=
+ =?utf-8?B?QVFJb1RwMHNtbVp3UUg2dS9VNWYyRWZObHBCNmpUYkFscHM1VzRmNzNoMzZE?=
+ =?utf-8?B?Z2puWUpZTlhqVEdKTjhCR3ZISWovOVZTRG8xeUxiYXBWSGw5M09POS9XK3lm?=
+ =?utf-8?B?WmdJN2piWHE1cEV0bFpUK1dvUnlKN1ZzaHVJTGx5ZUNGK0JNYnhFakdsMW95?=
+ =?utf-8?B?WWVNQVZTdnlhR2hoQmNuU080M21RRGk1eEZXcmtFVWFNOENJRWdQOUl3NnhS?=
+ =?utf-8?B?MmJ1b3FETFlkM1FLdndXcFVWQ3lUT1h4U3VIdVI1LzNLcXc0czlNVWJWNTBB?=
+ =?utf-8?B?TDcwZnZIQytMRFd6c2dTNnUvK1VqWUZIMVNjWmo0UExvV3hSUVBzMGRFSjA0?=
+ =?utf-8?B?d2lxWUhCNUdYQmZoYXRXTnNlcVY0NCtjOWtzbVhPbml1R2pZTnE5dHg0MjMv?=
+ =?utf-8?B?WC8rcUxDM2NyVEJmUTR5ck82ODcvaFV0WGpYOEhUVzFYb2VDZVdKUm05dHV2?=
+ =?utf-8?B?VjhZdXlXUWdoOWJUWlMwOEw3UXRPeXI4N2V4by9hSTdvdFZydTAyNHB3aUxu?=
+ =?utf-8?B?U3prVW55bU9tT0pXUGE2RG0va1BqbTI4cGNTZWZLN1NqbjJLR2Nqc053S2Nl?=
+ =?utf-8?B?YVpzMC9uem9xb2d4RHk0YU5xc0FVS2hTY3NYeUU4cDNEZml0V21lMy8ySzhE?=
+ =?utf-8?B?a0Z0VkhUc3ZjM2tNZUh4ZHlyT0s5MWhXTWNuT3JNVEdxWkwwbWN3cno2VFR6?=
+ =?utf-8?B?MHZra2ZtR2Y5YkcxVGVkNHQ5UGxpQ3gvKzE4K1o4b1RXUVE2dmpaZDV5bmxw?=
+ =?utf-8?B?ekFaZ1ZKWndNcnk1VmQ5RWQ5YW1XQWErazVKSXU3TjdIaE12enVydll6V0ZU?=
+ =?utf-8?B?Z29MRkVKN3g1NUNXbHd5Q0N0Rmw0R1FJYklWK0x3c01vK0JFNkZYelNIUHIr?=
+ =?utf-8?B?WmpOSWlrVW9vV1ROeVBLcVUvVzNPZ3VEWlp5QnhwRkd4ZDFTeG5EQ2JvanV0?=
+ =?utf-8?B?aEpOMjhUb2VBeThRQVRMaUVBYVY3a2U1NmlXc1lpb25QemVoUit2c0l2ejh3?=
+ =?utf-8?B?YzNuVUtPcHYvTGJLU1ZvOEwwQVhQbzNhekF6V2ZHRkNsMkZidGtPdjlGNElX?=
+ =?utf-8?B?UWFVWHlJT3J1ZStNZmNDZVZHdHlGVnNNa3VoZHRrSU52SlB4N1YvT3hBcVdX?=
+ =?utf-8?B?eVNkbnNXQXpjVEI0Q3NCQUgwcnRCNy9GREtlcjhJMzB0Q0YxcG9YbWs2eUhn?=
+ =?utf-8?B?ejFBWlZ6NGZVNWFFc0JKSUh6M3NKMFM0WG5Ua1Y0cWV2TzdhS3IwZDBrU2pw?=
+ =?utf-8?Q?8kBtwT?=
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xy3L/72MIh+31NtwqaZAi6EJi6V1/a33DpsQ6XrJ+AXNOWw8sNp3ZwCVcLEr55iahAuQnF81d8Ix4n1bWIIvRlSkuyQqbI6fo8MfFWbqMXt7pmNYqgCyRQqAmqTYrSlHB8bgQr2Njq/q7rCfjIe01IOowfldgj36Aq9FMME4z5M9Ml31iXlfsZmaHB69BiWPJB4sBRnq8R9fzs+ISj337cIeUwBMAjAsM5sWhbozdgHqJ2gV1y8RZarmmM7bygf4Xt58MbA/86sU8Rq21X76KbrqZD524cfktAPGYv5QktaRqXYHDq8M2IGXiwmduHj043eWw+5KgOXbOfJ8BjIKAc9AhDQJ27RuTpGevzV3NLmktyrz6L7QiKooWA0NBHMRZ/U3RCSuQRzbOA7MBjl4Ni/G3ttaYcL+o5hJIOxQEIE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <10B88DC7393A3D44A2CAFD210B515ACA@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57f4b1fb-9a2b-48df-d128-08d69e1a90f6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 07:50:25.2622
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB0478
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/1 15:29, Naoya Horiguchi wrote:
-> On Tue, Feb 26, 2019 at 10:34:32PM +0800, zhong jiang wrote:
->> On 2019/2/26 21:51, Kirill A. Shutemov wrote:
->>> On Tue, Feb 26, 2019 at 07:18:00PM +0800, zhong jiang wrote:
->>>> From: zhongjiang <zhongjiang@huawei.com>
->>>>
->>>> When soft_offline_in_use_page() runs on a thp tail page after pmd is plit,
->>> s/plit/split/
->>>
->>>> we trigger the following VM_BUG_ON_PAGE():
->>>>
->>>> Memory failure: 0x3755ff: non anonymous thp
->>>> __get_any_page: 0x3755ff: unknown zero refcount page type 2fffff80000000
->>>> Soft offlining pfn 0x34d805 at process virtual address 0x20fff000
->>>> page:ffffea000d360140 count:0 mapcount:0 mapping:0000000000000000 index:0x1
->>>> flags: 0x2fffff80000000()
->>>> raw: 002fffff80000000 ffffea000d360108 ffffea000d360188 0000000000000000
->>>> raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
->>>> page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
->>>> ------------[ cut here ]------------
->>>> kernel BUG at ./include/linux/mm.h:519!
->>>>
->>>> soft_offline_in_use_page() passed refcount and page lock from tail page to
->>>> head page, which is not needed because we can pass any subpage to
->>>> split_huge_page().
->>> I don't see a description of what is going wrong and why change will fixed
->>> it. From the description, it appears as it's cosmetic-only change.
->>>
->>> Please elaborate.
->> When soft_offline_in_use_page runs on a thp tail page after pmd is split,  
->> and we pass the head page to split_huge_page, Unfortunately, the tail page
->> can be free or count turn into zero.
-> I guess that you have the similar fix on memory_failure() in your mind:
->
->   commit c3901e722b2975666f42748340df798114742d6d
->   Author: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->   Date:   Thu Nov 10 10:46:23 2016 -0800
->   
->       mm: hwpoison: fix thp split handling in memory_failure()
->
-> So it seems that I somehow missed fixing soft offline when I wrote commit
-> c3901e722b29, and now you find and fix that. Thank you very much.
-> If you resend the patch with fixing typo, can you add some reference to
-> c3901e722b29 in the patch description to show the linkage?
-> And you can add the following tags:
-Yep, I find that that is a similar issue. hence I refer to that description in the patch you
-had mentioned.
-
-I will add the above desprition you had mentioned in V2.
-
-Thanks,
-zhong jiang
-> Fixes: 61f5d698cc97 ("mm: re-enable THP")
-> Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->
-> Thanks,
-> Naoya Horiguchi
->
-> .
->
-
-
+T24gMDEvMDMvMjAxOSAwNC4zNiwgUWlhbmcgWmhhbyB3cm90ZToNCj4gT24gMjAxOeW5tDLmnIgy
+OOaXpSAxODozMe+8jFJhc211cyBWaWxsZW1vZXMgd3JvdGU6DQo+IA0KPj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4+IEZyb206IFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1v
+ZXNAcHJldmFzLmRrPg0KPj4gU2VudDogMjAxOeW5tDLmnIgyOOaXpSAxODozMQ0KPj4gVG86IFFp
+YW5nIFpoYW8gPHFpYW5nLnpoYW9AbnhwLmNvbT47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29t
+Pg0KPj4gQ2M6IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJvci5uZXQ+OyBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnOyBUaW11ciBUYWJpDQo+PiA8dGltdXJAZnJlZXNjYWxlLmNvbT47IFJhc211
+cyBWaWxsZW1vZXMgPFJhc211cy5WaWxsZW1vZXNAcHJldmFzLnNlPg0KPj4gU3ViamVjdDogW1BB
+VENIIDQvNF0gc29jL2ZzbC9xZTogcWUuYzogc3VwcG9ydCBmc2wscWUtc251bXMgcHJvcGVydHkN
+Cj4+DQo+PiBUaGUgY3VycmVudCBjb2RlIGFzc3VtZXMgdGhhdCB0aGUgc2V0IG9mIHNudW0gX3Zh
+bHVlc18gdG8gcG9wdWxhdGUgdGhlDQo+PiBzbnVtc1tdIGFycmF5IHdpdGggaXMgYSBmdW5jdGlv
+biBvZiB0aGUgX251bWJlcl8gb2Ygc251bXMgYWxvbmUuIEhvd2V2ZXIsDQo+PiByZWFkaW5nIHRh
+YmxlIDQtMzAsIGFuZCBpdHMgZm9vdG5vdGVzLCBvZiB0aGUgUVVJQ0MgRW5naW5lIEJsb2NrIFJl
+ZmVyZW5jZQ0KPj4gTWFudWFsIHNob3dzIHRoYXQgdGhhdCBpcyBhIGJpdCB0b28gbmFpdmUuDQo+
+Pg0KPj4gQXMgYW4gYWx0ZXJuYXRpdmUsIHRoaXMgaW50cm9kdWNlcyBhIG5ldyBiaW5kaW5nIGZz
+bCxxZS1zbnVtcywgd2hpY2gNCj4+IGF1dG9tYXRpY2FsbHkgZW5jb2RlcyBib3RoIHRoZSBudW1i
+ZXIgb2Ygc251bXMgYW5kIHRoZSBhY3R1YWwgdmFsdWVzIHRvIHVzZS4NCj4+IENvbnZlbmllbnRs
+eSwgb2ZfcHJvcGVydHlfcmVhZF92YXJpYWJsZV91OF9hcnJheSBkb2VzIGV4YWN0bHkgd2hhdCB3
+ZSBuZWVkLg0KPj4NCj4+IEZvciBleGFtcGxlLCBmb3IgdGhlIE1QQzgzMDksIG9uZSB3b3VsZCBz
+cGVjaWZ5IHRoZSBwcm9wZXJ0eSBhcw0KPj4NCj4+ICAgICAgICAgICAgICAgIGZzbCxxZS1zbnVt
+cyA9IC9iaXRzLyA4IDwNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgMHg4OCAweDg5IDB4OTgg
+MHg5OSAweGE4IDB4YTkgMHhiOCAweGI5DQo+PiAgICAgICAgICAgICAgICAgICAgICAgIDB4Yzgg
+MHhjOSAweGQ4IDB4ZDkgMHhlOCAweGU5PjsNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBSYXNtdXMg
+VmlsbGVtb2VzIDxyYXNtdXMudmlsbGVtb2VzQHByZXZhcy5kaz4NCj4+IC0tLQ0KPj4gIC4uLi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4dCAgICAgIHwgIDggKysrKysr
+Ky0NCj4+ICBkcml2ZXJzL3NvYy9mc2wvcWUvcWUuYyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8IDE0ICsrKysrKysrKysrKystDQo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAyMCBpbnNlcnRpb25z
+KCspLCAyIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1fcWUvcWUudHh0DQo+PiBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2NwbV9xZS9xZS50eHQNCj4+IGluZGV4IGQ3
+YWZhZmY1ZmFmZi4uMDVmNWY0ODU1NjJhIDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4dA0KPj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvY3BtX3FlL3FlLnR4dA0KPj4gQEAg
+LTE4LDcgKzE4LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4+ICAtIHJlZyA6IG9mZnNldCBh
+bmQgbGVuZ3RoIG9mIHRoZSBkZXZpY2UgcmVnaXN0ZXJzLg0KPj4gIC0gYnVzLWZyZXF1ZW5jeSA6
+IHRoZSBjbG9jayBmcmVxdWVuY3kgZm9yIFFVSUNDIEVuZ2luZS4NCj4+ICAtIGZzbCxxZS1udW0t
+cmlzY3M6IGRlZmluZSBob3cgbWFueSBSSVNDIGVuZ2luZXMgdGhlIFFFIGhhcy4NCj4+IC0tIGZz
+bCxxZS1udW0tc251bXM6IGRlZmluZSBob3cgbWFueSBzZXJpYWwgbnVtYmVyKFNOVU0pIHRoZSBR
+RSBjYW4gdXNlDQo+PiBmb3IgdGhlDQo+PiArLSBmc2wscWUtc251bXM6IFRoaXMgcHJvcGVydHkg
+aGFzIHRvIGJlIHNwZWNpZmllZCBhcyAnL2JpdHMvIDgnIHZhbHVlLA0KPj4gKyAgZGVmaW5pbmcg
+dGhlIGFycmF5IG9mIHNlcmlhbCBudW1iZXIgKFNOVU0pIHZhbHVlcyBmb3IgdGhlIHZpcnR1YWwN
+Cj4+ICAgIHRocmVhZHMuDQo+Pg0KPj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+PiBAQCAtMzQs
+NiArMzUsMTEgQEAgUmVjb21tZW5kZWQgcHJvcGVydGllcw0KPj4gIC0gYnJnLWZyZXF1ZW5jeSA6
+IHRoZSBpbnRlcm5hbCBjbG9jayBzb3VyY2UgZnJlcXVlbmN5IGZvciBiYXVkLXJhdGUNCj4+ICAg
+IGdlbmVyYXRvcnMgaW4gSHouDQo+Pg0KPj4gK0RlcHJlY2F0ZWQgcHJvcGVydGllcw0KPj4gKy0g
+ZnNsLHFlLW51bS1zbnVtczogZGVmaW5lIGhvdyBtYW55IHNlcmlhbCBudW1iZXIoU05VTSkgdGhl
+IFFFIGNhbiB1c2UNCj4+ICsgIGZvciB0aGUgdGhyZWFkcy4gVXNlIGZzbCxxZS1zbnVtcyBpbnN0
+ZWFkIHRvIG5vdCBvbmx5IHNwZWNpZnkgdGhlDQo+PiArICBudW1iZXIgb2Ygc251bXMsIGJ1dCBh
+bHNvIHRoZWlyIHZhbHVlcy4NCj4+ICsNCj4+ICBFeGFtcGxlOg0KPj4gICAgICAgcWVAZTAxMDAw
+MDAgew0KPj4gIAkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L3NvYy9mc2wvcWUvcWUuYyBiL2RyaXZlcnMvc29jL2ZzbC9xZS9xZS5jIGluZGV4DQo+PiA3MWJl
+ZWI3MmVlZTQuLjA0OWIzNmQ2YWVlZSAxMDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvc29jL2ZzbC9x
+ZS9xZS5jDQo+PiArKysgYi9kcml2ZXJzL3NvYy9mc2wvcWUvcWUuYw0KPj4gQEAgLTI4Myw3ICsy
+ODMsNiBAQCBFWFBPUlRfU1lNQk9MKHFlX2Nsb2NrX3NvdXJjZSk7DQo+PiAgICovDQo+PiAgc3Rh
+dGljIHZvaWQgcWVfc251bXNfaW5pdCh2b2lkKQ0KPj4gIHsNCj4+IC0JaW50IGk7DQo+PiAgCXN0
+YXRpYyBjb25zdCB1OCBzbnVtX2luaXRfNzZbXSA9IHsNCj4+ICAJCTB4MDQsIDB4MDUsIDB4MEMs
+IDB4MEQsIDB4MTQsIDB4MTUsIDB4MUMsIDB4MUQsDQo+PiAgCQkweDI0LCAweDI1LCAweDJDLCAw
+eDJELCAweDM0LCAweDM1LCAweDg4LCAweDg5LCBAQCAtMzA0LDkNCj4+ICszMDMsMjIgQEAgc3Rh
+dGljIHZvaWQgcWVfc251bXNfaW5pdCh2b2lkKQ0KPj4gIAkJMHgyOCwgMHgyOSwgMHgzOCwgMHgz
+OSwgMHg0OCwgMHg0OSwgMHg1OCwgMHg1OSwNCj4+ICAJCTB4NjgsIDB4NjksIDB4NzgsIDB4Nzks
+IDB4ODAsIDB4ODEsDQo+PiAgCX07DQo+PiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqcWU7DQo+PiAg
+CWNvbnN0IHU4ICpzbnVtX2luaXQ7DQo+PiArCWludCBpOw0KPj4NCj4+ICAJYml0bWFwX3plcm8o
+c251bV9zdGF0ZSwgUUVfTlVNX09GX1NOVU0pOw0KPj4gKwlxZSA9IHFlX2dldF9kZXZpY2Vfbm9k
+ZSgpOw0KPj4gKwlpZiAocWUpIHsNCj4+ICsJCWkgPSBvZl9wcm9wZXJ0eV9yZWFkX3ZhcmlhYmxl
+X3U4X2FycmF5KHFlLCAiZnNsLHFlLXNudW1zIiwNCj4+ICsJCQkJCQkgICAgICAgc251bXMsIDE0
+LCBRRV9OVU1fT0ZfU05VTSk7DQo+PiArCQlvZl9ub2RlX3B1dChxZSk7DQo+PiArCQlpZiAoaSA+
+IDApIHsNCj4+ICsJCQlxZV9udW1fb2Zfc251bSA9IGk7DQo+PiArCQkJcmV0dXJuOw0KPj4gKwkJ
+fQ0KPj4gKwl9DQo+PiArDQo+PiAgCXFlX251bV9vZl9zbnVtID0gcWVfZ2V0X251bV9vZl9zbnVt
+cygpOw0KPj4NCj4+ICAJaWYgKHFlX251bV9vZl9zbnVtID09IDc2KQ0KPiANCj4gU28geW91IGRl
+ZmluZSAxNCBzbnVtcyBmb3IgTVBDODMwOSwgYnV0IHRoZXJlIHN0aWxsIGJlIHRoZSBjb21tZW50
+ICIvKiBObyBRRSBldmVyIGhhcyBmZXdlciB0aGFuIDI4IFNOVU1zICovIiBhbmQgaXQgd2lsbCBj
+aGVjayBpZiANCj4gVGhlIG51bV9vZl9zbnVtcyAiaXMgPjI4IiwgaXQgd2lsbCBjYXVzZSBjb25m
+dXNpb24sIHNvIEkgc3VnZ2VzdCB0byBtb2RpZnkgMjggdG8gMTQuDQoNClN1cmUsIHRoYXQgbmVl
+ZHMgdXBkYXRpbmcuIE15IHRoaW5raW5nIHdhcyB0aGF0IG9ubHkgbGVnYWN5IERUcyB3b3VsZA0K
+dXNlIHRoZSBmc2wscWUtbnVtLXNudW1zLCBhbmQgdGhlcmUgd291bGQgYmUgbm8gbmVlZCB0byBz
+dXBwb3J0IGxvd2VyDQp2YWx1ZXMgdGhhbiB3ZSB1c2VkIHRvLCBzaW5jZSB0aGUgbG9naWMgYmFj
+ayBpbiBxZV9zbnVtc19pbml0IHdvdWxkbid0DQpoYW5kbGUgc3VjaCB2YWx1ZXMgYXBwcm9wcmlh
+dGVseSBhbnl3YXkuDQoNCj4gSSByZWFkIHRoZSBvbGQgdmVyc2lvbiBRVUlDQyBFbmdpbmUgQmxv
+Y2sgUmVmZXJlbmNlIE1hbnVhbCwgaXQgc2FpZCBzbnVtcyB0YWJsZSBpcyBub3QgYXZhaWxhYmxl
+IG9uIE1QQzgzMDYvTVBDODMwNlMvTVBDODMwOSwNCj4gU28gSSB0aGluayB0aGUgY29kZSBpdCB3
+cml0dGVuIGxvbmcgYmVmb3JlIHdpdGggdGhpcyB2ZXJzaW9uIFJNLCBhbmQgYXQgdGhhdCB0aW1l
+LCB0aGUgc251bXMgaXMgYXQgbGVhc3QgMjgsIGFuZCBub2JvZHkgbW9kaWZ5IHRoZSBjb2RlIGxh
+dGVyLg0KPiBBbmQgbm93IHdpdGggdGhlIG5ldyB2ZXJzaW9uIFJNLCBpdCBzdXBwb3J0IE1QQzgz
+MDYvTVBDODMwNlMvTVBDODMwOSB3aXRoIHNudW1zIGFuZCBoYXZlIHNudW1zIGZld2VyIHRoZW4g
+MjgsIHNvIEkgdGhpbmsgdGhlIG1pbmltdW0gdmFsdWUgc2hvdWxkDQo+IEJlIG1vZGlmaWVkIHRv
+IDE0Lg0KDQpZZXMuIEknbGwgZG8gYW4gZXh0cmEgY2xlYW51cCBwYXRjaCBtb2RpZnlpbmcgdGhl
+IGNvZGUgY29tbWVudHMNCmFwcHJvcHJpYXRlbHkuIEJ1dCB3aGF0IGRvIHlvdSB0aGluayBhYm91
+dCB0aGUgY29yZSBpZGVhIGJlaGluZCB0aGlzDQpjaGFuZ2UgKGFuZCB0aGUgcHJlY2VkaW5nIGNs
+ZWFudXAgcGF0Y2hlcyk/DQoNClJhc211cw0K
