@@ -2,227 +2,215 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC2DC10F03
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A57C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926992084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:26:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jlitbj2t"
+	by mail.kernel.org (Postfix) with ESMTP id 06C02218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbfCAGZ7 (ORCPT
+        id S1728247AbfCAG0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 01:25:59 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:41369 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfCAGZ7 (ORCPT
+        Fri, 1 Mar 2019 01:26:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48120 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725913AbfCAG0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 01:25:59 -0500
-X-Greylist: delayed 101229 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Mar 2019 01:25:57 EST
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x216PgT9019527;
-        Fri, 1 Mar 2019 15:25:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x216PgT9019527
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1551421543;
-        bh=CPTIQj4MJjEqWQPvI7EAGkqlSEzE35Ksp0rPBhizPpc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jlitbj2tuEj96fvC7Iv3DwItUhmOGKWjIgTFjL75XOg+Mzinqmo+OcJMUw26T4X/R
-         sY13fXi5UYPLsCNBOKPdpWiCmwsY0cASLEeYd+nmqOD/VVF06OGzAVSzf82meTSGmg
-         ucyiftFJRGgDJhHmtVIiMdd8d6iSD8nuGBSTtibSG7+4xOu9edu7tvUAzRuTfCL5Fs
-         lu0OVMQHXmzDwRsRT7Gczfi50xMwwIlZ7MsfZeCe7oW0z0hOnMW8fNdqvC2u7RSC6L
-         TCaF6nSK1rbG4Pq6jecL/3jzWSMD+aRtQg+QNG1bNJfvaKRy9g8n3pVofN6R/Hze/p
-         2H6u50rqdNHUA==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id s15so21449771uap.6;
-        Thu, 28 Feb 2019 22:25:43 -0800 (PST)
-X-Gm-Message-State: APjAAAVOpB/6OK5GsF3WCxSbRKQ9X1HqhN4Ootinau7AsM6fRaYCeoep
-        M1dZ3CGCV+xKefWJlPMUhH/sQQRpydCCGnOE3kE=
-X-Google-Smtp-Source: APXvYqyO9icQE5soySUmzB8GfMt5HnNE/JNtqj1SEDSugKyv8JvaVQ7JQ4VBi120aSeFDO3UmQZl00jja98Q29etx3I=
-X-Received: by 2002:ab0:2a01:: with SMTP id o1mr1643096uar.42.1551421542201;
- Thu, 28 Feb 2019 22:25:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com> <20190228144306.GA138215@google.com>
-In-Reply-To: <20190228144306.GA138215@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 1 Mar 2019 15:25:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARTHJP=HzyBg_oBBL4whpxHXeijqk=zKLYpt=1GBLNGAA@mail.gmail.com>
-Message-ID: <CAK7LNARTHJP=HzyBg_oBBL4whpxHXeijqk=zKLYpt=1GBLNGAA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 1 Mar 2019 01:26:16 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x216JXRs102470
+        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 01:26:15 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxv1fy71w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 01:26:15 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <shilpa.bhat@linux.vnet.ibm.com>;
+        Fri, 1 Mar 2019 06:26:13 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 1 Mar 2019 06:25:58 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x216Pwb452363394
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Mar 2019 06:25:58 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC7AD11C054;
+        Fri,  1 Mar 2019 06:25:57 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C9AA311C04C;
+        Fri,  1 Mar 2019 06:25:56 +0000 (GMT)
+Received: from oc4502181600.in.ibm.com (unknown [9.124.35.71])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  1 Mar 2019 06:25:56 +0000 (GMT)
+From:   Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     dja@axtens.net, ego@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+Subject: [PATCH v2] powernv: powercap: Add hard minimum powercap
+Date:   Fri,  1 Mar 2019 11:55:54 +0530
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19030106-0016-0000-0000-0000025C5B97
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030106-0017-0000-0000-000032B6CD61
+Message-Id: <1551421554-11655-1-git-send-email-shilpa.bhat@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903010043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 12:06 AM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> On Thu, Feb 28, 2019 at 11:17:51AM +0900, Masahiro Yamada wrote:
-> > Hi Joel,
-> >
-> >
-> > On Thu, Feb 28, 2019 at 4:40 AM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > >
-> > > Introduce in-kernel headers and other artifacts which are made available
-> > > as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
-> > > it possible to build kernel modules, run eBPF programs, and other
-> > > tracing programs that need to extend the kernel for tracing purposes
-> > > without any dependency on the file system having headers and build
-> > > artifacts.
-> > >
-> > > On Android and embedded systems, it is common to switch kernels but not
-> > > have kernel headers available on the file system. Raw kernel headers
-> > > also cannot be copied into the filesystem like they can be on other
-> > > distros, due to licensing and other issues. There's no linux-headers
-> > > package on Android. Further once a different kernel is booted, any
-> > > headers stored on the file system will no longer be useful. By storing
-> > > the headers as a compressed archive within the kernel, we can avoid these
-> > > issues that have been a hindrance for a long time.
-> > >
-> > > The feature is also buildable as a module just in case the user desires
-> > > it not being part of the kernel image. This makes it possible to load
-> > > and unload the headers on demand. A tracing program, or a kernel module
-> > > builder can load the module, do its operations, and then unload the
-> > > module to save kernel memory. The total memory needed is 3.8MB.
-> > >
-> > > The code to read the headers is based on /proc/config.gz code and uses
-> > > the same technique to embed the headers.
-> >
-> >
-> >
-> > Please let me ask a question about the actual use-case.
-> >
-> >
-> > To build embedded systems including Android,
-> > I use an x86 build machine.
-> >
-> > In other words, I cross-compile vmlinux and in-tree modules.
-> > So,
-> >
-> >   target-arch: arm64
-> >   host-arch:   x86
-> >
-> >
-> >
-> > > To build a module, the below steps have been tested on an x86 machine:
-> > > modprobe kheaders
-> > > rm -rf $HOME/headers
-> > > mkdir -p $HOME/headers
-> > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> > > cd my-kernel-module
-> > > make -C $HOME/headers M=$(pwd) modules
-> > > rmmod kheaders
-> >
-> > I am guessing the user will run these commands
-> > on the target system.
-> > In other words, external modules are native-compiled.
-> > So,
-> >
-> >   target-arch: arm64
-> >   host-arch:   arm64
-> >
-> >
-> > Is this correct?
-> >
-> >
-> > If I understood the assumed use-case correctly,
-> > kheaders.tar.xw will contain host-programs compiled for x86,
-> > which will not work on the target system.
-> >
->
-> You are right, the above commands in the commit message work only if the
-> host/target are same arch due to scripts.
->
-> However we can build with arm64 device connected to a host, like this (which
-> I tested):
->
-> adb shell modprobe kheaders; adb pull /proc/kheaders.tar.xz
-> rm -rf $HOME/headers; mkdir -p $HOME/headers
-> tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> cd my-kernel-module
-> make -C $HOME/headers M=$(pwd) ARCH=arm64 CROSS_COMPILE=aarch64- modules
-> adb push test.ko /data/; adb shell rmmod kheaders
->
-> The other way we can make this work is using x86 usermode emulation inside a
-> chroot on the Android device which will make the earlier commands work. One
-> thing to note is that Android also runs on x86 hardware so the commands in
-> the commit message will work even for x86 Android targets already.
->
-> Also note that this the "module building" part is really only one of the
-> usecases. eBPF is another which needs the headers - and the headers are vast
-> majority of the archive. Headers take 3.1MB out of 3.6MB of the archive on
-> arm64 builds.
->
-> How do you want to proceed here, should I mention these points in the commit
-> message?
+In POWER9, OCC(On-Chip-Controller) provides for hard and soft system
+powercapping range. The hard powercap range is guaranteed while soft
+powercap may or may not be enforced by OCC due to various power-thermal
+reasons based on system configuration and workloads. This patch adds
+a sysfs file to export the hard minimum powercap limit to allow the
+user to set the appropriate powercap value that can be managed by the
+system.
 
+Signed-off-by: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+---
+Changes from V1:
+- s/asserted/enforced by OCC
 
+ .../ABI/testing/sysfs-firmware-opal-powercap       | 10 ++++
+ arch/powerpc/platforms/powernv/opal-powercap.c     | 66 +++++++++-------------
+ 2 files changed, 37 insertions(+), 39 deletions(-)
 
-I do not request a re-spin just for a matter of commit log,
-but this version produces an empty tarball.
-So, you will have a chance to update the patch anyway.
-
-In the next version, it would be nice to note that
-"external modules must be built on the same host arch
-as built vmlinux".
-
-
-
-
-Let me ask one more question.
-
-I guess this patch is motivated by
-how difficult to convey kernel headers
-from vendors to users.
-
-In that situation, how will the user find
-the right compiler to use for building external modules?
-
-
-
-
-Greg KH said:
-
-We don't ever support the system of loading a module built with anything
-other than the _exact_ same compiler than the kernel was.
-
-
-For the full context, see this:
-https://lore.kernel.org/patchwork/patch/836247/#1031547
-
-
+diff --git a/Documentation/ABI/testing/sysfs-firmware-opal-powercap b/Documentation/ABI/testing/sysfs-firmware-opal-powercap
+index c9b66ec..e37d43e 100644
+--- a/Documentation/ABI/testing/sysfs-firmware-opal-powercap
++++ b/Documentation/ABI/testing/sysfs-firmware-opal-powercap
+@@ -29,3 +29,13 @@ Description:	System powercap directory and attributes applicable for
+ 		  creates a request for setting a new-powercap. The
+ 		  powercap requested must be between powercap-min
+ 		  and powercap-max.
++
++What:		/sys/firmware/opal/powercap/system-powercap/powercap-hard-min
++Date:		March 2019
++Contact:	Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
++Description:	Hard minimum powercap
++
++		This file provides the hard minimum powercap limit in Watts.
++		The powercap value above hard minimum limit is guaranteed to be
++		enforced by OCC and the powercap value below this limit may or
++		may not be guaranteed.
+diff --git a/arch/powerpc/platforms/powernv/opal-powercap.c b/arch/powerpc/platforms/powernv/opal-powercap.c
+index d90ee4f..38408e7 100644
+--- a/arch/powerpc/platforms/powernv/opal-powercap.c
++++ b/arch/powerpc/platforms/powernv/opal-powercap.c
+@@ -139,10 +139,24 @@ static void powercap_add_attr(int handle, const char *name,
+ 	attr->handle = handle;
+ 	sysfs_attr_init(&attr->attr.attr);
+ 	attr->attr.attr.name = name;
+-	attr->attr.attr.mode = 0444;
++
++	if (!strncmp(name, "powercap-current", strlen(name))) {
++		attr->attr.attr.mode = 0664;
++		attr->attr.store = powercap_store;
++	} else {
++		attr->attr.attr.mode = 0444;
++	}
++
+ 	attr->attr.show = powercap_show;
+ }
+ 
++static const char * const powercap_strs[] = {
++	"powercap-max",
++	"powercap-min",
++	"powercap-current",
++	"powercap-hard-min",
++};
++
+ void __init opal_powercap_init(void)
+ {
+ 	struct device_node *powercap, *node;
+@@ -167,60 +181,34 @@ void __init opal_powercap_init(void)
+ 
+ 	i = 0;
+ 	for_each_child_of_node(powercap, node) {
+-		u32 cur, min, max;
+-		int j = 0;
+-		bool has_cur = false, has_min = false, has_max = false;
++		u32 id;
++		int j, count = 0;
+ 
+-		if (!of_property_read_u32(node, "powercap-min", &min)) {
+-			j++;
+-			has_min = true;
+-		}
+-
+-		if (!of_property_read_u32(node, "powercap-max", &max)) {
+-			j++;
+-			has_max = true;
+-		}
++		for (j = 0; j < ARRAY_SIZE(powercap_strs); j++)
++			if (!of_property_read_u32(node, powercap_strs[j], &id))
++				count++;
+ 
+-		if (!of_property_read_u32(node, "powercap-current", &cur)) {
+-			j++;
+-			has_cur = true;
+-		}
+-
+-		pcaps[i].pattrs = kcalloc(j, sizeof(struct powercap_attr),
++		pcaps[i].pattrs = kcalloc(count, sizeof(struct powercap_attr),
+ 					  GFP_KERNEL);
+ 		if (!pcaps[i].pattrs)
+ 			goto out_pcaps_pattrs;
+ 
+-		pcaps[i].pg.attrs = kcalloc(j + 1, sizeof(struct attribute *),
++		pcaps[i].pg.attrs = kcalloc(count + 1,
++					    sizeof(struct attribute *),
+ 					    GFP_KERNEL);
+ 		if (!pcaps[i].pg.attrs) {
+ 			kfree(pcaps[i].pattrs);
+ 			goto out_pcaps_pattrs;
+ 		}
+ 
+-		j = 0;
+ 		pcaps[i].pg.name = kasprintf(GFP_KERNEL, "%pOFn", node);
+-		if (has_min) {
+-			powercap_add_attr(min, "powercap-min",
+-					  &pcaps[i].pattrs[j]);
+-			pcaps[i].pg.attrs[j] = &pcaps[i].pattrs[j].attr.attr;
+-			j++;
+-		}
+-
+-		if (has_max) {
+-			powercap_add_attr(max, "powercap-max",
+-					  &pcaps[i].pattrs[j]);
+-			pcaps[i].pg.attrs[j] = &pcaps[i].pattrs[j].attr.attr;
+-			j++;
+-		}
++		for (j = 0; j < ARRAY_SIZE(powercap_strs); j++) {
++			if (of_property_read_u32(node, powercap_strs[j], &id))
++				continue;
+ 
+-		if (has_cur) {
+-			powercap_add_attr(cur, "powercap-current",
++			powercap_add_attr(id, powercap_strs[j],
+ 					  &pcaps[i].pattrs[j]);
+-			pcaps[i].pattrs[j].attr.attr.mode |= 0220;
+-			pcaps[i].pattrs[j].attr.store = powercap_store;
+ 			pcaps[i].pg.attrs[j] = &pcaps[i].pattrs[j].attr.attr;
+-			j++;
+ 		}
+ 
+ 		if (sysfs_create_group(powercap_kobj, &pcaps[i].pg)) {
 -- 
-Best Regards
-Masahiro Yamada
+1.8.3.1
+
