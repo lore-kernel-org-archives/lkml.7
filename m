@@ -2,108 +2,204 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15575C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955E7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D001C20818
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5989020818
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxHMdqT3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6r9OupR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389272AbfCAQy0 (ORCPT
+        id S2389283AbfCAQyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:54:26 -0500
-Received: from mail-it1-f193.google.com ([209.85.166.193]:54788 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388993AbfCAQy0 (ORCPT
+        Fri, 1 Mar 2019 11:54:44 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45502 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388993AbfCAQyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:54:26 -0500
-Received: by mail-it1-f193.google.com with SMTP id w18so21120020itj.4;
-        Fri, 01 Mar 2019 08:54:25 -0800 (PST)
+        Fri, 1 Mar 2019 11:54:44 -0500
+Received: by mail-pg1-f193.google.com with SMTP id y4so11681513pgc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:54:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=a2KcJGV77RJkPHn6Gh3n3ZC/r1453gshL8IPzbrQv7Y=;
-        b=HxHMdqT3u7T5SaJq7CT8b51L2PnORaojHVmNu7lM83xVs75k5RW2aBL0nQ2Mpd5q+Q
-         QGKzQX8Eeg8M4v+KwRqgt5aQp77uLlUMVsDYUb8xjtNV8fwFAd990ccpSNcGEcC/BZv/
-         1FVjTrkmr9Gol5KPFTJvxhAJUeLKQgifZsgP5pmA07Iw4Sj/yR08yJ/znQQ29sZCQzB9
-         ZWnT3+D1Fj/H8ICbAw4MnN3zNzDnGgiWFv21HVLfvWQPIJno+rwgYkTtCZ2tHzzc/PcE
-         fqu+qh/I2xILzzSAUNjR+nEJid5Z7xy8XCYfQxNGJO3FonANyI7CD7N9cXZmPsVnGVR8
-         Uz+g==
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=v8H6VN36oH6WU7j+Z98Gq/uFnx5u2KaHkgPBc2ET138=;
+        b=I6r9OupRZemMH0yWoIO6KKAxYf1g2M9H6rIYxzDE493TA0OORw7nelbafwVUPhXM4m
+         fVD4MwEgb4GOuPkKJ4WVetfD0KEQSqKOh7DB81MrH4hKom+rWxKVYI6L0iqNL+Z0tVUI
+         pmf+vk8V5qFpHYhxrpXASF4weaVEsISeF0AY/NY3JLNk/DyCCFB5UcXj+gFIwEvmpp9z
+         qE4f9M9vdeMyH6mh0xTm1kuJvzvufpznNYV5WUhx2rEB6ZvvAocTbTX1TT1N9moogyxW
+         IUFZSDXwkGHjT26040ToE7KEzOhTD3xqUSPTyqBNEyuPUHbkRCpz+dUzSeHHAOf3yjCh
+         3D3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=a2KcJGV77RJkPHn6Gh3n3ZC/r1453gshL8IPzbrQv7Y=;
-        b=gAWwA7gRof6f50FK7PKFqTFTnG8PDrcYhMat0gS9nMVSJx7SE9toAzju1fnQsrynZ2
-         UFqtdpOmd+d7jmntNgOE7aJuBL5iFF3lLlVQh3FDXevRNz7sKngWCxVuM5HaPjO1bV5S
-         2yq4gnjw5utc0jFenivsu56tOVs8KC48vtyjYXV1cw3on1dDHSY/ec0qLMZctxZATGrU
-         /t1wl/d1Ir++QoFkZwTOltutOK/oOd3dirizYk9qG+PdiiunWOiDUeaZ0Jn1nD10oDdk
-         hGEAX2S0aDB6FEmOGYLran7HPEqfLriHvNLXw/SMcDvLhuE2TdRMAQADtiTgyMWJ3S48
-         0lvg==
-X-Gm-Message-State: APjAAAWfvcXyUb/JYSl2pTtXMi1rALqX42wg+FvL3Nzldfbb2pMeUr6n
-        /W3WpbiX7f6oP0hq2U8ppgU=
-X-Google-Smtp-Source: APXvYqwqhgv0+qEIKdTH8qTF2ZR1GFGUvuw2KsajevY79c4kUBa2L2kiK9hNAP9XS0YSnbIJuZoodg==
-X-Received: by 2002:a24:6ec1:: with SMTP id w184mr3764480itc.113.1551459265291;
-        Fri, 01 Mar 2019 08:54:25 -0800 (PST)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id k4sm8234822ioj.33.2019.03.01.08.54.23
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=v8H6VN36oH6WU7j+Z98Gq/uFnx5u2KaHkgPBc2ET138=;
+        b=jHq18T1yigBoOleQdN6/gbuCzKKdx3SJSdM2GVHGRboUSh9Dffi02GwUK32MvwgBst
+         iQnPc5PuPDH9I9bmfQT6GK/mLzEXyspwrFb2oZX7xEtlcWAj+XEIuxlWBaBxOH+DgYUV
+         Jmao7DBVetzmMDwo9TP8mlXLGQbuzG65jZpJuoHYxXhQv4SFyPhINEy/h2YCuhOgkLgk
+         wyJmAyJQc4eZrKt0T9Nur8QJWfK/zcDJUjmz9dYnkwU+/piGaZQEdaOyLfli8BltIUaT
+         X77B7ciB8l3Au3avIABnMTOJmf5rm2sNaWgINxWhldVIZYqp2FRfqaAlEPaaBHkAeesR
+         TTHA==
+X-Gm-Message-State: APjAAAVaougnhawbMBq/bXptbkMETXAcZUmmayZ5JOVubjGhvhInq77h
+        nTGXdb2K9DfcZnQWzIR4Lyc=
+X-Google-Smtp-Source: APXvYqyCVrv6u79M3KrfhXHDimG5Wc3rxFXSj1v+2cybauUCmNrKyP1NPu86Bxe/Xx9wHvkCtzn6lA==
+X-Received: by 2002:a63:cc03:: with SMTP id x3mr5678881pgf.121.1551459282838;
+        Fri, 01 Mar 2019 08:54:42 -0800 (PST)
+Received: from ikegamiPC (M106072039032.v4.enabler.ne.jp. [106.72.39.32])
+        by smtp.gmail.com with ESMTPSA id m13sm47711334pff.175.2019.03.01.08.54.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 08:54:24 -0800 (PST)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sinan Kaya <okaya@kernel.org>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v2] PCIE/PME: fix possible use-after-free on remove
-Date:   Fri,  1 Mar 2019 11:54:19 -0500
-Message-Id: <20190301165419.16493-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 01 Mar 2019 08:54:41 -0800 (PST)
+From:   "Tokunori Ikegami" <ikegami.t@gmail.com>
+To:     "'Boris Brezillon'" <boris.brezillon@collabora.com>
+Cc:     "'Tokunori Ikegami'" <ikegami.t@gmail.com>,
+        <keescook@chromium.org>, <bbrezillon@kernel.org>, <richard@nod.at>,
+        <linux-kernel@vger.kernel.org>, <marek.vasut@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <computersforpeace@gmail.com>,
+        <dwmw2@infradead.org>, "'liujian \(CE\)'" <liujian56@huawei.com>,
+        <vigneshr@ti.com>
+References: <1551189648-58073-1-git-send-email-liujian56@huawei.com> <016001d4cf71$865e7b60$931b7220$@gmail.com> <4F88C5DDA1E80143B232E89585ACE27D0264F137@DGGEMM528-MBX.china.huawei.com> <20190228164228.734ede80@collabora.com> <005a01d4d03e$39b0e0f0$ad12a2d0$@yahoo.co.jp> <20190301170715.68d89e84@collabora.com>
+In-Reply-To: <20190301170715.68d89e84@collabora.com>
+Subject: RE: [PATCH v3] cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
+Date:   Sat, 2 Mar 2019 01:54:16 +0900
+Message-ID: <000301d4d04f$76c2aad0$64480070$@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Content-Language: ja
+Thread-Index: AQHOptjmAmqem5WpXlLpfOi8uScBsQIgzkq5Atg5CjYCPRAs9gF4c9/ZAQMTnbultcD/MA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In remove(), ensure that the pme work cannot run after kfree()
-is called. Otherwise, this could result in a use-after-free.
+Hi Boris-san,
 
-This issue was detected with the help of Coccinelle.
+> -----Original Message-----
+> From: linux-mtd [mailto:linux-mtd-bounces@lists.infradead.org] On Behalf
+> Of Boris Brezillon
+> Sent: Saturday, March 2, 2019 1:07 AM
+> To: Tokunori Ikegami
+> Cc: 'Tokunori Ikegami'; keescook@chromium.org; bbrezillon@kernel.org;
+> ikegami@allied-telesis.co.jp; richard@nod.at;
+> linux-kernel@vger.kernel.org; marek.vasut@gmail.com;
+> linux-mtd@lists.infradead.org; computersforpeace@gmail.com;
+> dwmw2@infradead.org; 'liujian (CE)'; vigneshr@ti.com
+> Subject: Re: [PATCH v3] cfi: fix deadloop in cfi_cmdset_0002.c
+> do_write_buffer
+> 
+> Hi Ikegami,
+> 
+> On Fri, 1 Mar 2019 23:51:16 +0900
+> "Tokunori Ikegami" <ikegami_to@yahoo.co.jp> wrote:
+> 
+> > > Except this version no longer does what Vignesh suggested. See how you
+> > > no longer test if chip_good() is true if time_after() returns true.
+> So,
+> > > imagine the thread entering this function is preempted just after the
+> > > first chip_good() test, and resumed a few ms later. time_after() will
+> > > return true, but chip_good() might also return true, and you ignore
+> it.
+> >
+> > I think that the following 3 versions will be worked for time_after()
+> as a same result and follow the Vignesh-san suggestion.
+> 
+> Let me show you how they are different:
+> 
+> >
+> > 1. Original Vignesh-san suggestion
+> >
+> > 	if (chip_good(map, adr, datum)) {
+> > 		xip_enable(map, chip, adr);
+> > 		goto op_done;
+> > 	}
+> 
+> --> thread preempted here
+> ==> chip_good() test becomes valid here
+> --> thread resumed here, but timeout has expired
+> 
+> >
+> > 	if (time_after(jiffies, timeo)) {
+> 
+> you enter this branch
+> 
+> > 		/* Test chip_good() if TRUE incorrectly again so write
+> failure by time_after() can be avoided. */
+> > 		if (chip_good(map, adr, datum)) {
+> 
+> chip_good() returns true
+> 
+> > 			xip_enable(map, chip, adr);
+> > 			goto op_done;
+> > 		}
+> > 		break;
+> > 	}
+> >
+> > 2. Liujian-san v3 patch
+> >
+> > 	/* Test chip_good() if FALSE correctly so write failure by
+> time_after() can be avoided. */
+> 
+> --> thread preempted here
+> ==> chip_good() test becomes valid here
+> --> thread resumed here, but timeout has expired
+> 
+> > 	if (time_after(jiffies, timeo) && !chip_good(map, adr))
+> 
+> You do not enter this branch because the chip_good() test is done once
+> more in case of timeout.
+> 
+> > 		break;
+> >
+> > 	if (chip_good(map, adr, datum)) {
+> > 		xip_enable(map, chip, adr);
+> > 		goto op_done;
+> > 	}
+> >
+> > 3. My idea
+> >
+> > 	/* Save current jiffies value before chip_good() to avoid write
+> failure by time_after() without testing chip_good() again. */
+> > 	unsigned long now = jiffies;
+> >
+> > 	if (chip_good(map, adr, datum)) {
+> > 		xip_enable(map, chip, adr);
+> > 		goto op_done;
+> > 	}
+> >
+> 
+> --> thread preempted here
+> ==> chip_good() test becomes valid here
+> --> thread resumed here, but timeout has expired
+> 
+> > 	if (time_after(now, timeo))
+> 
+> You do enter this branch, and erroneously report a failure.
 
-Cc: Sinan Kaya <okaya@kernel.org>
-Cc: Frederick Lawler <fred@fredlawl.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- drivers/pci/pcie/pme.c | 1 +
- 1 file changed, 1 insertion(+)
+I do not think that it is not entered here since the value timeo is compare
+with the saved value now before the chip_bood() by time_after().
 
-v2:
-	rebased against Bjorn Helgaas's pcm/pm branch at
-	git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
-
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index efa5b552914b..54d593d10396 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -437,6 +437,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
- 
- 	pcie_pme_disable_interrupt(srv->port, data);
- 	free_irq(srv->irq, srv);
-+	cancel_work_sync(&data->work);
- 	kfree(data);
- }
- 
--- 
-2.17.1
+> 
+> > 		break;
+> >
+> 
+> See now why your version is not correct?
+> 
+> Regards,
+> 
+> Boris
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
