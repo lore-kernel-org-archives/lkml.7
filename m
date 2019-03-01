@@ -2,200 +2,118 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BACDC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1119C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061372083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B102D2083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551456931;
+	bh=OYbSvu8htsvxMMTaECqiDpWvsWfJarNKG6pzPJt4ljE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kiz5km9UP+1fnbuwkBophrM3rGDMiC3aKGBMaye2CBtBnKDFTyW3OTLvxZYkOQKP0
+	 6nlfuT0GQbbtwEAvfGe9Fr6PUHtVfMdk+/TLAb5RvG+ciSzk92AvscN5L9ITftasWI
+	 sf0udZrBFBJJWfAZflX7dn7slsb9kKoWl+Ehxw9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389028AbfCAQMM (ORCPT
+        id S2388953AbfCAQPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:12:12 -0500
-Received: from foss.arm.com ([217.140.101.70]:38158 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388995AbfCAQML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:12:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCFBD80D;
-        Fri,  1 Mar 2019 08:12:10 -0800 (PST)
-Received: from [192.168.100.242] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 118613F575;
-        Fri,  1 Mar 2019 08:12:10 -0800 (PST)
-Subject: Re: [PATCH v5 03/10] arm64: add sysfs vulnerability show for meltdown
-To:     Andre Przywara <andre.przywara@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
-        suzuki.poulose@arm.com, Dave.Martin@arm.com,
-        shankerd@codeaurora.org, julien.thierry@arm.com,
-        mlangsdo@redhat.com, stefan.wahren@i2e.com,
-        linux-kernel@vger.kernel.org
-References: <20190227010544.597579-1-jeremy.linton@arm.com>
- <20190227010544.597579-4-jeremy.linton@arm.com>
- <c98ff98e-30e2-596b-39c5-8505ddef9496@foss.arm.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <9cfb9cff-6a26-fff7-9374-82eea0f63a21@arm.com>
-Date:   Fri, 1 Mar 2019 10:12:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 1 Mar 2019 11:15:30 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44801 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfCAQP3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:15:29 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q128so20856158ljb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:15:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TB2WNfItDh5tDSnagxb0cKOBLcV9amE7pWTa29E2ntc=;
+        b=TvC7HZfqXEiJ064TzP5lEIHq/SsMlkQR+LcoWNsAuJSkuy3rv38sLqYDqdQHrAJGsZ
+         OJTIcDDYj6hPDNkwTOCEEiboyxKk57MrljN0dawYPBwkn6Lt7164X4HJ1ZbJrajWK4aX
+         dNlBINxU9LnkytaKMNc2c2chaPbKEZRIDAx4c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TB2WNfItDh5tDSnagxb0cKOBLcV9amE7pWTa29E2ntc=;
+        b=EDIroaZ7rfS2j+b4jfv8Bvgh7pHNBmW/pNujwVoVS57xt939AB5cf4RZJkH4lxNvh5
+         D61hazWXCDaBz2o8d1pPLou/jKAPq0mpyG/jr54Av6HHfcbTLEzOtfyTaRtHN4nUGQSg
+         KxyoS82IejpplT8YTJ8lZzLfoiBFliLjyYwwRSP0JoF+T26+5bnmuf27xGJq5RTZhJz5
+         RoBGxBkmh/7X8U6RCp/Gevea5ndFT+Vs7gqfqn/UTonhWkvvymh8KFtAdYN+6fi0HZLN
+         CpB2xrH2/7xymuPhBglgJhpQCrjrRFYo841+ZE95Wdr9YS2QHwL5K9fBFSUmGQrR/nXu
+         F91w==
+X-Gm-Message-State: APjAAAW8Anb8VI8FIF8JfK7z0boJ/d3hc3lCfCyw6bxslWSgO3y/yoaX
+        LTg5uBB83pbqqoWpTVz3JgyE3vI3xAA=
+X-Google-Smtp-Source: APXvYqy/mDns/3nXvDRuuggbD9kAixJceY6imc/UQl7I9TTf0kwxWL7W52ikygjBT3/jmF8oO3D1ng==
+X-Received: by 2002:a2e:5518:: with SMTP id j24mr3254057ljb.80.1551456927211;
+        Fri, 01 Mar 2019 08:15:27 -0800 (PST)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id 77sm541269ljc.88.2019.03.01.08.15.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Mar 2019 08:15:26 -0800 (PST)
+Received: by mail-lj1-f174.google.com with SMTP id a17so20855766ljd.4
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:15:25 -0800 (PST)
+X-Received: by 2002:a2e:7a03:: with SMTP id v3mr3273103ljc.22.1551456925561;
+ Fri, 01 Mar 2019 08:15:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <c98ff98e-30e2-596b-39c5-8505ddef9496@foss.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190228145450.289603901@infradead.org> <20190228150152.540038736@infradead.org>
+ <CAHk-=wgsSXxL5c2Lbmbai=bcCgN0G=jPO+gWhQ3a+wx-LTaFkQ@mail.gmail.com>
+ <20190228175114.GG32494@hirez.programming.kicks-ass.net> <20190228180154.GO32534@hirez.programming.kicks-ass.net>
+ <CAHk-=whJww5smbSU2VzvcR7tajNqp=i9ZBYHK3RvwVXbs+V_JQ@mail.gmail.com>
+ <20190228190111.GI32494@hirez.programming.kicks-ass.net> <20190301103452.GQ32534@hirez.programming.kicks-ass.net>
+ <20190301122745.GR32534@hirez.programming.kicks-ass.net> <20190301125718.GS32534@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190301125718.GS32534@hirez.programming.kicks-ass.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 1 Mar 2019 08:15:09 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whi3C93GP3urxAMZcEP3cqHP9Z1F54b8H9P-e47=BB73g@mail.gmail.com>
+Message-ID: <CAHk-=whi3C93GP3urxAMZcEP3cqHP9Z1F54b8H9P-e47=BB73g@mail.gmail.com>
+Subject: Re: [PATCH 6/8] i915,uaccess: Fix redundant CLAC
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Mar 1, 2019 at 4:57 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Or.. we move the thing to assembly. Of course, I suck at (writing) asm,
+> so the below is probably broken in various ways.
 
-On 3/1/19 1:11 AM, Andre Przywara wrote:
-> Hi,
-> 
-> On 2/26/19 7:05 PM, Jeremy Linton wrote:
->> Display the mitigation status if active, otherwise
->> assume the cpu is safe unless it doesn't have CSV3
->> and isn't in our whitelist.
->>
->> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->> ---
->>   arch/arm64/kernel/cpufeature.c | 47 ++++++++++++++++++++++++++--------
->>   1 file changed, 37 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/cpufeature.c 
->> b/arch/arm64/kernel/cpufeature.c
->> index f6d84e2c92fe..d31bd770acba 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -944,7 +944,7 @@ has_useable_cnp(const struct 
->> arm64_cpu_capabilities *entry, int scope)
->>       return has_cpuid_feature(entry, scope);
->>   }
->> -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
->> +static bool __meltdown_safe = true;
->>   static int __kpti_forced; /* 0: not forced, >0: forced on, <0: 
->> forced off */
->>   static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities 
->> *entry,
->> @@ -963,6 +963,16 @@ static bool unmap_kernel_at_el0(const struct 
->> arm64_cpu_capabilities *entry,
->>           { /* sentinel */ }
->>       };
->>       char const *str = "command line option";
->> +    bool meltdown_safe;
->> +
->> +    meltdown_safe = is_midr_in_range_list(read_cpuid_id(), 
->> kpti_safe_list);
->> +
->> +    /* Defer to CPU feature registers */
->> +    if (has_cpuid_feature(entry, scope))
->> +        meltdown_safe = true;
->> +
->> +    if (!meltdown_safe)
->> +        __meltdown_safe = false;
->>       /*
->>        * For reasons that aren't entirely clear, enabling KPTI on Cavium
->> @@ -974,6 +984,11 @@ static bool unmap_kernel_at_el0(const struct 
->> arm64_cpu_capabilities *entry,
->>           __kpti_forced = -1;
->>       }
->> +    if (!IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0)) {
->> +        pr_info_once("kernel page table isolation disabled by 
->> CONFIG\n");
->> +        return false;
->> +    }
->> +
->>       /* Forced? */
->>       if (__kpti_forced) {
->>           pr_info_once("kernel page table isolation forced %s by %s\n",
->> @@ -985,14 +1000,10 @@ static bool unmap_kernel_at_el0(const struct 
->> arm64_cpu_capabilities *entry,
->>       if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
->>           return kaslr_offset() > 0;
->> -    /* Don't force KPTI for CPUs that are not vulnerable */
->> -    if (is_midr_in_range_list(read_cpuid_id(), kpti_safe_list))
->> -        return false;
->> -
->> -    /* Defer to CPU feature registers */
->> -    return !has_cpuid_feature(entry, scope);
->> +    return !meltdown_safe;
->>   }
->> +#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
->>   static void
->>   kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
->>   {
->> @@ -1022,6 +1033,13 @@ kpti_install_ng_mappings(const struct 
->> arm64_cpu_capabilities *__unused)
->>       return;
->>   }
->> +#else
->> +static void
->> +kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
->> +{
->> +}
->> +#endif    /* CONFIG_UNMAP_KERNEL_AT_EL0 */
->> +
->>   static int __init parse_kpti(char *str)
->>   {
->> @@ -1035,7 +1053,6 @@ static int __init parse_kpti(char *str)
->>       return 0;
->>   }
->>   early_param("kpti", parse_kpti);
->> -#endif    /* CONFIG_UNMAP_KERNEL_AT_EL0 */
->>   #ifdef CONFIG_ARM64_HW_AFDBM
->>   static inline void __cpu_enable_hw_dbm(void)
->> @@ -1286,7 +1303,6 @@ static const struct arm64_cpu_capabilities 
->> arm64_features[] = {
->>           .field_pos = ID_AA64PFR0_EL0_SHIFT,
->>           .min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
->>       },
->> -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
->>       {
->>           .desc = "Kernel page table isolation (KPTI)",
->>           .capability = ARM64_UNMAP_KERNEL_AT_EL0,
->> @@ -1302,7 +1318,6 @@ static const struct arm64_cpu_capabilities 
->> arm64_features[] = {
->>           .matches = unmap_kernel_at_el0,
->>           .cpu_enable = kpti_install_ng_mappings,
->>       },
->> -#endif
->>       {
->>           /* FP/SIMD is not implemented */
->>           .capability = ARM64_HAS_NO_FPSIMD,
->> @@ -2063,3 +2078,15 @@ static int __init enable_mrs_emulation(void)
->>   }
->>   core_initcall(enable_mrs_emulation);
->> +
->> +ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute 
->> *attr,
->> +        char *buf)
->> +{
->> +    if (arm64_kernel_unmapped_at_el0())
->> +        return sprintf(buf, "Mitigation: KPTI\n");
->> +
->> +    if (__meltdown_safe)
->> +        return sprintf(buf, "Not affected\n");
-> 
-> Shall those two checks be swapped? So it doesn't report about a KPTI 
-> mitigation if the CPU is safe, but we enable KPTI because of KASLR 
-> having enabled it? Or is that a different knob?
+Looks sane, and makes sense. I feel that the old "mixed C and asm" was
+much worse.
 
-Hmmm, I think having it this way reflects the fact that the machine is 
-mitigated independent of whether it needed it. The force on case is 
-similar. The machine may not have needed the mitigation but it was 
-forced on.
+My only comment is that I think you should remove the ENTRY() one,
+because you don't actually want that symbol to be global any more,
+because I think it's all from inside copy_user_64.S now.
 
+So just
 
-> 
-> Cheers,
-> Andre.
->  
->> +
->> +    return sprintf(buf, "Vulnerable\n");
->> +}
->>
+     ALIGN
+     copy_user_handle_tail:
+          .. code goes here..
 
+Hmm?
+
+               Linus
