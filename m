@@ -2,106 +2,70 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85ADCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CCEC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0762084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8687F2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387799AbfCANf3 (ORCPT
+        id S2387840AbfCANhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 08:35:29 -0500
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60784 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfCANf3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 08:35:29 -0500
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 0A84980295; Fri,  1 Mar 2019 14:35:19 +0100 (CET)
-Date:   Fri, 1 Mar 2019 14:35:12 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 1/6] fieldbus_dev: add Fieldbus Device subsystem.
-Message-ID: <20190301133512.GB7456@amd>
-References: <20190122152109.30488-1-TheSven73@googlemail.com>
- <20190122152109.30488-2-TheSven73@googlemail.com>
- <20190122165658.GH26416@windriver.com>
- <2f4406b5-9970-211e-beef-a8b6ad60b99e@suse.de>
- <20190122185246.GA922@kroah.com>
- <CAGngYiU2kLqQq5qkcxda9m__VWx62bsC=+ni4HAGMsOAxAtUzw@mail.gmail.com>
+        Fri, 1 Mar 2019 08:37:35 -0500
+Received: from mail.us.es ([193.147.175.20]:53958 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730726AbfCANhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 08:37:34 -0500
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id B3D25191917
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2019 14:37:32 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id A37D7DA87D
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2019 14:37:32 +0100 (CET)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 9F128DA863; Fri,  1 Mar 2019 14:37:32 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id AC0B4DA7F4;
+        Fri,  1 Mar 2019 14:37:30 +0100 (CET)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 01 Mar 2019 14:37:30 +0100 (CET)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [31.4.223.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 7FD254265A2F;
+        Fri,  1 Mar 2019 14:37:30 +0100 (CET)
+Date:   Fri, 1 Mar 2019 14:37:29 +0100
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfilter: xt_IDLETIMER: fix sysfs callback function type
+Message-ID: <20190301133729.e2phowh7bg7qd6th@salvia>
+References: <20190227181910.229008-1-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGngYiU2kLqQq5qkcxda9m__VWx62bsC=+ni4HAGMsOAxAtUzw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190227181910.229008-1-samitolvanen@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 27, 2019 at 10:19:10AM -0800, Sami Tolvanen wrote:
+> Use struct device_attribute instead of struct idletimer_tg_attr, and
+> the correct callback function type to avoid indirect call mismatches
+> with Control Flow Integrity checking.
 
---1LKvkjL3sHcu1TtY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu 2019-01-24 13:07:58, Sven Van Asbroeck wrote:
-> On Tue, Jan 22, 2019 at 1:52 PM Greg KH <gregkh@linuxfoundation.org> wrot=
-e:
-> >
-> > SPDX "GPL-2.0+" please.
-> >
-> > > would be if this code was derived from v2-only code that can't be
-> > > relicensed anymore.
-> >
-> > Are you _sure_ you want v2+?  I ask as I am forced to :)
-> >
->=20
-> The licencing choice confuses me. Why would I choose a different
-> licence to what the Linux kernel itself is provided under?
-> If I did pick a different one, what are the tradeoffs between GPLv2 and G=
-PLv2+ ?
-
-GPLv2 is buggy as it allows TiVO-ization. GPLv3 fixes that bug, so it
-is more sensible choice. Kernel stays v2, but we have drivers that are
-dual BSD or v2+, so that they can be used for other projects. One day
-we might want to run GNU Hurd or something...
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---1LKvkjL3sHcu1TtY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlx5NRAACgkQMOfwapXb+vL/LQCgm3qKNCexto1i1CodlIBjsa6G
-MdAAoLJWD3mqupKUI85Tgy0qwjuxzE4v
-=asHh
------END PGP SIGNATURE-----
-
---1LKvkjL3sHcu1TtY--
+Applied, thanks.
