@@ -2,556 +2,145 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AC7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2036FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A71A2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15F7218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ge6UMN32"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZHj2rcAT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732670AbfCAHd0 (ORCPT
+        id S1732706AbfCAHfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 02:33:26 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44534 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732492AbfCAHd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 02:33:26 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a81so18717194oii.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 23:33:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LL74di2v344wM5jh41gOcwxQavrMBr1e1kWEddpsDAo=;
-        b=Ge6UMN32q80H4NWTgqeY6la8P8iKXGkYdUs74Fs+25y2PYpRZwS6UTT8BQUkcNRtDE
-         YVD8fTB/TuM3XXIqMeO21O5ENo7r6oByXOL/FZnq0toVdNulYaj6VNGHECJNLD6FOmiQ
-         6uFLqzlTAJ+uw5uW1H0KH14EA74ihvrzAW9LkzG7Pk64D9imcvhm6WDHeM/i2YpIh2GL
-         OY0QABzfUQ2oW7Vbg2W3qWvltWdHACxmHthieBByIJTolqFe6jb/lE+bhxd2DCAuAsKU
-         QQSmGBP/o78tInxKg6pt0k5no2mYs3WemeySHl8ZlT76jx0s240BbRPSNVm8EvIjuPXj
-         unvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LL74di2v344wM5jh41gOcwxQavrMBr1e1kWEddpsDAo=;
-        b=Mz/0XATRQ73rm5zzP3Ykzyoi4iLMXfJ8WK3S4wxWSkLj0chALgygWT50hYwEqSndvy
-         VJ9VgdEBuJJjNnl21r/52xH/sXbNV9go7B7TpKTqRr0Jm7/+5V1Aa3gqTQ8XTwzw0/Lb
-         lvKx/lb29nHOBvUAJkyuAl7CY3WwjA/luT+NMorEk5CocYeKqWaRRXd1SUFKn5evA0rr
-         C3BRCw5obMAZMsrE95mRMx8P2DAh//EzlwVQAnzxSM8qSb4VV2WYGupUCrobMExqWGda
-         VBQwePUjrqt5AW70KHrdAHj8L6iyaGitZE8XW+F6XwSZ52iwRpQnvQvH1W+i4GTjKl69
-         Ux/A==
-X-Gm-Message-State: APjAAAX1C+5P9p9J5xvM8aRSTCaJ/M+YbV6GyQ8rtoyrIkLpYgttToT+
-        LAK/a3jok10/VZOacORCv6rnaw==
-X-Google-Smtp-Source: AHgI3IZAiOfLSda77E3eMo+AXCcuQdUQLoojoDMVpNzCUMeXmr8JN5TTUzTFXIS+UyQvCQBtsPK7sg==
-X-Received: by 2002:aca:6209:: with SMTP id w9mr2536810oib.47.1551425604738;
-        Thu, 28 Feb 2019 23:33:24 -0800 (PST)
-Received: from leoy-ThinkPad-X240s (li921-208.members.linode.com. [45.56.71.208])
-        by smtp.gmail.com with ESMTPSA id v2sm8432273otk.60.2019.02.28.23.33.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 23:33:23 -0800 (PST)
-Date:   Fri, 1 Mar 2019 15:33:17 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Wanglai Shi <shiwanglai@hisilicon.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, john.stultz@linaro.org,
-        xuwei5@hisilicon.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, suzhuangluan@hisilicon.com
-Subject: Re: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
-Message-ID: <20190301073317.GC5925@leoy-ThinkPad-X240s>
-References: <1551335603-38766-1-git-send-email-shiwanglai@hisilicon.com>
+        Fri, 1 Mar 2019 02:35:24 -0500
+Received: from mail-eopbgr150041.outbound.protection.outlook.com ([40.107.15.41]:58948
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732081AbfCAHfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 02:35:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bAN1xW4qhddjp1atXK3zEGsqPHX8MTz/4NzjSC5UuN8=;
+ b=ZHj2rcATvcPoWUp7EG0wCIy6laGphyg96EFcsLVVqBejTjZDv4wdkRPmcpSTwDchldE6OmZDVjw0emiohVBvGkfL2ELbsS1IBYasXZVKSaW9++ryl4tIr3SA4jA4pbddBuo8unuAIlu5iolFybMijanEepGOVOmWQkzjblKoKEg=
+Received: from VI1PR04MB4062.eurprd04.prod.outlook.com (10.171.182.161) by
+ VI1PR04MB5966.eurprd04.prod.outlook.com (20.178.123.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.15; Fri, 1 Mar 2019 07:35:20 +0000
+Received: from VI1PR04MB4062.eurprd04.prod.outlook.com
+ ([fe80::c08b:b438:76b7:d47b]) by VI1PR04MB4062.eurprd04.prod.outlook.com
+ ([fe80::c08b:b438:76b7:d47b%6]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
+ 07:35:20 +0000
+From:   Alison Wang <alison.wang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     Leo Li <leoyang.li@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] arm64: dts: ls1028a: Add Audio DT nodes
+Thread-Topic: [PATCH v2] arm64: dts: ls1028a: Add Audio DT nodes
+Thread-Index: AQHUyPlkY9LgOd8RWUqBQj6Qddk5kKX2Hn8AgABRvCA=
+Date:   Fri, 1 Mar 2019 07:35:20 +0000
+Message-ID: <VI1PR04MB4062B92CC89BA1DC4591426EF4760@VI1PR04MB4062.eurprd04.prod.outlook.com>
+References: <20190220084457.31357-1-alison.wang@nxp.com>
+ <20190301024107.GN26041@dragon>
+In-Reply-To: <20190301024107.GN26041@dragon>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=alison.wang@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fd468d91-e348-4889-c66e-08d69e187550
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB5966;
+x-ms-traffictypediagnostic: VI1PR04MB5966:
+x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;VI1PR04MB5966;23:2XQvt5fY9rDylTePQI7AkoDWxxjF8r+NP5F+u5B2n?=
+ =?us-ascii?Q?sDQyk3Ivha5jBSfsiug+ekUaI+2aRu+XRfzeJgtXxzZhDaSEIYIDEz+NVsFY?=
+ =?us-ascii?Q?aONmswGGose4AFVYlK0EZXlZu6YPu5n0hcRPoq7DikW75uihShiZHAOrbwcr?=
+ =?us-ascii?Q?g4dw0oRWIuY5pqI9zgfzQgh/f39+ywV0CCjkQTXSYb1nXqcbn3itsROwtBmw?=
+ =?us-ascii?Q?7/s6k/e8RzXk+30U7fKaALIhdEn57gec2glYWE/Seq4j7CV7l3z2OqlO3LUr?=
+ =?us-ascii?Q?zEsh8F4htV63P9UQF8f+lAfx664nPMpmYzb5ZN66rKsL20bwtFwBpgSv7X/H?=
+ =?us-ascii?Q?Gahc+dckj4l4qgMorttO9JdjAbMi5/xh0Y6FYQRY/1Af3ENwexO+zPXGPQG2?=
+ =?us-ascii?Q?B50qgEw6MtHUzmrVZO+C///SeDy/ENBvoc6qyUxOxSVwrKYFfcQTUTZY+0Fi?=
+ =?us-ascii?Q?e/CExbDylAV2x9byIqfkaRe732R5OOm7XLl/b+kZiZ+81AgBnbCgPrHqvFgy?=
+ =?us-ascii?Q?C49pqJUQvuhIzpwVsiZZgc0rqF0AjP2SaZnEu8Xz/Z021hAmbj4NQbr6DulO?=
+ =?us-ascii?Q?m2U0Yxep+Ath/f8ohljEenOJUgoN8AZ4qi32kH+7wyANtud6mIl3l65PwHRf?=
+ =?us-ascii?Q?iMUSmGoVNJdCaAyh64bP6wwJd8sAmayMaAWhAIwoZHTm3WzF91hOM2bvjhzI?=
+ =?us-ascii?Q?GeBwOr9DQlHqrWtEXMAx0LLBLDHfj96Ziro5oxjk7Hxt28bNerhszsMYLcc7?=
+ =?us-ascii?Q?2iuOkKGS/DoyOSOXOfXh88jOcBL2ziWkZ5p/xyG/QJYdphBAtOu4rKsfd9Vb?=
+ =?us-ascii?Q?pm7qtSuqg182YvyOX6MpuXNwy4Lvu4MSQqdtMKpH69QdjF0ZBsZj409vU1kS?=
+ =?us-ascii?Q?2mK17+AAio94XxH8T8meOyidRN6jqPO7st892gMQ5Oc9nujPZHxsyqS3f7Xt?=
+ =?us-ascii?Q?YZm20Jh7sGValBDWYqsAKz/zGAGelGpuHhqKDWXLzgYW5GieumuiqmGIK9s8?=
+ =?us-ascii?Q?DX9kg3cTa6FeFVv697CIjsVw+tWjhl4cXJF9Fgbm3fPUcUqyOFez13/KUy7S?=
+ =?us-ascii?Q?PugI3Onzl80ifx8W7U2fR5sPc/k0AodfpOjFllTasMhESqY/DxBbNdzja9cm?=
+ =?us-ascii?Q?Z2gXCUBtJ58xTSHDQdCbkwzps2VjD8VOSXe9LZf/mqeV8JvdT/07ooALyrUl?=
+ =?us-ascii?Q?37cRUTa784wzvb9TfDGuxSrHqEcMQ69kCHY8B4i4d8o7aChMs33+6hyUqDqF?=
+ =?us-ascii?Q?28Qh+JYamPVvAam//Y=3D?=
+x-microsoft-antispam-prvs: <VI1PR04MB5966FC411AF63387C112A751F4760@VI1PR04MB5966.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09634B1196
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(39860400002)(346002)(376002)(199004)(189003)(6506007)(53936002)(478600001)(7696005)(25786009)(6116002)(76176011)(316002)(3846002)(33656002)(99286004)(14454004)(55016002)(4326008)(8936002)(2906002)(6916009)(54906003)(14444005)(102836004)(9686003)(6246003)(6436002)(256004)(186003)(7736002)(66066001)(74316002)(229853002)(44832011)(26005)(71190400001)(106356001)(71200400001)(97736004)(446003)(305945005)(105586002)(476003)(8676002)(68736007)(11346002)(86362001)(81156014)(486006)(5660300002)(52536013)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5966;H:VI1PR04MB4062.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gafi4uIWagIGx516WSXgCMVyeVBLO7kIXwq/Ihyn6Xckg2CFdfTnLNszWWL8RCQYcC89pOSBpx3ZA4JJ3kasM6V0/HzKm/ODbr0BMcNPoOrXP/WYpZEkuuZiMojKGp4nxLeQmq4fM1VUaKljYY07fhFIvsi2x577GrOT0LEMRPktRkdIK/3Dz5juRCbJOrfTHEuUIoI+O1CgJEakBR4CqIDFAdDVo48qh9soTCyqr5KoBZFn/gvzg0/9hDTRk4/l4NcgqDNkoXxO62TmNe+sVyhbERck8TQH3hdVxBkmGY8W71HlZAKBLmANFXp/N0kJwSk9S3yFZYKzVUTDV0kVw9oPis80UZ1ICg5gsbBzB7U7320ANYEZFyAUGUFbknZ5lyL2B8zstCh8jjL3OTPOO7H31Qbyr6VS4vjlwIhQzVk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1551335603-38766-1-git-send-email-shiwanglai@hisilicon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd468d91-e348-4889-c66e-08d69e187550
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 07:35:20.2324
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5966
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wanglai,
+> On Wed, Feb 20, 2019 at 04:44:57PM +0800, Alison Wang wrote:
+> > This patch adds Audio DT nodes for LS1028ARDB and LS1028AQDS boards.
+> >
+> > Signed-off-by: Alison Wang <alison.wang@nxp.com>
+> > ---
+> > Changes in v2:
+> >  - Modify some nodes' names.
+> >  - Use GIC_SPI and IRQ_TYPE_LEVEL_HIGH.
+> >
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |   62
+> ++++++++++++++++++++
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   63
+> +++++++++++++++++++++
+> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   57
+> +++++++++++++++++++
+> >  3 files changed, 182 insertions(+), 0 deletions(-)
+> >  <snip>
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > index a8cf92a..de590ec 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> > @@ -335,5 +335,62 @@
+> >  				     <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 207
+> IRQ_TYPE_LEVEL_HIGH>,
+> >  				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209
+> IRQ_TYPE_LEVEL_HIGH>;
+> >  		};
+> > +
+> > +		edma0: dma-controller@22c0000 {
+>=20
+> Please sort the node in unit-address.
+>=20
+[Alison] Ok, I will update it in v3. Thanks.
 
-On Thu, Feb 28, 2019 at 02:33:23PM +0800, Wanglai Shi wrote:
-> This patch adds devicetree entries for the CoreSight trace
->  components on hi3660.
-> 
-> Signed-off-by: Wanglai Shi <shiwanglai@hisilicon.com>
-> ---
->  .../arm64/boot/dts/hisilicon/hi3660-coresight.dtsi | 429 +++++++++++++++++++++
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |   2 +
->  2 files changed, 431 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
-> new file mode 100644
-> index 0000000..d651a8b
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-coresight.dtsi
-> @@ -0,0 +1,429 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * dtsi for Hisilicon Hi3660 Coresight
-> + *
-> + * Copyright (C) 2016-2018 Hisilicon Ltd.
-> + *
-> + * Author: Wanglai Shi <shiwanglai@hisilicon.com>
-> + *
-> + */
-> +/ {
-> +	soc {
-> +		/* A53 cluster internals */
-> +		etm@ecc40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xecc40000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu0>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm0_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ecd40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xecd40000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu1>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm1_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ece40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xece40000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu2>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm2_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_in2>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ecf40000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xecf40000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu3>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm3_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_in3>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@ec801000 {
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-> +			reg = <0 0xec801000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					cluster0_funnel_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_etf_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					cluster0_funnel_in0: endpoint {
-> +						remote-endpoint = <&etm0_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					cluster0_funnel_in1: endpoint {
-> +						remote-endpoint = <&etm1_out>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					cluster0_funnel_in2: endpoint {
-> +						remote-endpoint = <&etm2_out>;
-> +					};
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					cluster0_funnel_in3: endpoint {
-> +						remote-endpoint = <&etm3_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etf@ec802000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0xec802000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					cluster0_etf_in: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_funnel_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					cluster0_etf_out: endpoint {
-> +						remote-endpoint =
-> +							<&top_funnel_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		/* A73 cluster internals */
-> +		etm@ed440000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xed440000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu4>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm4_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_in0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ed540000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xed540000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu5>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm5_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ed640000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xed640000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu6>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm6_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_in2>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etm@ed740000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			reg = <0 0xed740000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu7>;
-> +
-> +			out-ports {
-> +				port {
-> +					etm7_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_in3>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		funnel@ed001000 {
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-> +			reg = <0 0xed001000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +			out-ports {
-> +				port {
-> +					cluster1_funnel_out: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_etf_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					cluster1_funnel_in0: endpoint {
-> +						remote-endpoint = <&etm4_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					cluster1_funnel_in1: endpoint {
-> +						remote-endpoint = <&etm5_out>;
-> +					};
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					cluster1_funnel_in2: endpoint {
-> +						remote-endpoint = <&etm6_out>;
-> +					};
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					cluster1_funnel_in3: endpoint {
-> +						remote-endpoint = <&etm7_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etf@ed002000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0xed002000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					cluster1_etf_in: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_funnel_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					cluster1_etf_out: endpoint {
-> +						remote-endpoint =
-> +							<&top_funnel_in1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		/* Top internals */
-> +		funnel@ec031000 {
-> +			compatible = "arm,coresight-funnel", "arm,primecell";
-> +			reg = <0 0xec031000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			out-ports {
-> +				port {
-> +					top_funnel_out: endpoint {
-> +						remote-endpoint =
-> +							<&top_etf_in>;
-> +					};
-> +				};
-> +			};
-> +
-> +			in-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					top_funnel_in0: endpoint {
-> +						remote-endpoint =
-> +							<&cluster0_etf_out>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <0>;
 
-Here should s/<0>/<1>; otherwise DTC will complain warning for
-mismatching between 'port@1' and 'reg = <0>'.
+Best Regards,
+Alison Wang
 
-> +					/* there's an invisible funnel combo */
-> +					/*   between clusters and top funnel */
-> +					top_funnel_in1: endpoint {
-> +						remote-endpoint =
-> +							<&cluster1_etf_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etf@ec036000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0xec036000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					top_etf_in: endpoint {
-> +						remote-endpoint =
-> +							<&top_funnel_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				port {
-> +					top_etf_out: endpoint {
-> +						remote-endpoint =
-> +							<&replicator_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		replicator {
-> +			compatible = "arm,coresight-replicator";
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					replicator_in: endpoint {
-> +						remote-endpoint =
-> +							<&top_etf_out>;
-> +					};
-> +				};
-> +			};
-> +
-> +			out-ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					replicator0_out0: endpoint {
-> +						remote-endpoint = <&etr_in>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					replicator0_out1: endpoint {
-> +						remote-endpoint = <&tpiu_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		etr@ec033000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0xec033000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					etr_in: endpoint {
-> +						remote-endpoint =
-> +							<&replicator0_out0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		tpiu@ec032000 {
-> +			compatible = "arm,coresight-tpiu", "arm,primecell";
-> +			reg = <0 0xec032000 0 0x1000>;
-> +			clocks = <&crg_ctrl HI3660_PCLK>;
-> +			clock-names = "apb_pclk";
-> +
-> +			in-ports {
-> +				port {
-> +					tpiu_in: endpoint {
-> +						remote-endpoint =
-> +							<&replicator0_out1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index a4a3d08..8f2fede 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -1246,3 +1246,5 @@
->  		};
->  	};
->  };
-> +
-> +#include "hi3660-coresight.dtsi"
-
-Except the up mentioned issue, this patch looks good to me.
-
-After applying this patch though I can see Coresight devices
-under /sys/bus/coresight, but I cannot capture ETM trace data by
-using below two commands:
-
-  perf record -e cs_etm/@ec036000.etf/ --per-thread ./main
-  perf record -e cs_etm/@ec033000.etr/ --per-thread ./main
-
-I checked perf report command with '-D' option, I can see the
-perf.data file doesn't contain any trace data from ETM.  could you
-tell me which test command you are using?  At my side I will debug a
-bit on my Hikey960 board and will keep you posted if find anything.
-
-Thanks,
-Leo Yan
