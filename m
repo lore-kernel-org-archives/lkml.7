@@ -2,120 +2,127 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F88C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9646C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA65F204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E79204FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:51:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a3IZt+SH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387555AbfCASsv (ORCPT
+        id S2388415AbfCASvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 13:48:51 -0500
-Received: from unicorn.mansr.com ([81.2.72.234]:56170 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbfCASsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 13:48:51 -0500
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 5FC1515632; Fri,  1 Mar 2019 18:48:40 +0000 (GMT)
-From:   Mans Rullgard <mans@mansr.com>
-To:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] auxdisplay: deconfuse configuration
-Date:   Fri,  1 Mar 2019 18:48:14 +0000
-Message-Id: <20190301184816.784-1-mans@mansr.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 1 Mar 2019 13:51:03 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43932 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbfCASvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 13:51:02 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x21Iosas110080;
+        Fri, 1 Mar 2019 12:50:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1551466254;
+        bh=M06E0196jt7XW+8MbptvJBqu08FuR8tLnmmOx3HFSI8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=a3IZt+SHCGkE4LGaLTsWnd909BBCqElIgOQqz/ACOKqUXFvgE7K72RlyGtBrD5qyH
+         exlGx1TIArZwdn4PfsVceKWE4zN4LJQFCu8ep0Ef2t0ZIyZslB+GRbdV4mzkQ+MlxM
+         ohoqsy14yxHc4RsTxZoOK8hx9PQDVzP0XO8UqBV0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x21Ios06039727
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Mar 2019 12:50:54 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 1
+ Mar 2019 12:50:53 -0600
+Received: from dlep32.itg.ti.com (157.170.170.100) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Fri, 1 Mar 2019 12:50:53 -0600
+Received: from legion.dal.desgin.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x21Ior0b008566;
+        Fri, 1 Mar 2019 12:50:53 -0600
+Received: from localhost (a0272616local-lt.dhcp.ti.com [172.22.120.9])
+        by legion.dal.desgin.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x21IorU22086;
+        Fri, 1 Mar 2019 12:50:53 -0600 (CST)
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v6 3/4] dt-bindings: can: tcan4x5x: Add DT bindings for TCAN4x5X driver
+Date:   Fri, 1 Mar 2019 12:50:42 -0600
+Message-ID: <20190301185043.9037-3-dmurphy@ti.com>
+X-Mailer: git-send-email 2.12.2
+In-Reply-To: <20190301185043.9037-1-dmurphy@ti.com>
+References: <20190301185043.9037-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The auxdisplay Kconfig is confusing.  It creates two separate menus
-even though the settings are closely related.  Moreover, the options
-for setting the boot message depend on CONFIG_PARPORT even though they
-are used by drivers that do not.
+DT binding documentation for TI TCAN4x5x driver.
 
-Clear up the confustion by moving the "Parallel port LCD/Keypad" menu
-under auxdisplay where it logically belongs.  Change the boot message
-options to depend only on CONFIG_CHARLCD, making them accessible also
-when only the HD44780 is selected.
-
-Since the "Parallel port LCD/Keypad" driver now has a new dependency
-on CONFIG_AUXDISPLAY, rename its Kconfig symbol and keep the old one
-such that make oldconfig will not disable the driver.
-
-Signed-off-by: Mans Rullgard <mans@mansr.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/auxdisplay/Kconfig  | 17 ++++++++++++-----
- drivers/auxdisplay/Makefile |  2 +-
- 2 files changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
-index 57410f9c5d44..7d3fe27d6868 100644
---- a/drivers/auxdisplay/Kconfig
-+++ b/drivers/auxdisplay/Kconfig
-@@ -164,9 +164,7 @@ config ARM_CHARLCD
- 	  line and the Linux version on the second line, but that's
- 	  still useful.
- 
--endif # AUXDISPLAY
--
--menuconfig PANEL
-+menuconfig PARPORT_PANEL
- 	tristate "Parallel port LCD/Keypad Panel support"
- 	depends on PARPORT
- 	select CHARLCD
-@@ -178,7 +176,7 @@ menuconfig PANEL
- 	  compiled as a module, or linked into the kernel and started at boot.
- 	  If you don't understand what all this is about, say N.
- 
--if PANEL
-+if PARPORT_PANEL
- 
- config PANEL_PARPORT
- 	int "Default parallel port number (0=LPT1)"
-@@ -419,8 +417,11 @@ config PANEL_LCD_PIN_BL
- 
- 	  Default for the 'BL' pin in custom profile is '0' (uncontrolled).
- 
-+endif # PARPORT_PANEL
+v6 - No changes - https://lore.kernel.org/patchwork/patch/1042445/
+
+ .../devicetree/bindings/net/can/tcan4x5x.txt  | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+
+diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+new file mode 100644
+index 000000000000..781c19887538
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+@@ -0,0 +1,37 @@
++Texas Instruments TCAN4x5x CAN Controller
++================================================
 +
- config PANEL_CHANGE_MESSAGE
- 	bool "Change LCD initialization message ?"
-+	depends on CHARLCD
- 	default "n"
- 	---help---
- 	  This allows you to replace the boot message indicating the kernel version
-@@ -444,7 +445,13 @@ config PANEL_BOOT_MESSAGE
- 	  An empty message will only clear the display at driver init time. Any other
- 	  printf()-formatted message is valid with newline and escape codes.
- 
--endif # PANEL
-+endif # AUXDISPLAY
++This file provides device node information for the TCAN4x5x interface contains.
 +
-+config PANEL
-+	tristate "Parallel port LCD/Keypad Panel support (OLD OPTION)"
-+	depends on PARPORT
-+	select AUXDISPLAY
-+	select PARPORT_PANEL
- 
- config CHARLCD
- 	tristate "Character LCD core support" if COMPILE_TEST
-diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
-index 7ac6776ca3f6..cf54b5efb07e 100644
---- a/drivers/auxdisplay/Makefile
-+++ b/drivers/auxdisplay/Makefile
-@@ -10,4 +10,4 @@ obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
- obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
- obj-$(CONFIG_HD44780)		+= hd44780.o
- obj-$(CONFIG_HT16K33)		+= ht16k33.o
--obj-$(CONFIG_PANEL)             += panel.o
-+obj-$(CONFIG_PARPORT_PANEL)	+= panel.o
++Required properties:
++	- compatible: "ti,tcan4x5x"
++	- reg: 0
++	- #address-cells: 1
++	- #size-cells: 0
++	- spi-max-frequency: Maximum frequency of the SPI bus the chip can
++			     operate at should be less than or equal to 18 MHz.
++	- data-ready-gpios: Interrupt GPIO for data and error reporting.
++	- device-wake-gpios: Wake up GPIO to wake up the TCAN device.
++	- device-state-gpios: Input GPIO that indicates if the device is in
++			      a sleep state or if the device is active.
++
++See Documentation/devicetree/bindings/net/can/m_can.txt for additional
++required property details.
++
++Optional properties:
++	- reset-gpios: Hardwired output GPIO. If not defined then software
++		       reset.
++
++Example:
++tcan4x5x: tcan4x5x@0 {
++		compatible = "ti,tcan4x5x";
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <10000000>;
++		bosch,mram-cfg = <0x0 0 0 32 0 0 1 1>;
++		data-ready-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
++		device-state-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
++		device-wake-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&gpio1 27 GPIO_ACTIVE_LOW>;
++};
 -- 
-2.20.1
+2.20.1.390.gb5101f9297
 
