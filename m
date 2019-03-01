@@ -2,242 +2,244 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8616EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A6DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512512084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 723172084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 18:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732420AbfCASl1 convert rfc822-to-8bit (ORCPT
+        id S2387600AbfCASlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 13:41:27 -0500
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:43452 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726195AbfCASl1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 13:41:27 -0500
-Received: from 178-18-171-174.customer.bnet.at ([178.18.171.174]:59893 helo=[192.168.2.179])
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <philipp.tomsich@theobroma-systems.com>)
-        id 1gzn5n-0007Qu-D0; Fri, 01 Mar 2019 19:41:07 +0100
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH 1/3] phy: rockchip-emmc: Allow to set drive impedance via
- DTS.
-From:   Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-In-Reply-To: <CB9331AE-2FEC-4646-BD8E-BDF9F4E48F74@theobroma-systems.com>
-Date:   Fri, 1 Mar 2019 19:41:03 +0100
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Randy Li <ayaka@soulik.info>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <72859695-2E77-4EFF-9555-54907830849F@theobroma-systems.com>
-References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
- <CAD=FV=UUuQYwh2DMgB5FLuiE1BwbTMTuc9rAte1J5L_JP5qk1Q@mail.gmail.com>
- <CB9331AE-2FEC-4646-BD8E-BDF9F4E48F74@theobroma-systems.com>
-To:     =?utf-8?Q?Christoph_M=C3=BCllner?= 
-        <christoph.muellner@theobroma-systems.com>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Fri, 1 Mar 2019 13:41:51 -0500
+Received: from mga14.intel.com ([192.55.52.115]:37428 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbfCASlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 13:41:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 10:41:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,428,1544515200"; 
+   d="scan'208";a="137358009"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by FMSMGA003.fm.intel.com with SMTP; 01 Mar 2019 10:41:48 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 01 Mar 2019 20:41:47 +0200
+Date:   Fri, 1 Mar 2019 20:41:47 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Shayenne Moura <shayenneluzmoura@gmail.com>
+Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/vkms: Solve bug on kms_crc_cursor tests
+Message-ID: <20190301184147.GS20097@intel.com>
+References: <20190225142606.gov32asdq3qe375q@smtp.gmail.com>
+ <20190228101107.GL2665@phenom.ffwll.local>
+ <20190228140341.GG20097@intel.com>
+ <CAKkTe8Ei2fbz4L2noLvGWMCsHy1f7sadOV-horjNsGBEHt=q3w@mail.gmail.com>
+ <20190301152558.GR20097@intel.com>
+ <CAKkTe8HbgkVm1i2xAFT6ecgv2jFjyoqrSEYUpx_40Uj=ogKYPQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKkTe8HbgkVm1i2xAFT6ecgv2jFjyoqrSEYUpx_40Uj=ogKYPQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 01, 2019 at 03:35:35PM -0300, Shayenne Moura wrote:
+> Em sex, 1 de mar de 2019 às 12:26, Ville Syrjälä
+> <ville.syrjala@linux.intel.com> escreveu:
+> >
+> > On Fri, Mar 01, 2019 at 11:55:11AM -0300, Shayenne Moura wrote:
+> > > Em qui, 28 de fev de 2019 às 11:03, Ville Syrjälä
+> > > <ville.syrjala@linux.intel.com> escreveu:
+> > > >
+> > > > On Thu, Feb 28, 2019 at 11:11:07AM +0100, Daniel Vetter wrote:
+> > > > > On Mon, Feb 25, 2019 at 11:26:06AM -0300, Shayenne Moura wrote:
+> > > > > > vkms_crc_work_handle needs the value of the actual frame to
+> > > > > > schedule the workqueue that calls periodically the vblank
+> > > > > > handler and the destroy state functions. However, the frame
+> > > > > > value returned from vkms_vblank_simulate is updated and
+> > > > > > diminished in vblank_get_timestamp because it is not in a
+> > > > > > vblank interrupt, and return an inaccurate value.
+> > > > > >
+> > > > > > Solve this getting the actual vblank frame directly from the
+> > > > > > vblank->count inside the `struct drm_crtc`, instead of using
+> > > > > > the `drm_accurate_vblank_count` function.
+> > > > > >
+> > > > > > Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
+> > > > >
+> > > > > Sorry for the delay, I'm a bit swamped right now :-/
+> > > > >
+> > > > > Debug work you're doing here is really impressive! But I have no idea
+> > > > > what's going on. It doesn't look like it's just papering over a bug (like
+> > > > > the in_vblank_irq check we've discussed on irc), but I also have no idea
+> > > > > why it works.
+> > > > >
+> > > > > I'll pull in Ville, he understands this better than me.
+> > > >
+> > > > It's not entirely clear what we're trying to fix. From what I can see
+> > > > the crc work seems to be in no way synchronized with page flips, so
+> > > > I'm not sure how all this is really supposed to work.
+> > > >
+> > >
+> > > Hi, Ville!
+> > >
+> > > Thank you for the review! :)
+> > >
+> > > I do not understand well what crc code is doing, but the issue that I found
+> > > is related to the vblank timestamp and frame count.
+> > >
+> > > When vkms handles the crc_cursor it uses the start frame and end frame
+> > > values to verify if it needs to call the function 'drm_crtc_add_crc_entry()'
+> > > for each frame.
+> > >
+> > > However, when getting the frame count, the code is calling the function
+> > > drm_update_vblank_count(dev, pipe, false) and, because of the 'false',
+> > > subtracting the actual vblank timestamp (consequently, the frame count
+> > > value), causing conflicts.
+> >
+> > The in_vblank_irq behavour looks sane to me. What are these conflicts?
+> >
+> 
+> The entire history was:
+>  - I sent the patch with bugfix for vblank extra frame. The patch changed
+>    our function vkms_get_vblank_timestamp() to look like this:
+> 
+> bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
+>                    int *max_error, ktime_t *vblank_time,
+>                    bool in_vblank_irq)
+> {
+>     struct vkms_device *vkmsdev = drm_device_to_vkms_device(dev);
+>     struct vkms_output *output = &vkmsdev->output;
+> 
+>     *vblank_time = output->vblank_hrtimer.node.expires;
+> 
+> +   if (!in_vblank_irq)
+> +        *vblank_time -= output->period_ns;
+> 
+>     return true;
+> }
+> 
+>  - This patch solve the issue that I was looking for (extra vblank
+> frames on kms_flip).
+> 
+>  - However, kms_cursor_crc tests, which passed before my patch, started to fail.
+> 
+>  - Debugging them, I found that the problem was inside of function
+> `vkms_vblank_simulate()`
+> when it was handling the crc_enabled (inside  if (state && output->crc_enabled))
+> and inside the function vkms_crc_work_handle() too.
+> 
+>  - Following the steps:
+> 1. Inside vkms_vblank_simulate() we call drm_crtc_accurate_vblank_count()
+> 2. In its turn, drm_crtc_accurate_vblank_count() calls the function
+>    drm_update_vblank_count(dev, pipe, false).  /* This false is default */
+> 3. Finally, the “false” used in drm_update_vblank_count(), will be
+>   passed to vkms_get_vblank_timestamp() and the condition “if
+>   (!in_vblank_irq)” will be executed multiple times (we don’t want it).
+> 
+>  - Inside vkms_crc, the issue is that the returned frame value change for
+> every call of drm_crtc_accurate_vblank_count() because
+> in_vblank_irq == false.
 
+OK. So why is it changing? AFAICS it should not change unless the
+timer was moved forward in between the calls.
 
-> On 01.03.2019, at 19:09, Christoph Müllner <christoph.muellner@theobroma-systems.com> wrote:
 > 
-> Hi Doug,
+>  - To solve this, I used the value already calculated on vblank->count,
+> instead of using the helper function that updates the value.
 > 
->> On 01.03.2019, at 17:48, Doug Anderson <dianders@chromium.org> wrote:
->> 
->> Hi,
->> 
->> On Fri, Mar 1, 2019 at 7:37 AM Christoph Muellner
->> <christoph.muellner@theobroma-systems.com> wrote:
->>> 
->>> The rockchip-emmc PHY can be configured with different
->>> drive impedance values. Currenlty a value of 50 Ohm is
->>> hard coded into the driver.
->>> 
->>> This patch introduces the DTS property 'drive-impedance-ohm'
->>> for the rockchip-emmc phy node, which uses the value from the DTS
->>> to setup the drive impedance accordingly.
->>> 
->>> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
->>> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
->>> ---
->>> drivers/phy/rockchip/phy-rockchip-emmc.c | 38 ++++++++++++++++++++++++++++++--
->>> 1 file changed, 36 insertions(+), 2 deletions(-)
->>> 
->>> diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
->>> index 19bf84f0bc67..5413fa73dd45 100644
->>> --- a/drivers/phy/rockchip/phy-rockchip-emmc.c
->>> +++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
->>> @@ -87,6 +87,7 @@ struct rockchip_emmc_phy {
->>>       unsigned int    reg_offset;
->>>       struct regmap   *reg_base;
->>>       struct clk      *emmcclk;
->>> +       unsigned int drive_impedance;
->>> };
->>> 
->>> static int rockchip_emmc_phy_power(struct phy *phy, bool on_off)
->>> @@ -281,10 +282,10 @@ static int rockchip_emmc_phy_power_on(struct phy *phy)
->>> {
->>>       struct rockchip_emmc_phy *rk_phy = phy_get_drvdata(phy);
->>> 
->>> -       /* Drive impedance: 50 Ohm */
->>> +       /* Drive impedance: from DTS */
->>>       regmap_write(rk_phy->reg_base,
->>>                    rk_phy->reg_offset + GRF_EMMCPHY_CON6,
->>> -                    HIWORD_UPDATE(PHYCTRL_DR_50OHM,
->>> +                    HIWORD_UPDATE(rk_phy->drive_impedance,
->>>                                  PHYCTRL_DR_MASK,
->>>                                  PHYCTRL_DR_SHIFT));
->>> 
->>> @@ -314,6 +315,28 @@ static const struct phy_ops ops = {
->>>       .owner          = THIS_MODULE,
->>> };
->>> 
->>> +static u32 convert_drive_impedance_ohm(struct platform_device *pdev, u32 dr_ohm)
->>> +{
->>> +       switch (dr_ohm) {
->>> +       case 100:
->>> +               return PHYCTRL_DR_100OHM;
->>> +       case 66:
->>> +               return PHYCTRL_DR_66OHM;
->>> +       case 50:
->>> +               return PHYCTRL_DR_50OHM;
->>> +       case 40:
->>> +               return PHYCTRL_DR_40OHM;
->>> +       case 33:
->>> +               return PHYCTRL_DR_33OHM;
->>> +       }
->>> +
->>> +       dev_warn(&pdev->dev,
->>> +               "Invalid value %u for drive-impedance-ohm. "
->>> +               "Falling back to 50 Ohm.\n",
->>> +               dr_ohm);
->>> +       return PHYCTRL_DR_50OHM;
->>> +}
->>> +
->>> static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->>> {
->>>       struct device *dev = &pdev->dev;
->>> @@ -322,6 +345,7 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->>>       struct phy_provider *phy_provider;
->>>       struct regmap *grf;
->>>       unsigned int reg_offset;
->>> +       u32 val;
->>> 
->>>       if (!dev->parent || !dev->parent->of_node)
->>>               return -ENODEV;
->>> @@ -345,6 +369,16 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->>>       rk_phy->reg_offset = reg_offset;
->>>       rk_phy->reg_base = grf;
->>> 
->>> +       if (of_property_read_u32(dev->of_node, "drive-impedance-ohm", &val)) {
->>> +               dev_info(dev,
->>> +                       "Missing drive-impedance-ohm property in node %s "
->>> +                       "Falling back to 50 Ohm.\n",
->>> +                       dev->of_node->name);
->> 
->> This is awfully noisy for something that pretty much all existing
->> boards will run.  debug level instead of info level?  Also:
+> Shayenne
 > 
-> Removed for v2 as suggested by Robin.
-> 
->> 
->> * Don't split strings
->> across lines
->> 
->> * There's a magic % thing to get the name of an OF node.  Use that.
->> 
->> 
->>> +               rk_phy->drive_impedance = PHYCTRL_DR_50OHM;
->>> +       } else {
->>> +               rk_phy->drive_impedance = convert_drive_impedance_ohm(pdev, val);
->>> +       }
->> 
->> It's been a long time since I looked at this, but I could have sworn
->> that it was more complicated than that.  Specifically I though you
->> were supposed to query the eMMC card for what it supported and then
->> resolve that with what the host could support.
->> 
->> Assuming that this is supposed to be queried from the card (which is
->> how I remember it) then you definitely don't want it in the device
->> tree since you want to be able to stuff various different eMMC parts
->> and we should be able to figure out the impedance at runtime.
->> 
->> 
->> NOTE: IIRC the old value of 50 ohms is required to be supported by all
->> hosts and cards and is specified to be the default.
->> 
-> 
-> When using 50 ohms on our board in HS-400 mode (200 MHz), then
-> we see communication errors. These are cause by additional components
-> on the clock line, which damp the 200 Mhz signal too much.
-> 
-> We could do the following:
-> 
-> * sdhci.c provides a default implementation to set the drive impedance (in HOST_CONTROL2,
->  like it is done already now as part of sdhci_set_ios())
-> * sdhci-of-arasan.c installs an alternative implementation in case of Rockchip's eMMC controller
-> * the alternative implementation uses a callback to the Rockchip's eMMC phy driver
+> > >
+> > > Does it make sense? I am not sure about this crc code behavior.
+> > >
+> > > Shayenne
+> > >
+> > > > > -Daniel
+> > > > >
+> > > > > > ---
+> > > > > >  drivers/gpu/drm/vkms/vkms_crc.c  | 4 +++-
+> > > > > >  drivers/gpu/drm/vkms/vkms_crtc.c | 4 +++-
+> > > > > >  2 files changed, 6 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vkms/vkms_crc.c
+> > > > > > index d7b409a3c0f8..09a8b00ef1f1 100644
+> > > > > > --- a/drivers/gpu/drm/vkms/vkms_crc.c
+> > > > > > +++ b/drivers/gpu/drm/vkms/vkms_crc.c
+> > > > > > @@ -161,6 +161,8 @@ void vkms_crc_work_handle(struct work_struct *work)
+> > > > > >     struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
+> > > > > >     struct vkms_device *vdev = container_of(out, struct vkms_device,
+> > > > > >                                             output);
+> > > > > > +   unsigned int pipe = drm_crtc_index(crtc);
+> > > > > > +   struct drm_vblank_crtc *vblank = &crtc->dev->vblank[pipe];
+> > > > > >     struct vkms_crc_data *primary_crc = NULL;
+> > > > > >     struct vkms_crc_data *cursor_crc = NULL;
+> > > > > >     struct drm_plane *plane;
+> > > > > > @@ -196,7 +198,7 @@ void vkms_crc_work_handle(struct work_struct *work)
+> > > > > >     if (primary_crc)
+> > > > > >             crc32 = _vkms_get_crc(primary_crc, cursor_crc);
+> > > > > >
+> > > > > > -   frame_end = drm_crtc_accurate_vblank_count(crtc);
+> > > > > > +   frame_end = vblank->count;
+> > > > > >
+> > > > > >     /* queue_work can fail to schedule crc_work; add crc for
+> > > > > >      * missing frames
+> > > > > > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > > > index 8a9aeb0a9ea8..9bf3268e2e92 100644
+> > > > > > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > > > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > > > @@ -10,6 +10,8 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+> > > > > >                                               vblank_hrtimer);
+> > > > > >     struct drm_crtc *crtc = &output->crtc;
+> > > > > >     struct vkms_crtc_state *state = to_vkms_crtc_state(crtc->state);
+> > > > > > +   unsigned int pipe = drm_crtc_index(crtc);
+> > > > > > +   struct drm_vblank_crtc *vblank = &crtc->dev->vblank[pipe];
+> > > > > >     u64 ret_overrun;
+> > > > > >     bool ret;
+> > > > > >
+> > > > > > @@ -20,7 +22,7 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+> > > > > >             DRM_ERROR("vkms failure on handling vblank");
+> > > > > >
+> > > > > >     if (state && output->crc_enabled) {
+> > > > > > -           u64 frame = drm_crtc_accurate_vblank_count(crtc);
+> > > > > > +           u64 frame = vblank->count;
+> > > > > >
+> > > > > >             /* update frame_start only if a queued vkms_crc_work_handle()
+> > > > > >              * has read the data
+> > > > > > --
+> > > > > > 2.17.1
+> > > > > >
+> > > > >
+> > > > > --
+> > > > > Daniel Vetter
+> > > > > Software Engineer, Intel Corporation
+> > > > > http://blog.ffwll.ch
+> > > > > _______________________________________________
+> > > > > dri-devel mailing list
+> > > > > dri-devel@lists.freedesktop.org
+> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > >
+> > > > --
+> > > > Ville Syrjälä
+> > > > Intel
+> >
+> > --
+> > Ville Syrjälä
+> > Intel
 
-Generally, I would not make this either-or (I may have been less than clear
-in my comments to the internal ticket), but rather teach the sdhci-driver to
-always notify the eMMC PHY driver (if there is one) of the change.
-
-For the RK3399’s sdhci implementation, the bits in the HOST_CONTROL2
-register are ‘reserved’ and marked R/O, so the current implementation will
-not work anyway and the PHY driver needs to be notified of the change in
-requested drive-strength.
-
-> * the Rockchip eMMC phy driver sets the drive impedance accordingly
-> 
-> But still we would need a mechanism to override this for our board.
-> And exactly this override mechanism is provided by the patch series.
-
-The PHY would then need to determine the proper operation point (or an
-mapping from a table) to achieve the requested line characteristic for any
-given board.  In other words: the DTS for puma would still contain an entry
-to allow us to override to 33 Ohm when switching to HS-400.
-
-> Thanks,
-> Christoph
-> 
->> 
->> I do see at least the summary of what I thought of this before at
->> <https://patchwork.kernel.org/patch/9086541/>
->> 
->> 
->> (Sorry if the above is wrong and feel free to correct me--I don't have
->> time at the moment to do all the full research but hopefully you can
->> dig more based on my pointers.  Feel free to call me on my BS)
->> 
->> 
->> -Doug
-
+-- 
+Ville Syrjälä
+Intel
