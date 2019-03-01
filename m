@@ -2,215 +2,265 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6D6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0536C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A896620840
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC7620840
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389317AbfCAQ7n convert rfc822-to-8bit (ORCPT
+        id S2389324AbfCAQ7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:59:43 -0500
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:40962 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388319AbfCAQ7m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:59:42 -0500
-Received: from 178-18-171-174.customer.bnet.at ([178.18.171.174]:58162 helo=[192.168.2.179])
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <philipp.tomsich@theobroma-systems.com>)
-        id 1gzlVN-0006CB-Hp; Fri, 01 Mar 2019 17:59:25 +0100
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH 1/3] phy: rockchip-emmc: Allow to set drive impedance via
- DTS.
-From:   Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-In-Reply-To: <CAD=FV=UUuQYwh2DMgB5FLuiE1BwbTMTuc9rAte1J5L_JP5qk1Q@mail.gmail.com>
-Date:   Fri, 1 Mar 2019 17:59:22 +0100
-Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Randy Li <ayaka@soulik.info>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <75A1C272-3CF2-4F8E-9F92-605AF1AAB342@theobroma-systems.com>
-References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
- <CAD=FV=UUuQYwh2DMgB5FLuiE1BwbTMTuc9rAte1J5L_JP5qk1Q@mail.gmail.com>
-To:     Doug Anderson <dianders@chromium.org>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Fri, 1 Mar 2019 11:59:47 -0500
+Received: from mga17.intel.com ([192.55.52.151]:38832 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728493AbfCAQ7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:59:46 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 08:59:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,428,1544515200"; 
+   d="scan'208";a="121870014"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 01 Mar 2019 08:59:44 -0800
+Received: from [10.254.83.214] (kliang2-mobl1.ccr.corp.intel.com [10.254.83.214])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 499A65805B4;
+        Fri,  1 Mar 2019 08:59:43 -0800 (PST)
+Subject: Re: [RFC] perf/x86/rapl: Getting zero on energy-cores event
+To:     Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>
+Cc:     Vince Weaver <vincent.weaver@maine.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20190301114250.GA23459@krava>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <5fcaf3ae-00d3-f635-74bd-8b81a089133f@linux.intel.com>
+Date:   Fri, 1 Mar 2019 11:59:40 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
+MIME-Version: 1.0
+In-Reply-To: <20190301114250.GA23459@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doug,
-
-> On 01.03.2019, at 17:48, Doug Anderson <dianders@chromium.org> wrote:
-> 
-> Hi,
-> 
-> On Fri, Mar 1, 2019 at 7:37 AM Christoph Muellner
-> <christoph.muellner@theobroma-systems.com> wrote:
->> 
->> The rockchip-emmc PHY can be configured with different
->> drive impedance values. Currenlty a value of 50 Ohm is
->> hard coded into the driver.
->> 
->> This patch introduces the DTS property 'drive-impedance-ohm'
->> for the rockchip-emmc phy node, which uses the value from the DTS
->> to setup the drive impedance accordingly.
->> 
->> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
->> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
->> ---
->> drivers/phy/rockchip/phy-rockchip-emmc.c | 38 ++++++++++++++++++++++++++++++--
->> 1 file changed, 36 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
->> index 19bf84f0bc67..5413fa73dd45 100644
->> --- a/drivers/phy/rockchip/phy-rockchip-emmc.c
->> +++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
->> @@ -87,6 +87,7 @@ struct rockchip_emmc_phy {
->>        unsigned int    reg_offset;
->>        struct regmap   *reg_base;
->>        struct clk      *emmcclk;
->> +       unsigned int drive_impedance;
->> };
->> 
->> static int rockchip_emmc_phy_power(struct phy *phy, bool on_off)
->> @@ -281,10 +282,10 @@ static int rockchip_emmc_phy_power_on(struct phy *phy)
->> {
->>        struct rockchip_emmc_phy *rk_phy = phy_get_drvdata(phy);
->> 
->> -       /* Drive impedance: 50 Ohm */
->> +       /* Drive impedance: from DTS */
->>        regmap_write(rk_phy->reg_base,
->>                     rk_phy->reg_offset + GRF_EMMCPHY_CON6,
->> -                    HIWORD_UPDATE(PHYCTRL_DR_50OHM,
->> +                    HIWORD_UPDATE(rk_phy->drive_impedance,
->>                                   PHYCTRL_DR_MASK,
->>                                   PHYCTRL_DR_SHIFT));
->> 
->> @@ -314,6 +315,28 @@ static const struct phy_ops ops = {
->>        .owner          = THIS_MODULE,
->> };
->> 
->> +static u32 convert_drive_impedance_ohm(struct platform_device *pdev, u32 dr_ohm)
->> +{
->> +       switch (dr_ohm) {
->> +       case 100:
->> +               return PHYCTRL_DR_100OHM;
->> +       case 66:
->> +               return PHYCTRL_DR_66OHM;
->> +       case 50:
->> +               return PHYCTRL_DR_50OHM;
->> +       case 40:
->> +               return PHYCTRL_DR_40OHM;
->> +       case 33:
->> +               return PHYCTRL_DR_33OHM;
->> +       }
->> +
->> +       dev_warn(&pdev->dev,
->> +               "Invalid value %u for drive-impedance-ohm. "
->> +               "Falling back to 50 Ohm.\n",
->> +               dr_ohm);
->> +       return PHYCTRL_DR_50OHM;
->> +}
->> +
->> static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->> {
->>        struct device *dev = &pdev->dev;
->> @@ -322,6 +345,7 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->>        struct phy_provider *phy_provider;
->>        struct regmap *grf;
->>        unsigned int reg_offset;
->> +       u32 val;
->> 
->>        if (!dev->parent || !dev->parent->of_node)
->>                return -ENODEV;
->> @@ -345,6 +369,16 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->>        rk_phy->reg_offset = reg_offset;
->>        rk_phy->reg_base = grf;
->> 
->> +       if (of_property_read_u32(dev->of_node, "drive-impedance-ohm", &val)) {
->> +               dev_info(dev,
->> +                       "Missing drive-impedance-ohm property in node %s "
->> +                       "Falling back to 50 Ohm.\n",
->> +                       dev->of_node->name);
-> 
-> This is awfully noisy for something that pretty much all existing
-> boards will run.  debug level instead of info level?  Also:
-> 
-> * Don't split strings
-> across lines
-> 
-> * There's a magic % thing to get the name of an OF node.  Use that.
-> 
-> 
->> +               rk_phy->drive_impedance = PHYCTRL_DR_50OHM;
->> +       } else {
->> +               rk_phy->drive_impedance = convert_drive_impedance_ohm(pdev, val);
->> +       }
-> 
-> It's been a long time since I looked at this, but I could have sworn
-> that it was more complicated than that.  Specifically I though you
-> were supposed to query the eMMC card for what it supported and then
-> resolve that with what the host could support.
-> 
-> Assuming that this is supposed to be queried from the card (which is
-> how I remember it) then you definitely don't want it in the device
-> tree since you want to be able to stuff various different eMMC parts
-> and we should be able to figure out the impedance at runtime.
-
-Not necessarily (i.e. there’s not a bijective relationship, as far as I know):
-Higher drive-strenghts allow for faster speeds, but lower drive-strenghts
-may have an improved emission profile.  For the RK3399-Q7, emissions
-with a 33 Ohm preset are ok and we don’t see any reflections.
-
-The chip documentation has the following info:
-	Impedance	Relative		Remark
-	50 Ohm		x1			Default driver type, supports up to 200MHz operation
-	33 Ohm		x1.5			Supports up to 200MHz operation
-	66 Ohm		x0.75		The weakest driver that supports up to 200MHz operation.
-	100 Ohm		x0.5			For Low noise and low EMI systems, Minimum operating frequency is system dependent.
-	40 Ohm		x1.2			Supports up to DDR 200MHz operation.
 
 
-> NOTE: IIRC the old value of 50 ohms is required to be supported by all
-> hosts and cards and is specified to be the default.
+On 3/1/2019 6:42 AM, Jiri Olsa wrote:
+> hi,
+> I'm getting zero counts for energy-cores event on broadwell-x
+> server (model 0x4f)
+> 
+> I checked intel_rapl powercap driver and it won't export the
+> counter if it rdmsr returns zero on it
+> 
+> the SDM also says the rdmsr returns zero for some models
+> 
+> I made changes on perf rapl pmu below to remove sysfs events
+> if their rdmsr returns zero just to ilustrate the case
+> 
+> I think there's probably better fix, but I'm not sure if
+> there's a reason for zero counters to be exposed..?
 
-For our board, we have a series resistor in the line (originally a precaution against
-emissions and the BIOS_DISABLE circuitry) — do there’s more dampening on the
-signal than on the reference design.
++Stephane, who is the author.
 
-> I do see at least the summary of what I thought of this before at
-> <https://patchwork.kernel.org/patch/9086541/>
-> 
-> 
-> (Sorry if the above is wrong and feel free to correct me--I don't have
-> time at the moment to do all the full research but hopefully you can
-> dig more based on my pointers.  Feel free to call me on my BS)
-> 
-> 
-> -Doug
+I'm OK to hide the zero counters.
 
+
+> 
+> thoughts? thanks,
+> jirka
+> 
+> 
+> ---
+> diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+> index 94dc564146ca..effb9a9d2368 100644
+> --- a/arch/x86/events/intel/rapl.c
+> +++ b/arch/x86/events/intel/rapl.c
+> @@ -54,6 +54,7 @@
+>   #include <linux/module.h>
+>   #include <linux/slab.h>
+>   #include <linux/perf_event.h>
+> +#include <linux/nospec.h>
+>   #include <asm/cpu_device_id.h>
+>   #include <asm/intel-family.h>
+>   #include "../perf_event.h"
+> @@ -346,10 +347,18 @@ static void rapl_pmu_event_del(struct perf_event *event, int flags)
+>   	rapl_pmu_event_stop(event, PERF_EF_UPDATE);
+>   }
+>   
+> +static unsigned int event_msr[NR_RAPL_DOMAINS] = {
+> +	MSR_PP0_ENERGY_STATUS,
+> +	MSR_PKG_ENERGY_STATUS,
+> +	MSR_DRAM_ENERGY_STATUS,
+> +	MSR_PP1_ENERGY_STATUS,
+> +	MSR_PLATFORM_ENERGY_STATUS,
+> +};
+> +
+>   static int rapl_pmu_event_init(struct perf_event *event)
+>   {
+>   	u64 cfg = event->attr.config & RAPL_EVENT_MASK;
+> -	int bit, msr, ret = 0;
+> +	int bit, ret = 0;
+>   	struct rapl_pmu *pmu;
+>   
+>   	/* only look at RAPL events */
+> @@ -365,33 +374,12 @@ static int rapl_pmu_event_init(struct perf_event *event)
+>   
+>   	event->event_caps |= PERF_EV_CAP_READ_ACTIVE_PKG;
+>   
+> -	/*
+> -	 * check event is known (determines counter)
+> -	 */
+> -	switch (cfg) {
+> -	case INTEL_RAPL_PP0:
+> -		bit = RAPL_IDX_PP0_NRG_STAT;
+> -		msr = MSR_PP0_ENERGY_STATUS;
+> -		break;
+> -	case INTEL_RAPL_PKG:
+> -		bit = RAPL_IDX_PKG_NRG_STAT;
+> -		msr = MSR_PKG_ENERGY_STATUS;
+> -		break;
+> -	case INTEL_RAPL_RAM:
+> -		bit = RAPL_IDX_RAM_NRG_STAT;
+> -		msr = MSR_DRAM_ENERGY_STATUS;
+> -		break;
+> -	case INTEL_RAPL_PP1:
+> -		bit = RAPL_IDX_PP1_NRG_STAT;
+> -		msr = MSR_PP1_ENERGY_STATUS;
+> -		break;
+> -	case INTEL_RAPL_PSYS:
+> -		bit = RAPL_IDX_PSYS_NRG_STAT;
+> -		msr = MSR_PLATFORM_ENERGY_STATUS;
+> -		break;
+> -	default:
+> +	if (!cfg || cfg >= NR_RAPL_DOMAINS)
+>   		return -EINVAL;
+> -	}
+> +
+> +	cfg = array_index_nospec(cfg, NR_RAPL_DOMAINS);
+> +	bit = cfg - 1;
+> +
+>   	/* check event supported */
+>   	if (!(rapl_cntr_mask & (1 << bit)))
+>   		return -EINVAL;
+> @@ -406,7 +394,7 @@ static int rapl_pmu_event_init(struct perf_event *event)
+>   		return -EINVAL;
+>   	event->cpu = pmu->cpu;
+>   	event->pmu_private = pmu;
+> -	event->hw.event_base = msr;
+> +	event->hw.event_base = event_msr[bit];
+>   	event->hw.config = cfg;
+>   	event->hw.idx = bit;
+>   
+> @@ -435,11 +423,27 @@ static struct attribute_group rapl_pmu_attr_group = {
+>   	.attrs = rapl_pmu_attrs,
+>   };
+>   
+> -RAPL_EVENT_ATTR_STR(energy-cores, rapl_cores, "event=0x01");
+> -RAPL_EVENT_ATTR_STR(energy-pkg  ,   rapl_pkg, "event=0x02");
+> -RAPL_EVENT_ATTR_STR(energy-ram  ,   rapl_ram, "event=0x03");
+> -RAPL_EVENT_ATTR_STR(energy-gpu  ,   rapl_gpu, "event=0x04");
+> -RAPL_EVENT_ATTR_STR(energy-psys,   rapl_psys, "event=0x05");
+> +static ssize_t
+> +rapl_event_sysfs_show(struct device *dev, struct device_attribute *attr,
+> +		      char *page)
+> +{
+> +	struct perf_pmu_events_attr *pmu_attr =
+> +		container_of(attr, struct perf_pmu_events_attr, attr);
+> +
+> +	return sprintf(page, "event=%llu\n", pmu_attr->id);
+> +}
+> +
+> +#define RAPL_EVENT_ATTR(_name, v, _id)					\
+> +static struct perf_pmu_events_attr event_attr_##v = {			\
+> +	.attr	= __ATTR(_name, 0444, rapl_event_sysfs_show, NULL),	\
+> +	.id	= RAPL_IDX_##_id##_NRG_STAT,				\
+> +};
+> +
+> +RAPL_EVENT_ATTR(energy-cores,  rapl_cores,  PP0);
+> +RAPL_EVENT_ATTR(energy-pkg  ,    rapl_pkg,  PKG);
+> +RAPL_EVENT_ATTR(energy-ram  ,    rapl_ram,  RAM);
+> +RAPL_EVENT_ATTR(energy-gpu  ,    rapl_gpu,  PP1);
+> +RAPL_EVENT_ATTR(energy-psys ,   rapl_psys, PSYS);
+>   
+>   RAPL_EVENT_ATTR_STR(energy-cores.unit, rapl_cores_unit, "Joules");
+>   RAPL_EVENT_ATTR_STR(energy-pkg.unit  ,   rapl_pkg_unit, "Joules");
+> @@ -780,6 +784,59 @@ static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
+>   
+>   MODULE_DEVICE_TABLE(x86cpu, rapl_cpu_match);
+>   
+> +static void __init remove_name(struct attribute **attrs, const char *name)
+> +{
+> +	struct device_attribute *attr;
+> +	int i, j;
+> +
+> +	for (i = 0; attrs[i]; i++) {
+> +		attr = (struct device_attribute *) attrs[i];
+> +
+> +		if (strncmp(name, attr->attr.name, strlen(name)))
+> +			continue;
+> +
+> +		for (j = i; attrs[j]; j++)
+> +			attrs[j] = attrs[j + 1];
+> +
+> +		/* Check the shifted attr. */
+> +		i--;
+> +	}
+> +}
+> +
+> +static void __init check_events(struct attribute **attrs)
+> +{
+> +	struct perf_pmu_events_attr *pmu_attr;
+> +	struct device_attribute *attr;
+> +	int i, j;
+> +
+> +	for (i = 0; attrs[i]; i++) {
+> +		u64 val = 0;
+> +		u64 bit;
+> +
+> +		attr     = (struct device_attribute *) attrs[i];
+> +		pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
+> +
+> +		if (pmu_attr->event_str)
+> +			continue;
+> +
+> +		bit = pmu_attr->id;
+> +
+> +		if (WARN_ON_ONCE(bit >= NR_RAPL_DOMAINS))
+> +			continue;
+> +
+> +		if (!rdmsrl_safe(event_msr[bit], &val) && val)
+> +			continue;
+> +
+> +		remove_name(&attrs[i + 1], attr->attr.name);
+
+In perf cstate, we check and insert the available events for sysfs attrs
+I think we should use the same way here. It's better to factor out a 
+common function for both cstate and rapl.
+
+
+Peter,
+
+The cstate, rapl and uncore are similar. I think it should be the right 
+direction to abstract several common functions for them.
+Here, the sysfs attrs is an example.
+The common topology related functions I proposed is another example.
+https://lore.kernel.org/lkml/9631a92f-5b24-26a6-e160-4e4c0b4697c1@linux.intel.com/
+
+Thanks,
+Kan
