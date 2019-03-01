@@ -2,174 +2,105 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19FCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43656C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B215720863
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E58720863
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbfCABoJ (ORCPT
+        id S1731314AbfCABod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 20:44:09 -0500
-Received: from mga01.intel.com ([192.55.52.88]:17244 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725967AbfCABoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 20:44:09 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 17:44:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,425,1544515200"; 
-   d="scan'208";a="127201314"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Feb 2019 17:44:07 -0800
-Date:   Thu, 28 Feb 2019 16:38:44 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>,
-        weijiang.yang@intel.com
-Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
- enabled in Guest
-Message-ID: <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
-References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-7-weijiang.yang@intel.com>
- <20190228161715.GF6166@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228161715.GF6166@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 28 Feb 2019 20:44:33 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57366 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725967AbfCABod (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 20:44:33 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x211hxDg087578
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 20:44:31 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qxsxg34rp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 20:44:31 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 1 Mar 2019 01:44:29 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 1 Mar 2019 01:44:26 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x211iPE861210718
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Mar 2019 01:44:26 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C49FEAE057;
+        Fri,  1 Mar 2019 01:44:25 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A217AE045;
+        Fri,  1 Mar 2019 01:44:25 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.108.117])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  1 Mar 2019 01:44:24 +0000 (GMT)
+Subject: Re: [PULL REQUEST] Lock down patches
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     jmorris@namei.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Date:   Thu, 28 Feb 2019 20:44:14 -0500
+In-Reply-To: <CACdnJutqg26pk5xnK2ii3ia9JabAnBptE3YQ3yLvVT93as666Q@mail.gmail.com>
+References: <CACdnJuvW47m3JvEcuEX1bsr+L2Ht9LDn_iCuPbHLOoaohOFW4Q@mail.gmail.com>
+         <1551392438.10911.227.camel@linux.ibm.com>
+         <CACdnJuvwnh0PKr5jUTm2h=P5-u-oLgBjvThX+DxcegShXReCdA@mail.gmail.com>
+         <1551398720.10911.270.camel@linux.ibm.com>
+         <CACdnJutqg26pk5xnK2ii3ia9JabAnBptE3YQ3yLvVT93as666Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030101-4275-0000-0000-000003155751
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030101-4276-0000-0000-000038239FF7
+Message-Id: <1551404654.10911.276.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903010008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 08:17:15AM -0800, Sean Christopherson wrote:
-> On Mon, Feb 25, 2019 at 09:27:14PM +0800, Yang Weijiang wrote:
-> > "Load Guest CET state" bit controls whether guest CET states
-> > will be loaded at Guest entry. Before doing that, KVM needs
-> > to check if CPU CET feature is available.
-> > 
-> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx.c | 32 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> > 
-> > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> > index 89ee086e1729..d32cee9ee079 100644
-> > --- a/arch/x86/kvm/vmx.c
-> > +++ b/arch/x86/kvm/vmx.c
-> > @@ -55,6 +55,7 @@
-> >  #include <asm/mmu_context.h>
-> >  #include <asm/spec-ctrl.h>
-> >  #include <asm/mshyperv.h>
-> > +#include <asm/cet.h>
-> >  
-> >  #include "trace.h"
-> >  #include "pmu.h"
-> > @@ -4065,6 +4066,20 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
-> >  	return !(val & ~valid_bits);
-> >  }
-> >  
-> > +static int vmx_guest_cet_cap(struct kvm_vcpu *vcpu)
-> > +{
-> > +	u32 eax, ebx, ecx, edx;
-> > +
-> > +	/*
-> > +	 * Guest CET can work as long as HW supports the feature, independent
-> > +	 * to Host SW enabling status.
-> > +	 */
-> > +	cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
-> > +
-> > +	return ((ecx & bit(X86_FEATURE_SHSTK)) |
-> > +		(edx & bit(X86_FEATURE_IBT))) ? 1 : 0;
-> 
-> Given the holes in the (current) architecture/spec, I think KVM has to
-> require both features to be supported in the guest to allow CR4.CET to
-> be enabled.
-The reason why I use a "OR" here is to keep CET enabling control the
-same as that on host, right now on host, users can select to enable  SHSTK or IBT
-feature by disabling the unexpected one. It's free to select SHSTK & IBT
-or SHSTK | IBT.
-> 
-> Technically SHSTK and IBT can be enabled independently, but unless I'm
-> missing something, supporting that in KVM (or any VMM) would be nasty
-> and would likely degrade guest performance significantly.
-> 
-> MSRs IA32_U_CET and IA32_S_CET have enable bits for each CET feature.
-> Presumably the bits for each feature are reserved if the feature is not
-> supported, e.g. SH_STK_EN is reserved to zero if SHSTK isn't supported.
-> This wouldn't be a problem except that IA32_U_CET and the shadow stack
-> MSRs, e.g. IA32_PL*_SSP, can be saved/restored via XSAVES/XRSTORS.  The
-> behavior is restricted by IA32_XSS, but again it's all or nothing, e.g.
-> if any CET feature is supported then XSS_CET_{S,U} can be set.
-> 
-> For example, if a guest supported IBT and !SHSTK, and the guest enabled
-> XSS_CET_{S,I}, KVM would need to trap XSAVES/XRSTORS to enforce that the
-> SHSTK bits in XSS_CET_U aren't set.  And that doesn't even address the
-> fact that the architecture defines the effects on the size of the XSAVE
-> state area as being a bundled deal, e.g. IA32_XSS.CET_U=1 increases the
-> size by 16 bytes (for IA32_U_CET and IA32_PL3_SSP) regardless of whether
-> or not SHSTK is supported.  One would assume that IA32_PL3_SSP doesn't
-> exist if shadow stacks are not supported by the CPU.
-> 
-> TL;DR: the architecture enumerates SHSTK and IBT independently, but
-> the architecture effectively assumes they are bundled together.
-> 
-> > +}
-> > +
-> >  static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
-> >  {
-> >  	switch (msr->index) {
-> > @@ -5409,6 +5424,23 @@ static int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-> >  			return 1;
-> >  	}
-> >  
-> > +	/*
-> > +	 * To enable Guest CET, check whether CPU CET feature is
-> > +	 * available, if it's there, set Guest CET state loading bit
-> > +	 * per CR4.CET status, otherwise, return a fault to Guest.
-> > +	 */
-> > +	if (vmx_guest_cet_cap(vcpu)) {
-> 
-> This is wrong, it's checking the host capabilities.  Use guest_cpuid_has()
-> to query the guest capabilities.  E.g. CET can be supported in the host
-> but not exposed to guest, in which case the CPUID bits will not be "set"
-> for the guest.
->
-you're right, guest_cpuid_has() is enough for CET checking here since
-now guest CET enabling is independent to host CET state.
+On Thu, 2019-02-28 at 17:01 -0800, Matthew Garrett wrote:
 
-> > +		if (cr4 & X86_CR4_CET) {
+> > That's not a valid reason for preventing systems that do use IMA for
+> > verifying the kexec kernel image signature or kernel module signatures
+> > from enabling "lock down".  This just means that there needs to be
+> > some coordination between the different signature verification
+> > methods. [1][2]
 > 
-> No need for curly braces here, both the 'if' and 'else' contain a single
-> statement.
+> I agree, but the current form of the integration makes it impossible
+> for anyone using an IMA-enabled kernel (but not using IMA) to do
+> anything unless they have IMA signatures. It's a problem we need to
+> solve, I just don't think it's a problem we need to solve before
+> merging the patchset.
 
-will remove the braces.
-> 
-> > +			vmcs_set_bits(VM_ENTRY_CONTROLS,
-> > +				      VM_ENTRY_LOAD_GUEST_CET_STATE);
-> > +		} else {
-> > +			vmcs_clear_bits(VM_ENTRY_CONTROLS,
-> > +					VM_ENTRY_LOAD_GUEST_CET_STATE);
-> > +		}
-> > +	} else if (cr4 & X86_CR4_CET) {
-> > +		return 1;
-> > +	}
-> > +
-> >  	if (to_vmx(vcpu)->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
-> >  		return 1;
-> >  
-> > -- 
-> > 2.17.1
-> > 
+That's simply not true.  Have you even looked at the IMA architecture
+patches?
+
+fcf338449af5 x86/ima: require signed kernel modules
+d958083a8f64 x86/ima: define arch_get_ima_policy() for x86
+
+Mimi
+
