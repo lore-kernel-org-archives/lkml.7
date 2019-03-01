@@ -2,291 +2,112 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63220C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08986C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302DC2085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C61532085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:24:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="krqo598Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfCACWT (ORCPT
+        id S1730852AbfCACYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 21:22:19 -0500
-Received: from mga04.intel.com ([192.55.52.120]:41271 "EHLO mga04.intel.com"
+        Thu, 28 Feb 2019 21:24:00 -0500
+Received: from ozlabs.org ([203.11.71.1]:53425 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbfCACWS (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 21:22:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 18:22:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,425,1544515200"; 
-   d="scan'208";a="130265571"
-Received: from skl.sh.intel.com ([10.239.159.132])
-  by orsmga003.jf.intel.com with ESMTP; 28 Feb 2019 18:22:15 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2] perf util: Refactor time range parsing code
-Date:   Fri,  1 Mar 2019 18:13:06 +0800
-Message-Id: <1551435186-6008-1-git-send-email-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1725896AbfCACYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 21:24:00 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 449YBd4cqsz9s4V;
+        Fri,  1 Mar 2019 13:23:53 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1551407037;
+        bh=oZlwRUfuxCc354Fb3zW6x4JC89IDxaOzMO5/ibazr68=;
+        h=Date:From:To:Cc:Subject:From;
+        b=krqo598QrR4VMVPcnj2kfRRrQ51q/EgJzdycSwLdbAM5ayWXGgYQNHhRe12UHuAf+
+         tFLrWLqtVGgBeC+X+1h0f9L7AyjKy5vb6H+RCA49uiuZjPUQlVb8pMlmpDi6tNvLtB
+         WlZHey7xrP4ijhVAc3M8Vlf9sSYzhfEULNWic2eQdp2McG4BBO7UfVEQLr+fE6BtW7
+         gQYpizJO3hVFLvDvq3udgxOjZ+/hUlWoVwKT9paALsYLoM1dL2QTzObKz5KskDgDcz
+         n/CXKGhRqdMYm4RofdGJ4urj2DjLzQAMPL/AN3LZNooTmX27WeiXR6XLhRKGdTISG1
+         d9+Pid/m02iQw==
+Date:   Fri, 1 Mar 2019 13:23:51 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mario Kleiner <mario.kleiner.de@gmail.com>,
+        David Francis <David.Francis@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: linux-next: manual merge of the drm tree with the drm-fixes tree
+Message-ID: <20190301132351.6f4e815f@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/UfcNgO3NRzprj7em811gPnl"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jiri points out that we don't need any time checking and time string
-parsing if the --time option is not set. That makes sense.
+--Sig_/UfcNgO3NRzprj7em811gPnl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch refactors the time range parsing code, move the duplicated
-code from perf report and perf script to time_utils and check if --time
-option is set before parsing the time string. This patch is no logic
-change expected. So the usage of --time is same as before.
+Hi all,
 
-For example,
+Today's linux-next merge of the drm tree got a conflict in:
 
-Select the first and second 10% time slices:
-  perf report --time 10%/1,10%/2
-  perf script --time 10%/1,10%/2
+  drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
 
-Select the slices from 0% to 10% and from 30% to 40%:
-  perf report --time 0%-10%,30%-40%
-  perf script --time 0%-10%,30%-40%
+between commit:
 
-Select the time slices from timestamp 3971 to 3973
-  perf report --time 3971,3973
-  perf script --time 3971,3973
+  d63716658ac1 ("drm/amd/display: Use vrr friendly pageflip throttling in D=
+C.")
 
- v2:
- ---
- Add some examples in patch description.
- No functional changes.
+from the drm-fixes tree and commits:
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-report.c  | 38 +++++++--------------------------
- tools/perf/builtin-script.c  | 39 +++++++--------------------------
- tools/perf/util/time-utils.c | 51 +++++++++++++++++++++++++++++++++++++++++++-
- tools/perf/util/time-utils.h |  6 ++++++
- 4 files changed, 72 insertions(+), 62 deletions(-)
+  8a48b44cd00f ("drm/amd/display: Call into DC once per multiplane flip")
+  bc7f670ee04c ("drm/amd/display: Perform plane updates only when needed")
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1532ebd..ee93c18 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1375,36 +1375,13 @@ int cmd_report(int argc, const char **argv)
- 	if (symbol__init(&session->header.env) < 0)
- 		goto error;
- 
--	report.ptime_range = perf_time__range_alloc(report.time_str,
--						    &report.range_size);
--	if (!report.ptime_range) {
--		ret = -ENOMEM;
--		goto error;
--	}
--
--	if (perf_time__parse_str(report.ptime_range, report.time_str) != 0) {
--		if (session->evlist->first_sample_time == 0 &&
--		    session->evlist->last_sample_time == 0) {
--			pr_err("HINT: no first/last sample time found in perf data.\n"
--			       "Please use latest perf binary to execute 'perf record'\n"
--			       "(if '--buildid-all' is enabled, please set '--timestamp-boundary').\n");
--			ret = -EINVAL;
--			goto error;
--		}
--
--		report.range_num = perf_time__percent_parse_str(
--					report.ptime_range, report.range_size,
--					report.time_str,
--					session->evlist->first_sample_time,
--					session->evlist->last_sample_time);
--
--		if (report.range_num < 0) {
--			pr_err("Invalid time string\n");
--			ret = -EINVAL;
-+	if (report.time_str) {
-+		ret = perf_time__parse_for_ranges(report.time_str, session,
-+						  &report.ptime_range,
-+						  &report.range_size,
-+						  &report.range_num);
-+		if (ret < 0)
- 			goto error;
--		}
--	} else {
--		report.range_num = 1;
- 	}
- 
- 	if (session->tevent.pevent &&
-@@ -1426,7 +1403,8 @@ int cmd_report(int argc, const char **argv)
- 		ret = 0;
- 
- error:
--	zfree(&report.ptime_range);
-+	if (report.ptime_range)
-+		zfree(&report.ptime_range);
- 
- 	perf_session__delete(session);
- 	return ret;
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 2d8cb1d..53f78cf 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3699,37 +3699,13 @@ int cmd_script(int argc, const char **argv)
- 	if (err < 0)
- 		goto out_delete;
- 
--	script.ptime_range = perf_time__range_alloc(script.time_str,
--						    &script.range_size);
--	if (!script.ptime_range) {
--		err = -ENOMEM;
--		goto out_delete;
--	}
--
--	/* needs to be parsed after looking up reference time */
--	if (perf_time__parse_str(script.ptime_range, script.time_str) != 0) {
--		if (session->evlist->first_sample_time == 0 &&
--		    session->evlist->last_sample_time == 0) {
--			pr_err("HINT: no first/last sample time found in perf data.\n"
--			       "Please use latest perf binary to execute 'perf record'\n"
--			       "(if '--buildid-all' is enabled, please set '--timestamp-boundary').\n");
--			err = -EINVAL;
--			goto out_delete;
--		}
--
--		script.range_num = perf_time__percent_parse_str(
--					script.ptime_range, script.range_size,
--					script.time_str,
--					session->evlist->first_sample_time,
--					session->evlist->last_sample_time);
--
--		if (script.range_num < 0) {
--			pr_err("Invalid time string\n");
--			err = -EINVAL;
-+	if (script.time_str) {
-+		err = perf_time__parse_for_ranges(script.time_str, session,
-+						  &script.ptime_range,
-+						  &script.range_size,
-+						  &script.range_num);
-+		if (err < 0)
- 			goto out_delete;
--		}
--	} else {
--		script.range_num = 1;
- 	}
- 
- 	err = __cmd_script(&script);
-@@ -3737,7 +3713,8 @@ int cmd_script(int argc, const char **argv)
- 	flush_scripting();
- 
- out_delete:
--	zfree(&script.ptime_range);
-+	if (script.ptime_range)
-+		zfree(&script.ptime_range);
- 
- 	perf_evlist__free_stats(session->evlist);
- 	perf_session__delete(session);
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 6193b46..0f53bae 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -11,6 +11,8 @@
- #include "perf.h"
- #include "debug.h"
- #include "time-utils.h"
-+#include "session.h"
-+#include "evlist.h"
- 
- int parse_nsec_time(const char *str, u64 *ptime)
- {
-@@ -374,7 +376,7 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
- 	struct perf_time_interval *ptime;
- 	int i;
- 
--	if ((timestamp == 0) || (num == 0))
-+	if ((!ptime_buf) || (timestamp == 0) || (num == 0))
- 		return false;
- 
- 	if (num == 1)
-@@ -396,6 +398,53 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
- 	return (i == num) ? true : false;
- }
- 
-+int perf_time__parse_for_ranges(const char *time_str,
-+				struct perf_session *session,
-+				struct perf_time_interval **ranges,
-+				int *range_size, int *range_num)
-+{
-+	struct perf_time_interval *ptime_range;
-+	int size, num, ret;
-+
-+	ptime_range = perf_time__range_alloc(time_str, &size);
-+	if (!ptime_range)
-+		return -ENOMEM;
-+
-+	if (perf_time__parse_str(ptime_range, time_str) != 0) {
-+		if (session->evlist->first_sample_time == 0 &&
-+		    session->evlist->last_sample_time == 0) {
-+			pr_err("HINT: no first/last sample time found in perf data.\n"
-+			       "Please use latest perf binary to execute 'perf record'\n"
-+			       "(if '--buildid-all' is enabled, please set '--timestamp-boundary').\n");
-+			ret = -EINVAL;
-+			goto error;
-+		}
-+
-+		num = perf_time__percent_parse_str(
-+				ptime_range, size,
-+				time_str,
-+				session->evlist->first_sample_time,
-+				session->evlist->last_sample_time);
-+
-+		if (num < 0) {
-+			pr_err("Invalid time string\n");
-+			ret = -EINVAL;
-+			goto error;
-+		}
-+	} else {
-+		num = 1;
-+	}
-+
-+	*range_size = size;
-+	*range_num = num;
-+	*ranges = ptime_range;
-+	return 0;
-+
-+error:
-+	free(ptime_range);
-+	return ret;
-+}
-+
- int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz)
- {
- 	u64  sec = timestamp / NSEC_PER_SEC;
-diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
-index 70b177d..b923de4 100644
---- a/tools/perf/util/time-utils.h
-+++ b/tools/perf/util/time-utils.h
-@@ -23,6 +23,12 @@ bool perf_time__skip_sample(struct perf_time_interval *ptime, u64 timestamp);
- bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
- 				   int num, u64 timestamp);
- 
-+struct perf_session;
-+
-+int perf_time__parse_for_ranges(const char *str, struct perf_session *session,
-+				struct perf_time_interval **ranges,
-+				int *range_size, int *range_num);
-+
- int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz);
- 
- int fetch_current_timestamp(char *buf, size_t sz);
--- 
-2.7.4
+from the drm tree.
 
+I had no idea how to resolve this, so I just effectively reverted the
+drm-fixes commit.
+
+I fixed it up (see above) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/UfcNgO3NRzprj7em811gPnl
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx4l7cACgkQAVBC80lX
+0Gwk2gf/db06P2eC151aw7EZr+PzAu18jkqbNDEMzeVWYd+7oMjcmlY2BEnQA040
+Z+uL90Lu24M0ar8lCwRpvq6A7KJG0IzhgudHYG0K6JzWwP+MmJsUYZT1rzTpLcuy
+EsNRI00+UQTK51LsSTYdToQsMNX2maasDtlZzYtkXoooRB8oRsytyiDaGBAVA/pb
+C4IvTeYqtDGC/viJ+0oqHaUUEVf9uuipXaThUlt8XO/l7RSs2ytQfqPfXExmpEoL
+PMEgSBG26etYrNTpZoR6ksmR728W3cozR5jl20eLGsRT8lgMIPyIivu5v5xUo0Oo
+xT0MmQdddaFU0oDPBz5NkW6zoDM4Tg==
+=NNfy
+-----END PGP SIGNATURE-----
+
+--Sig_/UfcNgO3NRzprj7em811gPnl--
