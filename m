@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA275C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AA7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B0520838
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560F020838
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GKimwz6y";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jMha91ay"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="n5sfvAYq";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="U73WqVPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727676AbfCATjH (ORCPT
+        id S1727725AbfCATjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 14:39:07 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:40012 "EHLO
+        Fri, 1 Mar 2019 14:39:11 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:40898 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfCATjA (ORCPT
+        with ESMTP id S1727545AbfCATjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 14:39:00 -0500
+        Fri, 1 Mar 2019 14:39:06 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 706CA618CE; Fri,  1 Mar 2019 19:38:54 +0000 (UTC)
+        id 541ED61576; Fri,  1 Mar 2019 19:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551469139;
-        bh=YbD1o3QTKsJc4Zlft7yYAtBneOymuecIq+BLGIcWNb8=;
+        s=default; t=1551469145;
+        bh=g4c/dcKTIkANh/eh23Ydj1OxK6csIADsvwqCdoe3yHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GKimwz6yZWnbhr03410wjR4QBiyQv55BRPq+asK/ZjqvozPCoRV3ANP4uxqbKae6J
-         iXinci/SCBNlIU2BAEaHLPzK+VhunbQx43BvxauQ/iiIUilCDLUBgEIBV2npbboA6T
-         EHLDmsfVCDgOQ/PM57pffoUijbC6wQtnGm9H3hDs=
+        b=n5sfvAYqettpToT7g3NQrhM4MVnb+m2lkmfY6bn+JDbzE9k6r58376IfpDin3lDO6
+         NJLvHKkoXJR7gj1fQQqEMAsoV6NkW3K3mxRo8sjq4atL4S66bHFvlqDWFg+/LIpv+P
+         8kFgY6B75NxsweUj4vWLCZ6DLUgJQ/a3tEWPQXAw=
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BE37B6155F;
-        Fri,  1 Mar 2019 19:38:51 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 69DF761528;
+        Fri,  1 Mar 2019 19:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551469133;
-        bh=YbD1o3QTKsJc4Zlft7yYAtBneOymuecIq+BLGIcWNb8=;
+        s=default; t=1551469134;
+        bh=g4c/dcKTIkANh/eh23Ydj1OxK6csIADsvwqCdoe3yHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jMha91ayzW6yvovYZP4gY4++Z9fRUhd/7Jgxwk9WeIjkCMtHPh161NsZie7HTdukq
-         bgs9ZoZBbSSe7TR410QnexN+zB4CM5bTX1MgW0D5yR4RaUvkNE87Z3qKMgKrU+qy0x
-         2QiA2+MExg0SMFV7J1kAyBrjpIufDGEzlV1hKItc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BE37B6155F
+        b=U73WqVPzpuzY1mSmwwD93Dyed5RKwvwNWQuWdELbQH/bntfh9QPSnIDckM5yhDvQw
+         IwK8dwBybTRAy7wPZ7Cj/jciHj/LTZMQEr4uAsYq8lLDn6pzY4vBBnoV6Fd31S6u8g
+         dlvJbLuSj7GjdSFBAR28ZwBQZlXtkMqnWGQs1muI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 69DF761528
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -57,9 +58,9 @@ Cc:     jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
         Rob Clark <robdclark@gmail.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [RFC PATCH v1 07/15] drm/msm: Print all 64 bits of the faulting IOMMU address
-Date:   Fri,  1 Mar 2019 12:38:29 -0700
-Message-Id: <1551469117-3404-8-git-send-email-jcrouse@codeaurora.org>
+Subject: [RFC PATCH v1 08/15] drm/msm: Pass the MMU domain index in struct msm_file_private
+Date:   Fri,  1 Mar 2019 12:38:30 -0700
+Message-Id: <1551469117-3404-9-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org>
 References: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org>
@@ -68,29 +69,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we move to 64 bit addressing for a5xx and a6xx targets we will start
-seeing pagefaults at larger addresses so format them appropriately in the
-log message for easier debugging.
+Pass the index of the MMU domain in struct msm_file_private instead
+of assuming gpu->id throughout the submit path. This clears the way
+to change ctx->aspace to a per-instance pagetable.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- drivers/gpu/drm/msm/msm_iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/msm/msm_drv.c        |  2 ++
+ drivers/gpu/drm/msm/msm_drv.h        |  1 +
+ drivers/gpu/drm/msm/msm_gem.h        |  1 +
+ drivers/gpu/drm/msm/msm_gem_submit.c | 13 ++++++++-----
+ drivers/gpu/drm/msm/msm_gpu.c        |  5 ++---
+ 5 files changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 12bb54c..1926329 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -30,7 +30,7 @@ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
- 	struct msm_iommu *iommu = arg;
- 	if (iommu->base.handler)
- 		return iommu->base.handler(iommu->base.arg, iova, flags);
--	pr_warn_ratelimited("*** fault: iova=%08lx, flags=%d\n", iova, flags);
-+	pr_warn_ratelimited("*** fault: iova=%16lx, flags=%d\n", iova, flags);
- 	return 0;
- }
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 906b2bb..cac2293 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -607,6 +607,7 @@ static void load_gpu(struct drm_device *dev)
  
+ static int context_init(struct drm_device *dev, struct drm_file *file)
+ {
++	struct msm_drm_private *priv = dev->dev_private;
+ 	struct msm_file_private *ctx;
+ 
+ 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+@@ -615,6 +616,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+ 
+ 	msm_submitqueue_init(dev, ctx);
+ 
++	ctx->aspace = priv->gpu->aspace;
+ 	file->driver_priv = ctx;
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index cb642fe..3140e8f 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -68,6 +68,7 @@ struct msm_file_private {
+ 	rwlock_t queuelock;
+ 	struct list_head submitqueues;
+ 	int queueid;
++	struct msm_gem_address_space *aspace;
+ };
+ 
+ enum msm_mdp_plane_property {
+diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+index 2064fac..5e21d01 100644
+--- a/drivers/gpu/drm/msm/msm_gem.h
++++ b/drivers/gpu/drm/msm/msm_gem.h
+@@ -142,6 +142,7 @@ void msm_gem_vunmap(struct drm_gem_object *obj, enum msm_gem_lock subclass);
+ struct msm_gem_submit {
+ 	struct drm_device *dev;
+ 	struct msm_gpu *gpu;
++	struct msm_gem_address_space *aspace;
+ 	struct list_head node;   /* node in ring submit list */
+ 	struct list_head bo_list;
+ 	struct ww_acquire_ctx ticket;
+diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
+index 12b983f..79d95b2 100644
+--- a/drivers/gpu/drm/msm/msm_gem_submit.c
++++ b/drivers/gpu/drm/msm/msm_gem_submit.c
+@@ -32,8 +32,9 @@
+ #define BO_PINNED   0x2000
+ 
+ static struct msm_gem_submit *submit_create(struct drm_device *dev,
+-		struct msm_gpu *gpu, struct msm_gpu_submitqueue *queue,
+-		uint32_t nr_bos, uint32_t nr_cmds)
++		struct msm_gpu *gpu, struct msm_gem_address_space *aspace,
++		struct msm_gpu_submitqueue *queue, uint32_t nr_bos,
++		uint32_t nr_cmds)
+ {
+ 	struct msm_gem_submit *submit;
+ 	uint64_t sz = sizeof(*submit) + ((u64)nr_bos * sizeof(submit->bos[0])) +
+@@ -47,6 +48,7 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
+ 		return NULL;
+ 
+ 	submit->dev = dev;
++	submit->aspace = aspace;
+ 	submit->gpu = gpu;
+ 	submit->fence = NULL;
+ 	submit->cmd = (void *)&submit->bos[nr_bos];
+@@ -170,7 +172,7 @@ static void submit_unlock_unpin_bo(struct msm_gem_submit *submit,
+ 	struct msm_gem_object *msm_obj = submit->bos[i].obj;
+ 
+ 	if (submit->bos[i].flags & BO_PINNED)
+-		msm_gem_unpin_iova(&msm_obj->base, submit->gpu->aspace);
++		msm_gem_unpin_iova(&msm_obj->base, submit->aspace);
+ 
+ 	if (submit->bos[i].flags & BO_LOCKED)
+ 		ww_mutex_unlock(&msm_obj->resv->lock);
+@@ -274,7 +276,7 @@ static int submit_pin_objects(struct msm_gem_submit *submit)
+ 
+ 		/* if locking succeeded, pin bo: */
+ 		ret = msm_gem_get_and_pin_iova(&msm_obj->base,
+-				submit->gpu->aspace, &iova);
++				submit->aspace, &iova);
+ 
+ 		if (ret)
+ 			break;
+@@ -487,7 +489,8 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
+ 		}
+ 	}
+ 
+-	submit = submit_create(dev, gpu, queue, args->nr_bos, args->nr_cmds);
++	submit = submit_create(dev, gpu, ctx->aspace, queue, args->nr_bos,
++		args->nr_cmds);
+ 	if (!submit) {
+ 		ret = -ENOMEM;
+ 		goto out_unlock;
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index 10babd1..79b71b1 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -693,7 +693,7 @@ static void retire_submit(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
+ 		struct msm_gem_object *msm_obj = submit->bos[i].obj;
+ 		/* move to inactive: */
+ 		msm_gem_move_to_inactive(&msm_obj->base);
+-		msm_gem_unpin_iova(&msm_obj->base, gpu->aspace);
++		msm_gem_unpin_iova(&msm_obj->base, submit->aspace);
+ 		drm_gem_object_put(&msm_obj->base);
+ 	}
+ 
+@@ -777,8 +777,7 @@ void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+ 
+ 		/* submit takes a reference to the bo and iova until retired: */
+ 		drm_gem_object_get(&msm_obj->base);
+-		msm_gem_get_and_pin_iova(&msm_obj->base,
+-				submit->gpu->aspace, &iova);
++		msm_gem_get_and_pin_iova(&msm_obj->base, submit->aspace, &iova);
+ 
+ 		if (submit->bos[i].flags & MSM_SUBMIT_BO_WRITE)
+ 			msm_gem_move_to_active(&msm_obj->base, gpu, true, submit->fence);
 -- 
 2.7.4
 
