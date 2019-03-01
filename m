@@ -2,104 +2,138 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27258C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4437FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81CF20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:50:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="okn1yVIj"
+	by mail.kernel.org (Postfix) with ESMTP id 19A34218E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfCAPue (ORCPT
+        id S2388127AbfCAPuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 10:50:34 -0500
-Received: from mail-ua1-f43.google.com ([209.85.222.43]:38619 "EHLO
-        mail-ua1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfCAPue (ORCPT
+        Fri, 1 Mar 2019 10:50:46 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.251]:27507 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbfCAPup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 10:50:34 -0500
-Received: by mail-ua1-f43.google.com with SMTP id d4so11766075uap.5
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 07:50:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=wGU7fDOKYCdXJVTcbK8Nygb8SB6TIpOioDqhUiYr/Ik=;
-        b=okn1yVIjz9FYwP3mLrSb2FTlvnfUV20ieu8Ge7epzydgFeFixEr1KJOQN45jNLmpU4
-         HuGlxMq3hzvEq+Y9uaW01PMDSrq5VR9KJFEFNHF4Ew1y78/fcMGQf4e0BhsMc5RGf7w6
-         Rut5TReJaBzGY7hxROLiW16X+/hS/Vr9SyMyBGe8ADHxuOEwsW39JIkfopTc8PKDfaDU
-         5eYmHOurQZI6W7io/feu2Z1axyCHLV78kf4UpsOAEAxlZDqVmrST/n2aw1WZqrilEWVe
-         ml5hMOVhtImv/n+Tcx3mfSWDIhIqW09frmlFViVZCdGl4NY/Jy9BM98Nn7REhFpurdHS
-         H+uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=wGU7fDOKYCdXJVTcbK8Nygb8SB6TIpOioDqhUiYr/Ik=;
-        b=GcPSrU3feH1UGoGdvxJgf/tpqgwsd/XOzgUEsKgfEfr5z8VMqSchrsemMv5C4xDpxt
-         hfZm+zoqeUG+pGeXArnVoEnK/rQA4E4mHig0dti2GirzvoCL6UJ3Gtip0+12moDmmgro
-         VI9slFGj8BjXTG077uBazElpS7na+2l18U5jZYFj8Jlm5Q3mRVdKrH9kpPK7c12++j7Q
-         INn/D721ZZ9yJqvf3Wr+MZMepd07705gvGgV0PuQojLDaN5xbs+daTgLKVmA4TtaIWWC
-         qRyjSLOmUP6rAAKVH9K0zHF78YyFcwxEHRY9Rdt89ZAXubhJDNLZTOq01sj4TyRbbr7f
-         hfPg==
-X-Gm-Message-State: APjAAAU2K1cSKMYM2iv02zKrDYFiPbRic7oA7dyrqO+hBjQJad9feg78
-        YS+KsSBPCPm3d+3sD5OzmDHcydeColRDE72OAjs=
-X-Google-Smtp-Source: APXvYqyk2vaScOVcHo+PXCbhRAvBq0yBM0zQfacFltb0mAXYdCiQGMBWO1AvBbFZxmNBicGrNmVwK5XaW/LqZD05fJs=
-X-Received: by 2002:a67:ea18:: with SMTP id g24mr2882970vso.228.1551455432779;
- Fri, 01 Mar 2019 07:50:32 -0800 (PST)
+        Fri, 1 Mar 2019 10:50:45 -0500
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 1323F190D2
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2019 09:50:44 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id zkQtgT5a7iQerzkQtgfIxK; Fri, 01 Mar 2019 09:50:44 -0600
+X-Authority-Reason: nr=8
+Received: from [189.250.87.11] (port=47978 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1gzkQs-003cmU-6G; Fri, 01 Mar 2019 09:50:43 -0600
+Subject: Re: [PATCH] perf/core: Mark expected switch fall-through
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20190212205430.GA8446@embeddedor>
+ <2c4e0c7b-1166-387e-fe39-6b4ee5c32c7d@embeddedor.com>
+ <20190301135344.GG13100@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <5b810609-351c-fd1c-0dbd-d4380112a84b@embeddedor.com>
+Date:   Fri, 1 Mar 2019 09:50:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Fri, 1 Mar 2019 17:50:09 +0200
-Message-ID: <CAFCwf10UPHaBKhc7p1MrhhNAwZ3Jh3J3we2OPkGxPbAj+eaMRQ@mail.gmail.com>
-Subject: habanalabs user-space thunk library available in GitHub
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Olof Johansson <olof@lixom.net>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Cc:     Omer Shpigelman <oshpigelman@habana.ai>,
-        Tomer Tayar <ttayar@habana.ai>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190301135344.GG13100@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.87.11
+X-Source-L: No
+X-Exim-ID: 1gzkQs-003cmU-6G
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.87.11]:47978
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg and Olof,
-I wanted to let you know that I put the sources of our new userspace
-thunk library in GitHub, as we discussed a few weeks ago during the
-review of the driver.
-The link is: https://github.com/HabanaAI/hl-thunk
 
-As this library was written from scratch in the past month, it is
-still quite small and provides only the minimal functionality over the
-IOCTLs.
-We did ported some of the userspace tests we have in our runtime to
-this library (using CMocka framework) to demonstrate how to use the
-IOCTLs.
-The library is written in pure C. It is a stateless library (at least
-for now) and I took the basic design from drm library.
 
-Going forward, we plan to (in order of importance):
-1. Integrate this in our S/W stack. In effect, remove the functionally
-we expose in the thunk layer from the runtime and make the runtime
-link with the thunk layer and call it instead of calling directly to
-the IOCTLs. This will be done in the next week or two.
-2. Add additional tests for Goya and for future ASICs. We plan to use
-this library for doing bring-ups on Palladium and the real ASICs as it
-provides us with easy platform for testing purposes.
-3. Add more functionality to the library. I didn't yet decided how
-much functionality I want to add to this layer though, because I want
-to keep it thin.
+On 3/1/19 7:53 AM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Feb 28, 2019 at 03:31:31PM -0600, Gustavo A. R. Silva escreveu:
+>> Hi all,
+>>
+>> Friendly ping:
+>>
+>> Who can ack or review this, please?
+> 
+> I'm applying it, thanks.
+> 
 
-Bottom line, this is definitely not some mockup library. This will be
-an integral part of our S/W stack going forward.
+Great.
 
-I sincerely hope we can open source additional S/W parts in the
-future. I'll try pushing to this goal as much as I can inside the
-company.
+Thanks, Arnaldo.
 
-Thanks,
-Oded
+--
+Gustavo
