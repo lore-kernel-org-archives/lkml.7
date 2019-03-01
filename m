@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E16C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F508C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36BD92084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685CD20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BiXLIVB1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V1OV815Y"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QB0Xdo1v";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y1HaclBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfCATjx (ORCPT
+        id S1727941AbfCATkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 14:39:53 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:43296 "EHLO
+        Fri, 1 Mar 2019 14:40:02 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:44070 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbfCATjw (ORCPT
+        with ESMTP id S1726165AbfCATj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 14:39:52 -0500
+        Fri, 1 Mar 2019 14:39:58 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 48C1261A73; Fri,  1 Mar 2019 19:39:07 +0000 (UTC)
+        id 1477761B30; Fri,  1 Mar 2019 19:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551469191;
-        bh=VEbPbYm/qdcD3mba/AFbaTWNwPNd6uxUeYOD8sLO36k=;
+        s=default; t=1551469197;
+        bh=y0zGP4ZFToYS5xCseENwmzyCT+wKc2S0SKWjBV+zGw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BiXLIVB1RVQ1Iy6Q5bers2rFyHugwjApYhOj8lXcrOD46GBkOd053NxvVTk0QCfov
-         DWYinc3fYc54M54HgX/akSsDP2+ST9CxtgSnP7MUiK3NallHGWZQyavvfRQcrSfw/a
-         4miS7FJiq4cz9gmkrq5EFi7eGbCjAfKHsqwB/Ar0=
+        b=QB0Xdo1v30TIiOPltv3r8cF0bHTyYd23IeZmR3i5fVsz+ElAqAX3HVjzoPMjkC+qC
+         oFZKmSf84WKYH7MYOR2yHwz7sj2OvMgiSp6AcopFkMK2dc7XcwGLNYgOl2V0MSb60q
+         d4oapDijFiR5wQNoepT3EO+RySIjeENVZ7NOp6+s=
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD87E618E9;
-        Fri,  1 Mar 2019 19:39:03 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 60CEB618E9;
+        Fri,  1 Mar 2019 19:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551469145;
-        bh=VEbPbYm/qdcD3mba/AFbaTWNwPNd6uxUeYOD8sLO36k=;
+        s=default; t=1551469141;
+        bh=y0zGP4ZFToYS5xCseENwmzyCT+wKc2S0SKWjBV+zGw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V1OV815Y7JlXPAEFGbGAa/SjuWzH7MIyECwlWYVlLKryaOS8hVFTiP1HY07hB32mb
-         BZJ/4o4S/jMszAfwAAKW7Jnz6me6Ijue9rFslRa7tijx2wTZ5NJJUFGMsMJlPHQeB9
-         Th3+tvmrzZ9cwQECEh/iNWY8GeqrZqKhBb+jLEXc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CD87E618E9
+        b=Y1HaclBEi4cjitThlqr9h6Xp66LxHT1iG4oT2kTad0vwno/9xyhUQhLMpfK8gTWWI
+         EKfgQivh74+hNl8693B4wrmX53wDItjItG6vDvIgN6hTTVpJwCrqC2icBHY8NdDUll
+         8vvC1b0W+UGFQ7lCYYjTvaK3oo6M4RakidOLD7w8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 60CEB618E9
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -53,16 +54,13 @@ To:     freedreno@lists.freedesktop.org
 Cc:     jean-philippe.brucker@arm.com, linux-arm-msm@vger.kernel.org,
         dianders@chromimum.org, hoegsberg@google.com,
         baolu.lu@linux.intel.com, Sean Paul <sean@poorly.run>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Rob Clark <robdclark@gmail.com>,
         David Airlie <airlied@linux.ie>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [RFC PATCH v1 14/15] drm/msm/a6xx: Support per-instance pagetables
-Date:   Fri,  1 Mar 2019 12:38:36 -0700
-Message-Id: <1551469117-3404-15-git-send-email-jcrouse@codeaurora.org>
+Subject: [RFC PATCH v1 12/15] drm/msm: Add support to create target specific address spaces
+Date:   Fri,  1 Mar 2019 12:38:34 -0700
+Message-Id: <1551469117-3404-13-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org>
 References: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org>
@@ -71,197 +69,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for per-instance pagetables for a6xx targets. Add support
-to handle split pagetables and create a new instance if the needed
-IOMMU support exists and insert the necessary PM4 commands to trigger
-a pagetable switch at the beginning of a user command.
+Add support to create a GPU target specific address space for
+a context. For those targets that support per-instance
+pagetables they will return a new address space set up for
+the instance if possible otherwise just use the global
+device pagetable.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 124 ++++++++++++++++++++++++++++++++--
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h |   1 +
- 2 files changed, 121 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/msm/msm_drv.c | 25 ++++++++++++++++++++++---
+ drivers/gpu/drm/msm/msm_gpu.h |  1 +
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index f2e0800..57d1909 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -10,6 +10,63 @@
- 
- #include <linux/devfreq.h>
- 
-+static void a6xx_set_pagetable(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
-+	struct msm_file_private *ctx)
-+{
-+	u64 ttbr;
-+	u32 asid;
-+
-+	if (!msm_iommu_get_ptinfo(ctx->aspace->mmu, &ttbr, &asid))
-+		return;
-+
-+	ttbr = ttbr | ((u64) asid) << 48;
-+
-+	/* Turn off protected mode */
-+	OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-+	OUT_RING(ring, 0);
-+
-+	/* Turn on APIV mode to access critical regions */
-+	OUT_PKT4(ring, REG_A6XX_CP_MISC_CNTL, 1);
-+	OUT_RING(ring, 1);
-+
-+	/* Make sure the ME is synchronized before staring the update */
-+	OUT_PKT7(ring, CP_WAIT_FOR_ME, 0);
-+
-+	/* Execute the table update */
-+	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
-+	OUT_RING(ring, lower_32_bits(ttbr));
-+	OUT_RING(ring, upper_32_bits(ttbr));
-+	/* CONTEXTIDR is currently unused */
-+	OUT_RING(ring, 0);
-+	/* CONTEXTBANK is currently unused */
-+	OUT_RING(ring, 0);
-+
-+	/*
-+	 * Write the new TTBR0 to the preemption records - this will be used to
-+	 * reload the pagetable if the current ring gets preempted out.
-+	 */
-+	OUT_PKT7(ring, CP_MEM_WRITE, 4);
-+	OUT_RING(ring, lower_32_bits(rbmemptr(ring, ttbr0)));
-+	OUT_RING(ring, upper_32_bits(rbmemptr(ring, ttbr0)));
-+	OUT_RING(ring, lower_32_bits(ttbr));
-+	OUT_RING(ring, upper_32_bits(ttbr));
-+
-+	/* Invalidate the draw state so we start off fresh */
-+	OUT_PKT7(ring, CP_SET_DRAW_STATE, 3);
-+	OUT_RING(ring, 0x40000);
-+	OUT_RING(ring, 1);
-+	OUT_RING(ring, 0);
-+
-+	/* Turn off APRIV */
-+	OUT_PKT4(ring, REG_A6XX_CP_MISC_CNTL, 1);
-+	OUT_RING(ring, 0);
-+
-+	/* Turn off protected mode */
-+	OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-+	OUT_RING(ring, 1);
-+}
-+
-+
- static inline bool _a6xx_check_idle(struct msm_gpu *gpu)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-@@ -87,6 +144,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 	struct msm_ringbuffer *ring = submit->ring;
- 	unsigned int i;
- 
-+	a6xx_set_pagetable(gpu, ring, ctx);
-+
- 	get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
- 		rbmemptr_stats(ring, index, cpcycles_start));
- 
-@@ -783,21 +842,77 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 	return (unsigned long)busy_time;
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index cac2293..5b83093 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -605,6 +605,14 @@ static void load_gpu(struct drm_device *dev)
+ 	mutex_unlock(&init_lock);
  }
  
-+static struct msm_gem_address_space *a6xx_new_address_space(struct msm_gpu *gpu)
++static struct msm_gem_address_space *context_address_space(struct msm_gpu *gpu)
 +{
-+	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-+	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
-+	struct msm_gem_address_space *aspace;
-+	int ret;
-+
-+	/* Return the default pagetable if per instance tables don't work */
-+	if (!a6xx_gpu->per_instance_tables)
++	if (!gpu->funcs->new_address_space)
 +		return gpu->aspace;
 +
-+	aspace = msm_gem_address_space_create_instance(&gpu->pdev->dev, "gpu",
-+		0x100000000ULL, 0x1ffffffffULL);
-+	if (IS_ERR(aspace))
-+		return aspace;
-+
-+	ret = aspace->mmu->funcs->attach(aspace->mmu, NULL, 0);
-+	if (ret) {
-+		/* -ENODEV means that aux domains aren't supported */
-+		if (ret == -ENODEV)
-+			return gpu->aspace;
-+
-+		return ERR_PTR(ret);
-+	}
-+
-+	return aspace;
++	return gpu->funcs->new_address_space(gpu);
 +}
 +
- static struct msm_gem_address_space *
- a6xx_create_address_space(struct msm_gpu *gpu)
+ static int context_init(struct drm_device *dev, struct drm_file *file)
  {
-+	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-+	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
-+	struct device *dev = &gpu->pdev->dev;
- 	struct msm_gem_address_space *aspace;
- 	struct iommu_domain *iommu;
--	int ret;
-+	int ret, val = 1;
-+
-+	a6xx_gpu->per_instance_tables = false;
+ 	struct msm_drm_private *priv = dev->dev_private;
+@@ -614,9 +622,16 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+ 	if (!ctx)
+ 		return -ENOMEM;
  
- 	iommu = iommu_domain_alloc(&platform_bus_type);
- 	if (!iommu)
- 		return NULL;
- 
--	iommu->geometry.aperture_start = 0x100000000ULL;
--	iommu->geometry.aperture_end = 0x1ffffffffULL;
-+	/* Try to enable split pagetables */
-+	if (iommu_domain_set_attr(iommu, DOMAIN_ATTR_SPLIT_TABLES, &val)) {
-+		/*
-+		 * If split pagetables aren't available we won't be able to do
-+		 * per-instance pagetables so set up the global va space at our
-+		 * susual location
-+		 */
-+		iommu->geometry.aperture_start = 0x100000000ULL;
-+		iommu->geometry.aperture_end = 0x1ffffffffULL;
-+	} else {
-+		/*
-+		 * If split pagetables are available then we might be able to do
-+		 * per-instance pagetables. Put the default va-space in TTBR1 to
-+		 * prepare
-+		 */
-+		iommu->geometry.aperture_start = 0xfffffff100000000ULL;
-+		iommu->geometry.aperture_end = 0xffffff1ffffffffULL;
++	ctx->aspace = context_address_space(priv->gpu);
++	if (IS_ERR(ctx->aspace)) {
++		int ret = PTR_ERR(ctx->aspace);
 +
-+		/*
-+		 * If both split pagetables and aux domains are supported we can
-+		 * do per_instance pagetables
-+		 */
-+		a6xx_gpu->per_instance_tables =
-+			iommu_dev_has_feature(dev, IOMMU_DEV_FEAT_AUX);
++		kfree(ctx);
++		return ret;
 +	}
++
+ 	msm_submitqueue_init(dev, ctx);
  
--	aspace = msm_gem_address_space_create(&gpu->pdev->dev, iommu, "gpu");
-+	aspace = msm_gem_address_space_create(dev, iommu, "gpu");
- 	if (IS_ERR(aspace)) {
- 		iommu_domain_free(iommu);
- 		DRM_DEV_ERROR(gpu->dev->dev, "failed to init mmu: %ld\n",
-@@ -836,6 +951,7 @@ static const struct adreno_gpu_funcs funcs = {
- 		.gpu_state_get = a6xx_gpu_state_get,
- 		.gpu_state_put = a6xx_gpu_state_put,
- 		.create_address_space = a6xx_create_address_space,
-+		.new_address_space = a6xx_new_address_space,
- 	},
- 	.get_timestamp = a6xx_get_timestamp,
+-	ctx->aspace = priv->gpu->aspace;
+ 	file->driver_priv = ctx;
+ 
+ 	return 0;
+@@ -632,8 +647,12 @@ static int msm_open(struct drm_device *dev, struct drm_file *file)
+ 	return context_init(dev, file);
+ }
+ 
+-static void context_close(struct msm_file_private *ctx)
++static void context_close(struct msm_drm_private *priv,
++		struct msm_file_private *ctx)
+ {
++	if (ctx->aspace != priv->gpu->aspace)
++		msm_gem_address_space_put(ctx->aspace);
++
+ 	msm_submitqueue_close(ctx);
+ 	kfree(ctx);
+ }
+@@ -648,7 +667,7 @@ static void msm_postclose(struct drm_device *dev, struct drm_file *file)
+ 		priv->lastctx = NULL;
+ 	mutex_unlock(&dev->struct_mutex);
+ 
+-	context_close(ctx);
++	context_close(priv, ctx);
+ }
+ 
+ static irqreturn_t msm_irq(int irq, void *arg)
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index 81b9861..35b0faf 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -76,6 +76,7 @@ struct msm_gpu_funcs {
+ 	void (*gpu_set_freq)(struct msm_gpu *gpu, unsigned long freq);
+ 	struct msm_gem_address_space *(*create_address_space)
+ 		(struct msm_gpu *gpu);
++	struct msm_gem_address_space *(*new_address_space)(struct msm_gpu *gpu);
  };
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-index 528a4cf..4e9ce1c 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-@@ -21,6 +21,7 @@ struct a6xx_gpu {
- 	struct msm_ringbuffer *cur_ring;
  
- 	struct a6xx_gmu gmu;
-+	bool per_instance_tables;
- };
- 
- #define to_a6xx_gpu(x) container_of(x, struct a6xx_gpu, base)
+ struct msm_gpu {
 -- 
 2.7.4
 
