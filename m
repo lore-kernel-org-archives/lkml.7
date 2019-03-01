@@ -2,147 +2,128 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE111C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B64BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4732084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551447549;
-	bh=gNQ+CS6P+04BRuMvOzP54uGMZhZUhsZgd+SWpqZ1bOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1eGg9rTJYXNKYXLII2FK6ghauzS6W3Fl/FEvQoRXg5/5kn1WmjKBJwuxpfLy8QgJ2
-	 CfQ72YKS6U/jiwcHc3D3itkACoGX7b+jqfR2WWIZmdnJjfoMXvSlDVbWDmzQ+m5tdO
-	 IGrYjvs6QM+qYhRUKR5RB9736F+MtImsw8W7Qdk0=
+	by mail.kernel.org (Postfix) with ESMTP id E3AEA2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387915AbfCANjI (ORCPT
+        id S2387956AbfCANjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 08:39:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56438 "EHLO mail.kernel.org"
+        Fri, 1 Mar 2019 08:39:36 -0500
+Received: from foss.arm.com ([217.140.101.70]:35108 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387890AbfCANjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 08:39:07 -0500
-Received: from dragon (61-216-91-114.HINET-IP.hinet.net [61.216.91.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E22E52084D;
-        Fri,  1 Mar 2019 13:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551447546;
-        bh=gNQ+CS6P+04BRuMvOzP54uGMZhZUhsZgd+SWpqZ1bOI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JNCmCP6V0GweJp4d+him7lT/bdyo19KlSRjD6iDWHpiwcMDDxi84WnPu2TfzvzoEN
-         NLSzLfHqNDgYqnGVszBKFTxyu3yo+Gp6+USEVwkdhZsg7CBWa6EBwKMTRJ2I4XPAJD
-         K+0BCrb2Hx6sPZxbqzMCcCtA3uCqRrr7ngVqTcCU=
-Date:   Fri, 1 Mar 2019 21:38:07 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Yuantian Tang <andy.tang@nxp.com>
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        daniel.lezcano@linaro.org, rui.zhang@intel.com, edubezval@gmail.com
-Subject: Re: [PATCH] arm64: dts: ls1088a: add one more thermal zone node
-Message-ID: <20190301133805.GQ26041@dragon>
-References: <20190225030049.20401-1-andy.tang@nxp.com>
+        id S1727697AbfCANjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 08:39:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6111CA78;
+        Fri,  1 Mar 2019 05:39:35 -0800 (PST)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19B2E3F5C1;
+        Fri,  1 Mar 2019 05:39:31 -0800 (PST)
+Subject: Re: [PATCH v2 03/13] mm: Add generic p?d_large() macros
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190221113502.54153-1-steven.price@arm.com>
+ <20190221113502.54153-4-steven.price@arm.com>
+ <20190221142812.oa53lfnnfmsuh6ys@kshutemo-mobl1>
+ <a3076d01-41b3-d59b-e98c-a0fd9ba5d3f5@arm.com>
+ <20190221145706.zqwfdoyiirn3lc7y@kshutemo-mobl1>
+ <e0c7fc0c-7924-1106-a7a3-fc12136b7b82@arm.com>
+ <20190221210618.voyfs5cnafpvgedh@kshutemo-mobl1>
+ <20190301115300.GE5156@rapoport-lnx>
+ <20190301123031.rw3dswcoaa2x7haq@kshutemo-mobl1>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <b8bd0f99-1c5e-7cf5-32dd-ab52d921e86c@arm.com>
+Date:   Fri, 1 Mar 2019 13:39:30 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190225030049.20401-1-andy.tang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190301123031.rw3dswcoaa2x7haq@kshutemo-mobl1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 25, 2019 at 11:00:49AM +0800, Yuantian Tang wrote:
-> Ls1088a has 2 thermal sensors. This patch adds the second node
-> to dts to enable it.
-
-Can you elaborate on these 2 thermal sensors/zones, ccu and plt?
-
-Shawn
-
+On 01/03/2019 12:30, Kirill A. Shutemov wrote:
+> On Fri, Mar 01, 2019 at 01:53:01PM +0200, Mike Rapoport wrote:
+>> Him Kirill,
+>>
+>> On Fri, Feb 22, 2019 at 12:06:18AM +0300, Kirill A. Shutemov wrote:
+>>> On Thu, Feb 21, 2019 at 05:16:46PM +0000, Steven Price wrote:
+>>>>>> Note that in terms of the new page walking code, these new defines are
+>>>>>> only used when walking a page table without a VMA (which isn't currently
+>>>>>> done), so architectures which don't use p?d_large currently will work
+>>>>>> fine with the generic versions. They only need to provide meaningful
+>>>>>> definitions when switching to use the walk-without-a-VMA functionality.
+>>>>>
+>>>>> How other architectures would know that they need to provide the helpers
+>>>>> to get walk-without-a-VMA functionality? This looks very fragile to me.
+>>>>
+>>>> Yes, you've got a good point there. This would apply to the p?d_large
+>>>> macros as well - any arch which (inadvertently) uses the generic version
+>>>> is likely to be fragile/broken.
+>>>>
+>>>> I think probably the best option here is to scrap the generic versions
+>>>> altogether and simply introduce a ARCH_HAS_PXD_LARGE config option which
+>>>> would enable the new functionality to those arches that opt-in. Do you
+>>>> think this would be less fragile?
+>>>
+>>> These helpers are useful beyond pagewalker.
+>>>
+>>> Can we actually do some grinding and make *all* archs to provide correct
+>>> helpers? Yes, it's tedious, but not that bad.
+>>
+>> Many architectures simply cannot support non-leaf entries at the higher
+>> levels. I think letting the use a generic helper actually does make sense.
 > 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
->  1 files changed, 39 insertions(+), 4 deletions(-)
+> I disagree.
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 661137f..9f52bc9 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -129,19 +129,19 @@
->  	};
->  
->  	thermal-zones {
-> -		cpu_thermal: cpu-thermal {
-> +		ccu {
->  			polling-delay-passive = <1000>;
->  			polling-delay = <5000>;
->  			thermal-sensors = <&tmu 0>;
->  
->  			trips {
-> -				cpu_alert: cpu-alert {
-> +				ccu_alert: ccu-alert {
->  					temperature = <85000>;
->  					hysteresis = <2000>;
->  					type = "passive";
->  				};
->  
-> -				cpu_crit: cpu-crit {
-> +				ccu_crit: ccu-crit {
->  					temperature = <95000>;
->  					hysteresis = <2000>;
->  					type = "critical";
-> @@ -150,7 +150,42 @@
->  
->  			cooling-maps {
->  				map0 {
-> -					trip = <&cpu_alert>;
-> +					trip = <&ccu_alert>;
-> +					cooling-device =
-> +						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
-> +		};
-> +
-> +		plt {
-> +			polling-delay-passive = <1000>;
-> +			polling-delay = <5000>;
-> +			thermal-sensors = <&tmu 1>;
-> +
-> +			trips {
-> +				plt_alert: plt-alert {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				plt_crit: plt-crit {
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&plt_alert>;
->  					cooling-device =
->  						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->  						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> -- 
-> 1.7.1
-> 
+> It's makes sense if the level doesn't exists on the arch.
+
+This is what patch 24 [1] of the series does - if the level doesn't
+exist then appropriate stubs are provided.
+
+> But if the level exists, it will be less frugile to ask the arch to
+> provide the helper. Even if it is dummy always-false.
+
+The problem (as I see it), is we need a reliable set of p?d_large()
+implementations to be able to walk arbitrary page tables. Either the
+entire functionality of walking page tables without a VMA has to be an
+opt-in per architecture, or we need to mandate that every architecture
+provide these implementations.
+
+I could provide an asm-generic header to provide a complete set of dummy
+implementations for architectures that don't support large pages at all,
+but that seems a bit overkill when most architectures only need to
+define 2 or 3 implementations (the rest being provided by the
+folded-levels automatically).
+
+Thanks,
+
+Steve
+
+[1]
+https://lore.kernel.org/lkml/20190227170608.27963-25-steven.price@arm.com/
