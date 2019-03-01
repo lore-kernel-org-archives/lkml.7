@@ -2,106 +2,104 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7331BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0256AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E02F2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A242186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5iYZ5X8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4ZzkTeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbfCAG41 (ORCPT
+        id S1730160AbfCAG4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 01:56:27 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37953 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfCAG4Z (ORCPT
+        Fri, 1 Mar 2019 01:56:55 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39584 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfCAG4z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 01:56:25 -0500
-Received: by mail-pg1-f196.google.com with SMTP id m2so10981921pgl.5;
-        Thu, 28 Feb 2019 22:56:25 -0800 (PST)
+        Fri, 1 Mar 2019 01:56:55 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z84so11146814wmg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 22:56:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=6ckz5cZ+UCIsmGaUiciDSxa7VVqmOmRltABIFS3JWww=;
-        b=W5iYZ5X8ao0Kip3uX4gkvOU715GksHIx3Uo2Qfb0lZFNVDwyuaCL94ZY1LBpgulbYe
-         nlPj9+jqH0JxKy84brThjmWG7V8Q9D4hiwL05Wn4ujanTvTBAvcuFNE89GPudNza2mZT
-         CkFZgzdtIS8MQKzkKJLbE97Aql0XeecRpbX+Zrn40dtt6mcjkqOA3gnhLTZNYrFk7Yc0
-         L1KM2ETR6Vlwd6S5wZ4hxEi9Z5HaclJTwQkAxSEPP287Pbnv7gCDDRbQSDWRRRoDkyNW
-         +XqzbfBZtfJPpCz4V0E5sppTBD2pblZ+jy/HpE+RkQqpok77M2JAXAqNjBS2aUgQOIUC
-         lNAw==
+        bh=EnJpbJX/w2+VAaY+0Mw8fEugcfDzQ6872JX5Qhk7Qs4=;
+        b=X4ZzkTeuLYXTQ5R2VsG6OaSfWrTUrST63QLVbfpyaZyhVBsZWNl+j6bBemzUaHwIRq
+         PRPnVME/mKiFYyjutpnEM5Wlukw8vWBnD81MO8BsRpMIw5g7banx6ixYHpS0BEyF/jl2
+         nCDwJtaQ6Y1TuipOxVHJXxdQE3hfobcOuzqxrrW5+d5Uo+0CzcziihIs7sQowHAuNBh/
+         cSE2JseOoGHndA+oqKJ59Luk7lenu0gyvNhkVMfFI2Ler2kZK1iPQinJETsWchMoV0/5
+         8+RLzW5baBaXxPYU7uxt2mFpfS5reKB1JXI9rPWxcOSpXwQGursQN8h6N1AOAODefaS2
+         Ke/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6ckz5cZ+UCIsmGaUiciDSxa7VVqmOmRltABIFS3JWww=;
-        b=SoVTsPUICHFrgehQgtPZ7aEX5+fq8fAOZjDng7sRutKAtSyIev3Rb5TmGHMCzzxRfY
-         cXn8RCqNaHMO7H2LZLgsfWcAjhsEYbo1Yyp5kUtc220w6UWhFc11cI4rTnF364nQ3gRO
-         DDyytAAAtI0hmJjC1UR23rfB/WVWAyJlxvMEO3xY47Ky4j+UlPaO+Oy+AjwHfy8U7X1z
-         FdHawA3m9KsbjswmIe5WNCQrSlVyfcIIWec/8GF0eXVIRTC5XqwxGfM6cg3yHFAz8rLV
-         OftzyJyCCv7DAe10brk2TQJbl4gZgtq3OLaps+3Ns2KqoijaoaeyqeFh5egWI1RFLyFp
-         KD1w==
-X-Gm-Message-State: APjAAAU7sXW8N61TxN9W+wev4kJUkHeFxkUF31xnd4AuKSsQH30XiUy1
-        HcBq560+BUweP7pwoOwpSJQ=
-X-Google-Smtp-Source: APXvYqx/yxl5X72BpxIA5DV2dMwxx1W/mx32hotapCJxNwgxAeDmccie7m5fu2nsaltwn3IHX1nikw==
-X-Received: by 2002:a63:8b42:: with SMTP id j63mr3295302pge.79.1551423385242;
-        Thu, 28 Feb 2019 22:56:25 -0800 (PST)
-Received: from maya190131 ([52.247.206.249])
-        by smtp.gmail.com with ESMTPSA id m3sm20684239pgp.85.2019.02.28.22.56.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Feb 2019 22:56:25 -0800 (PST)
-Date:   Fri, 1 Mar 2019 06:56:24 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, kys@microsoft.com,
-        sthemmin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
-        jasowang@redhat.com, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        haiyangz@microsoft.com, vkuznets@redhat.com,
-        marcelo.cerri@canonical.com
-Subject: [PATCH v5 1/3] PCI: hv: Add __aligned(8) to struct
- retarget_msi_interrupt
-Message-ID: <5f6f7fa3d287867ae4c2220ff7235efe544cdd6e.1551421809.git.m.maya.nakamura@gmail.com>
-References: <cover.1551421809.git.m.maya.nakamura@gmail.com>
+        bh=EnJpbJX/w2+VAaY+0Mw8fEugcfDzQ6872JX5Qhk7Qs4=;
+        b=RrDCTthYF8gJGHyBnJh0zm/wQ2k/i+67xwfkEqCsb3AEFHivMxdOrjIDDet5fa+zuK
+         vssfSIiYYRI1ZAqz62BhgPxLJOMYNFGkUVpBB6cwg8tIn4Heaf7ypcss5K+LplquRO7V
+         aKm7gWhPFZ135tkaI8/dEOFl7AjLTy3QTOVB/V67piOx3lwK+n77tXUpPmnXayk9d9Pp
+         NwzBFwGXQd7vv/iIAXw+efdv4GPlVbclKLaPlQBq8x0P51sdkONeeRHJRsPTNxs+7hKJ
+         UGHcxei7RpKAXnosgIZIycLQnNkAAeo6NQeuxIaiGMkXLKVRX8NW1iGfRFWjkQDaRipy
+         +7MA==
+X-Gm-Message-State: AHQUAuYeVoHUAu9EJ24PEudfOir0lHLRtMgJ2bhJdZRNRO7x2p7gXaui
+        M4kQlVBsEvEPSBtXYQjpHw==
+X-Google-Smtp-Source: AHgI3IYjQLp480/EaDIKB/qf+RHAFdcKetVFPvW1zDfPb5TlT/T5RHhZaDPaUsTBU/V4HWQ8w+Hv5Q==
+X-Received: by 2002:a1c:4e09:: with SMTP id g9mr1977499wmh.56.1551423413407;
+        Thu, 28 Feb 2019 22:56:53 -0800 (PST)
+Received: from avx2 ([46.53.240.236])
+        by smtp.gmail.com with ESMTPSA id k6sm29850497wrq.82.2019.02.28.22.56.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 22:56:52 -0800 (PST)
+Date:   Fri, 1 Mar 2019 09:56:50 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        wang.bo116@zte.com.cn, WangBo <wdjjwb@163.com>
+Subject: Re: +
+ include-linux-typesh-use-unsigned-int-instead-of-unsigned.patch added to -mm
+ tree
+Message-ID: <20190301065650.GA10954@avx2>
+References: <20190228174109.MrWZN%akpm@linux-foundation.org>
+ <20190228211126.GA28901@avx2>
+ <CAK7LNAQv4giq5r4AKv4Ff1KP7k7US2Sdt=m1ZAXsDmKWKhZ9vQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1551421809.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAK7LNAQv4giq5r4AKv4Ff1KP7k7US2Sdt=m1ZAXsDmKWKhZ9vQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because Hyper-V requires that hypercall arguments be aligned on an 8
-byte boundary, add __aligned(8) to struct retarget_msi_interrupt.
+On Fri, Mar 01, 2019 at 09:13:27AM +0900, Masahiro Yamada wrote:
+> On Fri, Mar 1, 2019 at 7:08 AM Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> >
+> > On Thu, Feb 28, 2019 at 09:41:09AM -0800, akpm@linux-foundation.org wrote:
+> > > --- a/include/linux/types.h~include-linux-typesh-use-unsigned-int-instead-of-unsigned
+> > > +++ a/include/linux/types.h
+> > > @@ -155,9 +155,9 @@ typedef u64 dma_addr_t;
+> > >  typedef u32 dma_addr_t;
+> > >  #endif
+> > >
+> > > -typedef unsigned __bitwise gfp_t;
+> > > -typedef unsigned __bitwise slab_flags_t;
+> > > -typedef unsigned __bitwise fmode_t;
+> > > +typedef unsigned int __bitwise gfp_t;
+> > > +typedef unsigned int __bitwise slab_flags_t;
+> > > +typedef unsigned int __bitwise fmode_t;
+> >
+> > I don't know if this is desireable. Switching to "unsigned" is better:
+> > 1 less token and less 80 column pressure.
+> 
+> 
+> 
+> See the following commit.
 
-Link: https://lore.kernel.org/lkml/87k1hlqlby.fsf@vitty.brq.redhat.com/
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9ba4d12c179c..73862eef09ec 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -420,7 +420,7 @@ struct retarget_msi_interrupt {
- 	struct hv_interrupt_entry int_entry;
- 	u64	reserved2;
- 	struct hv_device_interrupt_target int_target;
--} __packed;
-+} __packed __aligned(8);
- 
- /*
-  * Driver specific state.
--- 
-2.17.1
-
+Ah, checkpatch.pl, how could we live without it.
