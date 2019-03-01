@@ -2,157 +2,150 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D38C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BAAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE1D20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:55:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nt1k1fUw"
+	by mail.kernel.org (Postfix) with ESMTP id C10F920850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388442AbfCAPzq (ORCPT
+        id S2388782AbfCAP4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 10:55:46 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34601 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728331AbfCAPzp (ORCPT
+        Fri, 1 Mar 2019 10:56:19 -0500
+Received: from vegas.theobroma-systems.com ([144.76.126.164]:60015 "EHLO
+        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728331AbfCAP4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 10:55:45 -0500
-Received: by mail-pf1-f193.google.com with SMTP id u9so11626597pfn.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 07:55:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=jLIyFAifiRAgcvZD4ggavrGnBhF8t9ofKtSW3O8SPdo=;
-        b=nt1k1fUwJM5poxCxYlEuws5SBVNeAlUTIEUk58bnjvn4bqDaBbUPnWWY9gbMmQ/wM6
-         bGZEwLv4BPHl+SnqH3Jk5ehTLV/5HtuvoTBKYzpymvyrA9yqh2AiWzOqLodBkRAIOPWc
-         lhQXgBObH4PtSaA6zW4FKU5+dSveES5jH1bmiV2PvzObWsAiTjoyaFeG8gIIQtjsHnV9
-         JKa5raQ4yO5Xm72T97mn4jKpQr1FOArglRPv8vT7gam1j+QkJhht+MQBDPOp7uyeaUPL
-         s/HjI+NFsHChvIY31DnDWQbj2w59Ga/F4Oidt/Ksf3bVg8u/i9Svib5zIm74DBKvFoNT
-         hlKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=jLIyFAifiRAgcvZD4ggavrGnBhF8t9ofKtSW3O8SPdo=;
-        b=epANlZajsunewjynh+neg+fjwvYpyYl3TlgGq2Rn6JXxvLWPZXlg/SQaa6T+clan0J
-         zT4jymyI4rbl0lswsuLDZ/Wa6jlT244nwo/ky4dipq8/pqVSifyhnMApviy+7PJv2gba
-         BIFEbryG/LD/bdkID0JEqSMgHxjCZUyMldHmv8ztF2XCE+UNJ8qL1+KJpVBGWou9FqdU
-         ZXNbY6stL3ZpbbWYN0BMk8o1fIge0vsKW1nOPF+TEbT8JRrrPPfVwJTTnh35qSV7XhI4
-         dftiVA86P8+ytpSiYx+JI2jTd6aSwh3x34gLoAEGGNbP1FmCZcVsjSSG6zNmqiJ2FZhR
-         gbdw==
-X-Gm-Message-State: APjAAAU/+f1CXpdI9Z2zirbKB6Qz6FYrFPPuGIRS/LTRSkPFcim3zyKO
-        aimJ+DdQrQCvzv2OHZ+iVIxU
-X-Google-Smtp-Source: APXvYqwKdl1qp9Psj2lcXh8SiEEmaJX0plH/RB2i6CpFukg+GA77tAJ9rxSY8+0yTca1CBEA64l8KA==
-X-Received: by 2002:a63:d80b:: with SMTP id b11mr5440880pgh.168.1551455744564;
-        Fri, 01 Mar 2019 07:55:44 -0800 (PST)
-Received: from Mani-XPS-13-9360 ([2409:4072:630c:677c:2dd3:3db1:5145:4da9])
-        by smtp.gmail.com with ESMTPSA id b138sm48505561pfb.48.2019.03.01.07.55.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 07:55:43 -0800 (PST)
-Date:   Fri, 1 Mar 2019 21:25:23 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Wen Yang <wen.yang99@zte.com.cn>, linus.walleij@linaro.org,
-        afaerber@suse.de
-Cc:     liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kgene@kernel.org, krzk@kernel.org,
-        linux-samsung-soc@vger.kernel.org, michal.simek@xilinx.com,
-        dinguyen@kernel.org, heiko@sntech.de,
-        linux-rockchip@lists.infradead.org, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, avifishman70@gmail.com,
-        tmaimon77@gmail.com, venture@google.com, yuenn@google.com,
-        brendanhiggins@google.com, openbmc@lists.ozlabs.org,
-        xuwei5@hisilicon.com, maxime.ripard@bootlin.com, wens@csie.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, horms@verge.net.au,
-        magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        fabio.estevam@nxp.com, linux-imx@nxp.com, wang.yi59@zte.com.cn
-Subject: Re: [PATCH 01/15] ARM: actions: fix a leaked reference by
- addingmissing of_node_put
-Message-ID: <20190301155523.GA1915@Mani-XPS-13-9360>
-References: <1551430616-42014-1-git-send-email-wen.yang99@zte.com.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1551430616-42014-1-git-send-email-wen.yang99@zte.com.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 1 Mar 2019 10:56:19 -0500
+X-Greylist: delayed 1148 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Mar 2019 10:56:18 EST
+Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:42682 helo=purcell.lan)
+        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <christoph.muellner@theobroma-systems.com>)
+        id 1gzkDW-0005Ag-JD; Fri, 01 Mar 2019 16:36:54 +0100
+From:   Christoph Muellner <christoph.muellner@theobroma-systems.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        shawn.lin@rock-chips.com
+Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Randy Li <ayaka@soulik.info>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] phy: rockchip-emmc: Allow to set drive impedance via DTS.
+Date:   Fri,  1 Mar 2019 16:33:43 +0100
+Message-Id: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wen,
+The rockchip-emmc PHY can be configured with different
+drive impedance values. Currenlty a value of 50 Ohm is
+hard coded into the driver.
 
-On Fri, Mar 01, 2019 at 04:56:42PM +0800, Wen Yang wrote:
-> The call to of_get_next_child returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
-> 
-> Detected by coccinelle with the following warnings:
-> ./arch/arm/mach-actions/platsmp.c:112:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 103, but without a corresponding object release within this function.
-> ./arch/arm/mach-actions/platsmp.c:124:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 115, but without a corresponding object release within this function.
-> ./arch/arm/mach-actions/platsmp.c:137:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 128, but without a corresponding object release within this function.
-> 
+This patch introduces the DTS property 'drive-impedance-ohm'
+for the rockchip-emmc phy node, which uses the value from the DTS
+to setup the drive impedance accordingly.
 
-We have a floating patch for this:
-https://www.spinics.net/lists/arm-kernel/msg694544.html
+Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+---
+ drivers/phy/rockchip/phy-rockchip-emmc.c | 38 ++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
-Andreas: Can you please take a second look at the patchset submitted by Linus
-Walleij and Russel for simplifying the Actions startup code?
+diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
+index 19bf84f0bc67..5413fa73dd45 100644
+--- a/drivers/phy/rockchip/phy-rockchip-emmc.c
++++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
+@@ -87,6 +87,7 @@ struct rockchip_emmc_phy {
+ 	unsigned int	reg_offset;
+ 	struct regmap	*reg_base;
+ 	struct clk	*emmcclk;
++	unsigned int drive_impedance;
+ };
+ 
+ static int rockchip_emmc_phy_power(struct phy *phy, bool on_off)
+@@ -281,10 +282,10 @@ static int rockchip_emmc_phy_power_on(struct phy *phy)
+ {
+ 	struct rockchip_emmc_phy *rk_phy = phy_get_drvdata(phy);
+ 
+-	/* Drive impedance: 50 Ohm */
++	/* Drive impedance: from DTS */
+ 	regmap_write(rk_phy->reg_base,
+ 		     rk_phy->reg_offset + GRF_EMMCPHY_CON6,
+-		     HIWORD_UPDATE(PHYCTRL_DR_50OHM,
++		     HIWORD_UPDATE(rk_phy->drive_impedance,
+ 				   PHYCTRL_DR_MASK,
+ 				   PHYCTRL_DR_SHIFT));
+ 
+@@ -314,6 +315,28 @@ static const struct phy_ops ops = {
+ 	.owner		= THIS_MODULE,
+ };
+ 
++static u32 convert_drive_impedance_ohm(struct platform_device *pdev, u32 dr_ohm)
++{
++	switch (dr_ohm) {
++	case 100:
++		return PHYCTRL_DR_100OHM;
++	case 66:
++		return PHYCTRL_DR_66OHM;
++	case 50:
++		return PHYCTRL_DR_50OHM;
++	case 40:
++		return PHYCTRL_DR_40OHM;
++	case 33:
++		return PHYCTRL_DR_33OHM;
++	}
++
++	dev_warn(&pdev->dev,
++		"Invalid value %u for drive-impedance-ohm. "
++		"Falling back to 50 Ohm.\n",
++		dr_ohm);
++	return PHYCTRL_DR_50OHM;
++}
++
+ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -322,6 +345,7 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+ 	struct phy_provider *phy_provider;
+ 	struct regmap *grf;
+ 	unsigned int reg_offset;
++	u32 val;
+ 
+ 	if (!dev->parent || !dev->parent->of_node)
+ 		return -ENODEV;
+@@ -345,6 +369,16 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+ 	rk_phy->reg_offset = reg_offset;
+ 	rk_phy->reg_base = grf;
+ 
++	if (of_property_read_u32(dev->of_node, "drive-impedance-ohm", &val)) {
++		dev_info(dev,
++			"Missing drive-impedance-ohm property in node %s "
++			"Falling back to 50 Ohm.\n",
++			dev->of_node->name);
++		rk_phy->drive_impedance = PHYCTRL_DR_50OHM;
++	} else {
++		rk_phy->drive_impedance = convert_drive_impedance_ohm(pdev, val);
++	}
++
+ 	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
+ 	if (IS_ERR(generic_phy)) {
+ 		dev_err(dev, "failed to create PHY\n");
+-- 
+2.11.0
 
-Thanks,
-Mani
-
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: "Andreas Färber" <afaerber@suse.de>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  arch/arm/mach-actions/platsmp.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/mach-actions/platsmp.c b/arch/arm/mach-actions/platsmp.c
-> index 4fd479c..1a8e078 100644
-> --- a/arch/arm/mach-actions/platsmp.c
-> +++ b/arch/arm/mach-actions/platsmp.c
-> @@ -107,6 +107,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
->  	}
->  
->  	timer_base_addr = of_iomap(node, 0);
-> +	of_node_put(node);
->  	if (!timer_base_addr) {
->  		pr_err("%s: could not map timer registers\n", __func__);
->  		return;
-> @@ -119,6 +120,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
->  	}
->  
->  	sps_base_addr = of_iomap(node, 0);
-> +	of_node_put(node);
->  	if (!sps_base_addr) {
->  		pr_err("%s: could not map sps registers\n", __func__);
->  		return;
-> @@ -132,6 +134,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
->  		}
->  
->  		scu_base_addr = of_iomap(node, 0);
-> +		of_node_put(node);
->  		if (!scu_base_addr) {
->  			pr_err("%s: could not map scu registers\n", __func__);
->  			return;
-> -- 
-> 2.9.5
-> 
