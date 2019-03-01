@@ -2,122 +2,129 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54098C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E04A1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2187020818
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551459120;
-	bh=NLcVGvDoCTEt+fV4NtCoXneeJa+nHwd/7+TY01svfd4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BLsPGomhyp33bNKzAcUujvmJO7Yc+jpqLJxJrRLrDanly1THvddthRN25IQ748YIj
-	 viS2zL92rciKTDmQl1CiSJ9GAIjgXP92/427GRgLJ9zDkOd7lNeXFnE4arGk0jABql
-	 apFUylspDbUZ/BjPLKVA4+u+bG1sqI4CI2Ho7c/s=
+	by mail.kernel.org (Postfix) with ESMTP id AE4E220857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:52:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="YadzOFns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389202AbfCAQv6 (ORCPT
+        id S2389231AbfCAQwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:51:58 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46291 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbfCAQv6 (ORCPT
+        Fri, 1 Mar 2019 11:52:47 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43974 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728489AbfCAQwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:51:58 -0500
-Received: by mail-lj1-f193.google.com with SMTP id v16so20969102ljg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:51:56 -0800 (PST)
+        Fri, 1 Mar 2019 11:52:46 -0500
+Received: by mail-ot1-f65.google.com with SMTP id n71so21513697ota.10;
+        Fri, 01 Mar 2019 08:52:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ez8ADp+Mbfs/OYuDUMwZpFL/duMhSwowVHyMrrx/aWQ=;
-        b=dMZDY89USSjVC3BrjDUiNDxmXLXR2c5MVYzMgTm8R6TT/aH7ikqz7ielZTAtnoDDeo
-         WLPOKLzpKu9mIUjwptn/X79xPfnTO+SIK7op63EGn7GcJ4htGu0n52c0Yiwt0douUDSE
-         adpuCC3/cSzuQd29SoqZUWMW62er83MTxib4s=
+        bh=kfGCMUN5rPhxXOHU6GO9HQgy62a74lDnvzWD2rPXkz4=;
+        b=YadzOFnsRt7HqStDcUVL5g8FLyCYcHKVpJdvB0bs1QQyo32ZJ1O9mujXJuPzSREToa
+         sJ/RCeeCUgznWWwjgLw1OMIH4WaVArcbAs6BqSwIWpQ2qA5KsuKpaaEz6RBU6iHqX8rJ
+         7dCzY3wWKFJOFJRfkSq0z0zw23LcbiZSspzyQTvkdX+UqaBWfmAGCIda/ny15hjDO9hn
+         A1gun7G8mD8U5Fo8F18Auo5eThd+j1CoBtc9hahktTw8/iP+gHvxRgKU3hZ+6FrDNNBv
+         N6yiFGE4d2vDJHNrcECwzbjbrQwhCA3iM2M2p52iFfRuObce+glfPhATOcKud57G7bdy
+         SwPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ez8ADp+Mbfs/OYuDUMwZpFL/duMhSwowVHyMrrx/aWQ=;
-        b=oUZo8XEj1rEva8Q8DoEzb8sXIya1PyGuAC/HrF/0NqeRp9CQYZ8dLhSgm+UBJt5e6w
-         0pqnGg8V6ApIccZyAK0QkYgh6WnBql/Tx/hlYGc25pzd7G+90uaVH3VvHvOpAE4/GP6I
-         H/fc1F6knEC4pMedElSCRJyZWhnZhngzHxcY13zrZ6HsUSQPAIwFar6uvCE1b0FATsE7
-         3zeMIjdPe8CxptU+sgS8rmFKu62mMmSpWjJ7nd4vFJ4e67Qf6VYBTUd7rzGzP74wPl3e
-         Kw1HizYlj1IhtnqZTpcqx8ZmCXer9nUnD5tNZsUZZUtRC1cCVRE/R8NCMFtBy8jPKVgk
-         Ob2Q==
-X-Gm-Message-State: APjAAAVextc1RdhTwYHYWTFjwdK+4pWWoipJUb6rvyj2AjcPefnAGnmO
-        6wA9p2tiRKxIfmW6mQF8hXR+Q0d2pEI=
-X-Google-Smtp-Source: APXvYqx242/WqfiFH5Lc7kVQfByNiweB2tddXlKtejrtuwmVoz9eaOnoep9AaYQklNaIXe/MGBOYow==
-X-Received: by 2002:a2e:a28f:: with SMTP id k15mr3320690lja.160.1551459115646;
-        Fri, 01 Mar 2019 08:51:55 -0800 (PST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id o7sm3624817lff.73.2019.03.01.08.51.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 08:51:54 -0800 (PST)
-Received: by mail-lf1-f42.google.com with SMTP id d26so1824409lfa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:51:54 -0800 (PST)
-X-Received: by 2002:ac2:415a:: with SMTP id c26mr3761301lfi.62.1551459114173;
- Fri, 01 Mar 2019 08:51:54 -0800 (PST)
+        bh=kfGCMUN5rPhxXOHU6GO9HQgy62a74lDnvzWD2rPXkz4=;
+        b=GE01i3RXJYw+0WIQev6Of8UJxiy1RtArqUslrYbV83Bqb+svPc7YVBlq2pLp8r9Wos
+         WwtV4s/pZ4dzzy6NVUqsaYbFodlsICH/GRkXLh5k51/28I9c3x3ETuN9V9j7ScQxAnJD
+         HuvXMrCq/ehGvQeJTwRe+1fvsLL9NZeJxMKyHAwF9fiSGDT8rh8xqeUqkfU/d2v3hfeS
+         He1EliRDGcvvINAPwWhG+FEaZV2vlYpDw9VXzB+QlEPOxYOCUJmtSZX0Joz6jBL0qe/1
+         zWsciplIEHpvXIBw7lwSrlrIpQV++xiI0we4QCbVPhblGct/PfFs/db8rTyEQcINqJzg
+         mH8Q==
+X-Gm-Message-State: APjAAAXQnkaaHNp2T3Ki4zyjhDqpwg/JbJxaTsT7YJQRNPEf3WvhFNJD
+        luc7kwDXzBVOc7Kn8ZGMN9feo7nK3qIJwzaw6aM=
+X-Google-Smtp-Source: APXvYqyGLydGGb+d8KABdstqENqvMOYfuAmB+lV9H24A55nw4V6X6UtyiPVGvL6BE7VbtjwSlCGD66Sqj8XyTHrXH/0=
+X-Received: by 2002:a9d:798c:: with SMTP id h12mr3782628otm.86.1551459165541;
+ Fri, 01 Mar 2019 08:52:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20190228171242.32144-1-frederic@kernel.org> <CAHk-=wh5MQiXNUBCN6VKNGRR2gDekhXpaTc914D3y4=dHpmh4Q@mail.gmail.com>
- <20190301034536.GA19200@lenoir>
-In-Reply-To: <20190301034536.GA19200@lenoir>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 1 Mar 2019 08:51:38 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgOZuGZaVOOiC=drG6ykVkOGk8RRXZ_CrPBMXHKjTg0dg@mail.gmail.com>
-Message-ID: <CAHk-=wgOZuGZaVOOiC=drG6ykVkOGk8RRXZ_CrPBMXHKjTg0dg@mail.gmail.com>
-Subject: Re: [PATCH 00/37] softirq: Per vector masking v3
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
+References: <20190301102140.7181-1-narmstrong@baylibre.com>
+ <20190301102140.7181-3-narmstrong@baylibre.com> <CAFBinCC1b5Q8Y=5qXKJ+B1XBhpo8PGFYHwTEeVTgbXwz7ge3-A@mail.gmail.com>
+ <a3654bdb-4289-7755-5601-e8177b00790f@baylibre.com>
+In-Reply-To: <a3654bdb-4289-7755-5601-e8177b00790f@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 1 Mar 2019 17:52:34 +0100
+Message-ID: <CAFBinCA6VJqK31NgyVkf2rLva0R2RbYQasdZGe+0BjjdOmnmFA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] clk: meson: g12a: add cpu clocks
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     jbrunet@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 7:45 PM Frederic Weisbecker <frederic@kernel.org> wrote:
+Hi Neil,
+
+On Fri, Mar 1, 2019 at 5:42 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+[...]
+> >> +static struct clk_regmap g12a_cpu_clk_dyn0_sel = {
+> >> +       .data = &(struct clk_regmap_mux_data){
+> >> +               .offset = HHI_SYS_CPU_CLK_CNTL0,
+> >> +               .mask = 0x3,
+> >> +               .shift = 0,
+> >> +       },
+> >> +       .hw.init = &(struct clk_init_data){
+> >> +               .name = "cpu_clk_dyn0_sel",
+> > the buildroot code has a variable with the name "p_premux"
+> > I'm not sure what the datasheet states, but maybe this should be
+> > cpu_clk_dyn0_pre_sel
+> > same applies to the corresponding dyn1 clock below
 >
-> Numbers are indeed missing. In fact this patchset mostly just brings an
-> infrastructure. We have yet to pinpoint the most latency-inducing
-> softirq disabled sites and make them disable only the vectors that
-> are involved in a given lock.
+> these bit are named "premux1", and cpu_clk_dyn0 names "postmux1",
+> which has no sense because there is no mux in between.
+>
+> clk_dyn0_sel is the actual source selector of the dyn0 tree,
+> clkdyn0 is the top of the dyn0 tree, this is why i did not add "sel"
+> in it.
+OK, thank you for the explanation.
+can you please add a comment with the name from the datasheet in that
+case? that'll make it easier (at least for me) to compare the
+datasheet (and also buildroot kernel, since similar names are used
+there) with the mainline drivers
 
-Note that I think we pretty much know that already: the people who
-have had issues have never actually really had issues with the actual
-"disable softirq" paths, they've all been about actually *running* the
-softirq's (and that in turn being a latency issue for running _other_
-softirqs, and in particular for delaying them into softirqd).
+[...]
+> >
+> >> +               .flags = CLK_IGNORE_UNUSED,
+> >> +       },
+> >> +};
+> >> +
+> >> +static struct clk_regmap g12a_cpu_clk_axi_div = {
+> >> +       .data = &(struct clk_regmap_div_data){
+> >> +               .offset = HHI_SYS_CPU_CLK_CNTL1,
+> >> +               .shift = 9,
+> >> +               .width = 3,
+> >> +               .flags = CLK_DIVIDER_POWER_OF_TWO,
+> >> +       },
+> >> +       .hw.init = &(struct clk_init_data){
+> >> +               .name = "cpu_clk_axi_div",
+> >> +               .ops = &clk_regmap_divider_ro_ops,
+> > out of curiosity (this applies to all CPU clock post-dividers):
+> > did you check whether CLK_DIVIDER_POWER_OF_TWO is correct on G12A?
+> > I'm asking because on Meson8b the post-dividers select between one of:
+> > "cpu_clk divided by 2, 3, 4, 5, 6, 7 or 8". also some of the
+> > post-dividers use register value 0 for cpu_clk_div2 while others use
+> > register value 1 for cpu_clk_div2.
+>
+> It's correct !
+thanks for looking this up again and double-checking!
 
-Now, it may well be that yes, we'll have "block softirqs" code that
-has issues too, but it's absolutely been swamped by the latencies for
-actually running them so far.
 
-Note that this is all really fairly independent of the whole masking
-logic. Yes, the masking logic comes into play too (allowing you to run
-a subset of softirq's at a time), but on the whole the complaints I've
-seen have not been "the networking softirq takes so long that it
-delays USB tasklet handling", but they have been along the lines of
-"the networking softirq gets invoked so often that it then floods the
-system and triggers softirqd, and _that_ then makes tasklet handling
-latency go up insanely".
-
-See the difference? Not the latency of softirq's disabled, but the
-latency of one group of softirqs causing problems for another when
-they all get batched together (and soft-scheduled to another context
-together).
-
-                  Linus
+Martin
