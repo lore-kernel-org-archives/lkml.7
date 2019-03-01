@@ -2,160 +2,136 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEC1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62CFC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A8D20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666EF20850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OzGtKNLv"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="JD3S1C9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389123AbfCAQgh (ORCPT
+        id S2389147AbfCAQg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:36:37 -0500
-Received: from mail-eopbgr130050.outbound.protection.outlook.com ([40.107.13.50]:61510
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        Fri, 1 Mar 2019 11:36:59 -0500
+Received: from mail-eopbgr1400090.outbound.protection.outlook.com ([40.107.140.90]:33427
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388450AbfCAQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:36:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+        id S1728517AbfCAQg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:36:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector1-bp-renesas-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BwBI1/vlYtRT0+PadTv6J4hbCxdIhJZ9YLjIT+9qh6c=;
- b=OzGtKNLvJ76sEHGkkoMzQQ40irskaZMdq0wpPcCDUhwwAEURXxwJAN8KDwxGcUUF/bXUaBYRiyZfCRszIsUPl6esQGQ7XK+sdkfsDxIjjJ3L9rdbIEP09W4KxsHPxL1+vh5YQLgk3sX9T/exisqO0Fo2vR1kVdNRDBB3nK8qbHk=
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com (52.134.1.18) by
- VI1PR0402MB3504.eurprd04.prod.outlook.com (52.134.4.21) with Microsoft SMTP
+ bh=HewLh+G4Pz1E+uDS72qXtqTEjC3nwRTDkQuSTfLiJ6U=;
+ b=JD3S1C9Pyh7GIUe83HVEIMXlFwUu3wxlAzC3vqeHQlvFeHZSCqm+V6EUkdR6ljL3kviC8KpvPCq31sI9NcX+VvCeE+sGxn8kQ3HuvXqWopLxvt/tR+JmiY5G9F48AeRHEg5oH2Qq+AG4De9QP9ibYuPXczq6VU/t9Z1FoMA+MPw=
+Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com (52.133.168.140) by
+ TYXPR01MB1888.jpnprd01.prod.outlook.com (52.133.169.21) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.21; Fri, 1 Mar 2019 16:36:31 +0000
-Received: from VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::f80e:d03f:57bc:aced]) by VI1PR0402MB3357.eurprd04.prod.outlook.com
- ([fe80::f80e:d03f:57bc:aced%2]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
- 16:36:31 +0000
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "baruch@tkos.co.il" <baruch@tkos.co.il>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+ 15.20.1665.15; Fri, 1 Mar 2019 16:36:52 +0000
+Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com
+ ([fe80::88d2:545c:9212:c8cf]) by TYXPR01MB1775.jpnprd01.prod.outlook.com
+ ([fe80::88d2:545c:9212:c8cf%5]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
+ 16:36:52 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "mathias.nyman@intel.com" <mathias.nyman@intel.com>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>,
-        "spencercw@gmail.com" <spencercw@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v5 0/4] Enable wm8524 on i.MX8MQ-EVK
-Thread-Topic: [PATCH v5 0/4] Enable wm8524 on i.MX8MQ-EVK
-Thread-Index: AQHU0EzsRlqTlUiSy0OM80ksBH0L8A==
-Date:   Fri, 1 Mar 2019 16:36:31 +0000
-Message-ID: <20190301163604.10618-1-daniel.baluta@nxp.com>
-Accept-Language: en-US
+        Simon Horman <horms@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: RE: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
+Thread-Topic: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
+Thread-Index: AQHUkyFpi/45UrthxEeTw5QuFUj6AaX3HGuggABRjACAAAQ+0A==
+Date:   Fri, 1 Mar 2019 16:36:52 +0000
+Message-ID: <TYXPR01MB17756DBAF2FD7A1F2A9B82B0C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+References: <1544732471-6730-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TYXPR01MB1775A4A3AF86097F284C4A08C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <20190301161624.GA19937@kroah.com>
+In-Reply-To: <20190301161624.GA19937@kroah.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0248.eurprd07.prod.outlook.com
- (2603:10a6:803:b4::15) To VI1PR0402MB3357.eurprd04.prod.outlook.com
- (2603:10a6:803:2::18)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=daniel.baluta@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [95.76.156.53]
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e1dbe88-8076-4f46-de9f-08d69e640f43
+x-ms-office365-filtering-correlation-id: e381ad49-cc13-4dce-0a47-08d69e641c1e
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0402MB3504;
-x-ms-traffictypediagnostic: VI1PR0402MB3504:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;VI1PR0402MB3504;23:wNk/TR8CkTaDDZ4XSk8BBalvKHQNzU3gmnjAf?=
- =?iso-8859-1?Q?14xqa2WSO633fzakakfcxILKh9qTk7ETSBlQizbuGqI2L7eJPFq4jrlfKF?=
- =?iso-8859-1?Q?CQgl938pcWz1sMYeeuhD+LOrU2sWx5AxfR9au7TdSYjNfrC2XPUGF5JoR8?=
- =?iso-8859-1?Q?7r7t3MZYAyssBscrGw2/w9qkxsKrRzUtFUOkl+aFibpOVm2kX+rh7HBpCJ?=
- =?iso-8859-1?Q?zSG5J6gaCAd2YOFW7BuQEgY7toGJ23QH4VR4TJhDSemGDYO1ci3A7xarfj?=
- =?iso-8859-1?Q?g77+ete9TeHRQoIxsvhSJ7kp9R/nmOX++R6eH89yHZRoXFNZqsb7DKv5Pf?=
- =?iso-8859-1?Q?NKfZUy1ju9CPoO2GY16C2xedgvjUmpb1mVN5SXFArcqpVdd0XO10Xpx8GO?=
- =?iso-8859-1?Q?mCY6fu/5x8l8tQiJtyVkFH29L53Mj9UumX8w5c66fxmKIgYcFAB+iHKlJA?=
- =?iso-8859-1?Q?o97kGqXK16elQ2HL9oJDuVsT4TACqbPXQZ4YCXJIZIwnuSzCIfh0bivCnX?=
- =?iso-8859-1?Q?eJf4dEA16CssXTkuCwjg1ItRfb/sXOQhass91I9hGjdYMMka56+gPKxMog?=
- =?iso-8859-1?Q?2i1QvzVllM3JqscWN1X+jfeOfBJSAqtZGqyX7tXXQiODzwtUOb33+iChjN?=
- =?iso-8859-1?Q?VZte30iSJlHsAPacsGIBpSmudpXNkvFkizZzWhDYRQbyhL/88QDA/xXdcb?=
- =?iso-8859-1?Q?4+xpa+23eAJNWgOm/8+K3fRldcxgbaRafBVMp9qzh1M+GHSr6exOpYMj7W?=
- =?iso-8859-1?Q?udDQ3unHsqjxbtNCU49M9GRKkXseQyL5QznkGc3AEwmtF5x0DHoepNfg/z?=
- =?iso-8859-1?Q?Gg6z1N9nJp3HcM6fFiXRS7SCV0S33p+h5JkqRA2T8wO9W0u/Jpsfp4XDxu?=
- =?iso-8859-1?Q?Y60jp4Ag0nSUZe9Z4DYjt99k6Ae484sEttRLMooKHEYy37p+83z4Cu0BLn?=
- =?iso-8859-1?Q?qmAXUGfA3FKiz9IGBEEw06sFgzZocym3QHyHrutU1KRDvWZtDUlSMrHpoG?=
- =?iso-8859-1?Q?k+ziGv/qE0Tpif+tlDefHHKAzOtasbiqXdh4V39zFV3WY6TqjoudUaVEdv?=
- =?iso-8859-1?Q?iNkvtsxUjHUqz66LL8cdyrVPtruPmZxDCUQmatVbObp+PoiphVN3Zqi0HX?=
- =?iso-8859-1?Q?LFx+Yl1kcT5cu3/7dBb3rago7TC6bjtRLaU3xLwNPtSIvB8Ww8KxoWPBkA?=
- =?iso-8859-1?Q?Wd3LC1TD6Ob2fUtfgeAN6GB47DrbROFGqwt/7Iho+nYZ3sJK9SdYz0eUy4?=
- =?iso-8859-1?Q?8mW1fyT6VbgYvJYgb/fpDgTENJa9G6cXIQE6M9xPK7TEgaQp45hF9+jb0r?=
- =?iso-8859-1?Q?wcq8C37sWo8JZgj7wVTQqrEkg4QCOilxfkBbcdpx7QILgzCEDvwUrKPzyd?=
- =?iso-8859-1?Q?V71mWpP0wGnek3vIkv/n8KsgRauOaFyjB65vfpAERKqsDjg/QR+JDu0866?=
- =?iso-8859-1?Q?PvCGpAl4+D6WlTTm847qepIe/VXcBEeHhWAEG?=
-x-microsoft-antispam-prvs: <VI1PR0402MB3504A87FC08678B6F6E27609F9760@VI1PR0402MB3504.eurprd04.prod.outlook.com>
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:TYXPR01MB1888;
+x-ms-traffictypediagnostic: TYXPR01MB1888:
+x-microsoft-exchange-diagnostics: 1;TYXPR01MB1888;20:D47Nj5t80BQ72tHejK82DIltFN/KQRlaCBFf7T4dnWD1zg2du1l3absRcyginf2+jPNP36L+MDDqb2lxXUTcNzr4MKqAeYgxSDJTlCXwVKUfP0wFWyr8kpwjs9kNVFcU21PHpAgiccp6Ox7TOq4O9A4vi8f028BmxeNgAbJBFFw=
+x-microsoft-antispam-prvs: <TYXPR01MB18880B6E62CA246039C5EEBDC0760@TYXPR01MB1888.jpnprd01.prod.outlook.com>
 x-forefront-prvs: 09634B1196
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(39860400002)(136003)(376002)(346002)(366004)(396003)(199004)(189003)(26005)(66066001)(186003)(7416002)(25786009)(106356001)(4326008)(2616005)(105586002)(6116002)(476003)(2351001)(68736007)(2501003)(50226002)(3846002)(486006)(44832011)(478600001)(256004)(14454004)(36756003)(2906002)(5640700003)(6436002)(305945005)(53936002)(86362001)(54906003)(316002)(1730700003)(81156014)(81166006)(8676002)(52116002)(8936002)(71200400001)(71190400001)(5660300002)(99286004)(102836004)(1076003)(6916009)(4744005)(97736004)(7736002)(6486002)(6512007)(6506007)(386003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3504;H:VI1PR0402MB3357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(346002)(39860400002)(366004)(136003)(199004)(189003)(5660300002)(52536013)(478600001)(6436002)(229853002)(68736007)(14454004)(2501003)(74316002)(7736002)(305945005)(55016002)(8936002)(9686003)(4744005)(81166006)(8676002)(81156014)(66066001)(2906002)(7696005)(71190400001)(33656002)(71200400001)(4326008)(476003)(11346002)(105586002)(76176011)(446003)(486006)(44832011)(99286004)(6116002)(25786009)(256004)(3846002)(54906003)(110136005)(316002)(53936002)(97736004)(7416002)(106356001)(6246003)(86362001)(102836004)(6506007)(186003)(53546011)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1888;H:TYXPR01MB1775.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: umXohuP9jOuBqzNpvHeGyVcNS+cUUJE06ciAYHcVEnTjLd+4XzmdMrTF9BZm05/fQCZfPwyy1z+DWAU5ZkiDOdyIr2ye6xDveIVOeZzGypE3cw1nJQ61epnP6TDXUrUXI6h0sAwHm3rJDh0Sqn5X2qVDtH+iBCSEBY6tgRPeGSFWTXfDfU2axv3DA3rjwnznISZf6zYeaf8h3VZ61nCoPi/iyQvg4MPjTtkm+oF/GY2eKwE42EcrhdyMvlz3sxct6H7x/7EEAO6gxtj0IPRlsklThljCx2euDC6aR2i5NqEH2Nk3DtbteWCFD7JmhCbR/9Zo10Z0SmsQ2sYs3xzbf77WCrKEv23bBfP+E5whhLdbd08JV9zV3UFnFS0Fw5fCyYvtaNlm/5PeIqDdC1HtBokekzDF+oG1eZpTj8vAgXU=
-Content-Type: text/plain; charset="iso-8859-1"
+x-microsoft-antispam-message-info: 8m53GT7t/eOCW8VhwMrZ5mDIBEsTmjaFGIM5aYvcjaov0bCo/jp0s0UJrjHUo7pB+2UIlzJnk0+dHSd/PCnxVCh53cc+rgIVW/4Z4jnR4VHXCwz17XMMIA8lqffqH27r1cDzSBlOy24zB0/7jxTPWb0meS7NXi3q1GUGAJzXKsPvfGUJYAdZ5ZicZ+0EDwRRYTXGyPQ6W75YPPCeKeapz/RfcbtY1S1gJ01n7lDHxiOPhyT8f/GMgX0/qWhKA2yrwNZIo3OtMW54fsp6GWhMbrFAG0MdVf90O7bOLE1GnXvsCL9OeLTpQfjWd8TzW+75S6/dH3FjIttUPHU9clFQc5V3EvYN9VOdr9ei6xmKRcjsOdihUmCM1lujOJreH2FpBSY68uC7TQ8mfztEhZiD2rOCXXvI5n/U3oYVs5faFP4=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e1dbe88-8076-4f46-de9f-08d69e640f43
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 16:36:31.3200
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e381ad49-cc13-4dce-0a47-08d69e641c1e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 16:36:52.3171
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3504
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1888
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes since v4 (after Fabio's review)
-	- removed mclk0 from sai2 node because it is not yet supported by SAI driv=
-er
-	- s/audio-codec-0/audio-codec
-	- squashed patches 4 and 5
+Hello Greg,
 
-Changes since v3:
-	- use "arm64: dts: imx8mq-evk" prefix for patches specific to 8MQ-EVK
-	- squash together patches for setting up SAI (previous 3/5 and 4/5)
-	- add back and document "fsl, imx8mq-sdma" compatbile string
+Thank you for your reply!
 
-Changes since v2:
-        - s/QM/MQ after Chris comments
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Sent: 01 March 2019 16:16
+> To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@v=
+ger.kernel.org; Simon Horman <horms@verge.net.au>;
+> Geert Uytterhoeven <geert+renesas@glider.be>; Chris Paterson <Chris.Pater=
+son2@renesas.com>; Biju Das
+> <biju.das@bp.renesas.com>; linux-renesas-soc@vger.kernel.org; Rob Herring=
+ <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>
+> Subject: Re: [PATCH] dt-bindings: usb-xhci: Add r8a774c0 support
+>=20
+> On Fri, Mar 01, 2019 at 11:25:33AM +0000, Fabrizio Castro wrote:
+> > Hello Greg,
+> >
+> > I am sorry to bother you.
+> > Do you think you take this patch?
+>=20
+> device tree bindings need an ack from the DT maintainers before I can
+> take them.  Also, this is for xhci, the xhci maintainer is responsible
+> for those, not me :)
 
-Changes since v1:
-        - added cover letter
-        - remove "fsl,imx8mq-sdma" compatible for sdma.
+I am so sorry.
 
-Daniel Baluta (4):
-  arm64: dts: imx8mq: Add SDMA nodes
-  bindings: fsl-imx-sdma: Document fsl,imx8mq-sdma compatbile string
-  arm64: dts: imx8mq: Add SAI2 node
-  arm64: dts: imx8mq-evk: Enable audio codec wm8952
+The patch has been reviewed by Geert Uytterhoeven, Simon Horman, and Rob He=
+rring already.
 
- .../devicetree/bindings/dma/fsl-imx-sdma.txt  |  1 +
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts  | 48 +++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 37 ++++++++++++++
- 3 files changed, 86 insertions(+)
+Mathias, are you the one taking the patches for Documentation/devicetree/bi=
+ndings/usb/usb-xhci.txt now?
 
---=20
-2.17.1
+Thanks,
+Fab
 
+>=20
+> thanks,
+>=20
+> greg k-h
