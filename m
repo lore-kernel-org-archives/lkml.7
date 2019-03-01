@@ -2,161 +2,184 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C99BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37544C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CFB20818
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF022083E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:25:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="IW4LnsC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733260AbfCALYb (ORCPT
+        id S2387520AbfCALY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:24:31 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33368 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732835AbfCALYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:24:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E290EBD;
-        Fri,  1 Mar 2019 03:24:30 -0800 (PST)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06C343F5C1;
-        Fri,  1 Mar 2019 03:24:26 -0800 (PST)
-Subject: Re: [PATCH v3 27/34] mm: pagewalk: Add 'depth' parameter to pte_hole
-To:     Dave Hansen <dave.hansen@intel.com>, linux-mm@kvack.org
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190227170608.27963-1-steven.price@arm.com>
- <20190227170608.27963-28-steven.price@arm.com>
- <aece3046-6040-e2ec-fcd7-204113d40eb7@intel.com>
- <02b9ec67-75c5-4a36-9110-cc4ba6ee4f94@arm.com>
- <5f354bf5-4ac8-d0e2-048c-0857c91a21e6@intel.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <26df02dd-c54e-ea91-bdd1-0a4aad3a30ac@arm.com>
-Date:   Fri, 1 Mar 2019 11:24:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Fri, 1 Mar 2019 06:24:59 -0500
+Received: from mail-eopbgr30061.outbound.protection.outlook.com ([40.107.3.61]:45954
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727952AbfCALY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 06:24:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tLxH7+9FvP9SCJC58TYtKbEMAGhdngc8QCK4XxuWzec=;
+ b=IW4LnsC8aKZNU7FJZlxTQb02fInkfFU1ncH1lXMUIo1gIvJz0dglNm3j0hBcErMHLz1PEfbbq0XpberzPecpE3+so/eqgh13VucvmI6T6TDD84ReHgwC6jduBSajc1RxAqjgc3gw0nkS5YCpFXDLIRKXF1fZLMlZPxu8vwREBa4=
+Received: from DB5PR0801MB1590.eurprd08.prod.outlook.com (10.167.230.14) by
+ DB5PR0801MB1544.eurprd08.prod.outlook.com (10.167.229.154) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.15; Fri, 1 Mar 2019 11:24:55 +0000
+Received: from DB5PR0801MB1590.eurprd08.prod.outlook.com
+ ([fe80::ac52:cef2:374a:afbd]) by DB5PR0801MB1590.eurprd08.prod.outlook.com
+ ([fe80::ac52:cef2:374a:afbd%2]) with mapi id 15.20.1643.022; Fri, 1 Mar 2019
+ 11:24:54 +0000
+From:   Dave P Martin <Dave.Martin@arm.com>
+To:     Amit Kachhap <Amit.Kachhap@arm.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Kristina Martsenko <Kristina.Martsenko@arm.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [kvmtool PATCH v6 6/6] arm/kvm: arm64: Add a vcpu feature for
+ pointer authentication
+Thread-Topic: [kvmtool PATCH v6 6/6] arm/kvm: arm64: Add a vcpu feature for
+ pointer authentication
+Thread-Index: AQHUyDUOH0S96lHnNUqqzBY6pIzdJ6X2pUibgAANFAA=
+Date:   Fri, 1 Mar 2019 11:24:54 +0000
+Message-ID: <20190301112452.GS16031@e103592.cambridge.arm.com>
+References: <1550568271-5319-1-git-send-email-amit.kachhap@arm.com>
+ <1550568271-5319-7-git-send-email-amit.kachhap@arm.com>
+ <20190221155409.GA3567@e103592.cambridge.arm.com>
+ <048f772a-1faf-5fa3-d82c-25212a5104af@arm.com>
+In-Reply-To: <048f772a-1faf-5fa3-d82c-25212a5104af@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.5.23 (2014-03-12)
+x-originating-ip: [217.140.106.49]
+x-clientproxiedby: LO2P265CA0214.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9e::34) To DB5PR0801MB1590.eurprd08.prod.outlook.com
+ (2603:10a6:0:3b::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Dave.Martin@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9d4b22a2-b484-4b63-e4ba-08d69e38874d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB5PR0801MB1544;
+x-ms-traffictypediagnostic: DB5PR0801MB1544:
+x-microsoft-exchange-diagnostics: 1;DB5PR0801MB1544;20:aHQrxyivKDmjAmeQrAHc0s9uUME3LR3qU51DDq5BDIFcdBTClD+asyY2xXFnauInm0cEgb6b41OE4eoUQcHIg3K2p+BxuiDfNkpFQjpxlpigbZvdwyN3JJcLR/ZD4AfE5+VUS28cif7SSfFgPI+8oFb0/NS1+kfCKDN0zzc7jag=
+x-microsoft-antispam-prvs: <DB5PR0801MB154467585FC1C0CDA0C41B95FE760@DB5PR0801MB1544.eurprd08.prod.outlook.com>
+x-forefront-prvs: 09634B1196
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(396003)(376002)(136003)(40434004)(199004)(189003)(256004)(14444005)(486006)(5024004)(1076003)(52116002)(71200400001)(71190400001)(93886005)(186003)(2906002)(446003)(76176011)(86362001)(316002)(102836004)(33656002)(6506007)(386003)(26005)(53546011)(58126008)(99286004)(476003)(54906003)(11346002)(66066001)(229853002)(53936002)(6486002)(72206003)(105586002)(4326008)(8676002)(305945005)(7736002)(478600001)(5660300002)(97736004)(6512007)(68736007)(14454004)(81156014)(81166006)(6636002)(106356001)(8936002)(6246003)(6116002)(3846002)(6436002)(6862004)(25786009)(18370500001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB5PR0801MB1544;H:DB5PR0801MB1590.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pWdgY5RmmNPKnW8CL+uZhuSVVDzAhLtNUX+SrSYUuNm9Ls2DMMqchee0uhJfnDiElTSjreNk7BTiR1JdqcCJQgYZqPWzU6IQI6wG2/7EGmRqQRb21M5KIbAh+G6yQWv6GNdjOMrSENT9fC0lr5ILfLWxv+6NvvIzjeoAsZNd4Loqcsd70ToX6wf4WcIlDM6mgpaECQvSKbUmXNUo9djLJh5QM4h0lwfVCjpLiw1XOi71Ns5Kc3F8dB816vZW+YqaZpFI7TJ6p+1pwBLMqsbM4piJR12nNhW2UZ0VkzwiEZqfdtSh6LKrryEBBM7NYlyh/aPlS7h1lNliwLBS1ScXDsM5vvrkVo4JfG9FN4Sdp/z0KgwlgA/b5GkxJjQ12r2IbSt3oHD3aP1T711jk5HKrGQyR+uEr2ADHnjlxGAdNj4=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EAE43C6DD55A704C8A230EA1AB7EEF68@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <5f354bf5-4ac8-d0e2-048c-0857c91a21e6@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d4b22a2-b484-4b63-e4ba-08d69e38874d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 11:24:54.3198
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5PR0801MB1544
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 19:00, Dave Hansen wrote:
-> On 2/28/19 3:28 AM, Steven Price wrote:
->> static int get_level(unsigned long addr, unsigned long end)
->> {
->> 	/* Add 1 to account for ~0ULL */
->> 	unsigned long size = (end - addr) + 1;
->> 	if (size < PMD_SIZE)
->> 		return 4;
->> 	else if (size < PUD_SIZE)
->> 		return 3;
->> 	else if (size < P4D_SIZE)
->> 		return 2;
->> 	else if (size < PGD_SIZE)
->> 		return 1;
->> 	return 0;
->> }
->>
->> There are two immediate problems with that:
->>
->>  * The "+1" to deal with ~0ULL is fragile
->>
->>  * PGD_SIZE isn't what you might expect, it's not defined for most
->> architectures and arm64/x86 use it as the size of the PGD table.
->> Although that's easy enough to fix up.
->>
->> Do you think a function like above would be preferable?
-> 
-> The question still stands of why we *need* the depth/level in the first
-> place.  As I said, we obviously need it for printing out the "name" of
-> the level.  Is that it?
+On Fri, Mar 01, 2019 at 10:37:54AM +0000, Amit Daniel Kachhap wrote:
+> Hi,
+>
+> On 2/21/19 9:24 PM, Dave Martin wrote:
+> > On Tue, Feb 19, 2019 at 02:54:31PM +0530, Amit Daniel Kachhap wrote:
 
-That is the only use I'm currently aware of.
+[...]
 
->> The other option would of course be to just drop the information from
->> the debugfs file about at which level the holes are. But it can be
->> useful information to see whether there are empty levels in the page
->> table structure. Although this is an area where x86 and arm64 differ
->> currently (x86 explicitly shows the gaps, arm64 doesn't), so if x86
->> doesn't mind losing that functionality that would certainly simplify things!
-> 
-> I think I'd actually be OK with the holes just not showing up.  I
-> actually find it kinda hard to read sometimes with the holes in there.
-> I'd be curious what others think though.
+> >> diff --git a/arm/aarch64/include/kvm/kvm-config-arch.h b/arm/aarch64/i=
+nclude/kvm/kvm-config-arch.h
+> >> index 04be43d..2074684 100644
+> >> --- a/arm/aarch64/include/kvm/kvm-config-arch.h
+> >> +++ b/arm/aarch64/include/kvm/kvm-config-arch.h
+> >> @@ -8,7 +8,9 @@
+> >>   "Create PMUv3 device"),\
+> >>   OPT_U64('\0', "kaslr-seed", &(cfg)->kaslr_seed,\
+> >>   "Specify random seed for Kernel Address Space "\
+> >> -"Layout Randomization (KASLR)"),
+> >> +"Layout Randomization (KASLR)"),\
+> >> +OPT_BOOLEAN('\0', "ptrauth", &(cfg)->has_ptrauth,\
+> >> +"Enable address authentication"),
+> >
+> > Nit: doesn't this enable address *and* generic authentication?  The
+> > discussion on what capababilities and enables the ABI exposes probably
+> > needs to conclude before we can finalise this here.
+> ok.
+> >
+> > However, I would recommend that we provide a single option here that
+> > turns both address authentication and generic authentication on, even
+> > if the ABI treats them independently.  This is expected to be the commo=
+n
+> > case by far.
+> ok
+> >
+> > We can always add more fine-grained options later if it turns out to be
+> > necessary.
+> Mark suggested to provide 2 flags [1] for Address and Generic
+> authentication so I was thinking of adding 2 features like,
+>
+> +#define KVM_ARM_VCPU_PTRAUTH_ADDR4 /* CPU uses pointer address
+> authentication */
+> +#define KVM_ARM_VCPU_PTRAUTH_GENERIC5 /* CPU uses pointer generic
+> authentication */
+>
+> And supply both of them concatenated in VCPU_INIT stage. Kernel KVM
+> would expect both feature requested together.
 
-If no-one has any objections to dropping the holes in the output, then I
-can rebase on something like below and drop this 'depth' patch.
+Seems reasonable.  Do you mean the kernel would treat it as an error if
+only one of these flags is passed to KVM_ARM_VCPU_INIT, or would KVM
+simply treat them as independent?
 
-Steve
+[...]
 
-----8<----
-From a9eabadfc212389068ec5cc60265c7a55585bb76 Mon Sep 17 00:00:00 2001
-From: Steven Price <steven.price@arm.com>
-Date: Fri, 1 Mar 2019 10:06:33 +0000
-Subject: [PATCH] x86: mm: Hide page table holes in debugfs
+> >> diff --git a/arm/kvm-cpu.c b/arm/kvm-cpu.c
+> >> index 7780251..4ac80f8 100644
+> >> --- a/arm/kvm-cpu.c
+> >> +++ b/arm/kvm-cpu.c
+> >> @@ -68,6 +68,12 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm,=
+ unsigned long cpu_id)
+> >>   vcpu_init.features[0] |=3D (1UL << KVM_ARM_VCPU_PSCI_0_2);
+> >>   }
+> >>
+> >> +/* Set KVM_ARM_VCPU_PTRAUTH if available */
+> >> +if (kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH)) {
+> >> +if (kvm->cfg.arch.has_ptrauth)
+> >> +vcpu_init.features[0] |=3D ARM_VCPU_PTRAUTH_FEATURE;
+> >> +}
+> >> +
+> >
+> > I'm not too keen on requiring a dummy #define for AArch32 here.  How do
+> > we handle other subarch-specific feature flags?  Is there something we
+> > can reuse?
+> I will check it.
 
-For the /sys/kernel/debug/page_tables/ files, rather than outputing a
-mostly empty line when a block of memory isn't present just skip the
-line. This keeps the output shorter and will help with a future change
-switching to using the generic page walk code as we no longer care about
-the 'level' that the page table holes are at.
+OK
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/x86/mm/dump_pagetables.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index e3cdc85ce5b6..a0f4139631dd 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -304,8 +304,8 @@ static void note_page(struct seq_file *m, struct
-pg_state *st,
- 		/*
- 		 * Now print the actual finished series
- 		 */
--		if (!st->marker->max_lines ||
--		    st->lines < st->marker->max_lines) {
-+		if ((cur & _PAGE_PRESENT) && (!st->marker->max_lines ||
-+		    st->lines < st->marker->max_lines)) {
- 			pt_dump_seq_printf(m, st->to_dmesg,
- 					   "0x%0*lx-0x%0*lx   ",
- 					   width, st->start_address,
-@@ -321,7 +321,9 @@ static void note_page(struct seq_file *m, struct
-pg_state *st,
- 			printk_prot(m, st->current_prot, st->level,
- 				    st->to_dmesg);
- 		}
--		st->lines++;
-+		if (cur & _PAGE_PRESENT) {
-+			st->lines++;
-+		}
-
- 		/*
- 		 * We print markers for special areas of address space,
--- 
-2.20.1
-
+Cheers
+---Dave
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
