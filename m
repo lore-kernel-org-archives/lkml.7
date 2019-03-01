@@ -2,103 +2,183 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C53FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0D6C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C2A2084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8517C206DD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388780AbfCAP0g (ORCPT
+        id S2388840AbfCAP13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 10:26:36 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43972 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728234AbfCAP0g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 10:26:36 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x21FKKPN083396
-        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 10:26:35 -0500
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qy534qd89-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 10:26:34 -0500
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <jejb@linux.ibm.com>;
-        Fri, 1 Mar 2019 15:26:33 -0000
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 1 Mar 2019 15:26:30 -0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x21FQT9R24182984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 Mar 2019 15:26:29 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 17A24124054;
-        Fri,  1 Mar 2019 15:26:29 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E5313124062;
-        Fri,  1 Mar 2019 15:26:27 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.80.228.140])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  1 Mar 2019 15:26:27 +0000 (GMT)
-Subject: Re: [PATCH v2] scsi: smartpqi_init: Reporting 'logical unit failure'
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     Erwan Velu <erwanaliasr1@gmail.com>, elliott@hpe.com
-Cc:     Erwan Velu <e.velu@criteo.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
-        <esc.storagedev@microsemi.com>,
-        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
-        <linux-scsi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Fri, 01 Mar 2019 07:26:27 -0800
-In-Reply-To: <20190301145832.12735-1-e.velu@criteo.com>
-References: <20190227163133.26283-1-e.velu@criteo.com>
-         <20190301145832.12735-1-e.velu@criteo.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030115-0052-0000-0000-00000392F330
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010686; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01168108; UDB=6.00610299; IPR=6.00948723;
- MB=3.00025794; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-01 15:26:32
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030115-0053-0000-0000-0000600298A4
-Message-Id: <1551453987.3334.2.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=585 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903010107
+        Fri, 1 Mar 2019 10:27:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43666 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388791AbfCAP10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 10:27:26 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 45EDFAE80;
+        Fri,  1 Mar 2019 15:27:24 +0000 (UTC)
+Date:   Fri, 01 Mar 2019 16:27:24 +0100
+Message-ID: <s5hpnrad38j.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     "Lee, Chun-Yi" <jlee@suse.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] efi: Downgrade "EFI_MEMMAP is not enabled" message
+In-Reply-To: <CAKv+Gu-gp+Hvd-ZcZC-ZRQOHpinj_mXx-L6fTUkKWSXd0UwC+g@mail.gmail.com>
+References: <20190301134033.2100-1-tiwai@suse.de>
+        <CAKv+Gu_d7fZuFmu6e5v4WFta11qVRkaKZWdt4X33JRLe3BwHZw@mail.gmail.com>
+        <s5ha7ieels3.wl-tiwai@suse.de>
+        <CAKv+Gu91QeeFHXfp4ShM2z1hbypwnoRKzZQQ3Sktk1sASXvR6Q@mail.gmail.com>
+        <s5h5zt2el6d.wl-tiwai@suse.de>
+        <CAKv+Gu-gp+Hvd-ZcZC-ZRQOHpinj_mXx-L6fTUkKWSXd0UwC+g@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-01 at 15:58 +0100, Erwan Velu wrote:
-> +			dev_err_ratelimited(&ctrl_info->pci_dev-
-> >dev, "received 'logical unit failure' from controller for scsi
-> %d:%d:%d:%d\n",
-> +							ctrl_info-
-> >scsi_host->host_no, device->bus,
-> +							device-
-> >target, device->lun);
+On Fri, 01 Mar 2019 15:57:03 +0100,
+Ard Biesheuvel wrote:
+> 
+> On Fri, 1 Mar 2019 at 15:14, Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > On Fri, 01 Mar 2019 15:02:23 +0100,
+> > Ard Biesheuvel wrote:
+> > >
+> > > On Fri, 1 Mar 2019 at 15:01, Takashi Iwai <tiwai@suse.de> wrote:
+> > > >
+> > > > On Fri, 01 Mar 2019 14:53:39 +0100,
+> > > > Ard Biesheuvel wrote:
+> > > > >
+> > > > > On Fri, 1 Mar 2019 at 14:40, Takashi Iwai <tiwai@suse.de> wrote:
+> > > > > >
+> > > > > > Since 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes
+> > > > > > when mapping the FB"), efifb_probe() checks its memory range via
+> > > > > > efi_mem_desc_lookup(), and this leads to a spurious error message
+> > > > > > "EFI_MEMMAP is not enabled" at every boot on KVM.  This is quite
+> > > > > > annoying since the error message appears even if you set "quiet" boot
+> > > > > > option.
+> > > > > >
+> > > > > > Actually there are only a few places that call efi_mem_desc_lookup()
+> > > > > > function, and the other callers do give the explicit error messages
+> > > > > > when the function returns an error in anyway.  That is, the error
+> > > > > > message in the function is more or less moot.
+> > > > > >
+> > > > > > So let's downgrade the error message for stop annoying users.
+> > > > > >
+> > > > > > Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+> > > > > > Bugzilla: https://bugzilla.suse.com/show_bug.cgi?id=1127339
+> > > > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > > > > ---
+> > > > > >  drivers/firmware/efi/efi.c | 2 +-
+> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > > > > > index 55b77c576c42..50ac33097458 100644
+> > > > > > --- a/drivers/firmware/efi/efi.c
+> > > > > > +++ b/drivers/firmware/efi/efi.c
+> > > > > > @@ -409,7 +409,7 @@ int efi_mem_desc_lookup(u64 phys_addr, efi_memory_desc_t *out_md)
+> > > > > >         efi_memory_desc_t *md;
+> > > > > >
+> > > > > >         if (!efi_enabled(EFI_MEMMAP)) {
+> > > > > > -               pr_err_once("EFI_MEMMAP is not enabled.\n");
+> > > > > > +               pr_debug("EFI_MEMMAP is not enabled.\n");
+> > > > > >                 return -EINVAL;
+> > > > > >         }
+> > > > > >
+> > > > >
+> > > > > efifb_probe() only calls efi_mem_desc_lookup() if
+> > > > > screen_info.orig_video_isVGA == VIDEO_TYPE_EFI, which only gets
+> > > > > assigned on a EFI boot.
+> > > > >
+> > > > > So even though I don't object to the patch as is, I would like to
+> > > > > understand where this error message is coming from, given that it
+> > > > > means that you are running on a UEFI system without the EFI memory
+> > > > > map.
+> > > > >
+> > > > > Is this system booting via GRUB in EFI mode?
+> > > >
+> > > > No, it's booted in legacy boot mode.  But the primary fb is efifb, and
+> > > > that's why the message appears.
+> > > >
+> > >
+> > > So how are we ending up with
+> > >
+> > > screen_info.orig_video_isVGA == VIDEO_TYPE_EFI
+> > >
+> > > ??
+> >
+> > Ah, sorry, my description was too ambiguous.
+> >
+> > Actually our GRUB2 default setup boots the Linux kernel with linuxefi.
+> > What I meant was that I invoked qemu-kvm without any -bios option, so
+> > it's no EFI BIOS.
+> >
+> 
+> Some from the link here
+> 
+> https://openqa.opensuse.org/tests/864184/file/journal_check-full_journal.log
+> 
+> I got
+> 
+> Feb 27 13:13:41 linux-e2c3 kernel: efifb: probing for efifb
+> Feb 27 13:13:41 linux-e2c3 kernel: efi: EFI_MEMMAP is not enabled.
+> Feb 27 13:13:41 linux-e2c3 kernel: fbcon: Taking over console
+> Feb 27 13:13:41 linux-e2c3 kernel: efifb: No BGRT, not showing boot graphics
+> Feb 27 13:13:41 linux-e2c3 kernel: efifb: framebuffer at 0xfc000000,
+> using 1408k, total 1408k
+> Feb 27 13:13:41 linux-e2c3 kernel: efifb: mode is 800x600x24,
+> linelength=2400, pages=1
+> Feb 27 13:13:41 linux-e2c3 kernel: efifb: scrolling: redraw
+> Feb 27 13:13:41 linux-e2c3 kernel: efifb: Truecolor: size=0:8:8:8,
+> shift=0:16:8:0
+> Feb 27 13:13:41 linux-e2c3 kernel: Console: switching to colour frame
+> buffer device 100x37
+> Feb 27 13:13:41 linux-e2c3 kernel: fb0: EFI VGA frame buffer device
+> 
+> So if we are doing legacy, there is something else that is taking,
+> GRUB perhaps, that is taking the framebuffer parameters and putting
+> them in screen_info and marking them as VIDEO_TYPE_EFI.
+> 
+> If this is a reasonable thing to do, it implies that the efifb driver
+> may run on otherwise non-EFI systems, and if this is the case, I'd
+> rather fix it like this:
+> 
+> diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+> index ba906876cc45..9e529cc2b4ff 100644
+> --- a/drivers/video/fbdev/efifb.c
+> +++ b/drivers/video/fbdev/efifb.c
+> @@ -464,7 +464,8 @@ static int efifb_probe(struct platform_device *dev)
+>         info->apertures->ranges[0].base = efifb_fix.smem_start;
+>         info->apertures->ranges[0].size = size_remap;
+> 
+> -       if (!efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+> +       if (efi_enabled(EFI_BOOT) &&
+> +           !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+>                 if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+>                     (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+>                         pr_err("efifb: video memory @ 0x%lx spans
+> multiple EFI memory regions\n",
+> 
+> Could you please confirm whether this works around the issue as well?
 
-Shouldn't this be a variant of sdev/scmd_printk?  Otherwise it tells
-you what disk in the array terms is the problem but not what device in
-your actual system is affected.
+Yeah, that makes sense, and I confirmed that your patch worked.
+Both EFI_BOOT and EFI_MEMMAP are 0 on the default boot.
 
-James
+Reported-and-tested-by: Takashi Iwai <tiwai@suse.de>
 
+
+Thanks!
+
+Takashi
