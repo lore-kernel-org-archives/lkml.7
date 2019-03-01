@@ -2,586 +2,277 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F3AC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BC0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63BD02084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550312084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:18:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hoUX4+aA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PY3KJn/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfCATM5 (ORCPT
+        id S1726203AbfCATSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 14:12:57 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43768 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbfCATM4 (ORCPT
+        Fri, 1 Mar 2019 14:18:30 -0500
+Received: from mail-it1-f194.google.com ([209.85.166.194]:34713 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfCATSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 14:12:56 -0500
-Received: by mail-qt1-f196.google.com with SMTP id y4so29023371qtc.10;
-        Fri, 01 Mar 2019 11:12:55 -0800 (PST)
+        Fri, 1 Mar 2019 14:18:30 -0500
+Received: by mail-it1-f194.google.com with SMTP id d125so11101681ith.1;
+        Fri, 01 Mar 2019 11:18:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2IDy1+JnazifkseAC7wCt+QbxwzYPyMdtElpePui2LE=;
-        b=hoUX4+aAZMvr3dEyjlosuWn4jHBvrLetJZ04MM9LCP9KUDNe8vu+donW5bAk9AnHOu
-         iXO1wGtiZkZqLMNXCDTeiLiZUDTWCYLIlhNkvE7CiiwgQNwgGuHFYLF/MD8VRVCHdIq1
-         wKwvaf44hgjSVQirfzv3QG95OICXAfTxGvUrQTG+wUrtV3oRCE76Pr7KhxBb0u/b5yjH
-         53DsFICd9RjlskgSsEKhm2wLh1oczV7W3qj4QP2kCzYkKXZ5GdpE52Zpdn1TeThmgARo
-         gGs0/JGHvT34Frrr9eJKiqf/O4Z/nTamr6KrHn0gB5tgmSrUgNtzjWRK9HqnqCa9sb28
-         icgQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=EJvnz88PKXt2P/1f4lpJ20/ghJgBxLBmogUepF9SBG8=;
+        b=PY3KJn/JV8oL2UFEKuIxQetuZ76EC3Ykeor87+m4jcZVqAp6rLNYOLJHTKmPeMPv2w
+         8qp+zwVoz/dA6f4FNNy0R3mVZImAgFS0OYwf4cSttWgPNFuj7TzW65+ZMghTQtPDDx9n
+         rYLWUov6atRtPZTUypYTOTclnQtaPctZWtG8fJEJGtwqiaD1w9u7bS4Y/dSO4+rO5vYI
+         A/Sm5WDl0mvstC6WyQA+rsXk/T1mcOaNwrNR6jhr/uzwYoApZmXvOankh0ce1A8ZBZKI
+         XjJFg+MTJWFfHz8B2ieqUKKW/P3igQXh7KDOaiKKrDY9dg5VhpYwXJZZg8ODwjNC2W9I
+         Xe3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2IDy1+JnazifkseAC7wCt+QbxwzYPyMdtElpePui2LE=;
-        b=E2E4++wtFMLbxkVjkyUQVf2bQf15R2JvtFsnLGKSLnjYMQH2uK5u6S2dxiqwl1Sfha
-         y0DQv8d6P/z8Q48eAm4RlpLMbet/N0cjfeQ9iPtfb9nm0c32eEZ6Vcpjpbp6QsGVsGAX
-         1KoVgM6PeQxeleeqCXWAKHuJ554pwlaUZYjfIj4jvtqzkVn/Wnx/yfNORx+QWofCvKdR
-         CuHQ3nxdSWOBqtLJjPCPM9RDHsJHXmfgrLxG37u9BUI93CMMZ8jR3kxVHP3C6SD4+v6o
-         515ew2jYHpbNZkKBIlVij+gvfS4Q3W4sPawrUESAXk1/3QrcKGJraXNijqwbwxBHk35N
-         DErQ==
-X-Gm-Message-State: APjAAAWyhaX9kR+mOROIwIJXV+MvPJWw+fxcMkEyCjPehnE8/wB+zjxK
-        7Crb61TOvgeM5j20XsOZsyTzyB3kaOtwkWNB2UY=
-X-Google-Smtp-Source: APXvYqzWJzcWA1Qeg55wEjT1goyG+JoHcWFUl1kz67AK3gbTONi2yHzpRoaP/SeYP57BF0ddXRKizISSZDN1aDGCnRU=
-X-Received: by 2002:ac8:3011:: with SMTP id f17mr5174674qte.268.1551467575060;
- Fri, 01 Mar 2019 11:12:55 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=EJvnz88PKXt2P/1f4lpJ20/ghJgBxLBmogUepF9SBG8=;
+        b=VSDfdd7VEXwP5ImQLwe2NqDtft6O69kZ2SupG1HWqmHu5JOcfgRAWDd3BheTGQ4RiX
+         3IUyKpX4PHzABSWZfKZGjVsQuhCYWYaN5rLTX2tLLz06/R2X2TmuNS4uK9i+JGrvBwKO
+         Rtyvfik+SaJWAD0UsU0nS7bjLK6J9fw7AjuG6EPMLN/1iHdt1fjXwUkOXai9+x0IFVHV
+         +epSZhljwEOyS84faAQLdD5TFAM/Lg354FvfdOAYuf8AEEzRLxJ/UKZvh62ap/QKFj5E
+         khkPnU9N1l0gvUbhEMpNVDdVuVXHzoI7ohEHC5i7dOH12hshGQmF41SGCRupjqJSrT3i
+         /tGg==
+X-Gm-Message-State: APjAAAVpWQaPFi5dmj3B5oQqepswwdg/vbiwGCI5JQ8h5EPXq0Ih3iK3
+        xwik5TUOL4B3UjyvIZcx/CE=
+X-Google-Smtp-Source: APXvYqxWbEwgGZMoVDprLcUbC03ZDpY0nrFyTF+nu4qDS8USyU6fj885eHJqnmcj5O6NGIAQz4GkQw==
+X-Received: by 2002:a02:12c4:: with SMTP id 65mr3809875jap.20.1551467908460;
+        Fri, 01 Mar 2019 11:18:28 -0800 (PST)
+Received: from ubu-Virtual-Machine (66-188-57-61.dhcp.bycy.mi.charter.com. [66.188.57.61])
+        by smtp.gmail.com with ESMTPSA id i14sm4987751itc.34.2019.03.01.11.18.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Mar 2019 11:18:27 -0800 (PST)
+Date:   Fri, 1 Mar 2019 14:18:24 -0500
+From:   Kimberly Brown <kimbrownkd@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>, gregkh@linuxfoundation.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] Drivers: hv: vmbus: Expose monitor data only when monitor
+ pages are used
+Message-ID: <20190301191824.GA4108@ubu-Virtual-Machine>
+References: <20190226053530.GA2897@ubu-Virtual-Machine>
 MIME-Version: 1.0
-References: <20190215222525.17802-1-willy@infradead.org>
-In-Reply-To: <20190215222525.17802-1-willy@infradead.org>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Fri, 1 Mar 2019 11:12:44 -0800
-Message-ID: <CAPhsuW7Hu6jBn-ti7S2cJhO1YQYg_RDZUgkqtgFO8zpBMV_9LA@mail.gmail.com>
-Subject: Re: [PATCH v3] page cache: Store only head pages in i_pages
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Hugh Dickins <hughd@google.com>, Jan Kara <jack@suse.cz>,
-        William Kucharski <william.kucharski@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190226053530.GA2897@ubu-Virtual-Machine>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 15, 2019 at 2:25 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> Transparent Huge Pages are currently stored in i_pages as pointers to
-> consecutive subpages.  This patch changes that to storing consecutive
-> pointers to the head page in preparation for storing huge pages more
-> efficiently in i_pages.
->
-> Large parts of this are "inspired" by Kirill's patch
-> https://lore.kernel.org/lkml/20170126115819.58875-2-kirill.shutemov@linux.intel.com/
->
-> Signed-off-by: Matthew Wilcox <willy@infradead.org>
-> Acked-by: Jan Kara <jack@suse.cz>
-> Reviewed-by: Kirill Shutemov <kirill@shutemov.name>
-> ---
->  include/linux/pagemap.h |   9 +++
->  mm/filemap.c            | 158 ++++++++++++++++------------------------
->  mm/huge_memory.c        |   3 +
->  mm/khugepaged.c         |   4 +-
->  mm/memfd.c              |   2 +
->  mm/migrate.c            |   2 +-
->  mm/shmem.c              |   2 +-
->  mm/swap_state.c         |   4 +-
->  8 files changed, 81 insertions(+), 103 deletions(-)
->
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index bcf909d0de5f..7d58e4e0b68e 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -333,6 +333,15 @@ static inline struct page *grab_cache_page_nowait(struct address_space *mapping,
->                         mapping_gfp_mask(mapping));
->  }
->
-> +static inline struct page *find_subpage(struct page *page, pgoff_t offset)
-> +{
-> +       VM_BUG_ON_PAGE(PageTail(page), page);
-> +       VM_BUG_ON_PAGE(page->index > offset, page);
-> +       VM_BUG_ON_PAGE(page->index + (1 << compound_order(page)) <= offset,
-> +                       page);
-> +       return page - page->index + offset;
-> +}
-> +
->  struct page *find_get_entry(struct address_space *mapping, pgoff_t offset);
->  struct page *find_lock_entry(struct address_space *mapping, pgoff_t offset);
->  unsigned find_get_entries(struct address_space *mapping, pgoff_t start,
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 5673672fd444..d9161cae11b5 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -279,11 +279,11 @@ EXPORT_SYMBOL(delete_from_page_cache);
->   * @pvec: pagevec with pages to delete
->   *
->   * The function walks over mapping->i_pages and removes pages passed in @pvec
-> - * from the mapping. The function expects @pvec to be sorted by page index.
-> + * from the mapping. The function expects @pvec to be sorted by page index
-> + * and is optimised for it to be dense.
->   * It tolerates holes in @pvec (mapping entries at those indices are not
->   * modified). The function expects only THP head pages to be present in the
-> - * @pvec and takes care to delete all corresponding tail pages from the
-> - * mapping as well.
-> + * @pvec.
->   *
->   * The function expects the i_pages lock to be held.
->   */
-> @@ -292,40 +292,43 @@ static void page_cache_delete_batch(struct address_space *mapping,
->  {
->         XA_STATE(xas, &mapping->i_pages, pvec->pages[0]->index);
->         int total_pages = 0;
-> -       int i = 0, tail_pages = 0;
-> +       int i = 0;
->         struct page *page;
->
->         mapping_set_update(&xas, mapping);
->         xas_for_each(&xas, page, ULONG_MAX) {
-> -               if (i >= pagevec_count(pvec) && !tail_pages)
-> +               if (i >= pagevec_count(pvec))
->                         break;
-> +
-> +               /* A swap/dax/shadow entry got inserted? Skip it. */
->                 if (xa_is_value(page))
->                         continue;
-> -               if (!tail_pages) {
-> -                       /*
-> -                        * Some page got inserted in our range? Skip it. We
-> -                        * have our pages locked so they are protected from
-> -                        * being removed.
-> -                        */
-> -                       if (page != pvec->pages[i]) {
-> -                               VM_BUG_ON_PAGE(page->index >
-> -                                               pvec->pages[i]->index, page);
-> -                               continue;
-> -                       }
-> -                       WARN_ON_ONCE(!PageLocked(page));
-> -                       if (PageTransHuge(page) && !PageHuge(page))
-> -                               tail_pages = HPAGE_PMD_NR - 1;
-> +               /*
-> +                * A page got inserted in our range? Skip it. We have our
-> +                * pages locked so they are protected from being removed.
-> +                * If we see a page whose index is higher than ours, it
-> +                * means our page has been removed, which shouldn't be
-> +                * possible because we're holding the PageLock.
-> +                */
-> +               if (page != pvec->pages[i]) {
-> +                       VM_BUG_ON_PAGE(page->index > pvec->pages[i]->index,
-> +                                       page);
-> +                       continue;
-> +               }
-> +
-> +               WARN_ON_ONCE(!PageLocked(page));
-> +
-> +               if (page->index == xas.xa_index)
->                         page->mapping = NULL;
-> -                       /*
-> -                        * Leave page->index set: truncation lookup relies
-> -                        * upon it
-> -                        */
-> +               /* Leave page->index set: truncation lookup relies on it */
-> +
-> +               /*
-> +                * Move to the next page in the vector if this is a small page
-> +                * or the index is of the last page in this compound page).
-> +                */
-> +               if (page->index + (1UL << compound_order(page)) - 1 ==
-> +                               xas.xa_index)
->                         i++;
-> -               } else {
-> -                       VM_BUG_ON_PAGE(page->index + HPAGE_PMD_NR - tail_pages
-> -                                       != pvec->pages[i]->index, page);
-> -                       tail_pages--;
-> -               }
->                 xas_store(&xas, NULL);
->                 total_pages++;
->         }
-> @@ -1491,7 +1494,7 @@ EXPORT_SYMBOL(page_cache_prev_miss);
->  struct page *find_get_entry(struct address_space *mapping, pgoff_t offset)
->  {
->         XA_STATE(xas, &mapping->i_pages, offset);
-> -       struct page *head, *page;
-> +       struct page *page;
->
->         rcu_read_lock();
->  repeat:
-> @@ -1506,25 +1509,19 @@ struct page *find_get_entry(struct address_space *mapping, pgoff_t offset)
->         if (!page || xa_is_value(page))
->                 goto out;
->
-> -       head = compound_head(page);
-> -       if (!page_cache_get_speculative(head))
-> +       if (!page_cache_get_speculative(page))
->                 goto repeat;
->
-> -       /* The page was split under us? */
-> -       if (compound_head(page) != head) {
-> -               put_page(head);
-> -               goto repeat;
-> -       }
-> -
->         /*
-> -        * Has the page moved?
-> +        * Has the page moved or been split?
->          * This is part of the lockless pagecache protocol. See
->          * include/linux/pagemap.h for details.
->          */
->         if (unlikely(page != xas_reload(&xas))) {
-> -               put_page(head);
-> +               put_page(page);
->                 goto repeat;
->         }
-> +       page = find_subpage(page, offset);
->  out:
->         rcu_read_unlock();
->
-> @@ -1706,7 +1703,6 @@ unsigned find_get_entries(struct address_space *mapping,
->
->         rcu_read_lock();
->         xas_for_each(&xas, page, ULONG_MAX) {
-> -               struct page *head;
->                 if (xas_retry(&xas, page))
->                         continue;
->                 /*
-> @@ -1717,17 +1713,13 @@ unsigned find_get_entries(struct address_space *mapping,
->                 if (xa_is_value(page))
->                         goto export;
->
-> -               head = compound_head(page);
-> -               if (!page_cache_get_speculative(head))
-> +               if (!page_cache_get_speculative(page))
->                         goto retry;
->
-> -               /* The page was split under us? */
-> -               if (compound_head(page) != head)
-> -                       goto put_page;
-> -
-> -               /* Has the page moved? */
-> +               /* Has the page moved or been split? */
->                 if (unlikely(page != xas_reload(&xas)))
->                         goto put_page;
-> +               page = find_subpage(page, xas.xa_index);
->
->  export:
->                 indices[ret] = xas.xa_index;
-> @@ -1736,7 +1728,7 @@ unsigned find_get_entries(struct address_space *mapping,
->                         break;
->                 continue;
->  put_page:
-> -               put_page(head);
-> +               put_page(page);
->  retry:
->                 xas_reset(&xas);
->         }
-> @@ -1778,33 +1770,27 @@ unsigned find_get_pages_range(struct address_space *mapping, pgoff_t *start,
->
->         rcu_read_lock();
->         xas_for_each(&xas, page, end) {
-> -               struct page *head;
->                 if (xas_retry(&xas, page))
->                         continue;
->                 /* Skip over shadow, swap and DAX entries */
->                 if (xa_is_value(page))
->                         continue;
->
-> -               head = compound_head(page);
-> -               if (!page_cache_get_speculative(head))
-> +               if (!page_cache_get_speculative(page))
->                         goto retry;
->
-> -               /* The page was split under us? */
-> -               if (compound_head(page) != head)
-> -                       goto put_page;
-> -
-> -               /* Has the page moved? */
-> +               /* Has the page moved or been split? */
->                 if (unlikely(page != xas_reload(&xas)))
->                         goto put_page;
->
-> -               pages[ret] = page;
-> +               pages[ret] = find_subpage(page, xas.xa_index);
->                 if (++ret == nr_pages) {
->                         *start = page->index + 1;
->                         goto out;
->                 }
->                 continue;
->  put_page:
-> -               put_page(head);
-> +               put_page(page);
->  retry:
->                 xas_reset(&xas);
->         }
-> @@ -1849,7 +1835,6 @@ unsigned find_get_pages_contig(struct address_space *mapping, pgoff_t index,
->
->         rcu_read_lock();
->         for (page = xas_load(&xas); page; page = xas_next(&xas)) {
-> -               struct page *head;
->                 if (xas_retry(&xas, page))
->                         continue;
->                 /*
-> @@ -1859,24 +1844,19 @@ unsigned find_get_pages_contig(struct address_space *mapping, pgoff_t index,
->                 if (xa_is_value(page))
->                         break;
->
-> -               head = compound_head(page);
-> -               if (!page_cache_get_speculative(head))
-> +               if (!page_cache_get_speculative(page))
->                         goto retry;
->
-> -               /* The page was split under us? */
-> -               if (compound_head(page) != head)
-> -                       goto put_page;
-> -
-> -               /* Has the page moved? */
-> +               /* Has the page moved or been split? */
->                 if (unlikely(page != xas_reload(&xas)))
->                         goto put_page;
->
-> -               pages[ret] = page;
-> +               pages[ret] = find_subpage(page, xas.xa_index);
->                 if (++ret == nr_pages)
->                         break;
->                 continue;
->  put_page:
-> -               put_page(head);
-> +               put_page(page);
->  retry:
->                 xas_reset(&xas);
->         }
-> @@ -1912,7 +1892,6 @@ unsigned find_get_pages_range_tag(struct address_space *mapping, pgoff_t *index,
->
->         rcu_read_lock();
->         xas_for_each_marked(&xas, page, end, tag) {
-> -               struct page *head;
->                 if (xas_retry(&xas, page))
->                         continue;
->                 /*
-> @@ -1923,26 +1902,21 @@ unsigned find_get_pages_range_tag(struct address_space *mapping, pgoff_t *index,
->                 if (xa_is_value(page))
->                         continue;
->
-> -               head = compound_head(page);
-> -               if (!page_cache_get_speculative(head))
-> +               if (!page_cache_get_speculative(page))
->                         goto retry;
->
-> -               /* The page was split under us? */
-> -               if (compound_head(page) != head)
-> -                       goto put_page;
-> -
-> -               /* Has the page moved? */
-> +               /* Has the page moved or been split? */
->                 if (unlikely(page != xas_reload(&xas)))
->                         goto put_page;
->
-> -               pages[ret] = page;
-> +               pages[ret] = find_subpage(page, xas.xa_index);
->                 if (++ret == nr_pages) {
->                         *index = page->index + 1;
->                         goto out;
->                 }
->                 continue;
->  put_page:
-> -               put_page(head);
-> +               put_page(page);
->  retry:
->                 xas_reset(&xas);
->         }
-> @@ -1991,7 +1965,6 @@ unsigned find_get_entries_tag(struct address_space *mapping, pgoff_t start,
->
->         rcu_read_lock();
->         xas_for_each_marked(&xas, page, ULONG_MAX, tag) {
-> -               struct page *head;
->                 if (xas_retry(&xas, page))
->                         continue;
->                 /*
-> @@ -2002,17 +1975,13 @@ unsigned find_get_entries_tag(struct address_space *mapping, pgoff_t start,
->                 if (xa_is_value(page))
->                         goto export;
->
-> -               head = compound_head(page);
-> -               if (!page_cache_get_speculative(head))
-> +               if (!page_cache_get_speculative(page))
->                         goto retry;
->
-> -               /* The page was split under us? */
-> -               if (compound_head(page) != head)
-> -                       goto put_page;
-> -
-> -               /* Has the page moved? */
-> +               /* Has the page moved or been split? */
->                 if (unlikely(page != xas_reload(&xas)))
->                         goto put_page;
-> +               page = find_subpage(page, xas.xa_index);
->
->  export:
->                 indices[ret] = xas.xa_index;
-> @@ -2021,7 +1990,7 @@ unsigned find_get_entries_tag(struct address_space *mapping, pgoff_t start,
->                         break;
->                 continue;
->  put_page:
-> -               put_page(head);
-> +               put_page(page);
->  retry:
->                 xas_reset(&xas);
->         }
-> @@ -2686,7 +2655,7 @@ void filemap_map_pages(struct vm_fault *vmf,
->         pgoff_t last_pgoff = start_pgoff;
->         unsigned long max_idx;
->         XA_STATE(xas, &mapping->i_pages, start_pgoff);
-> -       struct page *head, *page;
-> +       struct page *page;
->
->         rcu_read_lock();
->         xas_for_each(&xas, page, end_pgoff) {
-> @@ -2695,24 +2664,19 @@ void filemap_map_pages(struct vm_fault *vmf,
->                 if (xa_is_value(page))
->                         goto next;
->
-> -               head = compound_head(page);
-> -
->                 /*
->                  * Check for a locked page first, as a speculative
->                  * reference may adversely influence page migration.
->                  */
-> -               if (PageLocked(head))
-> +               if (PageLocked(page))
->                         goto next;
-> -               if (!page_cache_get_speculative(head))
-> +               if (!page_cache_get_speculative(page))
->                         goto next;
->
-> -               /* The page was split under us? */
-> -               if (compound_head(page) != head)
-> -                       goto skip;
-> -
-> -               /* Has the page moved? */
-> +               /* Has the page moved or been split? */
->                 if (unlikely(page != xas_reload(&xas)))
->                         goto skip;
-> +               page = find_subpage(page, xas.xa_index);
->
->                 if (!PageUptodate(page) ||
->                                 PageReadahead(page) ||
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index d4847026d4b1..7008174c033b 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2458,6 +2458,9 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->                         if (IS_ENABLED(CONFIG_SHMEM) && PageSwapBacked(head))
->                                 shmem_uncharge(head->mapping->host, 1);
->                         put_page(head + i);
-> +               } else if (!PageAnon(page)) {
-> +                       __xa_store(&head->mapping->i_pages, head[i].index,
-> +                                       head + i, 0);
->                 }
->         }
->
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 449044378782..7ba7a1e4fa79 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1374,7 +1374,7 @@ static void collapse_shmem(struct mm_struct *mm,
->                                 result = SCAN_FAIL;
->                                 goto xa_locked;
->                         }
-> -                       xas_store(&xas, new_page + (index % HPAGE_PMD_NR));
-> +                       xas_store(&xas, new_page);
->                         nr_none++;
->                         continue;
->                 }
-> @@ -1450,7 +1450,7 @@ static void collapse_shmem(struct mm_struct *mm,
->                 list_add_tail(&page->lru, &pagelist);
->
->                 /* Finally, replace with the new page. */
-> -               xas_store(&xas, new_page + (index % HPAGE_PMD_NR));
-> +               xas_store(&xas, new_page);
->                 continue;
->  out_unlock:
->                 unlock_page(page);
-> diff --git a/mm/memfd.c b/mm/memfd.c
-> index 650e65a46b9c..bccbf7dff050 100644
-> --- a/mm/memfd.c
-> +++ b/mm/memfd.c
-> @@ -39,6 +39,7 @@ static void memfd_tag_pins(struct xa_state *xas)
->         xas_for_each(xas, page, ULONG_MAX) {
->                 if (xa_is_value(page))
->                         continue;
-> +               page = find_subpage(page, xas.xa_index);
+There are two methods for signaling the host: the monitor page mechanism
+and hypercalls. The monitor page mechanism is used by performance
+critical channels (storage, networking, etc.) because it provides
+improved throughput. However, latency is increased. Monitor pages are
+allocated to these channels.
 
-This should be xas->xa_index.
+Monitor pages are not allocated to channels that do not use the monitor
+page mechanism. Therefore, these channels do not have a valid monitor id
+or valid monitor page data. In these cases, some of the "_show"
+functions return incorrect data. They return an invalid monitor id and
+data that is beyond the bounds of the hv_monitor_page array fields.
 
-I fixed this and am trying to test the patch.
+The "channel->offermsg.monitor_allocated" value can be used to determine
+whether monitor pages have been allocated to a channel.
 
-Thanks,
-Song
+Add "is_visible()" callback functions for the device-level and
+channel-level attribute groups. These functions will hide the monitor
+sysfs files when the monitor mechanism is not used.
 
->                 if (page_count(page) - page_mapcount(page) > 1)
->                         xas_set_mark(xas, MEMFD_TAG_PINNED);
->
-> @@ -88,6 +89,7 @@ static int memfd_wait_for_pins(struct address_space *mapping)
->                         bool clear = true;
->                         if (xa_is_value(page))
->                                 continue;
-> +                       page = find_subpage(page, xas.xa_index);
->                         if (page_count(page) - page_mapcount(page) != 1) {
->                                 /*
->                                  * On the last scan, we clean up all those tags
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 412d5fff78d4..8cb55dd69b9c 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -465,7 +465,7 @@ int migrate_page_move_mapping(struct address_space *mapping,
->
->                 for (i = 1; i < HPAGE_PMD_NR; i++) {
->                         xas_next(&xas);
-> -                       xas_store(&xas, newpage + i);
-> +                       xas_store(&xas, newpage);
->                 }
->         }
->
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index c8cdaa012f18..a78d4f05a51f 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -614,7 +614,7 @@ static int shmem_add_to_page_cache(struct page *page,
->                 if (xas_error(&xas))
->                         goto unlock;
->  next:
-> -               xas_store(&xas, page + i);
-> +               xas_store(&xas, page);
->                 if (++i < nr) {
->                         xas_next(&xas);
->                         goto next;
-> diff --git a/mm/swap_state.c b/mm/swap_state.c
-> index 85245fdec8d9..eb714165afd2 100644
-> --- a/mm/swap_state.c
-> +++ b/mm/swap_state.c
-> @@ -132,7 +132,7 @@ int add_to_swap_cache(struct page *page, swp_entry_t entry, gfp_t gfp)
->                 for (i = 0; i < nr; i++) {
->                         VM_BUG_ON_PAGE(xas.xa_index != idx + i, page);
->                         set_page_private(page + i, entry.val + i);
-> -                       xas_store(&xas, page + i);
-> +                       xas_store(&xas, page);
->                         xas_next(&xas);
->                 }
->                 address_space->nrpages += nr;
-> @@ -167,7 +167,7 @@ void __delete_from_swap_cache(struct page *page, swp_entry_t entry)
->
->         for (i = 0; i < nr; i++) {
->                 void *entry = xas_store(&xas, NULL);
-> -               VM_BUG_ON_PAGE(entry != page + i, entry);
-> +               VM_BUG_ON_PAGE(entry != page, entry);
->                 set_page_private(page + i, 0);
->                 xas_next(&xas);
->         }
-> --
-> 2.20.1
->
+Remove ".default_attributes" from "vmbus_chan_attrs" and create a
+channel-level attribute group, "vmbus_chan_group". These changes allow
+the new "is_visible()" callback function to be applied to the
+channel-level attributes. Call "sysfs_create_group()" to create the
+channel sysyfs files.
+
+Signed-off-by: Kimberly Brown <kimbrownkd@gmail.com>
+---
+Changes in v4:
+ - Added “is_visible()” callback functions for the device-level and
+   channel-level attribute groups.
+ - Removed the separate monitor attribute groups proposed in v3. They’re
+   no longer needed because the “is_visible()” callbacks are used to
+   determine the attribute visibility.
+ - Removed "default_attributes" from "vmbus_chan_attrs" and created a
+   channel-level attribute group.
+ - Removed the "kobject_put(kobj)" call proposed in v3. The calling
+   functions take care of calling "kobject_put(channel->kobj)" if an
+   error is returned by "vmbus_add_channel_kobj()".
+ - Updated the commit message and subject for clarity and to reflect the
+   new changes in v4.
+
+Changes in v3:
+ - The monitor "_show" functions no longer return an error when a
+   channel does not use the monitor page mechanism. Instead, the monitor
+   page sysfs files are created only when a channel uses the monitor
+   page mechanism. This change was suggested by G. Kroah-Hartman.
+
+Note: this patch was originally patch 2/2 in a patchset. Patch 1/2 has
+already been added to char-misc-testing, so I'm not resending it.
+
+Changes in v2:
+ - Changed the return value for cases where monitor_allocated is not set
+   to "-EINVAL".
+ - Updated the commit message to provide more details about the monitor
+   page mechanism.
+ - Updated the sysfs documentation to describe the new return value.
+
+ Documentation/ABI/stable/sysfs-bus-vmbus | 12 +++--
+ drivers/hv/vmbus_drv.c                   | 63 +++++++++++++++++++++++-
+ 2 files changed, 70 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/ABI/stable/sysfs-bus-vmbus b/Documentation/ABI/stable/sysfs-bus-vmbus
+index 826689dcc2e6..8e8d167eca31 100644
+--- a/Documentation/ABI/stable/sysfs-bus-vmbus
++++ b/Documentation/ABI/stable/sysfs-bus-vmbus
+@@ -81,7 +81,9 @@ What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/latency
+ Date:		September. 2017
+ KernelVersion:	4.14
+ Contact:	Stephen Hemminger <sthemmin@microsoft.com>
+-Description:	Channel signaling latency
++Description:	Channel signaling latency. This file is available only for
++		performance critical channels (storage, network, etc.) that use
++		the monitor page mechanism.
+ Users:		Debugging tools
+ 
+ What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/out_mask
+@@ -95,7 +97,9 @@ What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/pending
+ Date:		September. 2017
+ KernelVersion:	4.14
+ Contact:	Stephen Hemminger <sthemmin@microsoft.com>
+-Description:	Channel interrupt pending state
++Description:	Channel interrupt pending state. This file is available only for
++		performance critical channels (storage, network, etc.) that use
++		the monitor page mechanism.
+ Users:		Debugging tools
+ 
+ What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/read_avail
+@@ -137,7 +141,9 @@ What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/monitor_id
+ Date:		January. 2018
+ KernelVersion:	4.16
+ Contact:	Stephen Hemminger <sthemmin@microsoft.com>
+-Description:	Monitor bit associated with channel
++Description:	Monitor bit associated with channel. This file is available only
++		for performance critical channels (storage, network, etc.) that
++		use the monitor page mechanism.
+ Users:		Debugging tools and userspace drivers
+ 
+ What:		/sys/bus/vmbus/devices/<UUID>/channels/<N>/ring
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 000b53e5a17a..44308220d540 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -630,7 +630,36 @@ static struct attribute *vmbus_dev_attrs[] = {
+ 	&dev_attr_driver_override.attr,
+ 	NULL,
+ };
+-ATTRIBUTE_GROUPS(vmbus_dev);
++
++/*
++ * Device-level attribute_group callback function. Returns the permission for
++ * each attribute, and returns 0 if an attribute is not visible.
++ */
++static umode_t vmbus_dev_attr_is_visible(struct kobject *kobj,
++					 struct attribute *attr, int idx)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	const struct hv_device *hv_dev = device_to_hv_device(dev);
++
++	/* Hide the monitor attributes if the monitor mechanism is not used. */
++	if (!hv_dev->channel->offermsg.monitor_allocated &&
++	    (attr == &dev_attr_monitor_id.attr ||
++	     attr == &dev_attr_server_monitor_pending.attr ||
++	     attr == &dev_attr_client_monitor_pending.attr ||
++	     attr == &dev_attr_server_monitor_latency.attr ||
++	     attr == &dev_attr_client_monitor_latency.attr ||
++	     attr == &dev_attr_server_monitor_conn_id.attr ||
++	     attr == &dev_attr_client_monitor_conn_id.attr))
++		return 0;
++
++	return attr->mode;
++}
++
++static const struct attribute_group vmbus_dev_group = {
++	.attrs = vmbus_dev_attrs,
++	.is_visible = vmbus_dev_attr_is_visible
++};
++__ATTRIBUTE_GROUPS(vmbus_dev);
+ 
+ /*
+  * vmbus_uevent - add uevent for our device
+@@ -1550,10 +1579,34 @@ static struct attribute *vmbus_chan_attrs[] = {
+ 	NULL
+ };
+ 
++/*
++ * Channel-level attribute_group callback function. Returns the permission for
++ * each attribute, and returns 0 if an attribute is not visible.
++ */
++static umode_t vmbus_chan_attr_is_visible(struct kobject *kobj,
++					  struct attribute *attr, int idx)
++{
++	const struct vmbus_channel *channel =
++		container_of(kobj, struct vmbus_channel, kobj);
++
++	/* Hide the monitor attributes if the monitor mechanism is not used. */
++	if (!channel->offermsg.monitor_allocated &&
++	    (attr == &chan_attr_pending.attr ||
++	     attr == &chan_attr_latency.attr ||
++	     attr == &chan_attr_monitor_id.attr))
++		return 0;
++
++	return attr->mode;
++}
++
++static struct attribute_group vmbus_chan_group = {
++	.attrs = vmbus_chan_attrs,
++	.is_visible = vmbus_chan_attr_is_visible
++};
++
+ static struct kobj_type vmbus_chan_ktype = {
+ 	.sysfs_ops = &vmbus_chan_sysfs_ops,
+ 	.release = vmbus_chan_release,
+-	.default_attrs = vmbus_chan_attrs,
+ };
+ 
+ /*
+@@ -1571,6 +1624,12 @@ int vmbus_add_channel_kobj(struct hv_device *dev, struct vmbus_channel *channel)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = sysfs_create_group(kobj, &vmbus_chan_group);
++	if (ret) {
++		pr_err("Unable to set up channel sysfs files\n");
++		return ret;
++	}
++
+ 	kobject_uevent(kobj, KOBJ_ADD);
+ 
+ 	return 0;
+-- 
+2.17.1
+
