@@ -3,32 +3,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119ECC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0C6C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBAE32085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B862085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733197AbfCAJZJ (ORCPT
+        id S2387587AbfCAJZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 04:25:09 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:48116 "EHLO mx1.redhat.com"
+        Fri, 1 Mar 2019 04:25:20 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:36894 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732532AbfCAJZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732411AbfCAJZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 Mar 2019 04:25:06 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0CC043092656;
-        Fri,  1 Mar 2019 09:25:06 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E79483001A7C;
+        Fri,  1 Mar 2019 09:25:05 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-211.ams2.redhat.com [10.36.116.211])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EECDE1001E65;
-        Fri,  1 Mar 2019 09:25:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 505AF5D732;
+        Fri,  1 Mar 2019 09:25:03 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 4887A17475; Fri,  1 Mar 2019 10:25:02 +0100 (CET)
+        id 937C517515; Fri,  1 Mar 2019 10:25:02 +0100 (CET)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     intel-gfx@lists.freedesktop.org, daniel@ffwll.ch,
@@ -37,168 +37,85 @@ Cc:     intel-gfx@lists.freedesktop.org, daniel@ffwll.ch,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v7 1/4] drm: move i915_kick_out_vgacon to vgaarb
-Date:   Fri,  1 Mar 2019 10:24:59 +0100
-Message-Id: <20190301092502.30948-2-kraxel@redhat.com>
+Subject: [PATCH v7 4/4] drm/i915: switch to drm_fb_helper_remove_conflicting_pci_framebuffers
+Date:   Fri,  1 Mar 2019 10:25:02 +0100
+Message-Id: <20190301092502.30948-5-kraxel@redhat.com>
 In-Reply-To: <20190301092502.30948-1-kraxel@redhat.com>
 References: <20190301092502.30948-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 01 Mar 2019 09:25:06 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 01 Mar 2019 09:25:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also rename it to vga_remove_vgacon and add kerneldoc text.
-
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 ---
- include/linux/vgaarb.h          |  2 ++
- drivers/gpu/drm/i915/i915_drv.c | 35 +----------------------------
- drivers/gpu/vga/vgaarb.c        | 49 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 52 insertions(+), 34 deletions(-)
+ drivers/gpu/drm/i915/i915_drv.c | 38 ++------------------------------------
+ 1 file changed, 2 insertions(+), 36 deletions(-)
 
-diff --git a/include/linux/vgaarb.h b/include/linux/vgaarb.h
-index ee162e3e879b..553b34c8b5f7 100644
---- a/include/linux/vgaarb.h
-+++ b/include/linux/vgaarb.h
-@@ -125,9 +125,11 @@ extern void vga_put(struct pci_dev *pdev, unsigned int rsrc);
- #ifdef CONFIG_VGA_ARB
- extern struct pci_dev *vga_default_device(void);
- extern void vga_set_default_device(struct pci_dev *pdev);
-+extern int vga_remove_vgacon(struct pci_dev *pdev);
- #else
- static inline struct pci_dev *vga_default_device(void) { return NULL; };
- static inline void vga_set_default_device(struct pci_dev *pdev) { };
-+static inline int vga_remove_vgacon(struct pci_dev *pdev) { return 0; };
- #endif
- 
- /*
 diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-index 6630212f2faf..9df65d386d11 100644
+index 9df65d386d11..c6f1e0dbdd58 100644
 --- a/drivers/gpu/drm/i915/i915_drv.c
 +++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -757,39 +757,6 @@ static int i915_kick_out_firmware_fb(struct drm_i915_private *dev_priv)
+@@ -732,31 +732,6 @@ static int i915_load_modeset_init(struct drm_device *dev)
  	return ret;
  }
  
--#if !defined(CONFIG_VGA_CONSOLE)
--static int i915_kick_out_vgacon(struct drm_i915_private *dev_priv)
+-static int i915_kick_out_firmware_fb(struct drm_i915_private *dev_priv)
 -{
--	return 0;
--}
--#elif !defined(CONFIG_DUMMY_CONSOLE)
--static int i915_kick_out_vgacon(struct drm_i915_private *dev_priv)
--{
--	return -ENODEV;
--}
--#else
--static int i915_kick_out_vgacon(struct drm_i915_private *dev_priv)
--{
--	int ret = 0;
+-	struct apertures_struct *ap;
+-	struct pci_dev *pdev = dev_priv->drm.pdev;
+-	struct i915_ggtt *ggtt = &dev_priv->ggtt;
+-	bool primary;
+-	int ret;
 -
--	DRM_INFO("Replacing VGA console driver\n");
+-	ap = alloc_apertures(1);
+-	if (!ap)
+-		return -ENOMEM;
 -
--	console_lock();
--	if (con_is_bound(&vga_con))
--		ret = do_take_over_console(&dummy_con, 0, MAX_NR_CONSOLES - 1, 1);
--	if (ret == 0) {
--		ret = do_unregister_con_driver(&vga_con);
+-	ap->ranges[0].base = ggtt->gmadr.start;
+-	ap->ranges[0].size = ggtt->mappable_end;
 -
--		/* Ignore "already unregistered". */
--		if (ret == -ENODEV)
--			ret = 0;
--	}
--	console_unlock();
+-	primary =
+-		pdev->resource[PCI_ROM_RESOURCE].flags & IORESOURCE_ROM_SHADOW;
+-
+-	ret = drm_fb_helper_remove_conflicting_framebuffers(ap, "inteldrmfb", primary);
+-
+-	kfree(ap);
 -
 -	return ret;
 -}
--#endif
 -
  static void intel_init_dpio(struct drm_i915_private *dev_priv)
  {
  	/*
-@@ -1420,7 +1387,7 @@ static int i915_driver_init_hw(struct drm_i915_private *dev_priv)
+@@ -1377,22 +1352,13 @@ static int i915_driver_init_hw(struct drm_i915_private *dev_priv)
+ 	if (ret)
+ 		goto err_perf;
+ 
+-	/*
+-	 * WARNING: Apparently we must kick fbdev drivers before vgacon,
+-	 * otherwise the vga fbdev driver falls over.
+-	 */
+-	ret = i915_kick_out_firmware_fb(dev_priv);
++	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, 2,
++								"inteldrmfb");
+ 	if (ret) {
+ 		DRM_ERROR("failed to remove conflicting framebuffer drivers\n");
  		goto err_ggtt;
  	}
  
--	ret = i915_kick_out_vgacon(dev_priv);
-+	ret = vga_remove_vgacon(pdev);
- 	if (ret) {
- 		DRM_ERROR("failed to remove conflicting VGA console\n");
+-	ret = vga_remove_vgacon(pdev);
+-	if (ret) {
+-		DRM_ERROR("failed to remove conflicting VGA console\n");
+-		goto err_ggtt;
+-	}
+-
+ 	ret = i915_ggtt_init_hw(dev_priv);
+ 	if (ret)
  		goto err_ggtt;
-diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
-index dc8e039bfab5..f2f3ef8af271 100644
---- a/drivers/gpu/vga/vgaarb.c
-+++ b/drivers/gpu/vga/vgaarb.c
-@@ -48,6 +48,8 @@
- #include <linux/miscdevice.h>
- #include <linux/slab.h>
- #include <linux/screen_info.h>
-+#include <linux/vt.h>
-+#include <linux/console.h>
- 
- #include <linux/uaccess.h>
- 
-@@ -168,6 +170,53 @@ void vga_set_default_device(struct pci_dev *pdev)
- 	vga_default = pci_dev_get(pdev);
- }
- 
-+/**
-+ * vga_remove_vgacon - deactivete vga console
-+ *
-+ * Unbind and unregister vgacon in case pdev is the default vga
-+ * device.  Can be called by gpu drivers on initialization to make
-+ * sure vga register access done by vgacon will not disturb the
-+ * device.
-+ *
-+ * @pdev: pci device.
-+ */
-+#if !defined(CONFIG_VGA_CONSOLE)
-+int vga_remove_vgacon(struct pci_dev *pdev)
-+{
-+	return 0;
-+}
-+#elif !defined(CONFIG_DUMMY_CONSOLE)
-+int vga_remove_vgacon(struct pci_dev *pdev)
-+{
-+	return -ENODEV;
-+}
-+#else
-+int vga_remove_vgacon(struct pci_dev *pdev)
-+{
-+	int ret = 0;
-+
-+	if (pdev != vga_default)
-+		return 0;
-+	vgaarb_info(&pdev->dev, "deactivate vga console\n");
-+
-+	console_lock();
-+	if (con_is_bound(&vga_con))
-+		ret = do_take_over_console(&dummy_con, 0,
-+					   MAX_NR_CONSOLES - 1, 1);
-+	if (ret == 0) {
-+		ret = do_unregister_con_driver(&vga_con);
-+
-+		/* Ignore "already unregistered". */
-+		if (ret == -ENODEV)
-+			ret = 0;
-+	}
-+	console_unlock();
-+
-+	return ret;
-+}
-+#endif
-+EXPORT_SYMBOL(vga_remove_vgacon);
-+
- static inline void vga_irq_set_state(struct vga_device *vgadev, bool state)
- {
- 	if (vgadev->irq_set_state)
 -- 
 2.9.3
 
