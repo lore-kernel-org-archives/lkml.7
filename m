@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067E5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C527EC4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06812083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BFA20818
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="osFfafmF"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="n+9+4dsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbfCAL4l (ORCPT
+        id S1732878AbfCAMDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:56:41 -0500
-Received: from mail-eopbgr1400101.outbound.protection.outlook.com ([40.107.140.101]:44114
+        Fri, 1 Mar 2019 07:03:13 -0500
+Received: from mail-eopbgr1400124.outbound.protection.outlook.com ([40.107.140.124]:35098
         "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388004AbfCAL4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:56:40 -0500
+        id S1726195AbfCAMDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 07:03:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=renesasgroup.onmicrosoft.com; s=selector1-bp-renesas-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CL+70fpOUAjO58+ExBT1OwleGho/BCk8CteQURkBghM=;
- b=osFfafmFR0BH0Xj+MpWpUuSN210Y13IouEGfzx73OEjQp6P0ty8Dttg1dJmEE58sF80X8QjrUTS7/FulYdA+Lr3GCART/JVk0/KrL80vt/rqPzWu6sildwSJ3UL9p/GKfXngzBi8LhJ5mVwwjIRukWGb30KXmvKYe8qOQmHdXqU=
+ bh=BGiuni9977cVA3YIVyDyvPu/UMQjFarYlomOmwl2wSc=;
+ b=n+9+4dsXnc8EOhYTS2Yt0yAZ76KNsb5JJRPkV1NvUroPuhvrtpGH3zGa7YeGx6Bi1Z4FKHMANkDChU415jz9FFqg/Jk/njEjmFBNAblN+8+OaouolFA6L+Lg4VBMUTeuPnUJR4kNg7S3ZIu2LGIdz+AT9VKNG3CDrAnmq1/7Huw=
 Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com (52.133.168.140) by
- TYXPR01MB1504.jpnprd01.prod.outlook.com (52.133.166.14) with Microsoft SMTP
+ TYXPR01MB1535.jpnprd01.prod.outlook.com (52.133.166.21) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.20; Fri, 1 Mar 2019 11:56:33 +0000
+ 15.20.1643.20; Fri, 1 Mar 2019 12:03:07 +0000
 Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com
  ([fe80::88d2:545c:9212:c8cf]) by TYXPR01MB1775.jpnprd01.prod.outlook.com
  ([fe80::88d2:545c:9212:c8cf%5]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
- 11:56:33 +0000
+ 12:03:07 +0000
 From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-CC:     Simon Horman <horms@verge.net.au>,
+To:     =?iso-8859-2?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
+        Simon Horman <horms@verge.net.au>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Biju Das <biju.das@bp.renesas.com>,
         Magnus Damm <magnus.damm@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Thierry Reding <treding@nvidia.com>,
-        =?iso-8859-2?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Johan Hovold <johan@kernel.org>,
-        Lukasz Majewski <lukma@denx.de>,
         Michal Simek <monstr@monstr.eu>,
         =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
@@ -56,28 +60,19 @@ CC:     Simon Horman <horms@verge.net.au>,
         "linux-renesas-soc@vger.kernel.org" 
         <linux-renesas-soc@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Biju Das <biju.das@bp.renesas.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH 11/11] dt-bindings: can: rcar_canfd: document r8a774c0
- support
-Thread-Topic: [PATCH 11/11] dt-bindings: can: rcar_canfd: document r8a774c0
- support
-Thread-Index: AQHUrcrQP6ilvIZSJkSXC+A0LiwxK6X275xg
-Date:   Fri, 1 Mar 2019 11:56:32 +0000
-Message-ID: <TYXPR01MB1775D48B2053F31EC501C154C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+        Lukasz Majewski <lukma@denx.de>
+Subject: RE: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
+Thread-Topic: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
+Thread-Index: AQHUrcqn7iCjVkUVBUihzBp2UqLnOqXfpZYQgAD02QCAACZkAIAWMKTg
+Date:   Fri, 1 Mar 2019 12:03:06 +0000
+Message-ID: <TYXPR01MB1775ECF6D79FCA2C0040DA06C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
 References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-12-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1547663874-29411-12-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <TY1PR01MB1770A46D7FA45A8AFA923DADC0670@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <20190215075226.413d55dc@jawa> <c2eb829b-96a7-20cb-913f-ce4214f2156c@suse.de>
+In-Reply-To: <c2eb829b-96a7-20cb-913f-ce4214f2156c@suse.de>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -86,111 +81,132 @@ authentication-results: spf=none (sender IP is )
  smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
 x-originating-ip: [193.141.220.21]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b8611384-31ac-4dcb-b39e-08d69e3cf2f9
+x-ms-office365-filtering-correlation-id: 644f6e3d-148d-4369-7f65-08d69e3dddc7
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:TYXPR01MB1504;
-x-ms-traffictypediagnostic: TYXPR01MB1504:
-x-ms-exchange-purlcount: 2
-x-microsoft-exchange-diagnostics: 1;TYXPR01MB1504;20:6HyUu0y+khpyrnkbgjiDM0clDy0aPrtAAUo69+4+lciCML8sAVbCtiiTClrLcrvU5VSMaEuFnb4kvU3d2hZbWljjypzeHLFlX1aVi+vVdFVeZw9B2xNjPrq1Jk3bCjmoTpVdJux/7imjARQ3dCLTKhF8ESLIl0NH9yFXbXNK+Uw=
-x-microsoft-antispam-prvs: <TYXPR01MB150486DA4F44AAA91D5CFF86C0760@TYXPR01MB1504.jpnprd01.prod.outlook.com>
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:TYXPR01MB1535;
+x-ms-traffictypediagnostic: TYXPR01MB1535:
+x-ms-exchange-purlcount: 1
+x-microsoft-exchange-diagnostics: 1;TYXPR01MB1535;20:u08jSO4RuaMbo2R6DP4uvOnN2mr1oZMtm6FLoOPuNJfs96iEoM45eHpZSoJgFEsf4dve5e576fs0lT/3IRxCM1PIdl1sOumsTq1jO8CggHfqilufgoufB5CQbYWlikr6Gldv54qyQHHcvSPVVCvk23Rjv9fFmygFygOLH6/iFCw=
+x-microsoft-antispam-prvs: <TYXPR01MB153523BB83A1FBED9158658EC0760@TYXPR01MB1535.jpnprd01.prod.outlook.com>
 x-forefront-prvs: 09634B1196
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(396003)(136003)(346002)(199004)(189003)(33656002)(71190400001)(7696005)(71200400001)(66066001)(105586002)(54906003)(7416002)(99286004)(97736004)(3846002)(106356001)(6116002)(76176011)(316002)(7736002)(6916009)(55016002)(81166006)(5660300002)(256004)(44832011)(9686003)(53936002)(305945005)(6246003)(25786009)(81156014)(446003)(6506007)(11346002)(966005)(26005)(86362001)(53546011)(186003)(486006)(52536013)(4326008)(476003)(229853002)(478600001)(2906002)(6436002)(6306002)(8676002)(68736007)(8936002)(14454004)(74316002)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1504;H:TYXPR01MB1775.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39860400002)(376002)(396003)(366004)(189003)(199004)(106356001)(11346002)(446003)(52536013)(186003)(66066001)(7736002)(305945005)(8936002)(486006)(68736007)(476003)(44832011)(7416002)(74316002)(86362001)(25786009)(81156014)(81166006)(97736004)(256004)(8676002)(5660300002)(3846002)(6116002)(71200400001)(71190400001)(4326008)(53936002)(6306002)(102836004)(26005)(7696005)(76176011)(9686003)(93886005)(53386004)(229853002)(55016002)(316002)(54906003)(110136005)(6436002)(6246003)(33656002)(99286004)(105586002)(53546011)(6506007)(2906002)(14454004)(478600001)(966005);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1535;H:TYXPR01MB1775.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
 received-spf: None (protection.outlook.com: bp.renesas.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9I0HoJFq8H8g4MDHI1YgeqAyvZkHXcGrMKL/qRiFdeqAaiBqJ/UOG/iykD8qaHV9czOYb25bvFIPfvP/QQ036283PAEfHfCoTfmJHDBGeKpZbR9RAKtH595VAC3NssTiP5NwX+bmNX2EMpNVt+CbJaE0nL1d76PVqm/+szLwFGz1guN4AJS/AsZBJklKJYz3DVT/vZIh/8gLP6MonfnpuKMFAon9QRVEXASSQT5oLPYPtBJ59dxID8HeQrKC192L65hxkCt6qQ+RCOjF85kE2By41claR6QRiu4hV/xsHlVvQ3IAaUJiSgZaS0owvc0l3xY0BFRRTkUUqcrNb2qRPefdSDDbepPzdCcbA9YXS/sVN90BnOcrypQYw7cKqxeyo6zUrD04E34qCF9FvK3281vtrFlo3KqUSj4HcK3ljCs=
+x-microsoft-antispam-message-info: aEtn4I2uM8G0UJxCgFwvuG21PuX40V8LblODEE3ZjRsHNsXvzsuiDfDe1kTJJbFP5w5/qLSBhnVrPuP/TqdppjfPCr5HJH9OK6dhHxNFPE6NjWce4gm+NJiP5Axdp53cFZNibFOduqJaYj5Lh8GopC7vTACwQI97DyNsTHZ11TYsVFK6mUmvXpvxVTRHFjvBqQws5LebU5TIpu2azVYuOxpbPzAkeYy1Eia3hXcczt4kc8BoekeQT49rj/yrx1yz4iHKpTQBd85uEFNfFD11RmDScHPCxF7b2JQKpForwg5JUsYVnaMS1KAupMCqY3KBFyFtA6SH5I5m3xVhfCdQC9nEYkqCfUaDfcTopXQ2sAbK27UJKfWWyr1pF49jjcyBiFqqUgWo1Y0S3O9+EmLjm+CJzPb8ht0yO1tT7F8r3rs=
 Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8611384-31ac-4dcb-b39e-08d69e3cf2f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 11:56:32.8459
+X-MS-Exchange-CrossTenant-Network-Message-Id: 644f6e3d-148d-4369-7f65-08d69e3dddc7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 12:03:06.7884
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1504
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1535
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Marc,
+Thank you Andreas.
 
-I am sorry to bother you.
-Do you think you can take this patch?
+> From: Andreas F=E4rber <afaerber@suse.de>
+> Sent: 15 February 2019 09:10
+> Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Lin=
+ux.
+>=20
+> Hi Lukasz and Fabrizio,
+>=20
+> Am 15.02.19 um 07:52 schrieb Lukasz Majewski:
+> > The best approach is to run:
+> >
+> > git format patch -1 <your patch sha>
+> >
+> > And then
+> >
+> > scripts/get_maintainer.pl 0001-xxxxxxx
+> >
+> > You shall see the the list of people to send the patch.
+>=20
+> No, that does not answer his question. And please don't top-post.
+>=20
+> >> Who is the best person for taking this patch?
+>=20
+> The answer is: whomever is taking dt-bindings patches in the following
+> 10 patches that make use of this prefix, once you have a Reviewed-by
+> from Rob. So, most likely the Renesas kernel maintainer(s), i.e. Simon,
+> which differs from get_maintainers.pl of vendor-prefixes.txt.
+
+Simon, do you think you can take this patch?
 
 Thanks,
 Fab
 
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Sent: 16 January 2019 18:38
-> Subject: [PATCH 11/11] dt-bindings: can: rcar_canfd: document r8a774c0 su=
-pport
 >=20
-> Document the support for rcar_canfd on R8A774C0 SoC devices.
+> Regards,
+> Andreas
 >=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> ---
-> This patch depends on:
-> https://patchwork.kernel.org/patch/10687999/
-> https://patchwork.kernel.org/patch/10688001/
+> >>> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >>> Sent: 16 January 2019 18:38
+> >>> Subject: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon
+> >>> Linux.
+> >>>
+> >>> From: Biju Das <biju.das@bp.renesas.com>
+> >>>
+> >>> Add Silicon Linux to the list of devicetree vendor prefixes.
+> >>>
+> >>> Website: http://www.si-linux.co.jp
+> >>>
+> >>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> >>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >>> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> >>>  1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> >>> b/Documentation/devicetree/bindings/vendor-prefixes.txt index
+> >>> 4b1a2a8..02a7037 100644 ---
+> >>> a/Documentation/devicetree/bindings/vendor-prefixes.txt +++
+> >>> b/Documentation/devicetree/bindings/vendor-prefixes.txt @@ -344,6
+> >>> +344,7 @@ sgxSGX Sensortech sharpSharp Corporation
+> >>>  shimafujiShimafuji Electric, Inc.
+> >>>  si-enSi-En Technology Ltd.
+> >>> +si-linuxSilicon Linux Corporation
+> >>>  sifiveSiFive, Inc.
+> >>>  sigmaSigma Designs, Inc.
+> >>>  siiSeiko Instruments, Inc.
+> >>> --
+> >>> 2.7.4
+> >>
+> >>
+> >>
+> >> Renesas Electronics Europe GmbH,Geschaeftsfuehrer/President : Michael
+> >> Hannawald, Sitz der Gesellschaft/Registered office: Duesseldorf,
+> >> Arcadiastrasse 10, 40472 Duesseldorf,
+> >> Germany,Handelsregister/Commercial Register: Duesseldorf, HRB 3708
+> >> USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WEEE
+> >> reg. no.: DE 14978647
+> >
+> >
+> >
+> >
+> > Best regards,
+> >
+> > Lukasz Majewski
+> >
+> > --
+> >
+> > DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> > Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.d=
+e
+> >
 >=20
->  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 16 +++++++++-=
-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
 >=20
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> index 41049fe..32f051f 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> @@ -3,7 +3,8 @@ Renesas R-Car CAN FD controller Device Tree Bindings
->=20
->  Required properties:
->  - compatible: Must contain one or more of the following:
-> -  - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
-> +  - "renesas,rcar-gen3-canfd" for R-Car Gen3 and RZ/G2 compatible contro=
-llers.
-> +  - "renesas,r8a774c0-canfd" for R8A774C0 (RZ/G2E) compatible controller=
-.
->    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller=
-.
->    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controll=
-er.
->    - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible contro=
-ller.
-> @@ -28,12 +29,13 @@ The name of the child nodes are "channel0" and "chann=
-el1" respectively. Each
->  child node supports the "status" property only, which is used to
->  enable/disable the respective channel.
->=20
-> -Required properties for "renesas,r8a7795-canfd", "renesas,r8a7796-canfd"=
-,
-> -"renesas,r8a77965-canfd" and "renesas,r8a77990-canfd" compatible:
-> -In R8A7795, R8A7796, R8A77965 and R8A77990 SoCs, canfd clock is a div6 c=
-lock
-> -and can be used by both CAN and CAN FD controller at the same time. It n=
-eeds
-> -to be scaled to maximum frequency if any of these controllers use it. Th=
-is is
-> -done using the below properties:
-> +Required properties for "renesas,r8a774c0-canfd", "renesas,r8a7795-canfd=
-",
-> +"renesas,r8a7796-canfd", "renesas,r8a77965-canfd", and "renesas,r8a77990=
--canfd"
-> +compatible:
-> +In R8A774C0, R8A7795, R8A7796, R8A77965, and R8A77990 SoCs, canfd clock =
-is a
-> +div6 clock and can be used by both CAN and CAN FD controller at the same=
- time.
-> +It needs to be scaled to maximum frequency if any of these controllers u=
-se it.
-> +This is done using the below properties:
->=20
->  - assigned-clocks: phandle of canfd clock.
->  - assigned-clock-rates: maximum frequency of this clock.
 > --
-> 2.7.4
-
+> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+> GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
+> HRB 21284 (AG N=FCrnberg)
