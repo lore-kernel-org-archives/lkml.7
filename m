@@ -2,108 +2,118 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D17C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E58DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B213920848
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB8D20848
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=myself5.de header.i=@myself5.de header.b="yyECSCe1"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="kdNvZIqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389390AbfCARIH (ORCPT
+        id S2389386AbfCARLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:08:07 -0500
-Received: from myself5.de ([5.230.26.43]:41618 "EHLO myself5.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389295AbfCARIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:08:07 -0500
-X-Greylist: delayed 1596 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Mar 2019 12:07:55 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=myself5.de; s=mail;
-        h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From; bh=PYz4NWpts1lRBV35Yfte+ZcwO/FR0chrlrmwXbARq98=;
-        b=yyECSCe1ICsYmKgFFspbDUJgviq8fP/v8iR18K9h8RPyedbXMsyTHZy1+TwpCUDK7y94LdCItVf9Sy8F9F3RNXveo0TCTou+1l5kjAerviWGpJfXIoLyzDDCzBLpmShgPsayNLVldGtQghqWSzOEyOuVA0P2rlIXSRXemX4fvvkmYF5Ddd6urPc3UJudY3nzpU4PCL8gUGeywU9RAKIAxBkAaCS1KnRIBcMUZo7tSkOLcddf4PjsSsMFeflLot7Iv9PB1a76NnxbG/iRa50b82qmgBSIXQbFpDYfQPDc1fO+W6rHHvnLiT9zeCmT92A+MkPy9/jxIX5NW+DvkEBHjQ==;
-Received: from hsi-kbw-085-216-078-008.hsi.kabelbw.de ([85.216.78.8] helo=M5MacBookPro.fritz.box)
-        by myself5.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_CBC_SHA1:128)
-        (Exim 4.84_2)
-        (envelope-from <me@myself5.de>)
-        id 1gzlDV-0005y9-ME; Fri, 01 Mar 2019 17:41:07 +0100
-From:   me@myself5.de
-Cc:     Christian Oder <me@myself5.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the CHUWI Hi10 Air tablet
-Date:   Fri,  1 Mar 2019 17:40:01 +0100
-Message-Id: <20190301164002.6031-1-me@myself5.de>
-X-Mailer: git-send-email 2.20.1
+        Fri, 1 Mar 2019 12:11:06 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36423 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388635AbfCARLF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 12:11:05 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n22so11715881pfa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 09:11:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2JAzuulP94w5bpQ36/S8koiSOdc5JDbS6it/hml2MUc=;
+        b=kdNvZIqoj7tNVlXEGAQKuOguxI0q0XIWYYSt2s+D1xLhPyQB8LzOgKskFla2QeWkxY
+         z4G0FqeBx0hzoMdTQa9mEkzz+v7U/7QEPt71kqLb4roKwI/QmG2odlGBYJyPDJFWDNrB
+         aPudh1lGSjzh1alfACMyzK5aE5MqsVosWWAUw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2JAzuulP94w5bpQ36/S8koiSOdc5JDbS6it/hml2MUc=;
+        b=r402tEB2w6G2ITEWFQSBMN7ualKog/teJdwVmjSxx+XR6G5gsKcveLi1HPPOyqLXd1
+         kjm60hgpCFemiTXNOwGZTcgCtbNz133SxyLGNBFrfSfIkVVKB4RI2hVILI3VxRbRWSSs
+         ASStYweEh7GLM3zHHzkZq7oTgp7K4b5/0jGsxyM81s9/igSenDgilsLp8y0Of+Q+g4Nx
+         sGNA3rt/W0hQA3/LdB9l67C59UJwiC4adBHOzxQxau/tDO5sikSL3G/vk2bm6eT5MABl
+         MBY7Z8e8fsUPKbJhrroaX91P8KtoyhHT6Mw7fLH1NEsUq0CLxHvTe57ZiLOu3SUtx8mT
+         RtLg==
+X-Gm-Message-State: APjAAAWy1/uJE6wMIKVsUFu9UexDBT6Y/jG/1wKI2AW7/q4U32/reGgH
+        ySl/SXdoLc96lzr5Wj5NBHl+CQ==
+X-Google-Smtp-Source: AHgI3Ib67s64vDX63ITkjLuh986GCDbegyEpdhaNrfol2IGctPL28D804lSisKsOI4h5TvXhZJL5GA==
+X-Received: by 2002:a62:b502:: with SMTP id y2mr6522629pfe.212.1551460264931;
+        Fri, 01 Mar 2019 09:11:04 -0800 (PST)
+Received: from localhost.localdomain ([115.97.184.151])
+        by smtp.gmail.com with ESMTPSA id 23sm44802456pft.187.2019.03.01.09.11.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Mar 2019 09:11:04 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula@amarulasolutions.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2] arm64: dts: allwinner: a64-amarula-relic: Add STLM75 sensor
+Date:   Fri,  1 Mar 2019 22:40:51 +0530
+Message-Id: <20190301171051.6964-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Oder <me@myself5.de>
+Amarula A64 Relic has STLM75 sensor for digital temperature
+and thermal watchdog.
 
-Add  touchscreen info for the CHUWUI Hi10 Air tablet.
+Add support for it.
 
-Signed-off-by: Christian Oder <me@myself5.de>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Changes for v2:
+- change node name from temp to sensor 
+- compatible patches applied in linux-next,
+  fyi:
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=985e225142cf0cb826401f5448763f13ee712b3a 
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 167a156e3cc7..2d56ff7c8230 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -72,6 +72,25 @@ static const struct ts_dmi_data chuwi_hi8_pro_data = {
- 	.properties	= chuwi_hi8_pro_props,
+ .../dts/allwinner/sun50i-a64-amarula-relic.dts    | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+index 6cb2b7f0c817..3575db216016 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+@@ -34,6 +34,21 @@
+ 	status = "okay";
  };
  
-+static const struct property_entry chuwi_hi10_air_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1981),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1271),
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 99),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 9),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_U32("touchscreen-fuzz-x", 5),
-+	PROPERTY_ENTRY_U32("touchscreen-fuzz-y", 4),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hi10-air.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins>;
++	status = "okay";
++
++	sensor@48 {
++		compatible = "st,stlm75";
++		reg = <0x48>;
++	};
 +};
 +
-+static const struct ts_dmi_data chuwi_hi10_air_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= chuwi_hi10_air_props,
++&i2c0_pins {
++	bias-pull-up;
 +};
 +
- static const struct property_entry chuwi_vi8_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
-@@ -546,6 +565,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X1D3_C806N"),
- 		},
- 	},
-+	{
-+		/* Chuwi Hi10 Air */
-+		.driver_data = (void *)&chuwi_hi10_air_data,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-+			DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
-+		},
-+	},
- 	{
- 		/* Chuwi Vi8 (CWI506) */
- 		.driver_data = (void *)&chuwi_vi8_data,
+ &mmc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
 -- 
-2.20.1
+2.18.0.321.gffc6fa0e3
 
