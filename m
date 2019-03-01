@@ -2,201 +2,106 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2D9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F492C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164722087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2B02087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:11:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lsO3rgsE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733145AbfCAIKp convert rfc822-to-8bit (ORCPT
+        id S1733174AbfCAILj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:10:45 -0500
-Received: from foss.arm.com ([217.140.101.70]:59226 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728226AbfCAIKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:10:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3418A78;
-        Fri,  1 Mar 2019 00:10:44 -0800 (PST)
-Received: from why.wild-wind.fr.eu.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F5A43F575;
-        Fri,  1 Mar 2019 00:10:43 -0800 (PST)
-Date:   Fri, 1 Mar 2019 08:10:39 +0000
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Qiang Zhao <qiang.zhao@nxp.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v13 0/4] This patchset is to remove PPCisms for QEIC
-Message-ID: <20190301081039.45d4637e@why.wild-wind.fr.eu.org>
-In-Reply-To: <VI1PR04MB32474C533012923BD8A9690E91760@VI1PR04MB3247.eurprd04.prod.outlook.com>
-References: <20171110033125.991-1-qiang.zhao@nxp.com>
-        <AM3PR04MB118541F73F953292C937E80891380@AM3PR04MB1185.eurprd04.prod.outlook.com>
-        <VI1PR04MB32474C533012923BD8A9690E91760@VI1PR04MB3247.eurprd04.prod.outlook.com>
-Organization: ARM Ltd
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Fri, 1 Mar 2019 03:11:39 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52036 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727545AbfCAILj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 03:11:39 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x218BYkV020508;
+        Fri, 1 Mar 2019 02:11:34 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1551427894;
+        bh=RlHIViT63fHFLN7Kx1sLEZfBj4ytWCwufLaMNuXoYqw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lsO3rgsEB3CxzfDRitGdbx0PLgmefKzBPqgY/S/r9VCgcNB+qNlWxtpIyTcPg/RZG
+         huGoKe1HQ9kGshT5YYa81cxB1Nz48SVfY/wmFt4A+s1nezuIcEflWsY6MVWDHh1HqF
+         Xr+a3ljJTN3XwslPbx3WLoHt8QGSqL/r2Wi1eXrI=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x218BYBW102431
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 Mar 2019 02:11:34 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 1
+ Mar 2019 02:11:33 -0600
+Received: from dlep32.itg.ti.com (157.170.170.100) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Fri, 1 Mar 2019 02:11:33 -0600
+Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x218BVGV026339;
+        Fri, 1 Mar 2019 02:11:31 -0600
+Subject: Re: [PATCH 2/2] mmc: sdhci-omap: Don't finish_mrq() on a command
+ error during tuning
+To:     kbuild test robot <lkp@intel.com>
+CC:     <kbuild-all@01.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <ulf.hansson@linaro.org>, <kishon@ti.com>,
+        <adrian.hunter@intel.com>
+References: <20190226161606.18569-3-faiz_abbas@ti.com>
+ <201903011552.lYOpBJe2%fengguang.wu@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <caa90cb6-a862-a6da-04ed-386f96b1f4b9@ti.com>
+Date:   Fri, 1 Mar 2019 13:44:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <201903011552.lYOpBJe2%fengguang.wu@intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 Mar 2019 02:13:44 +0000
-Qiang Zhao <qiang.zhao@nxp.com> wrote:
+Hi,
 
-> Anybody help to review on this patchset?
-
-I'm afraid reviving reviving a series from 2017 by sending a ping like
-this isn't going to have much effect. If you want people to review it,
-please send an updated series on top of current mainline, and you'll
-be in the review queue for 5.2.
-
-Thanks.
-
-	M.
-
+On 01/03/19 12:52 PM, kbuild test robot wrote:
+> Hi Faiz,
 > 
-> Best Regards
-> Qiang Zhao
+> Thank you for the patch! Yet something to improve:
 > 
-> > -----Original Message-----
-> > From: Qiang Zhao
-> > Sent: 2017年11月30日 9:11
-> > To: Qiang Zhao <qiang.zhao@nxp.com>; tglx@linutronix.de;
-> > marc.zyngier@arm.com; jason@lakedaemon.net
-> > Cc: linux-kernel@vger.kernel.org
-> > Subject: RE: [Patch v13 0/4] This patchset is to remove PPCisms for QEIC
-> > 
-> > Hi Thomas and Marc,
-> > 
-> > Is there any feedback? Thank you!
-> > 
-> > Best Regards
-> > Qiang Zhao
-> >   
-> > > -----Original Message-----
-> > > From: Zhao Qiang [mailto:qiang.zhao@nxp.com]
-> > > Sent: Friday, November 10, 2017 11:31 AM
-> > > To: tglx@linutronix.de; marc.zyngier@arm.com; jason@lakedaemon.net
-> > > Cc: linux-kernel@vger.kernel.org; Qiang Zhao <qiang.zhao@nxp.com>
-> > > Subject: [Patch v13 0/4] This patchset is to remove PPCisms for QEIC
-> > >
-> > > QEIC is an interrupt controller for QE, was put under
-> > > drivers/soc/fsl/qe, and now move to driver/irqchip.
-> > > And QEIC is supported more than just powerpc boards, so remove PPCisms.
-> > >
-> > > changelog:
-> > > 	Changes for v8:
-> > > 	- use IRQCHIP_DECLARE() instead of subsys_initcall in qeic driver
-> > > 	- remove include/soc/fsl/qe/qe_ic.h
-> > > 	Changes for v9:
-> > > 	- rebase
-> > > 	- fix the compile issue when apply the second patch, in fact, there
-> > > was no compile issue
-> > > 	  when apply all the patches of this patchset
-> > > 	Changes for v10:
-> > > 	- simplify codes, remove duplicated codes
-> > > 	Changes for v11:
-> > > 	- rebase
-> > > 	Changes for v13:
-> > > 	- rewrite single-bit constants to BIT(x) to make the code more
-> > > readable
-> > >
-> > > Zhao Qiang (4):
-> > >   irqchip/qeic: move qeic driver from drivers/soc/fsl/qe
-> > > 	Changes for v2:
-> > > 		- modify the subject and commit msg
-> > > 	Changes for v3:
-> > > 		- merge .h file to .c, rename it with irq-qeic.c
-> > > 	Changes for v4:
-> > > 		- modify comments
-> > > 	Changes for v5:
-> > > 		- disable rename detection
-> > > 	Changes for v6:
-> > > 		- rebase
-> > > 	Changes for v7:
-> > > 		- na
-> > >
-> > >   irqchip/qeic: merge qeic init code from platforms to a common function
-> > > 	Changes for v2:
-> > > 		- modify subject and commit msg
-> > > 		- add check for qeic by type
-> > > 	Changes for v3:
-> > > 		- na
-> > > 	Changes for v4:
-> > > 		- na
-> > > 	Changes for v5:
-> > > 		- na
-> > > 	Changes for v6:
-> > > 		- rebase
-> > > 	Changes for v7:
-> > > 		- na
-> > > 	Changes for v8:
-> > > 		- use IRQCHIP_DECLARE() instead of subsys_initcall
-> > >
-> > >   irqchip/qeic: merge qeic_of_init into qe_ic_init
-> > > 	Changes for v2:
-> > > 		- modify subject and commit msg
-> > > 		- return 0 and add put node when return in qe_ic_init
-> > > 	Changes for v3:
-> > > 		- na
-> > > 	Changes for v4:
-> > > 		- na
-> > > 	Changes for v5:
-> > > 		- na
-> > > 	Changes for v6:
-> > > 		- rebase
-> > > 	Changes for v7:
-> > > 		- na
-> > > 	Changes for v12:
-> > > 		- remove unused code
-> > >
-> > >   irqchip/qeic: remove PPCisms for QEIC
-> > > 	Changes for v6:
-> > > 		- new added
-> > > 	Changes for v7:
-> > > 		- fix warning
-> > > 	Changes for v8:
-> > > 		- remove include/soc/fsl/qe/qe_ic.h
-> > >
-> > > Zhao Qiang (4):
-> > >   irqchip/qeic: move qeic driver from drivers/soc/fsl/qe
-> > >   irqchip/qeic: merge qeic init code from platforms to a common function
-> > >   irqchip/qeic: merge qeic_of_init into qe_ic_init
-> > >   irqchip/qeic: remove PPCisms for QEIC
-> > >
-> > >  MAINTAINERS                                        |   6 +
-> > >  arch/powerpc/platforms/83xx/km83xx.c               |   1 -
-> > >  arch/powerpc/platforms/83xx/misc.c                 |  16 -
-> > >  arch/powerpc/platforms/83xx/mpc832x_mds.c          |   1 -
-> > >  arch/powerpc/platforms/83xx/mpc832x_rdb.c          |   1 -
-> > >  arch/powerpc/platforms/83xx/mpc836x_mds.c          |   1 -
-> > >  arch/powerpc/platforms/83xx/mpc836x_rdk.c          |   1 -
-> > >  arch/powerpc/platforms/85xx/corenet_generic.c      |  10 -
-> > >  arch/powerpc/platforms/85xx/mpc85xx_mds.c          |  15 -
-> > >  arch/powerpc/platforms/85xx/mpc85xx_rdb.c          |  17 -
-> > >  arch/powerpc/platforms/85xx/twr_p102x.c            |  15 -
-> > >  drivers/irqchip/Makefile                           |   1 +
-> > >  drivers/{soc/fsl/qe/qe_ic.c => irqchip/irq-qeic.c} | 423 +++++++++++----------
-> > >  drivers/soc/fsl/qe/Makefile                        |   2 +-
-> > >  drivers/soc/fsl/qe/qe_ic.h                         | 103 -----
-> > >  include/soc/fsl/qe/qe_ic.h                         | 139 -------
-> > >  16 files changed, 231 insertions(+), 521 deletions(-)  rename
-> > > drivers/{soc/fsl/qe/qe_ic.c => irqchip/irq-qeic.c} (53%)  delete mode
-> > > 100644 drivers/soc/fsl/qe/qe_ic.h  delete mode 100644
-> > > include/soc/fsl/qe/qe_ic.h
-> > >
-> > > --
-> > > 2.14.1  
+> [auto build test ERROR on ulf.hansson-mmc/next]
+> [also build test ERROR on v5.0-rc8 next-20190228]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 > 
+> url:    https://github.com/0day-ci/linux/commits/Faiz-Abbas/Fixes-for-command-errors-during-tuning/20190228-083200
+> base:   git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git next
+> config: ia64-allmodconfig (attached as .config)
+> compiler: ia64-linux-gcc (GCC) 8.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=8.2.0 make.cross ARCH=ia64 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    ERROR: "ia64_delay_loop" [drivers/spi/spi-thunderx.ko] undefined!
+>    ERROR: "__sw_hweight8" [drivers/net/wireless/mediatek/mt76/mt76.ko] undefined!
+>    ERROR: "ia64_delay_loop" [drivers/net/phy/mdio-cavium.ko] undefined!
+>>> ERROR: "sdhci_cmd_err" [drivers/mmc/host/sdhci-omap.ko] undefined!
+>>> ERROR: "sdhci_finish_command" [drivers/mmc/host/sdhci-omap.ko] undefined!
 
+Looks like EXPORT_SYMBOL_GPL is required here. Will add in v2.
 
-
--- 
-Without deviation from the norm, progress is not possible.
+Thanks,
+Faiz
