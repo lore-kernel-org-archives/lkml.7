@@ -3,84 +3,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7358FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A8AC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47CA120850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5131D20850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388206AbfCAN7A (ORCPT
+        id S2388228AbfCAOAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 08:59:00 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:53703 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730726AbfCAN7A (ORCPT
+        Fri, 1 Mar 2019 09:00:25 -0500
+Received: from mail-qt1-f176.google.com ([209.85.160.176]:35073 "EHLO
+        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfCAOAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 08:59:00 -0500
-X-Originating-IP: 81.250.144.103
-Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id DFAE9FF80D;
-        Fri,  1 Mar 2019 13:58:49 +0000 (UTC)
-Subject: Re: [PATCH v4 4/4] hugetlb: allow to free gigantic pages regardless
- of the configuration
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190228063604.15298-1-alex@ghiti.fr>
- <20190228063604.15298-5-alex@ghiti.fr>
- <9a385cc8-581c-55cf-4a85-10b5c4dd178c@intel.com>
- <31212559-d397-88fb-eaec-60f6417436c8@oracle.com>
- <6c842251-1bed-4d79-bf6d-997006ec72e2@intel.com>
- <6ea4119a-0ecb-511d-3aab-269004245a08@oracle.com>
- <1cfaca88-a219-d057-3ab8-37fb1c1687d6@ghiti.fr>
- <f7c94eb5-d496-7e24-d44f-17eaff287012@ghiti.fr>
- <027de1e2-a9cd-8ba7-859b-ee803937340a@suse.cz>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <4bff265e-e03c-6d74-c09f-a89b74009feb@ghiti.fr>
-Date:   Fri, 1 Mar 2019 14:58:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Fri, 1 Mar 2019 09:00:25 -0500
+Received: by mail-qt1-f176.google.com with SMTP id p48so27809716qtk.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:00:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g9xkd/Gxhphfj3HVnbxPQnb1kGzm/fVUa3UHv2M59Ro=;
+        b=Qj02S1P3Q2l8QGmEPUFrcQTQMTjaF5sXUK6JDebLYL14O9U1IGf4xB8FGeIHfGauNJ
+         k4Mw2tn9CxZkbKy8Ixb/rpHhs5A0yUUSH77mxWwVxs4qqzwQeRZbuwRozlPi4131LSZU
+         zIvXKCsozMZPW+3jkfeSMiBVodYkPTe6lfnK2+61z7VKzGAZt+s/dkfszdSj2aBwY2hw
+         OulaET8PM3UNG2yN2vc24i9t2W/keWUMS7XStNgE9sY/e4QexofXHt3+HFAST956l6ej
+         hGvmERLrMKVWtmvBH7Lt6s6rSKy6a3wihp9cSIyH+RULaanN/XOoopGU6lpUEkG8yAUA
+         KytQ==
+X-Gm-Message-State: APjAAAV9ocfvbJ3eGTKxEjJohV9qqyVZ8KB/QCVN1mlNI72rqFQgCf5I
+        9fCWDewy1wGv7GzQWjFrveug3AxuzTTsEoPTpyU=
+X-Google-Smtp-Source: APXvYqzzXra1Q//BdtEJXDRE2tiG9F2FPvDiQG6XYu3dE71nW2yHz+Slrqp09Pc6PeapBAm2Ul/FjqfsaHIpRj2otik=
+X-Received: by 2002:a0c:b758:: with SMTP id q24mr3799112qve.149.1551448824305;
+ Fri, 01 Mar 2019 06:00:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <027de1e2-a9cd-8ba7-859b-ee803937340a@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <CAHUa44G17ksP7qcXTeNb_8TXby++=DmSo9FcDUTNsWBVqL7wpA@mail.gmail.com>
+In-Reply-To: <CAHUa44G17ksP7qcXTeNb_8TXby++=DmSo9FcDUTNsWBVqL7wpA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 1 Mar 2019 15:00:05 +0100
+Message-ID: <CAK8P3a3Rk-pcsjNfz_ipNiXdSQS6EvL_vjbEUNjbUwZwJzF4TQ@mail.gmail.com>
+Subject: Re: [GIT PULL] tee subsys fixes for v5.0
+To:     Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     arm-soc <arm@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/01/2019 02:33 PM, Vlastimil Babka wrote:
-> On 3/1/19 2:21 PM, Alexandre Ghiti wrote:
->> I collected mistakes here: domain name expired and no mailing list added :)
->> Really sorry about that, I missed the whole discussion (if any).
->> Could someone forward it to me (if any) ? Thanks !
-> Bounced you David and Mike's discussion (4 messages total). AFAICS that
-> was all.
+On Thu, Feb 28, 2019 at 1:32 PM Jens Wiklander
+<jens.wiklander@linaro.org> wrote:
+>
+> Hello arm-soc maintainers,
+>
+> Please pull this last minute fix for the OP-TEE driver.
 
-Thank you Vlastimil, I got them.
+Pulled into arm/fixes, thanks!
 
-Thanks,
+     Arnd
