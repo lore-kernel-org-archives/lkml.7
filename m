@@ -2,185 +2,102 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7380BC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEB0C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4703F20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C5F20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551458508;
+	bh=Yv4mG1OD16hCaOCzeiOwdhrBxvbWOaERd/aASzr5CAI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RrQwRzAwFTquVonFUhPCeC/SmpRi+vI91jbVJzhgQUCj1oaZsIL2dxDz8QDcofMAG
+	 N12AmUlmniqJ4h9wObEY7pg5Ri0pUe91sk3SZdPloeTN9fsHLPVyFXzzz179jCLqlI
+	 jv6NJCdeKvdYtjVJ4FpGqk1wuqidpWY8yPrGsXYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389055AbfCAQlY (ORCPT
+        id S2389121AbfCAQlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:41:24 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38676 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728449AbfCAQlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:41:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFC7080D;
-        Fri,  1 Mar 2019 08:41:23 -0800 (PST)
-Received: from [192.168.100.242] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 047CB3F575;
-        Fri,  1 Mar 2019 08:41:22 -0800 (PST)
-Subject: Re: [PATCH v5 09/10] arm64: add sysfs vulnerability show for
- speculative store bypass
-To:     Andre Przywara <andre.przywara@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
-        suzuki.poulose@arm.com, Dave.Martin@arm.com,
-        shankerd@codeaurora.org, julien.thierry@arm.com,
-        mlangsdo@redhat.com, stefan.wahren@i2e.com,
-        linux-kernel@vger.kernel.org
-References: <20190227010544.597579-1-jeremy.linton@arm.com>
- <20190227010544.597579-10-jeremy.linton@arm.com>
- <04eb2b5d-3754-0e39-3c6e-54b45741da83@foss.arm.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <f7bdf148-5b23-3d23-caf4-a5cc61e7cde1@arm.com>
-Date:   Fri, 1 Mar 2019 10:41:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Fri, 1 Mar 2019 11:41:46 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41390 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728449AbfCAQlp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:41:45 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y7so3787955lfg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:41:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Qze9L+97yo9+sIrq364mZS3RTYwTWHJrLWfBOMmKqw=;
+        b=Kx/LW5yOpYV1tHBgFl/aGS9vRC04gqZVqlqsK8RzeW2PjBACDe6Kf/S0/6AVSn//ui
+         8mfgKwDTazY5fi78YCixgNnpldW8Ub9kX6XzcXUKJ+XThOrpLAqWhBJLHipm10JWq16Y
+         oGEt/RqeqkcMQuIMxb0hFc6R25anCnw12ZtK8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Qze9L+97yo9+sIrq364mZS3RTYwTWHJrLWfBOMmKqw=;
+        b=R6I7j7ZrKKg8os5nYBP0bFkh2uS/dd2nJxWoKScrSmvdf/GUVpiaVC+tccPAezGr3r
+         ZwxuGJJ4wIqou6HLHPV1zNfMM9eXJlS17jUaosPVNn/qu+4Bus/+faW9tSVtLXN8GU04
+         abD2Dwmhakh7TrtrtZ2G4XLdQrsZAQmeDaV2ndnap+MWo5+KR+ic2pjaM2u5PW77mInJ
+         R94Tz6y1dQBaf6xZfdGFNVI3c8937Ghe7Bf4AteLPbIIhcbISLKfCQb6GOtHrduRNBGf
+         x/lPEgBpJUDa4MaDOBRkgMm3b6wVV+iq+WYshXX3+Tl4e5eUMdOp3werC3btWHtPHz9R
+         Z6cQ==
+X-Gm-Message-State: APjAAAV5p12gSAosLjNqX9Y+fhxmHP45/LU9Bg96UDPIkIf8lPxexsMB
+        Ywprbxas1p5V1imeh675RaxL2qP/nxA=
+X-Google-Smtp-Source: APXvYqwJTUiqlkY9/WEzNJI/uSvk024pTHtjWOiN7nNPybZaznnspwKtIMOXw7+c/p9QkZiVP4C49Q==
+X-Received: by 2002:a19:7919:: with SMTP id u25mr3481613lfc.87.1551458502672;
+        Fri, 01 Mar 2019 08:41:42 -0800 (PST)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id q15sm4768335lje.89.2019.03.01.08.41.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Mar 2019 08:41:41 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id g12so18446436lfb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:41:41 -0800 (PST)
+X-Received: by 2002:a19:c744:: with SMTP id x65mr3539303lff.148.1551458500748;
+ Fri, 01 Mar 2019 08:41:40 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <04eb2b5d-3754-0e39-3c6e-54b45741da83@foss.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190301140348.25175-1-will.deacon@arm.com>
+In-Reply-To: <20190301140348.25175-1-will.deacon@arm.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 1 Mar 2019 08:41:24 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wio4duTk=dPJZ+yW-Y-65Q4O8Hc09bexAqs4OQV1R3WhQ@mail.gmail.com>
+Message-ID: <CAHk-=wio4duTk=dPJZ+yW-Y-65Q4O8Hc09bexAqs4OQV1R3WhQ@mail.gmail.com>
+Subject: Re: [PATCH 00/20] Remove Mysterious Macro Intended to Obscure Weird
+ Behaviours (mmiowb())
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Love the acronym, and the series looks good to me.
 
-On 3/1/19 1:02 AM, Andre Przywara wrote:
-> Hi,
-> 
-> On 2/26/19 7:05 PM, Jeremy Linton wrote:
->> Return status based on ssbd_state and the arm64 SSBS feature. If
->> the mitigation is disabled, or the firmware isn't responding then
->> return the expected machine state based on a new blacklist of known
->> vulnerable cores.
->>
->> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->> ---
->>   arch/arm64/kernel/cpu_errata.c | 43 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 43 insertions(+)
->>
->> diff --git a/arch/arm64/kernel/cpu_errata.c 
->> b/arch/arm64/kernel/cpu_errata.c
->> index 5f5611d17dc1..e1b03f643799 100644
->> --- a/arch/arm64/kernel/cpu_errata.c
->> +++ b/arch/arm64/kernel/cpu_errata.c
->> @@ -279,6 +279,7 @@ static int detect_harden_bp_fw(void)
->>   DEFINE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
->>   int ssbd_state __read_mostly = ARM64_SSBD_KERNEL;
->> +static bool __ssb_safe = true;
->>   static const struct ssbd_options {
->>       const char    *str;
->> @@ -387,6 +388,9 @@ static bool has_ssbd_mitigation(const struct 
->> arm64_cpu_capabilities *entry,
->>       WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
->> +    if (is_midr_in_range_list(read_cpuid_id(), entry->midr_range_list))
->> +        __ssb_safe = false;
-> 
-> Is that the only place where we set it to false?
-> What about if firmware reports that (at least one core) is vulnerable?
+Michael - can you check (or maybe you already did?) that this works
+for ppc too, and doesn't have any gotcha's?
 
-Maybe.. Normally if the firmware is functional enough to report the core 
-state, then I would expect the kernel mitigation to be enabled. But your 
-right, if the mitigation is disabled then it might be possible for us to 
-miss the blacklist and report the machine safe even if the firmware 
-reports it vulnerable.
-
-The core problem though is really that the blacklist isn't complete, 
-because we also report an incorrect state if the firmware fails to 
-respond. Although that said, there are still some other interesting 
-paths here which might fall into the "unknown" case if you get creative 
-enough (ex: think force disabling a SSBS mitigated machine).
-
-Anyway, its probably worth flagging the machine vulnerable if we get 
-SMCC_RET_SUCCESS to avoid cases which miss the blacklist.
-
-
-> 
->> +
->>       if (this_cpu_has_cap(ARM64_SSBS)) {
->>           required = false;
->>           goto out_printmsg;
->> @@ -420,6 +424,7 @@ static bool has_ssbd_mitigation(const struct 
->> arm64_cpu_capabilities *entry,
->>           ssbd_state = ARM64_SSBD_UNKNOWN;
->>           return false;
->> +    /* machines with mixed mitigation requirements must not return 
->> this */
->>       case SMCCC_RET_NOT_REQUIRED:
->>           pr_info_once("%s mitigation not required\n", entry->desc);
->>           ssbd_state = ARM64_SSBD_MITIGATED;
->> @@ -475,6 +480,16 @@ static bool has_ssbd_mitigation(const struct 
->> arm64_cpu_capabilities *entry,
->>       return required;
->>   }
->> +/* known vulnerable cores */
->> +static const struct midr_range arm64_ssb_cpus[] = {
->> +    MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
->> +    MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
->> +    MIDR_ALL_VERSIONS(MIDR_CORTEX_A73),
->> +    MIDR_ALL_VERSIONS(MIDR_CORTEX_A75),
->> +    MIDR_ALL_VERSIONS(MIDR_CORTEX_A76),
->> +    {},
->> +};
->> +
->>   static void __maybe_unused
->>   cpu_enable_cache_maint_trap(const struct arm64_cpu_capabilities 
->> *__unused)
->>   {
->> @@ -770,6 +785,7 @@ const struct arm64_cpu_capabilities arm64_errata[] 
->> = {
->>           .capability = ARM64_SSBD,
->>           .type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
->>           .matches = has_ssbd_mitigation,
->> +        .midr_range_list = arm64_ssb_cpus,
->>       },
->>   #ifdef CONFIG_ARM64_ERRATUM_1188873
->>       {
->> @@ -808,3 +824,30 @@ ssize_t cpu_show_spectre_v2(struct device *dev, 
->> struct device_attribute *attr,
->>       return sprintf(buf, "Vulnerable\n");
->>   }
->> +
->> +ssize_t cpu_show_spec_store_bypass(struct device *dev,
->> +        struct device_attribute *attr, char *buf)
->> +{
->> +    /*
->> +     *  Two assumptions: First, ssbd_state reflects the worse case
->> +     *  for hetrogenous machines, and that if SSBS is supported its
-> 
->                  heterogeneous
-> 
-> Cheers,
-> Andre.
-> 
->> +     *  supported by all cores.
->> +     */
->> +    switch (ssbd_state) {
->> +    case ARM64_SSBD_MITIGATED:
->> +        return sprintf(buf, "Not affected\n");
->> +
->> +    case ARM64_SSBD_KERNEL:
->> +    case ARM64_SSBD_FORCE_ENABLE:
->> +        if (cpus_have_cap(ARM64_SSBS))
->> +            return sprintf(buf, "Not affected\n");
->> +        if (IS_ENABLED(CONFIG_ARM64_SSBD))
->> +            return sprintf(buf,
->> +                "Mitigation: Speculative Store Bypass disabled\n");
->> +    }
->> +
->> +    if (__ssb_safe)
->> +        return sprintf(buf, "Not affected\n");
->> +
->> +    return sprintf(buf, "Vulnerable\n");
->> +}
->>
-
+                      Linus
