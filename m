@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC02DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB1CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A1F20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399D520850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388836AbfCAP4Y (ORCPT
+        id S2388907AbfCAP41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 10:56:24 -0500
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:51352 "EHLO
+        Fri, 1 Mar 2019 10:56:27 -0500
+Received: from vegas.theobroma-systems.com ([144.76.126.164]:36228 "EHLO
         mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728331AbfCAP4V (ORCPT
+        by vger.kernel.org with ESMTP id S1728502AbfCAP4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 10:56:21 -0500
+        Fri, 1 Mar 2019 10:56:25 -0500
 Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:42682 helo=purcell.lan)
         by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1gzkDa-0005Ag-2G; Fri, 01 Mar 2019 16:36:58 +0100
+        id 1gzkDd-0005Ag-Ec; Fri, 01 Mar 2019 16:37:01 +0100
 From:   Christoph Muellner <christoph.muellner@theobroma-systems.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
         shawn.lin@rock-chips.com
@@ -32,20 +32,21 @@ Cc:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
         Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <mbrugger@suse.com>,
         Brian Norris <briannorris@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Douglas Anderson <dianders@chromium.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
         Randy Li <ayaka@soulik.info>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
         Tony Xie <tony.xie@rock-chips.com>,
+        Vicente Bergas <vicencb@gmail.com>,
         Ezequiel Garcia <ezequiel@collabora.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] arm64: dts: rockchip: Define drive-impedance-ohm for RK3399's emmc-phy.
-Date:   Fri,  1 Mar 2019 16:33:44 +0100
-Message-Id: <20190301153348.29870-2-christoph.muellner@theobroma-systems.com>
+Subject: [PATCH 3/3] arm64: dts: rockchip: Decrease emmc-phy's drive impedance on rk3399-puma
+Date:   Fri,  1 Mar 2019 16:33:45 +0100
+Message-Id: <20190301153348.29870-3-christoph.muellner@theobroma-systems.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
 References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
@@ -54,28 +55,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A previous patch introduced the property 'drive-impedance-ohm'
-for the RK3399's emmc phy node. This patch sets this value
-explicitly to the default value of 50 Ohm.
+The RK3399-Q7 (Puma) requires 33 Ohm drive strength to ensure signal
+integrity at HS-400 (200MHz clock, DDR signalling).
+
+A repeated EMC testing run validates that this increase does not
+negatively impact EMC compliance (emissions have ample distance to
+the regulatory limits).
 
 Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
 Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+Tested-by: Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>
+Tested-by: Klaus Goger <klaus.goger@theobroma-systems.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 1 +
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 6cc1c9fa4ea6..b875364a7709 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1450,6 +1450,7 @@
- 			clock-names = "refclk";
- 			#phy-cells = <1>;
- 			resets = <&cru SRST_PCIEPHY>;
-+			drive-impedance-ohm = <50>;
- 			reset-names = "phy";
- 			status = "disabled";
- 		};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+index 0130b9f98c9d..4f75bb6b2f14 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
+@@ -146,6 +146,7 @@
+ 
+ &emmc_phy {
+ 	status = "okay";
++	drive-impedance-ohm = <33>;
+ };
+ 
+ &gmac {
 -- 
 2.11.0
 
