@@ -2,424 +2,227 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DE0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 21:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72746C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 21:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28242206B6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 21:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FB3206B6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 21:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfCAVAl (ORCPT
+        id S1726121AbfCAVEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 16:00:41 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:34172 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCAVAl (ORCPT
+        Fri, 1 Mar 2019 16:04:53 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33020 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfCAVEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 16:00:41 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id C41488044D;
-        Fri,  1 Mar 2019 22:00:35 +0100 (CET)
-Date:   Fri, 1 Mar 2019 22:00:33 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
-Message-ID: <20190301210033.GA11150@ravnborg.org>
-References: <20190228220756.20262-1-paul@crapouillou.net>
- <20190228220756.20262-4-paul@crapouillou.net>
+        Fri, 1 Mar 2019 16:04:53 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 7B14C27D914
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
+References: <5c6702da.1c69fb81.12a14.4ece@mx.google.com>
+ <20190215104325.039dbbd9c3bfb35b95f9247b@linux-foundation.org>
+ <20190215185151.GG7897@sirena.org.uk>
+ <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
+ <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+ <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
+ <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
+ <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com>
+ <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com>
+Date:   Fri, 1 Mar 2019 21:04:46 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228220756.20262-4-paul@crapouillou.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=UpRNyd4B c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=p8lomlI2yiL8qkzjzeYA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+On 01/03/2019 20:41, Andrew Morton wrote:
+> On Fri, 1 Mar 2019 09:25:24 +0100 Guillaume Tucker <guillaume.tucker@collabora.com> wrote:
+> 
+>>>>> Michal had asked if the free space accounting fix up addressed this
+>>>>> boot regression? I was awaiting word on that.
+>>>>
+>>>> hm, does bot@kernelci.org actually read emails?  Let's try info@ as well..
+>>
+>> bot@kernelci.org is not person, it's a send-only account for
+>> automated reports.  So no, it doesn't read emails.
+>>
+>> I guess the tricky point here is that the authors of the commits
+>> found by bisections may not always have the hardware needed to
+>> reproduce the problem.  So it needs to be dealt with on a
+>> case-by-case basis: sometimes they do have the hardware,
+>> sometimes someone else on the list or on CC does, and sometimes
+>> it's better for the people who have access to the test lab which
+>> ran the KernelCI test to deal with it.
+>>
+>> This case seems to fall into the last category.  As I have access
+>> to the Collabora lab, I can do some quick checks to confirm
+>> whether the proposed patch does fix the issue.  I hadn't realised
+>> that someone was waiting for this to happen, especially as the
+>> BeagleBone Black is a very common platform.  Sorry about that,
+>> I'll take a look today.
+>>
+>> It may be a nice feature to be able to give access to the
+>> KernelCI test infrastructure to anyone who wants to debug an
+>> issue reported by KernelCI or verify a fix, so they won't need to
+>> have the hardware locally.  Something to think about for the
+>> future.
+> 
+> Thanks, that all sounds good.
+> 
+>>>> Is it possible to determine whether this regression is still present in
+>>>> current linux-next?
+>>
+>> I'll try to re-apply the patch that caused the issue, then see if
+>> the suggested change fixes it.  As far as the current linux-next
+>> master branch is concerned, KernelCI boot tests are passing fine
+>> on that platform.
+> 
+> They would, because I dropped
+> mm-shuffle-default-enable-all-shuffling.patch, so your tests presumably
+> now have shuffling disabled.
+> 
+> Is it possible to add the below to linux-next and try again?
 
-Driver looks good and is a very nice piece of work.
-In the following a number of minor issues.
+I've actually already done that, and essentially the issue can
+still be reproduced by applying that patch.  See this branch:
 
-One area that jumped at me was framedesc and the use of dma_alloc_coherent()
-I hope someone that knows the memory handling better can give some advice here.
-To me it looks like something drm should be able to help you with.
+  https://gitlab.collabora.com/gtucker/linux/commits/next-20190301-beaglebone-black-debug
 
-	Sam
+next-20190301 boots fine but the head fails, using
+multi_v7_defconfig + SMP=n in both cases and
+SHUFFLE_PAGE_ALLOCATOR=y enabled in the 2nd case as a result
+of the change in the default value.
 
-> --- a/drivers/gpu/drm/Makefile
-> +++ b/drivers/gpu/drm/Makefile
-> @@ -94,6 +94,7 @@ obj-$(CONFIG_DRM_TEGRA) += tegra/
->  obj-$(CONFIG_DRM_STM) += stm/
->  obj-$(CONFIG_DRM_STI) += sti/
->  obj-$(CONFIG_DRM_IMX) += imx/
-> +obj-y			+= ingenic/
+The change suggested by Michal Hocko on Feb 15th has now been
+applied in linux-next, it's part of this commit but as
+explained above it does not actually resolve the boot failure:
 
-To avoid visiting ingenic/ dir for every build use:
-obj-$(CONFIG_DRM_INGENIC) += ingennic/
+  98cf198ee8ce mm: move buddy list manipulations into helpers
 
-And accept that you need to do this also in ingenic/Makefile
+I can send more details on Monday and do a bit of debugging to
+help narrowing down the problem.  Please let me know if
+there's anything in particular that would seem be worth
+trying.
 
->  obj-$(CONFIG_DRM_MEDIATEK) += mediatek/
->  obj-$(CONFIG_DRM_MESON)	+= meson/
->  obj-y			+= i2c/
-> +#include <drm/drm_gem_cma_helper.h>
-> +#include <drm/drm_fb_cma_helper.h>
-> +#include <drm/drm_fb_helper.h>
-> +#include <drm/drm_fourcc.h>
-> +#include <drm/drm_gem_framebuffer_helper.h>
-> +#include <drm/drm_irq.h>
-> +#include <drm/drm_panel.h>
-> +#include <drm/drm_plane.h>
-> +#include <drm/drm_plane_helper.h>
-> +#include <drm/drm_probe_helper.h>
-> +#include <drm/drm_vblank.h>
-> +
-> +#include <dt-bindings/display/ingenic,drm.h>
-> +
-> +#include "../drm_internal.h"
-No other drivers needs drm_internal.h - what makes this driver special?
-Or do we have something in drm_internal that should be moved to
-include/drm/ ?
+> Or I can re-add this to linux-next.  Where should we go to determine
+> the results of such a change?  There are a heck of a lot of results on
+> https://kernelci.org/boot/ and entering "beaglebone-black" doesn't get
+> me anything.
 
-> +struct ingenic_framedesc {
-> +	uint32_t next;
-> +	uint32_t addr;
-> +	uint32_t id;
-> +	uint32_t cmd;
-> +} __packed;
-For internel types u32 is the typical use.
-uint32_t is usually used in uapi.
+The BeagleBone Black board was offline for a few days in our
+lab, which probably explains why you're not getting much
+results from the web interface.  Hopefully we'll see passing
+boot results in linux-next tomorrow now that the board is back
+on track.
 
-Consider to use dma_addr_t for addresses - we see this in other drivers.
-If there are alignemnt constraints then add these.
+It's quite easy for me to submit test jobs with kernels I've
+built myself instead of going through the full linux-next and
+KernelCI loop.  So that's the best way to try things out, then
+when a fix has been found it can be applied in linux-next on
+top of the mm/shuffle change to verify it in KernelCI.
 
-> +
-> +struct jz_soc_info {
-> +	bool needs_dev_clk;
-> +};
-> +
-> +struct ingenic_drm {
-> +	struct device *dev;
-> +	void __iomem *base;
-> +	struct regmap *map;
-> +	struct clk *lcd_clk, *pix_clk;
-> +
-> +	u32 lcd_mode;
-> +
-> +	struct ingenic_framedesc *framedesc;
-> +	dma_addr_t framedesc_phys;
-> +
-> +	struct drm_device *drm;
-> +	struct drm_plane primary;
-> +	struct drm_crtc crtc;
-> +	struct drm_connector connector;
-> +	struct drm_encoder encoder;
-> +	struct drm_panel *panel;
-> +
-> +	struct device_node *panel_node;
-panel_node is not used outside ingenic_drm_probe() so no need
-to have it here.
+Guillaume
 
-> +
-> +	unsigned short ps_start, ps_end, cls_start,
-> +		       cls_end, spl_start, spl_end, rev_start;
-I do not see these used, they can all be dropped.
+> From: Dan Williams <dan.j.williams@intel.com>
+> Subject: mm/shuffle: default enable all shuffling
+> 
+> Per Andrew's request arrange for all memory allocation shuffling code to
+> be enabled by default.
+> 
+> The page_alloc.shuffle command line parameter can still be used to disable
+> shuffling at boot, but the kernel will default enable the shuffling if the
+> command line option is not specified.
+> 
+> Link: http://lkml.kernel.org/r/154943713572.3858443.11206307988382889377.stgit@dwillia2-desk3.amr.corp.intel.com
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> 
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+> 
+>  init/Kconfig |    4 ++--
+>  mm/shuffle.c |    4 ++--
+>  mm/shuffle.h |    2 +-
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> --- a/init/Kconfig~mm-shuffle-default-enable-all-shuffling
+> +++ a/init/Kconfig
+> @@ -1709,7 +1709,7 @@ config SLAB_MERGE_DEFAULT
+>  	  command line.
+>  
+>  config SLAB_FREELIST_RANDOM
+> -	default n
+> +	default y
+>  	depends on SLAB || SLUB
+>  	bool "SLAB freelist randomization"
+>  	help
+> @@ -1728,7 +1728,7 @@ config SLAB_FREELIST_HARDENED
+>  
+>  config SHUFFLE_PAGE_ALLOCATOR
+>  	bool "Page allocator randomization"
+> -	default SLAB_FREELIST_RANDOM && ACPI_NUMA
+> +	default y
+>  	help
+>  	  Randomization of the page allocator improves the average
+>  	  utilization of a direct-mapped memory-side-cache. See section
+> --- a/mm/shuffle.c~mm-shuffle-default-enable-all-shuffling
+> +++ a/mm/shuffle.c
+> @@ -9,8 +9,8 @@
+>  #include "internal.h"
+>  #include "shuffle.h"
+>  
+> -DEFINE_STATIC_KEY_FALSE(page_alloc_shuffle_key);
+> -static unsigned long shuffle_state __ro_after_init;
+> +DEFINE_STATIC_KEY_TRUE(page_alloc_shuffle_key);
+> +static unsigned long shuffle_state __ro_after_init = 1 << SHUFFLE_ENABLE;
+>  
+>  /*
+>   * Depending on the architecture, module parameter parsing may run
+> --- a/mm/shuffle.h~mm-shuffle-default-enable-all-shuffling
+> +++ a/mm/shuffle.h
+> @@ -19,7 +19,7 @@ enum mm_shuffle_ctl {
+>  #define SHUFFLE_ORDER (MAX_ORDER-1)
+>  
+>  #ifdef CONFIG_SHUFFLE_PAGE_ALLOCATOR
+> -DECLARE_STATIC_KEY_FALSE(page_alloc_shuffle_key);
+> +DECLARE_STATIC_KEY_TRUE(page_alloc_shuffle_key);
+>  extern void page_alloc_shuffle(enum mm_shuffle_ctl ctl);
+>  extern void __shuffle_free_memory(pg_data_t *pgdat);
+>  static inline void shuffle_free_memory(pg_data_t *pgdat)
+> _
+> 
 
-> +};
-> +
-> +
-> +static const struct regmap_config ingenic_drm_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +
-> +	.max_register = JZ_REG_LCD_CMD1,
-> +	.writeable_reg = ingenic_drm_writeable_reg,
-> +};
-
-+1 for using regmap.
-
-> +
-> +static inline bool ingenic_drm_lcd_is_special_mode(u32 mode)
-> +{
-> +	switch (mode) {
-> +	case JZ_DRM_LCD_SPECIAL_TFT_1:
-> +	case JZ_DRM_LCD_SPECIAL_TFT_2:
-> +	case JZ_DRM_LCD_SPECIAL_TFT_3:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-Does it make sense to support these modes today?
-If it is not used in practice then no need to carry it in the driver.
-
-
-> +
-> +static inline bool ingenic_drm_lcd_is_stn_mode(u32 mode)
-> +{
-> +	switch (mode) {
-> +	case JZ_DRM_LCD_SINGLE_COLOR_STN:
-> +	case JZ_DRM_LCD_SINGLE_MONOCHROME_STN:
-> +	case JZ_DRM_LCD_DUAL_COLOR_STN:
-> +	case JZ_DRM_LCD_DUAL_MONOCHROME_STN:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-This function is not used and can be deleted.
-stn display are not really worth it these days anyway.
-
-
-> +static void ingenic_drm_crtc_atomic_flush(struct drm_crtc *crtc,
-> +					  struct drm_crtc_state *oldstate)
-> +{
-> +	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
-> +	struct drm_crtc_state *state = crtc->state;
-> +	struct drm_pending_vblank_event *event = state->event;
-> +	struct drm_framebuffer *drm_fb = crtc->primary->state->fb;
-> +	const struct drm_format_info *finfo;
-> +	unsigned int width, height;
-> +
-> +	if (drm_atomic_crtc_needs_modeset(state)) {
-> +		finfo = drm_format_info(drm_fb->format->format);
-> +		width = state->adjusted_mode.hdisplay;
-> +		height = state->adjusted_mode.vdisplay;
-
-width and height are unused and can be dropped.
-
-> +
-> +		ingenic_drm_crtc_update_timings(priv, &state->mode);
-> +
-> +		ingenic_drm_crtc_update_ctrl(priv, finfo->depth);
-> +		ingenic_drm_crtc_update_cfg(priv, &state->adjusted_mode);
-> +
-> +		clk_set_rate(priv->pix_clk, state->adjusted_mode.clock * 1000);
-> +
-> +		regmap_write(priv->map, JZ_REG_LCD_DA0, priv->framedesc->next);
-> +	}
-> +
-> +	if (event) {
-> +		state->event = NULL;
-> +
-> +		spin_lock_irq(&crtc->dev->event_lock);
-> +		if (drm_crtc_vblank_get(crtc) == 0)
-> +			drm_crtc_arm_vblank_event(crtc, event);
-> +		else
-> +			drm_crtc_send_vblank_event(crtc, event);
-> +		spin_unlock_irq(&crtc->dev->event_lock);
-> +	}
-> +}
-> +
-> +static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
-> +					    struct drm_plane_state *oldstate)
-> +{
-> +	struct ingenic_drm *priv = drm_plane_get_priv(plane);
-> +	struct drm_plane_state *state = plane->state;
-> +	const struct drm_format_info *finfo;
-> +	unsigned int width, height;
-> +
-> +	finfo = drm_format_info(state->fb->format->format);
-> +	width = state->crtc->state->adjusted_mode.hdisplay;
-> +	height = state->crtc->state->adjusted_mode.vdisplay;
-adjusted_mode->{h,v}display are both ints. So there is a hidden conversion to unsigned int here.
-and framedesc->cmd is uint32_t then this is maybe fine.
-Noticed so added a comment about it.
-
-> +
-> +	priv->framedesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
-> +
-> +	priv->framedesc->cmd = width * height * ((finfo->depth + 7) / 8) / 4;
-> +	priv->framedesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
-> +}
-> +
-> +static struct drm_driver ingenic_drm_driver_data = {
-> +	.driver_features	= DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME
-> +				| DRIVER_ATOMIC | DRIVER_HAVE_IRQ,
-
-DRIVER_HAVE_IRQ are only for legacy drivers these days.
-You can drop it.
-
-> +	.name			= "ingenic-drm",
-> +	.desc			= "DRM module for Ingenic SoCs",
-> +	.date			= "20190228",
-> +	.major			= 1,
-> +	.minor			= 0,
-> +	.patchlevel		= 0,
-> +
-> +	.fops			= &ingenic_drm_fops,
-> +
-> +	.dumb_create		= drm_gem_cma_dumb_create,
-> +	.gem_free_object_unlocked = drm_gem_cma_free_object,
-> +	.gem_vm_ops		= &drm_gem_cma_vm_ops,
-> +
-> +	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
-> +	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle,
-
-> +	.gem_prime_import	= drm_gem_prime_import,
-> +	.gem_prime_export	= drm_gem_prime_export,
-The two assignments above are not needed. This is the default behaviour. See drm_drv.h
-(from drm-misc-next)
-
-> +static int ingenic_drm_probe(struct platform_device *pdev)
-> +{
-> +	const struct jz_soc_info *soc_info;
-> +	struct device *dev = &pdev->dev;
-> +	struct ingenic_drm *priv;
-> +	struct clk *parent_clk;
-> +	struct drm_device *drm;
-> +	struct resource *mem;
-> +	void __iomem *base;
-> +	long parent_rate;
-> +	int ret, irq;
-> +
-> +	soc_info = device_get_match_data(dev);
-> +	if (!soc_info)
-> +		return -EINVAL;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->dev = dev;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = base = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "Failed to get platform irq\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	priv->map = devm_regmap_init_mmio(dev, base,
-> +					  &ingenic_drm_regmap_config);
-> +	if (IS_ERR(priv->map)) {
-> +		dev_err(dev, "Failed to create regmap\n");
-> +		return PTR_ERR(priv->map);
-> +	}
-> +
-> +	if (soc_info->needs_dev_clk) {
-> +		priv->lcd_clk = devm_clk_get(dev, "lcd");
-> +		if (IS_ERR(priv->lcd_clk)) {
-> +			dev_err(dev, "Failed to get lcd clock\n");
-> +			return PTR_ERR(priv->lcd_clk);
-> +		}
-> +	}
-> +
-> +	priv->pix_clk = devm_clk_get(dev, "lcd_pclk");
-> +	if (IS_ERR(priv->pix_clk)) {
-> +		dev_err(dev, "Failed to get pixel clock\n");
-> +		return PTR_ERR(priv->pix_clk);
-> +	}
-> +
-> +	priv->panel_node = of_parse_phandle(dev->of_node, "ingenic,panel", 0);
-> +	if (!priv->panel_node) {
-> +		DRM_INFO("No panel found");
-> +	} else {
-> +		priv->panel = of_drm_find_panel(priv->panel_node);
-> +		of_node_put(priv->panel_node);
-> +
-> +		if (IS_ERR(priv->panel)) {
-> +			if (PTR_ERR(priv->panel) == -EPROBE_DEFER)
-> +				return -EPROBE_DEFER;
-> +
-> +			priv->panel = NULL;
-> +		} else {
-> +			ret = drm_panel_prepare(priv->panel);
-> +			if (ret && ret != -ENOSYS)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	if (priv->panel) {
-> +		ret = device_property_read_u32(dev, "ingenic,lcd-mode",
-> +					       &priv->lcd_mode);
-> +		if (ret) {
-> +			dev_err(dev, "Unable to read ingenic,lcd-mode property\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	priv->framedesc = dma_alloc_coherent(dev, sizeof(*priv->framedesc),
-> +					     &priv->framedesc_phys, GFP_KERNEL);
-> +	if (!priv->framedesc)
-> +		return -ENOMEM;
-> +
-> +	priv->framedesc->next = priv->framedesc_phys;
-> +	priv->framedesc->id = 0xdeafbead;
-I did not really follow this code.
-But you have framedesc that include a next pointer which is uint32_t,
-and you assign to it framedesc_phys which is dmaaddr_t.
-This looks fishy to me, but maybe it is fine.
-
-When browsing other drivers I see uses of for example {dma,dmam}_pool_create()
-
-When lookign at the origianl fbdev code it is obvious where this comes from.
-Notice that in the fbdev code JZ_REG_LCD_DA0 register is updated in the enable function.
-This is done different in this driver.
-Just an observation, what is right I dunno.
-
-> +static int ingenic_drm_remove(struct platform_device *pdev)
-> +{
-> +	struct drm_device *drm = platform_get_drvdata(pdev);
-> +	struct ingenic_drm *priv = drm->dev_private;
-> +
-> +	drm_dev_unregister(drm);
-> +	drm_mode_config_cleanup(drm);
-> +
-> +	if (priv->lcd_clk)
-> +		clk_disable_unprepare(priv->lcd_clk);
-> +	clk_disable_unprepare(priv->pix_clk);
-> +
-> +	drm_vblank_cleanup(drm);
-> +	drm_irq_uninstall(drm);
-> +
-> +	drm_encoder_cleanup(&priv->encoder);
-> +	drm_connector_cleanup(&priv->connector);
-> +	drm_crtc_cleanup(&priv->crtc);
-> +	drm_plane_cleanup(&priv->primary);
-> +
-> +	drm_dev_put(drm);
-> +
-> +	dma_free_coherent(&pdev->dev, sizeof(*priv->framedesc),
-> +			  priv->framedesc, priv->framedesc_phys);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct jz_soc_info jz4740_soc_info = {
-> +	.needs_dev_clk = true,
-> +};
-> +
-> +static const struct jz_soc_info jz4725b_soc_info = {
-> +	.needs_dev_clk = false,
-> +};
-> +
-> +static const struct of_device_id ingenic_drm_of_match[] = {
-> +	{ .compatible = "ingenic,jz4740-drm", .data = &jz4740_soc_info },
-> +	{ .compatible = "ingenic,jz4725b-drm", .data = &jz4725b_soc_info },
-> +	{},
-Use /* sentinel */ like in most drivers.
