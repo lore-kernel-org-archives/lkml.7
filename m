@@ -7,415 +7,450 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CD1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123AAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E40B92084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B03B82084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:25:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SaBCWRVl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCSS13gl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726042AbfCAUYt (ORCPT
+        id S1726236AbfCAUZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 15:24:49 -0500
-Received: from mail-it1-f195.google.com ([209.85.166.195]:53561 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfCAUYt (ORCPT
+        Fri, 1 Mar 2019 15:25:32 -0500
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39038 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfCAUZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 15:24:49 -0500
-Received: by mail-it1-f195.google.com with SMTP id v2so22119583ith.3;
-        Fri, 01 Mar 2019 12:24:48 -0800 (PST)
+        Fri, 1 Mar 2019 15:25:31 -0500
+Received: by mail-it1-f194.google.com with SMTP id l15so23400722iti.4;
+        Fri, 01 Mar 2019 12:25:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GJj2wOKvJo8ufJt4xbCc59sLxKQHn8Mf6u3ohbviSec=;
-        b=SaBCWRVlo5BD3l3oYPXXF8aPbJVACKa/Z3imoxRpvMpV8J4zj0hLOcj/MkGoRo8N/x
-         yAL9T6UNlj8BQ8iUEcdclsYi17DK6HyVVSWJBePmb7GmOxzs6y9cZ7+pJ33dZt2Qs4J6
-         5bmSRd/gCC4RTZxkjpS/mfVgA9ZniyWPOj0zbRqqdti+YhLBje6IESA8XJzlM5O9BgAt
-         Rhu+zlwED+WFrSQTSot3k9yKRIiX3CZEYLObtHRwZGaRlcU/Ir9aHAIYJrrKeHSmDT60
-         CsFBdcL8tWxP/F6kcsJFcvPeHpylxGoOjxmhwoWFyC9fFvWujUlpDhBl+4BV3iYiCQ4b
-         L2+A==
+        bh=SrTgf+nIymAj0SLnVWmRNwnM/Fww7UgIvkfvav4dLNw=;
+        b=DCSS13gl7uEef2ydZVX8CvBFB4sG/O3XJyHMovmdPD4uMiqB1JtkVQWAeX5259EEE+
+         jUAjkgO9Mp7taNJDJR958votHlyJu8RJeDVD0prDaGaDtTImXf/OvVD9jRpZGKeZYFdl
+         pSRCWbsA6NkA1fI7obbzIgH47RI60JpAWhiwfmSCpQ7dKFdoWlzzOLyKE6eru4+ztRGh
+         gzPOo7/nufidZ15pBT7PGAZemUVxgWVUpUbC2ULXR2uSoKQa/N+XLrcx7AGrQmwBuwz9
+         oTJ4gTgu325ky9H9phC/vQZefxfa0UhRKiZtkfLcwi6EIqOORcaooICMbvbrO3167R9s
+         lYuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GJj2wOKvJo8ufJt4xbCc59sLxKQHn8Mf6u3ohbviSec=;
-        b=rRalL5olXz/DAQ5PkeGv6qjEYA+R2NIbBW9BxkQIaewE8onZBROQ2q8wJxoE03DByZ
-         UIypPRKVvLJtajYJx448km2HRcU+Woyv6FRD4Y4SDyj6E2dOzmVGTXj9nAysSHm6PSri
-         o2jS02/HH5KWs/z18WJOV6dKnXPIRmt4SUvLwksvjqXtuezGXDq7vWnKsNBnH4J2RMa0
-         qvYZOZkCgPh60qpjo4E9/m7zE14w4CHbb+AFiV6XqNFqItuDkHnXbq3Og1mIXvN0cflx
-         ECar5f4fGh/pmioJ6Av4J8H/n3lgJMGOphZjIE5KgGF7FDsdi1Z1gZ9+4Xk9i4xrvKkh
-         o73Q==
-X-Gm-Message-State: AHQUAuZ6aUY8X9ndGmCIuWE42+FMv2wOks/q35KF/TwtsfkvlLCcXbEL
-        jehqXrBTLQrUF7fmQ6ZpIWE56jpqMChPUmw3RXs=
-X-Google-Smtp-Source: AHgI3IYFXhqVduFJEQlsPWtHoqftoCre8irN+tHG5ZIK3mA1aZYeoMkKD7ox4Z0egX4aJ/StCE8ttlIU0r7R8i7JwBY=
-X-Received: by 2002:a24:7d88:: with SMTP id b130mr4492539itc.163.1551471887484;
- Fri, 01 Mar 2019 12:24:47 -0800 (PST)
+        bh=SrTgf+nIymAj0SLnVWmRNwnM/Fww7UgIvkfvav4dLNw=;
+        b=hMD8dtPaU+Mj018qv/InADG72yyIjH2Pxo1HK5i3nJjFymrovsSECjabqwe1VyA4PJ
+         5EI9mfL3fjpqpVZ1ovy+8dzQRAEOAeNmbVmrWaE7/eAqY0F5Z6S8rUGO4BhFN5AOcenG
+         OX3xynQkjngVLlGJoZ3coSPKyk1GUkQo6T6QqOFmF2UsRhYVy6hs046m/y3EIdtXBSlb
+         k97HRTnWiNAB2AFBtefKx77uroGE3anE1HGzCObBXlYjalulff3hDeIU1K/tGKsYLwAR
+         BDaW1jVDNg9WXIbLrJnEVeynIDeQ4vuFVYtRIeVgwjL62tVzdhELqh5t0dMKHVZ6uO45
+         xGpg==
+X-Gm-Message-State: APjAAAUwmUNzLM0knc8ZvBxqOZynC1qnbAjAIDI62sY993c/nfg3AshB
+        7/cy+pz9I9z5yV+/VcrBO644BjNOKfQHMacycT4=
+X-Google-Smtp-Source: APXvYqwJxc8NFtfI2vaNqsdtIc0j2Zkx+FJy2tE0MWVHQwKEsPJEKTxslBv0C3BBSN6Vn4ajm/zfIUsk6vypiki85Jk=
+X-Received: by 2002:a02:1854:: with SMTP id k81mr3726756jad.144.1551471930313;
+ Fri, 01 Mar 2019 12:25:30 -0800 (PST)
 MIME-Version: 1.0
-References: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org> <1551469117-3404-16-git-send-email-jcrouse@codeaurora.org>
-In-Reply-To: <1551469117-3404-16-git-send-email-jcrouse@codeaurora.org>
+References: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org> <1551469117-3404-3-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1551469117-3404-3-git-send-email-jcrouse@codeaurora.org>
 From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 1 Mar 2019 15:24:35 -0500
-Message-ID: <CAF6AEGtcSN_t8X07PnP92=KBaWtwOVf2H3Gd2PDC3rFRkKZ73g@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 15/15] drm/msm/a5xx: Support per-instance pagetables
+Date:   Fri, 1 Mar 2019 15:25:18 -0500
+Message-ID: <CAF6AEGtb3MAS8U8AQEFXBMVB5x5+1786+r+hybrg5qzqZuqnLg@mail.gmail.com>
+Subject: Re: [Freedreno] [RFC PATCH v1 02/15] iommu/arm-smmu: Add split
+ pagetable support for arm-smmu-v2
 To:     Jordan Crouse <jcrouse@codeaurora.org>
 Cc:     freedreno <freedreno@lists.freedesktop.org>,
         Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
         dianders@chromimum.org,
         "Kristian H. Kristensen" <hoegsberg@google.com>,
-        baolu.lu@linux.intel.com, Sean Paul <sean@poorly.run>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, baolu.lu@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 2:39 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+On Fri, Mar 1, 2019 at 2:38 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 >
-> Add support for per-instance pagetables for 5XX targets. Create a support
-> buffer for preemption to hold the SMMU pagetable information for a
-> preempted ring, enable TTBR1 to support split pagetables and add the
-> necessary PM4 commands to trigger a pagetable switch at the beginning
-> of a user command.
+> Add support for a split pagetable (TTBR0/TTBR1) scheme for
+> arm-smmu-v2. If split pagetables are enabled, create a
+> pagetable for TTBR1 and set up the sign extension bit so
+> that all IOVAs with that bit set are mapped and translated
+> from the TTBR1 pagetable.
 >
 > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 > ---
 >
->  drivers/gpu/drm/msm/adreno/a5xx_gpu.c     | 120 +++++++++++++++++++++++++++++-
->  drivers/gpu/drm/msm/adreno/a5xx_gpu.h     |  19 +++++
->  drivers/gpu/drm/msm/adreno/a5xx_preempt.c |  70 +++++++++++++----
->  3 files changed, 192 insertions(+), 17 deletions(-)
+>  drivers/iommu/arm-smmu-regs.h  |  18 +++++
+>  drivers/iommu/arm-smmu.c       | 149 +++++++++++++++++++++++++++++++++++++----
+>  drivers/iommu/io-pgtable-arm.c |   3 +-
+>  3 files changed, 154 insertions(+), 16 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-> index 3d6f414..9294fd5 100644
-> --- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-> @@ -202,6 +202,59 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
->         msm_gpu_retire(gpu);
+> diff --git a/drivers/iommu/arm-smmu-regs.h b/drivers/iommu/arm-smmu-regs.h
+> index a1226e4..56f9709 100644
+> --- a/drivers/iommu/arm-smmu-regs.h
+> +++ b/drivers/iommu/arm-smmu-regs.h
+> @@ -193,7 +193,25 @@ enum arm_smmu_s2cr_privcfg {
+>  #define RESUME_RETRY                   (0 << 0)
+>  #define RESUME_TERMINATE               (1 << 0)
+>
+> +#define TTBCR_EPD1                     (1 << 23)
+> +#define TTBCR_T1SZ_SHIFT               16
+> +#define TTBCR_IRGN1_SHIFT              24
+> +#define TTBCR_ORGN1_SHIFT              26
+> +#define TTBCR_RGN_WBWA                 1
+> +#define TTBCR_SH1_SHIFT                        28
+> +#define TTBCR_SH_IS                    3
+> +
+> +#define TTBCR_TG1_16K                  (1 << 30)
+> +#define TTBCR_TG1_4K                   (2 << 30)
+> +#define TTBCR_TG1_64K                  (3 << 30)
+> +
+>  #define TTBCR2_SEP_SHIFT               15
+> +#define TTBCR2_SEP_31                  (0x0 << TTBCR2_SEP_SHIFT)
+> +#define TTBCR2_SEP_35                  (0x1 << TTBCR2_SEP_SHIFT)
+> +#define TTBCR2_SEP_39                  (0x2 << TTBCR2_SEP_SHIFT)
+> +#define TTBCR2_SEP_41                  (0x3 << TTBCR2_SEP_SHIFT)
+> +#define TTBCR2_SEP_43                  (0x4 << TTBCR2_SEP_SHIFT)
+> +#define TTBCR2_SEP_47                  (0x5 << TTBCR2_SEP_SHIFT)
+>  #define TTBCR2_SEP_UPSTREAM            (0x7 << TTBCR2_SEP_SHIFT)
+>  #define TTBCR2_AS                      (1 << 4)
+>
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index af18a7e..05eb126 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -151,6 +151,7 @@ struct arm_smmu_cb {
+>         u32                             tcr[2];
+>         u32                             mair[2];
+>         struct arm_smmu_cfg             *cfg;
+> +       u64                             split_table_mask;
+>  };
+>
+>  struct arm_smmu_master_cfg {
+> @@ -208,6 +209,7 @@ struct arm_smmu_device {
+>         unsigned long                   va_size;
+>         unsigned long                   ipa_size;
+>         unsigned long                   pa_size;
+> +       unsigned long                   ubs_size;
+>         unsigned long                   pgsize_bitmap;
+>
+>         u32                             num_global_irqs;
+> @@ -252,13 +254,14 @@ enum arm_smmu_domain_stage {
+>
+>  struct arm_smmu_domain {
+>         struct arm_smmu_device          *smmu;
+> -       struct io_pgtable_ops           *pgtbl_ops;
+> +       struct io_pgtable_ops           *pgtbl_ops[2];
+>         const struct iommu_gather_ops   *tlb_ops;
+>         struct arm_smmu_cfg             cfg;
+>         enum arm_smmu_domain_stage      stage;
+>         bool                            non_strict;
+>         struct mutex                    init_mutex; /* Protects smmu pointer */
+>         spinlock_t                      cb_lock; /* Serialises ATS1* ops and TLB syncs */
+> +       u32 attributes;
+>         struct iommu_domain             domain;
+>  };
+>
+> @@ -618,6 +621,69 @@ static irqreturn_t arm_smmu_global_fault(int irq, void *dev)
+>         return IRQ_HANDLED;
 >  }
 >
-> +static void a5xx_set_pagetable(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
-> +       struct msm_file_private *ctx)
+> +static void arm_smmu_init_ttbr1(struct arm_smmu_domain *smmu_domain,
+> +               struct io_pgtable_cfg *pgtbl_cfg)
 > +{
-> +       u64 ttbr;
-> +       u32 asid;
+> +       struct arm_smmu_device *smmu = smmu_domain->smmu;
+> +       struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> +       struct arm_smmu_cb *cb = &smmu_domain->smmu->cbs[cfg->cbndx];
+> +       int pgsize = 1 << __ffs(pgtbl_cfg->pgsize_bitmap);
 > +
-> +       if (!msm_iommu_get_ptinfo(ctx->aspace->mmu, &ttbr, &asid))
-> +               return;
+> +       /* Enable speculative walks through the TTBR1 */
+> +       cb->tcr[0] &= ~TTBCR_EPD1;
 > +
-> +       ttbr = ttbr | ((u64) asid) << 48;
+> +       cb->tcr[0] |= TTBCR_SH_IS << TTBCR_SH1_SHIFT;
+> +       cb->tcr[0] |= TTBCR_RGN_WBWA << TTBCR_IRGN1_SHIFT;
+> +       cb->tcr[0] |= TTBCR_RGN_WBWA << TTBCR_ORGN1_SHIFT;
 > +
-> +       /* Turn off protected mode */
-> +       OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-> +       OUT_RING(ring, 0);
+> +       switch (pgsize) {
+> +       case SZ_4K:
+> +               cb->tcr[0] |= TTBCR_TG1_4K;
+> +               break;
+> +       case SZ_16K:
+> +               cb->tcr[0] |= TTBCR_TG1_16K;
+> +               break;
+> +       case SZ_64K:
+> +               cb->tcr[0] |= TTBCR_TG1_64K;
+> +               break;
+> +       }
 > +
-> +       /* Turn on APIV mode to access critical regions */
-> +       OUT_PKT4(ring, REG_A5XX_CP_CNTL, 1);
-> +       OUT_RING(ring, 1);
+> +       cb->tcr[0] |= (64ULL - smmu->va_size) << TTBCR_T1SZ_SHIFT;
 > +
-> +       /* Make sure the ME is synchronized before staring the update */
-> +       OUT_PKT7(ring, CP_WAIT_FOR_ME, 0);
+> +       /* Clear the existing SEP configuration */
+> +       cb->tcr[1] &= ~TTBCR2_SEP_UPSTREAM;
 > +
-> +       /* Execute the table update */
-> +       OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 3);
-> +       OUT_RING(ring, lower_32_bits(ttbr));
-> +       OUT_RING(ring, upper_32_bits(ttbr));
-> +       OUT_RING(ring, 0);
+> +       /* Set up the sign extend bit */
+> +       switch (smmu->va_size) {
+> +       case 32:
+> +               cb->tcr[1] |= TTBCR2_SEP_31;
+> +               cb->split_table_mask = (1ULL << 31);
+> +               break;
+> +       case 36:
+> +               cb->tcr[1] |= TTBCR2_SEP_35;
+> +               cb->split_table_mask = (1ULL << 35);
+> +               break;
+> +       case 40:
+> +               cb->tcr[1] |= TTBCR2_SEP_39;
+> +               cb->split_table_mask = (1ULL << 39);
+> +               break;
+> +       case 42:
+> +               cb->tcr[1] |= TTBCR2_SEP_41;
+> +               cb->split_table_mask = (1ULL << 41);
+> +               break;
+> +       case 44:
+> +               cb->tcr[1] |= TTBCR2_SEP_43;
+> +               cb->split_table_mask = (1ULL << 43);
+> +               break;
+> +       case 48:
+> +               cb->tcr[1] |= TTBCR2_SEP_UPSTREAM;
+> +               cb->split_table_mask = (1ULL << 48);
+> +       }
 > +
-> +       /*
-> +        * Write the new TTBR0 to the preemption records - this will be used to
-> +        * reload the pagetable if the current ring gets preempted out.
-> +        */
-> +       OUT_PKT7(ring, CP_MEM_WRITE, 4);
-> +       OUT_RING(ring, lower_32_bits(rbmemptr(ring, ttbr0)));
-> +       OUT_RING(ring, upper_32_bits(rbmemptr(ring, ttbr0)));
-> +       OUT_RING(ring, lower_32_bits(ttbr));
-> +       OUT_RING(ring, upper_32_bits(ttbr));
+> +       cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr[0];
+> +       cb->ttbr[1] |= (u64)cfg->asid << TTBRn_ASID_SHIFT;
+> +}
 > +
-> +       /* Invalidate the draw state so we start off fresh */
-> +       OUT_PKT7(ring, CP_SET_DRAW_STATE, 3);
-> +       OUT_RING(ring, 0x40000);
+>  static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+>                                        struct io_pgtable_cfg *pgtbl_cfg)
+>  {
+> @@ -650,8 +716,12 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+>                 } else {
+>                         cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr[0];
+>                         cb->ttbr[0] |= (u64)cfg->asid << TTBRn_ASID_SHIFT;
+> -                       cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr[1];
+> -                       cb->ttbr[1] |= (u64)cfg->asid << TTBRn_ASID_SHIFT;
+> +
+> +                       /*
+> +                        * Set TTBR1 to empty by default - it will get
+> +                        * programmed later if it is enabled
+> +                        */
+> +                       cb->ttbr[1] = (u64)cfg->asid << TTBRn_ASID_SHIFT;
+>                 }
+>         } else {
+>                 cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
+> @@ -760,11 +830,13 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  {
+>         int irq, start, ret = 0;
+>         unsigned long ias, oas;
+> -       struct io_pgtable_ops *pgtbl_ops;
+> +       struct io_pgtable_ops *pgtbl_ops[2];
+>         struct io_pgtable_cfg pgtbl_cfg;
+>         enum io_pgtable_fmt fmt;
+>         struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>         struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> +       bool split_tables =
+> +               (smmu_domain->attributes & (1 << DOMAIN_ATTR_SPLIT_TABLES));
 
-CP_SET_DRAW_STATE__0_DISABLE_ALL_GROUPS?
+BIT(DOMAIN_ATTR_SPLIT_TABLES) ?
 
-> +       OUT_RING(ring, 1);
+>
+>         mutex_lock(&smmu_domain->init_mutex);
+>         if (smmu_domain->smmu)
+> @@ -794,8 +866,11 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>          *
+>          * Note that you can't actually request stage-2 mappings.
+>          */
+> -       if (!(smmu->features & ARM_SMMU_FEAT_TRANS_S1))
+> +       if (!(smmu->features & ARM_SMMU_FEAT_TRANS_S1)) {
+>                 smmu_domain->stage = ARM_SMMU_DOMAIN_S2;
+> +               /* FIXME: fail instead? */
+> +               split_tables = false;
 
-was that really meant to be 1, not 0, for the low 32b of the state
-object address?
+yeah, I think we want to return an error somewhere if not supported.
+I think we want to fall back to not using per-process pagetables if
+this fails.
+
 
 BR,
 -R
 
-> +       OUT_RING(ring, 0);
+
+> +       }
+>         if (!(smmu->features & ARM_SMMU_FEAT_TRANS_S2))
+>                 smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
+>
+> @@ -812,8 +887,11 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>         if (IS_ENABLED(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) &&
+>             !IS_ENABLED(CONFIG_64BIT) && !IS_ENABLED(CONFIG_ARM_LPAE) &&
+>             (smmu->features & ARM_SMMU_FEAT_FMT_AARCH32_S) &&
+> -           (smmu_domain->stage == ARM_SMMU_DOMAIN_S1))
+> +           (smmu_domain->stage == ARM_SMMU_DOMAIN_S1)) {
+> +               /* FIXME: fail instead? */
+> +               split_tables = false;
+>                 cfg->fmt = ARM_SMMU_CTX_FMT_AARCH32_S;
+> +       }
+>         if ((IS_ENABLED(CONFIG_64BIT) || cfg->fmt == ARM_SMMU_CTX_FMT_NONE) &&
+>             (smmu->features & (ARM_SMMU_FEAT_FMT_AARCH64_64K |
+>                                ARM_SMMU_FEAT_FMT_AARCH64_16K |
+> @@ -903,8 +981,8 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>                 pgtbl_cfg.quirks |= IO_PGTABLE_QUIRK_NON_STRICT;
+>
+>         smmu_domain->smmu = smmu;
+> -       pgtbl_ops = alloc_io_pgtable_ops(fmt, &pgtbl_cfg, smmu_domain);
+> -       if (!pgtbl_ops) {
+> +       pgtbl_ops[0] = alloc_io_pgtable_ops(fmt, &pgtbl_cfg, smmu_domain);
+> +       if (!pgtbl_ops[0]) {
+>                 ret = -ENOMEM;
+>                 goto out_clear_smmu;
+>         }
+> @@ -916,6 +994,22 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>
+>         /* Initialise the context bank with our page table cfg */
+>         arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
 > +
-> +       /* Turn off APRIV */
-> +       OUT_PKT4(ring, REG_A5XX_CP_CNTL, 1);
-> +       OUT_RING(ring, 0);
+> +       pgtbl_ops[1] = NULL;
 > +
-> +       /* Turn off protected mode */
-> +       OUT_PKT7(ring, CP_SET_PROTECTED_MODE, 1);
-> +       OUT_RING(ring, 1);
-> +}
+> +       if (split_tables) {
+> +               /* FIXME: I think it is safe to reuse pgtbl_cfg here */
+> +               pgtbl_ops[1] = alloc_io_pgtable_ops(fmt, &pgtbl_cfg,
+> +                       smmu_domain);
+> +               if (!pgtbl_ops[1]) {
+> +                       free_io_pgtable_ops(pgtbl_ops[0]);
+> +                       ret = -ENOMEM;
+> +                       goto out_clear_smmu;
+> +               }
 > +
->  static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
->         struct msm_file_private *ctx)
->  {
-> @@ -217,6 +270,8 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
->                 return;
+> +               arm_smmu_init_ttbr1(smmu_domain, &pgtbl_cfg);
+> +       }
+> +
+>         arm_smmu_write_context_bank(smmu, cfg->cbndx);
+>
+>         /*
+> @@ -934,7 +1028,9 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>         mutex_unlock(&smmu_domain->init_mutex);
+>
+>         /* Publish page table ops for map/unmap */
+> -       smmu_domain->pgtbl_ops = pgtbl_ops;
+> +       smmu_domain->pgtbl_ops[0] = pgtbl_ops[0];
+> +       smmu_domain->pgtbl_ops[1] = pgtbl_ops[1];
+> +
+>         return 0;
+>
+>  out_clear_smmu:
+> @@ -970,7 +1066,9 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
+>                 devm_free_irq(smmu->dev, irq, domain);
 >         }
 >
-> +       a5xx_set_pagetable(gpu, ring, ctx);
+> -       free_io_pgtable_ops(smmu_domain->pgtbl_ops);
+> +       free_io_pgtable_ops(smmu_domain->pgtbl_ops[0]);
+> +       free_io_pgtable_ops(smmu_domain->pgtbl_ops[1]);
 > +
->         OUT_PKT7(ring, CP_PREEMPT_ENABLE_GLOBAL, 1);
->         OUT_RING(ring, 0x02);
+>         __arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
 >
-> @@ -1456,21 +1511,77 @@ static unsigned long a5xx_gpu_busy(struct msm_gpu *gpu)
->         return (unsigned long)busy_time;
+>         arm_smmu_rpm_put(smmu);
+> @@ -1285,10 +1383,23 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>         return ret;
 >  }
 >
-> +static struct msm_gem_address_space *a5xx_new_address_space(struct msm_gpu *gpu)
+> +static struct io_pgtable_ops *
+> +arm_smmu_get_pgtbl_ops(struct iommu_domain *domain, unsigned long iova)
 > +{
-> +       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> +       struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
-> +       struct msm_gem_address_space *aspace;
-> +       int ret;
+> +       struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> +       struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> +       struct arm_smmu_cb *cb = &smmu_domain->smmu->cbs[cfg->cbndx];
 > +
-> +       /* Return the default pagetable if per instance tables don't work */
-> +       if (!a5xx_gpu->per_instance_tables)
-> +               return gpu->aspace;
+> +       if (iova & cb->split_table_mask)
+> +               return smmu_domain->pgtbl_ops[1];
 > +
-> +       aspace = msm_gem_address_space_create_instance(&gpu->pdev->dev,
-> +               "gpu", 0x100000000ULL, 0x1ffffffffULL);
-> +       if (IS_ERR(aspace))
-> +               return aspace;
-> +
-> +       ret = aspace->mmu->funcs->attach(aspace->mmu, NULL, 0);
-> +       if (ret) {
-> +               /* -ENODEV means that aux domains aren't supported */
-> +               if (ret == -ENODEV)
-> +                       return gpu->aspace;
-> +
-> +               return ERR_PTR(ret);
-> +       }
-> +
-> +       return aspace;
+> +       return smmu_domain->pgtbl_ops[0];
 > +}
 > +
->  static struct msm_gem_address_space *
->  a5xx_create_address_space(struct msm_gpu *gpu)
+>  static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+>                         phys_addr_t paddr, size_t size, int prot)
 >  {
-> +       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> +       struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
-> +       struct device *dev = &gpu->pdev->dev;
->         struct msm_gem_address_space *aspace;
->         struct iommu_domain *iommu;
-> -       int ret;
-> +       int ret, val = 1;
-> +
-> +       a5xx_gpu->per_instance_tables = false;
+> -       struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+> +       struct io_pgtable_ops *ops = arm_smmu_get_pgtbl_ops(domain, iova);
+>         struct arm_smmu_device *smmu = to_smmu_domain(domain)->smmu;
+>         int ret;
 >
->         iommu = iommu_domain_alloc(&platform_bus_type);
->         if (!iommu)
->                 return NULL;
+> @@ -1305,7 +1416,7 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+>  static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+>                              size_t size)
+>  {
+> -       struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+> +       struct io_pgtable_ops *ops = arm_smmu_get_pgtbl_ops(domain, iova);
+>         struct arm_smmu_device *smmu = to_smmu_domain(domain)->smmu;
+>         size_t ret;
 >
-> -       iommu->geometry.aperture_start = 0x100000000ULL;
-> -       iommu->geometry.aperture_end = 0x1ffffffffULL;
-> +       /* Try to enable split pagetables */
-> +       if (iommu_domain_set_attr(iommu, DOMAIN_ATTR_SPLIT_TABLES, &val)) {
-> +               /*
-> +                * If split pagetables aren't available we won't be able to do
-> +                * per-instance pagetables so set up the global va space at our
-> +                * susual location
-> +                */
-> +               iommu->geometry.aperture_start = 0x100000000ULL;
-> +               iommu->geometry.aperture_end = 0x1ffffffffULL;
-> +       } else {
-> +               /*
-> +                * If split pagetables are available then we might be able to do
-> +                * per-instance pagetables. Put the default va-space in TTBR1 to
-> +                * prepare
-> +                */
-> +               iommu->geometry.aperture_start = 0xfffffff100000000ULL;
-> +               iommu->geometry.aperture_end = 0xfffffff1ffffffffULL;
-> +
-> +               /*
-> +                * If both split pagetables and aux domains are supported we can
-> +                * do per_instance pagetables
-> +                */
-> +               a5xx_gpu->per_instance_tables =
-> +                       iommu_dev_has_feature(dev, IOMMU_DEV_FEAT_AUX);
-> +       }
+> @@ -1349,7 +1460,7 @@ static phys_addr_t arm_smmu_iova_to_phys_hard(struct iommu_domain *domain,
+>         struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>         struct arm_smmu_device *smmu = smmu_domain->smmu;
+>         struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> -       struct io_pgtable_ops *ops= smmu_domain->pgtbl_ops;
+> +       struct io_pgtable_ops *ops = arm_smmu_get_pgtbl_ops(domain, iova);
+>         struct device *dev = smmu->dev;
+>         void __iomem *cb_base;
+>         u32 tmp;
+> @@ -1397,7 +1508,7 @@ static phys_addr_t arm_smmu_iova_to_phys(struct iommu_domain *domain,
+>                                         dma_addr_t iova)
+>  {
+>         struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> -       struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
+> +       struct io_pgtable_ops *ops = arm_smmu_get_pgtbl_ops(domain, iova);
 >
-> -       aspace = msm_gem_address_space_create(&gpu->pdev->dev, iommu, "gpu");
-> +       aspace = msm_gem_address_space_create(dev, iommu, "gpu");
->         if (IS_ERR(aspace)) {
->                 iommu_domain_free(iommu);
->                 DRM_DEV_ERROR(gpu->dev->dev, "failed to init mmu: %ld\n",
-> @@ -1510,6 +1621,7 @@ static const struct adreno_gpu_funcs funcs = {
->                 .gpu_state_get = a5xx_gpu_state_get,
->                 .gpu_state_put = a5xx_gpu_state_put,
->                 .create_address_space = a5xx_create_address_space,
-> +               .new_address_space = a5xx_new_address_space,
->         },
->         .get_timestamp = a5xx_get_timestamp,
->  };
-> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
-> index 7d71860..82ceb9b 100644
-> --- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
-> +++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
-> @@ -45,6 +45,11 @@ struct a5xx_gpu {
+>         if (domain->type == IOMMU_DOMAIN_IDENTITY)
+>                 return iova;
+> @@ -1584,6 +1695,11 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+>                 case DOMAIN_ATTR_NESTING:
+>                         *(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
+>                         return 0;
+> +               case DOMAIN_ATTR_SPLIT_TABLES:
+> +                       *((int *)data) =
+> +                               !!(smmu_domain->attributes &
+> +                                  (1 << DOMAIN_ATTR_SPLIT_TABLES));
+> +                       return 0;
+>                 default:
+>                         return -ENODEV;
+>                 }
+> @@ -1624,6 +1740,11 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+>                         else
+>                                 smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
+>                         break;
+> +               case DOMAIN_ATTR_SPLIT_TABLES:
+> +                       if (*((int *)data))
+> +                               smmu_domain->attributes |=
+> +                                       (1 << DOMAIN_ATTR_SPLIT_TABLES);
+> +                       break;
+>                 default:
+>                         ret = -ENODEV;
+>                 }
+> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+> index 237cacd..dc9fb2e 100644
+> --- a/drivers/iommu/io-pgtable-arm.c
+> +++ b/drivers/iommu/io-pgtable-arm.c
+> @@ -475,8 +475,7 @@ static int arm_lpae_map(struct io_pgtable_ops *ops, unsigned long iova,
+>         if (!(iommu_prot & (IOMMU_READ | IOMMU_WRITE)))
+>                 return 0;
 >
->         atomic_t preempt_state;
->         struct timer_list preempt_timer;
-> +       struct a5xx_smmu_info *smmu_info;
-> +       struct drm_gem_object *smmu_info_bo;
-> +       uint64_t smmu_info_iova;
-> +
-> +       bool per_instance_tables;
->  };
+> -       if (WARN_ON(iova >= (1ULL << data->iop.cfg.ias) ||
+> -                   paddr >= (1ULL << data->iop.cfg.oas)))
+> +       if (WARN_ON(paddr >= (1ULL << data->iop.cfg.oas)))
+>                 return -ERANGE;
 >
->  #define to_a5xx_gpu(x) container_of(x, struct a5xx_gpu, base)
-> @@ -132,6 +137,20 @@ struct a5xx_preempt_record {
->   */
->  #define A5XX_PREEMPT_COUNTER_SIZE (16 * 4)
->
-> +/*
-> + * This is a global structure that the preemption code uses to switch in the
-> + * pagetable for the preempted process - the code switches in whatever we
-> + * after preempting in a new ring.
-> + */
-> +struct a5xx_smmu_info {
-> +       uint32_t  magic;
-> +       uint32_t  _pad4;
-> +       uint64_t  ttbr0;
-> +       uint32_t  asid;
-> +       uint32_t  contextidr;
-> +};
-> +
-> +#define A5XX_SMMU_INFO_MAGIC 0x3618CDA3UL
->
->  int a5xx_power_init(struct msm_gpu *gpu);
->  void a5xx_gpmu_ucode_init(struct msm_gpu *gpu);
-> diff --git a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-> index 3d62310..1050409 100644
-> --- a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-> +++ b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
-> @@ -12,6 +12,7 @@
->   */
->
->  #include "msm_gem.h"
-> +#include "msm_mmu.h"
->  #include "a5xx_gpu.h"
->
->  /*
-> @@ -145,6 +146,15 @@ void a5xx_preempt_trigger(struct msm_gpu *gpu)
->         a5xx_gpu->preempt[ring->id]->wptr = get_wptr(ring);
->         spin_unlock_irqrestore(&ring->lock, flags);
->
-> +       /* Do read barrier to make sure we have updated pagetable info */
-> +       rmb();
-> +
-> +       /* Set the SMMU info for the preemption */
-> +       if (a5xx_gpu->smmu_info) {
-> +               a5xx_gpu->smmu_info->ttbr0 = ring->memptrs->ttbr0;
-> +               a5xx_gpu->smmu_info->contextidr = 0;
-> +       }
-> +
->         /* Set the address of the incoming preemption record */
->         gpu_write64(gpu, REG_A5XX_CP_CONTEXT_SWITCH_RESTORE_ADDR_LO,
->                 REG_A5XX_CP_CONTEXT_SWITCH_RESTORE_ADDR_HI,
-> @@ -221,9 +231,10 @@ void a5xx_preempt_hw_init(struct msm_gpu *gpu)
->                 a5xx_gpu->preempt[i]->rbase = gpu->rb[i]->iova;
->         }
->
-> -       /* Write a 0 to signal that we aren't switching pagetables */
-> +       /* Tell the CP where to find the smmu_info buffer*/
->         gpu_write64(gpu, REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_LO,
-> -               REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_HI, 0);
-> +               REG_A5XX_CP_CONTEXT_SWITCH_SMMU_INFO_HI,
-> +               a5xx_gpu->smmu_info_iova);
->
->         /* Reset the preemption state */
->         set_preempt_state(a5xx_gpu, PREEMPT_NONE);
-> @@ -271,6 +282,34 @@ void a5xx_preempt_fini(struct msm_gpu *gpu)
->
->         for (i = 0; i < gpu->nr_rings; i++)
->                 msm_gem_kernel_put(a5xx_gpu->preempt_bo[i], gpu->aspace, true);
-> +
-> +       msm_gem_kernel_put(a5xx_gpu->smmu_info_bo, gpu->aspace, true);
-> +}
-> +
-> +static int a5xx_smmu_info_init(struct msm_gpu *gpu)
-> +{
-> +       struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> +       struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
-> +       struct a5xx_smmu_info *ptr;
-> +       struct drm_gem_object *bo;
-> +       u64 iova;
-> +
-> +       if (!a5xx_gpu->per_instance_tables)
-> +               return 0;
-> +
-> +       ptr = msm_gem_kernel_new(gpu->dev, sizeof(struct a5xx_smmu_info),
-> +               MSM_BO_UNCACHED, gpu->aspace, &bo, &iova);
-> +
-> +       if (IS_ERR(ptr))
-> +               return PTR_ERR(ptr);
-> +
-> +       ptr->magic = A5XX_SMMU_INFO_MAGIC;
-> +
-> +       a5xx_gpu->smmu_info_bo = bo;
-> +       a5xx_gpu->smmu_info_iova = iova;
-> +       a5xx_gpu->smmu_info = ptr;
-> +
-> +       return 0;
->  }
->
->  void a5xx_preempt_init(struct msm_gpu *gpu)
-> @@ -284,17 +323,22 @@ void a5xx_preempt_init(struct msm_gpu *gpu)
->                 return;
->
->         for (i = 0; i < gpu->nr_rings; i++) {
-> -               if (preempt_init_ring(a5xx_gpu, gpu->rb[i])) {
-> -                       /*
-> -                        * On any failure our adventure is over. Clean up and
-> -                        * set nr_rings to 1 to force preemption off
-> -                        */
-> -                       a5xx_preempt_fini(gpu);
-> -                       gpu->nr_rings = 1;
-> -
-> -                       return;
-> -               }
-> +               if (preempt_init_ring(a5xx_gpu, gpu->rb[i]))
-> +                       goto fail;
->         }
->
-> -       timer_setup(&a5xx_gpu->preempt_timer, a5xx_preempt_timer, 0);
-> +       if (a5xx_smmu_info_init(gpu))
-> +               goto fail;
-> +
-> +       timer_setup(&a5xx_gpu->preempt_timer, a5xx_preempt_timer,
-> +               (unsigned long) a5xx_gpu);
-> +
-> +       return;
-> +fail:
-> +       /*
-> +        * On any failure our adventure is over. Clean up and
-> +        * set nr_rings to 1 to force preemption off
-> +        */
-> +       a5xx_preempt_fini(gpu);
-> +       gpu->nr_rings = 1;
->  }
+>         prot = arm_lpae_prot_to_pte(data, iommu_prot);
 > --
 > 2.7.4
 >
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
