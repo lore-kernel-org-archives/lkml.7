@@ -2,157 +2,164 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE34C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A05C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C992087E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E887218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 01:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733178AbfCABQv (ORCPT
+        id S1733219AbfCABRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 20:16:51 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:33712 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727771AbfCABQv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 20:16:51 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id E53C828D2D;
-        Thu, 28 Feb 2019 20:16:44 -0500 (EST)
-Date:   Fri, 1 Mar 2019 12:16:57 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-cc:     Michael Schmitz <schmitzmic@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] scsi: NCR5380: Mark expected switch fall-through
-In-Reply-To: <20190228202759.GA5883@embeddedor>
-Message-ID: <alpine.LNX.2.21.1903011143550.8@nippy.intranet>
-References: <20190228202759.GA5883@embeddedor>
+        Thu, 28 Feb 2019 20:17:18 -0500
+Received: from mga06.intel.com ([134.134.136.31]:11050 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727771AbfCABRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 20:17:18 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 17:17:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,425,1544515200"; 
+   d="scan'208";a="323065276"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Feb 2019 17:17:17 -0800
+Date:   Thu, 28 Feb 2019 17:17:13 -0800
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Don Zickus <dzickus@redhat.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Babu Moger <babu.moger@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Byungchul Park <byungchul.park@lge.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Christoffer Dall <cdall@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH v2 09/14] watchdog/hardlockup: Make
+ arch_touch_nmi_watchdog() to hpet-based implementation
+Message-ID: <20190301011713.GA8058@ranerica-svr.sc.intel.com>
+References: <1551283518-18922-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <1551283518-18922-10-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <20190227161758.GE4072@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190227161758.GE4072@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019, Gustavo A. R. Silva wrote:
-
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
+On Wed, Feb 27, 2019 at 08:17:58AM -0800, Paul E. McKenney wrote:
+> On Wed, Feb 27, 2019 at 08:05:13AM -0800, Ricardo Neri wrote:
+> > CPU architectures that have an NMI watchdog use arch_touch_nmi_watchdog()
+> > to briefly ignore the hardlockup detector. If the architecture does not
+> > have an NMI watchdog, one can be constructed using a source of non-
+> > maskable interrupts. In this case, arch_touch_nmi_watchdog() is common
+> > to any underlying hardware resource used to drive the detector and needs
+> > to be available to other kernel subsystems if hardware different from perf
+> > drives the detector.
+> > 
+> > There exists perf-based and HPET-based implementations. Make it available
+> > to the latter.
+> > 
+> > For clarity, wrap this function in a separate preprocessor conditional
+> > from functions which are truly specific to the perf-based implementation.
+> > 
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> > Cc: Andi Kleen <andi.kleen@intel.com>
+> > Cc: Tony Luck <tony.luck@intel.com>
+> > Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > Cc: Don Zickus <dzickus@redhat.com>
+> > Cc: Nicholas Piggin <npiggin@gmail.com>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Frederic Weisbecker <frederic@kernel.org>
+> > Cc: Alexei Starovoitov <ast@kernel.org>
+> > Cc: Babu Moger <babu.moger@oracle.com>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Cc: Paul Mackerras <paulus@samba.org>
+> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Philippe Ombredanne <pombredanne@nexb.com>
+> > Cc: Colin Ian King <colin.king@canonical.com>
+> > Cc: Byungchul Park <byungchul.park@lge.com>
+> > Cc: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+> > Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>
+> > Cc: Waiman Long <longman@redhat.com>
+> > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Davidlohr Bueso <dave@stgolabs.net>
+> > Cc: Christoffer Dall <cdall@linaro.org>
+> > Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> > Cc: David Rientjes <rientjes@google.com>
+> > Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+> > Cc: x86@kernel.org
+> > Cc: sparclinux@vger.kernel.org
+> > Cc: linuxppc-dev@lists.ozlabs.org
+> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > ---
+> >  include/linux/nmi.h | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+> > index 5a8b19749769..bf5ebcfdd590 100644
+> > --- a/include/linux/nmi.h
+> > +++ b/include/linux/nmi.h
+> > @@ -94,8 +94,16 @@ static inline void hardlockup_detector_disable(void) {}
+> >  # define NMI_WATCHDOG_SYSCTL_PERM	0444
+> >  #endif
+> > 
+> > -#if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
+> > +#if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF) || \
+> > +    defined(CONFIG_X86_HARDLOCKUP_DETECTOR_HPET)
 > 
+> Why not instead make CONFIG_X86_HARDLOCKUP_DETECTOR_HPET select
+> CONFIG_HARDLOCKUP_DETECTOR_PERF?  Keep the arch-specific details
+> in the arch-specific files and all that.
 
-This switch case is already marked. So I think the patch description 
-should state that this patch is actually a workaround for a gcc deficiency 
-which prevents it from locating the marker.
+Thanks for your feedback, Paul! The HPET implementation does not use
+perf. Thus, in my opinion is not correct for the HPET HLD to select
+the perf implementation. Patch 8 of this series splits the perf-specific
+code and the generic hardlockup detector code. Does this make sense?
 
-> This patch fixes the following warning:
-> 
-> In file included from drivers/scsi/dmx3191d.c:48:
-> drivers/scsi/NCR5380.c: In function ?NCR5380_information_transfer?:
-> drivers/scsi/NCR5380.c:1933:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
->       if (!hostdata->connected)
->          ^
-> drivers/scsi/NCR5380.c:1937:5: note: here
->      default:
->      ^~~~~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> Notice that, in this particular case, the code comment is modified
-> in accordance with what GCC is expecting to find.
-> 
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
-> Changes in v2:
->  - Update commit log.
->  - Move code comment after the default label and
->    retain reason for fall-through in comment as
->    requested by Michael Schmitz.
-> 
->  drivers/scsi/NCR5380.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-> index 01c23d27f290..985d1c053578 100644
-> --- a/drivers/scsi/NCR5380.c
-> +++ b/drivers/scsi/NCR5380.c
-> @@ -1933,13 +1933,12 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
->  					if (!hostdata->connected)
->  						return;
->  
-> -					/* Fall through to reject message */
-> -
-> +					/* Fall through - to reject message */
-
-This new hyphen is wrong and harms readability for humans.
-
-I did confirm that gcc can be appeased by the use of a hyphen but not by 
-correct grammar such as "Fall through to reject message" or "Fall through. 
-Reject message."
-
-> +				default:
->  					/*
-> -					 * If we get something weird that we aren't expecting,
-> -					 * reject it.
-> +					 * If we get something weird that we
-> +					 * aren't expecting, reject it.
-
-This reformatting isn't relevant to this patch. The comments can be 
-improved however (see below).
-
->  					 */
-> -				default:
-
-Moving the 'default' keyword closer to the 'fall through' comment makes 
-sense to me -- I could understand if gcc had simple, unambiguous rules for 
-annotations.
-
-Do compilers and static analysers agree as to what a correctly annotated 
-switch label should look like? If not, we would have to try to mangle code 
-and comments in such a way that might satisfy all of the failings in all 
-of the tools.
-
->  					if (tmp == EXTENDED_MESSAGE)
->  						scmd_printk(KERN_INFO, cmd,
->  						            "rejecting unknown extended message code %02x, length %d\n",
-> 
-
-Here's an alternative patch, which has the virtue that a simple heuristic 
-will work. This patch does not require that other static analysis tools 
-will follow gcc's weird rules about hyphens. (I assume they don't but I 
-didn't check.)
-
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 7fed9bb72784..fe0535affc14 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -1932,13 +1932,13 @@ static void NCR5380_information_transfer(struct Scsi_Host *instance)
- 					if (!hostdata->connected)
- 						return;
- 
--					/* Fall through to reject message */
--
-+					/* Reject message */
-+					/* Fall through */
-+				default:
- 					/*
- 					 * If we get something weird that we aren't expecting,
--					 * reject it.
-+					 * log it.
- 					 */
--				default:
- 					if (tmp == EXTENDED_MESSAGE)
- 						scmd_printk(KERN_INFO, cmd,
- 						            "rejecting unknown extended message code %02x, length %d\n",
-
--- 
+Thanks and BR,
+Ricardo
