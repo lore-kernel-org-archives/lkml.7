@@ -2,151 +2,218 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02975C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3729BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE342083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE21A2083E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 12:28:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mgCTnxXY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GkhXi942"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfCAM2A (ORCPT
+        id S1732812AbfCAM2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 07:28:00 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34828 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfCAM2A (ORCPT
+        Fri, 1 Mar 2019 07:28:23 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34301 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfCAM2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 07:28:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5nST5mD8fD941OtCbMGRJbm3+ycdOPkj4s+kpXfPFPo=; b=mgCTnxXYhucOsqOGadNl6VYWl
-        f9hiCB/2wvbQreuDGnU3qoA2B2PgrCVuKxV0DHlcBt41uVeEXa+qDz/la9DK9LVCUZAx7vkB+Np5X
-        KJINIHGYtOmcDAThC1XdsxIFIEiXxVjH+zbQ+iHtLCPY6OgzGBohIviJmRZHtJbYXjcLaY7249tWE
-        sFLWPxB1giQr8cE4PG7UuoGYWvysPEDtBEIGweMp/1OIkxUm3XD1ivtHFzWm577KmyAdB2Xhand0O
-        E4DVyRdK/5qmVZWwCifCpLCQFmgYdJltFPt8+NQKkj0RRkuQFHzhdXZ3gJzDDL3sR+rKsbDfBYFiQ
-        pA1wGyzlg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1gzhGX-00079d-Cn; Fri, 01 Mar 2019 12:27:50 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CD6992030867F; Fri,  1 Mar 2019 13:27:45 +0100 (CET)
-Date:   Fri, 1 Mar 2019 13:27:45 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>, valentin.schneider@arm.com,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: Re: [PATCH 6/8] i915,uaccess: Fix redundant CLAC
-Message-ID: <20190301122745.GR32534@hirez.programming.kicks-ass.net>
-References: <20190228145450.289603901@infradead.org>
- <20190228150152.540038736@infradead.org>
- <CAHk-=wgsSXxL5c2Lbmbai=bcCgN0G=jPO+gWhQ3a+wx-LTaFkQ@mail.gmail.com>
- <20190228175114.GG32494@hirez.programming.kicks-ass.net>
- <20190228180154.GO32534@hirez.programming.kicks-ass.net>
- <CAHk-=whJww5smbSU2VzvcR7tajNqp=i9ZBYHK3RvwVXbs+V_JQ@mail.gmail.com>
- <20190228190111.GI32494@hirez.programming.kicks-ass.net>
- <20190301103452.GQ32534@hirez.programming.kicks-ass.net>
+        Fri, 1 Mar 2019 07:28:22 -0500
+Received: by mail-lj1-f196.google.com with SMTP id l5so20241958lje.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 04:28:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2MagCbawOxkZRtuGDKFunTETA5HAgtt9jb5bH1LAn3M=;
+        b=GkhXi942hnf2O8NEhaFPZv6VOvMz3jP9Kd+DJiZBRxNHDfNvHupeIzFDSvp18wFtZy
+         7aANYnxISJpfH2v+qSGQgJ7Qm18NiR4FIJIRmPOcKROreJwKCB9ln4WuU5cRacQfl0q1
+         OAGAH1VwZ9P5cEQvTzGEf1pJSA6smVKoyP0KefGXlE/7CAmS+XWOKXl2V6rLY7HCEhOT
+         WbfqPmBuBslokw660D2Kfz2rZED6lxONNYx9UDfLuZUDzi02Th2sPS4xb+BHQZR/iGN5
+         EqaTaAeUs4Ym5RnecK2xKWO7fslw+8Khr4VmcdrLSlBGkWWs9fQn0m9XFGucWSHfrc4D
+         Uu9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=2MagCbawOxkZRtuGDKFunTETA5HAgtt9jb5bH1LAn3M=;
+        b=edG3nqEiVokPtVJWXoF1H72c2yqrdt/5MOnXiCKWHR720Hy83v13nr+hf0qOF1XJSX
+         uDCJgYTDz+GTMpvSyDGy2xqYeIoQyeOdEe/9vYQlpdgsGNzT2CNHzgQLEylshJSmO0ju
+         10qzCnRKy6yimCtv4UUQ078qWooZ5lp28AlS6DeTpbGxkyyR+7Ss8cg89Jl8pFTee1ti
+         4ihgc68j/Y31Zc2JswvrlDi5in+rxaAaci6rQjgLREHFRKsikCdPnjpfz5xnVk3TBVq8
+         /LfakGG1/3dwU8f3NFSKEkdnEGbIG3jYfDqKo2+bWnv6ui7FZrahqySKW4QFqdOzPbKa
+         6Qyg==
+X-Gm-Message-State: APjAAAX0oT4EshW1mu+TPldD5dMhla5SUzgFLL+tFFBqrRB5wTNa+5kt
+        sCKsk2lJRzqGaHL5hcGTmCDOdA==
+X-Google-Smtp-Source: APXvYqzrH3ZZZGIlKQbySKEbjOLX3OLlyQz1EUadnPJg/LZCEpuJAL8qVlFf5C3dSMaWvmS9nfQT+A==
+X-Received: by 2002:a2e:8496:: with SMTP id b22mr2595496ljh.143.1551443299767;
+        Fri, 01 Mar 2019 04:28:19 -0800 (PST)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id y2sm4614029lji.46.2019.03.01.04.28.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Mar 2019 04:28:18 -0800 (PST)
+Date:   Fri, 1 Mar 2019 14:28:16 +0200
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     davem@davemloft.net, grygorii.strashko@ti.com,
+        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiri@mellanox.com,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH net-next 3/6] net: 8021q: vlan_dev: add vid tag for vlan
+ device own address
+Message-ID: <20190301122815.GC4851@khorivan>
+Mail-Followup-To: Florian Fainelli <f.fainelli@gmail.com>,
+        davem@davemloft.net, grygorii.strashko@ti.com,
+        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiri@mellanox.com,
+        ilias.apalodimas@linaro.org
+References: <20190226184556.16082-1-ivan.khoronzhuk@linaro.org>
+ <20190226184556.16082-4-ivan.khoronzhuk@linaro.org>
+ <ec699573-87b3-76d2-6faa-3c23f32d7095@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190301103452.GQ32534@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ec699573-87b3-76d2-6faa-3c23f32d7095@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 11:34:52AM +0100, Peter Zijlstra wrote:
+On Wed, Feb 27, 2019 at 08:13:34PM -0800, Florian Fainelli wrote:
+>
+>
+>On 2/26/2019 10:45 AM, Ivan Khoronzhuk wrote:
+>> The vlan device address is held separately from uc/mc lists and
+>> handled differently. The vlan dev address is bound with real device
+>> address only if it's inherited from init, in all other cases it's
+>> separate address entry in uc list. With vid set, the address becomes
+>> not inherited from real device after it's set manually as before, but
+>> is part of uc list any way, with appropriate vid tag set. If vid_len
+>> for real device is 0, the behaviour is the same as before this change,
+>> so shouldn't be any impact on systems w/o individual virtual device
+>> filtering (IVDF) enabled. This allows to control and sync vlan device
+>> address and disable concrete vlan packet income when vlan interface is
+>> down.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>
+>[snip]
+>
+>>
+>> +static int vlan_dev_add_addr(struct net_device *dev, u8 *addr)
+>> +{
+>> +	struct net_device *real_dev = vlan_dev_real_dev(dev);
+>> +	unsigned char naddr[ETH_ALEN + NET_8021Q_VID_TSIZE];
+>> +
+>> +	if (real_dev->vid_len) {
+>
+>Don't you need to check that real_dev->vid_len is >= NET_8021Q_VID_TSIZE
+>here?
 
-> Let me do an allmodconfig build to see how much pain is caused by that
-> redundant CLAC warning.
+vid_len for all eth devices or 0 or NET_8021Q_VID_TSIZE and used here only as
+a flag that different addressing scheme is used.
+vlan_dev_set_addr_vid() do copy only < NET_8021Q_VID_TSIZE anyway.
 
-arch/x86/lib/usercopy_64.o: warning: objtool: .altinstr_replacement+0x30: redundant UACCESS disable
-drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x22: redundant UACCESS disable
-drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x64: redundant UACCESS disable
-drivers/xen/privcmd.o: warning: objtool: privcmd_ioctl()+0x1c0: call to {dynamic}() with UACCESS enabled
+Can add the following to be sure:
+if (real_dev->vid_len) {
+	if (real_dev->vid_len != NET_8021Q_VID_TSIZE)
+		return -1;
+	....
+}
 
-The usercopy one is difficult, that's copy_user_handle_tail(), it is
-buggered though, because that lacks notrace and thus has a __fentry__
-call in.
+But frankly, if this happens the system is ill and this check can't help it.
 
-Also, afaict all exception jumps into copy_user_handle_tail() will have
-AC=1, but the __{get,put}_user_nocheck() things do STAC/CLAC all over
-again.
 
-So what do we do? Annotate that we start with AC=1 and then immediately
-do the clac, and then let __{get,put}_user_nocheck() do their own thing?
-or make it use the unsafe stuff?
+>
+>> +		memcpy(naddr, addr, dev->addr_len);
+>> +		vlan_dev_set_addr_vid(dev, naddr);
+>> +		return dev_vid_uc_add(real_dev, naddr);
+>> +	}
+>> +
+>> +	if (ether_addr_equal(addr, real_dev->dev_addr))
+>> +		return 0;
+>> +
+>> +	return dev_uc_add(real_dev, addr);
+>> +}
+>> +
+>> +static void vlan_dev_del_addr(struct net_device *dev, u8 *addr)
+>> +{
+>> +	struct net_device *real_dev = vlan_dev_real_dev(dev);
+>> +	unsigned char naddr[ETH_ALEN + NET_8021Q_VID_TSIZE];
+>> +
+>> +	if (real_dev->vid_len) {
+>
+>Same here.
 
----
-diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-index ee42bb0cbeb3..e1ab9a50937c 100644
---- a/arch/x86/lib/usercopy_64.c
-+++ b/arch/x86/lib/usercopy_64.c
-@@ -59,7 +59,7 @@ EXPORT_SYMBOL(clear_user);
-  * Since protection fault in copy_from/to_user is not a normal situation,
-  * it is not necessary to optimize tail handling.
-  */
--__visible unsigned long
-+__visible notrace unsigned long
- copy_user_handle_tail(char *to, char *from, unsigned len)
- {
- 	for (; len; --len, to++) {
-diff --git a/drivers/gpu/drm/i915/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
-index 485b259127c3..695212c5bd07 100644
---- a/drivers/gpu/drm/i915/i915_gem_execbuffer.c
-+++ b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
-@@ -1606,6 +1606,7 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
- 					     len)) {
- end_user:
- 				user_access_end();
-+end:
- 				kvfree(relocs);
- 				err = -EFAULT;
- 				goto err;
-@@ -1625,7 +1626,7 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
- 		 * relocations were valid.
- 		 */
- 		if (!user_access_begin(urelocs, size))
--			goto end_user;
-+			goto end;
- 
- 		for (copied = 0; copied < nreloc; copied++)
- 			unsafe_put_user(-1,
-@@ -2616,7 +2617,7 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
- 		 * when we did the "copy_from_user()" above.
- 		 */
- 		if (!user_access_begin(user_exec_list, count * sizeof(*user_exec_list)))
--			goto end_user;
-+			goto end;
- 
- 		for (i = 0; i < args->buffer_count; i++) {
- 			if (!(exec2_list[i].offset & UPDATE))
-@@ -2630,6 +2631,7 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
- 		}
- end_user:
- 		user_access_end();
-+end:;
- 	}
- 
- 	args->flags &= ~__I915_EXEC_UNKNOWN_FLAGS;
+Not same, it's void routine.
+And del can't happen w/o add, no reason.
+
+>
+>> +		memcpy(naddr, addr, dev->addr_len);
+>> +		vlan_dev_set_addr_vid(dev, naddr);
+>> +		dev_vid_uc_del(real_dev, naddr);
+>> +		return;
+>> +	}
+>> +
+>> +	if (!ether_addr_equal(dev->dev_addr, real_dev->dev_addr))
+>> +		dev_uc_del(real_dev, addr);
+>> +}
+>> +
+>> +static int vlan_dev_subs_addr(struct net_device *dev, u8 *addr)
+>> +{
+>> +	int err;
+>> +
+>> +	err = vlan_dev_add_addr(dev, addr);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>> +	vlan_dev_del_addr(dev, dev->dev_addr);
+>> +	return err;
+>> +}
+>> +
+>>  bool vlan_dev_inherit_address(struct net_device *dev,
+>>  			      struct net_device *real_dev)
+>>  {
+>>  	if (dev->addr_assign_type != NET_ADDR_STOLEN)
+>>  		return false;
+>>
+>> +	if (real_dev->vid_len)
+>> +		if (vlan_dev_subs_addr(dev, real_dev->dev_addr))
+>> +			return false;
+>
+>The check on real_dev->vid_len can be absorbed into vlan_dev_subs_addr()?
+
+No, I'd tried. vlan_dev_subs_addr() is used not only here and move it under
+makes more not combined code.
+
+>
+>> +
+>>  	ether_addr_copy(dev->dev_addr, real_dev->dev_addr);
+>>  	call_netdevice_notifiers(NETDEV_CHANGEADDR, dev);
+>>  	return true;
+>> @@ -278,9 +327,10 @@ static int vlan_dev_open(struct net_device *dev)
+>>  	    !(vlan->flags & VLAN_FLAG_LOOSE_BINDING))
+>>  		return -ENETDOWN;
+>>
+>> -	if (!ether_addr_equal(dev->dev_addr, real_dev->dev_addr) &&
+>> -	    !vlan_dev_inherit_address(dev, real_dev)) {
+>> -		err = dev_uc_add(real_dev, dev->dev_addr);
+>> +	if (ether_addr_equal(dev->dev_addr, real_dev->dev_addr) ||
+>> +	    (!ether_addr_equal(dev->dev_addr, real_dev->dev_addr) &&
+>> +	     !vlan_dev_inherit_address(dev, real_dev))) {
+>
+>Should this condition simply become if !vlan_dev_inherit_address() now?
+
+It can't, I'd tried.
+vlan_dev_inherit_address() is used in (vlan.c):
+vlan_sync_address(struct net_device *dev, struct net_device *vlandev);
+
+-- 
+Regards,
+Ivan Khoronzhuk
