@@ -2,124 +2,337 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DBEC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7585C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4159B20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:54:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHKZVe9T"
+	by mail.kernel.org (Postfix) with ESMTP id A8FBD2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551462906;
+	bh=U1rPduvRF7kuOBHJsZ+EcDjWInk6MPHGkFFZr2wl0dg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zW0qVng9x4i8OeLYfXLYIprG3bhcB7dvwJcSd7f6hdiC2bBuB23s3VdoC742IrA4f
+	 WrEeDZ5lh72ekBevDhMawtpdZAP4l69jReMKJ545hcvJBPZGZ0vIyKLyk1wMF93+Qg
+	 t39H817dR2YDhuloz5Tg0jnasWqQteKNpZDKrjLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389661AbfCARyc (ORCPT
+        id S2389670AbfCARzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:54:32 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40700 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbfCARyb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:54:31 -0500
-Received: by mail-qk1-f196.google.com with SMTP id h28so14792588qkk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 09:54:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KOo9SeiQkoMjNKr8qPPJ64K4tDsxnbFa8N5q6JiAYDE=;
-        b=EHKZVe9TdyME0Hh60DvQhGJtSP3/SnrjK4UVUJxSfbfLhmvAJY9p57WkTNGe7cYRT5
-         85jSvQ0QURil190WcoRgWLn2tF/qjKvjc4HHl4zwHr2WuCEckeQwEFuRaNjuHUpO7RGP
-         UFFDMYqgcEz91kL1ytBBdLnrZSUWf04xDU3n/G9CSE9xHoQMB3hpofQ0430c8t27CJks
-         3JTjIhsri21vPe0UbatKfY6lBe0e+HZzsz80jqfgbHAvVTZj1e65AboQNx/UiZUa9XGJ
-         52pWYE3Fkm9ufHrCouRd7/pLevopPcoHNaQEUigFBkYIT1oO1ODVU3JZJvNWzFEnCeRg
-         xAOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KOo9SeiQkoMjNKr8qPPJ64K4tDsxnbFa8N5q6JiAYDE=;
-        b=NTBx+mkFdmTwdSPdbEF/x1+SCH4tdgIIturVbw+vHUccf0XiipY0gE9NJH7lI02Wap
-         rwUxP9vHtzM0RzkTHFR80oAblvsVsKHeHo7DrNaSqflN/OFReQx7EDlnhYDWQ98m2xGd
-         IQzWIP+OqDzuaGLl9Jv94EIv+psa+ZoVe/NAEyFPJtKAktPQRTJdwDofMRca+h6WWH2q
-         ZjK+2gSM33F3DM2hW5cZQ1hTHrSiRUNWPSQ/ts6mOUD13/ZdGDA9i0H80OB5VPR+o9n+
-         bXJB3OXIyPXZggWZwatXsXYc7zbX8plbEOwjpc45r0BQ3b3DCcHrBnnsyzFeGD+a6T/z
-         Pagw==
-X-Gm-Message-State: APjAAAWncs/DbS8xiUdcIcpnZLhWvL9/QgC6GE+5KRPUYo0rqyB2rF4U
-        s9nV3UJo5ybXByZsi7GGPAn23VHefSM=
-X-Google-Smtp-Source: APXvYqyTdTdiEsL+zPLn9bB/d6JFckujNqKPUcFGVxxNi3X/fYCKW6wFni+wMYn2Ecv2SPS7GM6xRg==
-X-Received: by 2002:a37:bd81:: with SMTP id n123mr1737512qkf.249.1551462870645;
-        Fri, 01 Mar 2019 09:54:30 -0800 (PST)
-Received: from quaco.ghostprotocols.net (177-59-143-241.3g.claro.net.br. [177.59.143.241])
-        by smtp.gmail.com with ESMTPSA id t55sm15492089qtt.57.2019.03.01.09.54.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 09:54:29 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 893104039C; Fri,  1 Mar 2019 14:54:26 -0300 (-03)
-Date:   Fri, 1 Mar 2019 14:54:26 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/8] perf scripts python: export-to-postgresql.py: Fix
- invalid input syntax for integer error
-Message-ID: <20190301175426.GO13100@kernel.org>
-References: <20190228130031.23064-1-adrian.hunter@intel.com>
- <20190228130031.23064-4-adrian.hunter@intel.com>
+        Fri, 1 Mar 2019 12:55:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727952AbfCARzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 12:55:04 -0500
+Received: from localhost (unknown [104.132.1.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 021F52084D;
+        Fri,  1 Mar 2019 17:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551462903;
+        bh=U1rPduvRF7kuOBHJsZ+EcDjWInk6MPHGkFFZr2wl0dg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zs9l+cSQE1FJTtJAdJUVPqKJB7JZZZIjB6FvUULePdwNIo4BVuxsD2ovhf5WLjBiH
+         6RSCG1jQsRjix6KZAlpGGgtQvpGNJwwZqMhOwjhTymvvlfG2PJOVoboQ3pPhgofVIk
+         2yqeQwqy121472uVKT44movHaGzxu4AftZQ/F2gg=
+Date:   Fri, 1 Mar 2019 09:55:02 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] f2fs: rebuild nat_bits during umount
+Message-ID: <20190301175502.GA8246@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190216222645.18341-1-chao@kernel.org>
+ <4c826d7c-0bd3-a63f-23f6-f15f8767719d@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190228130031.23064-4-adrian.hunter@intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4c826d7c-0bd3-a63f-23f6-f15f8767719d@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Feb 28, 2019 at 03:00:26PM +0200, Adrian Hunter escreveu:
-> Fix SQL query error "invalid input syntax for integer":
+On 02/28, Chao Yu wrote:
+> Ping,
 > 
->   Traceback (most recent call last):
->     File "tools/perf/scripts/python/export-to-postgresql.py", line 465, in <module>
->       do_query(query, 'CREATE VIEW calls_view AS '
->     File "tools/perf/scripts/python/export-to-postgresql.py", line 274, in do_query
->       raise Exception("Query failed: " + q.lastError().text())
->   Exception: Query failed: ERROR:  invalid input syntax for integer: ""
->   LINE 1: ...ch_count,call_id,return_id,CASE WHEN flags=0 THEN '' WHEN fl...
->                                                                ^
->   (22P02) QPSQL: Unable to create query
->   Error running python script tools/perf/scripts/python/export-to-postgresql.py
+> Could you please try this new version?
 
-Thanks, applied.
+It's in the queue, and I'll test this after the next pull request.
 
-- Arnaldo
- 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Fixes: f08046cb3082 ("perf thread-stack: Represent jmps to the start of a different symbol")
-> ---
->  tools/perf/scripts/python/export-to-postgresql.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-> index 30130213da7e..6358522a69f6 100644
-> --- a/tools/perf/scripts/python/export-to-postgresql.py
-> +++ b/tools/perf/scripts/python/export-to-postgresql.py
-> @@ -478,7 +478,7 @@ if perf_db_export_calls:
->  			'branch_count,'
->  			'call_id,'
->  			'return_id,'
-> -			'CASE WHEN flags=0 THEN \'\' WHEN flags=1 THEN \'no call\' WHEN flags=2 THEN \'no return\' WHEN flags=3 THEN \'no call/return\' WHEN flags=6 THEN \'jump\' ELSE flags END AS flags,'
-> +			'CASE WHEN flags=0 THEN \'\' WHEN flags=1 THEN \'no call\' WHEN flags=2 THEN \'no return\' WHEN flags=3 THEN \'no call/return\' WHEN flags=6 THEN \'jump\' ELSE CAST ( flags AS VARCHAR(6) ) END AS flags,'
->  			'parent_call_path_id'
->  		' FROM calls INNER JOIN call_paths ON call_paths.id = call_path_id')
->  
-> -- 
-> 2.17.1
-
--- 
-
-- Arnaldo
+> On 2019/2/17 6:26, Chao Yu wrote:
+> > From: Chao Yu <yuchao0@huawei.com>
+> > 
+> > If all free_nat_bitmap are available, we can rebuild nat_bits from
+> > free_nat_bitmap entirely during umount, let's make another chance
+> > to reenable nat_bits for image.
+> > 
+> > Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> > ---
+> > v3:
+> > - fix to remove nat journal during umount.
+> >  fs/f2fs/checkpoint.c | 23 +++++++++----
+> >  fs/f2fs/f2fs.h       | 29 ++--------------
+> >  fs/f2fs/node.c       | 82 +++++++++++++++++++++++++++++++++++++-------
+> >  3 files changed, 89 insertions(+), 45 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> > index 10a3ada28715..b4c9de4e6eb0 100644
+> > --- a/fs/f2fs/checkpoint.c
+> > +++ b/fs/f2fs/checkpoint.c
+> > @@ -1225,12 +1225,22 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  	struct f2fs_checkpoint *ckpt = F2FS_CKPT(sbi);
+> >  	unsigned long flags;
+> >  
+> > -	spin_lock_irqsave(&sbi->cp_lock, flags);
+> > +	if (cpc->reason & CP_UMOUNT) {
+> > +		if (le32_to_cpu(ckpt->cp_pack_total_block_count) >
+> > +			sbi->blocks_per_seg - NM_I(sbi)->nat_bits_blocks) {
+> > +			clear_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
+> > +			f2fs_msg(sbi->sb, KERN_NOTICE,
+> > +				"Disable nat_bits due to no space");
+> > +		} else if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG) &&
+> > +						f2fs_nat_bitmap_enabled(sbi)) {
+> > +			f2fs_enable_nat_bits(sbi);
+> > +			set_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
+> > +			f2fs_msg(sbi->sb, KERN_NOTICE,
+> > +				"Rebuild and enable nat_bits");
+> > +		}
+> > +	}
+> >  
+> > -	if ((cpc->reason & CP_UMOUNT) &&
+> > -			le32_to_cpu(ckpt->cp_pack_total_block_count) >
+> > -			sbi->blocks_per_seg - NM_I(sbi)->nat_bits_blocks)
+> > -		disable_nat_bits(sbi, false);
+> > +	spin_lock_irqsave(&sbi->cp_lock, flags);
+> >  
+> >  	if (cpc->reason & CP_TRIMMED)
+> >  		__set_ckpt_flags(ckpt, CP_TRIMMED_FLAG);
+> > @@ -1395,7 +1405,8 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  	start_blk = __start_cp_next_addr(sbi);
+> >  
+> >  	/* write nat bits */
+> > -	if (enabled_nat_bits(sbi, cpc)) {
+> > +	if ((cpc->reason & CP_UMOUNT) &&
+> > +			is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG)) {
+> >  		__u64 cp_ver = cur_cp_version(ckpt);
+> >  		block_t blk;
+> >  
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index c0d30810ef8a..a543354fc6bf 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -1615,33 +1615,6 @@ static inline void clear_ckpt_flags(struct f2fs_sb_info *sbi, unsigned int f)
+> >  	spin_unlock_irqrestore(&sbi->cp_lock, flags);
+> >  }
+> >  
+> > -static inline void disable_nat_bits(struct f2fs_sb_info *sbi, bool lock)
+> > -{
+> > -	unsigned long flags;
+> > -
+> > -	/*
+> > -	 * In order to re-enable nat_bits we need to call fsck.f2fs by
+> > -	 * set_sbi_flag(sbi, SBI_NEED_FSCK). But it may give huge cost,
+> > -	 * so let's rely on regular fsck or unclean shutdown.
+> > -	 */
+> > -
+> > -	if (lock)
+> > -		spin_lock_irqsave(&sbi->cp_lock, flags);
+> > -	__clear_ckpt_flags(F2FS_CKPT(sbi), CP_NAT_BITS_FLAG);
+> > -	kvfree(NM_I(sbi)->nat_bits);
+> > -	NM_I(sbi)->nat_bits = NULL;
+> > -	if (lock)
+> > -		spin_unlock_irqrestore(&sbi->cp_lock, flags);
+> > -}
+> > -
+> > -static inline bool enabled_nat_bits(struct f2fs_sb_info *sbi,
+> > -					struct cp_control *cpc)
+> > -{
+> > -	bool set = is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
+> > -
+> > -	return (cpc) ? (cpc->reason & CP_UMOUNT) && set : set;
+> > -}
+> > -
+> >  static inline void f2fs_lock_op(struct f2fs_sb_info *sbi)
+> >  {
+> >  	down_read(&sbi->cp_rwsem);
+> > @@ -2970,6 +2943,7 @@ int f2fs_truncate_inode_blocks(struct inode *inode, pgoff_t from);
+> >  int f2fs_truncate_xattr_node(struct inode *inode);
+> >  int f2fs_wait_on_node_pages_writeback(struct f2fs_sb_info *sbi,
+> >  					unsigned int seq_id);
+> > +bool f2fs_nat_bitmap_enabled(struct f2fs_sb_info *sbi);
+> >  int f2fs_remove_inode_page(struct inode *inode);
+> >  struct page *f2fs_new_inode_page(struct inode *inode);
+> >  struct page *f2fs_new_node_page(struct dnode_of_data *dn, unsigned int ofs);
+> > @@ -2993,6 +2967,7 @@ int f2fs_recover_xattr_data(struct inode *inode, struct page *page);
+> >  int f2fs_recover_inode_page(struct f2fs_sb_info *sbi, struct page *page);
+> >  int f2fs_restore_node_summary(struct f2fs_sb_info *sbi,
+> >  			unsigned int segno, struct f2fs_summary_block *sum);
+> > +void f2fs_enable_nat_bits(struct f2fs_sb_info *sbi);
+> >  int f2fs_flush_nat_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc);
+> >  int f2fs_build_node_manager(struct f2fs_sb_info *sbi);
+> >  void f2fs_destroy_node_manager(struct f2fs_sb_info *sbi);
+> > diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+> > index f6ff84e29749..e364c6a84f3c 100644
+> > --- a/fs/f2fs/node.c
+> > +++ b/fs/f2fs/node.c
+> > @@ -2038,6 +2038,24 @@ static void __move_free_nid(struct f2fs_sb_info *sbi, struct free_nid *i,
+> >  	}
+> >  }
+> >  
+> > +bool f2fs_nat_bitmap_enabled(struct f2fs_sb_info *sbi)
+> > +{
+> > +	struct f2fs_nm_info *nm_i = NM_I(sbi);
+> > +	unsigned int i;
+> > +	bool ret = true;
+> > +
+> > +	down_read(&nm_i->nat_tree_lock);
+> > +	for (i = 0; i < nm_i->nat_blocks; i++) {
+> > +		if (!test_bit_le(i, nm_i->nat_block_bitmap)) {
+> > +			ret = false;
+> > +			break;
+> > +		}
+> > +	}
+> > +	up_read(&nm_i->nat_tree_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static void update_free_nid_bitmap(struct f2fs_sb_info *sbi, nid_t nid,
+> >  							bool set, bool build)
+> >  {
+> > @@ -2698,7 +2716,7 @@ static void __update_nat_bits(struct f2fs_sb_info *sbi, nid_t start_nid,
+> >  	int valid = 0;
+> >  	int i = 0;
+> >  
+> > -	if (!enabled_nat_bits(sbi, NULL))
+> > +	if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG))
+> >  		return;
+> >  
+> >  	if (nat_index == 0) {
+> > @@ -2722,6 +2740,43 @@ static void __update_nat_bits(struct f2fs_sb_info *sbi, nid_t start_nid,
+> >  		__clear_bit_le(nat_index, nm_i->full_nat_bits);
+> >  }
+> >  
+> > +void f2fs_enable_nat_bits(struct f2fs_sb_info *sbi)
+> > +{
+> > +	struct f2fs_nm_info *nm_i = NM_I(sbi);
+> > +	int nat_ofs;
+> > +
+> > +	down_read(&nm_i->nat_tree_lock);
+> > +
+> > +	for (nat_ofs = 0; nat_ofs < nm_i->nat_blocks; nat_ofs++) {
+> > +		int valid = 0, nid_ofs = 0;
+> > +
+> > +		if (nat_ofs == 0) {
+> > +			valid = 1;
+> > +			nid_ofs = 1;
+> > +		}
+> > +
+> > +		for (; nid_ofs < NAT_ENTRY_PER_BLOCK; nid_ofs++) {
+> > +			if (!test_bit_le(nid_ofs,
+> > +					nm_i->free_nid_bitmap[nat_ofs]))
+> > +				valid++;
+> > +		}
+> > +
+> > +		if (valid == 0) {
+> > +			__set_bit_le(nat_ofs, nm_i->empty_nat_bits);
+> > +			__clear_bit_le(nat_ofs, nm_i->full_nat_bits);
+> > +			continue;
+> > +		}
+> > +
+> > +		__clear_bit_le(nat_ofs, nm_i->empty_nat_bits);
+> > +		if (valid == NAT_ENTRY_PER_BLOCK)
+> > +			__set_bit_le(nat_ofs, nm_i->full_nat_bits);
+> > +		else
+> > +			__clear_bit_le(nat_ofs, nm_i->full_nat_bits);
+> > +	}
+> > +
+> > +	up_read(&nm_i->nat_tree_lock);
+> > +}
+> > +
+> >  static int __flush_nat_entry_set(struct f2fs_sb_info *sbi,
+> >  		struct nat_entry_set *set, struct cp_control *cpc)
+> >  {
+> > @@ -2738,7 +2793,7 @@ static int __flush_nat_entry_set(struct f2fs_sb_info *sbi,
+> >  	 * #1, flush nat entries to journal in current hot data summary block.
+> >  	 * #2, flush nat entries to nat page.
+> >  	 */
+> > -	if (enabled_nat_bits(sbi, cpc) ||
+> > +	if ((cpc->reason & CP_UMOUNT) ||
+> >  		!__has_cursum_space(journal, set->entry_cnt, NAT_JOURNAL))
+> >  		to_journal = false;
+> >  
+> > @@ -2813,7 +2868,7 @@ int f2fs_flush_nat_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  	int err = 0;
+> >  
+> >  	/* during unmount, let's flush nat_bits before checking dirty_nat_cnt */
+> > -	if (enabled_nat_bits(sbi, cpc)) {
+> > +	if (cpc->reason & CP_UMOUNT) {
+> >  		down_write(&nm_i->nat_tree_lock);
+> >  		remove_nats_in_journal(sbi);
+> >  		up_write(&nm_i->nat_tree_lock);
+> > @@ -2829,7 +2884,7 @@ int f2fs_flush_nat_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+> >  	 * entries, remove all entries from journal and merge them
+> >  	 * into nat entry set.
+> >  	 */
+> > -	if (enabled_nat_bits(sbi, cpc) ||
+> > +	if ((cpc->reason & CP_UMOUNT) ||
+> >  		!__has_cursum_space(journal, nm_i->dirty_nat_cnt, NAT_JOURNAL))
+> >  		remove_nats_in_journal(sbi);
+> >  
+> > @@ -2864,15 +2919,18 @@ static int __get_nat_bitmaps(struct f2fs_sb_info *sbi)
+> >  	__u64 cp_ver = cur_cp_version(ckpt);
+> >  	block_t nat_bits_addr;
+> >  
+> > -	if (!enabled_nat_bits(sbi, NULL))
+> > -		return 0;
+> > -
+> >  	nm_i->nat_bits_blocks = F2FS_BLK_ALIGN((nat_bits_bytes << 1) + 8);
+> >  	nm_i->nat_bits = f2fs_kzalloc(sbi,
+> >  			nm_i->nat_bits_blocks << F2FS_BLKSIZE_BITS, GFP_KERNEL);
+> >  	if (!nm_i->nat_bits)
+> >  		return -ENOMEM;
+> >  
+> > +	nm_i->full_nat_bits = nm_i->nat_bits + 8;
+> > +	nm_i->empty_nat_bits = nm_i->full_nat_bits + nat_bits_bytes;
+> > +
+> > +	if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG))
+> > +		return 0;
+> > +
+> >  	nat_bits_addr = __start_cp_addr(sbi) + sbi->blocks_per_seg -
+> >  						nm_i->nat_bits_blocks;
+> >  	for (i = 0; i < nm_i->nat_bits_blocks; i++) {
+> > @@ -2889,13 +2947,13 @@ static int __get_nat_bitmaps(struct f2fs_sb_info *sbi)
+> >  
+> >  	cp_ver |= (cur_cp_crc(ckpt) << 32);
+> >  	if (cpu_to_le64(cp_ver) != *(__le64 *)nm_i->nat_bits) {
+> > -		disable_nat_bits(sbi, true);
+> > +		clear_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
+> > +		f2fs_msg(sbi->sb, KERN_NOTICE,
+> > +			"Disable nat_bits due to incorrect cp_ver (%llu, %llu)",
+> > +			cp_ver, le64_to_cpu(*(__le64 *)nm_i->nat_bits));
+> >  		return 0;
+> >  	}
+> >  
+> > -	nm_i->full_nat_bits = nm_i->nat_bits + 8;
+> > -	nm_i->empty_nat_bits = nm_i->full_nat_bits + nat_bits_bytes;
+> > -
+> >  	f2fs_msg(sbi->sb, KERN_NOTICE, "Found nat_bits in checkpoint");
+> >  	return 0;
+> >  }
+> > @@ -2906,7 +2964,7 @@ static inline void load_free_nid_bitmap(struct f2fs_sb_info *sbi)
+> >  	unsigned int i = 0;
+> >  	nid_t nid, last_nid;
+> >  
+> > -	if (!enabled_nat_bits(sbi, NULL))
+> > +	if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG))
+> >  		return;
+> >  
+> >  	for (i = 0; i < nm_i->nat_blocks; i++) {
+> > 
