@@ -2,116 +2,316 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFB9C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D426CC10F03
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB3420850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:16:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="GNmXw9cJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9659520857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389401AbfCARQr (ORCPT
+        id S2388399AbfCARTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:16:47 -0500
-Received: from smtp121.ord1c.emailsrvr.com ([108.166.43.121]:42002 "EHLO
-        smtp121.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728347AbfCARQr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:16:47 -0500
-X-Greylist: delayed 470 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Mar 2019 12:16:46 EST
-Received: from smtp8.relay.ord1c.emailsrvr.com (localhost [127.0.0.1])
-        by smtp8.relay.ord1c.emailsrvr.com (SMTP Server) with ESMTP id B9D91A012F;
-        Fri,  1 Mar 2019 12:08:55 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1551460135;
-        bh=Xu7Uxi0xQRaSsOKwI0OjPi904kiPaYkiHRyP0omueQk=;
-        h=From:To:Subject:Date:From;
-        b=GNmXw9cJxFHaJZWasReSP4nbJAhxVtYT3sacyyPi1GMwivbL9gjPDTiddXbKIxCnd
-         tBxha4mzpaH5cDXd54UpKxa7mUTNbdPPI0KCJh8/GKkGm5ZVEHtVw4GbukXnyk1c29
-         X8sRqqSj0mDx9gnzsZSwctOsc1wEZnka6QQHvJ18=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp8.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id EE22FA02E4;
-        Fri,  1 Mar 2019 12:08:54 -0500 (EST)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Fri, 01 Mar 2019 12:08:55 -0500
-From:   Ian Abbott <abbotti@mev.co.uk>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, linux-kernel@vger.kernel.org,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH] fuse: Add ioctl flag for compat ioctl with 64-bit time_t
-Date:   Fri,  1 Mar 2019 17:08:31 +0000
-Message-Id: <20190301170831.23612-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.20.1
+        Fri, 1 Mar 2019 12:19:49 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:45504 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728347AbfCARTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 12:19:49 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A1781A00CD;
+        Fri,  1 Mar 2019 18:19:47 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C2C71A0085;
+        Fri,  1 Mar 2019 18:19:47 +0100 (CET)
+Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 021DC204B1;
+        Fri,  1 Mar 2019 18:19:46 +0100 (CET)
+From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wen Yang <yellowriver2010@hotmail.com>
+Subject: [PATCH RESEND v3] crypto: caam - add missing put_device() call
+Date:   Fri,  1 Mar 2019 19:19:25 +0200
+Message-Id: <20190301171925.22650-1-horia.geanta@nxp.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, a CUSE server running on a 64-bit kernel can tell when an
-ioctl request comes from a process running a 32-bit ABI, but cannot tell
-whether the requesting process is using legacy IA32 emulation or x32
-ABI, for example.  In particular, the server does not know the size of
-the client process's `time_t` type.
+From: Wen Yang <yellowriver2010@hotmail.com>
 
-For 64-bit kernels, the `FUSE_IOCTL_COMPAT` and `FUSE_IOCTL_32BIT` flags
-are currently set in the ioctl input request (`struct fuse_ioctl_in`
-member `flags`) for a 32-bit requesting process.  This patch defines a
-new flag `FUSE_IOCTL_COMPAT_64TIME` and sets it if the 32-bit requesting
-process (running on a 64-bit kernel) uses a 64-bit `time_t` type.
+The of_find_device_by_node() takes a reference to the underlying device
+structure, we should release that reference.
 
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Fixes: 35af64038623 ("crypto: caam - Check for CAAM block presence before registering with crypto layer")
+Fixes: b189817cf789 ("crypto: caam/qi - add ablkcipher and authenc algorithms")
+Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
 ---
- fs/fuse/file.c            | 5 ++++-
- include/uapi/linux/fuse.h | 2 ++
- 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 06096b60f1df..9777e7a19889 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -2576,8 +2576,11 @@ long fuse_do_ioctl(struct file *file, unsigned int cmd, unsigned long arg,
- #if BITS_PER_LONG == 32
- 	inarg.flags |= FUSE_IOCTL_32BIT;
- #else
--	if (flags & FUSE_IOCTL_COMPAT)
-+	if (flags & FUSE_IOCTL_COMPAT) {
- 		inarg.flags |= FUSE_IOCTL_32BIT;
-+		if (COMPAT_USE_64BIT_TIME)
-+			inarg.flags |= FUSE_IOCTL_COMPAT_64TIME;
+Looks like previous versions, for some unknown reason, did not reach
+the mailing lists.
+
+Resending v3 with the addition of a 2nd Fixes and Reviewed-by tags,
+cf. https://lkml.org/lkml/2019/2/11/383
+
+ drivers/crypto/caam/caamalg.c    | 12 +++++++-----
+ drivers/crypto/caam/caamalg_qi.c | 11 ++++++++---
+ drivers/crypto/caam/caamhash.c   | 18 +++++++++++-------
+ drivers/crypto/caam/caampkc.c    | 14 ++++++++++----
+ drivers/crypto/caam/caamrng.c    | 22 ++++++++++++++--------
+ 5 files changed, 50 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index 9eac5099098e..579578498deb 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -3455,7 +3455,6 @@ static int __init caam_algapi_init(void)
+ {
+ 	struct device_node *dev_node;
+ 	struct platform_device *pdev;
+-	struct device *ctrldev;
+ 	struct caam_drv_private *priv;
+ 	int i = 0, err = 0;
+ 	u32 aes_vid, aes_inst, des_inst, md_vid, md_inst, ccha_inst, ptha_inst;
+@@ -3476,16 +3475,17 @@ static int __init caam_algapi_init(void)
+ 		return -ENODEV;
+ 	}
+ 
+-	ctrldev = &pdev->dev;
+-	priv = dev_get_drvdata(ctrldev);
++	priv = dev_get_drvdata(&pdev->dev);
+ 	of_node_put(dev_node);
+ 
+ 	/*
+ 	 * If priv is NULL, it's probably because the caam driver wasn't
+ 	 * properly initialized (e.g. RNG4 init failed). Thus, bail out here.
+ 	 */
+-	if (!priv)
+-		return -ENODEV;
++	if (!priv) {
++		err = -ENODEV;
++		goto out_put_dev;
 +	}
- #endif
  
- 	/* assume all the iovs returned by client always fits in a page */
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index 2ac598614a8f..1f4a71486601 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -335,6 +335,7 @@ struct fuse_file_lock {
-  * FUSE_IOCTL_RETRY: retry with new iovecs
-  * FUSE_IOCTL_32BIT: 32bit ioctl
-  * FUSE_IOCTL_DIR: is a directory
-+ * FUSE_IOCTL_COMPAT_64TIME: 32bit compat ioctl with 64bit time_t
-  *
-  * FUSE_IOCTL_MAX_IOV: maximum of in_iovecs + out_iovecs
-  */
-@@ -343,6 +344,7 @@ struct fuse_file_lock {
- #define FUSE_IOCTL_RETRY	(1 << 2)
- #define FUSE_IOCTL_32BIT	(1 << 3)
- #define FUSE_IOCTL_DIR		(1 << 4)
-+#define FUSE_IOCTL_COMPAT_64TIME (1 << 5)
  
- #define FUSE_IOCTL_MAX_IOV	256
+ 	/*
+@@ -3626,6 +3626,8 @@ static int __init caam_algapi_init(void)
+ 	if (registered)
+ 		pr_info("caam algorithms registered in /proc/crypto\n");
+ 
++out_put_dev:
++	put_device(&pdev->dev);
+ 	return err;
+ }
+ 
+diff --git a/drivers/crypto/caam/caamalg_qi.c b/drivers/crypto/caam/caamalg_qi.c
+index a15ce9213310..c61921d32489 100644
+--- a/drivers/crypto/caam/caamalg_qi.c
++++ b/drivers/crypto/caam/caamalg_qi.c
+@@ -2492,12 +2492,15 @@ static int __init caam_qi_algapi_init(void)
+ 	 * If priv is NULL, it's probably because the caam driver wasn't
+ 	 * properly initialized (e.g. RNG4 init failed). Thus, bail out here.
+ 	 */
+-	if (!priv || !priv->qi_present)
+-		return -ENODEV;
++	if (!priv || !priv->qi_present) {
++		err = -ENODEV;
++		goto out_put_dev;
++	}
+ 
+ 	if (caam_dpaa2) {
+ 		dev_info(ctrldev, "caam/qi frontend driver not suitable for DPAA 2.x, aborting...\n");
+-		return -ENODEV;
++		err = -ENODEV;
++		goto out_put_dev;
+ 	}
+ 
+ 	/*
+@@ -2610,6 +2613,8 @@ static int __init caam_qi_algapi_init(void)
+ 	if (registered)
+ 		dev_info(priv->qidev, "algorithms registered in /proc/crypto\n");
+ 
++out_put_dev:
++	put_device(ctrldev);
+ 	return err;
+ }
+ 
+diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamhash.c
+index d7483e4d0ce2..b1eadc6652b5 100644
+--- a/drivers/crypto/caam/caamhash.c
++++ b/drivers/crypto/caam/caamhash.c
+@@ -1993,7 +1993,6 @@ static int __init caam_algapi_hash_init(void)
+ {
+ 	struct device_node *dev_node;
+ 	struct platform_device *pdev;
+-	struct device *ctrldev;
+ 	int i = 0, err = 0;
+ 	struct caam_drv_private *priv;
+ 	unsigned int md_limit = SHA512_DIGEST_SIZE;
+@@ -2012,16 +2011,17 @@ static int __init caam_algapi_hash_init(void)
+ 		return -ENODEV;
+ 	}
+ 
+-	ctrldev = &pdev->dev;
+-	priv = dev_get_drvdata(ctrldev);
++	priv = dev_get_drvdata(&pdev->dev);
+ 	of_node_put(dev_node);
+ 
+ 	/*
+ 	 * If priv is NULL, it's probably because the caam driver wasn't
+ 	 * properly initialized (e.g. RNG4 init failed). Thus, bail out here.
+ 	 */
+-	if (!priv)
+-		return -ENODEV;
++	if (!priv) {
++		err = -ENODEV;
++		goto out_put_dev;
++	}
+ 
+ 	/*
+ 	 * Register crypto algorithms the device supports.  First, identify
+@@ -2043,8 +2043,10 @@ static int __init caam_algapi_hash_init(void)
+ 	 * Skip registration of any hashing algorithms if MD block
+ 	 * is not present.
+ 	 */
+-	if (!md_inst)
+-		return -ENODEV;
++	if (!md_inst) {
++		err = -ENODEV;
++		goto out_put_dev;
++	}
+ 
+ 	/* Limit digest size based on LP256 */
+ 	if (md_vid == CHA_VER_VID_MD_LP256)
+@@ -2101,6 +2103,8 @@ static int __init caam_algapi_hash_init(void)
+ 			list_add_tail(&t_alg->entry, &hash_list);
+ 	}
+ 
++out_put_dev:
++	put_device(&pdev->dev);
+ 	return err;
+ }
+ 
+diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.c
+index 77ab28a2811a..58285642306e 100644
+--- a/drivers/crypto/caam/caampkc.c
++++ b/drivers/crypto/caam/caampkc.c
+@@ -1042,8 +1042,10 @@ static int __init caam_pkc_init(void)
+ 	 * If priv is NULL, it's probably because the caam driver wasn't
+ 	 * properly initialized (e.g. RNG4 init failed). Thus, bail out here.
+ 	 */
+-	if (!priv)
+-		return -ENODEV;
++	if (!priv) {
++		err = -ENODEV;
++		goto out_put_dev;
++	}
+ 
+ 	/* Determine public key hardware accelerator presence. */
+ 	if (priv->era < 10)
+@@ -1053,8 +1055,10 @@ static int __init caam_pkc_init(void)
+ 		pk_inst = rd_reg32(&priv->ctrl->vreg.pkha) & CHA_VER_NUM_MASK;
+ 
+ 	/* Do not register algorithms if PKHA is not present. */
+-	if (!pk_inst)
+-		return -ENODEV;
++	if (!pk_inst) {
++		err =  -ENODEV;
++		goto out_put_dev;
++	}
+ 
+ 	err = crypto_register_akcipher(&caam_rsa);
+ 	if (err)
+@@ -1063,6 +1067,8 @@ static int __init caam_pkc_init(void)
+ 	else
+ 		dev_info(ctrldev, "caam pkc algorithms registered in /proc/crypto\n");
+ 
++out_put_dev:
++	put_device(ctrldev);
+ 	return err;
+ }
+ 
+diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
+index a387c8d49a62..95eb5402c59f 100644
+--- a/drivers/crypto/caam/caamrng.c
++++ b/drivers/crypto/caam/caamrng.c
+@@ -308,7 +308,6 @@ static int __init caam_rng_init(void)
+ 	struct device *dev;
+ 	struct device_node *dev_node;
+ 	struct platform_device *pdev;
+-	struct device *ctrldev;
+ 	struct caam_drv_private *priv;
+ 	u32 rng_inst;
+ 	int err;
+@@ -326,16 +325,17 @@ static int __init caam_rng_init(void)
+ 		return -ENODEV;
+ 	}
+ 
+-	ctrldev = &pdev->dev;
+-	priv = dev_get_drvdata(ctrldev);
++	priv = dev_get_drvdata(&pdev->dev);
+ 	of_node_put(dev_node);
+ 
+ 	/*
+ 	 * If priv is NULL, it's probably because the caam driver wasn't
+ 	 * properly initialized (e.g. RNG4 init failed). Thus, bail out here.
+ 	 */
+-	if (!priv)
+-		return -ENODEV;
++	if (!priv) {
++		err = -ENODEV;
++		goto out_put_dev;
++	}
+ 
+ 	/* Check for an instantiated RNG before registration */
+ 	if (priv->era < 10)
+@@ -344,13 +344,16 @@ static int __init caam_rng_init(void)
+ 	else
+ 		rng_inst = rd_reg32(&priv->ctrl->vreg.rng) & CHA_VER_NUM_MASK;
+ 
+-	if (!rng_inst)
+-		return -ENODEV;
++	if (!rng_inst) {
++		err = -ENODEV;
++		goto out_put_dev;
++	}
+ 
+ 	dev = caam_jr_alloc();
+ 	if (IS_ERR(dev)) {
+ 		pr_err("Job Ring Device allocation for transform failed\n");
+-		return PTR_ERR(dev);
++		err = PTR_ERR(dev);
++		goto out_put_dev;
+ 	}
+ 	rng_ctx = kmalloc(sizeof(*rng_ctx), GFP_DMA | GFP_KERNEL);
+ 	if (!rng_ctx) {
+@@ -361,6 +364,7 @@ static int __init caam_rng_init(void)
+ 	if (err)
+ 		goto free_rng_ctx;
+ 
++	put_device(&pdev->dev);
+ 	dev_info(dev, "registering rng-caam\n");
+ 	return hwrng_register(&caam_rng);
+ 
+@@ -368,6 +372,8 @@ static int __init caam_rng_init(void)
+ 	kfree(rng_ctx);
+ free_caam_alloc:
+ 	caam_jr_free(dev);
++out_put_dev:
++	put_device(&pdev->dev);
+ 	return err;
+ }
  
 -- 
-2.20.1
+2.17.1
 
