@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56369C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676DCC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBB42186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7D02186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387802AbfCAKzS (ORCPT
+        id S2387841AbfCAKzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 05:55:18 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:49083 "EHLO
+        Fri, 1 Mar 2019 05:55:23 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:51131 "EHLO
         relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728310AbfCAKzP (ORCPT
+        with ESMTP id S2387803AbfCAKzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 05:55:15 -0500
+        Fri, 1 Mar 2019 05:55:20 -0500
 X-Originating-IP: 90.88.147.150
 Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 1A5BBFF811;
-        Fri,  1 Mar 2019 10:55:11 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 8DD90FF814;
+        Fri,  1 Mar 2019 10:55:16 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net
 Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
@@ -33,9 +33,9 @@ Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
         nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
         linux@armlinux.org.uk
-Subject: [PATCH net-next v2 05/15] net: mvpp2: reconfiguring the port interface is PPv2.2 specific
-Date:   Fri,  1 Mar 2019 11:52:07 +0100
-Message-Id: <20190301105217.15764-6-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v2 07/15] net: mvpp2: fix the computation of the RXQs
+Date:   Fri,  1 Mar 2019 11:52:09 +0100
+Message-Id: <20190301105217.15764-8-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190301105217.15764-1-antoine.tenart@bootlin.com>
 References: <20190301105217.15764-1-antoine.tenart@bootlin.com>
@@ -46,50 +46,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a check on the PPv2 version in-use not to reconfigure
-the port mode when an interface is updated when using PPv2.1 as the
-functions called are PPv2.2 specific.
+The patch fixes the computation of RXQs being used by the PPv2 driver,
+which is set depending on the PPv2 engine version and the queue mode
+used. There are three cases:
 
+- PPv2.1: 1 RXQ per CPU.
+- PPV2.2 with MVPP2_QDIST_MULTI_MODE: 1 RXQ per CPU.
+- PPv2.2 with MVPP2_QDIST_SINGLE_MODE: 1 RXQ is shared between the CPUs.
+
+The PPv2 engine supports a maximum of 32 queues per port. This patch
+adds a check so that we do not overstep this maximum.
+
+It appeared the calculation was broken for PPv2.1 engines since
+f8c6ba8424b0, as PPv2.1 ports ended up with a single RXQ while they
+needed 4. This patch fixes it.
+
+Fixes: f8c6ba8424b0 ("net: mvpp2: use only one rx queue per port per CPU")
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  4 ++--
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 23 ++++++++++++-------
+ 2 files changed, 17 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+index 17ff330cce5f..687e011de5ef 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+@@ -549,8 +549,8 @@
+ #define MVPP2_MAX_TSO_SEGS		300
+ #define MVPP2_MAX_SKB_DESCS		(MVPP2_MAX_TSO_SEGS * 2 + MAX_SKB_FRAGS)
+ 
+-/* Default number of RXQs in use */
+-#define MVPP2_DEFAULT_RXQ		1
++/* Max number of RXQs per port */
++#define MVPP2_PORT_MAX_RXQ		32
+ 
+ /* Max number of Rx descriptors */
+ #define MVPP2_MAX_RXD_MAX		1024
 diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 71a3fdb76b12..204cae75a05b 100644
+index 24cee6cbe309..9c6200a59910 100644
 --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
 +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -4673,16 +4673,14 @@ static void mvpp2_mac_config(struct net_device *dev, unsigned int mode,
+@@ -4062,8 +4062,8 @@ static int mvpp2_multi_queue_vectors_init(struct mvpp2_port *port,
+ 			snprintf(irqname, sizeof(irqname), "hif%d", i);
  
- 	/* Make sure the port is disabled when reconfiguring the mode */
- 	mvpp2_port_disable(port);
--	if (change_interface) {
-+	if (port->priv->hw_version == MVPP22 && change_interface) {
- 		mvpp22_gop_mask_irq(port);
+ 		if (queue_mode == MVPP2_QDIST_MULTI_MODE) {
+-			v->first_rxq = i * MVPP2_DEFAULT_RXQ;
+-			v->nrxqs = MVPP2_DEFAULT_RXQ;
++			v->first_rxq = i;
++			v->nrxqs = 1;
+ 		} else if (queue_mode == MVPP2_QDIST_SINGLE_MODE &&
+ 			   i == (port->nqvecs - 1)) {
+ 			v->first_rxq = 0;
+@@ -4156,8 +4156,7 @@ static int mvpp2_port_init(struct mvpp2_port *port)
+ 	    MVPP2_MAX_PORTS * priv->max_port_rxqs)
+ 		return -EINVAL;
  
--		if (port->priv->hw_version == MVPP22) {
--			port->phy_interface = state->interface;
-+		port->phy_interface = state->interface;
+-	if (port->nrxqs % MVPP2_DEFAULT_RXQ ||
+-	    port->nrxqs > priv->max_port_rxqs || port->ntxqs > MVPP2_MAX_TXQ)
++	if (port->nrxqs > priv->max_port_rxqs || port->ntxqs > MVPP2_MAX_TXQ)
+ 		return -EINVAL;
  
--			/* Reconfigure the serdes lanes */
--			phy_power_off(port->comphy);
--			mvpp22_mode_reconfigure(port);
--		}
-+		/* Reconfigure the serdes lanes */
-+		phy_power_off(port->comphy);
-+		mvpp22_mode_reconfigure(port);
+ 	/* Disable port */
+@@ -4778,10 +4777,18 @@ static int mvpp2_port_probe(struct platform_device *pdev,
  	}
  
- 	/* mac (re)configuration */
-@@ -4696,7 +4694,7 @@ static void mvpp2_mac_config(struct net_device *dev, unsigned int mode,
- 	if (port->priv->hw_version == MVPP21 && port->flags & MVPP2_F_LOOPBACK)
- 		mvpp2_port_loopback_set(port, state);
+ 	ntxqs = MVPP2_MAX_TXQ;
+-	if (priv->hw_version == MVPP22 && queue_mode == MVPP2_QDIST_MULTI_MODE)
+-		nrxqs = MVPP2_DEFAULT_RXQ * num_possible_cpus();
+-	else
+-		nrxqs = MVPP2_DEFAULT_RXQ;
++	if (priv->hw_version == MVPP22 && queue_mode == MVPP2_QDIST_SINGLE_MODE) {
++		nrxqs = 1;
++	} else {
++		/* According to the PPv2.2 datasheet and our experiments on
++		 * PPv2.1, RX queues have an allocation granularity of 4 (when
++		 * more than a single one on PPv2.2).
++		 * Round up to nearest multiple of 4.
++		 */
++		nrxqs = (num_possible_cpus() + 3) & ~0x3;
++		if (nrxqs > MVPP2_PORT_MAX_RXQ)
++			nrxqs = MVPP2_PORT_MAX_RXQ;
++	}
  
--	if (change_interface)
-+	if (port->priv->hw_version == MVPP22 && change_interface)
- 		mvpp22_gop_unmask_irq(port);
- 
- 	mvpp2_port_enable(port);
+ 	dev = alloc_etherdev_mqs(sizeof(*port), ntxqs, nrxqs);
+ 	if (!dev)
 -- 
 2.20.1
 
