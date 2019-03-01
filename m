@@ -2,256 +2,122 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEA6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D92FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D648320657
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED13520830
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 03:04:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0HpGexN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732979AbfCAC6s (ORCPT
+        id S1729678AbfCADEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 21:58:48 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52164 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726088AbfCAC6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 21:58:48 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 895A4F2E290CE8592839;
-        Fri,  1 Mar 2019 10:58:45 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Fri, 1 Mar 2019
- 10:58:35 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <joe@perches.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 2/2] appletalk: Fix use-after-free in atalk_proc_exit
-Date:   Fri, 1 Mar 2019 10:57:57 +0800
-Message-ID: <20190301025757.27592-3-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190301025757.27592-1-yuehaibing@huawei.com>
-References: <20190301025757.27592-1-yuehaibing@huawei.com>
+        Thu, 28 Feb 2019 22:04:32 -0500
+Received: from mail-it1-f195.google.com ([209.85.166.195]:34955 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfCADEc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 22:04:32 -0500
+Received: by mail-it1-f195.google.com with SMTP id 188so19240018itb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 19:04:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DM+d/4EP4JRgwKFIQ8vTGi+KTuta0nTyCKeSsyUW+IQ=;
+        b=R0HpGexNCXxU8+buIYrCqvxn9P1eVd/e6fX87s3tas6Nd8yMl5BdqFjXUW22CaKr72
+         iS/PwDw32Cq/26zCWDKnDmHafZzuL6UtI+lN/sBa1wwk93xPhvacEOC4R3lRO86ppxJT
+         sO7kFqp4RjiHMZxSgv37VPjfFaYxbyneyZjaDpr1zgPW7ztVS3MwAzRxrOEBZvG3J/CH
+         GLFF/XBsJ8MDXHE3ytrX/u39fpsiimm+sqUqi2R5yNUBJUkpJEdNeeqt8F7J8a69Pdsy
+         +VDzbePnbipkG1fwmPzhXkO9i6pSMbYG5Ws5bHdqCS8PbenqtMJPHXBonU92pVM4jrHR
+         jL2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DM+d/4EP4JRgwKFIQ8vTGi+KTuta0nTyCKeSsyUW+IQ=;
+        b=HGUkkM6cHb7X/2Y7F9uVtsx/wtkN67zialWlzdMW8E+7QAAQtFSF7u0V62Ut5Y0nx8
+         +ucrUkg52Hpx+/FghhWlP4Qm6W1VPn7AxCxSnfo0A7oGjxeS7JDHeHH2w1jWetYEFEZU
+         E5+7Od/PXjA9NvMXxR5qfAuA/oXt2k0A64KSlaFg4bAgWAlCtTIwDOw+e7cETQiiHtnl
+         xLYHRvDanbQqfBTUkUAexDn6mR47UZhMcgbfbXEhmDVnK9oQ6VuznktIsqRDVyNFNT0L
+         4KibETNfiAaydU4ngIp2/V9whdcwoA0JsZAPtIYTTUUyyjcsmMbVVSQaMd+gif946CfX
+         8pvg==
+X-Gm-Message-State: APjAAAVe+uTbw2kF2kYnjTF10qeLtrqq+ulOv2ysEz3Dj2V1RPfIUmMC
+        k7hlxyjHHhqpvx1kjYKZ/6mhh0JDOKtPQ04c6A==
+X-Google-Smtp-Source: APXvYqxno2Gy/0WCVkCrPyDKeGjZggAjQXWYrJ1fBvBQzcQOlfA+bvq3pBSBUmC5W/39qKJFhwWRkKj0do5PVhCbm4A=
+X-Received: by 2002:a02:8c28:: with SMTP id l37mr1469411jak.17.1551409470930;
+ Thu, 28 Feb 2019 19:04:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+References: <20190215102458.GD10433@zn.tnic> <20190218014820.GA10711@dhcp-128-65.nay.redhat.com>
+ <20190220083241.GA3447@zn.tnic> <20190220094146.GA8597@dhcp-128-65.nay.redhat.com>
+ <20190221171321.GD12997@zn.tnic> <20190222021101.GA11654@dhcp-128-65.nay.redhat.com>
+ <20190222084241.GC8380@suse.de> <20190222130026.GA30766@zn.tnic>
+ <20190225110043.GA5884@suse.de> <20190225111216.GA9276@dhcp-128-65.nay.redhat.com>
+ <20190225113003.GE26145@zn.tnic>
+In-Reply-To: <20190225113003.GE26145@zn.tnic>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Fri, 1 Mar 2019 11:04:19 +0800
+Message-ID: <CAFgQCTvP-YDUEcHTgupr+ar+qeoj5rw1y8k+6kzrzHPzTqBkaw@mail.gmail.com>
+Subject: Re: [PATCHv7] x86/kdump: bugfix, make the behavior of crashkernel=X
+ consistent with kaslr
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Dave Young <dyoung@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Baoquan He <bhe@redhat.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>, x86@kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yinghai Lu <yinghai@kernel.org>, vgoyal@redhat.com,
+        iommu@lists.linux-foundation.org, konrad.wilk@oracle.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Hi Borislav,
 
-KASAN report this:
-
-BUG: KASAN: use-after-free in pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
-Read of size 8 at addr ffff8881f41fe5b0 by task syz-executor.0/2806
-
-CPU: 0 PID: 2806 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
- remove_proc_entry+0xe8/0x420 fs/proc/generic.c:667
- atalk_proc_exit+0x18/0x820 [appletalk]
- atalk_exit+0xf/0x5a [appletalk]
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb2de6b9c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200001c0
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb2de6ba6bc
-R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
-
-Allocated by task 2806:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
- slab_post_alloc_hook mm/slab.h:444 [inline]
- slab_alloc_node mm/slub.c:2739 [inline]
- slab_alloc mm/slub.c:2747 [inline]
- kmem_cache_alloc+0xcf/0x250 mm/slub.c:2752
- kmem_cache_zalloc include/linux/slab.h:730 [inline]
- __proc_create+0x30f/0xa20 fs/proc/generic.c:408
- proc_mkdir_data+0x47/0x190 fs/proc/generic.c:469
- 0xffffffffc10c01bb
- 0xffffffffc10c0166
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 2806:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
- slab_free_hook mm/slub.c:1409 [inline]
- slab_free_freelist_hook mm/slub.c:1436 [inline]
- slab_free mm/slub.c:2986 [inline]
- kmem_cache_free+0xa6/0x2a0 mm/slub.c:3002
- pde_put+0x6e/0x80 fs/proc/generic.c:647
- remove_proc_entry+0x1d3/0x420 fs/proc/generic.c:684
- 0xffffffffc10c031c
- 0xffffffffc10c0166
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881f41fe500
- which belongs to the cache proc_dir_entry of size 256
-The buggy address is located 176 bytes inside of
- 256-byte region [ffff8881f41fe500, ffff8881f41fe600)
-The buggy address belongs to the page:
-page:ffffea0007d07f80 count:1 mapcount:0 mapping:ffff8881f6e69a00 index:0x0
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6e69a00
-raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881f41fe480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff8881f41fe500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881f41fe580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                     ^
- ffff8881f41fe600: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
- ffff8881f41fe680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-It should check the return value of atalk_proc_init fails,
-otherwise atalk_exit will trgger use-after-free in pde_subdir_find
-while unload the module.This patch fix error cleanup path of atalk_init
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- include/linux/atalk.h            |  2 +-
- net/appletalk/atalk_proc.c       |  2 +-
- net/appletalk/ddp.c              | 37 +++++++++++++++++++++++++++++++------
- net/appletalk/sysctl_net_atalk.c |  5 ++++-
- 4 files changed, 37 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/atalk.h b/include/linux/atalk.h
-index 23f8055..5a90f28 100644
---- a/include/linux/atalk.h
-+++ b/include/linux/atalk.h
-@@ -158,7 +158,7 @@ extern int sysctl_aarp_retransmit_limit;
- extern int sysctl_aarp_resolve_time;
- 
- #ifdef CONFIG_SYSCTL
--extern void atalk_register_sysctl(void);
-+extern int atalk_register_sysctl(void);
- extern void atalk_unregister_sysctl(void);
+Do you think the following patch is good at present?
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 81f9d23..9213073 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -460,7 +460,7 @@ static void __init
+memblock_x86_reserve_range_setup_data(void)
+ # define CRASH_ADDR_LOW_MAX    (512 << 20)
+ # define CRASH_ADDR_HIGH_MAX   (512 << 20)
  #else
- #define atalk_register_sysctl()		do { } while(0)
-diff --git a/net/appletalk/atalk_proc.c b/net/appletalk/atalk_proc.c
-index bd8734e..77f203f 100644
---- a/net/appletalk/atalk_proc.c
-+++ b/net/appletalk/atalk_proc.c
-@@ -237,7 +237,7 @@ int __init atalk_proc_init(void)
- 	return -ENOMEM;
- }
- 
--void __exit atalk_proc_exit(void)
-+void atalk_proc_exit(void)
- {
- 	remove_proc_subtree("atalk", init_net.proc_net);
- }
-diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
-index 9b6bc5a..795fbc6 100644
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1910,12 +1910,16 @@ static const char atalk_err_snap[] __initconst =
- /* Called by proto.c on kernel start up */
- static int __init atalk_init(void)
- {
--	int rc = proto_register(&ddp_proto, 0);
-+	int rc;
- 
--	if (rc != 0)
-+	rc = proto_register(&ddp_proto, 0);
-+	if (rc)
- 		goto out;
- 
--	(void)sock_register(&atalk_family_ops);
-+	rc = sock_register(&atalk_family_ops);
-+	if (rc)
-+		goto out_proto;
-+
- 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
- 	if (!ddp_dl)
- 		printk(atalk_err_snap);
-@@ -1923,12 +1927,33 @@ static int __init atalk_init(void)
- 	dev_add_pack(&ltalk_packet_type);
- 	dev_add_pack(&ppptalk_packet_type);
- 
--	register_netdevice_notifier(&ddp_notifier);
-+	rc = register_netdevice_notifier(&ddp_notifier);
-+	if (rc)
-+		goto out_sock;
-+
- 	aarp_proto_init();
--	atalk_proc_init();
--	atalk_register_sysctl();
-+	rc = atalk_proc_init();
-+	if (rc)
-+		goto out_aarp;
-+
-+	rc = atalk_register_sysctl();
-+	if (rc)
-+		goto out_proc;
- out:
- 	return rc;
-+out_proc:
-+	atalk_proc_exit();
-+out_aarp:
-+	aarp_cleanup_module();
-+	unregister_netdevice_notifier(&ddp_notifier);
-+out_sock:
-+	dev_remove_pack(&ppptalk_packet_type);
-+	dev_remove_pack(&ltalk_packet_type);
-+	unregister_snap_client(ddp_dl);
-+	sock_unregister(PF_APPLETALK);
-+out_proto:
-+	proto_unregister(&ddp_proto);
-+	goto out;
- }
- module_init(atalk_init);
- 
-diff --git a/net/appletalk/sysctl_net_atalk.c b/net/appletalk/sysctl_net_atalk.c
-index c744a85..d945b7c 100644
---- a/net/appletalk/sysctl_net_atalk.c
-+++ b/net/appletalk/sysctl_net_atalk.c
-@@ -45,9 +45,12 @@ static struct ctl_table atalk_table[] = {
- 
- static struct ctl_table_header *atalk_table_header;
- 
--void atalk_register_sysctl(void)
-+int __init atalk_register_sysctl(void)
- {
- 	atalk_table_header = register_net_sysctl(&init_net, "net/appletalk", atalk_table);
-+	if (!atalk_table_header)
-+		return -ENOMEM;
-+	return 0;
- }
- 
- void atalk_unregister_sysctl(void)
--- 
-2.7.0
+-# define CRASH_ADDR_LOW_MAX    (896UL << 20)
++# define CRASH_ADDR_LOW_MAX    (1 << 32)
+ # define CRASH_ADDR_HIGH_MAX   MAXMEM
+ #endif
 
+For documentation, I will send another patch to improve the description.
 
+Thanks,
+Pingfan
+
+On Mon, Feb 25, 2019 at 7:30 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, Feb 25, 2019 at 07:12:16PM +0800, Dave Young wrote:
+> > If we move to high as default, it will allocate 160M high + 256M low. It
+>
+> We won't move to high by default - we will *fall* back to high if the
+> default allocation fails.
+>
+> > To make the process less fragile maybe we can remove the 896M limitation
+> > and only try <4G then go to high.
+>
+> Sure, the more robust for the user, the better.
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Good mailing practices for 400: avoid top-posting and trim the reply.
