@@ -2,144 +2,291 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F03C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB6FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA85D20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:43:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=criteo.com header.i=@criteo.com header.b="VTjSGxZV"
+	by mail.kernel.org (Postfix) with ESMTP id 52F2E2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 15:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388258AbfCAPnd (ORCPT
+        id S1728603AbfCAPqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 10:43:33 -0500
-Received: from mx07-00287e01.pphosted.com ([91.207.212.151]:20550 "EHLO
-        mx08-00287e01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728234AbfCAPnc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 10:43:32 -0500
-Received: from pps.filterd (m0111311.ppops.net [127.0.0.1])
-        by mx08-00287e01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x21Fe5dp009343;
-        Fri, 1 Mar 2019 16:43:19 +0100
-Received: from eur01-ve1-obe.outbound.protection.outlook.com (mail-ve1eur01lp2056.outbound.protection.outlook.com [104.47.1.56])
-        by mx08-00287e01.pphosted.com with ESMTP id 2qtwyfxxkv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 Mar 2019 16:43:19 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=criteo.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O4qS21S3tC/uFmA9mZG/NUxyy3GMhGBqFrl+rot+InE=;
- b=VTjSGxZVYI+lQyh4a1pcw21e5rVVD3tg0JPraz97ievA5+iXvyWI7DiDmwfOoXa6MVYFYqQsk+rLyCt2SPyApJamboYcDSQlslO7x642ocAVq5AVEkb0KIm+PCNeCZbF5dVB6s13EEbLu6d4HqYNCM9N+YQvuoPKGGTZgG/gTI0=
-Received: from VI1PR04MB5629.eurprd04.prod.outlook.com (20.178.125.158) by
- VI1PR04MB5279.eurprd04.prod.outlook.com (20.177.51.220) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1643.16; Fri, 1 Mar 2019 15:43:17 +0000
-Received: from VI1PR04MB5629.eurprd04.prod.outlook.com
- ([fe80::4574:93ab:72b8:d1ec]) by VI1PR04MB5629.eurprd04.prod.outlook.com
- ([fe80::4574:93ab:72b8:d1ec%3]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
- 15:43:17 +0000
-From:   Erwan Velu <e.velu@criteo.com>
-To:     James Bottomley <jejb@linux.ibm.com>,
-        Erwan Velu <erwanaliasr1@gmail.com>,
-        "elliott@hpe.com" <elliott@hpe.com>
-CC:     Don Brace <don.brace@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
-        <esc.storagedev@microsemi.com>,
-        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
-        <linux-scsi@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] scsi: smartpqi_init: Reporting 'logical unit failure'
-Thread-Topic: [PATCH v2] scsi: smartpqi_init: Reporting 'logical unit failure'
-Thread-Index: AQHU0D9MEwbiRTQ1W0O9RWBUcKAFRaX25ceAgAAEsoA=
-Date:   Fri, 1 Mar 2019 15:43:17 +0000
-Message-ID: <c858605b-7283-7882-64a8-8d1584274b95@criteo.com>
-References: <20190227163133.26283-1-e.velu@criteo.com>
- <20190301145832.12735-1-e.velu@criteo.com>
- <1551453987.3334.2.camel@linux.ibm.com>
-In-Reply-To: <1551453987.3334.2.camel@linux.ibm.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0018.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100::30)
- To VI1PR04MB5629.eurprd04.prod.outlook.com (2603:10a6:803:de::30)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [91.199.242.236]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2b4cec43-2978-4a92-eb6e-08d69e5c9f79
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB5279;
-x-ms-traffictypediagnostic: VI1PR04MB5279:
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtWSTFQUjA0TUI1Mjc5OzIzOjlHbTBBTzAzMU5oZEpXdWZUdlJuYUdjVWtC?=
- =?utf-8?B?RWE3UlBwcThqamJkQmRoOFUycmZwcGROK1BPbTZmVTVVTjBTRWFSVGE1S1BM?=
- =?utf-8?B?cDNKZk0yMERIaDV4dGVTL0x0QlYzem1UdHVKVngvUi8xelFhcFJFRkZQc2J4?=
- =?utf-8?B?c3VZTi9kRlZaVExtUzN6K1pUU3VCaVdqQitmbFhheVVFdDFxb0s3Z2VlR1dk?=
- =?utf-8?B?S3QyTXRlZjRWeHI5aS81MGlnd0pQU21GNDk3ZWYyYVBwUTc0M2FiRXQzMDJF?=
- =?utf-8?B?YmpEcW4xMkdnOHZpQWE3MHY5WUNHYlpTWWxxUU05T0RIbkVUcjFuV2FqTU9S?=
- =?utf-8?B?UkhqbnFwM2N3Y3RUZmkrTXd0emxzT0h4Sk45SlFla3NIYU5VdGFSSHM4T0Jw?=
- =?utf-8?B?MWxzbE0yUjdXWGQwVmczTlhsK2pkckw2QnY3V0NiMUxnYUZvaXFYSnB6RzdG?=
- =?utf-8?B?WnkvaGtDelAvMHY5d0lZYjl0akRJYTZacGRTUk1CWEIrR2tZSzhsb24zWmZr?=
- =?utf-8?B?RUZha3BaZ2xoNis2VC9ZRXFxYWJnVlR0aXNSbnp0SlBUa0QxR0IxSWlJUm1h?=
- =?utf-8?B?Z3ZzaWF6ZjV5YzVRQ29BVkU4Umx3eEM4VlVBa2o1N3hGMi9mL2RtTzloNE1X?=
- =?utf-8?B?NmhGVGFEaVJMbGVFcFFtVHhmRTRaeHh0eUJzSkNmRUYrODBuSk84dlJBMzhW?=
- =?utf-8?B?TFhpalpEbmpFUDFnNE40SVNrOE1KQXROaVdiVmhtOUlBKzBaaXAxYTVUU0V1?=
- =?utf-8?B?OEVRamZkbklNcFdOTmRzOXhsR2pZUmFaM3RyR0xscUllZko2blZ3dVlEZ1g4?=
- =?utf-8?B?SFNNNlU0MVJZRUdXdXREdDcrQUw4QlN1MXFnOEJ0OEQrcng2MVVhRkxNcnVz?=
- =?utf-8?B?T0h3ZVYybFk2eXc1a3VmcEM3RTJXeDlnR24zZlBsNGlMbU11RHlpYTVwUTlC?=
- =?utf-8?B?OGJzRU5MTmExanBsaVlwamVYUHFoMnQ4Y1lYQWJvN3VMampieXh1YklPNUI4?=
- =?utf-8?B?a2dUOHF5Nk1rVjY4NEptai9pUExNN0ZQNUsraXhWalp4ZXNsYkRNcDBJY3hK?=
- =?utf-8?B?SmFhWFB4ZnpiSUdDM2FQa2RhYUZ2TlQ0YUdqSEdrNnF5Zkozc0Y4SkVNZnNt?=
- =?utf-8?B?aVIzRTNpLzRwb2FZbUFSdXhURjdOSXR3ckV1OVhWYmxqbzR6eVBPWnNtZ2VG?=
- =?utf-8?B?NkZPenZ6K3RrelRDOVgwbUc5THZlQWZGQWJpM01YTkI4Skw3ZEtjbk9EV1Vy?=
- =?utf-8?B?TW1CcWMzdFNsRm1LOVNETnQ5Yk1GT2xRVjlxSkV5NUU5bEJqOWJYQzhTMkt3?=
- =?utf-8?B?ZGcwQmE2WXhNeTBuVDlvRnBUVVk4b1BJVUdnZFIwazVlYXpldklhdUYrZmVB?=
- =?utf-8?B?NjZlZ2hvb1d5bHZiNEltVWV0K0NhQkpTR3B0OVlNZG1SV0MzU3NQeFptQkE2?=
- =?utf-8?B?NTZyb2N1OW0yUUMybWU3dU1idFVpVUFoZzl5TCs3QXdveCtPYkZwL1VqQ1ZP?=
- =?utf-8?B?anFIN3RYUnZmd1l2a09nbGpuK2ZNaXNqK214ZFFibzd4b2EzODBzQkpFY1du?=
- =?utf-8?B?dXdIanEyQ0kwOW1naWxWbWRDdThNNjVycHBwSFZHdlU2WkVVdXdLaGhtMDBl?=
- =?utf-8?B?bnYzMklFeTl2VEdMNmQ5YnRkUTBXdkhGMWVwSmtIemU5cCtLUmZ1NEFtNVNK?=
- =?utf-8?B?eExUaGdWTDVpeW1WYjJOUUo5UUF3YndaQTNtZEtlYUM1SUdJd0J3S3ZScmpl?=
- =?utf-8?B?cCt3RjBuMDFFeDVPQk92QT09?=
-x-microsoft-antispam-prvs: <VI1PR04MB5279CF64FA0665E11E501AD3F2760@VI1PR04MB5279.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09634B1196
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(39860400002)(366004)(136003)(396003)(199004)(189003)(8676002)(31686004)(6512007)(25786009)(81166006)(54906003)(81156014)(86362001)(6436002)(31696002)(8936002)(4326008)(5660300002)(71200400001)(186003)(14454004)(2501003)(256004)(71190400001)(52116002)(7736002)(97736004)(6246003)(76176011)(229853002)(478600001)(6486002)(110136005)(26005)(106356001)(305945005)(105586002)(99286004)(6506007)(3846002)(446003)(316002)(386003)(2616005)(476003)(66066001)(53936002)(486006)(2906002)(68736007)(36756003)(11346002)(4744005)(102836004)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR04MB5279;H:VI1PR04MB5629.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: criteo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: r/QCNxdjiVRDvVvZlxZUDSQyGTwKhhiLvBGQ4zoY86ICdP3KRKe0qo1bZqRiSZmlH41NmrX4aLaNbMWbIp/z/XZPkidH5KU7Z78Mpef0ihyBewKaK0X2jzbowsrIKzcDzJ9jOneAgFfeIQXc3i7Z3lUAtUYySp55DRp3LHUycwaaI3rbcndmaMKrNpbTGFpan9zvco2E5YDGoKQTkPiPRgsOCeWEXPXQNHWCmWXCAUB6EmQ4Nrom/L5ATYJtgpgwHsaDmhBLTLwhDvNAfQ5iOw//ibYlM/ziW0TDZa2qZlPMrIaBWbeCLobkN1mqQikPj2YyoxsOzwRX9ioh+qOzXdetCKCQe2ii2DSXUmB7vibKGjYR4lhg2ymaY972Y8EmfncfYZV7nK8oK50sz6zLNz0vmWaNa/PpLmb52WEMuX8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FA79FA226588B240832546F5BA5927C3@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 1 Mar 2019 10:46:36 -0500
+Received: from mga12.intel.com ([192.55.52.136]:44416 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbfCAPqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 10:46:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 07:46:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,428,1544515200"; 
+   d="scan'208";a="138275566"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 01 Mar 2019 07:46:35 -0800
+Received: from [10.252.14.197] (abudanko-mobl.ccr.corp.intel.com [10.252.14.197])
+        by linux.intel.com (Postfix) with ESMTP id E0211580487;
+        Fri,  1 Mar 2019 07:46:32 -0800 (PST)
+Subject: [PATCH v5 04/10] perf record: implement COMPRESSED event record and
+ its attributes
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <fb4d9e55-84b7-7c18-2f72-f9d67da7e03f@linux.intel.com>
+Date:   Fri, 1 Mar 2019 18:46:31 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: criteo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b4cec43-2978-4a92-eb6e-08d69e5c9f79
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 15:43:17.4004
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2a35d8fd-574d-48e3-927c-8c398e225a01
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5279
+In-Reply-To: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpMZSAwMS8wMy8yMDE5IMOgIDE2OjI2LCBKYW1lcyBCb3R0b21sZXkgYSDDqWNyaXTCoDoNCj4g
-Wy4uLl0NCj4gU2hvdWxkbid0IHRoaXMgYmUgYSB2YXJpYW50IG9mIHNkZXYvc2NtZF9wcmludGs/
-ICBPdGhlcndpc2UgaXQgdGVsbHMNCj4geW91IHdoYXQgZGlzayBpbiB0aGUgYXJyYXkgdGVybXMg
-aXMgdGhlIHByb2JsZW0gYnV0IG5vdCB3aGF0IGRldmljZSBpbg0KPiB5b3VyIGFjdHVhbCBzeXN0
-ZW0gaXMgYWZmZWN0ZWQuDQoNCkhleSBKYW1lcywNCg0KTXkgaW5pdGlhbCB0YWtlIG9uIHRoYXQg
-d2FzIHRoYXQgcHFpX3Rha2VfZGV2aWNlX29mZmxpbmUoKSwgd2hpY2ggaXMgDQpjYWxsZWQganVz
-dCBhZnRlciwgd2lsbCBwcmludCB0aGUgInJlLXNjYW5uaW5nICIgbWVzc2FnZSB3aXRoIHRoZSBz
-YW1lIA0KZm9ybWF0Lg0KDQpBcyB0aGV5IHdpbGwgYmUgYm90aCBwcmludGVkIGluIHRoZSBzYW1l
-IGVycm9yIGNvbnRleHQgYW5kIG9uZSBhZnRlciB0aGUgDQpvdGhlciwgSSB0aG91Z2ggdGhhdCB3
-b3VsZCBtYWtlIHNlbnNlIHRvIHJlcHJlc2VudCB0aGUgc2FtZSBpbmZvcm1hdGlvbiANCnRvIGVh
-c2UgdGhlIHJlYWRpbmcgbGlrZSBjYXVzZSAtPiBjb25zZXF1ZW5jZS4NCg0KQXMgdGhlIG1lc3Nh
-Z2UgaXMgYWJvdXQgdGhlIExVTiBpdHNlbGYsIHdoaWNoIGlzIHJlcG9ydGVkIGZhdWx0eSwgSSAN
-CnRob3VnaCBpdCB3b3VsZCB3b3J0aCByZXBvcnRpbmcgdGhlIGluZm8gdGhhdCB3YXkuDQoNClNo
-YWxsIEkgY29uc2lkZXIgcHJpbnRpbmcgYWxzbyB0aGUgZGlzayBuYW1lIGluIGFkZGl0aW9uID8N
-Cg0KRXJ3YW4sDQoNCg0K
+
+Implemented PERF_RECORD_COMPRESSED event, related data types, header
+feature and functions to write, read and print feature attributes
+from the trace header section.
+
+comp_mmap_len preserves the size of mmaped kernel buffer that was used
+during collection. comp_mmap_len size is used on loading stage as the
+size of decomp buffer for decompression of COMPRESSED events content.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/builtin-record.c |  9 ++++++
+ tools/perf/perf.h           |  1 +
+ tools/perf/util/env.h       | 10 +++++++
+ tools/perf/util/event.c     |  1 +
+ tools/perf/util/event.h     |  7 +++++
+ tools/perf/util/header.c    | 55 ++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/header.h    |  1 +
+ 7 files changed, 83 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ab121bc27c6d..9eae28d77291 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -357,6 +357,11 @@ static int record__mmap_flush_parse(const struct option *opt,
+ 	return 0;
+ }
+ 
++static int record__comp_enabled(struct record *rec)
++{
++	return rec->opts.comp_level > 0;
++}
++
+ static int process_synthesized_event(struct perf_tool *tool,
+ 				     union perf_event *event,
+ 				     struct perf_sample *sample __maybe_unused,
+@@ -872,6 +877,9 @@ static void record__init_features(struct record *rec)
+ 	if (!(rec->opts.use_clockid && rec->opts.clockid_res_ns))
+ 		perf_header__clear_feat(&session->header, HEADER_CLOCKID);
+ 
++	if (!record__comp_enabled(rec))
++		perf_header__clear_feat(&session->header, HEADER_COMPRESSED);
++
+ 	perf_header__clear_feat(&session->header, HEADER_STAT);
+ }
+ 
+@@ -1210,6 +1218,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		err = -1;
+ 		goto out_child;
+ 	}
++	session->header.env.comp_mmap_len = session->evlist->mmap_len;
+ 
+ 	err = bpf__apply_obj_config();
+ 	if (err) {
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index 7886cc9771cf..2c6caad45b10 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -86,6 +86,7 @@ struct record_opts {
+ 	int	     nr_cblocks;
+ 	int	     affinity;
+ 	int	     mmap_flush;
++	unsigned int comp_level;
+ };
+ 
+ enum perf_affinity {
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index fb39e9af128f..7990d63ab764 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -65,6 +65,16 @@ struct perf_env {
+ 	unsigned long long	 memory_bsize;
+ 	u64                     clockid_res_ns;
+ 	u32                     comp_ratio;
++	u32			comp_ver;
++	u32			comp_type;
++	u32			comp_level;
++	u32			comp_mmap_len;
++};
++
++enum perf_compress_type {
++	PERF_COMP_NONE = 0,
++	PERF_COMP_ZSTD,
++	PERF_COMP_MAX
+ };
+ 
+ extern struct perf_env perf_env;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index ba7be74fad6e..d1ad6c419724 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -68,6 +68,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_EVENT_UPDATE]		= "EVENT_UPDATE",
+ 	[PERF_RECORD_TIME_CONV]			= "TIME_CONV",
+ 	[PERF_RECORD_HEADER_FEATURE]		= "FEATURE",
++	[PERF_RECORD_COMPRESSED]		= "COMPRESSED",
+ };
+ 
+ static const char *perf_ns__names[] = {
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 36ae7e92dab1..8a13aefe734e 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -254,6 +254,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+ 	PERF_RECORD_EVENT_UPDATE		= 78,
+ 	PERF_RECORD_TIME_CONV			= 79,
+ 	PERF_RECORD_HEADER_FEATURE		= 80,
++	PERF_RECORD_COMPRESSED			= 81,
+ 	PERF_RECORD_HEADER_MAX
+ };
+ 
+@@ -626,6 +627,11 @@ struct feature_event {
+ 	char				data[];
+ };
+ 
++struct compressed_event {
++	struct perf_event_header	header;
++	char				data[];
++};
++
+ union perf_event {
+ 	struct perf_event_header	header;
+ 	struct mmap_event		mmap;
+@@ -659,6 +665,7 @@ union perf_event {
+ 	struct feature_event		feat;
+ 	struct ksymbol_event		ksymbol_event;
+ 	struct bpf_event		bpf_event;
++	struct compressed_event		pack;
+ };
+ 
+ void perf_event__print_totals(void);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 01b324c275b9..5dadc6e4df76 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1244,6 +1244,30 @@ static int write_mem_topology(struct feat_fd *ff __maybe_unused,
+ 	return ret;
+ }
+ 
++static int write_compressed(struct feat_fd *ff __maybe_unused,
++			    struct perf_evlist *evlist __maybe_unused)
++{
++	int ret;
++
++	ret = do_write(ff, &(ff->ph->env.comp_ver), sizeof(ff->ph->env.comp_ver));
++	if (ret)
++		return ret;
++
++	ret = do_write(ff, &(ff->ph->env.comp_type), sizeof(ff->ph->env.comp_type));
++	if (ret)
++		return ret;
++
++	ret = do_write(ff, &(ff->ph->env.comp_level), sizeof(ff->ph->env.comp_level));
++	if (ret)
++		return ret;
++
++	ret = do_write(ff, &(ff->ph->env.comp_ratio), sizeof(ff->ph->env.comp_ratio));
++	if (ret)
++		return ret;
++
++	return do_write(ff, &(ff->ph->env.comp_mmap_len), sizeof(ff->ph->env.comp_mmap_len));
++}
++
+ static void print_hostname(struct feat_fd *ff, FILE *fp)
+ {
+ 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
+@@ -1531,6 +1555,13 @@ static void print_cache(struct feat_fd *ff, FILE *fp __maybe_unused)
+ 	}
+ }
+ 
++static void print_compressed(struct feat_fd *ff, FILE *fp)
++{
++	fprintf(fp, "# compressed : %s, level = %d, ratio = %d\n",
++		ff->ph->env.comp_type == PERF_COMP_ZSTD ? "Zstd" : "Unknown",
++		ff->ph->env.comp_level, ff->ph->env.comp_ratio);
++}
++
+ static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
+ {
+ 	const char *delimiter = "# pmu mappings: ";
+@@ -2373,6 +2404,27 @@ static int process_clockid(struct feat_fd *ff,
+ 	return 0;
+ }
+ 
++static int process_compressed(struct feat_fd *ff,
++			      void *data __maybe_unused)
++{
++	if (do_read_u32(ff, &(ff->ph->env.comp_ver)))
++		return -1;
++
++	if (do_read_u32(ff, &(ff->ph->env.comp_type)))
++		return -1;
++
++	if (do_read_u32(ff, &(ff->ph->env.comp_level)))
++		return -1;
++
++	if (do_read_u32(ff, &(ff->ph->env.comp_ratio)))
++		return -1;
++
++	if (do_read_u32(ff, &(ff->ph->env.comp_mmap_len)))
++		return -1;
++
++	return 0;
++}
++
+ struct feature_ops {
+ 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
+ 	void (*print)(struct feat_fd *ff, FILE *fp);
+@@ -2432,7 +2484,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPN(CACHE,		cache,		true),
+ 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
+ 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
+-	FEAT_OPR(CLOCKID,       clockid,        false)
++	FEAT_OPR(CLOCKID,       clockid,        false),
++	FEAT_OPR(COMPRESSED,	compressed,	false)
+ };
+ 
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 0d553ddca0a3..ee867075dc64 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -39,6 +39,7 @@ enum {
+ 	HEADER_SAMPLE_TIME,
+ 	HEADER_MEM_TOPOLOGY,
+ 	HEADER_CLOCKID,
++	HEADER_COMPRESSED,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
+-- 
+2.20.1
+
