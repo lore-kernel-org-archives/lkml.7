@@ -2,95 +2,80 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F790C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7170C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D77218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AB02087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 04:24:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="DNfvESeC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbfCAEWc (ORCPT
+        id S1730777AbfCAEYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 23:22:32 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:58134 "EHLO mx1.redhat.com"
+        Thu, 28 Feb 2019 23:24:06 -0500
+Received: from mail.nic.cz ([217.31.204.67]:53956 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfCAEWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 23:22:31 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8BBC387630;
-        Fri,  1 Mar 2019 04:22:31 +0000 (UTC)
-Received: from treble (ovpn-121-121.rdu2.redhat.com [10.10.121.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A967620CD;
-        Fri,  1 Mar 2019 04:22:28 +0000 (UTC)
-Date:   Thu, 28 Feb 2019 22:22:26 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+ca95b2b7aef9e7cbd6ab@syzkaller.appspotmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86/unwind: handle NULL pointer calls better in
- frame unwinder
-Message-ID: <20190301042226.qnh7ny5otz5w3bz7@treble>
-References: <20190301031201.7416-1-jannh@google.com>
+        id S1726066AbfCAEYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 23:24:06 -0500
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
+        by mail.nic.cz (Postfix) with ESMTP id 3B6306235E;
+        Fri,  1 Mar 2019 05:24:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1551414244; bh=CCzZIWsfGNm+j1aCuYUYxTHwbZhC2pVX+r4Vn4WaVnY=;
+        h=From:To:Date;
+        b=DNfvESeCSpqW42vgvbMikrNRHjvQ8kqp0lK5FoQ2ybGBDWJHAofyxAbxzvpsxKbP1
+         ccby90Ex8Yyz/POLVTUrHakJzagx7cquBRQ6Quk3L4CsXKXwkobdbXuBc+XQ+uktGS
+         R2YVeqtDXEwVj80vkZ9zu3sIaXO+JKG4oJtCeeB0=
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v2 mailbox 0/3] Armada 37xx mailbox support
+Date:   Fri,  1 Mar 2019 05:23:38 +0100
+Message-Id: <20190301042341.29484-1-marek.behun@nic.cz>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190301031201.7416-1-jannh@google.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 01 Mar 2019 04:22:31 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.99.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 04:12:00AM +0100, Jann Horn wrote:
-> When the frame unwinder is invoked for an oops caused by a call to NULL,
-> it currently skips the parent function because BP still points to the
-> parent's stack frame; the (nonexistent) current function only has the first
-> half of a stack frame, and BP doesn't point to it yet.
-> 
-> Add a special case for IP==0 that calculates a fake BP from SP, then uses
-> the real BP for the next frame.
-> 
-> Note that this handles first_frame specially: We return information about
-> the parent function as long as the saved IP is >=first_frame, even if the
-> fake BP points below it.
-> 
-> With an artificially-added NULL call in prctl_set_seccomp(), before this
-> patch, the trace is:
-> 
-> Call Trace:
->  ? prctl_set_seccomp+0x3a/0x50
->  __x64_sys_prctl+0x457/0x6f0
->  ? __ia32_sys_prctl+0x750/0x750
->  do_syscall_64+0x72/0x160
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> After this patch, the trace is:
-> 
-> Call Trace:
->  prctl_set_seccomp+0x3a/0x50
->  __x64_sys_prctl+0x457/0x6f0
->  ? __ia32_sys_prctl+0x750/0x750
->  do_syscall_64+0x72/0x160
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
+Hi,
+this is the second version of patches I sent in December, rebased onto
+current linux/master.
 
-The general approach looks good.  I'll try to give it a proper review
-tomorrow or so.
+Changes since previous version:
+ - compatible string changed not to use wildcards, as requested by
+   Rob Herring
+
+Marek
+
+Marek Behún (3):
+  mailbox: Add support for Armada 37xx rWTM mailbox
+  dt-bindings: mailbox: Document armada-37xx-rwtm-mailbox binding
+  arm64: dts: marvell: armada-37xx: add mailbox node
+
+ .../mailbox/armada-37xx-rwtm-mailbox.txt      |  16 ++
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |   7 +
+ drivers/mailbox/Kconfig                       |  10 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/armada-37xx-rwtm-mailbox.c    | 227 ++++++++++++++++++
+ include/linux/armada-37xx-rwtm-mailbox.h      |  23 ++
+ 6 files changed, 285 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt
+ create mode 100644 drivers/mailbox/armada-37xx-rwtm-mailbox.c
+ create mode 100644 include/linux/armada-37xx-rwtm-mailbox.h
 
 -- 
-Josh
+2.19.2
+
