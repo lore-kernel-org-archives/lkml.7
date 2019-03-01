@@ -2,58 +2,96 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C4FC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DE2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096012085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA0392085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731605AbfCAJYG (ORCPT
+        id S1732872AbfCAJZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 04:24:06 -0500
-Received: from 8bytes.org ([81.169.241.247]:56362 "EHLO theia.8bytes.org"
+        Fri, 1 Mar 2019 04:25:06 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:45910 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbfCAJYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 04:24:06 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2A13125A; Fri,  1 Mar 2019 10:24:05 +0100 (CET)
-Date:   Fri, 1 Mar 2019 10:24:01 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com, yi.l.liu@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] iommu/vt-d: Several fixes for 5.1
-Message-ID: <20190301092401.GA10516@8bytes.org>
-References: <20190301032313.9311-1-baolu.lu@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190301032313.9311-1-baolu.lu@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727825AbfCAJZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 04:25:05 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BBFD8301EA9B;
+        Fri,  1 Mar 2019 09:25:05 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-211.ams2.redhat.com [10.36.116.211])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F3131001DFD;
+        Fri,  1 Mar 2019 09:25:03 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 615A717476; Fri,  1 Mar 2019 10:25:02 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     intel-gfx@lists.freedesktop.org, daniel@ffwll.ch,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v7 2/4] drm/fb-helper: call vga_remove_vgacon automatically.
+Date:   Fri,  1 Mar 2019 10:25:00 +0100
+Message-Id: <20190301092502.30948-3-kraxel@redhat.com>
+In-Reply-To: <20190301092502.30948-1-kraxel@redhat.com>
+References: <20190301092502.30948-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 01 Mar 2019 09:25:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 11:23:09AM +0800, Lu Baolu wrote:
-> Hi Joerg,
-> 
-> This includes several small fixes. All are stable kernel irrelated.
-> Please consider it for 5.1-rc1.
-> 
-> Best regards,
-> Lu Baolu
-> 
-> Lu Baolu (4):
->   iommu/vt-d: Disable ATS support on untrusted devices
->   iommu/vt-d: Set context field after value initialized
->   iommu/vt-d: Fix NULL pointer reference in intel_svm_bind_mm()
->   iommu/vt-d: Get domain ID before clear pasid entry
+Add vga_remove_vgacon() call to
+drm_fb_helper_remove_conflicting_pci_framebuffers().
 
-Applied, thanks.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+---
+ include/drm/drm_fb_helper.h | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/include/drm/drm_fb_helper.h b/include/drm/drm_fb_helper.h
+index bb9acea61369..286d58efed5d 100644
+--- a/include/drm/drm_fb_helper.h
++++ b/include/drm/drm_fb_helper.h
+@@ -36,6 +36,7 @@ struct drm_fb_helper;
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_device.h>
+ #include <linux/kgdb.h>
++#include <linux/vgaarb.h>
+ 
+ enum mode_set_atomic {
+ 	LEAVE_ATOMIC_MODE_SET,
+@@ -642,11 +643,18 @@ drm_fb_helper_remove_conflicting_pci_framebuffers(struct pci_dev *pdev,
+ 						  int resource_id,
+ 						  const char *name)
+ {
++	int ret = 0;
++
++	/*
++	 * WARNING: Apparently we must kick fbdev drivers before vgacon,
++	 * otherwise the vga fbdev driver falls over.
++	 */
+ #if IS_REACHABLE(CONFIG_FB)
+-	return remove_conflicting_pci_framebuffers(pdev, resource_id, name);
+-#else
+-	return 0;
++	ret = remove_conflicting_pci_framebuffers(pdev, resource_id, name);
+ #endif
++	if (ret == 0)
++		ret = vga_remove_vgacon(pdev);
++	return ret;
+ }
+ 
+ #endif
+-- 
+2.9.3
 
