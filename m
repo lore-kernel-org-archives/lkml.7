@@ -2,1100 +2,823 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC74C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF95C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3CC2186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8F32085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 08:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ElB8B/4H"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ByoVozwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732155AbfCAI0x (ORCPT
+        id S1732181AbfCAI2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 03:26:53 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40119 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727299AbfCAI0x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 03:26:53 -0500
-Received: by mail-ed1-f67.google.com with SMTP id 10so19268205eds.7
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 00:26:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s/wp/0SlXTzAKYOscMQwliiDkTu7VhtdU4SWwkKiN60=;
-        b=ElB8B/4HEiaL/xlNC5sDjQOKS/uGv1zPKfDhoaDxh/x0N2zvn5M/3JNdEzWBJpXJ5V
-         GHOAib5Bdn4h95uUascKMyb1hu8GjcMI2uD+23U2ofhObDtnir7SvWL0XRD7zPf32X8R
-         Zvr5IAa4A1wugp88fk0XlEnGB65QHJH15L5S4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=s/wp/0SlXTzAKYOscMQwliiDkTu7VhtdU4SWwkKiN60=;
-        b=VhjArE/fRtlmczhvG2qiJNlOR7qsVDlcAPaybR/ax5HxzAGOAtDuy7p1Tq/htpEabp
-         szDnML2v8LckrU3zu2+WajxvY0oiVf+OGUkQRTL9OWjZDWPG5vrW415Bv7B99bEGCfiZ
-         XRz2R/1w/vvM6WoGso9jdz6R1eVMgvAb0Jjvya+zPjtwmZ7aU41941miEHNLMkmJ0R1y
-         TRQmjIhohR1vSx3e7lg080d4XyjlyrTnYW5TVr0S/lyvlW6rbBPreDyS+OuqvAwULy+A
-         xyqNCFGNUD4rk8nA2b8ZeefzcMOkQxN84uHXUAhqGi4ZIMlJZAj0QgqBEmrvN0XSK++B
-         HsPw==
-X-Gm-Message-State: APjAAAWLBAVULfGF5M3f8GaaCSVHCVb3kumGusxFvIYj7HTUL576AOpi
-        mT3xzFdEdVXeOiSRW6G/IOYc5A==
-X-Google-Smtp-Source: APXvYqyK6pnkN+vdhBgoK/OK3Ru1WFEph2mxAyzQ5EfC1/zU/OiotyOpBIhN0/F4N4z3y91YvqrjJg==
-X-Received: by 2002:a17:906:81d7:: with SMTP id e23mr2155612ejx.207.1551428808967;
-        Fri, 01 Mar 2019 00:26:48 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id k8sm5778742ede.65.2019.03.01.00.26.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 00:26:48 -0800 (PST)
-Date:   Fri, 1 Mar 2019 09:26:46 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
-Message-ID: <20190301082645.GU2665@phenom.ffwll.local>
-Mail-Followup-To: Paul Cercueil <paul@crapouillou.net>,
-        David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190228220756.20262-1-paul@crapouillou.net>
- <20190228220756.20262-4-paul@crapouillou.net>
+        Fri, 1 Mar 2019 03:28:31 -0500
+Received: from ozlabs.org ([203.11.71.1]:58179 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727299AbfCAI2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 03:28:31 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 449jHG0KYbz9s2R;
+        Fri,  1 Mar 2019 19:28:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1551428906;
+        bh=F12b9/uYTy5Za1oYTMO066cAzguQtstHtbLN1qAFlT4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ByoVozwPxjjGJIr6b/WfrROmT0boCL3P/UN2UHYPVBy9hJY91e0VReqI9HP+eoNPV
+         RKcazfCJ05aNtuNHd8Pa60EivVM+luMxCZcJMG7/mGEtOcH0hGcvL9pYqyyDI+pyEO
+         Gt3MSOAcjQgF8ICXzDecEJ6ebgpZBvAK8fGvEk5PW3sSYkWTxnK3ERwdTfDQNVqPkY
+         ri/n0Q18cotJJkGVHo19gfprlgP/Nk+jqttlUcbBUbCOH3igHyDE0tHQ50ETmqbC/u
+         sTWbJJLC6l9VflIMXKz62CgyUkYanHIqMY4z3uNGao7dEKKugiqbImvL0wphJlEXU8
+         SrzCHwnGCt8rg==
+Date:   Fri, 1 Mar 2019 19:28:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Mar 1
+Message-ID: <20190301192825.1c32b29a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228220756.20262-4-paul@crapouillou.net>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/bh.Xd8hdiwQMpgvSrUP0.QN"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 07:07:56PM -0300, Paul Cercueil wrote:
-> Add a KMS driver for the Ingenic JZ47xx family of SoCs.
-> This driver is meant to replace the aging jz4740-fb driver.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+--Sig_/bh.Xd8hdiwQMpgvSrUP0.QN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yay, more fbdev drivers moving to atmic!
+Hi all,
 
-Going on vacations for a week now, so just a few quick high-level comments
-below. Those should make the driver even smaller and cleaner.
+News: I will not be doing linux-next releases from next Thursday (Mar
+7) to the following Friday (Mar 15).  Sorry this happened to fall
+across most of the merge window.
 
-> ---
->  drivers/gpu/drm/Kconfig               |   2 +
->  drivers/gpu/drm/Makefile              |   1 +
->  drivers/gpu/drm/ingenic/Kconfig       |  16 +
->  drivers/gpu/drm/ingenic/Makefile      |   1 +
->  drivers/gpu/drm/ingenic/ingenic-drm.c | 896 ++++++++++++++++++++++++++++++++++
->  5 files changed, 916 insertions(+)
->  create mode 100644 drivers/gpu/drm/ingenic/Kconfig
->  create mode 100644 drivers/gpu/drm/ingenic/Makefile
->  create mode 100644 drivers/gpu/drm/ingenic/ingenic-drm.c
-> 
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index bd943a71756c..f1929112e559 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -303,6 +303,8 @@ source "drivers/gpu/drm/sti/Kconfig"
->  
->  source "drivers/gpu/drm/imx/Kconfig"
->  
-> +source "drivers/gpu/drm/ingenic/Kconfig"
-> +
->  source "drivers/gpu/drm/v3d/Kconfig"
->  
->  source "drivers/gpu/drm/vc4/Kconfig"
-> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> index 1ac55c65eac0..9666c0767f44 100644
-> --- a/drivers/gpu/drm/Makefile
-> +++ b/drivers/gpu/drm/Makefile
-> @@ -94,6 +94,7 @@ obj-$(CONFIG_DRM_TEGRA) += tegra/
->  obj-$(CONFIG_DRM_STM) += stm/
->  obj-$(CONFIG_DRM_STI) += sti/
->  obj-$(CONFIG_DRM_IMX) += imx/
-> +obj-y			+= ingenic/
->  obj-$(CONFIG_DRM_MEDIATEK) += mediatek/
->  obj-$(CONFIG_DRM_MESON)	+= meson/
->  obj-y			+= i2c/
-> diff --git a/drivers/gpu/drm/ingenic/Kconfig b/drivers/gpu/drm/ingenic/Kconfig
-> new file mode 100644
-> index 000000000000..d82c3d37ec9c
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ingenic/Kconfig
-> @@ -0,0 +1,16 @@
-> +config DRM_INGENIC
-> +	tristate "DRM Support for Ingenic SoCs"
-> +	depends on MIPS || COMPILE_TEST
-> +	depends on DRM
-> +	depends on CMA
-> +	depends on OF
-> +	select DRM_BRIDGE
-> +	select DRM_PANEL_BRIDGE
-> +	select DRM_KMS_HELPER
-> +	select DRM_KMS_CMA_HELPER
-> +	select DRM_GEM_CMA_HELPER
-> +	select VT_HW_CONSOLE_BINDING if FRAMEBUFFER_CONSOLE
-> +	help
-> +	  Choose this option for DRM support for the Ingenic SoCs.
-> +
-> +	  If M is selected the module will be called ingenic-drm.
-> diff --git a/drivers/gpu/drm/ingenic/Makefile b/drivers/gpu/drm/ingenic/Makefile
-> new file mode 100644
-> index 000000000000..11cac42ce0bb
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ingenic/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_DRM_INGENIC) += ingenic-drm.o
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> new file mode 100644
-> index 000000000000..18120deea96f
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> @@ -0,0 +1,896 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Ingenic JZ47xx KMS driver
-> +//
-> +// Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
-> +
-> +#include <linux/clk.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <drm/drm_atomic.h>
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_crtc.h>
-> +#include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_drv.h>
-> +#include <drm/drm_gem_cma_helper.h>
-> +#include <drm/drm_fb_cma_helper.h>
-> +#include <drm/drm_fb_helper.h>
-> +#include <drm/drm_fourcc.h>
-> +#include <drm/drm_gem_framebuffer_helper.h>
-> +#include <drm/drm_irq.h>
-> +#include <drm/drm_panel.h>
-> +#include <drm/drm_plane.h>
-> +#include <drm/drm_plane_helper.h>
-> +#include <drm/drm_probe_helper.h>
-> +#include <drm/drm_vblank.h>
-> +
-> +#include <dt-bindings/display/ingenic,drm.h>
-> +
-> +#include "../drm_internal.h"
-> +
-> +#define JZ_REG_LCD_CFG		0x00
-> +#define JZ_REG_LCD_VSYNC	0x04
-> +#define JZ_REG_LCD_HSYNC	0x08
-> +#define JZ_REG_LCD_VAT		0x0C
-> +#define JZ_REG_LCD_DAH		0x10
-> +#define JZ_REG_LCD_DAV		0x14
-> +#define JZ_REG_LCD_PS		0x18
-> +#define JZ_REG_LCD_CLS		0x1C
-> +#define JZ_REG_LCD_SPL		0x20
-> +#define JZ_REG_LCD_REV		0x24
-> +#define JZ_REG_LCD_CTRL		0x30
-> +#define JZ_REG_LCD_STATE	0x34
-> +#define JZ_REG_LCD_IID		0x38
-> +#define JZ_REG_LCD_DA0		0x40
-> +#define JZ_REG_LCD_SA0		0x44
-> +#define JZ_REG_LCD_FID0		0x48
-> +#define JZ_REG_LCD_CMD0		0x4C
-> +#define JZ_REG_LCD_DA1		0x50
-> +#define JZ_REG_LCD_SA1		0x54
-> +#define JZ_REG_LCD_FID1		0x58
-> +#define JZ_REG_LCD_CMD1		0x5C
-> +
-> +#define JZ_LCD_CFG_SLCD			BIT(31)
-> +#define JZ_LCD_CFG_PS_DISABLE		BIT(23)
-> +#define JZ_LCD_CFG_CLS_DISABLE		BIT(22)
-> +#define JZ_LCD_CFG_SPL_DISABLE		BIT(21)
-> +#define JZ_LCD_CFG_REV_DISABLE		BIT(20)
-> +#define JZ_LCD_CFG_HSYNCM		BIT(19)
-> +#define JZ_LCD_CFG_PCLKM		BIT(18)
-> +#define JZ_LCD_CFG_INV			BIT(17)
-> +#define JZ_LCD_CFG_SYNC_DIR		BIT(16)
-> +#define JZ_LCD_CFG_PS_POLARITY		BIT(15)
-> +#define JZ_LCD_CFG_CLS_POLARITY		BIT(14)
-> +#define JZ_LCD_CFG_SPL_POLARITY		BIT(13)
-> +#define JZ_LCD_CFG_REV_POLARITY		BIT(12)
-> +#define JZ_LCD_CFG_HSYNC_ACTIVE_LOW	BIT(11)
-> +#define JZ_LCD_CFG_PCLK_FALLING_EDGE	BIT(10)
-> +#define JZ_LCD_CFG_DE_ACTIVE_LOW	BIT(9)
-> +#define JZ_LCD_CFG_VSYNC_ACTIVE_LOW	BIT(8)
-> +#define JZ_LCD_CFG_18_BIT		BIT(7)
-> +#define JZ_LCD_CFG_PDW			(BIT(5) | BIT(4))
-> +#define JZ_LCD_CFG_MODE_MASK		0xf
-> +
-> +#define JZ_LCD_VSYNC_VPS_OFFSET		16
-> +#define JZ_LCD_VSYNC_VPE_OFFSET		0
-> +
-> +#define JZ_LCD_HSYNC_HPS_OFFSET		16
-> +#define JZ_LCD_HSYNC_HPE_OFFSET		0
-> +
-> +#define JZ_LCD_VAT_HT_OFFSET		16
-> +#define JZ_LCD_VAT_VT_OFFSET		0
-> +
-> +#define JZ_LCD_DAH_HDS_OFFSET		16
-> +#define JZ_LCD_DAH_HDE_OFFSET		0
-> +
-> +#define JZ_LCD_DAV_VDS_OFFSET		16
-> +#define JZ_LCD_DAV_VDE_OFFSET		0
-> +
-> +#define JZ_LCD_CTRL_BURST_4		(0x0 << 28)
-> +#define JZ_LCD_CTRL_BURST_8		(0x1 << 28)
-> +#define JZ_LCD_CTRL_BURST_16		(0x2 << 28)
-> +#define JZ_LCD_CTRL_RGB555		BIT(27)
-> +#define JZ_LCD_CTRL_OFUP		BIT(26)
-> +#define JZ_LCD_CTRL_FRC_GRAYSCALE_16	(0x0 << 24)
-> +#define JZ_LCD_CTRL_FRC_GRAYSCALE_4	(0x1 << 24)
-> +#define JZ_LCD_CTRL_FRC_GRAYSCALE_2	(0x2 << 24)
-> +#define JZ_LCD_CTRL_PDD_MASK		(0xff << 16)
-> +#define JZ_LCD_CTRL_EOF_IRQ		BIT(13)
-> +#define JZ_LCD_CTRL_SOF_IRQ		BIT(12)
-> +#define JZ_LCD_CTRL_OFU_IRQ		BIT(11)
-> +#define JZ_LCD_CTRL_IFU0_IRQ		BIT(10)
-> +#define JZ_LCD_CTRL_IFU1_IRQ		BIT(9)
-> +#define JZ_LCD_CTRL_DD_IRQ		BIT(8)
-> +#define JZ_LCD_CTRL_QDD_IRQ		BIT(7)
-> +#define JZ_LCD_CTRL_REVERSE_ENDIAN	BIT(6)
-> +#define JZ_LCD_CTRL_LSB_FISRT		BIT(5)
-> +#define JZ_LCD_CTRL_DISABLE		BIT(4)
-> +#define JZ_LCD_CTRL_ENABLE		BIT(3)
-> +#define JZ_LCD_CTRL_BPP_1		0x0
-> +#define JZ_LCD_CTRL_BPP_2		0x1
-> +#define JZ_LCD_CTRL_BPP_4		0x2
-> +#define JZ_LCD_CTRL_BPP_8		0x3
-> +#define JZ_LCD_CTRL_BPP_15_16		0x4
-> +#define JZ_LCD_CTRL_BPP_18_24		0x5
-> +#define JZ_LCD_CTRL_BPP_MASK		(JZ_LCD_CTRL_RGB555 | (0x7 << 0))
-> +
-> +#define JZ_LCD_CMD_SOF_IRQ		BIT(31)
-> +#define JZ_LCD_CMD_EOF_IRQ		BIT(30)
-> +#define JZ_LCD_CMD_ENABLE_PAL		BIT(28)
-> +
-> +#define JZ_LCD_SYNC_MASK		0x3ff
-> +
-> +#define JZ_LCD_STATE_EOF_IRQ		BIT(5)
-> +#define JZ_LCD_STATE_SOF_IRQ		BIT(4)
-> +#define JZ_LCD_STATE_DISABLED		BIT(0)
-> +
-> +struct ingenic_framedesc {
-> +	uint32_t next;
-> +	uint32_t addr;
-> +	uint32_t id;
-> +	uint32_t cmd;
-> +} __packed;
-> +
-> +struct jz_soc_info {
-> +	bool needs_dev_clk;
-> +};
-> +
-> +struct ingenic_drm {
-> +	struct device *dev;
+Changes since 20190228:
 
-Embedding is kinda the new thing, since it also prevents people from using
-devm_ for this, which is (strictly speaking, not that it matters much) the
-wrong lifetime for drm allocations. There's some patches from Noralf that
-should land soon to make this a bit more convenient.
+The arm-soc tree gained a conflict against the arm64 tree.
 
-> +	void __iomem *base;
-> +	struct regmap *map;
-> +	struct clk *lcd_clk, *pix_clk;
-> +
-> +	u32 lcd_mode;
-> +
-> +	struct ingenic_framedesc *framedesc;
-> +	dma_addr_t framedesc_phys;
-> +
-> +	struct drm_device *drm;
-> +	struct drm_plane primary;
-> +	struct drm_crtc crtc;
-> +	struct drm_connector connector;
-> +	struct drm_encoder encoder;
+The bpf-next tree lost its build failure.
 
-Any reason you didn't opt for the drm_simple_display_pipe helpers? Since
-you have just 1:1:1 between crtc/plane/encoder that will allow you to
-ditch lots of boilerplate.
+The drm tree gained a conflict against the drm-fixes tree.
 
-https://dri.freedesktop.org/docs/drm/gpu/drm-kms-helpers.html#simple-kms-helper-reference
+The nvdimm tree gained a conflict against the xen-tip tree.
 
-> +	struct drm_panel *panel;
-> +
-> +	struct device_node *panel_node;
+Non-merge commits (relative to Linus' tree): 10764
+ 10548 files changed, 480721 insertions(+), 247563 deletions(-)
 
-There's panel bridge helpers which takes a panel and wraps it into a
-drm_bridge (which you can glue into the simple pipe helpers), giving you
-the connector for free.
+----------------------------------------------------------------------------
 
-https://dri.freedesktop.org/docs/drm/gpu/drm-kms-helpers.html#panel-bridge-helper-reference
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
 
-This should cover all the bigger items, details look already really tidy.
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf. After
+the final fixups (if any), I do an x86_64 modules_install followed by
+builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+and sparc64 defconfig. And finally, a simple boot test of the powerpc
+pseries_le_defconfig kernel in qemu (with and without kvm enabled).
 
-Cheers, Daniel
+Below is a summary of the state of the merge.
 
-> +
-> +	unsigned short ps_start, ps_end, cls_start,
-> +		       cls_end, spl_start, spl_end, rev_start;
-> +};
-> +
-> +static const uint32_t ingenic_drm_primary_formats[] = {
-> +	DRM_FORMAT_XRGB1555,
-> +	DRM_FORMAT_RGB565,
-> +	DRM_FORMAT_XRGB8888,
-> +};
-> +
-> +static bool ingenic_drm_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case JZ_REG_LCD_IID:
-> +	case JZ_REG_LCD_SA0:
-> +	case JZ_REG_LCD_FID0:
-> +	case JZ_REG_LCD_CMD0:
-> +	case JZ_REG_LCD_SA1:
-> +	case JZ_REG_LCD_FID1:
-> +	case JZ_REG_LCD_CMD1:
-> +		return false;
-> +	default:
-> +		return true;
-> +	}
-> +}
-> +
-> +static const struct regmap_config ingenic_drm_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +
-> +	.max_register = JZ_REG_LCD_CMD1,
-> +	.writeable_reg = ingenic_drm_writeable_reg,
-> +};
-> +
-> +static inline struct ingenic_drm *drm_crtc_get_priv(struct drm_crtc *crtc)
-> +{
-> +	return container_of(crtc, struct ingenic_drm, crtc);
-> +}
-> +
-> +static inline struct ingenic_drm *drm_plane_get_priv(struct drm_plane *plane)
-> +{
-> +	return container_of(plane, struct ingenic_drm, primary);
-> +}
-> +
-> +static inline struct ingenic_drm *drm_conn_get_priv(struct drm_connector *conn)
-> +{
-> +	return container_of(conn, struct ingenic_drm, connector);
-> +}
-> +
-> +static void ingenic_drm_crtc_atomic_enable(struct drm_crtc *crtc,
-> +					  struct drm_crtc_state *state)
-> +{
-> +	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
-> +
-> +	regmap_write(priv->map, JZ_REG_LCD_STATE, 0);
-> +
-> +	regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
-> +			   JZ_LCD_CTRL_ENABLE | JZ_LCD_CTRL_DISABLE,
-> +			   JZ_LCD_CTRL_ENABLE);
-> +
-> +	drm_panel_enable(priv->panel);
-> +
-> +	drm_crtc_vblank_on(crtc);
-> +}
-> +
-> +static void ingenic_drm_crtc_atomic_disable(struct drm_crtc *crtc,
-> +					   struct drm_crtc_state *state)
-> +{
-> +	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
-> +	unsigned int var;
-> +
-> +	drm_crtc_vblank_off(crtc);
-> +
-> +	drm_panel_disable(priv->panel);
-> +
-> +	regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
-> +			   JZ_LCD_CTRL_DISABLE, JZ_LCD_CTRL_DISABLE);
-> +
-> +	regmap_read_poll_timeout(priv->map, JZ_REG_LCD_STATE, var,
-> +				 var & JZ_LCD_STATE_DISABLED,
-> +				 1000, 0);
-> +}
-> +
-> +static inline bool ingenic_drm_lcd_is_special_mode(u32 mode)
-> +{
-> +	switch (mode) {
-> +	case JZ_DRM_LCD_SPECIAL_TFT_1:
-> +	case JZ_DRM_LCD_SPECIAL_TFT_2:
-> +	case JZ_DRM_LCD_SPECIAL_TFT_3:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static inline bool ingenic_drm_lcd_is_stn_mode(u32 mode)
-> +{
-> +	switch (mode) {
-> +	case JZ_DRM_LCD_SINGLE_COLOR_STN:
-> +	case JZ_DRM_LCD_SINGLE_MONOCHROME_STN:
-> +	case JZ_DRM_LCD_DUAL_COLOR_STN:
-> +	case JZ_DRM_LCD_DUAL_MONOCHROME_STN:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static void ingenic_drm_crtc_update_timings(struct ingenic_drm *priv,
-> +					    struct drm_display_mode *mode)
-> +{
-> +	unsigned int vpe, vds, vde, vt, hpe, hds, hde, ht;
-> +
-> +	vpe = mode->vsync_end - mode->vsync_start;
-> +	vds = mode->vtotal - mode->vsync_start;
-> +	vde = vds + mode->vdisplay;
-> +	vt = vde + mode->vsync_start - mode->vdisplay;
-> +
-> +	hpe = mode->hsync_end - mode->hsync_start;
-> +	hds = mode->htotal - mode->hsync_start;
-> +	hde = hds + mode->hdisplay;
-> +	ht = hde + mode->hsync_start - mode->hdisplay;
-> +
-> +	regmap_write(priv->map, JZ_REG_LCD_VSYNC,
-> +		     0 << JZ_LCD_VSYNC_VPS_OFFSET |
-> +		     vpe << JZ_LCD_VSYNC_VPE_OFFSET);
-> +
-> +	regmap_write(priv->map, JZ_REG_LCD_HSYNC,
-> +		     0 << JZ_LCD_HSYNC_HPS_OFFSET |
-> +		     hpe << JZ_LCD_HSYNC_HPE_OFFSET);
-> +
-> +	regmap_write(priv->map, JZ_REG_LCD_VAT,
-> +		     ht << JZ_LCD_VAT_HT_OFFSET |
-> +		     vt << JZ_LCD_VAT_VT_OFFSET);
-> +
-> +	regmap_write(priv->map, JZ_REG_LCD_DAH,
-> +		     hds << JZ_LCD_DAH_HDS_OFFSET |
-> +		     hde << JZ_LCD_DAH_HDE_OFFSET);
-> +	regmap_write(priv->map, JZ_REG_LCD_DAV,
-> +		     vds << JZ_LCD_DAV_VDS_OFFSET |
-> +		     vde << JZ_LCD_DAV_VDE_OFFSET);
-> +
-> +	if (ingenic_drm_lcd_is_special_mode(priv->lcd_mode)) {
-> +		regmap_write(priv->map, JZ_REG_LCD_PS, hde << 16 | (hde + 1));
-> +		regmap_write(priv->map, JZ_REG_LCD_CLS, hde << 16 | (hde + 1));
-> +		regmap_write(priv->map, JZ_REG_LCD_SPL, hpe << 16 | (hpe + 1));
-> +		regmap_write(priv->map, JZ_REG_LCD_REV, mode->htotal << 16);
-> +	}
-> +}
-> +
-> +static void ingenic_drm_crtc_update_cfg(struct ingenic_drm *priv,
-> +					struct drm_display_mode *mode)
-> +
-> +{
-> +	unsigned int cfg = priv->lcd_mode;
-> +	u32 bus_flags = priv->connector.display_info.bus_flags;
-> +
-> +	if (mode->flags & DRM_MODE_FLAG_NHSYNC)
-> +		cfg |= JZ_LCD_CFG_HSYNC_ACTIVE_LOW;
-> +	if (mode->flags & DRM_MODE_FLAG_NVSYNC)
-> +		cfg |= JZ_LCD_CFG_VSYNC_ACTIVE_LOW;
-> +	if (bus_flags & DRM_BUS_FLAG_DE_LOW)
-> +		cfg |= JZ_LCD_CFG_DE_ACTIVE_LOW;
-> +	if (bus_flags & DRM_BUS_FLAG_PIXDATA_NEGEDGE)
-> +		cfg |= JZ_LCD_CFG_PCLK_FALLING_EDGE;
-> +
-> +	if (ingenic_drm_lcd_is_special_mode(priv->lcd_mode)) {
-> +		// TODO: Is that valid for all special modes?
-> +		cfg |= JZ_LCD_CFG_REV_POLARITY;
-> +	} else {
-> +		cfg |= JZ_LCD_CFG_PS_DISABLE
-> +		    | JZ_LCD_CFG_CLS_DISABLE
-> +		    | JZ_LCD_CFG_SPL_DISABLE
-> +		    | JZ_LCD_CFG_REV_DISABLE;
-> +	}
-> +
-> +	regmap_write(priv->map, JZ_REG_LCD_CFG, cfg);
-> +}
-> +
-> +static void ingenic_drm_crtc_update_ctrl(struct ingenic_drm *priv,
-> +					 unsigned int bpp)
-> +{
-> +	unsigned int ctrl = JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16;
-> +
-> +	switch (bpp) {
-> +	case 1:
-> +		ctrl |= JZ_LCD_CTRL_BPP_1;
-> +		break;
-> +	case 2:
-> +		ctrl |= JZ_LCD_CTRL_BPP_2;
-> +		break;
-> +	case 4:
-> +		ctrl |= JZ_LCD_CTRL_BPP_4;
-> +		break;
-> +	case 8:
-> +		ctrl |= JZ_LCD_CTRL_BPP_8;
-> +	break;
-> +	case 15:
-> +		ctrl |= JZ_LCD_CTRL_RGB555; /* Falltrough */
-> +	case 16:
-> +		ctrl |= JZ_LCD_CTRL_BPP_15_16;
-> +		break;
-> +	case 18:
-> +	case 24:
-> +	case 32:
-> +		ctrl |= JZ_LCD_CTRL_BPP_18_24;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
-> +			   JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16 |
-> +			   JZ_LCD_CTRL_BPP_MASK, ctrl);
-> +}
-> +
-> +static int ingenic_drm_crtc_atomic_check(struct drm_crtc *crtc,
-> +					 struct drm_crtc_state *state)
-> +{
-> +	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
-> +	long rate;
-> +
-> +	if (!drm_atomic_crtc_needs_modeset(state))
-> +		return 0;
-> +
-> +	rate = clk_round_rate(priv->pix_clk,
-> +			      state->adjusted_mode.clock * 1000);
-> +	if (rate < 0)
-> +		return rate;
-> +
-> +	return 0;
-> +}
-> +
-> +static void ingenic_drm_crtc_atomic_flush(struct drm_crtc *crtc,
-> +					  struct drm_crtc_state *oldstate)
-> +{
-> +	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
-> +	struct drm_crtc_state *state = crtc->state;
-> +	struct drm_pending_vblank_event *event = state->event;
-> +	struct drm_framebuffer *drm_fb = crtc->primary->state->fb;
-> +	const struct drm_format_info *finfo;
-> +	unsigned int width, height;
-> +
-> +	if (drm_atomic_crtc_needs_modeset(state)) {
-> +		finfo = drm_format_info(drm_fb->format->format);
-> +		width = state->adjusted_mode.hdisplay;
-> +		height = state->adjusted_mode.vdisplay;
-> +
-> +		ingenic_drm_crtc_update_timings(priv, &state->mode);
-> +
-> +		ingenic_drm_crtc_update_ctrl(priv, finfo->depth);
-> +		ingenic_drm_crtc_update_cfg(priv, &state->adjusted_mode);
-> +
-> +		clk_set_rate(priv->pix_clk, state->adjusted_mode.clock * 1000);
-> +
-> +		regmap_write(priv->map, JZ_REG_LCD_DA0, priv->framedesc->next);
-> +	}
-> +
-> +	if (event) {
-> +		state->event = NULL;
-> +
-> +		spin_lock_irq(&crtc->dev->event_lock);
-> +		if (drm_crtc_vblank_get(crtc) == 0)
-> +			drm_crtc_arm_vblank_event(crtc, event);
-> +		else
-> +			drm_crtc_send_vblank_event(crtc, event);
-> +		spin_unlock_irq(&crtc->dev->event_lock);
-> +	}
-> +}
-> +
-> +static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
-> +					    struct drm_plane_state *oldstate)
-> +{
-> +	struct ingenic_drm *priv = drm_plane_get_priv(plane);
-> +	struct drm_plane_state *state = plane->state;
-> +	const struct drm_format_info *finfo;
-> +	unsigned int width, height;
-> +
-> +	finfo = drm_format_info(state->fb->format->format);
-> +	width = state->crtc->state->adjusted_mode.hdisplay;
-> +	height = state->crtc->state->adjusted_mode.vdisplay;
-> +
-> +	priv->framedesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
-> +
-> +	priv->framedesc->cmd = width * height * ((finfo->depth + 7) / 8) / 4;
-> +	priv->framedesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
-> +}
-> +
-> +static enum drm_connector_status
-> +ingenic_drm_conn_detect(struct drm_connector *conn, bool force)
-> +{
-> +	struct ingenic_drm *priv = drm_conn_get_priv(conn);
-> +
-> +	if (priv->panel) {
-> +		drm_panel_attach(priv->panel, conn);
-> +
-> +		return connector_status_connected;
-> +	}
-> +
-> +	return connector_status_disconnected;
-> +}
-> +
-> +static void ingenic_drm_conn_destroy(struct drm_connector *conn)
-> +{
-> +	struct ingenic_drm *priv = drm_conn_get_priv(conn);
-> +
-> +	if (priv->panel)
-> +		drm_panel_detach(priv->panel);
-> +
-> +	drm_connector_cleanup(conn);
-> +}
-> +
-> +static int ingenic_drm_conn_get_modes(struct drm_connector *conn)
-> +{
-> +	struct ingenic_drm *priv = drm_conn_get_priv(conn);
-> +
-> +	if (priv->panel)
-> +		return priv->panel->funcs->get_modes(priv->panel);
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t ingenic_drm_irq_handler(int irq, void *arg)
-> +{
-> +	struct drm_device *drm = arg;
-> +	struct ingenic_drm *priv = drm->dev_private;
-> +	unsigned int state;
-> +
-> +	regmap_read(priv->map, JZ_REG_LCD_STATE, &state);
-> +
-> +	regmap_update_bits(priv->map, JZ_REG_LCD_STATE,
-> +			   JZ_LCD_STATE_EOF_IRQ, 0);
-> +
-> +	if (state & JZ_LCD_STATE_EOF_IRQ)
-> +		drm_crtc_handle_vblank(&priv->crtc);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int ingenic_drm_enable_vblank(struct drm_crtc *crtc)
-> +{
-> +	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
-> +
-> +	regmap_update_bits(priv->map, JZ_REG_LCD_CTRL,
-> +			   JZ_LCD_CTRL_EOF_IRQ, JZ_LCD_CTRL_EOF_IRQ);
-> +
-> +	return 0;
-> +}
-> +
-> +static void ingenic_drm_disable_vblank(struct drm_crtc *crtc)
-> +{
-> +	struct ingenic_drm *priv = drm_crtc_get_priv(crtc);
-> +
-> +	regmap_update_bits(priv->map, JZ_REG_LCD_CTRL, JZ_LCD_CTRL_EOF_IRQ, 0);
-> +}
-> +
-> +DEFINE_DRM_GEM_CMA_FOPS(ingenic_drm_fops);
-> +
-> +static struct drm_driver ingenic_drm_driver_data = {
-> +	.driver_features	= DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME
-> +				| DRIVER_ATOMIC | DRIVER_HAVE_IRQ,
-> +	.name			= "ingenic-drm",
-> +	.desc			= "DRM module for Ingenic SoCs",
-> +	.date			= "20190228",
-> +	.major			= 1,
-> +	.minor			= 0,
-> +	.patchlevel		= 0,
-> +
-> +	.fops			= &ingenic_drm_fops,
-> +
-> +	.dumb_create		= drm_gem_cma_dumb_create,
-> +	.gem_free_object_unlocked = drm_gem_cma_free_object,
-> +	.gem_vm_ops		= &drm_gem_cma_vm_ops,
-> +
-> +	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
-> +	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle,
-> +	.gem_prime_import	= drm_gem_prime_import,
-> +	.gem_prime_export	= drm_gem_prime_export,
-> +	.gem_prime_get_sg_table	= drm_gem_cma_prime_get_sg_table,
-> +	.gem_prime_import_sg_table = drm_gem_cma_prime_import_sg_table,
-> +	.gem_prime_vmap		= drm_gem_cma_prime_vmap,
-> +	.gem_prime_vunmap	= drm_gem_cma_prime_vunmap,
-> +	.gem_prime_mmap		= drm_gem_cma_prime_mmap,
-> +
-> +	.irq_handler		= ingenic_drm_irq_handler,
-> +};
-> +
-> +static const struct drm_plane_funcs ingenic_drm_primary_plane_funcs = {
-> +	.update_plane		= drm_atomic_helper_update_plane,
-> +	.disable_plane		= drm_atomic_helper_disable_plane,
-> +	.reset			= drm_atomic_helper_plane_reset,
-> +
-> +	.atomic_duplicate_state	= drm_atomic_helper_plane_duplicate_state,
-> +	.atomic_destroy_state	= drm_atomic_helper_plane_destroy_state,
-> +};
-> +
-> +static const struct drm_crtc_funcs ingenic_drm_crtc_funcs = {
-> +	.reset			= drm_atomic_helper_crtc_reset,
-> +	.set_config		= drm_atomic_helper_set_config,
-> +	.page_flip		= drm_atomic_helper_page_flip,
-> +
-> +	.atomic_duplicate_state	= drm_atomic_helper_crtc_duplicate_state,
-> +	.atomic_destroy_state	= drm_atomic_helper_crtc_destroy_state,
-> +
-> +	.enable_vblank		= ingenic_drm_enable_vblank,
-> +	.disable_vblank		= ingenic_drm_disable_vblank,
-> +
-> +	.gamma_set		= drm_atomic_helper_legacy_gamma_set,
-> +};
-> +
-> +static const struct drm_connector_funcs ingenic_drm_conn_funcs = {
-> +	.fill_modes		= drm_helper_probe_single_connector_modes,
-> +	.detect			= ingenic_drm_conn_detect,
-> +	.destroy		= ingenic_drm_conn_destroy,
-> +	.reset			= drm_atomic_helper_connector_reset,
-> +	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
-> +	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
-> +};
-> +
-> +static const struct drm_plane_helper_funcs ingenic_drm_plane_helper_funcs = {
-> +	.atomic_update		= ingenic_drm_plane_atomic_update,
-> +	.prepare_fb		= drm_gem_fb_prepare_fb,
-> +};
-> +
-> +static const struct drm_crtc_helper_funcs ingenic_drm_crtc_helper_funcs = {
-> +	.atomic_enable		= ingenic_drm_crtc_atomic_enable,
-> +	.atomic_disable		= ingenic_drm_crtc_atomic_disable,
-> +	.atomic_flush		= ingenic_drm_crtc_atomic_flush,
-> +	.atomic_check		= ingenic_drm_crtc_atomic_check,
-> +};
-> +
-> +static const struct drm_connector_helper_funcs ingenic_drm_conn_helper_funcs = {
-> +	.get_modes		= ingenic_drm_conn_get_modes,
-> +};
-> +
-> +static const struct drm_mode_config_funcs ingenic_drm_mode_config_funcs = {
-> +	.fb_create		= drm_gem_fb_create,
-> +	.output_poll_changed	= drm_fb_helper_output_poll_changed,
-> +	.atomic_check		= drm_atomic_helper_check,
-> +	.atomic_commit		= drm_atomic_helper_commit,
-> +};
-> +
-> +static const struct drm_encoder_funcs ingenic_drm_encoder_funcs = {
-> +	.destroy		= drm_encoder_cleanup,
-> +};
-> +
-> +static int ingenic_drm_probe(struct platform_device *pdev)
-> +{
-> +	const struct jz_soc_info *soc_info;
-> +	struct device *dev = &pdev->dev;
-> +	struct ingenic_drm *priv;
-> +	struct clk *parent_clk;
-> +	struct drm_device *drm;
-> +	struct resource *mem;
-> +	void __iomem *base;
-> +	long parent_rate;
-> +	int ret, irq;
-> +
-> +	soc_info = device_get_match_data(dev);
-> +	if (!soc_info)
-> +		return -EINVAL;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->dev = dev;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = base = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "Failed to get platform irq\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	priv->map = devm_regmap_init_mmio(dev, base,
-> +					  &ingenic_drm_regmap_config);
-> +	if (IS_ERR(priv->map)) {
-> +		dev_err(dev, "Failed to create regmap\n");
-> +		return PTR_ERR(priv->map);
-> +	}
-> +
-> +	if (soc_info->needs_dev_clk) {
-> +		priv->lcd_clk = devm_clk_get(dev, "lcd");
-> +		if (IS_ERR(priv->lcd_clk)) {
-> +			dev_err(dev, "Failed to get lcd clock\n");
-> +			return PTR_ERR(priv->lcd_clk);
-> +		}
-> +	}
-> +
-> +	priv->pix_clk = devm_clk_get(dev, "lcd_pclk");
-> +	if (IS_ERR(priv->pix_clk)) {
-> +		dev_err(dev, "Failed to get pixel clock\n");
-> +		return PTR_ERR(priv->pix_clk);
-> +	}
-> +
-> +	priv->panel_node = of_parse_phandle(dev->of_node, "ingenic,panel", 0);
-> +	if (!priv->panel_node) {
-> +		DRM_INFO("No panel found");
-> +	} else {
-> +		priv->panel = of_drm_find_panel(priv->panel_node);
-> +		of_node_put(priv->panel_node);
-> +
-> +		if (IS_ERR(priv->panel)) {
-> +			if (PTR_ERR(priv->panel) == -EPROBE_DEFER)
-> +				return -EPROBE_DEFER;
-> +
-> +			priv->panel = NULL;
-> +		} else {
-> +			ret = drm_panel_prepare(priv->panel);
-> +			if (ret && ret != -ENOSYS)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	if (priv->panel) {
-> +		ret = device_property_read_u32(dev, "ingenic,lcd-mode",
-> +					       &priv->lcd_mode);
-> +		if (ret) {
-> +			dev_err(dev, "Unable to read ingenic,lcd-mode property\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	priv->framedesc = dma_alloc_coherent(dev, sizeof(*priv->framedesc),
-> +					     &priv->framedesc_phys, GFP_KERNEL);
-> +	if (!priv->framedesc)
-> +		return -ENOMEM;
-> +
-> +	priv->framedesc->next = priv->framedesc_phys;
-> +	priv->framedesc->id = 0xdeafbead;
-> +
-> +	drm = drm_dev_alloc(&ingenic_drm_driver_data, dev);
-> +	if (IS_ERR(drm)) {
-> +		ret = PTR_ERR(drm);
-> +		goto err_free_dma;
-> +	}
-> +
-> +	priv->drm = drm;
-> +
-> +	drm_mode_config_init(drm);
-> +	drm->mode_config.min_width = 0;
-> +	drm->mode_config.min_height = 0;
-> +	drm->mode_config.max_width = 800;
-> +	drm->mode_config.max_height = 600;
-> +	drm->mode_config.funcs = &ingenic_drm_mode_config_funcs;
-> +
-> +	drm_plane_helper_add(&priv->primary, &ingenic_drm_plane_helper_funcs);
-> +
-> +	ret = drm_universal_plane_init(drm, &priv->primary,
-> +				       0, &ingenic_drm_primary_plane_funcs,
-> +				       ingenic_drm_primary_formats,
-> +				       ARRAY_SIZE(ingenic_drm_primary_formats),
-> +				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register primary plane: %i\n", ret);
-> +		goto err_unref_drm;
-> +	}
-> +
-> +	drm_crtc_helper_add(&priv->crtc, &ingenic_drm_crtc_helper_funcs);
-> +
-> +	ret = drm_crtc_init_with_planes(drm, &priv->crtc, &priv->primary,
-> +					NULL, &ingenic_drm_crtc_funcs, NULL);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init CRTC: %i\n", ret);
-> +		goto err_cleanup_plane;
-> +	}
-> +
-> +	drm_connector_helper_add(&priv->connector,
-> +				 &ingenic_drm_conn_helper_funcs);
-> +	ret = drm_connector_init(drm, &priv->connector,
-> +				 &ingenic_drm_conn_funcs,
-> +				 DRM_MODE_CONNECTOR_Unknown);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init connector: %i\n", ret);
-> +		goto err_cleanup_crtc;
-> +	}
-> +
-> +	priv->encoder.possible_crtcs = 1;
-> +
-> +	ret = drm_encoder_init(drm, &priv->encoder, &ingenic_drm_encoder_funcs,
-> +			       DRM_MODE_ENCODER_NONE, NULL);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init encoder: %i\n", ret);
-> +		goto err_cleanup_connector;
-> +	}
-> +
-> +	drm_connector_attach_encoder(&priv->connector, &priv->encoder);
-> +
-> +	platform_set_drvdata(pdev, drm);
-> +	priv->drm = drm;
-> +	drm->dev_private = priv;
-> +
-> +	ret = drm_irq_install(drm, irq);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to install IRQ handler\n");
-> +		goto err_cleanup_encoder;
-> +	}
-> +
-> +	ret = drm_vblank_init(drm, 1);
-> +	if (ret) {
-> +		dev_err(dev, "Failed calling drm_vblank_init()\n");
-> +		goto err_uninstall_irq;
-> +	}
-> +
-> +	drm_mode_config_reset(drm);
-> +
-> +	ret = clk_prepare_enable(priv->pix_clk);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to start pixel clock\n");
-> +		goto err_cleanup_vblank;
-> +	}
-> +
-> +	if (priv->lcd_clk) {
-> +		parent_clk = clk_get_parent(priv->lcd_clk);
-> +		parent_rate = clk_get_rate(parent_clk);
-> +
-> +		/* LCD Device clock must be 3x the pixel clock for STN panels,
-> +		 * or 1.5x the pixel clock for TFT panels. To avoid having to
-> +		 * check for the LCD device clock everytime we do a mode change,
-> +		 * we set the LCD device clock to the highest rate possible.
-> +		 */
-> +		ret = clk_set_rate(priv->lcd_clk, parent_rate);
-> +		if (ret) {
-> +			dev_err(dev, "Unable to set LCD clock rate\n");
-> +			goto err_pixclk_disable;
-> +		}
-> +
-> +		ret = clk_prepare_enable(priv->lcd_clk);
-> +		if (ret) {
-> +			dev_err(dev, "Unable to start lcd clock\n");
-> +			goto err_pixclk_disable;
-> +		}
-> +	}
-> +
-> +	ret = drm_fbdev_generic_setup(drm, 16);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to init fbdev\n");
-> +		goto err_devclk_disable;
-> +	}
-> +
-> +	ret = drm_dev_register(drm, 0);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register DRM driver\n");
-> +		goto err_cleanup_fbdev;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_cleanup_fbdev:
-> +	drm_mode_config_cleanup(drm);
-> +err_devclk_disable:
-> +	if (priv->lcd_clk)
-> +		clk_disable_unprepare(priv->lcd_clk);
-> +err_pixclk_disable:
-> +	clk_disable_unprepare(priv->pix_clk);
-> +err_cleanup_vblank:
-> +	drm_vblank_cleanup(drm);
-> +err_uninstall_irq:
-> +	drm_irq_uninstall(drm);
-> +err_cleanup_encoder:
-> +	drm_encoder_cleanup(&priv->encoder);
-> +err_cleanup_connector:
-> +	drm_connector_cleanup(&priv->connector);
-> +err_cleanup_crtc:
-> +	drm_crtc_cleanup(&priv->crtc);
-> +err_cleanup_plane:
-> +	drm_plane_cleanup(&priv->primary);
-> +err_unref_drm:
-> +	drm_dev_put(drm);
-> +err_free_dma:
-> +	dma_free_coherent(dev, sizeof(*priv->framedesc),
-> +			  priv->framedesc, priv->framedesc_phys);
-> +	return ret;
-> +}
-> +
-> +static int ingenic_drm_remove(struct platform_device *pdev)
-> +{
-> +	struct drm_device *drm = platform_get_drvdata(pdev);
-> +	struct ingenic_drm *priv = drm->dev_private;
-> +
-> +	drm_dev_unregister(drm);
-> +	drm_mode_config_cleanup(drm);
-> +
-> +	if (priv->lcd_clk)
-> +		clk_disable_unprepare(priv->lcd_clk);
-> +	clk_disable_unprepare(priv->pix_clk);
-> +
-> +	drm_vblank_cleanup(drm);
-> +	drm_irq_uninstall(drm);
-> +
-> +	drm_encoder_cleanup(&priv->encoder);
-> +	drm_connector_cleanup(&priv->connector);
-> +	drm_crtc_cleanup(&priv->crtc);
-> +	drm_plane_cleanup(&priv->primary);
-> +
-> +	drm_dev_put(drm);
-> +
-> +	dma_free_coherent(&pdev->dev, sizeof(*priv->framedesc),
-> +			  priv->framedesc, priv->framedesc_phys);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct jz_soc_info jz4740_soc_info = {
-> +	.needs_dev_clk = true,
-> +};
-> +
-> +static const struct jz_soc_info jz4725b_soc_info = {
-> +	.needs_dev_clk = false,
-> +};
-> +
-> +static const struct of_device_id ingenic_drm_of_match[] = {
-> +	{ .compatible = "ingenic,jz4740-drm", .data = &jz4740_soc_info },
-> +	{ .compatible = "ingenic,jz4725b-drm", .data = &jz4725b_soc_info },
-> +	{},
-> +};
-> +
-> +static struct platform_driver ingenic_drm_driver = {
-> +	.driver = {
-> +		.name = "ingenic-drm",
-> +		.of_match_table = of_match_ptr(ingenic_drm_of_match),
-> +	},
-> +	.probe = ingenic_drm_probe,
-> +	.remove = ingenic_drm_remove,
-> +};
-> +module_platform_driver(ingenic_drm_driver);
-> +
-> +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
-> +MODULE_DESCRIPTION("DRM driver for the Ingenic SoCs\n");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.11.0
-> 
+I am currently merging 297 trees (counting Linus' and 69 trees of bug
+fix patches pending for the current merge release).
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+$ git checkout master
+$ git reset --hard stable
+Merging origin/master (7d762d69145a afs: Fix manually set volume location s=
+erver list)
+Merging fixes/master (ed3ce4cfc919 adfs: mark expected switch fall-throughs)
+Merging kspp-gustavo/for-next/kspp (6f6c95f09001 ASN.1: mark expected switc=
+h fall-through)
+Merging kbuild-current/fixes (207a369e3c08 sh: fix build error for invisibl=
+e CONFIG_BUILTIN_DTB_SOURCE)
+Merging arc-current/for-curr (85d6adcbbe6d ARC: boot log: cut down on verbo=
+sity)
+Merging arm-current/fixes (d410a8a49e3e ARM: 8849/1: NOMMU: Fix encodings f=
+or PMSAv8's PRBAR4/PRLAR4)
+Merging arm64-fixes/for-next/fixes (74698f6971f2 arm64: Relax GIC version c=
+heck during early boot)
+Merging m68k-current/for-linus (bed1369f5190 m68k: Fix memblock-related cra=
+shes)
+Merging powerpc-fixes/fixes (8f5b27347e88 powerpc/powernv/sriov: Register I=
+OMMU groups for VFs)
+Merging sparc/master (7d762d69145a afs: Fix manually set volume location se=
+rver list)
+Merging fscrypt-current/for-stable (ae64f9bd1d36 Linux 4.15-rc2)
+Merging net/master (6e46e2d821bb net: dsa: mv88e6xxx: Fix u64 statistics)
+Merging bpf/master (dfca891ddf21 bpf: drop refcount if bpf_map_new_fd() fai=
+ls in map_create())
+Merging ipsec/master (660899ddf06a xfrm: Fix inbound traffic via XFRM inter=
+faces across network namespaces)
+Merging netfilter/master (ecef67cb10db tun: remove unnecessary memory barri=
+er)
+Merging ipvs/master (b2e3d68d1251 netfilter: nft_compat: destroy function m=
+ust not have side effects)
+Merging wireless-drivers/master (d04ca383860b mt76x0u: fix suspend/resume)
+Merging mac80211/master (51d0af222f6f mac80211: allocate tailroom for forwa=
+rded mesh packets)
+Merging rdma-fixes/for-rc (f09ef134a7ca iw_cxgb4: cq/qp mask depends on bar=
+2 pages in a host page)
+Merging sound-current/for-linus (268836649c07 Merge tag 'asoc-fix-v5.0-rc6'=
+ of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound into for-li=
+nus)
+Merging sound-asoc-fixes/for-linus (b5e806ae4ad8 Merge branch 'asoc-5.0' in=
+to asoc-linus)
+Merging regmap-fixes/for-linus (f17b5f06cb92 Linux 5.0-rc4)
+Merging regulator-fixes/for-linus (8cd0aeaa0868 Merge branch 'regulator-5.0=
+' into regulator-linus)
+Merging spi-fixes/for-linus (22e78ec655e8 Merge branch 'spi-5.0' into spi-l=
+inus)
+Merging pci-current/for-linus (f57a98e1b713 PCI: Work around Synopsys dupli=
+cate Device ID (HAPS USB3, NXP i.MX))
+Merging driver-core.current/driver-core-linus (d13937116f1e Linux 5.0-rc6)
+Merging tty.current/tty-linus (d13937116f1e Linux 5.0-rc6)
+Merging usb.current/usb-linus (d13937116f1e Linux 5.0-rc6)
+Merging usb-gadget-fixes/fixes (a53469a68eb8 usb: phy: am335x: fix race con=
+dition in _probe)
+Merging usb-serial-fixes/usb-linus (8d7fa3d4ea3f USB: serial: ftdi_sio: add=
+ ID for Hjelmslund Electronics USB485)
+Merging usb-chipidea-fixes/ci-for-usb-stable (d6d768a0ec3c usb: chipidea: f=
+ix static checker warning for NULL pointer)
+Merging phy/fixes (827cb0323928 phy: ath79-usb: Fix the main reset name to =
+match the DT binding)
+Merging staging.current/staging-linus (d13937116f1e Linux 5.0-rc6)
+Merging char-misc.current/char-misc-linus (d13937116f1e Linux 5.0-rc6)
+Merging soundwire-fixes/fixes (bfeffd155283 Linux 5.0-rc1)
+Merging thunderbolt-fixes/fixes (5908e6b738e3 Linux 5.0-rc8)
+Merging input-current/for-linus (7ad222b3aed3 Input: elan_i2c - add ACPI ID=
+ for touchpad in Lenovo V330-15ISK)
+Merging crypto-current/master (f86d17e9efe0 crypto: arm64/chacha - fix hcha=
+cha_block_neon() for big endian)
+Merging ide/master (adf040ddd001 ide: Use of_node_name_eq for node name com=
+parisons)
+Merging vfio-fixes/for-linus (9a71ac7e15a7 vfio-pci/nvlink2: Fix ancient gc=
+c warnings)
+Merging kselftest-fixes/fixes (7d4e591bc051 selftests: timers: use LDLIBS i=
+nstead of LDFLAGS)
+Merging modules-fixes/modules-linus (be71eda5383f module: Fix display of wr=
+ong module .text address)
+Merging slave-dma-fixes/fixes (d13937116f1e Linux 5.0-rc6)
+Merging backlight-fixes/for-backlight-fixes (651022382c7f Linux 4.20-rc1)
+Merging mtd-fixes/master (3e35730dd754 mtd: powernv_flash: Fix device regis=
+tration error)
+Merging spi-nor-fixes/spi-nor/fixes (7928b2cbe55b Linux 4.16-rc1)
+Merging mfd-fixes/for-mfd-fixes (48a2ca0ee399 Revert "mfd: cros_ec: Use dev=
+m_kzalloc for private data")
+Merging v4l-dvb-fixes/fixes (7bdf2c8fee51 media: v4l: ioctl: Sanitize num_p=
+lanes before using it)
+Merging reset-fixes/reset/fixes (26fce0557fa6 reset: imx7: Fix always writi=
+ng bits as 0)
+Merging mips-fixes/mips-fixes (e0bf304e4a00 MIPS: fix memory setup for plat=
+forms with PHYS_OFFSET !=3D 0)
+Merging at91-fixes/at91-fixes (bfeffd155283 Linux 5.0-rc1)
+Merging omap-fixes/fixes (dc30e7039137 ARM: OMAP2+: Variable "reg" in funct=
+ion omap4_dsi_mux_pads() could be uninitialized)
+Merging kvm-fixes/master (de3ccd26fafc KVM: MMU: record maximum physical ad=
+dress width in kvm_mmu_extended_role)
+Merging kvms390-fixes/master (b10bd9a256ae s390: vsie: Use effective CRYCBD=
+.31 to check CRYCBD validity)
+Merging hwmon-fixes/hwmon (ff066653aeed hwmon: (pmbus/tps53679) Fix driver =
+info initialization in probe routine)
+Merging nvdimm-fixes/libnvdimm-fixes (11189c1089da acpi/nfit: Fix command-s=
+upported detection)
+Merging btrfs-fixes/next-fixes (8834f5600cf3 Linux 5.0-rc5)
+Merging vfs-fixes/fixes (f612acfae86a exec: Fix mem leak in kernel_read_fil=
+e)
+Merging dma-mapping-fixes/for-linus (60d8cd572f65 arm64/xen: fix xen-swiotl=
+b cache flushing)
+Merging i3c-fixes/master (f36c1f9a8dfd i3c: master: dw: fix deadlock)
+Merging drivers-x86-fixes/fixes (6a730fcb9cb4 Documentation/ABI: Correct ml=
+xreg-io KernelVersion for 5.0)
+Merging samsung-krzk-fixes/fixes (bfeffd155283 Linux 5.0-rc1)
+Merging pinctrl-samsung-fixes/pinctrl-fixes (651022382c7f Linux 4.20-rc1)
+Merging devicetree-fixes/dt/linus (5fa98c2eda35 dt-bindings: Fix dt_binding=
+_check target for in tree builds)
+Merging scsi-fixes/fixes (388b4e6a00bb scsi: core: Avoid that system resume=
+ triggers a kernel warning)
+Merging drm-fixes/drm-fixes (17fb465f1602 drm/bochs: Fix the ID mismatch er=
+ror)
+Merging drm-intel-fixes/for-linux-next-fixes (5908e6b738e3 Linux 5.0-rc8)
+Merging mmc-fixes/fixes (e30be063d6db mmc: sdhci-esdhc-imx: correct the fix=
+ of ERR004536)
+Merging rtc-fixes/rtc-fixes (bfeffd155283 Linux 5.0-rc1)
+Merging gnss-fixes/gnss-linus (bfeffd155283 Linux 5.0-rc1)
+Merging hyperv-fixes/hyperv-fixes (b2946cd86f3c MAINTAINERS: Change mailing=
+ list for Hyper-V CORE AND DRIVERS)
+Merging drm-misc-fixes/for-linux-next-fixes (04b9c4885158 drm/bochs: Fix th=
+e ID mismatch error)
+Merging kbuild/for-next (85d89b922ba2 Merge branch 'kconfig' into for-next)
+Merging compiler-attributes/compiler-attributes (a3b22b9f11d9 Linux 5.0-rc7)
+Merging leaks/leaks-next (982ef2f7ef0a leaking_addresses: Completely remove=
+ --version flag)
+Merging dma-mapping/for-next (9eb9e96e97b3 Documentation/DMA-API-HOWTO: upd=
+ate dma_mask sections)
+Merging asm-generic/master (d724444ab97d asm-generic/page.h: fix typo in #e=
+rror text requiring a real asm/page.h)
+Merging arc/for-next (5908e6b738e3 Linux 5.0-rc8)
+Merging arm/for-next (585f8003e2e7 Merge branches 'fixes', 'misc' and 'smp-=
+hotplug' into for-next)
+Merging arm64/for-next/core (366e37e4da23 arm64: avoid clang warning about =
+self-assignment)
+Merging arm-perf/for-next/perf (cf2d65ec1d21 perf: xgene: Remove set but no=
+t used variable 'config')
+Merging arm-soc/for-next (237fcc148b2c Merge branch 'arm/fixes' into for-ne=
+xt)
+CONFLICT (content): Merge conflict in arch/arm64/Kconfig.platforms
+Merging actions/for-next (fb9c1c1deb5e Merge branch 'v4.20/drivers+s900-sps=
+' into next)
+Merging alpine/alpine/for-next (7928b2cbe55b Linux 4.16-rc1)
+Merging amlogic/for-next (a7c5fed5c7e4 Merge branch 'v5.1/drivers' into tmp=
+/aml-rebuild)
+Merging aspeed/for-next (e15425214990 ARM: dts: aspeed: quanta-q71l: enable=
+ uart1)
+Merging at91/at91-next (69dd6b9f7d58 Merge branches 'at91-soc' and 'at91-dt=
+' into at91-next)
+Merging bcm2835/for-next (1ee128f4fff2 Merge branch 'bcm2835-drivers-next' =
+into for-next)
+Merging imx-mxs/for-next (fe0b295f61af Merge branch 'imx/maintainers' into =
+for-next)
+Merging keystone/next (3c3a43c81bda Merge branch 'for_5.1/soc-drivers' into=
+ next)
+Merging mediatek/for-next (d542127adb0c Merge branch 'v5.0-next/soc' into f=
+or-next)
+Merging mvebu/for-next (c51f7f863552 Merge branch 'mvebu/dt64' into mvebu/f=
+or-next)
+Merging omap/for-next (af3b69ea03a2 Merge branch 'omap-for-v5.1/cpsw' into =
+for-next)
+Merging reset/reset/next (dbfc54534dfc dt-bindings: reset: meson: add g12a =
+bindings)
+Merging qcom/for-next (75920dd0498d Merge tag 'qcom-fixes-for-5.0-rc8' into=
+ doof)
+Merging renesas/next (f4435b0d605e Merge branch 'fixes-for-v5.1' into next)
+Merging rockchip/for-next (8444545ff72a Merge branch 'v5.1-clk/next' into f=
+or-next)
+Merging samsung/for-next (bebc6082da0a Linux 4.14)
+Merging samsung-krzk/for-next (8ecb112edde9 Merge branch 'fixes-late-dt' in=
+to for-next)
+Merging sunxi/sunxi/for-next (1fc3dc289134 Merge remote-tracking branches '=
+korg/sunxi/sunxi/dt-for-5.1', 'korg/sunxi/sunxi/dt64-for-5.1' and 'korg/sun=
+xi/sunxi/h3-h5-for-5.1' into sunxi/for-next)
+Merging tegra/for-next (d92dde4f12f1 Merge branch for-5.1/fixes into for-ne=
+xt)
+Merging clk/clk-next (ab75ecb8a742 Merge branch 'clk-imx' into clk-next)
+Merging clk-samsung/for-next (81faa30df9b6 clk: samsung: exynos5433: Add se=
+lected IMEM clocks)
+Merging c6x/for-linux-next (8adcc59974b8 Merge branch 'work.misc' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/viro/vfs)
+Merging csky/linux-next (88d5f20a8139 csky: Fixup vdsp&fpu issues in kernel)
+Merging h8300/h8300-next (21c7acc439b5 h8300: pci: Remove local declaration=
+ of pcibios_penalize_isa_irq)
+Merging ia64/next (c51836246f97 ia64: generate uapi header and system call =
+table files)
+Merging m68k/for-next (28713169d879 m68k: Add -ffreestanding to CFLAGS)
+Merging m68knommu/for-next (d7e9d01ac292 m68k: add ColdFire mcf5441x eDMA p=
+latform support)
+Merging microblaze/next (226a893bbb1f microblaze: no need to check return v=
+alue of debugfs_create functions)
+Merging mips/mips-next (aeb669d41ffa MIPS: lantiq: Remove separate GPHY Fir=
+mware loader)
+CONFLICT (content): Merge conflict in arch/mips/include/asm/pgtable.h
+CONFLICT (content): Merge conflict in arch/mips/include/asm/barrier.h
+Merging nds32/next (bfeffd155283 Linux 5.0-rc1)
+Merging nios2/for-next (1c286267aedf nios2: update_mmu_cache preload the TL=
+B with the new PTE)
+Merging openrisc/for-next (57ce8ba0fd3a openrisc: Fix broken paths to arch/=
+or32)
+Merging parisc-hd/for-next (6a5280012da5 parisc: use memblock_alloc() inste=
+ad of custom get_memblock())
+Merging powerpc/next (11f5acce2fa4 powerpc/powernv/ioda: Fix locked_vm coun=
+ting for memory used by IOMMU tables)
+CONFLICT (content): Merge conflict in kernel/dma/Kconfig
+CONFLICT (modify/delete): arch/powerpc/kernel/dma.c deleted in powerpc/next=
+ and modified in HEAD. Version HEAD of arch/powerpc/kernel/dma.c left in tr=
+ee.
+CONFLICT (content): Merge conflict in arch/powerpc/kernel/dma-swiotlb.c
+$ git rm -f arch/powerpc/kernel/dma.c
+Merging fsl/next (63d86876f324 Revert "powerpc/fsl_pci: simplify fsl_pci_dm=
+a_set_mask")
+Merging risc-v-pjw/for-next (467e050e9760 Merge branch 'i2c/for-current' of=
+ git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
+Merging risc-v/for-next (79a47bad61bb riscv: remove the HAVE_KPROBES option)
+Merging sifive/for-next (467e050e9760 Merge branch 'i2c/for-current' of git=
+://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
+Merging s390/features (7b660c225fa0 Merge tag 'vfio-ccw-20190227' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw into features)
+Merging sparc-next/master (b71acb0e3721 Merge branch 'linus' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6)
+Merging sh/for-next (ac21fc2dcb40 sh: switch to NO_BOOTMEM)
+Merging uml/linux-next (940b241d9050 um: Remove obsolete reenable_XX calls)
+Merging xtensa/xtensa-for-next (036ef74b3ecb Merge branch 'xtensa-5.1' into=
+ xtensa-for-next)
+Merging fscrypt/master (f5e55e777cc9 fscrypt: return -EXDEV for incompatibl=
+e rename or link into encrypted dir)
+Merging befs/for-next (55d945e2e4aa fs: befs: btree: Fixed some coding stan=
+dard issues)
+Merging btrfs/next (29dcea88779c Linux 4.17)
+Merging btrfs-kdave/for-next (836b12f8c30d Merge branch 'for-next-next-v5.0=
+-20190228' into for-next-20190228)
+Merging ceph/master (6cbbda12cb4f rbd: remove experimental designation from=
+ kernel layering)
+Merging cifs/for-next (7ee9d6006ef3 cifs: use correct format characters)
+Merging configfs/for-next (cc57c07343bd configfs: fix registered group remo=
+val)
+Merging ecryptfs/next (d43388dea04b eCryptfs: fix permission denied with ec=
+ryptfs_xattr mount option when create readonly file)
+Merging ext3/for_next (2337494f7c0f Merge udf cleanup.)
+Merging ext4/dev (bc1d69d6151f ext4: add sysfs attr /sys/fs/ext4/<disk>/jou=
+rnal_task)
+Merging f2fs/dev (100e23619856 f2fs: print more parameters in trace_f2fs_ma=
+p_blocks)
+Merging fuse/for-next (fabf7e0262d0 fuse: cache readdir calls if filesystem=
+ opts out of opendir)
+Merging jfs/jfs-next (2e3bc6125154 fs/jfs: Switch to use new generic UUID A=
+PI)
+Merging nfs/linux-next (a73881c96d73 SUNRPC: Fix an Oops in udp_poll())
+Merging nfs-anna/linux-next (a3b22b9f11d9 Linux 5.0-rc7)
+Merging nfsd/nfsd-next (b7e5034cbecf svcrpc: fix UDP on servers with lots o=
+f threads)
+Merging orangefs/for-next (6e356d45950e orangefs: remove two un-needed BUG_=
+ONs...)
+Merging overlayfs/overlayfs-next (993a0b2aec52 ovl: Do not lose security.ca=
+pability xattr over metadata file copy-up)
+Merging ubifs/linux-next (2fe8b2d5578d ubifs: Reject unsupported ioctl flag=
+s explicitly)
+Merging v9fs/9p-next (3bbe8b1a4ae9 9p: mark expected switch fall-through)
+Merging xfs/for-next (3d129e1be3d9 xfs: fix backwards endian conversion in =
+scrub)
+Merging file-locks/locks-next (bf77ae4c98d7 locks: fix error in locks_move_=
+blocks())
+Merging vfs/for-next (c0abe5af7341 Merge branches 'work.mount', 'work.misc'=
+ and 'work.iov_iter' into for-next)
+CONFLICT (content): Merge conflict in fs/Makefile
+Merging printk/for-next (b60706644282 lib/vsprintf: Remove %pCr remnant in =
+comment)
+Merging pci/next (68e9f622555b Merge branch 'remotes/lorenzo/pci/vmd')
+Merging pstore/for-next/pstore (93ee4b7d9f06 pstore/ram: Avoid needless all=
+oc during header write)
+Merging hid/for-next (c81eee9fb58c Merge branch 'for-5.1/hid-uclogic' into =
+for-next)
+Merging i2c/i2c/for-next (a8219c9b6988 Merge branch 'i2c/for-5.1' into i2c/=
+for-next)
+Merging i3c/i3c/next (988bb4a1937b i3c: master: dw-i3c-master: mark expecte=
+d switch fall-through)
+Merging dmi/master (57361846b52b Linux 4.19-rc2)
+Merging hwmon-staging/hwmon-next (985e225142cf dt-bindings: hwmon: Add miss=
+ing documentation for lm75)
+Merging jc_docs/docs-next (19c3fe285cba docs: Explicitly state that the 'Fi=
+xes:' tag shouldn't split lines)
+Merging v4l-dvb/master (9fabe1d108ca media: ipu3-mmu: fix some kernel-doc m=
+acros)
+CONFLICT (modify/delete): drivers/media/platform/soc_camera/sh_mobile_ceu_c=
+amera.c deleted in v4l-dvb/master and modified in HEAD. Version HEAD of dri=
+vers/media/platform/soc_camera/sh_mobile_ceu_camera.c left in tree.
+$ git rm -f drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
+Merging v4l-dvb-next/master (9fabe1d108ca media: ipu3-mmu: fix some kernel-=
+doc macros)
+Merging fbdev/fbdev-for-next (f40298444e8c video: fbdev: Fix potential NULL=
+ pointer dereference)
+Merging pm/linux-next (08a4a16f2588 Merge branch 'acpi-bus' into linux-next)
+Merging cpufreq-arm/cpufreq/arm/linux-next (0334906c0696 cpufreq: kryo: Rel=
+ease OPP tables on module removal)
+Merging cpupower/cpupower (ae2917093fb6 tools/power/cpupower: Display boost=
+ frequency separately)
+Merging opp/opp/linux-next (a9a744dd5b82 cpufreq: OMAP: Register an Energy =
+Model)
+Merging thermal/next (b537f89a9e4b Merge branches 'fixes' and 'thermal-inte=
+l' into next)
+Merging thermal-soc/next (8834f5600cf3 Linux 5.0-rc5)
+Merging ieee1394/for-next (c820518f6ca1 firewire: Remove depends on HAS_DMA=
+ in case of platform dependency)
+Merging dlm/next (8526e331c56f dlm: Fix test for -ERESTARTSYS)
+Merging swiotlb/linux-next (22cb45d7692a swiotlb: drop pointless static qua=
+lifier in swiotlb_create_debugfs())
+CONFLICT (content): Merge conflict in kernel/dma/swiotlb.c
+Merging rdma/for-next (bb618451544c RDMA/uverbs: Don't do double free of al=
+located PD)
+Merging net-next/master (be9cefe796f3 selftests: rtnetlink: use internal ne=
+tns switch for ip commands)
+CONFLICT (content): Merge conflict in drivers/infiniband/hw/mlx4/Kconfig
+Merging bpf-next/master (3860d38f2856 Merge branch 'bpf-dedup-fixes')
+Merging ipsec-next/master (590ce401c207 dt-bindings: net: dsa: ksz9477: fix=
+ indentation for switch spi bindings)
+Merging mlx5-next/mlx5-next (37b6bb77c6fd net/mlx5: Factor out HCA capabili=
+ties functions)
+Merging netfilter-next/master (123f89c8aab7 netfilter: nft_set_hash: remove=
+ nft_hash_key())
+Merging nfc-next/master (1f008cfec5d5 NFC: fdp: Fix unused variable warning=
+s)
+Merging ipvs-next/master (e2f7cc72cbf4 netfilter: conntrack: fix bogus port=
+ values for other l4 protocols)
+Merging wireless-drivers-next/master (501faf710230 Merge ath-next from git:=
+//git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git)
+Merging bluetooth/master (5364a0b4f4be arm64: dts: rockchip: move QCA6174A =
+wakeup pin into its USB node)
+Merging mac80211-next/master (6c4128f65857 rhashtable: Remove obsolete rhas=
+htable_walk_init function)
+Merging gfs2/for-next (2abbf9a4d262 gfs: no need to check return value of d=
+ebugfs_create functions)
+Merging mtd/mtd/next (9220d7befc9c Merge tag 'nand/for-5.1' of git://git.in=
+fradead.org/linux-mtd into mtd/next)
+CONFLICT (content): Merge conflict in MAINTAINERS
+Merging nand/nand/next (53bcbb839438 mtd: rawnand: denali_dt: remove single=
+ anonymous clock support)
+Merging spi-nor/spi-nor/next (225c0eda36bd mtd: spi-nor: Fix wrong abbrevia=
+tion HWCPAS)
+Merging crypto/master (0918f18c7179 crypto: s5p - add AES support for Exyno=
+s5433)
+Merging drm/drm-next (7fbd5d784f75 Merge tag 'imx-drm-next-2019-02-22' of g=
+it://git.pengutronix.de/pza/linux into drm-next)
+CONFLICT (content): Merge conflict in drivers/gpu/drm/amd/display/amdgpu_dm=
+/amdgpu_dm.c
+Merging drm-intel/for-linux-next (96e0adb4af42 drm/i915/opregion: rvda is r=
+elative from opregion base in opregion 2.1+)
+Merging drm-tegra/drm/tegra/for-next (ca52507efc03 drm/tegra: vic: Fix impl=
+icit function declaration warning)
+Merging drm-misc/for-linux-next (37406a60fac7 drm: Merge __drm_atomic_helpe=
+r_disable_all() into drm_atomic_helper_disable_all())
+Merging drm-msm/msm-next (860433ed2a55 drm/msm: Truncate the buffer object =
+name if the copy from user failed)
+Merging hdlcd/for-upstream/hdlcd (d664b851eb2b drm/arm/hdlcd: Reject atomic=
+ commits that disable only the plane)
+Merging mali-dp/for-upstream/mali-dp (dcc9d76b6d83 drm/komeda: Off by one i=
+n komeda_fb_get_pixel_addr())
+Merging imx-drm/imx-drm/next (a0ea4ffff266 drm/imx: only send commit done e=
+vent when all state has been applied)
+Merging etnaviv/etnaviv/next (9e05352340d3 drm/etnaviv: potential NULL dere=
+ference)
+Merging kconfig/for-next (bebc6082da0a Linux 4.14)
+Merging regmap/for-next (66fb181d6f82 Merge remote-tracking branch 'regmap/=
+topic/irq' into regmap-next)
+Merging sound/for-next (a634090a0f24 ALSA: usb-audio: Add quirk for MOTU Mi=
+croBook II)
+CONFLICT (content): Merge conflict in arch/arm64/boot/dts/nvidia/tegra210-p=
+2597.dtsi
+CONFLICT (content): Merge conflict in arch/arm64/boot/dts/nvidia/tegra194-p=
+2972-0000.dts
+Merging sound-asoc/for-next (3146089d235b Merge branch 'asoc-5.1' into asoc=
+-next)
+Merging modules/modules-next (93d77e7f1410 ARM: module: Fix function kallsy=
+ms on Thumb-2)
+Merging input/next (44466306ebec Input: ti_am335x_tsc - remove set but not =
+used variable 'tscadc_dev')
+Merging block/for-next (bbc61b186a87 Merge branch 'for-5.1/block' into for-=
+next)
+CONFLICT (content): Merge conflict in fs/btrfs/extent_io.c
+Merging device-mapper/for-next (cf603f07ca7d dm snapshot: don't define dire=
+ct_access if we don't support it)
+Merging pcmcia/pcmcia-next (95691e3eddc4 pcmcia: Implement CLKRUN protocol =
+disabling for Ricoh bridges)
+Merging mmc/next (4d3d534e9fd5 Merge branch 'fixes' into next)
+Merging kgdb/kgdb-next (3bd67b37e350 kdb: print real address of pointers in=
+stead of hashed addresses)
+CONFLICT (content): Merge conflict in kernel/debug/kdb/kdb_bt.c
+Merging md/for-next (e820d55cb99d md: fix raid10 hang issue caused by barri=
+er)
+Merging mfd/for-mfd-next (d2d833e0bf2b mfd: mxs-lradc: Mark expected switch=
+ fall-through)
+CONFLICT (content): Merge conflict in drivers/mfd/Kconfig
+Merging backlight/for-backlight-next (cec2b18832e2 backlight: pwm_bl: Use g=
+piod_get_value_cansleep() to get initial state)
+Merging battery/for-next (655ab0bc462d power: reset: at91-reset: add suppor=
+t for sam9x60 SoC)
+Merging regulator/for-next (9eeed52b844b Merge branch 'regulator-5.1' into =
+regulator-next)
+CONFLICT (modify/delete): arch/arm/mach-pxa/raumfeld.c deleted in HEAD and =
+modified in regulator/for-next. Version regulator/for-next of arch/arm/mach=
+-pxa/raumfeld.c left in tree.
+$ git rm -f arch/arm/mach-pxa/raumfeld.c
+Merging security/next-testing (6d3528f3b162 Merge branch 'next-general' int=
+o next-testing)
+Merging apparmor/apparmor-next (df4d55f2e1b8 apparmor: fix double free when=
+ unpack of secmark rules fails)
+Merging integrity/next-integrity (e7fde070f39b evm: Use defined constant fo=
+r UUID representation)
+Merging selinux/next (45189a1998e0 selinux: fix avc audit messages)
+Merging tpmdd/next (5812f97c0a22 tpm: Fix the type of the return value in c=
+alc_tpm2_event_size())
+Merging watchdog/master (59600d045ff4 dt-bindings: watchdog: renesas-wdt: D=
+ocument r8a77470 support)
+Merging iommu/next (5da1e0b809b1 Merge branches 'iommu/fixes', 'arm/msm', '=
+arm/tegra', 'x86/vt-d', 'x86/amd', 'hyper-v' and 'core' into next)
+Merging dwmw2-iommu/master (d8a5b80568a9 Linux 4.15)
+Merging vfio/next (0cfd027be1d6 vfio_pci: Enable memory accesses before cal=
+ling pci_map_rom)
+Merging trivial/for-next (75a24b822d38 kfifo: fix inaccurate comment)
+Merging audit/next (131d34cb0795 audit: mark expected switch fall-through)
+Merging devicetree/for-next (935665c1a117 of: unittest: unflatten device tr=
+ee on UML when testing)
+CONFLICT (modify/delete): Documentation/devicetree/bindings/interrupt-contr=
+oller/arm,gic-v3.txt deleted in devicetree/for-next and modified in HEAD. V=
+ersion HEAD of Documentation/devicetree/bindings/interrupt-controller/arm,g=
+ic-v3.txt left in tree.
+$ git rm -f Documentation/devicetree/bindings/interrupt-controller/arm,gic-=
+v3.txt
+Merging mailbox/mailbox-for-next (d69e11648e48 mailbox: tegra-hsp: Use devi=
+ce-managed registration API)
+Merging spi/for-next (6d5300bd54e6 Merge branch 'spi-5.1' into spi-next)
+CONFLICT (modify/delete): arch/mips/ath79/dev-spi.h deleted in HEAD and mod=
+ified in spi/for-next. Version spi/for-next of arch/mips/ath79/dev-spi.h le=
+ft in tree.
+$ git rm -f arch/mips/ath79/dev-spi.h
+Merging tip/auto-latest (371f210ec2a3 Merge branch 'x86/urgent')
+CONFLICT (content): Merge conflict in kernel/time/timer.c
+CONFLICT (content): Merge conflict in kernel/time/hrtimer.c
+CONFLICT (content): Merge conflict in include/uapi/linux/time.h
+CONFLICT (content): Merge conflict in include/uapi/asm-generic/unistd.h
+CONFLICT (content): Merge conflict in arch/x86/entry/syscalls/syscall_64.tbl
+CONFLICT (content): Merge conflict in arch/x86/entry/syscalls/syscall_32.tbl
+CONFLICT (content): Merge conflict in Kbuild
+Applying: time: fix up for "y2038: remove struct definition redirects"
+Merging clockevents/clockevents/next (dbfc6db7ba46 soc/tegra: default selec=
+t TEGRA_TIMER for Tegra210)
+Merging edac-amd/for-next (580b5cf50ca8 EDAC/altera: Add separate SDRAM EDA=
+C config)
+Merging irqchip/irq/irqchip-next (28528fca4908 irqchip/imx-irqsteer: Add mu=
+lti output interrupts support)
+Merging ftrace/for-next (1c347a94ca79 tracing: Comment why cond_snapshot is=
+ checked outside of max_lock protection)
+Merging rcu/rcu/next (e880edadc149 Merge LKMM and RCU)
+Merging kvm/linux-next (71783e09b487 Merge tag 'kvmarm-for-v5.1' of git://g=
+it.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into kvm-next)
+CONFLICT (content): Merge conflict in arch/x86/kvm/vmx/vmx.h
+CONFLICT (content): Merge conflict in arch/x86/kvm/vmx/vmx.c
+CONFLICT (content): Merge conflict in arch/arm/include/asm/kvm_host.h
+Merging kvm-arm/next (c88b093693cc arm64: KVM: Fix architecturally invalid =
+reset value for FPEXC32_EL2)
+Merging kvm-ppc/kvm-ppc-next (e74d53e30e29 KVM: PPC: Fix compilation when K=
+VM is not enabled)
+Merging kvms390/next (11ba5961a215 KVM: s390: add debug logging for cpu mod=
+el subfunctions)
+Merging xen-tip/linux-next (1d988ed46543 x86/xen: dont add memory above max=
+ allowed allocation)
+Merging percpu/for-next (1b046b445c0f percpu: km: no need to consider pcpu_=
+group_offsets[0])
+Merging workqueues/for-next (8bdc6201785d workqueue: fix typo in comment)
+Merging drivers-x86/for-next (238f9c11351f platform/x86: intel_pmc_core: Qu=
+irk to ignore XTAL shutdown)
+Merging chrome-platform/for-next (0d2f2a3da1f2 platform/chrome: wilco_ec: A=
+dd RTC driver)
+Merging hsi/for-next (1ff85bfa1614 HSI: omap_ssi_port: fix debugfs_simple_a=
+ttr.cocci warnings)
+Merging leds/for-next (5ddb0869bfc1 leds: lp55xx: fix null deref on firmwar=
+e load failure)
+Merging ipmi/for-next (038903593317 ipmi_si: Potential array underflow in h=
+otmod_handler())
+Merging driver-core/driver-core-next (2c1ea6abde88 platform: set of_node in=
+ platform_device_register_full())
+Merging usb/usb-next (23f4e3d8b310 usb: core: Fix typo in description of "a=
+uthorized_default")
+CONFLICT (content): Merge conflict in drivers/phy/marvell/Makefile
+CONFLICT (content): Merge conflict in drivers/phy/marvell/Kconfig
+Merging usb-gadget/next (5895d311d28f usb: phy: twl6030-usb: fix possible u=
+se-after-free on remove)
+Merging usb-serial/usb-next (6431866b6707 USB: serial: option: add Telit ME=
+910 ECM composition)
+Merging usb-chipidea-next/ci-for-usb-next (bc65fae4b1f0 usb: chipidea: imx:=
+ set power polarity)
+Merging phy-next/next (203d9b11928c phy: qcom-qmp: Add QMP UFS PHY support =
+for msm8998)
+Merging tty/tty-next (5b9cea15a3de serial: sprd: Modify the baud rate calcu=
+lation formula)
+Merging char-misc/char-misc-next (8c8448792a49 habanalabs: fix little-endia=
+n<->cpu conversion warnings)
+Merging extcon/extcon-next (3dfed89512d3 extcon: ptn5150: Fix return value =
+check in ptn5150_i2c_probe())
+Merging soundwire/next (bfeffd155283 Linux 5.0-rc1)
+Merging thunderbolt/next (5908e6b738e3 Linux 5.0-rc8)
+Merging staging/staging-next (362dd4e86918 Staging: vt6655: Modify comment =
+style of SPDX License Identifier)
+CONFLICT (content): Merge conflict in drivers/staging/fsl-dpaa2/ethsw/ethsw=
+.c
+Merging mux/for-next (a1ad5ff63944 Merge branch 'i2c-mux/for-next' into for=
+-next)
+Merging icc/icc-next (fcf9d0b7d2f5 drm/msm/a6xx: Add support for an interco=
+nnect path)
+Merging slave-dma/next (58810c58b9e7 Merge branch 'for-linus' into next)
+CONFLICT (content): Merge conflict in drivers/dma/imx-sdma.c
+CONFLICT (content): Merge conflict in drivers/dma/dmatest.c
+CONFLICT (content): Merge conflict in Documentation/driver-api/dmaengine/cl=
+ient.rst
+Merging cgroup/for-next (6a613d24effc cpuset: remove unused task_has_mempol=
+icy())
+Merging scsi/for-next (8c1ceb38e449 Merge branch 'misc' into for-next)
+CONFLICT (content): Merge conflict in include/linux/blkdev.h
+CONFLICT (modify/delete): fs/exofs/ore_raid.c deleted in scsi/for-next and =
+modified in HEAD. Version HEAD of fs/exofs/ore_raid.c left in tree.
+CONFLICT (modify/delete): fs/exofs/ore.c deleted in scsi/for-next and modif=
+ied in HEAD. Version HEAD of fs/exofs/ore.c left in tree.
+CONFLICT (content): Merge conflict in drivers/scsi/arcmsr/arcmsr_hba.c
+$ git rm -f fs/exofs/ore.c fs/exofs/ore_raid.c
+Merging scsi-mkp/for-next (26af1a368e40 scsi: cxgb4i: validate tcp sequence=
+ number only if chip version <=3D T5)
+Merging target-updates/for-next (1c130ae00b76 iscsi-target: make sure to wa=
+ke up sleeping login worker)
+Merging target-bva/for-next (60cc43fc8884 Linux 4.17-rc1)
+Merging vhost/linux-next (53cb6e5b4ab4 arch: move common mmap flags to linu=
+x/mman.h)
+CONFLICT (content): Merge conflict in kernel/dma/swiotlb.c
+CONFLICT (content): Merge conflict in drivers/iommu/Makefile
+CONFLICT (content): Merge conflict in drivers/iommu/Kconfig
+Merging rpmsg/for-next (6a4ac1cc9997 Merge branches 'hwspinlock-next', 'rpm=
+sg-next' and 'rproc-next' into for-next)
+Applying: remoteproc: fix for "dma-mapping: remove the DMA_MEMORY_EXCLUSIVE=
+ flag"
+Merging gpio/for-next (c0162a49e0a0 gpio: amd-fch: Drop const from resource)
+Merging gpio-brgl/gpio/for-next (2a9e27408e12 gpio: mockup: rework debugfs =
+interface)
+Merging pinctrl/for-next (dcab77888da9 dt-bindings: pinctrl: Document the i=
+.MX50 IOMUXC binding)
+Merging pinctrl-samsung/for-next (651022382c7f Linux 4.20-rc1)
+Merging pwm/for-next (7ca17b207127 pwm: imx: Signedness bug in imx_pwm_get_=
+state())
+Merging userns/for-next (cf43a757fd49 signal: Restore the stop PTRACE_EVENT=
+_EXIT)
+Merging ktest/for-next (6cd110a91f52 ktest: Take submenu into account for g=
+rub2 menus)
+Merging random/dev (05cbbb6f9ed5 drivers/char/random.c: make primary_crng s=
+tatic)
+Merging kselftest/next (0e27ded1159f selftests/ftrace: Handle the absence o=
+f tput)
+Merging y2038/y2038 (a2318b6a16a8 riscv: Use latest system call ABI)
+Merging livepatching/for-next (b420648f103d Merge branch 'for-5.1-atomic-re=
+place' into for-next)
+Merging coresight/next (37af13cc74d1 perf record: implement --affinity=3Dno=
+de|cpu option)
+Merging rtc/rtc-next (67075b63cce2 rtc: add AB-RTCMC-32.768kHz-EOZ9 RTC sup=
+port)
+Merging nvdimm/libnvdimm-for-next (445c193bdb75 Merge branch 'for-5.1/devda=
+x' into libnvdimm-for-next)
+CONFLICT (content): Merge conflict in mm/memory_hotplug.c
+Merging at24/at24/for-next (950bcbbe3154 eeprom: at24: implement support fo=
+r 'num-addresses' property)
+Merging ntb/ntb-next (8af642c76ef5 NTB: ntb_test: Fix bug when counting rem=
+ote files)
+Merging kspp/for-next/kspp (ddf89e25fad8 lib: Introduce test_stackinit modu=
+le)
+Merging init_task/init_task (e1e871aff3de Expand INIT_STRUCT_PID and remove)
+Merging cisco/for-next (84a401a27506 Merge branch 'for-x86' into for-next)
+CONFLICT (content): Merge conflict in arch/x86/kernel/setup.c
+Merging gnss/gnss-next (d4584bbfcf2a gnss: add driver for mediatek receiver=
+s)
+Merging fsi/master (d20810530b71 fsi: fsi-scom.c: Remove duplicate header)
+Merging siox/siox/next (1e4b044d2251 Linux 4.18-rc4)
+Merging slimbus/for-next (81648d8bc222 slimbus: core: add missing spin_lock=
+_init on txn_lock)
+Merging nvmem/for-next (c86d78c459db nvmem: allow to select i.MX nvmem driv=
+er for i.MX 7D)
+Merging xarray/xarray (4a5c8d898948 XArray: Fix xa_reserve for 2-byte align=
+ed entries)
+Applying: RDMA/devices: fix up for xa_alloc API change
+Applying: RDMA/restrack: fix for __xa_alloc() API change
+Merging hyperv/hyperv-next (396ae57ef1ef Drivers: hv: vmbus: Expose counter=
+s for interrupts and full conditions)
+Merging auxdisplay/auxdisplay (a3b22b9f11d9 Linux 5.0-rc7)
+Merging kgdb-dt/kgdb/for-next (97498c96a186 kgdb/treewide: constify struct =
+kgdb_arch arch_kgdb_ops)
+Merging pidfd/for-next (f67dcc84eb36 selftests: add tests for pidfd_send_si=
+gnal())
+CONFLICT (content): Merge conflict in include/uapi/asm-generic/unistd.h
+CONFLICT (content): Merge conflict in arch/x86/entry/syscalls/syscall_64.tbl
+CONFLICT (content): Merge conflict in arch/x86/entry/syscalls/syscall_32.tbl
+Merging devfreq/for-next (08cacec421f6 PM / devfreq: tegra: remove unneeded=
+ variable)
+Merging akpm-current/current (a86de3845b36 zram: default to lzo-rle instead=
+ of lzo)
+CONFLICT (content): Merge conflict in tools/testing/selftests/Makefile
+CONFLICT (content): Merge conflict in scripts/gcc-plugins/Kconfig
+CONFLICT (content): Merge conflict in include/linux/sched.h
+CONFLICT (content): Merge conflict in include/linux/kernfs.h
+CONFLICT (content): Merge conflict in include/linux/fs.h
+$ git checkout -b akpm remotes/origin/akpm/master
+Applying: pinctrl: fix pxa2xx.c build warnings
+Applying: scripts/atomic/gen-atomics.sh: don't assume that scripts are exec=
+utable
+Applying: powerpc: prefer memblock APIs returning virtual address
+Applying: microblaze: prefer memblock API returning virtual address
+Applying: sh: prefer memblock APIs returning virtual address
+Applying: openrisc: simplify pte_alloc_one_kernel()
+Applying: arch: simplify several early memory allocations
+Applying: arm, s390, unicore32: remove oneliner wrappers for memblock_alloc=
+()
+Applying: mm: create the new vm_fault_t type
+Applying: x86/mm/fault.c: Convert to use vm_fault_t
+Applying: mm/hmm: convert to use vm_fault_t
+Applying: drm/nouveau/dmem: update for struct hmm_devmem_ops member change
+Applying: MAINTAINERS: fix GTA02 entry and mark as orphan
+Applying: fs: fs_parser: fix printk format warning
+Applying: mm: refactor readahead defines in mm.h
+Applying: mm-refactor-readahead-defines-in-mmh-fix
+Applying: proc: calculate end pointer for /proc/*/* lookup at compile time
+Applying: proc: merge fix for proc_pident_lookup() API change
+Applying: unicore32: stop printing the virtual memory layout
+Applying: arch/nios2/mm/fault.c: remove duplicate include
+Applying: include/linux/sched/signal.h: replace `tsk' with `task'
+Applying: openrisc: prefer memblock APIs returning virtual address
+Applying: powerpc: use memblock functions returning virtual address
+Applying: powerpc: remove duplicated alloc_stack() function
+Applying: memblock: replace memblock_alloc_base(ANYWHERE) with memblock_phy=
+s_alloc
+Applying: memblock: drop memblock_alloc_base_nid()
+Applying: memblock: emphasize that memblock_alloc_range() returns a physica=
+l address
+Applying: memblock: memblock_phys_alloc_try_nid(): don't panic
+Applying: memblock: memblock_phys_alloc(): don't panic
+Applying: memblock: drop __memblock_alloc_base()
+Applying: memblock: drop memblock_alloc_base()
+Applying: memblock: refactor internal allocation functions
+Applying: memblock: fix parameter order in memblock_phys_alloc_try_nid()
+Applying: memblock: make memblock_find_in_range_node() and choose_memblock_=
+flags() static
+Applying: arch: use memblock_alloc() instead of memblock_alloc_from(size, a=
+lign, 0)
+Applying: arch: don't memset(0) memory returned by memblock_alloc()
+Applying: ia64: add checks for the return value of memblock_alloc*()
+Applying: sparc: add checks for the return value of memblock_alloc*()
+Applying: mm/percpu: add checks for the return value of memblock_alloc*()
+Applying: init/main: add checks for the return value of memblock_alloc*()
+Applying: swiotlb: add checks for the return value of memblock_alloc*()
+Applying: treewide: add checks for the return value of memblock_alloc*()
+Applying: mm: sparse: Use '%pa' with 'phys_addr_t' type
+Applying: memblock: fix format strings for panics after memblock_alloc
+Applying: mm/sparse: don't panic if the allocation in sparse_buffer_init fa=
+ils
+Applying: treewide-add-checks-for-the-return-value-of-memblock_alloc-fix-3-=
+fix
+Applying: memblock: memblock_alloc_try_nid: don't panic
+Applying: memblock: drop memblock_alloc_*_nopanic() variants
+Applying: memblock: remove memblock_{set,clear}_region_flags
+Applying: memblock: split checks whether a region should be skipped to a he=
+lper function
+Applying: mm: memblock: update comments and kernel-doc
+Applying: memblock-update-comments-and-kernel-doc-fix
+Applying: of: fix kmemleak crash caused by imbalance in early memory reserv=
+ation
+Applying: of: fix parameters order for call to memblock_find_in_range()
+Applying: mm, memcg: rename ambiguously named memory.stat counters and func=
+tions
+Applying: mm, memcg: consider subtrees in memory.events
+Applying: openvswitch: convert to kvmalloc
+Applying: md: convert to kvmalloc
+Applying: selinux: convert to kvmalloc
+Applying: Generic radix trees
+Applying: proc: commit to genradix
+Applying: sctp: convert to genradix
+Applying: Drop flex_arrays
+Applying: include/linux/relay.h: fix percpu annotation in struct rchan
+Applying: kernel/fork.c: remove duplicated include
+Applying: samples/mic/mpssd/mpssd.h: remove duplicate header
+Applying: drivers/media/platform/sti/delta/delta-ipc.c: fix read buffer ove=
+rflow
+Merging akpm/master (55837b987535 drivers/media/platform/sti/delta/delta-ip=
+c.c: fix read buffer overflow)
+
+--Sig_/bh.Xd8hdiwQMpgvSrUP0.QN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx47SkACgkQAVBC80lX
+0Gx4BQf/QO+IcPSoXhsHiKWFED9TLioPAcROSQYtqzf5b5SDJxjLX0tDFxe6tDMZ
+C4evehSDgcQzcLgB7S2CPfiRxB2XniYgmqVb/HEfLp1Q0B792cQ6mipvKTDKxVbu
+lmYBBS4ecT/GfPoy9PBy6M6TKLG/MIZYUTE+VqK3fUu8HdimIs67xtEbh6FMOdNy
+e7RorQ7RUJpB1lDADC7C82z90z1Uo+6Jky90lkN7esjKb/zGQ1kv3yN9WysDFE5i
+sjcx9qUSwKW6kuSGqp0MMZGbcBEKWEtUB+fOUjY4RfxsXXKFhdOKEfUi6hz5OCok
+5fYw5RWEn3onpDpWe8+x4qxjpmT44Q==
+=9ZL2
+-----END PGP SIGNATURE-----
+
+--Sig_/bh.Xd8hdiwQMpgvSrUP0.QN--
