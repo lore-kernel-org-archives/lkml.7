@@ -2,141 +2,171 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19277C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697BDC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6062083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09FEA2083E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:53:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Pyjzk4yc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387913AbfCALxQ (ORCPT
+        id S2387986AbfCALxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:53:16 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44174 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387478AbfCALxQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:53:16 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x21BnMeK009718
-        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 06:53:14 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2qy3e6akm5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 06:53:14 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Fri, 1 Mar 2019 11:53:12 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 1 Mar 2019 11:53:06 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x21Br55c31522890
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Mar 2019 11:53:05 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41070A404D;
-        Fri,  1 Mar 2019 11:53:05 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 127F4A4040;
-        Fri,  1 Mar 2019 11:53:03 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.204.73])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  1 Mar 2019 11:53:02 +0000 (GMT)
-Date:   Fri, 1 Mar 2019 13:53:01 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Steven Price <steven.price@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH v2 03/13] mm: Add generic p?d_large() macros
-References: <20190221113502.54153-1-steven.price@arm.com>
- <20190221113502.54153-4-steven.price@arm.com>
- <20190221142812.oa53lfnnfmsuh6ys@kshutemo-mobl1>
- <a3076d01-41b3-d59b-e98c-a0fd9ba5d3f5@arm.com>
- <20190221145706.zqwfdoyiirn3lc7y@kshutemo-mobl1>
- <e0c7fc0c-7924-1106-a7a3-fc12136b7b82@arm.com>
- <20190221210618.voyfs5cnafpvgedh@kshutemo-mobl1>
+        Fri, 1 Mar 2019 06:53:32 -0500
+Received: from mail-eopbgr1410115.outbound.protection.outlook.com ([40.107.141.115]:25136
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727199AbfCALxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 06:53:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector1-bp-renesas-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LtW2pSprzLfKngYAEP8oC0fzzZA0nK75SXz9zE7rz+w=;
+ b=Pyjzk4ycX3GXCU0/XrPeb/aypKMQTtYRvCAz/OaHgGbA7T+Tg6pgdeqWXid9tYC19TC1g/WBUvv7kVrZ091c2X2m/DuQ11qAen0bjU3LP6Fn+2c/nalUBWxSFi71ykYN+BWW00wVvbvLchO6lq0dhbEIrd97osHBj/biCCsa4IM=
+Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com (52.133.168.140) by
+ TYXPR01MB1504.jpnprd01.prod.outlook.com (52.133.166.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1643.20; Fri, 1 Mar 2019 11:52:42 +0000
+Received: from TYXPR01MB1775.jpnprd01.prod.outlook.com
+ ([fe80::88d2:545c:9212:c8cf]) by TYXPR01MB1775.jpnprd01.prod.outlook.com
+ ([fe80::88d2:545c:9212:c8cf%5]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
+ 11:52:42 +0000
+From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+To:     Marc Kleine-Budde <mkl@pengutronix.de>
+CC:     Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <treding@nvidia.com>,
+        =?iso-8859-2?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Johan Hovold <johan@kernel.org>,
+        Lukasz Majewski <lukma@denx.de>,
+        Michal Simek <monstr@monstr.eu>,
+        =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Ben Whitten <ben.whitten@gmail.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: RE: [PATCH 09/11] dt-bindings: can: rcar_can: Fix RZ/G2 CAN clocks
+Thread-Topic: [PATCH 09/11] dt-bindings: can: rcar_can: Fix RZ/G2 CAN clocks
+Thread-Index: AQHUrcrIDedHLsiSw0SUu7/Qdvj7uKX27qSA
+Date:   Fri, 1 Mar 2019 11:52:42 +0000
+Message-ID: <TYXPR01MB17755AA9CC7835B236626F42C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-10-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1547663874-29411-10-git-send-email-fabrizio.castro@bp.renesas.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ec7bf303-4453-4f2c-8ed0-08d69e3c69aa
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:TYXPR01MB1504;
+x-ms-traffictypediagnostic: TYXPR01MB1504:
+x-microsoft-exchange-diagnostics: 1;TYXPR01MB1504;20:jg2zpeK3A90SktX6rB9mbpwvAHqQX67o8/aTVLPXH6/ixJqqIRMkeNOO/CEHTwaKRUr3MEqTV4G0Ylfj+YMnW4y7Azjl0fQPnU3cn87Bea+mla/Dii4dq76VvSgvlK03r/XKf3U96UiLIiuxUjAwczoT3CH4J8Oe/kzKJs0aoZI=
+x-microsoft-antispam-prvs: <TYXPR01MB15040199734B873C97911FD5C0760@TYXPR01MB1504.jpnprd01.prod.outlook.com>
+x-forefront-prvs: 09634B1196
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(396003)(136003)(346002)(199004)(189003)(33656002)(71190400001)(7696005)(71200400001)(66066001)(105586002)(54906003)(7416002)(99286004)(97736004)(3846002)(106356001)(6116002)(76176011)(316002)(7736002)(6916009)(55016002)(81166006)(5660300002)(256004)(44832011)(9686003)(53936002)(305945005)(6246003)(25786009)(81156014)(446003)(6506007)(11346002)(26005)(86362001)(53546011)(186003)(486006)(52536013)(4326008)(476003)(229853002)(478600001)(2906002)(6436002)(8676002)(68736007)(8936002)(14454004)(74316002)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:TYXPR01MB1504;H:TYXPR01MB1775.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: bp.renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: U60/k+BCabS1E9mrgUZjrrgoYJXke2ciGSGIWoe71ycwOCgyHTb+2mwWsh/Fgbd2Z2SqyvFME9nKhc6KtxC9E7BBaO6P8xpKNtp3aGeH1r00HtYkxitMps2enbHqeMVKaqVxo4Eo9e7eICPuTCpbiNm1Pd7o/kQbKcgN1iYX2hP2EBOB6qFmbroWx5SRnjEGKx9xSuczmbuf+saw3oocITM2GM+Vn993UHgpwspCA2417OjV4tqkjaEgMAMynvoElicFKPdM9RDDvVfTRePX2Zqwi4u7gtzXasJ72KlTsIh9fR2eVMTiJ29PlNMkuLgn2BxoaTGZChiT2RnzZOEze6LgbcmMectKLmadDBkry5c2chQ0czNGVG6L2mnncA6A7mzZ1SI3Oq7uE/v9hzspnIu4x2ZEtS9ujeAcrsQqONI=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190221210618.voyfs5cnafpvgedh@kshutemo-mobl1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19030111-0016-0000-0000-0000025C7989
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030111-0017-0000-0000-000032B6ED0A
-Message-Id: <20190301115300.GE5156@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=939 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903010084
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec7bf303-4453-4f2c-8ed0-08d69e3c69aa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 11:52:42.4043
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Him Kirill,
+Hello Marc,
 
-On Fri, Feb 22, 2019 at 12:06:18AM +0300, Kirill A. Shutemov wrote:
-> On Thu, Feb 21, 2019 at 05:16:46PM +0000, Steven Price wrote:
-> > >> Note that in terms of the new page walking code, these new defines are
-> > >> only used when walking a page table without a VMA (which isn't currently
-> > >> done), so architectures which don't use p?d_large currently will work
-> > >> fine with the generic versions. They only need to provide meaningful
-> > >> definitions when switching to use the walk-without-a-VMA functionality.
-> > > 
-> > > How other architectures would know that they need to provide the helpers
-> > > to get walk-without-a-VMA functionality? This looks very fragile to me.
-> > 
-> > Yes, you've got a good point there. This would apply to the p?d_large
-> > macros as well - any arch which (inadvertently) uses the generic version
-> > is likely to be fragile/broken.
-> > 
-> > I think probably the best option here is to scrap the generic versions
-> > altogether and simply introduce a ARCH_HAS_PXD_LARGE config option which
-> > would enable the new functionality to those arches that opt-in. Do you
-> > think this would be less fragile?
-> 
-> These helpers are useful beyond pagewalker.
-> 
-> Can we actually do some grinding and make *all* archs to provide correct
-> helpers? Yes, it's tedious, but not that bad.
+I am sorry to bother you.
+Do you think you can take this patch?
 
-Many architectures simply cannot support non-leaf entries at the higher
-levels. I think letting the use a generic helper actually does make sense.
- 
-> I think we could provide generic helpers for folded levels in
-> <asm-generic/pgtable-nop?d.h> and rest has to be provided by the arch.
-> Architectures that support only 2 level paging would need to provide
-> pgd_large(), with 3 -- pmd_large() and so on.
-> 
-> -- 
->  Kirill A. Shutemov
+Thanks,
+Fab
 
--- 
-Sincerely yours,
-Mike.
+> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Sent: 16 January 2019 18:38
+> Subject: [PATCH 09/11] dt-bindings: can: rcar_can: Fix RZ/G2 CAN clocks
+>=20
+> According to the latest information, the clock options for CAN on RZ/G2
+> are the same as the ones available on R-Car Gen3
+>=20
+> Fixes: 868b7c0f43e6 ("dt-bindings: can: rcar_can: Add r8a774a1 support")
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 12 +++---------
+>  1 file changed, 3 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Doc=
+umentation/devicetree/bindings/net/can/rcar_can.txt
+> index 7fcf501..b463e12 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> @@ -28,13 +28,8 @@ Required properties:
+>=20
+>  - reg: physical base address and size of the R-Car CAN register map.
+>  - interrupts: interrupt specifier for the sole interrupt.
+> -- clocks: phandles and clock specifiers for 2 CAN clock inputs for RZ/G2
+> -	  devices.
+> -	  phandles and clock specifiers for 3 CAN clock inputs for every other
+> -	  SoC.
+> -- clock-names: 2 clock input name strings for RZ/G2: "clkp1", "can_clk".
+> -	       3 clock input name strings for every other SoC: "clkp1", "clkp2"=
+,
+> -	       "can_clk".
+> +- clocks: phandles and clock specifiers for 3 CAN clock inputs.
+> +- clock-names: 3 clock input name strings: "clkp1", "clkp2", and "can_cl=
+k".
+>  - pinctrl-0: pin control group to be used for this controller.
+>  - pinctrl-names: must be "default".
+>=20
+> @@ -50,8 +45,7 @@ using the below properties:
+>  Optional properties:
+>  - renesas,can-clock-select: R-Car CAN Clock Source Select. Valid values =
+are:
+>  			    <0x0> (default) : Peripheral clock (clkp1)
+> -			    <0x1> : Peripheral clock (clkp2) (not supported by
+> -				    RZ/G2 devices)
+> +			    <0x1> : Peripheral clock (clkp2)
+>  			    <0x3> : External input clock
+>=20
+>  Example
+> --
+> 2.7.4
 
