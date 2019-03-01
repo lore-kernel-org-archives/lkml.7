@@ -2,159 +2,168 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F242C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74E2C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA5520675
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:50:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OdNmHymi"
+	by mail.kernel.org (Postfix) with ESMTP id 7592420675
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388478AbfCAOuO (ORCPT
+        id S2388550AbfCAOwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:50:14 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:57917 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388390AbfCAOuN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:50:13 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190301145011euoutp013e30735bc1636ebb41821d0dc58a3708~H3TPuHQse2967129671euoutp010
-        for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2019 14:50:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190301145011euoutp013e30735bc1636ebb41821d0dc58a3708~H3TPuHQse2967129671euoutp010
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1551451811;
-        bh=8b5/0gDb7ME8Bvsrk2KZd3L0YwcNKXOKJ08/ArFJ0d0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=OdNmHymiaKMZDZ22rkXzMu2WXyVxGjm+BbRSb5EpPHJt6W/ye12P18g5rlr2aIFdn
-         pYDyy7MTuJImTvhnLB9T8KlpPmO6Tzb7wpW9RHuHwVuvuNiV9+yBkwKuL/rup58Aoh
-         u5fBZDjBudjL5GgkV5c6KIdopPQ/4wdFg5FhwI9w=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190301145011eucas1p26c54c9a24e1c3019f989897c5fb9a5f1~H3TPPfh450181001810eucas1p29;
-        Fri,  1 Mar 2019 14:50:11 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 8D.FF.04294.2A6497C5; Fri,  1
-        Mar 2019 14:50:10 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190301145010eucas1p1839d533def9e94cb7882fa6567ba5f86~H3TOgpk240841308413eucas1p19;
-        Fri,  1 Mar 2019 14:50:10 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190301145010eusmtrp161aaa88f1994c4a32fca97413becdfcd~H3TOSOqET2653126531eusmtrp1h;
-        Fri,  1 Mar 2019 14:50:10 +0000 (GMT)
-X-AuditID: cbfec7f4-84fff700000010c6-10-5c7946a2d509
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 73.CE.04128.2A6497C5; Fri,  1
-        Mar 2019 14:50:10 +0000 (GMT)
-Received: from [106.120.53.102] (unknown [106.120.53.102]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190301145009eusmtip17056ec7a86c90151a2969b5594021daf~H3TN8iibV2919429194eusmtip1Y;
-        Fri,  1 Mar 2019 14:50:09 +0000 (GMT)
-Subject: Re: [PATCH -next] fbdev: omap2: omapfb: trivial code cleanup
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     trivial@kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <f14aa8d6-7cd7-4295-11d9-ee0aefdaa7c0@samsung.com>
-Date:   Fri, 1 Mar 2019 15:50:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
+        Fri, 1 Mar 2019 09:52:12 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:35220 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728313AbfCAOwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:52:12 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D53AC43ED8;
+        Fri,  1 Mar 2019 14:52:11 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67C0E19C69;
+        Fri,  1 Mar 2019 14:52:11 +0000 (UTC)
+Date:   Fri, 1 Mar 2019 09:52:09 -0500
+From:   Phil Auld <pauld@redhat.com>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [RFC]  sched/fair: hard lockup in sched_cfs_period_timer
+Message-ID: <20190301145209.GA9304@pauld.bos.csb>
 MIME-Version: 1.0
-In-Reply-To: <20190301015342.28888-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsWy7djPc7qL3CpjDL79sLC48vU9m0Xz4vVs
-        Fif6PrBaXN41h81i9pJ+Fov3+y8zWdz5+pzFgd2j5chbVo9NqzrZPPbPXcPucb/7OJPH501y
-        AaxRXDYpqTmZZalF+nYJXBnrv1gVPOCqeP7rJmsD41eOLkZODgkBE4nu3S+Zuxi5OIQEVjBK
-        XFw0gRHC+cIo8etnE1TmM6NE4/If7DAtc97+YIFILGeUmPLkJSNIQkjgPaPEmjPJILawgKvE
-        utmTwRpEBNQlXmzdB2YzC6xjlFj5Jg7EZhOwkpjYvgqol4ODV8BO4mVjHIjJIqAicXyaFogp
-        KhAh0X9GHaSYV0BQ4uTMJywgNqeAtcTjZ59YIAYaSBxZNIcVwpaX2P52DtjJEgLL2CW+bZoC
-        dbKLxPIv3xkhbGGJV8e3QMVlJE5P7mGBaJjOKPHm11IoZz3IK8eYIKqsJQ4fv8gKYTtKbPiy
-        G+xmCQE+iRtvBSE280lM2jadGSLMK9HRJgRRrSaxYdkGNphdXTtXMkPYHhJfd+1kncCoOAvJ
-        b7OQ/DMLyT8LGJlXMYqnlhbnpqcWG+WllusVJ+YWl+al6yXn525iBCaa0/+Of9nBuOtP0iFG
-        AQ5GJR7eCq3KGCHWxLLiytxDjBIczEoivDMsgUK8KYmVValF+fFFpTmpxYcYpTlYlMR5qxke
-        RAsJpCeWpGanphakFsFkmTg4pRoYOxrP2ZVdWProcXB9UWN9iQAXt+9C7VWL2bwOMMsUHee8
-        ujtsWVbYks9TNz881PXOdDNLSr1T48/tFd9X3RRfEHAnM41x2vsLUgv/p+++1VrNwfFowaO0
-        bUy3n1u5SJlNkFQ88GHzwrXXvJcufHn/rWGRrF/Rj4yZNqsqntr9PLN1wwHNSP9Je5RYijMS
-        DbWYi4oTAVEiXB8wAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xu7qL3CpjDI43cVtc+fqezaJ58Xo2
-        ixN9H1gtLu+aw2Yxe0k/i8X7/ZeZLO58fc7iwO7RcuQtq8emVZ1sHvvnrmH3uN99nMnj8ya5
-        ANYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYz1
-        X6wKHnBVPP91k7WB8StHFyMnh4SAicSctz9Yuhi5OIQEljJK9Fx6xdTFyAGUkJE4vr4MokZY
-        4s+1LjaImreMEg1z/zODJIQFXCXWzZ7MDmKLCKhLvNi6jx2iqI9RovHEM7AOZoF1jBLLp7cw
-        glSxCVhJTGxfxQiygVfATuJlYxyIySKgInF8mhZIhahAhMSthx0sIDavgKDEyZlPwGxOAWuJ
-        x88+gdnMAnoSO67/YoWw5SW2v53DPIFRcBaSlllIymYhKVvAyLyKUSS1tDg3PbfYSK84Mbe4
-        NC9dLzk/dxMjMIK2Hfu5ZQdj17vgQ4wCHIxKPLwVWpUxQqyJZcWVuYcYJTiYlUR4Z1gChXhT
-        EiurUovy44tKc1KLDzGaAv0wkVlKNDkfGN15JfGGpobmFpaG5sbmxmYWSuK85w0qo4QE0hNL
-        UrNTUwtSi2D6mDg4pRoYbwSvPPt+PsNepazAKOMLV405+eL3vChunK/yqKJ43cE3y4QkzLRX
-        h8wOW72dpSeD81vjln/nXuby7rFj3LbjbNrcBxNu2F4926F1bHJ27ExGxWMPEyd/7L8xwzo1
-        /qLEy/ZdrmY/Jq+3tlMO3jAtRvz1yXo96flm0d93Vfo/WWC2eeL2ko4yIyWW4oxEQy3mouJE
-        AB9Rd0i2AgAA
-X-CMS-MailID: 20190301145010eucas1p1839d533def9e94cb7882fa6567ba5f86
-X-Msg-Generator: CA
-X-RootMTR: 20190301015537epcas4p242dee277b9b0b4953775bb948985775c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190301015537epcas4p242dee277b9b0b4953775bb948985775c
-References: <CGME20190301015537epcas4p242dee277b9b0b4953775bb948985775c@epcas4p2.samsung.com>
-        <20190301015342.28888-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 01 Mar 2019 14:52:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
 Hi,
 
-On 03/01/2019 02:53 AM, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> After commit 60d2fa0dad06 ("fbdev: omap2: no need to check
-> return value of debugfs_create functions"), there are corner
-> code need to be cleaned.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+I have a reproducible case of this: 
 
-Thanks but I've already applied earlier patch from Anders Roxell:
+[  217.264946] NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
+[  217.264948] Modules linked in: sunrpc iTCO_wdt gpio_ich iTCO_vendor_support intel_powerclamp coretemp kvm_intel kvm ipmi_ssif irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel ipmi_si intel_cstate joydev ipmi_devintf pcspkr hpilo intel_uncore sg hpwdt ipmi_msghandler acpi_power_meter i7core_edac lpc_ich acpi_cpufreq ip_tables xfs libcrc32c sr_mod sd_mod cdrom ata_generic radeon i2c_algo_bit drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm ata_piix drm serio_raw crc32c_intel hpsa myri10ge libata dca scsi_transport_sas netxen_nic dm_mirror dm_region_hash dm_log dm_mod
+[  217.264964] CPU: 24 PID: 46684 Comm: myapp Not tainted 5.0.0-rc7+ #25
+[  217.264965] Hardware name: HP ProLiant DL580 G7, BIOS P65 08/16/2015
+[  217.264965] RIP: 0010:tg_nop+0x0/0x10
+[  217.264966] Code: 83 c9 08 f0 48 0f b1 0f 48 39 c2 74 0e 48 89 c2 f7 c2 00 00 20 00 75 dc 31 c0 c3 b8 01 00 00 00 c3 66 0f 1f 84 00 00 00 00 00 <66> 66 66 66 90 31 c0 c3 0f 1f 84 00 00 00 00 00 66 66 66 66 90 8b
+[  217.264967] RSP: 0000:ffff976a7f703e48 EFLAGS: 00000087
+[  217.264967] RAX: ffff976a7c7c8f00 RBX: ffff976a6f4fad00 RCX: ffff976a7c7c90f0
+[  217.264968] RDX: ffff976a6f4faee0 RSI: ffff976a7f961f00 RDI: ffff976a6f4fad00
+[  217.264968] RBP: ffff976a7f961f00 R08: 0000000000000002 R09: ffffffad2c9b3331
+[  217.264969] R10: 0000000000000000 R11: 0000000000000000 R12: ffff976a7c7c8f00
+[  217.264969] R13: ffffffffb2305c00 R14: 0000000000000000 R15: ffffffffb22f8510
+[  217.264970] FS:  00007f6240678740(0000) GS:ffff976a7f700000(0000) knlGS:0000000000000000
+[  217.264970] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  217.264971] CR2: 00000000006dee20 CR3: 000000bf2bffc005 CR4: 00000000000206e0
+[  217.264971] Call Trace:
+[  217.264971]  <IRQ>
+[  217.264972]  walk_tg_tree_from+0x29/0xb0
+[  217.264972]  unthrottle_cfs_rq+0xe0/0x1a0
+[  217.264972]  distribute_cfs_runtime+0xd3/0xf0
+[  217.264973]  sched_cfs_period_timer+0xcb/0x160
+[  217.264973]  ? sched_cfs_slack_timer+0xd0/0xd0
+[  217.264973]  __hrtimer_run_queues+0xfb/0x270
+[  217.264974]  hrtimer_interrupt+0x122/0x270
+[  217.264974]  smp_apic_timer_interrupt+0x6a/0x140
+[  217.264975]  apic_timer_interrupt+0xf/0x20
+[  217.264975]  </IRQ>
+[  217.264975] RIP: 0033:0x7f6240125fe5
+[  217.264976] Code: 44 17 d0 f3 44 0f 7f 47 30 f3 44 0f 7f 44 17 c0 48 01 fa 48 83 e2 c0 48 39 d1 74 a3 66 0f 1f 84 00 00 00 00 00 66 44 0f 7f 01 <66> 44 0f 7f 41 10 66 44 0f 7f 41 20 66 44 0f 7f 41 30 48 83 c1 40
+...
 
-https://marc.info/?l=linux-fbdev&m=155004766902831&w=2
+There's more but this is the juicy part. 
 
-> ---
->  drivers/video/fbdev/omap2/omapfb/dss/core.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/core.c b/drivers/video/fbdev/omap2/omapfb/dss/core.c
-> index 7e6a3eb..b5956a1 100644
-> --- a/drivers/video/fbdev/omap2/omapfb/dss/core.c
-> +++ b/drivers/video/fbdev/omap2/omapfb/dss/core.c
-> @@ -136,7 +136,6 @@ static inline void dss_uninitialize_debugfs(void)
->  }
->  void dss_debugfs_create_file(const char *name, void (*write)(struct seq_file *))
->  {
-> -	return 0;
->  }
->  #endif /* CONFIG_FB_OMAP2_DSS_DEBUGFS */
->  
-> @@ -169,8 +168,6 @@ static struct notifier_block omap_dss_pm_notif_block = {
->  
->  static int __init omap_dss_probe(struct platform_device *pdev)
->  {
-> -	int r;
-> -
->  	core.pdev = pdev;
->  
->  	dss_features_init(omapdss_get_version());
+The reproducer involves a large number of cgroups in a hierarchy and a very low cfs_period_us 
+setting. 
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+The guts of sched_cfs_period_timer is this forever loop:
+
+	raw_spin_lock(&cfs_b->lock);
+	for (;;) {
+		overrun = hrtimer_forward_now(timer, cfs_b->period);
+		if (!overrun)
+			break;
+
+		idle = do_sched_cfs_period_timer(cfs_b, overrun);
+	}
+	if (idle)
+		cfs_b->period_active = 0;
+	raw_spin_unlock(&cfs_b->lock);
+
+
+There's no guarantee that hrtimer_forward_now() will ever return 0 and also 
+do_sched_cfs_period_timer() will drop and re-acquire the cfs_b->lock to call 
+distribute_cfs_runtime. 
+
+I considered code to tune the period and quota up (proportionally so they have the same 
+relative effect) but I did not like that because of the above statement and the fact that 
+it would be changing the valid values the user configured. I have two versions that do that 
+differently but they both still call out for protection from the forever loop. I think they 
+add complexity for no real gain.
+
+For my current testing I'm using a more direct but less elegant approach of simply limiting 
+the number of times the loop can execute. This has the potential to skip handling a period 
+I think but will prevent the problem reliably. I'm not sure how many iterations this loop 
+was expected to take. I'm seeing numbers in the low thousands at times.
+
+A more complete fix to make sure do_sched_cfs_period_timer never takes longer than period 
+would be good but I'm not sure what that would be and we still have this potential forever
+loop. 
+
+Below is the bandaid version. 
+  
+Thoughts? 
+
+
+Cheers,
+Phil
+
+---
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 310d0637fe4b..33e55620f891 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4859,12 +4859,16 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+        return HRTIMER_NORESTART;
+ }
+ 
++/* This is pretty arbitrary just to escape the "forever" loop before the watchdog
++ * kills us as there is no guarantee hrtimer_forward_now ever returns 0. */
++#define CFS_PERIOD_TIMER_EXIT_COUNT 100
+ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ {
+        struct cfs_bandwidth *cfs_b =
+                container_of(timer, struct cfs_bandwidth, period_timer);
+        int overrun;
+        int idle = 0;
++       int count = 0;
+ 
+        raw_spin_lock(&cfs_b->lock);
+        for (;;) {
+@@ -4872,6 +4876,14 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+                if (!overrun)
+                        break;
+ 
++               if (++count > CFS_PERIOD_TIMER_EXIT_COUNT) {
++                       pr_warn_ratelimited("cfs_period_timer(%d): too many overruns. Consider raising cfs_period_us (%lld)\n",
++                               smp_processor_id(), cfs_b->period/NSEC_PER_USEC);
++                       // Make sure we restart the timer.
++                       idle = 0;
++                       break;
++               }
++
+                idle = do_sched_cfs_period_timer(cfs_b, overrun);
+        }
+        if (idle)
+
+
+-- 
