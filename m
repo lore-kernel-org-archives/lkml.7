@@ -2,142 +2,202 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22637C4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814A8C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D991020818
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:53:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Yj7sZ2la"
+	by mail.kernel.org (Postfix) with ESMTP id 45DD42075B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389239AbfCAQxe (ORCPT
+        id S2389250AbfCAQxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:53:34 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:39608 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388993AbfCAQxe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:53:34 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x21GnpOL015521;
-        Fri, 1 Mar 2019 16:53:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=j4k6jLrVnlcAbIMB0yIUdCVdkW0RQdj2PTG7DoWiLGE=;
- b=Yj7sZ2la/PZpxGK/vwPTjSRo6O5i8nladTA0zCsMDSu7TBx6C361CWufB7AkoMnwFh0n
- mNOVFJI7Bb9EL1U+PUG5LeVOHsm7oryKk4zx5DnHzF6Fnnc/ig5eUAfWjumWOYXZDJBr
- mzFKi5QHt83Crb3Nz/bKniCB+sjSIkfUgLvRYTwY4GslQ2z/PEjCUWprBAt5wCMejIq5
- plRyFgIoyFMo/bbVnLSWl8r5qq3QhGT2t7wjlcxHSdT9rsplwuOIDYk+haAAu2uT+Soq
- 4Il2yqAGhQFWuKTDLsQJpIsJokfGSZLxF3JW1e890ImusZYhkbj/YpgHh6lrUsAQonLA MA== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2qtwkurfky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 01 Mar 2019 16:53:29 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x21GrT6R005516
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 Mar 2019 16:53:29 GMT
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x21GrTud010079;
-        Fri, 1 Mar 2019 16:53:29 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 01 Mar 2019 08:53:28 -0800
-Date:   Fri, 1 Mar 2019 08:53:27 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc:     dhowells@redhat.com, linux-xfs@vger.kernel.org,
+        Fri, 1 Mar 2019 11:53:52 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39028 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388993AbfCAQxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:53:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A7CE80D;
+        Fri,  1 Mar 2019 08:53:52 -0800 (PST)
+Received: from [192.168.100.242] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F7923F575;
+        Fri,  1 Mar 2019 08:53:51 -0800 (PST)
+Subject: Re: [PATCH v5 03/10] arm64: add sysfs vulnerability show for meltdown
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
+        marc.zyngier@arm.com, suzuki.poulose@arm.com, Dave.Martin@arm.com,
+        shankerd@codeaurora.org, julien.thierry@arm.com,
+        mlangsdo@redhat.com, stefan.wahren@i2e.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC] xfs: fix reporting supported extra file attributes for
- statx()
-Message-ID: <20190301165327.GQ21626@magnolia>
-References: <20171031221305.12908-1-mcgrof@kernel.org>
+References: <20190227010544.597579-1-jeremy.linton@arm.com>
+ <20190227010544.597579-4-jeremy.linton@arm.com>
+ <c98ff98e-30e2-596b-39c5-8505ddef9496@foss.arm.com>
+ <9cfb9cff-6a26-fff7-9374-82eea0f63a21@arm.com>
+ <20190301162050.GB28687@arrakis.emea.arm.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <bd5677d7-a520-c6a4-b97f-d76d48e511a7@arm.com>
+Date:   Fri, 1 Mar 2019 10:53:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20171031221305.12908-1-mcgrof@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9182 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903010118
+In-Reply-To: <20190301162050.GB28687@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 31, 2017 at 03:13:05PM -0700, Luis R. Rodriguez wrote:
-> statx(2) notes that any attribute that is not indicated as supported by
-> stx_attributes_mask has no usable value. Commit 5f955f26f3d42d ("xfs: report
-> crtime and attribute flags to statx") added support for informing userspace
-> of extra file attributes but forgot to list these flags as supported
-> making reporting them rather useless for the pedantic userspace author.
-> 
-> $ git describe --contains 5f955f26f3d42d04aba65590a32eb70eedb7f37d
-> v4.11-rc6~5^2^2~2
-> 
-> Fixes: 5f955f26f3d42d ("xfs: report crtime and attribute flags to statx")
-> Signed-off-by: Luis R. Rodriguez <mcgrof@kernel.org>
-> ---
-> 
-> Its unclear why David left these out or if it was just a mistake, I checked
-> the original patch thread [0] but it was not clear in the end. David?
-> 
-> Also, I posted a patch to add support to clearing these flags through
-> xfs_repair on symlinks [1] due to the pain this can cause as you have no option
-> but to use xfs_db to fix these otherwise. Since we *didn't* list these extra
-> file attributes as supported, it begs the question if instead we should only
-> set them *and* this mask if !S_ISLNK(inode->i_mode)).
-> 
-> If so, that also begs the question if we should add further sanity check
-> on the xfs setattr to ensure these are never set on symbolic links, despite the
-> fact that FS_IOC_FSSETXATTR ioctl won't be able to set them...
-> 
-> A long shot question in terms of semantics is if all the above is rather
-> generic for Linux, is if the VFS should even be checking for immutable or
-> append flags on unlink for symbolic links.
-> 
-> [0] https://patchwork.kernel.org/patch/9607879/
-> [1] https://lkml.kernel.org/r/20171031215156.12544-1-mcgrof@kernel.org
-> 
->  fs/xfs/xfs_iops.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 17081c77ef86..6b7d293a4aab 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -531,6 +531,10 @@ xfs_vn_getattr(
->  	if (ip->i_d.di_flags & XFS_DIFLAG_NODUMP)
->  		stat->attributes |= STATX_ATTR_NODUMP;
->  
-> +	stat->attributes_mask |= (STATX_ATTR_IMMUTABLE |
-> +				  STATX_ATTR_APPEND |
-> +				  STATX_ATTR_NODUMP);
-> +
+Hi,
 
-Heh, I just posted the same diff as a patch, having forgotten that this
-existed.  I'll ... just take this one instead.
-
-Sorry for whiffing on this for a year and a half(!!)
-
---D
-
->  	switch (inode->i_mode & S_IFMT) {
->  	case S_IFBLK:
->  	case S_IFCHR:
-> -- 
-> 2.14.2
+On 3/1/19 10:20 AM, Catalin Marinas wrote:
+> On Fri, Mar 01, 2019 at 10:12:09AM -0600, Jeremy Linton wrote:
+>> On 3/1/19 1:11 AM, Andre Przywara wrote:
+>>> On 2/26/19 7:05 PM, Jeremy Linton wrote:
+>>>> Display the mitigation status if active, otherwise
+>>>> assume the cpu is safe unless it doesn't have CSV3
+>>>> and isn't in our whitelist.
+>>>>
+>>>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>>>> ---
+>>>>    arch/arm64/kernel/cpufeature.c | 47 ++++++++++++++++++++++++++--------
+>>>>    1 file changed, 37 insertions(+), 10 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/kernel/cpufeature.c
+>>>> b/arch/arm64/kernel/cpufeature.c
+>>>> index f6d84e2c92fe..d31bd770acba 100644
+>>>> --- a/arch/arm64/kernel/cpufeature.c
+>>>> +++ b/arch/arm64/kernel/cpufeature.c
+>>>> @@ -944,7 +944,7 @@ has_useable_cnp(const struct
+>>>> arm64_cpu_capabilities *entry, int scope)
+>>>>        return has_cpuid_feature(entry, scope);
+>>>>    }
+>>>> -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+>>>> +static bool __meltdown_safe = true;
+>>>>    static int __kpti_forced; /* 0: not forced, >0: forced on, <0:
+>>>> forced off */
+>>>>    static bool unmap_kernel_at_el0(const struct
+>>>> arm64_cpu_capabilities *entry,
+>>>> @@ -963,6 +963,16 @@ static bool unmap_kernel_at_el0(const struct
+>>>> arm64_cpu_capabilities *entry,
+>>>>            { /* sentinel */ }
+>>>>        };
+>>>>        char const *str = "command line option";
+>>>> +    bool meltdown_safe;
+>>>> +
+>>>> +    meltdown_safe = is_midr_in_range_list(read_cpuid_id(),
+>>>> kpti_safe_list);
+>>>> +
+>>>> +    /* Defer to CPU feature registers */
+>>>> +    if (has_cpuid_feature(entry, scope))
+>>>> +        meltdown_safe = true;
+>>>> +
+>>>> +    if (!meltdown_safe)
+>>>> +        __meltdown_safe = false;
+>>>>        /*
+>>>>         * For reasons that aren't entirely clear, enabling KPTI on Cavium
+>>>> @@ -974,6 +984,11 @@ static bool unmap_kernel_at_el0(const struct
+>>>> arm64_cpu_capabilities *entry,
+>>>>            __kpti_forced = -1;
+>>>>        }
+>>>> +    if (!IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0)) {
+>>>> +        pr_info_once("kernel page table isolation disabled by
+>>>> CONFIG\n");
+>>>> +        return false;
+>>>> +    }
+>>>> +
+>>>>        /* Forced? */
+>>>>        if (__kpti_forced) {
+>>>>            pr_info_once("kernel page table isolation forced %s by %s\n",
+>>>> @@ -985,14 +1000,10 @@ static bool unmap_kernel_at_el0(const struct
+>>>> arm64_cpu_capabilities *entry,
+>>>>        if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
+>>>>            return kaslr_offset() > 0;
+>>>> -    /* Don't force KPTI for CPUs that are not vulnerable */
+>>>> -    if (is_midr_in_range_list(read_cpuid_id(), kpti_safe_list))
+>>>> -        return false;
+>>>> -
+>>>> -    /* Defer to CPU feature registers */
+>>>> -    return !has_cpuid_feature(entry, scope);
+>>>> +    return !meltdown_safe;
+>>>>    }
+>>>> +#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+>>>>    static void
+>>>>    kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+>>>>    {
+>>>> @@ -1022,6 +1033,13 @@ kpti_install_ng_mappings(const struct
+>>>> arm64_cpu_capabilities *__unused)
+>>>>        return;
+>>>>    }
+>>>> +#else
+>>>> +static void
+>>>> +kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+>>>> +{
+>>>> +}
+>>>> +#endif    /* CONFIG_UNMAP_KERNEL_AT_EL0 */
+>>>> +
+>>>>    static int __init parse_kpti(char *str)
+>>>>    {
+>>>> @@ -1035,7 +1053,6 @@ static int __init parse_kpti(char *str)
+>>>>        return 0;
+>>>>    }
+>>>>    early_param("kpti", parse_kpti);
+>>>> -#endif    /* CONFIG_UNMAP_KERNEL_AT_EL0 */
+>>>>    #ifdef CONFIG_ARM64_HW_AFDBM
+>>>>    static inline void __cpu_enable_hw_dbm(void)
+>>>> @@ -1286,7 +1303,6 @@ static const struct arm64_cpu_capabilities
+>>>> arm64_features[] = {
+>>>>            .field_pos = ID_AA64PFR0_EL0_SHIFT,
+>>>>            .min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
+>>>>        },
+>>>> -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+>>>>        {
+>>>>            .desc = "Kernel page table isolation (KPTI)",
+>>>>            .capability = ARM64_UNMAP_KERNEL_AT_EL0,
+>>>> @@ -1302,7 +1318,6 @@ static const struct arm64_cpu_capabilities
+>>>> arm64_features[] = {
+>>>>            .matches = unmap_kernel_at_el0,
+>>>>            .cpu_enable = kpti_install_ng_mappings,
+>>>>        },
+>>>> -#endif
+>>>>        {
+>>>>            /* FP/SIMD is not implemented */
+>>>>            .capability = ARM64_HAS_NO_FPSIMD,
+>>>> @@ -2063,3 +2078,15 @@ static int __init enable_mrs_emulation(void)
+>>>>    }
+>>>>    core_initcall(enable_mrs_emulation);
+>>>> +
+>>>> +ssize_t cpu_show_meltdown(struct device *dev, struct
+>>>> device_attribute *attr,
+>>>> +        char *buf)
+>>>> +{
+>>>> +    if (arm64_kernel_unmapped_at_el0())
+>>>> +        return sprintf(buf, "Mitigation: KPTI\n");
+>>>> +
+>>>> +    if (__meltdown_safe)
+>>>> +        return sprintf(buf, "Not affected\n");
+>>>
+>>> Shall those two checks be swapped? So it doesn't report about a KPTI
+>>> mitigation if the CPU is safe, but we enable KPTI because of KASLR
+>>> having enabled it? Or is that a different knob?
+>>
+>> Hmmm, I think having it this way reflects the fact that the machine is
+>> mitigated independent of whether it needed it. The force on case is similar.
+>> The machine may not have needed the mitigation but it was forced on.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-xfs" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> So is this patchset about showing vulnerabilities _and_ mitigations or
+> just one of them?
+> 
+
+Well, I don't think there is a way to express a mitigated but not 
+vulnerable state in the current ABI. This set is mostly just to bring us 
+in line with the current ABI expectations.
+
+
+
+
