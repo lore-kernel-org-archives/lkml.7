@@ -2,125 +2,81 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F3CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936FAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F37220838
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A7120842
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:53:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="b2XZiyEA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388201AbfCANuF (ORCPT
+        id S2388230AbfCANxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 08:50:05 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:52718 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387877AbfCANuE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 08:50:04 -0500
-Received: from ramsan ([84.194.111.163])
-        by michel.telenet-ops.be with bizsmtp
-        id idq21z00Z3XaVaC06dq2ey; Fri, 01 Mar 2019 14:50:02 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1gziY6-00079A-Br; Fri, 01 Mar 2019 14:50:02 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1gziY6-0007bP-9C; Fri, 01 Mar 2019 14:50:02 +0100
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [git pull] m68k updates for 5.1
-Date:   Fri,  1 Mar 2019 14:50:01 +0100
-Message-Id: <20190301135001.29176-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 1 Mar 2019 08:53:07 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:43206 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387877AbfCANxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 08:53:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Bb0FdK7wlKalmwwf5akDQd7YXSDiXQOEOXvyxrkezq0=; b=b2XZiyEARMwvzxZulMYYr+aFQ8
+        GMGPjwIUH4o4zXLV0o/LeYMdc3jUqZ5N39R6tYUxwUabqCSRJUuMubn+JYKYZAMJwyhshQ2iCwRDU
+        QgALjGWHV1yAE7u9BA6vpQNxtQ1Hxk8YLnSZNWx+QFRZWnDZTphm1GyGsJpWqnmVb7x0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1gzib1-0005YY-0E; Fri, 01 Mar 2019 14:53:03 +0100
+Date:   Fri, 1 Mar 2019 14:53:02 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jose Abreu <jose.abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Joao Pinto <joao.pinto@synopsys.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net 2/2] net: phy: Use C45 Helpers in PHY_FORCING state
+Message-ID: <20190301135302.GB19813@lunn.ch>
+References: <cover.1551437561.git.joabreu@synopsys.com>
+ <8480c38d6f3bc5c4f6c332a788bc82999266aab7.1551437561.git.joabreu@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8480c38d6f3bc5c4f6c332a788bc82999266aab7.1551437561.git.joabreu@synopsys.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Hi Linus,
+On Fri, Mar 01, 2019 at 11:54:24AM +0100, Jose Abreu wrote:
+> +static inline int phy_update_link(struct phy_device *phydev)
+> +{
+> +	if (!phydev->drv)
+> +		return -EIO;
+> +
+> +	if (phydev->drv->read_status)
+> +		return phydev->drv->read_status(phydev);
+> +	else if (phydev->is_c45)
+> +		return gen10g_read_status(phydev);
+> +	else
+> +		return genphy_update_link(phydev);
+> +}
 
-The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
+Hi Jose
 
-  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
+The asymmetry here could be an issue.  We might fall into the trap
+that a c45 PHY has the full state in phydev updated, were as a c22
+only has the link updated. Somebody testing on C45 might miss a bug
+for a C22 device.
 
-are available in the Git repository at:
+Maybe this should be called phy_read_state(), and calls
+genphy_read_status() not genphy_update_link().
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.1-tag1
-
-for you to fetch changes up to 28713169d879b67be2ef2f84dcf54905de238294:
-
-  m68k: Add -ffreestanding to CFLAGS (2019-01-21 10:36:53 +0100)
-
-----------------------------------------------------------------
-m68k updates for v5.1
-
-  - VLA removal,
-  - Gcc-8.x build fixes,
-  - Small improvements and cleanups,
-  - Defconfig updates.
-
-----------------------------------------------------------------
-Finn Thain (5):
-      m68k/mac: Clean up unused timer definitions
-      m68k/mac: Skip VIA port setup unless RTC is connected
-      m68k/mac: Remove obsolete comment
-      m68k/mac: Use '030 reset method on SE/30
-      m68k: Add -ffreestanding to CFLAGS
-
-Geert Uytterhoeven (5):
-      m68k/defconfig: Drop NET_VENDOR_<FOO>=n
-      m68k: Avoid VLA use in mangle_kernel_stack()
-      m68k/atari: Avoid VLA use in atari_switches_setup()
-      m68k/defconfig: Update defconfigs for v5.0-rc1
-      dio: Fix buffer overflow in case of unknown board
-
-Jonathan Neuschäfer (1):
-      m68k/apollo: Fix comment in Makefile
-
- arch/m68k/Makefile                   |  5 ++++-
- arch/m68k/apollo/Makefile            |  2 +-
- arch/m68k/atari/config.c             |  2 +-
- arch/m68k/configs/amcore_defconfig   | 20 -------------------
- arch/m68k/configs/amiga_defconfig    | 37 ++---------------------------------
- arch/m68k/configs/apollo_defconfig   | 34 ++------------------------------
- arch/m68k/configs/atari_defconfig    | 33 ++-----------------------------
- arch/m68k/configs/bvme6000_defconfig | 33 ++-----------------------------
- arch/m68k/configs/hp300_defconfig    | 34 ++------------------------------
- arch/m68k/configs/mac_defconfig      | 34 ++------------------------------
- arch/m68k/configs/multi_defconfig    | 34 ++------------------------------
- arch/m68k/configs/mvme147_defconfig  | 34 ++------------------------------
- arch/m68k/configs/mvme16x_defconfig  | 33 ++-----------------------------
- arch/m68k/configs/q40_defconfig      | 38 ++----------------------------------
- arch/m68k/configs/sun3_defconfig     | 33 ++-----------------------------
- arch/m68k/configs/sun3x_defconfig    | 34 ++------------------------------
- arch/m68k/include/asm/macints.h      |  3 ---
- arch/m68k/kernel/signal.c            |  3 ++-
- arch/m68k/mac/misc.c                 | 18 ++++-------------
- arch/m68k/mac/via.c                  | 20 +++++++++++--------
- drivers/dio/dio.c                    |  4 ++--
- 21 files changed, 50 insertions(+), 438 deletions(-)
-
-Thanks for pulling!
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+     Andrew
