@@ -2,196 +2,91 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E146BC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD91C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858C22085A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:13:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ps6y4qlp"
+	by mail.kernel.org (Postfix) with ESMTP id 50AAE2085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfCACNv (ORCPT
+        id S1728521AbfCACOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 21:13:51 -0500
-Received: from mail-eopbgr150080.outbound.protection.outlook.com ([40.107.15.80]:53251
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725896AbfCACNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 21:13:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=olZ5Eqj7QhErhJ+2fa8fayiO935U0E8ZeRWssQxgN6U=;
- b=Ps6y4qlpcEpfcWzsuesI7kquqXZZJZAQOACHMep8ZPgFw4B9GrGsbWLzBiJDKbWLwiRAkPCCk6it2WMKDolDYy/h+5OqsyWJakqKqSuOiIMFyYle/5o9UFV+1EcC5PtTU6Abez+Bf8A49iN3oPpob8trUG3+j7dO2Lvc516T8rE=
-Received: from VI1PR04MB3247.eurprd04.prod.outlook.com (10.170.232.160) by
- VI1PR04MB5840.eurprd04.prod.outlook.com (20.178.204.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.16; Fri, 1 Mar 2019 02:13:44 +0000
-Received: from VI1PR04MB3247.eurprd04.prod.outlook.com
- ([fe80::8d98:21a4:2a84:3c1d]) by VI1PR04MB3247.eurprd04.prod.outlook.com
- ([fe80::8d98:21a4:2a84:3c1d%4]) with mapi id 15.20.1643.022; Fri, 1 Mar 2019
- 02:13:44 +0000
-From:   Qiang Zhao <qiang.zhao@nxp.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Patch v13 0/4] This patchset is to remove PPCisms for QEIC
-Thread-Topic: [Patch v13 0/4] This patchset is to remove PPCisms for QEIC
-Thread-Index: AQHTWdb5r/xWWLVQD0+a/tK0Q3+9u6MqsL0Qgs5EG+A=
-Date:   Fri, 1 Mar 2019 02:13:44 +0000
-Message-ID: <VI1PR04MB32474C533012923BD8A9690E91760@VI1PR04MB3247.eurprd04.prod.outlook.com>
-References: <20171110033125.991-1-qiang.zhao@nxp.com>
- <AM3PR04MB118541F73F953292C937E80891380@AM3PR04MB1185.eurprd04.prod.outlook.com>
-In-Reply-To: <AM3PR04MB118541F73F953292C937E80891380@AM3PR04MB1185.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiang.zhao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 90a37cef-ade7-400e-0f7d-08d69deb8805
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB5840;
-x-ms-traffictypediagnostic: VI1PR04MB5840:
-x-microsoft-exchange-diagnostics: =?gb2312?B?MTtWSTFQUjA0TUI1ODQwOzIzOjJXN2M1OUJzMjMyUTgwYjhscjdQNElCMndm?=
- =?gb2312?B?TUhRRFZqNUphdDRoY3JQcUxCbXNldERvMlUyYmc1Tlp1R0daT0IwNnVBVzQz?=
- =?gb2312?B?UTZqQXB5VCtCUVlRakpNSllMb0FBc1hIY05WMVB3TWFiemxTa3VPalFTVVpm?=
- =?gb2312?B?OHhRbkM5YXVlZ29SV2Q1alRGMVdIaW9JNitPOFRUOVFIV1I5Uzh4MUtlT3JO?=
- =?gb2312?B?SkNyZnJPenNRU013MUVRdUN6UncxWlY1QXJ6amhwTlBTeTFYcktTWXVxb0hz?=
- =?gb2312?B?aFVuc2lVVGh1emhPQndkcDFyLzRXbHNobDFCUHNueFZTU00zUXM2YVNleEs5?=
- =?gb2312?B?Y2x2aVRGU2Y3U3NJRTljVUVHM3hUV3lGRmxWVHo4Wk1wZndXdnp0T2dWMG9h?=
- =?gb2312?B?NzdLbmVPSjdNUXdCeHBRRGR1a3BGTzNzM1hvMlhFZ1hIR2lnTWRHNUlMVllx?=
- =?gb2312?B?WW56c09HZi9pcnpVanQyWjczUTAwKzQ1Y3N2QWMrS2F6T3VuWUJ0amJuMzdZ?=
- =?gb2312?B?Nldwb01SWjlzK040UkVTTTY0bjN3WnBHcWNSS2hyaTlhTXh2RFdjMkg2TlQy?=
- =?gb2312?B?c0U1NEtGYjNMWXRrWEUwRkMwSlVSVWYra2FFeFFmVDlmTWthNFUyajhsYnFQ?=
- =?gb2312?B?YVZpbzFQZ0dMeFBwSjl4a2VCdWx1RFdvbDkrQ0pMWEc1RnM1RUtDME5PSWVs?=
- =?gb2312?B?b08vZ0szdm1aWEpNaHRvYWUrMkN6T0FpY0FoSEwwbHVBWlB6c2psSnE2YjRw?=
- =?gb2312?B?L1RKRE93WXBLaWl3UkVjM3lvbkRtdi8wQnIyTEJGY3ZMV1NubG00SlZObmhx?=
- =?gb2312?B?U1BaLzNtYk8zaW9BK1F4R1RkV1pIMC9TT1plSTJMOXllWUlrbEhEMDVCSTFI?=
- =?gb2312?B?Tmk3UjJuSDJwSGxncVlKTTR1YmhYbmJaODN5c1l1dkZ0V250dTh5T2MvZm51?=
- =?gb2312?B?M1pCYW4rYURaYi9Yd2xaVTU2ZVJYNXk4N1p5S3hLSFVyQmF0OXRBd0dMWGg5?=
- =?gb2312?B?aDN4THViL2haenp2WkhhY0srSFVoakF6QmZEMmlVdEN6QS8zOTltN0FOS012?=
- =?gb2312?B?VXR3SXYxUFl5Rm04cDk0VUg4akNBYkd2d09ZSFQxYXFHSHNlRlFuZ2NTYTN4?=
- =?gb2312?B?V1J3N1oySDY4S3BQVXRHeHdENjRvbnowa0lqUHE3N2pqYVZEVHc0TnIyeHNv?=
- =?gb2312?B?alRCMHorajFYOW12Ty9hSmlMOURFbTlQcUxOTkRPSzErLzE5NWE4USs4MnRK?=
- =?gb2312?B?bDh5Z29JSlFZUnNzUytmdDI5SGFsbU1NRXYwREM4K2JWUk82bmYrTUplL09V?=
- =?gb2312?B?dGVmQTJEaDFtWTVpSVlSNFdXQmxlU3M1bFU1MEMxcU9RbENvZXdmL1lpYVg2?=
- =?gb2312?B?dWhNdkRvUldicUR4U3RiZEhwaDU0M09WWlZpQzVDRExiaXhlcVQwdjIyYTVy?=
- =?gb2312?B?NzBCOWpGMHpjbkh0ZHRnano4NVYwbGVQU05YdVA5aCtSYjM3Rk1PVS95OGxF?=
- =?gb2312?B?ZG5PeXJtd3V1bFVOWWgzMWhwdHJ0dWZ5aDNxcVUyQzQ1NFh3eGMxQnZPdG5k?=
- =?gb2312?B?dGE3QTRWUW9tQjg2L3ZpdktLQ2pBRFhGcC9KK1BVOG1rUnZDLzIzK0ltM1pp?=
- =?gb2312?B?OFB1ZHVScWtVWllTaWhJL2M2VGRSYU1jc1lRODY2NDR4NDdUYWZDZHI0dU83?=
- =?gb2312?B?azJCZzBaMnlKV29YSkdpV1UyRVhHRGo2TDV0RmdBSnlCQlZsdUdHZ0hLay81?=
- =?gb2312?B?aTVmcnpWVkhOL2ZQNDM2WDhobVlxN1VzMmt3TEVpN2o0YmJQN3ByM0ZRNjMr?=
- =?gb2312?Q?wA92Qj8VjVuG8?=
-x-microsoft-antispam-prvs: <VI1PR04MB58404A3662A7C721A1BC986491760@VI1PR04MB5840.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09634B1196
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(346002)(39860400002)(376002)(199004)(189003)(54534003)(13464003)(53546011)(2906002)(71190400001)(99286004)(8936002)(6436002)(25786009)(14454004)(2201001)(81166006)(7736002)(478600001)(102836004)(71200400001)(55016002)(86362001)(52536013)(5660300002)(305945005)(14444005)(81156014)(256004)(8676002)(97736004)(74316002)(106356001)(105586002)(486006)(4326008)(76176011)(6116002)(11346002)(446003)(44832011)(68736007)(3846002)(9686003)(229853002)(476003)(53936002)(7696005)(186003)(6246003)(110136005)(26005)(316002)(33656002)(66066001)(2501003)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5840;H:VI1PR04MB3247.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LOHY76HD/9UcXlFaty4W1CMPJzhFdB/KTez5jWoj2wDaSB7hLdUuaMbuXXAH5/YgoE1jBM/cr/dZgP3X4/nyeEisdtKr2rAQEp9/aihcPoJDsg5QSMTExfrlbjhN7CBzq+4T7sc2AfI10dJS2LRluXSnsF+rD7I7ZF/jLfbNGEo/eBBF8ipXBhWno1h6jvOfxqnwjTq/ipG3IQyNA68LZlTW6nUE4MhU3mwALR4DRVpx4J3+UuHaTU+caNX2ZbAayKv9NB2TYijafufzdycf4vBWVoUZdGEYAdJlIQusfwKDnDjt4FBva/Vf60NBvHWzdvcTvLVnA2+wUIBznDTwSSvwO4Xwoh8wQFH1n3d8j8Ka3FiYDOwUQ5x0PjAjFPqjA0kB3CF7fmnSgyFPT+JXNNz2b2SPuEs34ixElpOrafM=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 28 Feb 2019 21:14:19 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:30270 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725896AbfCACOS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 21:14:18 -0500
+X-UUID: e8fb2f54fddb4f34a4ce6f51c673252e-20190301
+X-UUID: e8fb2f54fddb4f34a4ce6f51c673252e-20190301
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1578556314; Fri, 01 Mar 2019 10:14:11 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 1 Mar 2019 10:14:10 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 1 Mar 2019 10:14:10 +0800
+From:   <sean.wang@mediatek.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <marcel@holtmann.org>, <johan.hedberg@gmail.com>
+CC:     <devicetree@vger.kernel.org>, <linux-bluetooth@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>
+Subject: [PATCH v2 0/2] Bluetooth: mediatek: add support for MediaTek MT7663U and MT7668U UART devices
+Date:   Fri, 1 Mar 2019 10:14:06 +0800
+Message-ID: <cover.1551405664.git.sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90a37cef-ade7-400e-0f7d-08d69deb8805
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 02:13:44.2320
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5840
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW55Ym9keSBoZWxwIHRvIHJldmlldyBvbiB0aGlzIHBhdGNoc2V0Pw0KDQpCZXN0IFJlZ2FyZHMN
-ClFpYW5nIFpoYW8NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBRaWFu
-ZyBaaGFvDQo+IFNlbnQ6IDIwMTfE6jEx1MIzMMjVIDk6MTENCj4gVG86IFFpYW5nIFpoYW8gPHFp
-YW5nLnpoYW9AbnhwLmNvbT47IHRnbHhAbGludXRyb25peC5kZTsNCj4gbWFyYy56eW5naWVyQGFy
-bS5jb207IGphc29uQGxha2VkYWVtb24ubmV0DQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnDQo+IFN1YmplY3Q6IFJFOiBbUGF0Y2ggdjEzIDAvNF0gVGhpcyBwYXRjaHNldCBpcyB0
-byByZW1vdmUgUFBDaXNtcyBmb3IgUUVJQw0KPiANCj4gSGkgVGhvbWFzIGFuZCBNYXJjLA0KPiAN
-Cj4gSXMgdGhlcmUgYW55IGZlZWRiYWNrPyBUaGFuayB5b3UhDQo+IA0KPiBCZXN0IFJlZ2FyZHMN
-Cj4gUWlhbmcgWmhhbw0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+IEZy
-b206IFpoYW8gUWlhbmcgW21haWx0bzpxaWFuZy56aGFvQG54cC5jb21dDQo+ID4gU2VudDogRnJp
-ZGF5LCBOb3ZlbWJlciAxMCwgMjAxNyAxMTozMSBBTQ0KPiA+IFRvOiB0Z2x4QGxpbnV0cm9uaXgu
-ZGU7IG1hcmMuenluZ2llckBhcm0uY29tOyBqYXNvbkBsYWtlZGFlbW9uLm5ldA0KPiA+IENjOiBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBRaWFuZyBaaGFvIDxxaWFuZy56aGFvQG54cC5j
-b20+DQo+ID4gU3ViamVjdDogW1BhdGNoIHYxMyAwLzRdIFRoaXMgcGF0Y2hzZXQgaXMgdG8gcmVt
-b3ZlIFBQQ2lzbXMgZm9yIFFFSUMNCj4gPg0KPiA+IFFFSUMgaXMgYW4gaW50ZXJydXB0IGNvbnRy
-b2xsZXIgZm9yIFFFLCB3YXMgcHV0IHVuZGVyDQo+ID4gZHJpdmVycy9zb2MvZnNsL3FlLCBhbmQg
-bm93IG1vdmUgdG8gZHJpdmVyL2lycWNoaXAuDQo+ID4gQW5kIFFFSUMgaXMgc3VwcG9ydGVkIG1v
-cmUgdGhhbiBqdXN0IHBvd2VycGMgYm9hcmRzLCBzbyByZW1vdmUgUFBDaXNtcy4NCj4gPg0KPiA+
-IGNoYW5nZWxvZzoNCj4gPiAJQ2hhbmdlcyBmb3Igdjg6DQo+ID4gCS0gdXNlIElSUUNISVBfREVD
-TEFSRSgpIGluc3RlYWQgb2Ygc3Vic3lzX2luaXRjYWxsIGluIHFlaWMgZHJpdmVyDQo+ID4gCS0g
-cmVtb3ZlIGluY2x1ZGUvc29jL2ZzbC9xZS9xZV9pYy5oDQo+ID4gCUNoYW5nZXMgZm9yIHY5Og0K
-PiA+IAktIHJlYmFzZQ0KPiA+IAktIGZpeCB0aGUgY29tcGlsZSBpc3N1ZSB3aGVuIGFwcGx5IHRo
-ZSBzZWNvbmQgcGF0Y2gsIGluIGZhY3QsIHRoZXJlDQo+ID4gd2FzIG5vIGNvbXBpbGUgaXNzdWUN
-Cj4gPiAJICB3aGVuIGFwcGx5IGFsbCB0aGUgcGF0Y2hlcyBvZiB0aGlzIHBhdGNoc2V0DQo+ID4g
-CUNoYW5nZXMgZm9yIHYxMDoNCj4gPiAJLSBzaW1wbGlmeSBjb2RlcywgcmVtb3ZlIGR1cGxpY2F0
-ZWQgY29kZXMNCj4gPiAJQ2hhbmdlcyBmb3IgdjExOg0KPiA+IAktIHJlYmFzZQ0KPiA+IAlDaGFu
-Z2VzIGZvciB2MTM6DQo+ID4gCS0gcmV3cml0ZSBzaW5nbGUtYml0IGNvbnN0YW50cyB0byBCSVQo
-eCkgdG8gbWFrZSB0aGUgY29kZSBtb3JlDQo+ID4gcmVhZGFibGUNCj4gPg0KPiA+IFpoYW8gUWlh
-bmcgKDQpOg0KPiA+ICAgaXJxY2hpcC9xZWljOiBtb3ZlIHFlaWMgZHJpdmVyIGZyb20gZHJpdmVy
-cy9zb2MvZnNsL3FlDQo+ID4gCUNoYW5nZXMgZm9yIHYyOg0KPiA+IAkJLSBtb2RpZnkgdGhlIHN1
-YmplY3QgYW5kIGNvbW1pdCBtc2cNCj4gPiAJQ2hhbmdlcyBmb3IgdjM6DQo+ID4gCQktIG1lcmdl
-IC5oIGZpbGUgdG8gLmMsIHJlbmFtZSBpdCB3aXRoIGlycS1xZWljLmMNCj4gPiAJQ2hhbmdlcyBm
-b3IgdjQ6DQo+ID4gCQktIG1vZGlmeSBjb21tZW50cw0KPiA+IAlDaGFuZ2VzIGZvciB2NToNCj4g
-PiAJCS0gZGlzYWJsZSByZW5hbWUgZGV0ZWN0aW9uDQo+ID4gCUNoYW5nZXMgZm9yIHY2Og0KPiA+
-IAkJLSByZWJhc2UNCj4gPiAJQ2hhbmdlcyBmb3Igdjc6DQo+ID4gCQktIG5hDQo+ID4NCj4gPiAg
-IGlycWNoaXAvcWVpYzogbWVyZ2UgcWVpYyBpbml0IGNvZGUgZnJvbSBwbGF0Zm9ybXMgdG8gYSBj
-b21tb24gZnVuY3Rpb24NCj4gPiAJQ2hhbmdlcyBmb3IgdjI6DQo+ID4gCQktIG1vZGlmeSBzdWJq
-ZWN0IGFuZCBjb21taXQgbXNnDQo+ID4gCQktIGFkZCBjaGVjayBmb3IgcWVpYyBieSB0eXBlDQo+
-ID4gCUNoYW5nZXMgZm9yIHYzOg0KPiA+IAkJLSBuYQ0KPiA+IAlDaGFuZ2VzIGZvciB2NDoNCj4g
-PiAJCS0gbmENCj4gPiAJQ2hhbmdlcyBmb3IgdjU6DQo+ID4gCQktIG5hDQo+ID4gCUNoYW5nZXMg
-Zm9yIHY2Og0KPiA+IAkJLSByZWJhc2UNCj4gPiAJQ2hhbmdlcyBmb3Igdjc6DQo+ID4gCQktIG5h
-DQo+ID4gCUNoYW5nZXMgZm9yIHY4Og0KPiA+IAkJLSB1c2UgSVJRQ0hJUF9ERUNMQVJFKCkgaW5z
-dGVhZCBvZiBzdWJzeXNfaW5pdGNhbGwNCj4gPg0KPiA+ICAgaXJxY2hpcC9xZWljOiBtZXJnZSBx
-ZWljX29mX2luaXQgaW50byBxZV9pY19pbml0DQo+ID4gCUNoYW5nZXMgZm9yIHYyOg0KPiA+IAkJ
-LSBtb2RpZnkgc3ViamVjdCBhbmQgY29tbWl0IG1zZw0KPiA+IAkJLSByZXR1cm4gMCBhbmQgYWRk
-IHB1dCBub2RlIHdoZW4gcmV0dXJuIGluIHFlX2ljX2luaXQNCj4gPiAJQ2hhbmdlcyBmb3IgdjM6
-DQo+ID4gCQktIG5hDQo+ID4gCUNoYW5nZXMgZm9yIHY0Og0KPiA+IAkJLSBuYQ0KPiA+IAlDaGFu
-Z2VzIGZvciB2NToNCj4gPiAJCS0gbmENCj4gPiAJQ2hhbmdlcyBmb3IgdjY6DQo+ID4gCQktIHJl
-YmFzZQ0KPiA+IAlDaGFuZ2VzIGZvciB2NzoNCj4gPiAJCS0gbmENCj4gPiAJQ2hhbmdlcyBmb3Ig
-djEyOg0KPiA+IAkJLSByZW1vdmUgdW51c2VkIGNvZGUNCj4gPg0KPiA+ICAgaXJxY2hpcC9xZWlj
-OiByZW1vdmUgUFBDaXNtcyBmb3IgUUVJQw0KPiA+IAlDaGFuZ2VzIGZvciB2NjoNCj4gPiAJCS0g
-bmV3IGFkZGVkDQo+ID4gCUNoYW5nZXMgZm9yIHY3Og0KPiA+IAkJLSBmaXggd2FybmluZw0KPiA+
-IAlDaGFuZ2VzIGZvciB2ODoNCj4gPiAJCS0gcmVtb3ZlIGluY2x1ZGUvc29jL2ZzbC9xZS9xZV9p
-Yy5oDQo+ID4NCj4gPiBaaGFvIFFpYW5nICg0KToNCj4gPiAgIGlycWNoaXAvcWVpYzogbW92ZSBx
-ZWljIGRyaXZlciBmcm9tIGRyaXZlcnMvc29jL2ZzbC9xZQ0KPiA+ICAgaXJxY2hpcC9xZWljOiBt
-ZXJnZSBxZWljIGluaXQgY29kZSBmcm9tIHBsYXRmb3JtcyB0byBhIGNvbW1vbiBmdW5jdGlvbg0K
-PiA+ICAgaXJxY2hpcC9xZWljOiBtZXJnZSBxZWljX29mX2luaXQgaW50byBxZV9pY19pbml0DQo+
-ID4gICBpcnFjaGlwL3FlaWM6IHJlbW92ZSBQUENpc21zIGZvciBRRUlDDQo+ID4NCj4gPiAgTUFJ
-TlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDYgKw0K
-PiA+ICBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zLzgzeHgva204M3h4LmMgICAgICAgICAgICAgICB8
-ICAgMSAtDQo+ID4gIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvODN4eC9taXNjLmMgICAgICAgICAg
-ICAgICAgIHwgIDE2IC0NCj4gPiAgYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy84M3h4L21wYzgzMnhf
-bWRzLmMgICAgICAgICAgfCAgIDEgLQ0KPiA+ICBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zLzgzeHgv
-bXBjODMyeF9yZGIuYyAgICAgICAgICB8ICAgMSAtDQo+ID4gIGFyY2gvcG93ZXJwYy9wbGF0Zm9y
-bXMvODN4eC9tcGM4MzZ4X21kcy5jICAgICAgICAgIHwgICAxIC0NCj4gPiAgYXJjaC9wb3dlcnBj
-L3BsYXRmb3Jtcy84M3h4L21wYzgzNnhfcmRrLmMgICAgICAgICAgfCAgIDEgLQ0KPiA+ICBhcmNo
-L3Bvd2VycGMvcGxhdGZvcm1zLzg1eHgvY29yZW5ldF9nZW5lcmljLmMgICAgICB8ICAxMCAtDQo+
-ID4gIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvODV4eC9tcGM4NXh4X21kcy5jICAgICAgICAgIHwg
-IDE1IC0NCj4gPiAgYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy84NXh4L21wYzg1eHhfcmRiLmMgICAg
-ICAgICAgfCAgMTcgLQ0KPiA+ICBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zLzg1eHgvdHdyX3AxMDJ4
-LmMgICAgICAgICAgICB8ICAxNSAtDQo+ID4gIGRyaXZlcnMvaXJxY2hpcC9NYWtlZmlsZSAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gPiAgZHJpdmVycy97c29jL2ZzbC9xZS9x
-ZV9pYy5jID0+IGlycWNoaXAvaXJxLXFlaWMuY30gfCA0MjMgKysrKysrKysrKystLS0tLS0tLS0t
-DQo+ID4gIGRyaXZlcnMvc29jL2ZzbC9xZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
-IHwgICAyICstDQo+ID4gIGRyaXZlcnMvc29jL2ZzbC9xZS9xZV9pYy5oICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgMTAzIC0tLS0tDQo+ID4gIGluY2x1ZGUvc29jL2ZzbC9xZS9xZV9pYy5oICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgMTM5IC0tLS0tLS0NCj4gPiAgMTYgZmlsZXMgY2hhbmdl
-ZCwgMjMxIGluc2VydGlvbnMoKyksIDUyMSBkZWxldGlvbnMoLSkgIHJlbmFtZQ0KPiA+IGRyaXZl
-cnMve3NvYy9mc2wvcWUvcWVfaWMuYyA9PiBpcnFjaGlwL2lycS1xZWljLmN9ICg1MyUpICBkZWxl
-dGUgbW9kZQ0KPiA+IDEwMDY0NCBkcml2ZXJzL3NvYy9mc2wvcWUvcWVfaWMuaCAgZGVsZXRlIG1v
-ZGUgMTAwNjQ0DQo+ID4gaW5jbHVkZS9zb2MvZnNsL3FlL3FlX2ljLmgNCj4gPg0KPiA+IC0tDQo+
-ID4gMi4xNC4xDQoNCg==
+From: Sean Wang <sean.wang@mediatek.com>
+
+v2: changes since v1
+- add Rob's review tag
+- removed these merged patches
+
+This adds the support of enabling MT7668U and MT7663U UART based Bluetooth
+function running on the top of btmtkuart driver.
+
+We are through several patches to reach the goal and also wish applied
+the same flow in MediaTek btusb [1] for the transport independence.
+Once [1] and the series is being merged and then in next step I will
+consider to add a btmtk.c to hold these independent operations among
+various transport reused by MediaTek UART, USB and SDIO-based Bluetooth.
+
+Firstly,
+in patch 1/6 to update the dt-binding document for the kind of devices.
+in patch 2/6, 3/6 to fix the common error issues in the current code.
+in Patch 4/6, 5/6 to add the general flow which MT7622 and even MT7663U and
+MT7668U USB devices also utilize.
+
+Finally, in patch 6/6 to add the specific setups for MediaTek UART-based
+Bluetooth and enable MT7663U and MT7668U device.
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017074.html 
+
+Sean Wang (2):
+  dt-bindings: net: bluetooth: add support for MediaTek MT7663U and
+    MT7668U UART devices
+  Bluetooth: mediatek: add support for MediaTek MT7663U and MT7668U UART
+    devices
+
+ .../bindings/net/mediatek-bluetooth.txt       |  64 ++++
+ drivers/bluetooth/btmtkuart.c                 | 281 +++++++++++++++++-
+ 2 files changed, 335 insertions(+), 10 deletions(-)
+
+-- 
+2.18.0
+
