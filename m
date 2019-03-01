@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 946E2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E10C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678282186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B5F218AE
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732458AbfCAFic (ORCPT
+        id S1726253AbfCAFiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 00:38:32 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42766 "EHLO
+        Fri, 1 Mar 2019 00:38:22 -0500
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42728 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732492AbfCAFi3 (ORCPT
+        with ESMTP id S1731008AbfCAFiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 00:38:29 -0500
+        Fri, 1 Mar 2019 00:38:20 -0500
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from parav@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 1 Mar 2019 07:38:23 +0200
+        with ESMTPS (AES256-SHA encrypted); 1 Mar 2019 07:38:17 +0200
 Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x215brYd016903;
-        Fri, 1 Mar 2019 07:38:20 +0200
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x215brYb016903;
+        Fri, 1 Mar 2019 07:38:14 +0200
 From:   Parav Pandit <parav@mellanox.com>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         michal.lkml@markovi.net, davem@davemloft.net,
         gregkh@linuxfoundation.org, jiri@mellanox.com
 Cc:     parav@mellanox.com
-Subject: [RFC net-next 8/8] net/mlx5: Add subdev driver to bind to subdev devices
-Date:   Thu, 28 Feb 2019 23:37:52 -0600
-Message-Id: <1551418672-12822-9-git-send-email-parav@mellanox.com>
+Subject: [RFC net-next 6/8] devlink: Add support for devlink subdev lifecycle
+Date:   Thu, 28 Feb 2019 23:37:50 -0600
+Message-Id: <1551418672-12822-7-git-send-email-parav@mellanox.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1551418672-12822-1-git-send-email-parav@mellanox.com>
 References: <1551418672-12822-1-git-send-email-parav@mellanox.com>
@@ -41,176 +41,220 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a subdev driver to probe the subdev devices and create fake
-netdevice for it.
+Add support for creating and deleting devlink subdevices.
+For every subdev created on subdev bus, has corresponding devlink device.
+This devlink device serves the control point for any internal device
+configuration which is usually required before setting up the protocol
+specific devices such as netdev, block or infiniband devices.
+
+devlink subdev are created using iproute2 devlink tool command such as:
+(a) create devlink subdev
+$devlink dev add DEV
+output: subdev/subdev0
+
+(b) delete a devlink subdev
+$devlink dev del DEV
+$devlink dev del subdev/subdev0
 
 Signed-off-by: Parav Pandit <parav@mellanox.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/Makefile   |  2 +-
- drivers/net/ethernet/mellanox/mlx5/core/main.c     |  8 +-
- .../net/ethernet/mellanox/mlx5/core/mlx5_core.h    |  3 +
- .../ethernet/mellanox/mlx5/core/subdev_driver.c    | 93 ++++++++++++++++++++++
- 4 files changed, 104 insertions(+), 2 deletions(-)
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/subdev_driver.c
+ include/net/devlink.h        |  6 ++-
+ include/uapi/linux/devlink.h |  3 ++
+ net/core/devlink.c           | 97 ++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 102 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-index f218789..c8aeaf1 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-@@ -16,7 +16,7 @@ mlx5_core-y :=	main.o cmd.o debugfs.o fw.o eq.o uar.o pagealloc.o \
- 		transobj.o vport.o sriov.o fs_cmd.o fs_core.o \
- 		fs_counters.o rl.o lag.o dev.o events.o wq.o lib/gid.o \
- 		lib/devcom.o diag/fs_tracepoint.o diag/fw_tracer.o
--mlx5_core-$(CONFIG_SUBDEV) += subdev.o
-+mlx5_core-$(CONFIG_SUBDEV) += subdev.o subdev_driver.o
+diff --git a/include/net/devlink.h b/include/net/devlink.h
+index 9a067b1..3265508 100644
+--- a/include/net/devlink.h
++++ b/include/net/devlink.h
+@@ -36,6 +36,7 @@ struct devlink {
+ 	struct device *dev;
+ 	possible_net_t _net;
+ 	struct mutex lock;
++	struct devlink *parent;	/* optional if this is child devlink device */
+ 	char priv[0] __aligned(NETDEV_ALIGN);
+ };
  
- #
- # Netdev basic
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index 5f8cf0d..7dfa8c4 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1548,7 +1548,11 @@ static int __init init(void)
- 	mlx5e_init();
- #endif
+@@ -524,6 +525,8 @@ struct devlink_ops {
+ 	int (*flash_update)(struct devlink *devlink, const char *file_name,
+ 			    const char *component,
+ 			    struct netlink_ext_ack *extack);
++	struct devlink* (*dev_add)(struct devlink *devlink);
++	void (*dev_del)(struct devlink *del_dev);
+ };
  
--	return 0;
-+	err = subdev_register_driver(&mlx5_subdev_driver);
-+	if (err)
-+		pci_unregister_driver(&mlx5_core_driver);
+ static inline void *devlink_priv(struct devlink *devlink)
+@@ -545,7 +548,8 @@ static inline struct devlink *priv_to_devlink(void *priv)
+ void devlink_init(struct devlink *devlink, const struct devlink_ops *ops);
+ void devlink_cleanup(struct devlink *devlink);
+ struct devlink *devlink_alloc(const struct devlink_ops *ops, size_t priv_size);
+-void __devlink_register(struct devlink *devlink, struct device *dev);
++int __devlink_register(struct devlink *devlink, struct device *dev,
++		       struct devlink *parent);
+ int devlink_register(struct devlink *devlink, struct device *dev);
+ void __devlink_unregister(struct devlink *devlink);
+ void devlink_unregister(struct devlink *devlink);
+diff --git a/include/uapi/linux/devlink.h b/include/uapi/linux/devlink.h
+index 53de880..233f5bc 100644
+--- a/include/uapi/linux/devlink.h
++++ b/include/uapi/linux/devlink.h
+@@ -105,6 +105,9 @@ enum devlink_command {
+ 
+ 	DEVLINK_CMD_FLASH_UPDATE,
+ 
++	DEVLINK_CMD_DEV_ADD,
++	DEVLINK_CMD_DEV_DEL,
 +
-+	return err;
+ 	/* add new commands above here */
+ 	__DEVLINK_CMD_MAX,
+ 	DEVLINK_CMD_MAX = __DEVLINK_CMD_MAX - 1
+diff --git a/net/core/devlink.c b/net/core/devlink.c
+index cfbad2c..3b5c961 100644
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -3759,6 +3759,57 @@ static int devlink_nl_cmd_region_read_dumpit(struct sk_buff *skb,
+ 	return err;
+ }
  
- err_debug:
- 	mlx5_unregister_debugfs();
-@@ -1557,6 +1561,8 @@ static int __init init(void)
- 
- static void __exit cleanup(void)
- {
-+	subdev_unregister_driver(&mlx5_subdev_driver);
-+
- #ifdef CONFIG_MLX5_CORE_EN
- 	mlx5e_cleanup();
- #endif
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
-index 2a54148..1b733c7 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
-@@ -41,12 +41,15 @@
- #include <linux/ptp_clock_kernel.h>
- #include <linux/mlx5/cq.h>
- #include <linux/mlx5/fs.h>
-+#include <linux/subdev_bus.h>
- 
- #define DRIVER_NAME "mlx5_core"
- #define DRIVER_VERSION "5.0-0"
- 
- extern uint mlx5_core_debug_mask;
- 
-+extern struct subdev_driver mlx5_subdev_driver;
-+
- #define mlx5_core_dbg(__dev, format, ...)				\
- 	dev_dbg(&(__dev)->pdev->dev, "%s:%d:(pid %d): " format,		\
- 		 __func__, __LINE__, current->pid,			\
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/subdev_driver.c b/drivers/net/ethernet/mellanox/mlx5/core/subdev_driver.c
-new file mode 100644
-index 0000000..880aa4f
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/subdev_driver.c
-@@ -0,0 +1,93 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2018-19 Mellanox Technologies
-+
-+#include <linux/module.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/subdev_bus.h>
-+#include <linux/subdev_ids.h>
-+#include <linux/etherdevice.h>
-+
-+struct mlx5_subdev_ndev {
-+	struct net_device ndev;
-+};
-+
-+static void mlx5_dma_test(struct device *dev)
++static int
++devlink_nl_cmd_dev_add_doit(struct sk_buff *skb, struct genl_info *info)
 +{
-+	dma_addr_t pa;
-+	void *va;
-+
-+	va = dma_alloc_coherent(dev, 4096, &pa, GFP_KERNEL);
-+	if (va)
-+		dma_free_coherent(dev, 4096, va, pa);
-+}
-+
-+static struct net_device *ndev;
-+
-+static int mlx5e_subdev_open(struct net_device *netdev)
-+{
-+	return 0;
-+}
-+
-+static int mlx5e_subdev_close(struct net_device *netdev)
-+{
-+	return 0;
-+}
-+
-+static netdev_tx_t
-+mlx5e_subdev_xmit(struct sk_buff *skb, struct net_device *netdev)
-+{
-+	return NETDEV_TX_BUSY;
-+}
-+
-+const struct net_device_ops mlx5e_subdev_netdev_ops = {
-+	.ndo_open                = mlx5e_subdev_open,
-+	.ndo_stop                = mlx5e_subdev_close,
-+	.ndo_start_xmit          = mlx5e_subdev_xmit,
-+};
-+
-+static int mlx5_subdev_probe(struct device *dev)
-+{
++	struct devlink *devlink = info->user_ptr[0];
++	struct devlink *new_devlink;
++	struct sk_buff *msg;
 +	int err;
 +
-+	mlx5_dma_test(dev);
-+	/* Only one device supported in rfc */
-+	if (ndev)
-+		return 0;
++	if (!devlink->ops->dev_add || !devlink->ops->dev_del)
++		return -EOPNOTSUPP;
 +
-+	ndev = alloc_etherdev_mqs(sizeof(struct mlx5_subdev_ndev), 1, 1);
-+	if (!ndev)
++	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
++	if (!msg)
 +		return -ENOMEM;
 +
-+	SET_NETDEV_DEV(ndev, dev);
-+	ndev->netdev_ops = &mlx5e_subdev_netdev_ops;
-+	err = register_netdev(ndev);
-+	if (err) {
-+		free_netdev(ndev);
-+		ndev = NULL;
++	new_devlink = devlink->ops->dev_add(devlink);
++	if (IS_ERR(new_devlink)) {
++		err = PTR_ERR(new_devlink);
++		goto dev_err;
 +	}
++
++	err = devlink_nl_put_handle(msg, new_devlink);
++	if (err)
++		goto put_err;
++
++	return genlmsg_reply(msg, info);
++
++put_err:
++	devlink->ops->dev_del(new_devlink);
++dev_err:
++	nlmsg_free(msg);
 +	return err;
 +}
 +
-+static int mlx5_subdev_remove(struct device *dev)
++static int
++devlink_nl_cmd_dev_del_doit(struct sk_buff *skb, struct genl_info *info)
 +{
-+	if (ndev) {
-+		unregister_netdev(ndev);
-+		free_netdev(ndev);
-+		ndev = NULL;
-+	}
++	struct devlink *devlink;
++	struct devlink *parent;
++
++	devlink = devlink_get_from_info(info);
++	if (!devlink)
++		return -ENODEV;
++	parent = devlink->parent;
++	if (!parent)
++		return -EOPNOTSUPP;
++
++	parent->ops->dev_del(devlink);
 +	return 0;
 +}
 +
-+static const struct subdev_id mlx5_subdev_id_table[] = {
-+	{ .vendor_id = SUBDEV_VENDOR_ID_MELLANOX,
-+	  .device_id = SUBDEV_DEVICE_ID_MELLANOX_SF },
-+	{ 0, }
-+};
-+MODULE_DEVICE_TABLE(subdev, mlx5_subdev_id_table);
+ struct devlink_info_req {
+ 	struct sk_buff *msg;
+ };
+@@ -5201,6 +5252,20 @@ static int devlink_nl_cmd_health_reporter_dump_get_doit(struct sk_buff *skb,
+ 		.flags = GENL_ADMIN_PERM,
+ 		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK,
+ 	},
++	{
++		.cmd = DEVLINK_CMD_DEV_ADD,
++		.doit = devlink_nl_cmd_dev_add_doit,
++		.policy = devlink_nl_policy,
++		.flags = GENL_ADMIN_PERM,
++		.internal_flags = DEVLINK_NL_FLAG_NEED_DEVLINK,
++	},
++	{
++		.cmd = DEVLINK_CMD_DEV_DEL,
++		.doit = devlink_nl_cmd_dev_del_doit,
++		.policy = devlink_nl_policy,
++		.flags = GENL_ADMIN_PERM,
++		.internal_flags = DEVLINK_NL_FLAG_NO_LOCK,
++	},
+ };
+ 
+ static struct genl_family devlink_nl_family __ro_after_init = {
+@@ -5266,13 +5331,24 @@ struct devlink *devlink_alloc(const struct devlink_ops *ops, size_t priv_size)
+  *	Caller must hold devlink_mutex.
+  *
+  *	@devlink: devlink
++ *	@parent: pointer to parent devlink instance for which child devlink
++ *		 device is created. It must be set when child devlink
++ *		 device is created. It is optional otherwise.
+  */
+-void __devlink_register(struct devlink *devlink, struct device *dev)
++int __devlink_register(struct devlink *devlink, struct device *dev,
++		       struct devlink *parent)
+ {
+ 	lockdep_assert_held(&devlink_mutex);
 +
-+struct subdev_driver mlx5_subdev_driver = {
-+	.id_table = mlx5_subdev_id_table,
-+	.driver.name = "mlx5_subdev_driver",
-+	.driver.probe = mlx5_subdev_probe,
-+	.driver.remove = mlx5_subdev_remove,
-+};
++	if (parent && (!parent->ops || !parent->ops->dev_add ||
++		       !parent->ops->dev_del))
++		return -EINVAL;
++
+ 	devlink->dev = dev;
++	devlink->parent = parent;
+ 	list_add_tail(&devlink->list, &devlink_list);
+ 	devlink_notify(devlink, DEVLINK_CMD_NEW);
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(__devlink_register);
+ 
+@@ -5283,13 +5359,27 @@ void __devlink_register(struct devlink *devlink, struct device *dev)
+  */
+ int devlink_register(struct devlink *devlink, struct device *dev)
+ {
++	int ret;
++
+ 	mutex_lock(&devlink_mutex);
+-	__devlink_register(devlink, dev);
++	ret = __devlink_register(devlink, dev, NULL);
+ 	mutex_unlock(&devlink_mutex);
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(devlink_register);
+ 
++static void devlink_child_devices_delete(struct devlink *devlink)
++{
++	struct devlink *cur, *tmp;
++
++	list_for_each_entry_safe(cur, tmp, &devlink_list, list) {
++		struct devlink *parent = cur->parent;
++
++		if (devlink == parent)
++			parent->ops->dev_del(cur);
++	}
++}
++
+ /**
+  *	__devlink_unregister - Unregister devlink instance
+  *	Caller must hold the devlink_mutex while invoking this API.
+@@ -5299,6 +5389,7 @@ int devlink_register(struct devlink *devlink, struct device *dev)
+ void __devlink_unregister(struct devlink *devlink)
+ {
+ 	lockdep_assert_held(&devlink_mutex);
++	devlink_child_devices_delete(devlink);
+ 	devlink_notify(devlink, DEVLINK_CMD_DEL);
+ 	list_del(&devlink->list);
+ }
 -- 
 1.8.3.1
 
