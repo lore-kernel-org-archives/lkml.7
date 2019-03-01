@@ -2,178 +2,161 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58098C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C635C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1429020848
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4BDA2084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JEyoc1et"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tqj3YSzN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389610AbfCARxX (ORCPT
+        id S2389636AbfCARyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:53:23 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:48402 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbfCARxX (ORCPT
+        Fri, 1 Mar 2019 12:54:12 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37093 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbfCARyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:53:23 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x21Hn5jo062465;
-        Fri, 1 Mar 2019 17:52:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=NpucD7YBrSs74vzv0AXK91DfS+GP9Fp13cRwteMq25o=;
- b=JEyoc1et9IUl4twUIN7FXN5HbH3g9uCVH6yniiL/mlA6a0Njg1bpBZ3TlW/+rOgFgtnF
- ko5cw+9Y4gGEflsAEaeReQSQLLwb2eggXY+2FMlDTVmt6CYjXsVNDeFG98zGMtCKt5Yk
- Fq4OLiaoXpNOX1gKniCDuEEuTulYVV8O4rJtPTOzt7Zmk+uIuAf9vwbyJJP62RWCqIT5
- LOD5TRMphV1Ye90VpvGC3k6o0NTQHttJ9NOYRiULbbMt/NfT8zOxJp1fnVOccCAGJLOO
- ID0LYvleQ2Yn00z94C+aNxpOC9QHc40ZkLvYPu8TkCUHlAEp+QFfTOy1fisakExP8i21 Sg== 
-Received: from userv0022.oracle.com (userv0022.oracle.com [156.151.31.74])
-        by aserp2130.oracle.com with ESMTP id 2qtupervyr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 01 Mar 2019 17:52:04 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x21HpwU5007124
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 Mar 2019 17:51:58 GMT
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x21Hpqdx018558;
-        Fri, 1 Mar 2019 17:51:53 GMT
-Received: from [192.168.1.164] (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 01 Mar 2019 09:51:52 -0800
-Subject: Re: [PATCH v4 4/4] hugetlb: allow to free gigantic pages regardless
- of the configuration
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190228063604.15298-1-alex@ghiti.fr>
- <20190228063604.15298-5-alex@ghiti.fr>
- <9a385cc8-581c-55cf-4a85-10b5c4dd178c@intel.com>
- <31212559-d397-88fb-eaec-60f6417436c8@oracle.com>
- <6c842251-1bed-4d79-bf6d-997006ec72e2@intel.com>
- <6ea4119a-0ecb-511d-3aab-269004245a08@oracle.com>
- <1cfaca88-a219-d057-3ab8-37fb1c1687d6@ghiti.fr>
- <f7c94eb5-d496-7e24-d44f-17eaff287012@ghiti.fr>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <0d3de196-bd71-3ec9-00cd-f8274c9c5f53@oracle.com>
-Date:   Fri, 1 Mar 2019 09:51:50 -0800
+        Fri, 1 Mar 2019 12:54:11 -0500
+Received: by mail-pl1-f196.google.com with SMTP id q3so11823969pll.4;
+        Fri, 01 Mar 2019 09:54:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HlB4DS54GFijftk0TlQuUAHn5HmlOlT3HdXeBRlJrdQ=;
+        b=Tqj3YSzNiekIDAqnzz9Pm7NOMco9gWYo/OTwrtEYLEFsRaga8QRElCymPnkOSBBADg
+         s5UIIN9YllBh/mm+dG0FPo5AcyZIC280iKJQq+e9tsHuKeiECqc01E4wZPNftVtMlKCr
+         VuxBEsbFzKYi3t/EqX+Y0CdCDrOhn3w+qCVFuDRKZQCgdcLi7sf8hYQw/JlJcaArJdEw
+         y/d1x6mqoUFXPbdUgEmSMieClwmnLw+khz4wSGOM57qMQnJYpLr2YKBHqPGQcoy95tJ2
+         dGT/r9d6NEU0GI4ci9flYQ0+A4tzdsOx6J8DYpAxeZk/8LkuMIOD38rfg+JGnUxGsmA7
+         fNiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=HlB4DS54GFijftk0TlQuUAHn5HmlOlT3HdXeBRlJrdQ=;
+        b=Zoh1V0e0NhzYRVrKywnzZqpw0f2wLvs3byF66pEGHV+CNUSyWy2moR0WFihmpvsm2x
+         ePOIhRj4US/vdJe5Lix+w/raAyA2JUdRR6A3cdqBZaLBemb/O0WXha028aaRC071S72y
+         X3FeDstqGfozULfTrYPfNELvxYMQVqt+rnnWQTK/qAtj6UUqwFFrCVKzMbmpSxTLU9AG
+         CgfuVBGmg0Eu8P/VmFB3B85RgC1x9i8rxaVElZ2Iz0k0VXpqRmdw9HS6ucgmxDY4KxOY
+         HX/GAgVUmYe3MfY1EYUgTtsGdzLgQ9ZIi4OzWUWiQS5ImOSHveyqccSIn0SGGV8iXavO
+         BO8A==
+X-Gm-Message-State: APjAAAXi0wrVWTnOrY+y6TZa71PHSaKWjNgWXd+npBhP60VynnPh8758
+        o8beX/M+De7fomA8oC0hKm3vDpBs
+X-Google-Smtp-Source: APXvYqzoxUT71goFsDXwTHaRzqVpnxM24CiHm9ZVtVxhreatFlhVeJ3clfwM6LV1SkBHzrlVdM4rog==
+X-Received: by 2002:a17:902:8bc6:: with SMTP id r6mr6779421plo.235.1551462850393;
+        Fri, 01 Mar 2019 09:54:10 -0800 (PST)
+Received: from [10.67.50.0] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id m6sm22727846pfa.115.2019.03.01.09.54.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Mar 2019 09:54:09 -0800 (PST)
+Subject: Re: [PATCH net-next] net: dsa: Do not configure VLAN ID 0
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190228234936.1593-1-f.fainelli@gmail.com>
+ <5cfd1cbc-1ba4-2274-841a-4285db72afa4@ysoft.com>
+ <2f23dc48-a042-4fcf-cc5b-11d247061239@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <ab4f9ea2-f108-1538-3a98-dd03d3657a16@gmail.com>
+Date:   Fri, 1 Mar 2019 09:54:07 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <f7c94eb5-d496-7e24-d44f-17eaff287012@ghiti.fr>
+In-Reply-To: <2f23dc48-a042-4fcf-cc5b-11d247061239@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9182 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903010124
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/1/19 5:21 AM, Alexandre Ghiti wrote:
-> On 03/01/2019 07:25 AM, Alex Ghiti wrote:
->> On 2/28/19 5:26 PM, Mike Kravetz wrote:
->>> On 2/28/19 12:23 PM, Dave Hansen wrote:
->>>> On 2/28/19 11:50 AM, Mike Kravetz wrote:
->>>>> On 2/28/19 11:13 AM, Dave Hansen wrote:
->>>>>>> +    if (hstate_is_gigantic(h) && !IS_ENABLED(CONFIG_CONTIG_ALLOC)) {
->>>>>>> +        spin_lock(&hugetlb_lock);
->>>>>>> +        if (count > persistent_huge_pages(h)) {
->>>>>>> +            spin_unlock(&hugetlb_lock);
->>>>>>> +            return -EINVAL;
->>>>>>> +        }
->>>>>>> +        goto decrease_pool;
->>>>>>> +    }
->>>>>> This choice confuses me.  The "Decrease the pool size" code already
->>>>>> works and the code just falls through to it after skipping all the
->>>>>> "Increase the pool size" code.
->>>>>>
->>>>>> Why did did you need to add this case so early?  Why not just let it
->>>>>> fall through like before?
->>>>> I assume you are questioning the goto, right?  You are correct in that
->>>>> it is unnecessary and we could just fall through.
->>>> Yeah, it just looked odd to me.
+On 3/1/19 9:52 AM, Florian Fainelli wrote:
+
+[snip]
+
+>> Tested-by: Michal Vokáč <michal.vokac@ysoft.com>
+>>
+>> I am not sure what was the original problem as I could not find the
+>> thread where Heiner reported the issue but with the latest version
+>> next-20190228 I get this error with QCA8334 switch:
 > 
->> I'd rather avoid useless checks when we already know they won't
->> be met and I think that makes the code more understandable.
->>
->> But that's up to you for the next version.
+> Thanks Michal. There is still a lingering issue though, because we
+> currently skip the prepare phase (we don't have a switchdev_trans
+> structure that would make sense here), we are not checking that the
+> underlying switch device driver does actually support
+> port_vlan_add/port_vlan_del, and qca8k currently does not. I will submit
+> a v2 patch that also takes care of that.
 
-I too find some value in the goto.  It tells me this !CONFIG_CONTIG_ALLOC
-case is special and we are skipping the normal checks.  But, removing the
-goto is not a requirement for me.
-
->>>>> However, I wonder if we might want to consider a wacky condition that the
->>>>> above check would prevent.  Consider a system/configuration with 5 gigantic
-...
->>
->> If I may, I think that this is the kind of info the user wants to have and we should
->> return an error when it is not possible to allocate runtime huge pages.
->> I already noticed that if someone asks for 10 huge pages, and only 5 are allocated,
->> no error is returned to the user and I found that surprising.
-
-Upon further thought, let's not consider this wacky permanent -> surplus ->
-permanent case.  I just can't see it being an actual use case.
-
-IIUC, that 'no error' behavior is somewhat expected.  I seem to recall previous
-discussions about changing with the end result to leave as is.
-
->>>> @@ -2428,7 +2442,9 @@ static ssize_t __nr_hugepages_store_common(bool obey_mempolicy,
->>>>       } else
->>>>           nodes_allowed = &node_states[N_MEMORY];
->>>>   -    h->max_huge_pages = set_max_huge_pages(h, count, nodes_allowed);
->>>> +    err = set_max_huge_pages(h, count, nodes_allowed);
->>>> +    if (err)
->>>> +        goto out;
->>>>         if (nodes_allowed != &node_states[N_MEMORY])
->>>>           NODEMASK_FREE(nodes_allowed);
->>> Do note that I beleive there is a bug the above change.  The code after
->>> the out label is:
->>>
->>> out:
->>>          NODEMASK_FREE(nodes_allowed);
->>>          return err;
->>> }
->>>
->>> With the new goto, we need the same
->>> if (nodes_allowed != &node_states[N_MEMORY]) before NODEMASK_FREE().
->>>
->>> Sorry, I missed this in previous versions.
->>
->> Oh right, I'm really sorry I missed that, thank you for noticing.
-
-This is the only issue I have with the code in hugetlb.c.  For me, the
-goto can stay or go.  End result is the same.
+David, please discard this version, I will submit a version that
+properly emulates the prepare/commit phase such that no assumptions are
+broken, this will take care of both issues at once. Thanks!
 -- 
-Mike Kravetz
+Florian
