@@ -2,164 +2,165 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF95C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6475CC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785EE20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:58:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fc1D85Qh"
+	by mail.kernel.org (Postfix) with ESMTP id 2787E2084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551470380;
+	bh=KQoQlydgbnJEhwe6xSFRI9D3gi8ShQe1rnF0AanqJvA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=G0GTZEXu6hNkmZ+RyKBTXiTrsnu5H6BG6RQukBqQkVursNxZPmI7TBx1JRBGGsfpx
+	 Q4zmNfJlYjv8fZYwIo3+a5YmMd9ti16M0Sms6PkPNGKc90s1ygTRV5d0F6CZLwvPX6
+	 p+K1eSl4HziWFtNHsy2tgZ18SvSqVhTdIfpf7ONg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfCAT6m (ORCPT
+        id S1726172AbfCAT7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 14:58:42 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:5598 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfCAT6m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 14:58:42 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c798efa0000>; Fri, 01 Mar 2019 11:58:50 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 01 Mar 2019 11:58:41 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 01 Mar 2019 11:58:41 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 Mar
- 2019 19:58:41 +0000
-Subject: Re: [PATCH v2 2/4] mm: remove zone_lru_lock() function access
- ->lru_lock directly
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Rik van Riel <riel@surriel.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>
-References: <20190228083329.31892-1-aryabinin@virtuozzo.com>
- <20190228083329.31892-2-aryabinin@virtuozzo.com>
- <44ffadb4-4235-76c9-332f-680dda5da521@nvidia.com>
- <186bf66b-fec5-a614-3ffd-64b8d7660fe5@virtuozzo.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <1aac5881-0590-8c24-d963-1a7be86a7c43@nvidia.com>
-Date:   Fri, 1 Mar 2019 11:58:40 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 1 Mar 2019 14:59:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbfCAT7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 14:59:38 -0500
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14C642087E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2019 19:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551470377;
+        bh=KQoQlydgbnJEhwe6xSFRI9D3gi8ShQe1rnF0AanqJvA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U1/ptRAzGXpfk0E66aa8M2mPVw8Zn0gDjLLQnsV2ePAaDqmZJXxZlnLbXnjHRM3Md
+         eSuvz5s2v9tQLUhBQMOADiHwgiAtlvlhvJp1JOd8N2gCam9j/kPPBDwkEjdSNYZUAQ
+         Nj4qgHZinaDh5w5bPPKGkmvmv95Ofkj9su6WF11g=
+Received: by mail-wm1-f44.google.com with SMTP id z84so13348566wmg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 11:59:37 -0800 (PST)
+X-Gm-Message-State: APjAAAUDj+Nctkz1lHHEfTAQadwh9dwREwv4oIr4l9l6VVeHa3+/st8/
+        VJRwwyaIOD4uzqIb8AfftoMVuZJjRoTfOC7ERMk7Qg==
+X-Google-Smtp-Source: AHgI3IaeCSVAag+Tz/Ir1U2mdb7RP8IOk0JUl5UlcKX8glgJmdebKrPAMU1EwdnrXZlyUIeHf3zsb6EBnY/oUkDDawk=
+X-Received: by 2002:a1c:eb14:: with SMTP id j20mr4502373wmh.32.1551470375493;
+ Fri, 01 Mar 2019 11:59:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <186bf66b-fec5-a614-3ffd-64b8d7660fe5@virtuozzo.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551470330; bh=iet7hguJ74vBzlUc4/t0rTAEzUcMPS5XRiat49LTLdU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fc1D85Qh67XVnbF++2wghKnKz2r/XTZWPhZRYHcMwgialicSrayW/7fis6GLUxt3q
-         nwDHzN11qXq8F+g92Z8hYbEa7zHCO4T73RWtBU4RPOE7q+QSZO//0eju/cigOiEftt
-         BTErVRdvrONbuzpEpC0G8HMdzi31LmWkdXx+7df4oPyZVVitXAe+DwXJLd5fSSzBSB
-         k8e+qDuTenbi8L4be+B3I/ky0Qv7mmYbP4CNbApDy2zivyxa9dEoqCZtXNoJQEQqBr
-         M1enFdc5hBexsFfHUFiauKaYstoHRAffAfBXypVDMp7kqUO4sqNUYOwU2jVVA4QNgu
-         2AoVxJonVzYug==
+References: <20190301001806.154271-1-smuckle@google.com>
+In-Reply-To: <20190301001806.154271-1-smuckle@google.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 1 Mar 2019 11:59:24 -0800
+X-Gmail-Original-Message-ID: <CALCETrUcH9R62gDdiG-EGTfSt2kQktv-0+bYmPcLn4PWNMrHSQ@mail.gmail.com>
+Message-ID: <CALCETrUcH9R62gDdiG-EGTfSt2kQktv-0+bYmPcLn4PWNMrHSQ@mail.gmail.com>
+Subject: Re: [PATCH] selftests: x86: add version check in test_syscall_vdso
+To:     Steve Muckle <smuckle@google.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/1/19 2:51 AM, Andrey Ryabinin wrote:
-> 
-> 
-> On 3/1/19 12:44 AM, John Hubbard wrote:
->> On 2/28/19 12:33 AM, Andrey Ryabinin wrote:
->>> We have common pattern to access lru_lock from a page pointer:
->>> 	zone_lru_lock(page_zone(page))
->>>
->>> Which is silly, because it unfolds to this:
->>> 	&NODE_DATA(page_to_nid(page))->node_zones[page_zonenum(page)]->zone_pgdat->lru_lock
->>> while we can simply do
->>> 	&NODE_DATA(page_to_nid(page))->lru_lock
->>>
->>
->> Hi Andrey,
->>
->> Nice. I like it so much that I immediately want to tweak it. :)
->>
->>
->>> Remove zone_lru_lock() function, since it's only complicate things.
->>> Use 'page_pgdat(page)->lru_lock' pattern instead.
->>
->> Here, I think the zone_lru_lock() is actually a nice way to add
->> a touch of clarity at the call sites. How about, see below:
->>
->> [snip]
->>
->>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->>> index 2fd4247262e9..22423763c0bd 100644
->>> --- a/include/linux/mmzone.h
->>> +++ b/include/linux/mmzone.h
->>> @@ -788,10 +788,6 @@ typedef struct pglist_data {
->>>  
->>>  #define node_start_pfn(nid)	(NODE_DATA(nid)->node_start_pfn)
->>>  #define node_end_pfn(nid) pgdat_end_pfn(NODE_DATA(nid))
->>> -static inline spinlock_t *zone_lru_lock(struct zone *zone)
->>> -{
->>> -	return &zone->zone_pgdat->lru_lock;
->>> -}
->>>  
->>
->> Instead of removing that function, let's change it, and add another
->> (since you have two cases: either a page* or a pgdat* is available),
->> and move it to where it can compile, like this:
->>
->>
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index 80bb6408fe73..cea3437f5d68 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -1167,6 +1167,16 @@ static inline pg_data_t *page_pgdat(const struct page *page)
->>         return NODE_DATA(page_to_nid(page));
->>  }
->>  
->> +static inline spinlock_t *zone_lru_lock(pg_data_t *pgdat)
->> +{
->> +       return &pgdat->lru_lock;
->> +}
->> +
-> 
-> 
-> I don't think wrapper for a simple plain access to the struct member is reasonable.
-> Besides, there are plenty of "spin_lock(&pgdat->lru_lock)" even without this patch,
-> so for consistency reasons &pgdat->lru_lock seems like a better choice to me.
-> 
-> Also "&pgdat->lru_lock" is just shorter than:
->       "node_lru_lock(pgdat)"
-> 
-> 
-> 
->> +static inline spinlock_t *zone_lru_lock_from_page(struct page *page)
->> +{
->> +       return zone_lru_lock(page_pgdat(page));
->> +}
->> +
-> 
-> I don't think such function would find any use. Usually lru_lock is taken
-> to perform some manipulations with page *and* pgdat, thus it's better to remember
-> page_pgdat(page) in local variable.
-> 
+> On Feb 28, 2019, at 4:18 PM, Steve Muckle <smuckle@google.com> wrote:
+>
+> Since 4.17 registers r8-r11 are not clobbered/zeroed by a 64-bit kernel
+> handling a 32-bit syscall and this behavior is enforced by the
+> test_syscall_vdso testcase. See commit 8bb2610bc496
+> ("x86/entry/64/compat: Preserve r8-r11 in int $0x80").
+>
+> Permit the old behavior in the testcase for kernels prior to 4.17.
 
-That's a good argument.
+NAK.  If you want an old buggy kernel to pass a test, please either
+patch the kernel or run an old test.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+
+>
+> Signed-off-by: Steve Muckle <smuckle@google.com>
+> ---
+> .../testing/selftests/x86/test_syscall_vdso.c | 30 +++++++++++++++++++
+> 1 file changed, 30 insertions(+)
+>
+> diff --git a/tools/testing/selftests/x86/test_syscall_vdso.c b/tools/testing/selftests/x86/test_syscall_vdso.c
+> index c9c3281077bc..f7284dc4c32b 100644
+> --- a/tools/testing/selftests/x86/test_syscall_vdso.c
+> +++ b/tools/testing/selftests/x86/test_syscall_vdso.c
+> @@ -30,6 +30,7 @@
+> #include <sys/time.h>
+> #include <elf.h>
+> #include <sys/ptrace.h>
+> +#include <sys/utsname.h>
+> #include <sys/wait.h>
+>
+> #if !defined(__i386__)
+> @@ -71,6 +72,7 @@ struct regs64 {
+> };
+> struct regs64 regs64;
+> int kernel_is_64bit;
+> +int clobber_ok;
+>
+> asm (
+>    "    .pushsection .text\n"
+> @@ -130,6 +132,28 @@ void print_regs64(void)
+>    printf("12:%016llx 13:%016llx 14:%016llx 15:%016llx\n", regs64.r12,  regs64.r13,  regs64.r14,  regs64.r15);
+> }
+>
+> +static void get_kernel_version(int *version, int *patchlevel)
+> +{
+> +    int ret, sublevel;
+> +    struct utsname utsname;
+> +
+> +    ret = uname(&utsname);
+> +    if (ret) {
+> +        perror("uname");
+> +        exit(1);
+> +    }
+> +
+> +    ret = sscanf(utsname.release, "%d.%d.%d", version, patchlevel,
+> +             &sublevel);
+> +    if (ret < 0) {
+> +        perror("sscanf");
+> +        exit(1);
+> +    } else if (ret != 3) {
+> +        printf("Malformed kernel version %s\n", &utsname.release);
+> +        exit(1);
+> +    }
+> +}
+> +
+> int check_regs64(void)
+> {
+>    int err = 0;
+> @@ -166,6 +190,8 @@ int check_regs64(void)
+>             * Historically (and probably unintentionally), they
+>             * were clobbered or zeroed.
+>             */
+> +            if (clobber_ok && *r64 == 0 && num <= 11)
+> +                continue;
+>        }
+>        printf("[FAIL]\tR%d has changed:%016llx\n", num, *r64);
+>        err++;
+> @@ -385,6 +411,7 @@ int main(int argc, char **argv, char **envp)
+> {
+>    int exitcode = 0;
+>    int cs;
+> +    int version, patchlevel;
+>
+>    asm("\n"
+>    "    movl    %%cs, %%eax\n"
+> @@ -394,6 +421,9 @@ int main(int argc, char **argv, char **envp)
+>    if (!kernel_is_64bit)
+>        printf("[NOTE]\tNot a 64-bit kernel, won't test R8..R15 leaks\n");
+>
+> +    get_kernel_version(&version, &patchlevel);
+> +    clobber_ok = version < 4 || (version == 4 && patchlevel < 17);
+> +
+>    /* This only works for non-static builds:
+>     * syscall_addr = dlsym(dlopen("linux-gate.so.1", RTLD_NOW), "__kernel_vsyscall");
+>     */
+> --
+> 2.21.0.352.gf09ad66450-goog
+>
