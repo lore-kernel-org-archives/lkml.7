@@ -2,207 +2,147 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E208C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4579C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FF120818
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6177E20663
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QfosMyAG"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lL4pTzRg";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="EwOwEhl/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389177AbfCAQsn (ORCPT
+        id S2389226AbfCAQtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:48:43 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47820 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728285AbfCAQsm (ORCPT
+        Fri, 1 Mar 2019 11:49:03 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50720 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728285AbfCAQtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:48:42 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x21Gm2dA087945;
-        Fri, 1 Mar 2019 10:48:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1551458882;
-        bh=+Yz0uiTf07O3FtCAB7jVc9+niTq+LKff5BwRnHvkvdw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QfosMyAG9oj0+25rtvwPdPXW+EH277e79rHnQuRwkTiX/8dNRhlyYex4x/molZpyg
-         xEQS2ZQZOlA0lnLmHgQInsi/wO+nuSQ0ShNruZLZx3sQf7XTS9jKuA9hmLkA3pz7QQ
-         gqhAlDKHYSj7wAn9ypABuUJuSeQCyEGcQoaJkJpM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x21Gm2S7052275
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Mar 2019 10:48:02 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 1
- Mar 2019 10:48:01 -0600
-Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Fri, 1 Mar 2019 10:48:01 -0600
-Received: from [172.22.218.108] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x21Glt8a007743;
-        Fri, 1 Mar 2019 10:47:56 -0600
-Subject: Re: [PATCH v3] cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
-To:     Tokunori Ikegami <ikegami_to@yahoo.co.jp>,
-        "'Boris Brezillon'" <boris.brezillon@collabora.com>,
-        "'liujian (CE)'" <liujian56@huawei.com>
-CC:     "'Tokunori Ikegami'" <ikegami.t@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "ikegami@allied-telesis.co.jp" <ikegami@allied-telesis.co.jp>,
-        "richard@nod.at" <richard@nod.at>,
+        Fri, 1 Mar 2019 11:49:02 -0500
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x21Gkq1E006723;
+        Fri, 1 Mar 2019 08:48:46 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=qV1F0vgMFNiiNI3jBfb9NzxZ+UBd1KUqKhR7Izbz/CE=;
+ b=lL4pTzRgql0Ey81W1fMZVQCxk+R2l5A76/vmcyhaGr2A9qFPDiabL0DPzlMNmj4fBdq0
+ qKIGcdAPSqeBR435n43cdk1JUpMCIcy22AEBV8cGz7GuNLvZgrfvNErD3piM1AFHOITR
+ NFJ4JtkVCO5pKLYtittNGuKFGPndNv0Kz5E= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2qy7c3g8c1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 01 Mar 2019 08:48:45 -0800
+Received: from prn-mbx08.TheFacebook.com (2620:10d:c081:6::22) by
+ prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 1 Mar 2019 08:48:44 -0800
+Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
+ prn-mbx08.TheFacebook.com (2620:10d:c081:6::22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 1 Mar 2019 08:48:43 -0800
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 1 Mar 2019 08:48:43 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qV1F0vgMFNiiNI3jBfb9NzxZ+UBd1KUqKhR7Izbz/CE=;
+ b=EwOwEhl/rbQII3jNiRACDn0MM2NCvKcll5XHJiFMBkr/SodfRAyRpxTqPEpZado55sK6v7c43KDyv9c+tUfBhK/BPzYWW8wHHwiMRkvh5HVvKao6ajpb5UpTWoteWsNR1Vjej5oQLs3OOwJvP3HcXx4CWopXJd9vsFQyOJybVQo=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2869.namprd15.prod.outlook.com (20.178.206.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.15; Fri, 1 Mar 2019 16:48:41 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ecc7:1a8c:289f:df92]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ecc7:1a8c:289f:df92%3]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
+ 16:48:41 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+CC:     Roman Gushchin <guroan@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>
-References: <1551189648-58073-1-git-send-email-liujian56@huawei.com>
- <016001d4cf71$865e7b60$931b7220$@gmail.com>
- <4F88C5DDA1E80143B232E89585ACE27D0264F137@DGGEMM528-MBX.china.huawei.com>
- <20190228164228.734ede80@collabora.com>
- <005a01d4d03e$39b0e0f0$ad12a2d0$@yahoo.co.jp>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <4b3bc01a-3632-5dde-f683-94744ee7179d@ti.com>
-Date:   Fri, 1 Mar 2019 22:17:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <005a01d4d03e$39b0e0f0$ad12a2d0$@yahoo.co.jp>
-Content-Type: text/plain; charset="utf-8"
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH 2/3] mm: separate memory allocation and actual work in
+ alloc_vmap_area()
+Thread-Topic: [PATCH 2/3] mm: separate memory allocation and actual work in
+ alloc_vmap_area()
+Thread-Index: AQHUzUkHvmEZiK9g+UuhGR24XSYfTqX236aAgAAjAQA=
+Date:   Fri, 1 Mar 2019 16:48:41 +0000
+Message-ID: <20190301164834.GA3154@tower.DHCP.thefacebook.com>
+References: <20190225203037.1317-1-guro@fb.com>
+ <20190225203037.1317-3-guro@fb.com>
+ <db6b9745-7e64-6eb9-6b2b-da9d157a779b@suse.cz>
+In-Reply-To: <db6b9745-7e64-6eb9-6b2b-da9d157a779b@suse.cz>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR12CA0039.namprd12.prod.outlook.com
+ (2603:10b6:301:2::25) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:7a0f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0aedf333-3195-4c5e-9076-08d69e65c244
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB2869;
+x-ms-traffictypediagnostic: BYAPR15MB2869:
+x-microsoft-exchange-diagnostics: 1;BYAPR15MB2869;20:pZqoy77TZneKHPbZWFPsf1hffR/n97bXgdLEGOawnn76ZG/N/QXUTam3Xai2uyhTwhOTsheYklmiY80v28hLRNJmdgPyriAEtfVQLLmEzxeiyNQUSiMB/VxMPYKFHIDxZlCfovoucCfZ7U9ny7BBog32lHQDlkac1rvpft+0G9o=
+x-microsoft-antispam-prvs: <BYAPR15MB28699704F17D8024FD9EC0E6BE760@BYAPR15MB2869.namprd15.prod.outlook.com>
+x-forefront-prvs: 09634B1196
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(346002)(376002)(39860400002)(396003)(199004)(189003)(6916009)(476003)(446003)(316002)(11346002)(486006)(7736002)(1076003)(33656002)(54906003)(97736004)(46003)(81156014)(102836004)(8936002)(186003)(386003)(81166006)(53546011)(6506007)(99286004)(106356001)(8676002)(52116002)(14454004)(105586002)(6116002)(478600001)(53936002)(4326008)(25786009)(6436002)(5660300002)(305945005)(76176011)(6486002)(6512007)(9686003)(68736007)(2906002)(6246003)(14444005)(256004)(71190400001)(229853002)(86362001)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2869;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Gd016rsieWHZhRa6i464bFw38vIBLldCVt0T/TK8VaKbsJjmZQOK+H7jIdWqbVbgXdEMB9TjIkq9aJxxDPP1/uyzXlyCEX33MP4hpLDWjcU6tomdvhKw1RlWDOUg3fKGlSdre3Hnnq0m5nvvo7kbIEEgZPP8wDy++oVmTJTWNFlK1vRuKCkhe3sEFzWqeomvTx2ZNqI+TeQ6oFJL7qpMpEOGk2vhTpPIsLMjAyhLLdWfiK0h1q8faaL94iE7LjpYuJOmu8q9bjNU4+OxPxOpgy/IRTL/VjA2ZOr/uF/BFVPR8Lrvp6RNEzh2OMIanhXQfNg0w5n8wMp72HsWE7oe+q+l8+o0suRssx7D/LXt/gLjBOJTRwI7MLjH8/v10yPap0u32iCNBjDV8hYeNMuniHJu3P5phV/UqYFbDtkQod0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <03383EF3FB7B234EA2B739C4591BB3F0@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0aedf333-3195-4c5e-9076-08d69e65c244
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 16:48:41.1645
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2869
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_12:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
->>>>> In function do_write_buffer(), in the for loop, there is a case
->>>>> chip_ready() returns 1 while chip_good() returns 0, so it never break
->>>>> the loop.
->>>>> To fix this, chip_good() is enough and it should timeout if it stay
->>>>> bad for a while.
->>>>>
->>>>> Fixes: dfeae1073583("mtd: cfi_cmdset_0002: Change write buffer to
->>>>> check correct value")
->>>>> Signed-off-by: Yi Huaijie <yihuaijie@huawei.com>
->>>>> Signed-off-by: Liu Jian <liujian56@huawei.com>
->>>>> Reviewed-by: Tokunori Ikegami <ikegami_to@yahoo.co.jp>
->>>>> ---
->>>>> v2->v3:
->>>>> Follow Vignesh's advice:
->>>>> add one more check for check_good() even when time_after() returns
->> true.
->>>>>
->>>>>  drivers/mtd/chips/cfi_cmdset_0002.c | 2 +-
->>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c
->>>>> b/drivers/mtd/chips/cfi_cmdset_0002.c
->>>>> index 72428b6..3da2376 100644
->>>>> --- a/drivers/mtd/chips/cfi_cmdset_0002.c
->>>>> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c
->>>>> @@ -1876,7 +1876,7 @@ static int __xipram do_write_buffer(struct
->>>>> map_info *map, struct flchip *chip,
->>>>>  			continue;
->>>>>  		}
->>>>>
->>>>> -		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
->>>>> +		if (time_after(jiffies, timeo) && !chip_good(map, adr,
->>>>> datum))
->>>>
->>>>   Just another idea to understand easily.
->>>>
->>>>     unsigned long now = jiffies;
->>>>
->>>>     if (chip_good(map, adr, datum)) {
->>>>         xip_enable(map, chip, adr);
->>>>         goto op_done;
->>>>     }
->>>>
->>>>     if (time_after(now, timeo) {
->>>>         break;
->>>>     }
->>>>
->>>
->>> Thank you~. It is more easier to understand！
->>> If there are no other comments, I will send new patch again ):
->>
->> Except this version no longer does what Vignesh suggested. See how you
->> no longer test if chip_good() is true if time_after() returns true. So,
->> imagine the thread entering this function is preempted just after the
->> first chip_good() test, and resumed a few ms later. time_after() will
->> return true, but chip_good() might also return true, and you ignore it.
-> 
-> I think that the following 3 versions will be worked for time_after() as a same result and follow the Vignesh-san suggestion.
-> 
+On Fri, Mar 01, 2019 at 03:43:19PM +0100, Vlastimil Babka wrote:
+> On 2/25/19 9:30 PM, Roman Gushchin wrote:
+> > alloc_vmap_area() is allocating memory for the vmap_area, and
+> > performing the actual lookup of the vm area and vmap_area
+> > initialization.
+> >=20
+> > This prevents us from using a pre-allocated memory for the map_area
+> > structure, which can be used in some cases to minimize the number
+> > of required memory allocations.
+>=20
+> Hmm, but that doesn't happen here or in the later patch, right? The only
+> caller of init_vmap_area() is alloc_vmap_area(). What am I missing?
 
-As Boris explained above version 3 does not really follow my
-suggestion... Please see below
+So initially the patch was a part of a bigger patchset, which
+tried to minimize the number of separate allocations during vmalloc(),
+e.g. by inlining vm_struct->pages into vm_struct for small areas.
 
-> 1. Original Vignesh-san suggestion
-> 
-> 	if (chip_good(map, adr, datum)) {
-> 		xip_enable(map, chip, adr);
-> 		goto op_done;
-> 	}
-> 
-> 	if (time_after(jiffies, timeo)) {
-> 		/* Test chip_good() if TRUE incorrectly again so write failure by time_after() can be avoided. */
-> 		if (chip_good(map, adr, datum)) {
-> 			xip_enable(map, chip, adr);
-> 			goto op_done;
-> 		}
-> 		break;
-> 	}
-> 
+I temporarily dropped the rest of the patchset for some rework,
+but decided to leave this patch, because it looks like a nice refactoring
+in any case, and also it has been already reviewed and acked by Matthew
+and Johannes.
 
-
-Right, here we check chip_good() once _even when time_after() is true_
-to avoid _spurious_ timeout
-
-> 2. Liujian-san v3 patch
-> 
-> 	/* Test chip_good() if FALSE correctly so write failure by time_after() can be avoided. */
-> 	if (time_after(jiffies, timeo) && !chip_good(map, adr))
-> 		break;
-> 
-> 	if (chip_good(map, adr, datum)) {
-> 		xip_enable(map, chip, adr);
-> 		goto op_done;
-> 	}
-> 
-
-This is a better version of 1
-
-> 3. My idea
-> 
-> 	/* Save current jiffies value before chip_good() to avoid write failure by time_after() without testing chip_good() again. */
-> 	unsigned long now = jiffies;
-> 
-> 	if (chip_good(map, adr, datum)) {
-> 		xip_enable(map, chip, adr);
-> 		goto op_done;
-> 	}
-> 
-
-What if thread gets pre-empted at this point and is re-scheduled exactly
-after timeo jiffies have elapsed? Below check would be true and exit loop
-
-> 	if (time_after(now, timeo))
-> 		break;
-> 
-
-So, code does not check for check chip_good() after timeoout has
-elapsed. But chip_good() might be true at this point. Therefore leading
-to spurious timeout.  So this version is still not right.
-
->           Note: Some brackets have been fixed from the previous mail.
-> 
+Thank you for looking into it!
