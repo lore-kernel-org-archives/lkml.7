@@ -2,124 +2,104 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8561C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2931C10F03
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBD42186A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BBB2186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 06:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOw3HGUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfCAGy3 (ORCPT
+        id S1728169AbfCAGys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 01:54:29 -0500
-Received: from foss.arm.com ([217.140.101.70]:58474 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbfCAGy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 01:54:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EFDCEBD;
-        Thu, 28 Feb 2019 22:54:28 -0800 (PST)
-Received: from [172.20.0.134] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A8A23F5C1;
-        Thu, 28 Feb 2019 22:54:27 -0800 (PST)
-Subject: Re: [PATCH v5 01/10] arm64: Provide a command line to disable
- spectre_v2 mitigation
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
-        suzuki.poulose@arm.com, Dave.Martin@arm.com,
-        shankerd@codeaurora.org, julien.thierry@arm.com,
-        mlangsdo@redhat.com, stefan.wahren@i2e.com,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org
-References: <20190227010544.597579-1-jeremy.linton@arm.com>
- <20190227010544.597579-2-jeremy.linton@arm.com>
-From:   Andre Przywara <andre.przywara@arm.com>
-Message-ID: <c993f3c5-a2c1-98c8-7b63-2c7b22aeeb23@foss.arm.com>
-Date:   Fri, 1 Mar 2019 00:54:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 1 Mar 2019 01:54:48 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43208 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfCAGyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 01:54:47 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q17so10961500pfh.10;
+        Thu, 28 Feb 2019 22:54:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=oXEfPEGL+Zj75A5a3F8V80z9LeMcoj/Klqsodz0w0Eo=;
+        b=DOw3HGUvyL8LkrkxcIwaECvG5vd+yUTfNIJM5C6+dybHFL0DMuu5191QjD3KhLjETT
+         ENcwZb1K4hqigvIsGR7MyGcIWVZlKYtDNpwJB+ad+qNPD6TngKT69XEnYF9tvNclyi0s
+         WEVNBmc3fjbXt1ndqpdUmjXgXszS6MnKAvXN7u1yjjwk5mHb8W4INCaCqswfea1aI3Bk
+         zaWy0kA4Vdj3al27bFK8Z+3UmYOvwJt4hDZ9rY9CHb02DZWYMZXgIPCsDb92Z7eN6wOq
+         eKw2lvFgx7XLENb3Iu/09sixuheUiqXBzcl0xjD/Z8BRX0dvTs5lFFxNe9J/Av63QmbH
+         JvcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=oXEfPEGL+Zj75A5a3F8V80z9LeMcoj/Klqsodz0w0Eo=;
+        b=Ie46g3f6yTgH3ImS2B/ICwYOyym/LoXapD83Hro1kjMmgnnhCOb9gl2yBtC1WQ69Vh
+         FIFYy41dwG9sah4Ld+7Bik6pDL75svApQhFe7LT217ygHvjAqov4qzLR18IzmcfDgyj2
+         yiRmHVVqSjmgSDXuSGgR23qoUdCjEXc0N1Kb5JLAT1tFMpdI45HyLxbuY/eCIMTYX4yS
+         T391QhYsK89tx/Mrt2oUtTAQRVoytHB9WxhweA4SDbgPAStdz6j/d6dCn+etyQG3+UJL
+         6dC/ckTcuiGDAfDL8hjKi5WxMGLbvYCWLbCLX3LGV3eHKVaEY0nWiyL73btEPD2DUxrt
+         n/3A==
+X-Gm-Message-State: AHQUAuZLIobiEVYWBQIJJYvhDFe6iNRBjgh1c1Aig1hRWKceq2IJYFu9
+        rZ+LCZupwWO5v37AQfyWTCk=
+X-Google-Smtp-Source: AHgI3IYqJ2/1pxz/XxLtGjRL5eqzEUSI95cTJPkqnQJzFH9WXViShXguZHcx30uhm3begF46omTckQ==
+X-Received: by 2002:aa7:8597:: with SMTP id w23mr3925636pfn.87.1551423286942;
+        Thu, 28 Feb 2019 22:54:46 -0800 (PST)
+Received: from maya190131 ([52.247.206.249])
+        by smtp.gmail.com with ESMTPSA id s4sm19649505pfe.16.2019.02.28.22.54.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Feb 2019 22:54:46 -0800 (PST)
+Date:   Fri, 1 Mar 2019 06:54:45 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, kys@microsoft.com,
+        sthemmin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
+        jasowang@redhat.com, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        haiyangz@microsoft.com, vkuznets@redhat.com,
+        marcelo.cerri@canonical.com
+Subject: [PATCH v5 0/3] PCI: hv: Refactor hv_irq_unmask() to use hv_vpset and
+ cpumask_to_vpset()
+Message-ID: <cover.1551421809.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190227010544.597579-2-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patchset removes a duplicate definition of VP set (hv_vp_set) and
+uses the common definition (hv_vpset) that is used in other places. It
+changes the order of the members in struct hv_pcibus_device due to
+flexible array in hv_vpset.
 
-On 2/26/19 7:05 PM, Jeremy Linton wrote:
-> There are various reasons, including bencmarking, to disable spectrev2
-> mitigation on a machine. Provide a command-line to do so.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+It also removes the duplicate implementation of cpumask_to_vpset(), uses
+the shared implementation, and exports hv_max_vp_index, which is
+required by cpumask_to_vpset().
 
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+It adds __aligned(8) to struct retarget_msi_interrupt because Hyper-V
+requires that hypercall arguments be aligned on an 8 byte boundary. This
+is now a new patch, separate from one of the previous patches.
 
-Cheers,
-Andre.
+Maya Nakamura (3):
+  PCI: hv: Add __aligned(8) to struct retarget_msi_interrupt
+  PCI: hv: Replace hv_vp_set with hv_vpset
+  PCI: hv: Refactor hv_irq_unmask() to use cpumask_to_vpset()
 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> ---
->   Documentation/admin-guide/kernel-parameters.txt |  8 ++++----
->   arch/arm64/kernel/cpu_errata.c                  | 13 +++++++++++++
->   2 files changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 858b6c0b9a15..4d4d6a9537ae 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2842,10 +2842,10 @@
->   			check bypass). With this option data leaks are possible
->   			in the system.
->   
-> -	nospectre_v2	[X86,PPC_FSL_BOOK3E] Disable all mitigations for the Spectre variant 2
-> -			(indirect branch prediction) vulnerability. System may
-> -			allow data leaks with this option, which is equivalent
-> -			to spectre_v2=off.
-> +	nospectre_v2	[X86,PPC_FSL_BOOK3E,ARM64] Disable all mitigations for
-> +			the Spectre variant 2 (indirect branch prediction)
-> +			vulnerability. System may allow data leaks with this
-> +			option.
->   
->   	nospec_store_bypass_disable
->   			[HW] Disable all mitigations for the Speculative Store Bypass vulnerability
-> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-> index 9950bb0cbd52..d2b2c69d31bb 100644
-> --- a/arch/arm64/kernel/cpu_errata.c
-> +++ b/arch/arm64/kernel/cpu_errata.c
-> @@ -220,6 +220,14 @@ static void qcom_link_stack_sanitization(void)
->   		     : "=&r" (tmp));
->   }
->   
-> +static bool __nospectre_v2;
-> +static int __init parse_nospectre_v2(char *str)
-> +{
-> +	__nospectre_v2 = true;
-> +	return 0;
-> +}
-> +early_param("nospectre_v2", parse_nospectre_v2);
-> +
->   static void
->   enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
->   {
-> @@ -231,6 +239,11 @@ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
->   	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
->   		return;
->   
-> +	if (__nospectre_v2) {
-> +		pr_info_once("spectrev2 mitigation disabled by command line option\n");
-> +		return;
-> +	}
-> +
->   	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
->   		return;
->   
-> 
+ arch/x86/hyperv/hv_init.c           |  1 +
+ drivers/pci/controller/pci-hyperv.c | 61 +++++++++++++----------------
+ 2 files changed, 29 insertions(+), 33 deletions(-)
+
+-- 
+2.17.1
+
