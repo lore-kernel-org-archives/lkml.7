@@ -2,176 +2,130 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEE1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5385C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 126092084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7083A20851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 10:41:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VZ+DOAMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbfCAKk1 (ORCPT
+        id S1731890AbfCAKlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 05:40:27 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51172 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727492AbfCAKk1 (ORCPT
+        Fri, 1 Mar 2019 05:41:04 -0500
+Received: from mail-lj1-f170.google.com ([209.85.208.170]:42212 "EHLO
+        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfCAKlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 05:40:27 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x21AeD8G071352
-        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 05:40:25 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2qy2cj2da4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 05:40:25 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Fri, 1 Mar 2019 10:40:23 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 1 Mar 2019 10:40:16 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x21AeFVQ50724934
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 Mar 2019 10:40:15 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AEE45A4053;
-        Fri,  1 Mar 2019 10:40:15 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDCF6A404D;
-        Fri,  1 Mar 2019 10:40:13 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.204.73])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  1 Mar 2019 10:40:13 +0000 (GMT)
-Date:   Fri, 1 Mar 2019 12:40:11 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
-Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
-References: <5c6702da.1c69fb81.12a14.4ece@mx.google.com>
- <20190215104325.039dbbd9c3bfb35b95f9247b@linux-foundation.org>
- <20190215185151.GG7897@sirena.org.uk>
- <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
- <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
- <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
- <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
- <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com>
+        Fri, 1 Mar 2019 05:41:04 -0500
+Received: by mail-lj1-f170.google.com with SMTP id d14so19929619ljl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 02:41:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=iVyTvb+JL+tSG0oRvScKJQbHCTQmv9xA8LYTp/OAnA0=;
+        b=VZ+DOAMsZBpfbo+LpIbaT2bx3zYam11yoCQEX3C4eazAwP+h85IqQNnn13wlr9iryJ
+         T423DwlGbtpYVbwCV4MHBI+jBm9Ft9kaJ/dyVP7gACtbk1fmNef7ebl7MR6ZrEMnscS8
+         BI0lAzD1vobXYCRXXzdnF1hOlYcF5F916MwSzOrfgyVOisrEh0ddjE0SAQEFesyEz0ii
+         btX3twVp4D0q5Ns3Nj5GR15T4001RjZJSdXtdtaukfz3j3BL6spD+0ch675TsoYlh4KQ
+         RegEhUszMMcRuVoldv/oMlBvFkHRNh9ash7tyC3Z5bGCT/m4ATZGA7eqYbHHdLEtdnZx
+         TJuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=iVyTvb+JL+tSG0oRvScKJQbHCTQmv9xA8LYTp/OAnA0=;
+        b=ktTopFYD4BtDf+cZ9AW5ND73x69EAqDHbktM6zT48JvT+5dyx2UjbMWZ1hdCKwR7S5
+         +47GOsjQE8NTRW6vkZ26xtKxUw8mLmDKNcAtiEcTI+tt3LP8XXjlUNP7njMoc7pgZavk
+         wbI/l7qrusPa8npGYSxaAbH33ki4mBYAGBwxFzZ2pMOrvGuBrM6kU7OwTe6LrADumCm0
+         ncgptwt5Jfkq7zB2DivT8O3HrzHuxrZ8MyXDlILcKPiXcPFGEpW1k4oo6tJwTCCHrFZj
+         P4yJs6moEgh8Njh4ZsZCtLb+vlepk0BloAM2DJdQ6mD/k+Z7LH1DTKo2nPkHakPm4XUc
+         SpIA==
+X-Gm-Message-State: APjAAAUAYHcpQklBwLceedS36DJZ4gmle4Uv0kImEVMF0DW+h63jwLYD
+        NbTTD/sXUSNHeylkYhwZFBOC0IOqz3kUQxmdwwxzAQ==
+X-Google-Smtp-Source: APXvYqySHiInE3fCCgKfdciRvFJ42ILiTykam7FT4+TKhtxNknZQOM0UvQUDgQpbYlOR7BLiScxg5yLm9D0QaPvOujU=
+X-Received: by 2002:a2e:6309:: with SMTP id x9mr2158283ljb.75.1551436861623;
+ Fri, 01 Mar 2019 02:41:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19030110-0012-0000-0000-000002FBB841
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030110-0013-0000-0000-0000213367FA
-Message-Id: <20190301104011.GB5156@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903010075
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 1 Mar 2019 16:10:50 +0530
+Message-ID: <CA+G9fYvTkCZf-5OVU848ceskxhB6tKuabZphLb6XC23Nfe6VGA@mail.gmail.com>
+Subject: net/strparser/strparser.c:526 strp_done+0x41/0x50
+To:     Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>, yuehaibing@huawei.com,
+        vakul.garg@nxp.com, davejwatson@fb.com, doronrk@fb.com,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 09:25:24AM +0100, Guillaume Tucker wrote:
-> On 01/03/2019 00:55, Dan Williams wrote:
-> > On Thu, Feb 28, 2019 at 3:14 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >>
-> >> On Tue, 26 Feb 2019 16:04:04 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
-> >>
-> >>> On Tue, Feb 26, 2019 at 4:00 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >>>>
-> >>>> On Fri, 15 Feb 2019 18:51:51 +0000 Mark Brown <broonie@kernel.org> wrote:
-> >>>>
-> >>>>> On Fri, Feb 15, 2019 at 10:43:25AM -0800, Andrew Morton wrote:
-> >>>>>> On Fri, 15 Feb 2019 10:20:10 -0800 (PST) "kernelci.org bot" <bot@kernelci.org> wrote:
-> >>>>>
-> >>>>>>>   Details:    https://kernelci.org/boot/id/5c666ea959b514b017fe6017
-> >>>>>>>   Plain log:  https://storage.kernelci.org//next/master/next-20190215/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-collabora/boot-am335x-boneblack.txt
-> >>>>>>>   HTML log:   https://storage.kernelci.org//next/master/next-20190215/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-7/lab-collabora/boot-am335x-boneblack.html
-> >>>>>
-> >>>>>> Thanks.
-> >>>>>
-> >>>>>> But what actually went wrong?  Kernel doesn't boot?
-> >>>>>
-> >>>>> The linked logs show the kernel dying early in boot before the console
-> >>>>> comes up so yeah.  There should be kernel output at the bottom of the
-> >>>>> logs.
-> >>>>
-> >>>> I assume Dan is distracted - I'll keep this patchset on hold until we
-> >>>> can get to the bottom of this.
-> >>>
-> >>> Michal had asked if the free space accounting fix up addressed this
-> >>> boot regression? I was awaiting word on that.
-> >>
-> >> hm, does bot@kernelci.org actually read emails?  Let's try info@ as well..
-> 
-> bot@kernelci.org is not person, it's a send-only account for
-> automated reports.  So no, it doesn't read emails.
-> 
-> I guess the tricky point here is that the authors of the commits
-> found by bisections may not always have the hardware needed to
-> reproduce the problem.  So it needs to be dealt with on a
-> case-by-case basis: sometimes they do have the hardware,
-> sometimes someone else on the list or on CC does, and sometimes
-> it's better for the people who have access to the test lab which
-> ran the KernelCI test to deal with it.
-> 
-> This case seems to fall into the last category.  As I have access
-> to the Collabora lab, I can do some quick checks to confirm
-> whether the proposed patch does fix the issue.  I hadn't realised
-> that someone was waiting for this to happen, especially as the
-> BeagleBone Black is a very common platform.  Sorry about that,
-> I'll take a look today.
-> 
-> It may be a nice feature to be able to give access to the
-> KernelCI test infrastructure to anyone who wants to debug an
-> issue reported by KernelCI or verify a fix, so they won't need to
-> have the hardware locally.  Something to think about for the
-> future.
+Do you see this Kernel warning  while running selftests bpf tes_sock
+on x86_64 running Linux kernel version  5.0.0-rc8-next-20190301 ?
 
-Another thing to consider is adding "earlyprintk debug" to the kernel
-command line for the boot tests.
- 
-> >> Is it possible to determine whether this regression is still present in
-> >> current linux-next?
-> 
-> I'll try to re-apply the patch that caused the issue, then see if
-> the suggested change fixes it.  As far as the current linux-next
-> master branch is concerned, KernelCI boot tests are passing fine
-> on that platform.
-> 
-> Guillaume
-> 
-
--- 
-Sincerely yours,
-Mike.
-
+selftests: bpf: test_sock
+Test case: bind4 load with invalid access: src_ip6 .. [PASS]
+Test case: bind4 load with invalid access: mark .. [PASS]
+Test case: bind6 load with invalid access: src_ip4 .. [PASS]
+Test case: sock_create load with invalid access: src_port .. [PASS]
+Test case: sock_create load w/o expected_attach_type (compat mode) .. [PASS]
+Test case: sock_create load w/ expected_attach_type .. [PASS]
+Test case: attach type mismatch bind4 vs bind6 .. [PASS]
+Test case: attach type mismatch bind6 vs bind4 .. [PASS]
+Test case: attach type mismatch default vs bind4 .. [PASS]
+Test case: attach type mismatch bind6 vs sock_create .. [PASS]
+Test case: bind4 reject all .. [PASS]
+Test case: bind6 reject all .. [PASS]
+Test case: bind6 deny specific IP & port .. [PASS]
+Test case: bind4 allow specific IP & port .. [PASS]
+Test case: bind4 allow al[  190.125907] WARNING: CPU: 3 PID: 5841 at
+/srv/oe/build/tmp-lkft-glibc/work-shared/intel-corei7-64/kernel-source/net/strparser/strparser.c:526
+strp_done+0x41/0x50
+l .. [PASS]
+Tes[  190.140453] Modules linked in: algif_hash af_alg x86_pkg_temp_thermal fuse
+[  190.148702] CPU: 3 PID: 5841 Comm: kworker/3:166 Not tainted
+5.0.0-rc8-next-20190301 #1
+[  190.156701] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[  190.164180] Workqueue: events sk_psock_destroy_deferred
+[  190.169398] RIP: 0010:strp_done+0x41/0x50
+[  190.173399] Code: e8 04 51 4d ff 48 8d bb c0 00 00 00 e8 d8 50 4d
+ff 48 8b 7b 18 48 85 ff 74 0d e8 aa 83 df ff 48 c7 43 18 00 00 00 00
+5b 5d c3 <0f> 0b eb ce 90 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
+55 48
+[  190.192137] RSP: 0018:ffffaa2ce728fe00 EFLAGS: 00010246
+[  190.197354] RAX: ffffffffa8e09dd0 RBX: ffff9adbfb4bf040 RCX: ffffffffa8492fff
+[  190.204479] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9adbfb4bf040
+[  190.211602] RBP: ffffaa2ce728fe08 R08: 0000000000000001 R09: 0000000000000000
+[  190.218726] R10: 0000000000000000 R11: ffff9adc0fd045c0 R12: ffff9adc9fba1980
+[  190.225863] R13: ffff9adbfb4bf000 R14: 0000000000000000 R15: ffff9adc111226c0
+[  190.232991] FS:  0000000000000000(0000) GS:ffff9adc9fb80000(0000)
+knlGS:0000000000000000
+[  190.241068] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  190.246832] CR2: 00007f6c861cbc90 CR3: 00000003b2c9e001 CR4: 00000000003606e0
+[  190.253957] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  190.261081] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  190.268213] Call Trace:
+[  190.270658]  sk_psock_destroy_deferred+0x29/0x1b0
+[  190.275356]  process_one_work+0x281/0x610
+[  190.279370]  worker_thread+0x3c/0x3f0
+[  190.283034]  kthread+0x12c/0x150
+[  190.286265]  ? process_one_work+0x610/0x610
+[  190.290443]  ? kthread_park+0x90/0x90
+[  190.294102]  ret_from_fork+0x3a/0x50
+[  190.297680] irq event stamp: 2014
+[  190.300989] hardirqs last  enabled at (2013): [<ffffffffa90d71ac>]
+_raw_spin_unlock_irq+0x2c/0x40
+[  190.309859] hardirqs last disabled at (2014): [<ffffffffa90cf569>]
+__schedule+0xb9/0xa30
+[  190.317941] softirqs last  enabled at (1650): [<ffffffffa9400334>]
+__do_softirq+0x334/0x445
+[  190.326278] softirqs last disabled at (1347): [<ffffffffa8476e70>]
+irq_exit+0xc0/0xd0
+[  190.334096] ---[ end trace 1a716d569572ba40 ]---
