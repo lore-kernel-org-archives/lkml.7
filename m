@@ -2,219 +2,191 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FB6C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58B2C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121B320643
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:12:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MEHAg/Bi"
+	by mail.kernel.org (Postfix) with ESMTP id ACAA520850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733001AbfCANMB (ORCPT
+        id S2387527AbfCANVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 08:12:01 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39761 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfCANMB (ORCPT
+        Fri, 1 Mar 2019 08:21:17 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:52997 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbfCANVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 08:12:01 -0500
-Received: by mail-lf1-f65.google.com with SMTP id r123so9603516lff.6
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 05:11:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uy7YQVY0MNyCu4ZleqyjLSVOJnU21/6gwivprbY2l+8=;
-        b=MEHAg/Bi3n/IwCe9n16D71iyMRQgvWGXtM0MYSfjrc7DKSKMsRZpQ5sb1rsKnn7q/k
-         CqpvEp2NfhEdK1anvmuz5F1txCl0FugMSmR4q3Wo7yyWM71eRvX8SB/50EJZNYM5rahd
-         EEqJfyNUI30U1yN+2/EKTVGIKsEpQpUO76giWgpsf/rHk7WwenNCkMm6267Ly6ilaNVo
-         MG8GjzBmKmSnmkxRpUcgmuUNMww1e0ZxXC9yXqOSUvJ95uPse5cseY2O4ssp8e72/vDi
-         ycLu1q3UCkrnuLku+iQ0YFzFW+3/4tWOEUjXOG0p9LbjdQc4YpauU1ENJaZSxB6bUU8c
-         q5Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Uy7YQVY0MNyCu4ZleqyjLSVOJnU21/6gwivprbY2l+8=;
-        b=XtveBwCMAjctwLD64wEPZr5mIBHfxkPc/k93Mp3zty8pFXxoy+fjsqNHeRAWW9ITvn
-         QRSPsq4Np+hJkUCAAlc6xSw0LkdS+xY6hvBYIvjJoxK6bLBC1zy35D4fYwLVqigy9E6G
-         S3pK2FVhm9FkMyYEB4e/ahPr/3u1qhj8WNSuyaGMXrmuXEmH/YQyxLrUqEO7I05Zad6i
-         6OaPXEW1F2kQdzPB8LXv5Zg9sXTHWUcKQXMcXV/6bIMjKIIynQfJgE4xaeosc/V/U009
-         69V8R0ArYthhlYbgcp+c6OEKzZTI7B6HYpasPXiaOGhH7cptakt8kB1enTWAv26OY/9T
-         LEzw==
-X-Gm-Message-State: APjAAAWnSlEkFp4VxDsXYGQg7Jx+YoAG86QeJ4cHqaAoRMa57hrS6STC
-        8iBbSXwWPvY1Y6FP/x4pqvIflg==
-X-Google-Smtp-Source: APXvYqwxjsZGxdGAFzmrfxq8pmEXjVMWanq8pSppG+UOZinUtmoaCSJ0zxFHZOXMcpNU0pG7Yf1uAg==
-X-Received: by 2002:a19:e01e:: with SMTP id x30mr2974054lfg.23.1551445918007;
-        Fri, 01 Mar 2019 05:11:58 -0800 (PST)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id e18sm4538244ljb.2.2019.03.01.05.11.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 05:11:57 -0800 (PST)
-Date:   Fri, 1 Mar 2019 15:11:55 +0200
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     davem@davemloft.net, grygorii.strashko@ti.com,
-        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiri@mellanox.com,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH net-next 4/6] ethernet: eth: add default vid len for all
- ehternet kind devices
-Message-ID: <20190301131153.GD4851@khorivan>
-Mail-Followup-To: Florian Fainelli <f.fainelli@gmail.com>,
-        davem@davemloft.net, grygorii.strashko@ti.com,
-        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiri@mellanox.com,
-        ilias.apalodimas@linaro.org
-References: <20190226184556.16082-1-ivan.khoronzhuk@linaro.org>
- <20190226184556.16082-5-ivan.khoronzhuk@linaro.org>
- <30890ef3-7da8-8399-7388-cc22e000a67f@gmail.com>
+        Fri, 1 Mar 2019 08:21:16 -0500
+X-Originating-IP: 81.250.144.103
+Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id ABA561C001D;
+        Fri,  1 Mar 2019 13:21:06 +0000 (UTC)
+Subject: Re: [PATCH v4 4/4] hugetlb: allow to free gigantic pages regardless
+ of the configuration
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20190228063604.15298-1-alex@ghiti.fr>
+ <20190228063604.15298-5-alex@ghiti.fr>
+ <9a385cc8-581c-55cf-4a85-10b5c4dd178c@intel.com>
+ <31212559-d397-88fb-eaec-60f6417436c8@oracle.com>
+ <6c842251-1bed-4d79-bf6d-997006ec72e2@intel.com>
+ <6ea4119a-0ecb-511d-3aab-269004245a08@oracle.com>
+ <1cfaca88-a219-d057-3ab8-37fb1c1687d6@ghiti.fr>
+Message-ID: <f7c94eb5-d496-7e24-d44f-17eaff287012@ghiti.fr>
+Date:   Fri, 1 Mar 2019 14:21:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <30890ef3-7da8-8399-7388-cc22e000a67f@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1cfaca88-a219-d057-3ab8-37fb1c1687d6@ghiti.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 08:29:20PM -0800, Florian Fainelli wrote:
+On 03/01/2019 07:25 AM, Alex Ghiti wrote:
+> On 2/28/19 5:26 PM, Mike Kravetz wrote:
+>> On 2/28/19 12:23 PM, Dave Hansen wrote:
+>>> On 2/28/19 11:50 AM, Mike Kravetz wrote:
+>>>> On 2/28/19 11:13 AM, Dave Hansen wrote:
+>>>>>> +    if (hstate_is_gigantic(h) && 
+>>>>>> !IS_ENABLED(CONFIG_CONTIG_ALLOC)) {
+>>>>>> +        spin_lock(&hugetlb_lock);
+>>>>>> +        if (count > persistent_huge_pages(h)) {
+>>>>>> +            spin_unlock(&hugetlb_lock);
+>>>>>> +            return -EINVAL;
+>>>>>> +        }
+>>>>>> +        goto decrease_pool;
+>>>>>> +    }
+>>>>> This choice confuses me.  The "Decrease the pool size" code already
+>>>>> works and the code just falls through to it after skipping all the
+>>>>> "Increase the pool size" code.
+>>>>>
+>>>>> Why did did you need to add this case so early?  Why not just let it
+>>>>> fall through like before?
+>>>> I assume you are questioning the goto, right?  You are correct in that
+>>>> it is unnecessary and we could just fall through.
+>>> Yeah, it just looked odd to me.
 >
+> (Dave I do not receive your answers, I don't know why).
+
+I collected mistakes here: domain name expired and no mailing list added :)
+Really sorry about that, I missed the whole discussion (if any).
+Could someone forward it to me (if any) ? Thanks !
+
+> I'd rather avoid useless checks when we already know they won't
+> be met and I think that makes the code more understandable.
 >
->On 2/26/2019 10:45 AM, Ivan Khoronzhuk wrote:
->> IVDF - individual virtual device filtering. Allows to set per vlan
->> l2 address filters on end real network device (for unicast and for
->> multicast) and drop redundant not expected packet income.
+> But that's up to you for the next version.
+>
+> Thanks
+>>>
+>>>> However, I wonder if we might want to consider a wacky condition 
+>>>> that the
+>>>> above check would prevent.  Consider a system/configuration with 5 
+>>>> gigantic
+>>>> pages allocated at boot time.  Also CONFIG_CONTIG_ALLOC is not 
+>>>> enabled, so
+>>>> it is not possible to allocate gigantic pages after boot.
+>>>>
+>>>> Suppose the admin decreased the number of gigantic pages to 3.  
+>>>> However, all
+>>>> gigantic pages were in use.  So, 2 gigantic pages are now 'surplus'.
+>>>> h->nr_huge_pages == 5 and h->surplus_huge_pages == 2, so
+>>>> persistent_huge_pages() == 3.
+>>>>
+>>>> Now suppose the admin wanted to increase the number of gigantic 
+>>>> pages to 5.
+>>>> The above check would prevent this.  However, we do not need to really
+>>>> 'allocate' two gigantic pages.  We can simply convert the surplus 
+>>>> pages.
+>>>>
+>>>> I admit this is a wacky condition.  The ability to 'free' gigantic 
+>>>> pages
+>>>> at runtime if !CONFIG_CONTIG_ALLOC makes it possible.  I don't 
+>>>> necessairly
+>>>> think we should consider this.  hugetlbfs code just makes me think of
+>>>> wacky things. :)
+>>> I think you're saying that the newly-added check is overly-restrictive.
+>>>   If we "fell through" like I was suggesting we would get better 
+>>> behavior.
+>> At first, I did not think it overly restrictive.  But, I believe we can
+>> just eliminate that check for gigantic pages.  If 
+>> !CONFIG_CONTIG_ALLOC and
+>> this is a request to allocate more gigantic pages, 
+>> alloc_pool_huge_page()
+>> should return NULL.
 >>
->> If CONFIG_VLAN_8021Q_IVDF is enabled the following changes are
->> applied, and only for ethernet network devices.
->>
->> By default every ethernet netdev needs vid len = 2 bytes to be able to
->> hold up to 4096 vids. So set it for every eth device to be correct,
->> except vlan devs.
->>
->> In order to shrink all addresses of devices above vlan, the vid_len
->> for vlan dev = 0, as result all suckers sync their addresses to common
->> base not taking in to account vid part (vid_len of "to" devices is
->> important only). And only vlan device is the source of addresses with
->> actual its vid set, propagating it to parent devices while rx_mode().
->>
->> Also, don't bother those ethernet devices that at this moment are not
->> moved to vlan addressing scheme, so while end ethernet device is
->> created - set vid_len to 0, thus, while syncing, its address space is
->> concatenated to one dimensional like usual, and who needs IVDF - set
->> it to NET_8021Q_VID_TSIZE.
->>
->> There is another decision - is to inherit vid_len or some feature flag
->> from end root device in order to all upper devices have vlan extended
->> address space only if exact end real device have such capability. But
->> I didn't, because it requires more changes and probably I'm not
->> familiar with all places where it should be inherited, I would
->> appreciate if someone can guid where it's applicable, then it could
->> become a little bit more limited.
+>> The only potential issue I see is that in the past we have returned 
+>> EINVAL
+>> if !CONFIG_CONTIG_ALLOC and someone attempted to increase the pool size.
+>> Now, we will not increase the pool and will not return an error.  Not 
+>> sure
+>> if that is an acceptable change in user behavior.
 >
->I would think that a call to vlan_dev_ivdf_set() would be enough to
->indicate that the underlying network device driver supports IVDF and
->wants to make use of it. The infrastructure itself that you added costs
->little memory, it is once the call to vlan_dev_ivdf_set() is made that
->the memory consumption increases which is fine, since we want to make
->use of that feature.
->
->While I appreciate the thoughts given to making this a configurable
->option, I feel that enabling it unconditionally and having the
->underlying driver decide would be more manageable.
-
-Not exactly. Even system has no driver calling vlan_dev_ivdf_set()
-I still has this "mem consumption" from the very beginning. That's why I made
-this depended on the driver and CONF. For embedded world it looks fine.
-
-The issues is that I can't change addressing scheme dynamically since some
-drivers and infrastructure that exists before I called vlan_dev_ivdf_set()
-can already have some synced addresses using old scheme. To do this
-dynamically it needs unsync vlans from old scheme and make sync again.
-Probably that is topic to "sync" :-| about....
-
-I considered idea making "above infrastructure" IVDF to be dependent on
-underneath end device IVDF and remove this config at all, but here several
-issues with this, the infrastructure has to be "resynced" and some signal has
-to inform each vlan to do this, and while this happens, all end devices already
-configured and not supported IVDF shouldn't suffer. I can try but it looks not
-doable in normal way, and appreciate any thoughts about this.
-
-Meanwhile, this option looks fine for small embedded paltforms.
-
->
->We have had that conversation before, but let me ask again when we call
->dev_{uc,mc}_sync() and ultimately the network device's
->ndo_set_rx_mode(), by the time the ndo_set_rx_mode() function is called,
->we lost track of the call chain, like which virtual device was it
->originating from. If we somehow added a notification information about
->the network device stack (and we could use netdevice notifiers for
->that), then maybe we don't really need to add all of this code and we
->can just derive the necessary bits of information we want by checking:
->is this a VLAN network device? It is, okay what's your VLAN ID, etc.?
->
->Either approach would get us our cookie anyway :)
-
-Postulate here is that address of vlan device is separate from netdevice entity
-with it's own context.
-
-Several cases talking about this:
-
-- bound device having 2 slaves can have added vid to both slave devices but
-synced addresses for only one of them. So, if vid is set in real device it 
-doesn't mean it needs addresses of vlan device.
-
-- I know that's crazy, but net device tree can contain 2 same vlan devices ).
-The scheme doesn't prevent this case. So one vid address can be counted by two
-vlan network devices.
-
-- Any of the devices in _sync/rx_mode() chain is legal to do with addresses
-what ever it's allowed to do, drop some of them, combine with others and more,
-even add it's own vid addresses w/o actual vlan network device.
-
-These made me to look in side of building rx_sync netdevice tree holding links
-on nodes per each address. And I've did this mostly...then after short look
-on this asked myself "who is going to support this ..." and it anyway doesn't
-cover all possible cases.
-
-So, lost track of the device looks not so bad and opens more possibilities.
-
+> If I may, I think that this is the kind of info the user wants to have 
+> and we should
+> return an error when it is not possible to allocate runtime huge pages.
+> I already noticed that if someone asks for 10 huge pages, and only 5 
+> are allocated,
+> no error is returned to the user and I found that surprising.
 >
 >>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
+>> If we go down this path, then we could remove this change as well:
 >
->[snip]
+> I agree that in that path, we do not need the following change neither.
 >
->> @@ -404,8 +405,13 @@ EXPORT_SYMBOL(ether_setup);
->>  struct net_device *alloc_etherdev_mqs(int sizeof_priv, unsigned int txqs,
->>  				      unsigned int rxqs)
->>  {
->> -	return alloc_netdev_mqs(sizeof_priv, "eth%d", NET_NAME_UNKNOWN,
->> -				ether_setup, txqs, rxqs);
->> +	struct net_device *dev;
->> +
->> +	dev = alloc_netdev_mqs(sizeof_priv, "eth%d", NET_NAME_UNKNOWN,
->> +			       ether_setup, txqs, rxqs);
+>>
+>>> @@ -2428,7 +2442,9 @@ static ssize_t 
+>>> __nr_hugepages_store_common(bool obey_mempolicy,
+>>>       } else
+>>>           nodes_allowed = &node_states[N_MEMORY];
+>>>   -    h->max_huge_pages = set_max_huge_pages(h, count, nodes_allowed);
+>>> +    err = set_max_huge_pages(h, count, nodes_allowed);
+>>> +    if (err)
+>>> +        goto out;
+>>>         if (nodes_allowed != &node_states[N_MEMORY])
+>>>           NODEMASK_FREE(nodes_allowed);
+>> Do note that I beleive there is a bug the above change.  The code after
+>> the out label is:
+>>
+>> out:
+>>          NODEMASK_FREE(nodes_allowed);
+>>          return err;
+>> }
+>>
+>> With the new goto, we need the same
+>> if (nodes_allowed != &node_states[N_MEMORY]) before NODEMASK_FREE().
+>>
+>> Sorry, I missed this in previous versions.
 >
->You need to check the return value of alloc_netdev_mqs() now, otherwise
->you could be doing a NPD in the call right under. Since that is the
->default though, do you really need to call vlan_dev_ivdf_set() below?
+> Oh right, I'm really sorry I missed that, thank you for noticing.
+>
 
-Yep. Has to be done.
-But IVDF is not default....and can't be toggled dynamically, at least for now.
-
->-- 
->Florian
-
--- 
-Regards,
-Ivan Khoronzhuk
