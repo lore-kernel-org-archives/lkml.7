@@ -2,164 +2,219 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5C5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 22:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0FBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84DD92083D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 22:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="CzQ6zYf6"
+	by mail.kernel.org (Postfix) with ESMTP id 802602083D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfCAW6P (ORCPT
+        id S1727649AbfCAXAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 17:58:15 -0500
-Received: from mail-eopbgr690107.outbound.protection.outlook.com ([40.107.69.107]:60976
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726337AbfCAW6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 17:58:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7D0uQdkK/KTND7GsuRV58wX5LztBFCV+ZAvSqjr3hfo=;
- b=CzQ6zYf6Uj+UfuuZP0jZkbwtUx3zMuEYWabXuareGVj59M9afYQfSA8fct97TLEwQde6VZbNwSxbpzWcDw3wHcfImMbHQRXeoTcRcp+HDNnN0Isnssc0iPyxUcN1bkFYb9eMJ+h9+afmRAeEztIu64R6f+97MbWhiI0oQXdsMEs=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1712.namprd22.prod.outlook.com (10.164.206.154) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.18; Fri, 1 Mar 2019 22:58:10 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b8d4:8f0d:d6d1:4018]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b8d4:8f0d:d6d1:4018%3]) with mapi id 15.20.1665.017; Fri, 1 Mar 2019
- 22:58:10 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [PATCH] MIPS: eBPF: Fix icache flush end address
-Thread-Topic: [PATCH] MIPS: eBPF: Fix icache flush end address
-Thread-Index: AQHU0II9QjuLpQE7bEiWH3F6aW3bIQ==
-Date:   Fri, 1 Mar 2019 22:58:09 +0000
-Message-ID: <20190301225743.8632-1-paul.burton@mips.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR11CA0104.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::45) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.21.0
-x-originating-ip: [67.207.99.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 505f46a1-6a24-4398-4409-08d69e995fd5
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR2201MB1712;
-x-ms-traffictypediagnostic: MWHPR2201MB1712:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;MWHPR2201MB1712;23:Y6AUrjOfGAUrK1UqYhSj7607jP/rXXyft5Nxk?=
- =?iso-8859-1?Q?NryRb2AlPzWpVmZFGc6TkDwDJFBGqh9bInQeSDOo4pETWTldYMxSlSipWI?=
- =?iso-8859-1?Q?voYg6pvpUt/vp5WnmWYcRZqJGB/pzER9qT3wRvd4WDvXMLE7Wa5UBRKhqD?=
- =?iso-8859-1?Q?MuspVxp1LNg1xCLXstX0dzfdUTC0ifxqpVikW87TPP9PliT3JgSOHhxQqy?=
- =?iso-8859-1?Q?1wP0Sneg2bhExtPX/TUzTXZZOL3pEiVknomo+Bo+95Q7DE8Nbab2tRhgww?=
- =?iso-8859-1?Q?4RH0m41HAu1qWMw9OvjsLEojHGMXyZO/y8vvRyTg9jwqcWXxicFQ0hx3qm?=
- =?iso-8859-1?Q?qArDUERwsT6vYXVd8F8v8a5MDxRgEK9zcJjD1KVqxEeVBJeQ6R/5ml1QkB?=
- =?iso-8859-1?Q?b+TOaJOqKtNy6PHE4wZNa7WKA3lahhn04tIx7x3z+Z1W5UwozzSpea3Q2C?=
- =?iso-8859-1?Q?WLccSCBpGifSAIjzKg/GMnNNN9p0OPA12QXv3/NuCwopFhAC4dMuNaL/9F?=
- =?iso-8859-1?Q?SpBBP0ZkfE/qr3LdqEI3Zr6BCdQTbzY0uW1WeuqEfIHbobu/HVpxaznd9Q?=
- =?iso-8859-1?Q?ZucV6A63fIlL7YhU51CufqSmbt+k43CgaE9v5cAlYyysnDUOw05gfdCy4T?=
- =?iso-8859-1?Q?6WgHudCgliUqtf+qnvUltCY7e0tTutZDzk8/QNClvu4yp/VXGCUx6y55Ul?=
- =?iso-8859-1?Q?sWaTX+MLwdw72H6V0MnEq8E6yUH5qUTNe44JAxl+mYIXfHFEfO2AjcPVOn?=
- =?iso-8859-1?Q?l61r7f0N3RX/sB9+hWA3T9rMtCuFoCTvy8kDeUgnwZ703YW37YX6EVFP/p?=
- =?iso-8859-1?Q?7+mHAOPokffsjHXbDBOkfiNyPkG24Yaatgxzpr1mUMYGKlAc6rR924mLg2?=
- =?iso-8859-1?Q?ubCGzhWyN1H8CSG9cNEJNVNsnlsrWA2RPt26v5g7RWmvlxL5YQgp39NZA9?=
- =?iso-8859-1?Q?r7k4J7fFDHnSNeHIR7I49N5/xdQa4oh8VJlL1/1O9ZfjjykuzlbD1NgkLs?=
- =?iso-8859-1?Q?b4CACJtKwztqHjddz/17xzTjhlRqoLiZ5lozTv3zudz7eKf4TQG41vBy4y?=
- =?iso-8859-1?Q?7ySfNjUtkL1IwNDbO05GXnKagho3US7eXv1QT6QGo9Gs0HiY1RrlYWn0O0?=
- =?iso-8859-1?Q?uVL0TSh5CftckXWif1qy99O1mB5nzCMdBrXeDYcRwUooKCuGjAf8h/UpkU?=
- =?iso-8859-1?Q?sLB7lkbORrdkefluGBsgUk1GTtdkqCFTwPttBY8kkwVc+LPJKGU4rAmO/z?=
- =?iso-8859-1?Q?3HB/uWL/fyZ0FJv/rGovZ/1IlflE2LwTw4BQ733NrDVYVVB676N0s8xDEE?=
- =?iso-8859-1?Q?oj3s=3D?=
-x-microsoft-antispam-prvs: <MWHPR2201MB171221E822570A57D075C2DEC1760@MWHPR2201MB1712.namprd22.prod.outlook.com>
-x-forefront-prvs: 09634B1196
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(136003)(376002)(396003)(346002)(366004)(199004)(189003)(316002)(6116002)(3846002)(99286004)(2201001)(1076003)(186003)(7736002)(5660300002)(2616005)(7416002)(105586002)(44832011)(14444005)(256004)(52116002)(486006)(386003)(6506007)(81166006)(81156014)(8676002)(476003)(305945005)(2906002)(97736004)(4326008)(54906003)(110136005)(42882007)(66066001)(6436002)(6486002)(26005)(53936002)(2501003)(71190400001)(71200400001)(478600001)(50226002)(8936002)(6512007)(25786009)(14454004)(102836004)(106356001)(36756003)(68736007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1712;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 99p/MpIJjqXs5OAkrwpL2l5pRSXTEKHOPQP83798NaKVde059olqv8LAqHDRfkS5bGhPgRd/vJkIq58y9CIEZGIAEXJ+xIRHwzMbGv54S2pV3xlwy/miEcR5RwWJCHy4t0PMyCtQ546hfjMG0XG2eecfhq06kpRUgqBOjhB2vqaLwXNIcVDP+GbF/cg+BQ2siyynzGJyR36AzM9oUv92noYzNYng7sNEzv87PKo0SSOgtYdAC5kMxCdP2s0keXlVXM06GSXZYW0edNgUWgogUYplmn0qohZHG47k15JVw3p2Rqa7wTVWzBM0DWWfttE2ob6dsdlq+ApTOuBKsEcbCL8m8CumO7b94lf6XEt/ayrfLg99U9smTDe1RJsIGRFxcP/iVDUADVp8C/OH2Sq7H1wyEv/BBLIGEgEa1uF0nV4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 1 Mar 2019 18:00:24 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42515 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726337AbfCAXAY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 18:00:24 -0500
+Received: by mail-qk1-f195.google.com with SMTP id y140so15325044qkb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 15:00:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=NCIX/43FE8u7QVkPRu8lMcjtW87sMpYmpGvTDgosx1g=;
+        b=CIhYEwpw4ffBrmlWVBpuWxNNEi8MFPBQr1bGsHSWLRENDyk3SO4a9j3I8/axPpsRGo
+         9XHdHGXvDbFLZlEqpWjG4HWjfqvf/wQz60upQ5aCGfyxEspr09S5p7bc64rD3Ldm7pIU
+         wZj3Cve68ri+yOxZO5157r/4iqhf2WYsTf1NxZeurbQV1tkTJR+8qzLzH/s6FPOBmAO3
+         dfa0COxS4KCfd+UjiiJshzPYEMTeNM3pJ+IeeES8qp7l9mcoU1O2ueLA+VVmMkQRnW97
+         neIjgB1A3JPglBzxwOAn7HMxh4k+UiZLdWqkF1IZijUzxSHiaN8yj91TLl/ssY4N5NrG
+         RF4Q==
+X-Gm-Message-State: APjAAAUkfNfOvrL9KdOnFyLmhS9AnNLCjWO/Tv9iKRmk91sZ6AOJmSDF
+        59xnu6GJ1roZkkiACnZS8uNZEw==
+X-Google-Smtp-Source: APXvYqwUBDbutsz/7xBk6ONr2/RbZxUK/QesF+fQH5xMvb+3BOcq6aw3eZ5PaHk76C05DglV6qtixg==
+X-Received: by 2002:a37:4b49:: with SMTP id y70mr5727861qka.134.1551481223084;
+        Fri, 01 Mar 2019 15:00:23 -0800 (PST)
+Received: from localhost.localdomain (h69-128-230-203.cntcnh.dsl.dynamic.tds.net. [69.128.230.203])
+        by smtp.gmail.com with ESMTPSA id n66sm9061255qkl.38.2019.03.01.15.00.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Mar 2019 15:00:22 -0800 (PST)
+Subject: Re: [RFC] kprobes: Fix locking in recycle_rp_inst
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Srinivasa D S <srinivasa@in.ibm.com>,
+        Hien Nguyen <hien@us.ibm.com>, stable@vger.kernel.org
+References: <20190226161036.10680-1-jolsa@kernel.org>
+ <20190227173846.397e2a66da37e0385d3fc383@kernel.org>
+ <20190227133309.GL18893@krava>
+ <20190228155032.87b2a87926318744b64eee89@kernel.org>
+From:   David Valin <dvalin@redhat.com>
+Message-ID: <7f02944d-b859-4716-c786-d0dee6feab20@redhat.com>
+Date:   Fri, 1 Mar 2019 18:00:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 505f46a1-6a24-4398-4409-08d69e995fd5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 22:58:10.0275
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1712
+In-Reply-To: <20190228155032.87b2a87926318744b64eee89@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MIPS eBPF JIT calls flush_icache_range() in order to ensure the
-icache observes the code that we just wrote. Unfortunately it gets the
-end address calculation wrong due to some bad pointer arithmetic.
+Finally got around to testing it.  Verified the issue was still 
+present.  Then install Jiri's fix.  Cleared the issue out.  So at least 
+from the standpoint of fixing the hang, the change is good.
 
-The struct jit_ctx target field is of type pointer to u32, and as such
-adding one to it will increment the address being pointed to by 4 bytes.
-Therefore in order to find the address of the end of the code we simply
-need to add the number of 4 byte instructions emitted, but we mistakenly
-add the number of instructions multiplied by 4. This results in the call
-to flush_icache_range() operating on a memory region 4x larger than
-intended, which is always wasteful and can cause crashes if we overrun
-into an unmapped page.
+Dave
 
-Fix this by correcting the pointer arithmetic to remove the bogus
-multiplication, and use braces to remove the need for a set of brackets
-whilst also making it obvious that the target field is a pointer.
-
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: b6bd53f9c4e8 ("MIPS: Add missing file for eBPF JIT.")
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.13+
----
- arch/mips/net/ebpf_jit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/net/ebpf_jit.c b/arch/mips/net/ebpf_jit.c
-index 76e9bf88d3b9..0effd3cba9a7 100644
---- a/arch/mips/net/ebpf_jit.c
-+++ b/arch/mips/net/ebpf_jit.c
-@@ -1819,7 +1819,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog =
-*prog)
-=20
- 	/* Update the icache */
- 	flush_icache_range((unsigned long)ctx.target,
--			   (unsigned long)(ctx.target + ctx.idx * sizeof(u32)));
-+			   (unsigned long)&ctx.target[ctx.idx]);
-=20
- 	if (bpf_jit_enable > 1)
- 		/* Dump JIT code */
---=20
-2.21.0
-
+On 2/28/19 1:50 AM, Masami Hiramatsu wrote:
+> On Wed, 27 Feb 2019 14:33:09 +0100
+> Jiri Olsa <jolsa@redhat.com> wrote:
+>
+>> On Wed, Feb 27, 2019 at 05:38:46PM +0900, Masami Hiramatsu wrote:
+>>
+>> SNIP
+>>
+>>>> When we switch it to raw_spin_lock_irqsave the return probe
+>>>> on _raw_spin_lock starts working.
+>>> Yes, there can be a race between probes and probe on irq handler.
+>>>
+>>> kretprobe_hash_lock()/kretprobe_hash_unlock() are safe because
+>>> those disables irqs. Only recycle_rp_inst() has this problem.
+>>>
+>>> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+>>>
+>>> And this is one of the oldest bug in kprobe.
+>>>
+>>> commit ef53d9c5e4da ("kprobes: improve kretprobe scalability with hashed locking")
+>>>
+>>> introduced the spin_lock(&rp->lock) in recycle_rp_inst() but forgot to disable irqs.
+>>> And
+>>>
+>>> commit c9becf58d935 ("[PATCH] kretprobe: kretprobe-booster")
+>> ok, so I'll add:
+>>
+>> Fixes: c9becf58d935 ("[PATCH] kretprobe: kretprobe-booster")
+>>
+>>> introduced assembly-based trampoline which didn't disable irq.
+>>>
+>>> Could you add Cc:stable to this patch too?
+>> sure, attaching patch with updated changelog
+> Thank you Jiri,
+>
+> Ingo, could you pick this patch? (and my kretprobe fixup series?)
+>
+> Thank you,
+>
+>> thanks,
+>> jirka
+>>
+>>
+>> ---
+>> We can call recycle_rp_inst from both task and irq contexts,
+>> so we should irqsave/irqrestore locking functions.
+>>
+>> I wasn't able to hit this particular lockup, but I found it
+>> while checking on why return probe on _raw_spin_lock locks
+>> the system, reported by David by using bpftrace on simple
+>> script, like:
+>>
+>>    kprobe:_raw_spin_lock
+>>    {
+>>        @time[tid] = nsecs;
+>>        @symb[tid] = arg0;
+>>    }
+>>
+>>    kretprobe:_raw_spin_lock
+>>        / @time[tid] /
+>>    {
+>>        delete(@time[tid]);
+>>        delete(@symb[tid]);
+>>    }
+>>
+>> or by perf tool:
+>>
+>>    # perf probe -a _raw_spin_lock:%return
+>>    # perf record -e probe:_raw_spin_lock__return -a
+>>
+>> The thing is that the _raw_spin_lock call in recycle_rp_inst,
+>> is the only one that return probe code paths call and it will
+>> trigger another kprobe instance while already processing one
+>> and lock up on kretprobe_table_lock lock:
+>>
+>>    #12 [ffff99c337403d28] queued_spin_lock_slowpath at ffffffff9712693b
+>>    #13 [ffff99c337403d28] _raw_spin_lock_irqsave at ffffffff9794c100
+>>    #14 [ffff99c337403d38] pre_handler_kretprobe at ffffffff9719435c
+>>    #15 [ffff99c337403d68] kprobe_ftrace_handler at ffffffff97059f12
+>>    #16 [ffff99c337403d98] ftrace_ops_assist_func at ffffffff971a0421
+>>    #17 [ffff99c337403dd8] handle_edge_irq at ffffffff97139f55
+>>    #18 [ffff99c337403df0] handle_edge_irq at ffffffff97139f55
+>>    #19 [ffff99c337403e58] _raw_spin_lock at ffffffff9794c111
+>>    #20 [ffff99c337403e88] _raw_spin_lock at ffffffff9794c115
+>>    #21 [ffff99c337403ea8] trampoline_handler at ffffffff97058a8f
+>>    #22 [ffff99c337403f00] kretprobe_trampoline at ffffffff970586d5
+>>    #23 [ffff99c337403fb0] handle_irq at ffffffff97027b1f
+>>    #24 [ffff99c337403fc0] do_IRQ at ffffffff97a01bc9
+>>    --- <IRQ stack> ---
+>>    #25 [ffffa5c3c1f9fb38] ret_from_intr at ffffffff97a0098f
+>>        [exception RIP: smp_call_function_many+460]
+>>        RIP: ffffffff9716685c  RSP: ffffa5c3c1f9fbe0  RFLAGS: 00000202
+>>        RAX: 0000000000000005  RBX: ffff99c337421c80  RCX: ffff99c337566260
+>>        RDX: 0000000000000001  RSI: 0000000000000000  RDI: ffff99c337421c88
+>>        RBP: ffff99c337421c88   R8: 0000000000000001   R9: ffffffff98352940
+>>        R10: ffff99c33703c910  R11: ffffffff9794c110  R12: ffffffff97055680
+>>        R13: 0000000000000000  R14: 0000000000000001  R15: 0000000000000040
+>>        ORIG_RAX: ffffffffffffffde  CS: 0010  SS: 0018
+>>    #26 [ffffa5c3c1f9fc20] on_each_cpu at ffffffff97166918
+>>    #27 [ffffa5c3c1f9fc40] ftrace_replace_code at ffffffff97055a34
+>>    #28 [ffffa5c3c1f9fc88] ftrace_modify_all_code at ffffffff971a3552
+>>    #29 [ffffa5c3c1f9fca8] arch_ftrace_update_code at ffffffff97055a6c
+>>    #30 [ffffa5c3c1f9fcb0] ftrace_run_update_code at ffffffff971a3683
+>>    #31 [ffffa5c3c1f9fcc0] ftrace_startup at ffffffff971a6638
+>>    #32 [ffffa5c3c1f9fce8] register_ftrace_function at ffffffff971a66a0
+>>
+>> When we switch it to raw_spin_lock_irqsave the return probe
+>> on _raw_spin_lock starts working.
+>>
+>> Fixes: c9becf58d935 ("[PATCH] kretprobe: kretprobe-booster")
+>> Cc: stable@vger.kernel.org
+>> Reported-by: David Valin <dvalin@redhat.com>
+>> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>> ---
+>>   kernel/kprobes.c | 6 ++++--
+>>   1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+>> index c83e54727131..c82056b354cc 100644
+>> --- a/kernel/kprobes.c
+>> +++ b/kernel/kprobes.c
+>> @@ -1154,9 +1154,11 @@ void recycle_rp_inst(struct kretprobe_instance *ri,
+>>   	hlist_del(&ri->hlist);
+>>   	INIT_HLIST_NODE(&ri->hlist);
+>>   	if (likely(rp)) {
+>> -		raw_spin_lock(&rp->lock);
+>> +		unsigned long flags;
+>> +
+>> +		raw_spin_lock_irqsave(&rp->lock, flags);
+>>   		hlist_add_head(&ri->hlist, &rp->free_instances);
+>> -		raw_spin_unlock(&rp->lock);
+>> +		raw_spin_unlock_irqrestore(&rp->lock, flags);
+>>   	} else
+>>   		/* Unregistering */
+>>   		hlist_add_head(&ri->hlist, head);
+>> -- 
+>> 2.17.2
+>>
+>
