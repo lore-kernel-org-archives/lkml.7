@@ -2,180 +2,142 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62D2C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCC4C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866222084F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735232084F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D1BsrdId"
+	dkim=pass (1024-bit key) header.d=criteo.com header.i=@criteo.com header.b="MWWKzE0/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388894AbfCAQAB (ORCPT
+        id S2388933AbfCAQAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:00:01 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40502 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbfCAQAB (ORCPT
+        Fri, 1 Mar 2019 11:00:43 -0500
+Received: from mx07-00287e01.pphosted.com ([91.207.212.151]:52093 "EHLO
+        mx08-00287e01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727952AbfCAQAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:00:01 -0500
-Received: by mail-oi1-f195.google.com with SMTP id x187so19842124oia.7
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 08:00:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W190I+yoZEdd0KSL3BGOC3ZLIzOQOJXLBGSLLzpQAP4=;
-        b=D1BsrdIdDshr3lU3gfVOE8cWWYRYUjDEQgGH9NiJbfFJwB1YF6tozpgqwimx10vxfe
-         GjR0RYGPwzA9u2R7ruiXCLWlxFNEIV8MVOSYQEieDl9Zz9dG1tIOnoF/q4D/tNsE4Kvl
-         Q+r6rPcHv8u+xB6cFdJcZjdD8UGCG7uZ1tF1QZHjtbvfe5u25bQVSyguY/bR43l8hduq
-         GMuKbLTYsBSCfhRWcB+Fh++mcNGXZ+fvulxxljhaAvcz1z9gxZPREiYGkEw7RR0NP64P
-         G81ZryfeTlBmYDshM4kIhWSXRtIlKwmDmMt/KPQzCD0WvbMX22sVKEPbTp0KH3zNcdvb
-         v5Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W190I+yoZEdd0KSL3BGOC3ZLIzOQOJXLBGSLLzpQAP4=;
-        b=eoxRBB7eDWjB3wkpUpgdjjaTwfXP8uLhYNsKhlcFhSZn4dkSFcW5GyUbsOfONlHZAZ
-         Fqs/V9Zk9aItavwxhAp0wPyMuwbJ/1sJhNjz1oMLXPEUGoGSiNtUNuQbyoYX/kBLZcg6
-         XknHp/9D8lTx3vGUkmQGO+4xBcPH2b6xuxJni8ncEoMY8bBIfib1PWReWUgS4PzXut5X
-         aYWdx4aoGCdEf1bFclwBXcLJXV/LOMD8uPllr42R96/VOOWH9VQOfxGuRatLZL5+J73+
-         v4j7B16zQYDFTD3g2j1kDDvzhA87ofCpeid/JY2fpocJVlwqCMOV/b6mAsuuBhqGMZbH
-         8j1g==
-X-Gm-Message-State: AHQUAuZhE58vLWRVivgHVnmFNcmwHb0CD7BJBV2Yj3toW43lQBCiQRv3
-        AphFI+f9VYH8pshyjjGdC3gdIWg/2hKPLqg3BzpS1yU0
-X-Google-Smtp-Source: AHgI3IacCeOjW33h8cstkaxyTXVKE5e1GxGf51NtRlghqz9L3It1fwf9yIQb+hIJss4zgKfkFMDc6RzL88/G63pl1u0=
-X-Received: by 2002:aca:cc4d:: with SMTP id c74mr3791791oig.157.1551455999605;
- Fri, 01 Mar 2019 07:59:59 -0800 (PST)
+        Fri, 1 Mar 2019 11:00:43 -0500
+Received: from pps.filterd (m0111313.ppops.net [127.0.0.1])
+        by mx08-00287e01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x21FtF6c018584;
+        Fri, 1 Mar 2019 17:00:22 +0100
+Received: from eur01-db5-obe.outbound.protection.outlook.com (mail-db5eur01lp2058.outbound.protection.outlook.com [104.47.2.58])
+        by mx08-00287e01.pphosted.com with ESMTP id 2qtwfgf0j5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 Mar 2019 17:00:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=criteo.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OAMveYDU8VgJ0iXYVjLqnCdn3zn8qXekvlkzlpTzVC0=;
+ b=MWWKzE0/0SWGP/2rIOHAKtUPMBxJT1zO0OEEQRAQZtUaSmda82wttT1EJhXQyrFzLUgtP63lnxTSvh/pA8PWSuFNqJ03rPQEdztpx4Nl/ZNnnsa1FE/rn4aDw3V0g5A7/Dyeb+TM9lQ1jwhEhgfK9+UsxOVG6YnCRLqkB1zZzuo=
+Received: from VI1PR04MB5629.eurprd04.prod.outlook.com (20.178.125.158) by
+ VI1PR04MB4015.eurprd04.prod.outlook.com (10.171.182.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.16; Fri, 1 Mar 2019 16:00:20 +0000
+Received: from VI1PR04MB5629.eurprd04.prod.outlook.com
+ ([fe80::4574:93ab:72b8:d1ec]) by VI1PR04MB5629.eurprd04.prod.outlook.com
+ ([fe80::4574:93ab:72b8:d1ec%3]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
+ 16:00:20 +0000
+From:   Erwan Velu <e.velu@criteo.com>
+To:     James Bottomley <jejb@linux.ibm.com>,
+        Erwan Velu <erwanaliasr1@gmail.com>,
+        "elliott@hpe.com" <elliott@hpe.com>
+CC:     Don Brace <don.brace@microsemi.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
+        <esc.storagedev@microsemi.com>,
+        "open list:MICROSEMI SMART ARRAY SMARTPQI DRIVER (smartpqi)" 
+        <linux-scsi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] scsi: smartpqi_init: Reporting 'logical unit failure'
+Thread-Topic: [PATCH v2] scsi: smartpqi_init: Reporting 'logical unit failure'
+Thread-Index: AQHU0D9MEwbiRTQ1W0O9RWBUcKAFRaX25ceAgAAVdYD///L5gIAAAQiA
+Date:   Fri, 1 Mar 2019 16:00:20 +0000
+Message-ID: <a34de194-1602-08fc-9c67-27a1585b4d2c@criteo.com>
+References: <20190227163133.26283-1-e.velu@criteo.com>
+ <20190301145832.12735-1-e.velu@criteo.com>
+ <1551453987.3334.2.camel@linux.ibm.com>
+ <c858605b-7283-7882-64a8-8d1584274b95@criteo.com>
+ <1551455797.3334.6.camel@linux.ibm.com>
+In-Reply-To: <1551455797.3334.6.camel@linux.ibm.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0280.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a1::28) To VI1PR04MB5629.eurprd04.prod.outlook.com
+ (2603:10a6:803:de::30)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [91.199.242.236]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a4aabc4b-106c-4498-833f-08d69e5f0192
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:VI1PR04MB4015;
+x-ms-traffictypediagnostic: VI1PR04MB4015:
+x-microsoft-exchange-diagnostics: =?utf-8?B?MTtWSTFQUjA0TUI0MDE1OzIzOmt3VDdoRisvZFhsdnRJQ2J4OWhMd1dZS3Bs?=
+ =?utf-8?B?Vk9OMXlTS1N1MENBeTJWMElNYnZEOGNZZklTOWdvdWxoVkhjbCtEcUtvK0ox?=
+ =?utf-8?B?UGdGaUhiZ0Y0K0UyVEVyMXRKYWlyRCtCaFBSSnc4M241UkFJdlZ5Y3B3M1hw?=
+ =?utf-8?B?YlM0ZnI5Z0tUajRvSzEwRXZFd2hEdnJVQ01iRGxtYTcvaUhsMVZVWmVjRVNk?=
+ =?utf-8?B?SGNyR2M1WlNndVN5Yk5odEFGUkRsSUJrK1lLVjhldmZLMWszd2YxdVFIaFNL?=
+ =?utf-8?B?ckwxalkwekQ1enhVVVlFMzl3Slg4aGpZMFhNdzQ2d1QwVllBU0liR3Z3cFIx?=
+ =?utf-8?B?OWdxMlE1SXIrMHQ5Umwwb3RwZG05UmhFNkcyazdHdHRoT0V3RXFzakdsN1k3?=
+ =?utf-8?B?LzFzd293azRpSDQzR3VGclpNRVdZU2Irak9kelV5d1lweUNaT0tuRDdxaEVl?=
+ =?utf-8?B?dXBFZXdHS1hhVFhOc0x3T2RkeVdlY055V21mQVQ4QjNMcXErVCs5VTZrTFVy?=
+ =?utf-8?B?dG9QVFRONmFBRUxLSEllVHFRMStUcC9wWkxJVHFNMUM2eGZ0Q3ErT0tYcVVZ?=
+ =?utf-8?B?MXNNTXNMY0NxcGo4aGFWM1h2ZS93OWN3YXhHSjdBZnQ2MFIrR1JBVDFrZWdY?=
+ =?utf-8?B?QmRyUjBwRy83R0ZOMHV4QnRNNW5Jc0haUHJYR1c4anU5NC93ZkVha2RRakty?=
+ =?utf-8?B?SXhlUk45QlRLeUppb1h0Y3V2ZVgyZVhCQ0VhY2NqUmNuMzhadWZ6Y0hha01M?=
+ =?utf-8?B?OGV2N0kwMjBCZk9JM2Mya0xOM1F5ZFJtdGhRQnpVams2WGlvQ3BiU0V1NUdx?=
+ =?utf-8?B?ZzUzelYzbnFGN0Jmc2lIaFRHbk43VnJZLyt5Y1lCSnRIRkpXcy9tRkNIVk91?=
+ =?utf-8?B?Q0tXNzQ1M2RYbHJzRUsxZnZwdWVtVDhuTFE5OWJma29jU0ZiQkdqWXdzVEU4?=
+ =?utf-8?B?NEN4WkFyQ08rZ0c2Wk9wWXFtTjJYYnhhZHBZZ3lIWXRoZjlvcVo3emZDT3hq?=
+ =?utf-8?B?aVJVMVhRQklIUkk1RVRrWHhLTXBST1B3KzVjbVZnajVDSktPMlVUb1dUb3dW?=
+ =?utf-8?B?c1BPaU91VUd5Y0NhTmMzN2xBbHhMZDd1NzhpcXFVamFQWkMvc3NBSk1mVmZl?=
+ =?utf-8?B?QWVhMHVBRU5kY0NETVJHLzFXMEYzSEs2RnlDeUVPdGhmeFZ5ZUhDMzJWakdP?=
+ =?utf-8?B?bGRqTWJtcXV3bjRYTnp3ZzZ1K3o1MVBsVXNVWU9xalFTRDhYSUZBbmIrV2N1?=
+ =?utf-8?B?NEtJMG94SHZzcG5yUDI5MEtzZXdJVG43TVlGWXMvZ09SdlJYY0FuKzBNTGc1?=
+ =?utf-8?B?T0NwcThkYy9GQjN0Y1F2b0RwMEg2M2hQajRjb3E3YVduN0thL29iT3FzaThE?=
+ =?utf-8?B?SVpjeVRyaGllUnZmbDBpNVFCbmZ1cHo4QzZabXQ0Qk5FODJrY0RWblVnNEo2?=
+ =?utf-8?B?ZWM5a25HeFhKZ2wvY0ZHVGJYaEhRclJONkVpc0VwRHJhenV3UjJZRUtObTdU?=
+ =?utf-8?B?bTZ1bkF5bkVxcnVPNERrdFVNTzdnZDVBNXFEUjdaRVRPUTR1OFdIbnp6Y0RU?=
+ =?utf-8?B?WjQ4VVQ4T05odWpnV2ZUelJ6Y052T0ZkaXE1b0Nmc2IzYWtIbzZDNU5GbmRN?=
+ =?utf-8?B?b3R4WXlUMTArRmxjcTdBaHM0b1hCVFFsRmI5cVBDbm4rc3NOSFNZMEtid2Yr?=
+ =?utf-8?B?c0FNMmZHamMvYml2MkJKZTBGNDNhZ0JXbU53MkVYZWp6V3Y4L3hld0ZtckF6?=
+ =?utf-8?B?aGx1NUFOb1JCblE5UUlLYUZIZzI0azdWSmdSY2JqU0V5bklNRkcyN1hEZXR0?=
+ =?utf-8?B?NUdVQ3p2aWVMSytWKzlSNFB5eDkwOFRsdlB0OGFSR21qWW13ODBPZklCRTBw?=
+ =?utf-8?Q?6lTHHUv5q5c=3D?=
+x-microsoft-antispam-prvs: <VI1PR04MB4015E734840C6AF1E0D1F4DAF2760@VI1PR04MB4015.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09634B1196
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(376002)(136003)(346002)(39860400002)(51914003)(199004)(189003)(105586002)(31696002)(81156014)(81166006)(25786009)(36756003)(26005)(66066001)(305945005)(71200400001)(71190400001)(8676002)(478600001)(14454004)(102836004)(4326008)(106356001)(6246003)(7736002)(76176011)(52116002)(4744005)(54906003)(97736004)(110136005)(316002)(6506007)(386003)(486006)(31686004)(68736007)(5660300002)(6116002)(3846002)(2906002)(11346002)(446003)(2616005)(476003)(2501003)(186003)(6512007)(53936002)(6486002)(6436002)(93886005)(14444005)(256004)(86362001)(99286004)(66574012)(8936002)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR04MB4015;H:VI1PR04MB5629.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: criteo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: oC9zx0zcjcXnW1e/HW8pDEDJNYp92c3BTemwgwkEs3tNSIOWsKKf8qqGWoSjQ6nO9rm3iMKw/JZaSOC91IvbzaX32HAl5KYHPZEVDO5Cxi09GhB8XQdGmVjp1UTuhhb5upLfUvLw8oSNrG+W0nZ6WiNmoN0eb8cNYgkdydIlAKBL5wJ5r6114a1winThMrhkrlqAHTOjF1FEL/jl/LJmLgRO1A6XC2Vli8wtADT3zTJ0sPvz4N+54mAL7PKzv/QwMpwg2dHMnVBZX0TmUUeSu/TZ5OOJaB9nlcFcgzHYYT8n6oI3p4D/FELGSq2cs74Jc0MVWw9Z0tRlI9WYrvthMeFpEq3YNDkFBSm3+3S21oipsatY/GRkZqZuir3Wtx+AcrujvgW+MCBLg5MS4Cjw4A1VowbHhaSI4rIrH+b6Aas=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E985F7DEA1A37548B830DD81173DBECE@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190301031201.7416-1-jannh@google.com> <20190301153258.GD22584@linux.intel.com>
-In-Reply-To: <20190301153258.GD22584@linux.intel.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 1 Mar 2019 16:59:33 +0100
-Message-ID: <CAG48ez1LEKEd695bnoZ71k5EZ6ZxRc5wH3vfkbLA-XkMq1-_jw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/unwind: handle NULL pointer calls better in frame unwinder
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        syzbot <syzbot+ca95b2b7aef9e7cbd6ab@syzkaller.appspotmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: criteo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4aabc4b-106c-4498-833f-08d69e5f0192
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 16:00:20.6805
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2a35d8fd-574d-48e3-927c-8c398e225a01
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 1, 2019 at 4:33 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
-> On Fri, Mar 01, 2019 at 04:12:00AM +0100, Jann Horn wrote:
-> > When the frame unwinder is invoked for an oops caused by a call to NULL,
-> > it currently skips the parent function because BP still points to the
-> > parent's stack frame; the (nonexistent) current function only has the first
-> > half of a stack frame, and BP doesn't point to it yet.
-> >
-> > Add a special case for IP==0 that calculates a fake BP from SP, then uses
-> > the real BP for the next frame.
-> >
-> > Note that this handles first_frame specially: We return information about
-> > the parent function as long as the saved IP is >=first_frame, even if the
-> > fake BP points below it.
-> >
-> > With an artificially-added NULL call in prctl_set_seccomp(), before this
-> > patch, the trace is:
-> >
-> > Call Trace:
-> >  ? prctl_set_seccomp+0x3a/0x50
-> >  __x64_sys_prctl+0x457/0x6f0
-> >  ? __ia32_sys_prctl+0x750/0x750
-> >  do_syscall_64+0x72/0x160
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > After this patch, the trace is:
-> >
-> > Call Trace:
-> >  prctl_set_seccomp+0x3a/0x50
-> >  __x64_sys_prctl+0x457/0x6f0
-> >  ? __ia32_sys_prctl+0x750/0x750
-> >  do_syscall_64+0x72/0x160
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > Signed-off-by: Jann Horn <jannh@google.com>
-> > ---
-> >  arch/x86/include/asm/unwind.h  |  6 ++++++
-> >  arch/x86/kernel/unwind_frame.c | 25 ++++++++++++++++++++++---
-> >  2 files changed, 28 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/unwind.h b/arch/x86/include/asm/unwind.h
-> > index 1f86e1b0a5cd..499578f7e6d7 100644
-> > --- a/arch/x86/include/asm/unwind.h
-> > +++ b/arch/x86/include/asm/unwind.h
-> > @@ -23,6 +23,12 @@ struct unwind_state {
-> >  #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
-> >       bool got_irq;
-> >       unsigned long *bp, *orig_sp, ip;
-> > +     /*
-> > +      * If non-NULL: The current frame is incomplete and doesn't contain a
-> > +      * valid BP. When looking for the next frame, use this instead of the
-> > +      * non-existent saved BP.
-> > +      */
-> > +     unsigned long *next_bp;
-> >       struct pt_regs *regs;
-> >  #else
-> >       unsigned long *sp;
-> > diff --git a/arch/x86/kernel/unwind_frame.c b/arch/x86/kernel/unwind_frame.c
-> > index 3dc26f95d46e..9b9fd4826e7a 100644
-> > --- a/arch/x86/kernel/unwind_frame.c
-> > +++ b/arch/x86/kernel/unwind_frame.c
-> > @@ -320,10 +320,14 @@ bool unwind_next_frame(struct unwind_state *state)
-> >       }
-> >
-> >       /* Get the next frame pointer: */
-> > -     if (state->regs)
-> > +     if (state->next_bp) {
-> > +             next_bp = state->next_bp;
-> > +             state->next_bp = NULL;
-> > +     } else if (state->regs) {
-> >               next_bp = (unsigned long *)state->regs->bp;
-> > -     else
-> > +     } else {
-> >               next_bp = (unsigned long *)READ_ONCE_TASK_STACK(state->task, *state->bp);
-> > +     }
-> >
-> >       /* Move to the next frame if it's safe: */
-> >       if (!update_stack_state(state, next_bp))
-> > @@ -398,6 +402,21 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
-> >
-> >       bp = get_frame_pointer(task, regs);
-> >
-> > +     /*
-> > +      * If we crash with IP==0, the last successfully executed instruction
-> > +      * was probably an indirect function call with a NULL function pointer.
-> > +      * That means that SP points into the middle of an incomplete frame:
-> > +      * *SP is a return pointer, and *(SP-sizeof(unsigned long)) is where we
-> > +      * would have written a frame pointer if we hadn't crashed.
-> > +      * Pretend that the frame is complete and that BP points to it, but save
-> > +      * the real BP so that we can use it when looking for the next frame.
-> > +      */
-> > +     if (regs && regs->ip == 0 &&
->
-> Would it make sense to do 'regs->ip < PAGE_SIZE', a la show_fault_oops()?
-> E.g. to handle bugs where a function pointer gets loaded with NULL+offset.
-
-I don't think near-NULL function pointers make sense or are likely to
-occur in practice. Near-NULL pointer dereferences happen when you add
-a struct member offset to a NULL pointer, or something like that; but
-functions are never inline in structs/arrays, so there isn't really a
-reason to compute a function pointer by adding an offset to a (NULL)
-pointer.
+DQpMZSAwMS8wMy8yMDE5IMOgIDE2OjU2LCBKYW1lcyBCb3R0b21sZXkgYSDDqWNyaXTCoDoNCj4g
+Wy4uLl0NCj4gSSB3YXMgdGhpbmtpbmcganVzdA0KPg0KPiBpZiAocHJpbnRrX3JhdGVsaW1pdCgp
+KQ0KPiAJc2NtZF9wcmludGsoS0VSTl9FUlIsIHNjbWQsICJyZWNlaXZlZCAnbG9naWNhbCB1bml0
+IGZhaWx1cmUnIGZyb20gY29udHJvbGxlciBmb3Igc2NzaSAlZDolZDolZDolZFxuIiwgLi4uDQo+
+DQo+IFRoYXQgd2lsbCBnaXZlIGFsbCB0aGUgbmVjZXNzYXJ5IGluZm9ybWF0aW9uDQoNCkknbSBw
+cmV0dHkgbmV3IHRvIHRoaXMgYXJlYSwgbGVhcm5pbmcgZnJvbSB5b3XCoCA7bykNCg0KSSdsbCB1
+cGRhdGUgdGhlIHYzIHRoaXMgd2F5Lg0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCkVyd2Fu
+LA0KDQo=
