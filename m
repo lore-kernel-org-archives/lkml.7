@@ -2,185 +2,217 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B302C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BB0C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3121C20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f733MznZ"
+	by mail.kernel.org (Postfix) with ESMTP id CA75820848
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 19:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfCATmM (ORCPT
+        id S1726061AbfCATqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 14:42:12 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34524 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfCATmL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 14:42:11 -0500
-Received: by mail-pg1-f195.google.com with SMTP id i130so11918629pgd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 11:42:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2Y1dXKIdcDRHKlZKO/DO+DfTFCqmKYo0R7wnYH7c+6Y=;
-        b=f733MznZz6Tj/j68uuaTVUa4Ahb1qK7hS34ZlxIj3RuHaVfkvdbZtCh/kdYiA/4S27
-         /NTBnvXm6oNxAeSvxkJ5EUP5/LeYTvV1IJLV7zDAKRb7e8DWuX8EBVfdfLHOIRB9rTo1
-         hmvjFPDZXrRxWFeoTpyMiABBYwJz2h5OpWH8O/YIXyMYDWKBS6zW8XL8VqkJ7zeRUCu9
-         4Tw/SEENbRdSxI/7gUowjIZ/Kngy2iZgqvkrNEjWbt3/+hRdBaMgBi6Na9cq6DfSm4hx
-         wfScpuF9bHGJ9CKcGbAlhHG99t9HDNAelqXaSSUIeCHKJ4krZYpQCBd87QpDehtd8EpV
-         hfgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2Y1dXKIdcDRHKlZKO/DO+DfTFCqmKYo0R7wnYH7c+6Y=;
-        b=IA2mM+OHrOH6p1v2HbMXz/CiRxAKEEjtrzrhRS5fITSTY0YZlN4Um0I3fuccm8y/Pe
-         eL12MN2dIaUGhCaHSHi+a/pCHxk+c8ZllBnPolK6npRjSEqMcU9BCNtANJc9mqFVG5/1
-         6m+jnTow1YbauXSE+9gehTJKDfYn77dOhLSmY297+yF3cxHXwtlTZnqMkvykUD669dqb
-         F19bvxVa89X5L46sG/FnpPxLoWUlVJmjhHdQYSfwwqHR4aHaGPuJjBtCX7gkD1qxzm6w
-         ZFdTBBfVMAAJteK18pS4e87lLwr2PIVN4qWo/HPYv82VVyaG/a56Nnu1hwZH+FHeIqyL
-         /MoQ==
-X-Gm-Message-State: APjAAAW4hnW1eIrd8CQNYVC3Rm36zFO6RiiejJ9VPakJNeLwjM7EKw/0
-        Nssb1lZ8sv42p/mkPsBNf8TQAA==
-X-Google-Smtp-Source: AHgI3Iazxi2cIktO6kBp9OV4nPr/tp5OI+rCvumqrQCDUERiVBVEugHWSSwvYg29/S5EghEWLXiQGQ==
-X-Received: by 2002:a62:5444:: with SMTP id i65mr7404090pfb.193.1551469330720;
-        Fri, 01 Mar 2019 11:42:10 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x23sm24168750pgf.10.2019.03.01.11.42.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 11:42:09 -0800 (PST)
-Date:   Fri, 1 Mar 2019 11:42:49 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vaishali Thakkar <vaishali.thakkar@linaro.org>
-Cc:     andy.gross@linaro.org, david.brown@linaro.org,
-        gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rafael@kernel.org, vkoul@kernel.org
-Subject: Re: [PATCH v4 4/5] soc: qcom: socinfo: Expose custom attributes
-Message-ID: <20190301194249.GD27005@builder>
-References: <20190225065044.11023-1-vaishali.thakkar@linaro.org>
- <20190225065044.11023-5-vaishali.thakkar@linaro.org>
+        Fri, 1 Mar 2019 14:46:35 -0500
+Received: from relay.sw.ru ([185.231.240.75]:59556 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbfCATqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 14:46:35 -0500
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1gzo6q-0007Uo-RS; Fri, 01 Mar 2019 22:46:17 +0300
+Subject: Re: [PATCH RFC] mm/vmscan: try to protect active working set of
+ cgroup from reclaim.
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>
+References: <20190222175825.18657-1-aryabinin@virtuozzo.com>
+ <20190222191552.GA15922@cmpxchg.org>
+ <f752c208-599c-9b5a-bc42-e4282df43616@virtuozzo.com>
+ <7c915942-6f52-e7a4-b879-e4c99dd65968@virtuozzo.com>
+ <20190301174907.GA2375@cmpxchg.org>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <51ac7aaa-6890-c674-854d-1e2d132b83f9@virtuozzo.com>
+Date:   Fri, 1 Mar 2019 22:46:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190225065044.11023-5-vaishali.thakkar@linaro.org>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+In-Reply-To: <20190301174907.GA2375@cmpxchg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 24 Feb 22:50 PST 2019, Vaishali Thakkar wrote:
 
-> +#ifdef CONFIG_DEBUG_FS
-> +/* pmic model info */
 
-Please drop this comment and make "pmic_model" plural.
+On 3/1/19 8:49 PM, Johannes Weiner wrote:
+> Hello Andrey,
+> 
+> On Fri, Mar 01, 2019 at 01:38:26PM +0300, Andrey Ryabinin wrote:
+>> On 2/26/19 3:50 PM, Andrey Ryabinin wrote:
+>>> On 2/22/19 10:15 PM, Johannes Weiner wrote:
+>>>> On Fri, Feb 22, 2019 at 08:58:25PM +0300, Andrey Ryabinin wrote:
+>>>>> In a presence of more than 1 memory cgroup in the system our reclaim
+>>>>> logic is just suck. When we hit memory limit (global or a limit on
+>>>>> cgroup with subgroups) we reclaim some memory from all cgroups.
+>>>>> This is sucks because, the cgroup that allocates more often always wins.
+>>>>> E.g. job that allocates a lot of clean rarely used page cache will push
+>>>>> out of memory other jobs with active relatively small all in memory
+>>>>> working set.
+>>>>>
+>>>>> To prevent such situations we have memcg controls like low/max, etc which
+>>>>> are supposed to protect jobs or limit them so they to not hurt others.
+>>>>> But memory cgroups are very hard to configure right because it requires
+>>>>> precise knowledge of the workload which may vary during the execution.
+>>>>> E.g. setting memory limit means that job won't be able to use all memory
+>>>>> in the system for page cache even if the rest the system is idle.
+>>>>> Basically our current scheme requires to configure every single cgroup
+>>>>> in the system.
+>>>>>
+>>>>> I think we can do better. The idea proposed by this patch is to reclaim
+>>>>> only inactive pages and only from cgroups that have big
+>>>>> (!inactive_is_low()) inactive list. And go back to shrinking active lists
+>>>>> only if all inactive lists are low.
+>>>>
+>>>> Yes, you are absolutely right.
+>>>>
+>>>> We shouldn't go after active pages as long as there are plenty of
+>>>> inactive pages around. That's the global reclaim policy, and we
+>>>> currently fail to translate that well to cgrouped systems.
+>>>>
+>>>> Setting group protections or limits would work around this problem,
+>>>> but they're kind of a red herring. We shouldn't ever allow use-once
+>>>> streams to push out hot workingsets, that's a bug.
+>>>>
+>>>>> @@ -2489,6 +2491,10 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
+>>>>>  
+>>>>>  		scan >>= sc->priority;
+>>>>>  
+>>>>> +		if (!sc->may_shrink_active && inactive_list_is_low(lruvec,
+>>>>> +						file, memcg, sc, false))
+>>>>> +			scan = 0;
+>>>>> +
+>>>>>  		/*
+>>>>>  		 * If the cgroup's already been deleted, make sure to
+>>>>>  		 * scrape out the remaining cache.
+>>>>> @@ -2733,6 +2739,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>>>>>  	struct reclaim_state *reclaim_state = current->reclaim_state;
+>>>>>  	unsigned long nr_reclaimed, nr_scanned;
+>>>>>  	bool reclaimable = false;
+>>>>> +	bool retry;
+>>>>>  
+>>>>>  	do {
+>>>>>  		struct mem_cgroup *root = sc->target_mem_cgroup;
+>>>>> @@ -2742,6 +2749,8 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>>>>>  		};
+>>>>>  		struct mem_cgroup *memcg;
+>>>>>  
+>>>>> +		retry = false;
+>>>>> +
+>>>>>  		memset(&sc->nr, 0, sizeof(sc->nr));
+>>>>>  
+>>>>>  		nr_reclaimed = sc->nr_reclaimed;
+>>>>> @@ -2813,6 +2822,13 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>>>>>  			}
+>>>>>  		} while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
+>>>>>  
+>>>>> +		if ((sc->nr_scanned - nr_scanned) == 0 &&
+>>>>> +		     !sc->may_shrink_active) {
+>>>>> +			sc->may_shrink_active = 1;
+>>>>> +			retry = true;
+>>>>> +			continue;
+>>>>> +		}
+>>>>
+>>>> Using !scanned as the gate could be a problem. There might be a cgroup
+>>>> that has inactive pages on the local level, but when viewed from the
+>>>> system level the total inactive pages in the system might still be low
+>>>> compared to active ones. In that case we should go after active pages.
+>>>>
+>>>> Basically, during global reclaim, the answer for whether active pages
+>>>> should be scanned or not should be the same regardless of whether the
+>>>> memory is all global or whether it's spread out between cgroups.
+>>>>
+>>>> The reason this isn't the case is because we're checking the ratio at
+>>>> the lruvec level - which is the highest level (and identical to the
+>>>> node counters) when memory is global, but it's at the lowest level
+>>>> when memory is cgrouped.
+>>>>
+>>>> So IMO what we should do is:
+>>>>
+>>>> - At the beginning of global reclaim, use node_page_state() to compare
+>>>>   the INACTIVE_FILE:ACTIVE_FILE ratio and then decide whether reclaim
+>>>>   can go after active pages or not. Regardless of what the ratio is in
+>>>>   individual lruvecs.
+>>>>
+>>>> - And likewise at the beginning of cgroup limit reclaim, walk the
+>>>>   subtree starting at sc->target_mem_cgroup, sum up the INACTIVE_FILE
+>>>>   and ACTIVE_FILE counters, and make inactive_is_low() decision on
+>>>>   those sums.
+>>>>
+>>>
+>>> Sounds reasonable.
+>>>
+>>
+>> On the second thought it seems to be better to keep the decision on lru level.
+>> There are couple reasons for this:
+>>
+>> 1) Using bare node_page_state() (or sc->targe_mem_cgroup's total_[in]active counters) would be wrong.
+>>  Because some cgroups might have protection set (memory.low) and we must take it into account. Also different
+>> cgroups have different available swap space/memory.swappiness and it must be taken into account as well to.
+>>
+>> So it has to be yet another full memcg-tree iteration.
+> 
+> It should be possible to take that into account on the first iteration
+> and adjust the inactive/active counters in proportion to how much of
+> the cgroup's total memory is exempt by memory.low or min, right?
+> 
 
-> +static const char *const pmic_model[] = {
-> +	[0]  = "Unknown PMIC model",
-> +	[9]  = "PM8994",
-> +	[11] = "PM8916",
-> +	[13] = "PM8058",
-> +	[14] = "PM8028",
-> +	[15] = "PM8901",
-> +	[16] = "PM8027",
-> +	[17] = "ISL9519",
-> +	[18] = "PM8921",
-> +	[19] = "PM8018",
-> +	[20] = "PM8015",
-> +	[21] = "PM8014",
-> +	[22] = "PM8821",
-> +	[23] = "PM8038",
-> +	[24] = "PM8922",
-> +	[25] = "PM8917",
-> +};
-> +#endif /* CONFIG_DEBUG_FS */
-[..]
-> +static int qcom_show_pmic_model(struct seq_file *seq, void *p)
-> +{
-> +	struct socinfo *socinfo = seq->private;
-> +	int model = SOCINFO_MINOR(le32_to_cpu(socinfo->pmic_model));
-> +
-> +	if (model < 0)
-> +		return -EINVAL;
+Should be possible, more complexity though to this subtle code.
 
-You need to deal with the fact that model might be >=
-ARRAY_SIZE(pmic_model) and that pmic_mode[model] might be NULL, in the
-event that you missed entries in the list or this driver is used on
-newer platforms.
 
-> +
-> +	seq_printf(seq, "%s\n", pmic_model[model]);
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_show_pmic_die_revision(struct seq_file *seq, void *p)
-> +{
-> +	struct socinfo *socinfo = seq->private;
-> +
-> +	seq_printf(seq, "%u.%u\n",
-> +		   SOCINFO_MAJOR(le32_to_cpu(socinfo->pmic_die_rev)),
-> +		   SOCINFO_MINOR(le32_to_cpu(socinfo->pmic_die_rev)));
-> +
-> +	return 0;
-> +}
-> +
-> +UINT_SHOW(raw_version, raw_ver);
-> +UINT_SHOW(hardware_platform, hw_plat);
-> +UINT_SHOW(platform_version, plat_ver);
-> +UINT_SHOW(foundry_id, foundry_id);
-> +HEX_SHOW(chip_family, chip_family);
-> +HEX_SHOW(raw_device_family, raw_device_family);
-> +HEX_SHOW(raw_device_number, raw_device_num);
-> +QCOM_OPEN(build_id, qcom_show_build_id);
-> +QCOM_OPEN(accessory_chip, qcom_show_accessory_chip);
-> +QCOM_OPEN(pmic_model, qcom_show_pmic_model);
-> +QCOM_OPEN(platform_subtype, qcom_show_platform_subtype);
-> +QCOM_OPEN(pmic_die_revision, qcom_show_pmic_die_revision);
-> +
-> +static void socinfo_debugfs_init(struct qcom_socinfo *qcom_socinfo)
-> +{
-> +	qcom_socinfo->dbg_root = debugfs_create_dir("qcom_socinfo", NULL);
-> +
-> +	DEBUGFS_UINT_ADD(raw_version);
-> +	DEBUGFS_UINT_ADD(hardware_platform);
+>> 2) Let's consider simple case. Two cgroups, one with big 'active' set of pages the other allocates one-time used pages.
+>> So the total inactive is low, thus checking inactive ratio on higher level will result in reclaiming pages.
+>> While with check on lru-level only inactive will be reclaimed.
+> 
+> It's the other way around. Let's say you have two cgroups, A and B:
+> 
+>         A:  500M inactive   10G active -> inactive is low
+>         B:   10G inactive  500M active -> inactive is NOT low
+>    ----------------------------------------------------------
+>    global: 10.5G inactive 10.5G active -> inactive is NOT low
+> 
+> Checking locally will scan active pages from A.
 
-Note that the content of struct socinfo has grown over time, so based on
-the comments in the struct the size of the struct would not cover
-hw_plat if version < 3.
+No, checking locally will not scan active from A. Initial state of sc->may_shrink_active = 0, so A group
+will be skipped completely, and will reclaim from B. Since overall reclaim was successful, sc->may_shrink_active remain 0
+and A will be protected as long as B supply enough inactive pages. 
 
-So you should make the addition of these conditional on socinfo->ver.
-As each version adds more entries I suggest that you do this with a:
+> Checking globally will
+> not, because there is plenty of use-once pages from B.
+> 
 
-switch (qcom_socinfo->socinfo->ver) {
-case 12:
-	add v12 entries;
-case 11:
-	add v11 entries;
-case 10:
-	add v10 entries;
-...
-};
+That is correct. So in this example global vs local check will not make a difference.
 
-> +	DEBUGFS_UINT_ADD(platform_version);
-> +	DEBUGFS_UINT_ADD(foundry_id);
-> +	DEBUGFS_HEX_ADD(chip_family);
-> +	DEBUGFS_HEX_ADD(raw_device_family);
-> +	DEBUGFS_HEX_ADD(raw_device_number);
-> +	DEBUGFS_ADD(build_id);
-> +	DEBUGFS_ADD(accessory_chip);
-> +	DEBUGFS_ADD(pmic_model);
-> +	DEBUGFS_ADD(platform_subtype);
-> +	DEBUGFS_ADD(pmic_die_revision);
-> +}
-> +
+> So if you check globally, without any protection, A and B compete
+> evenly during global reclaim. Under the same reclaim pressure, A has
+> managed to activate most of its pages whereas B has not. That means A
+> is hotter and B provides the better reclaim candidates.
+> 
+> If you apply this decision locally, on the other hand, you are no
+> longer aging the groups at the same rate. And then the LRU orders
+> between groups will no longer be comparable, and you won't be
+> reclaiming the coldest memory in the system anymore.
+> 
 
-Regards,
-Bjorn
+I really don't see any how global check will make any difference in this example.
+In both cases, we reclaim only from B and don't touch A. And this what we actually want.
+
