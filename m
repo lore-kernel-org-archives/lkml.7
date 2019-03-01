@@ -2,180 +2,239 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5C5C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B89C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 656B220840
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551459608;
-	bh=L5vtetHrEy9oal9REsCsxQSvlO9Q456lbnteWlGnOIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bpnPH0BTmG51E5dAkIJnGNntnOMbN9v8yYUjM9r7S+hUXDpw/EzYqwe6qYnb/9XUf
-	 StHUSeHRJUwVZVNeJxXtU+s6r8G7iBkDyUNVeZLZTaLSFhfP3oJ3M/aluD/k73px8L
-	 TenLBkEsBUkAbvY+o7aVxUOJ2NdkPL6CJZoORvLA=
+	by mail.kernel.org (Postfix) with ESMTP id 26FCB20840
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:00:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSsmg8nf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389329AbfCARAG (ORCPT
+        id S2389343AbfCARAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:00:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389182AbfCARAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:00:06 -0500
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3E2020857;
-        Fri,  1 Mar 2019 17:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551459605;
-        bh=L5vtetHrEy9oal9REsCsxQSvlO9Q456lbnteWlGnOIQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EUyX9ZkfolsvavE0N7lY29W2RxFT9Hr72sJ/v4ojB5iRXvjP3h1xbagIBJEyBlC6e
-         IphJVjq3Fz80Y0q/RgeWLeHp7UGPGXDgQLHY+1qqLFuZG5G0xEu5rZh7b3bsd4j6md
-         F3jKzp2hgo8NqFUe2KvxNCIjCtGK2bVDLe5h0Fco=
-Date:   Fri, 1 Mar 2019 18:00:02 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>
-Subject: Re: [RFC net-next 1/8] subdev: Introducing subdev bus
-Message-ID: <20190301170002.GB24452@kroah.com>
-References: <1551418672-12822-1-git-send-email-parav@mellanox.com>
- <1551418672-12822-2-git-send-email-parav@mellanox.com>
- <20190301071727.GA8975@kroah.com>
- <AM4PR0501MB22601B097AF53AAFD59CB8B6D1760@AM4PR0501MB2260.eurprd05.prod.outlook.com>
+        Fri, 1 Mar 2019 12:00:10 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36988 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389182AbfCARAJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 12:00:09 -0500
+Received: by mail-pl1-f196.google.com with SMTP id q3so11761633pll.4
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 09:00:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=aTGNXZtZWrszMLPUL2OK6BWeWCHlT5fsDlsF0ZKNHr8=;
+        b=SSsmg8nfyaAQEbgIvMyImPoDpLuDinHeF+M2WbV8wfj9g+8nbnML5dPGAj1kbR0CL4
+         W+Q95KL5adoVctnXAkYQSoPM8WnBk/MJNxdxaYo4WlHGxm6+NhTRQwocimmJ/TRC5aTo
+         ZXz47K6hdaWipv+9KFcfOJAhkD7WZUvMusuW/d2wsds2xsCft11AOiDREZqHHgfKCa8K
+         kgz1biqznDOa1Cte/nkHjC38v0Pks0jqRTcKZGsOBTczEHnTAmYpBo1WgMjXUYAVfzjr
+         eYYScuT/YUgkSe0sFjlm/n8H5DMtseBsmwCivBJr9e+pAKaigPDqf6vfvxS10wUIKnHF
+         7IuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=aTGNXZtZWrszMLPUL2OK6BWeWCHlT5fsDlsF0ZKNHr8=;
+        b=YQJURClQ7s0CNZZ2q3HGZkrGGYJptKBNlgkCDr6lGynC20spUzxbLozPMzmByCbp3l
+         9tj5SJTgK1U88XI6iwqG7eNoD3iFqr56Y/82DiL6Y/ZHzKMFZX0GAOyI8SU725m7J69t
+         j8udd/wR1a0525dpJcbXvnab1kH0hp0uf5DPgwhEM2XF8cNx+k31Gm2m+VJo1ZJ74SCS
+         iEkkeUGDisv7YfWCzj7icLazYVUWeTQ9PkFuOT0e7D49y914Q6fG0s0sfZEpiWEQtmaU
+         ZqO9niPO+9ZKnmwZigv/KNX44vB3GIbjHzy+ylA3oSVxuEIwEMC8dKkTf9ffq5sHU0h2
+         +KHQ==
+X-Gm-Message-State: APjAAAWWC626NcmcoqMoiwTGnpKxnaTdZFE738ANb8sTqo6NNjFLofm8
+        iqPH+Ieu8Dh1wmhzi1pnkEE=
+X-Google-Smtp-Source: APXvYqwpbZEI2rK7mN5XRKEDbxdhi8vayufxK8A3TbZL47w6frJOiJqZsbRJDW9blODUHfYutEgSDw==
+X-Received: by 2002:a17:902:2903:: with SMTP id g3mr6357893plb.222.1551459608471;
+        Fri, 01 Mar 2019 09:00:08 -0800 (PST)
+Received: from ikegamiPC (M106072039032.v4.enabler.ne.jp. [106.72.39.32])
+        by smtp.gmail.com with ESMTPSA id n1sm54935115pfi.123.2019.03.01.09.00.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 Mar 2019 09:00:07 -0800 (PST)
+From:   "Tokunori Ikegami" <ikegami.t@gmail.com>
+To:     "'Vignesh Raghavendra'" <vigneshr@ti.com>,
+        "'Boris Brezillon'" <boris.brezillon@collabora.com>,
+        "'liujian \(CE\)'" <liujian56@huawei.com>
+Cc:     "'Tokunori Ikegami'" <ikegami.t@gmail.com>,
+        <keescook@chromium.org>, <bbrezillon@kernel.org>,
+        <ikegami@allied-telesis.co.jp>, <richard@nod.at>,
+        <linux-kernel@vger.kernel.org>, <marek.vasut@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <computersforpeace@gmail.com>,
+        <dwmw2@infradead.org>
+References: <1551189648-58073-1-git-send-email-liujian56@huawei.com> <016001d4cf71$865e7b60$931b7220$@gmail.com> <4F88C5DDA1E80143B232E89585ACE27D0264F137@DGGEMM528-MBX.china.huawei.com> <20190228164228.734ede80@collabora.com> <005a01d4d03e$39b0e0f0$ad12a2d0$@yahoo.co.jp> <4b3bc01a-3632-5dde-f683-94744ee7179d@ti.com>
+In-Reply-To: <4b3bc01a-3632-5dde-f683-94744ee7179d@ti.com>
+Subject: RE: [PATCH v3] cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
+Date:   Sat, 2 Mar 2019 01:59:41 +0900
+Message-ID: <000501d4d050$38eca160$aac5e420$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM4PR0501MB22601B097AF53AAFD59CB8B6D1760@AM4PR0501MB2260.eurprd05.prod.outlook.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 14.0
+Content-Language: ja
+Thread-Index: AQHOptjmAmqem5WpXlLpfOi8uScBsQIgzkq5Atg5CjYCPRAs9gF4c9/ZAXvgv0ulsf4HgA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 04:35:46PM +0000, Parav Pandit wrote:
-> Hi Greg,
-> 
-> > -----Original Message-----
-> > From: Greg KH <gregkh@linuxfoundation.org>
-> > Sent: Friday, March 1, 2019 1:17 AM
-> > To: Parav Pandit <parav@mellanox.com>
-> > Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > michal.lkml@markovi.net; davem@davemloft.net; Jiri Pirko
-> > <jiri@mellanox.com>
-> > Subject: Re: [RFC net-next 1/8] subdev: Introducing subdev bus
-> > 
-> > On Thu, Feb 28, 2019 at 11:37:45PM -0600, Parav Pandit wrote:
-> > > Introduce a new subdev bus which holds sub devices created from a
-> > > primary device. These devices are named as 'subdev'.
-> > > A subdev is identified similarly to pci device using 16-bit vendor id
-> > > and device id.
-> > > Unlike PCI devices, scope of subdev is limited to Linux kernel.
-> > 
-> > But these are limited to only PCI devices, right?
-> > 
-> For Mellanox use case yes, its limited to PCI devices.
-> 
-> > This sounds a lot like that ARM proposal a week or so ago that asked for
-> > something like this, are you working with them to make sure your proposal
-> > works for them as well?  (sorry, can't find where that was announced, it was
-> > online somewhere...)
-> > 
-> We were not aware of it, mostly because we are either on net side of mailing lists (netdev, rdma, virt etc).
-> ARM proposal likely on linux-kernel, I guess.
-> I will lookup that proposal and surely see if both of us can use common infrastructure.
-> 
-> > > A central entry that assigns unique subdev vendor and device id is:
-> > > include/linux/subdev_ids.h enums. Enum are chosen over define macro so
-> > > that two vendors do not end up with vendor id in kernel development
-> > > process.
-> > 
-> > Why not just make it dynamic with on static ids?
-> > 
-> Can you please elaborate?
-> Do you mean we should use something similar to pci_add_dynid() with enhancement to catch duplicate id addition?
+> [...]
+> >>>>> In function do_write_buffer(), in the for loop, there is a case
+> >>>>> chip_ready() returns 1 while chip_good() returns 0, so it never =
+break
+> >>>>> the loop.
+> >>>>> To fix this, chip_good() is enough and it should timeout if it =
+stay
+> >>>>> bad for a while.
+> >>>>>
+> >>>>> Fixes: dfeae1073583("mtd: cfi_cmdset_0002: Change write buffer =
+to
+> >>>>> check correct value")
+> >>>>> Signed-off-by: Yi Huaijie <yihuaijie@huawei.com>
+> >>>>> Signed-off-by: Liu Jian <liujian56@huawei.com>
+> >>>>> Reviewed-by: Tokunori Ikegami <ikegami_to@yahoo.co.jp>
+> >>>>> ---
+> >>>>> v2->v3:
+> >>>>> Follow Vignesh's advice:
+> >>>>> add one more check for check_good() even when time_after() =
+returns
+> >> true.
+> >>>>>
+> >>>>>  drivers/mtd/chips/cfi_cmdset_0002.c | 2 +-
+> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c
+> >>>>> b/drivers/mtd/chips/cfi_cmdset_0002.c
+> >>>>> index 72428b6..3da2376 100644
+> >>>>> --- a/drivers/mtd/chips/cfi_cmdset_0002.c
+> >>>>> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+> >>>>> @@ -1876,7 +1876,7 @@ static int __xipram do_write_buffer(struct
+> >>>>> map_info *map, struct flchip *chip,
+> >>>>>  			continue;
+> >>>>>  		}
+> >>>>>
+> >>>>> -		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
+> >>>>> +		if (time_after(jiffies, timeo) && !chip_good(map, adr,
+> >>>>> datum))
+> >>>>
+> >>>>   Just another idea to understand easily.
+> >>>>
+> >>>>     unsigned long now =3D jiffies;
+> >>>>
+> >>>>     if (chip_good(map, adr, datum)) {
+> >>>>         xip_enable(map, chip, adr);
+> >>>>         goto op_done;
+> >>>>     }
+> >>>>
+> >>>>     if (time_after(now, timeo) {
+> >>>>         break;
+> >>>>     }
+> >>>>
+> >>>
+> >>> Thank you~. It is more easier to understand=EF=BC=81
+> >>> If there are no other comments, I will send new patch again ):
+> >>
+> >> Except this version no longer does what Vignesh suggested. See how =
+you
+> >> no longer test if chip_good() is true if time_after() returns true. =
+So,
+> >> imagine the thread entering this function is preempted just after =
+the
+> >> first chip_good() test, and resumed a few ms later. time_after() =
+will
+> >> return true, but chip_good() might also return true, and you ignore =
+it.
+> >
+> > I think that the following 3 versions will be worked for =
+time_after()
+> as a same result and follow the Vignesh-san suggestion.
+> >
+>=20
+> As Boris explained above version 3 does not really follow my
+> suggestion... Please see below
+>=20
+> > 1. Original Vignesh-san suggestion
+> >
+> > 	if (chip_good(map, adr, datum)) {
+> > 		xip_enable(map, chip, adr);
+> > 		goto op_done;
+> > 	}
+> >
+> > 	if (time_after(jiffies, timeo)) {
+> > 		/* Test chip_good() if TRUE incorrectly again so write
+> failure by time_after() can be avoided. */
+> > 		if (chip_good(map, adr, datum)) {
+> > 			xip_enable(map, chip, adr);
+> > 			goto op_done;
+> > 		}
+> > 		break;
+> > 	}
+> >
+>=20
+>=20
+> Right, here we check chip_good() once _even when time_after() is true_
+> to avoid _spurious_ timeout
+>=20
+> > 2. Liujian-san v3 patch
+> >
+> > 	/* Test chip_good() if FALSE correctly so write failure by
+> time_after() can be avoided. */
+> > 	if (time_after(jiffies, timeo) && !chip_good(map, adr))
+> > 		break;
+> >
+> > 	if (chip_good(map, adr, datum)) {
+> > 		xip_enable(map, chip, adr);
+> > 		goto op_done;
+> > 	}
+> >
+>=20
+> This is a better version of 1
+>=20
+> > 3. My idea
+> >
+> > 	/* Save current jiffies value before chip_good() to avoid write
+> failure by time_after() without testing chip_good() again. */
+> > 	unsigned long now =3D jiffies;
+> >
+> > 	if (chip_good(map, adr, datum)) {
+> > 		xip_enable(map, chip, adr);
+> > 		goto op_done;
+> > 	}
+> >
+>=20
+> What if thread gets pre-empted at this point and is re-scheduled =
+exactly
+> after timeo jiffies have elapsed? Below check would be true and exit =
+loop
 
-I have no idea what I wrote here, sorry :)
+  I think that the jiffies value now is save before chip_good() so below =
+check would be false and not exit loop.
 
-I was trying to say something like "using an enumerated type going to
-rely on a central authority for your "dynamic" bus, why is that needed
-at all"?
+Regards,
+Ikegami
 
-> > > subdev bus holds subdevices of multiple devices. A typical created
-> > > subdev for a PCI device in sysfs tree appears under their parent's
-> > > device as using core's default device naming scheme:
-> > >
-> > > subdev<instance_id>.
-> > > i.e.
-> > > subdev0
-> > > subdev1
-> > >
-> > > $ ls -l /sys/bus/pci/devices/0000:05:00.0 [..]
-> > > drwxr-xr-x 4 root root        0 Feb 13 15:57 subvdev0
-> > > drwxr-xr-x 4 root root        0 Feb 13 15:57 subvdev1
-> > >
-> > > Device model view:
-> > > ------------------
-> > >                +------+    +------+       +------+
-> > >                |subdev|    |subdev|       |subdev|
-> > >           -----|  1   |----|  2   |-------|  3   |----------
-> > >           |    +--|---+    +-|----+       +--|---+         |
-> > >           --------|----------|---subdev bus--|--------------
-> > >                   |          |               |
-> > >                +--+----+-----+           +---+---+
-> > >                |pcidev |                 |pcidev |
-> > >           -----|   A   |-----------------|   B   |----------
-> > >           |    +-------+                 +-------+         |
-> > >           -------------------pci bus------------------------
-> > 
-> > To be clear, "subdev bus" is just a logical grouping, there is no physical
-> > backing "bus" here at all, right?
-> > 
-> Yep. that's correct.
-> 
-> > What is going to "bind" to subdev devices?  PCI drivers?  Or new types of
-> > drivers?
-> > 
-> Devices are placed on subdev bus using devlink interface. And drivers which registers using subdev_register_driver(), their probe() method will be called.
+>=20
+> > 	if (time_after(now, timeo))
+> > 		break;
+> >
+>=20
+> So, code does not check for check chip_good() after timeoout has
+> elapsed. But chip_good() might be true at this point. Therefore =
+leading
+> to spurious timeout.  So this version is still not right.
+>=20
+> >           Note: Some brackets have been fixed from the previous =
+mail.
+> >
+>=20
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
-But it's just a virtual mapping, what "good" does this provide anyone?
-You are still sharing the same backing device here, what does this
-logical split buy you?
-
-> So yes, those are PCI vendor driver.
-> I tried to capture this in cover-letter.
-> At present users didn't ask to map this subdev to VM, but there is very high chance that once we have this without PCI SR-IOV, they would like to extend to VMs too.
-> So in that case devlink will have option to say, add 'passthrough' device, and in that case instead of vendor's pci driver, some high level vfio type driver will bind to it.
-> That is just the anticipation, but we haven't really worked out this fully.
-> But this model allows to do so.
-
-I think mfd is what you want to do here, instead of creating your own
-bus type.
-
-> > > +int subdev_add_dev(struct subdev *subdev, struct device *parent_dev,
-> > > +		   enum subdev_vendor_id vid, enum subdev_device_id did) {
-> > > +	u32 id = 0;
-> > > +	int ret;
-> > > +
-> > > +	if (!parent_dev)
-> > > +		return -EINVAL;
-> > 
-> > No root devices?
-> > 
-> I didn't get the comment. Intent of this check is subdev must have parent. Parent type doesn't matter.
-
-You do not allow a subdev to sit at the "root" of the device tree.
-That's fine, it was just a comment, it's your choice.
-
-thanks,
-
-greg k-h
