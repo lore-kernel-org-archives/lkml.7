@@ -2,97 +2,103 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65819C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E10C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354072084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:34:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gwhf8UzV"
+	by mail.kernel.org (Postfix) with ESMTP id 139B320851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 13:35:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387632AbfCANeN (ORCPT
+        id S2387757AbfCANfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 08:34:13 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46865 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727418AbfCANeN (ORCPT
+        Fri, 1 Mar 2019 08:35:04 -0500
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60693 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727418AbfCANfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 08:34:13 -0500
-Received: by mail-ed1-f67.google.com with SMTP id f2so19990354edy.13;
-        Fri, 01 Mar 2019 05:34:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6MiZRbDnFH7E3sPevTt6YhdflgjtqJuZkFaKR9B+10c=;
-        b=Gwhf8UzVyQ5TTnrHzZt85WH8n5rO4e/J8AQOuD4D7RiMKIAjHD73QIGbNTrwbVK0r4
-         ee062GyOlOd+THHQUh+FWqPoSy777Je8u6Hn0+nyQtjCOEvIB06s/E1ZK9njJcE/oakE
-         wc0izpwyldbadj/M8pX0zLkIvu9cTYPWOKFWtM/5lt7sm35kMKco6TkiiGxsAYmrmhtF
-         Ycmb1WMW8Lvr1iW0grqu8TEBIRTQr8JR7oxPRDQVItoCsCK71geuOoM5nxZt4oZfYPIw
-         26VC5A4DQW55OifHxbgte5uXwG6hXZ/Whc21E4i4/a+R9TcWz3kpxZf3cP5mjAZQI+K8
-         bfgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6MiZRbDnFH7E3sPevTt6YhdflgjtqJuZkFaKR9B+10c=;
-        b=VMphgbj92xMQmJcNwBmzBKvRMoBwgBivC/1uDGgHDcEgDyZcJVEiut7HMVLFCbNqHW
-         rohuz/ufs1HPsWBmxP7+EXkilzY4gLICnWwqHwlMpKZHj3YpP1P7WyxgofyH4Yl9UxO1
-         sbN23+ubMvtRciRxZ0sKv4Mg1dBclQA0C28tV3vtgSv1MOwcAmVpWrQLecDTMdlIXFF7
-         MLuO4RqM3acqM2ZzGINL/tA0asZBwlM1AfGFUISKYXDbj9C3G/ibJ+h3x1nyMojjf8ap
-         JrIXr7mvL7rLMvEnrcfoZ5qntoOifODrUPwayROxtwfVmqaY1llWVYUNobxidfgUj3AY
-         SmVA==
-X-Gm-Message-State: APjAAAWhN0l88BghdlMUXETNJEFVNvX15fKR2OdcZdzg3gm9GGuESOH6
-        wI9TBJJnt15SPMEnUm+CkTTM8YWl
-X-Google-Smtp-Source: APXvYqyxI1YdeSwPP4f69XAvM48o5OYHKZTRAMJvPkbFLk88ucx5KThhacqKYxGeHSwsGHpNXvrcAA==
-X-Received: by 2002:a50:ed81:: with SMTP id h1mr4282612edr.145.1551447251406;
-        Fri, 01 Mar 2019 05:34:11 -0800 (PST)
-Received: from dell5510 ([62.201.25.198])
-        by smtp.gmail.com with ESMTPSA id w33sm1769058edd.62.2019.03.01.05.34.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 05:34:10 -0800 (PST)
-Date:   Fri, 1 Mar 2019 14:34:08 +0100
-From:   Petr Vorel <petr.vorel@gmail.com>
-To:     Arseny Maslennikov <ar@cs.msu.ru>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Riku Voipio <riku.voipio@linaro.org>
-Subject: Re: [PATCH] scripts/package/Makefile: put proper config in source
- tarball
-Message-ID: <20190301133407.GB20771@dell5510>
-Reply-To: Petr Vorel <petr.vorel@gmail.com>
-References: <20190221215901.23970-1-ar@cs.msu.ru>
+        Fri, 1 Mar 2019 08:35:04 -0500
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 6BEFC801D1; Fri,  1 Mar 2019 14:34:54 +0100 (CET)
+Date:   Fri, 1 Mar 2019 14:34:56 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>, svendev@arcx.com,
+        robh+dt@kernel.org, linus.walleij@linaro.org, lee.jones@linaro.org,
+        mark.rutland@arm.com, treding@nvidia.com, david@lechnology.com,
+        noralf@tronnes.org, johan@kernel.org, monstr@monstr.eu,
+        michal.vokac@ysoft.com, arnd@arndb.de, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        stuyoder@gmail.com, maxime.ripard@bootlin.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/6] fieldbus_dev: add Fieldbus Device subsystem.
+Message-ID: <20190301133456.GA7456@amd>
+References: <20190122152109.30488-1-TheSven73@googlemail.com>
+ <20190122152109.30488-2-TheSven73@googlemail.com>
+ <20190122165658.GH26416@windriver.com>
+ <2f4406b5-9970-211e-beef-a8b6ad60b99e@suse.de>
+ <20190122185246.GA922@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
 Content-Disposition: inline
-In-Reply-To: <20190221215901.23970-1-ar@cs.msu.ru>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190122185246.GA922@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-> It is widely known that one can build a kernel without a .config in the
-> source tree by setting KCONFIG_CONFIG equal to the actual configuration
-> file path.
-
-> When making a *-pkg target, make(1) prepares a source tarball and tries
-> to pack `.config' in there regardless of the value of KCONFIG_CONFIG,
-> failing spectacularly if .config is absent and packing the wrong config
-> if it exists.
-> Let's fix that.
-
-> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
-Reviewed-by: Petr Vorel <pvorel@suse.cz>
+--gKMricLos+KVdGMg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-Kind regards,
-Petr
+> > >=20
+> > >> +
+> > >> +MODULE_AUTHOR("Sven Van Asbroeck <TheSven73@googlemail.com>");
+> > >> +MODULE_AUTHOR("Jonathan Stiles <jonathans@arcx.com>");
+> > >> +MODULE_DESCRIPTION("Fieldbus Device Driver Core");
+> > >> +MODULE_LICENSE("GPL v2");
+> >=20
+> > Sven, as this code appears to be all by ArcX people, any chance you can
+> > make it just GPL (SPDX GPL-2.0-or-later)? Only reason to have it v2-only
+>=20
+> SPDX "GPL-2.0+" please.
+>=20
+> > would be if this code was derived from v2-only code that can't be
+> > relicensed anymore.
+>=20
+> Are you _sure_ you want v2+?  I ask as I am forced to :)
+
+And I find it pretty nasty. You are trying to push people away from
+GPL V2+, which is not cool. Who is forcing you and why is that okay
+thing to do? :-(.
+
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--gKMricLos+KVdGMg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlx5NQAACgkQMOfwapXb+vJYfACeKnAur6M/y7B2T0Guu/GOrlNi
+Pj8An1l+JZnIujHIKv1GxgdSLhQU4DA2
+=y+dV
+-----END PGP SIGNATURE-----
+
+--gKMricLos+KVdGMg--
