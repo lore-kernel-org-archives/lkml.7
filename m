@@ -2,147 +2,169 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4579C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CD7C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6177E20663
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:49:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lL4pTzRg";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="EwOwEhl/"
+	by mail.kernel.org (Postfix) with ESMTP id E9CA120818
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389226AbfCAQtD (ORCPT
+        id S2389183AbfCAQvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:49:03 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:50720 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728285AbfCAQtC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:49:02 -0500
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x21Gkq1E006723;
-        Fri, 1 Mar 2019 08:48:46 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=qV1F0vgMFNiiNI3jBfb9NzxZ+UBd1KUqKhR7Izbz/CE=;
- b=lL4pTzRgql0Ey81W1fMZVQCxk+R2l5A76/vmcyhaGr2A9qFPDiabL0DPzlMNmj4fBdq0
- qKIGcdAPSqeBR435n43cdk1JUpMCIcy22AEBV8cGz7GuNLvZgrfvNErD3piM1AFHOITR
- NFJ4JtkVCO5pKLYtittNGuKFGPndNv0Kz5E= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2qy7c3g8c1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 01 Mar 2019 08:48:45 -0800
-Received: from prn-mbx08.TheFacebook.com (2620:10d:c081:6::22) by
- prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 1 Mar 2019 08:48:44 -0800
-Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
- prn-mbx08.TheFacebook.com (2620:10d:c081:6::22) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 1 Mar 2019 08:48:43 -0800
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 1 Mar 2019 08:48:43 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qV1F0vgMFNiiNI3jBfb9NzxZ+UBd1KUqKhR7Izbz/CE=;
- b=EwOwEhl/rbQII3jNiRACDn0MM2NCvKcll5XHJiFMBkr/SodfRAyRpxTqPEpZado55sK6v7c43KDyv9c+tUfBhK/BPzYWW8wHHwiMRkvh5HVvKao6ajpb5UpTWoteWsNR1Vjej5oQLs3OOwJvP3HcXx4CWopXJd9vsFQyOJybVQo=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB2869.namprd15.prod.outlook.com (20.178.206.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.15; Fri, 1 Mar 2019 16:48:41 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ecc7:1a8c:289f:df92]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::ecc7:1a8c:289f:df92%3]) with mapi id 15.20.1665.015; Fri, 1 Mar 2019
- 16:48:41 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-CC:     Roman Gushchin <guroan@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH 2/3] mm: separate memory allocation and actual work in
- alloc_vmap_area()
-Thread-Topic: [PATCH 2/3] mm: separate memory allocation and actual work in
- alloc_vmap_area()
-Thread-Index: AQHUzUkHvmEZiK9g+UuhGR24XSYfTqX236aAgAAjAQA=
-Date:   Fri, 1 Mar 2019 16:48:41 +0000
-Message-ID: <20190301164834.GA3154@tower.DHCP.thefacebook.com>
-References: <20190225203037.1317-1-guro@fb.com>
- <20190225203037.1317-3-guro@fb.com>
- <db6b9745-7e64-6eb9-6b2b-da9d157a779b@suse.cz>
-In-Reply-To: <db6b9745-7e64-6eb9-6b2b-da9d157a779b@suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR12CA0039.namprd12.prod.outlook.com
- (2603:10b6:301:2::25) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:7a0f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0aedf333-3195-4c5e-9076-08d69e65c244
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB2869;
-x-ms-traffictypediagnostic: BYAPR15MB2869:
-x-microsoft-exchange-diagnostics: 1;BYAPR15MB2869;20:pZqoy77TZneKHPbZWFPsf1hffR/n97bXgdLEGOawnn76ZG/N/QXUTam3Xai2uyhTwhOTsheYklmiY80v28hLRNJmdgPyriAEtfVQLLmEzxeiyNQUSiMB/VxMPYKFHIDxZlCfovoucCfZ7U9ny7BBog32lHQDlkac1rvpft+0G9o=
-x-microsoft-antispam-prvs: <BYAPR15MB28699704F17D8024FD9EC0E6BE760@BYAPR15MB2869.namprd15.prod.outlook.com>
-x-forefront-prvs: 09634B1196
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(346002)(376002)(39860400002)(396003)(199004)(189003)(6916009)(476003)(446003)(316002)(11346002)(486006)(7736002)(1076003)(33656002)(54906003)(97736004)(46003)(81156014)(102836004)(8936002)(186003)(386003)(81166006)(53546011)(6506007)(99286004)(106356001)(8676002)(52116002)(14454004)(105586002)(6116002)(478600001)(53936002)(4326008)(25786009)(6436002)(5660300002)(305945005)(76176011)(6486002)(6512007)(9686003)(68736007)(2906002)(6246003)(14444005)(256004)(71190400001)(229853002)(86362001)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2869;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Gd016rsieWHZhRa6i464bFw38vIBLldCVt0T/TK8VaKbsJjmZQOK+H7jIdWqbVbgXdEMB9TjIkq9aJxxDPP1/uyzXlyCEX33MP4hpLDWjcU6tomdvhKw1RlWDOUg3fKGlSdre3Hnnq0m5nvvo7kbIEEgZPP8wDy++oVmTJTWNFlK1vRuKCkhe3sEFzWqeomvTx2ZNqI+TeQ6oFJL7qpMpEOGk2vhTpPIsLMjAyhLLdWfiK0h1q8faaL94iE7LjpYuJOmu8q9bjNU4+OxPxOpgy/IRTL/VjA2ZOr/uF/BFVPR8Lrvp6RNEzh2OMIanhXQfNg0w5n8wMp72HsWE7oe+q+l8+o0suRssx7D/LXt/gLjBOJTRwI7MLjH8/v10yPap0u32iCNBjDV8hYeNMuniHJu3P5phV/UqYFbDtkQod0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <03383EF3FB7B234EA2B739C4591BB3F0@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 1 Mar 2019 11:51:17 -0500
+Received: from foss.arm.com ([217.140.101.70]:38936 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728346AbfCAQvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 11:51:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D39680D;
+        Fri,  1 Mar 2019 08:51:16 -0800 (PST)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DAFA3F575;
+        Fri,  1 Mar 2019 08:51:12 -0800 (PST)
+Subject: Re: [PATCH 1/3] phy: rockchip-emmc: Allow to set drive impedance via
+ DTS.
+To:     Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        shawn.lin@rock-chips.com
+Cc:     devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
+        linux-kernel@vger.kernel.org,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Randy Li <ayaka@soulik.info>,
+        Douglas Anderson <dianders@chromium.org>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-rockchip@lists.infradead.org,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <1347b956-5682-1f86-b38c-7768bb9ffd23@arm.com>
+Date:   Fri, 1 Mar 2019 16:51:11 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0aedf333-3195-4c5e-9076-08d69e65c244
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2019 16:48:41.1645
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2869
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-01_12:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+In-Reply-To: <20190301153348.29870-1-christoph.muellner@theobroma-systems.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 03:43:19PM +0100, Vlastimil Babka wrote:
-> On 2/25/19 9:30 PM, Roman Gushchin wrote:
-> > alloc_vmap_area() is allocating memory for the vmap_area, and
-> > performing the actual lookup of the vm area and vmap_area
-> > initialization.
-> >=20
-> > This prevents us from using a pre-allocated memory for the map_area
-> > structure, which can be used in some cases to minimize the number
-> > of required memory allocations.
->=20
-> Hmm, but that doesn't happen here or in the later patch, right? The only
-> caller of init_vmap_area() is alloc_vmap_area(). What am I missing?
+On 01/03/2019 15:33, Christoph Muellner wrote:
+> The rockchip-emmc PHY can be configured with different
+> drive impedance values. Currenlty a value of 50 Ohm is
+> hard coded into the driver.
+> 
+> This patch introduces the DTS property 'drive-impedance-ohm'
+> for the rockchip-emmc phy node, which uses the value from the DTS
+> to setup the drive impedance accordingly.
+> 
+> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+> ---
+>   drivers/phy/rockchip/phy-rockchip-emmc.c | 38 ++++++++++++++++++++++++++++++--
+>   1 file changed, 36 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
+> index 19bf84f0bc67..5413fa73dd45 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-emmc.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
+> @@ -87,6 +87,7 @@ struct rockchip_emmc_phy {
+>   	unsigned int	reg_offset;
+>   	struct regmap	*reg_base;
+>   	struct clk	*emmcclk;
+> +	unsigned int drive_impedance;
+>   };
+>   
+>   static int rockchip_emmc_phy_power(struct phy *phy, bool on_off)
+> @@ -281,10 +282,10 @@ static int rockchip_emmc_phy_power_on(struct phy *phy)
+>   {
+>   	struct rockchip_emmc_phy *rk_phy = phy_get_drvdata(phy);
+>   
+> -	/* Drive impedance: 50 Ohm */
+> +	/* Drive impedance: from DTS */
+>   	regmap_write(rk_phy->reg_base,
+>   		     rk_phy->reg_offset + GRF_EMMCPHY_CON6,
+> -		     HIWORD_UPDATE(PHYCTRL_DR_50OHM,
+> +		     HIWORD_UPDATE(rk_phy->drive_impedance,
+>   				   PHYCTRL_DR_MASK,
+>   				   PHYCTRL_DR_SHIFT));
+>   
+> @@ -314,6 +315,28 @@ static const struct phy_ops ops = {
+>   	.owner		= THIS_MODULE,
+>   };
+>   
+> +static u32 convert_drive_impedance_ohm(struct platform_device *pdev, u32 dr_ohm)
+> +{
+> +	switch (dr_ohm) {
+> +	case 100:
+> +		return PHYCTRL_DR_100OHM;
+> +	case 66:
+> +		return PHYCTRL_DR_66OHM;
+> +	case 50:
+> +		return PHYCTRL_DR_50OHM;
+> +	case 40:
+> +		return PHYCTRL_DR_40OHM;
+> +	case 33:
+> +		return PHYCTRL_DR_33OHM;
+> +	}
+> +
+> +	dev_warn(&pdev->dev,
+> +		"Invalid value %u for drive-impedance-ohm. "
+> +		"Falling back to 50 Ohm.\n",
+> +		dr_ohm);
+> +	return PHYCTRL_DR_50OHM;
+> +}
+> +
+>   static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+> @@ -322,6 +345,7 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+>   	struct phy_provider *phy_provider;
+>   	struct regmap *grf;
+>   	unsigned int reg_offset;
+> +	u32 val;
+>   
+>   	if (!dev->parent || !dev->parent->of_node)
+>   		return -ENODEV;
+> @@ -345,6 +369,16 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+>   	rk_phy->reg_offset = reg_offset;
+>   	rk_phy->reg_base = grf;
+>   
+> +	if (of_property_read_u32(dev->of_node, "drive-impedance-ohm", &val)) {
+> +		dev_info(dev,
+> +			"Missing drive-impedance-ohm property in node %s "
+> +			"Falling back to 50 Ohm.\n",
+> +			dev->of_node->name);
 
-So initially the patch was a part of a bigger patchset, which
-tried to minimize the number of separate allocations during vmalloc(),
-e.g. by inlining vm_struct->pages into vm_struct for small areas.
+I think we're aiming to use %pOF for node names now, but here it looks 
+redundant anyway - dev_info() will already show the device name, which 
+for an of_platform device is the same thing.
 
-I temporarily dropped the rest of the patchset for some rework,
-but decided to leave this patch, because it looks like a nice refactoring
-in any case, and also it has been already reviewed and acked by Matthew
-and Johannes.
+> +		rk_phy->drive_impedance = PHYCTRL_DR_50OHM;
+> +	} else {
+> +		rk_phy->drive_impedance = convert_drive_impedance_ohm(pdev, val);
+> +	}
 
-Thank you for looking into it!
+FWIW, if you initialise val to the default (i.e. 50) then you could get 
+rid of the "else" case and just do the conversion unconditionally. 
+That's a fairly common idiom for reading optional properties.
+
+Robin.
+
+> +
+>   	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
+>   	if (IS_ERR(generic_phy)) {
+>   		dev_err(dev, "failed to create PHY\n");
+> 
