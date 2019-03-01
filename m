@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2F0C10F03
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B28BC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8739A20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B9A20850
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388668AbfCAOFL (ORCPT
+        id S2388680AbfCAOFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:05:11 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:36224 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388615AbfCAOFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:05:09 -0500
+        Fri, 1 Mar 2019 09:05:16 -0500
+Received: from foss.arm.com ([217.140.101.70]:36258 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388615AbfCAOFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:05:13 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 241C31CC4;
-        Fri,  1 Mar 2019 06:05:09 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A07B61DC8;
+        Fri,  1 Mar 2019 06:05:12 -0800 (PST)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D43E03F720;
-        Fri,  1 Mar 2019 06:05:05 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6500C3F720;
+        Fri,  1 Mar 2019 06:05:09 -0800 (PST)
 From:   Will Deacon <will.deacon@arm.com>
 To:     linux-arch@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
@@ -44,9 +44,9 @@ Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
         Ingo Molnar <mingo@kernel.org>,
         Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 19/20] net/ethernet/silan/sc92031: Remove stale comment about mmiowb()
-Date:   Fri,  1 Mar 2019 14:03:47 +0000
-Message-Id: <20190301140348.25175-20-will.deacon@arm.com>
+Subject: [PATCH 20/20] arch: Remove dummy mmiowb() definitions from arch code
+Date:   Fri,  1 Mar 2019 14:03:48 +0000
+Message-Id: <20190301140348.25175-21-will.deacon@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190301140348.25175-1-will.deacon@arm.com>
 References: <20190301140348.25175-1-will.deacon@arm.com>
@@ -55,26 +55,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mmiowb() is no more. It has ceased to be. It is an ex-barrier. So remove
-all references to it from comments.
+Now that no driver code is using mmiowb() directly, we can remove the
+dummy definitions remaining in architectures that don't make use of
+asm-generic/io.h, as well as the definition in asm-generic/io,h itself.
 
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 ---
- drivers/net/ethernet/silan/sc92031.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/alpha/include/asm/io.h       | 2 --
+ arch/hexagon/include/asm/io.h     | 2 --
+ arch/parisc/include/asm/io.h      | 2 --
+ arch/powerpc/include/asm/mmiowb.h | 2 --
+ arch/sparc/include/asm/io_64.h    | 2 --
+ include/asm-generic/io.h          | 4 ----
+ 6 files changed, 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/silan/sc92031.c b/drivers/net/ethernet/silan/sc92031.c
-index db5dc8ce0aff..02b3962b0e63 100644
---- a/drivers/net/ethernet/silan/sc92031.c
-+++ b/drivers/net/ethernet/silan/sc92031.c
-@@ -251,7 +251,6 @@ enum PMConfigBits {
-  * use of mdelay() at _sc92031_reset.
-  * Functions prefixed with _sc92031_ must be called with the lock held;
-  * functions prefixed with sc92031_ must be called without the lock held.
-- * Use mmiowb() before unlocking if the hardware was written to.
-  */
+diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
+index 4c533fc94d62..ccf9d65166bb 100644
+--- a/arch/alpha/include/asm/io.h
++++ b/arch/alpha/include/asm/io.h
+@@ -513,8 +513,6 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
+ #define writel_relaxed(b, addr)	__raw_writel(b, addr)
+ #define writeq_relaxed(b, addr)	__raw_writeq(b, addr)
  
- /* Locking rules for the interrupt:
+-#define mmiowb()
+-
+ /*
+  * String version of IO memory access ops:
+  */
+diff --git a/arch/hexagon/include/asm/io.h b/arch/hexagon/include/asm/io.h
+index e17262ad125e..3d0ae09c2b8e 100644
+--- a/arch/hexagon/include/asm/io.h
++++ b/arch/hexagon/include/asm/io.h
+@@ -184,8 +184,6 @@ static inline void writel(u32 data, volatile void __iomem *addr)
+ #define writew_relaxed __raw_writew
+ #define writel_relaxed __raw_writel
+ 
+-#define mmiowb()
+-
+ /*
+  * Need an mtype somewhere in here, for cache type deals?
+  * This is probably too long for an inline.
+diff --git a/arch/parisc/include/asm/io.h b/arch/parisc/include/asm/io.h
+index afe493b23d04..b163043d49db 100644
+--- a/arch/parisc/include/asm/io.h
++++ b/arch/parisc/include/asm/io.h
+@@ -229,8 +229,6 @@ static inline void writeq(unsigned long long q, volatile void __iomem *addr)
+ #define writel_relaxed(l, addr)	writel(l, addr)
+ #define writeq_relaxed(q, addr)	writeq(q, addr)
+ 
+-#define mmiowb() do { } while (0)
+-
+ void memset_io(volatile void __iomem *addr, unsigned char val, int count);
+ void memcpy_fromio(void *dst, const volatile void __iomem *src, int count);
+ void memcpy_toio(volatile void __iomem *dst, const void *src, int count);
+diff --git a/arch/powerpc/include/asm/mmiowb.h b/arch/powerpc/include/asm/mmiowb.h
+index b10180613507..74a00127eb20 100644
+--- a/arch/powerpc/include/asm/mmiowb.h
++++ b/arch/powerpc/include/asm/mmiowb.h
+@@ -11,8 +11,6 @@
+ #define arch_mmiowb_state()	(&local_paca->mmiowb_state)
+ #define mmiowb()		mb()
+ 
+-#else
+-#define mmiowb()		do { } while (0)
+ #endif /* CONFIG_MMIOWB */
+ 
+ #include <asm-generic/mmiowb.h>
+diff --git a/arch/sparc/include/asm/io_64.h b/arch/sparc/include/asm/io_64.h
+index b162c23ae8c2..688911051b44 100644
+--- a/arch/sparc/include/asm/io_64.h
++++ b/arch/sparc/include/asm/io_64.h
+@@ -396,8 +396,6 @@ static inline void memcpy_toio(volatile void __iomem *dst, const void *src,
+ 	}
+ }
+ 
+-#define mmiowb()
+-
+ #ifdef __KERNEL__
+ 
+ /* On sparc64 we have the whole physical IO address space accessible
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index bc490a746602..8f3bf95a36d1 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -22,10 +22,6 @@
+ #include <asm/mmiowb.h>
+ #include <asm-generic/pci_iomap.h>
+ 
+-#ifndef mmiowb
+-#define mmiowb() do {} while (0)
+-#endif
+-
+ #ifndef __io_br
+ #define __io_br()      barrier()
+ #endif
 -- 
 2.11.0
 
