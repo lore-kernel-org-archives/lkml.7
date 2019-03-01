@@ -2,129 +2,142 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04A1C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22637C4360F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4E220857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D991020818
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 16:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="YadzOFns"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Yj7sZ2la"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389231AbfCAQwr (ORCPT
+        id S2389239AbfCAQxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 11:52:47 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43974 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbfCAQwq (ORCPT
+        Fri, 1 Mar 2019 11:53:34 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:39608 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388993AbfCAQxe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 11:52:46 -0500
-Received: by mail-ot1-f65.google.com with SMTP id n71so21513697ota.10;
-        Fri, 01 Mar 2019 08:52:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kfGCMUN5rPhxXOHU6GO9HQgy62a74lDnvzWD2rPXkz4=;
-        b=YadzOFnsRt7HqStDcUVL5g8FLyCYcHKVpJdvB0bs1QQyo32ZJ1O9mujXJuPzSREToa
-         sJ/RCeeCUgznWWwjgLw1OMIH4WaVArcbAs6BqSwIWpQ2qA5KsuKpaaEz6RBU6iHqX8rJ
-         7dCzY3wWKFJOFJRfkSq0z0zw23LcbiZSspzyQTvkdX+UqaBWfmAGCIda/ny15hjDO9hn
-         A1gun7G8mD8U5Fo8F18Auo5eThd+j1CoBtc9hahktTw8/iP+gHvxRgKU3hZ+6FrDNNBv
-         N6yiFGE4d2vDJHNrcECwzbjbrQwhCA3iM2M2p52iFfRuObce+glfPhATOcKud57G7bdy
-         SwPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kfGCMUN5rPhxXOHU6GO9HQgy62a74lDnvzWD2rPXkz4=;
-        b=GE01i3RXJYw+0WIQev6Of8UJxiy1RtArqUslrYbV83Bqb+svPc7YVBlq2pLp8r9Wos
-         WwtV4s/pZ4dzzy6NVUqsaYbFodlsICH/GRkXLh5k51/28I9c3x3ETuN9V9j7ScQxAnJD
-         HuvXMrCq/ehGvQeJTwRe+1fvsLL9NZeJxMKyHAwF9fiSGDT8rh8xqeUqkfU/d2v3hfeS
-         He1EliRDGcvvINAPwWhG+FEaZV2vlYpDw9VXzB+QlEPOxYOCUJmtSZX0Joz6jBL0qe/1
-         zWsciplIEHpvXIBw7lwSrlrIpQV++xiI0we4QCbVPhblGct/PfFs/db8rTyEQcINqJzg
-         mH8Q==
-X-Gm-Message-State: APjAAAXQnkaaHNp2T3Ki4zyjhDqpwg/JbJxaTsT7YJQRNPEf3WvhFNJD
-        luc7kwDXzBVOc7Kn8ZGMN9feo7nK3qIJwzaw6aM=
-X-Google-Smtp-Source: APXvYqyGLydGGb+d8KABdstqENqvMOYfuAmB+lV9H24A55nw4V6X6UtyiPVGvL6BE7VbtjwSlCGD66Sqj8XyTHrXH/0=
-X-Received: by 2002:a9d:798c:: with SMTP id h12mr3782628otm.86.1551459165541;
- Fri, 01 Mar 2019 08:52:45 -0800 (PST)
+        Fri, 1 Mar 2019 11:53:34 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x21GnpOL015521;
+        Fri, 1 Mar 2019 16:53:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=j4k6jLrVnlcAbIMB0yIUdCVdkW0RQdj2PTG7DoWiLGE=;
+ b=Yj7sZ2la/PZpxGK/vwPTjSRo6O5i8nladTA0zCsMDSu7TBx6C361CWufB7AkoMnwFh0n
+ mNOVFJI7Bb9EL1U+PUG5LeVOHsm7oryKk4zx5DnHzF6Fnnc/ig5eUAfWjumWOYXZDJBr
+ mzFKi5QHt83Crb3Nz/bKniCB+sjSIkfUgLvRYTwY4GslQ2z/PEjCUWprBAt5wCMejIq5
+ plRyFgIoyFMo/bbVnLSWl8r5qq3QhGT2t7wjlcxHSdT9rsplwuOIDYk+haAAu2uT+Soq
+ 4Il2yqAGhQFWuKTDLsQJpIsJokfGSZLxF3JW1e890ImusZYhkbj/YpgHh6lrUsAQonLA MA== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2130.oracle.com with ESMTP id 2qtwkurfky-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 01 Mar 2019 16:53:29 +0000
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x21GrT6R005516
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 1 Mar 2019 16:53:29 GMT
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x21GrTud010079;
+        Fri, 1 Mar 2019 16:53:29 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 01 Mar 2019 08:53:28 -0800
+Date:   Fri, 1 Mar 2019 08:53:27 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc:     dhowells@redhat.com, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] xfs: fix reporting supported extra file attributes for
+ statx()
+Message-ID: <20190301165327.GQ21626@magnolia>
+References: <20171031221305.12908-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-References: <20190301102140.7181-1-narmstrong@baylibre.com>
- <20190301102140.7181-3-narmstrong@baylibre.com> <CAFBinCC1b5Q8Y=5qXKJ+B1XBhpo8PGFYHwTEeVTgbXwz7ge3-A@mail.gmail.com>
- <a3654bdb-4289-7755-5601-e8177b00790f@baylibre.com>
-In-Reply-To: <a3654bdb-4289-7755-5601-e8177b00790f@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 1 Mar 2019 17:52:34 +0100
-Message-ID: <CAFBinCA6VJqK31NgyVkf2rLva0R2RbYQasdZGe+0BjjdOmnmFA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] clk: meson: g12a: add cpu clocks
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     jbrunet@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20171031221305.12908-1-mcgrof@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9182 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903010118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+On Tue, Oct 31, 2017 at 03:13:05PM -0700, Luis R. Rodriguez wrote:
+> statx(2) notes that any attribute that is not indicated as supported by
+> stx_attributes_mask has no usable value. Commit 5f955f26f3d42d ("xfs: report
+> crtime and attribute flags to statx") added support for informing userspace
+> of extra file attributes but forgot to list these flags as supported
+> making reporting them rather useless for the pedantic userspace author.
+> 
+> $ git describe --contains 5f955f26f3d42d04aba65590a32eb70eedb7f37d
+> v4.11-rc6~5^2^2~2
+> 
+> Fixes: 5f955f26f3d42d ("xfs: report crtime and attribute flags to statx")
+> Signed-off-by: Luis R. Rodriguez <mcgrof@kernel.org>
+> ---
+> 
+> Its unclear why David left these out or if it was just a mistake, I checked
+> the original patch thread [0] but it was not clear in the end. David?
+> 
+> Also, I posted a patch to add support to clearing these flags through
+> xfs_repair on symlinks [1] due to the pain this can cause as you have no option
+> but to use xfs_db to fix these otherwise. Since we *didn't* list these extra
+> file attributes as supported, it begs the question if instead we should only
+> set them *and* this mask if !S_ISLNK(inode->i_mode)).
+> 
+> If so, that also begs the question if we should add further sanity check
+> on the xfs setattr to ensure these are never set on symbolic links, despite the
+> fact that FS_IOC_FSSETXATTR ioctl won't be able to set them...
+> 
+> A long shot question in terms of semantics is if all the above is rather
+> generic for Linux, is if the VFS should even be checking for immutable or
+> append flags on unlink for symbolic links.
+> 
+> [0] https://patchwork.kernel.org/patch/9607879/
+> [1] https://lkml.kernel.org/r/20171031215156.12544-1-mcgrof@kernel.org
+> 
+>  fs/xfs/xfs_iops.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 17081c77ef86..6b7d293a4aab 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -531,6 +531,10 @@ xfs_vn_getattr(
+>  	if (ip->i_d.di_flags & XFS_DIFLAG_NODUMP)
+>  		stat->attributes |= STATX_ATTR_NODUMP;
+>  
+> +	stat->attributes_mask |= (STATX_ATTR_IMMUTABLE |
+> +				  STATX_ATTR_APPEND |
+> +				  STATX_ATTR_NODUMP);
+> +
 
-On Fri, Mar 1, 2019 at 5:42 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-[...]
-> >> +static struct clk_regmap g12a_cpu_clk_dyn0_sel = {
-> >> +       .data = &(struct clk_regmap_mux_data){
-> >> +               .offset = HHI_SYS_CPU_CLK_CNTL0,
-> >> +               .mask = 0x3,
-> >> +               .shift = 0,
-> >> +       },
-> >> +       .hw.init = &(struct clk_init_data){
-> >> +               .name = "cpu_clk_dyn0_sel",
-> > the buildroot code has a variable with the name "p_premux"
-> > I'm not sure what the datasheet states, but maybe this should be
-> > cpu_clk_dyn0_pre_sel
-> > same applies to the corresponding dyn1 clock below
->
-> these bit are named "premux1", and cpu_clk_dyn0 names "postmux1",
-> which has no sense because there is no mux in between.
->
-> clk_dyn0_sel is the actual source selector of the dyn0 tree,
-> clkdyn0 is the top of the dyn0 tree, this is why i did not add "sel"
-> in it.
-OK, thank you for the explanation.
-can you please add a comment with the name from the datasheet in that
-case? that'll make it easier (at least for me) to compare the
-datasheet (and also buildroot kernel, since similar names are used
-there) with the mainline drivers
+Heh, I just posted the same diff as a patch, having forgotten that this
+existed.  I'll ... just take this one instead.
 
-[...]
-> >
-> >> +               .flags = CLK_IGNORE_UNUSED,
-> >> +       },
-> >> +};
-> >> +
-> >> +static struct clk_regmap g12a_cpu_clk_axi_div = {
-> >> +       .data = &(struct clk_regmap_div_data){
-> >> +               .offset = HHI_SYS_CPU_CLK_CNTL1,
-> >> +               .shift = 9,
-> >> +               .width = 3,
-> >> +               .flags = CLK_DIVIDER_POWER_OF_TWO,
-> >> +       },
-> >> +       .hw.init = &(struct clk_init_data){
-> >> +               .name = "cpu_clk_axi_div",
-> >> +               .ops = &clk_regmap_divider_ro_ops,
-> > out of curiosity (this applies to all CPU clock post-dividers):
-> > did you check whether CLK_DIVIDER_POWER_OF_TWO is correct on G12A?
-> > I'm asking because on Meson8b the post-dividers select between one of:
-> > "cpu_clk divided by 2, 3, 4, 5, 6, 7 or 8". also some of the
-> > post-dividers use register value 0 for cpu_clk_div2 while others use
-> > register value 1 for cpu_clk_div2.
->
-> It's correct !
-thanks for looking this up again and double-checking!
+Sorry for whiffing on this for a year and a half(!!)
 
+--D
 
-Martin
+>  	switch (inode->i_mode & S_IFMT) {
+>  	case S_IFBLK:
+>  	case S_IFCHR:
+> -- 
+> 2.14.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-xfs" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
