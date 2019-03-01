@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0C7C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DC3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727B7218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:19:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E5292085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733288AbfCAJTP (ORCPT
+        id S2387473AbfCAJTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 04:19:15 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52502 "EHLO
+        Fri, 1 Mar 2019 04:19:22 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52510 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726424AbfCAJTJ (ORCPT
+        by vger.kernel.org with ESMTP id S1733260AbfCAJTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 04:19:09 -0500
+        Fri, 1 Mar 2019 04:19:15 -0500
 Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2196gjG019117;
-        Fri, 1 Mar 2019 10:18:55 +0100
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2196gYC019090;
+        Fri, 1 Mar 2019 10:18:56 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qtwxpjkwt-1
+        by mx08-00178001.pphosted.com with ESMTP id 2qtwxpjkwu-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 01 Mar 2019 10:18:55 +0100
+        Fri, 01 Mar 2019 10:18:56 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0744642;
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E123C48;
         Fri,  1 Mar 2019 09:18:55 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DC3412C83;
-        Fri,  1 Mar 2019 09:18:54 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 1 Mar 2019
- 10:18:54 +0100
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C4FC22C83;
+        Fri,  1 Mar 2019 09:18:55 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 1 Mar 2019
+ 10:18:55 +0100
 Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 1 Mar 2019 10:18:54
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Fri, 1 Mar 2019 10:18:55
  +0100
 From:   Fabien Dessenne <fabien.dessenne@st.com>
 To:     Rob Herring <robh+dt@kernel.org>,
@@ -49,9 +49,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
 CC:     Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 2/3] ARM: dts: stm32: enable IPCC mailbox support on STM32MP157c-ed1
-Date:   Fri, 1 Mar 2019 10:18:38 +0100
-Message-ID: <1551431919-23410-3-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH 3/3] ARM: dts: stm32: enable IPCC mailbox support on STM32MP157a-dk1
+Date:   Fri, 1 Mar 2019 10:18:39 +0100
+Message-ID: <1551431919-23410-4-git-send-email-fabien.dessenne@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
 References: <1551431919-23410-1-git-send-email-fabien.dessenne@st.com>
@@ -65,19 +65,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable STM32 IPCC mailbox driver for STM32MP157c-ed1 board.
+Enable STM32 IPCC mailbox driver for STM32MP157a-dk1 board.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 4 ++++
+ arch/arm/boot/dts/stm32mp157a-dk1.dts | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 10dc7c0..626ceb3 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -83,6 +83,10 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index b229ab1..85a761a 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -65,6 +65,10 @@
+ 	};
  };
  
 +&ipcc {
