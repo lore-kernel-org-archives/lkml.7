@@ -2,326 +2,154 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D990DC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF88C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92EDE218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551407362;
-	bh=jJdgpX1L47vSLflN1xQQdcVG1MpizQEHl3YKACjxcmI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GYrd1g0GsbsbeA2DzFs+lJwGH/Hr586hDLSs9qF+iyygQRh2F1KHoiCN2T0k7CDY8
-	 LAZFDgZgwFIv/KU2nB9hS4v/H23+rcLMBDUEYXLKtAhRQSqCV2/PgUEaKH2NRdOHtp
-	 +8tZKL8xlYsDs1nsoT9r/rbgytP8e6XmSLipHd8k=
+	by mail.kernel.org (Postfix) with ESMTP id 03FCC20863
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 02:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkSW9mqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731324AbfCAC3U (ORCPT
+        id S1731531AbfCACcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 21:29:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725896AbfCAC3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 21:29:20 -0500
-Received: from devnote (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 727B120863;
-        Fri,  1 Mar 2019 02:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551407358;
-        bh=jJdgpX1L47vSLflN1xQQdcVG1MpizQEHl3YKACjxcmI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZFT5RBPhr/4YRUs20kfnwuZH39H+JLOmAPnVABFgLg9cV4Ue5tnbdbrmKYIyUF3tG
-         eKTuaGqfFAXh5ZOA7TymG2vaypwpaHCFDlxs0EBIJt324UI0nSzVpUYiNf4mUFaNxk
-         ReL31c2ZGYKD38hQtNtp1g6FSp1F9S7JqjNseuoE=
-Date:   Fri, 1 Mar 2019 11:29:15 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Shuah Khan" <shuah@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Andy Lutomirski" <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v5 3/6] uaccess: Add non-pagefault user-space read
- functions
-Message-Id: <20190301112915.f00e5d5c894f73da50746bcf@kernel.org>
-In-Reply-To: <40eae910-16f3-8c6f-6cc7-c52b77b30ccd@fb.com>
-References: <155136974478.2968.3105123100519786079.stgit@devbox>
-        <155136983467.2968.13980231890937828195.stgit@devbox>
-        <40eae910-16f3-8c6f-6cc7-c52b77b30ccd@fb.com>
-X-Mailer: Sylpheed 3.5.0 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 28 Feb 2019 21:32:07 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39607 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbfCACcG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 21:32:06 -0500
+Received: by mail-qt1-f196.google.com with SMTP id o6so26115628qtk.6;
+        Thu, 28 Feb 2019 18:32:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=QzaYYWLTLgwZqUkJIcAQxjTqSbN5ZFiQxz0iJmOQdrE=;
+        b=VkSW9mqI4twONOA8CdLJMsS/ZIFjsgpjDiOrRshoH3epZbgZMn5A+RfO3BgjZ8WroT
+         zEJibQTmBmoa1WE4CEBA+eLzRCKAF3WRjgR666Z7gLq9U6wnQI1fNkBn5TMPrlnEjhUW
+         D1kUzcsqyUcjuKiNkAiQBmUR+I4cbbzGjb24vNyUAR6nEUjQf2KMIwtYpFfUuzYE8b+c
+         7VMNQnN5GlBehhQjDTx1RB3aaiAsgmsWJPmP+JxSCcOi8jg8JFd2wgh6HaFcC1/Q1GBh
+         SsAog0eNaJs7wGPOlc4BBKqiCQ1KpCOi1KkmVxiJxB/9PzWuVoWLCXN8UA3kV2o6JkQ6
+         R/nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language;
+        bh=QzaYYWLTLgwZqUkJIcAQxjTqSbN5ZFiQxz0iJmOQdrE=;
+        b=hHfaC13lNnWXsS2X7Rg8LVO/t963ndZqJxdWlQ+iJVm40mMSWTwWppRQ/k6YAM3K1g
+         rN9Vb5IrNUnA4jvSj8Q/+fSANTmvZVaY6lZqke1C0MbMH5yAwgMLplXNvNNRS1fFVrhb
+         68nv4qUpewraTyRmsrKCRTCM12PVZLTqCkdk6XbgVgavtc0mpZWXYgUT4LC5M0tNuAye
+         rIoNj5d1SjE7495WesfaQa6FxewvEvORWSBS4+D6ruNdWy4/ltBJFsO4q9ntKDthU26I
+         9y25Eh1nQDn9htX7tndglCCIUP6oNyrwhyDFHevRolFIx1cSv5QxWQJsyaARgtAa1z23
+         rnRg==
+X-Gm-Message-State: APjAAAUBQ8+NJwKiOfFbZEsOQj9LzUlsOeqXWTRcBChx8tVdLDEoy0pX
+        Ipwii4I3fWF+j29df1PK/1glLsxT
+X-Google-Smtp-Source: APXvYqzOBMGGMJEMCthkKYw6CbsnamjTssjVC/35RVLml0M/wyc3RIqnVLjbadB2IAcj+4nh2XYy1Q==
+X-Received: by 2002:a0c:b98f:: with SMTP id v15mr1971132qvf.60.1551407525015;
+        Thu, 28 Feb 2019 18:32:05 -0800 (PST)
+Received: from [192.168.1.199] (pool-108-28-156-19.washdc.fios.verizon.net. [108.28.156.19])
+        by smtp.gmail.com with ESMTPSA id m128sm11767097qkf.53.2019.02.28.18.32.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 18:32:04 -0800 (PST)
+Subject: Re: Realtek r8822be kernel module does not negotiate 802.11ac
+ connection
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     Pkshih <pkshih@realtek.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <51d62a31-7cde-e815-bdee-4ef5433007aa@gmail.com>
+ <F7CD281DE3E379468C6D07993EA72F84D17AF74C@RTITMBSVM04.realtek.com.tw>
+From:   "David R. Bergstein" <david.r.bergstein@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david.r.bergstein@gmail.com; keydata=
+ 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
+ cZPytJop3jxjNbB2ZRfwBXX3FsGBkJ4S2SKQyQ==
+Message-ID: <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
+Date:   Thu, 28 Feb 2019 21:32:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <F7CD281DE3E379468C6D07993EA72F84D17AF74C@RTITMBSVM04.realtek.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yonghong,
+Tony,
 
-On Thu, 28 Feb 2019 22:49:43 +0000
-Yonghong Song <yhs@fb.com> wrote:
+Thanks for your response.  Can you advise as to the availability of the
+new rtw88 driver?  As it appears to be under development, I could not
+locate a copy of the code for local compilation.
 
-> 
-> 
-> On 2/28/19 8:03 AM, Masami Hiramatsu wrote:
-> > Add probe_user_read(), strncpy_from_unsafe_user() and
-> > strnlen_unsafe_user() which allows caller to access user-space
-> > in IRQ context.
-> > 
-> > Current probe_kernel_read() and strncpy_from_unsafe() are
-> > not available for user-space memory, because it sets
-> > KERNEL_DS while accessing data. On some arch, user address
-> > space and kernel address space can be co-exist, but others
-> > can not. In that case, setting KERNEL_DS means given
-> 
-> Just curious. Given the list of arch's currently linux supports,
-> do you know which arch's fall into "user address space and
-> kernel address space" can co-exist, and which arch's cannot?
+Sincerely,
 
-As far as I can heard, (and based on probe_kernel_read() failure)
-sparc32 (and sparc64?), arm64, and s390 will not work.
-x86 works, but if user patch the 4G/4G, it shouldn't work.
+David R. Bergstein
 
-Thank you,
-
-> 
+On 2/27/19 5:23 AM, Tony Chuang wrote:
+>> This message is in regard to a bug I have open on bugs.launchpad.net, 1813372,
+>> linked below.  This issue, originally identified in an Ubuntu kernel, has been
+>> duplicated in the most current mainline kernel, 5.0-rc8, and is in regard to
+>> problems attaining a wireless connection at 802.11ac speeds.
+>>
+>> https://bugs.launchpad.net/bugs/1813372
+>>
+>> At your earliest convenience, please see the bug report above, and advise if a fix
+>> will be available for the r8822be kernel module.
+>>
+>> Sincerely,
+>>
+>> David R. Bergstein
+>>
+> Hi,
+>
+> If it's possible I will suggest that you can use the new driver "rtw88" being
+> reviewed now. rtw88 is better supported by Realtek and has significant
+> improvement in contrast to r8822be. And also it is aim to better support
+> 802.11ac series ICs, so it may help resolve your problem about 802.11ac
+> connection speeds.
 > Thanks!
-> 
-> Yonghong
-> 
-> 
-> > address is treated as a kernel address space.
-> > Also strnlen_user() is only available from user context since
-> > it can sleep if pagefault is enabled.
-> > 
-> > To access user-space memory without pagefault, we need
-> > these new functions which sets USER_DS while accessing
-> > the data.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >    Changes in v5:
-> >     - Simplify probe_user_read() (Thanks, Peter!)
-> >     - Add strnlen_unsafe_user()
-> >    Changes in v3:
-> >     - Use user_access_ok() for probe_user_read().
-> >    Changes in v2:
-> >     - Simplify strncpy_from_unsafe_user() using strncpy_from_user()
-> >       according to Linus's suggestion.
-> >     - Simplify probe_user_read() not using intermediate function.
-> > ---
-> >   include/linux/uaccess.h |   14 +++++
-> >   mm/maccess.c            |  122 +++++++++++++++++++++++++++++++++++++++++++++--
-> >   2 files changed, 130 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> > index 1afd9dfabe67..5be7f9adb418 100644
-> > --- a/include/linux/uaccess.h
-> > +++ b/include/linux/uaccess.h
-> > @@ -258,6 +258,17 @@ extern long probe_kernel_read(void *dst, const void *src, size_t size);
-> >   extern long __probe_kernel_read(void *dst, const void *src, size_t size);
-> >   
-> >   /*
-> > + * probe_user_read(): safely attempt to read from a location in user space
-> > + * @dst: pointer to the buffer that shall take the data
-> > + * @src: address to read from
-> > + * @size: size of the data chunk
-> > + *
-> > + * Safely read from address @src to the buffer at @dst.  If a kernel fault
-> > + * happens, handle that and return -EFAULT.
-> > + */
-> > +extern long probe_user_read(void *dst, const void __user *src, size_t size);
-> > +
-> > +/*
-> >    * probe_kernel_write(): safely attempt to write to a location
-> >    * @dst: address to write to
-> >    * @src: pointer to the data that shall be written
-> > @@ -270,6 +281,9 @@ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
-> >   extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
-> >   
-> >   extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
-> > +extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
-> > +				     long count);
-> > +extern long strnlen_unsafe_user(const void __user *unsafe_addr, long count);
-> >   
-> >   /**
-> >    * probe_kernel_address(): safely attempt to read from a location
-> > diff --git a/mm/maccess.c b/mm/maccess.c
-> > index ec00be51a24f..d1b2ec78d9ef 100644
-> > --- a/mm/maccess.c
-> > +++ b/mm/maccess.c
-> > @@ -5,8 +5,20 @@
-> >   #include <linux/mm.h>
-> >   #include <linux/uaccess.h>
-> >   
-> > +static __always_inline long
-> > +probe_read_common(void *dst, const void __user *src, size_t size)
-> > +{
-> > +	long ret;
-> > +
-> > +	pagefault_disable();
-> > +	ret = __copy_from_user_inatomic(dst, src, size);
-> > +	pagefault_enable();
-> > +
-> > +	return ret ? -EFAULT : 0;
-> > +}
-> > +
-> >   /**
-> > - * probe_kernel_read(): safely attempt to read from a location
-> > + * probe_kernel_read(): safely attempt to read from a kernel-space location
-> >    * @dst: pointer to the buffer that shall take the data
-> >    * @src: address to read from
-> >    * @size: size of the data chunk
-> > @@ -29,17 +41,45 @@ long __probe_kernel_read(void *dst, const void *src, size_t size)
-> >   	mm_segment_t old_fs = get_fs();
-> >   
-> >   	set_fs(KERNEL_DS);
-> > -	pagefault_disable();
-> > -	ret = __copy_from_user_inatomic(dst,
-> > -			(__force const void __user *)src, size);
-> > -	pagefault_enable();
-> > +	ret = probe_read_common(dst, (__force const void __user *)src, size);
-> >   	set_fs(old_fs);
-> >   
-> > -	return ret ? -EFAULT : 0;
-> > +	return ret;
-> >   }
-> >   EXPORT_SYMBOL_GPL(probe_kernel_read);
-> >   
-> >   /**
-> > + * probe_user_read(): safely attempt to read from a user-space location
-> > + * @dst: pointer to the buffer that shall take the data
-> > + * @src: address to read from. This must be a user address.
-> > + * @size: size of the data chunk
-> > + *
-> > + * Safely read from user address @src to the buffer at @dst. If a kernel fault
-> > + * happens, handle that and return -EFAULT.
-> > + */
-> > +
-> > +long __weak probe_user_read(void *dst, const void __user *src, size_t size)
-> > +    __attribute__((alias("__probe_user_read")));
-> > +
-> > +long __probe_user_read(void *dst, const void __user *src, size_t size)
-> > +{
-> > +	long ret = -EFAULT;
-> > +	mm_segment_t old_fs = get_fs();
-> > +
-> > +	/*
-> > +	 * Since this can be called in IRQ context, we carefully set the
-> > +	 * USER_DS and use user_access_ok() which checks segment setting
-> > +	 * instead of task context.
-> > +	 */
-> > +	set_fs(USER_DS);
-> > +	if (user_access_ok(src, size))
-> > +		ret = probe_read_common(dst, src, size);
-> > +	set_fs(old_fs);
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(probe_user_read);
-> > +
-> > +/**
-> >    * probe_kernel_write(): safely attempt to write to a location
-> >    * @dst: address to write to
-> >    * @src: pointer to the data that shall be written
-> > @@ -66,6 +106,7 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
-> >   }
-> >   EXPORT_SYMBOL_GPL(probe_kernel_write);
-> >   
-> > +
-> >   /**
-> >    * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
-> >    * @dst:   Destination address, in kernel space.  This buffer must be at
-> > @@ -105,3 +146,72 @@ long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
-> >   
-> >   	return ret ? -EFAULT : src - unsafe_addr;
-> >   }
-> > +
-> > +/**
-> > + * strncpy_from_unsafe_user: - Copy a NUL terminated string from unsafe user
-> > + *				address.
-> > + * @dst:   Destination address, in kernel space.  This buffer must be at
-> > + *         least @count bytes long.
-> > + * @unsafe_addr: Unsafe user address.
-> > + * @count: Maximum number of bytes to copy, including the trailing NUL.
-> > + *
-> > + * Copies a NUL-terminated string from unsafe user address to kernel buffer.
-> > + *
-> > + * On success, returns the length of the string INCLUDING the trailing NUL.
-> > + *
-> > + * If access fails, returns -EFAULT (some data may have been copied
-> > + * and the trailing NUL added).
-> > + *
-> > + * If @count is smaller than the length of the string, copies @count-1 bytes,
-> > + * sets the last byte of @dst buffer to NUL and returns @count.
-> > + */
-> > +long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
-> > +			      long count)
-> > +{
-> > +	mm_segment_t old_fs = get_fs();
-> > +	long ret;
-> > +
-> > +	if (unlikely(count <= 0))
-> > +		return 0;
-> > +
-> > +	set_fs(USER_DS);
-> > +	pagefault_disable();
-> > +	ret = strncpy_from_user(dst, unsafe_addr, count);
-> > +	pagefault_enable();
-> > +	set_fs(old_fs);
-> > +	if (ret >= count) {
-> > +		ret = count;
-> > +		dst[ret - 1] = '\0';
-> > +	} else if (ret > 0)
-> > +		ret++;
-> > +	return ret;
-> > +}
-> > +
-> > +/**
-> > + * strnlen_unsafe_user: - Get the size of a user string INCLUDING final NUL.
-> > + * @unsafe_addr: The string to measure.
-> > + * @count: Maximum count (including NUL character)
-> > + *
-> > + * Get the size of a NUL-terminated string in user space without pagefault.
-> > + *
-> > + * Returns the size of the string INCLUDING the terminating NUL.
-> > + *
-> > + * If the string is too long, returns a number larger than @count. User
-> > + * has to check the return value against "> count".
-> > + * On exception (or invalid count), returns 0.
-> > + *
-> > + * Unlike strnlen_user, this can be used from IRQ handler etc. because
-> > + * it disables pagefaults.
-> > + */
-> > +long strnlen_unsafe_user(const void __user *unsafe_addr, long count)
-> > +{
-> > +	mm_segment_t old_fs = get_fs();
-> > +	int ret;
-> > +
-> > +	set_fs(USER_DS);
-> > +	pagefault_disable();
-> > +	ret = strnlen_user(unsafe_addr, count);
-> > +	pagefault_enable();
-> > +	set_fs(old_fs);
-> > +	return ret;
-> > +}
-> > 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+>
+> Yan-Hsuan
+>
