@@ -2,89 +2,74 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78346C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506BBC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3868E20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:27:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="TJw38H65"
+	by mail.kernel.org (Postfix) with ESMTP id 254F22186A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732439AbfCAH1E (ORCPT
+        id S1732512AbfCAH2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 02:27:04 -0500
-Received: from uho.ysoft.cz ([81.19.3.130]:38841 "EHLO uho.ysoft.cz"
+        Fri, 1 Mar 2019 02:28:19 -0500
+Received: from mga01.intel.com ([192.55.52.88]:35920 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfCAH1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 02:27:03 -0500
-Received: from iota-build.ysoft.local (unknown [10.1.5.151])
-        by uho.ysoft.cz (Postfix) with ESMTP id 413DFA36C8;
-        Fri,  1 Mar 2019 08:27:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1551425222;
-        bh=U0/CXybEquAYKSj4JpuTOuLjIaDciCa3HJX7Q0eaTLw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TJw38H653y+kIxfMhNYhyk8GW5zDzsZzzmZWckW+V4ZCAEObbcRhYzM3m+BdOyq+f
-         kfL+BVOo3sjXNUMbVtRODoGHwrfoCXUmjcJmeE5noxHxX5IunVyi3Jkb6HotlXkhmF
-         a5CUkzApBKAU9ncwq/cjwNkMkJTIhJHzFgc6sFRY=
-From:   =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH v2] ARM: dts: imx6dl-yapp4: Use rgmii-id phy mode on the cpu port
-Date:   Fri,  1 Mar 2019 08:26:42 +0100
-Message-Id: <1551425202-8871-1-git-send-email-michal.vokac@ysoft.com>
-X-Mailer: git-send-email 2.1.4
+        id S1725978AbfCAH2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 02:28:19 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 23:28:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,426,1544515200"; 
+   d="scan'208";a="151080343"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Feb 2019 23:28:12 -0800
+Received: from andy by smile with local (Exim 4.92-RC6)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1gzcaZ-0002Qp-AZ; Fri, 01 Mar 2019 09:28:11 +0200
+Date:   Fri, 1 Mar 2019 09:28:11 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+Cc:     lee.jones@linaro.org, bleung@chromium.org,
+        enric.balletbo@collabora.com, groeck@chromium.org,
+        linux-kernel@vger.kernel.org, gwendal@google.com,
+        jettrink@chromium.org
+Subject: Re: [PATCH v2] mfd: cros_ec: instantiate properly CrOS ISH MCU device
+Message-ID: <20190301072811.GH9224@smile.fi.intel.com>
+References: <1551413171-27290-1-git-send-email-rushikesh.s.kadam@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551413171-27290-1-git-send-email-rushikesh.s.kadam@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use rgmii-id phy mode for the CPU port (MAC0) of the QCA8334 switch
-to add delays to both Tx and Rx clock.
+On Fri, Mar 01, 2019 at 09:36:11AM +0530, Rushikesh S Kadam wrote:
+> Integrated Sensor Hub (ISH) is also a MCU running EC
+> having feature bit EC_FEATURE_ISH. Instantiate it as
+> a special CrOS EC device with device name 'cros_ish'.
 
-It worked with the rgmii mode before because the qca8k driver
-(incorrectly) enabled delays in that mode and rgmii-id was not
-implemented at all.
+> v2
+> - Addressed review comments to term the CrOS EC device as a generic
+>   Integrated Sensor Hub. 
 
-Commit 5ecdd77c61c8 ("net: dsa: qca8k: disable delay for RGMII mode")
-removed the delays from the RGMII mode and hence broke the networking.
+> +	/* The MCU is an Intel Integrated Sensor Hub */
 
-To fix the problem, commit a968b5e9d587 ("net: dsa: qca8k: Enable delay
-for RGMII_ID mode") was introduced.
+This has to be adjusted as well. Intel ISH is just one of the example of ISHs.
 
-Now the correct phy mode is available so use it.
+> +	EC_FEATURE_ISH = 40,
 
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
-Changes in v2:
- - Reworded commit message - added more details regarding the issue.
-
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-index b715ab0fa1ff..091d829f6b05 100644
---- a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-+++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
-@@ -125,7 +125,7 @@
- 				ethphy0: port@0 {
- 					reg = <0>;
- 					label = "cpu";
--					phy-mode = "rgmii";
-+					phy-mode = "rgmii-id";
- 					ethernet = <&fec>;
- 
- 					fixed-link {
 -- 
-2.1.4
+With Best Regards,
+Andy Shevchenko
+
 
