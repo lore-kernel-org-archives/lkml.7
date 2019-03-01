@@ -2,161 +2,152 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C635C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01907C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4BDA2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2412084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 17:54:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tqj3YSzN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6AaQnDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389636AbfCARyM (ORCPT
+        id S2389649AbfCARyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 12:54:12 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37093 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbfCARyL (ORCPT
+        Fri, 1 Mar 2019 12:54:17 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39901 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbfCARyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 12:54:11 -0500
-Received: by mail-pl1-f196.google.com with SMTP id q3so11823969pll.4;
-        Fri, 01 Mar 2019 09:54:11 -0800 (PST)
+        Fri, 1 Mar 2019 12:54:15 -0500
+Received: by mail-qt1-f193.google.com with SMTP id o6so28736444qtk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 09:54:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HlB4DS54GFijftk0TlQuUAHn5HmlOlT3HdXeBRlJrdQ=;
-        b=Tqj3YSzNiekIDAqnzz9Pm7NOMco9gWYo/OTwrtEYLEFsRaga8QRElCymPnkOSBBADg
-         s5UIIN9YllBh/mm+dG0FPo5AcyZIC280iKJQq+e9tsHuKeiECqc01E4wZPNftVtMlKCr
-         VuxBEsbFzKYi3t/EqX+Y0CdCDrOhn3w+qCVFuDRKZQCgdcLi7sf8hYQw/JlJcaArJdEw
-         y/d1x6mqoUFXPbdUgEmSMieClwmnLw+khz4wSGOM57qMQnJYpLr2YKBHqPGQcoy95tJ2
-         dGT/r9d6NEU0GI4ci9flYQ0+A4tzdsOx6J8DYpAxeZk/8LkuMIOD38rfg+JGnUxGsmA7
-         fNiQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lBH4Ydigs2bWU7WqTFcY8LV1XYbSgo9zlNdv0ERAU2Y=;
+        b=W6AaQnDvR59Vg4MCOhQtpb4Fu715hKb8akF4wdINKRYTM3GreCx2ePCMezTk+Jiwqg
+         B7vhhQlySMN05Fpb7UfzwK0kNvWqaqmKc1SEa/R457sMKXzAa3T2NFVXxU3owBKnFFif
+         YgfDHjxhnXZfKuEjYoBXYivYfpjm37lxls5IvYum79qVWeYlo1xgNhrKNCJ3AinnIMyQ
+         RaHd3xLkRGYTHUz24LOBe5UMv+mjXl4IARPNfVqGwq7NvU1r1wsedSl1fskA5kBHDZ2g
+         v6rK6c0K4phhpoRtRAWBg8egMuZDWo7rq8DKE1VVEonVeK+HjbadyZxlb1zKfSBoBMcZ
+         9v2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=HlB4DS54GFijftk0TlQuUAHn5HmlOlT3HdXeBRlJrdQ=;
-        b=Zoh1V0e0NhzYRVrKywnzZqpw0f2wLvs3byF66pEGHV+CNUSyWy2moR0WFihmpvsm2x
-         ePOIhRj4US/vdJe5Lix+w/raAyA2JUdRR6A3cdqBZaLBemb/O0WXha028aaRC071S72y
-         X3FeDstqGfozULfTrYPfNELvxYMQVqt+rnnWQTK/qAtj6UUqwFFrCVKzMbmpSxTLU9AG
-         CgfuVBGmg0Eu8P/VmFB3B85RgC1x9i8rxaVElZ2Iz0k0VXpqRmdw9HS6ucgmxDY4KxOY
-         HX/GAgVUmYe3MfY1EYUgTtsGdzLgQ9ZIi4OzWUWiQS5ImOSHveyqccSIn0SGGV8iXavO
-         BO8A==
-X-Gm-Message-State: APjAAAXi0wrVWTnOrY+y6TZa71PHSaKWjNgWXd+npBhP60VynnPh8758
-        o8beX/M+De7fomA8oC0hKm3vDpBs
-X-Google-Smtp-Source: APXvYqzoxUT71goFsDXwTHaRzqVpnxM24CiHm9ZVtVxhreatFlhVeJ3clfwM6LV1SkBHzrlVdM4rog==
-X-Received: by 2002:a17:902:8bc6:: with SMTP id r6mr6779421plo.235.1551462850393;
-        Fri, 01 Mar 2019 09:54:10 -0800 (PST)
-Received: from [10.67.50.0] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id m6sm22727846pfa.115.2019.03.01.09.54.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 09:54:09 -0800 (PST)
-Subject: Re: [PATCH net-next] net: dsa: Do not configure VLAN ID 0
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190228234936.1593-1-f.fainelli@gmail.com>
- <5cfd1cbc-1ba4-2274-841a-4285db72afa4@ysoft.com>
- <2f23dc48-a042-4fcf-cc5b-11d247061239@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <ab4f9ea2-f108-1538-3a98-dd03d3657a16@gmail.com>
-Date:   Fri, 1 Mar 2019 09:54:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lBH4Ydigs2bWU7WqTFcY8LV1XYbSgo9zlNdv0ERAU2Y=;
+        b=GW66/kWqcXHbo9Wy3drArz4wERS4oIyXgWxwiSiDLuQysu2lm/431vvFp8ZPNnPuuX
+         uZxLFYImzBAZESpnoik5ZEcnZ/tqghGPh5hX+yx+cCgdc+JpArINd9sdQurvONx5K1XT
+         BQQ4oXzVhkkTwcwOI81W46jxOor+UZjFboLnjXktdkjhHVxn2BjerE7Kwqa7M9OcBy9X
+         WQzLStWMTlAEdCmrHZHVKmMbAjn+H9y1CszJRoPOLIPGU5LTlQg0Gh/gtJqVTqZzqWsb
+         FNXiNfn5dCPugRb7uQXbHcQO+EBVXrhcZYDwBPKdD/VReT5lhbISTfyvt+7MwkLjvWOX
+         lc8Q==
+X-Gm-Message-State: APjAAAWQ2G+Go4PFQwOhiv5yqYoumDgi0fK4YpwZVpUdVbGmpNXwPYrb
+        3QVzyiXltdp213nURlcdlxo=
+X-Google-Smtp-Source: APXvYqzWrlXwnp5ALmYz4rxiHv3jf8gKCrnbHYHdbtncvCqlafbtacIIAct2ALrMg4GznNFs9ymM3w==
+X-Received: by 2002:ac8:17e7:: with SMTP id r36mr4918002qtk.104.1551462853751;
+        Fri, 01 Mar 2019 09:54:13 -0800 (PST)
+Received: from quaco.ghostprotocols.net (177-59-143-241.3g.claro.net.br. [177.59.143.241])
+        by smtp.gmail.com with ESMTPSA id v83sm2530244qkb.18.2019.03.01.09.54.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 Mar 2019 09:54:12 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2B1B84039C; Fri,  1 Mar 2019 14:54:09 -0300 (-03)
+Date:   Fri, 1 Mar 2019 14:54:09 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/8] perf scripts python: export-to-postgresql.py: Export
+ calls parent_id
+Message-ID: <20190301175409.GN13100@kernel.org>
+References: <20190228130031.23064-1-adrian.hunter@intel.com>
+ <20190228130031.23064-5-adrian.hunter@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <2f23dc48-a042-4fcf-cc5b-11d247061239@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190228130031.23064-5-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/1/19 9:52 AM, Florian Fainelli wrote:
+Em Thu, Feb 28, 2019 at 03:00:27PM +0200, Adrian Hunter escreveu:
+> Export to the 'calls' table the newly created 'parent_id' and create an
+> index for it.
 
-[snip]
+Thanks, applied.
 
->> Tested-by: Michal Vokáč <michal.vokac@ysoft.com>
->>
->> I am not sure what was the original problem as I could not find the
->> thread where Heiner reported the issue but with the latest version
->> next-20190228 I get this error with QCA8334 switch:
+- Arnaldo
+ 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/scripts/python/export-to-postgresql.py | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
 > 
-> Thanks Michal. There is still a lingering issue though, because we
-> currently skip the prepare phase (we don't have a switchdev_trans
-> structure that would make sense here), we are not checking that the
-> underlying switch device driver does actually support
-> port_vlan_add/port_vlan_del, and qca8k currently does not. I will submit
-> a v2 patch that also takes care of that.
+> diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
+> index 6358522a69f6..390a351d15ea 100644
+> --- a/tools/perf/scripts/python/export-to-postgresql.py
+> +++ b/tools/perf/scripts/python/export-to-postgresql.py
+> @@ -394,7 +394,8 @@ if perf_db_export_calls:
+>  		'call_id	bigint,'
+>  		'return_id	bigint,'
+>  		'parent_call_path_id	bigint,'
+> -		'flags		integer)')
+> +		'flags		integer,'
+> +		'parent_id	bigint)')
+>  
+>  do_query(query, 'CREATE VIEW machines_view AS '
+>  	'SELECT '
+> @@ -479,7 +480,8 @@ if perf_db_export_calls:
+>  			'call_id,'
+>  			'return_id,'
+>  			'CASE WHEN flags=0 THEN \'\' WHEN flags=1 THEN \'no call\' WHEN flags=2 THEN \'no return\' WHEN flags=3 THEN \'no call/return\' WHEN flags=6 THEN \'jump\' ELSE CAST ( flags AS VARCHAR(6) ) END AS flags,'
+> -			'parent_call_path_id'
+> +			'parent_call_path_id,'
+> +			'calls.parent_id'
+>  		' FROM calls INNER JOIN call_paths ON call_paths.id = call_path_id')
+>  
+>  do_query(query, 'CREATE VIEW samples_view AS '
+> @@ -575,6 +577,7 @@ def trace_begin():
+>  	sample_table(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+>  	if perf_db_export_calls or perf_db_export_callchains:
+>  		call_path_table(0, 0, 0, 0)
+> +		call_return_table(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+>  
+>  unhandled_count = 0
+>  
+> @@ -657,6 +660,7 @@ def trace_end():
+>  					'ADD CONSTRAINT returnfk    FOREIGN KEY (return_id)    REFERENCES samples    (id),'
+>  					'ADD CONSTRAINT parent_call_pathfk FOREIGN KEY (parent_call_path_id) REFERENCES call_paths (id)')
+>  		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
+> +		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
+>  
+>  	if (unhandled_count):
+>  		print datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events"
+> @@ -728,7 +732,7 @@ def call_path_table(cp_id, parent_id, symbol_id, ip, *x):
+>  	value = struct.pack(fmt, 4, 8, cp_id, 8, parent_id, 8, symbol_id, 8, ip)
+>  	call_path_file.write(value)
+>  
+> -def call_return_table(cr_id, thread_id, comm_id, call_path_id, call_time, return_time, branch_count, call_id, return_id, parent_call_path_id, flags, *x):
+> -	fmt = "!hiqiqiqiqiqiqiqiqiqiqii"
+> -	value = struct.pack(fmt, 11, 8, cr_id, 8, thread_id, 8, comm_id, 8, call_path_id, 8, call_time, 8, return_time, 8, branch_count, 8, call_id, 8, return_id, 8, parent_call_path_id, 4, flags)
+> +def call_return_table(cr_id, thread_id, comm_id, call_path_id, call_time, return_time, branch_count, call_id, return_id, parent_call_path_id, flags, parent_id, *x):
+> +	fmt = "!hiqiqiqiqiqiqiqiqiqiqiiiq"
+> +	value = struct.pack(fmt, 12, 8, cr_id, 8, thread_id, 8, comm_id, 8, call_path_id, 8, call_time, 8, return_time, 8, branch_count, 8, call_id, 8, return_id, 8, parent_call_path_id, 4, flags, 8, parent_id)
+>  	call_file.write(value)
+> -- 
+> 2.17.1
 
-David, please discard this version, I will submit a version that
-properly emulates the prepare/commit phase such that no assumptions are
-broken, this will take care of both issues at once. Thanks!
 -- 
-Florian
+
+- Arnaldo
