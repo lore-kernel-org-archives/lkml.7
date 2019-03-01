@@ -2,253 +2,111 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC5CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A4FC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D3F2083E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3552083E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551440760;
+	bh=uQiqb/8HsrWZDUs5nbzoHaOMDoaNPvBxnFDv3PloHiI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i35gN8WArIpyTGfL+kpEn6CgB67mNgetUXT8QaVFMxQa3t1USfhMUT67sT11R6EVQ
+	 JjrR6F52tZR7oJN3MxVJvTMMd+j+fYankO6tgieqoJTfDebVjdIKcRnMDR6bMTba2q
+	 5m9bJ2NbAs6hqqHmWFniu6Y76EP/p5QJO7YLdge0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387646AbfCALmy (ORCPT
+        id S2387668AbfCALp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:42:54 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:38336 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfCALmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:42:54 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8F33BE9510;
-        Fri,  1 Mar 2019 11:42:53 +0000 (UTC)
-Received: from krava (ovpn-204-247.brq.redhat.com [10.40.204.247])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 46EC65D9C5;
-        Fri,  1 Mar 2019 11:42:51 +0000 (UTC)
-Date:   Fri, 1 Mar 2019 12:42:50 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [RFC] perf/x86/rapl: Getting zero on energy-cores event
-Message-ID: <20190301114250.GA23459@krava>
+        Fri, 1 Mar 2019 06:45:59 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46772 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727418AbfCALp7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 06:45:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T6pXHKNa+ACXCXsUuVIA/K9jwD+fxsERuqC5A6ON50c=; b=lUTdB8kF9sCjBt8oRzoqjZkIt
+        sGcKFwfzbePvy3qmykp1v76FCrTI+N+gFkC2IBMANuYYzdC2Botq2iRTEwavgBOWuozlPjAbGJLQ4
+        yitkW7tuiG/n+bxl2BfQSljUuApSG9u1TxAntY/umXEhoFQ58h1ZvYbNmrdBZuVLQVNd4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1gzgbU-00027o-6q; Fri, 01 Mar 2019 11:45:24 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 5C0F11126E96; Fri,  1 Mar 2019 11:45:23 +0000 (GMT)
+Date:   Fri, 1 Mar 2019 11:45:23 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        guillaume.tucker@collabora.com, matthew.hart@linaro.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+Message-ID: <20190301114523.GA7429@sirena.org.uk>
+References: <5c6702da.1c69fb81.12a14.4ece@mx.google.com>
+ <20190215104325.039dbbd9c3bfb35b95f9247b@linux-foundation.org>
+ <20190215185151.GG7897@sirena.org.uk>
+ <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
+ <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+ <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
 Content-Disposition: inline
+In-Reply-To: <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
+X-Cookie: Yow!
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 01 Mar 2019 11:42:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi,
-I'm getting zero counts for energy-cores event on broadwell-x
-server (model 0x4f)
 
-I checked intel_rapl powercap driver and it won't export the
-counter if it rdmsr returns zero on it 
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-the SDM also says the rdmsr returns zero for some models
+On Thu, Feb 28, 2019 at 03:14:38PM -0800, Andrew Morton wrote:
 
-I made changes on perf rapl pmu below to remove sysfs events
-if their rdmsr returns zero just to ilustrate the case
+> hm, does bot@kernelci.org actually read emails?  Let's try info@ as well..
 
-I think there's probably better fix, but I'm not sure if
-there's a reason for zero counters to be exposed..?
+bot@ isn't reading mails but it copies people who can look at stuff on
+what it sends out.
 
-thoughts? thanks,
-jirka
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
----
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 94dc564146ca..effb9a9d2368 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -54,6 +54,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/perf_event.h>
-+#include <linux/nospec.h>
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- #include "../perf_event.h"
-@@ -346,10 +347,18 @@ static void rapl_pmu_event_del(struct perf_event *event, int flags)
- 	rapl_pmu_event_stop(event, PERF_EF_UPDATE);
- }
- 
-+static unsigned int event_msr[NR_RAPL_DOMAINS] = {
-+	MSR_PP0_ENERGY_STATUS,
-+	MSR_PKG_ENERGY_STATUS,
-+	MSR_DRAM_ENERGY_STATUS,
-+	MSR_PP1_ENERGY_STATUS,
-+	MSR_PLATFORM_ENERGY_STATUS,
-+};
-+
- static int rapl_pmu_event_init(struct perf_event *event)
- {
- 	u64 cfg = event->attr.config & RAPL_EVENT_MASK;
--	int bit, msr, ret = 0;
-+	int bit, ret = 0;
- 	struct rapl_pmu *pmu;
- 
- 	/* only look at RAPL events */
-@@ -365,33 +374,12 @@ static int rapl_pmu_event_init(struct perf_event *event)
- 
- 	event->event_caps |= PERF_EV_CAP_READ_ACTIVE_PKG;
- 
--	/*
--	 * check event is known (determines counter)
--	 */
--	switch (cfg) {
--	case INTEL_RAPL_PP0:
--		bit = RAPL_IDX_PP0_NRG_STAT;
--		msr = MSR_PP0_ENERGY_STATUS;
--		break;
--	case INTEL_RAPL_PKG:
--		bit = RAPL_IDX_PKG_NRG_STAT;
--		msr = MSR_PKG_ENERGY_STATUS;
--		break;
--	case INTEL_RAPL_RAM:
--		bit = RAPL_IDX_RAM_NRG_STAT;
--		msr = MSR_DRAM_ENERGY_STATUS;
--		break;
--	case INTEL_RAPL_PP1:
--		bit = RAPL_IDX_PP1_NRG_STAT;
--		msr = MSR_PP1_ENERGY_STATUS;
--		break;
--	case INTEL_RAPL_PSYS:
--		bit = RAPL_IDX_PSYS_NRG_STAT;
--		msr = MSR_PLATFORM_ENERGY_STATUS;
--		break;
--	default:
-+	if (!cfg || cfg >= NR_RAPL_DOMAINS)
- 		return -EINVAL;
--	}
-+
-+	cfg = array_index_nospec(cfg, NR_RAPL_DOMAINS);
-+	bit = cfg - 1;
-+
- 	/* check event supported */
- 	if (!(rapl_cntr_mask & (1 << bit)))
- 		return -EINVAL;
-@@ -406,7 +394,7 @@ static int rapl_pmu_event_init(struct perf_event *event)
- 		return -EINVAL;
- 	event->cpu = pmu->cpu;
- 	event->pmu_private = pmu;
--	event->hw.event_base = msr;
-+	event->hw.event_base = event_msr[bit];
- 	event->hw.config = cfg;
- 	event->hw.idx = bit;
- 
-@@ -435,11 +423,27 @@ static struct attribute_group rapl_pmu_attr_group = {
- 	.attrs = rapl_pmu_attrs,
- };
- 
--RAPL_EVENT_ATTR_STR(energy-cores, rapl_cores, "event=0x01");
--RAPL_EVENT_ATTR_STR(energy-pkg  ,   rapl_pkg, "event=0x02");
--RAPL_EVENT_ATTR_STR(energy-ram  ,   rapl_ram, "event=0x03");
--RAPL_EVENT_ATTR_STR(energy-gpu  ,   rapl_gpu, "event=0x04");
--RAPL_EVENT_ATTR_STR(energy-psys,   rapl_psys, "event=0x05");
-+static ssize_t
-+rapl_event_sysfs_show(struct device *dev, struct device_attribute *attr,
-+		      char *page)
-+{
-+	struct perf_pmu_events_attr *pmu_attr =
-+		container_of(attr, struct perf_pmu_events_attr, attr);
-+
-+	return sprintf(page, "event=%llu\n", pmu_attr->id);
-+}
-+
-+#define RAPL_EVENT_ATTR(_name, v, _id)					\
-+static struct perf_pmu_events_attr event_attr_##v = {			\
-+	.attr	= __ATTR(_name, 0444, rapl_event_sysfs_show, NULL),	\
-+	.id	= RAPL_IDX_##_id##_NRG_STAT,				\
-+};
-+
-+RAPL_EVENT_ATTR(energy-cores,  rapl_cores,  PP0);
-+RAPL_EVENT_ATTR(energy-pkg  ,    rapl_pkg,  PKG);
-+RAPL_EVENT_ATTR(energy-ram  ,    rapl_ram,  RAM);
-+RAPL_EVENT_ATTR(energy-gpu  ,    rapl_gpu,  PP1);
-+RAPL_EVENT_ATTR(energy-psys ,   rapl_psys, PSYS);
- 
- RAPL_EVENT_ATTR_STR(energy-cores.unit, rapl_cores_unit, "Joules");
- RAPL_EVENT_ATTR_STR(energy-pkg.unit  ,   rapl_pkg_unit, "Joules");
-@@ -780,6 +784,59 @@ static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
- 
- MODULE_DEVICE_TABLE(x86cpu, rapl_cpu_match);
- 
-+static void __init remove_name(struct attribute **attrs, const char *name)
-+{
-+	struct device_attribute *attr;
-+	int i, j;
-+
-+	for (i = 0; attrs[i]; i++) {
-+		attr = (struct device_attribute *) attrs[i];
-+
-+		if (strncmp(name, attr->attr.name, strlen(name)))
-+			continue;
-+
-+		for (j = i; attrs[j]; j++)
-+			attrs[j] = attrs[j + 1];
-+
-+		/* Check the shifted attr. */
-+		i--;
-+	}
-+}
-+
-+static void __init check_events(struct attribute **attrs)
-+{
-+	struct perf_pmu_events_attr *pmu_attr;
-+	struct device_attribute *attr;
-+	int i, j;
-+
-+	for (i = 0; attrs[i]; i++) {
-+		u64 val = 0;
-+		u64 bit;
-+
-+		attr     = (struct device_attribute *) attrs[i];
-+		pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
-+
-+		if (pmu_attr->event_str)
-+			continue;
-+
-+		bit = pmu_attr->id;
-+
-+		if (WARN_ON_ONCE(bit >= NR_RAPL_DOMAINS))
-+			continue;
-+
-+		if (!rdmsrl_safe(event_msr[bit], &val) && val)
-+			continue;
-+
-+		remove_name(&attrs[i + 1], attr->attr.name);
-+
-+		for (j = i; attrs[j]; j++)
-+			attrs[j] = attrs[j + 1];
-+
-+		/* Check the shifted attr. */
-+		i--;
-+	}
-+}
-+
- static int __init rapl_pmu_init(void)
- {
- 	const struct x86_cpu_id *id;
-@@ -796,6 +853,8 @@ static int __init rapl_pmu_init(void)
- 	rapl_cntr_mask = rapl_init->cntr_mask;
- 	rapl_pmu_events_group.attrs = rapl_init->attrs;
- 
-+	check_events(rapl_pmu_events_group.attrs);
-+
- 	ret = rapl_check_hw_unit(apply_quirk);
- 	if (ret)
- 		return ret;
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlx5G1AACgkQJNaLcl1U
+h9DjOAf+PPHQ/BVl5TBqjfMNMuiPCeaKRG1c8zsb8fiR194RFwgdwNGWRE8HcRXk
+AN30FaxyXFI+y7WhlvBmJj3kCLHiP1ZXpDFU7XOpFLEcPdSqjMyYZttxSM5Dztdg
+s5M58t9V3ic2Panl7J+yq2e2U3aC8NRui2v8RgsEaXNo++uKkEHRbQy5O8+sp57B
+ScsEjIa6hWFmy0XZBOSAWSCo+ev7nIiqTdV7EFcYyD9B/TGzJQKvExT5qqq8NYDy
+N2U7xhc4a3pWHmtfkyAYfG9MZw8e1nlnoRZqOETEApoI7T1XG0af2C2CyenZ/YER
+MQQzHE5/oVawoiZ1dtzvnsn32Nfl3Q==
+=VHFA
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
