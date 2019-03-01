@@ -2,211 +2,200 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1661CC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D4DC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D98C220675
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E77120675
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 14:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388868AbfCAOxZ (ORCPT
+        id S2388892AbfCAOxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 09:53:25 -0500
-Received: from mga09.intel.com ([134.134.136.24]:56043 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfCAOxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 09:53:24 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 06:53:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,427,1544515200"; 
-   d="scan'208";a="120134354"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga006.jf.intel.com with ESMTP; 01 Mar 2019 06:53:23 -0800
-Date:   Fri, 1 Mar 2019 06:53:23 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Subject: Re: [PATCH v3 3/8] KVM:CPUID: Add CPUID support for Guest CET
-Message-ID: <20190301145323.GB22584@linux.intel.com>
-References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-4-weijiang.yang@intel.com>
- <20190228155939.GD6166@linux.intel.com>
- <20190228082831.GB12006@local-michael-cet-test.sh.intel.com>
+        Fri, 1 Mar 2019 09:53:30 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38690 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728171AbfCAOx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 09:53:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 04BE7B118;
+        Fri,  1 Mar 2019 14:53:26 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     keescook@chromium.org
+Cc:     joel@joelfernandes.org, tony.luck@intel.com, ccross@android.com,
+        anton@enomsg.org, duwe@suse.de, linux-kernel@vger.kernel.org
+Subject: [PATCH] pstore: automatically dump and clean dmesg entries
+Date:   Fri, 01 Mar 2019 15:53:25 +0100
+Message-ID: <35267159.Lyx5QdZ5Rb@house>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228082831.GB12006@local-michael-cet-test.sh.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 04:28:32PM +0800, Yang Weijiang wrote:
-> On Thu, Feb 28, 2019 at 07:59:40AM -0800, Sean Christopherson wrote:
-> > On Mon, Feb 25, 2019 at 09:27:11PM +0800, Yang Weijiang wrote:
-> > > Guest CET SHSTK and IBT capability are reported via
-> > > CPUID.(EAX=7, ECX=0):ECX[bit 7] and EDX[bit 20] respectively.
-> > > Guest user mode and supervisor mode xsaves component size
-> > > is reported via CPUID.(EAX=0xD, ECX=1):ECX[bit 11] and ECX[bit 12]
-> > > respectively.
-> > > 
-> > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > > ---
-> > >  arch/x86/kvm/cpuid.c | 60 +++++++++++++++++++++++++++++++++-----------
-> > >  arch/x86/kvm/x86.h   |  4 +++
-> > >  2 files changed, 50 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > > index cb1aece25b17..5e05756cc6db 100644
-> > > --- a/arch/x86/kvm/cpuid.c
-> > > +++ b/arch/x86/kvm/cpuid.c
-> > > @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
-> > >  	return xcr0;
-> > >  }
-> > >  
-> > > +u64 kvm_supported_xss(void)
-> > > +{
-> > > +	u64 xss;
-> > > +
-> > > +	rdmsrl(MSR_IA32_XSS, xss);
-> > > +	xss &= KVM_SUPPORTED_XSS;
-> > > +	return xss;
-> > > +}
-> > > +EXPORT_SYMBOL(kvm_supported_xss);
-> > > +
-> > >  #define F(x) bit(X86_FEATURE_##x)
-> > >  
-> > >  /* For scattered features from cpufeatures.h; we currently expose none */
-> > > @@ -323,6 +333,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
-> > >  				 u32 index, int *nent, int maxnent)
-> > >  {
-> > >  	int r;
-> > > +	u32 eax, ebx, ecx, edx;
-> > >  	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
-> > >  #ifdef CONFIG_X86_64
-> > >  	unsigned f_gbpages = (kvm_x86_ops->get_lpage_level() == PT_PDPE_LEVEL)
-> > > @@ -503,6 +514,20 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
-> > >  			 * if the host doesn't support it.
-> > >  			 */
-> > >  			entry->edx |= F(ARCH_CAPABILITIES);
-> > > +
-> > > +			/*
-> > > +			 * Guest OS CET enabling is designed independent to
-> > > +			 * host enabling, it only has dependency on Host HW
-> > > +			 * capability, if it has, report CET support to
-> > > +			 * Guest.
-> > > +			 */
-> > > +			cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
-> > > +			if (ecx & F(SHSTK))
-> > > +				entry->ecx |= F(SHSTK);
-> > > +
-> > > +			if (edx & F(IBT))
-> > > +				entry->edx |= F(IBT);
-> > 
-> > There's no need to manually add these flags.  They will be automatically
-> > kept if supported in hardware because your previous patch, 02/08, added
-> > them to the mask of features that can be exposed to the guest,
-> > i.e. set them in kvm_cpuid_7_0_e{c,d}x_x86_features.
-> > 
-> I shared the same thought as you before, but after I took a closer look at the
-> kernel code, actually, when host CET feature is disabled by user via
-> cmdline options(no_cet_shstk and no_cet_ibt), it'll mask out CET feature bits in
-> boot_cpu_data.x86_capbility[] array, and cpuid_mask() will make the bits
-> in previous definition lost, so these lines actually add them back when
-> host CET is disabled.
+From: Torsten Duwe <duwe@suse.de>
 
-'entry' is filled by do_cpuid_1_ent(), which does cpuid_count(), same as
-your code, i.e. it's not affected by whether or not the host kernel is
-using each feature.
+Dump a previous oops or panic, which has made it to pstore,
+to the new syslog after reboot, optionally deleting it.
+This can happen automatically, without user land interaction.
+
+Signed-off-by: Torsten Duwe <duwe@suse.de>
+CC: Thomas Renninger <trenn@suse.de>
+
+---
+ fs/pstore/inode.c    |  6 +++---
+ fs/pstore/internal.h | 11 +++++++++--
+ fs/pstore/platform.c | 33 +++++++++++++++++++++++++++------
+ 3 files changed, 39 insertions(+), 11 deletions(-)
+
+Index: test_pstore/fs/pstore/inode.c
+===================================================================
+--- test_pstore.orig/fs/pstore/inode.c	2019-03-01 13:55:50.561322896 +0100
++++ test_pstore/fs/pstore/inode.c	2019-03-01 13:56:05.349323693 +0100
+@@ -374,7 +374,7 @@ fail:
+  * when we are re-scanning the backing store looking to add new
+  * error records.
+  */
+-void pstore_get_records(int quiet)
++void pstore_get_records(unsigned flags)
+ {
+ 	struct pstore_info *psi = psinfo;
+ 	struct dentry *root;
+@@ -385,7 +385,7 @@ void pstore_get_records(int quiet)
+ 	root = pstore_sb->s_root;
  
-> please check CET kernel patch here:
-> https://lkml.org/lkml/2018/11/20/204
-> 
-> > > +
-> > >  		} else {
-> > >  			entry->ebx = 0;
-> > >  			entry->ecx = 0;
-> > > @@ -564,14 +589,17 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
-> > >  	}
-> > >  	case 0xd: {
-> > >  		int idx, i;
-> > > -		u64 supported = kvm_supported_xcr0();
-> > > +		u64 u_supported = kvm_supported_xcr0();
-> > > +		u64 s_supported = kvm_supported_xss();
-> > > +		u64 supported;
-> > > +		int compacted;
-> > >  
-> > > -		entry->eax &= supported;
-> > > -		entry->ebx = xstate_required_size(supported, false);
-> > > +		entry->eax &= u_supported;
-> > > +		entry->ebx = xstate_required_size(u_supported, false);
-> > >  		entry->ecx = entry->ebx;
-> > > -		entry->edx &= supported >> 32;
-> > > +		entry->edx &= u_supported >> 32;
-> > >  		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
-> > > -		if (!supported)
-> > > +		if (!u_supported && !s_supported)
-> > >  			break;
-> > >  
-> > >  		for (idx = 1, i = 1; idx < 64; ++idx) {
-> > > @@ -583,19 +611,23 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
-> > >  			if (idx == 1) {
-> > >  				entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
-> > >  				cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
-> > > -				entry[i].ebx = 0;
-> > > -				if (entry[i].eax & (F(XSAVES)|F(XSAVEC)))
-> > > -					entry[i].ebx =
-> > > -						xstate_required_size(supported,
-> > > -								     true);
-> > > +				supported = u_supported | s_supported;
-> > > +				compacted = entry[i].eax &
-> > > +					(F(XSAVES) | F(XSAVEC));
-> > > +				entry[i].ebx = xstate_required_size(supported,
-> > > +								    compacted);
-> > > +				entry[i].ecx &= s_supported;
-> > > +				entry[i].edx = 0;
-> > >  			} else {
-> > > +				supported = (entry[i].ecx & 1) ? s_supported :
-> > > +								 u_supported;
-> > >  				if (entry[i].eax == 0 || !(supported & mask))
-> > >  					continue;
-> > > -				if (WARN_ON_ONCE(entry[i].ecx & 1))
-> > > -					continue;
-> > > +				entry[i].ecx &= 1;
-> > > +				entry[i].edx = 0;
-> > > +				if (entry[i].ecx)
-> > > +					entry[i].ebx = 0;
-> > >  			}
-> > > -			entry[i].ecx = 0;
-> > > -			entry[i].edx = 0;
-> > >  			entry[i].flags |=
-> > >  			       KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
-> > >  			++*nent;
-> > > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> > > index 224cd0a47568..c61da41c3c5c 100644
-> > > --- a/arch/x86/kvm/x86.h
-> > > +++ b/arch/x86/kvm/x86.h
-> > > @@ -283,6 +283,10 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
-> > >  				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
-> > >  				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
-> > >  				| XFEATURE_MASK_PKRU)
-> > > +
-> > > +#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_SHSTK_USER \
-> > > +				| XFEATURE_MASK_SHSTK_KERNEL)
-> > > +
-> > >  extern u64 host_xcr0;
-> > >  
-> > >  extern u64 kvm_supported_xcr0(void);
-> > > -- 
-> > > 2.17.1
-> > > 
+ 	inode_lock(d_inode(root));
+-	pstore_get_backend_records(psi, root, quiet);
++	pstore_get_backend_records(psi, root, flags);
+ 	inode_unlock(d_inode(root));
+ }
+ 
+@@ -415,7 +415,7 @@ static int pstore_fill_super(struct supe
+ 	if (!sb->s_root)
+ 		return -ENOMEM;
+ 
+-	pstore_get_records(0);
++	pstore_get_records(PGR_VERBOSE|PGR_POPULATE);
+ 
+ 	return 0;
+ }
+Index: test_pstore/fs/pstore/internal.h
+===================================================================
+--- test_pstore.orig/fs/pstore/internal.h	2019-03-01 13:55:50.565322897 +0100
++++ test_pstore/fs/pstore/internal.h	2019-03-01 13:56:05.349323693 +0100
+@@ -28,9 +28,16 @@ static inline void pstore_unregister_pms
+ extern struct pstore_info *psinfo;
+ 
+ extern void	pstore_set_kmsg_bytes(int);
+-extern void	pstore_get_records(int);
++extern void	pstore_get_records(unsigned);
++/* Flags for the pstore iterator pstore_get_records() */
++#define PGR_QUIET	0
++#define PGR_VERBOSE	1
++#define PGR_POPULATE	2
++#define PGR_SYSLOG	4
++#define PGR_CLEAR	8
++
+ extern void	pstore_get_backend_records(struct pstore_info *psi,
+-					   struct dentry *root, int quiet);
++					   struct dentry *root, unsigned flags);
+ extern int	pstore_mkfile(struct dentry *root,
+ 			      struct pstore_record *record);
+ extern bool	pstore_is_mounted(void);
+Index: test_pstore/fs/pstore/platform.c
+===================================================================
+--- test_pstore.orig/fs/pstore/platform.c	2019-03-01 13:55:50.565322897 +0100
++++ test_pstore/fs/pstore/platform.c	2019-03-01 13:59:06.077333431 +0100
+@@ -87,6 +87,11 @@ static DECLARE_WORK(pstore_work, pstore_
+ static DEFINE_SPINLOCK(pstore_lock);
+ struct pstore_info *psinfo;
+ 
++static int auto_action=0;
++module_param(auto_action, int, 0664);
++MODULE_PARM_DESC(auto_action, "action to take on backend "
++		 "registration: 0=nothing, 1=print, 2=print+clear");
++
+ static char *backend;
+ static char *compress =
+ #ifdef CONFIG_PSTORE_COMPRESS_DEFAULT
+@@ -108,6 +113,8 @@ static size_t big_oops_buf_sz;
+ 
+ /* How much of the console log to snapshot */
+ unsigned long kmsg_bytes = PSTORE_DEFAULT_KMSG_BYTES;
++module_param(kmsg_bytes, ulong, 0644);
++MODULE_PARM_DESC(kmsg_bytes, "maximum size to save of a crash dump");
+ 
+ void pstore_set_kmsg_bytes(int bytes)
+ {
+@@ -606,7 +613,11 @@ int pstore_register(struct pstore_info *
+ 	allocate_buf_for_compression();
+ 
+ 	if (pstore_is_mounted())
+-		pstore_get_records(0);
++		pstore_get_records(PGR_VERBOSE|PGR_POPULATE);
++
++	if (auto_action)
++		pstore_get_records(PGR_SYSLOG|
++				   ((auto_action>1)?PGR_CLEAR:0));
+ 
+ 	if (psi->flags & PSTORE_FLAGS_DMESG)
+ 		pstore_register_kmsg();
+@@ -723,7 +734,7 @@ static void decompress_record(struct pst
+  * error records.
+  */
+ void pstore_get_backend_records(struct pstore_info *psi,
+-				struct dentry *root, int quiet)
++				struct dentry *root, unsigned flags)
+ {
+ 	int failed = 0;
+ 	unsigned int stop_loop = 65536;
+@@ -742,7 +753,7 @@ void pstore_get_backend_records(struct p
+ 	 */
+ 	for (; stop_loop; stop_loop--) {
+ 		struct pstore_record *record;
+-		int rc;
++		int rc = 0;
+ 
+ 		record = kzalloc(sizeof(*record), GFP_KERNEL);
+ 		if (!record) {
+@@ -760,12 +771,23 @@ void pstore_get_backend_records(struct p
+ 		}
+ 
+ 		decompress_record(record);
+-		rc = pstore_mkfile(root, record);
++		if (flags & PGR_POPULATE)
++			rc = pstore_mkfile(root, record);
++		if (record->type == PSTORE_TYPE_DMESG) {
++			if (flags & PGR_SYSLOG) {
++				pr_notice("---------- pstore: ----------\n");
++				pr_notice("%.*s\n", (int)record->size,
++					  record->buf);
++				pr_notice("-----------------------------\n");
++			}
++			if (flags & PGR_CLEAR && psi->erase)
++				psi->erase(record);
++		}
+ 		if (rc) {
+ 			/* pstore_mkfile() did not take record, so free it. */
+ 			kfree(record->buf);
+ 			kfree(record);
+-			if (rc != -EEXIST || !quiet)
++			if (rc != -EEXIST || (flags & PGR_VERBOSE))
+ 				failed++;
+ 		}
+ 	}
+@@ -784,7 +806,7 @@ out:
+ 
+ static void pstore_dowork(struct work_struct *work)
+ {
+-	pstore_get_records(1);
++	pstore_get_records(PGR_QUIET|PGR_POPULATE);
+ }
+ 
+ static void pstore_timefunc(struct timer_list *unused)
+
