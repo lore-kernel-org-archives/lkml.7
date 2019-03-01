@@ -2,429 +2,129 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C0EC4360F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:51:04 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FC7218EA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7001C43381
 	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:51:03 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id AD7D1218FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 00:51:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="MOHJiXeG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732809AbfCAAvC convert rfc822-to-8bit (ORCPT
+        id S1732660AbfCAAtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 Feb 2019 19:51:02 -0500
-Received: from mga18.intel.com ([134.134.136.126]:58348 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731791AbfCAAvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 Feb 2019 19:51:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Feb 2019 16:51:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,425,1544515200"; 
-   d="scan'208";a="130245933"
-Received: from lftan-mobl.gar.corp.intel.com (HELO ubuntu) ([10.226.248.85])
-  by orsmga003.jf.intel.com with SMTP; 28 Feb 2019 16:50:59 -0800
-Received: by ubuntu (sSMTP sendmail emulation); Fri, 01 Mar 2019 08:50:48 +0800
-Message-ID: <1551401448.24631.15.camel@intel.com>
-Subject: Re: [PATCH v6 1/3] PCI: altera: Add Stratix 10 PCIe support
-From:   Ley Foon Tan <ley.foon.tan@intel.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        lftan.linux@gmail.com
-Date:   Fri, 01 Mar 2019 08:50:48 +0800
-In-Reply-To: <20190228105612.GA31404@red-moon>
-References: <1551351172-25424-1-git-send-email-ley.foon.tan@intel.com>
-         <1551351172-25424-2-git-send-email-ley.foon.tan@intel.com>
-         <20190228105612.GA31404@red-moon>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
-Mime-Version: 1.0
+        Thu, 28 Feb 2019 19:49:16 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33951 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfCAAtP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 Feb 2019 19:49:15 -0500
+Received: by mail-qt1-f196.google.com with SMTP id w4so25957035qtc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Feb 2019 16:49:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=3zaAc4AkyYlmNHrBEr4XOgXYMne+k8U/cWFaLP79Juw=;
+        b=MOHJiXeGPN8iY0eIT5lF3Mxy5lun1L4+DZDbqOBS02rxnV+dZ1SiS6KZkGj++5xet+
+         ZakVbbOHwWlivX0cZ4Vj441ijOwVIiRMfSVqrrgVxC+yP2MZ2HWJJ/TcfYGm55ht0hRo
+         BjoXpyhEw3ppAAa8buPCteihj7kxVqNG6QYWfZBTNcQCOQ1wBFfkB+DxbAKc+Xl6jEYb
+         kAyJH65nsKLaORU7CRygORAqKpaOpWs9zH8zYLlm3i+nZtuYRVXx7YL54B/2v+qQ0F11
+         Xk6sQNKaXlPuyNQL7ti1oxL2MDAUgOMK/YUHUGOiyCg8fTITWaQltlTvSlPJi9uEerol
+         Ozww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3zaAc4AkyYlmNHrBEr4XOgXYMne+k8U/cWFaLP79Juw=;
+        b=eawcmqXHxxh+9SkEUVyQMbQ0kqZ0ZLToDHfBaVdLIXeMkzmrsWu4VneKUwkUVGj3l+
+         NSRQGhZBDa5qFkW7HSdZaIsU6c9A6z3/Rf0rl3pAZlOZSydyERle0RUglXIANUPeEQ3L
+         Hf1pPlmX69FwxRD5KLPnlHYAAVN9jh4Agv3mqDqNpj7AL3XkSVUHcFMJfENLD9Kj8s2y
+         1eJqusYng5DbN3U7WoLR3wdvdjvU2VvJyrjuURK+sHNwzronTR+Xu/VRL4qnlNMh06bS
+         WxHFkrZWP/DTu1KKeHEoanKsNJVAYGK+A4abja5WlmhJu8ekIW2JcJtMyGvXmvjNHod+
+         O3Sg==
+X-Gm-Message-State: APjAAAXiqzckZEgXlxm6NhXfC+xlr0CRtjWufD1LvsnFgCJw98rvnkVZ
+        wvOa9QjfLfUEpxtm5tAMtHFA0Q==
+X-Google-Smtp-Source: APXvYqwLalUyIj1++3RJLmJq+1Z9CujJWMbxVlRb9u6ZUDzfDCT+f3+pu+iAuj3b4e3ATUMDdQG6NA==
+X-Received: by 2002:ac8:3464:: with SMTP id v33mr1839555qtb.65.1551401354288;
+        Thu, 28 Feb 2019 16:49:14 -0800 (PST)
+Received: from ovpn-120-151.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id v26sm12683985qtk.22.2019.02.28.16.49.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 Feb 2019 16:49:13 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     willy@infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm/hugepages: fix "orig_pud" set but not used
+Date:   Thu, 28 Feb 2019 19:49:03 -0500
+Message-Id: <20190301004903.89514-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-02-28 at 10:56 +0000, Lorenzo Pieralisi wrote:
-> On Thu, Feb 28, 2019 at 06:52:50PM +0800, Ley Foon Tan wrote:
-> 
-> [...]
-> 
-> > 
-> > +static int s10_tlp_read_packet(struct altera_pcie *pcie, u32
-> > *value)
-> > +{
-> > +	int i;
-> > +	u32 ctrl;
-> > +	u32 comp_status;
-> > +	u32 dw[4];
-> > +	u32 count;
-> > +
-> > +	for (i = 0; i < TLP_LOOP; i++) {
-> > +		ctrl = cra_readl(pcie, S10_RP_RXCPL_STATUS);
-> > +		if (!(ctrl & RP_RXCPL_SOP)) {
-> > +			udelay(5);
-> > +			continue;
-> > +		}
-> > +
-> > +		/* Read first DW */
-> > +		dw[0] = cra_readl(pcie, S10_RP_RXCPL_REG);
-> > +		count = 1;
-> > +
-> > +		/* Poll for EOP */
-> > +		for (i = 0; i < TLP_LOOP && count <
-> > ARRAY_SIZE(dw); i++) {
-> > +			ctrl = cra_readl(pcie,
-> > S10_RP_RXCPL_STATUS);
-> > +			dw[count++] = cra_reeadl(pcie,
-> > S10_RP_RXCPL_REG);
-> > +			if (ctrl & RP_RXCPL_EOP) {
-> > +				comp_status =
-> > TLP_COMP_STATUS(dw[1]);
-> > +				if (comp_status)
-> > +					return
-> > PCIBIOS_DEVICE_NOT_FOUND;
-> > +
-> > +				if (value &&
-> > +				    TLP_BYTE_COUNT(dw[1]) ==
-> > sizeof(u32) &&
-> > +				    count == 4)
-> > +					*value = dw[3];
-> > +
-> > +				return PCIBIOS_SUCCESSFUL;
-> > +			}
-> Two more things.
-> 
-> - Why don't you need a udelay() in the inner loop ?
-It has received start of packet (SOP) when in the inner loop, next DW
-will come on next. So, I don't add udelay here.
-> - I think that count >= ARRAY_SIZE(dw) in the inner loop is an error
->   condition and it should be flagged up with a warning before
-> exiting.
-Yes, please add this.
-> 
-> I can make these changes if you let me know your thoughts on this.
-Please go ahead and change this.
+The commit a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent
+hugepages") introduced pudp_huge_get_and_clear_full() but no one uses
+its return code, so just make it void.
 
-Thanks.
+mm/huge_memory.c: In function 'zap_huge_pud':
+mm/huge_memory.c:1982:8: warning: variable 'orig_pud' set but not used
+[-Wunused-but-set-variable]
+  pud_t orig_pud;
+        ^~~~~~~~
 
-Regards
-Ley Foon
-> 
-> Lorenzo
-> 
-> > 
-> > +		}
-> > +	}
-> > +
-> > +	return PCIBIOS_DEVICE_NOT_FOUND;
-> > +}
-> > +
-> >  static void tlp_write_packet(struct altera_pcie *pcie, u32
-> > *headers,
-> >  			     u32 data, bool align)
-> >  {
-> > @@ -210,6 +306,15 @@ static void tlp_write_packet(struct
-> > altera_pcie *pcie, u32 *headers,
-> >  	tlp_write_tx(pcie, &tlp_rp_regdata);
-> >  }
-> >  
-> > +static void s10_tlp_write_packet(struct altera_pcie *pcie, u32
-> > *headers,
-> > +				 u32 data, bool dummy)
-> > +{
-> > +	s10_tlp_write_tx(pcie, headers[0], RP_TX_SOP);
-> > +	s10_tlp_write_tx(pcie, headers[1], 0);
-> > +	s10_tlp_write_tx(pcie, headers[2], 0);
-> > +	s10_tlp_write_tx(pcie, data, RP_TX_EOP);
-> > +}
-> > +
-> >  static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus,
-> > u32 devfn,
-> >  			      int where, u8 byte_en, u32 *value)
-> >  {
-> > @@ -219,9 +324,9 @@ static int tlp_cfg_dword_read(struct
-> > altera_pcie *pcie, u8 bus, u32 devfn,
-> >  	headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
-> >  	headers[2] = TLP_CFG_DW2(bus, devfn, where);
-> >  
-> > -	tlp_write_packet(pcie, headers, 0, false);
-> > +	pcie->pcie_data->ops->tlp_write_pkt(pcie, headers, 0,
-> > false);
-> >  
-> > -	return tlp_read_packet(pcie, value);
-> > +	return pcie->pcie_data->ops->tlp_read_pkt(pcie, value);
-> >  }
-> >  
-> >  static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus,
-> > u32 devfn,
-> > @@ -236,11 +341,13 @@ static int tlp_cfg_dword_write(struct
-> > altera_pcie *pcie, u8 bus, u32 devfn,
-> >  
-> >  	/* check alignment to Qword */
-> >  	if ((where & 0x7) == 0)
-> > -		tlp_write_packet(pcie, headers, value, true);
-> > +		pcie->pcie_data->ops->tlp_write_pkt(pcie, headers,
-> > +						    value, true);
-> >  	else
-> > -		tlp_write_packet(pcie, headers, value, false);
-> > +		pcie->pcie_data->ops->tlp_write_pkt(pcie, headers,
-> > +						    value, false);
-> >  
-> > -	ret = tlp_read_packet(pcie, NULL);
-> > +	ret = pcie->pcie_data->ops->tlp_read_pkt(pcie, NULL);
-> >  	if (ret != PCIBIOS_SUCCESSFUL)
-> >  		return ret;
-> >  
-> > @@ -254,6 +361,53 @@ static int tlp_cfg_dword_write(struct
-> > altera_pcie *pcie, u8 bus, u32 devfn,
-> >  	return PCIBIOS_SUCCESSFUL;
-> >  }
-> >  
-> > +static int s10_rp_read_cfg(struct altera_pcie *pcie, int where,
-> > +			   int size, u32 *value)
-> > +{
-> > +	void *addr = S10_RP_CFG_ADDR(pcie, where);
-> > +
-> > +	switch (size) {
-> > +	case 1:
-> > +		*value = readb(addr);
-> > +		break;
-> > +	case 2:
-> > +		*value = readw(addr);
-> > +		break;
-> > +	default:
-> > +		*value = readl(addr);
-> > +		break;
-> > +	}
-> > +
-> > +	return PCIBIOS_SUCCESSFUL;
-> > +}
-> > +
-> > +static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
-> > +			    int where, int size, u32 value)
-> > +{
-> > +	void *addr = S10_RP_CFG_ADDR(pcie, where);
-> > +
-> > +	switch (size) {
-> > +	case 1:
-> > +		writeb(value, addr);
-> > +		break;
-> > +	case 2:
-> > +		writew(value, addr);
-> > +		break;
-> > +	default:
-> > +		writel(value, addr);
-> > +		break;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Monitor changes to PCI_PRIMARY_BUS register on root
-> > port
-> > +	 * and update local copy of root bus number accordingly.
-> > +	 */
-> > +	if (busno == pcie->root_bus_nr && where ==
-> > PCI_PRIMARY_BUS)
-> > +		pcie->root_bus_nr = value & 0xff;
-> > +
-> > +	return PCIBIOS_SUCCESSFUL;
-> > +}
-> > +
-> >  static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8
-> > busno,
-> >  				 unsigned int devfn, int where,
-> > int size,
-> >  				 u32 *value)
-> > @@ -262,6 +416,10 @@ static int _altera_pcie_cfg_read(struct
-> > altera_pcie *pcie, u8 busno,
-> >  	u32 data;
-> >  	u8 byte_en;
-> >  
-> > +	if (busno == pcie->root_bus_nr && pcie->pcie_data->ops-
-> > >rp_read_cfg)
-> > +		return pcie->pcie_data->ops->rp_read_cfg(pcie,
-> > where,
-> > +							 size,
-> > value);
-> > +
-> >  	switch (size) {
-> >  	case 1:
-> >  		byte_en = 1 << (where & 3);
-> > @@ -302,6 +460,10 @@ static int _altera_pcie_cfg_write(struct
-> > altera_pcie *pcie, u8 busno,
-> >  	u32 shift = 8 * (where & 3);
-> >  	u8 byte_en;
-> >  
-> > +	if (busno == pcie->root_bus_nr && pcie->pcie_data->ops-
-> > >rp_write_cfg)
-> > +		return pcie->pcie_data->ops->rp_write_cfg(pcie,
-> > busno,
-> > +						     where, size,
-> > value);
-> > +
-> >  	switch (size) {
-> >  	case 1:
-> >  		data32 = (value & 0xff) << shift;
-> > @@ -365,7 +527,8 @@ static int altera_read_cap_word(struct
-> > altera_pcie *pcie, u8 busno,
-> >  	int ret;
-> >  
-> >  	ret = _altera_pcie_cfg_read(pcie, busno, devfn,
-> > -				    PCIE_CAP_OFFSET + offset,
-> > sizeof(*value),
-> > +				    pcie->pcie_data->cap_offset +
-> > offset,
-> > +				    sizeof(*value),
-> >  				    &data);
-> >  	*value = data;
-> >  	return ret;
-> > @@ -375,7 +538,8 @@ static int altera_write_cap_word(struct
-> > altera_pcie *pcie, u8 busno,
-> >  				 unsigned int devfn, int offset,
-> > u16 value)
-> >  {
-> >  	return _altera_pcie_cfg_write(pcie, busno, devfn,
-> > -				      PCIE_CAP_OFFSET + offset,
-> > sizeof(value),
-> > +				      pcie->pcie_data->cap_offset
-> > + offset,
-> > +				      sizeof(value),
-> >  				      value);
-> >  }
-> >  
-> > @@ -403,7 +567,7 @@ static void altera_wait_link_retrain(struct
-> > altera_pcie *pcie)
-> >  	/* Wait for link is up */
-> >  	start_jiffies = jiffies;
-> >  	for (;;) {
-> > -		if (altera_pcie_link_up(pcie))
-> > +		if (pcie->pcie_data->ops->get_link_status(pcie))
-> >  			break;
-> >  
-> >  		if (time_after(jiffies, start_jiffies +
-> > LINK_UP_TIMEOUT)) {
-> > @@ -418,7 +582,7 @@ static void altera_pcie_retrain(struct
-> > altera_pcie *pcie)
-> >  {
-> >  	u16 linkcap, linkstat, linkctl;
-> >  
-> > -	if (!altera_pcie_link_up(pcie))
-> > +	if (!pcie->pcie_data->ops->get_link_status(pcie))
-> >  		return;
-> >  
-> >  	/*
-> > @@ -540,12 +704,20 @@ static int altera_pcie_parse_dt(struct
-> > altera_pcie *pcie)
-> >  	struct device *dev = &pcie->pdev->dev;
-> >  	struct platform_device *pdev = pcie->pdev;
-> >  	struct resource *cra;
-> > +	struct resource *hip;
-> >  
-> >  	cra = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > "Cra");
-> >  	pcie->cra_base = devm_ioremap_resource(dev, cra);
-> >  	if (IS_ERR(pcie->cra_base))
-> >  		return PTR_ERR(pcie->cra_base);
-> >  
-> > +	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
-> > +		hip = platform_get_resource_byname(pdev,
-> > IORESOURCE_MEM, "Hip");
-> > +		pcie->hip_base = devm_ioremap_resource(&pdev->dev, 
-> > hip);
-> > +		if (IS_ERR(pcie->hip_base))
-> > +			return PTR_ERR(pcie->hip_base);
-> > +	}
-> > +
-> >  	/* setup IRQ */
-> >  	pcie->irq = platform_get_irq(pdev, 0);
-> >  	if (pcie->irq < 0) {
-> > @@ -562,6 +734,48 @@ static void altera_pcie_host_init(struct
-> > altera_pcie *pcie)
-> >  	altera_pcie_retrain(pcie);
-> >  }
-> >  
-> > +static const struct altera_pcie_ops altera_pcie_ops_1_0 = {
-> > +	.tlp_read_pkt = tlp_read_packet,
-> > +	.tlp_write_pkt = tlp_write_packet,
-> > +	.get_link_status = altera_pcie_link_up,
-> > +};
-> > +
-> > +static const struct altera_pcie_ops altera_pcie_ops_2_0 = {
-> > +	.tlp_read_pkt = s10_tlp_read_packet,
-> > +	.tlp_write_pkt = s10_tlp_write_packet,
-> > +	.get_link_status = s10_altera_pcie_link_up,
-> > +	.rp_read_cfg = s10_rp_read_cfg,
-> > +	.rp_write_cfg = s10_rp_write_cfg,
-> > +};
-> > +
-> > +static const struct altera_pcie_data altera_pcie_1_0_data = {
-> > +	.ops = &altera_pcie_ops_1_0,
-> > +	.cap_offset = 0x80,
-> > +	.version = ALTERA_PCIE_V1,
-> > +	.cfgrd0 = TLP_FMTTYPE_CFGRD0,
-> > +	.cfgrd1 = TLP_FMTTYPE_CFGRD1,
-> > +	.cfgwr0 = TLP_FMTTYPE_CFGWR0,
-> > +	.cfgwr1 = TLP_FMTTYPE_CFGWR1,
-> > +};
-> > +
-> > +static const struct altera_pcie_data altera_pcie_2_0_data = {
-> > +	.ops = &altera_pcie_ops_2_0,
-> > +	.version = ALTERA_PCIE_V2,
-> > +	.cap_offset = 0x70,
-> > +	.cfgrd0 = S10_TLP_FMTTYPE_CFGRD0,
-> > +	.cfgrd1 = S10_TLP_FMTTYPE_CFGRD1,
-> > +	.cfgwr0 = S10_TLP_FMTTYPE_CFGWR0,
-> > +	.cfgwr1 = S10_TLP_FMTTYPE_CFGWR1,
-> > +};
-> > +
-> > +static const struct of_device_id altera_pcie_of_match[] = {
-> > +	{.compatible = "altr,pcie-root-port-1.0",
-> > +	 .data = &altera_pcie_1_0_data },
-> > +	{.compatible = "altr,pcie-root-port-2.0",
-> > +	 .data = &altera_pcie_2_0_data },
-> > +	{},
-> > +};
-> > +
-> >  static int altera_pcie_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev = &pdev->dev;
-> > @@ -570,6 +784,7 @@ static int altera_pcie_probe(struct
-> > platform_device *pdev)
-> >  	struct pci_bus *child;
-> >  	struct pci_host_bridge *bridge;
-> >  	int ret;
-> > +	const struct of_device_id *match;
-> >  
-> >  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> >  	if (!bridge)
-> > @@ -578,6 +793,12 @@ static int altera_pcie_probe(struct
-> > platform_device *pdev)
-> >  	pcie = pci_host_bridge_priv(bridge);
-> >  	pcie->pdev = pdev;
-> >  
-> > +	match = of_match_device(altera_pcie_of_match, &pdev->dev);
-> > +	if (!match)
-> > +		return -ENODEV;
-> > +
-> > +	pcie->pcie_data = match->data;
-> > +
-> >  	ret = altera_pcie_parse_dt(pcie);
-> >  	if (ret) {
-> >  		dev_err(dev, "Parsing DT failed\n");
-> > @@ -628,11 +849,6 @@ static int altera_pcie_probe(struct
-> > platform_device *pdev)
-> >  	return ret;
-> >  }
-> >  
-> > -static const struct of_device_id altera_pcie_of_match[] = {
-> > -	{ .compatible = "altr,pcie-root-port-1.0", },
-> > -	{},
-> > -};
-> > -
-> >  static struct platform_driver altera_pcie_driver = {
-> >  	.probe		= altera_pcie_probe,
-> >  	.driver = {
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/asm-generic/pgtable.h | 8 ++++----
+ mm/huge_memory.c              | 4 +---
+ 2 files changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 05e61e6c843f..17b789557afe 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -167,11 +167,11 @@ static inline pmd_t pmdp_huge_get_and_clear_full(struct mm_struct *mm,
+ #endif
+ 
+ #ifndef __HAVE_ARCH_PUDP_HUGE_GET_AND_CLEAR_FULL
+-static inline pud_t pudp_huge_get_and_clear_full(struct mm_struct *mm,
+-					    unsigned long address, pud_t *pudp,
+-					    int full)
++static inline void pudp_huge_get_and_clear_full(struct mm_struct *mm,
++						unsigned long address,
++						pud_t *pudp, int full)
+ {
+-	return pudp_huge_get_and_clear(mm, address, pudp);
++	pudp_huge_get_and_clear(mm, address, pudp);
+ }
+ #endif
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index faf357eaf0ce..9f57a1173e6a 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1979,7 +1979,6 @@ spinlock_t *__pud_trans_huge_lock(pud_t *pud, struct vm_area_struct *vma)
+ int zap_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 		 pud_t *pud, unsigned long addr)
+ {
+-	pud_t orig_pud;
+ 	spinlock_t *ptl;
+ 
+ 	ptl = __pud_trans_huge_lock(pud, vma);
+@@ -1991,8 +1990,7 @@ int zap_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 	 * pgtable_trans_huge_withdraw after finishing pudp related
+ 	 * operations.
+ 	 */
+-	orig_pud = pudp_huge_get_and_clear_full(tlb->mm, addr, pud,
+-			tlb->fullmm);
++	pudp_huge_get_and_clear_full(tlb->mm, addr, pud, tlb->fullmm);
+ 	tlb_remove_pud_tlb_entry(tlb, pud, addr);
+ 	if (vma_is_dax(vma)) {
+ 		spin_unlock(ptl);
+-- 
+2.17.2 (Apple Git-113)
+
