@@ -7,57 +7,59 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EA0C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323E9C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B103A20848
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E351720848
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 20:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bgxYSC/e"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hwdmx+4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbfCAUIr (ORCPT
+        id S1727636AbfCAUK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 15:08:47 -0500
-Received: from mail-io1-f74.google.com ([209.85.166.74]:55451 "EHLO
-        mail-io1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfCAUIr (ORCPT
+        Fri, 1 Mar 2019 15:10:27 -0500
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:42031 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfCAUK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 15:08:47 -0500
-Received: by mail-io1-f74.google.com with SMTP id l10so18953254iob.22
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 12:08:46 -0800 (PST)
+        Fri, 1 Mar 2019 15:10:27 -0500
+Received: by mail-yw1-f74.google.com with SMTP id c74so23551541ywc.9
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 12:10:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:message-id:mime-version:subject:from:to:cc;
-        bh=piSjA100sPG+ZVsc61tYlQG0rjYRR09SCBtuiXgjxhM=;
-        b=bgxYSC/ehJ6FBNakJ0m5/tTf2KBxYaQpAzLKlwcy7jR1t80VFKrMwnNeDXlP3Z1nru
-         7m+n390IJB3XgiSo2r4Hh/kyGRpqiZrgaGdznj3XcNRPKZ+Uj70vplenlefyhyvQjNDy
-         Q42LdCo/dgGa/Ad24E1/Ngk+rU03Ft0E2uJMPACRFycKWqTCS6gWCeUtKa689M1ob7qB
-         5Igjom7HBf1gkacMiwMGpO/37y/iJp/hs/UmBPv/7Bp/1rISvajWCk0YRGL6qrLvAVT6
-         J1ehvNA6IwiKyurA9aOmb/W8Pmi2Zfu8MpY0afQmf/YrguKdWc9xnkve7o9la1ICWI0v
-         dGdw==
+        bh=0pj3h/XnwOwIzHOuDRkJHpH5NVy6ymoFJNdB153FB1s=;
+        b=Hwdmx+4KRQbz6Vx9b18wMgbTr+6Cv9XfreEUSnAPHoibjc4Hnh6tLvaoANhM8bDqWN
+         jbMlWGs03KcgaxSiHVgqv24w/+Dq/8oe8KiMef0+BixH2fxmvcGdIKlShwDWGN3CHA1+
+         azm09dqG094Lq2nIxZOr7hvzUd1Q3c9lTMGPxe+70qV1hbMppjzySpXPE+DYuDUxXq9D
+         nZ5MHlH0aVg/bEH/feg0AqTALVROrdBeEjrkE4zWkeTrG8z2SP8CW+mFP5RZuMehvXhk
+         ZZNuLtmzwSJ4WH5NwNPrMjTpryHLte32gcKOoVwYWaAqvyc1VWKjN0w+qlzOLtKf3sFr
+         2Zjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=piSjA100sPG+ZVsc61tYlQG0rjYRR09SCBtuiXgjxhM=;
-        b=tXltOnbBvraipJP5XoR1jzpAsUbrM5UX+qmXVUF+rMGU/AGM2z6ax4+fryw/yHNXrs
-         E5IjmgmQ0pEiOAcAfzmZVIgDZ2w+saS5NIf48AhtsNY2z1IWWu8ThVOTCWw3sVLhpqQs
-         4v9U2T7iv5RBYEReJ7ZoL2FC14ivQlW/UeZ4cPIHDTd34pLqYaWopU8zbzfSa3Tx1ujB
-         JLTBzY4/6BA2HP2S/GqwlcxYBWxpYsj5yPPI2WbSr3oe5vGyLxIS7tYaT14wmD1MbkMr
-         oD7zXLlx4Ud4/nNFLTTl65wfmPm6mwg5tx9JYtK7tLvmxHtWxljehJboWNb83ZFqjWnp
-         VRAQ==
-X-Gm-Message-State: APjAAAVb7PQ6a+P71jCt4YgNscpuTzzIc4xvZJQv4uiOq3JTuMD+0ba7
-        5Oh+Yg5VcKEze3ycPqliVuXAywoj9Q==
-X-Google-Smtp-Source: AHgI3IbWUIuiFA+Qg0y0EYTqXdZCBPzfYtTDj8A/+yAkITp6isykIvfFpC36+Aqq/49bvumggyZn60hgjw==
-X-Received: by 2002:a24:548:: with SMTP id 69mr4077709itl.29.1551470925977;
- Fri, 01 Mar 2019 12:08:45 -0800 (PST)
-Date:   Fri,  1 Mar 2019 21:08:35 +0100
-Message-Id: <20190301200835.18286-1-jannh@google.com>
+        bh=0pj3h/XnwOwIzHOuDRkJHpH5NVy6ymoFJNdB153FB1s=;
+        b=Ic+/D7QdIeuvvwDEMIBudnwZEf/TPOHg/vPO+gwawME2RkJWPxztJXbRtzPAX1mgnt
+         dTgJiZy8EeWwURqvcAnsvD6LWmmX7cLFeBhoGm3QZVb7WiV/wmjleKYCpwvMKRW+X+eZ
+         rXnkx6RENxiRiV1Hp0LpU314nIuTN5DzZhrLO/TOEkFGuFxJxoA1K0pC+QIbK91E7ug2
+         mzchwd2Fs/fysiNr5V+H5BKYKjlHL4FasPX02wzklTdTMLtaTI/27OtUUhPqK+uGZXkR
+         4//S24q7QcJgeKdjmrw5JkNpdQYNlvocDkv9aYbU2hCbFd5PDpSTK2amfjs2oIQtsf95
+         mjwg==
+X-Gm-Message-State: APjAAAXK8lK6Q+cRYCNERUO0ibQ02dhoGu4DJVFVSG3GGDi3wLEVYSUV
+        EKqq8pQdVR5b/18P+JL9JMT085APJw==
+X-Google-Smtp-Source: APXvYqxp26fpoSLFLbW+Jmjloi/7TCoqGyJfoK6CR0vXEYcLAvImbDwo5re+YvSQApTWCo6VnOWRtEYVyw==
+X-Received: by 2002:a25:bed2:: with SMTP id k18mr3198613ybm.72.1551471026380;
+ Fri, 01 Mar 2019 12:10:26 -0800 (PST)
+Date:   Fri,  1 Mar 2019 21:10:10 +0100
+Message-Id: <20190301201010.19094-1-jannh@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.21.0.352.gf09ad66450-goog
-Subject: [PATCH] fs: use KERNEL_DS instead of get_ds()
+Subject: [PATCH] integrity: use KERNEL_DS instead of get_ds()
 From:   Jann Horn <jannh@google.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>, jannh@google.com
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, jannh@google.com
+Cc:     linux-integrity@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -67,59 +69,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 get_ds() is a legacy name for KERNEL_DS; all architectures #define it to
 KERNEL_DS, and almost every user of set_fs() uses the name KERNEL_DS.
 
-Let the VFS also use KERNEL_DS so that we can get rid of get_ds() at some
-point.
+Let the integrity subsystem also use KERNEL_DS so that we can get rid of
+get_ds() at some point.
 
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
- fs/read_write.c | 6 +++---
- fs/splice.c     | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ security/integrity/iint.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index ff3c5e6f87cf..30df848b7451 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -426,7 +426,7 @@ ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
- 	ssize_t result;
+diff --git a/security/integrity/iint.c b/security/integrity/iint.c
+index 88f04b3380d4..423876fca8b4 100644
+--- a/security/integrity/iint.c
++++ b/security/integrity/iint.c
+@@ -200,7 +200,7 @@ int integrity_kernel_read(struct file *file, loff_t offset,
+ 		return -EBADF;
  
  	old_fs = get_fs();
 -	set_fs(get_ds());
 +	set_fs(KERNEL_DS);
- 	/* The cast to a user pointer is valid due to the set_fs() */
- 	result = vfs_read(file, (void __user *)buf, count, pos);
+ 	ret = __vfs_read(file, buf, count, &offset);
  	set_fs(old_fs);
-@@ -499,7 +499,7 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t
- 		return -EINVAL;
  
- 	old_fs = get_fs();
--	set_fs(get_ds());
-+	set_fs(KERNEL_DS);
- 	p = (__force const char __user *)buf;
- 	if (count > MAX_RW_COUNT)
- 		count =  MAX_RW_COUNT;
-@@ -521,7 +521,7 @@ ssize_t kernel_write(struct file *file, const void *buf, size_t count,
- 	ssize_t res;
- 
- 	old_fs = get_fs();
--	set_fs(get_ds());
-+	set_fs(KERNEL_DS);
- 	/* The cast to a user pointer is valid due to the set_fs() */
- 	res = vfs_write(file, (__force const char __user *)buf, count, pos);
- 	set_fs(old_fs);
-diff --git a/fs/splice.c b/fs/splice.c
-index de2ede048473..ec8b54b5c0d2 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -357,7 +357,7 @@ static ssize_t kernel_readv(struct file *file, const struct kvec *vec,
- 	ssize_t res;
- 
- 	old_fs = get_fs();
--	set_fs(get_ds());
-+	set_fs(KERNEL_DS);
- 	/* The cast to a user pointer is valid due to the set_fs() */
- 	res = vfs_readv(file, (const struct iovec __user *)vec, vlen, &pos, 0);
- 	set_fs(old_fs);
 -- 
 2.21.0.352.gf09ad66450-goog
 
