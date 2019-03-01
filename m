@@ -2,198 +2,111 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14281C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026E1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D232C20850
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0F020854
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 05:59:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="c4yCENa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfCAF4M (ORCPT
+        id S1726792AbfCAF7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 00:56:12 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58076 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbfCAF4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 00:56:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44BB6EBD;
-        Thu, 28 Feb 2019 21:56:11 -0800 (PST)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 981BF3F5C1;
-        Thu, 28 Feb 2019 21:56:08 -0800 (PST)
-Subject: Re: [PATCH v6 1/6] arm64/kvm: preserve host HCR_EL2 value
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        Fri, 1 Mar 2019 00:59:11 -0500
+Received: from m12-11.163.com ([220.181.12.11]:44105 "EHLO m12-11.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725931AbfCAF7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 00:59:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=tUOcAXbC57tewSd2Ua
+        HB7li6S8FsNoFf+1c7U8KA+CA=; b=c4yCENa+R1ix9ZCJLSAsNAifQJJoD6UZH+
+        BR80lUsDrMnFx4tgCKsMNYYsOuw30kmJARh9SjDGNJ5p/g/T4VGQwxuPs1RPRuzw
+        KPau58SSgqgKX+PkjERf3cF9L6dA/W9kEguYzbkZzqkJUX4j/lcXLyjmN7QJMbak
+        kUZC+qtis=
+Received: from localhost.localdomain (unknown [111.231.88.23])
+        by smtp7 (Coremail) with SMTP id C8CowACnRAqWyXhcUuxTHw--.49115S2;
+        Fri, 01 Mar 2019 13:56:48 +0800 (CST)
+From:   Su Yanjun <suyanjun218@163.com>
+To:     pablo@netfilter.org, kadlec@blackhole.kfki.hu, fw@strlen.de,
+        davem@davemloft.net, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1550568271-5319-1-git-send-email-amit.kachhap@arm.com>
- <1550568271-5319-2-git-send-email-amit.kachhap@arm.com>
- <20190221154935.GU3567@e103592.cambridge.arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <d3975fbf-1d3a-48ff-dd47-e1aa61eea623@arm.com>
-Date:   Fri, 1 Mar 2019 11:26:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190221154935.GU3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Cc:     suyj.fnst@cn.fujitsu.com, suyanjun218@163.com
+Subject: [PATCH] netfilter: nf_ct_helper: Fix possible panic when nf_conntrack_helper_unregister is used in an unloadable module
+Date:   Fri,  1 Mar 2019 13:56:06 +0800
+Message-Id: <1551419766-1039-1-git-send-email-suyanjun218@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: C8CowACnRAqWyXhcUuxTHw--.49115S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr47ZryDXrWrWFykXFW5Wrg_yoW8Cw4fpw
+        1Sg343tw1kJFsYyws7uw4xZ3W8trZ3ZF45Xrn3JFyfZw4Dtw1DuFWfKrW7WFW5Jr4fJrnF
+        yw1Yvw13Aa4kAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07boOzsUUUUU=
+X-Originating-IP: [111.231.88.23]
+X-CM-SenderInfo: pvx1t0xmxqjiqy6rljoofrz/1tbiTgBqy1UC8p9ojQAAsw
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Su Yanjun <suyj.fnst@cn.fujitsu.com>
 
-On 2/21/19 9:19 PM, Dave Martin wrote:
-> On Tue, Feb 19, 2019 at 02:54:26PM +0530, Amit Daniel Kachhap wrote:
->> From: Mark Rutland <mark.rutland@arm.com>
->>
->> When restoring HCR_EL2 for the host, KVM uses HCR_HOST_VHE_FLAGS, which
->> is a constant value. This works today, as the host HCR_EL2 value is
->> always the same, but this will get in the way of supporting extensions
->> that require HCR_EL2 bits to be set conditionally for the host.
->>
->> To allow such features to work without KVM having to explicitly handle
->> every possible host feature combination, this patch has KVM save/restore
->> for the host HCR when switching to/from a guest HCR. The saving of the
->> register is done once during cpu hypervisor initialization state and is
->> just restored after switch from guest.
->>
->> For fetching HCR_EL2 during kvm initialisation, a hyp call is made using
->> kvm_call_hyp and is helpful in NHVE case.
-> 
-> Minor nit: NVHE misspelled.  This looks a bit like it's naming an arch
-> feature rather than a kernel implementation detail though.  Maybe write
-> "non-VHE".
-yes.
-> 
->> For the hyp TLB maintenance code, __tlb_switch_to_host_vhe() is updated
->> to toggle the TGE bit with a RMW sequence, as we already do in
->> __tlb_switch_to_guest_vhe().
->>
->> The value of hcr_el2 is now stored in struct kvm_cpu_context as both host
->> and guest can now use this field in a common way.
->>
->> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
->> [Added __cpu_copy_hyp_conf, hcr_el2 field in struct kvm_cpu_context]
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Christoffer Dall <christoffer.dall@arm.com>
->> Cc: kvmarm@lists.cs.columbia.edu
->> ---
->>   arch/arm/include/asm/kvm_host.h      |  2 ++
->>   arch/arm64/include/asm/kvm_asm.h     |  2 ++
->>   arch/arm64/include/asm/kvm_emulate.h | 22 +++++++++++-----------
->>   arch/arm64/include/asm/kvm_host.h    | 13 ++++++++++++-
->>   arch/arm64/include/asm/kvm_hyp.h     |  2 +-
->>   arch/arm64/kvm/guest.c               |  2 +-
->>   arch/arm64/kvm/hyp/switch.c          | 23 +++++++++++++----------
->>   arch/arm64/kvm/hyp/sysreg-sr.c       | 21 ++++++++++++++++++++-
->>   arch/arm64/kvm/hyp/tlb.c             |  6 +++++-
->>   virt/kvm/arm/arm.c                   |  1 +
->>   10 files changed, 68 insertions(+), 26 deletions(-)
->>
->> diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
->> index ca56537..05706b4 100644
->> --- a/arch/arm/include/asm/kvm_host.h
->> +++ b/arch/arm/include/asm/kvm_host.h
->> @@ -273,6 +273,8 @@ static inline void __cpu_init_stage2(void)
->>   	kvm_call_hyp(__init_stage2_translation);
->>   }
->>   
->> +static inline void __cpu_copy_hyp_conf(void) {}
->> +
->>   static inline int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->>   {
->>   	return 0;
->> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
->> index f5b79e9..8acd73f 100644
->> --- a/arch/arm64/include/asm/kvm_asm.h
->> +++ b/arch/arm64/include/asm/kvm_asm.h
->> @@ -80,6 +80,8 @@ extern void __vgic_v3_init_lrs(void);
->>   
->>   extern u32 __kvm_get_mdcr_el2(void);
->>   
->> +extern void __kvm_populate_host_regs(void);
->> +
->>   /* Home-grown __this_cpu_{ptr,read} variants that always work at HYP */
->>   #define __hyp_this_cpu_ptr(sym)						\
->>   	({								\
->> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
->> index 506386a..0dbe795 100644
->> --- a/arch/arm64/include/asm/kvm_emulate.h
->> +++ b/arch/arm64/include/asm/kvm_emulate.h
->> @@ -50,25 +50,25 @@ void kvm_inject_pabt32(struct kvm_vcpu *vcpu, unsigned long addr);
->>   
->>   static inline bool vcpu_el1_is_32bit(struct kvm_vcpu *vcpu)
->>   {
->> -	return !(vcpu->arch.hcr_el2 & HCR_RW);
->> +	return !(vcpu->arch.ctxt.hcr_el2 & HCR_RW);
-> 
-> Putting hcr_el2 into struct kvm_cpu_context creates a lot of splatter
-> here, and I'm wondering whether it's really necessary.  Otherwise,
-> we could just put the per-vcpu guest HCR_EL2 value in struct
-> kvm_vcpu_arch.
-I did like that in V4 version [1] but comments were raised that this was 
-repetition of hcr_el2 field in 2 places and may be avoided.
+Because nf_conntrack_helper_unregister maybe used in an unloadable module,
+it uses 'synchronize_rcu' which may cause kernel panic.
 
-[1]: https://lkml.org/lkml/2019/1/4/433
-> 
-> Is the *host* hcr_el2 value really different per-vcpu?  That looks
-> odd.  I would have thought this is fixed across the system at KVM
-> startup time.
-> 
-> Having a single global host hcr_el2 would also avoid the need for
-> __kvm_populate_host_regs(): instead, we just decide what HCR_EL2 is to
-> be ahead of time and set a global variable that we map into Hyp.
-> 
-> 
-> Or does the host HCR_EL2 need to vary at runtime for some reason I've
-> missed?
-This patch basically makes host hcr_el2 not to use fixed values like 
-HCR_HOST_NVHE_FLAGS/HCR_HOST_VHE_FLAGS during context switch and hence 
-saves those values at boot time. This patch is just preparation to 
-configure host hcr_el2 dynamically. However currently it is same for all 
-cpus.
+According to the artical:
+RCU and Unloadable Modules
+https://lwn.net/Articles/217484/
 
-I suppose it is better to have host hcr_el2 as percpu to take care of 
-heterogeneous systems. Currently even host mdcr_el2 is stored on percpu 
-basis(arch/arm64/kvm/debug.c).
-> 
-> [...]
-> 
-> +void __hyp_text __kvm_populate_host_regs(void)
-> +{
-> +       struct kvm_cpu_context *host_ctxt;
-> +
-> +       if (has_vhe())
-> +               host_ctxt = this_cpu_ptr(&kvm_host_cpu_state);
-> +       else
-> +               host_ctxt = __hyp_this_cpu_ptr(kvm_host_cpu_state);
-> 
-> According to the comment by the definition of __hyp_this_cpu_ptr(), this
-> always works at Hyp.  I also see other calls with no fallback
-> this_cpu_ptr() call like we have here.
-> 
-> So, can we simply always call __hyp_this_cpu_ptr() here?
-Yes i missed this.
+When we have a heavy rcu callback load, then some of the callbacks might be
+deferred in order to allow other processing to proceed. sychnorize_rcu does
+not wait rcu callback complete and module may be unloaded before callback
+done.
 
-Thanks,
-Amit D
-> 
-> (I'm not familiar with this, myself.)
-> 
-> Cheers
-> ---Dave
-> 
+This patch uses rcu_barrier instead of synchronize_rcu will prevent this
+situation.
+
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+---
+ net/netfilter/nf_conntrack_helper.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/net/netfilter/nf_conntrack_helper.c b/net/netfilter/nf_conntrack_helper.c
+index 274baf1..0ee9378 100644
+--- a/net/netfilter/nf_conntrack_helper.c
++++ b/net/netfilter/nf_conntrack_helper.c
+@@ -397,8 +397,15 @@ void nf_conntrack_helper_unregister(struct nf_conntrack_helper *me)
+ 
+ 	/* Make sure every nothing is still using the helper unless its a
+ 	 * connection in the hash.
++	 *
++	 * 'synchronize_rcu' may have problem when rcu callback function
++	 * is used in unloadable modules. Use rcu_barrier instead, so that
++	 * it will wait until rcu callback completes before modules are
++	 * unloaded.
++	 * More detail about rcu_barrier please see:
++	 * https://lwn.net/Articles/217484/
+ 	 */
+-	synchronize_rcu();
++	rcu_barrier();
+ 
+ 	nf_ct_expect_iterate_destroy(expect_iter_me, NULL);
+ 	nf_ct_iterate_destroy(unhelp, me);
+@@ -406,7 +413,7 @@ void nf_conntrack_helper_unregister(struct nf_conntrack_helper *me)
+ 	/* Maybe someone has gotten the helper already when unhelp above.
+ 	 * So need to wait it.
+ 	 */
+-	synchronize_rcu();
++	rcu_barrier();
+ }
+ EXPORT_SYMBOL_GPL(nf_conntrack_helper_unregister);
+ 
+-- 
+2.7.4
+
+
