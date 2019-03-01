@@ -2,107 +2,212 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97090C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FB3C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABCB218AE
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54762087E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 09:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387674AbfCAJlF (ORCPT
+        id S2387690AbfCAJl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 04:41:05 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:49980 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733133AbfCAJlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 04:41:04 -0500
-Received: from ramsan ([84.194.111.163])
-        by xavier.telenet-ops.be with bizsmtp
-        id iZgv1z00T3XaVaC01Zgvc3; Fri, 01 Mar 2019 10:41:02 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1gzef1-0005Ll-Hl; Fri, 01 Mar 2019 10:40:55 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1gzef1-0002xE-EK; Fri, 01 Mar 2019 10:40:55 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] Documentation/locking/lockdep: Drop last two chars of sample states
-Date:   Fri,  1 Mar 2019 10:40:52 +0100
-Message-Id: <20190301094052.11288-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Fri, 1 Mar 2019 04:41:27 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60450 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733133AbfCAJl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 04:41:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C79FD1688;
+        Fri,  1 Mar 2019 01:41:25 -0800 (PST)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2709F3F575;
+        Fri,  1 Mar 2019 01:41:22 -0800 (PST)
+Subject: Re: [PATCH v6 4/6] arm64/kvm: add a userspace option to enable
+ pointer authentication
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <1550568271-5319-1-git-send-email-amit.kachhap@arm.com>
+ <1550568271-5319-5-git-send-email-amit.kachhap@arm.com>
+ <20190221155350.GY3567@e103592.cambridge.arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <56edb86f-7205-4714-823a-d26005d175ab@arm.com>
+Date:   Fri, 1 Mar 2019 15:11:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <20190221155350.GY3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the removal of FS_RECLAIM annotations, lockdep states contain four
-characters, not six.
+Hi,
 
-Fixes: e5684bbfc3f03480 ("Documentation/locking/lockdep: Update info about states")
-Fixes: d92a8cfcb37ecd13 ("locking/lockdep: Rework FS_RECLAIM annotation")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Fix silly before/after inversion in patch description.
----
- Documentation/RCU/lockdep-splat.txt      | 6 +++---
- Documentation/locking/lockdep-design.txt | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+On 2/21/19 9:23 PM, Dave Martin wrote:
+> On Tue, Feb 19, 2019 at 02:54:29PM +0530, Amit Daniel Kachhap wrote:
+>> This feature will allow the KVM guest to allow the handling of
+>> pointer authentication instructions or to treat them as undefined
+>> if not set. It uses the existing vcpu API KVM_ARM_VCPU_INIT to
+>> supply this parameter instead of creating a new API.
+>>
+>> A new register is not created to pass this parameter via
+>> SET/GET_ONE_REG interface as just a flag (KVM_ARM_VCPU_PTRAUTH)
+>> supplied is enough to enable this feature.
+>>
+>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>> Cc: kvmarm@lists.cs.columbia.edu
+>> ---
+>>   Documentation/arm64/pointer-authentication.txt |  9 +++++----
+>>   Documentation/virtual/kvm/api.txt              |  4 ++++
+>>   arch/arm64/include/asm/kvm_host.h              |  3 ++-
+>>   arch/arm64/include/uapi/asm/kvm.h              |  1 +
+>>   arch/arm64/kvm/handle_exit.c                   |  2 +-
+>>   arch/arm64/kvm/hyp/ptrauth-sr.c                | 16 +++++++++++++++-
+>>   arch/arm64/kvm/reset.c                         |  3 +++
+>>   arch/arm64/kvm/sys_regs.c                      | 26 +++++++++++++-------------
+>>   include/uapi/linux/kvm.h                       |  1 +
+>>   9 files changed, 45 insertions(+), 20 deletions(-)
+>>
+> 
+> [...]
+> 
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index 1bacf78..2768a53 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -43,7 +43,7 @@
+>>   
+>>   #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
+>>   
+>> -#define KVM_VCPU_MAX_FEATURES 4
+>> +#define KVM_VCPU_MAX_FEATURES 5
+>>   
+>>   #define KVM_REQ_SLEEP \
+>>   	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+>> @@ -451,6 +451,7 @@ static inline bool kvm_arch_requires_vhe(void)
+>>   	return false;
+>>   }
+>>   
+>> +bool kvm_arm_vcpu_ptrauth_allowed(const struct kvm_vcpu *vcpu);
+>>   static inline bool kvm_supports_ptrauth(void)
+>>   {
+>>   	return has_vhe() && system_supports_address_auth() &&
+> 
+> [...]
+> 
+>> diff --git a/arch/arm64/kvm/hyp/ptrauth-sr.c b/arch/arm64/kvm/hyp/ptrauth-sr.c
+>> index 528ee6e..6846a23 100644
+>> --- a/arch/arm64/kvm/hyp/ptrauth-sr.c
+>> +++ b/arch/arm64/kvm/hyp/ptrauth-sr.c
+>> @@ -93,9 +93,23 @@ void kvm_arm_vcpu_ptrauth_reset(struct kvm_vcpu *vcpu)
+> 
+> [...]
+> 
+>> +/**
+>> + * kvm_arm_vcpu_ptrauth_allowed - checks if ptrauth feature is allowed by user
+>> + *
+>> + * @vcpu: The VCPU pointer
+>> + *
+>> + * This function will be used to check userspace option to have ptrauth or not
+>> + * in the guest kernel.
+>> + */
+>> +bool kvm_arm_vcpu_ptrauth_allowed(const struct kvm_vcpu *vcpu)
+>> +{
+>> +	return kvm_supports_ptrauth() &&
+>> +		test_bit(KVM_ARM_VCPU_PTRAUTH, vcpu->arch.features);
+>> +}
+> 
+> Nit: for SVE is called the equivalent helper vcpu_has_sve(vcpu).
+> 
+> Neither naming is more correct, but it would make sense to be
+> consistent.  We will likely accumulate more of these vcpu feature
+> predicates over time.
+> 
+> Given that this is trivial and will be used all over the place, it
+> probably makes sense to define it in kvm_host.h rather than having it
+> out of line in a separate C file.
+Ok I checked the SVE implementation. vcpu_has_ptrauth macro make more sense.
+> 
+>> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+>> index b72a3dd..987e0c3c 100644
+>> --- a/arch/arm64/kvm/reset.c
+>> +++ b/arch/arm64/kvm/reset.c
+>> @@ -91,6 +91,9 @@ int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>>   	case KVM_CAP_ARM_VM_IPA_SIZE:
+>>   		r = kvm_ipa_limit;
+>>   		break;
+>> +	case KVM_CAP_ARM_PTRAUTH:
+>> +		r = kvm_supports_ptrauth();
+>> +		break;
+>>   	default:
+>>   		r = 0;
+>>   	}
+>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>> index 12529df..f7bcc60 100644
+>> --- a/arch/arm64/kvm/sys_regs.c
+>> +++ b/arch/arm64/kvm/sys_regs.c
+>> @@ -1055,7 +1055,7 @@ static bool access_cntp_cval(struct kvm_vcpu *vcpu,
+>>   }
+>>   
+>>   /* Read a sanitised cpufeature ID register by sys_reg_desc */
+>> -static u64 read_id_reg(struct sys_reg_desc const *r, bool raz)
+>> +static u64 read_id_reg(struct kvm_vcpu *vcpu, struct sys_reg_desc const *r, bool raz)
+>>   {
+>>   	u32 id = sys_reg((u32)r->Op0, (u32)r->Op1,
+>>   			 (u32)r->CRn, (u32)r->CRm, (u32)r->Op2);
+>> @@ -1071,7 +1071,7 @@ static u64 read_id_reg(struct sys_reg_desc const *r, bool raz)
+>>   					 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+>>   					 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
+>>   					 (0xfUL << ID_AA64ISAR1_GPI_SHIFT);
+>> -		if (!kvm_supports_ptrauth()) {
+>> +		if (!kvm_arm_vcpu_ptrauth_allowed(vcpu)) {
+>>   			kvm_debug("ptrauth unsupported for guests, suppressing\n");
+>>   			val &= ~ptrauth_mask;
+>>   		}
+>> @@ -1095,7 +1095,7 @@ static bool __access_id_reg(struct kvm_vcpu *vcpu,
+>>   	if (p->is_write)
+>>   		return write_to_read_only(vcpu, p, r);
+>>   
+>> -	p->regval = read_id_reg(r, raz);
+>> +	p->regval = read_id_reg(vcpu, r, raz);
+>>   	return true;
+>>   }
+> 
+> The SVE KVM series makes various overlapping changes to propagate vcpuo
+> into the relevant places, but hopefully the rebase is not too painful.
+> Many of the changes are probably virtually identical between the two
+> series.
+> 
+> See for example [1].  Maybe you could cherry-pick and drop the
+> equivalent changes here (though if your series is picked up first, I
+> will live with it ;)
+Yes no issue. I will cherry-pick your specific patch and rebase mine on it.
 
-diff --git a/Documentation/RCU/lockdep-splat.txt b/Documentation/RCU/lockdep-splat.txt
-index 238e9f61352f6187..9423b633526d14df 100644
---- a/Documentation/RCU/lockdep-splat.txt
-+++ b/Documentation/RCU/lockdep-splat.txt
-@@ -24,11 +24,11 @@ other info that might help us debug this:
- 
- rcu_scheduler_active = 1, debug_locks = 0
- 3 locks held by scsi_scan_6/1552:
-- #0:  (&shost->scan_mutex){+.+.+.}, at: [<ffffffff8145efca>]
-+ #0:  (&shost->scan_mutex){+.+.}, at: [<ffffffff8145efca>]
- scsi_scan_host_selected+0x5a/0x150
-- #1:  (&eq->sysfs_lock){+.+...}, at: [<ffffffff812a5032>]
-+ #1:  (&eq->sysfs_lock){+.+.}, at: [<ffffffff812a5032>]
- elevator_exit+0x22/0x60
-- #2:  (&(&q->__queue_lock)->rlock){-.-...}, at: [<ffffffff812b6233>]
-+ #2:  (&(&q->__queue_lock)->rlock){-.-.}, at: [<ffffffff812b6233>]
- cfq_exit_queue+0x43/0x190
- 
- stack backtrace:
-diff --git a/Documentation/locking/lockdep-design.txt b/Documentation/locking/lockdep-design.txt
-index 49f58a07ee7b19c8..39fae143c9cbf5ff 100644
---- a/Documentation/locking/lockdep-design.txt
-+++ b/Documentation/locking/lockdep-design.txt
-@@ -45,10 +45,10 @@ When locking rules are violated, these state bits are presented in the
- locking error messages, inside curlies. A contrived example:
- 
-    modprobe/2287 is trying to acquire lock:
--    (&sio_locks[i].lock){-.-...}, at: [<c02867fd>] mutex_lock+0x21/0x24
-+    (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
- 
-    but task is already holding lock:
--    (&sio_locks[i].lock){-.-...}, at: [<c02867fd>] mutex_lock+0x21/0x24
-+    (&sio_locks[i].lock){-.-.}, at: [<c02867fd>] mutex_lock+0x21/0x24
- 
- 
- The bit position indicates STATE, STATE-read, for each of the states listed
--- 
-2.17.1
-
+Thanks,
+Amit D
+> 
+> [...]
+> 
+> Cheers
+> ---Dave
+> 
+> 
+> [1] [PATCH v5 10/26] KVM: arm64: Propagate vcpu into read_id_reg()
+> https://lists.cs.columbia.edu/pipermail/kvmarm/2019-February/034687.html
+> 
