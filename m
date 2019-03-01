@@ -2,186 +2,189 @@ Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B76C43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DA1C43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01F2420851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C3720851
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 11:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387852AbfCALC7 (ORCPT
+        id S1733141AbfCALFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 06:02:59 -0500
-Received: from foss.arm.com ([217.140.101.70]:33106 "EHLO foss.arm.com"
+        Fri, 1 Mar 2019 06:05:25 -0500
+Received: from foss.arm.com ([217.140.101.70]:33166 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727932AbfCALC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 06:02:58 -0500
+        id S1726170AbfCALFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 06:05:24 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CC78EBD;
-        Fri,  1 Mar 2019 03:02:58 -0800 (PST)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 507303F575;
-        Fri,  1 Mar 2019 03:02:54 -0800 (PST)
-Subject: Re: [PATCH v3 11/34] mips: mm: Add p?d_large() definitions
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Morse <james.morse@arm.com>
-References: <20190227170608.27963-1-steven.price@arm.com>
- <20190227170608.27963-12-steven.price@arm.com>
- <20190228021526.bb6m3my46ohb4o6h@pburton-laptop>
- <74944d83-f3c0-ff02-590e-b7e5abcea485@arm.com>
- <20190228185526.hdryn2zsfign7vht@pburton-laptop>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <7e314e29-dab5-e941-60c8-05ea74747f4e@arm.com>
-Date:   Fri, 1 Mar 2019 11:02:52 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF57EEBD;
+        Fri,  1 Mar 2019 03:05:23 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 890203F575;
+        Fri,  1 Mar 2019 03:05:19 -0800 (PST)
+Date:   Fri, 1 Mar 2019 11:05:16 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        paulmck@linux.vnet.ibm.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, yhs@fb.com,
+        dietmar.eggemann@arm.com
+Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190301110516.6ec7ekslugg6ubzg@e107158-lin.cambridge.arm.com>
+References: <20190227193748.132301-1-joel@joelfernandes.org>
+ <20190228173444.54403795211d80ba540b61cb@kernel.org>
+ <20190228150054.GB156098@google.com>
+ <20190301112826.ced40b59fb7e8118fa5b40d6@kernel.org>
+ <20190301032611.GA78818@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190228185526.hdryn2zsfign7vht@pburton-laptop>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190301032611.GA78818@google.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/02/2019 18:55, Paul Burton wrote:
-> Hi Steven,
+On 02/28/19 22:26, Joel Fernandes wrote:
+> On Fri, Mar 01, 2019 at 11:28:26AM +0900, Masami Hiramatsu wrote:
+> > Hi Joel,
 > 
-> On Thu, Feb 28, 2019 at 12:11:24PM +0000, Steven Price wrote:
->> On 28/02/2019 02:15, Paul Burton wrote:
->>> On Wed, Feb 27, 2019 at 05:05:45PM +0000, Steven Price wrote:
->>>> For mips, we don't support large pages on 32 bit so add stubs returning 0.
->>>
->>> So far so good :)
->>>
->>>> For 64 bit look for _PAGE_HUGE flag being set. This means exposing the
->>>> flag when !CONFIG_MIPS_HUGE_TLB_SUPPORT.
->>>
->>> Here I have to ask why? We could just return 0 like the mips32 case when
->>> CONFIG_MIPS_HUGE_TLB_SUPPORT=n, let the compiler optimize the whole
->>> thing out and avoid redundant work at runtime.
->>>
->>> This could be unified too in asm/pgtable.h - checking for
->>> CONFIG_MIPS_HUGE_TLB_SUPPORT should be sufficient to cover the mips32
->>> case along with the subset of mips64 configurations without huge pages.
->>
->> The intention here is to define a new set of macros/functions which will
->> always tell us whether we're at the leaf of a page table walk, whether
->> or not huge pages are compiled into the kernel. Basically this allows
->> the page walking code to be used on page tables other than user space,
->> for instance the kernel page tables (which e.g. might use a large
->> mapping for linear memory even if huge pages are not compiled in) or
->> page tables from firmware (e.g. EFI on arm64).
->>
->> I'm not familiar enough with mips to know how it handles things like the
->> linear map so I don't know how relevant that is, but I'm trying to
->> introduce a new set of functions which differ from the existing
->> p?d_huge() macros by not depending on whether these mappings could exist
->> for a user space VMA (i.e. not depending on HUGETLB support and existing
->> for all levels that architecturally they can occur at).
+> Hi Masami,
 > 
-> Thanks for the explanation - the background helps.
+> > On Thu, 28 Feb 2019 10:00:54 -0500
+> > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > 
+> > > > Hmm, isn't it easier to add kernel-headers package on Android?
+> > > 
+> > > I have already been down that road. In the Android ecosystem, the Android
+> > > teams only provide a "userspace system image" which goes on the system
+> > > partition of the flash (and a couple other images are also provided but
+> > > system is the main one). The system image cannot contain GPL source code. It
+> > > is also not possible to put kernel headers for every kernel version on the
+> > > system images that ship and is not practical. Android boots on 1000s of forked
+> > > kernels. It does not make sense to provide headers on the system image for
+> > > every kernel version and I already had many discussions on the subject with
+> > > the teams, it is something that is just not done. Now for kernel modules,
+> > > there's another image called the "vendor image" which is flashed onto the
+> > > vendor parition, this is where kernel modules go.  This vendor image is not
+> > > provided by Google for non-Pixel devices. So we have no control over what
+> > > goes there BUT we do know that kernel modules that are enabled will go there,
+> > > and we do have control over enforcing that certain kernel modules should be
+> > > built and available as they are mandatory for Android to function properly.
+> > > We would also possibly make it a built-in option as well. Anyway my point is
+> > > keeping it in the kernel is really the easiest and the smartest choice IMO.
+> > 
+> > Sorry, I'm not convinced yet. This sounds like "because Android decided not
+> > to put the header files on vendor partition, but kernel module is OK"
+> > Why don't google ask vendors to put their kernel headers (or header tarball)
+> > on vendor partition instead?
 > 
-> Right now for MIPS, with one exception, there'll be no difference
-> between a page being huge or large. So for the vast majority of kernels
-> with CONFIG_MIPS_HUGE_TLB_SUPPORT=n we should just return 0.
-> 
-> The one exception I mentioned is old SGI IP27 support, which allows the
-> kernel to be mapped through the TLB & does that using 2x 16MB pages when
-> CONFIG_MAPPED_KERNEL=y. However even there your patch as-is won't pick
-> up on that for 2 reasons:
-> 
->   1) The pages in question don't appear to actually be recorded in the
->      page tables - they're just written straight into the TLB as wired
->      entries (ie. entries that will never be evicted).
-> 
->   2) Even if they were in the page tables the _PAGE_HUGE bit isn't set.
-> 
-> Since those pages aren't recorded in the page tables anyway we'd either
-> need to:
-> 
->   a) Add them to the page tables, and set the _PAGE_HUGE bit.
-> 
->   b) Ignore them if the code you're working on won't be operating on the
->      memory mapping the kernel.
-> 
-> For other platforms the kernel is run from unmapped memory, and for all
-> cases including IP27 the kernel will use unmapped memory to access
-> lowmem or peripherals when possible. That is, MIPS has virtual address
-> regions ((c)kseg[01] or xkphys) which are architecturally defined as
-> linear maps to physical memory & so VA->PA translation doesn't use the
-> TLB at all.
-> 
-> So my thought would be that for almost everything we could just do:
-> 
->   #define pmd_large(pmd)	pmd_huge(pmd)
->   #define pud_large(pmd)	pud_huge(pmd)
-> 
-> And whether we need to do anything about IP27 depends on whether a) or
-> b) is chosen above.
-> 
-> Or alternatively you could do something like:
-> 
->   #ifdef _PAGE_HUGE
-> 
->   static inline int pmd_large(pmd_t pmd)
->   {
->   	return (pmd_val(pmd) & _PAGE_HUGE) != 0;
->   }
-> 
->   static inline int pud_large(pud_t pud)
->   {
->   	return (pud_val(pud) & _PAGE_HUGE) != 0;
->   }
-> 
->   #else
->   # define pmd_large(pmd)	0
->   # define pud_large(pud)	0
->   #endif
-> 
-> That would cover everything except for the IP27, but would make it pick
-> up the IP27 kernel pages automatically if someone later defines
-> _PAGE_HUGE for IP27 CONFIG_MAPPED_KERNEL=y & makes use of it for those
-> pages.
+> May be Google can do that, but I think you missed the point of the patches.
+> Making it a module is not mandatory, people can build it into the kernel as
+> well (CONFIG_IKHEADERS_PROC=y). In this case, the proc entry will be
+> available on boot without any dependency on the filesystem. If you go through
+> the other threads such as folks from ARM who replied, they just boot a kernel
+> image for debug purpose and want headers on device available without any
+> additional step of copying headers to the filesystem. And folks from Google
+> also said that they wanted a built-in option.
 
-Thanks for the detailed explanation. I think my preference is your
-change above (#ifdef _PAGE_HUGE) because I'm trying to stop people
-thinking p?d_large==p?d_huge. MIPS is a little different from other
-architectures in that the hardware doesn't walk the page tables, so
-there isn't a definitive answer as to whether there is a 'huge' bit in
-the tables or not - it actually does depend on the kernel configuration.
+Yes I do see this patch a useful addition. When you need the header and you're
+dealing with multiple devices and kernel trees and versions - having the
+headers part of the kernel just makes it easier to use them when you need them.
+Especially sometimes when you change a config option (like enabling a new
+syscall e.g: bpf) it's very easy to forget that the headers has changed as well
+and you need to push an updated copy.
 
-For the IP27 case I think the current situation is probably fine - the
-intention is to walk the page tables, so even though the TLBs (and
-therefore the actual translations) might not match, at least p?d_large
-will accurately tell when the leaf of the page table tree has been
-reached. And as you say, using _PAGE_HUGE as the #ifdef means that
-should support be added the code should automatically make use of it.
+FWIW most of the time I run on non-android systems for development/debugging
+purposes. I use the built-in version although I can see a module version
+helpful too. You can save some space if your kernel image partition is small
+and it's easy to install the module along with all other modules when
+rebuilding the kernel than remembering to update the headers. It's a (very)
+nice convenience.
 
-Thanks for your help,
+--
+Qais Yousef
 
-Steve
+> 
+> There are many usecases for this, I have often run into issues with Linux
+> over the years not only with Android, but other distros, where I boot custom
+> kernels with no linux-headers package. This is quite painful. It is
+> convenient to have it as /proc file since the file is dependent on kernel
+> being booted up and this will work across all Linux distros and systems. I
+> feel that if you can keep an open mind about it, you will see that a lot of
+> people will use this feature if it is accepted and there is a lot of positive
+> feedback in earlier posts of this set.
+> 
+> > > > > The code to read the headers is based on /proc/config.gz code and uses
+> > > > > the same technique to embed the headers.
+> > > > > 
+> > > > > To build a module, the below steps have been tested on an x86 machine:
+> > > > > modprobe kheaders
+> > > > > rm -rf $HOME/headers
+> > > > > mkdir -p $HOME/headers
+> > > > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> > > > > cd my-kernel-module
+> > > > > make -C $HOME/headers M=$(pwd) modules
+> > > > > rmmod kheaders
+> > > > 
+> > > > It seems a bit complex, but no difference from compared with carrying
+> > > > kheaders.tar.gz. I think we would better have a psudo filesystem
+> > > > which can mount this compressed header file directly :) Then it becomes
+> > > > simpler, like
+> > > > 
+> > > > modprobe headerfs
+> > > > mkdir $HOME/headers
+> > > > mount -t headerfs $HOME/headers
+> > > > 
+> > > > And this doesn't consume any disk-space.
+> > > 
+> > > I felt using a compressed tar is really the easiest way because of all the
+> > > tools are already available.
+> > 
+> > As I asked above, if the pure tarball is useful, you can simply ask vendors
+> > to put the header tarball on their vendor directory. I feel making it as
+> > a module is not a right way.
+> 
+> I don't see what is the drawback of making it a module, it makes it well
+> integrated into kernel build and ecosystem. I also didn't see any
+> justification you're providing about why it cannot be a module. If you go
+> through this and earlier threads, a lot of people are Ok with having a module
+> option. And I asked several top kernel maintainers at LPC and many people
+> suggested having it as a module.
+> 
+> > > There isn't a compressed in-ram filesystem right
+> > > now that I'm aware off that can achieve the kind of high compression ratio
+> > > this patchset does.
+> > 
+> > I think if linux can support something like tarfs(or compressed initramfs)
+> > in kernel, it gives linux an improvement not only a hack. :-)
+> 
+> Agreed, that sounds like a good idea. I will consider doing it once the
+> series in its current form can be accepted. I am saying so since this series
+> is simple, and I can do that as a next step since that idea will take a lot
+> of time to implement. But I am keen on doing it.
+> 
+> thanks,
+> 
+>  - Joel
+> 
