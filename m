@@ -3,184 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2457EC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBBAC43381
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED07820851
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B03A820830
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 07:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732356AbfCAHLL (ORCPT
+        id S1731353AbfCAHOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 02:11:11 -0500
-Received: from foss.arm.com ([217.140.101.70]:58900 "EHLO foss.arm.com"
+        Fri, 1 Mar 2019 02:14:45 -0500
+Received: from mx.socionext.com ([202.248.49.38]:3461 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfCAHLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 02:11:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4221EEBD;
-        Thu, 28 Feb 2019 23:11:08 -0800 (PST)
-Received: from [172.20.0.134] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DC083F575;
-        Thu, 28 Feb 2019 23:11:07 -0800 (PST)
-Subject: Re: [PATCH v5 03/10] arm64: add sysfs vulnerability show for meltdown
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
-        suzuki.poulose@arm.com, Dave.Martin@arm.com,
-        shankerd@codeaurora.org, julien.thierry@arm.com,
-        mlangsdo@redhat.com, stefan.wahren@i2e.com,
-        linux-kernel@vger.kernel.org
-References: <20190227010544.597579-1-jeremy.linton@arm.com>
- <20190227010544.597579-4-jeremy.linton@arm.com>
-From:   Andre Przywara <andre.przywara@arm.com>
-Message-ID: <c98ff98e-30e2-596b-39c5-8505ddef9496@foss.arm.com>
-Date:   Fri, 1 Mar 2019 01:11:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1725982AbfCAHOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 02:14:44 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 01 Mar 2019 16:14:43 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 124A21800E1;
+        Fri,  1 Mar 2019 16:14:43 +0900 (JST)
+Received: from 10.213.24.1 (10.213.24.1) by m-FILTER with ESMTP; Fri, 1 Mar 2019 16:14:43 +0900
+Received: from SOC-EX01V.e01.socionext.com (10.213.24.21) by
+ SOC-EX01V.e01.socionext.com (10.213.24.21) with Microsoft SMTP Server (TLS)
+ id 15.0.995.29; Fri, 1 Mar 2019 16:14:42 +0900
+Received: from SOC-EX01V.e01.socionext.com ([10.213.24.21]) by
+ SOC-EX01V.e01.socionext.com ([10.213.24.21]) with mapi id 15.00.0995.028;
+ Fri, 1 Mar 2019 16:14:42 +0900
+From:   <yamada.masahiro@socionext.com>
+To:     <kacper@kolodziej.it>, <michal.lkml@markovi.net>
+CC:     <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] kbuild: [bin]deb-pkg: add DPKG_FLAGS variable
+Thread-Topic: [PATCH] kbuild: [bin]deb-pkg: add DPKG_FLAGS variable
+Thread-Index: AQHUvU+HoJmTT8El8Um4OmE/yzQLqKX2ghIA
+Date:   Fri, 1 Mar 2019 07:14:41 +0000
+Message-ID: <87d286c0f28945728dd67b0ddf17375e@SOC-EX01V.e01.socionext.com>
+References: <20190205123752.25432-1-kacper@kolodziej.it>
+In-Reply-To: <20190205123752.25432-1-kacper@kolodziej.it>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-securitypolicycheck: OK by SHieldMailChecker v2.5.2
+x-shieldmailcheckerpolicyversion: POLICY190117
+x-originating-ip: [10.213.24.1]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190227010544.597579-4-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2/26/19 7:05 PM, Jeremy Linton wrote:
-> Display the mitigation status if active, otherwise
-> assume the cpu is safe unless it doesn't have CSV3
-> and isn't in our whitelist.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->   arch/arm64/kernel/cpufeature.c | 47 ++++++++++++++++++++++++++--------
->   1 file changed, 37 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index f6d84e2c92fe..d31bd770acba 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -944,7 +944,7 @@ has_useable_cnp(const struct arm64_cpu_capabilities *entry, int scope)
->   	return has_cpuid_feature(entry, scope);
->   }
->   
-> -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
-> +static bool __meltdown_safe = true;
->   static int __kpti_forced; /* 0: not forced, >0: forced on, <0: forced off */
->   
->   static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
-> @@ -963,6 +963,16 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
->   		{ /* sentinel */ }
->   	};
->   	char const *str = "command line option";
-> +	bool meltdown_safe;
-> +
-> +	meltdown_safe = is_midr_in_range_list(read_cpuid_id(), kpti_safe_list);
-> +
-> +	/* Defer to CPU feature registers */
-> +	if (has_cpuid_feature(entry, scope))
-> +		meltdown_safe = true;
-> +
-> +	if (!meltdown_safe)
-> +		__meltdown_safe = false;
->   
->   	/*
->   	 * For reasons that aren't entirely clear, enabling KPTI on Cavium
-> @@ -974,6 +984,11 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
->   		__kpti_forced = -1;
->   	}
->   
-> +	if (!IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0)) {
-> +		pr_info_once("kernel page table isolation disabled by CONFIG\n");
-> +		return false;
-> +	}
-> +
->   	/* Forced? */
->   	if (__kpti_forced) {
->   		pr_info_once("kernel page table isolation forced %s by %s\n",
-> @@ -985,14 +1000,10 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
->   	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
->   		return kaslr_offset() > 0;
->   
-> -	/* Don't force KPTI for CPUs that are not vulnerable */
-> -	if (is_midr_in_range_list(read_cpuid_id(), kpti_safe_list))
-> -		return false;
-> -
-> -	/* Defer to CPU feature registers */
-> -	return !has_cpuid_feature(entry, scope);
-> +	return !meltdown_safe;
->   }
->   
-> +#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
->   static void
->   kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
->   {
-> @@ -1022,6 +1033,13 @@ kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
->   
->   	return;
->   }
-> +#else
-> +static void
-> +kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
-> +{
-> +}
-> +#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
-> +
->   
->   static int __init parse_kpti(char *str)
->   {
-> @@ -1035,7 +1053,6 @@ static int __init parse_kpti(char *str)
->   	return 0;
->   }
->   early_param("kpti", parse_kpti);
-> -#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
->   
->   #ifdef CONFIG_ARM64_HW_AFDBM
->   static inline void __cpu_enable_hw_dbm(void)
-> @@ -1286,7 +1303,6 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
->   		.field_pos = ID_AA64PFR0_EL0_SHIFT,
->   		.min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
->   	},
-> -#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
->   	{
->   		.desc = "Kernel page table isolation (KPTI)",
->   		.capability = ARM64_UNMAP_KERNEL_AT_EL0,
-> @@ -1302,7 +1318,6 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
->   		.matches = unmap_kernel_at_el0,
->   		.cpu_enable = kpti_install_ng_mappings,
->   	},
-> -#endif
->   	{
->   		/* FP/SIMD is not implemented */
->   		.capability = ARM64_HAS_NO_FPSIMD,
-> @@ -2063,3 +2078,15 @@ static int __init enable_mrs_emulation(void)
->   }
->   
->   core_initcall(enable_mrs_emulation);
-> +
-> +ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr,
-> +		char *buf)
-> +{
-> +	if (arm64_kernel_unmapped_at_el0())
-> +		return sprintf(buf, "Mitigation: KPTI\n");
-> +
-> +	if (__meltdown_safe)
-> +		return sprintf(buf, "Not affected\n");
-
-Shall those two checks be swapped? So it doesn't report about a KPTI 
-mitigation if the CPU is safe, but we enable KPTI because of KASLR 
-having enabled it? Or is that a different knob?
-
-Cheers,
-Andre.
-
-> +
-> +	return sprintf(buf, "Vulnerable\n");
-> +}
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2FjcGVyIEtvxYJvZHpp
+ZWogW21haWx0bzprYWNwZXJAa29sb2R6aWVqLml0XQ0KPiBTZW50OiBUdWVzZGF5LCBGZWJydWFy
+eSAwNSwgMjAxOSA5OjM4IFBNDQo+IFRvOiBZYW1hZGEsIE1hc2FoaXJvL+WxseeUsCDnnJ/lvJgg
+PHlhbWFkYS5tYXNhaGlyb0Bzb2Npb25leHQuY29tPjsNCj4gbWljaGFsLmxrbWxAbWFya292aS5u
+ZXQNCj4gQ2M6IGxpbnV4LWtidWlsZEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7DQo+IGthY3BlckBrb2xvZHppZWouaXQNCj4gU3ViamVjdDogW1BBVENIXSBr
+YnVpbGQ6IFtiaW5dZGViLXBrZzogYWRkIERQS0dfRkxBR1MgdmFyaWFibGUNCj4gDQo+IERQS0df
+RkxBR1MgdmFyaWFibGUgbGV0cyB1c2VyIHRvIGFkZCBtb3JlIGZsYWdzIHRvIGRwa2ctYnVpbGRw
+YWNrYWdlDQo+IGNvbW1hbmQgaW4gZGViLXBrZyBhbmQgYmluZGViLXBrZy4NCj4gDQo+IFNpZ25l
+ZC1vZmYtYnk6IEthY3BlciBLb8WCb2R6aWVqIDxrYWNwZXJAa29sb2R6aWVqLml0Pg0KPiAtLS0N
+Cg0KQXBwbGllZCB0byBsaW51eC1rYnVpbGQuDQpUaGFua3MuDQoNCg0KDQo+ICBzY3JpcHRzL3Bh
+Y2thZ2UvTWFrZWZpbGUgfCA0ICsrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvc2NyaXB0cy9wYWNrYWdlL01h
+a2VmaWxlIGIvc2NyaXB0cy9wYWNrYWdlL01ha2VmaWxlDQo+IGluZGV4IDQ1M2ZlY2VlNjJmMC4u
+Njk2M2VhY2IzMjNjIDEwMDY0NA0KPiAtLS0gYS9zY3JpcHRzL3BhY2thZ2UvTWFrZWZpbGUNCj4g
+KysrIGIvc2NyaXB0cy9wYWNrYWdlL01ha2VmaWxlDQo+IEBAIC03MiwxMSArNzIsMTEgQEAgZGVi
+LXBrZzogRk9SQ0UNCj4gIAkkKGNhbGwgY21kLHNyY190YXIsJChLREVCX1NPVVJDRU5BTUUpKQ0K
+PiAgCW9yaWd2ZXJzaW9uPSQkKGRwa2ctcGFyc2VjaGFuZ2Vsb2cgLVNWZXJzaW9uIHxzZWQNCj4g
+J3MvLVteLV0qJCQvLycpO1wNCj4gIAkJbXYNCj4gJChLREVCX1NPVVJDRU5BTUUpLnRhci5neiAu
+Li8kKEtERUJfU09VUkNFTkFNRSlfJCR7b3JpZ3ZlcnNpb259Lm9yaWcudA0KPiBhci5neg0KPiAt
+CStkcGtnLWJ1aWxkcGFja2FnZSAtciQoS0JVSUxEX1BLR19ST09UQ01EKSAtYSQkKGNhdCBkZWJp
+YW4vYXJjaCkNCj4gLWkuZ2l0IC11cyAtdWMNCj4gKwkrZHBrZy1idWlsZHBhY2thZ2UgLXIkKEtC
+VUlMRF9QS0dfUk9PVENNRCkgLWEkJChjYXQgZGViaWFuL2FyY2gpDQo+ICQoRFBLR19GTEFHUykg
+LWkuZ2l0IC11cyAtdWMNCj4gDQo+ICBiaW5kZWItcGtnOiBGT1JDRQ0KPiAgCSQoQ09ORklHX1NI
+RUxMKSAkKHNyY3RyZWUpL3NjcmlwdHMvcGFja2FnZS9ta2RlYmlhbg0KPiAtCStkcGtnLWJ1aWxk
+cGFja2FnZSAtciQoS0JVSUxEX1BLR19ST09UQ01EKSAtYSQkKGNhdCBkZWJpYW4vYXJjaCkNCj4g
+LWIgLW5jIC11Yw0KPiArCStkcGtnLWJ1aWxkcGFja2FnZSAtciQoS0JVSUxEX1BLR19ST09UQ01E
+KSAtYSQkKGNhdCBkZWJpYW4vYXJjaCkNCj4gJChEUEtHX0ZMQUdTKSAtYiAtbmMgLXVjDQo+IA0K
+PiAgaW50ZGViLXBrZzogRk9SQ0UNCj4gIAkrJChDT05GSUdfU0hFTEwpICQoc3JjdHJlZSkvc2Ny
+aXB0cy9wYWNrYWdlL2J1aWxkZGViDQo+IC0tDQo+IDIuMjAuMQ0KDQo=
