@@ -2,184 +2,104 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D009EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 01:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AB9C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 01:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F3F2075B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 01:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC6620815
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 01:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfCBBSY (ORCPT
+        id S1727161AbfCBBUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 20:18:24 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47684 "EHLO mx1.suse.de"
+        Fri, 1 Mar 2019 20:20:54 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4756 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727885AbfCBBSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 20:18:17 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 05036ADE3;
-        Sat,  2 Mar 2019 01:18:15 +0000 (UTC)
-From:   Tony Jones <tonyj@suse.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
-        Tony Jones <tonyj@suse.de>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH v2 7/7] perf script python: add printdate function to SQL exporters
-Date:   Fri,  1 Mar 2019 17:19:03 -0800
-Message-Id: <20190302011903.2416-8-tonyj@suse.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190302011903.2416-1-tonyj@suse.de>
-References: <20190302011903.2416-1-tonyj@suse.de>
+        id S1726053AbfCBBUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 20:20:54 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9742DA86CED8FE8DC9FE;
+        Sat,  2 Mar 2019 09:20:51 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Sat, 2 Mar 2019
+ 09:20:49 +0800
+Subject: Re: [PATCH -next] fbdev: omap2: omapfb: trivial code cleanup
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+References: <CGME20190301015537epcas4p242dee277b9b0b4953775bb948985775c@epcas4p2.samsung.com>
+ <20190301015342.28888-1-yuehaibing@huawei.com>
+ <f14aa8d6-7cd7-4295-11d9-ee0aefdaa7c0@samsung.com>
+CC:     <trivial@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-omap@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <bdb40e58-ae8c-497f-cb35-baecdfbdd2a9@huawei.com>
+Date:   Sat, 2 Mar 2019 09:20:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f14aa8d6-7cd7-4295-11d9-ee0aefdaa7c0@samsung.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a printdate function to eliminate the repetitive use of
-datetime.datetime.today() in the SQL exporting scripts.
+On 2019/3/1 22:50, Bartlomiej Zolnierkiewicz wrote:
+> 
+> Hi,
+> 
+> On 03/01/2019 02:53 AM, Yue Haibing wrote:
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> After commit 60d2fa0dad06 ("fbdev: omap2: no need to check
+>> return value of debugfs_create functions"), there are corner
+>> code need to be cleaned.
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Thanks but I've already applied earlier patch from Anders Roxell:
+> 
+> https://marc.info/?l=linux-fbdev&m=155004766902831&w=2
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/scripts/python/export-to-postgresql.py | 19 +++++++++++--------
- tools/perf/scripts/python/export-to-sqlite.py     | 13 ++++++++-----
- 2 files changed, 19 insertions(+), 13 deletions(-)
+Good to know this, Thanks!
 
-diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-index 439bbbf1e036..515dc5506427 100644
---- a/tools/perf/scripts/python/export-to-postgresql.py
-+++ b/tools/perf/scripts/python/export-to-postgresql.py
-@@ -249,6 +249,9 @@ perf_db_export_callchains = False
- def printerr(*args, **kw_args):
- 	print(*args, file=sys.stderr, **kw_args)
- 
-+def printdate(*args, **kw_args):
-+        print(datetime.datetime.today(), *args, sep=' ', **kw_args)
-+
- def usage():
- 	printerr("Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]")
- 	printerr("where:	columns		'all' or 'branches'")
-@@ -287,7 +290,7 @@ def do_query(q, s):
- 		return
- 	raise Exception("Query failed: " + q.lastError().text())
- 
--print(datetime.datetime.today(), "Creating database...")
-+printdate("Creating database...")
- 
- db = QSqlDatabase.addDatabase('QPSQL')
- query = QSqlQuery(db)
-@@ -580,7 +583,7 @@ if perf_db_export_calls:
- 	call_file		= open_output_file("call_table.bin")
- 
- def trace_begin():
--	print(datetime.datetime.today(), "Writing to intermediate files...")
-+	printdate("Writing to intermediate files...")
- 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
- 	evsel_table(0, "unknown")
- 	machine_table(0, 0, "unknown")
-@@ -596,7 +599,7 @@ def trace_begin():
- unhandled_count = 0
- 
- def trace_end():
--	print(datetime.datetime.today(), "Copying to database...")
-+	printdate("Copying to database...")
- 	copy_output_file(evsel_file,		"selected_events")
- 	copy_output_file(machine_file,		"machines")
- 	copy_output_file(thread_file,		"threads")
-@@ -611,7 +614,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		copy_output_file(call_file,		"calls")
- 
--	print(datetime.datetime.today(), "Removing intermediate files...")
-+	printdate("Removing intermediate files...")
- 	remove_output_file(evsel_file)
- 	remove_output_file(machine_file)
- 	remove_output_file(thread_file)
-@@ -626,7 +629,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		remove_output_file(call_file)
- 	os.rmdir(output_dir_name)
--	print(datetime.datetime.today(), "Adding primary keys")
-+	printdate("Adding primary keys")
- 	do_query(query, 'ALTER TABLE selected_events ADD PRIMARY KEY (id)')
- 	do_query(query, 'ALTER TABLE machines        ADD PRIMARY KEY (id)')
- 	do_query(query, 'ALTER TABLE threads         ADD PRIMARY KEY (id)')
-@@ -641,7 +644,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		do_query(query, 'ALTER TABLE calls           ADD PRIMARY KEY (id)')
- 
--	print(datetime.datetime.today(), "Adding foreign keys")
-+	printdate("Adding foreign keys")
- 	do_query(query, 'ALTER TABLE threads '
- 					'ADD CONSTRAINT machinefk  FOREIGN KEY (machine_id)   REFERENCES machines   (id),'
- 					'ADD CONSTRAINT processfk  FOREIGN KEY (process_id)   REFERENCES threads    (id)')
-@@ -677,8 +680,8 @@ def trace_end():
- 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
- 
- 	if (unhandled_count):
--		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
--	print(datetime.datetime.today(), "Done")
-+		printdate("Warning: ", unhandled_count, " unhandled events")
-+	printdate("Done")
- 
- def trace_unhandled(event_name, context, event_fields_dict):
- 	global unhandled_count
-diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-index 3da338243aed..3b71902a5a21 100644
---- a/tools/perf/scripts/python/export-to-sqlite.py
-+++ b/tools/perf/scripts/python/export-to-sqlite.py
-@@ -65,6 +65,9 @@ perf_db_export_callchains = False
- def printerr(*args, **keyword_args):
- 	print(*args, file=sys.stderr, **keyword_args)
- 
-+def printdate(*args, **kw_args):
-+        print(datetime.datetime.today(), *args, sep=' ', **kw_args)
-+
- def usage():
- 	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]");
- 	printerr("where:	columns		'all' or 'branches'");
-@@ -105,7 +108,7 @@ def do_query_(q):
- 		return
- 	raise Exception("Query failed: " + q.lastError().text())
- 
--print(datetime.datetime.today(), "Creating database ...")
-+printdate("Creating database ...")
- 
- db_exists = False
- try:
-@@ -383,7 +386,7 @@ if perf_db_export_calls:
- 	call_query.prepare("INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
- 
- def trace_begin():
--	print(datetime.datetime.today(), "Writing records...")
-+	printdate("Writing records...")
- 	do_query(query, 'BEGIN TRANSACTION')
- 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
- 	evsel_table(0, "unknown")
-@@ -402,14 +405,14 @@ unhandled_count = 0
- def trace_end():
- 	do_query(query, 'END TRANSACTION')
- 
--	print(datetime.datetime.today(), "Adding indexes")
-+	printdate("Adding indexes")
- 	if perf_db_export_calls:
- 		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
- 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
- 
- 	if (unhandled_count):
--		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
--	print(datetime.datetime.today(), "Done")
-+		printdate("Warning: ", unhandled_count, " unhandled events")
-+	printdate("Done")
- 
- def trace_unhandled(event_name, context, event_fields_dict):
- 	global unhandled_count
--- 
-2.16.4
+> 
+>> ---
+>>  drivers/video/fbdev/omap2/omapfb/dss/core.c | 3 ---
+>>  1 file changed, 3 deletions(-)
+>>
+>> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/core.c b/drivers/video/fbdev/omap2/omapfb/dss/core.c
+>> index 7e6a3eb..b5956a1 100644
+>> --- a/drivers/video/fbdev/omap2/omapfb/dss/core.c
+>> +++ b/drivers/video/fbdev/omap2/omapfb/dss/core.c
+>> @@ -136,7 +136,6 @@ static inline void dss_uninitialize_debugfs(void)
+>>  }
+>>  void dss_debugfs_create_file(const char *name, void (*write)(struct seq_file *))
+>>  {
+>> -	return 0;
+>>  }
+>>  #endif /* CONFIG_FB_OMAP2_DSS_DEBUGFS */
+>>  
+>> @@ -169,8 +168,6 @@ static struct notifier_block omap_dss_pm_notif_block = {
+>>  
+>>  static int __init omap_dss_probe(struct platform_device *pdev)
+>>  {
+>> -	int r;
+>> -
+>>  	core.pdev = pdev;
+>>  
+>>  	dss_features_init(omapdss_get_version());
+> 
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> 
+> 
 
