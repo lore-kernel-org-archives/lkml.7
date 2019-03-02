@@ -2,393 +2,116 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1392DC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 15:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B692EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 15:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA58820857
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 15:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D60020857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 15:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="PxWejLPA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTUz6BYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfCBPtw (ORCPT
+        id S1726537AbfCBP4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 10:49:52 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:49128 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726119AbfCBPtv (ORCPT
+        Sat, 2 Mar 2019 10:56:30 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46798 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfCBP4a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 10:49:51 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 491978EE515;
-        Sat,  2 Mar 2019 07:49:51 -0800 (PST)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id R-xQDhd26Vl2; Sat,  2 Mar 2019 07:49:51 -0800 (PST)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id C007F8EE1EC;
-        Sat,  2 Mar 2019 07:49:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1551541791;
-        bh=e2vvxB1nB++oj0W9o09UDIkT6h7hJ4zdkzsCu6s0a2A=;
-        h=Subject:From:To:Cc:Date:From;
-        b=PxWejLPA3n/wkHraRRPtt45sSxApnM2aVnxdbgGen9pLyE+ry9/RNlIevRC86j0lI
-         OSpfQSon8QYYXpjUYQ6YPBtu9VALqhnp5JIXeBxYGsJRwKYVXAtcmRi9BmTheinG3w
-         RQh55JzFQZZaY4rHZH6lHN724hTggxbQ2KWz9x98=
-Message-ID: <1551541788.5893.6.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.0-rc7
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Sat, 02 Mar 2019 07:49:48 -0800
+        Sat, 2 Mar 2019 10:56:30 -0500
+Received: by mail-pf1-f196.google.com with SMTP id g6so386205pfh.13;
+        Sat, 02 Mar 2019 07:56:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1XYSGNTVuQSlBFhuCwNoe/1S1Ik18xLByDDkKibQsNI=;
+        b=YTUz6BYTlhD8rfnJNiBAvaIuJGHNr4p0rVDzDq9W3RjH0N5C0MSZRyKpYYcTRLnMC+
+         qkH+CyI+UvFbBIJ6x6F5I59xwFd3B7Sgm7nHCJ+RUPrMMgy+7AgvDDYj6ap1VwoffCcb
+         WUU02Tn8SmYyALX+9pjvl1rgS+5Dva855oyJk+19l8nFVnTo7QxvOGypJbduh+v+8y1t
+         XllDH/er66wG5omibZ5w2saxQeXkmUiEltdGAYpc72HEWZmLip+a9XTJxqjvmjAh7pzo
+         9mqmQePS/jXIgRScHMg/YRRf0NX3gAciKQAGUCU8g7MJkJeI1YVEoqUG1ZJsXk74cC+d
+         WvQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1XYSGNTVuQSlBFhuCwNoe/1S1Ik18xLByDDkKibQsNI=;
+        b=Ddk4SNSBYsf4v8Upn3/aKRk4CAgNELRWnHaEuiqxylrUpT8pVIGvz3iM8V1kkziPgR
+         1A7pau8kO3bTTqUfofwNmxSXx3tMQXgyj9Y5P7WOvytAsx753D7wFDLDjH6zBPUytN8X
+         xvQLS2/4DWzqfGFqv53fNYy8MHegzPWVFR7YLb9UPbSAgsw9tqZIr66WMPZ6VyAZ7TvO
+         uKY0tCT+ZehZIc51M59jfIVppFGJ1I0BPt93FBwwqCj6GaLzmYQtZu7l4dnoE0J6dGg1
+         HbMhZNFdJ6p/f7SOG3JMeA0I406Z3NmU9N0qlbmAzaGLCdGqf+Z6z5jWayCdkNzGwXGh
+         WFJw==
+X-Gm-Message-State: APjAAAX3BzBWrwQ2LN3XeGMsJ4JYK6KJFdBjzgoDWDTdH0C5Me5SbavG
+        OOXa6LoZfVnP3I9CsXHhaQ0iY/C48YMikCBvSqo=
+X-Google-Smtp-Source: APXvYqzg5u/pd1X+lc5BLDlBF/szgRVyuIo2O6TbcwZT/G0dVmasix0ZpNCubCF+3kr96yp4rtfOurph7s5B8IlwQ2w=
+X-Received: by 2002:a63:2004:: with SMTP id g4mr10319973pgg.337.1551542188980;
+ Sat, 02 Mar 2019 07:56:28 -0800 (PST)
+MIME-Version: 1.0
+References: <20190302090505.65542-1-chenyu56@huawei.com> <20190302090505.65542-8-chenyu56@huawei.com>
+In-Reply-To: <20190302090505.65542-8-chenyu56@huawei.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 2 Mar 2019 17:56:17 +0200
+Message-ID: <CAHp75VeZWQ42eaGqwUJ6r=XebKRk=nJM9c+OFaKoOT+jXxkDHw@mail.gmail.com>
+Subject: Re: [PATCH v3 07/12] phy: Add usb phy support for hi3660 Soc of Hisilicon
+To:     Yu Chen <chenyu56@huawei.com>
+Cc:     USB <linux-usb@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Suzhuangluan <suzhuangluan@hisilicon.com>,
+        Kongfei <kongfei@hisilicon.com>, liuyu712@hisilicon.com,
+        wanghu17@hisilicon.com, butao@hisilicon.com,
+        Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com,
+        lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>,
+        xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com,
+        yudongbin@hisilicon.com, zangleigang@hisilicon.com,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>,
+        Pengcheng Li <lpc.li@hisilicon.com>,
+        Jianguo Sun <sunjianguo1@huawei.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jiancheng Xue <xuejiancheng@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nine small fixes.  The resume fix is a cosmetic removal of a warning
-with an incorrect condition causing it to alarm people wrongly.  The
-other eight patches correct a thinko in Christoph Hellwig's DMA
-conversion series.  Without it all these drivers end up with 32 bit DMA
-masks meaning they bounce any page over 4GB before sending it to the
-controller.  Nowadays, even laptops mostly have memory above 4GB, so
-this can lead to significant performance degradation with all the
-bouncing.
+On Sat, Mar 2, 2019 at 11:06 AM Yu Chen <chenyu56@huawei.com> wrote:
+>
+> This driver handles usb phy power on and shutdown for hi3660 Soc of
+> Hisilicon.
 
-The patch is available here:
+Few comments below. After fixing them, FWIW
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+> +#define HI3660_USB_DEFAULT_PHY_PARAM           0x1c466e3
 
-The short changelog is:
+A bit of description would be nice to have what this value means.
 
-Bart Van Assche (1):
-      scsi: core: Avoid that system resume triggers a kernel warning
+> +       /* delay for exit from IDDQ mode */
+> +       usleep_range(100, 100);
 
-Hannes Reinecke (8):
-      scsi: hptiop: fix calls to dma_set_mask()
-      scsi: hisi_sas: fix calls to dma_set_mask_and_coherent()
-      scsi: csiostor: fix calls to dma_set_mask_and_coherent()
-      scsi: bfa: fix calls to dma_set_mask_and_coherent()
-      scsi: aic94xx: fix calls to dma_set_mask_and_coherent()
-      scsi: 3w-sas: fix calls to dma_set_mask_and_coherent()
-      scsi: 3w-9xxx: fix calls to dma_set_mask_and_coherent()
-      scsi: lpfc: fix calls to dma_set_mask_and_coherent()
+100,100 ? I think you need to give a room to scheduler, at least 20%
+margin would be good to have.
 
-And the diffstat:
+> +       /* delay for vbus valid */
+> +       usleep_range(100, 100);
 
- drivers/scsi/3w-9xxx.c                 | 14 +++++++++-----
- drivers/scsi/3w-sas.c                  | 12 ++++++++----
- drivers/scsi/aic94xx/aic94xx_init.c    |  8 +++++---
- drivers/scsi/bfa/bfad.c                | 18 +++++++++++++-----
- drivers/scsi/csiostor/csio_init.c      |  7 +++++--
- drivers/scsi/hisi_sas/hisi_sas_main.c  |  8 ++++++--
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c |  8 +++++---
- drivers/scsi/hptiop.c                  | 10 +++++++---
- drivers/scsi/lpfc/lpfc_init.c          | 19 ++++++++++++-------
- drivers/scsi/scsi_lib.c                |  1 -
- 10 files changed, 70 insertions(+), 35 deletions(-)
+Ditto.
 
-With full diff below.
 
-James
-
----
-
-diff --git a/drivers/scsi/3w-9xxx.c b/drivers/scsi/3w-9xxx.c
-index a3c20e3a8b7c..3337b1e80412 100644
---- a/drivers/scsi/3w-9xxx.c
-+++ b/drivers/scsi/3w-9xxx.c
-@@ -2009,7 +2009,7 @@ static int twa_probe(struct pci_dev *pdev, const struct pci_device_id *dev_id)
- 	struct Scsi_Host *host = NULL;
- 	TW_Device_Extension *tw_dev;
- 	unsigned long mem_addr, mem_len;
--	int retval = -ENODEV;
-+	int retval;
- 
- 	retval = pci_enable_device(pdev);
- 	if (retval) {
-@@ -2020,8 +2020,10 @@ static int twa_probe(struct pci_dev *pdev, const struct pci_device_id *dev_id)
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
- 
--	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))) {
-+	retval = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (retval)
-+		retval = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (retval) {
- 		TW_PRINTK(host, TW_DRIVER, 0x23, "Failed to set dma mask");
- 		retval = -ENODEV;
- 		goto out_disable_device;
-@@ -2240,8 +2242,10 @@ static int twa_resume(struct pci_dev *pdev)
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
- 
--	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))) {
-+	retval = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (retval)
-+		retval = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (retval) {
- 		TW_PRINTK(host, TW_DRIVER, 0x40, "Failed to set dma mask during resume");
- 		retval = -ENODEV;
- 		goto out_disable_device;
-diff --git a/drivers/scsi/3w-sas.c b/drivers/scsi/3w-sas.c
-index e8f5f7c63190..2d15b878bd94 100644
---- a/drivers/scsi/3w-sas.c
-+++ b/drivers/scsi/3w-sas.c
-@@ -1572,8 +1572,10 @@ static int twl_probe(struct pci_dev *pdev, const struct pci_device_id *dev_id)
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
- 
--	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))) {
-+	retval = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (retval)
-+		retval = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (retval) {
- 		TW_PRINTK(host, TW_DRIVER, 0x18, "Failed to set dma mask");
- 		retval = -ENODEV;
- 		goto out_disable_device;
-@@ -1804,8 +1806,10 @@ static int twl_resume(struct pci_dev *pdev)
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
- 
--	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))) {
-+	retval = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (retval)
-+		retval = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (retval) {
- 		TW_PRINTK(host, TW_DRIVER, 0x25, "Failed to set dma mask during resume");
- 		retval = -ENODEV;
- 		goto out_disable_device;
-diff --git a/drivers/scsi/aic94xx/aic94xx_init.c b/drivers/scsi/aic94xx/aic94xx_init.c
-index 07efcb9b5b94..bbdae67774f0 100644
---- a/drivers/scsi/aic94xx/aic94xx_init.c
-+++ b/drivers/scsi/aic94xx/aic94xx_init.c
-@@ -769,9 +769,11 @@ static int asd_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (err)
- 		goto Err_remove;
- 
--	err = -ENODEV;
--	if (dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32))) {
-+	err = dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(64));
-+	if (err)
-+		err = dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32));
-+	if (err) {
-+		err = -ENODEV;
- 		asd_printk("no suitable DMA mask for %s\n", pci_name(dev));
- 		goto Err_remove;
- 	}
-diff --git a/drivers/scsi/bfa/bfad.c b/drivers/scsi/bfa/bfad.c
-index 42a0caf6740d..88880a66a189 100644
---- a/drivers/scsi/bfa/bfad.c
-+++ b/drivers/scsi/bfa/bfad.c
-@@ -727,7 +727,7 @@ bfad_init_timer(struct bfad_s *bfad)
- int
- bfad_pci_init(struct pci_dev *pdev, struct bfad_s *bfad)
- {
--	int		rc = -ENODEV;
-+	int rc = -ENODEV;
- 
- 	if (pci_enable_device(pdev)) {
- 		printk(KERN_ERR "pci_enable_device fail %p\n", pdev);
-@@ -739,8 +739,12 @@ bfad_pci_init(struct pci_dev *pdev, struct bfad_s *bfad)
- 
- 	pci_set_master(pdev);
- 
--	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))) {
-+	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (rc)
-+		rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+
-+	if (rc) {
-+		rc = -ENODEV;
- 		printk(KERN_ERR "dma_set_mask_and_coherent fail %p\n", pdev);
- 		goto out_release_region;
- 	}
-@@ -1534,6 +1538,7 @@ bfad_pci_slot_reset(struct pci_dev *pdev)
- {
- 	struct bfad_s *bfad = pci_get_drvdata(pdev);
- 	u8 byte;
-+	int rc;
- 
- 	dev_printk(KERN_ERR, &pdev->dev,
- 		   "bfad_pci_slot_reset flags: 0x%x\n", bfad->bfad_flags);
-@@ -1561,8 +1566,11 @@ bfad_pci_slot_reset(struct pci_dev *pdev)
- 	pci_save_state(pdev);
- 	pci_set_master(pdev);
- 
--	if (dma_set_mask_and_coherent(&bfad->pcidev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&bfad->pcidev->dev, DMA_BIT_MASK(32)))
-+	rc = dma_set_mask_and_coherent(&bfad->pcidev->dev, DMA_BIT_MASK(64));
-+	if (rc)
-+		rc = dma_set_mask_and_coherent(&bfad->pcidev->dev,
-+					       DMA_BIT_MASK(32));
-+	if (rc)
- 		goto out_disable_device;
- 
- 	if (restart_bfa(bfad) == -1)
-diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
-index cf629380a981..616b25bf7941 100644
---- a/drivers/scsi/csiostor/csio_init.c
-+++ b/drivers/scsi/csiostor/csio_init.c
-@@ -210,8 +210,11 @@ csio_pci_init(struct pci_dev *pdev, int *bars)
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
- 
--	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))) {
-+	rv = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (rv)
-+		rv = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (rv) {
-+		rv = -ENODEV;
- 		dev_err(&pdev->dev, "No suitable DMA available.\n");
- 		goto err_release_regions;
- 	}
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index eed7fc5b3389..bc17fa0d8375 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -2323,6 +2323,7 @@ static struct Scsi_Host *hisi_sas_shost_alloc(struct platform_device *pdev,
- 	struct Scsi_Host *shost;
- 	struct hisi_hba *hisi_hba;
- 	struct device *dev = &pdev->dev;
-+	int error;
- 
- 	shost = scsi_host_alloc(hw->sht, sizeof(*hisi_hba));
- 	if (!shost) {
-@@ -2343,8 +2344,11 @@ static struct Scsi_Host *hisi_sas_shost_alloc(struct platform_device *pdev,
- 	if (hisi_sas_get_fw_info(hisi_hba) < 0)
- 		goto err_out;
- 
--	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)) &&
--	    dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))) {
-+	error = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+	if (error)
-+		error = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-+
-+	if (error) {
- 		dev_err(dev, "No usable DMA addressing method\n");
- 		goto err_out;
- 	}
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index c92b3822c408..e0570fd8466e 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -2447,10 +2447,12 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		goto err_out_disable_device;
- 
--	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32))) {
-+	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (rc)
-+		rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (rc) {
- 		dev_err(dev, "No usable DMA addressing method\n");
--		rc = -EIO;
-+		rc = -ENODEV;
- 		goto err_out_regions;
- 	}
- 
-diff --git a/drivers/scsi/hptiop.c b/drivers/scsi/hptiop.c
-index 3eedfd4f8f57..251c084a6ff0 100644
---- a/drivers/scsi/hptiop.c
-+++ b/drivers/scsi/hptiop.c
-@@ -1292,6 +1292,7 @@ static int hptiop_probe(struct pci_dev *pcidev, const struct pci_device_id *id)
- 	dma_addr_t start_phy;
- 	void *start_virt;
- 	u32 offset, i, req_size;
-+	int rc;
- 
- 	dprintk("hptiop_probe(%p)\n", pcidev);
- 
-@@ -1308,9 +1309,12 @@ static int hptiop_probe(struct pci_dev *pcidev, const struct pci_device_id *id)
- 
- 	/* Enable 64bit DMA if possible */
- 	iop_ops = (struct hptiop_adapter_ops *)id->driver_data;
--	if (dma_set_mask(&pcidev->dev,
--			 DMA_BIT_MASK(iop_ops->hw_dma_bit_mask)) ||
--	    dma_set_mask(&pcidev->dev, DMA_BIT_MASK(32))) {
-+	rc = dma_set_mask(&pcidev->dev,
-+			  DMA_BIT_MASK(iop_ops->hw_dma_bit_mask));
-+	if (rc)
-+		rc = dma_set_mask(&pcidev->dev, DMA_BIT_MASK(32));
-+
-+	if (rc) {
- 		printk(KERN_ERR "hptiop: fail to set dma_mask\n");
- 		goto disable_pci_device;
- 	}
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index c1c36812c3d2..a588dfad4b11 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -7361,15 +7361,18 @@ lpfc_sli_pci_mem_setup(struct lpfc_hba *phba)
- 	unsigned long bar0map_len, bar2map_len;
- 	int i, hbq_count;
- 	void *ptr;
--	int error = -ENODEV;
-+	int error;
- 
- 	if (!pdev)
--		return error;
-+		return -ENODEV;
- 
- 	/* Set the device DMA mask size */
--	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)))
-+	error = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (error)
-+		error = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (error)
- 		return error;
-+	error = -ENODEV;
- 
- 	/* Get the bus address of Bar0 and Bar2 and the number of bytes
- 	 * required by each mapping.
-@@ -9742,11 +9745,13 @@ lpfc_sli4_pci_mem_setup(struct lpfc_hba *phba)
- 	uint32_t if_type;
- 
- 	if (!pdev)
--		return error;
-+		return -ENODEV;
- 
- 	/* Set the device DMA mask size */
--	if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64)) ||
--	    dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32)))
-+	error = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+	if (error)
-+		error = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (error)
- 		return error;
- 
- 	/*
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index f8d51c3d5582..a6828391d6b3 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -2598,7 +2598,6 @@ void scsi_device_resume(struct scsi_device *sdev)
- 	 * device deleted during suspend)
- 	 */
- 	mutex_lock(&sdev->state_mutex);
--	WARN_ON_ONCE(!sdev->quiesced_by);
- 	sdev->quiesced_by = NULL;
- 	blk_clear_pm_only(sdev->request_queue);
- 	if (sdev->sdev_state == SDEV_QUIESCE)
-
+-- 
+With Best Regards,
+Andy Shevchenko
