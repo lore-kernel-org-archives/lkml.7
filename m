@@ -2,179 +2,194 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF98C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84918C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A6020823
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE8B20840
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ks+kYPap"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HyvumV8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfCBDQY (ORCPT
+        id S1727779AbfCBDUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 22:16:24 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41644 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbfCBDQY (ORCPT
+        Fri, 1 Mar 2019 22:20:02 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42507 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfCBDUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 22:16:24 -0500
-Received: by mail-qt1-f194.google.com with SMTP id v10so30244079qtp.8;
-        Fri, 01 Mar 2019 19:16:22 -0800 (PST)
+        Fri, 1 Mar 2019 22:20:02 -0500
+Received: by mail-ed1-f66.google.com with SMTP id j89so21677702edb.9;
+        Fri, 01 Mar 2019 19:20:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=iCrMRx3hb630A2wxwPkLxj7aOIlGrD8Tg5ChwcKkYO4=;
-        b=Ks+kYPapu+B0XeR7EMSb2dKHDrBxcUipO5V2rQ24QI/Zhpe2lynQABAiU/hst/2GQJ
-         H2hIJ9zFqm1HYRRmMzn2KnNqGvsPzsei9A/cGMdGNx3v76xz/MBDF7U/EZ1GbGwvGd6Z
-         r7eEEpgxoASC6WGXAZXajZYPveKyh9M2DGZJbeItUIKobWmjx6Ii6w6Iw/skkdAABeln
-         uJ/7WRVGCmaZJYtD6Uk88R7oijaavjXrBBtoCc0Q7hQWQhSSja3rR+rbpoXr2t/JTy7f
-         5aoQns/6ImI9OLkQV1pTWTiEqXkH6tHAoHOmY+WU7ESUrDIpAIjsFhD9DcqJF8iOGhvQ
-         GtEg==
+        h=subject:to:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R8mlpSPGD/WOluqVKoUAMbg7xYny1QOi9BjF5XMYnRY=;
+        b=HyvumV8GOWZg7Wr0AB/1OBXO0RGMEAlPF3RlqyUyJGncKToZUEzKuT0/ZxNFT35/98
+         wTqK6VqmZr0Y6g5z7QQSuv2OcIwFrlWaQoOyTSRsGABGffW1Ib8pW9GAzUmoEOJnwMlW
+         oeVmfKpsy4vRD827VTfc5Lo7S3QefDPCBcrlRraH6UBrxrYLwWYJ+4qc99Ja7EogX2K5
+         EBKUFrS0ly59xLWC9vYACXlVrAX4+mOUsQgwjzWpxa9+RJjwYeQ3ffQaJLPna45BOJGq
+         P6HEPoAVk1Ax2k4YwBcvjCoUIACf5TXi3EL0M1fRwmF/Ku8uRGxJNqIE/QTetdQ9ME5b
+         qhxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
+        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=iCrMRx3hb630A2wxwPkLxj7aOIlGrD8Tg5ChwcKkYO4=;
-        b=MaV0WgRtj/pn4U57SajsEjoiqvgVCjAP1qomeKabSco44wSqn/lm0EHOlrEDa+KirM
-         10GS+wsRD2Zzf/ngXCH3RkoNcQmrJrfvu7+t7OXppQtPergBuhxPmRNGLiJyyOFrdAAr
-         YtnrVeZ/upOPUvHXdPhmuJvzJn6fOb0aE1kULSACcOVYoYpcChnlWHXIE05lapQrPtsF
-         ypQu9s43uWC8TcVCkqFU8ss6uqc11HJmIazTDAub9ZiMOBJB7Mi510RNpN9iO0Ppvu7s
-         J5DeXbHsBLiffSAPjpxb95mnZdLk2ItVnYj2vNY8C5jaCawEid7VxMYubMkwIGNaW1zA
-         i5Xw==
-X-Gm-Message-State: APjAAAWyYIOWUo/XbqrwTpXKNYqzqQQROYJPLu5efvEiRWURJc1NekaQ
-        HN9ziJwhlxgQ81GTo+EQZLVtGpvg
-X-Google-Smtp-Source: APXvYqyhRNoxntc+A+exTR7Bd5jU+LRT98O8GnoGqyD11cBzBY/V/d5qIzcx/jn5+yyznwWEH+5jbw==
-X-Received: by 2002:a0c:f2d3:: with SMTP id c19mr6285836qvm.230.1551496582332;
-        Fri, 01 Mar 2019 19:16:22 -0800 (PST)
-Received: from [192.168.1.199] (pool-108-28-156-19.washdc.fios.verizon.net. [108.28.156.19])
-        by smtp.gmail.com with ESMTPSA id a68sm15056212qkj.82.2019.03.01.19.16.21
+         :content-language:content-transfer-encoding;
+        bh=R8mlpSPGD/WOluqVKoUAMbg7xYny1QOi9BjF5XMYnRY=;
+        b=ll7AKbX3Iyl1XdMXAsD8ynnpV5wtCemSPNVYYbdfepGRwXV4JPNno4IKxCmS7TD5KA
+         bEdBCV7u+sKRfM3+kLqdKNFK8TZdQ0t3h3d6+1aWdi5MQtcLRJwhYJl5veMgaKJLqY5u
+         TGuuCTo2fw+56CC+810MZktP0u4UeryQWlulsk2qES6NEnfEvTp3bIAPithQhracq7kc
+         sl8opgkgj/Rf4k+jz/CZvKESTI4omquHcuREP7H8yXZVQzubrxOsn6+kFz45H5f9xvWO
+         nAfWZWyd+YW8GpWOKCqOPLTUTQZO6bv6lMgPYV+C78D+bGuMkRI8TXx7YSbejfKjZtPD
+         ADcQ==
+X-Gm-Message-State: APjAAAW9HFEA+Fdi7AWF1yDOv8uRTQiAztmIENj8sZP8RpxBpGxJsNxA
+        fFNYZs3OBJJiNpyrTFqG+24=
+X-Google-Smtp-Source: APXvYqyOnpPSi/IyB2p/dMXhrxavsEu5XMhasKBscv96cRVZ6sxmR8YClAUjJTLG1VL7D/A8WtZ0VA==
+X-Received: by 2002:a05:6402:1205:: with SMTP id c5mr6808211edw.19.1551496799325;
+        Fri, 01 Mar 2019 19:19:59 -0800 (PST)
+Received: from [10.230.26.115] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id e21sm6381538edb.27.2019.03.01.19.19.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 19:16:21 -0800 (PST)
-Subject: Re: Realtek r8822be kernel module does not negotiate 802.11ac
- connection
-From:   "David R. Bergstein" <david.r.bergstein@gmail.com>
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Tony Chuang <yhchuang@realtek.com>
-Cc:     Pkshih <pkshih@realtek.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <51d62a31-7cde-e815-bdee-4ef5433007aa@gmail.com>
- <F7CD281DE3E379468C6D07993EA72F84D17AF74C@RTITMBSVM04.realtek.com.tw>
- <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
- <e68c6aae-8d71-266a-81fe-d078ac1ef38c@lwfinger.net>
- <6eb7af74-b1a8-d112-e027-6c14252af994@gmail.com>
- <487c350c-c455-b490-8de5-1d68760aa3dc@lwfinger.net>
- <2e39892d-d206-e87f-c802-d427c54277cf@gmail.com>
+        Fri, 01 Mar 2019 19:19:58 -0800 (PST)
+Subject: Re: [PATCH net-next 2/6] net: 8021q: vlan_dev: add vid tag to
+ addresses of uc and mc lists
+To:     davem@davemloft.net, grygorii.strashko@ti.com,
+        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jiri@mellanox.com,
+        ilias.apalodimas@linaro.org
+References: <20190226184556.16082-1-ivan.khoronzhuk@linaro.org>
+ <20190226184556.16082-3-ivan.khoronzhuk@linaro.org>
+ <72ecf925-f818-3d6b-4f96-b01daabd21f2@gmail.com>
+ <20190301122417.GB4851@khorivan>
+From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=david.r.bergstein@gmail.com; keydata=
- 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
- cZPytJop3jxjNbB2ZRfwBXX3FsGBkJ4S2SKQyQ==
-Message-ID: <8706d34c-1fac-84ba-759d-18d96750636b@gmail.com>
-Date:   Fri, 1 Mar 2019 22:16:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ mQENBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAG0KEZsb3JpYW4gRmFpbmVsbGkgPGZhaW5lbGxpQGJyb2FkY29tLmNvbT6JAccEEAECALEF
+ AlPAG9YXCgABv0jL/n0t8VEFmtDa8j7qERo7AN0gFAAAAAAAFgABa2V5LXVzYWdlLW1hc2tA
+ cGdwLmNvbY4wFIAAAAAAIAAHcHJlZmVycmVkLWVtYWlsLWVuY29kaW5nQHBncC5jb21wZ3Bt
+ aW1lCAsJCAcDAgEKAhkBBReAAAAAGRhsZGFwOi8va2V5cy5icm9hZGNvbS5jb20FGwMAAAAD
+ FgIBBR4BAAAABBUICQoACgkQgTG1xCm8ZqD+Dgf9HhhzqvJYIPomNeg+ll7/TbzWb871E+HQ
+ TaufJQFQwLEbgdFSZO2uj4UqfDpCyTwtHTVMJogWt3pCAE1sadeIY8OlT6918ofKIl8AiHj2
+ BlfL7ASZ5wzkRMt/4TZoinq9O1tPEynb5G6PdZTV3UQtmSGnpt2EOu7KtRJsnThBiXoOO9TJ
+ Asg4vXJ0ZM1y/MPhQlZbPCHQZFe1gaVWBPLGnLyWyeprqgSLWHaGqrUhlfK1sLuJK1bjYDCI
+ NetK0pS4cA4ZJgogr5FrtV64R19zLl02mt/Yj7rAmjC3ZBuwVi3V35kD8Kd4d9QM2apsiILV
+ bzGbtVCSUgvxI+1SsJEm3bkBDQRTwBvBAQgArGvvWip77T4xgJztZp9YRylAcVTC9gtx0Gg6
+ eYk/EPANGm9TkuGpI++T/Il2H2TjFQNC7eubWohbYj0+6Tmf8nP+VmyobDxPXcMrK7x4xy9o
+ D+Kub2Vf0SXbsM8fL/SqzGbFWZSm73L1L4GZoxvYIz0i7LExYSX2u5YVLaMBaH9HwKt2cvr7
+ MuTrRHtcbOZImoXT29g2UnoF1uwxYNeRhZY/lRvVkkY0lDipPuDwg3SpfHMtCybPq1uAswQd
+ gEbHzRsEXwCR1OF3pIuGt4I3tSEhH/k1caqi0BlqjbGUOkku44xC2gf1ZU267FBBkdV3yJ/7
+ KnrJEnkMCYhS3kII9wARAQABiQJBBBgBAgErBQJTwBvCBRsMAAAAwF0gBBkBCAAGBQJTwBvB
+ AAoJEJNgBqiYLw9VDRUIAJaTef6hsUAESnlGDpC+ymL2RZdzAJx9lXjU4hhaFcyhznuyyMJq
+ d3mehmLxsqDRvHDiqyD71w2Bnc838MVZw0pwBPdnb/h9Ocmp0lL/9hwSGWvy4az5lYVyoA9u
+ 14UIzh0YNGu6jr0isd/LJAbHXqwJwWWs3y8PTrpEp68V6lv+aXt5gR03lJEAvIR1Awp4JJ/e
+ Z5y12gQISp0X8xal9YhhDWER92YLYrO2b6Hc2S31lAupzfCw8lmZsP1PRz1GmF/KmDD9J9N/
+ b8IehhWQqrBQjMjn2K2XkvN75HnAMHKFYfHZR3ZHtK52ZP1crV7THtbtrnPXVDq+vO4QPmdC
+ +SEACgkQgTG1xCm8ZqC6BwgAl3kRh7oozpjpG8jpO8en5CBtTl3G+OpKJK9qbQyzdCsuJ0K1
+ qe1wZPZbP/Y+VtmqSgnExBzjStt9drjFBK8liPQZalp2sMlS9S7csSy6cMLF1auZubAZEqpm
+ tpXagbtgR12YOo57Reb83F5KhtwwiWdoTpXRTx/nM0cHtjjrImONhP8OzVMmjem/B68NY++/
+ qt0F5XTsP2zjd+tRLrFh3W4XEcLt1lhYmNmbJR/l6+vVbWAKDAtcbQ8SL2feqbPWV6VDyVKh
+ ya/EEq0xtf84qEB+4/+IjCdOzDD3kDZJo+JBkDnU3LBXw4WCw3QhOXY+VnhOn2EcREN7qdAK
+ w0j9Sw==
+Message-ID: <3b3dcc51-39d9-0f23-ab5a-6d0375593c79@gmail.com>
+Date:   Fri, 1 Mar 2019 19:19:50 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <2e39892d-d206-e87f-c802-d427c54277cf@gmail.com>
+In-Reply-To: <20190301122417.GB4851@khorivan>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Larry,
 
-Please disregard my last message.  The firmware is now installed and the
-rtw88 module is working with my wireless router.  The next hurdle
-appears to be setting the speed to 802.11ac as it is currently
-connecting as an 802.11n client.
 
-Sincerely,
-
-David R. Bergstein
-
-On 3/1/19 9:55 PM, David R. Bergstein wrote:
-> Larry,
->
-> Following up to your last reply, I blacklisted the r8822be module,
-> rebooted and was unable to bring up the wireless interface via rtw88. 
-> Below are some errors recorded in my system log:
->
->  
-> [  267.509818] rtw_pci 0000:3d:00.0: Direct firmware load for
-> rtw88/rtw8822b_fw.bin failed with error -2
-> [  267.509821] rtw_pci 0000:3d:00.0: failed to request firmware
-> [  267.511068] rtw_pci 0000:3d:00.0: mac power on failed
-> [  267.511072] rtw_pci 0000:3d:00.0: failed to power on mac
-> [  267.511073] rtw_pci 0000:3d:00.0: failed to setup chip efuse info
-> [  267.511075] rtw_pci 0000:3d:00.0: failed to setup chip information
-> [  267.512817] rtw_pci: probe of 0000:3d:00.0 failed with error -114
->
-> As directed, I used the rtwpci module to perform load/unload the rtw88
-> module before I saw the errors above.  Do I still need to install firmware?
->
-> Sincerely,
->
-> David R. Bergstein
->
-> On 3/1/19 8:46 PM, Larry Finger wrote:
->> On 3/1/19 4:26 PM, David R. Bergstein wrote:
->>> Larry,
->>>
->>> Thanks for the response and detailed instructions, which allowed me to
->>> build and install the rtw88 kernel module.  I cannot however seem to get
->>> my system to actually use the module.  Just to recap this is an HP Omen
->>> laptop with secure boot disabled.  Upon boot-up both the new rtw88 and
->>> old r8822be modules are loaded.  If I unload the r8822be module the wifi
->>> network connection gets terminated, even if I unload/reload the rtw88
->>> module.
->>>
->>> Is there something else I should be doing prior to invoking rtw88, e.g.,
->>> blacklisting the old module?
->> Yes, r8822be must be blacklisted. Use the lsmod command to see what
->> modules are actually loaded. You load/unload rtw88 using the rtwpci
->> module.
+On 3/1/2019 4:24 AM, Ivan Khoronzhuk wrote:
+> On Wed, Feb 27, 2019 at 08:09:44PM -0800, Florian Fainelli wrote:
 >>
->> Larry
 >>
+>> On 2/26/2019 10:45 AM, Ivan Khoronzhuk wrote:
+>>> Update vlan mc and uc addresses with VID tag while propagating
+>>> addresses to lower devices, do this only if address is not synced.
+>>> It allows at end driver level to distinguish addresses belonging
+>>> to vlan devices.
+>>>
+>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>>> ---
+>>
+>> [snip]
+>>
+>>>
+>>> +u16 vlan_dev_get_addr_vid(struct net_device *dev, const u8 *addr)
+>>
+>> Having some kernel doc comment here would also be nice.
+> 
+> yes can be: vlan_dev_get_addr_vid - get vlan id the address belongs to
+> 
+> 
+>>
+>>> +{
+>>> +    u16 vid = 0;
+>>> +
+>>> +    if (dev->vid_len != NET_8021Q_VID_TSIZE)
+>>> +        return vid;
+>>> +
+>>> +    vid = addr[dev->addr_len];
+>>> +    vid |= (addr[dev->addr_len + 1] & 0xf) << 8;
+>>
+>> This uses knowledge of the maximum VLAN ID is 4095, which is fine, might
+>> be a good idea to add a check on VID not exceeding the maximum VLAN ID
+>> number instead of doing a silent truncation?
+> 
+> and then return -1, not sure, just because it's 0 or directly set by vlan
+> layer and is verified anyway. But no harm to verify even it looks like
+> redundancy.
+
+I would have thought that there would be an existing helper function to
+put/get a VLAN identifier into/from two bytes but that is fine as-is.
+
+> 
+>>
+>> [snip]
+>>
+>>> +static void vlan_dev_align_addr_vid(struct net_device *vlan_dev)
+>>> +{
+>>> +    struct net_device *real_dev = vlan_dev_real_dev(vlan_dev);
+>>> +    struct netdev_hw_addr *ha;
+>>> +
+>>> +    if (!real_dev->vid_len)
+>>> +        return;
+>>
+>> Should not this check be moved to dev_{mc,uc}_sync? It does not seem to
+>> me like this would scale really well across different stacked devices
+>> (VLAN, bond, macvlan) as well as underlying drivers (cpsw, dsa, etc.).
+>> Or maybe the check should be if vlan_dev->vid_len > real_dev->vid_len ->
+>> error, right?
+> 
+> It shouldn't be part of netdev addr module, no any
+> vlan_dev_vlan_id(vlan_dev)
+> should be there.
+> 
+> It's scaled becouse bond/team ...etc, are ethernet devices and have IVDF
+> enabled while configuration. Address propagation always is from leafs to
+> real root device, every underneeth device knows nothing about above, so
+> check is only in one direction.
+> 
+
+OK, indeed stacked devices would lead to that, thanks for explaining!
+-- 
+Florian
