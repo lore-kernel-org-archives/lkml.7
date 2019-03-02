@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDB5C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D455BC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3D020836
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACEB720836
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfCBJFm (ORCPT
+        id S1727875AbfCBJFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 04:05:42 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4194 "EHLO huawei.com"
+        Sat, 2 Mar 2019 04:05:41 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58188 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725986AbfCBJFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 04:05:38 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BC0B78F137EA00654D29;
-        Sat,  2 Mar 2019 17:05:35 +0800 (CST)
+        id S1726734AbfCBJFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 04:05:34 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B22EB5339B2435EE9BE1;
+        Sat,  2 Mar 2019 17:05:30 +0800 (CST)
 Received: from vm100-107-113-134.huawei.com (100.107.113.134) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 2 Mar 2019 17:05:26 +0800
+ 14.3.408.0; Sat, 2 Mar 2019 17:05:22 +0800
 From:   Yu Chen <chenyu56@huawei.com>
 To:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -36,13 +36,13 @@ CC:     <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
         <xuyiping@hisilicon.com>, <xuyoujun4@huawei.com>,
         <yudongbin@hisilicon.com>, <zangleigang@hisilicon.com>,
         Yu Chen <chenyu56@huawei.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
         Binghui Wang <wangbinghui@hisilicon.com>
-Subject: [PATCH v3 06/12] usb: dwc3: Increase timeout for CmdAct cleared by device controller
-Date:   Sat, 2 Mar 2019 17:04:59 +0800
-Message-ID: <20190302090505.65542-7-chenyu56@huawei.com>
+Subject: [PATCH v3 02/12] dt-bindings: misc: Add bindings for HiSilicon usb hub and data role switch functionality on HiKey960
+Date:   Sat, 2 Mar 2019 17:04:55 +0800
+Message-ID: <20190302090505.65542-3-chenyu56@huawei.com>
 X-Mailer: git-send-email 2.15.0-rc2
 In-Reply-To: <20190302090505.65542-1-chenyu56@huawei.com>
 References: <20190302090505.65542-1-chenyu56@huawei.com>
@@ -55,32 +55,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It needs more time for the device controller to clear the CmdAct of
-DEPCMD on Hisilicon Kirin Soc.
+This patch adds binding documentation to support usb hub and usb
+data role switch of Hisilicon HiKey960 Board.
 
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: John Stultz <john.stultz@linaro.org>
 Cc: Binghui Wang <wangbinghui@hisilicon.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
- drivers/usb/dwc3/gadget.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v1:
+* Fix some format errors as suggested by Sergei.
+* Modify gpio description to use gpiod API.
+v2:
+* Remove information about Hikey.
+* Fix gpio description.
+* Remove device_type of endpoint.
+v3:
+* Remove property typec-vbus-enable-val.
+* Add description of pinctrl-names.
+* Add example for "hisilicon,gpio-hubv1"
+* Add flag in gpiod properties.
+---
+---
+ .../bindings/misc/hisilicon-hikey-usb.txt          | 52 ++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 6c9b76bcc2e1..84d701b37171 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -270,7 +270,7 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
- {
- 	const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
- 	struct dwc3		*dwc = dep->dwc;
--	u32			timeout = 1000;
-+	u32			timeout = 5000;
- 	u32			saved_config = 0;
- 	u32			reg;
- 
+diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+new file mode 100644
+index 000000000000..422e844df719
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+@@ -0,0 +1,52 @@
++Support usb hub and usb data role switch of Hisilicon HiKey960 Board.
++
++-----------------------------
++
++Required properties:
++- compatible: "hisilicon,gpio-hubv1","hisilicon,hikey960-usb"
++- typec-vbus-gpios: gpio to control the vbus of typeC port
++- otg-switch-gpios: gpio to switch DP & DM between the hub and typeC port
++- hub-vdd33-en-gpios: gpio to enable the power of hub
++- pinctrl-names: pin configuration state name ("default")
++- pinctrl-0: pinctrl config
++
++Example
++-----
++
++	hisi_hikey_usb: hisi_hikey_usb {
++		compatible = "hisilicon,hikey960-usb";
++		typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_HIGH>;
++		otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
++		hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usbhub5734_pmx_func>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			hikey_usb_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&dwc3_role_switch_notify>;
++			};
++		};
++	};
++
++	hisi_hikey_usb: hisi_hikey_usb {
++		compatible = "hisilicon,gpio-hubv1";
++		typec-vbus-gpios = <&gpio25 2 GPIO_ACTIVE_LOW>;
++		otg-switch-gpios = <&gpio25 6 GPIO_ACTIVE_HIGH>;
++		hub-vdd33-en-gpios = <&gpio5 6 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usbhub5734_pmx_func>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			hikey_usb_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&dwc3_role_switch_notify>;
++			};
++		};
++	};
 -- 
 2.15.0-rc2
 
