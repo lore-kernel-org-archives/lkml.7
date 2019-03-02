@@ -2,273 +2,175 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC5AC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47521C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9014220836
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1615020836
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfCBJpe (ORCPT
+        id S1726375AbfCBJzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 04:45:34 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:36780 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfCBJpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 04:45:33 -0500
-Received: from DGGEMA401-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 109D9DB1405800F36679;
-        Sat,  2 Mar 2019 17:45:30 +0800 (CST)
-Received: from DGGEMA424-HUB.china.huawei.com (10.1.198.157) by
- DGGEMA401-HUB.china.huawei.com (10.3.20.42) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Sat, 2 Mar 2019 17:45:29 +0800
-Received: from DGGEMA525-MBX.china.huawei.com ([169.254.6.135]) by
- dggema424-hub.china.huawei.com ([10.1.198.157]) with mapi id 14.03.0399.000;
- Sat, 2 Mar 2019 17:45:23 +0800
-From:   Shiwanglai <shiwanglai@hisilicon.com>
-To:     Leo Yan <leo.yan@linaro.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
-        Suzhuangluan <suzhuangluan@hisilicon.com>
-Subject: Re: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
-Thread-Topic: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
-Thread-Index: AdTQ23UGyEoKqPicQGKeKMQN9GH8Ng==
-Date:   Sat, 2 Mar 2019 09:45:22 +0000
-Message-ID: <6496F4728C09F6479CFF21A8E67D33D568F32660@dggema525-mbx.china.huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.151.64.239]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Sat, 2 Mar 2019 04:55:32 -0500
+Received: from mga14.intel.com ([192.55.52.115]:46221 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbfCBJzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 04:55:32 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2019 01:55:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,431,1544515200"; 
+   d="scan'208";a="119031766"
+Received: from chenyu-office.sh.intel.com ([10.239.158.163])
+  by orsmga007.jf.intel.com with ESMTP; 02 Mar 2019 01:55:29 -0800
+Date:   Sat, 2 Mar 2019 18:04:20 +0800
+From:   Yu Chen <yu.c.chen@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yu Chen <yu.chen.surf@gmail.com>
+Subject: Re: [PATCH 2/2][RFC v2] ACPI: Update cpuinfo.max after bootup if
+ necessary
+Message-ID: <20190302100420.GA7044@chenyu-office.sh.intel.com>
+References: <cover.1551375162.git.yu.c.chen@intel.com>
+ <bd3c5e04e882e5a4c977211a8d268440b36276a4.1551375162.git.yu.c.chen@intel.com>
+ <CAJZ5v0g4CGfAMH0pM-wWSt6pXZrw3ckqBbbUzNwjqScwRjrK3g@mail.gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0g4CGfAMH0pM-wWSt6pXZrw3ckqBbbUzNwjqScwRjrK3g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCi0tLS0t08q8/tStvP4tLS0tLQ0Kt6K8/sjLOiBMZW8gWWFuIFttYWlsdG86bGVvLnlhbkBs
-aW5hcm8ub3JnXSANCreiy83KsbzkOiAyMDE5xOoz1MIxyNUgMTU6MzMNCsrVvP7IyzogU2hpd2Fu
-Z2xhaSA8c2hpd2FuZ2xhaUBoaXNpbGljb24uY29tPg0Ks63LzTogcm9iaCtkdEBrZXJuZWwub3Jn
-OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgam9obi5zdHVsdHpAbGluYXJvLm9yZzsgeHV3ZWkgKE8p
-IDx4dXdlaTVAaHVhd2VpLmNvbT47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IGNvcmVzaWdodEBsaXN0cy5saW5hcm8ub3JnOyBTdXpodWFuZ2x1YW4gPHN1emh1YW5nbHVh
-bkBoaXNpbGljb24uY29tPg0K1vfM4jogUmU6IFtQQVRDSCB2Ml0gZHRzOiBhcm02NDogYWRkIENv
-cmVTaWdodCB0cmFjZSBzdXBwb3J0IGZvciBoaTM2NjANCg0KSGkgV2FuZ2xhaSwNCg0KT24gVGh1
-LCBGZWIgMjgsIDIwMTkgYXQgMDI6MzM6MjNQTSArMDgwMCwgV2FuZ2xhaSBTaGkgd3JvdGU6DQo+
-IFRoaXMgcGF0Y2ggYWRkcyBkZXZpY2V0cmVlIGVudHJpZXMgZm9yIHRoZSBDb3JlU2lnaHQgdHJh
-Y2UgIGNvbXBvbmVudHMgDQo+IG9uIGhpMzY2MC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFdhbmds
-YWkgU2hpIDxzaGl3YW5nbGFpQGhpc2lsaWNvbi5jb20+DQo+IC0tLQ0KPiAgLi4uL2FybTY0L2Jv
-b3QvZHRzL2hpc2lsaWNvbi9oaTM2NjAtY29yZXNpZ2h0LmR0c2kgfCA0MjkgKysrKysrKysrKysr
-KysrKysrKysrDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2hpc2lsaWNvbi9oaTM2NjAuZHRzaSAg
-ICAgICAgICB8ICAgMiArDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDQzMSBpbnNlcnRpb25zKCspDQo+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgDQo+IGFyY2gvYXJtNjQvYm9vdC9kdHMvaGlzaWxpY29uL2hp
-MzY2MC1jb3Jlc2lnaHQuZHRzaQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvaGlzaWxpY29uL2hpMzY2MC1jb3Jlc2lnaHQuZHRzaSANCj4gYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2hpc2lsaWNvbi9oaTM2NjAtY29yZXNpZ2h0LmR0c2kNCj4gbmV3IGZpbGUgbW9kZSAxMDA2
-NDQNCj4gaW5kZXggMDAwMDAwMC4uZDY1MWE4Yg0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvaGlzaWxpY29uL2hpMzY2MC1jb3Jlc2lnaHQuZHRzaQ0KPiBAQCAt
-MCwwICsxLDQyOSBAQA0KPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4g
-Kw0KPiArLyoNCj4gKyAqIGR0c2kgZm9yIEhpc2lsaWNvbiBIaTM2NjAgQ29yZXNpZ2h0DQo+ICsg
-Kg0KPiArICogQ29weXJpZ2h0IChDKSAyMDE2LTIwMTggSGlzaWxpY29uIEx0ZC4NCj4gKyAqDQo+
-ICsgKiBBdXRob3I6IFdhbmdsYWkgU2hpIDxzaGl3YW5nbGFpQGhpc2lsaWNvbi5jb20+DQo+ICsg
-Kg0KPiArICovDQo+ICsvIHsNCj4gKwlzb2Mgew0KPiArCQkvKiBBNTMgY2x1c3RlciBpbnRlcm5h
-bHMgKi8NCj4gKwkJZXRtQGVjYzQwMDAwIHsNCj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcmVz
-aWdodC1ldG00eCIsICJhcm0scHJpbWVjZWxsIjsNCj4gKwkJCXJlZyA9IDwwIDB4ZWNjNDAwMDAg
-MCAweDEwMDA+Ow0KPiArCQkJY2xvY2tzID0gPCZjcmdfY3RybCBISTM2NjBfUENMSz47DQo+ICsJ
-CQljbG9jay1uYW1lcyA9ICJhcGJfcGNsayI7DQo+ICsJCQljcHUgPSA8JmNwdTA+Ow0KPiArDQo+
-ICsJCQlvdXQtcG9ydHMgew0KPiArCQkJCXBvcnQgew0KPiArCQkJCQlldG0wX291dDogZW5kcG9p
-bnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0NCj4gKwkJCQkJCQk8JmNsdXN0ZXIwX2Z1
-bm5lbF9pbjA+Ow0KPiArCQkJCQl9Ow0KPiArCQkJCX07DQo+ICsJCQl9Ow0KPiArCQl9Ow0KPiAr
-DQo+ICsJCWV0bUBlY2Q0MDAwMCB7DQo+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3Jlc2lnaHQt
-ZXRtNHgiLCAiYXJtLHByaW1lY2VsbCI7DQo+ICsJCQlyZWcgPSA8MCAweGVjZDQwMDAwIDAgMHgx
-MDAwPjsNCj4gKwkJCWNsb2NrcyA9IDwmY3JnX2N0cmwgSEkzNjYwX1BDTEs+Ow0KPiArCQkJY2xv
-Y2stbmFtZXMgPSAiYXBiX3BjbGsiOw0KPiArCQkJY3B1ID0gPCZjcHUxPjsNCj4gKw0KPiArCQkJ
-b3V0LXBvcnRzIHsNCj4gKwkJCQlwb3J0IHsNCj4gKwkJCQkJZXRtMV9vdXQ6IGVuZHBvaW50IHsN
-Cj4gKwkJCQkJCXJlbW90ZS1lbmRwb2ludCA9DQo+ICsJCQkJCQkJPCZjbHVzdGVyMF9mdW5uZWxf
-aW4xPjsNCj4gKwkJCQkJfTsNCj4gKwkJCQl9Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4gKw0KPiAr
-CQlldG1AZWNlNDAwMDAgew0KPiArCQkJY29tcGF0aWJsZSA9ICJhcm0sY29yZXNpZ2h0LWV0bTR4
-IiwgImFybSxwcmltZWNlbGwiOw0KPiArCQkJcmVnID0gPDAgMHhlY2U0MDAwMCAwIDB4MTAwMD47
-DQo+ICsJCQljbG9ja3MgPSA8JmNyZ19jdHJsIEhJMzY2MF9QQ0xLPjsNCj4gKwkJCWNsb2NrLW5h
-bWVzID0gImFwYl9wY2xrIjsNCj4gKwkJCWNwdSA9IDwmY3B1Mj47DQo+ICsNCj4gKwkJCW91dC1w
-b3J0cyB7DQo+ICsJCQkJcG9ydCB7DQo+ICsJCQkJCWV0bTJfb3V0OiBlbmRwb2ludCB7DQo+ICsJ
-CQkJCQlyZW1vdGUtZW5kcG9pbnQgPQ0KPiArCQkJCQkJCTwmY2x1c3RlcjBfZnVubmVsX2luMj47
-DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKwkJCX07DQo+ICsJCX07DQo+ICsNCj4gKwkJZXRt
-QGVjZjQwMDAwIHsNCj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcmVzaWdodC1ldG00eCIsICJh
-cm0scHJpbWVjZWxsIjsNCj4gKwkJCXJlZyA9IDwwIDB4ZWNmNDAwMDAgMCAweDEwMDA+Ow0KPiAr
-CQkJY2xvY2tzID0gPCZjcmdfY3RybCBISTM2NjBfUENMSz47DQo+ICsJCQljbG9jay1uYW1lcyA9
-ICJhcGJfcGNsayI7DQo+ICsJCQljcHUgPSA8JmNwdTM+Ow0KPiArDQo+ICsJCQlvdXQtcG9ydHMg
-ew0KPiArCQkJCXBvcnQgew0KPiArCQkJCQlldG0zX291dDogZW5kcG9pbnQgew0KPiArCQkJCQkJ
-cmVtb3RlLWVuZHBvaW50ID0NCj4gKwkJCQkJCQk8JmNsdXN0ZXIwX2Z1bm5lbF9pbjM+Ow0KPiAr
-CQkJCQl9Ow0KPiArCQkJCX07DQo+ICsJCQl9Ow0KPiArCQl9Ow0KPiArDQo+ICsJCWZ1bm5lbEBl
-YzgwMTAwMCB7DQo+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3Jlc2lnaHQtZnVubmVsIiwgImFy
-bSxwcmltZWNlbGwiOw0KPiArCQkJcmVnID0gPDAgMHhlYzgwMTAwMCAwIDB4MTAwMD47DQo+ICsJ
-CQljbG9ja3MgPSA8JmNyZ19jdHJsIEhJMzY2MF9QQ0xLPjsNCj4gKwkJCWNsb2NrLW5hbWVzID0g
-ImFwYl9wY2xrIjsNCj4gKw0KPiArCQkJb3V0LXBvcnRzIHsNCj4gKwkJCQlwb3J0IHsNCj4gKwkJ
-CQkJY2x1c3RlcjBfZnVubmVsX291dDogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBv
-aW50ID0NCj4gKwkJCQkJCQk8JmNsdXN0ZXIwX2V0Zl9pbj47DQo+ICsJCQkJCX07DQo+ICsJCQkJ
-fTsNCj4gKwkJCX07DQo+ICsNCj4gKwkJCWluLXBvcnRzIHsNCj4gKwkJCQkjYWRkcmVzcy1jZWxs
-cyA9IDwxPjsNCj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gKw0KPiArCQkJCXBvcnRAMCB7
-DQo+ICsJCQkJCXJlZyA9IDwwPjsNCj4gKwkJCQkJY2x1c3RlcjBfZnVubmVsX2luMDogZW5kcG9p
-bnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZldG0wX291dD47DQo+ICsJCQkJCX07
-DQo+ICsJCQkJfTsNCj4gKw0KPiArCQkJCXBvcnRAMSB7DQo+ICsJCQkJCXJlZyA9IDwxPjsNCj4g
-KwkJCQkJY2x1c3RlcjBfZnVubmVsX2luMTogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZldG0xX291dD47DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKw0KPiArCQkJ
-CXBvcnRAMiB7DQo+ICsJCQkJCXJlZyA9IDwyPjsNCj4gKwkJCQkJY2x1c3RlcjBfZnVubmVsX2lu
-MjogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZldG0yX291dD47DQo+
-ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKw0KPiArCQkJCXBvcnRAMyB7DQo+ICsJCQkJCXJlZyA9
-IDwzPjsNCj4gKwkJCQkJY2x1c3RlcjBfZnVubmVsX2luMzogZW5kcG9pbnQgew0KPiArCQkJCQkJ
-cmVtb3RlLWVuZHBvaW50ID0gPCZldG0zX291dD47DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4g
-KwkJCX07DQo+ICsJCX07DQo+ICsNCj4gKwkJZXRmQGVjODAyMDAwIHsNCj4gKwkJCWNvbXBhdGli
-bGUgPSAiYXJtLGNvcmVzaWdodC10bWMiLCAiYXJtLHByaW1lY2VsbCI7DQo+ICsJCQlyZWcgPSA8
-MCAweGVjODAyMDAwIDAgMHgxMDAwPjsNCj4gKwkJCWNsb2NrcyA9IDwmY3JnX2N0cmwgSEkzNjYw
-X1BDTEs+Ow0KPiArCQkJY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiOw0KPiArDQo+ICsJCQlpbi1w
-b3J0cyB7DQo+ICsJCQkJcG9ydCB7DQo+ICsJCQkJCWNsdXN0ZXIwX2V0Zl9pbjogZW5kcG9pbnQg
-ew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0NCj4gKwkJCQkJCQk8JmNsdXN0ZXIwX2Z1bm5l
-bF9vdXQ+Ow0KPiArCQkJCQl9Ow0KPiArCQkJCX07DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQlvdXQt
-cG9ydHMgew0KPiArCQkJCXBvcnQgew0KPiArCQkJCQljbHVzdGVyMF9ldGZfb3V0OiBlbmRwb2lu
-dCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPQ0KPiArCQkJCQkJCTwmdG9wX2Z1bm5lbF9p
-bjA+Ow0KPiArCQkJCQl9Ow0KPiArCQkJCX07DQo+ICsJCQl9Ow0KPiArCQl9Ow0KPiArDQo+ICsJ
-CS8qIEE3MyBjbHVzdGVyIGludGVybmFscyAqLw0KPiArCQlldG1AZWQ0NDAwMDAgew0KPiArCQkJ
-Y29tcGF0aWJsZSA9ICJhcm0sY29yZXNpZ2h0LWV0bTR4IiwgImFybSxwcmltZWNlbGwiOw0KPiAr
-CQkJcmVnID0gPDAgMHhlZDQ0MDAwMCAwIDB4MTAwMD47DQo+ICsJCQljbG9ja3MgPSA8JmNyZ19j
-dHJsIEhJMzY2MF9QQ0xLPjsNCj4gKwkJCWNsb2NrLW5hbWVzID0gImFwYl9wY2xrIjsNCj4gKwkJ
-CWNwdSA9IDwmY3B1ND47DQo+ICsNCj4gKwkJCW91dC1wb3J0cyB7DQo+ICsJCQkJcG9ydCB7DQo+
-ICsJCQkJCWV0bTRfb3V0OiBlbmRwb2ludCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPQ0K
-PiArCQkJCQkJCTwmY2x1c3RlcjFfZnVubmVsX2luMD47DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsN
-Cj4gKwkJCX07DQo+ICsJCX07DQo+ICsNCj4gKwkJZXRtQGVkNTQwMDAwIHsNCj4gKwkJCWNvbXBh
-dGlibGUgPSAiYXJtLGNvcmVzaWdodC1ldG00eCIsICJhcm0scHJpbWVjZWxsIjsNCj4gKwkJCXJl
-ZyA9IDwwIDB4ZWQ1NDAwMDAgMCAweDEwMDA+Ow0KPiArCQkJY2xvY2tzID0gPCZjcmdfY3RybCBI
-STM2NjBfUENMSz47DQo+ICsJCQljbG9jay1uYW1lcyA9ICJhcGJfcGNsayI7DQo+ICsJCQljcHUg
-PSA8JmNwdTU+Ow0KPiArDQo+ICsJCQlvdXQtcG9ydHMgew0KPiArCQkJCXBvcnQgew0KPiArCQkJ
-CQlldG01X291dDogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0NCj4gKwkJ
-CQkJCQk8JmNsdXN0ZXIxX2Z1bm5lbF9pbjE+Ow0KPiArCQkJCQl9Ow0KPiArCQkJCX07DQo+ICsJ
-CQl9Ow0KPiArCQl9Ow0KPiArDQo+ICsJCWV0bUBlZDY0MDAwMCB7DQo+ICsJCQljb21wYXRpYmxl
-ID0gImFybSxjb3Jlc2lnaHQtZXRtNHgiLCAiYXJtLHByaW1lY2VsbCI7DQo+ICsJCQlyZWcgPSA8
-MCAweGVkNjQwMDAwIDAgMHgxMDAwPjsNCj4gKwkJCWNsb2NrcyA9IDwmY3JnX2N0cmwgSEkzNjYw
-X1BDTEs+Ow0KPiArCQkJY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiOw0KPiArCQkJY3B1ID0gPCZj
-cHU2PjsNCj4gKw0KPiArCQkJb3V0LXBvcnRzIHsNCj4gKwkJCQlwb3J0IHsNCj4gKwkJCQkJZXRt
-Nl9vdXQ6IGVuZHBvaW50IHsNCj4gKwkJCQkJCXJlbW90ZS1lbmRwb2ludCA9DQo+ICsJCQkJCQkJ
-PCZjbHVzdGVyMV9mdW5uZWxfaW4yPjsNCj4gKwkJCQkJfTsNCj4gKwkJCQl9Ow0KPiArCQkJfTsN
-Cj4gKwkJfTsNCj4gKw0KPiArCQlldG1AZWQ3NDAwMDAgew0KPiArCQkJY29tcGF0aWJsZSA9ICJh
-cm0sY29yZXNpZ2h0LWV0bTR4IiwgImFybSxwcmltZWNlbGwiOw0KPiArCQkJcmVnID0gPDAgMHhl
-ZDc0MDAwMCAwIDB4MTAwMD47DQo+ICsJCQljbG9ja3MgPSA8JmNyZ19jdHJsIEhJMzY2MF9QQ0xL
-PjsNCj4gKwkJCWNsb2NrLW5hbWVzID0gImFwYl9wY2xrIjsNCj4gKwkJCWNwdSA9IDwmY3B1Nz47
-DQo+ICsNCj4gKwkJCW91dC1wb3J0cyB7DQo+ICsJCQkJcG9ydCB7DQo+ICsJCQkJCWV0bTdfb3V0
-OiBlbmRwb2ludCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPQ0KPiArCQkJCQkJCTwmY2x1
-c3RlcjFfZnVubmVsX2luMz47DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKwkJCX07DQo+ICsJ
-CX07DQo+ICsNCj4gKwkJZnVubmVsQGVkMDAxMDAwIHsNCj4gKwkJCWNvbXBhdGlibGUgPSAiYXJt
-LGNvcmVzaWdodC1mdW5uZWwiLCAiYXJtLHByaW1lY2VsbCI7DQo+ICsJCQlyZWcgPSA8MCAweGVk
-MDAxMDAwIDAgMHgxMDAwPjsNCj4gKwkJCWNsb2NrcyA9IDwmY3JnX2N0cmwgSEkzNjYwX1BDTEs+
-Ow0KPiArCQkJY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsiOw0KPiArCQkJb3V0LXBvcnRzIHsNCj4g
-KwkJCQlwb3J0IHsNCj4gKwkJCQkJY2x1c3RlcjFfZnVubmVsX291dDogZW5kcG9pbnQgew0KPiAr
-CQkJCQkJcmVtb3RlLWVuZHBvaW50ID0NCj4gKwkJCQkJCQk8JmNsdXN0ZXIxX2V0Zl9pbj47DQo+
-ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKwkJCX07DQo+ICsNCj4gKwkJCWluLXBvcnRzIHsNCj4g
-KwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4g
-Kw0KPiArCQkJCXBvcnRAMCB7DQo+ICsJCQkJCXJlZyA9IDwwPjsNCj4gKwkJCQkJY2x1c3RlcjFf
-ZnVubmVsX2luMDogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZldG00
-X291dD47DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKw0KPiArCQkJCXBvcnRAMSB7DQo+ICsJ
-CQkJCXJlZyA9IDwxPjsNCj4gKwkJCQkJY2x1c3RlcjFfZnVubmVsX2luMTogZW5kcG9pbnQgew0K
-PiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZldG01X291dD47DQo+ICsJCQkJCX07DQo+ICsJ
-CQkJfTsNCj4gKw0KPiArCQkJCXBvcnRAMiB7DQo+ICsJCQkJCXJlZyA9IDwyPjsNCj4gKwkJCQkJ
-Y2x1c3RlcjFfZnVubmVsX2luMjogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50
-ID0gPCZldG02X291dD47DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKw0KPiArCQkJCXBvcnRA
-MyB7DQo+ICsJCQkJCXJlZyA9IDwzPjsNCj4gKwkJCQkJY2x1c3RlcjFfZnVubmVsX2luMzogZW5k
-cG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZldG03X291dD47DQo+ICsJCQkJ
-CX07DQo+ICsJCQkJfTsNCj4gKwkJCX07DQo+ICsJCX07DQo+ICsNCj4gKwkJZXRmQGVkMDAyMDAw
-IHsNCj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcmVzaWdodC10bWMiLCAiYXJtLHByaW1lY2Vs
-bCI7DQo+ICsJCQlyZWcgPSA8MCAweGVkMDAyMDAwIDAgMHgxMDAwPjsNCj4gKwkJCWNsb2NrcyA9
-IDwmY3JnX2N0cmwgSEkzNjYwX1BDTEs+Ow0KPiArCQkJY2xvY2stbmFtZXMgPSAiYXBiX3BjbGsi
-Ow0KPiArDQo+ICsJCQlpbi1wb3J0cyB7DQo+ICsJCQkJcG9ydCB7DQo+ICsJCQkJCWNsdXN0ZXIx
-X2V0Zl9pbjogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0NCj4gKwkJCQkJ
-CQk8JmNsdXN0ZXIxX2Z1bm5lbF9vdXQ+Ow0KPiArCQkJCQl9Ow0KPiArCQkJCX07DQo+ICsJCQl9
-Ow0KPiArDQo+ICsJCQlvdXQtcG9ydHMgew0KPiArCQkJCXBvcnQgew0KPiArCQkJCQljbHVzdGVy
-MV9ldGZfb3V0OiBlbmRwb2ludCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPQ0KPiArCQkJ
-CQkJCTwmdG9wX2Z1bm5lbF9pbjE+Ow0KPiArCQkJCQl9Ow0KPiArCQkJCX07DQo+ICsJCQl9Ow0K
-PiArCQl9Ow0KPiArDQo+ICsJCS8qIFRvcCBpbnRlcm5hbHMgKi8NCj4gKwkJZnVubmVsQGVjMDMx
-MDAwIHsNCj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcmVzaWdodC1mdW5uZWwiLCAiYXJtLHBy
-aW1lY2VsbCI7DQo+ICsJCQlyZWcgPSA8MCAweGVjMDMxMDAwIDAgMHgxMDAwPjsNCj4gKwkJCWNs
-b2NrcyA9IDwmY3JnX2N0cmwgSEkzNjYwX1BDTEs+Ow0KPiArCQkJY2xvY2stbmFtZXMgPSAiYXBi
-X3BjbGsiOw0KPiArDQo+ICsJCQlvdXQtcG9ydHMgew0KPiArCQkJCXBvcnQgew0KPiArCQkJCQl0
-b3BfZnVubmVsX291dDogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0NCj4g
-KwkJCQkJCQk8JnRvcF9ldGZfaW4+Ow0KPiArCQkJCQl9Ow0KPiArCQkJCX07DQo+ICsJCQl9Ow0K
-PiArDQo+ICsJCQlpbi1wb3J0cyB7DQo+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJ
-CQkJI3NpemUtY2VsbHMgPSA8MD47DQo+ICsNCj4gKwkJCQlwb3J0QDAgew0KPiArCQkJCQlyZWcg
-PSA8MD47DQo+ICsJCQkJCXRvcF9mdW5uZWxfaW4wOiBlbmRwb2ludCB7DQo+ICsJCQkJCQlyZW1v
-dGUtZW5kcG9pbnQgPQ0KPiArCQkJCQkJCTwmY2x1c3RlcjBfZXRmX291dD47DQo+ICsJCQkJCX07
-DQo+ICsJCQkJfTsNCj4gKw0KPiArCQkJCXBvcnRAMSB7DQo+ICsJCQkJCXJlZyA9IDwwPjsNCg0K
-SGVyZSBzaG91bGQgcy88MD4vPDE+OyBvdGhlcndpc2UgRFRDIHdpbGwgY29tcGxhaW4gd2Fybmlu
-ZyBmb3IgbWlzbWF0Y2hpbmcgYmV0d2VlbiAncG9ydEAxJyBhbmQgJ3JlZyA9IDwwPicuDQotLSBp
-ZiByZWcgc2V0IHRvIDEsIHRoZW4gdGhlcmUncyBubyBkYXRhIG91dHB1dCBmcm9tIGNsdXN0ZXIg
-MSB0byB0b3AuDQoNCj4gKwkJCQkJLyogdGhlcmUncyBhbiBpbnZpc2libGUgZnVubmVsIGNvbWJv
-ICovDQo+ICsJCQkJCS8qICAgYmV0d2VlbiBjbHVzdGVycyBhbmQgdG9wIGZ1bm5lbCAqLw0KLS0g
-Zm9yIHRoZSBhYm92ZSByZWFzb24uDQo+ICsJCQkJCXRvcF9mdW5uZWxfaW4xOiBlbmRwb2ludCB7
-DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPQ0KPiArCQkJCQkJCTwmY2x1c3RlcjFfZXRmX291
-dD47DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKwkJCX07DQo+ICsJCX07DQo+ICsNCj4gKwkJ
-ZXRmQGVjMDM2MDAwIHsNCj4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcmVzaWdodC10bWMiLCAi
-YXJtLHByaW1lY2VsbCI7DQo+ICsJCQlyZWcgPSA8MCAweGVjMDM2MDAwIDAgMHgxMDAwPjsNCj4g
-KwkJCWNsb2NrcyA9IDwmY3JnX2N0cmwgSEkzNjYwX1BDTEs+Ow0KPiArCQkJY2xvY2stbmFtZXMg
-PSAiYXBiX3BjbGsiOw0KPiArDQo+ICsJCQlpbi1wb3J0cyB7DQo+ICsJCQkJcG9ydCB7DQo+ICsJ
-CQkJCXRvcF9ldGZfaW46IGVuZHBvaW50IHsNCj4gKwkJCQkJCXJlbW90ZS1lbmRwb2ludCA9DQo+
-ICsJCQkJCQkJPCZ0b3BfZnVubmVsX291dD47DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKwkJ
-CX07DQo+ICsNCj4gKwkJCW91dC1wb3J0cyB7DQo+ICsJCQkJcG9ydCB7DQo+ICsJCQkJCXRvcF9l
-dGZfb3V0OiBlbmRwb2ludCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPQ0KPiArCQkJCQkJ
-CTwmcmVwbGljYXRvcl9pbj47DQo+ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKwkJCX07DQo+ICsJ
-CX07DQo+ICsNCj4gKwkJcmVwbGljYXRvciB7DQo+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3Jl
-c2lnaHQtcmVwbGljYXRvciI7DQo+ICsJCQljbG9ja3MgPSA8JmNyZ19jdHJsIEhJMzY2MF9QQ0xL
-PjsNCj4gKwkJCWNsb2NrLW5hbWVzID0gImFwYl9wY2xrIjsNCj4gKw0KPiArCQkJaW4tcG9ydHMg
-ew0KPiArCQkJCXBvcnQgew0KPiArCQkJCQlyZXBsaWNhdG9yX2luOiBlbmRwb2ludCB7DQo+ICsJ
-CQkJCQlyZW1vdGUtZW5kcG9pbnQgPQ0KPiArCQkJCQkJCTwmdG9wX2V0Zl9vdXQ+Ow0KPiArCQkJ
-CQl9Ow0KPiArCQkJCX07DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQlvdXQtcG9ydHMgew0KPiArCQkJ
-CSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiArDQo+
-ICsJCQkJcG9ydEAwIHsNCj4gKwkJCQkJcmVnID0gPDA+Ow0KPiArCQkJCQlyZXBsaWNhdG9yMF9v
-dXQwOiBlbmRwb2ludCB7DQo+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmV0cl9pbj47DQo+
-ICsJCQkJCX07DQo+ICsJCQkJfTsNCj4gKw0KPiArCQkJCXBvcnRAMSB7DQo+ICsJCQkJCXJlZyA9
-IDwxPjsNCj4gKwkJCQkJcmVwbGljYXRvcjBfb3V0MTogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVt
-b3RlLWVuZHBvaW50ID0gPCZ0cGl1X2luPjsNCj4gKwkJCQkJfTsNCj4gKwkJCQl9Ow0KPiArCQkJ
-fTsNCj4gKwkJfTsNCj4gKw0KPiArCQlldHJAZWMwMzMwMDAgew0KPiArCQkJY29tcGF0aWJsZSA9
-ICJhcm0sY29yZXNpZ2h0LXRtYyIsICJhcm0scHJpbWVjZWxsIjsNCj4gKwkJCXJlZyA9IDwwIDB4
-ZWMwMzMwMDAgMCAweDEwMDA+Ow0KPiArCQkJY2xvY2tzID0gPCZjcmdfY3RybCBISTM2NjBfUENM
-Sz47DQo+ICsJCQljbG9jay1uYW1lcyA9ICJhcGJfcGNsayI7DQo+ICsNCj4gKwkJCWluLXBvcnRz
-IHsNCj4gKwkJCQlwb3J0IHsNCj4gKwkJCQkJZXRyX2luOiBlbmRwb2ludCB7DQo+ICsJCQkJCQly
-ZW1vdGUtZW5kcG9pbnQgPQ0KPiArCQkJCQkJCTwmcmVwbGljYXRvcjBfb3V0MD47DQo+ICsJCQkJ
-CX07DQo+ICsJCQkJfTsNCj4gKwkJCX07DQo+ICsJCX07DQo+ICsNCj4gKwkJdHBpdUBlYzAzMjAw
-MCB7DQo+ICsJCQljb21wYXRpYmxlID0gImFybSxjb3Jlc2lnaHQtdHBpdSIsICJhcm0scHJpbWVj
-ZWxsIjsNCj4gKwkJCXJlZyA9IDwwIDB4ZWMwMzIwMDAgMCAweDEwMDA+Ow0KPiArCQkJY2xvY2tz
-ID0gPCZjcmdfY3RybCBISTM2NjBfUENMSz47DQo+ICsJCQljbG9jay1uYW1lcyA9ICJhcGJfcGNs
-ayI7DQo+ICsNCj4gKwkJCWluLXBvcnRzIHsNCj4gKwkJCQlwb3J0IHsNCj4gKwkJCQkJdHBpdV9p
-bjogZW5kcG9pbnQgew0KPiArCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0NCj4gKwkJCQkJCQk8JnJl
-cGxpY2F0b3IwX291dDE+Ow0KPiArCQkJCQl9Ow0KPiArCQkJCX07DQo+ICsJCQl9Ow0KPiArCQl9
-Ow0KPiArCX07DQo+ICt9Ow0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9oaXNp
-bGljb24vaGkzNjYwLmR0c2kgDQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9oaXNpbGljb24vaGkz
-NjYwLmR0c2kNCj4gaW5kZXggYTRhM2QwOC4uOGYyZmVkZSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9h
-cm02NC9ib290L2R0cy9oaXNpbGljb24vaGkzNjYwLmR0c2kNCj4gKysrIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9oaXNpbGljb24vaGkzNjYwLmR0c2kNCj4gQEAgLTEyNDYsMyArMTI0Niw1IEBADQo+
-ICAJCX07DQo+ICAJfTsNCj4gIH07DQo+ICsNCj4gKyNpbmNsdWRlICJoaTM2NjAtY29yZXNpZ2h0
-LmR0c2kiDQoNCkV4Y2VwdCB0aGUgdXAgbWVudGlvbmVkIGlzc3VlLCB0aGlzIHBhdGNoIGxvb2tz
-IGdvb2QgdG8gbWUuDQoNCkFmdGVyIGFwcGx5aW5nIHRoaXMgcGF0Y2ggdGhvdWdoIEkgY2FuIHNl
-ZSBDb3Jlc2lnaHQgZGV2aWNlcyB1bmRlciAvc3lzL2J1cy9jb3Jlc2lnaHQsIGJ1dCBJIGNhbm5v
-dCBjYXB0dXJlIEVUTSB0cmFjZSBkYXRhIGJ5IHVzaW5nIGJlbG93IHR3byBjb21tYW5kczoNCg0K
-ICBwZXJmIHJlY29yZCAtZSBjc19ldG0vQGVjMDM2MDAwLmV0Zi8gLS1wZXItdGhyZWFkIC4vbWFp
-bg0KICBwZXJmIHJlY29yZCAtZSBjc19ldG0vQGVjMDMzMDAwLmV0ci8gLS1wZXItdGhyZWFkIC4v
-bWFpbg0KDQpJIGNoZWNrZWQgcGVyZiByZXBvcnQgY29tbWFuZCB3aXRoICctRCcgb3B0aW9uLCBJ
-IGNhbiBzZWUgdGhlIHBlcmYuZGF0YSBmaWxlIGRvZXNuJ3QgY29udGFpbiBhbnkgdHJhY2UgZGF0
-YSBmcm9tIEVUTS4gIGNvdWxkIHlvdSB0ZWxsIG1lIHdoaWNoIHRlc3QgY29tbWFuZCB5b3UgYXJl
-IHVzaW5nPyAgQXQgbXkgc2lkZSBJIHdpbGwgZGVidWcgYSBiaXQgb24gbXkgSGlrZXk5NjAgYm9h
-cmQgYW5kIHdpbGwga2VlcCB5b3UgcG9zdGVkIGlmIGZpbmQgYW55dGhpbmcuDQotLSAgbXkgdGVz
-dCBjb21tYW5kDQotLSBlY2hvIDEgPiAvc3lzL2J1cy9jb3Jlc2lnaHQvZGV2aWNlcy9lYzAzMzAw
-MC5ldHINCi0tIGVjaG8gMSA+IC9zeXMvYnVzL2NvcmVzaWdodC9kZXZpY2VzL2VjYzQwMDAwLmV0
-bS9lbmFibGVfc291cmNlDQoNCg0KVGhhbmtzLA0KTGVvIFlhbg0K
+On Thu, Feb 28, 2019 at 11:56:48PM +0100, Rafael J. Wysocki wrote:
+> On Thu, Feb 28, 2019 at 6:59 PM Chen Yu <yu.c.chen@intel.com> wrote:
+> >
+> > On Dell Inc. XPS13 9333, the BIOS changes the value of
+> > MSR_IA32_MISC_ENABLE_TURBO_DISABLE at runtime (e.g., when
+> > the power source changes), the maximum frequency of the
+> > CPU is not updated accordingly. This is due to the policy's
+> > cpuinfo.max is not updated when _PPC notifier fires.
+> >
+> > Fix this problem by updating the policy's cpuinfo.max when
+> > necessary.
+> >
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=200759
+> > Reported-and-tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> > Originally-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> > ---
+> >  drivers/cpufreq/cpufreq.c      |  2 ++
+> >  drivers/cpufreq/intel_pstate.c | 15 +++++++++++++--
+> >  2 files changed, 15 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index e35a886e00bc..95e08816b512 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -2237,6 +2237,8 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
+> >
+> >         policy->min = new_policy->min;
+> >         policy->max = new_policy->max;
+> > +       policy->cpuinfo.max_freq = new_policy->cpuinfo.max_freq;
+> > +       policy->cpuinfo.min_freq = new_policy->cpuinfo.min_freq;
+> >         trace_cpu_frequency_limits(policy);
+> >
+> >         policy->cached_target_freq = UINT_MAX;
+> > diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> > index dd66decf2087..841c74f69f66 100644
+> > --- a/drivers/cpufreq/intel_pstate.c
+> > +++ b/drivers/cpufreq/intel_pstate.c
+> > @@ -2081,11 +2081,17 @@ static void intel_pstate_adjust_policy_max(struct cpufreq_policy *policy,
+> >
+> >  static int intel_pstate_verify_policy(struct cpufreq_policy *policy)
+> >  {
+> > +       int max_freq;
+> >         struct cpudata *cpu = all_cpu_data[policy->cpu];
+> >
+> >         update_turbo_state();
+> > +       max_freq = intel_pstate_get_max_freq(cpu);
+> > +
+> > +       if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
+> > +               policy->cpuinfo.max_freq = policy->max = max_freq;
+> 
+> Updating cpuinfo.max_freq here only causes the current limit to be
+> reported via sysfs, because intel_pstate doesn't actually use
+> cpuinfo.max_freq for anything and the core doesn't enforce it as a
+> limit.
+> 
+> All of the computations in the active mode in the driver actually use
+> the current limit anyway AFAICS.
+>
+Yes, but it looks like we should also take care of the cpuinfo.max
+if it changes, I searched the code, it seems that other components
+might use the policy's cpuinfo.max for some purpose. They might use
+cpufreq_cpu_get() to get the policy, and use the cpuinfo.max_freq
+directly, no matter what the mode intel_pstate is in. Such as kvm
+might use it as the max tsc khz if the tsc is not constant. And i915
+might consider the cpuinfo.max_freq to adjust the IA frequency on
+gen6 platforms. So changing cpuinfo.max might also impact not only
+cpufreq but also other components too.
+> > +
+> >         cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
+> > -                                    intel_pstate_get_max_freq(cpu));
+> > +                                    max_freq);
+> >
+> >         if (policy->policy != CPUFREQ_POLICY_POWERSAVE &&
+> >             policy->policy != CPUFREQ_POLICY_PERFORMANCE)
+> > @@ -2192,11 +2198,16 @@ static struct cpufreq_driver intel_pstate = {
+> >
+> >  static int intel_cpufreq_verify_policy(struct cpufreq_policy *policy)
+> >  {
+> > +       int max_freq;
+> >         struct cpudata *cpu = all_cpu_data[policy->cpu];
+> >
+> >         update_turbo_state();
+> > +       max_freq = intel_pstate_get_max_freq(cpu);
+> > +
+> > +       if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
+> > +               policy->cpuinfo.max_freq = policy->max = max_freq;
+> 
+> In this case (passive mode) updating cpuinfo.max_freq will actually
+> cause governors to use the new value in computations, so the P-state
+> selection will work somewhat differently, but that isn't really
+> consistent with what acpi-cpufreq does and with setting no_turbo in
+> the intel_pstate sysfs to 1 without this patch.
+> 
+> With acpi-cpufreq cpuinfo.max_freq is always the max frequency in the
+> _PSS table regardless of what the _PSS limit is.  Also setting
+> no_turbo to 1 in intel_pstate without this patch doesn't cause
+> cpuinfo.max_freq to change and I don't really think that it should.
+> 
+> I would be tempted to always initialize cpuinfo.max_freq to the max
+> turbo frequency, but there is a concern about systems in which
+> MSR_IA32_MISC_ENABLE_TURBO_DISABLE is never set on the fly (just in
+> the BIOS setup as it should be) and where it doesn't make sense to
+> consider turbo frequencies at all.
+Ok, maybe we can check the bit during boot(consider BIOS's setting)?
+> 
+> >         cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
+> > -                                    intel_pstate_get_max_freq(cpu));
+> > +                                    max_freq);
+> >
+> >         intel_pstate_adjust_policy_max(policy, cpu);
+> >
+> > --
+> 
+> It looks like I need to think about this a bit more.
+Ok, I'll test the patch you sent out.
+
+Thanks,
+Yu
