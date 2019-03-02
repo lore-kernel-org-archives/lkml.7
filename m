@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC160C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDB5C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E7620836
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3D020836
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbfCBJFp (ORCPT
+        id S1727925AbfCBJFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 04:05:45 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4196 "EHLO huawei.com"
+        Sat, 2 Mar 2019 04:05:42 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4194 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727721AbfCBJFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 04:05:40 -0500
+        id S1725986AbfCBJFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 04:05:38 -0500
 Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CC1CE67C0FBFF9400ED5;
+        by Forcepoint Email with ESMTP id BC0B78F137EA00654D29;
         Sat,  2 Mar 2019 17:05:35 +0800 (CST)
 Received: from vm100-107-113-134.huawei.com (100.107.113.134) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 2 Mar 2019 17:05:29 +0800
+ 14.3.408.0; Sat, 2 Mar 2019 17:05:26 +0800
 From:   Yu Chen <chenyu56@huawei.com>
 To:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -36,13 +36,13 @@ CC:     <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
         <xuyiping@hisilicon.com>, <xuyoujun4@huawei.com>,
         <yudongbin@hisilicon.com>, <zangleigang@hisilicon.com>,
         Yu Chen <chenyu56@huawei.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Andy Shevchenko" <andy.shevchenko@gmail.com>
-Subject: [PATCH v3 08/12] usb: roles: Add usb role switch notifier.
-Date:   Sat, 2 Mar 2019 17:05:01 +0800
-Message-ID: <20190302090505.65542-9-chenyu56@huawei.com>
+        Binghui Wang <wangbinghui@hisilicon.com>
+Subject: [PATCH v3 06/12] usb: dwc3: Increase timeout for CmdAct cleared by device controller
+Date:   Sat, 2 Mar 2019 17:04:59 +0800
+Message-ID: <20190302090505.65542-7-chenyu56@huawei.com>
 X-Mailer: git-send-email 2.15.0-rc2
 In-Reply-To: <20190302090505.65542-1-chenyu56@huawei.com>
 References: <20190302090505.65542-1-chenyu56@huawei.com>
@@ -55,136 +55,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds notifier for drivers want to be informed of the usb role switch.
+It needs more time for the device controller to clear the CmdAct of
+DEPCMD on Hisilicon Kirin Soc.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: John Stultz <john.stultz@linaro.org>
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 ---
- drivers/usb/roles/class.c | 20 +++++++++++++++++++-
- include/linux/usb/role.h  | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index f45d8df5cfb8..e2caaa665d6e 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -20,6 +20,7 @@ struct usb_role_switch {
- 	struct device dev;
- 	struct mutex lock; /* device lock*/
- 	enum usb_role role;
-+	struct blocking_notifier_head nh;
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 6c9b76bcc2e1..84d701b37171 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -270,7 +270,7 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
+ {
+ 	const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
+ 	struct dwc3		*dwc = dep->dwc;
+-	u32			timeout = 1000;
++	u32			timeout = 5000;
+ 	u32			saved_config = 0;
+ 	u32			reg;
  
- 	/* From descriptor */
- 	struct device *usb2_port;
-@@ -49,8 +50,10 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
- 	mutex_lock(&sw->lock);
- 
- 	ret = sw->set(sw->dev.parent, role);
--	if (!ret)
-+	if (!ret) {
- 		sw->role = role;
-+		blocking_notifier_call_chain(&sw->nh, role, NULL);
-+	}
- 
- 	mutex_unlock(&sw->lock);
- 
-@@ -58,6 +61,20 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
- }
- EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
- 
-+int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&sw->nh, nb);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
-+
-+int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&sw->nh, nb);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
-+
- /**
-  * usb_role_switch_get_role - Get the USB role for a switch
-  * @sw: USB role switch
-@@ -271,6 +288,7 @@ usb_role_switch_register(struct device *parent,
- 		return ERR_PTR(-ENOMEM);
- 
- 	mutex_init(&sw->lock);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&sw->nh);
- 
- 	sw->allow_userspace_control = desc->allow_userspace_control;
- 	sw->usb2_port = desc->usb2_port;
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index 9684a8734757..9e1ca663387a 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -41,6 +41,8 @@ struct usb_role_switch_desc {
- 	bool allow_userspace_control;
- };
- 
-+
-+#if IS_ENABLED(CONFIG_USB_ROLE_SWITCH)
- int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
- enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
- struct usb_role_switch *usb_role_switch_get(struct device *dev);
-@@ -50,5 +52,49 @@ struct usb_role_switch *
- usb_role_switch_register(struct device *parent,
- 			 const struct usb_role_switch_desc *desc);
- void usb_role_switch_unregister(struct usb_role_switch *sw);
-+int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb);
-+int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb);
-+#else
-+static inline int usb_role_switch_set_role(struct usb_role_switch *sw,
-+		enum usb_role role)
-+{
-+	return 0;
-+}
-+
-+static inline enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
-+{
-+	return USB_ROLE_NONE;
-+}
-+
-+static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
-+
-+static inline struct usb_role_switch *
-+usb_role_switch_register(struct device *parent,
-+			 const struct usb_role_switch_desc *desc)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void usb_role_switch_unregister(struct usb_role_switch *sw) { }
-+
-+static int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
-+
-+static int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
-+#endif
- 
- #endif /* __LINUX_USB_ROLE_H */
 -- 
 2.15.0-rc2
 
