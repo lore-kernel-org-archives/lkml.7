@@ -2,327 +2,142 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A43FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA67CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5D520857
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="kuZSFvLn"
+	by mail.kernel.org (Postfix) with ESMTP id C412920857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfCBOMo (ORCPT
+        id S1726498AbfCBOTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 09:12:44 -0500
-Received: from mail.z3ntu.xyz ([128.199.32.197]:35506 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbfCBOMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 09:12:44 -0500
-Received: from localhost.localdomain (80-110-118-127.cgn.dynamic.surfer.at [80.110.118.127])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id C9045C5055;
-        Sat,  2 Mar 2019 14:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1551535960; bh=mAWSP378iKsdM8BS0CNiAIaNIRv6NccSHHdX83lvaN4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=kuZSFvLnqj8GcQrfEX1k6v0eKl729HyXEgRVCv0rYJXX2X1xuqoocRA7clWTt7v9F
-         qsGS6qgnkKnbD/CBCYmlonbD4kCIqyY7jdFHFWAOpqzw3rglSoWnh6NnY4JAj2TrBw
-         AUNBU42j94iQPA1/mVAO4LAy/rOh5LtelJh+Rafc=
-From:   Luca Weiss <luca@z3ntu.xyz>
-Cc:     Luca Weiss <luca@z3ntu.xyz>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
-        Coly Li <colyli@suse.de>, Stephen Boyd <sboyd@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Aaron Wu <aaron.wu@analog.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
-        , TOUCHSCREEN)...)
-Subject: [PATCH 2/2] Input: add a driver for GPIO controllable vibrators
-Date:   Sat,  2 Mar 2019 15:11:31 +0100
-Message-Id: <20190302141132.21160-2-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190302141132.21160-1-luca@z3ntu.xyz>
-References: <20190302141132.21160-1-luca@z3ntu.xyz>
+        Sat, 2 Mar 2019 09:19:33 -0500
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:53002 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726113AbfCBOTd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 09:19:33 -0500
+Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x22EJGcc045326;
+        Sat, 2 Mar 2019 23:19:16 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp);
+ Sat, 02 Mar 2019 23:19:16 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp)
+Received: from [192.168.1.2] (119.104.232.153.ap.dti.ne.jp [153.232.104.119])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x22EJFQt045323
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sat, 2 Mar 2019 23:19:15 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: add HDMI sound node for
+ rk3328-rock64
+To:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190217173407.29189-1-katsuhiro@katsuster.net>
+ <20190217173407.29189-2-katsuhiro@katsuster.net>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <d42dd768-d6c1-098d-759f-e3576d0edcc2@katsuster.net>
+Date:   Sat, 2 Mar 2019 23:19:15 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190217173407.29189-2-katsuhiro@katsuster.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a simple driver for GPIO controllable vibrators.
-It will be used by the Fairphone 2.
+Ping...
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- drivers/input/misc/Kconfig      |  12 ++
- drivers/input/misc/Makefile     |   1 +
- drivers/input/misc/gpio-vibra.c | 214 ++++++++++++++++++++++++++++++++
- 3 files changed, 227 insertions(+)
- create mode 100644 drivers/input/misc/gpio-vibra.c
-
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index ca59a2be9bc5..77480268fef2 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -280,6 +280,18 @@ config INPUT_GPIO_DECODER
- 	 To compile this driver as a module, choose M here: the module
- 	 will be called gpio_decoder.
- 
-+config INPUT_GPIO_VIBRA
-+	tristate "GPIO vibrator support"
-+	depends on GPIOLIB || COMPILE_TEST
-+	select INPUT_FF_MEMLESS
-+	help
-+	  Say Y here to get support for GPIO based vibrator devices.
-+
-+	  If unsure, say N.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called gpio-vibra.
-+
- config INPUT_IXP4XX_BEEPER
- 	tristate "IXP4XX Beeper support"
- 	depends on ARCH_IXP4XX
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 9d0f9d1ff68f..79edbad44cf3 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
- obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
- obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
- obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
-+obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
- obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
- obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
- obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
-diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
-new file mode 100644
-index 000000000000..14f9534668c8
---- /dev/null
-+++ b/drivers/input/misc/gpio-vibra.c
-@@ -0,0 +1,214 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ *  GPIO vibrator driver
-+ *
-+ *  Copyright (C) 2019 Luca Weiss <luca@z3ntu.xyz>
-+ *
-+ *  Based on PWM vibrator driver:
-+ *  Copyright (C) 2017 Collabora Ltd.
-+ *
-+ *  Based on previous work from:
-+ *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
-+ *
-+ *  Based on PWM beeper driver:
-+ *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
-+ */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/input.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+
-+enum vibrator_state {
-+	VIBRATOR_OFF,
-+	VIBRATOR_ON
-+};
-+
-+struct gpio_vibrator {
-+	struct input_dev *input;
-+	struct gpio_desc *gpio;
-+	struct regulator *vcc;
-+
-+	struct work_struct play_work;
-+	enum vibrator_state state;
-+	bool vcc_on;
-+};
-+
-+static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
-+{
-+	struct device *pdev = vibrator->input->dev.parent;
-+	int err;
-+
-+	if (!vibrator->vcc_on) {
-+		err = regulator_enable(vibrator->vcc);
-+		if (err) {
-+			dev_err(pdev, "failed to enable regulator: %d", err);
-+			return err;
-+		}
-+		vibrator->vcc_on = true;
-+	}
-+
-+	gpiod_set_value(vibrator->gpio, 1);
-+
-+	return 0;
-+}
-+
-+static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
-+{
-+	gpiod_set_value(vibrator->gpio, 0);
-+
-+	if (vibrator->vcc_on) {
-+		regulator_disable(vibrator->vcc);
-+		vibrator->vcc_on = false;
-+	}
-+}
-+
-+static void gpio_vibrator_play_work(struct work_struct *work)
-+{
-+	struct gpio_vibrator *vibrator = container_of(work,
-+					struct gpio_vibrator, play_work);
-+
-+	if (vibrator->state == VIBRATOR_ON)
-+		gpio_vibrator_start(vibrator);
-+	else
-+		gpio_vibrator_stop(vibrator);
-+}
-+
-+static int gpio_vibrator_play_effect(struct input_dev *dev, void *data,
-+				    struct ff_effect *effect)
-+{
-+	struct gpio_vibrator *vibrator = input_get_drvdata(dev);
-+
-+	int level = effect->u.rumble.strong_magnitude;
-+
-+	if (!level)
-+		level = effect->u.rumble.weak_magnitude;
-+
-+	if (level)
-+		vibrator->state = VIBRATOR_ON;
-+	else
-+		vibrator->state = VIBRATOR_OFF;
-+
-+	schedule_work(&vibrator->play_work);
-+
-+	return 0;
-+}
-+
-+static void gpio_vibrator_close(struct input_dev *input)
-+{
-+	struct gpio_vibrator *vibrator = input_get_drvdata(input);
-+
-+	cancel_work_sync(&vibrator->play_work);
-+	gpio_vibrator_stop(vibrator);
-+}
-+
-+static int gpio_vibrator_probe(struct platform_device *pdev)
-+{
-+	struct gpio_vibrator *vibrator;
-+	int err;
-+
-+	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
-+	if (!vibrator)
-+		return -ENOMEM;
-+
-+	vibrator->input = devm_input_allocate_device(&pdev->dev);
-+	if (!vibrator->input)
-+		return -ENOMEM;
-+
-+	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-+	err = PTR_ERR_OR_ZERO(vibrator->vcc);
-+	if (err) {
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to request regulator: %d",
-+				err);
-+		return err;
-+	}
-+
-+	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
-+	err = PTR_ERR_OR_ZERO(vibrator->gpio);
-+	if (err) {
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to request main gpio: %d",
-+				err);
-+		return err;
-+	}
-+
-+	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
-+
-+	vibrator->input->name = "gpio-vibrator";
-+	vibrator->input->id.bustype = BUS_HOST;
-+	vibrator->input->dev.parent = &pdev->dev;
-+	vibrator->input->close = gpio_vibrator_close;
-+
-+	input_set_drvdata(vibrator->input, vibrator);
-+	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
-+
-+	err = input_ff_create_memless(vibrator->input, NULL,
-+				      gpio_vibrator_play_effect);
-+	if (err) {
-+		dev_err(&pdev->dev, "Couldn't create FF dev: %d", err);
-+		return err;
-+	}
-+
-+	err = input_register_device(vibrator->input);
-+	if (err) {
-+		dev_err(&pdev->dev, "Couldn't register input dev: %d", err);
-+		return err;
-+	}
-+
-+	platform_set_drvdata(pdev, vibrator);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
-+{
-+	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
-+
-+	cancel_work_sync(&vibrator->play_work);
-+	if (vibrator->state == VIBRATOR_ON)
-+		gpio_vibrator_stop(vibrator);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused gpio_vibrator_resume(struct device *dev)
-+{
-+	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
-+
-+	if (vibrator->state == VIBRATOR_ON)
-+		gpio_vibrator_start(vibrator);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(gpio_vibrator_pm_ops,
-+			 gpio_vibrator_suspend, gpio_vibrator_resume);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id gpio_vibra_dt_match_table[] = {
-+	{ .compatible = "gpio-vibrator" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
-+#endif
-+
-+static struct platform_driver gpio_vibrator_driver = {
-+	.probe	= gpio_vibrator_probe,
-+	.driver	= {
-+		.name	= "gpio-vibrator",
-+		.pm	= &gpio_vibrator_pm_ops,
-+		.of_match_table = of_match_ptr(gpio_vibra_dt_match_table),
-+	},
-+};
-+module_platform_driver(gpio_vibrator_driver);
-+
-+MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xy>");
-+MODULE_DESCRIPTION("GPIO vibrator driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:gpio-vibrator");
--- 
-2.21.0
+On 2019/02/18 2:34, Katsuhiro Suzuki wrote:
+> This patch adds HDMI sound (I2S0) node for rock64.
+> 
+> After apply this patch, UART2 will fail to allocate DMA resources
+> but UART driver can work fine without DMA.
+> 
+> This error is related to the DMAC of rk3328 (pl330 or compatible).
+> DMAC connected to 16 DMA sources. Each sources have ID number that is
+> called 'Req number' in rk3328 TRM. Currently total 7 sources has been
+> activated as follows:
+> 
+> | Req number | Source | Required  |
+> |            |        | channels  |
+> |------------+--------+-----------|
+> | 14, 15     | I2S1   | 2ch       |
+> |  6,  7     | UART2  | 2ch       |
+> |     10     | SPDIF  | 1ch       |
+> |  8,  9     | SPI0   | 2ch       |
+> |------------+--------+-----------|
+> |            | Total  | 7ch       |
+> 
+> HDMI audio needs to activate new source I2S0 (Req number 11 and 12).
+> I2S0 can work concurrently with other sources, but rk3328 DMAC can
+> use max 8 channels at same time. If I2S0 is simply activated by this
+> patch, required DMAC channels will be 9. So last one (UART2) cannot
+> allocate the DMA resources.
+> 
+> Virt-dma mechanism for pl0330 DMAC driver is needed to fix this
+> problem.
+> 
+> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> ---
+>   .../arm64/boot/dts/rockchip/rk3328-rock64.dts | 21 ++++++++++++++++++-
+>   1 file changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+> index 2157a528276b..bfc0930d245c 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+> @@ -68,7 +68,8 @@
+>   	sound {
+>   		compatible = "audio-graph-card";
+>   		label = "rockchip,rk3328";
+> -		dais = <&i2s1_p0
+> +		dais = <&i2s0_p0
+> +			&i2s1_p0
+>   			&spdif_p0>;
+>   	};
+>   
+> @@ -141,6 +142,12 @@
+>   
+>   &hdmi {
+>   	status = "okay";
+> +
+> +	port@0 {
+> +		hdmi_p0_0: endpoint {
+> +			remote-endpoint = <&i2s0_p0_0>;
+> +		};
+> +	};
+>   };
+>   
+>   &hdmiphy {
+> @@ -256,6 +263,18 @@
+>   	};
+>   };
+>   
+> +&i2s0 {
+> +	status = "okay";
+> +
+> +	i2s0_p0: port {
+> +		i2s0_p0_0: endpoint {
+> +			dai-format = "i2s";
+> +			mclk-fs = <256>;
+> +			remote-endpoint = <&hdmi_p0_0>;
+> +		};
+> +	};
+> +};
+> +
+>   &i2s1 {
+>   	status = "okay";
+>   
+> 
 
