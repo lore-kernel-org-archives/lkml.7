@@ -2,154 +2,324 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FD4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 12:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F10C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 12:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A183A2086D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 12:42:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="PrkfjzY0"
+	by mail.kernel.org (Postfix) with ESMTP id 2BFC820857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 12:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfCBMmB (ORCPT
+        id S1726541AbfCBMqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 07:42:01 -0500
-Received: from mail.z3ntu.xyz ([128.199.32.197]:34800 "EHLO mail.z3ntu.xyz"
+        Sat, 2 Mar 2019 07:46:53 -0500
+Received: from ozlabs.org ([203.11.71.1]:54757 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfCBMmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 07:42:01 -0500
-X-Greylist: delayed 376 seconds by postgrey-1.27 at vger.kernel.org; Sat, 02 Mar 2019 07:41:58 EST
-Received: from localhost.localdomain (80-110-118-127.cgn.dynamic.surfer.at [80.110.118.127])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 1C4ABC08C2;
-        Sat,  2 Mar 2019 12:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1551530141; bh=zMzZKQCx4TweeMHExedO0nYB7efi3gJK6D0yTMHGrgI=;
-        h=From:To:Cc:Subject:Date;
-        b=PrkfjzY09y/YNuJHnrRCFIKsUAc4p8cUDfZlC0+ufGvvpRD8DD5ttrl76DAkpdDPy
-         VerkGdhWq5jpoR7a/hB/56mL3ZZHVK7E7CN/EuOEKWHsUhaZlyNJeQBsn5Ru+pz0ML
-         9FDZY7pjnN7dx3veGR9TXsnoYwzuM6etqH5D04bQ=
-From:   Luca Weiss <luca@z3ntu.xyz>
-Cc:     Luca Weiss <luca@z3ntu.xyz>, Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm: Fix NULL pointer dereference
-Date:   Sat,  2 Mar 2019 13:35:29 +0100
-Message-Id: <20190302123530.27747-1-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.21.0
+        id S1726049AbfCBMqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 07:46:53 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44BQyr35Vvz9s4Y;
+        Sat,  2 Mar 2019 23:46:44 +1100 (AEDT)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Will Deacon <will.deacon@arm.com>, linux-arch@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH 12/20] powerpc/mmiowb: Hook up mmwiob() implementation to asm-generic code
+In-Reply-To: <20190301140348.25175-13-will.deacon@arm.com>
+References: <20190301140348.25175-1-will.deacon@arm.com> <20190301140348.25175-13-will.deacon@arm.com>
+Date:   Sat, 02 Mar 2019 23:46:41 +1100
+Message-ID: <874l8ljvf2.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[    3.707412] Unable to handle kernel NULL pointer dereference at virtual address 0000009c
-[    3.714511] pgd = (ptrval)
-[    3.722742] [0000009c] *pgd=00000000
-[    3.725238] Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-[    3.728968] Modules linked in:
-[    3.734265] CPU: 3 PID: 112 Comm: kworker/3:2 Tainted: G        W         5.0.0-rc7-00183-g06a1c31df9eb #4
-[    3.737142] Hardware name: Generic DT based system
-[    3.746778] Workqueue: events deferred_probe_work_func
-[    3.751542] PC is at msm_gem_map_vma+0x3c/0xac
-[    3.756669] LR is at msm_gem_get_and_pin_iova+0xd8/0x134
-[    3.761086] pc : [<c07d3b7c>]    lr : [<c07d14f8>]    psr: 60000013
-[    3.766560] sp : ee297be8  ip : ed9ab1c0  fp : ed93b800
-[    3.772546] r10: ee35e180  r9 : 00000000  r8 : ee297c80
-[    3.777752] r7 : 00000000  r6 : 7c100000  r5 : 00000000  r4 : ee35e180
-[    3.782968] r3 : 00000001  r2 : 00000003  r1 : ee35e180  r0 : 00000000
-[    3.789562] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-[    3.796079] Control: 10c5787d  Table: 2e3a806a  DAC: 00000051
-[    3.803282] Process kworker/3:2 (pid: 112, stack limit = 0x(ptrval))
-[    3.809006] Stack: (0xee297be8 to 0xee298000)
-[    3.815445] 7be0:                   00000000 c1108c48 eda8c000 00000003 eda8c0fc c1108c48
-[    3.819715] 7c00: eda8c000 00000003 eda8c0fc c07d14f8 00000001 c07d1100 7c100000 00000000
-[    3.827873] 7c20: eda8c000 bb7ffb78 00000000 eda8c000 00000000 00000000 c0c8b1d4 ee3bfa00
-[    3.836037] 7c40: ee3b9800 c07d1684 00000000 c1108c48 ee0d7810 ee3b9800 c0c8b1d4 c07d222c
-[    3.844193] 7c60: ee3bfd84 ee297c80 00000000 c0b1d5b0 ee3bfc40 c07dcfd8 ee3bfd84 ee297c80
-[    3.852357] 7c80: 0000006d ee3bfc40 ee0d7810 bb7ffb78 c0c8b1d4 00000000 ee3bfc40 c07ddb48
-[    3.860516] 7ca0: 00002004 c0eba384 ee3bfc40 c079eba0 ee3bd040 ee3b9800 00000001 ed93b800
-[    3.868673] 7cc0: ed9aa100 c07db7e8 ee3bf240 ed9a6500 00000001 ee3b9800 ee3bf2d4 c07a0a30
-[    3.876834] 7ce0: ed93b800 7d100000 c1108c48 ee0d7610 ee3b9800 ed93b800 c1108c48 00000000
-[    3.884991] 7d00: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    3.893151] 7d20: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 bb7ffb78
-[    3.901310] 7d40: c12113c4 ed93b800 ee3b9800 c1108c48 ee9eec10 00000000 ed93b800 7d100000
-[    3.909472] 7d60: eff7b000 c07cf748 7d100000 00000000 c0e9a350 c0b1d5b0 c12113c4 c0961e40
-[    3.917633] 7d80: c12113c4 40000113 eeff4bec c0ebe004 00000019 c0b1d230 ee9eeda8 60000113
-[    3.925791] 7da0: ee35d300 ee9eeda8 c07ce260 bb7ffb78 c07ce260 ee35d2c0 00000028 00000002
-[    3.933950] 7dc0: eeb76280 c118f884 ee0be640 c11c6128 c07ce260 c07ea4ac 00000000 c0962b48
-[    3.942108] 7de0: c118f868 00000001 c0ebbc98 ee35d2c0 00000000 eeb76280 00000000 c118f87c
-[    3.950270] 7e00: ee35d2c0 00000000 c11c63e0 c118f694 00000019 c07ea5d0 ee0d7810 00000000
-[    3.958430] 7e20: c118f694 00000000 00000000 c07f2b0c c120f55c ee0d7810 c120f560 00000000
-[    3.966590] 7e40: 00000000 c07f08c4 c07f0e8c ee0d7810 c11ba3d0 ee0d7810 c118f694 c07f0e8c
-[    3.974748] 7e60: c1108c48 00000001 c0ebc3cc c11c63f8 c11ba3d0 c07f0c08 00000001 c07f2f8c
-[    3.982908] 7e80: c118f694 00000000 ee297ed4 c07f0e8c c1108c48 00000001 c0ebc3cc c11c63f8
-[    3.991068] 7ea0: c11ba3d0 c07ee8a0 c11ba3d0 ee82686c ee0baf38 bb7ffb78 ee0d7810 ee0d7810
-[    3.999227] 7ec0: c1108c48 ee0d7844 c118faac c07f05b0 ee0d7810 ee0d7810 00000001 bb7ffb78
-[    4.007389] 7ee0: ee0d7810 ee0d7810 c118fd18 c118faac c11c63e0 c07ef7d0 ee0d7810 c118fa90
-[    4.015548] 7f00: c118fa90 c07efd68 c118fac8 ee27fe00 eefd9c80 eefdcd00 00000000 c118facc
-[    4.023708] 7f20: 00000000 c033c038 eefd9c80 eefd9c80 00000008 ee27fe00 ee27fe14 eefd9c80
-[    4.031866] 7f40: 00000008 c1103d00 eefd9c98 ee296000 eefd9c80 c033ce54 ee907eac c0b1d230
-[    4.040026] 7f60: ee907eac eea24440 ee285000 00000000 ee296000 ee27fe00 c033ce24 eea2445c
-[    4.048188] 7f80: ee907eac c0341db0 00000000 ee285000 c0341c8c 00000000 00000000 00000000
-[    4.056346] 7fa0: 00000000 00000000 00000000 c03010e8 00000000 00000000 00000000 00000000
-[    4.064505] 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    4.072665] 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-[    4.080828] [<c07d3b7c>] (msm_gem_map_vma) from [<c07d14f8>] (msm_gem_get_and_pin_iova+0xd8/0x134)
-[    4.088983] [<c07d14f8>] (msm_gem_get_and_pin_iova) from [<c07d1684>] (_msm_gem_kernel_new+0x38/0xac)
-[    4.097839] [<c07d1684>] (_msm_gem_kernel_new) from [<c07d222c>] (msm_gem_kernel_new+0x24/0x2c)
-[    4.107130] [<c07d222c>] (msm_gem_kernel_new) from [<c07dcfd8>] (dsi_tx_buf_alloc_6g+0x44/0x90)
-[    4.115631] [<c07dcfd8>] (dsi_tx_buf_alloc_6g) from [<c07ddb48>] (msm_dsi_host_modeset_init+0x80/0x104)
-[    4.124313] [<c07ddb48>] (msm_dsi_host_modeset_init) from [<c07db7e8>] (msm_dsi_modeset_init+0x34/0x1c0)
-[    4.133691] [<c07db7e8>] (msm_dsi_modeset_init) from [<c07a0a30>] (mdp5_kms_init+0x764/0x7e0)
-[    4.143409] [<c07a0a30>] (mdp5_kms_init) from [<c07cf748>] (msm_drm_bind+0x56c/0x740)
-[    4.151824] [<c07cf748>] (msm_drm_bind) from [<c07ea4ac>] (try_to_bring_up_master+0x238/0x2b4)
-[    4.159636] [<c07ea4ac>] (try_to_bring_up_master) from [<c07ea5d0>] (component_add+0xa8/0x170)
-[    4.168146] [<c07ea5d0>] (component_add) from [<c07f2b0c>] (platform_drv_probe+0x48/0x9c)
-[    4.176737] [<c07f2b0c>] (platform_drv_probe) from [<c07f08c4>] (really_probe+0x278/0x404)
-[    4.184981] [<c07f08c4>] (really_probe) from [<c07f0c08>] (driver_probe_device+0x78/0x1c0)
-[    4.193147] [<c07f0c08>] (driver_probe_device) from [<c07ee8a0>] (bus_for_each_drv+0x74/0xb8)
-[    4.201389] [<c07ee8a0>] (bus_for_each_drv) from [<c07f05b0>] (__device_attach+0xd0/0x164)
-[    4.209984] [<c07f05b0>] (__device_attach) from [<c07ef7d0>] (bus_probe_device+0x84/0x8c)
-[    4.218143] [<c07ef7d0>] (bus_probe_device) from [<c07efd68>] (deferred_probe_work_func+0x48/0xc4)
-[    4.226398] [<c07efd68>] (deferred_probe_work_func) from [<c033c038>] (process_one_work+0x204/0x574)
-[    4.235254] [<c033c038>] (process_one_work) from [<c033ce54>] (worker_thread+0x30/0x560)
-[    4.244534] [<c033ce54>] (worker_thread) from [<c0341db0>] (kthread+0x124/0x154)
-[    4.252606] [<c0341db0>] (kthread) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
-[    4.259966] Exception stack(0xee297fb0 to 0xee297ff8)
-[    4.266998] 7fa0:                                     00000000 00000000 00000000 00000000
-[    4.272143] 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    4.280297] 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    4.288451] Code: e5813080 1a000013 e3a03001 e5c4307c (e590009c)
-[    4.294933] ---[ end trace 18729cc2bca2b4b3 ]---
+Hi Will,
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- drivers/gpu/drm/msm/msm_gem_vma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Will Deacon <will.deacon@arm.com> writes:
+> In a bid to kill off explicit mmiowb() usage in driver code, hook up
+> the asm-generic mmiowb() tracking code but provide a definition of
+> arch_mmiowb_state() so that the tracking data can remain in the paca
+> as it does at present
+>
+> This replaces the existing (flawed) implementation.
+>
+> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> ---
+>  arch/powerpc/Kconfig                |  1 +
+>  arch/powerpc/include/asm/Kbuild     |  1 -
+>  arch/powerpc/include/asm/io.h       | 33 +++------------------------------
+>  arch/powerpc/include/asm/mmiowb.h   | 20 ++++++++++++++++++++
+>  arch/powerpc/include/asm/paca.h     |  6 +++++-
+>  arch/powerpc/include/asm/spinlock.h | 17 -----------------
+>  arch/powerpc/xmon/xmon.c            |  5 ++++-
+>  7 files changed, 33 insertions(+), 50 deletions(-)
+>  create mode 100644 arch/powerpc/include/asm/mmiowb.h
 
-diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
-index 49c04829cf34..fcf7a83f0e6f 100644
---- a/drivers/gpu/drm/msm/msm_gem_vma.c
-+++ b/drivers/gpu/drm/msm/msm_gem_vma.c
-@@ -85,7 +85,7 @@ msm_gem_map_vma(struct msm_gem_address_space *aspace,
- 
- 	vma->mapped = true;
- 
--	if (aspace->mmu)
-+	if (aspace && aspace->mmu)
- 		ret = aspace->mmu->funcs->map(aspace->mmu, vma->iova, sgt,
- 				size, prot);
- 
--- 
-2.21.0
+Thanks for fixing our bugs for us, I owe you some more beers :)
 
+I meant to reply to your previous series saying that we could just use
+more space in the paca, but you obviously worked that out yourself.
+
+I'll run this through our builders and do some boot tests but I looks
+good to me.
+
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+
+
+cheers
+
+
+
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 2890d36eb531..6979304475fd 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -134,6 +134,7 @@ config PPC
+>  	select ARCH_HAS_ELF_RANDOMIZE
+>  	select ARCH_HAS_FORTIFY_SOURCE
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+> +	select ARCH_HAS_MMIOWB			if PPC64
+>  	select ARCH_HAS_PHYS_TO_DMA
+>  	select ARCH_HAS_PMEM_API                if PPC64
+>  	select ARCH_HAS_PTE_SPECIAL
+> diff --git a/arch/powerpc/include/asm/Kbuild b/arch/powerpc/include/asm/Kbuild
+> index 57bd1f6660f4..77ff7fb24823 100644
+> --- a/arch/powerpc/include/asm/Kbuild
+> +++ b/arch/powerpc/include/asm/Kbuild
+> @@ -8,7 +8,6 @@ generic-y += irq_regs.h
+>  generic-y += irq_work.h
+>  generic-y += local64.h
+>  generic-y += mcs_spinlock.h
+> -generic-y += mmiowb.h
+>  generic-y += preempt.h
+>  generic-y += rwsem.h
+>  generic-y += vtime.h
+> diff --git a/arch/powerpc/include/asm/io.h b/arch/powerpc/include/asm/io.h
+> index 7f19fbd3ba55..828100476ba6 100644
+> --- a/arch/powerpc/include/asm/io.h
+> +++ b/arch/powerpc/include/asm/io.h
+> @@ -34,14 +34,11 @@ extern struct pci_dev *isa_bridge_pcidev;
+>  #include <asm/byteorder.h>
+>  #include <asm/synch.h>
+>  #include <asm/delay.h>
+> +#include <asm/mmiowb.h>
+>  #include <asm/mmu.h>
+>  #include <asm/ppc_asm.h>
+>  #include <asm/pgtable.h>
+>  
+> -#ifdef CONFIG_PPC64
+> -#include <asm/paca.h>
+> -#endif
+> -
+>  #define SIO_CONFIG_RA	0x398
+>  #define SIO_CONFIG_RD	0x399
+>  
+> @@ -107,12 +104,6 @@ extern bool isa_io_special;
+>   *
+>   */
+>  
+> -#ifdef CONFIG_PPC64
+> -#define IO_SET_SYNC_FLAG()	do { local_paca->io_sync = 1; } while(0)
+> -#else
+> -#define IO_SET_SYNC_FLAG()
+> -#endif
+> -
+>  #define DEF_MMIO_IN_X(name, size, insn)				\
+>  static inline u##size name(const volatile u##size __iomem *addr)	\
+>  {									\
+> @@ -127,7 +118,7 @@ static inline void name(volatile u##size __iomem *addr, u##size val)	\
+>  {									\
+>  	__asm__ __volatile__("sync;"#insn" %1,%y0"			\
+>  		: "=Z" (*addr) : "r" (val) : "memory");			\
+> -	IO_SET_SYNC_FLAG();						\
+> +	mmiowb_set_pending();						\
+>  }
+>  
+>  #define DEF_MMIO_IN_D(name, size, insn)				\
+> @@ -144,7 +135,7 @@ static inline void name(volatile u##size __iomem *addr, u##size val)	\
+>  {									\
+>  	__asm__ __volatile__("sync;"#insn"%U0%X0 %1,%0"			\
+>  		: "=m" (*addr) : "r" (val) : "memory");			\
+> -	IO_SET_SYNC_FLAG();						\
+> +	mmiowb_set_pending();						\
+>  }
+>  
+>  DEF_MMIO_IN_D(in_8,     8, lbz);
+> @@ -652,24 +643,6 @@ static inline void name at					\
+>  
+>  #include <asm-generic/iomap.h>
+>  
+> -#ifdef CONFIG_PPC32
+> -#define mmiowb()
+> -#else
+> -/*
+> - * Enforce synchronisation of stores vs. spin_unlock
+> - * (this does it explicitly, though our implementation of spin_unlock
+> - * does it implicitely too)
+> - */
+> -static inline void mmiowb(void)
+> -{
+> -	unsigned long tmp;
+> -
+> -	__asm__ __volatile__("sync; li %0,0; stb %0,%1(13)"
+> -	: "=&r" (tmp) : "i" (offsetof(struct paca_struct, io_sync))
+> -	: "memory");
+> -}
+> -#endif /* !CONFIG_PPC32 */
+> -
+>  static inline void iosync(void)
+>  {
+>          __asm__ __volatile__ ("sync" : : : "memory");
+> diff --git a/arch/powerpc/include/asm/mmiowb.h b/arch/powerpc/include/asm/mmiowb.h
+> new file mode 100644
+> index 000000000000..b10180613507
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/mmiowb.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_POWERPC_MMIOWB_H
+> +#define _ASM_POWERPC_MMIOWB_H
+> +
+> +#ifdef CONFIG_MMIOWB
+> +
+> +#include <linux/compiler.h>
+> +#include <asm/barrier.h>
+> +#include <asm/paca.h>
+> +
+> +#define arch_mmiowb_state()	(&local_paca->mmiowb_state)
+> +#define mmiowb()		mb()
+> +
+> +#else
+> +#define mmiowb()		do { } while (0)
+> +#endif /* CONFIG_MMIOWB */
+> +
+> +#include <asm-generic/mmiowb.h>
+> +
+> +#endif	/* _ASM_POWERPC_MMIOWB_H */
+> diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/paca.h
+> index e843bc5d1a0f..134e912d403f 100644
+> --- a/arch/powerpc/include/asm/paca.h
+> +++ b/arch/powerpc/include/asm/paca.h
+> @@ -34,6 +34,8 @@
+>  #include <asm/cpuidle.h>
+>  #include <asm/atomic.h>
+>  
+> +#include <asm-generic/mmiowb_types.h>
+> +
+>  register struct paca_struct *local_paca asm("r13");
+>  
+>  #if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
+> @@ -171,7 +173,6 @@ struct paca_struct {
+>  	u16 trap_save;			/* Used when bad stack is encountered */
+>  	u8 irq_soft_mask;		/* mask for irq soft masking */
+>  	u8 irq_happened;		/* irq happened while soft-disabled */
+> -	u8 io_sync;			/* writel() needs spin_unlock sync */
+>  	u8 irq_work_pending;		/* IRQ_WORK interrupt while soft-disable */
+>  	u8 nap_state_lost;		/* NV GPR values lost in power7_idle */
+>  #ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
+> @@ -264,6 +265,9 @@ struct paca_struct {
+>  #ifdef CONFIG_STACKPROTECTOR
+>  	unsigned long canary;
+>  #endif
+> +#ifdef CONFIG_MMIOWB
+> +	struct mmiowb_state mmiowb_state;
+> +#endif
+>  } ____cacheline_aligned;
+>  
+>  extern void copy_mm_to_paca(struct mm_struct *mm);
+> diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
+> index 685c72310f5d..15b39c407c4e 100644
+> --- a/arch/powerpc/include/asm/spinlock.h
+> +++ b/arch/powerpc/include/asm/spinlock.h
+> @@ -39,19 +39,6 @@
+>  #define LOCK_TOKEN	1
+>  #endif
+>  
+> -#if defined(CONFIG_PPC64) && defined(CONFIG_SMP)
+> -#define CLEAR_IO_SYNC	(get_paca()->io_sync = 0)
+> -#define SYNC_IO		do {						\
+> -				if (unlikely(get_paca()->io_sync)) {	\
+> -					mb();				\
+> -					get_paca()->io_sync = 0;	\
+> -				}					\
+> -			} while (0)
+> -#else
+> -#define CLEAR_IO_SYNC
+> -#define SYNC_IO
+> -#endif
+> -
+>  #ifdef CONFIG_PPC_PSERIES
+>  #define vcpu_is_preempted vcpu_is_preempted
+>  static inline bool vcpu_is_preempted(int cpu)
+> @@ -99,7 +86,6 @@ static inline unsigned long __arch_spin_trylock(arch_spinlock_t *lock)
+>  
+>  static inline int arch_spin_trylock(arch_spinlock_t *lock)
+>  {
+> -	CLEAR_IO_SYNC;
+>  	return __arch_spin_trylock(lock) == 0;
+>  }
+>  
+> @@ -130,7 +116,6 @@ extern void __rw_yield(arch_rwlock_t *lock);
+>  
+>  static inline void arch_spin_lock(arch_spinlock_t *lock)
+>  {
+> -	CLEAR_IO_SYNC;
+>  	while (1) {
+>  		if (likely(__arch_spin_trylock(lock) == 0))
+>  			break;
+> @@ -148,7 +133,6 @@ void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long flags)
+>  {
+>  	unsigned long flags_dis;
+>  
+> -	CLEAR_IO_SYNC;
+>  	while (1) {
+>  		if (likely(__arch_spin_trylock(lock) == 0))
+>  			break;
+> @@ -167,7 +151,6 @@ void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long flags)
+>  
+>  static inline void arch_spin_unlock(arch_spinlock_t *lock)
+>  {
+> -	SYNC_IO;
+>  	__asm__ __volatile__("# arch_spin_unlock\n\t"
+>  				PPC_RELEASE_BARRIER: : :"memory");
+>  	lock->slock = 0;
+> diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
+> index 757b8499aba2..de8e4693b176 100644
+> --- a/arch/powerpc/xmon/xmon.c
+> +++ b/arch/powerpc/xmon/xmon.c
+> @@ -2429,7 +2429,10 @@ static void dump_one_paca(int cpu)
+>  	DUMP(p, trap_save, "%#-*x");
+>  	DUMP(p, irq_soft_mask, "%#-*x");
+>  	DUMP(p, irq_happened, "%#-*x");
+> -	DUMP(p, io_sync, "%#-*x");
+> +#ifdef CONFIG_MMIOWB
+> +	DUMP(p, mmiowb_state.nesting_count, "%#-*x");
+> +	DUMP(p, mmiowb_state.mmiowb_pending, "%#-*x");
+> +#endif
+>  	DUMP(p, irq_work_pending, "%#-*x");
+>  	DUMP(p, nap_state_lost, "%#-*x");
+>  	DUMP(p, sprg_vdso, "%#-*llx");
+> -- 
+> 2.11.0
