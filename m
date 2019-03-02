@@ -2,136 +2,100 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2A8C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F166C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 05:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C0B20857
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E861D20857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 05:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H54t1Lwp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lxtcKuD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfCBEj3 (ORCPT
+        id S1727354AbfCBFUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 23:39:29 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46239 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfCBEj3 (ORCPT
+        Sat, 2 Mar 2019 00:20:31 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9806 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725300AbfCBFUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 23:39:29 -0500
-Received: by mail-pl1-f196.google.com with SMTP id c17so9263181plz.13
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 20:39:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=T80MdXzCnVwzBeJXMQTkL4J5G0aH3MXHjAFEpqlA0WA=;
-        b=H54t1LwpYL9KnRhB0RSkACShPDrChkkfBpcCaNyX8vbf/4K1S8jijCEuv5s9YRWUzf
-         IQfvZ5krjRlj8Rq2oNvTgneiBXMPVs25FPE3SWCoDewQ5uPMgCa1KdmdjKd1A+b0HuYW
-         b84nrR/0hqbAO0WaKor8odL6NOOJbwfUSbrIlgyVF7GZPm5gvHCUc7MysgXpAblBzbD4
-         H9dVCrvRfvxO5h+cnvrnW0jhXAYo457TNOL/m/9c3Lk7RSe396f4pj/1VvDRhEPWs3ao
-         fcR476QUi6NVL5SAH72apw0w6maFPeOpjHRXh8/6cLrPQWt8a5q2LNaSLlsHov0ToFeK
-         APZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=T80MdXzCnVwzBeJXMQTkL4J5G0aH3MXHjAFEpqlA0WA=;
-        b=Cv2v9d4HAD4FhVOENBrMQkgjy6im9S/Dkj0XtTfgWd546zYE77VF8/BRD0jzlhp4oq
-         ZZhsdfxb6pWiNviVzEXfybUIUwLMJCodUX9mJlKt2nBwbWB1YBn9/Odh4IahP0CIn46k
-         aeWlA/RSpt/4qu6QhlvfJbNF3N8wLQUAavVwp9Hly84HiyQ3iubC6EkSX2s9rdQvbw20
-         AWfGUzcb4RTbuWWWbeZCPVktVFFkPecgaUwiFz/0dnQ3AhqqAxkvqJTSlNi4gqxSP/Ff
-         AVT/cMgUcqbHybW7XRfFEATaGQRer845E4WQrcASUO83mf9fMI2PTGph/BDMyKwoWSGi
-         syTw==
-X-Gm-Message-State: APjAAAU/cgf9FITAGEs/QfyznuUtrDolSzMu9ws2Zz1oeDBj2gqNyM4r
-        e4A4YBNbyeWIpIQIOQzxLOE=
-X-Google-Smtp-Source: APXvYqxrbuCoMsX8jDfR607E+AkSPdih1iVDlTkR+/4MYXNh/xAM6MP7Wqzc9csPX45GlxJm4H/Zcw==
-X-Received: by 2002:a17:902:b709:: with SMTP id d9mr9235818pls.83.1551501568725;
-        Fri, 01 Mar 2019 20:39:28 -0800 (PST)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id a24sm29102508pfo.160.2019.03.01.20.39.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 20:39:27 -0800 (PST)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     vbabka@suse.cz, mhocko@suse.com, jrdr.linux@gmail.com
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, shaoyafang@didiglobal.com,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH] mm: compaction: some tracepoints should be defined only when CONFIG_COMPACTION is set
-Date:   Sat,  2 Mar 2019 12:38:58 +0800
-Message-Id: <1551501538-4092-2-git-send-email-laoar.shao@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1551501538-4092-1-git-send-email-laoar.shao@gmail.com>
-References: <1551501538-4092-1-git-send-email-laoar.shao@gmail.com>
+        Sat, 2 Mar 2019 00:20:31 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c7a12a70000>; Fri, 01 Mar 2019 21:20:39 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 01 Mar 2019 21:20:30 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 01 Mar 2019 21:20:30 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 Mar
+ 2019 05:20:30 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 2 Mar 2019 05:20:30 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.172.134]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5c7a129b0001>; Fri, 01 Mar 2019 21:20:29 -0800
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <riteshh@codeaurora.org>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <anrao@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V1 01/11] mmc: tegra: fix ddr signaling for non-ddr modes
+Date:   Fri, 1 Mar 2019 21:20:15 -0800
+Message-ID: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1551504039; bh=Qe2T48QJX1FMDt69wX/5uHHEUnqPGEOo62jpymdGE50=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=lxtcKuD+qW5/YBbhFQsOJCjhgJ5hQLM3klmDJR0v1JK69DAZQMJmJhBn0LtZ7X/3k
+         14wtgBydG+RPtAtxPRmdBZmW2LNEAyMjuxR7/ruiSsTvjdtKi0oTT5hGZSaoEWFo/r
+         jMYmqj//fEEPYDELTq74RHi94V78nkG2vgypOGRprA1rNqmZ4N+Ya5Q7u4Qqi5bsag
+         HnRsKtnJA3agieKtksQcwpJ3pm5MLab/ElebnAa+xVeIIy7H/T9TqI72cgGQmiOBkD
+         GYiUmK+SmdnZ+cC1xfMvAknFuRqA2/oZcDpmAHma/oJVn9jb1ue6w8EruetyMVq3Io
+         EupwgF+PDJkxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only mm_compaction_isolate_{free, migrate}pages may be used when
-CONFIG_COMPACTION is not set.
-All others are used only when CONFIG_COMPACTION is set.
+ddr_signaling is set to true for DDR50 and DDR52 modes but is
+not set back to false for other modes. This programs incorrect
+host clock when mode change happens from DDR52/DDR50 to other
+SDR or HS modes like incase of mmc_retune where it switches
+from HS400 to HS DDR and then from HS DDR to HS mode and then
+to HS200.
 
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+This patch fixes the ddr_signaling to set properly for non DDR
+modes.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- include/trace/events/compaction.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/mmc/host/sdhci-tegra.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/trace/events/compaction.h b/include/trace/events/compaction.h
-index 6074eff..3e42078 100644
---- a/include/trace/events/compaction.h
-+++ b/include/trace/events/compaction.h
-@@ -64,6 +64,7 @@
- 	TP_ARGS(start_pfn, end_pfn, nr_scanned, nr_taken)
- );
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 32e62904c0d3..46086dd43bfb 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -779,6 +779,7 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
+ 	bool set_dqs_trim = false;
+ 	bool do_hs400_dll_cal = false;
  
-+#ifdef CONFIG_COMPACTION
- TRACE_EVENT(mm_compaction_migratepages,
- 
- 	TP_PROTO(unsigned long nr_all,
-@@ -132,7 +133,6 @@
- 		__entry->sync ? "sync" : "async")
- );
- 
--#ifdef CONFIG_COMPACTION
- TRACE_EVENT(mm_compaction_end,
- 	TP_PROTO(unsigned long zone_start, unsigned long migrate_pfn,
- 		unsigned long free_pfn, unsigned long zone_end, bool sync,
-@@ -166,7 +166,6 @@
- 		__entry->sync ? "sync" : "async",
- 		__print_symbolic(__entry->status, COMPACTION_STATUS))
- );
--#endif
- 
- TRACE_EVENT(mm_compaction_try_to_compact_pages,
- 
-@@ -195,7 +194,6 @@
- 		__entry->prio)
- );
- 
--#ifdef CONFIG_COMPACTION
- DECLARE_EVENT_CLASS(mm_compaction_suitable_template,
- 
- 	TP_PROTO(struct zone *zone,
-@@ -296,7 +294,6 @@
- 
- 	TP_ARGS(zone, order)
- );
--#endif
- 
- TRACE_EVENT(mm_compaction_kcompactd_sleep,
- 
-@@ -352,6 +349,7 @@
- 
- 	TP_ARGS(nid, order, classzone_idx)
- );
-+#endif
- 
- #endif /* _TRACE_COMPACTION_H */
- 
++	tegra_host->ddr_signaling = false;
+ 	switch (timing) {
+ 	case MMC_TIMING_UHS_SDR50:
+ 	case MMC_TIMING_UHS_SDR104:
 -- 
-1.8.3.1
+2.7.4
 
