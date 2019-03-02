@@ -2,98 +2,79 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A98FC00319
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 22:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4317C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 22:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14BB2086D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 22:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACFCF20863
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 22:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfCBWQM (ORCPT
+        id S1726952AbfCBWRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 17:16:12 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37762 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfCBWQL (ORCPT
+        Sat, 2 Mar 2019 17:17:05 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:38779 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfCBWRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 17:16:11 -0500
-Received: by mail-qk1-f195.google.com with SMTP id m9so860104qkl.4
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 14:16:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bR0p/R7by6RvefIldSpKSAx2xSqpBquQGgzDi4xf7FE=;
-        b=IeonzNhr42JL5T7p5QPPWcZkCapaxM4/hXoisiixst/adNPuCufzf4EpbK6w/e8MxJ
-         24iPq5sitNRB7IIpxL98i2xJaqE+WSvyMk8T+UfJvPmuFG3LsnFGtrcgmrM+iT3azS9P
-         RGt1zL7fJQXmA7G7rhLcuLtg/8iXlUwkD1iZH+6WVRPCUMrf5LQejggCyp8TrudKPwOD
-         UKfdsPnfymWdE1JDGSGIG7BNRKRZSde45qpJ1tA+gwhHzMG0wHO6R8AHINp3E+uYC69x
-         lormCIOiU7YnnsaRxEFt3g6Vn6CPLF0OxwGoySmiXP+6n2TIF8jM029LpV+vg7E5CHHK
-         eskQ==
-X-Gm-Message-State: APjAAAW0ynJSunReM3Ttn+gK4iBHE4Q0QhIlhC1QOldU/rKwPC2m3GGX
-        x+vIsn7cMbTKZNAOhTCB2EwDukrvVyIe4fAtyTo=
-X-Google-Smtp-Source: APXvYqwUqUX/NmZOaq4VfwXrxuZ+efNU5lDfaBzWIhxiqBkSa4Jb2/h+AluvxZWZF+YoekmtOSc+s2L7VTvmqCJ+HA4=
-X-Received: by 2002:a37:7cf:: with SMTP id 198mr8882575qkh.173.1551564970578;
- Sat, 02 Mar 2019 14:16:10 -0800 (PST)
+        Sat, 2 Mar 2019 17:17:04 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1h0CwF-0006pf-87; Sat, 02 Mar 2019 22:16:59 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][drm-next] drm/amdgpu: fix missing assignment of error return code to variable ret
+Date:   Sat,  2 Mar 2019 22:16:58 +0000
+Message-Id: <20190302221658.7536-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190212180441.15340-1-keescook@chromium.org> <20190212180441.15340-2-keescook@chromium.org>
- <CAK8P3a2xC3OVckPnweSjor3AH5LpSzichKxAjkAcgXDtCf0QmQ@mail.gmail.com>
- <CAKv+Gu_+GZ8Ut0nN+za+V48Eo6O27P_go3Dk1rDe1Wederad1Q@mail.gmail.com> <CAGXu5jLwEh-_v_aVm35hSqbX3QzdFOy_AwEa4mmKM8JmWtiKGA@mail.gmail.com>
-In-Reply-To: <CAGXu5jLwEh-_v_aVm35hSqbX3QzdFOy_AwEa4mmKM8JmWtiKGA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 2 Mar 2019 23:15:53 +0100
-Message-ID: <CAK8P3a3r-VV=xwuUgC5kMoNsOymjzSoZ4h-ks_p7AzNDfPa4oA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gcc-plugins: structleak: Generalize to all variable types
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 2, 2019 at 4:43 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Sat, Mar 2, 2019 at 1:05 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Thu, 28 Feb 2019 at 21:27, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > I get similar results with asan-stack=1 but without your plugin, only
-> > > the combination of the two has the explosive stack size growth.
->
-> I can look more closely, but I'm not sure it's entirely worth it:
-> these two may not make sense to build at the same time. (e.g. the
-> use-after-scope config was disallowed to work with this plugin.)
+From: Colin Ian King <colin.king@canonical.com>
 
-Well, I still want to make sure all 'randconfig' builds complete without
-warnings, and without having to turn off the otherwise useful
-stack overflow warnings.
+An earlier commit replaced ttm_bo_wait with amdgpu_bo_sync_wait and
+removed the error return assignment to variable ret. Fix this by adding
+the assignment back. Also break line to clean up checkpatch overly
+long line warning.
 
-One thing I noticed is that your patch removes the 'depends on
-!COMPILE_TEST' check for GCC_PLUGIN_STRUCTLEAK_BYREF_ALL,
-so if we add that back in, it would at least take care of the
-allmodconfig and randconfig cases.
+Detected by CoverityScan, CID#1477327 ("Logically dead code")
 
-> > > I can help analyze this further, but maybe you can have a look first,
-> > > there might be something obvious when you read the input to the
-> > > plugin.
-> > >
-> >
-> > Is this before or after use-after-scope was disabled entirely?
->
-> I was wondering the same thing, but I assumed it didn't matter: it
-> wasn't possible to use both before it was entirely disabled.
+Fixes: c60cd590cb7d ("drm/amdgpu: Replace ttm_bo_wait with amdgpu_bo_sync_wait")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Right. I already had the use-after-scope stuff disabled for
-build testing, using the same 'depends on !COMPILE_TEST'
-check, so one more reason it did not make a difference.
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+index 1921dec3df7a..92993baac91a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+@@ -906,7 +906,8 @@ static int init_kfd_vm(struct amdgpu_vm *vm, void **process_info,
+ 		pr_err("validate_pt_pd_bos() failed\n");
+ 		goto validate_pd_fail;
+ 	}
+-	amdgpu_bo_sync_wait(vm->root.base.bo, AMDGPU_FENCE_OWNER_KFD, false);
++	ret = amdgpu_bo_sync_wait(vm->root.base.bo,
++				  AMDGPU_FENCE_OWNER_KFD, false);
+ 	if (ret)
+ 		goto wait_pd_fail;
+ 	amdgpu_bo_fence(vm->root.base.bo,
+-- 
+2.20.1
 
-      Arnd
