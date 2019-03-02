@@ -2,104 +2,121 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDD4C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 15:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A98C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 15:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D7E20857
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 15:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE93820857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 15:47:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FT7xEuaa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYF8RWQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfCBPnn (ORCPT
+        id S1726587AbfCBPrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 10:43:43 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:43928 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfCBPnn (ORCPT
+        Sat, 2 Mar 2019 10:47:37 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42221 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbfCBPrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 10:43:43 -0500
-Received: by mail-ua1-f65.google.com with SMTP id g1so658180uae.10
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 07:43:42 -0800 (PST)
+        Sat, 2 Mar 2019 10:47:36 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b2so440448pgl.9;
+        Sat, 02 Mar 2019 07:47:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nbJjxwxOlfJ3iaGGg9xeY6Ddwu/l4z5tJPWN/qYSwE0=;
-        b=FT7xEuaa1OFYuO9BfHNTFSoK544uvygXdgTReUnuvoa+53+RkUd5s0BYLAJ5OK6vhE
-         PNZEFU01htCD3GlKY7q/u5WBNGk7Qh5MaYYg8ZdzE8zK3DW9UXFsUpYODY6C8ur71PvG
-         WKPkljS0MBvWeW343LmuGB7+fA+P8gKBGuWyM=
+        bh=H5x6yUPDSEfuUmzgNfhpIBJ31W2TdYRTPk6RCnWC0aM=;
+        b=XYF8RWQABgPdoz7XTuxY4a8IidQSfdBQrw2Kf1+u8jrVLe/3GIcWxUmE1RNo9fgzP0
+         nMym/jw6nHj8Phi5D0bHuLFxOJ5JOqM6f7tq2kGv6BCTB2IoW0lofR89qmw3rmECvEnu
+         JNc+/YLARV9ypHS98IpD3E5wuGPwlOfFvsSZXcbuUPhhQ5vt867wsbqpXX8L084sX10o
+         yCYZmmCjnIryB3+kS6HARIv8I66w/OiGXoiHGjXBSuuCnMnrdw1vDrXT6dhUx8PM9ZSG
+         vmOxGiIXAcEv2HH6B9DA/MxyowOQFhJwJRPpVLK9siHgiMvY3IAGIWeUnPCnIKL04TnN
+         I0ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nbJjxwxOlfJ3iaGGg9xeY6Ddwu/l4z5tJPWN/qYSwE0=;
-        b=SWp6BSf04KOaVR//slwKuFrIyQQB96ecJEu5Xs1cElq/u6hAPFVXPQniXqNV92aXYR
-         g60rhLzSvm0l0T5y9c8AiBmjNdtCq4+h6Qf/gIbcYAN0Btck/rmEq9g8qnPCc/XXpn9n
-         6ErR8csdRNLmZnCiODgAUforKP2C2vqcnVJGRdTPDHWe10J/XN31c1W2+hHIFm7CbXvl
-         pCOvDDkySpfkiCkKyHfcJWtr7bt/pHOTc6uLyxulXIvPoQhUjfwgO3me9cZX0mDPWZTB
-         fpsnDGlucSFr+iFafOWMK3WsJZ8jwwrQ2VDwbxwXpuXMTwbI+b5vYr2hJtxE1OeHLPuy
-         kr7A==
-X-Gm-Message-State: APjAAAUJQNha//B7NsjB60UKi14LG3rmdOowpiM/bLi06i5+IOyrNpDL
-        OoywYXlBts0DXyYzj+9hMHeYoxI7dlw=
-X-Google-Smtp-Source: APXvYqzP+MBjRISVSry2nB6Mj+hhOKYTpBcTFAcq3848/sRjqBE0leYXd5tiZ2vCMrv4nhrFx1TnxQ==
-X-Received: by 2002:a67:f409:: with SMTP id p9mr5458959vsn.213.1551541420770;
-        Sat, 02 Mar 2019 07:43:40 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id 62sm328560vkj.23.2019.03.02.07.43.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 02 Mar 2019 07:43:39 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id c5so666861uaq.7
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 07:43:38 -0800 (PST)
-X-Received: by 2002:a67:fe97:: with SMTP id b23mr5668281vsr.66.1551541418513;
- Sat, 02 Mar 2019 07:43:38 -0800 (PST)
+        bh=H5x6yUPDSEfuUmzgNfhpIBJ31W2TdYRTPk6RCnWC0aM=;
+        b=OwQRwqyHz4B+bB0TrBldM5H9DdeOsBEKbAAuI5kNwACVrA/IPGFKgMGjGE7gGubCpp
+         cIqhikLI6UfmERXqGucWUAq4W8qubbFiJDtxUMmLEyH3RXUBY3X0CX4rNIgYpeELHePj
+         YB+mPU5tals9K1Z+QOjWpf9Z6jgj6P+PXDVBZdMBEIdGQNx0tunvId6H0tN2/weSAHyt
+         7IC0byElszwSasHI3BgKf7Gw4NnUv3KTSG3mW7dUxIXDudswT0Qig2p9oGfwM3B1Yd5h
+         o+OPsCqSleBDA8ONySTPPMGUqvO5RsZqJPvwcCYUM2vF5BFJ+HDFZP6Ay48Qg/oTTFoc
+         KZXg==
+X-Gm-Message-State: APjAAAXiKI68YKIz8q6Cp+vU0vz6QevzbWplfBynIrfn6NEnsaLdA7Z1
+        tzIiUhAOIdYV5jjqyarFHJqo4SC29zspuMifTd0=
+X-Google-Smtp-Source: APXvYqyj6R9ZhVqit4g5CWHmPODnXbUyJ05s+mpbuk1jecWB+PDzpan7jDfh/hb8KZdlkFipQwZihyzImtKQII10Wdw=
+X-Received: by 2002:a63:2004:: with SMTP id g4mr10296840pgg.337.1551541655455;
+ Sat, 02 Mar 2019 07:47:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20190212180441.15340-1-keescook@chromium.org> <20190212180441.15340-2-keescook@chromium.org>
- <CAK8P3a2xC3OVckPnweSjor3AH5LpSzichKxAjkAcgXDtCf0QmQ@mail.gmail.com> <CAKv+Gu_+GZ8Ut0nN+za+V48Eo6O27P_go3Dk1rDe1Wederad1Q@mail.gmail.com>
-In-Reply-To: <CAKv+Gu_+GZ8Ut0nN+za+V48Eo6O27P_go3Dk1rDe1Wederad1Q@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Sat, 2 Mar 2019 07:43:24 -0800
-X-Gmail-Original-Message-ID: <CAGXu5jLwEh-_v_aVm35hSqbX3QzdFOy_AwEa4mmKM8JmWtiKGA@mail.gmail.com>
-Message-ID: <CAGXu5jLwEh-_v_aVm35hSqbX3QzdFOy_AwEa4mmKM8JmWtiKGA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gcc-plugins: structleak: Generalize to all variable types
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+References: <20190302090505.65542-1-chenyu56@huawei.com> <20190302090505.65542-7-chenyu56@huawei.com>
+In-Reply-To: <20190302090505.65542-7-chenyu56@huawei.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 2 Mar 2019 17:47:23 +0200
+Message-ID: <CAHp75Vd+wPU_QvaWHanpG6hjnUj6==4Y3YiOtZnWpk0kyFUQ4A@mail.gmail.com>
+Subject: Re: [PATCH v3 06/12] usb: dwc3: Increase timeout for CmdAct cleared
+ by device controller
+To:     Yu Chen <chenyu56@huawei.com>
+Cc:     USB <linux-usb@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Emese Revfy <re.emese@gmail.com>,
-        Alexander Popov <alex.popov@linux.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
+        John Stultz <john.stultz@linaro.org>,
+        Suzhuangluan <suzhuangluan@hisilicon.com>,
+        Kongfei <kongfei@hisilicon.com>, liuyu712@hisilicon.com,
+        wanghu17@hisilicon.com, butao@hisilicon.com,
+        Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com,
+        lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>,
+        xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com,
+        yudongbin@hisilicon.com, zangleigang@hisilicon.com,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Binghui Wang <wangbinghui@hisilicon.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 2, 2019 at 1:05 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+On Sat, Mar 2, 2019 at 11:06 AM Yu Chen <chenyu56@huawei.com> wrote:
 >
-> On Thu, 28 Feb 2019 at 21:27, Arnd Bergmann <arnd@arndb.de> wrote:
-> > I get similar results with asan-stack=1 but without your plugin, only
-> > the combination of the two has the explosive stack size growth.
-
-I can look more closely, but I'm not sure it's entirely worth it:
-these two may not make sense to build at the same time. (e.g. the
-use-after-scope config was disallowed to work with this plugin.)
-
-> > I can help analyze this further, but maybe you can have a look first,
-> > there might be something obvious when you read the input to the
-> > plugin.
-> >
+> It needs more time for the device controller to clear the CmdAct of
+> DEPCMD on Hisilicon Kirin Soc.
 >
-> Is this before or after use-after-scope was disabled entirely?
 
-I was wondering the same thing, but I assumed it didn't matter: it
-wasn't possible to use both before it was entirely disabled.
+5x times more? Can you provide more specific details on that?
+
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> ---
+>  drivers/usb/dwc3/gadget.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 6c9b76bcc2e1..84d701b37171 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -270,7 +270,7 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
+>  {
+>         const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
+>         struct dwc3             *dwc = dep->dwc;
+> -       u32                     timeout = 1000;
+> +       u32                     timeout = 5000;
+>         u32                     saved_config = 0;
+>         u32                     reg;
+>
+> --
+> 2.15.0-rc2
+>
+
 
 -- 
-Kees Cook
+With Best Regards,
+Andy Shevchenko
