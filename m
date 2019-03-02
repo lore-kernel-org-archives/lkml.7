@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A958C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62345C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADB520857
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA9420857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="UxmpdSvH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JoCrbG4Y"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="hjk4OJ6P";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PvS7S7Yc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfCBEai (ORCPT
+        id S1728355AbfCBEaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 23:30:38 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:35099 "EHLO
+        Fri, 1 Mar 2019 23:30:39 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:39837 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728039AbfCBE37 (ORCPT
+        by vger.kernel.org with ESMTP id S1727974AbfCBE37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 Mar 2019 23:29:59 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id C4F652212D;
-        Fri,  1 Mar 2019 23:29:58 -0500 (EST)
+        by mailout.nyi.internal (Postfix) with ESMTP id A34C121C82;
+        Fri,  1 Mar 2019 23:29:57 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Fri, 01 Mar 2019 23:29:58 -0500
+  by compute5.internal (MEProxy); Fri, 01 Mar 2019 23:29:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=kwfuUztxUlhsG
-        6MYLzQmOvXZRpx67dgCMPLH+uawJkc=; b=UxmpdSvHwPtKCR/w4U6iD3T5zck2m
-        sBdUpmhwqiAiXzGYyz5IkGC9LyrzkGgExdlVrMN7YxZ5s9uEKihiTYRqJYbJ9Lnl
-        QYE3tI436MulETdVbBP4ytsSW66lNhf7bWV+CS+vVah9BblXTXijQcnTVI5+eNgA
-        559j9OtTLQtEBC246eiOCKptnCq3MXkbzaqNDmS5RexRj6qcy160R4u0fFfJ4iMD
-        xSkaom8PQn+UpoJYdJXZNVA0/aR46VTqmioIKaM5+xV84BL7/AH7nCuKWIwS+XJ/
-        fv70ppMTcVeq/mdDaidSa07jcwXGmNvs7dLVrX5PJsuClZKiW08ma26CA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=iyNHX5bab3Lfe
+        AAxywZMP6Pf+JBDMgU9maMkQ45NjMk=; b=hjk4OJ6POVLyUPslwe7Vvj4kHDAES
+        xZ5TQbvhPQTOhtYJImhQynTYGUUgA8dzlSFEdeXbe1nCaK0YQs9EwNh3dY0RB8Tc
+        caItwbz2uUsJPpLKygO1qfFGCaAqL0kQE6WiIc+sKttiYBzqO8v2/7wBC0Dh6cbF
+        Y96yjSYeCQ0yzERYdY3gp48qGbqXEctYypte7m5oS6xdwm3ft+Oc1QxW5MnF0EtQ
+        TDdvzG2Zv3ptTITeB5Aw7t5NE1Aw8C98x7r5iB3qtFsaGYQmIucbp7Js/QEtR6jy
+        kzUbUxTJ26p5QjokKEX6t6Lp6McDl7bxgjI4gpeqJJve6zxHWaUjaQHFw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=kwfuUztxUlhsG6MYLzQmOvXZRpx67dgCMPLH+uawJkc=; b=JoCrbG4Y
-        VgCr1TJ8HYv/ne/9yBybpApIf7NbtlDUHafGT3uMJAdjlDZQepcMHLWGKyMa+dqJ
-        ZaRDQK2SQHkDaJ8K+dKEqKxRulj64gmvWbwmDtjurVeO/pOWy34iHRo7al6v+Y30
-        uXSfvhQAXQCdcsQvPqlwz8wAbHIpScSGeorp/QBlSTOIaVrnn+cVmaeJbMiBf61p
-        X5Bzobh22s5NJqQW94aL4LF1pHeYwSZkz/2+MLsV+pkzvf5dL9A9wZP/vp+HgaBu
-        CQN8tV5dPUVzIkkwTF1/9CzJEvbZ7hKzAG3FY9e/RleAkKSzEUx2CpKYtk6ozUi2
-        pzGYbH9Mf02wOw==
-X-ME-Sender: <xms:xgZ6XLuZ4JsKoCVj5WXj4EwNmF-EbJBZezXDJ8N_MUHXh5Lnoz6SGQ>
+        fm2; bh=iyNHX5bab3LfeAAxywZMP6Pf+JBDMgU9maMkQ45NjMk=; b=PvS7S7Yc
+        XPHkAo4pdMq24igXGdPaz73XaawXCVwwvg39r7FB+xOcL6cK8vwKCXV1TfEwCV+7
+        6ZaF6UEyv6XMTGJukxiiTdMeCDzZyaRy08YAB8OPkURUQK2NEK2urjcb43fmFFQo
+        N7Csha+6dL9t/oN+7MqVTQrlYTvt8MbH1ZGW95V6Dzh4iLyYPryAbfJI5kzqEKd3
+        /x1tyY2Q9qzcWsk6X/2rDBkYxCr+J0vAdn0943VxTJWNJJh6wA8Eyqs+F6OetvDC
+        dcTchkSw2089+rwVaJWQiQb6gLTceUuKRnOG+1Q00TbCjGJfEp2Vft09p1XNU3Eq
+        lX2SmY+ish5K9A==
+X-ME-Sender: <xms:xQZ6XON16BTLr7mt5tlbh0306PCGg6Th2ABpXy_PmTMlDfPcsT3z8g>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrvdeigdejtdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
     ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
     ejtddrudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhu
-    vghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpeek
-X-ME-Proxy: <xmx:xgZ6XNtX0QiksiNbHDDu-PbCZYJzrjqjhogL2XBplcj8e5xl-DQ0yg>
-    <xmx:xgZ6XHp9GPtG2_uqP2RxRseEuWk72_4eBl59vyDucvNQxeyWeQROUA>
-    <xmx:xgZ6XBPzW0fElht5LWT5EbIEbpTFkpcpeRhFs3Ca1tfMZzMuP2qc5Q>
-    <xmx:xgZ6XJIqFBJX-wMTFFZ1gmqR9uq3AIedjk_5LIYIRgAkUOhWvXRiXg>
+    vghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:xQZ6XBMZTekxXT86t8sf8S8H5xkUfvYlxm2eixAuQrpAp5127cedAA>
+    <xmx:xQZ6XASsifMx0-IXCrJr7VJLybCz-CuDwOnogL_JM5VUVUOT6-5H9A>
+    <xmx:xQZ6XDDf2HxuWPCuhSj1PyWGfPVpINae7Qm0N-gki_13s8It9_tDTA>
+    <xmx:xQZ6XHJ3JMVo1WNnsO241R8_RmsAKwO6QoRccdtytuyrqhHd9PAVYg>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D93D810310;
-        Fri,  1 Mar 2019 23:29:57 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id B9C1E10310;
+        Fri,  1 Mar 2019 23:29:56 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>,
@@ -75,9 +75,9 @@ To:     Maxime Ripard <maxime.ripard@bootlin.com>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v3 10/15] [NOT FOR MERGE] clk: sunxi-ng: sun8i: Avoid turning off unused PRCM gates
-Date:   Fri,  1 Mar 2019 22:29:46 -0600
-Message-Id: <20190302042951.53671-11-samuel@sholland.org>
+Subject: [PATCH v3 08/15] arm64: dts: allwinner: a64: Add msgbox node
+Date:   Fri,  1 Mar 2019 22:29:44 -0600
+Message-Id: <20190302042951.53671-9-samuel@sholland.org>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190302042951.53671-1-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
@@ -88,72 +88,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hardware attached to AHB0/APB0 and controlled in the PRCM is designed to
-be used by firmware running on the ARISC core. However, some devices in
-this block (specifically the I2C, RSB, PIO, and CIR-RX) have native
-Linux drivers and are already in the device tree. In particular, the RSB
-and I2C buses may have sound chips and display bridges hanging off of
-them that cannot easily be driven from firmware.
-
-To facilitate sharing this hardware block between Linux and system
-firmware, avoid turning off PRCM clock gates that are unreferenced in
-the device tree. We assume that firmware has already optimally
-configured these clocks before booting Linux.
+The A64 SoC contains a message box that can be used to send messages and
+interrupts back and forth between the ARM application CPUs and the ARISC
+coprocessor. Add a device tree node for it.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-r.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r.c b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-index 90b3530e2c18..603de1e853e9 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-r.c
-@@ -92,19 +92,19 @@ static struct ccu_div apb0_clk = {
- static SUNXI_CCU_M(a83t_apb0_clk, "apb0", "ahb0", 0x0c, 0, 2, 0);
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 2abb335145a6..29ee8f0f833a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -447,6 +447,16 @@
+ 			reg = <0x1c14000 0x400>;
+ 		};
  
- static SUNXI_CCU_GATE(apb0_pio_clk,	"apb0-pio",	"apb0",
--		      0x28, BIT(0), 0);
-+		      0x28, BIT(0), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_ir_clk,	"apb0-ir",	"apb0",
--		      0x28, BIT(1), 0);
-+		      0x28, BIT(1), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_timer_clk,	"apb0-timer",	"apb0",
--		      0x28, BIT(2), 0);
-+		      0x28, BIT(2), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_rsb_clk,	"apb0-rsb",	"apb0",
--		      0x28, BIT(3), 0);
-+		      0x28, BIT(3), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_uart_clk,	"apb0-uart",	"apb0",
--		      0x28, BIT(4), 0);
-+		      0x28, BIT(4), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_i2c_clk,	"apb0-i2c",	"apb0",
--		      0x28, BIT(6), 0);
-+		      0x28, BIT(6), CLK_IGNORE_UNUSED);
- static SUNXI_CCU_GATE(apb0_twd_clk,	"apb0-twd",	"apb0",
--		      0x28, BIT(7), 0);
-+		      0x28, BIT(7), CLK_IGNORE_UNUSED);
- 
- static const char * const r_mod0_default_parents[] = { "osc32k", "osc24M" };
- static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
-@@ -113,7 +113,7 @@ static SUNXI_CCU_MP_WITH_MUX_GATE(ir_clk, "ir",
- 				  16, 2,	/* P */
- 				  24, 2,	/* mux */
- 				  BIT(31),	/* gate */
--				  0);
-+				  CLK_IGNORE_UNUSED);
- 
- static const char *const a83t_r_mod0_parents[] = { "osc16M", "osc24M" };
- static const struct ccu_mux_fixed_prediv a83t_ir_predivs[] = {
-@@ -138,7 +138,7 @@ static struct ccu_mp a83t_ir_clk = {
- 		.hw.init	= CLK_HW_INIT_PARENTS("ir",
- 						      a83t_r_mod0_parents,
- 						      &ccu_mp_ops,
--						      0),
-+						      CLK_IGNORE_UNUSED),
- 	},
- };
- 
++		msgbox: mailbox@1c17000 {
++			compatible = "allwinner,sun50i-a64-msgbox",
++				     "allwinner,sun6i-a31-msgbox";
++			reg = <0x01c17000 0x1000>;
++			clocks = <&ccu CLK_BUS_MSGBOX>;
++			resets = <&ccu RST_BUS_MSGBOX>;
++			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			#mbox-cells = <1>;
++		};
++
+ 		usb_otg: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-a33-musb";
+ 			reg = <0x01c19000 0x0400>;
 -- 
 2.19.2
 
