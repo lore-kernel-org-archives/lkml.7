@@ -2,32 +2,32 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392A1C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C71C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DED21473
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369E82084F
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfCBCw3 (ORCPT
+        id S1727889AbfCBCwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 21:52:29 -0500
-Received: from mga09.intel.com ([134.134.136.24]:61568 "EHLO mga09.intel.com"
+        Fri, 1 Mar 2019 21:52:32 -0500
+Received: from mga04.intel.com ([192.55.52.120]:49771 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbfCBCw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 21:52:28 -0500
+        id S1727824AbfCBCwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 21:52:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 18:52:28 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 18:52:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,430,1544515200"; 
-   d="scan'208";a="148572586"
+   d="scan'208";a="148572604"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Mar 2019 18:52:27 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 01 Mar 2019 18:52:28 -0800
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -41,237 +41,46 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v4 00/17] x86/split_lock: Enable #AC exception for split locked accesses
-Date:   Fri,  1 Mar 2019 18:44:54 -0800
-Message-Id: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v4 06/17] x86/msr-index: Define IA32_CORE_CAPABILITY MSR and #AC exception for split lock bit
+Date:   Fri,  1 Mar 2019 18:45:00 -0800
+Message-Id: <1551494711-213533-7-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
+In-Reply-To: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
+References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-==Introduction==
+A new IA32_CORE_CAPABILITY MSR (0xCF) is defined. Each bit in
+the MSR enumerates a model specific feature. Currently bit 5 enumerates
+#AC exception for split locked accesses. When bit 5 is 1, split locked
+accesses will generate #AC exception. When bit 5 is 0, split locked
+accesses will not generate #AC exception.
 
-A split lock is any atomic operation whose operand crosses two cache
-lines. Since the operand spans two cache lines and the operation must
-be atomic, the system locks the bus while the CPU accesses the two cache
-lines.
+Please check the latest Intel Architecture Instruction Set Extensions
+and Future Features Programming Reference for more detailed information
+on the MSR and the split lock bit.
 
-During bus locking, request from other CPUs or bus agents for control
-of the bus are blocked. Blocking bus access from other CPUs plus
-overhead of configuring bus locking protocol degrade not only the
-performance of one CPU but overall system performance.
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+---
+ arch/x86/include/asm/msr-index.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-If operand is cacheable and completely contained in one cache line, atomic
-operation is optimized by less expensive cache locking on Intel P6 and
-recent processors. If split lock is detected and the two cache lines in the
-operand can be merged into one cache line, cache locking instead of
-more expensive bus locking will be used for atomic operation. Removing
-split lock can improve overall performance.
-
-Instructions that may cause split lock issue include lock add, lock btc,
-xchg, lsl, far call, ltr, etc.
-
-More information about split lock, bus locking, and cache locking can be
-found in the latest Intel 64 and IA-32 Architecture Software Developer's
-Manual.
-
-==Split lock detection==
-
-Currently we can trace split lock event counter sq_misc.split_lock
-for debug purpose. But for system deployed in the field, this event
-counter after the fact is insufficient. We need a mechanism that
-detects split lock before it happens to ensure that bus lock is never
-incurred due to split lock.
-
-Intel introduces a mechanism to detect split lock via Alignment Check
-(#AC) exception before badly aligned atomic instructions might impact
-whole system performance in Tremont and other future processors. 
-
-This capability is critical for real time system designers who build
-consolidated real time systems. These systems run hard real time
-code on some cores and run "untrusted" user processes on some
-other cores. The hard real time cannot afford to have any bus lock from
-the untrusted processes to hurt real time performance. To date the
-designers have been unable to deploy these solutions as they have no
-way to prevent the "untrusted" user code from generating split lock and
-bus lock to block the hard real time code to access memory during bus
-locking.
-
-This capability may also find usage in cloud. A user process with split
-lock running in one guest can block other cores from accessing shared
-memory during its split locked memory access. That may cause overall
-system performance degradation.
-
-Split lock may open a security hole where malicious user code may slow
-down overall system by executing instructions with split lock.
-
-==Enumerate #AC for split lock==
-
-A control bit (bit 29) in TEST_CTL MSR 0x33 will be introduced in
-future x86 processors. When the bit 29 is set, the processor causes
-#AC exception for split locked accesses at all CPL.
-
-The split lock detection feature is enumerated through bit 5 in
-MSR IA32_CORE_CAPABILITY (0xCF). The MSR 0xCF itself is enumerated by
-CPUID.(EAX=0x7,ECX=0):EDX[30].
-
-The enumeration method is published in the latest Intel Software
-Developer's Manual.
-
-A few processors don't follow the above enumeration. For those processors,
-we can enable #AC for split lock based on their FMS numbers. We will
-enable split lock detection on those processors in the future once their
-FMS numbers are public.
-
-==Handle Split Lock===
-
-There may be different considerations to handle split lock, e.g. how
-to handle split lock issue in firmware after kernel enables #AC for
-split lock.
-
-But we use a simple way to handle split lock which is suggested
-by Thomas Gleixner and Dave Hansen:
-
-- If split lock happens in kernel, a warning is issued and #AC for
-split lock is disabled on the local CPU. The split lock issue should
-be fixed in kernel.
-
-- If split lock happens in user process, the process is killed by
-SIGBUS. Unless the issue is fixed, the process cannot run in the
-system.
-
-- If split lock happens in firmware, system may hang in firmware. The
-issue should be fixed in firmware.
-
-- Enable split lock detection by default once the feature is enumerated.
-
-- Disable split lock detection by "clearcpuid=split_lock_detect" during
-boot time.
-
-- Disable/enable split lock detection by interface
-/sys/devices/system/cpu/split_lock_detect during run time.
-
-==Expose to guest==
-
-To expose this feature to guest, we need to
-1. report the new CPUID bit to guest.
-2. emulate IA32_CORE_CAPABILITIES MSR.
-3. emulate TEST_CTL MSR. We must do it. Since this patch
-series enable split lock detection in host kernel by default, if we do
-not emualte TEST_CTL MSR for guest, guest will run with the value set
-by host without knowing that. So guest will run with split lock detection
-enabled due to the host's value. Thus guest running with buggy firmware
-and old kernel will fail because they lack the ability to handle #AC for
-split lock. So we should emulate TEST_CTL MSR and separate its value
-between host and guest.
-
-==Patches==
-Patch 1-4: Fix a few split lock issues.
-Patch 5-7: Enumerate features.
-Patch 8-12: Extend "clearcpuid=" option.
-Patch 13: Handle #AC for split lock
-Patch 14: /sys interface to enable/disable split lock detection
-Patch 15-17: Enable split lock detection in KVM.
-
-==Changelog==
-v4:
-- Remove "setcpuid=" option
-- Enable IA32_CORE_CAPABILITY enumeration for split lock
-- Handle CPUID faulting by Peter Zijlstra
-- Enable /sys interface to enable/disable split lock detection
-
-v3:
-- Handle split lock as suggested by Thomas Gleixner.
-- Fix a few potential spit lock issues suggested by Thomas Gleixner.
-- Support kernel option "setcpuid=" suggested by Dave Hanson and Thomas
-Gleixner.
-- Support flag string in "clearcpuid=" suggested by Dave Hanson and
-Thomas Gleixner.
-
-v2:
-- Remove code that handles split lock issue in firmware and fix
-x86_capability issue mainly based on comments from Thomas Gleixner and
-Peter Zijlstra.
-
-In previous version:
-Comments from Dave Hansen:
-- Enumerate feature in X86_FEATURE_SPLIT_LOCK_AC
-- Separate #AC handler from do_error_trap
-- Use CONFIG to configure inherit BIOS setting, enable, or disable split
-  lock. Remove kernel parameter "split_lock_ac="
-- Change config interface to debugfs from sysfs
-- Fix a few bisectable issues
-- Other changes.
-
-Comment from Tony Luck and Dave Hansen:
-- Dump right information in #AC handler
-
-Comment from Alan Cox and Dave Hansen:
-- Description of split lock in patch 0
-
-Others:
-- Remove tracing because we can trace split lock in existing
-  sq_misc.split_lock.
-- Add CONFIG to configure either panic or re-execute faulting instruction
-  for split lock in kernel.
-- other minor changes.
-
-Fenghua Yu (13):
-  x86/common: Align cpu_caps_cleared and cpu_caps_set to unsigned long
-  drivers/net/b44: Align pwol_mask to unsigned long for better
-    performance
-  wlcore: Align reg_ch_conf_pending and tmp_ch_bitmap to unsigned long
-    for better performance
-  x86/split_lock: Align x86_capability to unsigned long to avoid split
-    locked access
-  x86/cpufeatures: Enumerate IA32_CORE_CAPABILITIES MSR
-  x86/msr-index: Define IA32_CORE_CAPABILITY MSR and #AC exception for
-    split lock bit
-  x86/split_lock: Enumerate #AC for split lock by MSR
-    IA32_CORE_CAPABILITY
-  x86/clearcpuid: Support multiple clearcpuid options
-  x86/clearcpuid: Support feature flag string in kernel option
-    clearcpuid
-  x86/clearcpuid: Apply cleared feature bits that are forced set before
-  Change document for kernel option clearcpuid
-  x86/split_lock: Handle #AC exception for split lock
-  x86/split_lock: Add a sysfs interface to allow user to enable or
-    disable split lock detection on all CPUs during run time
-
-Peter Zijlstra (1):
-  x86/clearcpuid: Handle clearcpuid faulting
-
-Xiaoyao Li (3):
-  kvm: x86: Report CORE_CAPABILITY on GET_SUPPORTED_CPUID
-  kvm: x86: Add support IA32_CORE_CAPABILITY MSR
-  kvm: vmx: Emulate TEST_CTL MSR
-
- Documentation/admin-guide/kernel-parameters.txt |   6 +-
- arch/x86/include/asm/cmdline.h                  |   3 +
- arch/x86/include/asm/cpu.h                      |   7 +
- arch/x86/include/asm/cpufeature.h               |   5 +
- arch/x86/include/asm/cpufeatures.h              |   2 +
- arch/x86/include/asm/kvm_host.h                 |   1 +
- arch/x86/include/asm/msr-index.h                |   7 +
- arch/x86/include/asm/processor.h                |   4 +-
- arch/x86/kernel/cpu/common.c                    |  13 +-
- arch/x86/kernel/cpu/cpuid-deps.c                |  79 +++++++++++
- arch/x86/kernel/cpu/intel.c                     | 170 +++++++++++++++++++++++-
- arch/x86/kernel/cpu/scattered.c                 |  17 +++
- arch/x86/kernel/fpu/init.c                      |  33 +++--
- arch/x86/kernel/process.c                       |   3 +
- arch/x86/kernel/traps.c                         |  42 ++++++
- arch/x86/kvm/cpuid.c                            |   3 +-
- arch/x86/kvm/vmx/vmx.c                          |  58 ++++++++
- arch/x86/kvm/vmx/vmx.h                          |   2 +
- arch/x86/kvm/x86.c                              |  17 ++-
- arch/x86/lib/cmdline.c                          |  17 ++-
- drivers/net/ethernet/broadcom/b44.c             |   3 +-
- drivers/net/wireless/ti/wlcore/cmd.c            |   3 +-
- drivers/net/wireless/ti/wlcore/wlcore.h         |   6 +-
- 23 files changed, 473 insertions(+), 28 deletions(-)
-
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 8e40c2446fd1..549e73dcca15 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -59,6 +59,9 @@
+ #define MSR_PLATFORM_INFO_CPUID_FAULT_BIT	31
+ #define MSR_PLATFORM_INFO_CPUID_FAULT		BIT_ULL(MSR_PLATFORM_INFO_CPUID_FAULT_BIT)
+ 
++#define MSR_IA32_CORE_CAPABILITY	0x000000cf
++#define CORE_CAP_SPLIT_LOCK_DETECT	BIT(5)     /* Detect split lock */
++
+ #define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
+ #define NHM_C3_AUTO_DEMOTE		(1UL << 25)
+ #define NHM_C1_AUTO_DEMOTE		(1UL << 26)
 -- 
 2.7.4
 
