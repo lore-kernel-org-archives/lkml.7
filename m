@@ -2,69 +2,69 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4C7C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F060C00319
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678C420830
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7B02086D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfCBSwS (ORCPT
+        id S1727157AbfCBSwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 13:52:18 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:36574 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbfCBSwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 13:52:17 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9C5D4307CEB2;
-        Sat,  2 Mar 2019 18:51:47 +0000 (UTC)
-Received: from sky.random (ovpn-121-1.rdu2.redhat.com [10.10.121.1])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 220315D70A;
-        Sat,  2 Mar 2019 18:51:45 +0000 (UTC)
-Date:   Sat, 2 Mar 2019 13:51:44 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Jan Stancek <jstancek@redhat.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
-        peterz@infradead.org, riel@surriel.com, mhocko@suse.com,
-        ying.huang@intel.com, jrdr.linux@gmail.com, jglisse@redhat.com,
-        aneesh.kumar@linux.ibm.com, david@redhat.com, raquini@redhat.com,
-        rientjes@google.com, kirill@shutemov.name,
-        mgorman@techsingularity.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/memory.c: do_fault: avoid usage of stale
- vm_area_struct
-Message-ID: <20190302185144.GD31083@redhat.com>
-References: <20190302171043.GP11592@bombadil.infradead.org>
- <a5234d11b8cc158352a2f97fc33aa9ad90bb287b.1551550112.git.jstancek@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5234d11b8cc158352a2f97fc33aa9ad90bb287b.1551550112.git.jstancek@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sat, 02 Mar 2019 18:51:47 +0000 (UTC)
+        Sat, 2 Mar 2019 13:52:22 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:50894 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726648AbfCBSwU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 13:52:20 -0500
+Received: from marcel-macpro.fritz.box (p4FF9F361.dip0.t-ipconnect.de [79.249.243.97])
+        by mail.holtmann.org (Postfix) with ESMTPSA id F141DCEE16;
+        Sat,  2 Mar 2019 20:00:14 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH RESEND v2] Bluetooth: mediatek: add support for MediaTek
+ MT7663U and MT7668U UART devices
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <35cb9acf1c5604e1d975efe9186879fc826fbe2f.1551551989.git.sean.wang@mediatek.com>
+Date:   Sat, 2 Mar 2019 19:52:18 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <826E5A6F-3429-416D-B4F4-DE3F6349D7FF@holtmann.org>
+References: <35cb9acf1c5604e1d975efe9186879fc826fbe2f.1551551989.git.sean.wang@mediatek.com>
+To:     sean.wang@mediatek.com
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jan,
+Hi Sean,
 
-On Sat, Mar 02, 2019 at 07:19:39PM +0100, Jan Stancek wrote:
-> +	struct mm_struct *vm_mm = READ_ONCE(vma->vm_mm);
+> This adds the support of enabling MT7663U and MT7668U Bluetooth function
+> running on the top of btmtkuart driver.
+> 
+> There are a few differences between MT766[3,8]U and MT7622 where
+> MT766[3,8]U are standalone devices based on UART transport while MT7622
+> bluetooth is a built-in device on MediaTek SoC communicating with the host
+> through BTIF serial transport. Thus, extra setup sequence is necessary
+> for these standalone devices such as remote regulator and reset control via
+> GPIO, baud rate changing handshake between the host and device and so on.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+> drivers/bluetooth/btmtkuart.c | 281 ++++++++++++++++++++++++++++++++--
+> 1 file changed, 271 insertions(+), 10 deletions(-)
 
-The vma->vm_mm cannot change under gcc there, so no need of
-READ_ONCE. The release of mmap_sem has release semantics so the
-vma->vm_mm access cannot be reordered after up_read(mmap_sem) either.
+patch has been applied to bluetooth-next tree.
 
-Other than the above detail:
+Regards
 
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
+Marcel
 
-Thanks,
-Andrea
