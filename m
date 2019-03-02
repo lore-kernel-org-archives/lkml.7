@@ -2,76 +2,180 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DCCC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 03:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19A4C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 03:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B351020863
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 03:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C192320863
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 03:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbfCCDnL (ORCPT
+        id S1726446AbfCCDpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 22:43:11 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:54414 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbfCCDnL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 22:43:11 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1h0I1d-0003Tb-On; Sun, 03 Mar 2019 03:43:00 +0000
-Date:   Sun, 3 Mar 2019 03:42:53 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [git pull] vfs.git fixes
-Message-ID: <20190303034249.GO2217@ZenIV.linux.org.uk>
+        Sat, 2 Mar 2019 22:45:46 -0500
+Received: from mga14.intel.com ([192.55.52.115]:54519 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726017AbfCCDpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 22:45:45 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2019 19:45:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,434,1544515200"; 
+   d="scan'208";a="128568232"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Mar 2019 19:45:44 -0800
+Date:   Sat, 2 Mar 2019 11:44:03 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     john.hubbard@gmail.com
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        artemyko@mellanox.com
+Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error
+ handling paths
+Message-ID: <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
+References: <20190302032726.11769-2-jhubbard@nvidia.com>
+ <20190302202435.31889-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190302202435.31889-1-jhubbard@nvidia.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Assorted fixes that sat in -next for a while, all over the
-place.
+FWIW I don't have ODP hardware either.  So I can't test this either.
 
-The following changes since commit 1c7fc5cbc33980acd13d668f1c8f0313d6ae9fd8:
+On Sat, Mar 02, 2019 at 12:24:35PM -0800, john.hubbard@gmail.com wrote:
+> From: John Hubbard <jhubbard@nvidia.com>
+> 
+> 1. Bug fix: the error handling release pages starting
+> at the first page that experienced an error.
+> 
+> 2. Refinement: release_pages() is better than put_page()
+> in a loop.
+> 
+> 3. Dead code removal: the check for (user_virt & ~page_mask)
+> is checking for a condition that can never happen,
+> because earlier:
+> 
+>     user_virt = user_virt & page_mask;
+> 
+> ...so, remove that entire phrase.
+> 
+> 4. Minor: As long as I'm here, shorten up a couple of long lines
+> in the same function, without harming the ability to
+> grep for the printed error message.
+> 
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Doug Ledford <dledford@redhat.com>
+> Cc: linux-rdma@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+> 
+> v2: Fixes a kbuild test robot reported build failure, by directly
+>     including pagemap.h
+> 
+>  drivers/infiniband/core/umem_odp.c | 25 ++++++++++---------------
+>  1 file changed, 10 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+> index acb882f279cb..83872c1f3f2c 100644
+> --- a/drivers/infiniband/core/umem_odp.c
+> +++ b/drivers/infiniband/core/umem_odp.c
+> @@ -40,6 +40,7 @@
+>  #include <linux/vmalloc.h>
+>  #include <linux/hugetlb.h>
+>  #include <linux/interval_tree_generic.h>
+> +#include <linux/pagemap.h>
+>  
+>  #include <rdma/ib_verbs.h>
+>  #include <rdma/ib_umem.h>
+> @@ -648,25 +649,17 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+>  
+>  		if (npages < 0) {
+>  			if (npages != -EAGAIN)
+> -				pr_warn("fail to get %zu user pages with error %d\n", gup_num_pages, npages);
+> +				pr_warn("fail to get %zu user pages with error %d\n",
+> +					gup_num_pages, npages);
+>  			else
+> -				pr_debug("fail to get %zu user pages with error %d\n", gup_num_pages, npages);
+> +				pr_debug("fail to get %zu user pages with error %d\n",
+> +					 gup_num_pages, npages);
+>  			break;
+>  		}
+>  
+>  		bcnt -= min_t(size_t, npages << PAGE_SHIFT, bcnt);
+>  		mutex_lock(&umem_odp->umem_mutex);
+>  		for (j = 0; j < npages; j++, user_virt += PAGE_SIZE) {
+> -			if (user_virt & ~page_mask) {
+> -				p += PAGE_SIZE;
+> -				if (page_to_phys(local_page_list[j]) != p) {
+> -					ret = -EFAULT;
+> -					break;
+> -				}
+> -				put_page(local_page_list[j]);
+> -				continue;
+> -			}
+> -
 
-  Linux 5.0-rc2 (2019-01-14 10:41:12 +1200)
+I think this is trying to account for compound pages. (ie page_mask could
+represent more than PAGE_SIZE which is what user_virt is being incrimented by.)
+But putting the page in that case seems to be the wrong thing to do?
 
-are available in the git repository at:
+Yes this was added by Artemy[1] now cc'ed.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+>  			ret = ib_umem_odp_map_dma_single_page(
+>  					umem_odp, k, local_page_list[j],
+>  					access_mask, current_seq);
+> @@ -684,9 +677,11 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
+>  		mutex_unlock(&umem_odp->umem_mutex);
+>  
+>  		if (ret < 0) {
+> -			/* Release left over pages when handling errors. */
+> -			for (++j; j < npages; ++j)
+> -				put_page(local_page_list[j]);
+> +			/*
+> +			 * Release pages, starting at the the first page
+> +			 * that experienced an error.
+> +			 */
+> +			release_pages(&local_page_list[j], npages - j);
 
-for you to fetch changes up to d3d6a18d7d351cbcc9b33dbedf710e65f8ce1595:
+My concern here is that release_pages handle compound pages, perhaps
+differently from the above code so calling it may may not work?  But I've not
+really spent a lot of time on it...
 
-  aio: Fix locking in aio_poll() (2019-02-21 22:16:47 -0500)
+:-/
 
-----------------------------------------------------------------
-Al Viro (2):
-      fix cgroup_do_mount() handling of failure exits
-      cgroup: saner refcounting for cgroup_root
+Ira
 
-Bart Van Assche (1):
-      aio: Fix locking in aio_poll()
+[1]
 
-Chandan Rajendra (1):
-      copy_mount_string: Limit string length to PATH_MAX
+commit 403cd12e2cf759ead5cbdcb62bf9872b9618d400
+Author: Artemy Kovalyov <artemyko@mellanox.com>
+Date:   Wed Apr 5 09:23:55 2017 +0300
 
-YueHaibing (1):
-      exec: Fix mem leak in kernel_read_file
+    IB/umem: Add contiguous ODP support
 
- fs/aio.c                        | 12 ++++++---
- fs/exec.c                       |  2 +-
- fs/kernfs/mount.c               |  8 ++++--
- fs/namespace.c                  |  2 +-
- kernel/cgroup/cgroup-internal.h |  2 +-
- kernel/cgroup/cgroup-v1.c       | 58 +++++++++--------------------------------
- kernel/cgroup/cgroup.c          | 25 +++++++++---------
- 7 files changed, 44 insertions(+), 65 deletions(-)
+    Currenlty ODP supports only regular MMU pages.
+    Add ODP support for regions consisting of physically contiguous chunks
+    of arbitrary order (huge pages for instance) to improve performance.
+
+    Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
+    Signed-off-by: Leon Romanovsky <leon@kernel.org>
+    Signed-off-by: Doug Ledford <dledford@redhat.com>
+
+
