@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DA1C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ABFC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE7720838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983AE20838
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ZczlnyGR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fuLe8AYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfCBXg1 (ORCPT
+        id S1727991AbfCBXgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 18:36:27 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:35236 "EHLO
+        Sat, 2 Mar 2019 18:36:33 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:35398 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfCBXgY (ORCPT
+        with ESMTP id S1726958AbfCBXgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 18:36:24 -0500
+        Sat, 2 Mar 2019 18:36:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1551569781; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1551569788; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ceWiyac6eO6VdoR/z++C3FuR0pv/VI5vA70upsbZU2s=;
-        b=ZczlnyGRXX837PfgoVEwl3SjDbXPJ+omA3MsCqlX6Po9PHU6iY9n10mcqruIm0nxwQAXLz
-        64y7GB/iPb+AgAXA/E9yepQt9/XBeajKh2cQ5CcdKhQb1gOgdAUueQFm89D5YrBG+Qz8p2
-        7cbMelBhtqo1TXyh3A3N0aDoHSBC4R0=
+        bh=9saRiwPForVL/IuLR0EjvzRbRxXP/QeRDTaQu9/4LS0=;
+        b=fuLe8AYbVsvvqCZvxW8jWCUAeaeOXkttsBf75Q72Dhp0zX9GM1FOKbTHZokg3li5GYvViZ
+        5/zMDloF9G8hmM3Phcsv6OyGwuG+UvYmbrs6H8pcbT2aBjmx3biiAj4bpfHNM9WT0isN4E
+        eyRjlUzIxnR1gPOcFcdDb9DS7lQKYSY=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -45,9 +45,9 @@ Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
         linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v10 18/27] clk: jz4740: Add TCU clock
-Date:   Sat,  2 Mar 2019 20:34:04 -0300
-Message-Id: <20190302233413.14813-19-paul@crapouillou.net>
+Subject: [PATCH v10 19/27] MIPS: Kconfig: Select TCU timer driver when MACH_INGENIC is set
+Date:   Sat,  2 Mar 2019 20:34:05 -0300
+Message-Id: <20190302233413.14813-20-paul@crapouillou.net>
 In-Reply-To: <20190302233413.14813-1-paul@crapouillou.net>
 References: <20190302233413.14813-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,12 +55,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the missing TCU clock to the list of clocks supplied by the CGU for
-the JZ4740 SoC.
+We cannot boot to userspace (not even initramfs) if the timer driver is
+not present; so it makes sense to enable it unconditionally when
+MACH_INGENIC is set.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
@@ -78,38 +77,21 @@ Notes:
     
          v10: No change
 
- drivers/clk/ingenic/jz4740-cgu.c       | 6 ++++++
- include/dt-bindings/clock/jz4740-cgu.h | 1 +
- 2 files changed, 7 insertions(+)
+ arch/mips/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
-index 4479c102e899..d8ac7f2e183a 100644
---- a/drivers/clk/ingenic/jz4740-cgu.c
-+++ b/drivers/clk/ingenic/jz4740-cgu.c
-@@ -211,6 +211,12 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
- 		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
- 		.gate = { CGU_REG_CLKGR, 5 },
- 	},
-+
-+	[JZ4740_CLK_TCU] = {
-+		"tcu", CGU_CLK_GATE,
-+		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 1 },
-+	},
- };
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index a84c24d894aa..8e27d9983243 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -394,6 +394,7 @@ config MACH_INGENIC
+ 	select BUILTIN_DTB
+ 	select USE_OF
+ 	select LIBFDT
++	select INGENIC_TIMER
  
- static void __init jz4740_cgu_init(struct device_node *np)
-diff --git a/include/dt-bindings/clock/jz4740-cgu.h b/include/dt-bindings/clock/jz4740-cgu.h
-index 6ed83f926ae7..e82d77028581 100644
---- a/include/dt-bindings/clock/jz4740-cgu.h
-+++ b/include/dt-bindings/clock/jz4740-cgu.h
-@@ -34,5 +34,6 @@
- #define JZ4740_CLK_ADC		19
- #define JZ4740_CLK_I2C		20
- #define JZ4740_CLK_AIC		21
-+#define JZ4740_CLK_TCU		22
- 
- #endif /* __DT_BINDINGS_CLOCK_JZ4740_CGU_H__ */
+ config LANTIQ
+ 	bool "Lantiq based platforms"
 -- 
 2.11.0
 
