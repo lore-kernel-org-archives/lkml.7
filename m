@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210EFC10F06
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BBDC4360F
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90F52085A
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1099A20857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="oVH2LJ/i";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tNw6ne3n"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="U19Yy44d";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0UzCjnkN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfCBEaA (ORCPT
+        id S1728159AbfCBEaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 23:30:00 -0500
+        Fri, 1 Mar 2019 23:30:06 -0500
 Received: from out2-smtp.messagingengine.com ([66.111.4.26]:57233 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727938AbfCBE36 (ORCPT
+        by vger.kernel.org with ESMTP id S1728072AbfCBEaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 23:29:58 -0500
+        Fri, 1 Mar 2019 23:30:00 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id F363E22120;
-        Fri,  1 Mar 2019 23:29:56 -0500 (EST)
+        by mailout.nyi.internal (Postfix) with ESMTP id 5E24F22148;
+        Fri,  1 Mar 2019 23:29:59 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Fri, 01 Mar 2019 23:29:56 -0500
+  by compute5.internal (MEProxy); Fri, 01 Mar 2019 23:29:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=ecURF+ayLWpY2
-        Oe8w1vUiDRoINN11ZW1ygsWBjCaQUk=; b=oVH2LJ/ipR1gMiBgO00vqnOzkP+nK
-        72eo4L8SKc0JJ5STMoJAfvnwoUO4nFKXc+kjsxw3GFTbr9xKQ1nHHqny+oIl201o
-        lwUyhNU71i9H0vFJ1liAgbEcSzPncjMTD6DVxTNQiZTjpIy4LjKzcypcUzfEWakH
-        qTuQvr3dQzISyQ6a0uRUZWRdb2YQAAgKIkIOmBhi1ZfrUrxBd09IlyET6OVsgq7u
-        /HdDWBNZl/UfoK73fgD9RpM4HS2ZxcU9JbjDrwBrCuzWqT8zvdA/9EzPbahfFV3o
-        uG+d6p95WDS7/cYMtaeKyKy2DczUh0yoH5Ud+KqF7YzdVa69ScvaByqZA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=jYp+ycn1UzPzl
+        xBONZFtfT7KW34dUxVmR4eWWrPmRKU=; b=U19Yy44dJkZznMu5F6hMcIJ++5yEE
+        NK4Vpp5Y/rXdz0caYJ39xBuCinDBPy8UTTwD6xvaswTyxmpsSwwq0ySjp6z7CBGO
+        NjHV4Z+xNTaUjiaxDmspdl6VOWnuMbDL3ILmqtQKoxd1BoMcAyjObtZvpkQqDjm1
+        T5G5l8kQYh1RB9X7LlghNyr/zOJ9IZWESSk2wxLy4JbMkEe+Jd1a/JVETGb7kJjm
+        P6itnsgAfp8mPdHfNMwuFsQaZbkyko+pxQwD8lBWtXjRs2SQi9Q3CHjZQmfLeILm
+        zq/h6fYchaiXpzYMHRnwjRXbutE+BBnKg+7jz+eEYPZiCprRfJmOj/pAA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=ecURF+ayLWpY2Oe8w1vUiDRoINN11ZW1ygsWBjCaQUk=; b=tNw6ne3n
-        lCco5DuCmmp4woeo+/EN+sucysrvnYp+HPC+exsQejqAnb5Ui/wzaQIcwmdomzKU
-        q/Q8BGSj90Q3Se3GrfR9Ack53V+VH4e/e6m07kd232P7rCGmbe/exrL0HIrH2QYh
-        Y1xKr5HrhlsCV1f01lHiPnxi14X47VuqDhNyVt9ijJ0F7rqnnrX1SWyN9CS+qXeD
-        HtF4LWIuz6yXO6YBCP1Kdr+Zw/SUonYkRBVa2zayVSck78h45tuCJgwOGnaKeVen
-        sB6ewc2zoZUaVHiDx/QsNKqjXyjIUIuiCmkJLkgoqLCofGHTq6HXcs3Oy03gJRcp
-        yWNf5ra1hRQgCw==
-X-ME-Sender: <xms:xAZ6XN_0J9GSLbAn36NTsOKqTzpgehz2txkvtUVJYb44SMQWZ472RA>
+        fm2; bh=jYp+ycn1UzPzlxBONZFtfT7KW34dUxVmR4eWWrPmRKU=; b=0UzCjnkN
+        eBMSp5r4qrY+EsHy+mr1idD+e7JMm46fjGxl7FsXv5qthRbG/VxoHAcNGeTHUuTN
+        YzliprCS/rTFCHdOXjKlsyaMKAsy6HDZj/n7PG2O4e+9JUnj6iVJXFvua5lstfG6
+        fgLs3Pwc/OYcnlAVINO2iqPd/PJSsVlFBqGDCVQGfsaAlzhDLwRLMvbDa93cPvy5
+        aJwYp+GXuIp8bkSa56r+6Uf+HyaJmQa0DFnkxcMWa0bBeGTUi+c8/WJY3GUO2Oba
+        rcxpaxCk3D+unfhGwoJVfTN88J9H1UGm63vmJPzYkfPYPir66330pAt6O0DMG9BU
+        BgvgfGBW0fR6dA==
+X-ME-Sender: <xms:xwZ6XGpG013EGgkBBIy2GFEPjqFl4Z_TXFDPIcSCH1Y04bgG7iD26A>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrvdeigdejtdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
     ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
     ejtddrudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhu
-    vghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:xAZ6XNMvqrYWASUqNiSdkHU7kUnYoe65MA2AreMyOgllizBKIozajQ>
-    <xmx:xAZ6XBcZk0NFOgesxagFRCHlVsmTicS4QGYsX4QPSC_a0t4iQH92ng>
-    <xmx:xAZ6XMUVdjYtK3ng_5rvArH1oJpJZn3X1sonw93JbRu6MHGwpoFyAA>
-    <xmx:xAZ6XPde_6r-ax1FgTBohqmHhfq4RgvAKJSjJ65ROtvl1FrIONycgA>
+    vghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpeek
+X-ME-Proxy: <xmx:xwZ6XFZAY9ugVlTcMv1ZQ5D3h7QfXS2n39uUmDlkFJ1wnhMTaZ_uzw>
+    <xmx:xwZ6XEHYHKbI8wSuLDiEkEWUhXGEHfo9hTFAHDOFuV4-8blP2vYSVg>
+    <xmx:xwZ6XNwPHaS4BDxUpTrr3KEr1OqfDBg7Lwa7CTE-d_JbdBv6VVcfsQ>
+    <xmx:xwZ6XGK_2ii0HsMhMqHhFyEejuy8MIIbid0OQMr-5ZmM_WJdYFiumQ>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2CD9010312;
-        Fri,  1 Mar 2019 23:29:56 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 730B910312;
+        Fri,  1 Mar 2019 23:29:58 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>,
@@ -75,9 +75,9 @@ To:     Maxime Ripard <maxime.ripard@bootlin.com>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v3 07/15] ARM: dts: sunxi: h3/h5: Add msgbox node
-Date:   Fri,  1 Mar 2019 22:29:43 -0600
-Message-Id: <20190302042951.53671-8-samuel@sholland.org>
+Subject: [PATCH v3 11/15] [NOT FOR MERGE] dt-bindings: Add a binding for a mailbox-backed interrupt controller
+Date:   Fri,  1 Mar 2019 22:29:47 -0600
+Message-Id: <20190302042951.53671-12-samuel@sholland.org>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190302042951.53671-1-samuel@sholland.org>
 References: <20190302042951.53671-1-samuel@sholland.org>
@@ -88,36 +88,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The H3 and H5 SoCs contain a message box that can be used to send
-messages and interrupts back and forth between the ARM application CPUs
-and the ARISC coprocessor. Add a device tree node for it.
+This is a somewhat generic binding for an interrupt controller/forwarder
+implemented in firmware and communicated with using a mailbox.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../interrupt-controller/mbox-intc.txt        | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index a4c757c0b741..a42fd3f9739e 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -227,6 +227,16 @@
- 			#size-cells = <0>;
- 		};
- 
-+		msgbox: mailbox@1c17000 {
-+			compatible = "allwinner,sun8i-h3-msgbox",
-+				     "allwinner,sun6i-a31-msgbox";
-+			reg = <0x01c17000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MSGBOX>;
-+			resets = <&ccu RST_BUS_MSGBOX>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <2>;
-+		};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
+new file mode 100644
+index 000000000000..a0eb7904ca83
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
+@@ -0,0 +1,33 @@
++Mailbox-backed Interrupt Controller
++===================================
 +
- 		usb_otg: usb@1c19000 {
- 			compatible = "allwinner,sun8i-h3-musb";
- 			reg = <0x01c19000 0x400>;
++This binding represents an interrupt controller implemented in firmware,
++that uses a mailbox channel to signal and acknowledge interrupts.
++
++Device Node:
++============
++
++Required properties:
++--------------------
++- compatible:		Must be one of the following strings:
++			- allwinner,sunxi-msgbox-intc
++- interrupt-controller:	Signifies that this node is an interrupt controller.
++- #interrupt-cells:	Must be 1.
++- mboxes:		phandle for the mailbox controller and channel
++			specifier. If the mailbox controller has unidirectional
++			channels, two entries are required (see below).
++- mbox-names:		Only required for unidirectional mailbox channels. In
++			that case, it must contain the strings "tx" and "rx"
++			(where "tx" and "rx" are from Linux's perspective, not
++			the direction the interrupts are traveling).
++
++Example:
++--------
++
++	msgbox_intc: interrupt-controller {
++		compatible = "allwinner,sunxi-msgbox-intc";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		mboxes = <&msgbox 6>, <&msgbox 7>;
++		mbox-names = "tx", "rx";
++	};
 -- 
 2.19.2
 
