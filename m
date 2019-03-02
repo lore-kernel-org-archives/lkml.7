@@ -2,141 +2,111 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B113C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 16:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76560C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 16:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6D020836
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 16:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3581320857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 16:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eCnNVlNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfCBQYz (ORCPT
+        id S1726614AbfCBQ16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 11:24:55 -0500
-Received: from mga11.intel.com ([192.55.52.93]:27387 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbfCBQYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 11:24:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2019 08:24:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,432,1544515200"; 
-   d="scan'208";a="138532444"
-Received: from spandruv-mobl3.jf.intel.com ([10.252.135.12])
-  by orsmga002.jf.intel.com with ESMTP; 02 Mar 2019 08:24:54 -0800
-Message-ID: <426011fc8925a3fd27737f22d39ea6fc04c67404.camel@linux.intel.com>
-Subject: Re: [RFT][PATCH 0/2] cpufreq: intel_pstate: Handle _PPC updates on
- global turbo disable/enable
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Yu Chen <yu.c.chen@intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        Sat, 2 Mar 2019 11:27:58 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34849 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfCBQ15 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 11:27:57 -0500
+Received: by mail-qt1-f193.google.com with SMTP id p48so870335qtk.2
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 08:27:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gjnv6iMNlS9yYKpROQTYmdIC2eoSfYKiCH6UrKQ3rL8=;
+        b=eCnNVlNKniNcbkoE2rsLuu5RWHbtNsdr+HRW4X/rNXAr6ZS1EgK7wxRIiGYz1ft44W
+         YfezRfv7dY9pA+9DVFhmrERELuHJDpRRaiNRLmGCQj1fAyE/mS2mXB9N5gQNXpemUcUI
+         MIABQiPqNAkSJ/Jega0i43AOJqfECgA37Ji2yQr382ddw5qLP7MVwL8ZMkJ7YzWqgukB
+         aSzoQWt+FZ1azCB9jT0sV071iKaI6lUVpWIMYuhHRqvOEFOmablR0PrWSbUiJVOdthNo
+         L+OfW1CMH2axGgOby7fpe2yGTn+1J0RBhvFgMkEp4bRGI8BwiWEsu8DGuGoOPpCEbA/G
+         i6FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gjnv6iMNlS9yYKpROQTYmdIC2eoSfYKiCH6UrKQ3rL8=;
+        b=lhMWTfPZI0gQ+vmSUTFKCSWMpo4CxM5Okxh3knbdQyNAeJeFaqOL4aJ8I4Ioo4USC4
+         kPahAhbNJd1rR/LrHqF3NhMEko4WanfDNCnh6qLPbDuye32eEaSRjSepXR+PmM9x3VTV
+         WkYumOd/tKANYASr8x5zm9JYlXnIKHUTSyDL062MxW5ncNouoLAeRQLpA/16f59gWEER
+         REkLf4UylDqHDSmq11vz55Rpay0VUFqNuxHOvFBO+/O7IHQsU42jjGR3QFJ1nvTywuZY
+         FBd4pziJfehmE/6oSm6lAA9vf3XxuXFLn6HOxSq1If3+QYin24XxHlvp/u6127wDtgVe
+         tWKQ==
+X-Gm-Message-State: APjAAAWs6zX25gtjV3Ed7GjQ7gI/eKKm9IaLM8d6y49jM83Fej2IB8VB
+        dX46xbVjNazYA0NkSnErrYBNvjWHBjdkSswvyO7xaQ==
+X-Google-Smtp-Source: APXvYqzAhKOT/k+jSXG2gKPep4lG2XzriqjdfKLtA7QN2okom3KtAa/0F/8KOacQWxLZlokFUOi09jW91+rxliPuld8=
+X-Received: by 2002:ac8:28e4:: with SMTP id j33mr8723829qtj.349.1551544076375;
+ Sat, 02 Mar 2019 08:27:56 -0800 (PST)
+MIME-Version: 1.0
+References: <20190301230606.8302-1-tkjos@google.com> <20190302075720.GA18046@kroah.com>
+In-Reply-To: <20190302075720.GA18046@kroah.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Sat, 2 Mar 2019 08:27:44 -0800
+Message-ID: <CAHRSSExy=kWt+MDzD10VogfasygJET6FmEtRc9vJuLv4Ov7+uA@mail.gmail.com>
+Subject: Re: [PATCH] binder: fix race between munmap() and direct reclaim
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Todd Kjos <tkjos@android.com>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Date:   Sat, 02 Mar 2019 08:24:54 -0800
-In-Reply-To: <20190302103008.GA7086@chenyu-office.sh.intel.com>
-References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
-         <fa5e3e09eb32f5197bef2a50ced952850bf70748.camel@linux.intel.com>
-         <20190302103008.GA7086@chenyu-office.sh.intel.com>
+        Martijn Coenen <maco@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Android Kernel Team <kernel-team@android.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-1.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-03-02 at 18:30 +0800, Yu Chen wrote:
-> On Fri, Mar 01, 2019 at 09:39:27AM -0800, Srinivas Pandruvada wrote:
-> > On Fri, 2019-03-01 at 13:43 +0100, Rafael J. Wysocki wrote:
-> > > Hi All,
-> > > 
-> > > This is how I would fix the issue reported in BZ 200759 (see this
-> > > patch series
-> > > from Yu too: https://marc.info/?l=linux-pm&m=155137672924029&w=2)
-> > > .
-> > > 
-> > > Patch [1/2] causes intel_pstate to update all policies if it gets
-> > > a
-> > > _PPC change
-> > > notification and sees a global turbo disable/enable change.
-> > > 
-> > > Patch [2/2] makes it update cpuinfo.max_freq for all policies in
-> > > those cases.
-> > > 
-> > > The patches here have not been tested yet, so testing would be
-> > > much
-> > > appreciated.
-> > > 
-> > > Of course, comments are welcome too!
-> > 
-> > This is the only platform, someone reported such issue.
-> > Can we solve this by some udev rules and offline/online cpu 1-3 on
-> > power source change?
-> > 
-> 
-> Sound reasonable, we can deal with this BIOS problem in user space
-> too. But if cpu0 could not be offline, how could cpu0's policy
-> be updated?
-I thought CPU0 is not a problem as the _PPC is sent on this and
-policies gets updated from the following log.
+On Fri, Mar 1, 2019 at 11:57 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, Mar 01, 2019 at 03:06:06PM -0800, Todd Kjos wrote:
+> > An munmap() on a binder device causes binder_vma_close() to be called
+> > which clears the alloc->vma pointer.
+> >
+> > If direct reclaim causes binder_alloc_free_page() to be called, there
+> > is a race where alloc->vma is read into a local vma pointer and then
+> > used later after the mm->mmap_sem is acquired. This can result in
+> > calling zap_page_range() with an invalid vma which manifests as a
+> > use-after-free in zap_page_range().
+> >
+> > The fix is to check alloc->vma after acquiring the mmap_sem (which we
+> > were acquiring anyway) and skip zap_page_range() if it has changed
+> > to NULL.
+> >
+> > Signed-off-by: Todd Kjos <tkjos@google.com>
+> > ---
+>
+> Any specific commit that this fixes?
 
-# Unplug
+No, it's been there a long time.
 
-[   25.775643] CPU 0: _PPC is 6 - frequency  limited
-[   25.775660] intel_pstate: set_policy cpuinfo.max 3000000 policy->max 
-1700000
-[   25.775666] intel_pstate: cpu:0 max_state 17 min_policy_perf:8
-max_policy_perf:17
-[   25.775670] intel_pstate: cpu:0 global_min:8 global_max:30
-[   25.775674] intel_pstate: cpu:0 max_perf_ratio:17 min_perf_ratio:8
+> And should it be marked for stable releases?
 
-"REDUCED FREQUENCY ABOVE AFTER UNPLUG"
+It is needed in stable (back to 4.4), but will need to be backported.
+Should I post backported versions targeting the specific releases now?
+I was thinking we'd wait for this one to land. I think we'll need 1
+patch for 4.4/4.9 and a second one for 4.14/4.19 (and some of those
+backported patches will have conflicts when merged down to android-4.X
+-- I think the 4.14/4.19 version will apply to all the android
+branches). Let me know how you want to handle this.
 
-
-# Re-plug
-
-[   36.979264] CPU 0: _PPC is 6 - frequency  limited
-[   36.979276] intel_pstate: policy->max > max non turbo frequency
-[   36.979280] intel_pstate: set_policy cpuinfo.max 3000000 policy->max 
-3000000
-[   36.979283] intel_pstate: cpu:0 max_state 30 min_policy_perf:8
-max_policy_perf:30
-[   36.979286] intel_pstate: cpu:0 global_min:8 global_max:30
-[   36.979289] intel_pstate: cpu:0 max_perf_ratio:30 min_perf_ratio:8
-
-Thanks,
-Srinivas
-
-> 
-> Thanks,
-> Yu
-> 
-> > There are examples of changing governors on power source change.
-> > https://bbs.archlinux.org/viewtopic.php?id=207186
-> > 
-> > Here instead of changing governor just
-> > echo 0 > /sys/devices/system/cpu/cpu1/online
-> > echo 1 > /sys/devices/system/cpu/cpu1/online
-> > echo 0 >
-> > /sys/devices/system/cpu/cpu2/online
-> > echo 1 >
-> > /sys/devices/system/cpu/cpu2/online
-> > echo 0 >
-> > /sys/devices/system/cpu/cpu3/online
-> > echo 1 >
-> > /sys/devices/system/cpu/cpu3/online
-> > 
-> > Thanks,
-> > Srinivas
-> > 
-> > > 
-> > > Thanks,
-> > > Rafael
-> > > 
-
+>
+> thanks,
+>
+> greg k-h
