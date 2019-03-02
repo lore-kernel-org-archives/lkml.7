@@ -2,29 +2,29 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3E9C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4857C10F05
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C659C20836
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF2A20836
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:05:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfCBJF2 (ORCPT
+        id S1728079AbfCBJFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 04:05:28 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4757 "EHLO huawei.com"
+        Sat, 2 Mar 2019 04:05:48 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4759 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725986AbfCBJF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 04:05:28 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9FE8E49CF0B0DB080614;
-        Sat,  2 Mar 2019 17:05:25 +0800 (CST)
+        id S1727916AbfCBJFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 04:05:44 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D641E86C5E641E719DFC;
+        Sat,  2 Mar 2019 17:05:40 +0800 (CST)
 Received: from vm100-107-113-134.huawei.com (100.107.113.134) by
  DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.408.0; Sat, 2 Mar 2019 17:05:19 +0800
+ 14.3.408.0; Sat, 2 Mar 2019 17:05:32 +0800
 From:   Yu Chen <chenyu56@huawei.com>
 To:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -35,11 +35,17 @@ CC:     <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
         <lipengcheng8@huawei.com>, <songxiaowei@hisilicon.com>,
         <xuyiping@hisilicon.com>, <xuyoujun4@huawei.com>,
         <yudongbin@hisilicon.com>, <zangleigang@hisilicon.com>,
-        Yu Chen <chenyu56@huawei.com>
-Subject: [PATCH v3 00/12] Add support for usb on Hikey960
-Date:   Sat, 2 Mar 2019 17:04:53 +0800
-Message-ID: <20190302090505.65542-1-chenyu56@huawei.com>
+        Yu Chen <chenyu56@huawei.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Binghui Wang <wangbinghui@hisilicon.com>
+Subject: [PATCH v3 11/12] usb: gadget: Add configfs attribuite for controling match_existing_only
+Date:   Sat, 2 Mar 2019 17:05:04 +0800
+Message-ID: <20190302090505.65542-12-chenyu56@huawei.com>
 X-Mailer: git-send-email 2.15.0-rc2
+In-Reply-To: <20190302090505.65542-1-chenyu56@huawei.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [100.107.113.134]
@@ -49,59 +55,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patchset adds support for usb functionality of Hikey960, includes:
-- dwc3 driver for Hisilicon Kirin Soc hi3660
-- usb driver for HiKey960 board
-- some adjustment in dwc3, usb gadget and typec driver
-- dts for support usb of HiKey960
+Currently the "match_existing_only" of usb_gadget_driver in configfs is
+set to one which is not flexible.
+Dwc3 udc will be removed when usb core switch to host mode. This causes
+failure of writing name of dwc3 udc to configfs's UDC attribuite.
+To fix this we need to add a way to change the config of
+"match_existing_only".
+There are systems like Android do not support udev, so adding
+"match_existing_only" attribute to allow configuration by user is cost little.
+This patch adds a configfs attribuite for controling match_existing_only
+which allow user to config "match_existing_only".
 
-This patchset based on patchset https://lkml.org/lkml/2019/1/25/344
-of Heikki Krogerus
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Binghui Wang <wangbinghui@hisilicon.com>
+Signed-off-by: Yu Chen <chenyu56@huawei.com>
+---
+ drivers/usb/gadget/configfs.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-Yu Chen (12):
-  dt-bindings: phy: Add support for HiSilicon's hi3660 USB PHY
-  dt-bindings: misc: Add bindings for HiSilicon usb hub and data role
-    switch functionality on HiKey960
-  usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc
-    Platform
-  usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
-  usb: dwc3: Execute GCTL Core Soft Reset while switch mdoe for
-    Hisilicon Kirin Soc
-  usb: dwc3: Increase timeout for CmdAct cleared by device controller
-  phy: Add usb phy support for hi3660 Soc of Hisilicon
-  usb: roles: Add usb role switch notifier.
-  usb: dwc3: Registering a role switch in the DRD code.
-  hikey960: Support usb functionality of Hikey960
-  usb: gadget: Add configfs attribuite for controling
-    match_existing_only
-  dts: hi3660: Add support for usb on Hikey960
-
- .../bindings/misc/hisilicon-hikey-usb.txt          |  52 +++++
- .../devicetree/bindings/phy/phy-hi3660-usb3.txt    |  28 +++
- MAINTAINERS                                        |   8 +
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |  53 +++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |  74 +++++++
- drivers/misc/Kconfig                               |   6 +
- drivers/misc/Makefile                              |   1 +
- drivers/misc/hisi_hikey_usb.c                      | 167 +++++++++++++++
- drivers/phy/hisilicon/Kconfig                      |  10 +
- drivers/phy/hisilicon/Makefile                     |   1 +
- drivers/phy/hisilicon/phy-hi3660-usb3.c            | 232 +++++++++++++++++++++
- drivers/usb/dwc3/Kconfig                           |   1 +
- drivers/usb/dwc3/core.c                            |  43 ++++
- drivers/usb/dwc3/core.h                            |  10 +
- drivers/usb/dwc3/drd.c                             |  58 +++++-
- drivers/usb/dwc3/dwc3-of-simple.c                  |   4 +-
- drivers/usb/dwc3/gadget.c                          |   2 +-
- drivers/usb/gadget/configfs.c                      |  32 +++
- drivers/usb/roles/class.c                          |  20 +-
- include/linux/usb/role.h                           |  46 ++++
- 20 files changed, 844 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
- create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
- create mode 100644 drivers/misc/hisi_hikey_usb.c
- create mode 100644 drivers/phy/hisilicon/phy-hi3660-usb3.c
-
+diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
+index 025129942894..be85104bfab9 100644
+--- a/drivers/usb/gadget/configfs.c
++++ b/drivers/usb/gadget/configfs.c
+@@ -291,6 +291,36 @@ static ssize_t gadget_dev_desc_UDC_store(struct config_item *item,
+ 	return ret;
+ }
+ 
++static ssize_t gadget_driver_match_existing_only_store(struct config_item *item,
++		const char *page, size_t len)
++{
++	struct gadget_info *gi = to_gadget_info(item);
++	struct usb_gadget_driver *gadget_driver = &(gi->composite.gadget_driver);
++	bool match_existing_only;
++	int ret;
++
++	ret = kstrtobool(page, &match_existing_only);
++	if (ret)
++		return ret;
++
++	if (match_existing_only)
++		gadget_driver->match_existing_only = 1;
++	else
++		gadget_driver->match_existing_only = 0;
++
++	return len;
++}
++
++static ssize_t gadget_driver_match_existing_only_show(struct config_item *item,
++		char *page)
++{
++	struct gadget_info *gi = to_gadget_info(item);
++	struct usb_gadget_driver *gadget_driver = &(gi->composite.gadget_driver);
++	bool match_existing_only = !!gadget_driver->match_existing_only;
++
++	return sprintf(page, "%s\n", match_existing_only ? "true" : "false");
++}
++
+ CONFIGFS_ATTR(gadget_dev_desc_, bDeviceClass);
+ CONFIGFS_ATTR(gadget_dev_desc_, bDeviceSubClass);
+ CONFIGFS_ATTR(gadget_dev_desc_, bDeviceProtocol);
+@@ -300,6 +330,7 @@ CONFIGFS_ATTR(gadget_dev_desc_, idProduct);
+ CONFIGFS_ATTR(gadget_dev_desc_, bcdDevice);
+ CONFIGFS_ATTR(gadget_dev_desc_, bcdUSB);
+ CONFIGFS_ATTR(gadget_dev_desc_, UDC);
++CONFIGFS_ATTR(gadget_, driver_match_existing_only);
+ 
+ static struct configfs_attribute *gadget_root_attrs[] = {
+ 	&gadget_dev_desc_attr_bDeviceClass,
+@@ -311,6 +342,7 @@ static struct configfs_attribute *gadget_root_attrs[] = {
+ 	&gadget_dev_desc_attr_bcdDevice,
+ 	&gadget_dev_desc_attr_bcdUSB,
+ 	&gadget_dev_desc_attr_UDC,
++	&gadget_attr_driver_match_existing_only,
+ 	NULL,
+ };
+ 
 -- 
 2.15.0-rc2
 
