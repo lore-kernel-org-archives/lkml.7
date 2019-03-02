@@ -2,106 +2,169 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54AEC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A80EC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A7A20838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57B72086D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6DvPdiY"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="U5Y+38qM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfCBSjM (ORCPT
+        id S1727143AbfCBSjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 13:39:12 -0500
-Received: from mail-oi1-f174.google.com ([209.85.167.174]:34368 "EHLO
-        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbfCBSjM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 13:39:12 -0500
-Received: by mail-oi1-f174.google.com with SMTP id g16so824906oib.1;
-        Sat, 02 Mar 2019 10:39:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5ydMXTOgR5VLSA0eQdZRLW2LaxV3fAtpkkyyvuJtn0A=;
-        b=T6DvPdiYaCUtHjIkgy3LWPo0nixdZeaSUKkmBVmZ+5wwboi995nyrlQA5y9KyW+jyo
-         RY70KCtg+AjAGQICGZkrCFPwFfhJplLdpHD3Yqfd++/NZcz0L66VJdirQIL/uL7SyF+G
-         3Zn+NEvocv5CixGpZnffxWzXeSv5GMQXatb69U8FjdOIsNU1/Z6PkZYGxgqgSkeb1Eg8
-         83X3XnLpWlp9hOf3sVMxwNp3+FlurDQW1SKqZ8WF40zQPv4ThYGuci6D+s3jdd0qgBjt
-         DvS0ZkDNl9A7cx32DaA5wWQiUTWWRWwbhhRkjTLYPKWkzD/u5ueCqHRfvp/4LvNIoGQg
-         Q0jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5ydMXTOgR5VLSA0eQdZRLW2LaxV3fAtpkkyyvuJtn0A=;
-        b=fLudNwNzd3zDmEbOQtLJ6R4QNSWpK+tTBGlBv7qa+e2gPUm5drcF8hquXt8yvmAd0w
-         2CbxEOvnWlgsrwtdGlrUzF846l3Os1gq42tqyxOtG1TSFgIgrhqiTuIAWxEdjm2cN9QY
-         i3ZiETOU0NZ7/Fb6IjUaBS+3UPXExP43NjXB0/aygmjMbiPdOhBQ3VsPKoq2QmLa3pKr
-         KsBZ3kLXvQOCSzEh79pHSSB6/blMoGxUMVGbXWf8pWTcz9R8JSd7JjmaT0d1eeTe+qcJ
-         Nw6a+J6jIM5Mlikf+TvYslNzTJOtoMKY3TptnE8JVfI48ElA4b8LeMiHoU4zOEx/U46O
-         58KQ==
-X-Gm-Message-State: AHQUAua5x25g/GaG6DhSw3z5tMNwvIa2WKaSpIlbRukv0D9x2zyLCSZJ
-        XjhOchIiGVoGCSaA7a6MrwxJAIq/
-X-Google-Smtp-Source: AHgI3IZ5HZWd/4TULDc/41LKGbZv3o21sX4zXKVI5u7pOyStWQwArPDhQsNmPFOczChXcp+tlxhgGg==
-X-Received: by 2002:aca:55d0:: with SMTP id j199mr7370278oib.110.1551551950593;
-        Sat, 02 Mar 2019 10:39:10 -0800 (PST)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id e12sm549448otr.1.2019.03.02.10.39.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 02 Mar 2019 10:39:09 -0800 (PST)
-Subject: Re: Realtek r8822be kernel module does not negotiate 802.11ac
- connection
-To:     "David R. Bergstein" <david.r.bergstein@gmail.com>,
-        Tony Chuang <yhchuang@realtek.com>
-Cc:     Pkshih <pkshih@realtek.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Sat, 2 Mar 2019 13:39:36 -0500
+Received: from mail-eopbgr790135.outbound.protection.outlook.com ([40.107.79.135]:12064
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726246AbfCBSjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 13:39:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3qKUFg37P3gs3MZiiUuMuFZNoLgTVDHlDxV+SDCy5s4=;
+ b=U5Y+38qM8ifyxUCRN08f8qGPyNcHnLpO1ENui8U2WK9RpiOvxvfDEz5u/UbEw654bWe/v1UHJlSrSBr+H4EtXK+utz16Z/6vVTfPOs02J55Gy/vEWAkn5YlWlHDf82Qy7RmKI05HplGe9JqMkj3b8fW5S7R9W8O1HYqzwALDeQ0=
+Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
+ DM5PR2101MB0887.namprd21.prod.outlook.com (52.132.132.156) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.3; Sat, 2 Mar 2019 18:39:31 +0000
+Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
+ ([fe80::ec2d:d32b:e611:553f]) by DM5PR2101MB0918.namprd21.prod.outlook.com
+ ([fe80::ec2d:d32b:e611:553f%8]) with mapi id 15.20.1686.003; Sat, 2 Mar 2019
+ 18:39:31 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     kimbrownkd <kimbrownkd@gmail.com>, Long Li <longli@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <51d62a31-7cde-e815-bdee-4ef5433007aa@gmail.com>
- <F7CD281DE3E379468C6D07993EA72F84D17AF74C@RTITMBSVM04.realtek.com.tw>
- <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
- <e68c6aae-8d71-266a-81fe-d078ac1ef38c@lwfinger.net>
- <6eb7af74-b1a8-d112-e027-6c14252af994@gmail.com>
- <487c350c-c455-b490-8de5-1d68760aa3dc@lwfinger.net>
- <2e39892d-d206-e87f-c802-d427c54277cf@gmail.com>
- <8706d34c-1fac-84ba-759d-18d96750636b@gmail.com>
- <27e1a339-023a-360b-1e5d-1a156fc5edd2@gmail.com>
- <c64c435c-fda7-9356-0205-093182fb1398@lwfinger.net>
- <96c5b6c4-61fe-570d-ba2d-7721b1be7cca@gmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <20331a61-7d3d-7368-8c11-dbecde52c968@lwfinger.net>
-Date:   Sat, 2 Mar 2019 12:39:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <96c5b6c4-61fe-570d-ba2d-7721b1be7cca@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Subject: RE: [PATCH v4] Drivers: hv: vmbus: Expose monitor data only when
+ monitor pages are used
+Thread-Topic: [PATCH v4] Drivers: hv: vmbus: Expose monitor data only when
+ monitor pages are used
+Thread-Index: AQHU0GOP4Hnv7QzAq0Gy2Vo3bvT5e6X4q0rw
+Date:   Sat, 2 Mar 2019 18:39:30 +0000
+Message-ID: <DM5PR2101MB091825C55612FBCEA3322119D7770@DM5PR2101MB0918.namprd21.prod.outlook.com>
+References: <20190226053530.GA2897@ubu-Virtual-Machine>
+ <20190301191824.GA4108@ubu-Virtual-Machine>
+In-Reply-To: <20190301191824.GA4108@ubu-Virtual-Machine>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-02T18:39:27.7610633Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2d9ed75d-13e4-4fbd-bbbf-79ba7f57ada0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+x-originating-ip: [107.0.123.131]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fbc22955-2881-4e30-0b7f-08d69f3e6889
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR2101MB0887;
+x-ms-traffictypediagnostic: DM5PR2101MB0887:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-exchange-diagnostics: =?utf-8?B?MTtETTVQUjIxMDFNQjA4ODc7MjM6VVVkWk9zS2s1aVY2cC9OZEdPTldmN2I0?=
+ =?utf-8?B?aHNycFVEQkZkK2JXVnBHU01LSHR0Nlg3QnZpSDRLa1dYT3VFQW9UcFJQM0lk?=
+ =?utf-8?B?ZFJSNWJQUTZpQzFna1BLVm44eFNXRktHK3J6MnhlenZBMm9PWEZVc2lTVEQ5?=
+ =?utf-8?B?S1EyTjFEZFVmNHhZV3drQXBlU05zd3BmekNRU1JYSVpqVktZeEhlaS9PMzlI?=
+ =?utf-8?B?bTFrUjJjaWV2ZXBBR0hQdEc1QjhJSzBpTHFjdHJYOUpHOUFuanZ5OXVBZmVL?=
+ =?utf-8?B?T2p1WlRCYm5iNG04TFlZSnowcWJFY2xKYmRUdFh1T2N3bkhJbks4cFR4RUpW?=
+ =?utf-8?B?OHFRaDdrNS81REdEOWZIZWtmWnozZ3psQWFvZERmVGI2WnhMOXk1b2gwU3dq?=
+ =?utf-8?B?MzZ0MlVyQ2pYd0Z2bmdGZWZMNEQvUEdYaWJmdGhYZXloUHE4U2dhS0NDdE1q?=
+ =?utf-8?B?M1NvNEpLbEV2ei91OExQWEtBSFk2R1F0QnJBWlB4LzNaOEpjK25TTkFualpC?=
+ =?utf-8?B?S1hZSmY1RDNkSWNTZWxBUnhGckx4RWswRXZtdHVjaUdzS3MxTXJoS2hCdzFy?=
+ =?utf-8?B?a2JFZmF1ZnRORGQ0SUtIYkpkRHh5U0Nnc05EOVhuenJMMUdLTWUrY3JGa3U1?=
+ =?utf-8?B?bHJTVUFMRTFyNmFJanRaNXdZN3NScDgxVytuYUFKK3BYRFNDazA1cm5pbFFh?=
+ =?utf-8?B?MFVjN1lCUzhOWVR1VFpLZmNhM0dTdmx4U0lIWFpUekZvTUlzOFVlby9TMFZ1?=
+ =?utf-8?B?d1VNMTI5N2NpYXlGaHdITHk4SU5HNnA0UFVuQjRsemI3MkNQM3BaYWR3S3pK?=
+ =?utf-8?B?Qld4UVJrYXJPUVUyWXdoRnlsUmhDRjNYWml6b3A0NUFlSS95RUwwbkV2T0hK?=
+ =?utf-8?B?OEEyNUYxelcwc2h6N3RMdy9hcTdQeGFJN0JMa2dHWUxkZVQwVzAzNzNWNXFo?=
+ =?utf-8?B?bEZCS1FRL2FTc2ZBTHIvaWpJSmkzSGxnbGU5eDVNYWtJbnZsYUgwWUlsNXpI?=
+ =?utf-8?B?S1cwRWYzdFE2T3RjSG9EOGQxQ3RSSS9uazFhZkl5MGFxaXkwek5kSDJjK3JK?=
+ =?utf-8?B?cDB2RE40KzJwamVnVFpIS2k3YmV5b1g0NWVSMjAxQmVZTGJkelBramIwWEpB?=
+ =?utf-8?B?c0c5bUJXYzZUbEp5RTNPT3ZZdnF3ekpmVWM0QUducndWN1k2MUZ0dkl3cWdp?=
+ =?utf-8?B?V1ZSeVFGd2Y4RHdvblNJSFVnTXdMZHB2cHNjalZGOFNwNC9lRi91VDdEQ0hG?=
+ =?utf-8?B?VldtWDFVTWt5N09YV3ZpZVdLUDZmUmh3OEtaUHdCaHlPczhHa1BGbW84UGtX?=
+ =?utf-8?B?NHhsQlM0QmJUbzQySUpZaVZ2TEpLbFdHYkJvWU4rbnpyS3NpZVNQYmxQeVAz?=
+ =?utf-8?B?OFBrNGdCQzhkYWpWVzhCUHlBNDdIRnVkSHpDaHRzclJ5RW8xTFdnTjFRQXpP?=
+ =?utf-8?B?ZmxMNVNYdGRsYk0wazQvWjBFSU8yaHlBNHdtYjBNZ1YrTGVvZFRvcjh6bzA2?=
+ =?utf-8?B?TkhkNUMrZ2pxeVJmK2ZKQkFzRG45TWVES0dLR09nSmtnZ3NmMU9OaEsyb2VU?=
+ =?utf-8?B?emhWRG5BaXRlOGpyNHZBTGIza1E3bVh2ZGFwN0h1TXEzNmdIcE9mczVNMnc2?=
+ =?utf-8?B?RmNtWFdiWStBbW85b0tUQTMxTXJMNEhaU1VBeCtidG0wak1YcE5aNCtyZ1JQ?=
+ =?utf-8?B?UUxmbld1QitrVWVSM3RLTUI3ZEZKQVJUYnE4T01adCtkOEVMUVAraWVEMHJq?=
+ =?utf-8?B?N2xmTmx5ZFNQeTJHUzlXQm1CbmVnakFxL3FTK3dlb2dvbmdvNUoyZ2doc2VO?=
+ =?utf-8?B?WldEc2dGMXcxV243VjM3ZjVaSlN4Y1JDbjJqcWlTVUx4WENhbHFLd1JFVXFs?=
+ =?utf-8?B?ckQwZFBCRE5pWWYwZ3VBWCtqaU1NT2pDNStBYW9GK2NYWGdIeFZDcVVUTktY?=
+ =?utf-8?B?dGpBTVV3Wjd1MHc9PQ==?=
+x-microsoft-antispam-prvs: <DM5PR2101MB08875F992CB1D02EC42B9998D7770@DM5PR2101MB0887.namprd21.prod.outlook.com>
+x-forefront-prvs: 09645BAC66
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(366004)(136003)(346002)(376002)(189003)(199004)(186003)(256004)(14444005)(6506007)(76176011)(9686003)(55016002)(26005)(6346003)(6436002)(102836004)(7696005)(22452003)(97736004)(10290500003)(316002)(54906003)(110136005)(71200400001)(71190400001)(25786009)(229853002)(2501003)(68736007)(8936002)(478600001)(33656002)(14454004)(4326008)(486006)(476003)(11346002)(446003)(2906002)(6116002)(3846002)(106356001)(105586002)(305945005)(7736002)(86362001)(86612001)(53936002)(99286004)(6246003)(8676002)(81166006)(81156014)(8990500004)(1511001)(66066001)(10090500001)(52536013)(5660300002)(74316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0887;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eSf5w7Jcc5wYSQaacVp0KPoGv5ycQZ5un+EugdCpDDuK3xUFkzAXKUl29TIr2ivO46iuz1MjQWsDxPUglY4cBHlGsLG7okoHp1qj15IqMmCl8jJSmSOWLTQTquyf67XMapA+qV4FmkZxyh3RZ3MyhQlhki65736aCy/Z7ac/HgfEPqItQm+qAJSqnl8FzlTzI5pKnGzHRbTK2XjJylfUjtfmSDtDdkiebM8DKtuPqndDcPYyZ9VQrXnvVxRvbt8RvCrteKQCr00v61e5wqsSKS3D68CVZSlWhq1iFLC1ZyoimCNGkyvdAlISFL2swIkOoNSYG+jixX20qmT1D9Aw4DeHExRy8C63AOuisk05dkvtLRVhJvDNpc476yvjTBMFXnDYAWuLBjMMFkOqTgKGsh7Lpxi5k4cdPrZj5bymzV4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbc22955-2881-4e30-0b7f-08d69f3e6889
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2019 18:39:30.8765
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0887
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/19 12:09 PM, David R. Bergstein wrote:
-> Larry,
-> 
-> I tried using iw but it gives the same reading for bit rate.  In regard
-> to the firmware, it was not installed via "make install" so I did it
-> manually.
-
-David,
-
-There was a typo in the Makefile. 'make install' now installs the firmware 
-correctly.
-
-Larry
-
-
+RnJvbTogS2ltYmVybHkgQnJvd24gPGtpbWJyb3dua2RAZ21haWwuY29tPiAgU2VudDogRnJpZGF5
+LCBNYXJjaCAxLCAyMDE5IDExOjE4IEFNDQo+IA0KPiArLyoNCj4gKyAqIENoYW5uZWwtbGV2ZWwg
+YXR0cmlidXRlX2dyb3VwIGNhbGxiYWNrIGZ1bmN0aW9uLiBSZXR1cm5zIHRoZSBwZXJtaXNzaW9u
+IGZvcg0KPiArICogZWFjaCBhdHRyaWJ1dGUsIGFuZCByZXR1cm5zIDAgaWYgYW4gYXR0cmlidXRl
+IGlzIG5vdCB2aXNpYmxlLg0KPiArICovDQo+ICtzdGF0aWMgdW1vZGVfdCB2bWJ1c19jaGFuX2F0
+dHJfaXNfdmlzaWJsZShzdHJ1Y3Qga29iamVjdCAqa29iaiwNCj4gKwkJCQkJICBzdHJ1Y3QgYXR0
+cmlidXRlICphdHRyLCBpbnQgaWR4KQ0KPiArew0KPiArCWNvbnN0IHN0cnVjdCB2bWJ1c19jaGFu
+bmVsICpjaGFubmVsID0NCj4gKwkJY29udGFpbmVyX29mKGtvYmosIHN0cnVjdCB2bWJ1c19jaGFu
+bmVsLCBrb2JqKTsNCj4gKw0KPiArCS8qIEhpZGUgdGhlIG1vbml0b3IgYXR0cmlidXRlcyBpZiB0
+aGUgbW9uaXRvciBtZWNoYW5pc20gaXMgbm90IHVzZWQuICovDQo+ICsJaWYgKCFjaGFubmVsLT5v
+ZmZlcm1zZy5tb25pdG9yX2FsbG9jYXRlZCAmJg0KPiArCSAgICAoYXR0ciA9PSAmY2hhbl9hdHRy
+X3BlbmRpbmcuYXR0ciB8fA0KPiArCSAgICAgYXR0ciA9PSAmY2hhbl9hdHRyX2xhdGVuY3kuYXR0
+ciB8fA0KPiArCSAgICAgYXR0ciA9PSAmY2hhbl9hdHRyX21vbml0b3JfaWQuYXR0cikpDQo+ICsJ
+CXJldHVybiAwOw0KPiArDQo+ICsJcmV0dXJuIGF0dHItPm1vZGU7DQo+ICt9DQo+ICsNCj4gK3N0
+YXRpYyBzdHJ1Y3QgYXR0cmlidXRlX2dyb3VwIHZtYnVzX2NoYW5fZ3JvdXAgPSB7DQo+ICsJLmF0
+dHJzID0gdm1idXNfY2hhbl9hdHRycywNCj4gKwkuaXNfdmlzaWJsZSA9IHZtYnVzX2NoYW5fYXR0
+cl9pc192aXNpYmxlDQo+ICt9Ow0KPiArDQo+ICBzdGF0aWMgc3RydWN0IGtvYmpfdHlwZSB2bWJ1
+c19jaGFuX2t0eXBlID0gew0KPiAgCS5zeXNmc19vcHMgPSAmdm1idXNfY2hhbl9zeXNmc19vcHMs
+DQo+ICAJLnJlbGVhc2UgPSB2bWJ1c19jaGFuX3JlbGVhc2UsDQo+IC0JLmRlZmF1bHRfYXR0cnMg
+PSB2bWJ1c19jaGFuX2F0dHJzLA0KDQpKdXN0IHRvIGRvdWJsZS1jaGVjayBteSB1bmRlcnN0YW5k
+aW5nLCByZW1vdmluZyB0aGUgZGVmYXVsdF9hdHRycw0KaGVyZSBtZWFucyB0aGF0IGluIHZtYnVz
+X2FkZF9jaGFubmVsX2tvYmooKSwgdGhlIGNhbGwgdG8NCmtvYmplY3RfaW5pdF9hbmRfYWRkKCkg
+d2lsbCBvbmx5IGNyZWF0ZSB0aGUgc3ViLWRpcmVjdG9yeSB0aGF0IGlzIHRoZQ0KY2hhbm5lbCBu
+dW1iZXIuICBUaGUgc3ViLWRpcmVjdG9yeSB3aWxsIGJlIGVtcHR5LiAgVGhlbiB0aGUgbmV3DQpj
+YWxsIHRvIHN5c2ZzX2NyZWF0ZV9ncm91cCgpIHRoYXQgeW91IGFkZGVkIGJlbG93IHdpbGwgcG9w
+dWxhdGUNCnRoZSBzdWJkaXJlY3RvcnksIGFzIGZpbHRlcmVkIGJ5IHZtYnVzX2NoYW5fYXR0cl9p
+c192aXNpYmxlKCkuDQoNCj4gIH07DQo+IA0KPiAgLyoNCj4gQEAgLTE1NzEsNiArMTYyNCwxMiBA
+QCBpbnQgdm1idXNfYWRkX2NoYW5uZWxfa29iaihzdHJ1Y3QgaHZfZGV2aWNlICpkZXYsIHN0cnVj
+dA0KPiB2bWJ1c19jaGFubmVsICpjaGFubmVsKQ0KPiAgCWlmIChyZXQpDQo+ICAJCXJldHVybiBy
+ZXQ7DQo+IA0KPiArCXJldCA9IHN5c2ZzX2NyZWF0ZV9ncm91cChrb2JqLCAmdm1idXNfY2hhbl9n
+cm91cCk7DQo+ICsJaWYgKHJldCkgew0KPiArCQlwcl9lcnIoIlVuYWJsZSB0byBzZXQgdXAgY2hh
+bm5lbCBzeXNmcyBmaWxlc1xuIik7DQo+ICsJCXJldHVybiByZXQ7DQoNCkluIHRoaXMgZXJyb3Ig
+Y2FzZSwgdGhlIHByZXZpb3VzbHkgY3JlYXRlZCBzdWItZGlyZWN0b3J5IHRoYXQgaXMgdGhlDQpj
+aGFubmVsIG51bWJlciBuZWVkcyB0byBiZSBkZWxldGVkL2NsZWFuZWQgdXAuDQoNCj4gKwl9DQo+
+ICsNCg0KTWljaGFlbA0K
