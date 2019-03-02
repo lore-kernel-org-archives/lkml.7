@@ -2,82 +2,116 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA3BC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 17:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D6AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 17:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEAE20836
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 17:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0E920830
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 17:59:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="ESM1wsI2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJR06GBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfCBRy0 (ORCPT
+        id S1726910AbfCBR7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 12:54:26 -0500
-Received: from tomli.me ([153.92.126.73]:41934 "EHLO tomli.me"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727209AbfCBRyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 12:54:23 -0500
-Received: from tomli.me (localhost [127.0.0.1])
-        by tomli.me (OpenSMTPD) with ESMTP id 04ab6b38;
-        Sat, 2 Mar 2019 17:54:20 +0000 (UTC)
-X-HELO: localhost.lan
-Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
-Received: from Unknown (HELO localhost.lan) (2402:f000:1:1501:200:5efe:3d30:3659)
- by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Sat, 02 Mar 2019 17:54:19 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=from:to:cc:subject:date:message-id:in-reply-to:references:mime-version:content-transfer-encoding; s=1490979754; bh=foHmT6tpUB7T3HL59GtGQQQmGWB4MM4AVOND1ASTjGg=; b=ESM1wsI2X5jVsRXHT0KDSHx0U0CaVy0uVsP72SGkmYUFzP/mWUVOOIPIyjJqL7DOeGvV/ATVDoTBXetlV57+X/+l+/CJga6+LdDsfsbcX+JmnQ8OsiDr7ViX08NepiSWuCDXux4ehw2VLiUzQ+GBVOYkf51kcFVJLp421KrkYKHc4P/xCGSvDpAFxsXob8XrN28uuIO9pNe4U+XGSM2cTKFm+06QnbTRLF5NuxonWB9kttvA+Ebab6e9M4C4CWIY/YY5vWy2vOF40oIXTKmxwNSYKawgUEl2QXZ0EKWRmcd0vDyg16CyCD6H4CzVxsqMX0c5ZCXXhbZFK+QrSXAThg==
-From:   Yifeng Li <tomli@tomli.me>
-To:     Lee Jones <lee.jones@linaro.org>, linux-mips@vger.kernel.org
-Cc:     Yifeng Li <tomli@tomli.me>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] MAINTAINERS: add myself as a maintainer of MIPS/Loongson2 platform code.
-Date:   Sun,  3 Mar 2019 01:53:34 +0800
-Message-Id: <20190302175334.5103-8-tomli@tomli.me>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190302175334.5103-1-tomli@tomli.me>
-References: <20190302175334.5103-1-tomli@tomli.me>
+        Sat, 2 Mar 2019 12:59:16 -0500
+Received: from mail-ot1-f50.google.com ([209.85.210.50]:43192 "EHLO
+        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfCBR7Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 12:59:16 -0500
+Received: by mail-ot1-f50.google.com with SMTP id n71so900363ota.10;
+        Sat, 02 Mar 2019 09:59:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sDx/M7qP93enJkvGW388g5o0KovC/DQqsEAbG9aprjw=;
+        b=dJR06GBN29wHi+OGhoRnEREyzjXWK20wSZICzvoW8Yh5dW8nw/dE4wQdG1aLR4GnmA
+         mM/8Xrw5jeo2AQCcDwPeodqjuHQjLO+tBR6Z2QfS5thUFjwE8WatY5KdPVHrDzu72/iI
+         yurngpdylViKVRI4NWqOnUiSp2OH1KULNeNaRdjjMj/7Yiig9D6ZUb5djUxkFzE0/xH3
+         ugDK4rffzPDEnQKZn1dfQhb/D689M01mX43q79xo4t3wLXyDfi79vDHIsm/s2Fl/gJB5
+         fMzAzDaoRpZXrAPUHeRcscpp2B1iQVnnELVwd145C2LOwgMwcLq+aoG0nqGiwTxyZoAZ
+         l1IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sDx/M7qP93enJkvGW388g5o0KovC/DQqsEAbG9aprjw=;
+        b=OF4gEVnVdJy9AZDErq4CAn2KdFMbCO6F2LHyTtPhcBupxsEYnJwKbvT/07hW3dFtr2
+         D18bMn5ksbkSXqCxgIy7OTWelGlxKECBJv40jHIulPB6C2e2rDA9Iu3j4ipIxgHzkTlD
+         7ShiSo1J1Kqu7aFtU4nbnaLcEEiBkghSl54AmhxNCdpdvkQmc+H7k3YlhRwo/UlVR+G8
+         a5F3C1O6SRZuk5FZxzSHXrufcju/T6CmUCoJfXS1vJM28dqj/CauIDsLcQOUTO9Ubr+T
+         MMS4gg4Dlb7b+NJKAjpfjS4C+ooP01Z9IaIC6CUwR6Qtx62PPSGnJY20T3uQml3wIGdP
+         mHEw==
+X-Gm-Message-State: APjAAAVkDnOwE5e3curxdo279gahPdmw3fg612J+7J8766mU1ZIA3BCb
+        9cMgMnooogUoKBIL4eo+Hxc+30p3
+X-Google-Smtp-Source: APXvYqzFmHrUIb15HpTGtnZgNW4mQXfJSznirwHpJQpBFfioa7pSXNV05VrTCvHXm1HJLMIvEBHWDg==
+X-Received: by 2002:a9d:4b13:: with SMTP id q19mr7510583otf.304.1551549554516;
+        Sat, 02 Mar 2019 09:59:14 -0800 (PST)
+Received: from [192.168.1.126] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id t77sm449296oie.26.2019.03.02.09.59.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 02 Mar 2019 09:59:13 -0800 (PST)
+Subject: Re: Realtek r8822be kernel module does not negotiate 802.11ac
+ connection
+To:     "David R. Bergstein" <david.r.bergstein@gmail.com>,
+        Tony Chuang <yhchuang@realtek.com>
+Cc:     Pkshih <pkshih@realtek.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <51d62a31-7cde-e815-bdee-4ef5433007aa@gmail.com>
+ <F7CD281DE3E379468C6D07993EA72F84D17AF74C@RTITMBSVM04.realtek.com.tw>
+ <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
+ <e68c6aae-8d71-266a-81fe-d078ac1ef38c@lwfinger.net>
+ <6eb7af74-b1a8-d112-e027-6c14252af994@gmail.com>
+ <487c350c-c455-b490-8de5-1d68760aa3dc@lwfinger.net>
+ <2e39892d-d206-e87f-c802-d427c54277cf@gmail.com>
+ <8706d34c-1fac-84ba-759d-18d96750636b@gmail.com>
+ <27e1a339-023a-360b-1e5d-1a156fc5edd2@gmail.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <c64c435c-fda7-9356-0205-093182fb1398@lwfinger.net>
+Date:   Sat, 2 Mar 2019 11:58:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <27e1a339-023a-360b-1e5d-1a156fc5edd2@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've introduced platform code for Lemote Yeeloong computers and modified
-power management-related files. Add myself as a maintainer of these code.
+On 3/1/19 9:52 PM, David R. Bergstein wrote:
+> Larry,
+> 
+> Sorry about all these extra replies.  Shortly after I sent my last
+> message my access point started recognizing the connection as 802.11ac
+> with PHY Rate / Modulation Rate of 866.6 Mbps.  What is somewhat
+> misleading is the information reported by iwconfig (see bit rate below).
+> 
+> $ iwconfig wlo1
+> wlo1      IEEE 802.11  ESSID:"XXXXXXXXXX-5G"
+>            Mode:Managed  Frequency:5.22 GHz  Access Point:
+> xx:xx:xx:xx:xx:xx
+>            Bit Rate=6.5 Mb/s   Tx-Power=23 dBm
+>            Retry short limit:7   RTS thr:off   Fragment thr:off
+>            Power Management:on
+>            Link Quality=70/70  Signal level=-40 dBm
+>            Rx invalid nwid:0  Rx invalid crypt:0  Rx invalid frag:0
+>            Tx excessive retries:0  Invalid misc:11   Missed beacon:0
 
-Signed-off-by: Yifeng Li <tomli@tomli.me>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+The utility iwconfig is obsolete and not exactly up to date with the latest in 
+wireless. I am not an expert on iw, but I think you want 'iw dev wlo1 link'.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 208f19801a23..a82cd47927c1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10134,6 +10134,15 @@ F:	arch/mips/include/asm/mach-loongson64/
- F:	drivers/*/*loongson2*
- F:	drivers/*/*/*loongson2*
- 
-+MIPS/LOONGSON2 LEMOTE PLATFORM AND POWER MANAGEMENT DRIVER
-+M:	Tom Li <tomli@tomli.me>
-+L:	linux-mips@vger.kernel.org
-+S:	Maintained
-+F:	arch/mips/loongson64/common/platform.c
-+F:	arch/mips/loongson64/lemote-2f/pm.c
-+F:	arch/mips/loongson64/lemote-2f/sci.c
-+F:	arch/mips/loongson64/lemote-2f/platform.c
-+
- MIPS/LOONGSON3 ARCHITECTURE
- M:	Huacai Chen <chenhc@lemote.com>
- L:	linux-mips@vger.kernel.org
--- 
-2.20.1
+I am wondering about the missing firmware stage. Had you not done the 'sudo make 
+install' step, or did that step fail to install the firmware?
+
+Larry
 
