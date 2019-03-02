@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D7CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E50C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABCC20838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA63020838
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Oo5pcamB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="A0HuhlUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfCBXgj (ORCPT
+        id S1727277AbfCBXgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 18:36:39 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:35484 "EHLO
+        Sat, 2 Mar 2019 18:36:46 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:35594 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfCBXgh (ORCPT
+        with ESMTP id S1727249AbfCBXgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 18:36:37 -0500
+        Sat, 2 Mar 2019 18:36:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1551569794; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1551569800; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=H+7Ak1Ej5G/ZDjD49LA+VYriL4Mo6sDGFqSst+iXhY0=;
-        b=Oo5pcamBxAhllqhJvIYVE8YUkOi23A/bQIBDwsc2x/p1yl964WYawPtq66NZvdCgD4Z/6P
-        FNnSgVtkrdjSrGk296xjQAzfP7qOwEBP7RvImHdy2W4DTfwbStmfG+jsKgq9pyQDq3rccC
-        aUil3XKHEaKtiNCsqlvavpm/+aAee5g=
+        bh=kYQr/vg1nrG1G0ivoz+7hR5xR6cCY4JqbCWVjMCC1gU=;
+        b=A0HuhlUu0mkcEhGcK4sXw0LKUxOVaaCnf3NvjGtyioZdPnSrxWY8lgUFwujK+gI/6D1p+G
+        88c0hY2lpSEu04rFyGalk8jWUcio8S3nx3cG211sE3XdcRDGl0uIsg9MZXEqOLNudxeuMh
+        mH9IRJUOYQ3wz2CmA5dQ4F9GxovmyMw=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -45,9 +45,9 @@ Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
         linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v10 20/27] MIPS: jz4740: Add DTS nodes for the TCU drivers
-Date:   Sat,  2 Mar 2019 20:34:06 -0300
-Message-Id: <20190302233413.14813-21-paul@crapouillou.net>
+Subject: [PATCH v10 21/27] MIPS: qi_lb60: Move PWM devices to devicetree
+Date:   Sat,  2 Mar 2019 20:34:07 -0300
+Message-Id: <20190302233413.14813-22-paul@crapouillou.net>
 In-Reply-To: <20190302233413.14813-1-paul@crapouillou.net>
 References: <20190302233413.14813-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,7 +55,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DTS nodes for the JZ4780, JZ4770 and JZ4740 devicetree files.
+Probe the few drivers using PWMs from devicetree, now that we have a
+devicetree node for the PWM driver.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
@@ -65,259 +66,110 @@ Tested-by: Artur Rojek <contact@artur-rojek.eu>
 Notes:
          v5: New patch
     
-         v6: Fix register lengths in watchdog/pwm nodes
+         v6: No change
     
          v7: No change
     
-         v8: - Fix wrong start address for PWM node
-             - Add system timer and clocksource sub-nodes
+         v8: No change
     
-         v9: Drop timer and clocksource sub-nodes
+         v9: No change
     
          v10: No change
 
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 51 +++++++++++++++++++++++---
- arch/mips/boot/dts/ingenic/jz4770.dtsi | 59 ++++++++++++++++++++++++++++++
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 67 ++++++++++++++++++++++++++++++----
- 3 files changed, 164 insertions(+), 13 deletions(-)
+ arch/mips/boot/dts/ingenic/qi_lb60.dts | 14 ++++++++++++++
+ arch/mips/jz4740/board-qi_lb60.c       | 19 -------------------
+ 2 files changed, 14 insertions(+), 19 deletions(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 2beb78a62b7d..bfa97e29f348 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4740-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -45,12 +46,52 @@
- 		#clock-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/qi_lb60.dts b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+index 76aaf8982554..85529a142409 100644
+--- a/arch/mips/boot/dts/ingenic/qi_lb60.dts
++++ b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+@@ -9,6 +9,14 @@
+ 	chosen {
+ 		stdout-path = &uart0;
  	};
- 
--	watchdog: watchdog@10002000 {
--		compatible = "ingenic,jz4740-watchdog";
--		reg = <0x10002000 0x10>;
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4740-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
- 
--		clocks = <&cgu JZ4740_CLK_RTC>;
--		clock-names = "rtc";
-+		#clock-cells = <1>;
 +
-+		clocks = <&cgu JZ4740_CLK_RTC
-+			  &cgu JZ4740_CLK_EXT
-+			  &cgu JZ4740_CLK_PCLK
-+			  &cgu JZ4740_CLK_TCU>;
-+		clock-names = "rtc", "ext", "pclk", "tcu";
++	beeper {
++		compatible = "pwm-beeper";
++		pwms = <&pwm 4 0 0>;
 +
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <23 22 21>;
-+
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4740-watchdog";
-+			reg = <0x0 0xc>;
-+
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
-+
-+		pwm: pwm@40 {
-+			compatible = "ingenic,jz4740-pwm";
-+			reg = <0x40 0x80>;
-+
-+			#pwm-cells = <3>;
-+
-+			clocks = <&tcu TCU_CLK_TIMER0
-+				  &tcu TCU_CLK_TIMER1
-+				  &tcu TCU_CLK_TIMER2
-+				  &tcu TCU_CLK_TIMER3
-+				  &tcu TCU_CLK_TIMER4
-+				  &tcu TCU_CLK_TIMER5
-+				  &tcu TCU_CLK_TIMER6
-+				  &tcu TCU_CLK_TIMER7>;
-+			clock-names = "timer0", "timer1", "timer2", "timer3",
-+				      "timer4", "timer5", "timer6", "timer7";
-+		};
- 	};
- 
- 	rtc_dev: rtc@10003000 {
-diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-index 49ede6c14ff3..89c7a4b9773c 100644
---- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- #include <dt-bindings/clock/jz4770-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -46,6 +47,64 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4770-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
-+
-+		#clock-cells = <1>;
-+
-+		clocks = <&cgu JZ4770_CLK_RTC
-+			  &cgu JZ4770_CLK_EXT
-+			  &cgu JZ4770_CLK_PCLK
-+			  &cgu JZ4770_CLK_EXT>;
-+		clock-names = "rtc", "ext", "pclk", "tcu";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <27 26 25>;
-+
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4740-watchdog";
-+			reg = <0x0 0xc>;
-+
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
-+
-+		pwm: pwm@40 {
-+			compatible = "ingenic,jz4740-pwm";
-+			reg = <0x40 0x80>;
-+
-+			#pwm-cells = <3>;
-+
-+			clocks = <&tcu TCU_CLK_TIMER0
-+				  &tcu TCU_CLK_TIMER1
-+				  &tcu TCU_CLK_TIMER2
-+				  &tcu TCU_CLK_TIMER3
-+				  &tcu TCU_CLK_TIMER4
-+				  &tcu TCU_CLK_TIMER5
-+				  &tcu TCU_CLK_TIMER6
-+				  &tcu TCU_CLK_TIMER7>;
-+			clock-names = "timer0", "timer1", "timer2", "timer3",
-+				      "timer4", "timer5", "timer6", "timer7";
-+		};
-+
-+		ost: timer@e0 {
-+			compatible = "ingenic,jz4770-ost";
-+			reg = <0xe0 0x20>;
-+
-+			clocks = <&tcu TCU_CLK_OST>;
-+			clock-names = "ost";
-+
-+			interrupts = <15>;
-+		};
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_pwm4>;
 +	};
-+
- 	pinctrl: pin-controller@10010000 {
- 		compatible = "ingenic,jz4770-pinctrl";
- 		reg = <0x10010000 0x600>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index b03cdec56de9..9f45c075b4f8 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <dt-bindings/clock/jz4780-cgu.h>
-+#include <dt-bindings/clock/ingenic,tcu.h>
- #include <dt-bindings/dma/jz4780-dma.h>
+ };
  
- / {
-@@ -46,6 +47,64 @@
- 		#clock-cells = <1>;
+ &ext {
+@@ -30,4 +38,10 @@
+ 		groups = "uart0-data";
+ 		bias-disable;
  	};
- 
-+	tcu: timer@10002000 {
-+		compatible = "ingenic,jz4770-tcu";
-+		reg = <0x10002000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x10002000 0x1000>;
 +
-+		#clock-cells = <1>;
-+
-+		clocks = <&cgu JZ4780_CLK_RTCLK
-+			  &cgu JZ4780_CLK_EXCLK
-+			  &cgu JZ4780_CLK_PCLK
-+			  &cgu JZ4780_CLK_EXCLK>;
-+		clock-names = "rtc", "ext", "pclk", "tcu";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <27 26 25>;
-+
-+		watchdog: watchdog@0 {
-+			compatible = "ingenic,jz4780-watchdog";
-+			reg = <0x0 0xc>;
-+
-+			clocks = <&tcu TCU_CLK_WDT>;
-+			clock-names = "wdt";
-+		};
-+
-+		pwm: pwm@40 {
-+			compatible = "ingenic,jz4740-pwm";
-+			reg = <0x40 0x80>;
-+
-+			#pwm-cells = <3>;
-+
-+			clocks = <&tcu TCU_CLK_TIMER0
-+				  &tcu TCU_CLK_TIMER1
-+				  &tcu TCU_CLK_TIMER2
-+				  &tcu TCU_CLK_TIMER3
-+				  &tcu TCU_CLK_TIMER4
-+				  &tcu TCU_CLK_TIMER5
-+				  &tcu TCU_CLK_TIMER6
-+				  &tcu TCU_CLK_TIMER7>;
-+			clock-names = "timer0", "timer1", "timer2", "timer3",
-+				      "timer4", "timer5", "timer6", "timer7";
-+		};
-+
-+		ost: timer@e0 {
-+			compatible = "ingenic,jz4770-ost";
-+			reg = <0xe0 0x20>;
-+
-+			clocks = <&tcu TCU_CLK_OST>;
-+			clock-names = "ost";
-+
-+			interrupts = <15>;
-+		};
++	pins_pwm4: pwm4 {
++		function = "pwm4";
++		groups = "pwm4";
++		bias-disable;
 +	};
-+
- 	rtc_dev: rtc@10003000 {
- 		compatible = "ingenic,jz4780-rtc";
- 		reg = <0x10003000 0x4c>;
-@@ -239,14 +298,6 @@
- 		status = "disabled";
- 	};
+ };
+diff --git a/arch/mips/jz4740/board-qi_lb60.c b/arch/mips/jz4740/board-qi_lb60.c
+index 6718efb400f4..02b9c131a051 100644
+--- a/arch/mips/jz4740/board-qi_lb60.c
++++ b/arch/mips/jz4740/board-qi_lb60.c
+@@ -27,7 +27,6 @@
+ #include <linux/power_supply.h>
+ #include <linux/power/jz4740-battery.h>
+ #include <linux/power/gpio-charger.h>
+-#include <linux/pwm.h>
  
--	watchdog: watchdog@10002000 {
--		compatible = "ingenic,jz4780-watchdog";
--		reg = <0x10002000 0x10>;
+ #include <linux/platform_data/jz4740/jz4740_nand.h>
+ 
+@@ -395,17 +394,6 @@ static struct gpiod_lookup_table qi_lb60_mmc_gpio_table = {
+ 	},
+ };
+ 
+-/* beeper */
+-static struct pwm_lookup qi_lb60_pwm_lookup[] = {
+-	PWM_LOOKUP("jz4740-pwm", 4, "pwm-beeper", NULL, 0,
+-		   PWM_POLARITY_NORMAL),
+-};
 -
--		clocks = <&cgu JZ4780_CLK_RTCLK>;
--		clock-names = "rtc";
--	};
+-static struct platform_device qi_lb60_pwm_beeper = {
+-	.name = "pwm-beeper",
+-	.id = -1,
+-};
 -
- 	nemc: nemc@13410000 {
- 		compatible = "ingenic,jz4780-nemc";
- 		reg = <0x13410000 0x10000>;
+ /* charger */
+ static char *qi_lb60_batteries[] = {
+ 	"battery",
+@@ -454,10 +442,8 @@ static struct platform_device *jz_platform_devices[] __initdata = {
+ 	&jz4740_i2s_device,
+ 	&jz4740_codec_device,
+ 	&jz4740_adc_device,
+-	&jz4740_pwm_device,
+ 	&jz4740_dma_device,
+ 	&qi_lb60_gpio_keys,
+-	&qi_lb60_pwm_beeper,
+ 	&qi_lb60_charger_device,
+ 	&qi_lb60_audio_device,
+ };
+@@ -486,10 +472,6 @@ static struct pinctrl_map pin_map[] __initdata = {
+ 			"10010000.jz4740-pinctrl", "PD0", pin_cfg_bias_disable),
+ 	PIN_MAP_CONFIGS_PIN_DEFAULT("jz4740-mmc.0",
+ 			"10010000.jz4740-pinctrl", "PD2", pin_cfg_bias_disable),
+-
+-	/* PWM pin configuration */
+-	PIN_MAP_MUX_GROUP_DEFAULT("jz4740-pwm",
+-			"10010000.jz4740-pinctrl", "pwm4", "pwm4"),
+ };
+ 
+ 
+@@ -508,7 +490,6 @@ static int __init qi_lb60_init_platform_devices(void)
+ 	spi_register_board_info(qi_lb60_spi_board_info,
+ 				ARRAY_SIZE(qi_lb60_spi_board_info));
+ 
+-	pwm_add_table(qi_lb60_pwm_lookup, ARRAY_SIZE(qi_lb60_pwm_lookup));
+ 	pinctrl_register_mappings(pin_map, ARRAY_SIZE(pin_map));
+ 
+ 	return platform_add_devices(jz_platform_devices,
 -- 
 2.11.0
 
