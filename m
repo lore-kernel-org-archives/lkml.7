@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB88CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10A0C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40C22075B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807F82075B
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbfCBCxv (ORCPT
+        id S1728384AbfCBCyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 21:53:51 -0500
+        Fri, 1 Mar 2019 21:54:03 -0500
 Received: from mga04.intel.com ([192.55.52.120]:49764 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727800AbfCBCwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727782AbfCBCwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 Mar 2019 21:52:30 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from fmsmga004.fm.intel.com ([10.253.24.48])
   by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Mar 2019 18:52:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,430,1544515200"; 
-   d="scan'208";a="148572607"
+   d="scan'208";a="148572610"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
   by fmsmga004.fm.intel.com with ESMTP; 01 Mar 2019 18:52:28 -0800
 From:   Fenghua Yu <fenghua.yu@intel.com>
@@ -41,9 +41,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v4 07/17] x86/split_lock: Enumerate #AC for split lock by MSR IA32_CORE_CAPABILITY
-Date:   Fri,  1 Mar 2019 18:45:01 -0800
-Message-Id: <1551494711-213533-8-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v4 08/17] x86/clearcpuid: Support multiple clearcpuid options
+Date:   Fri,  1 Mar 2019 18:45:02 -0800
+Message-Id: <1551494711-213533-9-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
 References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
@@ -52,105 +52,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bits in MSR IA32_CORE_CAPABILITY enumerate features that are not
-enumerated through CPUID. Currently bit 5 is defined to enumerate
-feature of #AC for split lock accesses. All other bits are reserved now.
+Currently only one kernel option "clearcpuid=" can be picked up by
+kernel during boot time.
 
-When the bit 5 is 1, the feature is supported and feature bit
-X86_FEATURE_SPLIT_LOCK_DETECT is set. Otherwise, the feature is not
-available.
+In some cases, user may want to clear a few cpu caps. This may be
+useful to replace endless (new) kernel options like nosmep, nosmap,
+etc.
 
-The MSR IA32_CORE_CAPABILITY itself is enumerated by
-CPUID.(EAX=0x7,ECX=0):EDX[30].
+We add support of multiple clearcpuid options to allow user to clear
+multiple cpu caps.
 
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- arch/x86/include/asm/cpu.h         |  5 +++++
- arch/x86/include/asm/cpufeatures.h |  1 +
- arch/x86/kernel/cpu/common.c       |  1 +
- arch/x86/kernel/cpu/cpuid-deps.c   |  1 +
- arch/x86/kernel/cpu/intel.c        | 21 +++++++++++++++++++++
- 5 files changed, 29 insertions(+)
+ arch/x86/include/asm/cmdline.h |  3 +++
+ arch/x86/kernel/fpu/init.c     | 30 ++++++++++++++++++++----------
+ arch/x86/lib/cmdline.c         | 17 +++++++++++++++--
+ 3 files changed, 38 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index adc6cc86b062..e241abce1a2a 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -40,4 +40,9 @@ int mwait_usable(const struct cpuinfo_x86 *);
- unsigned int x86_family(unsigned int sig);
- unsigned int x86_model(unsigned int sig);
- unsigned int x86_stepping(unsigned int sig);
-+#ifdef CONFIG_CPU_SUP_INTEL
-+void init_core_capability(struct cpuinfo_x86 *c);
-+#else
-+static inline void init_core_capability(struct cpuinfo_x86 *c) {}
-+#endif
- #endif /* _ASM_X86_CPU_H */
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 350eeccd0ce9..54c73e74213d 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -221,6 +221,7 @@
- #define X86_FEATURE_ZEN			( 7*32+28) /* "" CPU is AMD family 0x17 (Zen) */
- #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
- #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
-+#define X86_FEATURE_SPLIT_LOCK_DETECT	( 7*32+31) /* #AC for split lock */
+diff --git a/arch/x86/include/asm/cmdline.h b/arch/x86/include/asm/cmdline.h
+index 6faaf27e8899..059e29558bb3 100644
+--- a/arch/x86/include/asm/cmdline.h
++++ b/arch/x86/include/asm/cmdline.h
+@@ -5,5 +5,8 @@
+ int cmdline_find_option_bool(const char *cmdline_ptr, const char *option);
+ int cmdline_find_option(const char *cmdline_ptr, const char *option,
+ 			char *buffer, int bufsize);
++int cmdline_find_option_in_range(const char *cmdline_ptr, int cmdline_size,
++				 const char *option, char *buffer, int bufsize,
++				 char **arg_pos);
  
- /* Virtualization flags: Linux defined, word 8 */
- #define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 51ab37ba5f64..79e7cc0c4c85 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -897,6 +897,7 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ #endif /* _ASM_X86_CMDLINE_H */
+diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
+index 6abd83572b01..88bbba7ee96a 100644
+--- a/arch/x86/kernel/fpu/init.c
++++ b/arch/x86/kernel/fpu/init.c
+@@ -243,16 +243,31 @@ static void __init fpu__init_system_ctx_switch(void)
+ 	WARN_ON_FPU(current->thread.fpu.initialized);
+ }
  
- 	init_scattered_cpuid_features(c);
- 	init_speculation_control(c);
-+	init_core_capability(c);
- 
- 	/*
- 	 * Clear/Set all flags overridden by options, after probe.
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index 2c0bd38a44ab..5ba11ce99f92 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -59,6 +59,7 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_AVX512_4VNNIW,	X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_4FMAPS,	X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_VPOPCNTDQ, X86_FEATURE_AVX512F   },
-+	{ X86_FEATURE_SPLIT_LOCK_DETECT, X86_FEATURE_CORE_CAPABILITY},
- 	{}
- };
- 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index fc3c07fe7df5..0c44c49f6005 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1029,3 +1029,24 @@ static const struct cpu_dev intel_cpu_dev = {
- 
- cpu_dev_register(intel_cpu_dev);
- 
-+/**
-+ * init_core_capability - enumerate features supported in IA32_CORE_CAPABILITY
-+ * @c: pointer to cpuinfo_x86
-+ *
-+ * Return: void
-+ */
-+void init_core_capability(struct cpuinfo_x86 *c)
++static void __init clear_cpuid(void)
 +{
-+	/*
-+	 * If MSR_IA32_CORE_CAPABILITY exists, enumerate features that are
-+	 * reported in the MSR.
-+	 */
-+	if (c == &boot_cpu_data && cpu_has(c, X86_FEATURE_CORE_CAPABILITY)) {
-+		u64 val;
++	char arg[32], *argptr, *option_pos, clearcpuid_option[] = "clearcpuid";
++	int bit, cmdline_size;
 +
-+		rdmsrl(MSR_IA32_CORE_CAPABILITY, val);
-+
-+		if (val & CORE_CAP_SPLIT_LOCK_DETECT)
-+			setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
++	/* Find each option in boot_command_line and clear specified cpu cap. */
++	cmdline_size = COMMAND_LINE_SIZE;
++	while (cmdline_find_option_in_range(boot_command_line, cmdline_size,
++					    clearcpuid_option, arg,
++					    sizeof(arg), &option_pos) >= 0) {
++		/* Chang command line range for next search. */
++		cmdline_size = option_pos - boot_command_line + 1;
++		argptr = arg;
++		if (get_option(&argptr, &bit) &&
++		    bit >= 0 && bit < NCAPINTS * 32)
++			setup_clear_cpu_cap(bit);
 +	}
 +}
++
+ /*
+  * We parse fpu parameters early because fpu__init_system() is executed
+  * before parse_early_param().
+  */
+ static void __init fpu__init_parse_early_param(void)
+ {
+-	char arg[32];
+-	char *argptr = arg;
+-	int bit;
+-
+ 	if (cmdline_find_option_bool(boot_command_line, "no387"))
+ 		setup_clear_cpu_cap(X86_FEATURE_FPU);
+ 
+@@ -271,12 +286,7 @@ static void __init fpu__init_parse_early_param(void)
+ 	if (cmdline_find_option_bool(boot_command_line, "noxsaves"))
+ 		setup_clear_cpu_cap(X86_FEATURE_XSAVES);
+ 
+-	if (cmdline_find_option(boot_command_line, "clearcpuid", arg,
+-				sizeof(arg)) &&
+-	    get_option(&argptr, &bit) &&
+-	    bit >= 0 &&
+-	    bit < NCAPINTS * 32)
+-		setup_clear_cpu_cap(bit);
++	clear_cpuid();
+ }
+ 
+ /*
+diff --git a/arch/x86/lib/cmdline.c b/arch/x86/lib/cmdline.c
+index 3261abb21ef4..9cf1a0773877 100644
+--- a/arch/x86/lib/cmdline.c
++++ b/arch/x86/lib/cmdline.c
+@@ -114,13 +114,15 @@ __cmdline_find_option_bool(const char *cmdline, int max_cmdline_size,
+  * @option: option string to look for
+  * @buffer: memory buffer to return the option argument
+  * @bufsize: size of the supplied memory buffer
++ * @option_pos: pointer to the option if found
+  *
+  * Returns the length of the argument (regardless of if it was
+  * truncated to fit in the buffer), or -1 on not found.
+  */
+ static int
+ __cmdline_find_option(const char *cmdline, int max_cmdline_size,
+-		      const char *option, char *buffer, int bufsize)
++		      const char *option, char *buffer, int bufsize,
++		      char **arg_pos)
+ {
+ 	char c;
+ 	int pos = 0, len = -1;
+@@ -164,6 +166,9 @@ __cmdline_find_option(const char *cmdline, int max_cmdline_size,
+ 				len = 0;
+ 				bufptr = buffer;
+ 				state = st_bufcpy;
++				if (arg_pos)
++					*arg_pos = (char *)cmdline -
++						   strlen(option) - 1;
+ 				break;
+ 			} else if (c == *opptr++) {
+ 				/*
+@@ -211,5 +216,13 @@ int cmdline_find_option(const char *cmdline, const char *option, char *buffer,
+ 			int bufsize)
+ {
+ 	return __cmdline_find_option(cmdline, COMMAND_LINE_SIZE, option,
+-				     buffer, bufsize);
++				     buffer, bufsize, NULL);
++}
++
++int cmdline_find_option_in_range(const char *cmdline, int cmdline_size,
++				 char *option, char *buffer, int bufsize,
++				 char **arg_pos)
++{
++	return __cmdline_find_option(cmdline, cmdline_size, option, buffer,
++				     bufsize, arg_pos);
+ }
 -- 
 2.7.4
 
