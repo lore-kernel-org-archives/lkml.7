@@ -2,89 +2,154 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81C8C4360F
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 11:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FD4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 12:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD33220863
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 11:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A183A2086D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 12:42:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="PrkfjzY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfCBLpH (ORCPT
+        id S1726530AbfCBMmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 06:45:07 -0500
-Received: from mail-it1-f198.google.com ([209.85.166.198]:42952 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfCBLpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 06:45:06 -0500
-Received: by mail-it1-f198.google.com with SMTP id j127so718725itj.7
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 03:45:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=s7R6v8IwdlGPxl0cTjVrsrNU/QmcK0RcG8SCwLlaGGw=;
-        b=TflHsPlUaA6fdMo6/+DwrgA+eZTJmgGHYuIpCO8/BjbadWlkZ4291IUqgNGf4Nt6h8
-         vC8RvWriHcVG3gQUVJFqlMnn3wBbG7a5mJR6mu3JdDsd4UnlH3qmzEmMHoliCacv8d/G
-         k9/loXGZuOIznQ4YquRdBWdoRNp6BINTnnV5+stj3pB50JTK2zi/uNdxxnSkGxW5Az3t
-         Z7qm9F3WS+6oISAwj5TTKkZCt4F72RN24IXMVMI6FT/asem5WNsQDvJ2tEm1Nt84KMA8
-         QXxT0TPpLjrNrJ7g/neVoDP7o4DZjTT1p01LW+SqEuriuC05ejOAmTflil0glB3Rkhfa
-         lXIw==
-X-Gm-Message-State: APjAAAVj8gnbDeTtZsgviWHL3ETSbTiCYUpfDAB3sDYGP1Cit+K/ybvf
-        RO+cBUH8t+wiLavYNj7PWzsyMYtm76dNG8IfmzZfWd9jyQp/
-X-Google-Smtp-Source: AHgI3IZUM9RghBA+3GHZ32szWazgPOyJRqyblSbiX0/fKnGu1Cfi/kaCVUxP0Koavv1zJBTf1/kAi0ZlAUjk5rlh0D6H9OXBMXTD
+        Sat, 2 Mar 2019 07:42:01 -0500
+Received: from mail.z3ntu.xyz ([128.199.32.197]:34800 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbfCBMmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 07:42:01 -0500
+X-Greylist: delayed 376 seconds by postgrey-1.27 at vger.kernel.org; Sat, 02 Mar 2019 07:41:58 EST
+Received: from localhost.localdomain (80-110-118-127.cgn.dynamic.surfer.at [80.110.118.127])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 1C4ABC08C2;
+        Sat,  2 Mar 2019 12:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1551530141; bh=zMzZKQCx4TweeMHExedO0nYB7efi3gJK6D0yTMHGrgI=;
+        h=From:To:Cc:Subject:Date;
+        b=PrkfjzY09y/YNuJHnrRCFIKsUAc4p8cUDfZlC0+ufGvvpRD8DD5ttrl76DAkpdDPy
+         VerkGdhWq5jpoR7a/hB/56mL3ZZHVK7E7CN/EuOEKWHsUhaZlyNJeQBsn5Ru+pz0ML
+         9FDZY7pjnN7dx3veGR9TXsnoYwzuM6etqH5D04bQ=
+From:   Luca Weiss <luca@z3ntu.xyz>
+Cc:     Luca Weiss <luca@z3ntu.xyz>, Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm: Fix NULL pointer dereference
+Date:   Sat,  2 Mar 2019 13:35:29 +0100
+Message-Id: <20190302123530.27747-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Received: by 2002:a24:6cd5:: with SMTP id w204mr6212057itb.16.1551527105640;
- Sat, 02 Mar 2019 03:45:05 -0800 (PST)
-Date:   Sat, 02 Mar 2019 03:45:05 -0800
-In-Reply-To: <000000000000299b190583172880@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fdc7da05831b0df8@google.com>
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low!
-From:   syzbot <syzbot+78923eea7cf44364f4fb@syzkaller.appspotmail.com>
-To:     darrick.wong@oracle.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+[    3.707412] Unable to handle kernel NULL pointer dereference at virtual address 0000009c
+[    3.714511] pgd = (ptrval)
+[    3.722742] [0000009c] *pgd=00000000
+[    3.725238] Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+[    3.728968] Modules linked in:
+[    3.734265] CPU: 3 PID: 112 Comm: kworker/3:2 Tainted: G        W         5.0.0-rc7-00183-g06a1c31df9eb #4
+[    3.737142] Hardware name: Generic DT based system
+[    3.746778] Workqueue: events deferred_probe_work_func
+[    3.751542] PC is at msm_gem_map_vma+0x3c/0xac
+[    3.756669] LR is at msm_gem_get_and_pin_iova+0xd8/0x134
+[    3.761086] pc : [<c07d3b7c>]    lr : [<c07d14f8>]    psr: 60000013
+[    3.766560] sp : ee297be8  ip : ed9ab1c0  fp : ed93b800
+[    3.772546] r10: ee35e180  r9 : 00000000  r8 : ee297c80
+[    3.777752] r7 : 00000000  r6 : 7c100000  r5 : 00000000  r4 : ee35e180
+[    3.782968] r3 : 00000001  r2 : 00000003  r1 : ee35e180  r0 : 00000000
+[    3.789562] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+[    3.796079] Control: 10c5787d  Table: 2e3a806a  DAC: 00000051
+[    3.803282] Process kworker/3:2 (pid: 112, stack limit = 0x(ptrval))
+[    3.809006] Stack: (0xee297be8 to 0xee298000)
+[    3.815445] 7be0:                   00000000 c1108c48 eda8c000 00000003 eda8c0fc c1108c48
+[    3.819715] 7c00: eda8c000 00000003 eda8c0fc c07d14f8 00000001 c07d1100 7c100000 00000000
+[    3.827873] 7c20: eda8c000 bb7ffb78 00000000 eda8c000 00000000 00000000 c0c8b1d4 ee3bfa00
+[    3.836037] 7c40: ee3b9800 c07d1684 00000000 c1108c48 ee0d7810 ee3b9800 c0c8b1d4 c07d222c
+[    3.844193] 7c60: ee3bfd84 ee297c80 00000000 c0b1d5b0 ee3bfc40 c07dcfd8 ee3bfd84 ee297c80
+[    3.852357] 7c80: 0000006d ee3bfc40 ee0d7810 bb7ffb78 c0c8b1d4 00000000 ee3bfc40 c07ddb48
+[    3.860516] 7ca0: 00002004 c0eba384 ee3bfc40 c079eba0 ee3bd040 ee3b9800 00000001 ed93b800
+[    3.868673] 7cc0: ed9aa100 c07db7e8 ee3bf240 ed9a6500 00000001 ee3b9800 ee3bf2d4 c07a0a30
+[    3.876834] 7ce0: ed93b800 7d100000 c1108c48 ee0d7610 ee3b9800 ed93b800 c1108c48 00000000
+[    3.884991] 7d00: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    3.893151] 7d20: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 bb7ffb78
+[    3.901310] 7d40: c12113c4 ed93b800 ee3b9800 c1108c48 ee9eec10 00000000 ed93b800 7d100000
+[    3.909472] 7d60: eff7b000 c07cf748 7d100000 00000000 c0e9a350 c0b1d5b0 c12113c4 c0961e40
+[    3.917633] 7d80: c12113c4 40000113 eeff4bec c0ebe004 00000019 c0b1d230 ee9eeda8 60000113
+[    3.925791] 7da0: ee35d300 ee9eeda8 c07ce260 bb7ffb78 c07ce260 ee35d2c0 00000028 00000002
+[    3.933950] 7dc0: eeb76280 c118f884 ee0be640 c11c6128 c07ce260 c07ea4ac 00000000 c0962b48
+[    3.942108] 7de0: c118f868 00000001 c0ebbc98 ee35d2c0 00000000 eeb76280 00000000 c118f87c
+[    3.950270] 7e00: ee35d2c0 00000000 c11c63e0 c118f694 00000019 c07ea5d0 ee0d7810 00000000
+[    3.958430] 7e20: c118f694 00000000 00000000 c07f2b0c c120f55c ee0d7810 c120f560 00000000
+[    3.966590] 7e40: 00000000 c07f08c4 c07f0e8c ee0d7810 c11ba3d0 ee0d7810 c118f694 c07f0e8c
+[    3.974748] 7e60: c1108c48 00000001 c0ebc3cc c11c63f8 c11ba3d0 c07f0c08 00000001 c07f2f8c
+[    3.982908] 7e80: c118f694 00000000 ee297ed4 c07f0e8c c1108c48 00000001 c0ebc3cc c11c63f8
+[    3.991068] 7ea0: c11ba3d0 c07ee8a0 c11ba3d0 ee82686c ee0baf38 bb7ffb78 ee0d7810 ee0d7810
+[    3.999227] 7ec0: c1108c48 ee0d7844 c118faac c07f05b0 ee0d7810 ee0d7810 00000001 bb7ffb78
+[    4.007389] 7ee0: ee0d7810 ee0d7810 c118fd18 c118faac c11c63e0 c07ef7d0 ee0d7810 c118fa90
+[    4.015548] 7f00: c118fa90 c07efd68 c118fac8 ee27fe00 eefd9c80 eefdcd00 00000000 c118facc
+[    4.023708] 7f20: 00000000 c033c038 eefd9c80 eefd9c80 00000008 ee27fe00 ee27fe14 eefd9c80
+[    4.031866] 7f40: 00000008 c1103d00 eefd9c98 ee296000 eefd9c80 c033ce54 ee907eac c0b1d230
+[    4.040026] 7f60: ee907eac eea24440 ee285000 00000000 ee296000 ee27fe00 c033ce24 eea2445c
+[    4.048188] 7f80: ee907eac c0341db0 00000000 ee285000 c0341c8c 00000000 00000000 00000000
+[    4.056346] 7fa0: 00000000 00000000 00000000 c03010e8 00000000 00000000 00000000 00000000
+[    4.064505] 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    4.072665] 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+[    4.080828] [<c07d3b7c>] (msm_gem_map_vma) from [<c07d14f8>] (msm_gem_get_and_pin_iova+0xd8/0x134)
+[    4.088983] [<c07d14f8>] (msm_gem_get_and_pin_iova) from [<c07d1684>] (_msm_gem_kernel_new+0x38/0xac)
+[    4.097839] [<c07d1684>] (_msm_gem_kernel_new) from [<c07d222c>] (msm_gem_kernel_new+0x24/0x2c)
+[    4.107130] [<c07d222c>] (msm_gem_kernel_new) from [<c07dcfd8>] (dsi_tx_buf_alloc_6g+0x44/0x90)
+[    4.115631] [<c07dcfd8>] (dsi_tx_buf_alloc_6g) from [<c07ddb48>] (msm_dsi_host_modeset_init+0x80/0x104)
+[    4.124313] [<c07ddb48>] (msm_dsi_host_modeset_init) from [<c07db7e8>] (msm_dsi_modeset_init+0x34/0x1c0)
+[    4.133691] [<c07db7e8>] (msm_dsi_modeset_init) from [<c07a0a30>] (mdp5_kms_init+0x764/0x7e0)
+[    4.143409] [<c07a0a30>] (mdp5_kms_init) from [<c07cf748>] (msm_drm_bind+0x56c/0x740)
+[    4.151824] [<c07cf748>] (msm_drm_bind) from [<c07ea4ac>] (try_to_bring_up_master+0x238/0x2b4)
+[    4.159636] [<c07ea4ac>] (try_to_bring_up_master) from [<c07ea5d0>] (component_add+0xa8/0x170)
+[    4.168146] [<c07ea5d0>] (component_add) from [<c07f2b0c>] (platform_drv_probe+0x48/0x9c)
+[    4.176737] [<c07f2b0c>] (platform_drv_probe) from [<c07f08c4>] (really_probe+0x278/0x404)
+[    4.184981] [<c07f08c4>] (really_probe) from [<c07f0c08>] (driver_probe_device+0x78/0x1c0)
+[    4.193147] [<c07f0c08>] (driver_probe_device) from [<c07ee8a0>] (bus_for_each_drv+0x74/0xb8)
+[    4.201389] [<c07ee8a0>] (bus_for_each_drv) from [<c07f05b0>] (__device_attach+0xd0/0x164)
+[    4.209984] [<c07f05b0>] (__device_attach) from [<c07ef7d0>] (bus_probe_device+0x84/0x8c)
+[    4.218143] [<c07ef7d0>] (bus_probe_device) from [<c07efd68>] (deferred_probe_work_func+0x48/0xc4)
+[    4.226398] [<c07efd68>] (deferred_probe_work_func) from [<c033c038>] (process_one_work+0x204/0x574)
+[    4.235254] [<c033c038>] (process_one_work) from [<c033ce54>] (worker_thread+0x30/0x560)
+[    4.244534] [<c033ce54>] (worker_thread) from [<c0341db0>] (kthread+0x124/0x154)
+[    4.252606] [<c0341db0>] (kthread) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
+[    4.259966] Exception stack(0xee297fb0 to 0xee297ff8)
+[    4.266998] 7fa0:                                     00000000 00000000 00000000 00000000
+[    4.272143] 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    4.280297] 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    4.288451] Code: e5813080 1a000013 e3a03001 e5c4307c (e590009c)
+[    4.294933] ---[ end trace 18729cc2bca2b4b3 ]---
 
-HEAD commit:    c63e9e91a254 Add linux-next specific files for 20190301
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10856157200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f5875f9dc6e009b2
-dashboard link: https://syzkaller.appspot.com/bug?extid=78923eea7cf44364f4fb
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149ae1eb200000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15ee41eb200000
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ drivers/gpu/drm/msm/msm_gem_vma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+78923eea7cf44364f4fb@syzkaller.appspotmail.com
-
-BUG: MAX_STACK_TRACE_ENTRIES too low!
-turning off the locking correctness validator.
-CPU: 0 PID: 1176 Comm: kworker/u5:0 Not tainted 5.0.0-rc8-next-20190301 #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: hci1 hci_power_on
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  save_trace kernel/locking/lockdep.c:467 [inline]
-  save_trace.cold+0x14/0x19 kernel/locking/lockdep.c:437
-  mark_lock+0x2fb/0x1380 kernel/locking/lockdep.c:3401
-  mark_irqflags kernel/locking/lockdep.c:3304 [inline]
-  __lock_acquire+0xf2c/0x3fb0 kernel/locking/lockdep.c:3644
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4202
-  process_one_work+0x8df/0x1790 kernel/workqueue.c:2244
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index 49c04829cf34..fcf7a83f0e6f 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -85,7 +85,7 @@ msm_gem_map_vma(struct msm_gem_address_space *aspace,
+ 
+ 	vma->mapped = true;
+ 
+-	if (aspace->mmu)
++	if (aspace && aspace->mmu)
+ 		ret = aspace->mmu->funcs->map(aspace->mmu, vma->iova, sgt,
+ 				size, prot);
+ 
+-- 
+2.21.0
 
