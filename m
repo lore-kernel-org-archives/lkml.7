@@ -2,97 +2,100 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A17C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68997C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781DD20838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2690220836
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 09:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPZJ48LX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlWKYEmo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfCBJg2 (ORCPT
+        id S1726370AbfCBJnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 04:36:28 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:38403 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfCBJg2 (ORCPT
+        Sat, 2 Mar 2019 04:43:17 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35973 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfCBJnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 04:36:28 -0500
-Received: by mail-ua1-f67.google.com with SMTP id d4so181012uap.5
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 01:36:27 -0800 (PST)
+        Sat, 2 Mar 2019 04:43:17 -0500
+Received: by mail-wm1-f65.google.com with SMTP id j125so368836wmj.1
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 01:43:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KzcIXt1A98hziKuoJoTOypTfa9JZQFVS/+pT/mj2GO4=;
-        b=nPZJ48LXbfWYuCQki8bfQB/cobttZrsS/7FZtJschLWRaTvkE6C3zD3j9uawkZL5WO
-         5O2OCAwA0wGaftVGgJdICL/JdUp3yQv1Ke1Iqi6wraNFGJeCM0ye2dl9HFhK7n/dqqmO
-         6jjgyi+yc7C4Lux4zTGa1we3gWVNVXjSEuGUvSNY6z5BA1VPH8wI8M2tybO0BQz2GsoE
-         Wm2Tn/ms0iH45Ruiaev94ARkjTtyklKiURBwVxREPb+iwEaC0o2JMF8X3ILKf11nf4YD
-         O7x5rouF1Cni3pyQJxMtRfu4tzfVDzZfMSYbyBAH6RmJkpM50RGEtOFuYE1VrlYzy7d5
-         jsRQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=syjDp5AtcL9XBtFK+ESgSPx24l1Z1Rx9YKkdB/Z6VbU=;
+        b=AlWKYEmop8tBHcdeTvQ3sKRtrxd+rOPV/SXvgGPkBJyFFT7w1ZurIJJotOHpxvMC/M
+         XiXZFuquQjO91WxmRj06+s8DKI8bjB7Tbi+1DpjRmo0qawd9q00DbYeRbcDux0iv3da3
+         knqCp858e1J7ABLTfj5/IZtlLht1T95qEPbOymUqKRA1btY2kEOf8Msn+oh+jo/hayrj
+         uy11j2yqzH5UrWxuvC2Sx+xYJ7p3F/gwI5OLfT4OgzMvuFVkuJb7+gHiq1IrTsIljEaH
+         DQyV7c9IUp8CVZngbxoEsMeCS25S9cORQGXgf7l1k5EBhCqjjoYCF4u82lEXS9lr3GLJ
+         yLWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KzcIXt1A98hziKuoJoTOypTfa9JZQFVS/+pT/mj2GO4=;
-        b=W32bzvMlNnQNBFAqQ8yCM7P84/9wlgvw9XSIaS/5LQ3N1bgqDm4xFKkxS3PZfeQc0d
-         RRXLV9yptNyon9jUcgP6zWneumrJMoJkp7JOma4X1K6L5BxljMQ7U5stTpYP1sno4unU
-         XL6E75ONqLxDOTfehr91221/ngGgAN0c1zEj4GIoJR2miO1yJYbh/XMSXz/+1tdSCgfe
-         PX9GYKCpEBtc4L+WuKsASn3XmRkTdjjzUt1LK8VrqY2/o3xWUTRr2lNwpWbVqhmVdDzO
-         Q70FgRcngq2IqjpBjIKnUXqHoEc3BEu/g4nXAabSE5itXmYz3xBfu9qY51+k14ESkF7r
-         tRig==
-X-Gm-Message-State: APjAAAWl1V+lrFtH5wkbx/YeRgwoBhMAUP80KdOcDeOqd1cWO22M5ArS
-        FnRo4C7GO0xw9k5xcdoOraKP9lS0MnKLEYFHv9c=
-X-Google-Smtp-Source: APXvYqyL8cNmQIgRfZLYTExMvbZs4m3xDWySrMjDvitkUgV+Qt+0B7biZXh58+jOT7M/f7F87oPSe4b3Ka0sMs3Enf4=
-X-Received: by 2002:ab0:69d9:: with SMTP id u25mr5090211uaq.8.1551519387283;
- Sat, 02 Mar 2019 01:36:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20190228095545.30842-1-oded.gabbay@gmail.com> <20190228095545.30842-2-oded.gabbay@gmail.com>
- <91b9cfc4a87bfd7a220f558f514e322f4864b13e.camel@perches.com>
-In-Reply-To: <91b9cfc4a87bfd7a220f558f514e322f4864b13e.camel@perches.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=syjDp5AtcL9XBtFK+ESgSPx24l1Z1Rx9YKkdB/Z6VbU=;
+        b=WxfGqo04e5HDuKVfI6JdhJESfHyPgL2K3ouV2100JQPxaQX66VK2Hgm7Og1vVb/a64
+         8LLXGXREImOmJEcMMjLbNkx3EXWZKSS1XHmLTb2yo/i1Fj/XJZoSvy3LT3DGZpnQL/1v
+         336ZKXf9x1dutr7xK/QEKzhUCThQaZGMhYzUg3DSRbB4FkCuvVEszuQiTVC/4etdJa/0
+         ow5eBxdgQDyN9UXoTCRB5FqqqWJXCzlYum9jA/03BQ0+Z55u0v2+zwG4ujzknoUD7YN0
+         wk3dBwv+7t4/9jpayb07POD59ecQjxxNnE/BqrJ9fFULNUxzJNi0O0I8QZ4s+ZYDOAJc
+         0fUA==
+X-Gm-Message-State: APjAAAU7rRPfK+yZENa4gMUjUOufON2nnQjjVxg2igMR8mGRiv4PHbMN
+        7F4RIMGVsos9Xesry1P8IZVPCG4Z
+X-Google-Smtp-Source: AHgI3IYGR2JKIJWwkWnwFi+v0ieFDhiWFnzqGYu27+6AWH04bX5BxlRIg3caeCGQL1lG1bTJAEk8zw==
+X-Received: by 2002:a1c:96ce:: with SMTP id y197mr5776056wmd.126.1551519795394;
+        Sat, 02 Mar 2019 01:43:15 -0800 (PST)
+Received: from goyamonster.habana-labs.com ([31.154.181.186])
+        by smtp.gmail.com with ESMTPSA id n14sm1186004wrx.24.2019.03.02.01.43.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 02 Mar 2019 01:43:14 -0800 (PST)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Sat, 2 Mar 2019 11:36:01 +0200
-Message-ID: <CAFCwf13EYVhZmzQSwh0==Omr9mkJksCW0aFrqOsPRZxWkGCU=Q@mail.gmail.com>
-Subject: Re: [PATCH 11/15] habanalabs: print pointer using %p
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Cc:     joe@perches.com
+Subject: [PATCH] habanalabs: use %px instead of %p in error print
+Date:   Sat,  2 Mar 2019 11:43:12 +0200
+Message-Id: <20190302094312.13363-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 2, 2019 at 3:00 AM Joe Perches <joe@perches.com> wrote:
->
-> On Thu, 2019-02-28 at 11:55 +0200, Oded Gabbay wrote:
-> > Don't cast pointer to u64 to print it. Instead, print the pointer using
-> > %p.
->
-> You might want to use %px here if you _really_
-> want the actual address and not the hashed output
-> %p normally produces.
-Yes, you are correct. Thanks for pointing it out, I'll fix that.
-Oded
+When parsing the address of an internal command buffer, the driver prints
+an error if the buffer's address is not in the range of the device's DRAM
+or SRAM memory address space.
 
+Use %px to print the real address that the user gave the driver and not a
+hashed value, so the user will get a clue regarding the origin of his
+error.
 
->
-> > diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-> []
-> > @@ -4276,9 +4276,8 @@ static int goya_parse_cb_no_ext_quque(struct hl_device *hdev,
-> >                       return 0;
-> >
-> >               dev_err(hdev->dev,
-> > -                     "Internal CB address 0x%llx + 0x%x is not in SRAM nor in DRAM\n",
-> > -                     (u64) (uintptr_t) parser->user_cb,
-> > -                     parser->user_cb_size);
-> > +                     "Internal CB address %p + 0x%x is not in SRAM nor in DRAM\n",
-> > +                     parser->user_cb, parser->user_cb_size);
->
->
+Note that if the print occurs, the pointer that is printed is a
+user's virtual address and not some kind of physical address.
+
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/goya/goya.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index c4f3ec1e9d8b..238dd57c541b 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -4293,7 +4293,7 @@ static int goya_parse_cb_no_ext_quque(struct hl_device *hdev,
+ 			return 0;
+ 
+ 		dev_err(hdev->dev,
+-			"Internal CB address %p + 0x%x is not in SRAM nor in DRAM\n",
++			"Internal CB address %px + 0x%x is not in SRAM nor in DRAM\n",
+ 			parser->user_cb, parser->user_cb_size);
+ 
+ 		return -EFAULT;
+-- 
+2.18.0
+
