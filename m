@@ -2,162 +2,147 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FC7C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 06:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D454C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 07:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E66206DD
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 06:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBAA22083D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 07:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfCBGNB (ORCPT
+        id S1726715AbfCBHFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 01:13:01 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53004 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725930AbfCBGNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 01:13:01 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C2181738D0A63C084325;
-        Sat,  2 Mar 2019 14:12:58 +0800 (CST)
-Received: from [127.0.0.1] (10.177.23.164) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Sat, 2 Mar 2019
- 14:12:50 +0800
-Subject: Re: [PATCH RFC 1/1] iommu: set the default iommu-dma mode as
- non-strict
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20190131135211.6732-1-thunder.leizhen@huawei.com>
- <94b9b0c9-1a24-63ba-5abe-5f6d79fed415@arm.com>
- <dc06dfd0-0ab6-6f0b-64c6-2587a2a55798@huawei.com>
- <5C78B89C.7040100@huawei.com> <e567cf93-4e34-e15e-9d98-5834bc63e234@arm.com>
-CC:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <5C7A1EE1.6020200@huawei.com>
-Date:   Sat, 2 Mar 2019 14:12:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Sat, 2 Mar 2019 02:05:06 -0500
+Received: from mail-it1-f197.google.com ([209.85.166.197]:36089 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfCBHFG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 02:05:06 -0500
+Received: by mail-it1-f197.google.com with SMTP id i4so296664itb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 23:05:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=xuilmwSUkMHUDLhuVilB7fgYtSmCUjO8KFUDRjAcl+I=;
+        b=UtXI/xex5D2OqKlfL2RAazShzt5m0MiiQeq1Gw3Os3YFvM/c/4A1AakWodPJ7aMvNz
+         gdLeRc31KF/oXhUN0Zrr3Fzix/B/1ln8l7tbQFAd8YEZMD7oOiyChNxBSt5qJwi23x01
+         VZAzDN2GMhi1wtRcohuqo0ZscCdXX1oLbjS13PgaTcmcZetMz2rNFBdEtJ0LiuWag12p
+         n/f6RS5D1LmCCczlVqGMLDMepgEUYrYSRclH29UMqbrOOmUCQZsGPfJYrO7mGvyzxnsN
+         fcjtb5WbTnNamTKe7sG71EYu2vgkTVeWgTrOiVAKy+ZLrUy8eiPYIuNqsk1BTzTgKF2T
+         8Akg==
+X-Gm-Message-State: AHQUAuYe3qtxh3Rs89qx1Mj50QxeukqdYO2aMdwC2jja0+EuvBhOzQDY
+        Ciziq346KA6/rTs7X7/5EJpbXf1ytr3TKOj+QknRSnVl2hhc
+X-Google-Smtp-Source: APXvYqzMHBzZoaMwA1uXoL6UYjxnxxZ+7NlLtzal5NF1nHzMZypOfRiW1wIj288keg81d3LdE7jxXhHo7wzvssREtOVkTdZfNc6h
 MIME-Version: 1.0
-In-Reply-To: <e567cf93-4e34-e15e-9d98-5834bc63e234@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.23.164]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a24:5c81:: with SMTP id q123mr5346247itb.34.1551510305173;
+ Fri, 01 Mar 2019 23:05:05 -0800 (PST)
+Date:   Fri, 01 Mar 2019 23:05:05 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009af83005831724a4@google.com>
+Subject: kernel BUG at include/linux/mm.h:LINE! (4)
+From:   syzbot <syzbot+cc252aa9d2d3b576246f@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    42fd8df9d1d9 Add linux-next specific files for 20190228
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16c3cd5cc00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c0f38652d28b522f
+dashboard link: https://syzkaller.appspot.com/bug?extid=cc252aa9d2d3b576246f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+cc252aa9d2d3b576246f@syzkaller.appspotmail.com
+
+page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
+page->mem_cgroup:ffff888059786cc0
+------------[ cut here ]------------
+kernel BUG at include/linux/mm.h:579!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 22405 Comm: syz-executor.3 Not tainted 5.0.0-rc8-next-20190228  
+#45
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:put_page_testzero include/linux/mm.h:579 [inline]
+RIP: 0010:put_page include/linux/mm.h:1025 [inline]
+RIP: 0010:generic_pipe_buf_release+0x120/0x160 fs/pipe.c:224
+Code: bd ff 4c 89 e7 e8 90 43 db ff e8 5b 07 bd ff 5b 41 5c 41 5d 5d c3 e8  
+4f 07 bd ff 48 c7 c6 60 98 75 87 4c 89 e7 e8 c0 db e4 ff <0f> 0b e8 39 07  
+bd ff 4d 8d 65 ff e9 3d ff ff ff 48 89 df e8 e8 f8
+RSP: 0018:ffff888056c57920 EFLAGS: 00010246
+RAX: 0000000000040000 RBX: ffffea0002283db4 RCX: ffffc9000c456000
+RDX: 0000000000040000 RSI: ffffffff81984e72 RDI: ffffed100ad8af08
+RBP: ffff888056c57938 R08: 0000000000000021 R09: ffffed1015d05011
+R10: ffffed1015d05010 R11: ffff8880ae828087 R12: ffffea0002283d80
+R13: 0000000000000000 R14: ffff88809ad3c800 R15: ffff8880592ac928
+FS:  00007fb53aaf2700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fff65e0fdb8 CR3: 0000000093a2f000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  pipe_buf_release include/linux/pipe_fs_i.h:129 [inline]
+  iter_file_splice_write+0x7d1/0xbe0 fs/splice.c:759
+  do_splice_from fs/splice.c:847 [inline]
+  direct_splice_actor+0x126/0x1a0 fs/splice.c:1019
+  splice_direct_to_actor+0x369/0x970 fs/splice.c:974
+  do_splice_direct+0x1da/0x2a0 fs/splice.c:1062
+  do_sendfile+0x597/0xd00 fs/read_write.c:1442
+  __do_sys_sendfile64 fs/read_write.c:1503 [inline]
+  __se_sys_sendfile64 fs/read_write.c:1489 [inline]
+  __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1489
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x457e29
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb53aaf1c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000457e29
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000102000000 R11: 0000000000000246 R12: 00007fb53aaf26d4
+R13: 00000000004c4dce R14: 00000000004d8af8 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace ce17ea3937b628f2 ]---
+RIP: 0010:put_page_testzero include/linux/mm.h:579 [inline]
+RIP: 0010:put_page include/linux/mm.h:1025 [inline]
+RIP: 0010:generic_pipe_buf_release+0x120/0x160 fs/pipe.c:224
+Code: bd ff 4c 89 e7 e8 90 43 db ff e8 5b 07 bd ff 5b 41 5c 41 5d 5d c3 e8  
+4f 07 bd ff 48 c7 c6 60 98 75 87 4c 89 e7 e8 c0 db e4 ff <0f> 0b e8 39 07  
+bd ff 4d 8d 65 ff e9 3d ff ff ff 48 89 df e8 e8 f8
+RSP: 0018:ffff888056c57920 EFLAGS: 00010246
+RAX: 0000000000040000 RBX: ffffea0002283db4 RCX: ffffc9000c456000
+RDX: 0000000000040000 RSI: ffffffff81984e72 RDI: ffffed100ad8af08
+RBP: ffff888056c57938 R08: 0000000000000021 R09: ffffed1015d05011
+R10: ffffed1015d05010 R11: ffff8880ae828087 R12: ffffea0002283d80
+R13: 0000000000000000 R14: ffff88809ad3c800 R15: ffff8880592ac928
+FS:  00007fb53aaf2700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b30225000 CR3: 0000000093a2f000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-On 2019/3/1 19:07, Jean-Philippe Brucker wrote:
-> Hi Leizhen,
-> 
-> On 01/03/2019 04:44, Leizhen (ThunderTown) wrote:
->>
->>
->> On 2019/2/26 20:36, Hanjun Guo wrote:
->>> Hi Jean,
->>>
->>> On 2019/1/31 22:55, Jean-Philippe Brucker wrote:
->>>> Hi,
->>>>
->>>> On 31/01/2019 13:52, Zhen Lei wrote:
->>>>> Currently, many peripherals are faster than before. For example, the top
->>>>> speed of the older netcard is 10Gb/s, and now it's more than 25Gb/s. But
->>>>> when iommu page-table mapping enabled, it's hard to reach the top speed
->>>>> in strict mode, because of frequently map and unmap operations. In order
->>>>> to keep abreast of the times, I think it's better to set non-strict as
->>>>> default.
->>>>
->>>> Most users won't be aware of this relaxation and will have their system
->>>> vulnerable to e.g. thunderbolt hotplug. See for example 4.3 Deferred
->>>> Invalidation in
->>>> http://www.cs.technion.ac.il/users/wwwb/cgi-bin/tr-get.cgi/2018/MSC/MSC-2018-21.pdf
->> Hi Jean,
->>
->>    In fact, we have discussed the vulnerable of deferred invalidation before upstream
->> the non-strict patches. The attacks maybe possible because of an untrusted device or
->> the mistake of the device driver. And we limited the VFIO to still use strict mode.
->>    As mentioned in the pdf, limit the freed memory with deferred invalidation only to
->> be reused by the device, can mitigate the vulnerability. But it's too hard to implement
->> it now.
->>    A compromise maybe we only apply non-strict to (1) dma_free_coherent, because the
->> memory is controlled by DMA common module, so we can make the memory to be freed after
->> the global invalidation in the timer handler. (2) And provide some new APIs related to
->> iommu_unmap_page/sg, these new APIs deferred invalidation. And the candiate device
->> drivers update the APIs if they want to improve performance. (3) Make sure that only
->> the trusted devices and trusted drivers can apply (1) and (2). For example, the driver
->> must be built into kernel Image.
-> 
-> Do we have a notion of untrusted kernel drivers? A userspace driver
-It seems impossible to have such driver. The modules insmod by root users should be
-guaranteed by themselves.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> (VFIO) is untrusted, ok. But a malicious driver loaded into the kernel
-> address space would have much easier ways to corrupt the system than to
-> exploit lazy mode...
-Yes, so that we have no need to consider untrusted drivers.
-
-> 
-> For (3), I agree that we should at least disallow lazy mode if
-> pci_dev->untrusted is set. At the moment it means that we require the
-> strictest IOMMU configuration for external-facing PCI ports, but it can
-> be extended to blacklist other vulnerable devices or locations.
-I plan to add an attribute file for each device, espcially for hotplug devices. And
-let the root users to decide which mode should be used, strict or non-strict. Becasue
-they should known whether the hot-plug divice is trusted or not.
-
-> 
-> If you do (3) then maybe we don't need (1) and (2), which require a
-> tonne of work in the DMA and IOMMU layers (but would certainly be nice
-> to see, since it would also help handle ATS invalidation timeouts)
-> 
-> Thanks,
-> Jean
-> 
->>    So that some high-end trusted devices use non-strict mode, and keep others still using
->> strict mode. The drivers who want to use non-strict mode, should change to use new APIs
->> by themselves.
->>
->>
->>>>
->>>> Why not keep the policy to secure by default, as we do for
->>>> iommu.passthrough? And maybe add something similar to
->>>> CONFIG_IOMMU_DEFAULT_PASSTRHOUGH? It's easy enough for experts to pass a
->>>> command-line argument or change the default config.
->>>
->>> Sorry for the late reply, it was Chinese new year, and we had a long discussion
->>> internally, we are fine to add a Kconfig but not sure OS vendors will set it
->>> to default y.
->>>
->>> OS vendors seems not happy to pass a command-line argument, to be honest,
->>> this is our motivation to enable non-strict as default. Hope OS vendors
->>> can see this email thread, and give some input here.
->>>
->>> Thanks
->>> Hanjun
->>>
->>>
->>> .
->>>
->>
-> 
-> 
-> .
-> 
-
--- 
-Thanks!
-BestRegards
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with  
+syzbot.
