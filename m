@@ -2,59 +2,81 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A694EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 07:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33562C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 07:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7692C20818
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 07:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAB92085A
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 07:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551513445;
+	bh=jxJ0TYI72cb/7mo1z3aSC9IxUGZVvyNNKztVduoqyaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GIc/6SJBqn/cAxUKytKbAVBrUZX9+0YF/knBrJK5wpNtTmFDqwG4m9ERWHn5b0Tgk
+	 5+qEnZ5GEtc8NqHVYFdpL6BSH94zKW7iHwPwWtlLbZz5uM0zE3pjokx1W6kQoHsTR/
+	 NLhSSH6PsiUQIq9gd4pm9RN82OkiZ9p2g5it8Gvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfCBHYj (ORCPT
+        id S1726536AbfCBH5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 02:24:39 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:35690 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725300AbfCBHYj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 02:24:39 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::cf9])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 99A57144FCAF1;
-        Fri,  1 Mar 2019 23:24:38 -0800 (PST)
-Date:   Fri, 01 Mar 2019 23:24:38 -0800 (PST)
-Message-Id: <20190301.232438.2039287142330016890.davem@davemloft.net>
-To:     antoine.tenart@bootlin.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
-        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
-        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
-        linux@armlinux.org.uk
-Subject: Re: [PATCH net-next v2 00/15] net: mvpp2: fixes and improvements
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190301105217.15764-1-antoine.tenart@bootlin.com>
-References: <20190301105217.15764-1-antoine.tenart@bootlin.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 01 Mar 2019 23:24:39 -0800 (PST)
+        Sat, 2 Mar 2019 02:57:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbfCBH5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 02:57:23 -0500
+Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3197020818;
+        Sat,  2 Mar 2019 07:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551513442;
+        bh=jxJ0TYI72cb/7mo1z3aSC9IxUGZVvyNNKztVduoqyaE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fknQkhdnHVSUsjcrzbIP305tkdKRrcDVkFNw9HhDCPL3hrtL5D2Aqctn2RT14iaeU
+         KpSuwdAx5dL7sLhI3CqtoBDkJGz/t/UDocJweoCJB9cQf1HdJdVw6YydHyh+AoyLE1
+         X4ru0jJTo9QXO929jw2md7JTwsYaIg/w8SohZvcs=
+Date:   Sat, 2 Mar 2019 08:57:20 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Todd Kjos <tkjos@android.com>
+Cc:     tkjos@google.com, arve@android.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, maco@google.com,
+        joel@joelfernandes.org, kernel-team@android.com
+Subject: Re: [PATCH] binder: fix race between munmap() and direct reclaim
+Message-ID: <20190302075720.GA18046@kroah.com>
+References: <20190301230606.8302-1-tkjos@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190301230606.8302-1-tkjos@google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antoine Tenart <antoine.tenart@bootlin.com>
-Date: Fri,  1 Mar 2019 11:52:02 +0100
+On Fri, Mar 01, 2019 at 03:06:06PM -0800, Todd Kjos wrote:
+> An munmap() on a binder device causes binder_vma_close() to be called
+> which clears the alloc->vma pointer.
+> 
+> If direct reclaim causes binder_alloc_free_page() to be called, there
+> is a race where alloc->vma is read into a local vma pointer and then
+> used later after the mm->mmap_sem is acquired. This can result in
+> calling zap_page_range() with an invalid vma which manifests as a
+> use-after-free in zap_page_range().
+> 
+> The fix is to check alloc->vma after acquiring the mmap_sem (which we
+> were acquiring anyway) and skip zap_page_range() if it has changed
+> to NULL.
+> 
+> Signed-off-by: Todd Kjos <tkjos@google.com>
+> ---
 
-> This series aims to improve the Marvell PPv2 driver and to fix various
-> issues we encountered while testing the ports in many different
-> configurations. The series is based on top of Russell PPv2 phylink
-> rework and improvement.
- ...
+Any specific commit that this fixes?  And should it be marked for
+stable releases?
 
-Series applied, thanks Antoine.
+thanks,
+
+greg k-h
