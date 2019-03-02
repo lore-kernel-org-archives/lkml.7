@@ -2,152 +2,109 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6FAC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 21:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC1BC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 21:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6473D20815
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 21:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFEF20838
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 21:27:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="ffIRcXxU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfCBV0N (ORCPT
+        id S1726912AbfCBV1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 16:26:13 -0500
-Received: from gateway31.websitewelcome.com ([192.185.143.33]:15581 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726592AbfCBV0N (ORCPT
+        Sat, 2 Mar 2019 16:27:45 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:42946 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfCBV1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 16:26:13 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id A17B61BDBF
-        for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2019 15:26:11 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 0C95hZKs02qH70C95h3zuE; Sat, 02 Mar 2019 15:26:11 -0600
-X-Authority-Reason: nr=8
-Received: from [189.250.88.58] (port=39524 helo=[192.168.1.77])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h0C95-000EJy-4U; Sat, 02 Mar 2019 15:26:11 -0600
-Subject: Re: [PATCH] isdn: mISDN: Fix potential NULL pointer dereference of
- kzalloc
-To:     Aditya Pakki <pakki001@umn.edu>
-Cc:     kjlu@umn.edu, Karsten Keil <isdn@linux-pingi.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190302212044.13638-1-pakki001@umn.edu>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <939bbac6-2fa4-c3f4-2b8b-b3498cb31c6d@embeddedor.com>
-Date:   Sat, 2 Mar 2019 15:26:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190302212044.13638-1-pakki001@umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.88.58
-X-Source-L: No
-X-Exim-ID: 1h0C95-000EJy-4U
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.77]) [189.250.88.58]:39524
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 34
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Sat, 2 Mar 2019 16:27:45 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id C82E2DE6
+        for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2019 21:27:43 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id dAnuItaPQ2g1 for <linux-kernel@vger.kernel.org>;
+        Sat,  2 Mar 2019 15:27:43 -0600 (CST)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 9601ACC0
+        for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2019 15:27:43 -0600 (CST)
+Received: by mail-io1-f70.google.com with SMTP id d7so1295393ios.17
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 13:27:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=0NPqt03KPPHD//K2Osnhxg72NyH85JUvZkfB9DO+DkA=;
+        b=ffIRcXxUUh+IaBsSDMLFY3UsRgNGtx1RG9CnLm4IbmRz7jSuD7nXwgou4JHy16uV1k
+         dMoL/tPN8HcXphI2Sd8pHonMKERCSjn2Poo5Wj0Viv9uquaXgqZCShI7U5fDfHRcpZy0
+         gxwQj+091xHw5vsMJvEEyHiH1oIShXYIjBWQjR5ZFTBs6sdxuZH/3bi++IpECBXEJCwr
+         Tb5+f31xsoMyAOaTF/7FTyNi8ToXeHChzqW76NNlMA05Zu+A37PqEVrlw60YGq0bwJdc
+         6V09CHpO5iyDbf3MnfRyDMjEY0JVmYJ/x3XdBFlqkqetO/uvwL+T15hfgBUat76HwRnR
+         XIyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0NPqt03KPPHD//K2Osnhxg72NyH85JUvZkfB9DO+DkA=;
+        b=D0n7eNi9zeA4ymvT+FHJNTXf6JsKjWthhN1pjQOnWJcbkIy1ExDEEJLxWKK4SiilGK
+         owmoj8H1YMCKDRRL6C05YBVjbUSr872SCVHIFWNrt1cU3sTo+xEmRYwmzn0AFhD6qN/X
+         cuXXO1KYKEIsgCfdbfNVz8hMTlbQbA3sn2E4lHgzGCUcSRXfcdov0aj/3W4tbPmcKyoO
+         a+Dm9Jg6H1ZvKMy/EkOZTAunTgufu/Tzdi049KjusL7eJejb4HkI7fVmvCZTDd50ftKv
+         /ODtqWepCs+BjlgyWBBrsSaWaf/H1xV8MMrznXhszgVKqqoqZTIKzjBLWqxO8mCoHmi/
+         q9Aw==
+X-Gm-Message-State: APjAAAUjNQ+Z5CINZmevgEZ9ojR4DN7PDCdrBoAkI0uY8WZbkcXRrw9y
+        Vz7CrKI7enrcS6CYqZKaiPwFRXJHgJGTwbZNhv5lIpe9RaHts5/G383ptDKqurAVHR3dddLS5/5
+        h7HONAHS/9W5YTo2+snsaeQOHEejX
+X-Received: by 2002:a5d:97c8:: with SMTP id k8mr6487818ios.267.1551562063272;
+        Sat, 02 Mar 2019 13:27:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxgExxgg18sn4TQiKupbjGfC1774WaSrerDq/3yKqDwrfbKxvP/vYv2RyII12x1pbY1ODIE3Q==
+X-Received: by 2002:a5d:97c8:: with SMTP id k8mr6487811ios.267.1551562063093;
+        Sat, 02 Mar 2019 13:27:43 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id y3sm955383itb.2.2019.03.02.13.27.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 02 Mar 2019 13:27:42 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Lee Jones <lee.jones@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mfd: sm501: Fix potential NULL pointer dereference
+Date:   Sat,  2 Mar 2019 15:27:27 -0600
+Message-Id: <20190302212727.14118-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+lookup variable on failure of allocating memory via devm_kzalloc
+can cause a NULL pointer dereference. This patch avoids such a scenario.
 
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/mfd/sm501.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On 3/2/19 3:20 PM, Aditya Pakki wrote:
-> Allocating memory via kzalloc for phi may fail and causes a
-> NULL pointer dereference. This patch avoids such a scenario.
-> 
+diff --git a/drivers/mfd/sm501.c b/drivers/mfd/sm501.c
+index a530972c5a7e..e0173bf4b0dc 100644
+--- a/drivers/mfd/sm501.c
++++ b/drivers/mfd/sm501.c
+@@ -1145,6 +1145,9 @@ static int sm501_register_gpio_i2c_instance(struct sm501_devdata *sm,
+ 	lookup = devm_kzalloc(&pdev->dev,
+ 			      sizeof(*lookup) + 3 * sizeof(struct gpiod_lookup),
+ 			      GFP_KERNEL);
++	if (!lookup)
++		return -ENOMEM;
++
+ 	lookup->dev_id = "i2c-gpio";
+ 	if (iic->pin_sda < 32)
+ 		lookup->table[0].chip_label = "SM501-LOW";
+-- 
+2.17.1
 
-Was this detected by Coccinelle?
-
-If so, please mention it in the commit log.
-
-Thanks
---
-Gustavo
-
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->  drivers/isdn/hardware/mISDN/hfcsusb.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-> index 124ff530da82..26e3182bbca8 100644
-> --- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-> +++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-> @@ -263,6 +263,9 @@ hfcsusb_ph_info(struct hfcsusb *hw)
->  	int i;
->  
->  	phi = kzalloc(struct_size(phi, bch, dch->dev.nrbchan), GFP_ATOMIC);
-> +	if (!phi)
-> +		return;
-> +
->  	phi->dch.ch.protocol = hw->protocol;
->  	phi->dch.ch.Flags = dch->Flags;
->  	phi->dch.state = dch->state;
-> 
