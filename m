@@ -4,126 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AFBC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 20:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F641C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 20:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAF2206B6
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 20:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ACED206B6
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 20:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="aMRu4mL3"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="gztPNJBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfCBUjL (ORCPT
+        id S1726839AbfCBUkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 15:39:11 -0500
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:33338 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbfCBUjL (ORCPT
+        Sat, 2 Mar 2019 15:40:17 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:49550 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726577AbfCBUkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 15:39:11 -0500
-X-Greylist: delayed 456 seconds by postgrey-1.27 at vger.kernel.org; Sat, 02 Mar 2019 15:39:09 EST
+        Sat, 2 Mar 2019 15:40:17 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 24465D1F
-        for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2019 20:31:33 +0000 (UTC)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id B8732CFD
+        for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2019 20:40:15 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qxTm0NktI4WZ for <linux-kernel@vger.kernel.org>;
-        Sat,  2 Mar 2019 14:31:33 -0600 (CST)
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7h3wbAyVR6hX for <linux-kernel@vger.kernel.org>;
+        Sat,  2 Mar 2019 14:40:15 -0600 (CST)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id EEC60C2B
-        for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2019 14:31:32 -0600 (CST)
-Received: by mail-io1-f71.google.com with SMTP id p17so1229017ios.8
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 12:31:32 -0800 (PST)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 86B3293A
+        for <linux-kernel@vger.kernel.org>; Sat,  2 Mar 2019 14:40:15 -0600 (CST)
+Received: by mail-io1-f72.google.com with SMTP id k24so1235667ioa.18
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 12:40:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=ZtO3KVKZ6PJf0yc97/RDd9q8ExnseZtD6Ih5Vi4KdUY=;
-        b=aMRu4mL3DsgrswlVo8Wl/bfR3ts3md+xOHx/x4uklLEpIgJ93FuxF0oG57tNInVsB5
-         4js1I7O2tBhQkOg03fMkXGptMCs7J2UUGGLr0kvWkDOT7ewDPz6UMYANrohTRji+nssp
-         bTDTnnXvjiZCdSu/pvjvFvJnxRb0QTVqyj4jAL+/qzqYSbfPS0LpTBXoK26O/GRfldY7
-         ipCRh/Oo2Vaetzy8sf3fbbz3hWtGG3i8I8NPiRlEmutPrbtz5N+UW55a3Nxr0zC1UUvh
-         un3D9c20hUAg/d+uJH5u0stlUKdHXxoHzdIhecnu7bfuzktPb+O1zTT3hCAD9uXIpJdZ
-         rwzw==
+        bh=y0xx9CNXAixKOH4s5a9j3si4MaIeGUmv4k00ayMuflo=;
+        b=gztPNJBLGbWlOJbSRex3nzA5ccPx7vtzkktwN6hbhpQ1D4PZSQRZOSLhtM9lQniHOQ
+         ENluWtq09STllAwZ4W9LMdZklm8BCpLSlgMcXWVo1MmTg7+IjN23XVqov8dUeC2mxPLr
+         kTGNPlSO9P0dBFs7X023jWPCNfHtq0IWPMUBC2ZmSH3YeEETxf41YPEaVaNuGx+xb4Gy
+         7Ir//uFI+dmz5HxIxeVum0xJPsncaJLEGNzuskYa8qtPQHaThh0DGPX5YSykYl7Vn3Sa
+         /fmly4T/eZkaZrUXqV3toWM2IBNZLymuM0T9gg11E9CuBeS+r+BBZXSfK6tQpgFwqbMd
+         avbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZtO3KVKZ6PJf0yc97/RDd9q8ExnseZtD6Ih5Vi4KdUY=;
-        b=VyT4rM1Fo7hjeQyjuQd8voIxCmhHqb4/hMxXgSPyAJ1jEIfzVoM0IW0fuWIsLzFpL4
-         tq3TTosvPaevXjY9XRcCNvVGX31pfU81wuVHbp8ndbbmzqbgb6fq9io9WAUpx7biDVgP
-         zhj4DBpJcyGuC4QZcwYp/72oB7qB9Xi2CjTYwv8yz16UU2oaEQ9plhXrsZYOCEGEdWda
-         I3BST1LAuZXRaSuZUnz1aXpOQi0e6euhxeT43R4hSnEzsAW9ldXZJwDKFDzgOXAw6TG/
-         mevWx7iRw0s7e7k5gdclaRtOQi4//1l8m8PIS5Dxpt45ZQysohhdGSQpRUeVw5otpsQp
-         DLyA==
-X-Gm-Message-State: APjAAAUrx815oEAUpthoQ2TtomsDff6tq0wvwGjTq1P0NNzhNuRgQRrL
-        IlvUbHFIZ7gTnN00u0PYL72s3xCsaXMfQaZSs7YfUL/9HIG2xWbuakNYZfPWCkasZnoSy5hwBNv
-        fskx2koxeL/CzN1V9/T2i0vpVu9Nt
-X-Received: by 2002:a5d:8893:: with SMTP id d19mr5811301ioo.277.1551558692635;
-        Sat, 02 Mar 2019 12:31:32 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxzDofBlKkimOF1FcnHMLT1rFVFPkx+EPGv64bVeGitGB+iyfi4i7+n5aoAPh6Q3Oow0ePySQ==
-X-Received: by 2002:a5d:8893:: with SMTP id d19mr5811293ioo.277.1551558692438;
-        Sat, 02 Mar 2019 12:31:32 -0800 (PST)
+        bh=y0xx9CNXAixKOH4s5a9j3si4MaIeGUmv4k00ayMuflo=;
+        b=YfZLFX8TM9yKsx3JS0QqnBeXejlusRADjasJ8wZBgzdtM6caMUWxOssecLNT1f5gLD
+         wcz/+3O2pl5PSsWjG9a5eVekpeeI4eEZDxFsa5lKhgn7jRXkXy27HSBHcYsD7TiEUOVJ
+         vQYqWWl6d4rpa3O0WsH4yK4Y4JIAH4WGHcwiCNc6uSCVDW5Wasg2ue8idQ3l84bXeZaQ
+         /EzPYCW+CpUhJCTpUhj8KPz5LXUHOeTSfrIraRHaKBIjV5udymsWZmgcS2wvcSYAd9Dj
+         0B/+0kb5URtvwUDB4t+ixzfEDITmHjafz8Pm3tFJP8PfZQtnND1qTr64aiossWZwk0/Y
+         +z+g==
+X-Gm-Message-State: APjAAAWqGPmOmMA1C/SssUFib3MXhVzRgulHC1oYGzQs6i9QjVX3VE1i
+        tgMrvKRbSFkfU6IAgQXxAckHZx228ozC0S5IbURqMSrOvoxqFcnn1mmMJ3ydvszGxjaqr0gmlRq
+        p+6LhGBBoORSVz+bHMxnQdWkn5JtV
+X-Received: by 2002:a24:9403:: with SMTP id j3mr1235072ite.44.1551559215171;
+        Sat, 02 Mar 2019 12:40:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzFPLCWGb3LVhLsQB+BEE5/Cy74SW7BlFPgT6WLuCdLF/CUN441tV1U3tjfyq2f9sYQBipGSQ==
+X-Received: by 2002:a24:9403:: with SMTP id j3mr1235060ite.44.1551559214949;
+        Sat, 02 Mar 2019 12:40:14 -0800 (PST)
 Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id 81sm606358iou.78.2019.03.02.12.31.31
+        by smtp.gmail.com with ESMTPSA id p141sm900936itb.39.2019.03.02.12.40.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 02 Mar 2019 12:31:32 -0800 (PST)
+        Sat, 02 Mar 2019 12:40:14 -0800 (PST)
 From:   Aditya Pakki <pakki001@umn.edu>
 To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] rsi: Fix NULL pointer dereference in kmalloc
-Date:   Sat,  2 Mar 2019 14:31:22 -0600
-Message-Id: <20190302203123.9182-1-pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] omapfb: Fix potential NULL pointer dereference in kmalloc
+Date:   Sat,  2 Mar 2019 14:40:04 -0600
+Message-Id: <20190302204006.9953-1-pakki001@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmalloc can fail in rsi_register_rates_channels but memcpy still attempts
-to write to channels. The patch checks and avoids such a situation.
+Memory allocated, using kmalloc, for new_compat may fail. This patch
+checks for such an error and prevents potential NULL pointer
+dereference.
 
 Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
- drivers/net/wireless/rsi/rsi_91x_mac80211.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_mac80211.c b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-index e56fc83faf0e..59eb1f533d0e 100644
---- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-@@ -197,6 +197,11 @@ static void rsi_register_rates_channels(struct rsi_hw *adapter, int band)
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
+index 136d30484d02..0592c436b2da 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/omapdss-boot-init.c
+@@ -111,6 +111,8 @@ static void __init omapdss_omapify_node(struct device_node *node)
  
- 	if (band == NL80211_BAND_2GHZ) {
- 		channels = kmalloc(sizeof(rsi_2ghz_channels), GFP_KERNEL);
-+		if (!channels) {
-+			rsi_dbg(ERR_ZONE, "Failed to allocate memory\n");
-+			return;
-+		}
-+
- 		memcpy(channels,
- 		       rsi_2ghz_channels,
- 		       sizeof(rsi_2ghz_channels));
-@@ -206,6 +211,11 @@ static void rsi_register_rates_channels(struct rsi_hw *adapter, int band)
- 		sbands->n_bitrates = ARRAY_SIZE(rsi_rates);
- 	} else {
- 		channels = kmalloc(sizeof(rsi_5ghz_channels), GFP_KERNEL);
-+		if (!channels) {
-+			rsi_dbg(ERR_ZONE, "Failed to allocate memory\n");
-+			return;
-+		}
-+
- 		memcpy(channels,
- 		       rsi_5ghz_channels,
- 		       sizeof(rsi_5ghz_channels));
+ 	new_len = prop->length + strlen(prefix) * num_strs;
+ 	new_compat = kmalloc(new_len, GFP_KERNEL);
++	if (!new_compat)
++		return;
+ 
+ 	omapdss_prefix_strcpy(new_compat, new_len, prop->value, prop->length);
+ 
 -- 
 2.17.1
 
