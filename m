@@ -2,173 +2,156 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8C2C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3162BC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A652086D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:38:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AAv7VdjS"
+	by mail.kernel.org (Postfix) with ESMTP id 01A1820863
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfCBNhm (ORCPT
+        id S1726714AbfCBNrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 08:37:42 -0500
-Received: from mail-eopbgr50074.outbound.protection.outlook.com ([40.107.5.74]:64231
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfCBNhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 08:37:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/KUUxYoDUSaTPlpT7K4LU/+i+IFiN/A557NxS/OWrl8=;
- b=AAv7VdjSD1vQ9IvP6arfGrijzI56ZuCgtP4seNMhuG7r297LOO8uY/QHBaF50NrHr/7O2poskD2fEmIygTXVZAsQJU54zE+fyNSPz2QoOO2O7VY/MsIr3gBWeXdiw0kOHv5QiTgbPODjCAUPGLX0lyJZS59BUlb/igGdTlBbE9A=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB3954.eurprd04.prod.outlook.com (52.134.124.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.16; Sat, 2 Mar 2019 13:37:37 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185%5]) with mapi id 15.20.1665.019; Sat, 2 Mar 2019
- 13:37:37 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>
-CC:     Vlad Buslov <vladbu@mellanox.com>,
-        "kernel-team@fb.com" <kernel-team@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 03/12] percpu: introduce helper to determine if two
- regions overlap
-Thread-Topic: [PATCH 03/12] percpu: introduce helper to determine if two
- regions overlap
-Thread-Index: AQHUzwvzZOpEZztyM0qHqrva9HhZI6X4WyeQ
-Date:   Sat, 2 Mar 2019 13:37:37 +0000
-Message-ID: <AM0PR04MB44816A833E192E37072B641988770@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190228021839.55779-1-dennis@kernel.org>
- <20190228021839.55779-4-dennis@kernel.org>
-In-Reply-To: <20190228021839.55779-4-dennis@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5b5597d4-d06d-4a01-dd9d-08d69f143bf7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB3954;
-x-ms-traffictypediagnostic: AM0PR04MB3954:
-x-microsoft-exchange-diagnostics: =?gb2312?B?MTtBTTBQUjA0TUIzOTU0OzIzOjZPdEZmb3FpWU9RdEhUSmVzRHQ4TGp6YXFO?=
- =?gb2312?B?SGN6dFpMaWluSFJ2cmd4R3BoL1VTVzhNTGJ4L0NVV1FRV0MzVHY1TUJJdXd1?=
- =?gb2312?B?bUpMQzRxVlBRYlEvRzcyUkdydW1MTXJMdm1JS21vNGc5NFNQQmVCUU8zY3Vq?=
- =?gb2312?B?b25qOEJiVFZ2M1JPbXJPbWFVRTNmVEg5Wi8yd09ETW5ZZXlxMVJqTE83dXFh?=
- =?gb2312?B?ZlB4NEs4cktMNGdtbUx2TUw3WEJKTDVTSjdwNHg5cElDU1RYTmdLSEdZMnlZ?=
- =?gb2312?B?YldrTnRGc1htZEM1OTBPbDVhNjMydlFYQVF5RmtWT3pjRkNDaDJTQ0N3VUMz?=
- =?gb2312?B?VVVQaTgxWUdERHVrNE5Wby9IeW1jcVZJcmp4em4xUStBNjJ2Ui9jZWlYamFJ?=
- =?gb2312?B?MTZ5Wllob05ubE9GdStCekJIckxCMEVaK2dmUmk5bmdIdytGcGQyb2JnVmJ5?=
- =?gb2312?B?TFgxSEQxYXZUWUZ0SEFsZlF3VExweEx1NUhYK2hRNlAwak9WVWR6WTRDLzNN?=
- =?gb2312?B?dHFiVUhWeHVRV2lFd2JCZUNuU25rT2VtS1JBZHNzZlJrQ0d2MHUwVXh3Zmw2?=
- =?gb2312?B?cGhhMkxmWDRDSkVkNVp4SUEyZFVSWlpiUCs4K2txcUZKQzE1OWNBemtSWml1?=
- =?gb2312?B?UW9HY0llT09KWnBodk5RY3RQRnI3ZFRrNlRnZnd5MXN4bGR0Z0pCQkhQaC9T?=
- =?gb2312?B?Z3MwZlBoc3FkeityUDlSZ2NMRkk3LzlON2crOTM1VnFQWnoyaUZiWXRXUEhL?=
- =?gb2312?B?TWZCcjc4Q3k1NHRMQTBVZDJLU3pzcnVaOWpHL0dLQkJoNmFjbmlpYnJsb2lx?=
- =?gb2312?B?dU41Z0xOUjV2VGdqZTN5ODF1Tmp0U1VCQngvSUYwSU11VmZYNmdsM2JHUVJ3?=
- =?gb2312?B?RnRGRGdHWElOenFHZjlnQWpib1dBMmQrTlgyUXUxclRkais1elIxSFYvdk5y?=
- =?gb2312?B?WGlRS21YYkh0VVh0VThDK0xPVG5NWlFtaWNtYUhjRU9MRVVBQXJjYXUyWDVQ?=
- =?gb2312?B?Unh5SmFqLytyMzFVM1MxbndzVWZzR1pxcTBaa25QdnpkbWFqQUNvTnF6MjFu?=
- =?gb2312?B?OEVBcFZlVkVUalByTzc1WmUySGRhWnZSMTNPSWxuREJFZGRDZlJ6TzVEYUxE?=
- =?gb2312?B?N1JteVZ0d1pGbHBQVDg5WGswcUNCU0hkaFBHaDdBVTR2SmM3bzFoWjB3dXBJ?=
- =?gb2312?B?aE12cjIyRklrV1pON3p5TTdTTThFdmgvWWV3SUxXRFpKV3FjVy96dzRvWnc4?=
- =?gb2312?B?aVdCWVZVMDBkSDNnUWJnMzN6R0JTdlBWbnp1cjlKQmZDU3BtR2dmWWNLdk96?=
- =?gb2312?B?d2htRlU2QTlOWTdNRlJCSHFLb1ZtdTFZU2djeWd3aU8zT2FUTmFxT3pTeDdH?=
- =?gb2312?B?OFpJT3BaVkU4YTFWZENTR1R4eFhoK1BzV05rZWJQYndsK0loY25QekJ5dGs2?=
- =?gb2312?B?anlrNlJHOE1VNVNERWNrRnJkUjNvdTlTcWRkTFBmS2Nmbk1qVHlKTXdWVXpy?=
- =?gb2312?B?WHQ4NWNETGhTYzdtMkkvS2ZTakRqbWRGZHdqOHhXQTJXMloyaXhaWmJId3lq?=
- =?gb2312?B?ajZNN25sYUd5Z1Q3Sko0ZGpGbmFuZFlWU283TUExayt3ZVg4bUMza0taQjNR?=
- =?gb2312?B?amtFdmtjbmgvUnFrZlltanRreForQm1lSEdQbkh2UUFYOXd1TEhIY1M5cFZ6?=
- =?gb2312?B?Y2d3YkJySWV1bU9UOTNTekk1Ri9tQmhoamxiWTcxV0pldTBXMFhZaHJzbmdu?=
- =?gb2312?B?RUdaTG5Ha0VYRitTNGVtQT09?=
-x-microsoft-antispam-prvs: <AM0PR04MB3954CEA39580767DE3C9DCE988770@AM0PR04MB3954.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09645BAC66
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(366004)(346002)(376002)(199004)(189003)(13464003)(6116002)(4326008)(3846002)(53936002)(33656002)(14454004)(106356001)(6436002)(99286004)(105586002)(229853002)(97736004)(7736002)(55016002)(54906003)(478600001)(74316002)(6246003)(66066001)(9686003)(2906002)(305945005)(476003)(446003)(11346002)(8936002)(486006)(44832011)(86362001)(53546011)(186003)(26005)(316002)(68736007)(256004)(76176011)(52536013)(71200400001)(71190400001)(25786009)(14444005)(7696005)(110136005)(102836004)(8676002)(81166006)(81156014)(6506007)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB3954;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: p7i3svkzc/qVAH+kP/eiieP/OJiPsCYJyPSJUuSSglk37ELyoXYes++EWzuURO0dbkNZDVC36zVjnA/IvDnovik/r+U3MvQozn3ohaRPgNkpMl8Ky+XAbAg1F5mfezZTTnAU6HF/YVpdgIT94REcFgcUY8K4dOgp7+Cm3iLvZ1XT7U96MdpRgubu75n+czQ6U9gzycEYjKJyLOmOPivUXXJyEwAO2wdxARFhGj7aPut1r9z66kA7ei47FtMWX6VkGWNplQhq8cmJ5hq1tqnsW9qTeRc73azvbNOAPAt6n9+pc6hT0N3NSMiNIR8Ivis75gzaer1zuTVhsWTzqe44LMIZ1EHVScmqhFE4/ShQR+v3sSyjZ27VyvSx+L+3XHVnfZSESHDEIaYyC3OI7XLc35rBNn1olB6n3kWEQOEpzQw=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b5597d4-d06d-4a01-dd9d-08d69f143bf7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2019 13:37:37.3135
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB3954
+        Sat, 2 Mar 2019 08:47:48 -0500
+Received: from sauhun.de ([88.99.104.3]:36240 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726113AbfCBNrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 08:47:47 -0500
+Received: from localhost (p54B33179.dip0.t-ipconnect.de [84.179.49.121])
+        by pokefinder.org (Postfix) with ESMTPSA id 2F45D4A1772;
+        Sat,  2 Mar 2019 14:47:43 +0100 (CET)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Keerthy <j-keerthy@ti.com>,
+        Peter Rosin <peda@axentia.se>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Phil Reid <preid@electromag.com.au>,
+        Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [RFC PATCH v2 0/7] i2c: core: introduce atomic transfers
+Date:   Sat,  2 Mar 2019 14:47:28 +0100
+Message-Id: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGVubmlzLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IG93bmVy
-LWxpbnV4LW1tQGt2YWNrLm9yZyBbbWFpbHRvOm93bmVyLWxpbnV4LW1tQGt2YWNrLm9yZ10gT24N
-Cj4gQmVoYWxmIE9mIERlbm5pcyBaaG91DQo+IFNlbnQ6IDIwMTnE6jLUwjI4yNUgMTA6MTkNCj4g
-VG86IERlbm5pcyBaaG91IDxkZW5uaXNAa2VybmVsLm9yZz47IFRlanVuIEhlbyA8dGpAa2VybmVs
-Lm9yZz47IENocmlzdG9waA0KPiBMYW1ldGVyIDxjbEBsaW51eC5jb20+DQo+IENjOiBWbGFkIEJ1
-c2xvdiA8dmxhZGJ1QG1lbGxhbm94LmNvbT47IGtlcm5lbC10ZWFtQGZiLmNvbTsNCj4gbGludXgt
-bW1Aa3ZhY2sub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQ
-QVRDSCAwMy8xMl0gcGVyY3B1OiBpbnRyb2R1Y2UgaGVscGVyIHRvIGRldGVybWluZSBpZiB0d28g
-cmVnaW9ucw0KPiBvdmVybGFwDQo+IA0KPiBXaGlsZSBibG9jayBoaW50cyB3ZXJlIGFsd2F5cyBh
-Y2N1cmF0ZSwgaXQncyBwb3NzaWJsZSB3aGVuIHNwYW5uaW5nIGFjcm9zcw0KPiBibG9ja3MgdGhh
-dCB3ZSBtaXNzIHVwZGF0aW5nIHRoZSBjaHVuaydzIGNvbnRpZ19oaW50LiBSYXRoZXIgdGhhbiBy
-ZWx5IG9uDQo+IGNvcnJlY3RuZXNzIG9mIHRoZSBib3VuZGFyaWVzIG9mIGhpbnRzLCBkbyBhIGZ1
-bGwgb3ZlcmxhcCBjb21wYXJpc29uLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFpob3Ug
-PGRlbm5pc0BrZXJuZWwub3JnPg0KPiAtLS0NCj4gIG1tL3BlcmNwdS5jIHwgMzEgKysrKysrKysr
-KysrKysrKysrKysrKysrKysrLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMo
-KyksIDQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvbW0vcGVyY3B1LmMgYi9tbS9w
-ZXJjcHUuYw0KPiBpbmRleCA2OWNhNTFkMjM4YjUuLmI0MDExMmIyZmM1OSAxMDA2NDQNCj4gLS0t
-IGEvbW0vcGVyY3B1LmMNCj4gKysrIGIvbW0vcGVyY3B1LmMNCj4gQEAgLTU0Niw2ICs1NDYsMjQg
-QEAgc3RhdGljIGlubGluZSBpbnQgcGNwdV9jbnRfcG9wX3BhZ2VzKHN0cnVjdA0KPiBwY3B1X2No
-dW5rICpjaHVuaywgaW50IGJpdF9vZmYsDQo+ICAJICAgICAgIGJpdG1hcF93ZWlnaHQoY2h1bmst
-PnBvcHVsYXRlZCwgcGFnZV9zdGFydCk7ICB9DQo+IA0KPiArLyoNCj4gKyAqIHBjcHVfcmVnaW9u
-X292ZXJsYXAgLSBkZXRlcm1pbmVzIGlmIHR3byByZWdpb25zIG92ZXJsYXANCj4gKyAqIEBhOiBz
-dGFydCBvZiBmaXJzdCByZWdpb24sIGluY2x1c2l2ZQ0KPiArICogQGI6IGVuZCBvZiBmaXJzdCBy
-ZWdpb24sIGV4Y2x1c2l2ZQ0KPiArICogQHg6IHN0YXJ0IG9mIHNlY29uZCByZWdpb24sIGluY2x1
-c2l2ZQ0KPiArICogQHk6IGVuZCBvZiBzZWNvbmQgcmVnaW9uLCBleGNsdXNpdmUNCj4gKyAqDQo+
-ICsgKiBUaGlzIGlzIHVzZWQgdG8gZGV0ZXJtaW5lIGlmIHRoZSBoaW50IHJlZ2lvbiBbYSwgYikg
-b3ZlcmxhcHMgd2l0aA0KPiArdGhlDQo+ICsgKiBhbGxvY2F0ZWQgcmVnaW9uIFt4LCB5KS4NCj4g
-KyAqLw0KPiArc3RhdGljIGlubGluZSBib29sIHBjcHVfcmVnaW9uX292ZXJsYXAoaW50IGEsIGlu
-dCBiLCBpbnQgeCwgaW50IHkpIHsNCj4gKwlpZiAoKHggPj0gYSAmJiB4IDwgYikgfHwgKHkgPiBh
-ICYmIHkgPD0gYikgfHwNCj4gKwkgICAgKHggPD0gYSAmJiB5ID49IGIpKQ0KDQpJIHRoaW5rIHRo
-aXMgY291bGQgYmUgc2ltcGxpZmllZDoNCiAoYSA8IHkpICYmICh4IDwgYikgY291bGQgYmUgdXNl
-ZCB0byBkbyBvdmVybGFwIGNoZWNrLg0KDQpSZWdhcmRzLA0KUGVuZy4NCg0KPiArCQlyZXR1cm4g
-dHJ1ZTsNCj4gKwlyZXR1cm4gZmFsc2U7DQo+ICt9DQo+ICsNCj4gIC8qKg0KPiAgICogcGNwdV9j
-aHVua191cGRhdGUgLSB1cGRhdGVzIHRoZSBjaHVuayBtZXRhZGF0YSBnaXZlbiBhIGZyZWUgYXJl
-YQ0KPiAgICogQGNodW5rOiBjaHVuayBvZiBpbnRlcmVzdA0KPiBAQCAtNzEwLDggKzcyOCwxMSBA
-QCBzdGF0aWMgdm9pZCBwY3B1X2Jsb2NrX3VwZGF0ZV9oaW50X2FsbG9jKHN0cnVjdA0KPiBwY3B1
-X2NodW5rICpjaHVuaywgaW50IGJpdF9vZmYsDQo+ICAJCQkJCVBDUFVfQklUTUFQX0JMT0NLX0JJ
-VFMsDQo+ICAJCQkJCXNfb2ZmICsgYml0cyk7DQo+IA0KPiAtCWlmIChzX29mZiA+PSBzX2Jsb2Nr
-LT5jb250aWdfaGludF9zdGFydCAmJg0KPiAtCSAgICBzX29mZiA8IHNfYmxvY2stPmNvbnRpZ19o
-aW50X3N0YXJ0ICsgc19ibG9jay0+Y29udGlnX2hpbnQpIHsNCj4gKwlpZiAocGNwdV9yZWdpb25f
-b3ZlcmxhcChzX2Jsb2NrLT5jb250aWdfaGludF9zdGFydCwNCj4gKwkJCQlzX2Jsb2NrLT5jb250
-aWdfaGludF9zdGFydCArDQo+ICsJCQkJc19ibG9jay0+Y29udGlnX2hpbnQsDQo+ICsJCQkJc19v
-ZmYsDQo+ICsJCQkJc19vZmYgKyBiaXRzKSkgew0KPiAgCQkvKiBibG9jayBjb250aWcgaGludCBp
-cyBicm9rZW4gLSBzY2FuIHRvIGZpeCBpdCAqLw0KPiAgCQlwY3B1X2Jsb2NrX3JlZnJlc2hfaGlu
-dChjaHVuaywgc19pbmRleCk7DQo+ICAJfSBlbHNlIHsNCj4gQEAgLTc2NCw4ICs3ODUsMTAgQEAg
-c3RhdGljIHZvaWQgcGNwdV9ibG9ja191cGRhdGVfaGludF9hbGxvYyhzdHJ1Y3QNCj4gcGNwdV9j
-aHVuayAqY2h1bmssIGludCBiaXRfb2ZmLA0KPiAgCSAqIGNvbnRpZyBoaW50IGlzIGJyb2tlbi4g
-IE90aGVyd2lzZSwgaXQgbWVhbnMgYSBzbWFsbGVyIHNwYWNlDQo+ICAJICogd2FzIHVzZWQgYW5k
-IHRoZXJlZm9yZSB0aGUgY2h1bmsgY29udGlnIGhpbnQgaXMgc3RpbGwgY29ycmVjdC4NCj4gIAkg
-Ki8NCj4gLQlpZiAoYml0X29mZiA+PSBjaHVuay0+Y29udGlnX2JpdHNfc3RhcnQgICYmDQo+IC0J
-ICAgIGJpdF9vZmYgPCBjaHVuay0+Y29udGlnX2JpdHNfc3RhcnQgKyBjaHVuay0+Y29udGlnX2Jp
-dHMpDQo+ICsJaWYgKHBjcHVfcmVnaW9uX292ZXJsYXAoY2h1bmstPmNvbnRpZ19iaXRzX3N0YXJ0
-LA0KPiArCQkJCWNodW5rLT5jb250aWdfYml0c19zdGFydCArIGNodW5rLT5jb250aWdfYml0cywN
-Cj4gKwkJCQliaXRfb2ZmLA0KPiArCQkJCWJpdF9vZmYgKyBiaXRzKSkNCj4gIAkJcGNwdV9jaHVu
-a19yZWZyZXNoX2hpbnQoY2h1bmspOw0KPiAgfQ0KPiANCj4gLS0NCj4gMi4xNy4xDQoNCg==
+So, finally, here is the second RFC for supporting I2C transfers in atomic
+contexts (i.e. very late). This will need some text because I tried some things
+on the way but had to discard them. However, I think it is important to have
+that documented.
+
+One thing I really wanted to have is a kind of whitelist for devices which are
+allowed to use atomic transfers. So we could identify the "unauthorized" ones
+as buggy. To be useful, this should not add new API calls for transfers,
+otherwise things would have become way more complicated for I2C users like
+regmap. So, I tried e.g. to flag clients and provide that information
+throughout the i2c tree (think muxes here). In the end, I concluded that this
+is not an I2C specific problem, so it can't have an I2C specifc solution.
+Imagine a GPIO which is needed to reboot (drivers/power/reset/gpio-restart.c).
+This is the device which needs to whitelisted but the driver doesn't even know
+if the GPIO is behind I2C or not. So, if we want this, it should probably be
+handled on 'struct device' level. Including all the hierarchy. Postponed.
+
+So, this RFC v2 is much more similar to v1 than I expected. Main changes:
+
+* cleaned up 'struct i2c_adapter' a bit before adding the new stuff
+* added an atomic callback for SMBus, too. Only build-tested so far. But spent
+  a few braincells of getting the SMBus logic readable because we could have
+  an I2C fallback just for the atomic case
+* add a WARN for atomic transfers with no atomic transfer handler
+* added support for the i2c-demuxer, so I could test the series. Support
+  for I2C muxes is missing because of the locking issue (see later) which
+  may mean a redesign anyhow
+* imported the omap support into this series to have another user. I didn't
+  pick up the patch for imx from Stefan because it is bigger and probably
+  needs seperate review first
+* I converted the tegra-bpmp driver which already had handling for the atomic
+  case*. I did not convert the pxa driver which has a polling-only mode, too.
+  This also seems like a bigger task and its current behaviour shouldn't be
+  affected by this series. *only build tested
+* added a HACK to allow the i2c-gpio driver atomic transfers. This will only
+  work if accessing the GPIO can be done in atomic contexts, too, so this is
+  for testing only
+
+For the regular cases this series works well on my Renesas Lager board*
+which needs an I2C access to the PMIC to reboot the board. *if I use the
+i2c-gpio driver, the i2c-sh_mobile is not converted yet.
+
+However, during the last review, Russell King brought up an interesting corner
+case. What if we want to reboot because of a panic and the bus is not in a
+consistent state? To create this situation, I recently created the 'inject-panic'
+fault injector [1] which is merged into i2c/for-next meanwhile.
+
+With this fault injector and 'reboot after panic' settings, I can create
+the problem Russell described: a) the bus is in an inconsistent state because
+the driver was interrupted (SCL/SDA both low) and b) the lock for this driver
+is taken, so trylock fails.
+
+I think b) is an interesting question: shall we give atomic transfers priority
+and ignore the lock? Do we need a seperate one then (SMP is turned off already,
+or?)? If so, that would probably mean way more complicated mux-locking code
+(Peter?)? And what if some mux in the path needs interrupts? And how academic
+is all that? Because someone putting the reboot functionality behind muxed I2C
+is kind of asking for problems :)
+
+That being said: this is an issue I think it is worth tackling. However, this
+issue is not introduced by this series. It is already there. It might just
+become more visible.
+
+Sidenote: I think problem a) is easier once we solved b). E.g. if we decide on
+a higher priority, we can postulate that IP cores should be reset first and
+bus recovery can also be applied. This will not help all cases but IMO is all
+we can do.
+
+Another topic where I'd like input from other people is the use of 'in_atomic'
+in this series. It was already there, so I kept it to avoid regressions. I am
+aware that 'in_atomic' should not be used in drivers. So, if someone has
+expertise to say if it can be removed or replaced with something else, I am
+all ears.
+
+A branch (based on i2c/for-next) can be found here:
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/i2c/atomic_xfer
+
+Sorry, no TLDR; text here - I think this topic deserves a few words ;)
+
+Looking forward to comments, thanks!
+
+   Wolfram
+
+
+[1] http://patchwork.ozlabs.org/patch/1044789/
+
+
+Tero Kristo (1):
+  i2c: busses: omap: Add the master_xfer_irqless hook
+
+Wolfram Sang (6):
+  i2c: apply coding style for struct i2c_adapter
+  i2c: core: use I2C locking behaviour also for SMBUS
+  i2c: core: introduce callbacks for atomic transfers
+  i2c: demux: WIP: handle the new atomic callbacks
+  i2c: tegra-bpmp: convert to use new atomic callbacks
+  i2c: algo: bit: HACK! add atomic callback
+
+ drivers/i2c/algos/i2c-algo-bit.c      |  5 ++-
+ drivers/i2c/busses/i2c-omap.c         | 79 +++++++++++++++++++++++++++++------
+ drivers/i2c/busses/i2c-tegra-bpmp.c   | 27 +++++++++---
+ drivers/i2c/i2c-core-base.c           | 17 ++++----
+ drivers/i2c/i2c-core-smbus.c          | 25 ++++++++---
+ drivers/i2c/i2c-core.h                | 15 +++++++
+ drivers/i2c/muxes/i2c-demux-pinctrl.c |  3 ++
+ include/linux/i2c.h                   | 38 +++++++++++------
+ 8 files changed, 162 insertions(+), 47 deletions(-)
+
+-- 
+2.11.0
+
