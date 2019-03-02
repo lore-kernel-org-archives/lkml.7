@@ -2,97 +2,106 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE7EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54AEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB3C2086D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:32:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551551527;
-	bh=LWJFIa5iJ0G75fjn537mMbuXZnuU15cwL1uRXhrPJhY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=OF4PRbqW4Trz6tFm3yZHqAJNjgtBhG+z4f4BIoI1d6XwmeBaBdI+6AEXZzCFK6GJ3
-	 5sKbzV6p+GHihHwNfIlhlos9BdHtVTFY5XxAZaNhcCBhtkEpPZvrf/dnl5mZQMZYac
-	 TTVfkQgDUa7Qq9nj5D5FNv6H347RHsbC5MDaLF44=
+	by mail.kernel.org (Postfix) with ESMTP id A6A7A20838
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:39:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6DvPdiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfCBScF (ORCPT
+        id S1727058AbfCBSjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 13:32:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbfCBScE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 13:32:04 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9800920838;
-        Sat,  2 Mar 2019 18:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551551524;
-        bh=LWJFIa5iJ0G75fjn537mMbuXZnuU15cwL1uRXhrPJhY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TFtTc2c8JslryZZnmC2O3iLQEgBRJwwON4sqvFNqpRc5dqfdhYU6XQ285C+UuoIL6
-         Ov4HkSRaJsjQvhPS1PgZ/p8BvdUf4fv8c2SF8VJ/dtNhJdDVwulA3//XV9X9AGNUlV
-         dIctCnoBvO4tlPIbRu4qWDUFcyysyD3ZfoHab8UE=
-Subject: Re: [PATCH] selftests: x86: add version check in test_syscall_vdso
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Steve Muckle <smuckle@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        shuah <shuah@kernel.org>
-References: <20190301001806.154271-1-smuckle@google.com>
- <CALCETrUcH9R62gDdiG-EGTfSt2kQktv-0+bYmPcLn4PWNMrHSQ@mail.gmail.com>
- <20190302091047.GA14963@kroah.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <b9805f57-5fc8-454e-c1c8-c06dab86e863@kernel.org>
-Date:   Sat, 2 Mar 2019 11:31:16 -0700
+        Sat, 2 Mar 2019 13:39:12 -0500
+Received: from mail-oi1-f174.google.com ([209.85.167.174]:34368 "EHLO
+        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfCBSjM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 13:39:12 -0500
+Received: by mail-oi1-f174.google.com with SMTP id g16so824906oib.1;
+        Sat, 02 Mar 2019 10:39:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5ydMXTOgR5VLSA0eQdZRLW2LaxV3fAtpkkyyvuJtn0A=;
+        b=T6DvPdiYaCUtHjIkgy3LWPo0nixdZeaSUKkmBVmZ+5wwboi995nyrlQA5y9KyW+jyo
+         RY70KCtg+AjAGQICGZkrCFPwFfhJplLdpHD3Yqfd++/NZcz0L66VJdirQIL/uL7SyF+G
+         3Zn+NEvocv5CixGpZnffxWzXeSv5GMQXatb69U8FjdOIsNU1/Z6PkZYGxgqgSkeb1Eg8
+         83X3XnLpWlp9hOf3sVMxwNp3+FlurDQW1SKqZ8WF40zQPv4ThYGuci6D+s3jdd0qgBjt
+         DvS0ZkDNl9A7cx32DaA5wWQiUTWWRWwbhhRkjTLYPKWkzD/u5ueCqHRfvp/4LvNIoGQg
+         Q0jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5ydMXTOgR5VLSA0eQdZRLW2LaxV3fAtpkkyyvuJtn0A=;
+        b=fLudNwNzd3zDmEbOQtLJ6R4QNSWpK+tTBGlBv7qa+e2gPUm5drcF8hquXt8yvmAd0w
+         2CbxEOvnWlgsrwtdGlrUzF846l3Os1gq42tqyxOtG1TSFgIgrhqiTuIAWxEdjm2cN9QY
+         i3ZiETOU0NZ7/Fb6IjUaBS+3UPXExP43NjXB0/aygmjMbiPdOhBQ3VsPKoq2QmLa3pKr
+         KsBZ3kLXvQOCSzEh79pHSSB6/blMoGxUMVGbXWf8pWTcz9R8JSd7JjmaT0d1eeTe+qcJ
+         Nw6a+J6jIM5Mlikf+TvYslNzTJOtoMKY3TptnE8JVfI48ElA4b8LeMiHoU4zOEx/U46O
+         58KQ==
+X-Gm-Message-State: AHQUAua5x25g/GaG6DhSw3z5tMNwvIa2WKaSpIlbRukv0D9x2zyLCSZJ
+        XjhOchIiGVoGCSaA7a6MrwxJAIq/
+X-Google-Smtp-Source: AHgI3IZ5HZWd/4TULDc/41LKGbZv3o21sX4zXKVI5u7pOyStWQwArPDhQsNmPFOczChXcp+tlxhgGg==
+X-Received: by 2002:aca:55d0:: with SMTP id j199mr7370278oib.110.1551551950593;
+        Sat, 02 Mar 2019 10:39:10 -0800 (PST)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id e12sm549448otr.1.2019.03.02.10.39.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 02 Mar 2019 10:39:09 -0800 (PST)
+Subject: Re: Realtek r8822be kernel module does not negotiate 802.11ac
+ connection
+To:     "David R. Bergstein" <david.r.bergstein@gmail.com>,
+        Tony Chuang <yhchuang@realtek.com>
+Cc:     Pkshih <pkshih@realtek.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <51d62a31-7cde-e815-bdee-4ef5433007aa@gmail.com>
+ <F7CD281DE3E379468C6D07993EA72F84D17AF74C@RTITMBSVM04.realtek.com.tw>
+ <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
+ <e68c6aae-8d71-266a-81fe-d078ac1ef38c@lwfinger.net>
+ <6eb7af74-b1a8-d112-e027-6c14252af994@gmail.com>
+ <487c350c-c455-b490-8de5-1d68760aa3dc@lwfinger.net>
+ <2e39892d-d206-e87f-c802-d427c54277cf@gmail.com>
+ <8706d34c-1fac-84ba-759d-18d96750636b@gmail.com>
+ <27e1a339-023a-360b-1e5d-1a156fc5edd2@gmail.com>
+ <c64c435c-fda7-9356-0205-093182fb1398@lwfinger.net>
+ <96c5b6c4-61fe-570d-ba2d-7721b1be7cca@gmail.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <20331a61-7d3d-7368-8c11-dbecde52c968@lwfinger.net>
+Date:   Sat, 2 Mar 2019 12:39:09 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190302091047.GA14963@kroah.com>
+In-Reply-To: <96c5b6c4-61fe-570d-ba2d-7721b1be7cca@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/19 2:10 AM, Greg KH wrote:
-> On Fri, Mar 01, 2019 at 11:59:24AM -0800, Andy Lutomirski wrote:
->>> On Feb 28, 2019, at 4:18 PM, Steve Muckle <smuckle@google.com> wrote:
->>>
->>> Since 4.17 registers r8-r11 are not clobbered/zeroed by a 64-bit kernel
->>> handling a 32-bit syscall and this behavior is enforced by the
->>> test_syscall_vdso testcase. See commit 8bb2610bc496
->>> ("x86/entry/64/compat: Preserve r8-r11 in int $0x80").
->>>
->>> Permit the old behavior in the testcase for kernels prior to 4.17.
->>
->> NAK.  If you want an old buggy kernel to pass a test, please either
->> patch the kernel or run an old test.
+On 3/2/19 12:09 PM, David R. Bergstein wrote:
+> Larry,
 > 
-> Yeah, this isn't ok, especially as you might have 4.14 or 4.9 kernels
-> that can pass the test if the needed patches were backported.  Checking
-> kernel version numbers should never be used for anything.
-> 
+> I tried using iw but it gives the same reading for bit rate.  In regard
+> to the firmware, it was not installed via "make install" so I did it
+> manually.
 
-Also, this test failure can tell us if we should backport important
-fixes. I have had requests to add kernel version checking in tests
-before and the recommendation is "don't check kernel versions and
-reply on feature type checks". In the case of fixes like this one,
-it is better for the test to fail than make us feel warm and fuzzy
-by making it pass.
+David,
 
-thanks,
--- Shuah
+There was a typo in the Makefile. 'make install' now installs the firmware 
+correctly.
+
+Larry
 
 
