@@ -2,145 +2,216 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B7AC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 12:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E84AC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466EB20863
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 12:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1EE620838
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DHF0wpi2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z4bIadvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfCBM4v (ORCPT
+        id S1726452AbfCBNAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 07:56:51 -0500
-Received: from mail-eopbgr140058.outbound.protection.outlook.com ([40.107.14.58]:19736
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726049AbfCBM4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 07:56:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xKkrdgy4sxDG+g4+6p6ybVWcmJjsSEcbrNBjKqfqtmQ=;
- b=DHF0wpi2y6PD1mcrl15X5UPheWEB09RfxAw0g5Gh6aRHKtLs0Bm9cXOhvP/MfmpOyoYuTWmrPgKrbhfxB/7VzGpYxGjpTaD9WFM940ye4OfXAcwh8FZ/g+COFEG6NUoi1+FNtKKJ3p3b0ZGaXlf1wP9EvKdqu+i9ogv11saoBvI=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4386.eurprd04.prod.outlook.com (52.135.152.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.18; Sat, 2 Mar 2019 12:56:46 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185%5]) with mapi id 15.20.1665.019; Sat, 2 Mar 2019
- 12:56:46 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>
-CC:     Vlad Buslov <vladbu@mellanox.com>,
-        "kernel-team@fb.com" <kernel-team@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 01/12] percpu: update free path with correct new free
- region
-Thread-Topic: [PATCH 01/12] percpu: update free path with correct new free
- region
-Thread-Index: AQHUzwvxqvudgH94gkaVeLURKBFXS6X4Tzjg
-Date:   Sat, 2 Mar 2019 12:56:46 +0000
-Message-ID: <AM0PR04MB4481091BB9F6BF0481C7F13B88770@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190228021839.55779-1-dennis@kernel.org>
- <20190228021839.55779-2-dennis@kernel.org>
-In-Reply-To: <20190228021839.55779-2-dennis@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 743b958b-ddde-4971-ca15-08d69f0e871c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB4386;
-x-ms-traffictypediagnostic: AM0PR04MB4386:
-x-microsoft-exchange-diagnostics: =?gb2312?B?MTtBTTBQUjA0TUI0Mzg2OzIzOkdRR1VNeUtncERFdnBIdFUzcFo1eXc5bVFD?=
- =?gb2312?B?VjJ1cUk0b0RiQmdhK0ZUNmZhZ29ua1lNbFk3dkgwL1pSc2VGMVVzUngwZ2pk?=
- =?gb2312?B?bjJ5eCtzSWhCVzNQdmk1SEY0ZlZaWVpyZXpXb09UVmU4ZWo1azk2aHNFQk9V?=
- =?gb2312?B?VUhjNzYyUFhCVUNoSzhWSVVvZklZZnMwMGN1TmJPUlNiYXNvZGZuWXBKVjRN?=
- =?gb2312?B?TWE0QnorbGg1b0ZITUM3dzM0ZWkwZXdZTFR6QWVkRmpyd2FQOHdCZ1NzZGZJ?=
- =?gb2312?B?VGMrM20xNUo5bHR2eGg0YThHR1g2SnI3YW9NQWEvQ250YWFIU0t3MDNDUkVv?=
- =?gb2312?B?NnBnQTROS25MeGtjTWZBTTBxVG11Rmw5dlkwTnBvVjRiN2NWb0lIaU5qYkdR?=
- =?gb2312?B?YlhmVVEyV3pLM3RCVjFVWkVpMG1aaTRxcHhmNUJBUXI2QkQ1OTY1Umg1RzhV?=
- =?gb2312?B?TjhSUkYxOHhQUlo2alN3WEorQkRBWWtJVjJXdndmWDErYTZiV2VuRW1NRlJj?=
- =?gb2312?B?TFdPUm1CelRENnZZeHRRVm5HaXVZYVV6UFRzRGo3bGMzL0VjazU3NlZUMzNV?=
- =?gb2312?B?bDF6N0txU3YvbkkyVWdmWWtoRDhVY2ZyK3NwUE5VTnV4amNaRnEzZWF3c2Qz?=
- =?gb2312?B?bUJNU2pPNkRzMXpEV1NVRnE5TkxyMEtZeTYwUzQ4QnpUbjVjQ3lNSmFWbllE?=
- =?gb2312?B?WE1XckllM0xHQThnNGpnbmZySTVpNHNaRWtMZ0hNSHBQY0pUYm1XNFBJRFBr?=
- =?gb2312?B?Z25DZUZobitqVWIxR01Tang0ZnJEaXBuOFlBSmNIV214bmVmQ2twaWJId0Zp?=
- =?gb2312?B?YmVNcm0rMUJTVXlWeGp6dFZIM2pxWVRxZWQ1TGZOZERwZmt0Y3F5cW5EcGtW?=
- =?gb2312?B?dngveGxUdDYwTHlPQUU4R25mY0FOYmxqZEMzclAwbEROZHRuQmltbnVaaERX?=
- =?gb2312?B?SDdqV2JjV3ZxdzBLZlk1NU9jSjJwTHN4b3hFY2owTXNyaW5yODY4YWc1TkpC?=
- =?gb2312?B?M2xNVE5QTTNkbWNqTkxGcHVwOFh5TGZCY3dkSHVkMWxPWldkWnJwb2tDRWFN?=
- =?gb2312?B?cDlNRjNYSGF2MWdmckwzbEJyOFdOc25KUU1UVHF5bmlBaGdDS2NCVzNUSWZ5?=
- =?gb2312?B?YlRLTXRzbTd2aGtIdFlqRzFpZnpCcXB2QTZBdzZROC9oZzNFWmJVa1JaWWxN?=
- =?gb2312?B?ck5XaGpSQlpQY2NJMUx2UzQzRnZMbm5UWjVxSFJyOER0OHAwQXI4MFg3cWZq?=
- =?gb2312?B?NGcxa29MSit3azNPRjZ2WDJIYlZOZjhZRWlIc0pseXQ1bGRtaXYzS1BPY1o3?=
- =?gb2312?B?QjNlaGFaOHRCM1d1US9YOG0veWM3NXQ3eFYxK2thbXcrdVgwR3dNOXFieGgz?=
- =?gb2312?B?N1hoeHgxcmZ3M3VaQ25YcWs2QzhERTZkR0o3dzJNRVkzT3NFbHFsYi9yejdX?=
- =?gb2312?B?ZVJMNUhpc2RVQkpkU2x5djIrSDA4TUR5ZDBRY2c0S1E5YnFnbU9ZUzBGL3VW?=
- =?gb2312?B?Q2Q2OGNCRmh5eENid3pMNDFJNlZRd0c2SG4zYkpraXJrTGpydjhaRE9xMzQv?=
- =?gb2312?B?RW9obEZLcWEzcDg0ZnJvdnJ3Tm1takp2a0ZiNEdPNWhoSi9SRUYwdUkxZ3U5?=
- =?gb2312?B?SkxRSUtRR0NaUzJyeWI4SDNmcHozWGRocXZqOWh6N3NKV0R4M09KaDY0ejJt?=
- =?gb2312?B?TU1iVVJTUDVscEV4TmJhQ2hqUzhMUFpQVHQ2UnhBenJORlhGSmtMWTl5VzU3?=
- =?gb2312?B?enFtR3pFVEZISDFPRlg5YW9uVjlLdUcxbWxDR0prTm1xR0hFMlYvMHNJSXpI?=
- =?gb2312?Q?m5SpC56gLvqAW?=
-x-microsoft-antispam-prvs: <AM0PR04MB438639AFFBC1DC1D3FAA9EDF88770@AM0PR04MB4386.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09645BAC66
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(376002)(366004)(346002)(136003)(189003)(13464003)(199004)(15650500001)(229853002)(446003)(4326008)(99286004)(7696005)(6436002)(6116002)(11346002)(476003)(14454004)(44832011)(76176011)(53936002)(25786009)(106356001)(33656002)(5660300002)(71200400001)(53546011)(6506007)(71190400001)(3846002)(105586002)(102836004)(26005)(186003)(6246003)(52536013)(97736004)(7736002)(305945005)(81166006)(8676002)(81156014)(256004)(14444005)(66066001)(86362001)(2906002)(74316002)(55016002)(68736007)(110136005)(9686003)(486006)(8936002)(478600001)(54906003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4386;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iQH7gOaHje6Pr1mf5qQLAqWtQKr3kbIUxiC+YPtqJ+zPQ6JQ4+8PcZ87+CTgahyrvCG3vpD5fNAs7Jwz6mz3T2YmtssvOY5MFVuWZLGV3tgRKn10QorKUsdcl+rZ255Kwv3SCjwsl/Vq/ykT/jnj3fYXQxu/0vvXc7CQr4kqo7czDt4CMnBYPdYR6SRHwEdLYwXZ8WHq8kvZWW4G0Jd8Kdo+JlE+exkGvvhbjkyblFEIr0bGipLADXlHOBO6LhP1HoSW112n25AAD2rasTuALfxTz/ymsG5SU416EANwV2bYI8s2/Pkyp/24tTzNauBhw2HnnIIYFkuhaE4ENcZbA7NmaZW/Gmfoj17oa5VnAXsaS4rWLrsjWq6RCJzfKWofVpq43Ph/95deXdOQbo7UDIBxE8ud7X3Q3BoKdGTsOG0=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Sat, 2 Mar 2019 08:00:04 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42298 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfCBNAE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 08:00:04 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b2so323676pgl.9
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 05:00:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/wTns5QPuDo+J1NyvXOlmOIqmrL7mvCVtWAYA/U/wJM=;
+        b=Z4bIadvPW/HuFXuCIpvqWYj/A3riHF0fv21vsBYp3NBjT6VRHx3JtYkpTLYHjy6vkc
+         CISJmoM8QPWBUq+OrPX55pKmf9JfzFywLWcV8ToODMuRMvD9UWcldkEsDaT1CZpqUqix
+         h2OjDzQsjq46Uj2HCi+9JTT3yhK6Eozo/TWDBU/EP7CK45/hE+mjgAgof1CTtXNwc0ns
+         8uBdvGT1FfZDEVbirjJ+cewF1WyLbrIdmqrH7++N/X5eOtWZklh9PTRiX0bd51fe9v1D
+         FgKlBnalUiNJlo/0cg2oSODh0ysF/rFPHEr4aZpBdnHn10BDwwLhiAEb28cv1zrCaDQq
+         fL7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/wTns5QPuDo+J1NyvXOlmOIqmrL7mvCVtWAYA/U/wJM=;
+        b=mQl7BFfs+2aIExJ4vT77y5SsnqSMk7EMe8tx54XN6rgk9hL8H+fjgPGV3HrKmXj/Mr
+         boClsDowx3z1GjUkp1BOXswdPHzE/qle46lWEkVchfhFTzmhWx5tbI9r7azhDSyndQpv
+         Pk5AuuucbKaaxcx9qvAPmzYPOocJv1HjkQamLVu0YYByLCh9GlrRlEj83pU1PFi4EImO
+         SiyKSrFcuz7BpFHk/ZQ7y20qTXTC7j0fMK7PbjTH6S4y7NVE9B3nI583SD8hYM0bOE7V
+         NNXyOBQN4LaSfuuua6Wwy/lSzKcH/xIphp7+7SAEZJs897GBkl7wMQqkJo+SShQomCzM
+         iamw==
+X-Gm-Message-State: APjAAAVtaIf8FrDyYqvJgSFpTuZ70EnR0WNn8+tqiFleU5nuNcBLgTUq
+        d6wldQ/lwW8Yj8HzIWODpfJUKg==
+X-Google-Smtp-Source: APXvYqymuon4VNkVPFWuNwbmk7MVQPD959f3S92mw0Vf2eh0xC/Rr6R9tB5lEH7pjWnNEZcsEA+Gjw==
+X-Received: by 2002:a63:2b03:: with SMTP id r3mr9389634pgr.1.1551531602937;
+        Sat, 02 Mar 2019 05:00:02 -0800 (PST)
+Received: from leoy-ThinkPad-X240s (li1206-191.members.linode.com. [45.79.107.191])
+        by smtp.gmail.com with ESMTPSA id z77sm1492048pfi.155.2019.03.02.04.59.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 02 Mar 2019 05:00:01 -0800 (PST)
+Date:   Sat, 2 Mar 2019 20:59:55 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Shiwanglai <shiwanglai@hisilicon.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
+        Suzhuangluan <suzhuangluan@hisilicon.com>
+Subject: Re: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
+Message-ID: <20190302125955.GA11385@leoy-ThinkPad-X240s>
+References: <6496F4728C09F6479CFF21A8E67D33D568F32660@dggema525-mbx.china.huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 743b958b-ddde-4971-ca15-08d69f0e871c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2019 12:56:46.3072
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4386
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6496F4728C09F6479CFF21A8E67D33D568F32660@dggema525-mbx.china.huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogb3duZXItbGludXgtbW1A
-a3ZhY2sub3JnIFttYWlsdG86b3duZXItbGludXgtbW1Aa3ZhY2sub3JnXSBPbg0KPiBCZWhhbGYg
-T2YgRGVubmlzIFpob3UNCj4gU2VudDogMjAxOcTqMtTCMjjI1SAxMDoxOA0KPiBUbzogRGVubmlz
-IFpob3UgPGRlbm5pc0BrZXJuZWwub3JnPjsgVGVqdW4gSGVvIDx0akBrZXJuZWwub3JnPjsgQ2hy
-aXN0b3BoDQo+IExhbWV0ZXIgPGNsQGxpbnV4LmNvbT4NCj4gQ2M6IFZsYWQgQnVzbG92IDx2bGFk
-YnVAbWVsbGFub3guY29tPjsga2VybmVsLXRlYW1AZmIuY29tOw0KPiBsaW51eC1tbUBrdmFjay5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogW1BBVENIIDAxLzEy
-XSBwZXJjcHU6IHVwZGF0ZSBmcmVlIHBhdGggd2l0aCBjb3JyZWN0IG5ldyBmcmVlIHJlZ2lvbg0K
-PiANCj4gV2hlbiB1cGRhdGluZyB0aGUgY2h1bmsncyBjb250aWdfaGludCBvbiB0aGUgZnJlZSBw
-YXRoIG9mIGEgaGludCB0aGF0IGRvZXMgbm90DQo+IHRvdWNoIHRoZSBwYWdlIGJvdW5kYXJpZXMs
-IGl0IHdhcyBpbmNvcnJlY3RseSB1c2luZyB0aGUgc3RhcnRpbmcgb2Zmc2V0IG9mIHRoZQ0KPiBm
-cmVlIHJlZ2lvbiBhbmQgdGhlIGJsb2NrJ3MgY29udGlnX2hpbnQuIFRoaXMgY291bGQgbGVhZCB0
-byBpbmNvcnJlY3QNCj4gYXNzdW1wdGlvbnMgYWJvdXQgZml0IGdpdmVuIGEgc2l6ZSBhbmQgYmV0
-dGVyIGFsaWdubWVudCBvZiB0aGUgc3RhcnQuIEZpeCB0aGlzIGJ5DQo+IHVzaW5nIChlbmQgLSBz
-dGFydCkgYXMgdGhpcyBpcyBvbmx5IGNhbGxlZCB3aGVuIHVwZGF0aW5nIGEgaGludCB3aXRoaW4g
-YSBibG9jay4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERlbm5pcyBaaG91IDxkZW5uaXNAa2VybmVs
-Lm9yZz4NCj4gLS0tDQo+ICBtbS9wZXJjcHUuYyB8IDIgKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAx
-IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL21tL3BlcmNw
-dS5jIGIvbW0vcGVyY3B1LmMNCj4gaW5kZXggZGI4NjI4MmZkMDI0Li41M2JkNzlhNjE3YjEgMTAw
-NjQ0DQo+IC0tLSBhL21tL3BlcmNwdS5jDQo+ICsrKyBiL21tL3BlcmNwdS5jDQo+IEBAIC04NzEs
-NyArODcxLDcgQEAgc3RhdGljIHZvaWQgcGNwdV9ibG9ja191cGRhdGVfaGludF9mcmVlKHN0cnVj
-dA0KPiBwY3B1X2NodW5rICpjaHVuaywgaW50IGJpdF9vZmYsDQo+ICAJCXBjcHVfY2h1bmtfcmVm
-cmVzaF9oaW50KGNodW5rKTsNCj4gIAllbHNlDQo+ICAJCXBjcHVfY2h1bmtfdXBkYXRlKGNodW5r
-LCBwY3B1X2Jsb2NrX29mZl90b19vZmYoc19pbmRleCwgc3RhcnQpLA0KPiAtCQkJCSAgc19ibG9j
-ay0+Y29udGlnX2hpbnQpOw0KPiArCQkJCSAgZW5kIC0gc3RhcnQpOw0KPiAgfQ0KDQpSZXZpZXdl
-ZC1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQoNCj4gDQo+ICAvKioNCj4gLS0NCj4g
-Mi4xNy4xDQoNCg==
+On Sat, Mar 02, 2019 at 09:45:22AM +0000, Shiwanglai wrote:
+
+[...]
+
+> > +		/* Top internals */
+> > +		funnel@ec031000 {
+> > +			compatible = "arm,coresight-funnel", "arm,primecell";
+> > +			reg = <0 0xec031000 0 0x1000>;
+> > +			clocks = <&crg_ctrl HI3660_PCLK>;
+> > +			clock-names = "apb_pclk";
+> > +
+> > +			out-ports {
+> > +				port {
+> > +					top_funnel_out: endpoint {
+> > +						remote-endpoint =
+> > +							<&top_etf_in>;
+> > +					};
+> > +				};
+> > +			};
+> > +
+> > +			in-ports {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <0>;
+> > +
+> > +				port@0 {
+> > +					reg = <0>;
+> > +					top_funnel_in0: endpoint {
+> > +						remote-endpoint =
+> > +							<&cluster0_etf_out>;
+> > +					};
+> > +				};
+> > +
+> > +				port@1 {
+> > +					reg = <0>;
+> 
+> Here should s/<0>/<1>; otherwise DTC will complain warning for mismatching between 'port@1' and 'reg = <0>'.
+
+> -- if reg set to 1, then there's no data output from cluster 1 to top.
+
+Thanks for the info, Wanglai.  Now I see why write as it is.
+
+I can confirm if directly use your patch with perf with mainline
+kernel I can capture CoreSight trace data successfully on Hikey960
+board.
+
+But since this DT binding will introduce DTC warning, I personally
+think we can improve for this with below method:
+
+We can create a funnel node named "funnel_combo", and we don't need to
+specify register address range for it; and cluster 0 and cluster 1 will
+output to "funnel_combo" and "funnel_combo" will output to the top
+funnel.  Thus the DT binding will write as below.
+
+To support for a funnel without any register address range (we have
+support replicator like this mode), we also need to extend the driver
+drivers/hwtracing/coresight/coresight-funnel.c.
+
+Mathieu, Mike, Suzuki, could you help confirm this is the right
+direction we should move forward to?
+
+---8<---
+	/* An invisible combo funnel between clusters and top funnel */
+	funnel_combo {
+		compatible = "arm,coresight-funnel";
+		clocks = <&crg_ctrl HI3660_PCLK>;
+		clock-names = "apb_pclk";
+
+		out-ports {
+			port {
+				combo_funnel_out: endpoint {
+					remote-endpoint =
+						<&top_funnel_in>;
+				};
+			};
+		};
+
+		in-ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				combo_funnel_in0: endpoint {
+					remote-endpoint =
+						<&cluster0_etf_out>;
+				};
+			};
+
+			port@1 {
+				reg = <1>;
+				combo_funnel_in1: endpoint {
+					remote-endpoint =
+						<&cluster1_etf_out>;
+				};
+			};
+		};
+	};
+
+	/* Top internals */
+	funnel@ec031000 {
+		compatible = "arm,coresight-funnel", "arm,primecell";
+		reg = <0 0xec031000 0 0x1000>;
+		clocks = <&crg_ctrl HI3660_PCLK>;
+		clock-names = "apb_pclk";
+
+		out-ports {
+			port {
+				top_funnel_out: endpoint {
+					remote-endpoint =
+						<&top_etf_in>;
+				};
+			};
+		};
+
+		in-ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				top_funnel_in: endpoint {
+					remote-endpoint =
+						<&combo_funnel_out>;
+				};
+			};
+		};
+	};
+
+--->8---
+
+[...]
+
+Thanks,
+Leo Yan
