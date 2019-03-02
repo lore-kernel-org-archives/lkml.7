@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169FAC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABFCC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8A220838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB20020838
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Q5fikHtf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="rnnAc4Z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfCBXfz (ORCPT
+        id S1727783AbfCBXgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 18:35:55 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:34384 "EHLO
+        Sat, 2 Mar 2019 18:36:03 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:34528 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfCBXfx (ORCPT
+        with ESMTP id S1726958AbfCBXgB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 18:35:53 -0500
+        Sat, 2 Mar 2019 18:36:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1551569750; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1551569757; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=bNrt35JIP1EJ9SZv42mKntmeQEDItMZvplduG2u//DI=;
-        b=Q5fikHtfmLQC1MYR791RIGQLBhzU9QmxumKX68sdcr92oUjqtRSLNi/4JWdYRw9PBzqhmk
-        HExb7ZND3amhpISNvpq8CsYtMAPxEQHAxNKo9bcdonsuPhO/1gtXeUoqSBPJ0cv/6wajki
-        Xr48UN2refz27JsXJGw5J34Vvo5laME=
+        bh=T5gM9fNr36oTxFv1YWXbA8rrY8lrYbbD1rX18qV1k78=;
+        b=rnnAc4Z9csRKPiG4x9NkmzbqXZ5L7zsGSSmV8buOUWJTfsh4v22a9Qb2FW9u2XVSQLo2gy
+        5oZUSeZaM5jkJyT+3zV2Ietg55z4p/5axVVuAKs88B13u1oVHb6YhvpeUzCZWf7hheFZmj
+        mia1rOU2tFj1TyheATgXR2XVJBA3hIs=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -45,9 +45,9 @@ Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
         linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v10 13/27] pwm: jz4740: Use clocks from TCU driver
-Date:   Sat,  2 Mar 2019 20:33:59 -0300
-Message-Id: <20190302233413.14813-14-paul@crapouillou.net>
+Subject: [PATCH v10 14/27] pwm: jz4740: Improve algorithm of clock calculation
+Date:   Sat,  2 Mar 2019 20:34:00 -0300
+Message-Id: <20190302233413.14813-15-paul@crapouillou.net>
 In-Reply-To: <20190302233413.14813-1-paul@crapouillou.net>
 References: <20190302233413.14813-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,16 +55,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ingenic-timer "TCU" driver provides us with clocks, that can be
-(un)gated, reparented or reclocked from devicetree, instead of having
-these settings hardcoded in this driver.
-
-While this driver is devicetree-compatible, it is never (as of now)
-probed from devicetree, so this change does not introduce a ABI problem
-with current devicetree files.
-
-Note that the "select REGMAP" has been dropped because it's
-already enabled by the "select INGENIC_TIMER".
+The previous algorithm hardcoded details about how the TCU clocks work.
+The new algorithm will use clk_round_rate to find the perfect clock rate
+for the PWM channel.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
@@ -74,127 +67,94 @@ Tested-by: Artur Rojek <contact@artur-rojek.eu>
 Notes:
          v9: New patch
     
-         v10: Explain in commit message why "select REGMAP" was dropped
+        v10: - New algorithm. Instead of starting with the maximum clock rate
+               and using clk_round_rate(rate - 1) to get the next (smaller)
+    	   clock, we compute the maximum rate we can use before the
+    	   register overflows, and apply it with clk_set_max_rate.
+    	   Then we read the new clock rate and compute the register values
+    	   of the period and duty from that.
+    	 - Use NSEC_PER_SEC instead of magic 1000000000 value
 
- drivers/pwm/Kconfig      |  3 ++-
- drivers/pwm/pwm-jz4740.c | 39 ++++++++++++++++++++++++++-------------
- 2 files changed, 28 insertions(+), 14 deletions(-)
+ drivers/pwm/pwm-jz4740.c | 49 ++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 33 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index ace8ea4b6247..4e201e970509 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -204,7 +204,8 @@ config PWM_IMX
- config PWM_JZ4740
- 	tristate "Ingenic JZ47xx PWM support"
- 	depends on MACH_INGENIC
--	select REGMAP
-+	depends on COMMON_CLK
-+	select INGENIC_TIMER
- 	help
- 	  Generic PWM framework driver for Ingenic JZ47xx based
- 	  machines.
 diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-index 8dfac5ffd71c..c6136bd4434b 100644
+index c6136bd4434b..f497388fc818 100644
 --- a/drivers/pwm/pwm-jz4740.c
 +++ b/drivers/pwm/pwm-jz4740.c
-@@ -28,7 +28,7 @@
- 
- struct jz4740_pwm_chip {
- 	struct pwm_chip chip;
--	struct clk *clk;
-+	struct clk *clks[NUM_PWM];
- 	struct regmap *map;
- };
- 
-@@ -40,6 +40,9 @@ static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
- static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct jz4740_pwm_chip *jz = to_jz4740(chip);
-+	struct clk *clk;
-+	char clk_name[16];
+@@ -110,24 +110,45 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
+ 	struct clk *clk = jz4740->clks[pwm->hwpwm],
+ 		   *parent_clk = clk_get_parent(clk);
+-	unsigned long rate, period, duty;
++	unsigned long rate, parent_rate, period, duty;
+ 	unsigned long long tmp;
+-	unsigned int prescaler = 0;
 +	int ret;
  
- 	/*
- 	 * Timers 0 and 1 are used for system tasks, so they are unavailable
-@@ -48,16 +51,29 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 	if (pwm->hwpwm < 2)
- 		return -EBUSY;
- 
--	regmap_write(jz->map, TCU_REG_TSCR, BIT(pwm->hwpwm));
-+	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
- 
-+	clk = clk_get(chip->dev, clk_name);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
+-	rate = clk_get_rate(parent_clk);
+-	tmp = (unsigned long long)rate * state->period;
+-	do_div(tmp, 1000000000);
+-	period = tmp;
++	parent_rate = clk_get_rate(parent_clk);
 +
-+	ret = clk_prepare_enable(clk);
-+	if (ret) {
-+		clk_put(clk);
++	jz4740_pwm_disable(chip, pwm);
++
++	/* Reset the clock to the maximum rate, and we'll reduce it if needed */
++	ret = clk_set_rate(clk, parent_rate);
++	if (ret)
 +		return ret;
-+	}
+ 
+-	while (period > 0xffff && prescaler < 6) {
+-		period >>= 2;
+-		rate >>= 2;
+-		++prescaler;
++	/* Limit the clock to a maximum rate that still gives us a period value
++	 * which fits in 16 bits.
++	 */
++	tmp = 0xffffull * NSEC_PER_SEC;
++	do_div(tmp, state->period);
 +
-+	jz->clks[pwm->hwpwm] = clk;
- 	return 0;
- }
- 
- static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct jz4740_pwm_chip *jz = to_jz4740(chip);
-+	struct clk *clk = jz->clks[pwm->hwpwm];
- 
--	regmap_write(jz->map, TCU_REG_TSCR, BIT(pwm->hwpwm));
-+	clk_disable_unprepare(clk);
-+	clk_put(clk);
- }
- 
- static int jz4740_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -92,16 +108,20 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			    struct pwm_state *state)
- {
- 	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
-+	struct clk *clk = jz4740->clks[pwm->hwpwm],
-+		   *parent_clk = clk_get_parent(clk);
-+	unsigned long rate, period, duty;
- 	unsigned long long tmp;
--	unsigned long period, duty;
- 	unsigned int prescaler = 0;
- 
--	tmp = (unsigned long long)clk_get_rate(jz4740->clk) * state->period;
-+	rate = clk_get_rate(parent_clk);
-+	tmp = (unsigned long long)rate * state->period;
- 	do_div(tmp, 1000000000);
- 	period = tmp;
- 
- 	while (period > 0xffff && prescaler < 6) {
- 		period >>= 2;
-+		rate >>= 2;
- 		++prescaler;
++	ret = clk_set_max_rate(clk, tmp);
++	if (ret) {
++		dev_err(chip->dev, "Unable to set max rate: %i\n", ret);
++		return ret;
  	}
  
-@@ -121,10 +141,7 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+-	if (prescaler == 6)
+-		return -EINVAL;
++	/* Read back the clock rate, as it may have been modified by
++	 * clk_set_max_rate()
++	 */
++	rate = clk_get_rate(clk);
+ 
++	if (rate != parent_rate)
++		dev_dbg(chip->dev, "PWM clock updated to %lu Hz\n", rate);
++
++	/* Calculate period value */
++	tmp = (unsigned long long)rate * state->period;
++	do_div(tmp, NSEC_PER_SEC);
++	period = (unsigned long)tmp;
++
++	/* Calculate duty value */
+ 	tmp = (unsigned long long)period * state->duty_cycle;
+ 	do_div(tmp, state->period);
+ 	duty = period - tmp;
+@@ -135,14 +156,10 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (duty >= period)
+ 		duty = period - 1;
+ 
+-	jz4740_pwm_disable(chip, pwm);
+-
+ 	/* Set abrupt shutdown */
  	regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
  			   TCU_TCSR_PWM_SD, TCU_TCSR_PWM_SD);
  
--	/* Set clock prescale */
--	regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
--			   TCU_TCSR_PRESCALE_MASK,
--			   prescaler << TCU_TCSR_PRESCALE_LSB);
-+	clk_set_rate(clk, rate);
- 
+-	clk_set_rate(clk, rate);
+-
  	/* Reset counter to 0 */
  	regmap_write(jz4740->map, TCU_REG_TCNTc(pwm->hwpwm), 0);
-@@ -170,10 +187,6 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
- 	if (!jz4740)
- 		return -ENOMEM;
  
--	jz4740->clk = devm_clk_get(&pdev->dev, "ext");
--	if (IS_ERR(jz4740->clk))
--		return PTR_ERR(jz4740->clk);
--
- 	jz4740->map = dev_get_regmap(dev->parent, NULL);
- 	if (!jz4740->map) {
- 		dev_err(dev, "regmap not found\n");
 -- 
 2.11.0
 
