@@ -2,579 +2,467 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F1CC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E7AC00319
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7210F20838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:40:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Gdq7/oho"
+	by mail.kernel.org (Postfix) with ESMTP id 8FA2A2086D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551552247;
+	bh=5mFlekM7wUzir4C+YsU7colMb6WKWl0Gnw4q2VQp8WQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=f67SVOEjdBza6dKP7BZjLagrV8D8kIrfJYRlSvMbBsYWfCA+G7+IVbMYs08RHAeom
+	 jBdrgStbAq+TTFXpbyxeJevLBWQidS4P63Pl7xFZwCrz9N/9Lo3i2USA5sDgI3IjHT
+	 EtIJtoTcgdDWameQTtJMsRqahpAhrY0mvktWXmYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbfCBSkt (ORCPT
+        id S1726936AbfCBSoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 13:40:49 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44344 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfCBSks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 13:40:48 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w2so1208235wrt.11
-        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 10:40:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=cp2ik8OTebg+BirUlmnMeLWpDKQDnqk6596G0W4eWlE=;
-        b=Gdq7/oho0UR00Kkilncf1ne+J2p6PAUs/NMcYH5paWib8bAynL7AORDbXH7xHtgXNi
-         TtHxVIoXnLaTN8ZAKiCO4lFTPRgty9A4TivUoKpj9T1AjWPkqElnvG5HcewPprkov4u4
-         A49R7P19PYE6SsLcP6vHDb6kELFRvocwuzUwotPB4zhu5Nxy5lw2leQ1PVooE0YFx0Cj
-         EahrEbv2S6/IN70FnVKWRv3jYSp8CjQ9iVXrmW7wVpgmVnfuB6gaAc7ANh4ZLq2kcOZI
-         wElQK8UXuMrzJRjQYqHYm4c8mc1h8t5yoCRGUr26Bqo5LKBrhnldeO3lC6YOWIJcn94p
-         5dNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=cp2ik8OTebg+BirUlmnMeLWpDKQDnqk6596G0W4eWlE=;
-        b=M+a4YllyJigaim3OW7UnDUqgXVM01ngutExEuuL+SLKobr6dmd6JXLIGorbMSicKcn
-         Pt3pFnimFJdY6+H20eOkWfhJIVl3rov2Ghg/980kD0D9Lz+cwA/wNBOi4NZy0On/tj+r
-         HZWZ9+9lI43GhmDPVwKCX75i+nn96mz9i8FaGcCsRhYbe+Ci4ypYMcH+ojg7TpR/I9j/
-         fYhTwdEhoXBm905rVVqYd0tgBwtqhhlz/JmE4hpTC7eQhqn6WsBBGHdnnGujXHNyIiCE
-         MalaU1vtSrKV7KD4HmgT8dFZs1DNicgj7tYWE5znSri16dzC7tZITdkuHqsBEJoGfeQ3
-         ilgw==
-X-Gm-Message-State: APjAAAW2B6Swc0GDOWN4ROy6xsLPfNHXgNEKx22ggdfEECrCDdKSwADA
-        XO/wSQakrZ08RkMqC5EAscD8Ow==
-X-Google-Smtp-Source: APXvYqyEJhnFXNOK4JCkcvp8fgNLnWtaTQlT+lrIfcvAUHNTPIGHzfsrPGP3zrVVTeRYF4aE6mlL0w==
-X-Received: by 2002:adf:e548:: with SMTP id z8mr7688554wrm.52.1551552045282;
-        Sat, 02 Mar 2019 10:40:45 -0800 (PST)
-Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id u4sm3463849wmb.25.2019.03.02.10.40.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 02 Mar 2019 10:40:44 -0800 (PST)
-Message-ID: <fc94b0cdd050d10ee9c83dc5f918fedab4fb0fc7.camel@baylibre.com>
-Subject: Re: [PATCH v2 6/8] clk: Allow parents to be specified without
- string names
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Date:   Sat, 02 Mar 2019 19:40:42 +0100
-In-Reply-To: <20190226223429.193873-7-sboyd@kernel.org>
-References: <20190226223429.193873-1-sboyd@kernel.org>
-         <20190226223429.193873-7-sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Sat, 2 Mar 2019 13:44:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726246AbfCBSoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 13:44:05 -0500
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3EB820830;
+        Sat,  2 Mar 2019 18:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551552244;
+        bh=5mFlekM7wUzir4C+YsU7colMb6WKWl0Gnw4q2VQp8WQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qYUYxziV02FFqnERoqpae7rKak5ytM5aSDT9Xjet2f1OJnf7W8F+6U68qxTTDO5uc
+         v5v9UeKLYpxTAGT5RrRm4Ib4wlUh1g+WBLIQfAHfS4rlPXiQsFBK7V0nXj65yj3Mqn
+         fsubkSreAH5UeDOCjzmu+ng1jC9XI0+gO8LY35uc=
+Date:   Sat, 2 Mar 2019 18:43:56 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de,
+        arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org,
+        johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de,
+        lars@metafoo.de, linux-kernel@vger.kernel.org,
+        martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org,
+        m.othacehe@gmail.com, nicolas.ferre@microchip.com,
+        pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com,
+        treding@nvidia.com, techsupport@maxbotix.com
+Subject: Re: [PATCH v2 3/4] mb12x2.c: add distance iio sensor with i2c
+Message-ID: <20190302184356.5a28988f@archlinux>
+In-Reply-To: <20190301134255.tsixtoqlxnoa2kig@arbad>
+References: <20190301134255.tsixtoqlxnoa2kig@arbad>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-02-26 at 14:34 -0800, Stephen Boyd wrote:
-> The common clk framework is lacking in ability to describe the clk
-> topology without specifying strings for every possible parent-child
-> link. There are a few drawbacks to the current approach:
-> 
->  1) String comparisons are used for everything, including describing
->  topologies that are 'local' to a single clock controller.
-> 
->  2) clk providers (e.g. i2c clk drivers) need to create globally unique
->  clk names to avoid collisions in the clk namespace, leading to awkward
->  name generation code in various clk drivers.
-> 
->  3) DT bindings may not fully describe the clk topology and linkages
->  between clk controllers because drivers can easily rely on globally unique
->  strings to describe connections between clks.
-> 
-> This leads to confusing DT bindings, complicated clk name generation
-> code, and inefficient string comparisons during clk registration just so
-> that the clk framework can detect the topology of the clk tree.
-> Furthermore, some drivers call clk_get() and then __clk_get_name() to
-> extract the globally unique clk name just so they can specify the parent
-> of the clk they're registering. We have of_clk_parent_fill() but that
-> mostly only works for single clks registered from a DT node, which isn't
-> the norm. Let's simplify this all by introducing two new ways of
-> specifying clk parents.
-> 
-> The first method is an array of pointers to clk_hw structures
-> corresponding to the parents at that index. This works for clks that are
-> registered when we have access to all the clk_hw pointers for the
-> parents.
-> 
-> The second method is a mix of clk_hw pointers and strings of local and
-> global parent clk names. If the .name member of the map is set we'll
-> look for that clk by performing a DT based lookup of the device the clk
-> is registered with and the .name specified in the map. If that fails,
-> we'll fallback to the .fallback member and perform a global clk name
-> lookup like we've always done before.
+On Fri, 1 Mar 2019 14:42:56 +0100
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-Nitpick: I think you forgot to update the commit message when renaming the
-struct members
-
+> Add I2CXL-MaxSonar ultrasonic distance sensors of type family mb12x2 using
+> an i2c interface
 > 
-> Using either one of these new methods is entirely optional. Existing
-> drivers will continue to work, and they can migrate to this new approach
-> as they see fit. Eventually, we'll want to get rid of the 'parent_names'
-> array in struct clk_init_data and use one of these new methods instead.
+> Implemented functionality:
+> - reading the distance via in_distance_raw
+> - buffered mode with trigger
+> - make use of status gpio to announce completion of ranging
 > 
+> Add mb12x2 driver to Kconfig and Makefile
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Hi Andreas,
 
-Being able to specify parents from DT is great addition !!! Thx !
+Comments inline.
 
-Overall, it looks good but with such big patch on framework is not easy get a
-clear idea. I'll try to give it a spin next week.
+Thanks,
 
+Jonathan
 
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 > ---
->  drivers/clk/clk.c            | 260 ++++++++++++++++++++++++++---------
->  include/linux/clk-provider.h |  19 +++
->  2 files changed, 217 insertions(+), 62 deletions(-)
+>  drivers/iio/proximity/Kconfig  |  11 ++
+>  drivers/iio/proximity/Makefile |   1 +
+>  drivers/iio/proximity/mb12x2.c | 283 +++++++++++++++++++++++++++++++++++++++++
+
+Please don't use wild cards in driver names.  Just pick
+a supported part (usually whatever you are testing with :)
+
+>  3 files changed, 295 insertions(+)
+>  create mode 100644 drivers/iio/proximity/mb12x2.c
 > 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 937b8d092d17..3d01e8c56400 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -39,6 +39,13 @@ static LIST_HEAD(clk_notifier_list);
+> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
+> index b99367a89f81..a420f2cb314b 100644
+> --- a/drivers/iio/proximity/Kconfig
+> +++ b/drivers/iio/proximity/Kconfig
+> @@ -45,6 +45,17 @@ config LIDAR_LITE_V2
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called pulsedlight-lite-v2
 >  
->  /***    private data structures    ***/
->  
-> +struct clk_parent_map {
-> +	const struct clk_hw	*hw;
-> +	struct clk_core		*core;
-> +	const char	 	*fw_name;
-> +	const char	 	*name;
-> +};
+> +config MB12X2
+
+Avoid wild cards in these names as well.  Particularly as I think
+this supports some of the MB7xxx parts as well.
+
+> +	tristate "MaxSonar MB12X2 family ultrasonic sensors"
+> +	depends on I2C
+> +	help
+> +	  Say Y to build a driver for the ultrasonic sensors I2CXL of
+> +	  MaxBotix which have an i2c interface. It can be used to measure
+> +	  the distance of objects.
 > +
->  struct clk_core {
->  	const char		*name;
->  	const struct clk_ops	*ops;
-> @@ -46,8 +53,7 @@ struct clk_core {
->  	struct module		*owner;
->  	struct device		*dev;
->  	struct clk_core		*parent;
-> -	const char		**parent_names;
-> -	struct clk_core		**parents;
-> +	struct clk_parent_map	*parents;
->  	u8			num_parents;
->  	u8			new_parent_index;
->  	unsigned long		rate;
-> @@ -316,17 +322,92 @@ static struct clk_core *clk_core_lookup(const char *name)
->  	return NULL;
->  }
->  
-> +/**
-> + * clk_core_get - Find the parent of a clk using a clock specifier in DT
-> + * @core: clk to find parent of
-> + * @name: name to search for in 'clock-names' of device providing clk
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called mb12x2.
+
+Please list all known parts that are supported.  The reason is people
+grep for them to find the driver.  Having them in the help is fine.
+
+> +
+>  config RFD77402
+>  	tristate "RFD77402 ToF sensor"
+>  	depends on I2C
+> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
+> index 6d031f903c4c..be9a14db77e7 100644
+> --- a/drivers/iio/proximity/Makefile
+> +++ b/drivers/iio/proximity/Makefile
+> @@ -7,6 +7,7 @@
+>  obj-$(CONFIG_AS3935)		+= as3935.o
+>  obj-$(CONFIG_ISL29501)		+= isl29501.o
+>  obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
+> +obj-$(CONFIG_MB12X2)		+= mb12x2.o
+>  obj-$(CONFIG_RFD77402)		+= rfd77402.o
+>  obj-$(CONFIG_SRF04)		+= srf04.o
+>  obj-$(CONFIG_SRF08)		+= srf08.o
+> diff --git a/drivers/iio/proximity/mb12x2.c b/drivers/iio/proximity/mb12x2.c
+> new file mode 100644
+> index 000000000000..8b1ac901c253
+> --- /dev/null
+> +++ b/drivers/iio/proximity/mb12x2.c
+
+No wild cards in filenames either please.  It just goes wrong
+far too often.
+
+> @@ -0,0 +1,283 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * mb12x2.c - Support for MaxBotix I2CXL-MaxSonar-EZ series ultrasonic
+> + *   ranger with i2c interface
+> + * actually supported are mb12x2 types
 > + *
-> + * This is the preferred method for clk providers to find the parent of a
-> + * clk when that parent is external to the clk controller. The parent_names
-> + * array is indexed and treated as a local name matching a string in the device
-> + * node's 'clock-names' property. This allows clk providers to use their own
-> + * namespace instead of looking for a globally unique parent string.
+> + * Copyright (c) 2019 Andreas Klinger <ak@it-klinger.de>
 > + *
-> + * For example the following DT snippet would allow a clock registered by the
-> + * clock-controller@c001 that has a clk_init_data::parent_data array
-> + * with 'xtal' in the 'name' member to find the clock provided by the
-> + * clock-controller@f00abcd without needing to get the globally unique name of
-> + * the xtal clk.
+> + * For details about the device see:
+> + * https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
 > + *
-> + * 	parent: clock-controller@f00abcd {
-> + * 		reg = <0xf00abcd 0xabcd>;
-> + * 		#clock-cells = <0>;
-> + * 	};
-> + *
-> + * 	clock-controller@c001 {
-> + * 		reg = <0xc001 0xf00d>;
-> + * 		clocks = <&parent>;
-> + * 		clock-names = "xtal";
-> + * 		#clock-cells = <1>;
-> + * 	};
-> + *
-> + * Returns: -ENOENT when the provider can't be found or the clk doesn't
-> + * exist in the provider. -EINVAL when the name can't be found. NULL when the
-> + * provider knows about the clk but it isn't provided on this system.
-> + * A valid clk_core pointer when the clk can be found in the provider.
 > + */
-> +static struct clk_core *clk_core_get(struct clk_core *core, const char *name)
-> +{
-> +	struct clk_hw *hw;
-> +	struct device *dev = core->dev;
 > +
-> +	if (!dev)
-> +		return ERR_PTR(-ENOENT);
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/bitops.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
 > +
-> +	/* TODO: Support clkdev clk_lookups */
-> +	hw = of_clk_get_hw(dev->of_node, -1, name);
-> +	if (IS_ERR_OR_NULL(hw))
-> +		return ERR_CAST(hw);
+> +/* registers of MaxSonar device */
+> +#define MB12X2_RANGE_COMMAND	0x51	/* Command for reading range */
+> +#define MB12X2_ADDR_UNLOCK_1	0xAA	/* Command 1 for changing address */
+> +#define MB12X2_ADDR_UNLOCK_2	0xA5	/* Command 2 for changing address */
 > +
-> +	return hw->core;
-> +}
+> +struct mb12x2_data {
+> +	struct i2c_client	*client;
 > +
-> +static void clk_core_fill_parent_index(struct clk_core *core, u8 index)
-> +{
-> +	struct clk_parent_map *entry = &core->parents[index];
-> +	struct clk_core *parent = ERR_PTR(-ENOENT);
-> +
-> +	if (entry->hw) {
-> +		parent = entry->hw->core;
-> +		/*
-> +		 * We have a direct reference but it isn't registered yet? Orphan it
-> +		 * and let clk_reparent() update the orphan status when the parent
-> +		 * is registered.
-> +		 */
-> +		if (!parent)
-> +			parent = ERR_PTR(-EPROBE_DEFER);
-> +	} else {
-> +		if (entry->fw_name)
-> +			parent = clk_core_get(core, entry->fw_name);
-> +		if (IS_ERR(parent) && PTR_ERR(parent) == -ENOENT)
-> +			parent = clk_core_lookup(entry->name);
-> +	}
-> +
-> +	/* Only cache it if it's not an error */
-> +	if (!IS_ERR(parent))
-> +		entry->core = parent;
-> +}
-> +
->  static struct clk_core *clk_core_get_parent_by_index(struct clk_core *core,
->  							 u8 index)
->  {
-> -	if (!core || index >= core->num_parents)
-> +	if (!core || index >= core->num_parents || !core->parents)
->  		return NULL;
->  
-> -	if (!core->parents[index])
-> -		core->parents[index] =
-> -				clk_core_lookup(core->parent_names[index]);
-> +	if (!core->parents[index].core)
-> +		clk_core_fill_parent_index(core, index);
->  
-> -	return core->parents[index];
-> +	return core->parents[index].core;
->  }
->  
->  struct clk_hw *
-> @@ -1516,15 +1597,15 @@ static int clk_fetch_parent_index(struct clk_core *core,
->  		return -EINVAL;
->  
->  	for (i = 0; i < core->num_parents; i++) {
-> -		if (core->parents[i] == parent)
-> +		if (core->parents[i].core == parent)
->  			return i;
->  
-> -		if (core->parents[i])
-> +		if (core->parents[i].core)
->  			continue;
->  
->  		/* Fallback to comparing globally unique names */
-> -		if (!strcmp(parent->name, core->parent_names[i])) {
-> -			core->parents[i] = parent;
-> +		if (!strcmp(parent->name, core->parents[i].name)) {
-> +			core->parents[i].core = parent;
->  			return i;
->  		}
->  	}
-> @@ -2290,6 +2371,7 @@ void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent)
->  bool clk_has_parent(struct clk *clk, struct clk *parent)
->  {
->  	struct clk_core *core, *parent_core;
-> +	int i;
->  
->  	/* NULL clocks should be nops, so return success if either is NULL. */
->  	if (!clk || !parent)
-> @@ -2302,8 +2384,11 @@ bool clk_has_parent(struct clk *clk, struct clk *parent)
->  	if (core->parent == parent_core)
->  		return true;
->  
-> -	return match_string(core->parent_names, core->num_parents,
-> -			    parent_core->name) >= 0;
-> +	for (i = 0; i < core->num_parents; i++)
-> +		if (!strcmp(core->parents[i].name, parent_core->name))
-> +			return true;
-> +
-> +	return false;
->  }
->  EXPORT_SYMBOL_GPL(clk_has_parent);
->  
-> @@ -2886,9 +2971,9 @@ static int possible_parents_show(struct seq_file *s, void *data)
->  	int i;
->  
->  	for (i = 0; i < core->num_parents - 1; i++)
-> -		seq_printf(s, "%s ", core->parent_names[i]);
-> +		seq_printf(s, "%s ", core->parents[i].name);
->  
-> -	seq_printf(s, "%s\n", core->parent_names[i]);
-> +	seq_printf(s, "%s\n", core->parents[i].name);
->  
->  	return 0;
->  }
-> @@ -3022,7 +3107,7 @@ static inline void clk_debug_unregister(struct clk_core *core)
->   */
->  static int __clk_core_init(struct clk_core *core)
->  {
-> -	int i, ret;
-> +	int ret;
->  	struct clk_core *orphan;
->  	struct hlist_node *tmp2;
->  	unsigned long rate;
-> @@ -3076,12 +3161,6 @@ static int __clk_core_init(struct clk_core *core)
->  		goto out;
->  	}
->  
-> -	/* throw a WARN if any entries in parent_names are NULL */
-> -	for (i = 0; i < core->num_parents; i++)
-> -		WARN(!core->parent_names[i],
-> -				"%s: invalid NULL in %s's .parent_names\n",
-> -				__func__, core->name);
-> -
->  	core->parent = __clk_init_parent(core);
->  
->  	/*
-> @@ -3310,6 +3389,96 @@ struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
->  	return clk;
->  }
->  
-> +static int clk_cpy_name(const char *dst, const char *src, bool must_exist)
-> +{
-> +	if (!src) {
-> +		if (must_exist)
-> +			return -EINVAL;
-> +		return 0;
-> +	}
-> +
-> +	dst = kstrdup_const(src, GFP_KERNEL);
-> +	if (!dst)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +
-> +static int clk_core_populate_parent_map(struct clk_core *core)
-> +{
-> +	const struct clk_init_data *init = core->hw->init;
-> +	u8 num_parents = init->num_parents;
-> +	const char * const *parent_names = init->parent_names;
-> +	const struct clk_hw **parent_hws = init->parent_hws;
-> +	const struct clk_parent_data *parent_data = init->parent_data;
-> +	int i, ret = 0;
-> +	struct clk_parent_map *parents, *parent;
-> +
-> +	if (!num_parents)
-> +		return 0;
+> +	struct mutex		lock;
 > +
 > +	/*
-> +	 * Avoid unnecessary string look-ups of clk_core's possible parents by
-> +	 * having a cache of names/clk_hw pointers to clk_core pointers.
+> +	 * optionally a gpio can be used to announce when ranging has
+> +	 * finished
 > +	 */
-> +	parents = kcalloc(num_parents, sizeof(*parents), GFP_KERNEL);
-> +	core->parents = parents;
-> +	if (!parents)
+> +	struct completion	ranging;
+> +	struct gpio_desc	*gpiod_status;
+> +	int			irqnr;
+> +
+> +	/*
+> +	 * triggered buffer
+> +	 * 1x16-bit channel + 3x16 padding + 4x16 timestamp
+
+Probably easier to just list that as a 64 bit timestamp.
+
+> +	 */
+> +	s16			buffer[8];
+> +};
+> +
+> +static irqreturn_t mb12x2_handle_irq(int irq, void *dev_id)
+> +{
+> +	struct iio_dev *indio_dev = dev_id;
+> +	struct mb12x2_data *data = iio_priv(indio_dev);
+> +
+> +	/* double check to make sure data is now available */
+> +	if (!gpiod_get_value(data->gpiod_status))
+
+This sounds rather worrying.  Does the device generate false
+interrupts?
+
+Ideally I'd much rather we never treated this as a gpio at all
+but instead requested and used the interrupt alone.  Will
+give us cleaner code.
+
+> +		complete(&data->ranging);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static s16 mb12x2_read_distance(struct mb12x2_data *data)
+> +{
+> +	struct i2c_client *client = data->client;
+> +	int ret;
+> +	s16 distance;
+> +	__be16 buf;
+> +
+> +	mutex_lock(&data->lock);
+> +
+> +	reinit_completion(&data->ranging);
+> +
+> +	ret = i2c_smbus_write_byte(client, MB12X2_RANGE_COMMAND);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "write command - err: %d\n", ret);
+> +		mutex_unlock(&data->lock);
+> +		return ret;
+> +	}
+> +
+> +	if (data->gpiod_status) {
+> +		/* it cannot take more than 100 ms */
+> +		ret = wait_for_completion_killable_timeout(&data->ranging,
+> +									HZ/10);
+> +		if (ret < 0) {
+> +			mutex_unlock(&data->lock);
+> +			return ret;
+> +		} else if (ret == 0) {
+> +			mutex_unlock(&data->lock);
+> +			return -ETIMEDOUT;
+
+It feels like a single unlock location and error return point using
+goto would be cleaner and less potentially error prone than doing
+it in every path.
+
+
+> +		}
+> +	} else {
+> +		/*
+> +		 * use simple sleep if gpio announce pin is not connected
+
+Use single line comment syntax.
+
+> +		 */
+> +		msleep(15);
+> +	}
+> +
+> +	ret = i2c_master_recv(client, (char *)&buf, sizeof(buf));
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "i2c_master_recv: ret=%d\n", ret);
+> +		mutex_unlock(&data->lock);
+> +		return ret;
+> +	}
+> +
+> +	distance = __be16_to_cpu(buf);
+
+Hmm. in theory we'd normally expect the buffered path to just return
+that as big endian but given how slow this sensor is and the need
+to potentially handle error codes, this is fine.
+
+> +	/* check for not returning misleading error codes */
+> +	if (distance < 0) {
+> +		dev_err(&client->dev, "distance=%d\n", distance);
+> +		return -EINVAL;
+> +	}
+> +
+> +	mutex_unlock(&data->lock);
+> +
+> +	return distance;
+> +}
+> +
+> +static irqreturn_t mb12x2_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct mb12x2_data *data = iio_priv(indio_dev);
+> +	s16 sensor_data;
+> +
+> +	sensor_data = mb12x2_read_distance(data);
+> +	if (sensor_data < 0)
+> +		goto err;
+> +
+> +	mutex_lock(&data->lock);
+> +
+> +	data->buffer[0] = sensor_data;
+
+This seems an odd thing to do.   If you are happy having a local
+sensor_data on the stack, why not have the buffer on the stack as well?
+
+I'm also not sure what the locking is protecting in this case..
+We are in an interrupt handler so no need to protect the kfifo
+as can't have concurrent writers and kfifo is safe for one reader
+and one writer without locks.
+
+> +	iio_push_to_buffers_with_timestamp(indio_dev,
+> +						data->buffer, pf->timestamp);
+> +
+> +	mutex_unlock(&data->lock);
+> +err:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int mb12x2_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *channel, int *val,
+> +			    int *val2, long mask)
+> +{
+> +	struct mb12x2_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	if (channel->type != IIO_DISTANCE)
+> +		return -EINVAL;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = mb12x2_read_distance(data);
+> +		if (ret < 0)
+> +			return ret;
+> +		*val = ret;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		/* 1 LSB is 1 cm */
+> +		*val = 0;
+> +		*val2 = 10000;
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_chan_spec mb12x2_channels[] = {
+> +	{
+> +		.type = IIO_DISTANCE,
+> +		.info_mask_separate =
+> +				BIT(IIO_CHAN_INFO_RAW) |
+> +				BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = 0,
+> +		.scan_type = {
+> +			.sign = 's',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_CPU,
+> +		},
+> +	},
+> +	IIO_CHAN_SOFT_TIMESTAMP(1),
+> +};
+> +
+> +static const struct iio_info mb12x2_info = {
+> +	.read_raw = mb12x2_read_raw,
+> +};
+> +
+> +static int mb12x2_probe(struct i2c_client *client,
+> +					 const struct i2c_device_id *id)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct mb12x2_data *data;
+> +	int ret;
+> +	struct device *dev = &client->dev;
+> +
+> +	if (!i2c_check_functionality(client->adapter,
+> +					I2C_FUNC_SMBUS_READ_BYTE |
+> +					I2C_FUNC_SMBUS_WRITE_BYTE))
+> +		return -ENODEV;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> +	if (!indio_dev)
 > +		return -ENOMEM;
 > +
-> +	/* Copy everything over because it might be __initdata */
-> +	for (i = 0, parent = parents; i < num_parents; i++, parent++) {
-> +		if (parent_names) {
-> +			/* throw a WARN if any entries are NULL */
-> +			WARN(!parent_names[i],
-> +				"%s: invalid NULL in %s's .parent_names\n",
-> +				__func__, core->name);
-> +			ret = clk_cpy_name(parent->name, parent_names[i],
-> +					   true);
-> +		} else if (parent_data) {
-> +			parent->hw = parent_data[i].hw;
-> +			ret = clk_cpy_name(parent->fw_name,
-> +					   parent_data[i].fw_name, false);
-> +			if (!ret)
-> +				ret = clk_cpy_name(parent->name,
-> +						   parent_data[i].name,
-> +						   false);
-> +		} else if (parent_hws) {
-> +			parent->hw = parent_hws[i];
+> +	data = iio_priv(indio_dev);
+> +	i2c_set_clientdata(client, indio_dev);
+> +	data->client = client;
+> +
+> +	indio_dev->info = &mb12x2_info;
+> +	indio_dev->name = id->name;
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = mb12x2_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(mb12x2_channels);
+> +
+> +	mutex_init(&data->lock);
+> +
+> +	init_completion(&data->ranging);
+> +
+> +	data->gpiod_status = devm_gpiod_get(dev, "status", GPIOD_IN);
+> +	if (IS_ERR(data->gpiod_status)) {
+> +		if (PTR_ERR(data->gpiod_status) == -ENOENT) {
+> +			dev_warn(dev, "no status gpio --> use sleep instead\n");
+> +			data->gpiod_status = NULL;
 > +		} else {
-> +			ret = -EINVAL;
-> +			WARN(1, "Must specify parents if num_parents > 0\n");
+> +			dev_err(dev, "cannot setup gpio; err=%ld\n",
+> +					PTR_ERR(data->gpiod_status));
+> +			return PTR_ERR(data->gpiod_status);
+> +		}
+> +	}
+> +
+> +	if (data->gpiod_status) {
+> +		data->irqnr = gpiod_to_irq(data->gpiod_status);
+> +		if (data->irqnr < 0) {
+> +			dev_err(dev, "gpiod_to_irq: %d\n", data->irqnr);
+> +			return data->irqnr;
 > +		}
 > +
-> +		if (ret) {
-> +			do {
-> +				kfree_const(parents[i].name);
-> +				kfree_const(parents[i].fw_name);
-> +			} while (--i >= 0);
-> +			kfree(parents);
-> +
+> +		ret = devm_request_irq(dev, data->irqnr, mb12x2_handle_irq,
+> +				IRQF_TRIGGER_FALLING, id->name, indio_dev);
+> +		if (ret < 0) {
+> +			dev_err(dev, "request_irq: %d\n", ret);
 > +			return ret;
 > +		}
 > +	}
 > +
-> +	return 0;
-> +}
-> +
-> +static void clk_core_free_parent_map(struct clk_core *core)
-> +{
-> +	int i = core->num_parents;
-> +
-> +	if (!core->num_parents)
-> +		return;
-> +
-> +	while (--i >= 0) {
-> +		kfree_const(core->parents[i].name);
-> +		kfree_const(core->parents[i].fw_name);
+> +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
+> +			iio_pollfunc_store_time, mb12x2_trigger_handler, NULL);
+> +	if (ret < 0) {
+> +		dev_err(dev, "setup of iio triggered buffer failed\n");
+> +		return ret;
 > +	}
 > +
-> +	kfree(core->parents);
+> +	return devm_iio_device_register(dev, indio_dev);
 > +}
 > +
->  /**
->   * clk_register - allocate a new clock, register it and return an opaque cookie
->   * @dev: device that is registering this clock
-> @@ -3323,7 +3492,7 @@ struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
->   */
->  struct clk *clk_register(struct device *dev, struct clk_hw *hw)
->  {
-> -	int i, ret;
-> +	int ret;
->  	struct clk_core *core;
->  
->  	core = kzalloc(sizeof(*core), GFP_KERNEL);
-> @@ -3356,33 +3525,9 @@ struct clk *clk_register(struct device *dev, struct clk_hw *hw)
->  	core->max_rate = ULONG_MAX;
->  	hw->core = core;
->  
-> -	/* allocate local copy in case parent_names is __initdata */
-> -	core->parent_names = kcalloc(core->num_parents, sizeof(char *),
-> -					GFP_KERNEL);
-> -
-> -	if (!core->parent_names) {
-> -		ret = -ENOMEM;
-> -		goto fail_parent_names;
-> -	}
-> -
-> -
-> -	/* copy each string name in case parent_names is __initdata */
-> -	for (i = 0; i < core->num_parents; i++) {
-> -		core->parent_names[i] = kstrdup_const(hw->init->parent_names[i],
-> -						GFP_KERNEL);
-> -		if (!core->parent_names[i]) {
-> -			ret = -ENOMEM;
-> -			goto fail_parent_names_copy;
-> -		}
-> -	}
-> -
-> -	/* avoid unnecessary string look-ups of clk_core's possible parents. */
-> -	core->parents = kcalloc(core->num_parents, sizeof(*core->parents),
-> -				GFP_KERNEL);
-> -	if (!core->parents) {
-> -		ret = -ENOMEM;
-> +	ret = clk_core_populate_parent_map(core);
-> +	if (ret)
->  		goto fail_parents;
-> -	};
->  
->  	INIT_HLIST_HEAD(&core->clks);
->  
-> @@ -3393,7 +3538,7 @@ struct clk *clk_register(struct device *dev, struct clk_hw *hw)
->  	hw->clk = alloc_clk(core, NULL, NULL);
->  	if (IS_ERR(hw->clk)) {
->  		ret = PTR_ERR(hw->clk);
-> -		goto fail_parents;
-> +		goto fail_create_clk;
->  	}
->  
->  	clk_core_link_consumer(hw->core, hw->clk);
-> @@ -3409,13 +3554,9 @@ struct clk *clk_register(struct device *dev, struct clk_hw *hw)
->  	free_clk(hw->clk);
->  	hw->clk = NULL;
->  
-> +fail_create_clk:
-> +	clk_core_free_parent_map(core);
->  fail_parents:
-> -	kfree(core->parents);
-> -fail_parent_names_copy:
-> -	while (--i >= 0)
-> -		kfree_const(core->parent_names[i]);
-> -	kfree(core->parent_names);
-> -fail_parent_names:
->  fail_ops:
->  	kfree_const(core->name);
->  fail_name:
-> @@ -3445,15 +3586,10 @@ EXPORT_SYMBOL_GPL(clk_hw_register);
->  static void __clk_release(struct kref *ref)
->  {
->  	struct clk_core *core = container_of(ref, struct clk_core, ref);
-> -	int i = core->num_parents;
->  
->  	lockdep_assert_held(&prepare_lock);
->  
-> -	kfree(core->parents);
-> -	while (--i >= 0)
-> -		kfree_const(core->parent_names[i]);
-> -
-> -	kfree(core->parent_names);
-> +	clk_core_free_parent_map(core);
->  	kfree_const(core->name);
->  	kfree(core);
->  }
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index e443fa9fa859..f4de52c6764e 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -250,6 +250,18 @@ struct clk_ops {
->  	void		(*debug_init)(struct clk_hw *hw, struct dentry *dentry);
->  };
->  
-> +/**
-> + * struct clk_parent_data - clk parent information
-> + * @hw: parent clk_hw pointer (used for clk providers with internal clks)
-> + * @fw_name: parent name local to provider registering clk
-> + * @name: globally unique parent name (used as a fallback)
-> + */
-> +struct clk_parent_data {
-> +	const struct clk_hw 	*hw;
-> +	const char		*fw_name;
-> +	const char		*name;
+> +static const struct of_device_id of_mb12x2_match[] = {
+> +	{ .compatible = "maxbotix,i2cxl", },
+> +	{},
 > +};
 > +
->  /**
->   * struct clk_init_data - holds init data that's common to all clocks and is
->   * shared between the clock provider and the common clock framework.
-> @@ -257,13 +269,20 @@ struct clk_ops {
->   * @name: clock name
->   * @ops: operations this clock supports
->   * @parent_names: array of string names for all possible parents
-> + * @parent_data: array of parent data for all possible parents (when some
-> + *               parents are external to the clk controller)
-> + * @parent_hws: array of pointers to all possible parents (when all parents
-> + *              are internal to the clk controller)
->   * @num_parents: number of possible parents
->   * @flags: framework-level hints and quirks
->   */
->  struct clk_init_data {
->  	const char		*name;
->  	const struct clk_ops	*ops;
-> +	/* Only one of the following three should be assigned */
->  	const char		* const *parent_names;
-> +	const struct clk_parent_data	*parent_data;
-> +	const struct clk_hw		**parent_hws;
->  	u8			num_parents;
->  	unsigned long		flags;
->  };
-
+> +MODULE_DEVICE_TABLE(of, of_mb12x2_match);
+> +
+> +static const struct i2c_device_id mb12x2_id[] = {
+> +	{ "maxbotix-i2cxl", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, mb12x2_id);
+> +
+> +static struct i2c_driver mb12x2_driver = {
+> +	.driver = {
+> +		.name	= "maxbotix-i2cxl",
+> +		.of_match_table	= of_mb12x2_match,
+> +	},
+> +	.probe = mb12x2_probe,
+> +	.id_table = mb12x2_id,
+> +};
+> +module_i2c_driver(mb12x2_driver);
+> +
+> +MODULE_AUTHOR("Andreas Klinger <ak@it-klinger.de>");
+> +MODULE_DESCRIPTION("Maxbotix I2CXL-MaxSonar i2c ultrasonic ranger driver");
+> +MODULE_LICENSE("GPL");
 
