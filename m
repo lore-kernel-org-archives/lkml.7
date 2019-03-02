@@ -4,62 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B15FC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 00:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51773C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 00:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B502083D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 00:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161202083D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 00:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551486021;
-	bh=1v7JwTDhFErcdUbXUSacRBTuWy9JRRNtT48RmZYe66w=;
+	s=default; t=1551486022;
+	bh=IFpnuf7Vqa/tKxz8L3pVoGxkGPdv7CO6jbnim1F3rgI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=fXDwTDjXQtlsTVKfagJnsyz8js2te7GzfRy61Sz+gWKIZngDApbFG69d/FyiKpD7y
-	 SabKKDehfPwcuTDji2IKPaJX3SRMVApKCvVcHBtCja0PahBt/ebj3rL5lO9OQfULVm
-	 q5KsLXigjyLXBTKT1bov3VbJyDeT0/MSsZRpdrjw=
+	b=wfkRb/aWVcyX3dG+JBGDdJmqfRoQBNz/wv+OGTvHP5lyPVoLo+Dap55G59GEb3i2N
+	 b2hRoIs6+fAhQPYtBr5MwoV3qRtq7E3LoeRo/ES6HYvj1sGBq18t9Z0CiZTWzO7te2
+	 Z8PwMiSMFk5m7X5h84p1ZHtDNLSuy4ulaAk5t8Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfCBAUF (ORCPT
+        id S1726982AbfCBAUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 19:20:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbfCBAUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 Mar 2019 19:20:04 -0500
-Subject: Re: [GIT PULL] MMC fixes for v5.0-rc9
+Received: from mail.kernel.org ([198.145.29.99]:56218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbfCBAUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 19:20:04 -0500
+Subject: Re: [GIT] Crypto Fixes for 5.0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1551486003;
-        bh=1v7JwTDhFErcdUbXUSacRBTuWy9JRRNtT48RmZYe66w=;
+        bh=IFpnuf7Vqa/tKxz8L3pVoGxkGPdv7CO6jbnim1F3rgI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=TITqvV7V1OADbh6M6bpc3hgBGz5v/Z3vpBnykfNlAedH4ex6KjtoOsruoOiQp/YSJ
-         iMZkOB+rM6IcCQDJ9o3mnnizdFoI7e/l5DWpPNb749R3Ljd8jKqOGilHnuqkYgqM48
-         hXYQAwC/e0l1rfkQsWBljTZBlQEFMmo/jr7ApVZU=
+        b=s5Iu/xqywtW+SM4P7u2tngfPWTeTlc/NjP9xdUU2FMBQ9bHfQsyyr06I4PlawK4H4
+         7ICGKDnjhUclVBJPsw1dV8L+y2oa2c+xRYhYTILNerNaFOEkbTzfVIVzK4n2dglLaD
+         PuFYhtQuHFTBJW7+hIAlTo3Luw1jFJKrhIN6eZGw=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190228142239.4078-1-ulf.hansson@linaro.org>
-References: <20190228142239.4078-1-ulf.hansson@linaro.org>
+In-Reply-To: <20190228055618.ix3iqmcuwlok5zjo@gondor.apana.org.au>
+References: <20180105073808.GA14405@gondor.apana.org.au>
+ <20180212031702.GA26153@gondor.apana.org.au>
+ <20180428080517.haxgpvqrwgotakyo@gondor.apana.org.au>
+ <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
+ <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
+ <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
+ <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
+ <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
+ <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
+ <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
+ <20190228055618.ix3iqmcuwlok5zjo@gondor.apana.org.au>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190228142239.4078-1-ulf.hansson@linaro.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.0-rc8
-X-PR-Tracked-Commit-Id: e30be063d6dbcc0f18b1eb25fa709fdef89201fb
+X-PR-Tracked-Message-Id: <20190228055618.ix3iqmcuwlok5zjo@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: c64316502008064c158fa40cc250665e461b0f2a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3a8ed368fc8544d002129d919cf651accf43582c
-Message-Id: <155148600359.30240.8711133847178164835.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 3f25a5990d9d32e8f77ce830b9ea6c0e4f4bea4b
+Message-Id: <155148600343.30240.18256785578839270718.pr-tracker-bot@kernel.org>
 Date:   Sat, 02 Mar 2019 00:20:03 +0000
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 28 Feb 2019 15:22:39 +0100:
+The pull request you sent on Thu, 28 Feb 2019 13:56:18 +0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.0-rc8
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3a8ed368fc8544d002129d919cf651accf43582c
+https://git.kernel.org/torvalds/c/3f25a5990d9d32e8f77ce830b9ea6c0e4f4bea4b
 
 Thank you!
 
