@@ -2,187 +2,86 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2727BC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DEBC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D663320838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BFE20836
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oWoAu67M"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="gmU34Yd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfCBN4B (ORCPT
+        id S1726380AbfCBOL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 08:56:01 -0500
-Received: from mail-eopbgr20069.outbound.protection.outlook.com ([40.107.2.69]:14734
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfCBN4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 08:56:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J2XtwoDe+A9DhM99DdpQLjpj7UMgRlhs/k4f5hp39Dk=;
- b=oWoAu67M3H+JOZH9JKLdPPQDE/HJFohAHPxY6c2zsz/KfrTh9yk7/ui+/JZZ6xE9XyQcJKC15rSZyfqfXEW0M2utMIk1bGw/wrdbBwKVZdD+A/Po6xiiEMze/AL5REHxVEhrgKa7pLW2Y+7PhZ7Vp2rm19vfSD6vPvZkZFxDCmg=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4226.eurprd04.prod.outlook.com (52.134.91.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.16; Sat, 2 Mar 2019 13:55:55 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185%5]) with mapi id 15.20.1665.019; Sat, 2 Mar 2019
- 13:55:55 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>
-CC:     Vlad Buslov <vladbu@mellanox.com>,
-        "kernel-team@fb.com" <kernel-team@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 05/12] percpu: relegate chunks unusable when failing small
- allocations
-Thread-Topic: [PATCH 05/12] percpu: relegate chunks unusable when failing
- small allocations
-Thread-Index: AQHUzwv3B7bPPhTIqESPGGL2rz7Di6X4X1uA
-Date:   Sat, 2 Mar 2019 13:55:54 +0000
-Message-ID: <AM0PR04MB4481502C6D96166F594994CA88770@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190228021839.55779-1-dennis@kernel.org>
- <20190228021839.55779-6-dennis@kernel.org>
-In-Reply-To: <20190228021839.55779-6-dennis@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 52eebccd-8d72-4532-c6e5-08d69f16ca49
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB4226;
-x-ms-traffictypediagnostic: AM0PR04MB4226:
-x-microsoft-exchange-diagnostics: =?gb2312?B?MTtBTTBQUjA0TUI0MjI2OzIzOm1qS21HUTJFWEtoM05Ja0kwK2FzWkFBVGF6?=
- =?gb2312?B?azd3UmprdEUvV0NUUzJmUzRrQzlqcGk3U2NXSFNzeE1GY3hWV29Kc2M5THJv?=
- =?gb2312?B?TllVenVPYUpPb0V3aWliejJYQ2xSWE02RGpvdFFIWS9oUFdZTEdVNXJpV1hu?=
- =?gb2312?B?elBEOHd0aldFaklsV1piNitoRzgvTDhpbDdDZDdDbEF6Ymtoc3dwQjJXUzk2?=
- =?gb2312?B?czlocithZGR4TTAzMzJWRGQ4WkNacEJmSDBpNGM0VktKRW5wQ1JyU25VOVlF?=
- =?gb2312?B?elZ2RC9pMXc1bjY2V2QremhBUm5TME91OCs1VldHMFI0R1pqRFRQQ1lvL1lT?=
- =?gb2312?B?Tm9ydzFsK0RlL29kYmV4Y2lOc1ZVYVNNQnB3UHQ2dHZVU1ZHUmVDSWc3UTM2?=
- =?gb2312?B?VGJsUTdxTU1TTzNlSGFzUVEwSk9NMmVyQUpCRFdWVmNzNklxeU92aVJsQTNa?=
- =?gb2312?B?MGl3V2JKb1J1aDF3T0NwUXo1Sk96Yjg2ZGRuV0lBS2wvT0JWTktNc2hHNmtl?=
- =?gb2312?B?cTBEUHVNSmJOV0E0YzMzTDc3YXQyOGowa0VWU0V3d0VRUTgxZWFHc1NQSkFx?=
- =?gb2312?B?WXlMTnRTVEZSejR0VkVMWlBFVUhHblV5QStKeUF5NFF1Qkw3SFNKQ2RBN1R0?=
- =?gb2312?B?TFowUWZpVHJyYTNpUGVNNmhaYUNjU3NDVlZqQk5qQmxkV2ZtUmM3cC9PRG1U?=
- =?gb2312?B?bERQVlpiMXhlMHFGbWhZYkRQSmE2MnZzVklxVUdTWC9BVnBCNmlwdmlNRXQ5?=
- =?gb2312?B?Wk5hZFZiSGx1V0lqbFpXSUxZQVlKWUlmR0ZoSjU2TWFvSWd6Sjl5ZkdYTS9x?=
- =?gb2312?B?bkpqRG5aRXltWG1PZlpITVAyMWoyZ1hzU0JBNVY5cGJkQVNqODB6S2hpRDV6?=
- =?gb2312?B?WWJCV00wdGJvU0VwYVFNVGlxY0MwWjI2QXBzT0dlalRKOExMOFJSMU5sWmhO?=
- =?gb2312?B?UzhYQ2E2bFcwT3QwQUlYOElOS2tFYzBQUC8zVDc4aUlBd2JuS2FpZ2lCMGx3?=
- =?gb2312?B?RmFEU0E3QWhyb1BNVDEvL2NySDFuMU5ITElJUk02a0J2aTd5d1JJWmRjdkVV?=
- =?gb2312?B?c252K0dHbmhCaFArZCs4d1AwcXM5VTUraFppaERxQTFWN0x4VEdEblFXVS8v?=
- =?gb2312?B?MUM5UFZvT1Fqb1ROZXVJWGZBUERadHgvWS91U2pkMGZ0eG1VYU4rUVI1Y0xp?=
- =?gb2312?B?dWdnUVY5WXFuM1dQUUpTK0J6VERhVjBydlRBS2FNSXZia3RrQU42SVFoSHM3?=
- =?gb2312?B?RGZSR3hYUUFyY1lNM0dVWVVxdEtYQlVlQzFmSGlMT3hYUnZmeS9oUCtxS1pt?=
- =?gb2312?B?YW1TUDJjbWg4c1BuT2R6eE9Feldod1ZsN3pqMVhqNlFnTlpIcEhuT0RFMjJq?=
- =?gb2312?B?N0xVN1lSRFRxZS81NVZqNE1udCtBZHZmZ1krMytWOFZmbm5pUVVQR1lFQ0JT?=
- =?gb2312?B?NHhPdDVSNVpPZVArZEQvb3F5M2dTcTk0d2RFT1FCTlFBQ3duTndCWkx6cFdm?=
- =?gb2312?B?N2FYSGVDTkdnN1hmVVNCWWhTUFZhUFJPMGZoZHlVZXZOM1BYd2ZWREl4S05Q?=
- =?gb2312?B?VDNGS1FxNWYxTjVMRTZ1Z0xVUXl2WU0xRXpwNmt3WjlFSW1KK1RmNjBYM3FK?=
- =?gb2312?B?N2YwNU1KZTJuN2UrS3dyak1aeERpV2c1UEJaVnpuWmxGL1JSdk41aHFwN1ZX?=
- =?gb2312?B?TU9SQnJTdEJVMnpZQUhqTnNkV3QzOE5JZTF5NjhzZU95eFlQL2d5ZzY3dk5X?=
- =?gb2312?B?ZFlvZ3ZjK0NWZERPQ3l1dz09?=
-x-microsoft-antispam-prvs: <AM0PR04MB4226273981240CA20C8DD53688770@AM0PR04MB4226.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09645BAC66
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(396003)(39860400002)(346002)(199004)(189003)(13464003)(9686003)(55016002)(305945005)(26005)(76176011)(229853002)(7696005)(33656002)(316002)(53546011)(66066001)(6246003)(7736002)(5660300002)(53936002)(6506007)(105586002)(106356001)(99286004)(68736007)(186003)(6436002)(52536013)(25786009)(446003)(3846002)(8936002)(6116002)(8676002)(81156014)(81166006)(97736004)(74316002)(54906003)(14444005)(71190400001)(4326008)(71200400001)(102836004)(478600001)(86362001)(11346002)(476003)(44832011)(110136005)(2906002)(486006)(256004)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4226;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 2kVn5erfSjQAobq3iIkiXafSHg/PqMWTa7lcpcaSZgFDriC8fVRSTH7ezeVkCeD1OQMR+bRJxkqbuA9kYdHeP9ULcIYikwghqfVgSJuSbpFFS59YPlrxyA2sk+Oje6Y+BaLrhbe/oDFFtCARIJh1u8LxaIUooAzkn00OYtz56SLOpX+y1UrdYGwrtGQh8oZPTfro8vq9hWYwJmA12l8M5i1f7snTjs5GBDwrr0no6/e2wCFW971/u0nkQgIJUGPLJwcp7xFP7KKVY/9e9xUfnxLJ0vos1WFTIb2JUBQK98HWB2kz5Nh0LiC56hnSgWaYR298C7blkbUzh2L70PemwHf61sTDCVaVORxSg981CZuBR8Usex17OPg7kN+IsdApPMS0JJa1VfYkoQ7lllK1A6C5EA5mE5wjoGCMqe/p8H8=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Sat, 2 Mar 2019 09:11:56 -0500
+Received: from mail.z3ntu.xyz ([128.199.32.197]:35486 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbfCBOLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 09:11:55 -0500
+Received: from localhost.localdomain (80-110-118-127.cgn.dynamic.surfer.at [80.110.118.127])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 6100FC5052;
+        Sat,  2 Mar 2019 14:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1551535913; bh=URv8Iesj4qMowVM6J4UgsodrZDtb5bdRZ0k0tc+W0OY=;
+        h=From:To:Cc:Subject:Date;
+        b=gmU34Yd0Ufw+4zwoM6Ey/0Pi5TIIvhkTPNbk4L+NuoI9rhwwLk0PK5qSxwhBStUya
+         DLyht4o7V+03x76AJ/jWSDsP2gOKtP+9EhE4uvtuLzJKKFzeayjGMT/wQDLP6m+a6/
+         oSks5dTtSflCKN/ZKa4GzNxZAbRnVr8gn5uQlUAk=
+From:   Luca Weiss <luca@z3ntu.xyz>
+Cc:     Luca Weiss <luca@z3ntu.xyz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
+        , TOUCHSCREEN)...),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] dt-bindings: input: add GPIO controllable vibrator
+Date:   Sat,  2 Mar 2019 15:11:30 +0100
+Message-Id: <20190302141132.21160-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52eebccd-8d72-4532-c6e5-08d69f16ca49
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2019 13:55:55.0072
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4226
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRGVubmlzLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IG93bmVy
-LWxpbnV4LW1tQGt2YWNrLm9yZyBbbWFpbHRvOm93bmVyLWxpbnV4LW1tQGt2YWNrLm9yZ10gT24N
-Cj4gQmVoYWxmIE9mIERlbm5pcyBaaG91DQo+IFNlbnQ6IDIwMTnE6jLUwjI4yNUgMTA6MTkNCj4g
-VG86IERlbm5pcyBaaG91IDxkZW5uaXNAa2VybmVsLm9yZz47IFRlanVuIEhlbyA8dGpAa2VybmVs
-Lm9yZz47IENocmlzdG9waA0KPiBMYW1ldGVyIDxjbEBsaW51eC5jb20+DQo+IENjOiBWbGFkIEJ1
-c2xvdiA8dmxhZGJ1QG1lbGxhbm94LmNvbT47IGtlcm5lbC10ZWFtQGZiLmNvbTsNCj4gbGludXgt
-bW1Aa3ZhY2sub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQ
-QVRDSCAwNS8xMl0gcGVyY3B1OiByZWxlZ2F0ZSBjaHVua3MgdW51c2FibGUgd2hlbiBmYWlsaW5n
-IHNtYWxsDQo+IGFsbG9jYXRpb25zDQo+IA0KPiBJbiBjZXJ0YWluIGNhc2VzLCByZXF1ZXN0b3Jz
-IG9mIHBlcmNwdSBtZW1vcnkgbWF5IHdhbnQgc3BlY2lmaWMgYWxpZ25tZW50cy4NCj4gSG93ZXZl
-ciwgaXQgaXMgcG9zc2libGUgdG8gZW5kIHVwIGluIHNpdHVhdGlvbnMgd2hlcmUgdGhlIGNvbnRp
-Z19oaW50IG1hdGNoZXMsDQo+IGJ1dCB0aGUgYWxpZ25tZW50IGRvZXMgbm90LiBUaGlzIGNhdXNl
-cyBleGNlc3Mgc2Nhbm5pbmcgb2YgY2h1bmtzIHRoYXQgd2lsbCBmYWlsLg0KPiBUbyBwcmV2ZW50
-IHRoaXMsIGlmIGEgc21hbGwgYWxsb2NhdGlvbiBmYWlscyAoPCAzMkIpLCB0aGUgY2h1bmsgaXMg
-bW92ZWQgdG8gdGhlDQo+IGVtcHR5IGxpc3QuIE9uY2UgYW4gYWxsb2NhdGlvbiBpcyBmcmVlZCBm
-cm9tIHRoYXQgY2h1bmssIGl0IGlzIHBsYWNlZCBiYWNrIGludG8NCj4gcm90YXRpb24uDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBEZW5uaXMgWmhvdSA8ZGVubmlzQGtlcm5lbC5vcmc+DQo+IC0tLQ0K
-PiAgbW0vcGVyY3B1LmMgfCAzNSArKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLQ0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pDQo+IA0K
-PiBkaWZmIC0tZ2l0IGEvbW0vcGVyY3B1LmMgYi9tbS9wZXJjcHUuYw0KPiBpbmRleCBjOTk2YmNm
-ZmJiMmEuLjNkN2RlZWNlOTU1NiAxMDA2NDQNCj4gLS0tIGEvbW0vcGVyY3B1LmMNCj4gKysrIGIv
-bW0vcGVyY3B1LmMNCj4gQEAgLTk0LDYgKzk0LDggQEANCj4gDQo+ICAvKiB0aGUgc2xvdHMgYXJl
-IHNvcnRlZCBieSBmcmVlIGJ5dGVzIGxlZnQsIDEtMzEgYnl0ZXMgc2hhcmUgdGhlIHNhbWUgc2xv
-dCAqLw0KPiAgI2RlZmluZSBQQ1BVX1NMT1RfQkFTRV9TSElGVAkJNQ0KPiArLyogY2h1bmtzIGlu
-IHNsb3RzIGJlbG93IHRoaXMgYXJlIHN1YmplY3QgdG8gYmVpbmcgc2lkZWxpbmVkIG9uIGZhaWxl
-ZCBhbGxvYyAqLw0KPiArI2RlZmluZSBQQ1BVX1NMT1RfRkFJTF9USFJFU0hPTEQJMw0KPiANCj4g
-ICNkZWZpbmUgUENQVV9FTVBUWV9QT1BfUEFHRVNfTE9XCTINCj4gICNkZWZpbmUgUENQVV9FTVBU
-WV9QT1BfUEFHRVNfSElHSAk0DQo+IEBAIC00ODgsNiArNDkwLDIyIEBAIHN0YXRpYyB2b2lkIHBj
-cHVfbWVtX2ZyZWUodm9pZCAqcHRyKQ0KPiAgCWt2ZnJlZShwdHIpOw0KPiAgfQ0KPiANCj4gK3N0
-YXRpYyB2b2lkIF9fcGNwdV9jaHVua19tb3ZlKHN0cnVjdCBwY3B1X2NodW5rICpjaHVuaywgaW50
-IHNsb3QsDQo+ICsJCQkgICAgICBib29sIG1vdmVfZnJvbnQpDQo+ICt7DQo+ICsJaWYgKGNodW5r
-ICE9IHBjcHVfcmVzZXJ2ZWRfY2h1bmspIHsNCj4gKwkJaWYgKG1vdmVfZnJvbnQpDQo+ICsJCQls
-aXN0X21vdmUoJmNodW5rLT5saXN0LCAmcGNwdV9zbG90W3Nsb3RdKTsNCj4gKwkJZWxzZQ0KPiAr
-CQkJbGlzdF9tb3ZlX3RhaWwoJmNodW5rLT5saXN0LCAmcGNwdV9zbG90W3Nsb3RdKTsNCj4gKwl9
-DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lkIHBjcHVfY2h1bmtfbW92ZShzdHJ1Y3QgcGNwdV9j
-aHVuayAqY2h1bmssIGludCBzbG90KSB7DQo+ICsJX19wY3B1X2NodW5rX21vdmUoY2h1bmssIHNs
-b3QsIHRydWUpOw0KPiArfQ0KPiArDQo+ICAvKioNCj4gICAqIHBjcHVfY2h1bmtfcmVsb2NhdGUg
-LSBwdXQgY2h1bmsgaW4gdGhlIGFwcHJvcHJpYXRlIGNodW5rIHNsb3QNCj4gICAqIEBjaHVuazog
-Y2h1bmsgb2YgaW50ZXJlc3QNCj4gQEAgLTUwNSwxMiArNTIzLDggQEAgc3RhdGljIHZvaWQgcGNw
-dV9jaHVua19yZWxvY2F0ZShzdHJ1Y3QgcGNwdV9jaHVuaw0KPiAqY2h1bmssIGludCBvc2xvdCkg
-IHsNCj4gIAlpbnQgbnNsb3QgPSBwY3B1X2NodW5rX3Nsb3QoY2h1bmspOw0KPiANCj4gLQlpZiAo
-Y2h1bmsgIT0gcGNwdV9yZXNlcnZlZF9jaHVuayAmJiBvc2xvdCAhPSBuc2xvdCkgew0KPiAtCQlp
-ZiAob3Nsb3QgPCBuc2xvdCkNCj4gLQkJCWxpc3RfbW92ZSgmY2h1bmstPmxpc3QsICZwY3B1X3Ns
-b3RbbnNsb3RdKTsNCj4gLQkJZWxzZQ0KPiAtCQkJbGlzdF9tb3ZlX3RhaWwoJmNodW5rLT5saXN0
-LCAmcGNwdV9zbG90W25zbG90XSk7DQo+IC0JfQ0KPiArCWlmIChvc2xvdCAhPSBuc2xvdCkNCj4g
-KwkJX19wY3B1X2NodW5rX21vdmUoY2h1bmssIG5zbG90LCBvc2xvdCA8IG5zbG90KTsNCj4gIH0N
-Cj4gDQo+ICAvKioNCj4gQEAgLTEzODEsNyArMTM5NSw3IEBAIHN0YXRpYyB2b2lkIF9fcGVyY3B1
-ICpwY3B1X2FsbG9jKHNpemVfdCBzaXplLCBzaXplX3QNCj4gYWxpZ24sIGJvb2wgcmVzZXJ2ZWQs
-DQo+ICAJYm9vbCBpc19hdG9taWMgPSAoZ2ZwICYgR0ZQX0tFUk5FTCkgIT0gR0ZQX0tFUk5FTDsN
-Cj4gIAlib29sIGRvX3dhcm4gPSAhKGdmcCAmIF9fR0ZQX05PV0FSTik7DQo+ICAJc3RhdGljIGlu
-dCB3YXJuX2xpbWl0ID0gMTA7DQo+IC0Jc3RydWN0IHBjcHVfY2h1bmsgKmNodW5rOw0KPiArCXN0
-cnVjdCBwY3B1X2NodW5rICpjaHVuaywgKm5leHQ7DQo+ICAJY29uc3QgY2hhciAqZXJyOw0KPiAg
-CWludCBzbG90LCBvZmYsIGNwdSwgcmV0Ow0KPiAgCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+IEBA
-IC0xNDQzLDExICsxNDU3LDE0IEBAIHN0YXRpYyB2b2lkIF9fcGVyY3B1ICpwY3B1X2FsbG9jKHNp
-emVfdCBzaXplLA0KPiBzaXplX3QgYWxpZ24sIGJvb2wgcmVzZXJ2ZWQsDQo+ICByZXN0YXJ0Og0K
-PiAgCS8qIHNlYXJjaCB0aHJvdWdoIG5vcm1hbCBjaHVua3MgKi8NCj4gIAlmb3IgKHNsb3QgPSBw
-Y3B1X3NpemVfdG9fc2xvdChzaXplKTsgc2xvdCA8IHBjcHVfbnJfc2xvdHM7IHNsb3QrKykgew0K
-PiAtCQlsaXN0X2Zvcl9lYWNoX2VudHJ5KGNodW5rLCAmcGNwdV9zbG90W3Nsb3RdLCBsaXN0KSB7
-DQo+ICsJCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZShjaHVuaywgbmV4dCwgJnBjcHVfc2xvdFtz
-bG90XSwgbGlzdCkgew0KPiAgCQkJb2ZmID0gcGNwdV9maW5kX2Jsb2NrX2ZpdChjaHVuaywgYml0
-cywgYml0X2FsaWduLA0KPiAgCQkJCQkJICBpc19hdG9taWMpOw0KPiAtCQkJaWYgKG9mZiA8IDAp
-DQo+ICsJCQlpZiAob2ZmIDwgMCkgew0KPiArCQkJCWlmIChzbG90IDwgUENQVV9TTE9UX0ZBSUxf
-VEhSRVNIT0xEKQ0KPiArCQkJCQlwY3B1X2NodW5rX21vdmUoY2h1bmssIDApOw0KPiAgCQkJCWNv
-bnRpbnVlOw0KPiArCQkJfQ0KPiANCj4gIAkJCW9mZiA9IHBjcHVfYWxsb2NfYXJlYShjaHVuaywg
-Yml0cywgYml0X2FsaWduLCBvZmYpOw0KPiAgCQkJaWYgKG9mZiA+PSAwKQ0KDQpGb3IgdGhlIGNv
-ZGU6IFJldmlld2VkLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCg0KQnV0IEkgZGlk
-IG5vdCB1bmRlcnN0YW5kIHdlbGwgd2h5IGNob29zZSAzMkI/IElmIHRoZXJlIGFyZQ0KbW9yZSBp
-bmZvcm1hdGlvbiwgYmV0dGVyIHB1dCBpbiBjb21taXQgbG9nLg0KDQpUaGFua3MsDQpQZW5nLg0K
-DQoNCj4gLS0NCj4gMi4xNy4xDQoNCg==
+Provide a simple driver for GPIO controllable vibrators.
+It will be used by the Fairphone 2.
+
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ .../devicetree/bindings/input/gpio-vibrator.txt  | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.txt
+
+diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.txt b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+new file mode 100644
+index 000000000000..9e2e9acf497b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/gpio-vibrator.txt
+@@ -0,0 +1,16 @@
++* GPIO vibrator device tree bindings
++
++Registers a GPIO device as vibrator, where the vibration motor just has the capability to turn on or off. If the device is connected to a pwm, you should use the pwm-vibrator driver instead.
++
++Required properties:
++- compatible: should contain "gpio-vibrator"
++- enable-gpios: Should contain a GPIO handle
++- vcc-supply: Phandle for the regulator supplying power
++
++Example from Fairphone 2:
++
++vibrator {
++	compatible = "gpio-vibrator";
++	enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
++	vcc-supply = <&pm8941_l18>;
++};
+-- 
+2.21.0
+
