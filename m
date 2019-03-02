@@ -2,105 +2,97 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9D3C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37378C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB59F20815
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:30:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Gva++6U1"
+	by mail.kernel.org (Postfix) with ESMTP id 00ADA20815
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfCBCaN (ORCPT
+        id S1727678AbfCBCgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 21:30:13 -0500
-Received: from ozlabs.org ([203.11.71.1]:53113 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbfCBCaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 21:30:13 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44B9HQ5x12z9s70;
-        Sat,  2 Mar 2019 13:30:10 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1551493811;
-        bh=viONznM0aNKcavWKQqbIpMIYaHZ31PzHLY8helsa0fY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Gva++6U1lPaMt+EJOFEIuLSHEwJaquvkU+0jzhBDi8x2BPGk0pZ7AoWFxm9td503V
-         b4alRDIL8SLSlBkZJDVSKMuWppSVXhdMrZOlCdnKhLqORUCybgNpbcQPuTh1/nAz5X
-         rV2J6Lj7ge0eQqGoeAn+5UNMH9TIPNrcu3+z4LGswTWtCrE4FKuTaqV9ZGyNl4hwpl
-         +g74gmvvnCPkqWmmgF24LCSX8F6ek+S5jTQXff+jHdOraBAZineNInjdPUJYvvFwQW
-         3FDO0XJK5tRUBCcpPupdcctr+P8Pq/GGmKEU/2Ewzzo5Bgox2S+9UfrXqn9MprhIzQ
-         i4o/UWQc9301Q==
-Date:   Sat, 2 Mar 2019 13:30:10 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     bp@alien8.de, natechancellor@gmail.com, niravd@google.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: clean up headers
-Message-ID: <20190302133010.135cd3ad@canb.auug.org.au>
-In-Reply-To: <20190302132750.0916adc4@canb.auug.org.au>
-References: <20190302000715.130116-1-ndesaulniers@google.com>
-        <20190302132750.0916adc4@canb.auug.org.au>
+        Fri, 1 Mar 2019 21:36:20 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60470 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726412AbfCBCgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 Mar 2019 21:36:20 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 035B1F77E1F3FE301F3A;
+        Sat,  2 Mar 2019 10:36:17 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.408.0; Sat, 2 Mar 2019
+ 10:36:08 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <idosch@mellanox.com>,
+        <alexander.h.duyck@intel.com>, <tyhicks@canonical.com>,
+        <f.fainelli@gmail.com>, <therbert@google.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] net-sysfs: Fix mem leak in netdev_register_kobject
+Date:   Sat, 2 Mar 2019 10:34:55 +0800
+Message-ID: <20190302023455.27732-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_//rcWLvHZTsIVY=DLbp1W8Fk"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//rcWLvHZTsIVY=DLbp1W8Fk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: YueHaibing <yuehaibing@huawei.com>
 
-Hi Nick,
+syzkaller report this:
+BUG: memory leak
+unreferenced object 0xffff88837a71a500 (size 256):
+  comm "syz-executor.2", pid 9770, jiffies 4297825125 (age 17.843s)
+  hex dump (first 32 bytes):
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+    ff ff ff ff ff ff ff ff 20 c0 ef 86 ff ff ff ff  ........ .......
+  backtrace:
+    [<00000000db12624b>] netdev_register_kobject+0x124/0x2e0 net/core/net-sysfs.c:1751
+    [<00000000dc49a994>] register_netdevice+0xcc1/0x1270 net/core/dev.c:8516
+    [<00000000e5f3fea0>] tun_set_iff drivers/net/tun.c:2649 [inline]
+    [<00000000e5f3fea0>] __tun_chr_ioctl+0x2218/0x3d20 drivers/net/tun.c:2883
+    [<000000001b8ac127>] vfs_ioctl fs/ioctl.c:46 [inline]
+    [<000000001b8ac127>] do_vfs_ioctl+0x1a5/0x10e0 fs/ioctl.c:690
+    [<0000000079b269f8>] ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
+    [<00000000de649beb>] __do_sys_ioctl fs/ioctl.c:712 [inline]
+    [<00000000de649beb>] __se_sys_ioctl fs/ioctl.c:710 [inline]
+    [<00000000de649beb>] __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
+    [<000000007ebded1e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+    [<00000000db315d36>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000115be9bb>] 0xffffffffffffffff
 
-On Sat, 2 Mar 2019 13:27:50 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> On Fri,  1 Mar 2019 16:07:14 -0800 Nick Desaulniers <ndesaulniers@google.=
-com> wrote:
-> >
-> > It turns out that arch/x86/boot/string.c doesn't actually need
-> > linux/kernel.h, simply linux/limits.h and linux/compiler.h. Include the=
-m,
-> > and sort the headers alphabetically. =20
->=20
-> One small nit: please do not do the sort in the same commit as the bug
-> fix.  It just complicates the review and has (a remote) possibility of
-> adding a new problem.  (Not a big issue here, but in general cleanups
-> and bug fixes should be separate.)
+It should call kset_unregister to free 'dev->queues_kset'
+in error path of register_queue_kobjects, otherwise will cause a mem leak.
 
-Also it is *very* common for headers to be included in the order:
-linux/ asm/ and then local.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/core/net-sysfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+index 7c50611..bbeb606 100644
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1541,6 +1541,9 @@ static int register_queue_kobjects(struct net_device *dev)
+ error:
+ 	netdev_queue_update_kobjects(dev, txq, 0);
+ 	net_rx_queue_update_kobjects(dev, rxq, 0);
++#ifdef CONFIG_SYSFS
++	kset_unregister(dev->queues_kset);
++#endif
+ 	return error;
+ }
+ 
+-- 
+2.7.0
 
---Sig_//rcWLvHZTsIVY=DLbp1W8Fk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx56rIACgkQAVBC80lX
-0Gyq3Af/fhjAdEW2O7W+6Y5DppOtwQcN8PH2G/RK067OmD4JSN5588RkOOUc6Sj3
-kD23JR+DpjtAE2hhk272jtDkPWEmIimhvQrsdwC8pU2dERoRkq7g7ci2wGxYvmx2
-gwCJ3EGKsyGOMZIepWRlUdnjtq5d3ECJxfo3iJUb4V8Ig2okF9St034GGPg7Psge
-mIUPK4lh0Cvp6YzzL+ua8LM/c8KjDXXS8v/xv8Gh3leQducSzegFwKivKWy9pVP+
-LH27hmFpaDmDP461LA58KRFlhszE3Tw8nF1cDNfJOhHNZdRxi3EaSkV7Lh9wfNPV
-1eMdzAVZIg4YdS4T4mLngpfbwqdL7A==
-=yKYe
------END PGP SIGNATURE-----
-
---Sig_//rcWLvHZTsIVY=DLbp1W8Fk--
