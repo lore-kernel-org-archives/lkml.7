@@ -7,90 +7,130 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AFFC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2A8C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D802D20857
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C0B20857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 04:39:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QTCUa43Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H54t1Lwp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfCBEjR (ORCPT
+        id S1727919AbfCBEj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 23:39:17 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34147 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfCBEjR (ORCPT
+        Fri, 1 Mar 2019 23:39:29 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46239 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbfCBEj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 23:39:17 -0500
-Received: by mail-pg1-f194.google.com with SMTP id i130so12422514pgd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 20:39:16 -0800 (PST)
+        Fri, 1 Mar 2019 23:39:29 -0500
+Received: by mail-pl1-f196.google.com with SMTP id c17so9263181plz.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 20:39:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=E8xVMa3UyuhomxW571zy6yHj+BYk0T3qqrgE0C01lI8=;
-        b=QTCUa43Qqn46xL2GJEFIy3N7UKDlwEPNFPIMLCF62SXxWkUAvnVEtC/sHcpVsqXRJF
-         gTaiwkPOaM800+E4W+uo9eGPjv/lRcx9KLrnL2T/QxyXTojp5WmCbl3Ww+jFL55/kqs3
-         2Xi8cYJuB1oQgCzTgD5YDG1oE1ecIKs8VIFvERZ9GjGQFfKUMNPVJBwtX+ek8PjA2sPC
-         hsI6GWwQLGpkg/MD+Yy0QZ/Xjg50F84/Rnl08tagz0ExUwUT33hC43nTEoUcOh/5JLPf
-         e1Qgfa5VmDcV8S6B85KZkzBCzaKoXxs54o3GQDdLSSRW+nY9lWtWA1TlzwaFut/TCNwG
-         tvQQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=T80MdXzCnVwzBeJXMQTkL4J5G0aH3MXHjAFEpqlA0WA=;
+        b=H54t1LwpYL9KnRhB0RSkACShPDrChkkfBpcCaNyX8vbf/4K1S8jijCEuv5s9YRWUzf
+         IQfvZ5krjRlj8Rq2oNvTgneiBXMPVs25FPE3SWCoDewQ5uPMgCa1KdmdjKd1A+b0HuYW
+         b84nrR/0hqbAO0WaKor8odL6NOOJbwfUSbrIlgyVF7GZPm5gvHCUc7MysgXpAblBzbD4
+         H9dVCrvRfvxO5h+cnvrnW0jhXAYo457TNOL/m/9c3Lk7RSe396f4pj/1VvDRhEPWs3ao
+         fcR476QUi6NVL5SAH72apw0w6maFPeOpjHRXh8/6cLrPQWt8a5q2LNaSLlsHov0ToFeK
+         APZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=E8xVMa3UyuhomxW571zy6yHj+BYk0T3qqrgE0C01lI8=;
-        b=HSCGcZS12ONSofjWT5Ix2bwAEl8pYsRS69NXvj5bM0jTqs0qm1y2vYP25Nk59WAR6I
-         fBzYjSCu/avj5kc2oZADl7Luzrr8N8wNVGrJ8vVK6bFJPm8vGL1jgYTiKcAhSQsVRYde
-         Xabl9hYWORDpkhb9oVp5SvuqIJXeyAYPY0NJpqaCA4IFpscIGQWIpXGKeueIR2yuyd8F
-         ymGZbVCfnZB+k/XiI4X3/yOD15e6RXk4f+rmDyVAAByIReQ7GOS3L/6j6cej2TQC+Oev
-         PjoR3dDB3NR2h349ckXa5aCP5x7N7I13+QRs3LtjuPv/+kB2qJVwFkIkM70ad1UxlZOH
-         j3rw==
-X-Gm-Message-State: APjAAAWmCKrSEz+vGzWPdhLzNqLhF35j/hJmtfT7IQk6Y9FIFu6s4eNp
-        nq+3sLysgGS/wDVP8igx9lY=
-X-Google-Smtp-Source: APXvYqyfVorxlZUwAAT9aEX4cV0VaLDj91iyCjHgIS5j2y9UZvsAX25pp8fFaFh2TeAiWHrhAHE4Sg==
-X-Received: by 2002:a63:2b82:: with SMTP id r124mr8310326pgr.214.1551501556456;
-        Fri, 01 Mar 2019 20:39:16 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=T80MdXzCnVwzBeJXMQTkL4J5G0aH3MXHjAFEpqlA0WA=;
+        b=Cv2v9d4HAD4FhVOENBrMQkgjy6im9S/Dkj0XtTfgWd546zYE77VF8/BRD0jzlhp4oq
+         ZZhsdfxb6pWiNviVzEXfybUIUwLMJCodUX9mJlKt2nBwbWB1YBn9/Odh4IahP0CIn46k
+         aeWlA/RSpt/4qu6QhlvfJbNF3N8wLQUAavVwp9Hly84HiyQ3iubC6EkSX2s9rdQvbw20
+         AWfGUzcb4RTbuWWWbeZCPVktVFFkPecgaUwiFz/0dnQ3AhqqAxkvqJTSlNi4gqxSP/Ff
+         AVT/cMgUcqbHybW7XRfFEATaGQRer845E4WQrcASUO83mf9fMI2PTGph/BDMyKwoWSGi
+         syTw==
+X-Gm-Message-State: APjAAAU/cgf9FITAGEs/QfyznuUtrDolSzMu9ws2Zz1oeDBj2gqNyM4r
+        e4A4YBNbyeWIpIQIOQzxLOE=
+X-Google-Smtp-Source: APXvYqxrbuCoMsX8jDfR607E+AkSPdih1iVDlTkR+/4MYXNh/xAM6MP7Wqzc9csPX45GlxJm4H/Zcw==
+X-Received: by 2002:a17:902:b709:: with SMTP id d9mr9235818pls.83.1551501568725;
+        Fri, 01 Mar 2019 20:39:28 -0800 (PST)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id a24sm29102508pfo.160.2019.03.01.20.39.13
+        by smtp.gmail.com with ESMTPSA id a24sm29102508pfo.160.2019.03.01.20.39.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 20:39:15 -0800 (PST)
+        Fri, 01 Mar 2019 20:39:27 -0800 (PST)
 From:   Yafang Shao <laoar.shao@gmail.com>
 To:     vbabka@suse.cz, mhocko@suse.com, jrdr.linux@gmail.com
 Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, shaoyafang@didiglobal.com,
         Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH] mm: compaction: show gfp flag names in try_to_compact_pages tracepoint
-Date:   Sat,  2 Mar 2019 12:38:57 +0800
-Message-Id: <1551501538-4092-1-git-send-email-laoar.shao@gmail.com>
+Subject: [PATCH] mm: compaction: some tracepoints should be defined only when CONFIG_COMPACTION is set
+Date:   Sat,  2 Mar 2019 12:38:58 +0800
+Message-Id: <1551501538-4092-2-git-send-email-laoar.shao@gmail.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1551501538-4092-1-git-send-email-laoar.shao@gmail.com>
+References: <1551501538-4092-1-git-send-email-laoar.shao@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-show the gfp flag names instead of the gfp_mask could make the trace
-more convenient.
+Only mm_compaction_isolate_{free, migrate}pages may be used when
+CONFIG_COMPACTION is not set.
+All others are used only when CONFIG_COMPACTION is set.
 
 Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 ---
- include/trace/events/compaction.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/trace/events/compaction.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/include/trace/events/compaction.h b/include/trace/events/compaction.h
-index 6074eff..e66afb818 100644
+index 6074eff..3e42078 100644
 --- a/include/trace/events/compaction.h
 +++ b/include/trace/events/compaction.h
-@@ -189,9 +189,9 @@
- 		__entry->prio = prio;
- 	),
+@@ -64,6 +64,7 @@
+ 	TP_ARGS(start_pfn, end_pfn, nr_scanned, nr_taken)
+ );
  
--	TP_printk("order=%d gfp_mask=0x%x priority=%d",
-+	TP_printk("order=%d gfp_mask=%s priority=%d",
- 		__entry->order,
--		__entry->gfp_mask,
-+		show_gfp_flags(__entry->gfp_mask),
++#ifdef CONFIG_COMPACTION
+ TRACE_EVENT(mm_compaction_migratepages,
+ 
+ 	TP_PROTO(unsigned long nr_all,
+@@ -132,7 +133,6 @@
+ 		__entry->sync ? "sync" : "async")
+ );
+ 
+-#ifdef CONFIG_COMPACTION
+ TRACE_EVENT(mm_compaction_end,
+ 	TP_PROTO(unsigned long zone_start, unsigned long migrate_pfn,
+ 		unsigned long free_pfn, unsigned long zone_end, bool sync,
+@@ -166,7 +166,6 @@
+ 		__entry->sync ? "sync" : "async",
+ 		__print_symbolic(__entry->status, COMPACTION_STATUS))
+ );
+-#endif
+ 
+ TRACE_EVENT(mm_compaction_try_to_compact_pages,
+ 
+@@ -195,7 +194,6 @@
  		__entry->prio)
  );
+ 
+-#ifdef CONFIG_COMPACTION
+ DECLARE_EVENT_CLASS(mm_compaction_suitable_template,
+ 
+ 	TP_PROTO(struct zone *zone,
+@@ -296,7 +294,6 @@
+ 
+ 	TP_ARGS(zone, order)
+ );
+-#endif
+ 
+ TRACE_EVENT(mm_compaction_kcompactd_sleep,
+ 
+@@ -352,6 +349,7 @@
+ 
+ 	TP_ARGS(nid, order, classzone_idx)
+ );
++#endif
+ 
+ #endif /* _TRACE_COMPACTION_H */
  
 -- 
 1.8.3.1
