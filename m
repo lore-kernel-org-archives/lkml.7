@@ -2,79 +2,327 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3449EC4360F
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A43FC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE96920863
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5D520857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 14:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4tOtx72Y"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="kuZSFvLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfCBOMB (ORCPT
+        id S1726630AbfCBOMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 09:12:01 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:44343 "EHLO vps0.lunn.ch"
+        Sat, 2 Mar 2019 09:12:44 -0500
+Received: from mail.z3ntu.xyz ([128.199.32.197]:35506 "EHLO mail.z3ntu.xyz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbfCBOMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 09:12:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=svz5PFqb/JtDVjrGSzNstLmNgbDp1h1gdJasLry7ZIU=; b=4tOtx72Y3/4TWgp7a++TvCe8L/
-        EbKOqsCb9Gw73K6hHMoD9NJJUsqF3o9GDr6FYrT/6v7OlxyJTtZl/2PaUsaPDMALIwiw2X/cp6E7D
-        pAQFPBp8uU10qsvFs+INc19CbXWg8E4JINFgja/IPUeKPloZHuq3bFqvWUAZVo+mdeFw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1h05Mq-0000qD-Fs; Sat, 02 Mar 2019 15:11:56 +0100
-Date:   Sat, 2 Mar 2019 15:11:56 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jose Abreu <jose.abreu@synopsys.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Joao Pinto <joao.pinto@synopsys.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net 1/2] net: phy: Use C45 Helpers in phy_read_status()
-Message-ID: <20190302141156.GG19813@lunn.ch>
-References: <cover.1551437561.git.joabreu@synopsys.com>
- <27b3e9f2318c87aac928165b8dfe7d98e272f3d1.1551437561.git.joabreu@synopsys.com>
- <237f5214-c49e-53f9-65f0-479951f62d4a@gmail.com>
+        id S1726410AbfCBOMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 09:12:44 -0500
+Received: from localhost.localdomain (80-110-118-127.cgn.dynamic.surfer.at [80.110.118.127])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id C9045C5055;
+        Sat,  2 Mar 2019 14:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1551535960; bh=mAWSP378iKsdM8BS0CNiAIaNIRv6NccSHHdX83lvaN4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=kuZSFvLnqj8GcQrfEX1k6v0eKl729HyXEgRVCv0rYJXX2X1xuqoocRA7clWTt7v9F
+         qsGS6qgnkKnbD/CBCYmlonbD4kCIqyY7jdFHFWAOpqzw3rglSoWnh6NnY4JAj2TrBw
+         AUNBU42j94iQPA1/mVAO4LAy/rOh5LtelJh+Rafc=
+From:   Luca Weiss <luca@z3ntu.xyz>
+Cc:     Luca Weiss <luca@z3ntu.xyz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
+        Coly Li <colyli@suse.de>, Stephen Boyd <sboyd@kernel.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Aaron Wu <aaron.wu@analog.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
+        , TOUCHSCREEN)...)
+Subject: [PATCH 2/2] Input: add a driver for GPIO controllable vibrators
+Date:   Sat,  2 Mar 2019 15:11:31 +0100
+Message-Id: <20190302141132.21160-2-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190302141132.21160-1-luca@z3ntu.xyz>
+References: <20190302141132.21160-1-luca@z3ntu.xyz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <237f5214-c49e-53f9-65f0-479951f62d4a@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 07:14:20PM -0800, Florian Fainelli wrote:
-> 
-> 
-> On 3/1/2019 2:54 AM, Jose Abreu wrote:
-> > Currently phy_read_status() considers that either the PHY driver has the
-> > read_status() callback or uses the generic callback.
-> > 
-> > For C45 PHYs we need to use the gen10g_read_status() callback.
-> 
-> Right, so we could expect your C45 PHY driver to assign the read_status
-> callback to gen10g_read_status() if it is appropriate. So far most of
-> the 10g PHY drivers (cortina, marvell10g, aquantia) have to define their
-> own read_status() callback to be feature complete. Unlike C22 PHYs that
-> can really be driven with a simple generic PHY driver model for standard
-> features, C45 PHYs seem to be quirky enough this does not work anymore.
+Provide a simple driver for GPIO controllable vibrators.
+It will be used by the Fairphone 2.
 
-Hi Jose
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ drivers/input/misc/Kconfig      |  12 ++
+ drivers/input/misc/Makefile     |   1 +
+ drivers/input/misc/gpio-vibra.c | 214 ++++++++++++++++++++++++++++++++
+ 3 files changed, 227 insertions(+)
+ create mode 100644 drivers/input/misc/gpio-vibra.c
 
-Does your PHY support 1000Base-T? If so you need read_status() because
-the registers for that link mode don't appear to be standardized.
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index ca59a2be9bc5..77480268fef2 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -280,6 +280,18 @@ config INPUT_GPIO_DECODER
+ 	 To compile this driver as a module, choose M here: the module
+ 	 will be called gpio_decoder.
+ 
++config INPUT_GPIO_VIBRA
++	tristate "GPIO vibrator support"
++	depends on GPIOLIB || COMPILE_TEST
++	select INPUT_FF_MEMLESS
++	help
++	  Say Y here to get support for GPIO based vibrator devices.
++
++	  If unsure, say N.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called gpio-vibra.
++
+ config INPUT_IXP4XX_BEEPER
+ 	tristate "IXP4XX Beeper support"
+ 	depends on ARCH_IXP4XX
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 9d0f9d1ff68f..79edbad44cf3 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
+ obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
+ obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
+ obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
++obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
+ obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
+ obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
+ obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
+diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+new file mode 100644
+index 000000000000..14f9534668c8
+--- /dev/null
++++ b/drivers/input/misc/gpio-vibra.c
+@@ -0,0 +1,214 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ *  GPIO vibrator driver
++ *
++ *  Copyright (C) 2019 Luca Weiss <luca@z3ntu.xyz>
++ *
++ *  Based on PWM vibrator driver:
++ *  Copyright (C) 2017 Collabora Ltd.
++ *
++ *  Based on previous work from:
++ *  Copyright (C) 2012 Dmitry Torokhov <dmitry.torokhov@gmail.com>
++ *
++ *  Based on PWM beeper driver:
++ *  Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
++ */
++
++#include <linux/gpio/consumer.h>
++#include <linux/input.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/regulator/consumer.h>
++#include <linux/slab.h>
++
++enum vibrator_state {
++	VIBRATOR_OFF,
++	VIBRATOR_ON
++};
++
++struct gpio_vibrator {
++	struct input_dev *input;
++	struct gpio_desc *gpio;
++	struct regulator *vcc;
++
++	struct work_struct play_work;
++	enum vibrator_state state;
++	bool vcc_on;
++};
++
++static int gpio_vibrator_start(struct gpio_vibrator *vibrator)
++{
++	struct device *pdev = vibrator->input->dev.parent;
++	int err;
++
++	if (!vibrator->vcc_on) {
++		err = regulator_enable(vibrator->vcc);
++		if (err) {
++			dev_err(pdev, "failed to enable regulator: %d", err);
++			return err;
++		}
++		vibrator->vcc_on = true;
++	}
++
++	gpiod_set_value(vibrator->gpio, 1);
++
++	return 0;
++}
++
++static void gpio_vibrator_stop(struct gpio_vibrator *vibrator)
++{
++	gpiod_set_value(vibrator->gpio, 0);
++
++	if (vibrator->vcc_on) {
++		regulator_disable(vibrator->vcc);
++		vibrator->vcc_on = false;
++	}
++}
++
++static void gpio_vibrator_play_work(struct work_struct *work)
++{
++	struct gpio_vibrator *vibrator = container_of(work,
++					struct gpio_vibrator, play_work);
++
++	if (vibrator->state == VIBRATOR_ON)
++		gpio_vibrator_start(vibrator);
++	else
++		gpio_vibrator_stop(vibrator);
++}
++
++static int gpio_vibrator_play_effect(struct input_dev *dev, void *data,
++				    struct ff_effect *effect)
++{
++	struct gpio_vibrator *vibrator = input_get_drvdata(dev);
++
++	int level = effect->u.rumble.strong_magnitude;
++
++	if (!level)
++		level = effect->u.rumble.weak_magnitude;
++
++	if (level)
++		vibrator->state = VIBRATOR_ON;
++	else
++		vibrator->state = VIBRATOR_OFF;
++
++	schedule_work(&vibrator->play_work);
++
++	return 0;
++}
++
++static void gpio_vibrator_close(struct input_dev *input)
++{
++	struct gpio_vibrator *vibrator = input_get_drvdata(input);
++
++	cancel_work_sync(&vibrator->play_work);
++	gpio_vibrator_stop(vibrator);
++}
++
++static int gpio_vibrator_probe(struct platform_device *pdev)
++{
++	struct gpio_vibrator *vibrator;
++	int err;
++
++	vibrator = devm_kzalloc(&pdev->dev, sizeof(*vibrator), GFP_KERNEL);
++	if (!vibrator)
++		return -ENOMEM;
++
++	vibrator->input = devm_input_allocate_device(&pdev->dev);
++	if (!vibrator->input)
++		return -ENOMEM;
++
++	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
++	err = PTR_ERR_OR_ZERO(vibrator->vcc);
++	if (err) {
++		if (err != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to request regulator: %d",
++				err);
++		return err;
++	}
++
++	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
++	err = PTR_ERR_OR_ZERO(vibrator->gpio);
++	if (err) {
++		if (err != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to request main gpio: %d",
++				err);
++		return err;
++	}
++
++	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
++
++	vibrator->input->name = "gpio-vibrator";
++	vibrator->input->id.bustype = BUS_HOST;
++	vibrator->input->dev.parent = &pdev->dev;
++	vibrator->input->close = gpio_vibrator_close;
++
++	input_set_drvdata(vibrator->input, vibrator);
++	input_set_capability(vibrator->input, EV_FF, FF_RUMBLE);
++
++	err = input_ff_create_memless(vibrator->input, NULL,
++				      gpio_vibrator_play_effect);
++	if (err) {
++		dev_err(&pdev->dev, "Couldn't create FF dev: %d", err);
++		return err;
++	}
++
++	err = input_register_device(vibrator->input);
++	if (err) {
++		dev_err(&pdev->dev, "Couldn't register input dev: %d", err);
++		return err;
++	}
++
++	platform_set_drvdata(pdev, vibrator);
++
++	return 0;
++}
++
++static int __maybe_unused gpio_vibrator_suspend(struct device *dev)
++{
++	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
++
++	cancel_work_sync(&vibrator->play_work);
++	if (vibrator->state == VIBRATOR_ON)
++		gpio_vibrator_stop(vibrator);
++
++	return 0;
++}
++
++static int __maybe_unused gpio_vibrator_resume(struct device *dev)
++{
++	struct gpio_vibrator *vibrator = dev_get_drvdata(dev);
++
++	if (vibrator->state == VIBRATOR_ON)
++		gpio_vibrator_start(vibrator);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(gpio_vibrator_pm_ops,
++			 gpio_vibrator_suspend, gpio_vibrator_resume);
++
++#ifdef CONFIG_OF
++static const struct of_device_id gpio_vibra_dt_match_table[] = {
++	{ .compatible = "gpio-vibrator" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, gpio_vibra_dt_match_table);
++#endif
++
++static struct platform_driver gpio_vibrator_driver = {
++	.probe	= gpio_vibrator_probe,
++	.driver	= {
++		.name	= "gpio-vibrator",
++		.pm	= &gpio_vibrator_pm_ops,
++		.of_match_table = of_match_ptr(gpio_vibra_dt_match_table),
++	},
++};
++module_platform_driver(gpio_vibrator_driver);
++
++MODULE_AUTHOR("Luca Weiss <luca@z3ntu.xy>");
++MODULE_DESCRIPTION("GPIO vibrator driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:gpio-vibrator");
+-- 
+2.21.0
 
-    Andrew
