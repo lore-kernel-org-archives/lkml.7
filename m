@@ -2,79 +2,87 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8ADC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 16:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143E4C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 16:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6330520838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 16:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCCFA20838
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 16:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfCBQqw convert rfc822-to-8bit (ORCPT
+        id S1726672AbfCBQu3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 11:46:52 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:53489 "EHLO
+        Sat, 2 Mar 2019 11:50:29 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:57728 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfCBQqv (ORCPT
+        with ESMTP id S1726239AbfCBQu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 11:46:51 -0500
+        Sat, 2 Mar 2019 11:50:29 -0500
 Received: from marcel-macpro.fritz.box (p4FF9F361.dip0.t-ipconnect.de [79.249.243.97])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 48389CF352;
-        Sat,  2 Mar 2019 17:54:46 +0100 (CET)
+        by mail.holtmann.org (Postfix) with ESMTPSA id ED825CF352;
+        Sat,  2 Mar 2019 17:58:22 +0100 (CET)
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH] net/bluetooth: Fix bound check in event handling
+Subject: Re: [PATCH v2 0/2] Bluetooth: mediatek: add support for MediaTek
+ MT7663U and MT7668U UART devices
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190228195939.30685-1-tomasbortoli@gmail.com>
-Date:   Sat, 2 Mar 2019 17:46:49 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller@googlegroups.com
+In-Reply-To: <cover.1551405664.git.sean.wang@mediatek.com>
+Date:   Sat, 2 Mar 2019 17:50:26 +0100
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: 8BIT
-Message-Id: <8F6AC5BF-F50B-4C30-A73B-98526AF181EB@holtmann.org>
-References: <20190228195939.30685-1-tomasbortoli@gmail.com>
-To:     Tomas Bortoli <tomasbortoli@gmail.com>
+Message-Id: <172BBF8E-16EC-4DF8-99D6-B991FADA91B6@holtmann.org>
+References: <cover.1551405664.git.sean.wang@mediatek.com>
+To:     Sean Wang <sean.wang@mediatek.com>
 X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomas,
+Hi Sean,
 
-> hci_inquiry_result_with_rssi_evt() can perform out of bound reads
-> on skb->data as a bound check is missing.
+> v2: changes since v1
+> - add Rob's review tag
+> - removed these merged patches
 > 
-> Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-> Reported-by: syzbot+cec7a50c412a2c03f8f5@syzkaller.appspotmail.com
-> Reported-by: syzbot+660883c56e2fa65d4497@syzkaller.appspotmail.com
-> ---
-> Syzkaler reports:
-> https://syzkaller.appspot.com/bug?id=d708485af9edc3af35f3b4d554e827c6c8bf6b0f
-> https://syzkaller.appspot.com/bug?id=3acd1155d48a5acc5d76711568b04926945a6885
+> This adds the support of enabling MT7668U and MT7663U UART based Bluetooth
+> function running on the top of btmtkuart driver.
 > 
-> net/bluetooth/hci_event.c | 4 ++++
-> 1 file changed, 4 insertions(+)
+> We are through several patches to reach the goal and also wish applied
+> the same flow in MediaTek btusb [1] for the transport independence.
+> Once [1] and the series is being merged and then in next step I will
+> consider to add a btmtk.c to hold these independent operations among
+> various transport reused by MediaTek UART, USB and SDIO-based Bluetooth.
 > 
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index ac2826ce162b..aa953d23bb72 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -3983,6 +3983,10 @@ static void hci_inquiry_result_with_rssi_evt(struct hci_dev *hdev,
-> 		for (; num_rsp; num_rsp--, info++) {
-> 			u32 flags;
+> Firstly,
+> in patch 1/6 to update the dt-binding document for the kind of devices.
+> in patch 2/6, 3/6 to fix the common error issues in the current code.
+> in Patch 4/6, 5/6 to add the general flow which MT7622 and even MT7663U and
+> MT7668U USB devices also utilize.
 > 
-> +			if ((void *)(info + sizeof(info)) >
-> +			   (void *)(skb->data + skb->len))
-> +				break;
-> +
+> Finally, in patch 6/6 to add the specific setups for MediaTek UART-based
+> Bluetooth and enable MT7663U and MT7668U device.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017074.html 
+> 
+> Sean Wang (2):
+>  dt-bindings: net: bluetooth: add support for MediaTek MT7663U and
+>    MT7668U UART devices
+>  Bluetooth: mediatek: add support for MediaTek MT7663U and MT7668U UART
+>    devices
+> 
+> .../bindings/net/mediatek-bluetooth.txt       |  64 ++++
+> drivers/bluetooth/btmtkuart.c                 | 281 +++++++++++++++++-
+> 2 files changed, 335 insertions(+), 10 deletions(-)
 
-first of all, the loop exists twice here. If one is vulnerable, then the second is a well. And second, can we not just do this inside the for-condition check or a lot simpler than this void casting fun.
+I applied patch 1/2 but it seems patch 2/2 is missing. Please re-send.
 
 Regards
 
