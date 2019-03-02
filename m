@@ -1,255 +1,157 @@
-Return-Path: <SRS0=6SCO=RE=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4DCC43381
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F5CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 00:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398BD205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 Mar 2019 23:58:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SXnoDtky"
+	by mail.kernel.org (Postfix) with ESMTP id D396620823
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 00:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfCAX56 (ORCPT
+        id S1726767AbfCBAAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 18:57:58 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41584 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbfCAX56 (ORCPT
+        Fri, 1 Mar 2019 19:00:37 -0500
+Received: from gateway32.websitewelcome.com ([192.185.144.98]:39645 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725934AbfCBAAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 18:57:58 -0500
-Received: by mail-oi1-f193.google.com with SMTP id e7so20964143oia.8
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 15:57:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=OG0crcG3uLndABasQV7vOc+Z+aGCUDZf4bYULwWn/3E=;
-        b=SXnoDtkycybmEZgu3RjhNxcc7KmGms5JiMzHmo2WJpIJb+Epp9BXqIjbh3Ni4tlUzu
-         Y5sk0QzI9+czQN8IQVyA0QqeulLsWHX5pQrUvuaF9fyK3N/3cCbdrFHN84dDsLCmNw1c
-         D9kv62JZrkbb6TK4OYCmoPDqr7RPvd44Hfph5Go+TeTbninIHyfG8WBOy3sSHPf9ibEr
-         1LXZL3QjK1yr1WgM7pCnT9djX/a0pz10q8h2DqycPzQjuImU5nO7/F/q/WKFrEDLxQTp
-         Rg+Reqgft7njWcJ6Nw5x8TEhYgtvXIXTCR72Y3qY5JeTx7u2m7ggqYret1KYw/GO0XSn
-         RxcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=OG0crcG3uLndABasQV7vOc+Z+aGCUDZf4bYULwWn/3E=;
-        b=aKffXO1wTA9BxsJUFAfBLYgSbYPyo86Tl3Z+3G2bRXJyNs9VaUB2OZ5eqFtk05GUyN
-         z4gH0fiTZQgjps0DYeiAyuGcO2hpJasFuEwKeMLF830GTsxQ6uKKtuGmUY/9xNpM5wgz
-         IUTAdY9h/P6LPPAk7jr+Xvph1Uq9v7z4LgMHlr4t3S+d+HSlGNFzpZYIxaE9mBsfytzI
-         qVIbVQjUIYtXz6DM0wy/4Byw6lm5Sa/kLnWLjzvsSMxEtNSSPVuimO2y7UOpynJgHN+E
-         yj1kpGJiTdMQto26nEk5xfii577nra+NMW81li2yRVXRkF/4u9Og8A/iBTws03zLf2CE
-         yVMA==
-X-Gm-Message-State: AHQUAub19nN7eQwqY/ozaX3osJ87YRoqA/cknv0rXXsPBjbpy6nai5z+
-        +h1Yg1yuPmBOGtfN6hWL8DZKWEQNFeiHw5NRBLqHGkLZOsM=
-X-Google-Smtp-Source: AHgI3IaMW3c1Whf0fGsAx/zpKQ1ah2h7P+kUIig7KEO9qmlp83tMGFxh/VhxlkWkt/6WePSsMRHWBifnRiQP9i9OdHc=
-X-Received: by 2002:aca:cc4d:: with SMTP id c74mr5104666oig.157.1551484676578;
- Fri, 01 Mar 2019 15:57:56 -0800 (PST)
+        Fri, 1 Mar 2019 19:00:36 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 06D3784685
+        for <linux-kernel@vger.kernel.org>; Fri,  1 Mar 2019 18:00:35 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id zs4wghSnYdnCezs4xgdJPR; Fri, 01 Mar 2019 18:00:35 -0600
+X-Authority-Reason: nr=8
+Received: from [189.250.88.58] (port=37732 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1gzs4w-0036Ba-Dd; Fri, 01 Mar 2019 18:00:34 -0600
+Subject: Re: [PATCH] drm/amdgpu/powerplay: Fix missing break in switch
+ statement
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190301212943.GA21585@embeddedor>
+ <CADnq5_NdT3R141uSGxYd7yZ0nimo2uW_WgfWF8jGxYr68F4Kqg@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <37efca9b-c949-efb9-c336-f1fb910d81f3@embeddedor.com>
+Date:   Fri, 1 Mar 2019 18:00:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-From:   Jann Horn <jannh@google.com>
-Date:   Sat, 2 Mar 2019 00:57:30 +0100
-Message-ID: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
-Subject: a.out coredumping: fix or delete?
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CADnq5_NdT3R141uSGxYd7yZ0nimo2uW_WgfWF8jGxYr68F4Kqg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.88.58
+X-Source-L: No
+X-Exim-ID: 1gzs4w-0036Ba-Dd
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.88.58]:37732
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In theory, Linux can dump cores for a.out binaries. In practice, that
-code is pretty bitrotten and buggy. Does anyone want that code so much
-that they'd like to fix it, or can we just delete it?
-
-Here's a shell script that will give you a minimal a.out binary that
-Linux will execute (and that then segfaults immediately because it has
-no executable pages mapped):
-
-==============
-#!/bin/bash
-(
-  # a_info: magic=OMAGIC
-  printf '\x07\x01'
-  # a_info: machtype=M_386
-  printf '\x64'
-  # a_info: flags=0
-  printf '\x00'
-
-  # a_text, a_data, a_bss, a_syms: 0
-  printf '\x00\x00\x00\x00'
-  printf '\x00\x00\x00\x00'
-  printf '\x00\x00\x00\x00'
-  printf '\x00\x00\x00\x00'
-
-  # a_entry: 0x42424242
-  printf '\x42\x42\x42\x42'
-
-  # a_trsize, a_drsize: 0
-  printf '\x00\x00\x00\x00'
-  printf '\x00\x00\x00\x00'
-) > aout_binary
-chmod +x aout_binary
-==============
-
-You need a kernel with CONFIG_IA32_AOUT enabled (for x86-64) or with
-CONFIG_BINFMT_AOUT enabled (for 32-bit x86). If aout is built as a
-module, you have to manually load it with "modprobe binfmt_aout",
-because even though there is binfmt autoloading code in the kernel, no
-aliases are set up for any binfmts.
-
-On a Debian 9 system with a 4.9 stable kernel, if you try to run this
-a.out program with core dumps enabled ("ulimit -c unlimited") a few
-times, the kernel oopses:
-
-==============
-[ 2659.912016] aout_binary[978]: segfault at 42424242 ip 42424242 sp
-bfffe4e0 error 14
-[ 2659.912318] BUG: unable to handle kernel paging request at bffff000
-[ 2659.912336] IP: [<d030bd14>] memcpy+0x14/0x30
-[ 2659.912364] *pdpt = 00000000367f7001 *pde = 000000007d0d1067
-[ 2659.912368] Oops: 0000 [#1] SMP
-[ 2659.912377] Modules linked in: binfmt_aout [...]
-[ 2659.912421] CPU: 0 PID: 978 Comm: aout_binary Not tainted
-4.9.0-8-686-pae #1 Debian 4.9.144-3.1
-[ 2659.912422] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.10.2-1 04/01/2014
-[ 2659.912424] task: f30e2000 task.stack: f470a000
-[ 2659.912428] EIP: 0060:[<d030bd14>] EFLAGS: 00010206 CPU: 0
-[ 2659.912430] EIP is at memcpy+0x14/0x30
-[ 2659.912431] EAX: fffba000 EBX: 00001000 ECX: 00000400 EDX: bffff000
-[ 2659.912433] ESI: bffff000 EDI: fffba000 EBP: f470bab0 ESP: f470baa4
-[ 2659.912434]  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068
-[ 2659.912436] CR0: 80050033 CR2: bffff000 CR3: 346ad4e0 CR4: 001406f0
-[ 2659.912442] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-[ 2659.912444] DR6: fffe0ff0 DR7: 00000400
-[ 2659.912445] Stack:
-[ 2659.912446]  f470bbf0 bffff000 00001000 00001000 d03111a2 f470bb28
-00003000 00000000
-[ 2659.912449]  fffbb000 f470bc10 fffba000 6721debb 00001000 00002000
-00000000 f470bb40
-[ 2659.912452]  d016cd10 00001000 00000000 00001000 00000001 f470bb28
-f470bb2c 00001000
-[ 2659.912456] Call Trace:
-[ 2659.912475]  [<d03111a2>] ? iov_iter_copy_from_user_atomic+0x1a2/0x230
-[ 2659.912488]  [<d016cd10>] ? generic_perform_write+0xe0/0x1d0
-[ 2659.912492]  [<d016ef52>] ? __generic_file_write_iter+0x192/0x1f0
-[ 2659.912501]  [<d0217c67>] ? __find_get_block+0xc7/0x250
-[ 2659.912512]  [<f8680496>] ? ext4_file_write_iter+0x86/0x460 [ext4]
-[ 2659.912514]  [<f85c7050>] ? crc32c_intel_init+0x20/0x20 [crc32c_intel]
-[ 2659.912517]  [<d021816c>] ? __getblk_gfp+0x2c/0x310
-[ 2659.912523]  [<d01e12bc>] ? generic_file_llseek_size+0x13c/0x1e0
-[ 2659.912525]  [<d01e1eac>] ? new_sync_write+0xcc/0x130
-[ 2659.912527]  [<d01e1faf>] ? __kernel_write+0x4f/0x100
-[ 2659.912537]  [<d023b382>] ? dump_emit+0x92/0xe0
-[ 2659.912539]  [<f86fead5>] ? aout_core_dump+0x2a5/0x2f1 [binfmt_aout]
-[ 2659.912542]  [<d023bb43>] ? do_coredump+0x4d3/0xde0
-[...]
-[ 2659.912618] Code: 58 2b 43 50 88 43 4e 5b 5d c3 90 8d 74 26 00 e8
-43 fb ff ff eb e8 90 55 89 e5 57 56 53 3e 8d 74 26 00 89 cb 89 c7 c1
-e9 02 89 d6 <f3> a5 89 d9 83 e1 03 74 02 f3 a4 5b 5e 5f 5d c3 8d b6 00
-00 00
-[ 2659.912639] EIP: [<d030bd14>]
-[ 2659.912641] memcpy+0x14/0x30
-[ 2659.912642]  SS:ESP 0068:f470baa4
-[ 2659.912643] CR2: 00000000bffff000
-[ 2659.912645] ---[ end trace 6413c918c629c657 ]---
-==============
-
-The problem is that since 43a5d548eb594, aout_core_dump() essentially
-calls __kernel_write() on a userspace address, which then causes
-iov_iter_init() to decide based on uaccess_kernel() that it should use
-ITER_KVEC and access the userspace memory with memcpy().
 
 
-If you try to reproduce this on a 64-bit system with a master branch
-kernel, it doesn't work. But that's because that code is even more
-broken: The userspace stack pointer is something like 0xffffc4c8, but
-fill_dump() for some reason assumes that top-of-stack is at
-0xc0000000, causing it to not even attempt to dump the stack:
+On 3/1/19 5:54 PM, Alex Deucher wrote:
+> On Fri, Mar 1, 2019 at 4:51 PM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+>>
+>> Add missing break statement in order to prevent the code from falling
+>> through to case SMU_Discrete_DpmTable.
+>>
+>> This bug was found thanks to the ongoing efforts to enable
+>> -Wimplicit-fallthrough.
+>>
+>> Fixes: 34a564eaf528 ("drm/amd/powerplay: implement fw image related smum interface for Polaris.")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> 
+> Already fixed:
+> https://cgit.freedesktop.org/~agd5f/linux/commit/?h=drm-next-5.2-wip&id=6feaa4194c18578623565017f95d1b2f6b243567
+> 
 
-        if (dump->start_stack < 0xc0000000) {
-                unsigned long tmp;
+Awesome. :)
 
-                tmp = (unsigned long) (0xc0000000 - dump->start_stack);
-                dump->u_ssize = tmp >> PAGE_SHIFT;
-        }
+I was looking for that link, but I didn't find it.  That's why
+I sent this patch.
 
-You can reproduce the oops if you use gdb to move the stack pointer
-down below 0xc0000000:
+Happy to see it is fixed now.
 
-==============
-user@debian:~/aout$ ulimit -c unlimited
-user@debian:~/aout$ gdb ./aout_binary
-[...]
-(gdb) break *0x42424242
-Breakpoint 1 at 0x42424242
-(gdb) run
-Starting program: /home/user/aout/aout_binary
-[...]
-(gdb) p/x $sp
-$1 = 0xffffcdcc
-(gdb) set $sp=0x80000000
-(gdb) detach
-Detaching from p[   94.987218] aout_binary[1079]: segfault at 42424242
-ip 0000000042424242 sp 0000000080000000 error 14
-rogram: /home/us[   94.989368] Code: Bad RIP value.
-er/aout/aout_binary, process 1079
-(gdb) [   94.991341]
-==================================================================
-[   94.993463] BUG: KASAN: user-memory-access in
-iov_iter_copy_from_user_atomic+0x23d/0x530
-[   94.995465] Read of size 4096 at addr 0000000080000000 by task
-aout_binary/1079
-[   94.997069]
-[   94.997417] CPU: 4 PID: 1079 Comm: aout_binary Not tainted 5.0.0-rc8 #292
-[   94.998942] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.10.2-1 04/01/2014
-[   95.000809] Call Trace:
-[   95.001412]  dump_stack+0x71/0xab
-[...]
-[   95.004628]  kasan_report+0x176/0x192
-[...]
-[   95.006746]  memcpy+0x1f/0x50
-[   95.007433]  iov_iter_copy_from_user_atomic+0x23d/0x530
-[...]
-[   95.009459]  generic_perform_write+0x1a1/0x2d0
-[...]
-[   95.013166]  __generic_file_write_iter+0x264/0x2a0
-[   95.014242]  ext4_file_write_iter+0x3a4/0x680
-[...]
-[   95.027234]  __vfs_write+0x294/0x3b0
-[...]
-[   95.032673]  __kernel_write+0x91/0x190
-[   95.033540]  dump_emit+0x131/0x1d0
-[...]
-[   95.076087] Disabling lock debugging due to kernel taint
-[   95.077287] BUG: unable to handle kernel paging request at 0000000080000000
-[   95.078812] #PF error: [normal kernel read fault]
-[   95.079845] PGD 1e0629067 P4D 1e0629067 PUD 0
-[   95.080831] Oops: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC KASAN
-[...]
-==============
+Thanks, Alex.
 
-Also, the non-compat version of the coredump code looks like it leaks
-some kernel memory into the coredump through "struct user". I don't
-think anyone's going to care much, given that it looks like on distro
-kernels, you won't usually be able to load a.out binaries...
-
-
-The rest of a.out is also kind of weird; for example, there is support
-for loading text at an unaligned offset (by copying code into an
-anonymous mapping), but from a glance, it looks like the resulting
-text mapping wouldn't actually be executable? And there is support for
-loading files without mmap handler, except that an earlier security
-check prevents the use of files without mmap handler, unless you're on
-x86-64, where the copied code in ia32_aout.c is used that doesn't have
-that security check.
+--
+Gustavo
