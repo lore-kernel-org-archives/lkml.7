@@ -2,72 +2,72 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84918C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76BEC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE8B20840
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92ACD20823
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:25:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HyvumV8G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EM/4IfJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfCBDUC (ORCPT
+        id S1727739AbfCBDZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 22:20:02 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42507 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfCBDUC (ORCPT
+        Fri, 1 Mar 2019 22:25:03 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46892 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfCBDZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 22:20:02 -0500
-Received: by mail-ed1-f66.google.com with SMTP id j89so21677702edb.9;
-        Fri, 01 Mar 2019 19:20:00 -0800 (PST)
+        Fri, 1 Mar 2019 22:25:02 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c17so9205039plz.13;
+        Fri, 01 Mar 2019 19:25:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=R8mlpSPGD/WOluqVKoUAMbg7xYny1QOi9BjF5XMYnRY=;
-        b=HyvumV8GOWZg7Wr0AB/1OBXO0RGMEAlPF3RlqyUyJGncKToZUEzKuT0/ZxNFT35/98
-         wTqK6VqmZr0Y6g5z7QQSuv2OcIwFrlWaQoOyTSRsGABGffW1Ib8pW9GAzUmoEOJnwMlW
-         oeVmfKpsy4vRD827VTfc5Lo7S3QefDPCBcrlRraH6UBrxrYLwWYJ+4qc99Ja7EogX2K5
-         EBKUFrS0ly59xLWC9vYACXlVrAX4+mOUsQgwjzWpxa9+RJjwYeQ3ffQaJLPna45BOJGq
-         P6HEPoAVk1Ax2k4YwBcvjCoUIACf5TXi3EL0M1fRwmF/Ku8uRGxJNqIE/QTetdQ9ME5b
-         qhxA==
+        bh=rucb+LvsZKp0l/Go5ALdMP7y4S7qsON4cS8AOIbEYFs=;
+        b=EM/4IfJ+fnKyaKXJ4HCmr/Qf0YbMYZUL/3Lg5cUWu9NoUcE+tq9lAzTEuzlOsdr8cQ
+         jQMwOiTYjDYDhFKRkRU8DjLxic9lM5aK0TPpYsL8KwLTIQFNDQy0+5+AJhbyO1g71QTM
+         tFzUvleJFbYYI3gAiF25//3fS6W5a+tpCyKLogqspotUSOmu8yKQ17FoA0RM10gNmjY0
+         wgpfjBfTifG8Cnd/2hCSnp0t2/dSR9qNfA3Bj2hQEgpubb3/K6kLmOM2Yw1sNS9IxUnL
+         x/TxCT9l1KMvhzkfgGsusX9IbDFnCNDJLs3fBjFfPtnbXdZn+4HLZmvOcy1krABws5Pz
+         E7vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=R8mlpSPGD/WOluqVKoUAMbg7xYny1QOi9BjF5XMYnRY=;
-        b=ll7AKbX3Iyl1XdMXAsD8ynnpV5wtCemSPNVYYbdfepGRwXV4JPNno4IKxCmS7TD5KA
-         bEdBCV7u+sKRfM3+kLqdKNFK8TZdQ0t3h3d6+1aWdi5MQtcLRJwhYJl5veMgaKJLqY5u
-         TGuuCTo2fw+56CC+810MZktP0u4UeryQWlulsk2qES6NEnfEvTp3bIAPithQhracq7kc
-         sl8opgkgj/Rf4k+jz/CZvKESTI4omquHcuREP7H8yXZVQzubrxOsn6+kFz45H5f9xvWO
-         nAfWZWyd+YW8GpWOKCqOPLTUTQZO6bv6lMgPYV+C78D+bGuMkRI8TXx7YSbejfKjZtPD
-         ADcQ==
-X-Gm-Message-State: APjAAAW9HFEA+Fdi7AWF1yDOv8uRTQiAztmIENj8sZP8RpxBpGxJsNxA
-        fFNYZs3OBJJiNpyrTFqG+24=
-X-Google-Smtp-Source: APXvYqyOnpPSi/IyB2p/dMXhrxavsEu5XMhasKBscv96cRVZ6sxmR8YClAUjJTLG1VL7D/A8WtZ0VA==
-X-Received: by 2002:a05:6402:1205:: with SMTP id c5mr6808211edw.19.1551496799325;
-        Fri, 01 Mar 2019 19:19:59 -0800 (PST)
+        bh=rucb+LvsZKp0l/Go5ALdMP7y4S7qsON4cS8AOIbEYFs=;
+        b=AJXi3E5Ph9XRdkvDCU7VcdgO75YZVS9bjUL2jMC26hhg4dT5hKYxCvbHgrdfrkPbBc
+         LXI1M9gP+4hqYKr+a+nhRTwnhR/UR4Twhr+BtHFKOlMJnnCYAF9+HiT4JSDHeBQrMwm4
+         BwLTfVU5wE7yYX/5oNLznPV0rmZ6pR6KZnOHjR1dQkGDuyVr2oBewWkZMTNR6W/bAkrd
+         kXj1gGNe45RIhpfsh9AWObOlmw65tdHRwEPzBU7njJRbreM75n5OdsNXcPdaXlY/oOqA
+         Tsx43cf8NtRnHi9/zdnzkYV49d99a1TvsoRqLAw1p+DOVla/l3DSF9mLQNCUgra4qB8f
+         JqzQ==
+X-Gm-Message-State: APjAAAW/W0UFN3H/Fb5PtKoHVi+/hO1piuUlycJAjqkZWuUH0LOhlsyW
+        GaKttHjGOHvIccm/i/z8Vtc=
+X-Google-Smtp-Source: APXvYqwxXk2PzleyRTn/K/X0J2R4hjXwJPsOdFeb2JC82vHwrWWqvEIxSy0BHBKvw3Hyc6+SOz/QlQ==
+X-Received: by 2002:a17:902:4545:: with SMTP id m63mr8808655pld.71.1551497101297;
+        Fri, 01 Mar 2019 19:25:01 -0800 (PST)
 Received: from [10.230.26.115] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id e21sm6381538edb.27.2019.03.01.19.19.56
+        by smtp.gmail.com with ESMTPSA id m67sm39594453pfj.70.2019.03.01.19.24.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 19:19:58 -0800 (PST)
-Subject: Re: [PATCH net-next 2/6] net: 8021q: vlan_dev: add vid tag to
- addresses of uc and mc lists
+        Fri, 01 Mar 2019 19:25:00 -0800 (PST)
+Subject: Re: [PATCH net-next 3/6] net: 8021q: vlan_dev: add vid tag for vlan
+ device own address
 To:     davem@davemloft.net, grygorii.strashko@ti.com,
         linux-omap@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, jiri@mellanox.com,
         ilias.apalodimas@linaro.org
 References: <20190226184556.16082-1-ivan.khoronzhuk@linaro.org>
- <20190226184556.16082-3-ivan.khoronzhuk@linaro.org>
- <72ecf925-f818-3d6b-4f96-b01daabd21f2@gmail.com>
- <20190301122417.GB4851@khorivan>
+ <20190226184556.16082-4-ivan.khoronzhuk@linaro.org>
+ <ec699573-87b3-76d2-6faa-3c23f32d7095@gmail.com>
+ <20190301122815.GC4851@khorivan>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
@@ -102,12 +102,12 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  qt0F5XTsP2zjd+tRLrFh3W4XEcLt1lhYmNmbJR/l6+vVbWAKDAtcbQ8SL2feqbPWV6VDyVKh
  ya/EEq0xtf84qEB+4/+IjCdOzDD3kDZJo+JBkDnU3LBXw4WCw3QhOXY+VnhOn2EcREN7qdAK
  w0j9Sw==
-Message-ID: <3b3dcc51-39d9-0f23-ab5a-6d0375593c79@gmail.com>
-Date:   Fri, 1 Mar 2019 19:19:50 -0800
+Message-ID: <b31925a9-4510-1e04-d2d9-714163fff296@gmail.com>
+Date:   Fri, 1 Mar 2019 19:24:57 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <20190301122417.GB4851@khorivan>
+In-Reply-To: <20190301122815.GC4851@khorivan>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -118,15 +118,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/1/2019 4:24 AM, Ivan Khoronzhuk wrote:
-> On Wed, Feb 27, 2019 at 08:09:44PM -0800, Florian Fainelli wrote:
+On 3/1/2019 4:28 AM, Ivan Khoronzhuk wrote:
+> On Wed, Feb 27, 2019 at 08:13:34PM -0800, Florian Fainelli wrote:
 >>
 >>
 >> On 2/26/2019 10:45 AM, Ivan Khoronzhuk wrote:
->>> Update vlan mc and uc addresses with VID tag while propagating
->>> addresses to lower devices, do this only if address is not synced.
->>> It allows at end driver level to distinguish addresses belonging
->>> to vlan devices.
+>>> The vlan device address is held separately from uc/mc lists and
+>>> handled differently. The vlan dev address is bound with real device
+>>> address only if it's inherited from init, in all other cases it's
+>>> separate address entry in uc list. With vid set, the address becomes
+>>> not inherited from real device after it's set manually as before, but
+>>> is part of uc list any way, with appropriate vid tag set. If vid_len
+>>> for real device is 0, the behaviour is the same as before this change,
+>>> so shouldn't be any impact on systems w/o individual virtual device
+>>> filtering (IVDF) enabled. This allows to control and sync vlan device
+>>> address and disable concrete vlan packet income when vlan interface is
+>>> down.
 >>>
 >>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 >>> ---
@@ -134,62 +141,31 @@ On 3/1/2019 4:24 AM, Ivan Khoronzhuk wrote:
 >> [snip]
 >>
 >>>
->>> +u16 vlan_dev_get_addr_vid(struct net_device *dev, const u8 *addr)
->>
->> Having some kernel doc comment here would also be nice.
-> 
-> yes can be: vlan_dev_get_addr_vid - get vlan id the address belongs to
-> 
-> 
->>
+>>> +static int vlan_dev_add_addr(struct net_device *dev, u8 *addr)
 >>> +{
->>> +    u16 vid = 0;
+>>> +    struct net_device *real_dev = vlan_dev_real_dev(dev);
+>>> +    unsigned char naddr[ETH_ALEN + NET_8021Q_VID_TSIZE];
 >>> +
->>> +    if (dev->vid_len != NET_8021Q_VID_TSIZE)
->>> +        return vid;
->>> +
->>> +    vid = addr[dev->addr_len];
->>> +    vid |= (addr[dev->addr_len + 1] & 0xf) << 8;
+>>> +    if (real_dev->vid_len) {
 >>
->> This uses knowledge of the maximum VLAN ID is 4095, which is fine, might
->> be a good idea to add a check on VID not exceeding the maximum VLAN ID
->> number instead of doing a silent truncation?
+>> Don't you need to check that real_dev->vid_len is >= NET_8021Q_VID_TSIZE
+>> here?
 > 
-> and then return -1, not sure, just because it's 0 or directly set by vlan
-> layer and is verified anyway. But no harm to verify even it looks like
-> redundancy.
+> vid_len for all eth devices or 0 or NET_8021Q_VID_TSIZE and used here
+> only as
+> a flag that different addressing scheme is used.
+> vlan_dev_set_addr_vid() do copy only < NET_8021Q_VID_TSIZE anyway.
+> 
+> Can add the following to be sure:
+> if (real_dev->vid_len) {
+>     if (real_dev->vid_len != NET_8021Q_VID_TSIZE)
+>         return -1;
+>     ....
+> }
+> 
+> But frankly, if this happens the system is ill and this check can't help
+> it.
 
-I would have thought that there would be an existing helper function to
-put/get a VLAN identifier into/from two bytes but that is fine as-is.
-
-> 
->>
->> [snip]
->>
->>> +static void vlan_dev_align_addr_vid(struct net_device *vlan_dev)
->>> +{
->>> +    struct net_device *real_dev = vlan_dev_real_dev(vlan_dev);
->>> +    struct netdev_hw_addr *ha;
->>> +
->>> +    if (!real_dev->vid_len)
->>> +        return;
->>
->> Should not this check be moved to dev_{mc,uc}_sync? It does not seem to
->> me like this would scale really well across different stacked devices
->> (VLAN, bond, macvlan) as well as underlying drivers (cpsw, dsa, etc.).
->> Or maybe the check should be if vlan_dev->vid_len > real_dev->vid_len ->
->> error, right?
-> 
-> It shouldn't be part of netdev addr module, no any
-> vlan_dev_vlan_id(vlan_dev)
-> should be there.
-> 
-> It's scaled becouse bond/team ...etc, are ethernet devices and have IVDF
-> enabled while configuration. Address propagation always is from leafs to
-> real root device, every underneeth device knows nothing about above, so
-> check is only in one direction.
-> 
-
-OK, indeed stacked devices would lead to that, thanks for explaining!
+Fair enough. All of your responses below make sense to me, thanks!
 -- 
 Florian
