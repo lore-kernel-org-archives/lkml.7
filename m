@@ -2,107 +2,96 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04490C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 10:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA13C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 10:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA30420838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 10:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBF920830
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 10:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="S6e3r1Ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbfCBKVS (ORCPT
+        id S1726360AbfCBK3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 05:21:18 -0500
-Received: from mga01.intel.com ([192.55.52.88]:44994 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725986AbfCBKVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 05:21:18 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2019 02:21:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,431,1544515200"; 
-   d="scan'208";a="147944535"
-Received: from chenyu-office.sh.intel.com ([10.239.158.163])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Mar 2019 02:21:16 -0800
-Date:   Sat, 2 Mar 2019 18:30:08 +0800
-From:   Yu Chen <yu.c.chen@intel.com>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [RFT][PATCH 0/2] cpufreq: intel_pstate: Handle _PPC updates on
- global turbo disable/enable
-Message-ID: <20190302103008.GA7086@chenyu-office.sh.intel.com>
-References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
- <fa5e3e09eb32f5197bef2a50ced952850bf70748.camel@linux.intel.com>
+        Sat, 2 Mar 2019 05:29:14 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38276 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfCBK3O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 05:29:14 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q81so245912oic.5;
+        Sat, 02 Mar 2019 02:29:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NFS8iN791dAHXkv5uIHJZIdjxpznm7Am3E/GPQELsSw=;
+        b=S6e3r1TaBOfYkoTrY7OmY6W7HIJLC8/6YAnMog+h6K6fgxI7qKOQnk09xcw0zNoBpa
+         eV535ci2yTLWRIiR4pXjRtJIicz7MlK2S7KoBsmB8R3VDYQ1Y7kWH+9Z1APu6TFEZIo2
+         P5wuZ4vvbsz2oRt2tTOjh4Tsuu8LAfLaQL8/ejQ8/0cPjn4RKTpj6yizFDTDbuhpjTxN
+         xoiH4ekIP/QQ5ThKFmKimVJVyvzILH9NtyfMfuhnulTM77UX/7r9ffB4j01HRdpAAfbo
+         9uYf25Q4ZjhKXUlh5PSNwM++s0uVfcOvJSXgHJcQdAC+t2e8UnvjcQUfzVQ1yAzGp+Pk
+         zSLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NFS8iN791dAHXkv5uIHJZIdjxpznm7Am3E/GPQELsSw=;
+        b=ro1AzxG5bV+/MABQXFyIrl1mvBIhCM9AUKFjkRjouTKEBHz6ICRGCtIvPRbr2rCxrT
+         r2n7BVb55maim3tsYEUwEsjuVXhVLp6jprQVTGDCjHHScOTJCGrS8YLWdoNjlImyE3kh
+         T6He+JXhOTTV9oiM1PR6LDTOiGi6RxmQsSRmSdJcFIK64TiyjYXRiWM/oqEkmgtAEyD2
+         ZtNBfOnrAG4J6QLPZR/f4J9JKxzv/hFgCqVjJ4HByVjf7xi82Xl+IeCQZUoaFDeunZ6F
+         WL9KnxqJAibdEJA/5Zrd11YPljRjTBHVbJjP9TBHM+gJWCJFI2X7oS9y1NcK4Y3b9Omn
+         S0rg==
+X-Gm-Message-State: AHQUAuYfVnYsxIrT+x+hm4QkLg+fWV/gt7jN1UoSaUjGUgg4H9PRAa83
+        M+rW6KT1+u3UaIlO9HVD3EDI7wRqB6CcfzU+nwxD6kE2
+X-Google-Smtp-Source: AHgI3IYZdpDzaozOuPlNBcZ437nMyI3Gzf3CWXvrhZ3Ikqn98FHIX6LoGznlvanc5HCWvIhza2NzlldVe71vCKUoih8=
+X-Received: by 2002:aca:aacb:: with SMTP id t194mr6283612oie.129.1551522553134;
+ Sat, 02 Mar 2019 02:29:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa5e3e09eb32f5197bef2a50ced952850bf70748.camel@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190212151413.24632-1-narmstrong@baylibre.com>
+ <20190212151413.24632-9-narmstrong@baylibre.com> <CAFBinCBoahGTbnii0Dhfj75YC8u2HjodAqFWwtD=K3xOZ-wGPw@mail.gmail.com>
+In-Reply-To: <CAFBinCBoahGTbnii0Dhfj75YC8u2HjodAqFWwtD=K3xOZ-wGPw@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Sat, 2 Mar 2019 11:29:01 +0100
+Message-ID: <CAFBinCDjFJS58+6yqxrsyHvhycsg2sC4tTtRj8O=GkcPJpR5Tg@mail.gmail.com>
+Subject: Re: [PATCH 8/8] usb: dwc3: Add Amlogic G12A DWC3 glue
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
+        kishon@ti.com, linux-amlogic@lists.infradead.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 09:39:27AM -0800, Srinivas Pandruvada wrote:
-> On Fri, 2019-03-01 at 13:43 +0100, Rafael J. Wysocki wrote:
-> > Hi All,
-> > 
-> > This is how I would fix the issue reported in BZ 200759 (see this
-> > patch series
-> > from Yu too: https://marc.info/?l=linux-pm&m=155137672924029&w=2).
-> > 
-> > Patch [1/2] causes intel_pstate to update all policies if it gets a
-> > _PPC change
-> > notification and sees a global turbo disable/enable change.
-> > 
-> > Patch [2/2] makes it update cpuinfo.max_freq for all policies in
-> > those cases.
-> > 
-> > The patches here have not been tested yet, so testing would be much
-> > appreciated.
-> > 
-> > Of course, comments are welcome too!
-> 
-> This is the only platform, someone reported such issue.
-> Can we solve this by some udev rules and offline/online cpu 1-3 on
-> power source change?
->
-Sound reasonable, we can deal with this BIOS problem in user space
-too. But if cpu0 could not be offline, how could cpu0's policy
-be updated?
+Hi Neil,
 
-Thanks,
-Yu
+> > +static int dwc3_meson_g12a_debugfs_init(struct dwc3_meson_g12a *priv)
+> > +{
+> > +       priv->root = debugfs_create_dir("dwc3-meson-g12a", NULL);
+> > +       if (IS_ERR(priv->root))
+> > +               return PTR_ERR(priv->root);
+> > +
+> > +       debugfs_create_file("mode_force", 0600, priv->root, priv,
+> > +                           &dwc3_meson_g12a_mode_force_fops);
+> > +
+> > +       debugfs_create_file("otg_id", 0400, priv->root, priv,
+> > +                           &dwc3_meson_g12a_otg_id_fops);
+> > +
+> > +       return 0;
+> > +}
+I just stumbled across the "USB role switch framework", see [0]
+it seems to provide a userspace API as well and two in-kernel drivers
+are using this framework already
+(drivers/usb/gadget/udc/renesas_usb3.c,
+drivers/usb/roles/intel-xhci-usb-role-switch.c)
 
-> There are examples of changing governors on power source change.
-> https://bbs.archlinux.org/viewtopic.php?id=207186
-> 
-> Here instead of changing governor just
-> echo 0 > /sys/devices/system/cpu/cpu1/online
-> echo 1 > /sys/devices/system/cpu/cpu1/online
-> echo 0 >
-> /sys/devices/system/cpu/cpu2/online
-> echo 1 >
-> /sys/devices/system/cpu/cpu2/online
-> echo 0 >
-> /sys/devices/system/cpu/cpu3/online
-> echo 1 >
-> /sys/devices/system/cpu/cpu3/online
-> 
-> Thanks,
-> Srinivas
-> 
-> > 
-> > Thanks,
-> > Rafael
-> > 
-> 
+
+[0] https://elixir.bootlin.com/linux/v5.0-rc8/source/drivers/usb/roles/class.c#L246
