@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64755C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 844F7C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2464F20838
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477BA20838
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 23:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="IXR83I4B"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="IXUH+ixR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfCBXgO (ORCPT
+        id S1727922AbfCBXgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 18:36:14 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:34704 "EHLO
+        Sat, 2 Mar 2019 18:36:20 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:35004 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfCBXgM (ORCPT
+        with ESMTP id S1726958AbfCBXgS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 18:36:12 -0500
+        Sat, 2 Mar 2019 18:36:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1551569769; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1551569775; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=JxzTaPJ+1m042fGj0D2uCEKzGbpGlEuVoq++EpXOWzk=;
-        b=IXR83I4BfcfKIkTCEaODuNaHgr5YmhV4OSWX1oCfboL4JedY+DxJLXzsnBA8Vb2mt/0R/k
-        u4BibBdmOYruNm86s89v1nHs3lgs5JJABoX1lAgBY733H8sNUCMqrVXBk2xalZv7npETBk
-        ShfVw3bPBgIQM1WVIDJwgrrwTUl5yyM=
+        bh=Z5TpvnRnK8R/swFcxrnsjK2/6tvP93DyiTrxCZmU0EA=;
+        b=IXUH+ixRm5hhXpgBv3WXJkiTGrfPwyVXyoQWIj+dBzqyLbK5LYjhtB9ElQGQVcMfGwok6j
+        0p3ra78+rFa0wc1185hIbr5ph2fuTppw6jCa3HTshBVE/e2EHiQgcTcEvD8ev+enH9mPzj
+        i3EkwfCHvn5VpzHShsNpKfhM1FjuQRs=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -45,9 +45,9 @@ Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
         linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v10 16/27] pwm: jz4740: Drop dependency on MACH_INGENIC, use COMPILE_TEST
-Date:   Sat,  2 Mar 2019 20:34:02 -0300
-Message-Id: <20190302233413.14813-17-paul@crapouillou.net>
+Subject: [PATCH v10 17/27] pwm: jz4740: Remove unused devicetree compatible strings
+Date:   Sat,  2 Mar 2019 20:34:03 -0300
+Message-Id: <20190302233413.14813-18-paul@crapouillou.net>
 In-Reply-To: <20190302233413.14813-1-paul@crapouillou.net>
 References: <20190302233413.14813-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,13 +55,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on MACH_INGENIC prevent us from creating a generic kernel that
-works on more than one MIPS board. Instead, we just depend on MIPS being
-set.
-
-On other architectures, this driver can still be built, thanks to
-COMPILE_TEST. This is used by automated tools to find bugs, for
-instance.
+Right now none of the Ingenic-based boards probe this driver from
+devicetree. This driver defined three compatible strings for the exact
+same behaviour. Before these strings are used, we can remove two of
+them.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Acked-by: Thierry Reding <thierry.reding@gmail.com>
@@ -82,22 +79,22 @@ Notes:
     
          v10: No change
 
- drivers/pwm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-jz4740.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4e201e970509..0c9b07cb77ff 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -203,7 +203,7 @@ config PWM_IMX
- 
- config PWM_JZ4740
- 	tristate "Ingenic JZ47xx PWM support"
--	depends on MACH_INGENIC
-+	depends on MIPS || COMPILE_TEST
- 	depends on COMMON_CLK
- 	select INGENIC_TIMER
- 	help
+diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+index c914589d547b..823d51c8e6fe 100644
+--- a/drivers/pwm/pwm-jz4740.c
++++ b/drivers/pwm/pwm-jz4740.c
+@@ -228,8 +228,6 @@ static int jz4740_pwm_remove(struct platform_device *pdev)
+ #ifdef CONFIG_OF
+ static const struct of_device_id jz4740_pwm_dt_ids[] = {
+ 	{ .compatible = "ingenic,jz4740-pwm", },
+-	{ .compatible = "ingenic,jz4770-pwm", },
+-	{ .compatible = "ingenic,jz4780-pwm", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, jz4740_pwm_dt_ids);
 -- 
 2.11.0
 
