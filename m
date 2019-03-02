@@ -2,167 +2,156 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 730C5C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0BAC4360F
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F302075B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:55:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6im72mt"
+	by mail.kernel.org (Postfix) with ESMTP id 91B372083E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfCBCzO (ORCPT
+        id S1727812AbfCBDEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 21:55:14 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:32829 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfCBCzN (ORCPT
+        Fri, 1 Mar 2019 22:04:16 -0500
+Received: from a2nlsmtp01-03.prod.iad2.secureserver.net ([198.71.225.37]:36022
+        "EHLO a2nlsmtp01-03.prod.iad2.secureserver.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726693AbfCBDEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 21:55:13 -0500
-Received: by mail-qt1-f195.google.com with SMTP id z39so30257884qtz.0;
-        Fri, 01 Mar 2019 18:55:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Km68r/9NC235UC4PibvhRC9HlVBg7ll49L+EeMzdqWE=;
-        b=k6im72mtSM08RhupXf1kwktMsa0rybuVEJoJd6kZEtOGEhvtuQArHfQBnAk1FfnMnF
-         ggYX4ON9pES8o3VakpWzVspuy9VS1n4L2jikS/gDdPY9t3HpHpyqwrvLGKCZJA8q3qCr
-         kBFGWsv1dyfQvxvEGgwV3Txu5qZIMg77XkHqR2l2x33ZXHH+WMGeLWqr5xoYrhEpwBx/
-         9l+UEH4oOdh3PJ9+BQ29851FPH8AnuX1eI0vyuHo6jmTyDkWtzAOOM0D7Fg/EwZDWfS2
-         o0kFYxkrBmPBOzxqoJ2wtyuOmTI+Fi9cpdxWt7ZdiRqxMqo6u/JrVHgL5H8vjG9GPe2h
-         KScg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=Km68r/9NC235UC4PibvhRC9HlVBg7ll49L+EeMzdqWE=;
-        b=obds9xcLLcwKCReMihEBr01+S/Awo2a+VrTHlcT9bPiZehPbxTONvDT0GdT7224qnF
-         S+bCFfm28wA3BY60NUytaqn5cH835CZfIZH2zODrnGoANn9eHDBANvfyl8wjcga9WUaW
-         0adZuvA/s5/G/hItEycZsepPAR4dV23hPuFrEQBbDYpMs041/klPY8yI0L70UJqFKCEB
-         XXaRdpeAcFZHmYW69XAW8kt48urR1kU5YJqjAimOP1a4I2h234MnNYAVJbT1oTreDDDi
-         3XlxXeFMNkGjrgFQcU3PonPj39foEdyELug9nt492pGGCvUCOsf3BwiYfIFwVbyNrxwy
-         IJ3A==
-X-Gm-Message-State: APjAAAXhyg2DR72Yx8iSpSXL+CFI78l8rE6ZawQ9uJQIEuY7Six9ktIf
-        t8CA5RgmNc6NfjfKH1iLuzrYth0BALs=
-X-Google-Smtp-Source: APXvYqwoXHox8ebvwf05EvBu5z5FjgawQLxmE54lnK7+MgVgzYcBsO+evrsOfUFzP4vXTcSBIzASDw==
-X-Received: by 2002:ac8:1b98:: with SMTP id z24mr6432692qtj.204.1551495312181;
-        Fri, 01 Mar 2019 18:55:12 -0800 (PST)
-Received: from [192.168.1.199] (pool-108-28-156-19.washdc.fios.verizon.net. [108.28.156.19])
-        by smtp.gmail.com with ESMTPSA id w1sm14123714qtc.75.2019.03.01.18.55.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 18:55:11 -0800 (PST)
-Subject: Re: Realtek r8822be kernel module does not negotiate 802.11ac
- connection
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Tony Chuang <yhchuang@realtek.com>
-Cc:     Pkshih <pkshih@realtek.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <51d62a31-7cde-e815-bdee-4ef5433007aa@gmail.com>
- <F7CD281DE3E379468C6D07993EA72F84D17AF74C@RTITMBSVM04.realtek.com.tw>
- <b0518665-d5ca-7c94-9808-7cc0cf565814@gmail.com>
- <e68c6aae-8d71-266a-81fe-d078ac1ef38c@lwfinger.net>
- <6eb7af74-b1a8-d112-e027-6c14252af994@gmail.com>
- <487c350c-c455-b490-8de5-1d68760aa3dc@lwfinger.net>
-From:   "David R. Bergstein" <david.r.bergstein@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david.r.bergstein@gmail.com; keydata=
- mQGNBFuOpRoBDADZ5R/eYIWhqqdgyJWcNf/wRM38UOQIH+ef+S1aeedsMciGiboMQiu7AZf2
- pbizMQVdDK1DOFymP1PCJ1mWI+Ck+VlxosWOOvPcbh+Iir4kFzV/9aEp2BEbePu/Mb2NB5Q4
- MZBanRcmtfro4ZIbHIrga/foV6I92WQzt4yqMFKhU46mlSyQkFDgyaQ6qUU7b2H0mNwS9AAH
- vhIavAfdeWNqqO5adzgXwblZnwzbH84Kr2eqGCOLKzCn3jMsg5VHHu8isc8ZG7Eac+G+gJEn
- HAp4nQ4U6oBX/gLR6lk3Tpb9RIdQICFElM89pQOI+yQvStjC6s9jA0673iSzbuqzuYgCCf89
- n4GWfaZBsNF0vm9dwJUroM/D2SJLYTB9Czqh336jm+KK3EyVD9APULwBAQKKOLwG9TreEsKp
- VNs2RBjb/mbJTPT7meQBa9O9EP94dIWWtVkaPaX+nZP0bR5JYzsoAG16jnzNgxcf/6V1Y3Wy
- 3+AU4sPiJY1PEBUtRIL8nAkAEQEAAbQwRGF2aWQgUi4gQmVyZ3N0ZWluIDxkYXZpZC5yLmJl
- cmdzdGVpbkBnbWFpbC5jb20+iQHOBBMBCgA4FiEEmajOzgQlh7dLtUxJC6xF9iYnYB8FAluO
- pRoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQC6xF9iYnYB9hiwv8C7fejEdiPk0i
- 8uQzoxr9XVkKLck5IOuP/jA4YFEiF0Y5NCcvhfMEDmgMUKhzkAP7EZI+tL3hrybilY/YncBc
- PKkG3sdYvB0Tv48EfINQjOKv4WT3CG5qvxaEj+niBhBZ4xlcajqmHFwBQ1jAFmJr1ZJUMEqw
- nSm+/rE1eq83kGanWPFfamJD+mFELebTg+Rss1dFAh4qMO9Wv8mzooGLvanxBL51N7QxiXR0
- FuL2Aaqr/+RMtLnlNHDNGIkvPzSk8wKeySMbnVpSfyzBeIM+VgCGghehGjHtU3QWxElrdCmM
- Rg6BI53/xZLPUr2GrcftLkUGxb5OcgqqDZQUBHhW0H5N/T+Crc1dUUFnwJ+k0dw7JypzGL89
- sMsoi4hj1BORSRJzfuuK69GllXyzEGdjjupii2MbmMEMKJEo6SZSJAz4p69g/lMa+XPjFMot
- lbwgWW2/iotkSn2AFG4v7c98PiWzVSSy3D0f0Oaq36E640Um+mOtPMLfcoumTIoR1xhcuQGN
- BFuOpRoBDADiIkSQ/Kp8iLyNvPLExUN+RkAzMiVY2sHAp+RW3h+uL58uxYoL/cQ+9dS1IqSe
- PuQpyhGT3JtTUl0gh9NWmt9xE8TQCWBibOJp5qXd21zdyWAGFfgJ1B3QU6DjZihl4Eukc8N2
- /kcvovU9CGWmF3bPlOdhOxUIQEdWqA+sZyLK6qrwP2BRIRh6idF5d7LEqwV/ZfWQJ3lmyvfa
- g/M5JYL2EusYhpCEOreCvI+lP9Je3/ue6uMf6jC+w6/PAUjDWgBIbxkOghSL7jrbAhSCMaFv
- YCYYpfNt4D6/skumDO3XtirFUHEI7s0/RrDMNhY0CVR6XkWop0S9bEhBRu30G8PC516KxgD0
- ijQnMheCJnQJypWVO6+n4K2oagZZClUTVGbhKWcCwRA/dsSUgyduQPgkOcJseF40RTBZ+jrO
- /7J9hU0dm0w664mBXNiM2dDbq9rbCiZX1DTxlAn3tbFE7GaXQM26Q6jBOi04urxGpwEhQT4I
- OF/0fJdwkmKt2JsY6JcAEQEAAYkBtgQYAQoAIBYhBJmozs4EJYe3S7VMSQusRfYmJ2AfBQJb
- jqUaAhsMAAoJEAusRfYmJ2Af9coL+gLUcCdFwkOIpU9CakfVeplCepp0EaHcPpfIzPMb2v2W
- IkCiYzsrCqytyblBSCVgRk7QO+KQ7p6NHUn4keaAxRam+6/4+yfLcgTB44A0xYO04LzRVEY5
- 8Vjek3/YJcvRPS4MCWTqbj/l0AEV7kVstkuyL8DdSnGYOZsk7JrwH/7EG5x3V1m6HOUj6aNX
- 45o9J3dSUJI4ymKlB4PGVWf7gBf9whbECAEptcBHef1j9KrAfetL6QI2iOU00rqWME7CIkmb
- NnCSZuyqLcdl5AWCII7J0vc20qeon8Mps3jEPZcC8jIGBIkLgcbb0EmtqXtE9d+Quo+/5igR
- tDnFcUya7QZqP+edCK1BI3rvfZT07nMTOI88Ddd9Ha76ndUOjW4lrIwqq08N6pI4/EHaqrkA
- 6BD6T0TrECEVfeFzudib/2M2KQo04fitQWH7fK8eGo8XmcgtnMH3tKcBwBBs3Zg0XjhSXr8K
- cZPytJop3jxjNbB2ZRfwBXX3FsGBkJ4S2SKQyQ==
-Message-ID: <2e39892d-d206-e87f-c802-d427c54277cf@gmail.com>
-Date:   Fri, 1 Mar 2019 21:55:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Fri, 1 Mar 2019 22:04:16 -0500
+X-Greylist: delayed 676 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 Mar 2019 22:04:15 EST
+Received: from linuxonhyperv2.linuxonhyperv.com ([107.180.71.197])
+        by : HOSTING RELAY : with ESMTP
+        id zukng12mfvhwrzukngTnjM; Fri, 01 Mar 2019 19:51:58 -0700
+x-originating-ip: 107.180.71.197
+Received: from longli by linuxonhyperv2.linuxonhyperv.com with local (Exim 4.91)
+        (envelope-from <longli@linuxonhyperv2.linuxonhyperv.com>)
+        id 1gzukn-0000m1-HO; Fri, 01 Mar 2019 19:51:57 -0700
+From:   Long Li <longli@linuxonhyperv.com>
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [PATCH 1/2] CIFS: Fix a bug with re-sending wdata when transport returning -EAGAIN
+Date:   Sat,  2 Mar 2019 02:51:45 +0000
+Message-Id: <20190302025146.2935-1-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <487c350c-c455-b490-8de5-1d68760aa3dc@lwfinger.net>
-Content-Type: text/plain; charset=utf-8
+Reply-To: longli@microsoft.com
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-CMAE-Envelope: MS4wfJX5FjUbmpArmWgxJ8znoJonI53gLp/UBGxpnyKmwW9kPMWQN0MqVAh4vrNWSZPvtL5F+TIAIAUqNrBeaOzaasJ2XkRnkmMckouZZ7+BxW3NV677CB5o
+ 2tzMBS0myN+Dd2zVDIxAXJPzT/IDAz+DztB/QmqjNxnk48FHLN+aMm8cGmHsxDdDBv2F6otlnyipv3HaSdMeazNz88pmBg/Z6dnL5pWyKZBuM8wUVHLM01RO
+ sZTnbyRYckZVmI2Nxr6AlA8xhY/JmlZdA9U5aEJE2mHQiOYqmVZ5xGR1J4vrW9BQXtomnkA1QPGoJds8FQl7ZrFVr+wHmPrcPqD43lgXgqSswTYLXTDqXP5q
+ JnX7MFZAP1kSfXAVtE+DVRop90L/K32bj9h0+wvNwuKoGVnRlwcUM1ANoXzFn9kQgbMNKWXY
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Larry,
+From: Long Li <longli@microsoft.com>
 
-Following up to your last reply, I blacklisted the r8822be module,
-rebooted and was unable to bring up the wireless interface via rtw88. 
-Below are some errors recorded in my system log:
+When sending a wdata, transport may return -EAGAIN. In this case
+we should re-obtain credits because the session may have been
+reconnected.
 
- 
-[  267.509818] rtw_pci 0000:3d:00.0: Direct firmware load for
-rtw88/rtw8822b_fw.bin failed with error -2
-[  267.509821] rtw_pci 0000:3d:00.0: failed to request firmware
-[  267.511068] rtw_pci 0000:3d:00.0: mac power on failed
-[  267.511072] rtw_pci 0000:3d:00.0: failed to power on mac
-[  267.511073] rtw_pci 0000:3d:00.0: failed to setup chip efuse info
-[  267.511075] rtw_pci 0000:3d:00.0: failed to setup chip information
-[  267.512817] rtw_pci: probe of 0000:3d:00.0 failed with error -114
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ fs/cifs/file.c | 61 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 31 insertions(+), 30 deletions(-)
 
-As directed, I used the rtwpci module to perform load/unload the rtw88
-module before I saw the errors above.  Do I still need to install firmware?
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 9b53f33137b3..08e73759d6ec 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -2620,43 +2620,44 @@ cifs_resend_wdata(struct cifs_writedata *wdata, struct list_head *wdata_list,
+ 	struct TCP_Server_Info *server =
+ 		tlink_tcon(wdata->cfile->tlink)->ses->server;
+ 
+-	/*
+-	 * Wait for credits to resend this wdata.
+-	 * Note: we are attempting to resend the whole wdata not in segments
+-	 */
+ 	do {
+-		rc = server->ops->wait_mtu_credits(server, wdata->bytes, &wsize,
+-						   &credits);
+-
+-		if (rc)
+-			goto out;
+-
+-		if (wsize < wdata->bytes) {
+-			add_credits_and_wake_if(server, &credits, 0);
+-			msleep(1000);
+-		}
+-	} while (wsize < wdata->bytes);
++		/*
++		 * Wait for credits to resend this wdata.
++		 * Note: we are attempting to resend the whole wdata not in
++		 * segments
++		 */
++		do {
++			rc = server->ops->wait_mtu_credits(server, wdata->bytes,
++						&wsize, &credits);
++			if (rc)
++				goto fail;
++
++			if (wsize < wdata->bytes) {
++				add_credits_and_wake_if(server, &credits, 0);
++				msleep(1000);
++			}
++		} while (wsize < wdata->bytes);
+ 
+-	wdata->credits = credits;
+-	rc = -EAGAIN;
+-	while (rc == -EAGAIN) {
++		wdata->credits = credits;
+ 		rc = 0;
+ 		if (wdata->cfile->invalidHandle)
+ 			rc = cifs_reopen_file(wdata->cfile, false);
+ 		if (!rc)
+ 			rc = server->ops->async_writev(wdata,
+-					cifs_uncached_writedata_release);
+-	}
++				cifs_uncached_writedata_release);
+ 
+-	if (!rc) {
+-		list_add_tail(&wdata->list, wdata_list);
+-		return 0;
+-	}
++		/* If the write was successfully sent, we are done */
++		if (!rc) {
++			list_add_tail(&wdata->list, wdata_list);
++			return 0;
++		}
+ 
+-	add_credits_and_wake_if(server, &wdata->credits, 0);
+-out:
+-	kref_put(&wdata->refcount, cifs_uncached_writedata_release);
++		/* Roll back credits and retry if needed */
++		add_credits_and_wake_if(server, &wdata->credits, 0);
++	} while (rc == -EAGAIN);
+ 
++fail:
++	kref_put(&wdata->refcount, cifs_uncached_writedata_release);
+ 	return rc;
+ }
+ 
+@@ -2884,12 +2885,12 @@ static void collect_uncached_write_data(struct cifs_aio_ctx *ctx)
+ 						wdata->bytes, &tmp_from,
+ 						ctx->cfile, cifs_sb, &tmp_list,
+ 						ctx);
++
++					kref_put(&wdata->refcount,
++						cifs_uncached_writedata_release);
+ 				}
+ 
+ 				list_splice(&tmp_list, &ctx->list);
+-
+-				kref_put(&wdata->refcount,
+-					 cifs_uncached_writedata_release);
+ 				goto restart_loop;
+ 			}
+ 		}
+-- 
+2.17.1
 
-Sincerely,
-
-David R. Bergstein
-
-On 3/1/19 8:46 PM, Larry Finger wrote:
-> On 3/1/19 4:26 PM, David R. Bergstein wrote:
->> Larry,
->>
->> Thanks for the response and detailed instructions, which allowed me to
->> build and install the rtw88 kernel module.  I cannot however seem to get
->> my system to actually use the module.  Just to recap this is an HP Omen
->> laptop with secure boot disabled.  Upon boot-up both the new rtw88 and
->> old r8822be modules are loaded.  If I unload the r8822be module the wifi
->> network connection gets terminated, even if I unload/reload the rtw88
->> module.
->>
->> Is there something else I should be doing prior to invoking rtw88, e.g.,
->> blacklisting the old module?
->
-> Yes, r8822be must be blacklisted. Use the lsmod command to see what
-> modules are actually loaded. You load/unload rtw88 using the rtwpci
-> module.
->
-> Larry
->
