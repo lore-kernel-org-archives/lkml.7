@@ -2,74 +2,71 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97801C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861D2C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B142083E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D12A20823
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I7WRr809"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tTEFEJNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfCBDJH (ORCPT
+        id S1727838AbfCBDO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 22:09:07 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42733 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbfCBDJH (ORCPT
+        Fri, 1 Mar 2019 22:14:27 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44875 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727526AbfCBDO0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 22:09:07 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b2so12335755pgl.9;
-        Fri, 01 Mar 2019 19:09:06 -0800 (PST)
+        Fri, 1 Mar 2019 22:14:26 -0500
+Received: by mail-pf1-f194.google.com with SMTP id a3so12293765pff.11;
+        Fri, 01 Mar 2019 19:14:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=j5tUV8mrPKSwkaY2MybIkKGmYwEW+MDIsinu3Bwb2Ac=;
-        b=I7WRr809XeLdDgiYJ57ERs9VjGqBVG3KjhevEqf34enoNRQDAm07ulrEZnL7SDLCYe
-         QE02iNXyOD9xcIOwk7m9/O/HRfSzqUAay6dWKpAjJ54uce97Oy8yE3xLDFdZ9Bwpm+Lv
-         1gcoegwQMfx/pTC9woBKYuZtoSgdbBfDBXpctfth4bHMQ09LGDAppSxiw0iKKHakdpQv
-         Ecw4SZETqJdSHxLNS6HO3BMYD1zfUe5tFxt5wiuy+s34uQZqENsN2upTWHB88UhJuZMV
-         lzdgn2/Krfrf2o4Um3h7r0WbsjDwASKwGL9coVok/xSw/oHRsI9Tc5eGgZEvFFwzMRve
-         5rHQ==
+        bh=yQDSDvv+8YNV0MRBXqf5FonE7iohMnXJXimqZ/DxZQs=;
+        b=tTEFEJNawjchMk6h6v6mVa0nFmxcmL8clY3mjxkm2+4KE+e8RLb+1BGas1pN/fX7hO
+         KORSbuJvpjbOAz962rQ0cM3JsXKSlB3QQtPuKyaiSpIxpGVIhalqoBVfpmDVL1+k+HNs
+         IKv6GbaUIViTEuEXk/yQmxUrHgegPUdFrBaHHdjjEeySBLyVb8HwpUBPI3he/mHKCTFw
+         wzIHSVFHSIyFTWeBew6i65EJsI6/VVfaJpjhGXmn8O6rqXvsBsG4gkFqVI/C49rLhGC1
+         LWuA5bw32BqT99ptZguApMQDJ8VtVxpglI6AoRAfhIF95lOF2I9jGf+2vehZOZuN8VbR
+         ST7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=j5tUV8mrPKSwkaY2MybIkKGmYwEW+MDIsinu3Bwb2Ac=;
-        b=A96dBp6xog1CNUe8iuWkZlB0teRpDn2+uo2F2BfydTzJq5HbqpF4vJ5+Hfef3TEuc9
-         llNzOEYo4ra46brIlBgcSQWhlwWTqQaJbHG3URKe4volawedu7RYfjhqhqrHeEwtLvXH
-         sNAvLOOdPNvYczLEGXqYfmsO0Mefj6Tkti9iW6e6erXtJHJUP0lPBLEIH3YV/Rgxd5gx
-         H/EQpqutjXiMmXQc5o1GOGCEHZ8XLX3r5RnEhhiQiyXbOtuUt6yZHSNXVFjc4BPebp66
-         EEfJUePnCMDxFv3Fw4PO1DSHDbV6dluhWZBSiXonIsYu0vFEnCpwdUQzLREmW9LL4vQj
-         ENDg==
-X-Gm-Message-State: APjAAAUxbXKJ5L9WzHLgaav/dtmK2ZoDwNTFTsp7Xht6fSBk3eyunCc6
-        c2CM82spabb7rek1hpuvhXlYH0sG
-X-Google-Smtp-Source: APXvYqw0IPqZv4dNsYyYsiMfg619jq6qVyAi5qsU6+J6lo5GFLCstL51Rl92tv17mZWyhsW7eXKGjA==
-X-Received: by 2002:a63:e844:: with SMTP id a4mr7593281pgk.231.1551496145856;
-        Fri, 01 Mar 2019 19:09:05 -0800 (PST)
+        bh=yQDSDvv+8YNV0MRBXqf5FonE7iohMnXJXimqZ/DxZQs=;
+        b=Z6Nb5rdBCkTjT3ar4wlRiy3M9Ur1ZIaJetBfs3gbMCC9CSjmximfD4xepDKs6tRb4/
+         VlgVQEg5jtcybtrYwWgobxcuw9UIafEY9m3vm+wEzQDUhia6md5dTZOTXmeRD1UJWY/s
+         cf2hPfPlt/iBPHp1Diu+aZsKKzHcLYjHjZFRLi8yKWr7UvOwEtB33/uuIy4UX+VkRMwA
+         k6ujWENkBSPr9qtgJRXAC0sC4atCPZGveqTerXEBKco2N8fxrx6J/+Z3drPjfjjQxKGB
+         vgJFidE7oJb/cFSCORSDntj9uU8ieNm1nOMPc6Pfhuf9xMokKkwDNstc+LOrskaq8Xeo
+         Jjbg==
+X-Gm-Message-State: APjAAAVZy19L3EpUlVb/OV6ABNxq2vGJwfyXwIyc6ozQVR/9+vxuikTj
+        t5jm16AJGmWQp0+UaWwOB6s=
+X-Google-Smtp-Source: APXvYqyPQeZH+LZZ8YpN5PUvxVgTJIRnOU+neEBfG/0QV4zcCPUzHi94+2KdoJiwTxFz/qWLxeLUEQ==
+X-Received: by 2002:a65:4244:: with SMTP id d4mr8226163pgq.419.1551496465354;
+        Fri, 01 Mar 2019 19:14:25 -0800 (PST)
 Received: from [10.230.26.115] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id p6sm43646495pgd.69.2019.03.01.19.08.58
+        by smtp.gmail.com with ESMTPSA id j24sm40671298pgl.58.2019.03.01.19.14.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 Mar 2019 19:09:04 -0800 (PST)
-Subject: Re: [PATCH net-next v2 3/3] net: phy: marvell10g: set the PHY in low
- power by default
-To:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     davem@davemloft.net, linux@armlinux.org.uk, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
-        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
-        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com
-References: <20190301110047.20257-1-antoine.tenart@bootlin.com>
- <20190301110047.20257-4-antoine.tenart@bootlin.com>
- <20190301141953.GF19813@lunn.ch> <20190301150706.GD3554@kwain>
+        Fri, 01 Mar 2019 19:14:24 -0800 (PST)
+Subject: Re: [PATCH net 1/2] net: phy: Use C45 Helpers in phy_read_status()
+To:     Jose Abreu <jose.abreu@synopsys.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Joao Pinto <joao.pinto@synopsys.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <cover.1551437561.git.joabreu@synopsys.com>
+ <27b3e9f2318c87aac928165b8dfe7d98e272f3d1.1551437561.git.joabreu@synopsys.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
@@ -104,15 +101,15 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  qt0F5XTsP2zjd+tRLrFh3W4XEcLt1lhYmNmbJR/l6+vVbWAKDAtcbQ8SL2feqbPWV6VDyVKh
  ya/EEq0xtf84qEB+4/+IjCdOzDD3kDZJo+JBkDnU3LBXw4WCw3QhOXY+VnhOn2EcREN7qdAK
  w0j9Sw==
-Message-ID: <d17bdf0c-f1b8-99e3-b199-a99a7f7347d3@gmail.com>
-Date:   Fri, 1 Mar 2019 19:08:56 -0800
+Message-ID: <237f5214-c49e-53f9-65f0-479951f62d4a@gmail.com>
+Date:   Fri, 1 Mar 2019 19:14:20 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <20190301150706.GD3554@kwain>
+In-Reply-To: <27b3e9f2318c87aac928165b8dfe7d98e272f3d1.1551437561.git.joabreu@synopsys.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -120,59 +117,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/1/2019 7:07 AM, Antoine Tenart wrote:
-> Hi Andrew,
+On 3/1/2019 2:54 AM, Jose Abreu wrote:
+> Currently phy_read_status() considers that either the PHY driver has the
+> read_status() callback or uses the generic callback.
 > 
-> On Fri, Mar 01, 2019 at 03:19:53PM +0100, Andrew Lunn wrote:
->> On Fri, Mar 01, 2019 at 12:00:47PM +0100, Antoine Tenart wrote:
->>> When the Marvell 10G PHYs are set out of reset, the LPOWER bit is set
->>> depending on an hardware configuration choice. We also do not know what
->>> is the PHY state at boot time. Hence, set the PHY in low power by
->>> default when this driver probes.
->>
->> Florian did some work for c22 PHYs so that the existing link state
->> could be used at boot. So for example, the bootloader configured the
->> PHY up and it got link, there is no need to down/up the PHY when linux
->> takes control. The networking comes up faster that way.
->>
->> Can this work for this PHY?
-> 
-> This use case (the bootloader configures the PHY, Linux boots and sets
-> an interface using this PHY up) would work, and is what's happening in
-> some situations right now (the 3310 reset is never asserted prior to
-> this series).
-> 
-> But consider this case (let's say we use a 10G link):
-> 
->   ----------------               ----------------
->   |    Board 1   |               |    Board 2   |
->   | MAC — 3310 — | — SFP cable — | — 3310 — MAC |
->   ----------------               ----------------
-> 
-> Board 1: The userspace do not set the interface up. The MAC is in reset
->          (default state during the MAC driver probe), the PHY was
-> 	 configured by the bootloader.
-> Board 2: The userspace set the interface up. The MAC is configured, the
->          PHY is configured as well.
-> 
-> The two PHY's PCS will establish a link and report it as being up. In
-> this case, phylink's AN mode is MLO_AN_PHY and thus will report the
-> overall link as being the PHY's link status: up.
-> 
-> My understanding is that the issue arises because the PHYs were never
-> set in reset, or low power, and thus act as if the user wanted the port
-> to be up. As the default behaviour for networking ports is to be down at
-> boot, I thought to set the PHY as well in a default low power state.
+> For C45 PHYs we need to use the gen10g_read_status() callback.
 
-The policy you are creating here for the marvell10g driver is entirely
-applicable to any PHY <=> PHY configuration where either of the two
-software agents on Board 1 or Board 2 has not had a chance to bring-up
-its bootloader/OS/applications to control the PHY.
+Right, so we could expect your C45 PHY driver to assign the read_status
+callback to gen10g_read_status() if it is appropriate. So far most of
+the 10g PHY drivers (cortina, marvell10g, aquantia) have to define their
+own read_status() callback to be feature complete. Unlike C22 PHYs that
+can really be driven with a simple generic PHY driver model for standard
+features, C45 PHYs seem to be quirky enough this does not work anymore.
 
-A number of PHYs come up fully on (or in isolate or super isolate mode)
-and will AN with their link partner if connected. For some people it's a
-feature, for some it is a waste of power. I don't necessarily have an
-issue with your patch per-se, but it does create an one off behavior
-that other PHY drivers may not follow.
+> 
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Joao Pinto <joao.pinto@synopsys.com>
+> ---
+>  include/linux/phy.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 333b56d8f746..872899136fdc 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -1030,6 +1030,8 @@ static inline int phy_read_status(struct phy_device *phydev)
+>  
+>  	if (phydev->drv->read_status)
+>  		return phydev->drv->read_status(phydev);
+> +	else if (phydev->is_c45)
+> +		return gen10g_read_status(phydev);
+>  	else
+>  		return genphy_read_status(phydev);
+>  }
+> 
+
 -- 
 Florian
