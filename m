@@ -2,215 +2,78 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5734C43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50712C10F03
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECF320823
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:39:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="fevPHetG"
+	by mail.kernel.org (Postfix) with ESMTP id 208CA2075B
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 02:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfCBCjo (ORCPT
+        id S1727754AbfCBCmQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 21:39:44 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43818 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfCBCjn (ORCPT
+        Fri, 1 Mar 2019 21:42:16 -0500
+Received: from orcrist.hmeau.com ([104.223.48.154]:45194 "EHLO
+        deadmen.hmeau.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfCBCmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 21:39:43 -0500
-Received: by mail-qk1-f195.google.com with SMTP id f196so15529176qke.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 18:39:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5Temr26glEFV5oBvptkrenNBwbSVXvaTPHPZBdA7hho=;
-        b=fevPHetGuRxApcOMs7+xRchWUctf+oj1jQqEq46J109zotdV7Y2+0pdX4q79SgjvX5
-         UVzx1FJ/2GGQCg4V9qIjmPNHu8BA5s6eZJtubMrLUEIeyc/al1fnL48cn4TibRFZT0ym
-         bNUWQQUM1tpWtBk2SDHB1B8LQPEAHQm/OHd+Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5Temr26glEFV5oBvptkrenNBwbSVXvaTPHPZBdA7hho=;
-        b=LrVE6N4cgAo06yrwKyK7T3GjIXXcRaUpMTunFNlvlc7q6fiWPEZbSjUGT8eFwdxW60
-         PUApnue72FcwjiUdWH9e7mL1uPoPXYvDH0hw++Eh56FPy8Tuy2d4Qt0D7ud5PbDeUX+E
-         ernBrpkS0vSR251HsoYbo0IwQvEn2lOqZRMGsvYxGMpAxYevW0Tizi52tm8bNyb1wTxQ
-         62CE7aon0ZcDbxUuoJ4XDLZKxCFuAZ6Lc4rrANTUDZkmdw72WUuhnyNImqDfHdglKyi0
-         uzPzrw+hnfLIJD4MvAzQvORLt1KLtMpj2VOyLeNK0q1ljgaSxF/zenT1syXk4NijFKuo
-         2aew==
-X-Gm-Message-State: APjAAAX2sUsgjxzfP4MaBzLxQ9kcCNZMzq44R6calBqjIG6lkwxI7iHC
-        Lny2bZve+s0JqWEEJtzVeYPo/g==
-X-Google-Smtp-Source: APXvYqws/TPWsG/bS5u7wD2HdripLz6HAVECeBO8vtpK9O2+uSxGPz857GonmrvABkuB4UebSYCU1w==
-X-Received: by 2002:a37:f506:: with SMTP id l6mr6466129qkk.110.1551494382200;
-        Fri, 01 Mar 2019 18:39:42 -0800 (PST)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id h10sm24209069qta.3.2019.03.01.18.39.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 Mar 2019 18:39:41 -0800 (PST)
-Date:   Fri, 1 Mar 2019 21:39:40 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190302023940.GA55262@google.com>
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
- <20190228144306.GA138215@google.com>
- <CAK7LNARTHJP=HzyBg_oBBL4whpxHXeijqk=zKLYpt=1GBLNGAA@mail.gmail.com>
- <20190301171954.GA217990@google.com>
- <CAK7LNAShVt=zOPP1TUuBbR_H8kmc+zuLAyRXucjMMKrALkW_6A@mail.gmail.com>
+        Fri, 1 Mar 2019 21:42:15 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1gzubL-0006Zn-7N; Sat, 02 Mar 2019 10:42:11 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1gzubH-00055K-Ev; Sat, 02 Mar 2019 10:42:07 +0800
+Date:   Sat, 2 Mar 2019 10:42:07 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT] Crypto Fixes for 5.0
+Message-ID: <20190302024207.ue7zl6zvnidjy6it@gondor.apana.org.au>
+References: <20180212031702.GA26153@gondor.apana.org.au>
+ <20180428080517.haxgpvqrwgotakyo@gondor.apana.org.au>
+ <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
+ <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
+ <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
+ <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
+ <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
+ <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
+ <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
+ <20190228055618.ix3iqmcuwlok5zjo@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAShVt=zOPP1TUuBbR_H8kmc+zuLAyRXucjMMKrALkW_6A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190228055618.ix3iqmcuwlok5zjo@gondor.apana.org.au>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 02, 2019 at 11:13:07AM +0900, Masahiro Yamada wrote:
-> On Sat, Mar 2, 2019 at 3:03 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Fri, Mar 01, 2019 at 03:25:05PM +0900, Masahiro Yamada wrote:
-> > [...]
-> > > > > I am guessing the user will run these commands
-> > > > > on the target system.
-> > > > > In other words, external modules are native-compiled.
-> > > > > So,
-> > > > >
-> > > > >   target-arch: arm64
-> > > > >   host-arch:   arm64
-> > > > >
-> > > > >
-> > > > > Is this correct?
-> > > > >
-> > > > >
-> > > > > If I understood the assumed use-case correctly,
-> > > > > kheaders.tar.xw will contain host-programs compiled for x86,
-> > > > > which will not work on the target system.
-> > > > >
-> > > >
-> > > > You are right, the above commands in the commit message work only if the
-> > > > host/target are same arch due to scripts.
-> > > >
-> > > > However we can build with arm64 device connected to a host, like this (which
-> > > > I tested):
-> > > >
-> > > > adb shell modprobe kheaders; adb pull /proc/kheaders.tar.xz
-> > > > rm -rf $HOME/headers; mkdir -p $HOME/headers
-> > > > tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
-> > > > cd my-kernel-module
-> > > > make -C $HOME/headers M=$(pwd) ARCH=arm64 CROSS_COMPILE=aarch64- modules
-> > > > adb push test.ko /data/; adb shell rmmod kheaders
-> > > >
-> > > > The other way we can make this work is using x86 usermode emulation inside a
-> > > > chroot on the Android device which will make the earlier commands work. One
-> > > > thing to note is that Android also runs on x86 hardware so the commands in
-> > > > the commit message will work even for x86 Android targets already.
-> > > >
-> > > > Also note that this the "module building" part is really only one of the
-> > > > usecases. eBPF is another which needs the headers - and the headers are vast
-> > > > majority of the archive. Headers take 3.1MB out of 3.6MB of the archive on
-> > > > arm64 builds.
-> > > >
-> > > > How do you want to proceed here, should I mention these points in the commit
-> > > > message?
-> > >
-> > >
-> > >
-> > > I do not request a re-spin just for a matter of commit log,
-> > > but this version produces an empty tarball.
-> > > So, you will have a chance to update the patch anyway.
-> > >
-> > > In the next version, it would be nice to note that
-> > > "external modules must be built on the same host arch
-> > > as built vmlinux".
-> >
-> > Ok, I respun it with 1 more minor nit for arm64 building. Please take a look.
-> 
-> 
-> I have not checked code-diff in v3 yet.
-> 
-> Anyway, I will add comments to v4
-> if I notice something.
+Hi Linus: 
 
-Ok. Since all your comments from previous series were addressed, it would be
-nice to get your Acked-by tag for v4 unless you have further comments or
-concerns.
+This push fixes a couple of issues in arm64/chacha that was
+introduced in 5.0.
 
-> > > Let me ask one more question.
-> > >
-> > > I guess this patch is motivated by
-> > > how difficult to convey kernel headers
-> > > from vendors to users.
-> > >
-> > > In that situation, how will the user find
-> > > the right compiler to use for building external modules?
-> > >
-> > >
-> > >
-> > >
-> > > Greg KH said:
-> > >
-> > > We don't ever support the system of loading a module built with anything
-> > > other than the _exact_ same compiler than the kernel was.
-> > >
-> > >
-> > > For the full context, see this:
-> > > https://lore.kernel.org/patchwork/patch/836247/#1031547
-> >
-> > IMO this issue is not related to this patch but is just an issue with
-> > building external modules in general.
-> 
-> 
-> I do not think it is an issue of the build system, at least.
-> 
-> As far as I understood Greg's comment, it is troublesome
-> without the assumption that vmlinux and modules are built
-> by the same compiler.
-> It is related to this patch since this patch assumes use-cases
-> where external modules are built in a completely different environment,
-> where a different compiler is probably installed.
 
-Yes, but what I'm trying to say is the same issue exists with all other
-solutions today that do this. Such as debian you have linux-headers package.
-A user could totally use the build artifacts obtained from somewhere to build
-a kernel module with a completely different compiler. That issue has just to
-do with the reality, and isn't an issue caused by any one solution such as
-this one.  I agree care must be taken whenever user is building external
-kernel modules independent of kernel sources.  Did I miss something else?
+Please pull from
 
-thanks a lot,
+git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
- - Joel
 
+Eric Biggers (2):
+      crypto: arm64/chacha - fix chacha_4block_xor_neon() for big endian
+      crypto: arm64/chacha - fix hchacha_block_neon() for big endian
+
+ arch/arm64/crypto/chacha-neon-core.S | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
