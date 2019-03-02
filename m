@@ -3,139 +3,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC0BC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D13C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F8B2083E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8A812083E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 03:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfCBDET (ORCPT
+        id S1727782AbfCBDHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 Mar 2019 22:04:19 -0500
-Received: from a2nlsmtp01-05.prod.iad2.secureserver.net ([198.71.225.49]:45624
-        "EHLO a2nlsmtp01-05.prod.iad2.secureserver.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726693AbfCBDET (ORCPT
+        Fri, 1 Mar 2019 22:07:36 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35274 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726696AbfCBDHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 Mar 2019 22:04:19 -0500
-Received: from linuxonhyperv2.linuxonhyperv.com ([107.180.71.197])
-        by : HOSTING RELAY : with ESMTP
-        id zukrgx7wsvHD3zukrgCi7x; Fri, 01 Mar 2019 19:52:01 -0700
-x-originating-ip: 107.180.71.197
-Received: from longli by linuxonhyperv2.linuxonhyperv.com with local (Exim 4.91)
-        (envelope-from <longli@linuxonhyperv2.linuxonhyperv.com>)
-        id 1gzukr-0000m7-77; Fri, 01 Mar 2019 19:52:01 -0700
-From:   Long Li <longli@linuxonhyperv.com>
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH 2/2] CIFS: Fix a bug with re-sending rdata when transport returning -EAGAIN
-Date:   Sat,  2 Mar 2019 02:51:46 +0000
-Message-Id: <20190302025146.2935-2-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190302025146.2935-1-longli@linuxonhyperv.com>
-References: <20190302025146.2935-1-longli@linuxonhyperv.com>
+        Fri, 1 Mar 2019 22:07:35 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x222xAR3007031
+        for <linux-kernel@vger.kernel.org>; Fri, 1 Mar 2019 22:07:35 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2qydkx8cpq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 01 Mar 2019 22:07:35 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Sat, 2 Mar 2019 03:07:32 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 2 Mar 2019 03:07:30 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2237ToR27590888
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 2 Mar 2019 03:07:29 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 010DB52050;
+        Sat,  2 Mar 2019 03:07:29 +0000 (GMT)
+Received: from [9.199.40.144] (unknown [9.199.40.144])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id DD4AE5204F;
+        Sat,  2 Mar 2019 03:07:26 +0000 (GMT)
+Subject: Re: [PATCH] perf c2c: Fix c2c report for empty numa node
+To:     Jiri Olsa <jolsa@redhat.com>, acme@kernel.org
+Cc:     alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        eranian@google.com, linux-kernel@vger.kernel.org, tonyj@suse.com,
+        nasastry@in.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20190228153719.23411-1-ravi.bangoria@linux.ibm.com>
+ <20190228161231.GB8674@krava> <20190228162208.GC8674@krava>
+ <9ee9ca23-bb29-2038-5fe3-d52bcf4cd049@linux.ibm.com>
+ <20190301102644.GC2979@krava>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Sat, 2 Mar 2019 08:37:25 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Reply-To: longli@microsoft.com
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfHVMZ3YZdpaQQHlyI15jJkM14XlHjpQ2z4a/I0Cm5O+W3FVh39b/6Upqj9K4R/9Al2mKNZKPovFAnoIKB09kuUPEzx3YmD0ouGFezZUDU98gpPM8unsT
- 16Q71DqEq76upCWywgYPqvK9IrEV9eMtMkstIiERnDaLdt7ttt8unfhHot+jDYXTmNQZj/UDjG0dS8/TRCRWgUYqIQO02hB4Ln2h2nA9jrZGCPBqNkl3JLzY
- Vol31ubhDcLgk28qUooLZEHHp+kUOr6ICjcss7LbyZI13YMF5hUwaJSsjJymDJX8ONl/IxkwE8GbxKrqyNHehvANhw5bD1/XacqoNp3hQ+Lyd4myt3Nl23JM
- FHl1wCUMbYodxI5O3RpMmHOIlGDGhlelqK8D6VB2llHuSlaA+IacENdT2Q6QEsv07QeHJlSE
+In-Reply-To: <20190301102644.GC2979@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030203-0012-0000-0000-000002FC0223
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030203-0013-0000-0000-00002133B3E9
+Message-Id: <400ca5f3-5048-2d58-d108-3cde2a9074af@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-02_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903020018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
 
-When sending a rdata, transport may return -EAGAIN. In this case
-we should re-obtain credits because the session may have been
-reconnected.
+On 3/1/19 3:56 PM, Jiri Olsa wrote:
+> Ravi Bangoria reported that we fail with empty
+> numa node with following message:
+> 
+>   $ lscpu
+>   NUMA node0 CPU(s):
+>   NUMA node1 CPU(s):   0-4
+> 
+>   $ sudo ./perf c2c report
+>   node/cpu topology bugFailed setup nodes
+> 
+> Fixing this by detecting empty node and keeping
+> its cpu set empty.
+> 
+> Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> Link: http://lkml.kernel.org/n/tip-dyq5jo6pn1j3yqavb5ukjwwu@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- fs/cifs/file.c | 51 +++++++++++++++++++++++++-------------------------
- 1 file changed, 26 insertions(+), 25 deletions(-)
-
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 08e73759d6ec..c83ca96f883b 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3335,44 +3335,45 @@ static int cifs_resend_rdata(struct cifs_readdata *rdata,
- 	struct TCP_Server_Info *server =
- 		tlink_tcon(rdata->cfile->tlink)->ses->server;
- 
--	/*
--	 * Wait for credits to resend this rdata.
--	 * Note: we are attempting to resend the whole rdata not in segments
--	 */
- 	do {
--		rc = server->ops->wait_mtu_credits(server, rdata->bytes,
-+		/*
-+		 * Wait for credits to resend this rdata.
-+		 * Note: we are attempting to resend the whole rdata not in
-+		 * segments
-+		 */
-+		do {
-+			rc = server->ops->wait_mtu_credits(server, rdata->bytes,
- 						&rsize, &credits);
- 
--		if (rc)
--			goto out;
-+			if (rc)
-+				goto fail;
- 
--		if (rsize < rdata->bytes) {
--			add_credits_and_wake_if(server, &credits, 0);
--			msleep(1000);
--		}
--	} while (rsize < rdata->bytes);
-+			if (rsize < rdata->bytes) {
-+				add_credits_and_wake_if(server, &credits, 0);
-+				msleep(1000);
-+			}
-+		} while (rsize < rdata->bytes);
- 
--	rdata->credits = credits;
--	rc = -EAGAIN;
--	while (rc == -EAGAIN) {
-+		rdata->credits = credits;
- 		rc = 0;
- 		if (rdata->cfile->invalidHandle)
- 			rc = cifs_reopen_file(rdata->cfile, true);
- 		if (!rc)
- 			rc = server->ops->async_readv(rdata);
--	}
- 
--	if (!rc) {
--		/* Add to aio pending list */
--		list_add_tail(&rdata->list, rdata_list);
--		return 0;
--	}
-+		/* If the read was successfully sent, we are done */
-+		if (!rc) {
-+			/* Add to aio pending list */
-+			list_add_tail(&rdata->list, rdata_list);
-+			return 0;
-+		}
- 
--	add_credits_and_wake_if(server, &rdata->credits, 0);
--out:
--	kref_put(&rdata->refcount,
--		cifs_uncached_readdata_release);
-+		/* Roll back credits and retry if needed */
-+		add_credits_and_wake_if(server, &rdata->credits, 0);
-+	} while (rc == -EAGAIN);
- 
-+fail:
-+	kref_put(&rdata->refcount, cifs_uncached_readdata_release);
- 	return rc;
- }
- 
--- 
-2.17.1
+Reported-by: Nageswara R Sastry <nasastry@in.ibm.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
