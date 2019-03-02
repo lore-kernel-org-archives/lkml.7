@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB705C10F05
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2F2C00319
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7930220863
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B47D20863
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 13:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfCBNrv (ORCPT
+        id S1726658AbfCBNrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 08:47:51 -0500
-Received: from sauhun.de ([88.99.104.3]:36372 "EHLO pokefinder.org"
+        Sat, 2 Mar 2019 08:47:48 -0500
+Received: from sauhun.de ([88.99.104.3]:36264 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbfCBNrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 08:47:49 -0500
+        id S1726086AbfCBNrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 08:47:46 -0500
 Received: from localhost (p54B33179.dip0.t-ipconnect.de [84.179.49.121])
-        by pokefinder.org (Postfix) with ESMTPSA id ED96F4A1778;
-        Sat,  2 Mar 2019 14:47:45 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id C28BE4A1773;
+        Sat,  2 Mar 2019 14:47:43 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -35,9 +35,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [RFC PATCH v2 5/7] i2c: busses: omap: Add the master_xfer_irqless hook
-Date:   Sat,  2 Mar 2019 14:47:33 +0100
-Message-Id: <20190302134735.4393-6-wsa+renesas@sang-engineering.com>
+Subject: [RFC PATCH v2 1/7] i2c: apply coding style for struct i2c_adapter
+Date:   Sat,  2 Mar 2019 14:47:29 +0100
+Message-Id: <20190302134735.4393-2-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
 References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
@@ -46,185 +46,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
-
-Add the master_xfer_irqless hook to enable i2c transactions
-in irq disabled contexts like the poweroff case.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/busses/i2c-omap.c | 79 ++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 66 insertions(+), 13 deletions(-)
+ include/linux/i2c.h | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
-index cd9c65f3d404..bf48126faf94 100644
---- a/drivers/i2c/busses/i2c-omap.c
-+++ b/drivers/i2c/busses/i2c-omap.c
-@@ -269,6 +269,8 @@ static const u8 reg_map_ip_v2[] = {
- 	[OMAP_I2C_IP_V2_IRQENABLE_CLR] = 0x30,
- };
- 
-+static int omap_i2c_xfer_data(struct omap_i2c_dev *omap);
-+
- static inline void omap_i2c_write_reg(struct omap_i2c_dev *omap,
- 				      int reg, u16 val)
- {
-@@ -648,15 +650,28 @@ static void omap_i2c_resize_fifo(struct omap_i2c_dev *omap, u8 size, bool is_rx)
- 			(1000 * omap->speed / 8);
- }
- 
-+static void omap_i2c_wait(struct omap_i2c_dev *omap)
-+{
-+	u16 stat;
-+	u16 mask = omap_i2c_read_reg(omap, OMAP_I2C_IE_REG);
-+	int count = 0;
-+
-+	do {
-+		stat = omap_i2c_read_reg(omap, OMAP_I2C_STAT_REG);
-+		count++;
-+	} while (!(stat & mask) && count < 5);
-+}
-+
- /*
-  * Low level master read/write transaction.
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 383510b4f083..758a6db864c9 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -517,20 +517,23 @@ i2c_register_board_info(int busnum, struct i2c_board_info const *info,
+  * Documentation file Documentation/i2c/fault-codes.
   */
- static int omap_i2c_xfer_msg(struct i2c_adapter *adap,
--			     struct i2c_msg *msg, int stop)
-+			     struct i2c_msg *msg, int stop, bool polling)
- {
- 	struct omap_i2c_dev *omap = i2c_get_adapdata(adap);
- 	unsigned long timeout;
- 	u16 w;
-+	int ret;
+ struct i2c_algorithm {
+-	/* If an adapter algorithm can't do I2C-level access, set master_xfer
+-	   to NULL. If an adapter algorithm can do SMBus access, set
+-	   smbus_xfer. If set to NULL, the SMBus protocol is simulated
+-	   using common I2C messages */
+-	/* master_xfer should return the number of messages successfully
+-	   processed, or a negative value on error */
++	/*
++	 * If an adapter algorithm can't do I2C-level access, set master_xfer
++	 * to NULL. If an adapter algorithm can do SMBus access, set
++	 * smbus_xfer. If set to NULL, the SMBus protocol is simulated
++	 * using common I2C messages.
++	 *
++	 * master_xfer should return the number of messages successfully
++	 * processed, or a negative value on error
++	 */
+ 	int (*master_xfer)(struct i2c_adapter *adap, struct i2c_msg *msgs,
+ 			   int num);
+-	int (*smbus_xfer) (struct i2c_adapter *adap, u16 addr,
+-			   unsigned short flags, char read_write,
+-			   u8 command, int size, union i2c_smbus_data *data);
++	int (*smbus_xfer)(struct i2c_adapter *adap, u16 addr,
++			  unsigned short flags, char read_write,
++			  u8 command, int size, union i2c_smbus_data *data);
  
- 	dev_dbg(omap->dev, "addr: 0x%04x, len: %d, flags: 0x%x, stop: %d\n",
- 		msg->addr, msg->len, msg->flags, stop);
-@@ -680,7 +695,8 @@ static int omap_i2c_xfer_msg(struct i2c_adapter *adap,
- 	w |= OMAP_I2C_BUF_RXFIF_CLR | OMAP_I2C_BUF_TXFIF_CLR;
- 	omap_i2c_write_reg(omap, OMAP_I2C_BUF_REG, w);
+ 	/* To determine what the adapter supports */
+-	u32 (*functionality) (struct i2c_adapter *);
++	u32 (*functionality)(struct i2c_adapter *adap);
  
--	reinit_completion(&omap->cmd_complete);
-+	if (!polling)
-+		reinit_completion(&omap->cmd_complete);
- 	omap->cmd_err = 0;
- 
- 	w = OMAP_I2C_CON_EN | OMAP_I2C_CON_MST | OMAP_I2C_CON_STT;
-@@ -732,8 +748,21 @@ static int omap_i2c_xfer_msg(struct i2c_adapter *adap,
- 	 * REVISIT: We should abort the transfer on signals, but the bus goes
- 	 * into arbitration and we're currently unable to recover from it.
- 	 */
--	timeout = wait_for_completion_timeout(&omap->cmd_complete,
--						OMAP_I2C_TIMEOUT);
-+	if (!polling) {
-+		timeout = wait_for_completion_timeout(&omap->cmd_complete,
-+						      OMAP_I2C_TIMEOUT);
-+	} else {
-+		do {
-+			omap_i2c_wait(omap);
-+			ret = omap_i2c_xfer_data(omap);
-+		} while (ret == -EAGAIN);
-+
-+		if (!ret)
-+			timeout = 1;
-+		else
-+			timeout = 0;
-+	}
-+
- 	if (timeout == 0) {
- 		dev_err(omap->dev, "controller timed out\n");
- 		omap_i2c_reset(omap);
-@@ -772,7 +801,8 @@ static int omap_i2c_xfer_msg(struct i2c_adapter *adap,
-  * to do the work during IRQ processing.
-  */
- static int
--omap_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
-+omap_i2c_xfer_common(struct i2c_adapter *adap, struct i2c_msg msgs[], int num,
-+		     bool polling)
- {
- 	struct omap_i2c_dev *omap = i2c_get_adapdata(adap);
- 	int i;
-@@ -794,7 +824,8 @@ omap_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
- 		omap->set_mpu_wkup_lat(omap->dev, omap->latency);
- 
- 	for (i = 0; i < num; i++) {
--		r = omap_i2c_xfer_msg(adap, &msgs[i], (i == (num - 1)));
-+		r = omap_i2c_xfer_msg(adap, &msgs[i], (i == (num - 1)),
-+				      polling);
- 		if (r != 0)
- 			break;
- 	}
-@@ -813,6 +844,18 @@ omap_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
- 	return r;
- }
- 
-+static int
-+omap_i2c_xfer_irq(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
-+{
-+	return omap_i2c_xfer_common(adap, msgs, num, false);
-+}
-+
-+static int
-+omap_i2c_xfer_polling(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
-+{
-+	return omap_i2c_xfer_common(adap, msgs, num, true);
-+}
-+
- static u32
- omap_i2c_func(struct i2c_adapter *adap)
- {
-@@ -1035,10 +1078,8 @@ omap_i2c_isr(int irq, void *dev_id)
- 	return ret;
- }
- 
--static irqreturn_t
--omap_i2c_isr_thread(int this_irq, void *dev_id)
-+static int omap_i2c_xfer_data(struct omap_i2c_dev *omap)
- {
--	struct omap_i2c_dev *omap = dev_id;
- 	u16 bits;
- 	u16 stat;
- 	int err = 0, count = 0;
-@@ -1056,7 +1097,8 @@ omap_i2c_isr_thread(int this_irq, void *dev_id)
- 
- 		if (!stat) {
- 			/* my work here is done */
--			goto out;
-+			err = -EAGAIN;
-+			break;
- 		}
- 
- 		dev_dbg(omap->dev, "IRQ (ISR = 0x%04x)\n", stat);
-@@ -1165,14 +1207,25 @@ omap_i2c_isr_thread(int this_irq, void *dev_id)
- 		}
- 	} while (stat);
- 
--	omap_i2c_complete_cmd(omap, err);
-+	return err;
-+}
-+
-+static irqreturn_t
-+omap_i2c_isr_thread(int this_irq, void *dev_id)
-+{
-+	int ret;
-+	struct omap_i2c_dev *omap = dev_id;
-+
-+	ret = omap_i2c_xfer_data(omap);
-+	if (ret != -EAGAIN)
-+		omap_i2c_complete_cmd(omap, ret);
- 
--out:
- 	return IRQ_HANDLED;
- }
- 
- static const struct i2c_algorithm omap_i2c_algo = {
--	.master_xfer	= omap_i2c_xfer,
-+	.master_xfer	= omap_i2c_xfer_irq,
-+	.master_xfer_atomic	= omap_i2c_xfer_polling,
- 	.functionality	= omap_i2c_func,
- };
- 
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+ 	int (*reg_slave)(struct i2c_client *client);
 -- 
 2.11.0
 
