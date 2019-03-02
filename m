@@ -2,467 +2,512 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E7AC00319
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F365C43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA2A2086D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551552247;
-	bh=5mFlekM7wUzir4C+YsU7colMb6WKWl0Gnw4q2VQp8WQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=f67SVOEjdBza6dKP7BZjLagrV8D8kIrfJYRlSvMbBsYWfCA+G7+IVbMYs08RHAeom
-	 jBdrgStbAq+TTFXpbyxeJevLBWQidS4P63Pl7xFZwCrz9N/9Lo3i2USA5sDgI3IjHT
-	 EtIJtoTcgdDWameQTtJMsRqahpAhrY0mvktWXmYA=
+	by mail.kernel.org (Postfix) with ESMTP id CBB512086D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfCBSoG (ORCPT
+        id S1727087AbfCBSoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 13:44:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbfCBSoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 13:44:05 -0500
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3EB820830;
-        Sat,  2 Mar 2019 18:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551552244;
-        bh=5mFlekM7wUzir4C+YsU7colMb6WKWl0Gnw4q2VQp8WQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qYUYxziV02FFqnERoqpae7rKak5ytM5aSDT9Xjet2f1OJnf7W8F+6U68qxTTDO5uc
-         v5v9UeKLYpxTAGT5RrRm4Ib4wlUh1g+WBLIQfAHfS4rlPXiQsFBK7V0nXj65yj3Mqn
-         fsubkSreAH5UeDOCjzmu+ng1jC9XI0+gO8LY35uc=
-Date:   Sat, 2 Mar 2019 18:43:56 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de,
-        arnd@arndb.de, davem@davemloft.net, gregkh@linuxfoundation.org,
-        johan@kernel.org, khilman@baylibre.com, knaack.h@gmx.de,
-        lars@metafoo.de, linux-kernel@vger.kernel.org,
-        martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org,
-        m.othacehe@gmail.com, nicolas.ferre@microchip.com,
-        pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com,
-        treding@nvidia.com, techsupport@maxbotix.com
-Subject: Re: [PATCH v2 3/4] mb12x2.c: add distance iio sensor with i2c
-Message-ID: <20190302184356.5a28988f@archlinux>
-In-Reply-To: <20190301134255.tsixtoqlxnoa2kig@arbad>
-References: <20190301134255.tsixtoqlxnoa2kig@arbad>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 2 Mar 2019 13:44:22 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:65096 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726648AbfCBSoV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 13:44:21 -0500
+X-UUID: d18ead8f35e9417cb743e375f4ac2717-20190303
+X-UUID: d18ead8f35e9417cb743e375f4ac2717-20190303
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 108793282; Sun, 03 Mar 2019 02:44:13 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 3 Mar 2019 02:44:12 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 3 Mar 2019 02:44:12 +0800
+From:   <sean.wang@mediatek.com>
+To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>
+CC:     <linux-bluetooth@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>
+Subject: [PATCH RESEND v2] Bluetooth: mediatek: add support for MediaTek MT7663U and MT7668U UART devices
+Date:   Sun, 3 Mar 2019 02:44:09 +0800
+Message-ID: <35cb9acf1c5604e1d975efe9186879fc826fbe2f.1551551989.git.sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 Mar 2019 14:42:56 +0100
-Andreas Klinger <ak@it-klinger.de> wrote:
+From: Sean Wang <sean.wang@mediatek.com>
 
-> Add I2CXL-MaxSonar ultrasonic distance sensors of type family mb12x2 using
-> an i2c interface
-> 
-> Implemented functionality:
-> - reading the distance via in_distance_raw
-> - buffered mode with trigger
-> - make use of status gpio to announce completion of ranging
-> 
-> Add mb12x2 driver to Kconfig and Makefile
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-Hi Andreas,
+This adds the support of enabling MT7663U and MT7668U Bluetooth function
+running on the top of btmtkuart driver.
 
-Comments inline.
+There are a few differences between MT766[3,8]U and MT7622 where
+MT766[3,8]U are standalone devices based on UART transport while MT7622
+bluetooth is a built-in device on MediaTek SoC communicating with the host
+through BTIF serial transport. Thus, extra setup sequence is necessary
+for these standalone devices such as remote regulator and reset control via
+GPIO, baud rate changing handshake between the host and device and so on.
 
-Thanks,
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ drivers/bluetooth/btmtkuart.c | 281 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 271 insertions(+), 10 deletions(-)
 
-Jonathan
-
-> ---
->  drivers/iio/proximity/Kconfig  |  11 ++
->  drivers/iio/proximity/Makefile |   1 +
->  drivers/iio/proximity/mb12x2.c | 283 +++++++++++++++++++++++++++++++++++++++++
-
-Please don't use wild cards in driver names.  Just pick
-a supported part (usually whatever you are testing with :)
-
->  3 files changed, 295 insertions(+)
->  create mode 100644 drivers/iio/proximity/mb12x2.c
-> 
-> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-> index b99367a89f81..a420f2cb314b 100644
-> --- a/drivers/iio/proximity/Kconfig
-> +++ b/drivers/iio/proximity/Kconfig
-> @@ -45,6 +45,17 @@ config LIDAR_LITE_V2
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called pulsedlight-lite-v2
->  
-> +config MB12X2
-
-Avoid wild cards in these names as well.  Particularly as I think
-this supports some of the MB7xxx parts as well.
-
-> +	tristate "MaxSonar MB12X2 family ultrasonic sensors"
-> +	depends on I2C
-> +	help
-> +	  Say Y to build a driver for the ultrasonic sensors I2CXL of
-> +	  MaxBotix which have an i2c interface. It can be used to measure
-> +	  the distance of objects.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called mb12x2.
-
-Please list all known parts that are supported.  The reason is people
-grep for them to find the driver.  Having them in the help is fine.
-
-> +
->  config RFD77402
->  	tristate "RFD77402 ToF sensor"
->  	depends on I2C
-> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-> index 6d031f903c4c..be9a14db77e7 100644
-> --- a/drivers/iio/proximity/Makefile
-> +++ b/drivers/iio/proximity/Makefile
-> @@ -7,6 +7,7 @@
->  obj-$(CONFIG_AS3935)		+= as3935.o
->  obj-$(CONFIG_ISL29501)		+= isl29501.o
->  obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
-> +obj-$(CONFIG_MB12X2)		+= mb12x2.o
->  obj-$(CONFIG_RFD77402)		+= rfd77402.o
->  obj-$(CONFIG_SRF04)		+= srf04.o
->  obj-$(CONFIG_SRF08)		+= srf08.o
-> diff --git a/drivers/iio/proximity/mb12x2.c b/drivers/iio/proximity/mb12x2.c
-> new file mode 100644
-> index 000000000000..8b1ac901c253
-> --- /dev/null
-> +++ b/drivers/iio/proximity/mb12x2.c
-
-No wild cards in filenames either please.  It just goes wrong
-far too often.
-
-> @@ -0,0 +1,283 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * mb12x2.c - Support for MaxBotix I2CXL-MaxSonar-EZ series ultrasonic
-> + *   ranger with i2c interface
-> + * actually supported are mb12x2 types
-> + *
-> + * Copyright (c) 2019 Andreas Klinger <ak@it-klinger.de>
-> + *
-> + * For details about the device see:
-> + * https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
-> + *
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/delay.h>
-> +#include <linux/module.h>
-> +#include <linux/bitops.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
-> +
-> +/* registers of MaxSonar device */
-> +#define MB12X2_RANGE_COMMAND	0x51	/* Command for reading range */
-> +#define MB12X2_ADDR_UNLOCK_1	0xAA	/* Command 1 for changing address */
-> +#define MB12X2_ADDR_UNLOCK_2	0xA5	/* Command 2 for changing address */
-> +
-> +struct mb12x2_data {
-> +	struct i2c_client	*client;
-> +
-> +	struct mutex		lock;
-> +
-> +	/*
-> +	 * optionally a gpio can be used to announce when ranging has
-> +	 * finished
-> +	 */
-> +	struct completion	ranging;
-> +	struct gpio_desc	*gpiod_status;
-> +	int			irqnr;
-> +
-> +	/*
-> +	 * triggered buffer
-> +	 * 1x16-bit channel + 3x16 padding + 4x16 timestamp
-
-Probably easier to just list that as a 64 bit timestamp.
-
-> +	 */
-> +	s16			buffer[8];
-> +};
-> +
-> +static irqreturn_t mb12x2_handle_irq(int irq, void *dev_id)
-> +{
-> +	struct iio_dev *indio_dev = dev_id;
-> +	struct mb12x2_data *data = iio_priv(indio_dev);
-> +
-> +	/* double check to make sure data is now available */
-> +	if (!gpiod_get_value(data->gpiod_status))
-
-This sounds rather worrying.  Does the device generate false
-interrupts?
-
-Ideally I'd much rather we never treated this as a gpio at all
-but instead requested and used the interrupt alone.  Will
-give us cleaner code.
-
-> +		complete(&data->ranging);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static s16 mb12x2_read_distance(struct mb12x2_data *data)
-> +{
-> +	struct i2c_client *client = data->client;
-> +	int ret;
-> +	s16 distance;
-> +	__be16 buf;
-> +
-> +	mutex_lock(&data->lock);
-> +
-> +	reinit_completion(&data->ranging);
-> +
-> +	ret = i2c_smbus_write_byte(client, MB12X2_RANGE_COMMAND);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "write command - err: %d\n", ret);
-> +		mutex_unlock(&data->lock);
-> +		return ret;
-> +	}
-> +
-> +	if (data->gpiod_status) {
-> +		/* it cannot take more than 100 ms */
-> +		ret = wait_for_completion_killable_timeout(&data->ranging,
-> +									HZ/10);
-> +		if (ret < 0) {
-> +			mutex_unlock(&data->lock);
-> +			return ret;
-> +		} else if (ret == 0) {
-> +			mutex_unlock(&data->lock);
-> +			return -ETIMEDOUT;
-
-It feels like a single unlock location and error return point using
-goto would be cleaner and less potentially error prone than doing
-it in every path.
-
-
-> +		}
-> +	} else {
-> +		/*
-> +		 * use simple sleep if gpio announce pin is not connected
-
-Use single line comment syntax.
-
-> +		 */
-> +		msleep(15);
-> +	}
-> +
-> +	ret = i2c_master_recv(client, (char *)&buf, sizeof(buf));
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "i2c_master_recv: ret=%d\n", ret);
-> +		mutex_unlock(&data->lock);
-> +		return ret;
-> +	}
-> +
-> +	distance = __be16_to_cpu(buf);
-
-Hmm. in theory we'd normally expect the buffered path to just return
-that as big endian but given how slow this sensor is and the need
-to potentially handle error codes, this is fine.
-
-> +	/* check for not returning misleading error codes */
-> +	if (distance < 0) {
-> +		dev_err(&client->dev, "distance=%d\n", distance);
-> +		return -EINVAL;
-> +	}
-> +
-> +	mutex_unlock(&data->lock);
-> +
-> +	return distance;
-> +}
-> +
-> +static irqreturn_t mb12x2_trigger_handler(int irq, void *p)
-> +{
-> +	struct iio_poll_func *pf = p;
-> +	struct iio_dev *indio_dev = pf->indio_dev;
-> +	struct mb12x2_data *data = iio_priv(indio_dev);
-> +	s16 sensor_data;
-> +
-> +	sensor_data = mb12x2_read_distance(data);
-> +	if (sensor_data < 0)
-> +		goto err;
-> +
-> +	mutex_lock(&data->lock);
-> +
-> +	data->buffer[0] = sensor_data;
-
-This seems an odd thing to do.   If you are happy having a local
-sensor_data on the stack, why not have the buffer on the stack as well?
-
-I'm also not sure what the locking is protecting in this case..
-We are in an interrupt handler so no need to protect the kfifo
-as can't have concurrent writers and kfifo is safe for one reader
-and one writer without locks.
-
-> +	iio_push_to_buffers_with_timestamp(indio_dev,
-> +						data->buffer, pf->timestamp);
-> +
-> +	mutex_unlock(&data->lock);
-> +err:
-> +	iio_trigger_notify_done(indio_dev->trig);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int mb12x2_read_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *channel, int *val,
-> +			    int *val2, long mask)
-> +{
-> +	struct mb12x2_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (channel->type != IIO_DISTANCE)
-> +		return -EINVAL;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = mb12x2_read_distance(data);
-> +		if (ret < 0)
-> +			return ret;
-> +		*val = ret;
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		/* 1 LSB is 1 cm */
-> +		*val = 0;
-> +		*val2 = 10000;
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_chan_spec mb12x2_channels[] = {
-> +	{
-> +		.type = IIO_DISTANCE,
-> +		.info_mask_separate =
-> +				BIT(IIO_CHAN_INFO_RAW) |
-> +				BIT(IIO_CHAN_INFO_SCALE),
-> +		.scan_index = 0,
-> +		.scan_type = {
-> +			.sign = 's',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.endianness = IIO_CPU,
-> +		},
-> +	},
-> +	IIO_CHAN_SOFT_TIMESTAMP(1),
-> +};
-> +
-> +static const struct iio_info mb12x2_info = {
-> +	.read_raw = mb12x2_read_raw,
-> +};
-> +
-> +static int mb12x2_probe(struct i2c_client *client,
-> +					 const struct i2c_device_id *id)
-> +{
-> +	struct iio_dev *indio_dev;
-> +	struct mb12x2_data *data;
-> +	int ret;
-> +	struct device *dev = &client->dev;
-> +
-> +	if (!i2c_check_functionality(client->adapter,
-> +					I2C_FUNC_SMBUS_READ_BYTE |
-> +					I2C_FUNC_SMBUS_WRITE_BYTE))
-> +		return -ENODEV;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	data = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +	data->client = client;
-> +
-> +	indio_dev->info = &mb12x2_info;
-> +	indio_dev->name = id->name;
-> +	indio_dev->dev.parent = dev;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = mb12x2_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(mb12x2_channels);
-> +
-> +	mutex_init(&data->lock);
-> +
-> +	init_completion(&data->ranging);
-> +
-> +	data->gpiod_status = devm_gpiod_get(dev, "status", GPIOD_IN);
-> +	if (IS_ERR(data->gpiod_status)) {
-> +		if (PTR_ERR(data->gpiod_status) == -ENOENT) {
-> +			dev_warn(dev, "no status gpio --> use sleep instead\n");
-> +			data->gpiod_status = NULL;
-> +		} else {
-> +			dev_err(dev, "cannot setup gpio; err=%ld\n",
-> +					PTR_ERR(data->gpiod_status));
-> +			return PTR_ERR(data->gpiod_status);
-> +		}
-> +	}
-> +
-> +	if (data->gpiod_status) {
-> +		data->irqnr = gpiod_to_irq(data->gpiod_status);
-> +		if (data->irqnr < 0) {
-> +			dev_err(dev, "gpiod_to_irq: %d\n", data->irqnr);
-> +			return data->irqnr;
-> +		}
-> +
-> +		ret = devm_request_irq(dev, data->irqnr, mb12x2_handle_irq,
-> +				IRQF_TRIGGER_FALLING, id->name, indio_dev);
-> +		if (ret < 0) {
-> +			dev_err(dev, "request_irq: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
-> +			iio_pollfunc_store_time, mb12x2_trigger_handler, NULL);
-> +	if (ret < 0) {
-> +		dev_err(dev, "setup of iio triggered buffer failed\n");
-> +		return ret;
-> +	}
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
-> +static const struct of_device_id of_mb12x2_match[] = {
-> +	{ .compatible = "maxbotix,i2cxl", },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, of_mb12x2_match);
-> +
-> +static const struct i2c_device_id mb12x2_id[] = {
-> +	{ "maxbotix-i2cxl", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, mb12x2_id);
-> +
-> +static struct i2c_driver mb12x2_driver = {
-> +	.driver = {
-> +		.name	= "maxbotix-i2cxl",
-> +		.of_match_table	= of_mb12x2_match,
-> +	},
-> +	.probe = mb12x2_probe,
-> +	.id_table = mb12x2_id,
-> +};
-> +module_i2c_driver(mb12x2_driver);
-> +
-> +MODULE_AUTHOR("Andreas Klinger <ak@it-klinger.de>");
-> +MODULE_DESCRIPTION("Maxbotix I2CXL-MaxSonar i2c ultrasonic ranger driver");
-> +MODULE_LICENSE("GPL");
+diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
+index e73b1013ba73..b0b680dd69f4 100644
+--- a/drivers/bluetooth/btmtkuart.c
++++ b/drivers/bluetooth/btmtkuart.c
+@@ -12,11 +12,15 @@
+ #include <linux/atomic.h>
+ #include <linux/clk.h>
+ #include <linux/firmware.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/serdev.h>
+ #include <linux/skbuff.h>
+ 
+@@ -25,18 +29,26 @@
+ 
+ #include "h4_recv.h"
+ 
+-#define VERSION "0.1"
++#define VERSION "0.2"
+ 
+ #define FIRMWARE_MT7622		"mediatek/mt7622pr2h.bin"
++#define FIRMWARE_MT7663		"mediatek/mt7663pr2h.bin"
++#define FIRMWARE_MT7668		"mediatek/mt7668pr2h.bin"
+ 
+ #define MTK_STP_TLR_SIZE	2
+ 
+ #define BTMTKUART_TX_STATE_ACTIVE	1
+ #define BTMTKUART_TX_STATE_WAKEUP	2
+ #define BTMTKUART_TX_WAIT_VND_EVT	3
++#define BTMTKUART_REQUIRED_WAKEUP	4
++
++#define BTMTKUART_FLAG_STANDALONE_HW	 BIT(0)
+ 
+ enum {
+ 	MTK_WMT_PATCH_DWNLD = 0x1,
++	MTK_WMT_TEST = 0x2,
++	MTK_WMT_WAKEUP = 0x3,
++	MTK_WMT_HIF = 0x4,
+ 	MTK_WMT_FUNC_CTRL = 0x6,
+ 	MTK_WMT_RST = 0x7,
+ 	MTK_WMT_SEMAPHORE = 0x17,
+@@ -57,6 +69,11 @@ struct mtk_stp_hdr {
+ 	u8	cs;
+ } __packed;
+ 
++struct btmtkuart_data {
++	unsigned int flags;
++	const char *fwname;
++};
++
+ struct mtk_wmt_hdr {
+ 	u8	dir;
+ 	u8	op;
+@@ -100,6 +117,14 @@ struct btmtkuart_dev {
+ 	struct serdev_device *serdev;
+ 	struct clk *clk;
+ 
++	struct regulator *vcc;
++	struct gpio_desc *reset;
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *pins_runtime;
++	struct pinctrl_state *pins_boot;
++	speed_t	desired_speed;
++	speed_t	curr_speed;
++
+ 	struct work_struct tx_work;
+ 	unsigned long tx_state;
+ 	struct sk_buff_head txq;
+@@ -110,8 +135,15 @@ struct btmtkuart_dev {
+ 	u8	stp_pad[6];
+ 	u8	stp_cursor;
+ 	u16	stp_dlen;
++
++	const struct btmtkuart_data *data;
+ };
+ 
++#define btmtkuart_is_standalone(bdev)	\
++	((bdev)->data->flags & BTMTKUART_FLAG_STANDALONE_HW)
++#define btmtkuart_is_builtin_soc(bdev)	\
++	!((bdev)->data->flags & BTMTKUART_FLAG_STANDALONE_HW)
++
+ static int mtk_hci_wmt_sync(struct hci_dev *hdev,
+ 			    struct btmtk_hci_wmt_params *wmt_params)
+ {
+@@ -202,7 +234,7 @@ static int mtk_hci_wmt_sync(struct hci_dev *hdev,
+ 	return err;
+ }
+ 
+-static int mtk_setup_fw(struct hci_dev *hdev)
++static int mtk_setup_firmware(struct hci_dev *hdev, const char *fwname)
+ {
+ 	struct btmtk_hci_wmt_params wmt_params;
+ 	const struct firmware *fw;
+@@ -211,7 +243,7 @@ static int mtk_setup_fw(struct hci_dev *hdev)
+ 	int err, dlen;
+ 	u8 flag;
+ 
+-	err = request_firmware(&fw, FIRMWARE_MT7622, &hdev->dev);
++	err = request_firmware(&fw, fwname, &hdev->dev);
+ 	if (err < 0) {
+ 		bt_dev_err(hdev, "Failed to load firmware file (%d)", err);
+ 		return err;
+@@ -523,6 +555,23 @@ static int btmtkuart_open(struct hci_dev *hdev)
+ 		goto err_open;
+ 	}
+ 
++	if (btmtkuart_is_standalone(bdev)) {
++		if (bdev->curr_speed != bdev->desired_speed)
++			err = serdev_device_set_baudrate(bdev->serdev,
++							 115200);
++		else
++			err = serdev_device_set_baudrate(bdev->serdev,
++							 bdev->desired_speed);
++
++		if (err < 0) {
++			bt_dev_err(hdev, "Unable to set baudrate UART device %s",
++				   dev_name(&bdev->serdev->dev));
++			goto  err_serdev_close;
++		}
++
++		serdev_device_set_flow_control(bdev->serdev, false);
++	}
++
+ 	bdev->stp_cursor = 2;
+ 	bdev->stp_dlen = 0;
+ 
+@@ -546,6 +595,8 @@ static int btmtkuart_open(struct hci_dev *hdev)
+ 	pm_runtime_put_sync(dev);
+ err_disable_rpm:
+ 	pm_runtime_disable(dev);
++err_serdev_close:
++	serdev_device_close(bdev->serdev);
+ err_open:
+ 	return err;
+ }
+@@ -606,8 +657,74 @@ static int btmtkuart_func_query(struct hci_dev *hdev)
+ 	return status;
+ }
+ 
++static int btmtkuart_change_baudrate(struct hci_dev *hdev)
++{
++	struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
++	struct btmtk_hci_wmt_params wmt_params;
++	u32 baudrate;
++	u8 param;
++	int err;
++
++	/* Indicate the device to enter the probe state the host is
++	 * ready to change a new baudrate.
++	 */
++	baudrate = cpu_to_le32(bdev->desired_speed);
++	wmt_params.op = MTK_WMT_HIF;
++	wmt_params.flag = 1;
++	wmt_params.dlen = 4;
++	wmt_params.data = &baudrate;
++	wmt_params.status = NULL;
++
++	err = mtk_hci_wmt_sync(hdev, &wmt_params);
++	if (err < 0) {
++		bt_dev_err(hdev, "Failed to device baudrate (%d)", err);
++		return err;
++	}
++
++	err = serdev_device_set_baudrate(bdev->serdev,
++					 bdev->desired_speed);
++	if (err < 0) {
++		bt_dev_err(hdev, "Failed to set up host baudrate (%d)",
++			   err);
++		return err;
++	}
++
++	serdev_device_set_flow_control(bdev->serdev, false);
++
++	/* Send a dummy byte 0xff to activate the new baudrate */
++	param = 0xff;
++	err = serdev_device_write(bdev->serdev, &param, sizeof(param),
++				  MAX_SCHEDULE_TIMEOUT);
++	if (err < 0 || err < sizeof(param))
++		return err;
++
++	serdev_device_wait_until_sent(bdev->serdev, 0);
++
++	/* Wait some time for the device changing baudrate done */
++	usleep_range(20000, 22000);
++
++	/* Test the new baudrate */
++	wmt_params.op = MTK_WMT_TEST;
++	wmt_params.flag = 7;
++	wmt_params.dlen = 0;
++	wmt_params.data = NULL;
++	wmt_params.status = NULL;
++
++	err = mtk_hci_wmt_sync(hdev, &wmt_params);
++	if (err < 0) {
++		bt_dev_err(hdev, "Failed to test new baudrate (%d)",
++			   err);
++		return err;
++	}
++
++	bdev->curr_speed = bdev->desired_speed;
++
++	return 0;
++}
++
+ static int btmtkuart_setup(struct hci_dev *hdev)
+ {
++	struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
+ 	struct btmtk_hci_wmt_params wmt_params;
+ 	ktime_t calltime, delta, rettime;
+ 	struct btmtk_tci_sleep tci_sleep;
+@@ -618,6 +735,28 @@ static int btmtkuart_setup(struct hci_dev *hdev)
+ 
+ 	calltime = ktime_get();
+ 
++	/* Wakeup MCUSYS is required for certain devices before we start to
++	 * do any setups.
++	 */
++	if (test_bit(BTMTKUART_REQUIRED_WAKEUP, &bdev->tx_state)) {
++		wmt_params.op = MTK_WMT_WAKEUP;
++		wmt_params.flag = 3;
++		wmt_params.dlen = 0;
++		wmt_params.data = NULL;
++		wmt_params.status = NULL;
++
++		err = mtk_hci_wmt_sync(hdev, &wmt_params);
++		if (err < 0) {
++			bt_dev_err(hdev, "Failed to wakeup the chip (%d)", err);
++			return err;
++		}
++
++		clear_bit(BTMTKUART_REQUIRED_WAKEUP, &bdev->tx_state);
++	}
++
++	if (btmtkuart_is_standalone(bdev))
++		btmtkuart_change_baudrate(hdev);
++
+ 	/* Query whether the firmware is already download */
+ 	wmt_params.op = MTK_WMT_SEMAPHORE;
+ 	wmt_params.flag = 1;
+@@ -637,7 +776,7 @@ static int btmtkuart_setup(struct hci_dev *hdev)
+ 	}
+ 
+ 	/* Setup a firmware which the device definitely requires */
+-	err = mtk_setup_fw(hdev);
++	err = mtk_setup_firmware(hdev, bdev->data->fwname);
+ 	if (err < 0)
+ 		return err;
+ 
+@@ -754,24 +893,82 @@ static int btmtkuart_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
+ 	return 0;
+ }
+ 
++static int btmtkuart_parse_dt(struct serdev_device *serdev)
++{
++	struct btmtkuart_dev *bdev = serdev_device_get_drvdata(serdev);
++	struct device_node *node = serdev->dev.of_node;
++	u32 speed = 921600;
++	int err;
++
++	if (btmtkuart_is_standalone(bdev)) {
++		of_property_read_u32(node, "current-speed", &speed);
++
++		bdev->desired_speed = speed;
++
++		bdev->vcc = devm_regulator_get(&serdev->dev, "vcc");
++		if (IS_ERR(bdev->vcc)) {
++			err = PTR_ERR(bdev->vcc);
++			return err;
++		}
++
++		bdev->pinctrl = devm_pinctrl_get(&serdev->dev);
++		if (IS_ERR(bdev->pinctrl)) {
++			err = PTR_ERR(bdev->pinctrl);
++			return err;
++		}
++
++		bdev->pins_boot = pinctrl_lookup_state(bdev->pinctrl,
++						       "default");
++		if (IS_ERR(bdev->pins_boot)) {
++			err = PTR_ERR(bdev->pins_boot);
++			return err;
++		}
++
++		bdev->pins_runtime = pinctrl_lookup_state(bdev->pinctrl,
++							  "runtime");
++		if (IS_ERR(bdev->pins_runtime)) {
++			err = PTR_ERR(bdev->pins_runtime);
++			return err;
++		}
++
++		bdev->reset = devm_gpiod_get_optional(&serdev->dev, "reset",
++						      GPIOD_OUT_LOW);
++		if (IS_ERR(bdev->reset)) {
++			err = PTR_ERR(bdev->reset);
++			return err;
++		}
++	} else if (btmtkuart_is_builtin_soc(bdev)) {
++		bdev->clk = devm_clk_get(&serdev->dev, "ref");
++		if (IS_ERR(bdev->clk))
++			return PTR_ERR(bdev->clk);
++	}
++
++	return 0;
++}
++
+ static int btmtkuart_probe(struct serdev_device *serdev)
+ {
+ 	struct btmtkuart_dev *bdev;
+ 	struct hci_dev *hdev;
++	int err;
+ 
+ 	bdev = devm_kzalloc(&serdev->dev, sizeof(*bdev), GFP_KERNEL);
+ 	if (!bdev)
+ 		return -ENOMEM;
+ 
+-	bdev->clk = devm_clk_get(&serdev->dev, "ref");
+-	if (IS_ERR(bdev->clk))
+-		return PTR_ERR(bdev->clk);
++	bdev->data = of_device_get_match_data(&serdev->dev);
++	if (!bdev->data)
++		return -ENODEV;
+ 
+ 	bdev->serdev = serdev;
+ 	serdev_device_set_drvdata(serdev, bdev);
+ 
+ 	serdev_device_set_client_ops(serdev, &btmtkuart_client_ops);
+ 
++	err = btmtkuart_parse_dt(serdev);
++	if (err < 0)
++		return err;
++
+ 	INIT_WORK(&bdev->tx_work, btmtkuart_tx_work);
+ 	skb_queue_head_init(&bdev->txq);
+ 
+@@ -798,13 +995,54 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 	hdev->manufacturer = 70;
+ 	set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
+ 
+-	if (hci_register_dev(hdev) < 0) {
++	if (btmtkuart_is_standalone(bdev)) {
++		/* Switch to the specific pin state for the booting requires */
++		pinctrl_select_state(bdev->pinctrl, bdev->pins_boot);
++
++		/* Power on */
++		err = regulator_enable(bdev->vcc);
++		if (err < 0)
++			return err;
++
++		/* Reset if the reset-gpios is available otherwise the board
++		 * -level design should be guaranteed.
++		 */
++		if (bdev->reset) {
++			gpiod_set_value_cansleep(bdev->reset, 1);
++			usleep_range(1000, 2000);
++			gpiod_set_value_cansleep(bdev->reset, 0);
++		}
++
++		/* Wait some time until device got ready and switch to the pin
++		 * mode the device requires for UART transfers.
++		 */
++		msleep(50);
++		pinctrl_select_state(bdev->pinctrl, bdev->pins_runtime);
++
++		/* A standalone device doesn't depends on power domain on SoC,
++		 * so mark it as no callbacks.
++		 */
++		pm_runtime_no_callbacks(&serdev->dev);
++
++		set_bit(BTMTKUART_REQUIRED_WAKEUP, &bdev->tx_state);
++	}
++
++	err = hci_register_dev(hdev);
++	if (err < 0) {
+ 		dev_err(&serdev->dev, "Can't register HCI device\n");
+ 		hci_free_dev(hdev);
+-		return -ENODEV;
++		goto err_regulator_disable;
+ 	}
+ 
+ 	return 0;
++
++err_regulator_disable:
++	if (btmtkuart_is_standalone(bdev))  {
++		pinctrl_select_state(bdev->pinctrl, bdev->pins_boot);
++		regulator_disable(bdev->vcc);
++	}
++
++	return err;
+ }
+ 
+ static void btmtkuart_remove(struct serdev_device *serdev)
+@@ -812,13 +1050,34 @@ static void btmtkuart_remove(struct serdev_device *serdev)
+ 	struct btmtkuart_dev *bdev = serdev_device_get_drvdata(serdev);
+ 	struct hci_dev *hdev = bdev->hdev;
+ 
++	if (btmtkuart_is_standalone(bdev))  {
++		pinctrl_select_state(bdev->pinctrl, bdev->pins_boot);
++		regulator_disable(bdev->vcc);
++	}
++
+ 	hci_unregister_dev(hdev);
+ 	hci_free_dev(hdev);
+ }
+ 
++static const struct btmtkuart_data mt7622_data = {
++	.fwname = FIRMWARE_MT7622,
++};
++
++static const struct btmtkuart_data mt7663_data = {
++	.flags = BTMTKUART_FLAG_STANDALONE_HW,
++	.fwname = FIRMWARE_MT7663,
++};
++
++static const struct btmtkuart_data mt7668_data = {
++	.flags = BTMTKUART_FLAG_STANDALONE_HW,
++	.fwname = FIRMWARE_MT7668,
++};
++
+ #ifdef CONFIG_OF
+ static const struct of_device_id mtk_of_match_table[] = {
+-	{ .compatible = "mediatek,mt7622-bluetooth"},
++	{ .compatible = "mediatek,mt7622-bluetooth", .data = &mt7622_data},
++	{ .compatible = "mediatek,mt7663u-bluetooth", .data = &mt7663_data},
++	{ .compatible = "mediatek,mt7668u-bluetooth", .data = &mt7668_data},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, mtk_of_match_table);
+@@ -840,3 +1099,5 @@ MODULE_DESCRIPTION("MediaTek Bluetooth Serial driver ver " VERSION);
+ MODULE_VERSION(VERSION);
+ MODULE_LICENSE("GPL");
+ MODULE_FIRMWARE(FIRMWARE_MT7622);
++MODULE_FIRMWARE(FIRMWARE_MT7663);
++MODULE_FIRMWARE(FIRMWARE_MT7668);
+-- 
+2.18.0
 
