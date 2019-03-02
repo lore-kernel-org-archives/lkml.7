@@ -2,169 +2,579 @@ Return-Path: <SRS0=OfNL=RF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A80EC43381
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F1CC43381
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57B72086D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7210F20838
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 Mar 2019 18:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="U5Y+38qM"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Gdq7/oho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfCBSjg (ORCPT
+        id S1726997AbfCBSkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 13:39:36 -0500
-Received: from mail-eopbgr790135.outbound.protection.outlook.com ([40.107.79.135]:12064
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726246AbfCBSjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 13:39:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3qKUFg37P3gs3MZiiUuMuFZNoLgTVDHlDxV+SDCy5s4=;
- b=U5Y+38qM8ifyxUCRN08f8qGPyNcHnLpO1ENui8U2WK9RpiOvxvfDEz5u/UbEw654bWe/v1UHJlSrSBr+H4EtXK+utz16Z/6vVTfPOs02J55Gy/vEWAkn5YlWlHDf82Qy7RmKI05HplGe9JqMkj3b8fW5S7R9W8O1HYqzwALDeQ0=
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
- DM5PR2101MB0887.namprd21.prod.outlook.com (52.132.132.156) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.3; Sat, 2 Mar 2019 18:39:31 +0000
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::ec2d:d32b:e611:553f]) by DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::ec2d:d32b:e611:553f%8]) with mapi id 15.20.1686.003; Sat, 2 Mar 2019
- 18:39:31 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kimbrownkd <kimbrownkd@gmail.com>, Long Li <longli@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4] Drivers: hv: vmbus: Expose monitor data only when
- monitor pages are used
-Thread-Topic: [PATCH v4] Drivers: hv: vmbus: Expose monitor data only when
- monitor pages are used
-Thread-Index: AQHU0GOP4Hnv7QzAq0Gy2Vo3bvT5e6X4q0rw
-Date:   Sat, 2 Mar 2019 18:39:30 +0000
-Message-ID: <DM5PR2101MB091825C55612FBCEA3322119D7770@DM5PR2101MB0918.namprd21.prod.outlook.com>
-References: <20190226053530.GA2897@ubu-Virtual-Machine>
- <20190301191824.GA4108@ubu-Virtual-Machine>
-In-Reply-To: <20190301191824.GA4108@ubu-Virtual-Machine>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-03-02T18:39:27.7610633Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2d9ed75d-13e4-4fbd-bbbf-79ba7f57ada0;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-x-originating-ip: [107.0.123.131]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fbc22955-2881-4e30-0b7f-08d69f3e6889
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR2101MB0887;
-x-ms-traffictypediagnostic: DM5PR2101MB0887:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtETTVQUjIxMDFNQjA4ODc7MjM6VVVkWk9zS2s1aVY2cC9OZEdPTldmN2I0?=
- =?utf-8?B?aHNycFVEQkZkK2JXVnBHU01LSHR0Nlg3QnZpSDRLa1dYT3VFQW9UcFJQM0lk?=
- =?utf-8?B?ZFJSNWJQUTZpQzFna1BLVm44eFNXRktHK3J6MnhlenZBMm9PWEZVc2lTVEQ5?=
- =?utf-8?B?S1EyTjFEZFVmNHhZV3drQXBlU05zd3BmekNRU1JYSVpqVktZeEhlaS9PMzlI?=
- =?utf-8?B?bTFrUjJjaWV2ZXBBR0hQdEc1QjhJSzBpTHFjdHJYOUpHOUFuanZ5OXVBZmVL?=
- =?utf-8?B?T2p1WlRCYm5iNG04TFlZSnowcWJFY2xKYmRUdFh1T2N3bkhJbks4cFR4RUpW?=
- =?utf-8?B?OHFRaDdrNS81REdEOWZIZWtmWnozZ3psQWFvZERmVGI2WnhMOXk1b2gwU3dq?=
- =?utf-8?B?MzZ0MlVyQ2pYd0Z2bmdGZWZMNEQvUEdYaWJmdGhYZXloUHE4U2dhS0NDdE1q?=
- =?utf-8?B?M1NvNEpLbEV2ei91OExQWEtBSFk2R1F0QnJBWlB4LzNaOEpjK25TTkFualpC?=
- =?utf-8?B?S1hZSmY1RDNkSWNTZWxBUnhGckx4RWswRXZtdHVjaUdzS3MxTXJoS2hCdzFy?=
- =?utf-8?B?a2JFZmF1ZnRORGQ0SUtIYkpkRHh5U0Nnc05EOVhuenJMMUdLTWUrY3JGa3U1?=
- =?utf-8?B?bHJTVUFMRTFyNmFJanRaNXdZN3NScDgxVytuYUFKK3BYRFNDazA1cm5pbFFh?=
- =?utf-8?B?MFVjN1lCUzhOWVR1VFpLZmNhM0dTdmx4U0lIWFpUekZvTUlzOFVlby9TMFZ1?=
- =?utf-8?B?d1VNMTI5N2NpYXlGaHdITHk4SU5HNnA0UFVuQjRsemI3MkNQM3BaYWR3S3pK?=
- =?utf-8?B?Qld4UVJrYXJPUVUyWXdoRnlsUmhDRjNYWml6b3A0NUFlSS95RUwwbkV2T0hK?=
- =?utf-8?B?OEEyNUYxelcwc2h6N3RMdy9hcTdQeGFJN0JMa2dHWUxkZVQwVzAzNzNWNXFo?=
- =?utf-8?B?bEZCS1FRL2FTc2ZBTHIvaWpJSmkzSGxnbGU5eDVNYWtJbnZsYUgwWUlsNXpI?=
- =?utf-8?B?S1cwRWYzdFE2T3RjSG9EOGQxQ3RSSS9uazFhZkl5MGFxaXkwek5kSDJjK3JK?=
- =?utf-8?B?cDB2RE40KzJwamVnVFpIS2k3YmV5b1g0NWVSMjAxQmVZTGJkelBramIwWEpB?=
- =?utf-8?B?c0c5bUJXYzZUbEp5RTNPT3ZZdnF3ekpmVWM0QUducndWN1k2MUZ0dkl3cWdp?=
- =?utf-8?B?V1ZSeVFGd2Y4RHdvblNJSFVnTXdMZHB2cHNjalZGOFNwNC9lRi91VDdEQ0hG?=
- =?utf-8?B?VldtWDFVTWt5N09YV3ZpZVdLUDZmUmh3OEtaUHdCaHlPczhHa1BGbW84UGtX?=
- =?utf-8?B?NHhsQlM0QmJUbzQySUpZaVZ2TEpLbFdHYkJvWU4rbnpyS3NpZVNQYmxQeVAz?=
- =?utf-8?B?OFBrNGdCQzhkYWpWVzhCUHlBNDdIRnVkSHpDaHRzclJ5RW8xTFdnTjFRQXpP?=
- =?utf-8?B?ZmxMNVNYdGRsYk0wazQvWjBFSU8yaHlBNHdtYjBNZ1YrTGVvZFRvcjh6bzA2?=
- =?utf-8?B?TkhkNUMrZ2pxeVJmK2ZKQkFzRG45TWVES0dLR09nSmtnZ3NmMU9OaEsyb2VU?=
- =?utf-8?B?emhWRG5BaXRlOGpyNHZBTGIza1E3bVh2ZGFwN0h1TXEzNmdIcE9mczVNMnc2?=
- =?utf-8?B?RmNtWFdiWStBbW85b0tUQTMxTXJMNEhaU1VBeCtidG0wak1YcE5aNCtyZ1JQ?=
- =?utf-8?B?UUxmbld1QitrVWVSM3RLTUI3ZEZKQVJUYnE4T01adCtkOEVMUVAraWVEMHJq?=
- =?utf-8?B?N2xmTmx5ZFNQeTJHUzlXQm1CbmVnakFxL3FTK3dlb2dvbmdvNUoyZ2doc2VO?=
- =?utf-8?B?WldEc2dGMXcxV243VjM3ZjVaSlN4Y1JDbjJqcWlTVUx4WENhbHFLd1JFVXFs?=
- =?utf-8?B?ckQwZFBCRE5pWWYwZ3VBWCtqaU1NT2pDNStBYW9GK2NYWGdIeFZDcVVUTktY?=
- =?utf-8?B?dGpBTVV3Wjd1MHc9PQ==?=
-x-microsoft-antispam-prvs: <DM5PR2101MB08875F992CB1D02EC42B9998D7770@DM5PR2101MB0887.namprd21.prod.outlook.com>
-x-forefront-prvs: 09645BAC66
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(366004)(136003)(346002)(376002)(189003)(199004)(186003)(256004)(14444005)(6506007)(76176011)(9686003)(55016002)(26005)(6346003)(6436002)(102836004)(7696005)(22452003)(97736004)(10290500003)(316002)(54906003)(110136005)(71200400001)(71190400001)(25786009)(229853002)(2501003)(68736007)(8936002)(478600001)(33656002)(14454004)(4326008)(486006)(476003)(11346002)(446003)(2906002)(6116002)(3846002)(106356001)(105586002)(305945005)(7736002)(86362001)(86612001)(53936002)(99286004)(6246003)(8676002)(81166006)(81156014)(8990500004)(1511001)(66066001)(10090500001)(52536013)(5660300002)(74316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0887;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: eSf5w7Jcc5wYSQaacVp0KPoGv5ycQZ5un+EugdCpDDuK3xUFkzAXKUl29TIr2ivO46iuz1MjQWsDxPUglY4cBHlGsLG7okoHp1qj15IqMmCl8jJSmSOWLTQTquyf67XMapA+qV4FmkZxyh3RZ3MyhQlhki65736aCy/Z7ac/HgfEPqItQm+qAJSqnl8FzlTzI5pKnGzHRbTK2XjJylfUjtfmSDtDdkiebM8DKtuPqndDcPYyZ9VQrXnvVxRvbt8RvCrteKQCr00v61e5wqsSKS3D68CVZSlWhq1iFLC1ZyoimCNGkyvdAlISFL2swIkOoNSYG+jixX20qmT1D9Aw4DeHExRy8C63AOuisk05dkvtLRVhJvDNpc476yvjTBMFXnDYAWuLBjMMFkOqTgKGsh7Lpxi5k4cdPrZj5bymzV4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 2 Mar 2019 13:40:49 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44344 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfCBSks (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 13:40:48 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w2so1208235wrt.11
+        for <linux-kernel@vger.kernel.org>; Sat, 02 Mar 2019 10:40:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=cp2ik8OTebg+BirUlmnMeLWpDKQDnqk6596G0W4eWlE=;
+        b=Gdq7/oho0UR00Kkilncf1ne+J2p6PAUs/NMcYH5paWib8bAynL7AORDbXH7xHtgXNi
+         TtHxVIoXnLaTN8ZAKiCO4lFTPRgty9A4TivUoKpj9T1AjWPkqElnvG5HcewPprkov4u4
+         A49R7P19PYE6SsLcP6vHDb6kELFRvocwuzUwotPB4zhu5Nxy5lw2leQ1PVooE0YFx0Cj
+         EahrEbv2S6/IN70FnVKWRv3jYSp8CjQ9iVXrmW7wVpgmVnfuB6gaAc7ANh4ZLq2kcOZI
+         wElQK8UXuMrzJRjQYqHYm4c8mc1h8t5yoCRGUr26Bqo5LKBrhnldeO3lC6YOWIJcn94p
+         5dNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=cp2ik8OTebg+BirUlmnMeLWpDKQDnqk6596G0W4eWlE=;
+        b=M+a4YllyJigaim3OW7UnDUqgXVM01ngutExEuuL+SLKobr6dmd6JXLIGorbMSicKcn
+         Pt3pFnimFJdY6+H20eOkWfhJIVl3rov2Ghg/980kD0D9Lz+cwA/wNBOi4NZy0On/tj+r
+         HZWZ9+9lI43GhmDPVwKCX75i+nn96mz9i8FaGcCsRhYbe+Ci4ypYMcH+ojg7TpR/I9j/
+         fYhTwdEhoXBm905rVVqYd0tgBwtqhhlz/JmE4hpTC7eQhqn6WsBBGHdnnGujXHNyIiCE
+         MalaU1vtSrKV7KD4HmgT8dFZs1DNicgj7tYWE5znSri16dzC7tZITdkuHqsBEJoGfeQ3
+         ilgw==
+X-Gm-Message-State: APjAAAW2B6Swc0GDOWN4ROy6xsLPfNHXgNEKx22ggdfEECrCDdKSwADA
+        XO/wSQakrZ08RkMqC5EAscD8Ow==
+X-Google-Smtp-Source: APXvYqyEJhnFXNOK4JCkcvp8fgNLnWtaTQlT+lrIfcvAUHNTPIGHzfsrPGP3zrVVTeRYF4aE6mlL0w==
+X-Received: by 2002:adf:e548:: with SMTP id z8mr7688554wrm.52.1551552045282;
+        Sat, 02 Mar 2019 10:40:45 -0800 (PST)
+Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id u4sm3463849wmb.25.2019.03.02.10.40.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 02 Mar 2019 10:40:44 -0800 (PST)
+Message-ID: <fc94b0cdd050d10ee9c83dc5f918fedab4fb0fc7.camel@baylibre.com>
+Subject: Re: [PATCH v2 6/8] clk: Allow parents to be specified without
+ string names
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Date:   Sat, 02 Mar 2019 19:40:42 +0100
+In-Reply-To: <20190226223429.193873-7-sboyd@kernel.org>
+References: <20190226223429.193873-1-sboyd@kernel.org>
+         <20190226223429.193873-7-sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbc22955-2881-4e30-0b7f-08d69f3e6889
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Mar 2019 18:39:30.8765
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0887
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogS2ltYmVybHkgQnJvd24gPGtpbWJyb3dua2RAZ21haWwuY29tPiAgU2VudDogRnJpZGF5
-LCBNYXJjaCAxLCAyMDE5IDExOjE4IEFNDQo+IA0KPiArLyoNCj4gKyAqIENoYW5uZWwtbGV2ZWwg
-YXR0cmlidXRlX2dyb3VwIGNhbGxiYWNrIGZ1bmN0aW9uLiBSZXR1cm5zIHRoZSBwZXJtaXNzaW9u
-IGZvcg0KPiArICogZWFjaCBhdHRyaWJ1dGUsIGFuZCByZXR1cm5zIDAgaWYgYW4gYXR0cmlidXRl
-IGlzIG5vdCB2aXNpYmxlLg0KPiArICovDQo+ICtzdGF0aWMgdW1vZGVfdCB2bWJ1c19jaGFuX2F0
-dHJfaXNfdmlzaWJsZShzdHJ1Y3Qga29iamVjdCAqa29iaiwNCj4gKwkJCQkJICBzdHJ1Y3QgYXR0
-cmlidXRlICphdHRyLCBpbnQgaWR4KQ0KPiArew0KPiArCWNvbnN0IHN0cnVjdCB2bWJ1c19jaGFu
-bmVsICpjaGFubmVsID0NCj4gKwkJY29udGFpbmVyX29mKGtvYmosIHN0cnVjdCB2bWJ1c19jaGFu
-bmVsLCBrb2JqKTsNCj4gKw0KPiArCS8qIEhpZGUgdGhlIG1vbml0b3IgYXR0cmlidXRlcyBpZiB0
-aGUgbW9uaXRvciBtZWNoYW5pc20gaXMgbm90IHVzZWQuICovDQo+ICsJaWYgKCFjaGFubmVsLT5v
-ZmZlcm1zZy5tb25pdG9yX2FsbG9jYXRlZCAmJg0KPiArCSAgICAoYXR0ciA9PSAmY2hhbl9hdHRy
-X3BlbmRpbmcuYXR0ciB8fA0KPiArCSAgICAgYXR0ciA9PSAmY2hhbl9hdHRyX2xhdGVuY3kuYXR0
-ciB8fA0KPiArCSAgICAgYXR0ciA9PSAmY2hhbl9hdHRyX21vbml0b3JfaWQuYXR0cikpDQo+ICsJ
-CXJldHVybiAwOw0KPiArDQo+ICsJcmV0dXJuIGF0dHItPm1vZGU7DQo+ICt9DQo+ICsNCj4gK3N0
-YXRpYyBzdHJ1Y3QgYXR0cmlidXRlX2dyb3VwIHZtYnVzX2NoYW5fZ3JvdXAgPSB7DQo+ICsJLmF0
-dHJzID0gdm1idXNfY2hhbl9hdHRycywNCj4gKwkuaXNfdmlzaWJsZSA9IHZtYnVzX2NoYW5fYXR0
-cl9pc192aXNpYmxlDQo+ICt9Ow0KPiArDQo+ICBzdGF0aWMgc3RydWN0IGtvYmpfdHlwZSB2bWJ1
-c19jaGFuX2t0eXBlID0gew0KPiAgCS5zeXNmc19vcHMgPSAmdm1idXNfY2hhbl9zeXNmc19vcHMs
-DQo+ICAJLnJlbGVhc2UgPSB2bWJ1c19jaGFuX3JlbGVhc2UsDQo+IC0JLmRlZmF1bHRfYXR0cnMg
-PSB2bWJ1c19jaGFuX2F0dHJzLA0KDQpKdXN0IHRvIGRvdWJsZS1jaGVjayBteSB1bmRlcnN0YW5k
-aW5nLCByZW1vdmluZyB0aGUgZGVmYXVsdF9hdHRycw0KaGVyZSBtZWFucyB0aGF0IGluIHZtYnVz
-X2FkZF9jaGFubmVsX2tvYmooKSwgdGhlIGNhbGwgdG8NCmtvYmplY3RfaW5pdF9hbmRfYWRkKCkg
-d2lsbCBvbmx5IGNyZWF0ZSB0aGUgc3ViLWRpcmVjdG9yeSB0aGF0IGlzIHRoZQ0KY2hhbm5lbCBu
-dW1iZXIuICBUaGUgc3ViLWRpcmVjdG9yeSB3aWxsIGJlIGVtcHR5LiAgVGhlbiB0aGUgbmV3DQpj
-YWxsIHRvIHN5c2ZzX2NyZWF0ZV9ncm91cCgpIHRoYXQgeW91IGFkZGVkIGJlbG93IHdpbGwgcG9w
-dWxhdGUNCnRoZSBzdWJkaXJlY3RvcnksIGFzIGZpbHRlcmVkIGJ5IHZtYnVzX2NoYW5fYXR0cl9p
-c192aXNpYmxlKCkuDQoNCj4gIH07DQo+IA0KPiAgLyoNCj4gQEAgLTE1NzEsNiArMTYyNCwxMiBA
-QCBpbnQgdm1idXNfYWRkX2NoYW5uZWxfa29iaihzdHJ1Y3QgaHZfZGV2aWNlICpkZXYsIHN0cnVj
-dA0KPiB2bWJ1c19jaGFubmVsICpjaGFubmVsKQ0KPiAgCWlmIChyZXQpDQo+ICAJCXJldHVybiBy
-ZXQ7DQo+IA0KPiArCXJldCA9IHN5c2ZzX2NyZWF0ZV9ncm91cChrb2JqLCAmdm1idXNfY2hhbl9n
-cm91cCk7DQo+ICsJaWYgKHJldCkgew0KPiArCQlwcl9lcnIoIlVuYWJsZSB0byBzZXQgdXAgY2hh
-bm5lbCBzeXNmcyBmaWxlc1xuIik7DQo+ICsJCXJldHVybiByZXQ7DQoNCkluIHRoaXMgZXJyb3Ig
-Y2FzZSwgdGhlIHByZXZpb3VzbHkgY3JlYXRlZCBzdWItZGlyZWN0b3J5IHRoYXQgaXMgdGhlDQpj
-aGFubmVsIG51bWJlciBuZWVkcyB0byBiZSBkZWxldGVkL2NsZWFuZWQgdXAuDQoNCj4gKwl9DQo+
-ICsNCg0KTWljaGFlbA0K
+On Tue, 2019-02-26 at 14:34 -0800, Stephen Boyd wrote:
+> The common clk framework is lacking in ability to describe the clk
+> topology without specifying strings for every possible parent-child
+> link. There are a few drawbacks to the current approach:
+> 
+>  1) String comparisons are used for everything, including describing
+>  topologies that are 'local' to a single clock controller.
+> 
+>  2) clk providers (e.g. i2c clk drivers) need to create globally unique
+>  clk names to avoid collisions in the clk namespace, leading to awkward
+>  name generation code in various clk drivers.
+> 
+>  3) DT bindings may not fully describe the clk topology and linkages
+>  between clk controllers because drivers can easily rely on globally unique
+>  strings to describe connections between clks.
+> 
+> This leads to confusing DT bindings, complicated clk name generation
+> code, and inefficient string comparisons during clk registration just so
+> that the clk framework can detect the topology of the clk tree.
+> Furthermore, some drivers call clk_get() and then __clk_get_name() to
+> extract the globally unique clk name just so they can specify the parent
+> of the clk they're registering. We have of_clk_parent_fill() but that
+> mostly only works for single clks registered from a DT node, which isn't
+> the norm. Let's simplify this all by introducing two new ways of
+> specifying clk parents.
+> 
+> The first method is an array of pointers to clk_hw structures
+> corresponding to the parents at that index. This works for clks that are
+> registered when we have access to all the clk_hw pointers for the
+> parents.
+> 
+> The second method is a mix of clk_hw pointers and strings of local and
+> global parent clk names. If the .name member of the map is set we'll
+> look for that clk by performing a DT based lookup of the device the clk
+> is registered with and the .name specified in the map. If that fails,
+> we'll fallback to the .fallback member and perform a global clk name
+> lookup like we've always done before.
+
+Nitpick: I think you forgot to update the commit message when renaming the
+struct members
+
+> 
+> Using either one of these new methods is entirely optional. Existing
+> drivers will continue to work, and they can migrate to this new approach
+> as they see fit. Eventually, we'll want to get rid of the 'parent_names'
+> array in struct clk_init_data and use one of these new methods instead.
+> 
+
+Being able to specify parents from DT is great addition !!! Thx !
+
+Overall, it looks good but with such big patch on framework is not easy get a
+clear idea. I'll try to give it a spin next week.
+
+
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  drivers/clk/clk.c            | 260 ++++++++++++++++++++++++++---------
+>  include/linux/clk-provider.h |  19 +++
+>  2 files changed, 217 insertions(+), 62 deletions(-)
+> 
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index 937b8d092d17..3d01e8c56400 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -39,6 +39,13 @@ static LIST_HEAD(clk_notifier_list);
+>  
+>  /***    private data structures    ***/
+>  
+> +struct clk_parent_map {
+> +	const struct clk_hw	*hw;
+> +	struct clk_core		*core;
+> +	const char	 	*fw_name;
+> +	const char	 	*name;
+> +};
+> +
+>  struct clk_core {
+>  	const char		*name;
+>  	const struct clk_ops	*ops;
+> @@ -46,8 +53,7 @@ struct clk_core {
+>  	struct module		*owner;
+>  	struct device		*dev;
+>  	struct clk_core		*parent;
+> -	const char		**parent_names;
+> -	struct clk_core		**parents;
+> +	struct clk_parent_map	*parents;
+>  	u8			num_parents;
+>  	u8			new_parent_index;
+>  	unsigned long		rate;
+> @@ -316,17 +322,92 @@ static struct clk_core *clk_core_lookup(const char *name)
+>  	return NULL;
+>  }
+>  
+> +/**
+> + * clk_core_get - Find the parent of a clk using a clock specifier in DT
+> + * @core: clk to find parent of
+> + * @name: name to search for in 'clock-names' of device providing clk
+> + *
+> + * This is the preferred method for clk providers to find the parent of a
+> + * clk when that parent is external to the clk controller. The parent_names
+> + * array is indexed and treated as a local name matching a string in the device
+> + * node's 'clock-names' property. This allows clk providers to use their own
+> + * namespace instead of looking for a globally unique parent string.
+> + *
+> + * For example the following DT snippet would allow a clock registered by the
+> + * clock-controller@c001 that has a clk_init_data::parent_data array
+> + * with 'xtal' in the 'name' member to find the clock provided by the
+> + * clock-controller@f00abcd without needing to get the globally unique name of
+> + * the xtal clk.
+> + *
+> + * 	parent: clock-controller@f00abcd {
+> + * 		reg = <0xf00abcd 0xabcd>;
+> + * 		#clock-cells = <0>;
+> + * 	};
+> + *
+> + * 	clock-controller@c001 {
+> + * 		reg = <0xc001 0xf00d>;
+> + * 		clocks = <&parent>;
+> + * 		clock-names = "xtal";
+> + * 		#clock-cells = <1>;
+> + * 	};
+> + *
+> + * Returns: -ENOENT when the provider can't be found or the clk doesn't
+> + * exist in the provider. -EINVAL when the name can't be found. NULL when the
+> + * provider knows about the clk but it isn't provided on this system.
+> + * A valid clk_core pointer when the clk can be found in the provider.
+> + */
+> +static struct clk_core *clk_core_get(struct clk_core *core, const char *name)
+> +{
+> +	struct clk_hw *hw;
+> +	struct device *dev = core->dev;
+> +
+> +	if (!dev)
+> +		return ERR_PTR(-ENOENT);
+> +
+> +	/* TODO: Support clkdev clk_lookups */
+> +	hw = of_clk_get_hw(dev->of_node, -1, name);
+> +	if (IS_ERR_OR_NULL(hw))
+> +		return ERR_CAST(hw);
+> +
+> +	return hw->core;
+> +}
+> +
+> +static void clk_core_fill_parent_index(struct clk_core *core, u8 index)
+> +{
+> +	struct clk_parent_map *entry = &core->parents[index];
+> +	struct clk_core *parent = ERR_PTR(-ENOENT);
+> +
+> +	if (entry->hw) {
+> +		parent = entry->hw->core;
+> +		/*
+> +		 * We have a direct reference but it isn't registered yet? Orphan it
+> +		 * and let clk_reparent() update the orphan status when the parent
+> +		 * is registered.
+> +		 */
+> +		if (!parent)
+> +			parent = ERR_PTR(-EPROBE_DEFER);
+> +	} else {
+> +		if (entry->fw_name)
+> +			parent = clk_core_get(core, entry->fw_name);
+> +		if (IS_ERR(parent) && PTR_ERR(parent) == -ENOENT)
+> +			parent = clk_core_lookup(entry->name);
+> +	}
+> +
+> +	/* Only cache it if it's not an error */
+> +	if (!IS_ERR(parent))
+> +		entry->core = parent;
+> +}
+> +
+>  static struct clk_core *clk_core_get_parent_by_index(struct clk_core *core,
+>  							 u8 index)
+>  {
+> -	if (!core || index >= core->num_parents)
+> +	if (!core || index >= core->num_parents || !core->parents)
+>  		return NULL;
+>  
+> -	if (!core->parents[index])
+> -		core->parents[index] =
+> -				clk_core_lookup(core->parent_names[index]);
+> +	if (!core->parents[index].core)
+> +		clk_core_fill_parent_index(core, index);
+>  
+> -	return core->parents[index];
+> +	return core->parents[index].core;
+>  }
+>  
+>  struct clk_hw *
+> @@ -1516,15 +1597,15 @@ static int clk_fetch_parent_index(struct clk_core *core,
+>  		return -EINVAL;
+>  
+>  	for (i = 0; i < core->num_parents; i++) {
+> -		if (core->parents[i] == parent)
+> +		if (core->parents[i].core == parent)
+>  			return i;
+>  
+> -		if (core->parents[i])
+> +		if (core->parents[i].core)
+>  			continue;
+>  
+>  		/* Fallback to comparing globally unique names */
+> -		if (!strcmp(parent->name, core->parent_names[i])) {
+> -			core->parents[i] = parent;
+> +		if (!strcmp(parent->name, core->parents[i].name)) {
+> +			core->parents[i].core = parent;
+>  			return i;
+>  		}
+>  	}
+> @@ -2290,6 +2371,7 @@ void clk_hw_reparent(struct clk_hw *hw, struct clk_hw *new_parent)
+>  bool clk_has_parent(struct clk *clk, struct clk *parent)
+>  {
+>  	struct clk_core *core, *parent_core;
+> +	int i;
+>  
+>  	/* NULL clocks should be nops, so return success if either is NULL. */
+>  	if (!clk || !parent)
+> @@ -2302,8 +2384,11 @@ bool clk_has_parent(struct clk *clk, struct clk *parent)
+>  	if (core->parent == parent_core)
+>  		return true;
+>  
+> -	return match_string(core->parent_names, core->num_parents,
+> -			    parent_core->name) >= 0;
+> +	for (i = 0; i < core->num_parents; i++)
+> +		if (!strcmp(core->parents[i].name, parent_core->name))
+> +			return true;
+> +
+> +	return false;
+>  }
+>  EXPORT_SYMBOL_GPL(clk_has_parent);
+>  
+> @@ -2886,9 +2971,9 @@ static int possible_parents_show(struct seq_file *s, void *data)
+>  	int i;
+>  
+>  	for (i = 0; i < core->num_parents - 1; i++)
+> -		seq_printf(s, "%s ", core->parent_names[i]);
+> +		seq_printf(s, "%s ", core->parents[i].name);
+>  
+> -	seq_printf(s, "%s\n", core->parent_names[i]);
+> +	seq_printf(s, "%s\n", core->parents[i].name);
+>  
+>  	return 0;
+>  }
+> @@ -3022,7 +3107,7 @@ static inline void clk_debug_unregister(struct clk_core *core)
+>   */
+>  static int __clk_core_init(struct clk_core *core)
+>  {
+> -	int i, ret;
+> +	int ret;
+>  	struct clk_core *orphan;
+>  	struct hlist_node *tmp2;
+>  	unsigned long rate;
+> @@ -3076,12 +3161,6 @@ static int __clk_core_init(struct clk_core *core)
+>  		goto out;
+>  	}
+>  
+> -	/* throw a WARN if any entries in parent_names are NULL */
+> -	for (i = 0; i < core->num_parents; i++)
+> -		WARN(!core->parent_names[i],
+> -				"%s: invalid NULL in %s's .parent_names\n",
+> -				__func__, core->name);
+> -
+>  	core->parent = __clk_init_parent(core);
+>  
+>  	/*
+> @@ -3310,6 +3389,96 @@ struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
+>  	return clk;
+>  }
+>  
+> +static int clk_cpy_name(const char *dst, const char *src, bool must_exist)
+> +{
+> +	if (!src) {
+> +		if (must_exist)
+> +			return -EINVAL;
+> +		return 0;
+> +	}
+> +
+> +	dst = kstrdup_const(src, GFP_KERNEL);
+> +	if (!dst)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +
+> +static int clk_core_populate_parent_map(struct clk_core *core)
+> +{
+> +	const struct clk_init_data *init = core->hw->init;
+> +	u8 num_parents = init->num_parents;
+> +	const char * const *parent_names = init->parent_names;
+> +	const struct clk_hw **parent_hws = init->parent_hws;
+> +	const struct clk_parent_data *parent_data = init->parent_data;
+> +	int i, ret = 0;
+> +	struct clk_parent_map *parents, *parent;
+> +
+> +	if (!num_parents)
+> +		return 0;
+> +
+> +	/*
+> +	 * Avoid unnecessary string look-ups of clk_core's possible parents by
+> +	 * having a cache of names/clk_hw pointers to clk_core pointers.
+> +	 */
+> +	parents = kcalloc(num_parents, sizeof(*parents), GFP_KERNEL);
+> +	core->parents = parents;
+> +	if (!parents)
+> +		return -ENOMEM;
+> +
+> +	/* Copy everything over because it might be __initdata */
+> +	for (i = 0, parent = parents; i < num_parents; i++, parent++) {
+> +		if (parent_names) {
+> +			/* throw a WARN if any entries are NULL */
+> +			WARN(!parent_names[i],
+> +				"%s: invalid NULL in %s's .parent_names\n",
+> +				__func__, core->name);
+> +			ret = clk_cpy_name(parent->name, parent_names[i],
+> +					   true);
+> +		} else if (parent_data) {
+> +			parent->hw = parent_data[i].hw;
+> +			ret = clk_cpy_name(parent->fw_name,
+> +					   parent_data[i].fw_name, false);
+> +			if (!ret)
+> +				ret = clk_cpy_name(parent->name,
+> +						   parent_data[i].name,
+> +						   false);
+> +		} else if (parent_hws) {
+> +			parent->hw = parent_hws[i];
+> +		} else {
+> +			ret = -EINVAL;
+> +			WARN(1, "Must specify parents if num_parents > 0\n");
+> +		}
+> +
+> +		if (ret) {
+> +			do {
+> +				kfree_const(parents[i].name);
+> +				kfree_const(parents[i].fw_name);
+> +			} while (--i >= 0);
+> +			kfree(parents);
+> +
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void clk_core_free_parent_map(struct clk_core *core)
+> +{
+> +	int i = core->num_parents;
+> +
+> +	if (!core->num_parents)
+> +		return;
+> +
+> +	while (--i >= 0) {
+> +		kfree_const(core->parents[i].name);
+> +		kfree_const(core->parents[i].fw_name);
+> +	}
+> +
+> +	kfree(core->parents);
+> +}
+> +
+>  /**
+>   * clk_register - allocate a new clock, register it and return an opaque cookie
+>   * @dev: device that is registering this clock
+> @@ -3323,7 +3492,7 @@ struct clk *clk_hw_create_clk(struct device *dev, struct clk_hw *hw,
+>   */
+>  struct clk *clk_register(struct device *dev, struct clk_hw *hw)
+>  {
+> -	int i, ret;
+> +	int ret;
+>  	struct clk_core *core;
+>  
+>  	core = kzalloc(sizeof(*core), GFP_KERNEL);
+> @@ -3356,33 +3525,9 @@ struct clk *clk_register(struct device *dev, struct clk_hw *hw)
+>  	core->max_rate = ULONG_MAX;
+>  	hw->core = core;
+>  
+> -	/* allocate local copy in case parent_names is __initdata */
+> -	core->parent_names = kcalloc(core->num_parents, sizeof(char *),
+> -					GFP_KERNEL);
+> -
+> -	if (!core->parent_names) {
+> -		ret = -ENOMEM;
+> -		goto fail_parent_names;
+> -	}
+> -
+> -
+> -	/* copy each string name in case parent_names is __initdata */
+> -	for (i = 0; i < core->num_parents; i++) {
+> -		core->parent_names[i] = kstrdup_const(hw->init->parent_names[i],
+> -						GFP_KERNEL);
+> -		if (!core->parent_names[i]) {
+> -			ret = -ENOMEM;
+> -			goto fail_parent_names_copy;
+> -		}
+> -	}
+> -
+> -	/* avoid unnecessary string look-ups of clk_core's possible parents. */
+> -	core->parents = kcalloc(core->num_parents, sizeof(*core->parents),
+> -				GFP_KERNEL);
+> -	if (!core->parents) {
+> -		ret = -ENOMEM;
+> +	ret = clk_core_populate_parent_map(core);
+> +	if (ret)
+>  		goto fail_parents;
+> -	};
+>  
+>  	INIT_HLIST_HEAD(&core->clks);
+>  
+> @@ -3393,7 +3538,7 @@ struct clk *clk_register(struct device *dev, struct clk_hw *hw)
+>  	hw->clk = alloc_clk(core, NULL, NULL);
+>  	if (IS_ERR(hw->clk)) {
+>  		ret = PTR_ERR(hw->clk);
+> -		goto fail_parents;
+> +		goto fail_create_clk;
+>  	}
+>  
+>  	clk_core_link_consumer(hw->core, hw->clk);
+> @@ -3409,13 +3554,9 @@ struct clk *clk_register(struct device *dev, struct clk_hw *hw)
+>  	free_clk(hw->clk);
+>  	hw->clk = NULL;
+>  
+> +fail_create_clk:
+> +	clk_core_free_parent_map(core);
+>  fail_parents:
+> -	kfree(core->parents);
+> -fail_parent_names_copy:
+> -	while (--i >= 0)
+> -		kfree_const(core->parent_names[i]);
+> -	kfree(core->parent_names);
+> -fail_parent_names:
+>  fail_ops:
+>  	kfree_const(core->name);
+>  fail_name:
+> @@ -3445,15 +3586,10 @@ EXPORT_SYMBOL_GPL(clk_hw_register);
+>  static void __clk_release(struct kref *ref)
+>  {
+>  	struct clk_core *core = container_of(ref, struct clk_core, ref);
+> -	int i = core->num_parents;
+>  
+>  	lockdep_assert_held(&prepare_lock);
+>  
+> -	kfree(core->parents);
+> -	while (--i >= 0)
+> -		kfree_const(core->parent_names[i]);
+> -
+> -	kfree(core->parent_names);
+> +	clk_core_free_parent_map(core);
+>  	kfree_const(core->name);
+>  	kfree(core);
+>  }
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index e443fa9fa859..f4de52c6764e 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -250,6 +250,18 @@ struct clk_ops {
+>  	void		(*debug_init)(struct clk_hw *hw, struct dentry *dentry);
+>  };
+>  
+> +/**
+> + * struct clk_parent_data - clk parent information
+> + * @hw: parent clk_hw pointer (used for clk providers with internal clks)
+> + * @fw_name: parent name local to provider registering clk
+> + * @name: globally unique parent name (used as a fallback)
+> + */
+> +struct clk_parent_data {
+> +	const struct clk_hw 	*hw;
+> +	const char		*fw_name;
+> +	const char		*name;
+> +};
+> +
+>  /**
+>   * struct clk_init_data - holds init data that's common to all clocks and is
+>   * shared between the clock provider and the common clock framework.
+> @@ -257,13 +269,20 @@ struct clk_ops {
+>   * @name: clock name
+>   * @ops: operations this clock supports
+>   * @parent_names: array of string names for all possible parents
+> + * @parent_data: array of parent data for all possible parents (when some
+> + *               parents are external to the clk controller)
+> + * @parent_hws: array of pointers to all possible parents (when all parents
+> + *              are internal to the clk controller)
+>   * @num_parents: number of possible parents
+>   * @flags: framework-level hints and quirks
+>   */
+>  struct clk_init_data {
+>  	const char		*name;
+>  	const struct clk_ops	*ops;
+> +	/* Only one of the following three should be assigned */
+>  	const char		* const *parent_names;
+> +	const struct clk_parent_data	*parent_data;
+> +	const struct clk_hw		**parent_hws;
+>  	u8			num_parents;
+>  	unsigned long		flags;
+>  };
+
+
