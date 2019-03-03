@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1E4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F64C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E1F206DD
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15151206DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfCCQrf (ORCPT
+        id S1726597AbfCCQrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 11:47:35 -0500
-Received: from mga01.intel.com ([192.55.52.88]:31318 "EHLO mga01.intel.com"
+        Sun, 3 Mar 2019 11:47:39 -0500
+Received: from mga01.intel.com ([192.55.52.88]:31316 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbfCCQrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726456AbfCCQrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 3 Mar 2019 11:47:14 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 08:47:13 -0800
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 08:47:12 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,436,1544515200"; 
-   d="scan'208";a="128667524"
+   d="scan'208";a="128667520"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Mar 2019 08:47:13 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 03 Mar 2019 08:47:12 -0800
 From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     jikos@kernel.org, benjamin.tissoires@redhat.com
 Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 7/9] HID: intel-ish-hid: Add interface functions for struct ishtp_cl
-Date:   Sun,  3 Mar 2019 08:46:52 -0800
-Message-Id: <20190303164654.29400-8-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 4/9] HID: intel-ish-hid: Move driver registry functions
+Date:   Sun,  3 Mar 2019 08:46:49 -0800
+Message-Id: <20190303164654.29400-5-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190303164654.29400-1-srinivas.pandruvada@linux.intel.com>
 References: <20190303164654.29400-1-srinivas.pandruvada@linux.intel.com>
@@ -43,82 +43,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of directly accessing members of struct ishtp_cl, create interface
-functions to access them.
+Move the driver registry with the ishtp bus to the common interface
+file, which clients can include.
+Also rename __ishtp_cl_driver_register() to ishtp_cl_driver_register()
+and removed define for ishtp_cl_driver_register.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/hid/intel-ish-hid/ishtp/client.c | 42 ++++++++++++++++++++++++
- include/linux/intel-ish-client-if.h      |  7 ++++
- 2 files changed, 49 insertions(+)
+ drivers/hid/intel-ish-hid/ishtp-hid-client.c |  2 +-
+ drivers/hid/intel-ish-hid/ishtp/bus.c        |  8 +++---
+ drivers/hid/intel-ish-hid/ishtp/bus.h        | 27 +-------------------
+ include/linux/intel-ish-client-if.h          | 25 ++++++++++++++++++
+ 4 files changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp/client.c b/drivers/hid/intel-ish-hid/ishtp/client.c
-index 657b46dcefa6..b7ac5e3b1e82 100644
---- a/drivers/hid/intel-ish-hid/ishtp/client.c
-+++ b/drivers/hid/intel-ish-hid/ishtp/client.c
-@@ -1063,3 +1063,45 @@ void recv_ishtp_cl_msg_dma(struct ishtp_device *dev, void *msg,
- eoi:
- 	return;
+diff --git a/drivers/hid/intel-ish-hid/ishtp-hid-client.c b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
+index 287d71338b91..9084fea4c247 100644
+--- a/drivers/hid/intel-ish-hid/ishtp-hid-client.c
++++ b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
+@@ -938,7 +938,7 @@ static int __init ish_hid_init(void)
+ 	int	rv;
+ 
+ 	/* Register ISHTP client device driver with ISHTP Bus */
+-	rv = ishtp_cl_driver_register(&hid_ishtp_cl_driver);
++	rv = ishtp_cl_driver_register(&hid_ishtp_cl_driver, THIS_MODULE);
+ 
+ 	return rv;
+ 
+diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
+index 308853eab91c..95a97534fcda 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/bus.c
++++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
+@@ -485,7 +485,7 @@ static void ishtp_bus_remove_device(struct ishtp_cl_device *device)
  }
-+
-+void *ishtp_get_client_data(struct ishtp_cl *cl)
-+{
-+	return cl->client_data;
-+}
-+EXPORT_SYMBOL(ishtp_get_client_data);
-+
-+void ishtp_set_client_data(struct ishtp_cl *cl, void *data)
-+{
-+	cl->client_data = data;
-+}
-+EXPORT_SYMBOL(ishtp_set_client_data);
-+
-+struct ishtp_device *ishtp_get_ishtp_device(struct ishtp_cl *cl)
-+{
-+	return cl->dev;
-+}
-+EXPORT_SYMBOL(ishtp_get_ishtp_device);
-+
-+void ishtp_set_tx_ring_size(struct ishtp_cl *cl, int size)
-+{
-+	cl->tx_ring_size = size;
-+}
-+EXPORT_SYMBOL(ishtp_set_tx_ring_size);
-+
-+void ishtp_set_rx_ring_size(struct ishtp_cl *cl, int size)
-+{
-+	cl->rx_ring_size = size;
-+}
-+EXPORT_SYMBOL(ishtp_set_rx_ring_size);
-+
-+void ishtp_set_connection_state(struct ishtp_cl *cl, int state)
-+{
-+	cl->state = state;
-+}
-+EXPORT_SYMBOL(ishtp_set_connection_state);
-+
-+void ishtp_cl_set_fw_client_id(struct ishtp_cl *cl, int fw_client_id)
-+{
-+	cl->fw_client_id = fw_client_id;
-+}
-+EXPORT_SYMBOL(ishtp_cl_set_fw_client_id);
+ 
+ /**
+- * __ishtp_cl_driver_register() - Client driver register
++ * ishtp_cl_driver_register() - Client driver register
+  * @driver:	the client driver instance
+  * @owner:	Owner of this driver module
+  *
+@@ -494,8 +494,8 @@ static void ishtp_bus_remove_device(struct ishtp_cl_device *device)
+  *
+  * Return: Return value of driver_register or -ENODEV if not ready
+  */
+-int __ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
+-			       struct module *owner)
++int ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
++			     struct module *owner)
+ {
+ 	int err;
+ 
+@@ -512,7 +512,7 @@ int __ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(__ishtp_cl_driver_register);
++EXPORT_SYMBOL(ishtp_cl_driver_register);
+ 
+ /**
+  * ishtp_cl_driver_unregister() - Client driver unregister
+diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.h b/drivers/hid/intel-ish-hid/ishtp/bus.h
+index c96e7fb42f01..4aed195719de 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/bus.h
++++ b/drivers/hid/intel-ish-hid/ishtp/bus.h
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/intel-ish-client-if.h>
+ 
+ struct ishtp_cl;
+ struct ishtp_cl_device;
+@@ -52,26 +53,6 @@ struct ishtp_cl_device {
+ 	void (*event_cb)(struct ishtp_cl_device *device);
+ };
+ 
+-/**
+- * struct ishtp_cl_device - ISHTP device handle
+- * @driver:	driver instance on a bus
+- * @name:	Name of the device for probe
+- * @probe:	driver callback for device probe
+- * @remove:	driver callback on device removal
+- *
+- * Client drivers defines to get probed/removed for ISHTP client device.
+- */
+-struct ishtp_cl_driver {
+-	struct device_driver driver;
+-	const char *name;
+-	const guid_t *guid;
+-	int (*probe)(struct ishtp_cl_device *dev);
+-	int (*remove)(struct ishtp_cl_device *dev);
+-	int (*reset)(struct ishtp_cl_device *dev);
+-	const struct dev_pm_ops *pm;
+-};
+-
+-
+ int	ishtp_bus_new_client(struct ishtp_device *dev);
+ void	ishtp_remove_all_clients(struct ishtp_device *dev);
+ int	ishtp_cl_device_bind(struct ishtp_cl *cl);
+@@ -105,12 +86,6 @@ void	ishtp_get_device(struct ishtp_cl_device *);
+ void	ishtp_set_drvdata(struct ishtp_cl_device *cl_device, void *data);
+ void	*ishtp_get_drvdata(struct ishtp_cl_device *cl_device);
+ 
+-int	__ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
+-				   struct module *owner);
+-#define ishtp_cl_driver_register(driver)		\
+-	__ishtp_cl_driver_register(driver, THIS_MODULE)
+-void	ishtp_cl_driver_unregister(struct ishtp_cl_driver *driver);
+-
+ int	ishtp_register_event_cb(struct ishtp_cl_device *device,
+ 				void (*read_cb)(struct ishtp_cl_device *));
+ int	ishtp_fw_cl_by_uuid(struct ishtp_device *dev, const guid_t *cuuid);
 diff --git a/include/linux/intel-ish-client-if.h b/include/linux/intel-ish-client-if.h
-index 7ce172f656f8..526e3048e09f 100644
+index 11e285172735..abc0b8122f07 100644
 --- a/include/linux/intel-ish-client-if.h
 +++ b/include/linux/intel-ish-client-if.h
-@@ -87,5 +87,12 @@ int ishtp_cl_flush_queues(struct ishtp_cl *cl);
- int ishtp_cl_io_rb_recycle(struct ishtp_cl_rb *rb);
- bool ishtp_cl_tx_empty(struct ishtp_cl *cl);
- struct ishtp_cl_rb *ishtp_cl_rx_get_rb(struct ishtp_cl *cl);
-+void *ishtp_get_client_data(struct ishtp_cl *cl);
-+void ishtp_set_client_data(struct ishtp_cl *cl, void *data);
-+struct ishtp_device *ishtp_get_ishtp_device(struct ishtp_cl *cl);
-+void ishtp_set_tx_ring_size(struct ishtp_cl *cl, int size);
-+void ishtp_set_rx_ring_size(struct ishtp_cl *cl, int size);
-+void ishtp_set_connection_state(struct ishtp_cl *cl, int state);
-+void ishtp_cl_set_fw_client_id(struct ishtp_cl *cl, int fw_client_id);
+@@ -10,6 +10,31 @@
  
- #endif /* _INTEL_ISH_CLIENT_IF_H_ */
+ struct ishtp_cl_device;
+ 
++/**
++ * struct ishtp_cl_device - ISHTP device handle
++ * @driver:	driver instance on a bus
++ * @name:	Name of the device for probe
++ * @probe:	driver callback for device probe
++ * @remove:	driver callback on device removal
++ *
++ * Client drivers defines to get probed/removed for ISHTP client device.
++ */
++struct ishtp_cl_driver {
++	struct device_driver driver;
++	const char *name;
++	const guid_t *guid;
++	int (*probe)(struct ishtp_cl_device *dev);
++	int (*remove)(struct ishtp_cl_device *dev);
++	int (*reset)(struct ishtp_cl_device *dev);
++	const struct dev_pm_ops *pm;
++};
++
++int ishtp_cl_driver_register(struct ishtp_cl_driver *driver,
++			     struct module *owner);
++void ishtp_cl_driver_unregister(struct ishtp_cl_driver *driver);
++int ishtp_register_event_cb(struct ishtp_cl_device *device,
++			    void (*read_cb)(struct ishtp_cl_device *));
++
+ /* Get the device * from ishtp device instance */
+ struct device *ishtp_device(struct ishtp_cl_device *cl_device);
+ /* Trace interface for clients */
 -- 
 2.17.2
 
