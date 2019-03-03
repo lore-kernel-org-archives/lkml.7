@@ -3,178 +3,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6335BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 09:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97EFC43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265AB20818
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 09:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A670420836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:05:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="yHvqlUNR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQsBWKzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726041AbfCCJxe (ORCPT
+        id S1726080AbfCCKFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 04:53:34 -0500
-Received: from mail-eopbgr00070.outbound.protection.outlook.com ([40.107.0.70]:34187
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725877AbfCCJxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 04:53:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qKla7ajTc5yB6+x/0Wo3/YSLiuf0G3cDL8t8DZs4SUU=;
- b=yHvqlUNRWtPUkt9143w6K+O2v+YaMDd2nTdW3tqNXAzRy3GUJ6LDbtq6+fZ3MmnVeLyBZneZFMaq16M7e8qlQOojAx4Put0DOpty0ERZQdyYpk5+ly2Dz9H7TpPpVa8/UYW0aqdHaPNSW0vuEsdx7TPAhNTChz2A7zRGayp5thU=
-Received: from DB6PR0501CA0008.eurprd05.prod.outlook.com (2603:10a6:4:8f::18)
- by DB6PR0501MB2631.eurprd05.prod.outlook.com (2603:10a6:4:8c::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1665.16; Sun, 3 Mar
- 2019 09:53:27 +0000
-Received: from DB5EUR03FT006.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::207) by DB6PR0501CA0008.outlook.office365.com
- (2603:10a6:4:8f::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1665.16 via Frontend
- Transport; Sun, 3 Mar 2019 09:53:27 +0000
-Authentication-Results: spf=pass (sender IP is 193.47.165.134)
- smtp.mailfrom=mellanox.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none
- header.from=mellanox.com;
-Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
- 193.47.165.134 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.47.165.134; helo=mtlcas13.mtl.com;
-Received: from mtlcas13.mtl.com (193.47.165.134) by
- DB5EUR03FT006.mail.protection.outlook.com (10.152.20.106) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1643.11 via Frontend Transport; Sun, 3 Mar 2019 09:53:27 +0000
-Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4; Sun, 3 Mar 2019 11:53:26
- +0200
-Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Sun,
- 3 Mar 2019 11:53:26 +0200
-Received: from [10.223.3.154] (10.223.3.154) by MTLCAS01.mtl.com (10.0.8.71)
- with Microsoft SMTP Server (TLS) id 14.3.301.0; Sun, 3 Mar 2019 11:53:24
- +0200
-Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error handling
- paths
-To:     Ira Weiny <ira.weiny@intel.com>,
-        "john.hubbard@gmail.com" <john.hubbard@gmail.com>
-CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-References: <20190302032726.11769-2-jhubbard@nvidia.com>
- <20190302202435.31889-1-jhubbard@nvidia.com>
- <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
-From:   Artemy Kovalyov <artemyko@mellanox.com>
-Message-ID: <2404c962-8f6d-1f6d-0055-eb82864ca7fc@mellanox.com>
-Date:   Sun, 3 Mar 2019 11:52:41 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        Sun, 3 Mar 2019 05:05:32 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38416 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726032AbfCCKFb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 05:05:31 -0500
+Received: by mail-pg1-f196.google.com with SMTP id m2so1107834pgl.5;
+        Sun, 03 Mar 2019 02:05:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=b8vQYc9ep8TfoYWy1t/cwVZtTf+JFWkdkgDvyL2DYys=;
+        b=eQsBWKzko1lBtorrWr+b06pWwvf5bv7f9QI8605aY1Kw/dzLGRowS+gxr8N56VREuW
+         cABct7IuxrVOSnxC7ndkrBXi65G/LN1zEHDGeEIbTpXKbF46a2X1wSu7DOtVv3Wi3nK8
+         wA8xEsNVIs5+CW+h66uTLBqNev9THmAGa6TDrQINOgPFwYvNhFWu7k9uHJl1VtpYPKSp
+         QXw0/fbIa7u3XrwRt59pAXtPO1vRdyk5Tk1Oe7k76odFBjyQkE01qP1OIhrbf/IG/Y11
+         ZE7zHbC16oti7qnbCmN0U6CMrJ6j8qMmoPOHCYbeFc7KldHoBlJJ4zQDXaEkwgvrL9eH
+         xJqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=b8vQYc9ep8TfoYWy1t/cwVZtTf+JFWkdkgDvyL2DYys=;
+        b=hXZtSRd2KE5+rzmwiyS2IoY2EfWQWvaDVLuM+vAQJwfEATNlAqPuKQYJ7wK2DH2DVF
+         Nyc54pX7dvrFvSBAOMvAln9am6G3xX6UmwOf4464h49krkQldmNbNavazoXUXcSjgLTo
+         JsFe+i7w1FsmzZDI7VfsHpmKUB84Wx6En3fDtI3Kx+bJL9jm8yRjuNwInAlQk67eXnp2
+         AhQoTmw+ZGA9+xC2g9x/DDrW3P+aTG149A2yds4Fp73hvhTbA3DuOlwCwKIk67jvdcHu
+         A2A/6m310MEedqHvz8fhlaHQK5uU62TvVcFJAm7OH+skGD7aF1oXsnzFjY07uqRGKChp
+         8lBg==
+X-Gm-Message-State: APjAAAV9xF8hiotzSrQT2nOQpNMeTCw9JqBsbwt6h1O5W0vzWUxlhMGW
+        12I3Kq6TZVm2+EMuGfp8LSc=
+X-Google-Smtp-Source: APXvYqw6VAOgIqjNxc0p0slnJ2hgt5OBEUHaGw1eB/rnwZFE7hXi83hgipthHGM9ezdF/jVjdPWi/g==
+X-Received: by 2002:a65:5844:: with SMTP id s4mr13205327pgr.77.1551607530979;
+        Sun, 03 Mar 2019 02:05:30 -0800 (PST)
+Received: from localhost (193-116-74-175.tpgi.com.au. [193.116.74.175])
+        by smtp.gmail.com with ESMTPSA id m20sm5798295pfj.142.2019.03.03.02.05.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 Mar 2019 02:05:30 -0800 (PST)
+Date:   Sun, 03 Mar 2019 20:05:23 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 01/20] asm-generic/mmiowb: Add generic implementation of
+ mmiowb() tracking
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Rich Felker <dalias@libc.org>,
+        David Howells <dhowells@redhat.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Luck <tony.luck@intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+References: <20190301140348.25175-1-will.deacon@arm.com>
+        <20190301140348.25175-2-will.deacon@arm.com>
+        <1551575210.6lwpiqtg5k.astroid@bobo.none>
+        <CAHk-=whxaYGTmHyoWeegL=ihHMDW_FJehUJVN_nP++Su=foL+g@mail.gmail.com>
+        <1551583190.duzqnmfnvg.astroid@bobo.none>
+        <CAHk-=whVN58nWh29jvXx+X-Yx9dCC6BeAZOtKak+d01y_UVg=A@mail.gmail.com>
+In-Reply-To: <CAHk-=whVN58nWh29jvXx+X-Yx9dCC6BeAZOtKak+d01y_UVg=A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.223.3.154]
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:193.47.165.134;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(136003)(396003)(2980300002)(199004)(189003)(77096007)(26005)(8936002)(86362001)(81156014)(53546011)(81166006)(8676002)(31696002)(2906002)(65826007)(186003)(76176011)(230700001)(4326008)(47776003)(6246003)(65956001)(16526019)(3846002)(6116002)(6666004)(65806001)(356004)(58126008)(110136005)(23676004)(2486003)(106002)(54906003)(36756003)(16576012)(67846002)(50466002)(106466001)(336012)(2501003)(305945005)(7736002)(316002)(64126003)(476003)(126002)(486006)(11346002)(5660300002)(446003)(2616005)(31686004)(14444005)(229853002)(478600001)(3940600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2631;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:mail13.mellanox.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 078ea771-00ee-484f-1613-08d69fbe15a1
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060)(7193020);SRVR:DB6PR0501MB2631;
-X-MS-TrafficTypeDiagnostic: DB6PR0501MB2631:
-X-Microsoft-Exchange-Diagnostics: 1;DB6PR0501MB2631;20:tXDChfSYsZbIR8W+OsxCZ2t4Al6C5VLIzUtAXA9U74C4vwyc+GFd0sxK9y7rzvvy3XNggVnTT2txmVA9my4FkyMjh3kuRj2IJMMXjgv+LGfxyUCRd3eHEcJ5g8y9ERjpLSzRk3Rjzu6/AmH7ui4UYIxZDjBjW7zK5UyhumlcMpAFvHos9wN7eiTuG020ll7twi354uNmiN3Je0wtQQLWqAWJXdte/fvs36drZUhdeE6UD+vU0Koqeo3n9C/OIAsuyGH06h4nica+B+zaLSZFqFriBEZlzIJlta15EwmVbJHnzdlncSdkaa+hxWi7uLGc5/8q8n3/x+3ToMjFx5Lx18U0Dup/m52uBojVDo8KVVRnReR2OtHD6eXs3HArsmj+Mg76DquYqZWWZKbJd+jkGiteQ2psoVLnRizyB11SFXmqj68UZ7JFbc5AF6hejlBbzc1La25o6RR8+Z/xUysB3oNnOjXh9bHF/3Ddo4Ywk2kj3XffpoF2FdKsKAHxTw+L
-X-Microsoft-Antispam-PRVS: <DB6PR0501MB2631E2673D06A8BDEF08DF21B7700@DB6PR0501MB2631.eurprd05.prod.outlook.com>
-X-Forefront-PRVS: 096507C068
-X-Microsoft-Exchange-Diagnostics: =?utf-8?B?MTtEQjZQUjA1MDFNQjI2MzE7MjM6M2JSRmxaZEZ5ZlI0aTRrZ2FCVStkdHIr?=
- =?utf-8?B?RDl5ai9HRFZ2ajFJdExWRE9TdjQ2UldMdEhWZnVkNkNya1dJRmpuQXhmTmpB?=
- =?utf-8?B?ZVVBT01oRXcwZ2k1S1ZjdDB6aUFyaS9tQThBSDB6WCt6VDZBMGtOYkZqQzM0?=
- =?utf-8?B?YlpPYlpMbWRNNlpBR0lsalJvS3hmVDNiN1loSmxuM1V1dzZxL0xncVI0L0Nw?=
- =?utf-8?B?MEdFY2RvbEVWVVpQL1ZBUHNxMjBJSFhaQnJDYVBIMWxvdUZTQVN5NmV6L2xX?=
- =?utf-8?B?UEgxN0UwVVQzcmx5MkhVSTlyV1dpSm9NcEVnWURsUC91aVJRSVU3d3RCRVhu?=
- =?utf-8?B?MDdKeEowT0w3WmNFb0pqd2g1OVZ3dmN5RWFZMi9FNVB0OXVIWE5BdytTSjBn?=
- =?utf-8?B?OVA3MGtpS3ZGY2xNeTlrdDM1UlYva2NhU2JubWxvZk55eU9nald5RG1aRU5N?=
- =?utf-8?B?ZzI5ZU1GMkJKbDVDaVgraFlVeis5OGRVU2ZrZ0xVcm1melpLZTZCSm52WWRD?=
- =?utf-8?B?OEV1c2lVUDQvR1dyeHRHNHlybms4Sm8rL3dHU0JUbitzSlpKSm50cHlHckxm?=
- =?utf-8?B?OVNlTGFkcXJTRm5WbzI3WWN0ZnhZd2VEekd6cEZTb0NCTSsvbTdhR25LN1hS?=
- =?utf-8?B?QmxxQXk1NU95bkhKNUJmdFFjVVJabnpXa082UXUwbG02cHRQYXlCL0pJcDUv?=
- =?utf-8?B?N29kTFU3SmtSTk9NNlZjOFBVUS9TVi9ZUjhEc1ErNXdocG0wM3d1YWVtdzdZ?=
- =?utf-8?B?SnROZy9NcmZPajcxdGhVY0ZtMjdzb0FpQXMxUGZKOGlRMkFLZGRMbUdldkpm?=
- =?utf-8?B?QllVaEFoU0l3bnpZbi80Mzh1dGtMRjA2SFd4YlN3ay9KNXhnb2xEaWY5K0tI?=
- =?utf-8?B?VklZUFRBMkpZMCs4OStvQkpUd1dUa3hiTE1EZ1NLdUk3WW4xemdSL09ma2pU?=
- =?utf-8?B?K2dycktVMnNrdEl5R1NHL1RwM1UyWWRuZVhSMk1CVnhkbUppM0NwRHRFWXRv?=
- =?utf-8?B?Tkg0ZTk3NXR2UW8zNXg4bXA4YWRaTTZNcXB4UWF0b2w5dHBWSnRxRWdvNUhB?=
- =?utf-8?B?cG9veC9zalVKVkQ1OXF1Z3FJcW5wVlhtY05HMXVZcDJhK1QrV3oxZ1ZOcnV5?=
- =?utf-8?B?ak81UHRDWkJkeUIyOFdjRlNNanZTS2twVFVFblBiVUVsQkxHUVBhUFl5QVdm?=
- =?utf-8?B?a2F1N1VtaFg2UHAwb05FR1cwMDE5cXk1WEI5eXBrbEc5NjNyakFBcE5LOGtI?=
- =?utf-8?B?ZnRVNGt6U0I4OWNqcUJINjhIUk0wbUMxSjQrQ0sxYTFvbE9mRCtiVmxQdWRL?=
- =?utf-8?B?eHRkOHk4SDFqYjBWWFJwcEE4S2lqa0IvdXhqWkcyNVVUMVdISkxDSGVmY2NU?=
- =?utf-8?B?VS9Ba09TVEhzTjFQS1doU3pjeTdkOUtsQUp4ZWRUajJWRDl5cUE3em9BNWdn?=
- =?utf-8?B?VUZadGMvV25PUVZ3Y2V5RDdyajZiRXgzQlF3dzMwVTNVV0JTVGdUaTZtdm40?=
- =?utf-8?B?UGZFYW1wM0N2QS9BSHgvMGw2M1NkWXU2a1BiVEsrTG5MVFNxTUZzeTZpbjR3?=
- =?utf-8?B?TzV5Yit2VGFNeHBGaHZ2azFZZVlNbEhSUWVxc0F4YnFIbVVNaW1VVlRYdUZm?=
- =?utf-8?B?Y0hYdXBGczBFb3BTSUhFekRBcEM1STBPSU5ibnkrZXlKaWNiK2FYNU1SK3U5?=
- =?utf-8?B?bkpuMGYyT0c0alVwQVdVbEdPVUJmR0ZsaGtRc0hZQXYvbHZFVG1GM1BPNmR3?=
- =?utf-8?B?Uis3Mjl5NGtUTkVlQjNyQ0xjZHFTTkQ1S3BhK0QxV1d1OUp6VVQ5OWJsTkE0?=
- =?utf-8?Q?3x6OHtNYHBB/b9C?=
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: eBeEpP01KdR240Vh/zowf5wyUrmz7hiVtYcxJm1JPzMBgg1kLLlAgSfwv7m6suoNK1i7ou96AaI19CYteVaO0s7BJ7xzmBaH/aOCykjXoYgv4u8j3/PIEwQCfeT5nSRmYO7xEfMIxRl1GhVVWnutjIPshiv158yaD1Fay2eLTqt5dvakJi2ECOVeuroZXtLqJ+B+XvzBHsxJ5cYeilncylgP/JIytDF3GsZJhxnEblox2YPez7pHqDCr6f8SvmA3kmQT0CFQlR9BtBo3A2re2EXgC+sh+tZEBoGcNPQZ4YjvmYOI1MHyEmS/cQMLn/jqOnJoo9B53qPT8m5aAE6ZCc/mpmY/8+E/dfgSpRcqDBexLLefZ7cBXmK7S5GKtttxi1QobhDxzB6Lgf7qzRC0Rm+Q8ZyW6n/EjZEjfifb6k0=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2019 09:53:27.1596
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 078ea771-00ee-484f-1613-08d69fbe15a1
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.134];Helo=[mtlcas13.mtl.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2631
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1551606848.8cceyn7nhv.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 02/03/2019 21:44, Ira Weiny wrote:
-> 
-> On Sat, Mar 02, 2019 at 12:24:35PM -0800, john.hubbard@gmail.com wrote:
->> From: John Hubbard <jhubbard@nvidia.com>
+Linus Torvalds's on March 3, 2019 2:29 pm:
+> On Sat, Mar 2, 2019, 19:34 Nicholas Piggin <npiggin@gmail.com> wrote:
+>=20
 >>
->> ...
->> 3. Dead code removal: the check for (user_virt & ~page_mask)
->> is checking for a condition that can never happen,
->> because earlier:
+>> It doesn't have to be done all at once with this series, obviously this
+>> is a big improvement on its own. But why perpetuate the nomenclature
+>> and concept for new code added now?
 >>
->>      user_virt = user_virt & page_mask;
->>
->> ...so, remove that entire phrase.
->>
->>   
->>   		bcnt -= min_t(size_t, npages << PAGE_SHIFT, bcnt);
->>   		mutex_lock(&umem_odp->umem_mutex);
->>   		for (j = 0; j < npages; j++, user_virt += PAGE_SIZE) {
->> -			if (user_virt & ~page_mask) {
->> -				p += PAGE_SIZE;
->> -				if (page_to_phys(local_page_list[j]) != p) {
->> -					ret = -EFAULT;
->> -					break;
->> -				}
->> -				put_page(local_page_list[j]);
->> -				continue;
->> -			}
->> -
-> 
-> I think this is trying to account for compound pages. (ie page_mask could
-> represent more than PAGE_SIZE which is what user_virt is being incrimented by.)
-> But putting the page in that case seems to be the wrong thing to do?
-> 
-> Yes this was added by Artemy[1] now cc'ed.
+>=20
+> What nomenclature?
+>=20
+> Nobody will be using mmiowb(). That's the whole point of the patch series=
+.
+>=20
+> It's now an entirely internal name, and nobody cares.
 
-Right, this is for huge pages, please keep it.
-put_page() needed to decrement refcount of the head page.
+Why even bother with it at all, "internal" or not?  Just get rid of=20
+mmiowb, the concept is obsolete.
 
+> And none of this has anything to do with wmb(), since it's about IO being
+> ordered across cpu's by spin locks, not by barriers.
+>=20
+> So I'm not seeing what you're arguing about.
+
+Pretend ia64 doesn't exist for a minute. Now the regular mb/wmb barriers=20
+orders IO across CPUs with respect to their cacheable accesses. =20
+Regardless of whether that cacheable access is a spin lock, a bit lock,=20
+an atomic, a mutex... This is how it was before mmiowb came along.
+
+Nothing wrong with this series to make spinlocks order mmio, but why=20
+call it mmiowb? Another patch could rename ia64's mmiowb and then the
+name can be removed from the tree completely.
+
+Thanks,
+Nick
+
+=
