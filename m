@@ -2,125 +2,118 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEAAC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2412FC43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6326220835
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:13:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551644035;
-	bh=B4PEBAkzx+BT56qVyTWe/iCzZs6ongEGTSFMkUsWq4I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tY9lQ6HMew3+JXxZi2PbfIOOJirzyeNY8EpbQs1eLuWOwiDLikZaQ/3bnn2R5oqkE
-	 AK6LHgmYEPAHLOz59OZGCJvrsmAaiulEvkrr6lpwzSp9tydEvUQMWRBbhgjcH4AEAT
-	 Wk/HnmH8UhGuYX/pYS/POtl2KP+3fcrrsd+9A1VQ=
+	by mail.kernel.org (Postfix) with ESMTP id D8EDF20835
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lIkYsUGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbfCCUNx (ORCPT
+        id S1726635AbfCCUQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 15:13:53 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46568 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfCCUNx (ORCPT
+        Sun, 3 Mar 2019 15:16:43 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34482 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbfCCUQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 15:13:53 -0500
-Received: by mail-lj1-f194.google.com with SMTP id v16so2456909ljg.13
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 12:13:51 -0800 (PST)
+        Sun, 3 Mar 2019 15:16:43 -0500
+Received: by mail-lj1-f196.google.com with SMTP id l5so2494404lje.1
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 12:16:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x1iMEQoPgXk1WJSYeb2Z3XqmYDbk/Fcp2JImzIRwCU0=;
-        b=e7/nVcpDoI+4NGiOf6LPzCJB5Ze7AbKuNZtJnKQEzPgLhf6oPrhDF3Tn+yYSZe0LMe
-         +g2CVcs9oK7MyTPL0HwQawhGLi6lHMvKH1+81RQxKAJuyByy3/hEqw4nm7pxJYdXFUMd
-         JdLaF2VbwOfr5PCvA8gEYXG62JzPN/RsRgx7c=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Ut5F1KmFjOQ0jlhN+14pQF+2tOrtJRs/T7GtTtJGCg=;
+        b=lIkYsUGM4Xg27pXfFwWn5xbdRTlwk7pi8xXQqhLj/tyH20YeYEYSW2pmCmge+wX8j6
+         u1SqZ9P1maRwIcNuFvqpA5M5k3AhE0e7ZIyLzYVQZluGnWBr24DVcfMz83T+VdE3K/nw
+         FVulo1gDRlFBGOW9XPc93jj9vgcr9O5mARcGBNLKNzLSoCglXTll7AgHjHG0DN8zR4Df
+         Ojv6v90GX1LDaLTyKLo8jZTMzKTMFDpbZy+LvAZW2xfiheGaAGiIX/4vRzHiWqWA7JnP
+         dln4BPCZgG6P4Eg1iJYJtLtTiWjbjhtiWEQYSdNlolmciAaMuxmRfFw8cCF88bPCGsbK
+         3xmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x1iMEQoPgXk1WJSYeb2Z3XqmYDbk/Fcp2JImzIRwCU0=;
-        b=BQgT8XF6ET2sbRVvjFqvsJmTzBDY+zsvF1CWOVl2ndy32UqIhYbUBpaE+mAUv9Zvof
-         zOieN/6r25rFGMml/EofABLx39b5cKAY/lohCh9+/NT7ThD/ElxdrYzdna23G2kMeL3V
-         VAk0EvdnNain09p1H7gA2NjaUviHn2/uWbtF8wra66WM3hcjOYy4oIr9MTkIQueuf+EK
-         9xXsQQMkfgbserDBaVcpVRc7lUmjczUt2grkA7QUvV+Tqaxc0qyP/M4Ommh2+hp27uFK
-         oTb7idkUGfxWEN/RgjubeFoRCI1logMYYBaFWDimHSRiJ4PPzuoy2DIxT6GyfG/rORQD
-         aUlg==
-X-Gm-Message-State: APjAAAV9GZoDZU0oPndqkTO/lD4+YOwVwR2asQ89JoaFPDi9RyxK2YWt
-        EDtmIWjIBj9h4Z69eb6am5t6dN7HQZ8=
-X-Google-Smtp-Source: APXvYqxLuBIMF1ATLD6yKnThS3lRHnycwE7RdIurXAsHNbFqP1EDSwlSnAQdnwNsKxrqdQ+Tg+t1jQ==
-X-Received: by 2002:a2e:880a:: with SMTP id x10mr8580629ljh.12.1551644030734;
-        Sun, 03 Mar 2019 12:13:50 -0800 (PST)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id x2sm1130845ljd.30.2019.03.03.12.13.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Mar 2019 12:13:49 -0800 (PST)
-Received: by mail-lj1-f178.google.com with SMTP id g80so2471868ljg.6
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 12:13:49 -0800 (PST)
-X-Received: by 2002:a2e:7a03:: with SMTP id v3mr8852138ljc.22.1551644029066;
- Sun, 03 Mar 2019 12:13:49 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Ut5F1KmFjOQ0jlhN+14pQF+2tOrtJRs/T7GtTtJGCg=;
+        b=OlIjLFWoRB46jlOsAdDcKoGf9wP6DEqkhI+73ErD+B86CEM/FS9UnRFi/xLTm7xsbX
+         fw+ShD7bcaLc1n7O1j2CJR17idbpHRWVgrgJ16qM8ZhCX2MVAhFTC4raBOxza478PxAp
+         pZRN17kO3q66ApS/0gtKs24V05Ev21VOBK5FhoKTOhugZb0njT75nFVfpMMwdmBE6fpj
+         wAQaZgJuhJFduhANWcWZOKfTtn0HK1a9VPizCdbeu2sVDBwhaKoehlUOpspISedQz2ev
+         eplcQ/XRpcxRtAF5C1VZH8HTWr7MfPpbicr3/OyTJ3qFxRD/2fHLLm593De7VYpB1GcS
+         g/4Q==
+X-Gm-Message-State: APjAAAXqAXXtbA8FSYcfRGCqpLAjHPEdkj69hI1jx0FWyNFLL5KLcVYT
+        +oC/wKVCcTzp8YzCxi8rZzrYX1aS
+X-Google-Smtp-Source: APXvYqwaly/n/Uxg1yGT4mVYvzaIrRAy93toHddLRmabGdfSwAnLopA0Qbabb2LIOnlh/+FY/Rsyew==
+X-Received: by 2002:a2e:93ca:: with SMTP id p10mr4101590ljh.16.1551644200560;
+        Sun, 03 Mar 2019 12:16:40 -0800 (PST)
+Received: from localhost.localdomain ([46.216.192.153])
+        by smtp.gmail.com with ESMTPSA id o7sm1134914lff.73.2019.03.03.12.16.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 Mar 2019 12:16:39 -0800 (PST)
+Received: from jek by localhost.localdomain with local (Exim 4.92-RC4)
+        (envelope-from <jekhor@gmail.com>)
+        id 1h0XXK-0005Bg-6M; Sun, 03 Mar 2019 23:16:38 +0300
+From:   Yauhen Kharuzhy <jekhor@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Yauhen Kharuzhy <jekhor@gmail.com>
+Subject: [PATCH v3 0/2] extcon: Intel Cherry Trail Whiskey Cove PMIC and external charger tweaks
+Date:   Sun,  3 Mar 2019 23:16:11 +0300
+Message-Id: <20190303201613.19884-1-jekhor@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <000000000000f39c7b05832e0219@google.com> <20190303135502.GP2217@ZenIV.linux.org.uk>
- <20190303151846.GQ2217@ZenIV.linux.org.uk> <CAHk-=wiQ2YNB+2FT+jbdcC6qfYqvS2kLLAZbmPE_7sLfUPwFJg@mail.gmail.com>
-In-Reply-To: <CAHk-=wiQ2YNB+2FT+jbdcC6qfYqvS2kLLAZbmPE_7sLfUPwFJg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 3 Mar 2019 12:13:33 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wheffK1OpNbBOfpLEvXXGmEu5+K9k5k-h44xw1KBo69Fg@mail.gmail.com>
-Message-ID: <CAHk-=wheffK1OpNbBOfpLEvXXGmEu5+K9k5k-h44xw1KBo69Fg@mail.gmail.com>
-Subject: Re: [PATCH] aio: prevent the final fput() in the middle of vfs_poll()
- (Re: KASAN: use-after-free Read in unix_dgram_poll)
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jason Baron <jbaron@akamai.com>, kgraul@linux.ibm.com,
-        ktkhai@virtuozzo.com, kyeongdon.kim@lge.com,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, pabeni@redhat.com,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 3, 2019 at 11:44 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> But doesn't it look nice to see
->
->  2 files changed, 41 insertions(+), 50 deletions(-)
->
-> with actual code reduction, and a fundamental simplification in
-> handling of the file pointer?
+At implementation of charging support for Lenovo Yoga Book (Intel Cherry
+Trail based with Whiskey Cove PMIC), two pitfalls were found:
 
-A coupl,e of the changes are "useless", and do the same thing as not
-having them at all:
+- for detection of charger type by PMIC, bit 6 in the CHGRCTRL1 register
+  should be set in 0 (and set to 1 for Host mode). Pick up its definition
+  and logic from from Intel code drop[1];
 
--               struct inode *inode = file_inode(kiocb->ki_filp);
-+               struct inode *inode = file_inode(iocb->ki_filp);
+- "#CHARGE ENABLE" signal of external charger (bq25892) in Yoga Book is
+  connected to one of PMIC outputs controlled by CHGDISCTRL register.
+  Enable charging at driver initialization. Pick up this from Lenovo's code
+  drop[2,3].
 
--               file_end_write(kiocb->ki_filp);
-+               file_end_write(iocb->ki_filp);
 
-because the "ki_filp" ends up existing in both kiocb and iocb. At one
-point of editing that file I decided to try to just remove it from the
-sub-structs entirely and only keep it in the top-level structure, but
-it needs to be inside the 'struct kiocb' anyway for all the other
-users outside of fs/aio.c.
+v3 changes:
+- Don't restore of initial state of CHGDISCTRL and CHGRCTRL0 at exit but
+  switch them into HW-controlled mode (as discussed in mailing list);
+- Use regmap_update_bits() instead of regmap_readi()/regmap_write() in
+  the cht_wc_extcon_set_otgmode();
+- Coding style and constant names changed as Andy and Hans recommended.
 
-Anyway, I don't think the patch is wrong (although I haven't actually
-_tested_ it) but I wanted to point out that those two one-liner
-changes are just "noise" that doesn't matter for the working of the
-patch.
+v2 changes:
+- Disable HW control mode of CHGDISCTRL at driver probing and restore
+  initial state at exit.
+- Switch CE output off if OTG host mode is enabled.
+- Save and restore CHGRCTRL0 register also.
 
-In the above, we have 'kiocb' being the embedded 'struct kiocb', and
-'iocb' is the 'struct aio_kiocb' that contains it. 'ki_filp' is the
-exact same field in both cases.
+[1]. https://github.com/01org/ProductionKernelQuilts/uefi/cht-m1stable/patches/0001-power_supply-intel-pmic-ccsm-driver.patch
+[2]. https://github.com/jekhor/yogabook-linux-android-kernel/blob/b7aa015ab794b516da7b6cb76e5e2d427e3b8b0c/drivers/power/bq2589x_charger.c#L2257
+[3]. https://github.com/01org/ProductionKernelQuilts/uefi/cht-m1stable/patches/EM-Charger-Disable-battery-charging-in-S3-and-enable.patch
 
-                 Linus
+Yauhen Kharuzhy (2):
+  extcon-intel-cht-wc: Make charger detection co-existed with OTG host mode
+  extcon intel-cht-wc: Enable external charger
 
-               Linus
+ drivers/extcon/extcon-intel-cht-wc.c | 60 +++++++++++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 2 deletions(-)
+
+-- 
+2.20.1
+
