@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B478CC4360F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1D6C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D8820866
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7035C20866
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551626422;
-	bh=P8PZLEAqkFI/Xl0BkJeC9ZtGZH6NeAmgav7w4SeqSLw=;
+	s=default; t=1551626460;
+	bh=MebKlPuxeSBNnTbJs9KccKLdKxCkTvLHoVe0q3eWkoI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0sDN9AQ05yOb9JE2ZSEcizIWdGUAl6/wAKFpbxtP65n1Z2BhJfzZt5bUpvqnmoLbS
-	 h8+WyuXmXdHfU6i03qwVd+Co6tibmXg6eaLqqZe0TAOvCqHy3KW0XLFEvm3N+nkBXK
-	 rcYExV2G8ve2SI1iYqn/4mWfjvjrrAGxThZcDRm4=
+	b=YWCM363YYha1qeioJZxt4vJvbd3nM4TUSAed9k6xwKtCbNm1zOz1vSNa8/s6vT2jc
+	 cA51B9OKV3RHdP0sgA6paWbJCiMG9v7gYbdzcNV6UPfKR9jgQew1SnjNc2DeJWairN
+	 a7xoJ1/8bfjnd4Zc6DMhs9bEVo57d3i4tJ4PZR3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfCCPUV (ORCPT
+        id S1726422AbfCCPU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 10:20:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33496 "EHLO mail.kernel.org"
+        Sun, 3 Mar 2019 10:20:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726350AbfCCPUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 10:20:20 -0500
+        id S1726331AbfCCPU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 10:20:58 -0500
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FB0120836;
-        Sun,  3 Mar 2019 15:20:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0A920836;
+        Sun,  3 Mar 2019 15:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551626419;
-        bh=P8PZLEAqkFI/Xl0BkJeC9ZtGZH6NeAmgav7w4SeqSLw=;
+        s=default; t=1551626457;
+        bh=MebKlPuxeSBNnTbJs9KccKLdKxCkTvLHoVe0q3eWkoI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=a85FqTR7/VDGZ7rLi8CCDVyPznsM1NtWbf+aBh7LnaKzzEgvPag6luZKGQGtlXIfX
-         ZgSiuX+cFDiz26MXT2iuB68eK5JB3BVQguMlR3aSlsc5pdMmqw84tEXPgSQo4V+Qc9
-         z+beVentRk9Nhk5JTbRIpisrXcvY5FODhas3iPIg=
-Date:   Sun, 3 Mar 2019 15:20:10 +0000
+        b=2iZC5sqX9BTxPUPMNaW2bk6dxjzQWVCBdIFEJgonNkiqCAQ1hU53bfAOOzznYoDK9
+         PKju10myEqWzBEIF8wDT5L4GYkxS8abENGRQIjat/Y0GhmlJmIwFkqiIub6oZxdvqF
+         /hExvsovIo/PvIc4D01K+SK4g0RkpaSg5pQfFdmo=
+Date:   Sun, 3 Mar 2019 15:20:50 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -57,11 +57,11 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] iio: accel: bmc150: add mount matrix support
-Message-ID: <20190303152010.6d223cba@archlinux>
-In-Reply-To: <5d256b403997704072ea5f5889a63adfe67b3a86.1550768574.git.hns@goldelico.com>
+Subject: Re: [PATCH v2 04/10] iio: accel: bma180: add mount matrix support
+Message-ID: <20190303152050.1bd70f7d@archlinux>
+In-Reply-To: <39eb050ab5ba5a10f624f95f2bf4582e4e7ccbde.1550768574.git.hns@goldelico.com>
 References: <cover.1550768574.git.hns@goldelico.com>
-        <5d256b403997704072ea5f5889a63adfe67b3a86.1550768574.git.hns@goldelico.com>
+        <39eb050ab5ba5a10f624f95f2bf4582e4e7ccbde.1550768574.git.hns@goldelico.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -71,7 +71,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Feb 2019 18:02:48 +0100
+On Thu, 21 Feb 2019 18:02:49 +0100
 "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
 > This patch allows to read a mount-matrix device tree
@@ -86,60 +86,57 @@ Thanks,
 Jonathan
 
 > ---
->  drivers/iio/accel/bmc150-accel-core.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  drivers/iio/accel/bma180.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
-> index 383c802eb5b8..b4e2d9b04e1d 100644
-> --- a/drivers/iio/accel/bmc150-accel-core.c
-> +++ b/drivers/iio/accel/bmc150-accel-core.c
-> @@ -204,6 +204,7 @@ struct bmc150_accel_data {
->  	int ev_enable_state;
->  	int64_t timestamp, old_timestamp; /* Only used in hw fifo mode. */
->  	const struct bmc150_accel_chip_info *chip_info;
+> diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
+> index cb9765a3de60..f9720a1e8a7c 100644
+> --- a/drivers/iio/accel/bma180.c
+> +++ b/drivers/iio/accel/bma180.c
+> @@ -116,6 +116,7 @@ struct bma180_data {
+>  	struct i2c_client *client;
+>  	struct iio_trigger *trig;
+>  	const struct bma180_part_info *part_info;
 > +	struct iio_mount_matrix orientation;
->  };
->  
->  static const struct {
-> @@ -796,6 +797,20 @@ static ssize_t bmc150_accel_get_fifo_state(struct device *dev,
->  	return sprintf(buf, "%d\n", state);
+>  	struct mutex mutex;
+>  	bool sleep_state;
+>  	int scale;
+> @@ -561,6 +562,15 @@ static int bma180_set_power_mode(struct iio_dev *indio_dev,
+>  	return ret;
 >  }
 >  
 > +static const struct iio_mount_matrix *
-> +bmc150_accel_get_mount_matrix(const struct iio_dev *indio_dev,
+> +bma180_accel_get_mount_matrix(const struct iio_dev *indio_dev,
 > +				const struct iio_chan_spec *chan)
 > +{
-> +	struct bmc150_accel_data *data = iio_priv(indio_dev);
+> +	struct bma180_data *data = iio_priv(indio_dev);
 > +
 > +	return &data->orientation;
 > +}
 > +
-> +static const struct iio_chan_spec_ext_info bmc150_accel_ext_info[] = {
-> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmc150_accel_get_mount_matrix),
+>  static const struct iio_enum bma180_power_mode_enum = {
+>  	.items = bma180_power_modes,
+>  	.num_items = ARRAY_SIZE(bma180_power_modes),
+> @@ -571,7 +581,8 @@ static const struct iio_enum bma180_power_mode_enum = {
+>  static const struct iio_chan_spec_ext_info bma180_ext_info[] = {
+>  	IIO_ENUM("power_mode", true, &bma180_power_mode_enum),
+>  	IIO_ENUM_AVAILABLE("power_mode", &bma180_power_mode_enum),
+> -	{ },
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bma180_accel_get_mount_matrix),
 > +	{ }
-> +};
-> +
->  static IIO_CONST_ATTR(hwfifo_watermark_min, "1");
->  static IIO_CONST_ATTR(hwfifo_watermark_max,
->  		      __stringify(BMC150_ACCEL_FIFO_LENGTH));
-> @@ -978,6 +993,7 @@ static const struct iio_event_spec bmc150_accel_event = {
->  		.shift = 16 - (bits),					\
->  		.endianness = IIO_LE,					\
->  	},								\
-> +	.ext_info = bmc150_accel_ext_info,				\
->  	.event_spec = &bmc150_accel_event,				\
->  	.num_event_specs = 1						\
->  }
-> @@ -1555,6 +1571,11 @@ int bmc150_accel_core_probe(struct device *dev, struct regmap *regmap, int irq,
+>  };
 >  
->  	data->regmap = regmap;
+>  #define BMA180_ACC_CHANNEL(_axis, _bits) {				\
+> @@ -722,6 +733,11 @@ static int bma180_probe(struct i2c_client *client,
+>  		chip = id->driver_data;
+>  	data->part_info = &bma180_part_info[chip];
 >  
-> +	ret = iio_read_mount_matrix(dev, "mount-matrix",
-> +				     &data->orientation);
+> +	ret = iio_read_mount_matrix(&client->dev, "mount-matrix",
+> +				&data->orientation);
 > +	if (ret)
 > +		return ret;
 > +
->  	ret = bmc150_accel_chip_init(data);
+>  	ret = data->part_info->chip_config(data);
 >  	if (ret < 0)
->  		return ret;
+>  		goto err_chip_disable;
 
