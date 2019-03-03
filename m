@@ -2,121 +2,171 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38E9C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13427C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 22:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C155920830
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551649922;
-	bh=KHZn34+J5WHRXxBZYJcuasDJcTwzC4kRbmL8UJ5ec4g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PjpVvarsYH03FTggfKyDQZhEOuv1gIfLO0XJJTxmSOwBFYBKm0KDTg48vUMfOHzlg
-	 rujYUDbHwyP1K+WkVWqK6d7s25KuXSsweOrXtU+lR2YoITb5E3CXVfI1gGWjOAc+tS
-	 rTjtP4QKKHn8L5GmUYgZ2kFDlR5d8wE0zDDJdAZw=
+	by mail.kernel.org (Postfix) with ESMTP id CDB7820815
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 22:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfCCVwB (ORCPT
+        id S1726680AbfCCWAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 16:52:01 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46870 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbfCCVwA (ORCPT
+        Sun, 3 Mar 2019 17:00:55 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40357 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfCCWAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 16:52:00 -0500
-Received: by mail-ot1-f65.google.com with SMTP id c18so2609187otl.13;
-        Sun, 03 Mar 2019 13:51:59 -0800 (PST)
+        Sun, 3 Mar 2019 17:00:55 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u9so1580672pgo.7;
+        Sun, 03 Mar 2019 14:00:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xJAKWxNdLPhf1x4Xo3jWbcwM90lY4yAIGKFLWLrrhrY=;
-        b=SWVneBRjyAr2/8tN8ZXYSD4dSBZue66eO2QMTAejlwFNzhUNyWDD343g5X3Zhm0x7k
-         ei6IyedPx7/CpYJ2LmkGxS9/ilRTcNKU3jidlcYliOV0LuZDmiqEzvCo8GK54YLCZVFo
-         qgMN9AylVNNJxiXyqcZPL0+TJwfBYlYIJT/7dC2MGonS+2FyXV6EcUdbg3ZaEf3SaKDD
-         odxvBfU+TGqcz6DrSkt+eYKzNdai42j4Y2fSwBP5R2HwdBm3L6dABTEp0XA0j+eS78yJ
-         PY1F9KM/EIdHW86Oj9gEjkWT32uKKcg2klkG3MaE66/nHWSJ30TJhYnW6gNwNEQLJqLx
-         uW2w==
-X-Gm-Message-State: APjAAAX3kiNztwKvuLwyS8jKmf+MaSbRc3v5usTr89sCfSBt21xXTTtk
-        19hETdHYfgRkgWf8ZmTbHMvt9b8pUOYnAcbH7B8=
-X-Google-Smtp-Source: APXvYqwjjms//CO56jgVmThqWeWVYhaUxnSxuU/Oi1g0CUtP2T5cxCBY2nKv/EuAjb9AS7IUC90/5hVmyiWiMGiN54I=
-X-Received: by 2002:a9d:6498:: with SMTP id g24mr10783966otl.343.1551649919266;
- Sun, 03 Mar 2019 13:51:59 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xOxcJj2JeDBzju7CadzruEc/ZHnJa/uKtghWKpZJdhI=;
+        b=iSTxcJYrUTCKgqpgG3nl2EPC3+LV9Wn3ioH+LHKGrVNvT+eLm3R7CXjWhUYKVuGnwB
+         X7z/fsTIJ1qTQ7YO028reQzVwc5gA0yj9DdlsKkDg4Kztq9G+Wcgm1zRl9qvGH8dkv5f
+         TB1WvtnmJvdbSeF+N55HMxT2dhKcRPl0ZHDJwS9wtpEgyNSu+5nsoqv0txS6JTH/9uhJ
+         7d+Sak7953IjZ8VDhqNKp8HAZNWtKUR8I9Cuv4YkLXAYIswRjfWP0L1Wj7fvp+smtT1r
+         NeY9OYuZZryAHlPQrigtLUsHvmGWe0yTRvGHdhOrwBQZPU4JbhNXOyfGvkMewx7QwRYS
+         y0oA==
+X-Gm-Message-State: APjAAAUOE+FNQ9uykTZhfGS/E4l9/oMWq2+46ryFkWPRdq65yZxXTjbl
+        tTp5RN/j2oHBb3LkaWxzaFs=
+X-Google-Smtp-Source: APXvYqwFCpq0U4lf4zoebEobAKk50Db/gxITdBT0eqb+BrCa9Uzu5Bu7lur9ao1r4t6AMt9j+6xJoA==
+X-Received: by 2002:a17:902:12e:: with SMTP id 43mr17178570plb.31.1551650454021;
+        Sun, 03 Mar 2019 14:00:54 -0800 (PST)
+Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
+        by smtp.gmail.com with ESMTPSA id z12sm5294062pgv.0.2019.03.03.14.00.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 03 Mar 2019 14:00:53 -0800 (PST)
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        syzbot+17335689e239ce135d8b@syzkaller.appspotmail.com
+Subject: [PATCH] kernel/wq: Fix a alloc_workqueue() error path
+Date:   Sun,  3 Mar 2019 14:00:46 -0800
+Message-Id: <20190303220046.29448-1-bvanassche@acm.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <9956076.F4luUDm1Dq@aspire.rjw.lan> <fa5e3e09eb32f5197bef2a50ced952850bf70748.camel@linux.intel.com>
- <CAJZ5v0ik6oHCXD23tURsRXRj1-C-Z=S6y+KEiRxe0zJpGrKa+Q@mail.gmail.com> <f214b0d82fce14c374aa6b548742c999513d9046.camel@linux.intel.com>
-In-Reply-To: <f214b0d82fce14c374aa6b548742c999513d9046.camel@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 3 Mar 2019 22:51:46 +0100
-Message-ID: <CAJZ5v0huRALvfFBeo067dNMyUJn+Oyp8eFR3JRR+C9g7QhaekA@mail.gmail.com>
-Subject: Re: [RFT][PATCH 0/2] cpufreq: intel_pstate: Handle _PPC updates on
- global turbo disable/enable
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 3, 2019 at 10:20 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> On Sun, 2019-03-03 at 18:03 +0100, Rafael J. Wysocki wrote:
-> > On Fri, Mar 1, 2019 at 6:39 PM Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com> wrote:
-> > >
-> > > On Fri, 2019-03-01 at 13:43 +0100, Rafael J. Wysocki wrote:
-> > > > Hi All,
-> > > >
-> > > > This is how I would fix the issue reported in BZ 200759 (see this
-> > > > patch series
-> > > > from Yu too: https://marc.info/?l=linux-pm&m=155137672924029&w=2)
-> > > > .
-> > > >
-> > > > Patch [1/2] causes intel_pstate to update all policies if it gets
-> > > > a
-> > > > _PPC change
-> > > > notification and sees a global turbo disable/enable change.
-> > > >
-> > > > Patch [2/2] makes it update cpuinfo.max_freq for all policies in
-> > > > those cases.
-> > > >
-> > > > The patches here have not been tested yet, so testing would be
-> > > > much
-> > > > appreciated.
-> > > >
-> > > > Of course, comments are welcome too!
-> > >
-> > > This is the only platform, someone reported such issue.
-> >
-> > I don't think this matters.
-> >
-> > First, it doesn't mean that no other problems have this problem.
-> >
-> > Second, the current handling of MSR_IA32_MISC_ENABLE_TURBO_DISABLE
-> > changes in intel_pstate is not sufficient if the changes is from set
-> > to unset anyway.
->
-> Any platform with HWP, you can't even notify of this change. So any
-> platform beyond SKL is not useful.
+This patch fixes a use-after-free and a memory leak in an alloc_workqueue()
+error path. This patch avoids that e.g. the following complaint gets
+reported:
 
-Do you mean that HWP platforms don't supply _PPS (as a rule) and so
-they don't send _PPC notifications?  Is there anything they do instead
-of it?
+BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:197 [inline]
+BUG: KASAN: use-after-free in lockdep_register_key+0x3b9/0x490 kernel/locking/lockdep.c:1023
+Read of size 8 at addr ffff888090fc2698 by task syz-executor134/7858
 
-That's fair enough, but the point is that the driver doesn't do the
-right thing even if the platform does send a _PPC notification.
+CPU: 1 PID: 7858 Comm: syz-executor134 Not tainted 5.0.0-rc8-next-20190301 #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+ kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ __read_once_size include/linux/compiler.h:197 [inline]
+ lockdep_register_key+0x3b9/0x490 kernel/locking/lockdep.c:1023
+ wq_init_lockdep kernel/workqueue.c:3444 [inline]
+ alloc_workqueue+0x427/0xe70 kernel/workqueue.c:4263
+ ucma_open+0x76/0x290 drivers/infiniband/core/ucma.c:1732
+ misc_open+0x398/0x4c0 drivers/char/misc.c:141
+ chrdev_open+0x247/0x6b0 fs/char_dev.c:417
+ do_dentry_open+0x488/0x1160 fs/open.c:771
+ vfs_open+0xa0/0xd0 fs/open.c:880
+ do_last fs/namei.c:3416 [inline]
+ path_openat+0x10e9/0x46e0 fs/namei.c:3533
+ do_filp_open+0x1a1/0x280 fs/namei.c:3563
+ do_sys_open+0x3fe/0x5d0 fs/open.c:1063
+ __do_sys_openat fs/open.c:1090 [inline]
+ __se_sys_openat fs/open.c:1084 [inline]
+ __x64_sys_openat+0x9d/0x100 fs/open.c:1084
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> Fixing is always good :-)
+Allocated by task 7789:
+ save_stack+0x45/0xd0 mm/kasan/common.c:75
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_kmalloc mm/kasan/common.c:497 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
+ __do_kmalloc mm/slab.c:3726 [inline]
+ __kmalloc+0x15c/0x740 mm/slab.c:3735
+ kmalloc include/linux/slab.h:553 [inline]
+ kzalloc include/linux/slab.h:743 [inline]
+ alloc_workqueue+0x13c/0xe70 kernel/workqueue.c:4236
+ ucma_open+0x76/0x290 drivers/infiniband/core/ucma.c:1732
+ misc_open+0x398/0x4c0 drivers/char/misc.c:141
+ chrdev_open+0x247/0x6b0 fs/char_dev.c:417
+ do_dentry_open+0x488/0x1160 fs/open.c:771
+ vfs_open+0xa0/0xd0 fs/open.c:880
+ do_last fs/namei.c:3416 [inline]
+ path_openat+0x10e9/0x46e0 fs/namei.c:3533
+ do_filp_open+0x1a1/0x280 fs/namei.c:3563
+ do_sys_open+0x3fe/0x5d0 fs/open.c:1063
+ __do_sys_openat fs/open.c:1090 [inline]
+ __se_sys_openat fs/open.c:1084 [inline]
+ __x64_sys_openat+0x9d/0x100 fs/open.c:1084
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Well, I can only agree with that ...
+Freed by task 7789:
+ save_stack+0x45/0xd0 mm/kasan/common.c:75
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+ __cache_free mm/slab.c:3498 [inline]
+ kfree+0xcf/0x230 mm/slab.c:3821
+ alloc_workqueue+0xc3e/0xe70 kernel/workqueue.c:4295
+ ucma_open+0x76/0x290 drivers/infiniband/core/ucma.c:1732
+ misc_open+0x398/0x4c0 drivers/char/misc.c:141
+ chrdev_open+0x247/0x6b0 fs/char_dev.c:417
+ do_dentry_open+0x488/0x1160 fs/open.c:771
+ vfs_open+0xa0/0xd0 fs/open.c:880
+ do_last fs/namei.c:3416 [inline]
+ path_openat+0x10e9/0x46e0 fs/namei.c:3533
+ do_filp_open+0x1a1/0x280 fs/namei.c:3563
+ do_sys_open+0x3fe/0x5d0 fs/open.c:1063
+ __do_sys_openat fs/open.c:1090 [inline]
+ __se_sys_openat fs/open.c:1084 [inline]
+ __x64_sys_openat+0x9d/0x100 fs/open.c:1084
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888090fc2580
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 280 bytes inside of
+ 512-byte region [ffff888090fc2580, ffff888090fc2780)
+
+Reported-by: syzbot+17335689e239ce135d8b@syzkaller.appspotmail.com
+Fixes: 669de8bda87b ("kernel/workqueue: Use dynamic lockdep keys for workqueues")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+---
+ kernel/workqueue.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 497900263dbc..35fd0e697087 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -4291,6 +4291,8 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+ 	return wq;
+ 
+ err_free_wq:
++	wq_unregister_lockdep(wq);
++	wq_free_lockdep(wq);
+ 	free_workqueue_attrs(wq->unbound_attrs);
+ 	kfree(wq);
+ 	return NULL;
+-- 
+2.20.1
+
