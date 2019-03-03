@@ -2,112 +2,100 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49DBC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 23:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114BFC43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 23:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A97DC20830
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 23:20:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="ImD1quPI"
+	by mail.kernel.org (Postfix) with ESMTP id C994620835
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 23:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551655915;
+	bh=AoEdZ/QvUWCT1+KJXviGS/rfEaJIKp+DQSyY5pfJA4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WLErHJE5gxM8TGXof6AyEWNfnFp70+YBUv5rrlwTo40ehCo3knArDg/j0qtGUjLvM
+	 Yo5VtEOYqtFvi2uiMNnHIfC6/c16ndMj4jcg34K+ElZCE43wAtMSYtIN1s+ahjWWmp
+	 R5C/IDbNx9ciFzYhGEApJsmWd5fV1LImFuhdNZkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbfCCXU2 (ORCPT
+        id S1726012AbfCCXbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 18:20:28 -0500
-Received: from sonic305-21.consmr.mail.ir2.yahoo.com ([77.238.177.83]:44083
-        "EHLO sonic305-21.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725933AbfCCXU2 (ORCPT
+        Sun, 3 Mar 2019 18:31:52 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51968 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfCCXbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 18:20:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1551655225; bh=hJJs89gLO3zR8QQLuElz8/Yqbfde/GI2GHShr2zQm20=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=ImD1quPIstA/ltgesQ5Kle203d50x7IdL9aaWmJmolZ8z9MdvRSnwwk7samUZTZ9k/kZgoAMFjepnpRXK+8hWZhwiawo9FqpJ5mETBztRg58WkPJx8UQYTY15xzquOepd5iF63bcFZn/6lHjb+f+ewbi3gMgj0ef0gb16bD1tfu/2KJ3JZ9MJdjqICWmUJ0D1trSPTu+YKvLlFbGYrikIk3KBQSWzSTN2zCYvy/xTjbGnEFm10cB7MK30BLgtgPDNWRVrqnMS4Z2bw0C03oihk6dnibpsZE1E1xth6yDSVw0cH0mThKOYdv2f6IOGTr37JSjbfjXOCdWylp45fWdzg==
-X-YMail-OSG: WNqoP6MVM1nwpz3m2S8zh6Mh7W8eZUlUa2.fwkA.DoCz9453IdKt_Kh5mbZQCea
- ayj1tMMC8gXB3Iu9eTon1ZWOl2Dt8cvc1nt18Cli4G3VzhQfGXv3EQnzez380PyN104OZkdQn50A
- vuZZS1Q8K8V7ITG_VIJ1gQpKSasem55o5g.B2B2ACp80kIuOyeARJRuZZ_8mxz6EXs9qER7RGAJY
- wDbGwHZA39CG3cVyfJYeSrwPrOX.XD7I4QZXbujmrzzkS9M9yDlwN54CCl_7Wjyp7_MDB6t238.j
- LG5tMtban9gTA3JhzAUiIO2W6g34YQYQf7QlUKkVa3YLggPmiMOuLvbL8MeS.Wp8noIkOCmVqpZM
- e3yTVVn.NRWxJwIVC6Vfg_yRDL6KmEy0.f3bEre1hm1X7EH.pCti6WltjUU80W0ED9nCHW1k3mJ6
- C8VvuQQN3ijVYxcMLxGsw_TuvqNKwMMKhHKodZn2J5getkmEr7sANnMZLwAV.E3T.zOaDOPHA.B8
- z.MzVFdQi1waseEH9KB8jR_gTVzxsY75c.iaJtoQtlVlA9LM83JdnmTGHW.Wnsmt_EcMhn6tdxfs
- 1QZGD6tnnsYz7IeokrQrvhfflUbhRUJ3.GUAwh1pf.LhUM4BcBVG9541ZA9AQE.L7GzG2LxL6NRY
- sgvAub_vpU0f6kgFg7kzLoBv7rJqyHFpk5rxaJiE._LabSf3OOG8jFbk0gBTDNC1JpEJvasMmUBY
- u3hIkTVaER7viFV8tkFNBqgKf9tmY435m1MLfxQIUdQ54alne3WoeOLbwDWVEWegv2IMWcCTpKR5
- 3CQBthnu8.0nnETwDuyII2.CHFc8U4fDjYPeMOdnrEowjdO014o3g4XKTyyEdctZ.aiwWPswoUzS
- 5XJ7UyONbLHBKURWBIeeVuZEn7.6W.dq2TeQo0OB7DImyZPGQ8r_dizt2qpuMFr.dB1dv.8DUqMp
- 5Ij1UA3v6mC3.lCqOHE7nqc0jhO7FBtBty_GF_lw93KJ.55Km3ylSDNpK4sxxuC4CopkoxMq8E5j
- Uo8WmnpmlLhFmyAkOpj4G3Yywk7_jLRY34utfrcsL7beHTuUNEK5r
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.ir2.yahoo.com with HTTP; Sun, 3 Mar 2019 23:20:25 +0000
-Received: from 125.120.226.215 (EHLO [10.1.1.220]) ([125.120.226.215])
-          by smtp412.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID cffb140c901cd21086c4a78b37c17fea;
-          Sun, 03 Mar 2019 23:20:22 +0000 (UTC)
-Subject: Re: [PATCH] staging: erofs: dir.c fix "alignment should match open
- parenthesis" issues
-To:     Dominik Adamski <adamski.dominik@gmail.com>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org
-References: <20190303223718.31937-1-adamski.dominik@gmail.com>
-From:   Gao Xiang <hsiangkao@aol.com>
-Message-ID: <2224517f-f4cd-538f-0f7c-7a5b64ea536a@aol.com>
-Date:   Mon, 4 Mar 2019 07:20:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sun, 3 Mar 2019 18:31:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=zPF3PZ/4xX7SB0kmbBIZIBD5Od4zY0RToWk/97KIMUQ=; b=kLTXkpwHo8U/WaLg5IWM/jnko
+        sXwWLAagBPdIJbvPEpSUMSk9T3BHqj3ibfHSPKLvljIMYk+NV0bpZKC7Km+vRuKnJtG3eyh9eXzq0
+        bbIrAEAKoSduMpISidj1uRdsbUlC6DDW3PrDQqqZ67WlrL8bjHmJ3xRFeEQIx7HajwOPA=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h0aaB-0007KG-5g; Sun, 03 Mar 2019 23:31:47 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id CBC10440082; Sun,  3 Mar 2019 23:31:45 +0000 (GMT)
+Date:   Sun, 3 Mar 2019 23:31:45 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt: snps,dw-apb-ssi: Add clock bindings documentation
+Message-ID: <20190303233145.GN23441@sirena.org.uk>
+References: <1551360342-23981-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1551360342-23981-2-git-send-email-gareth.williams.jx@renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20190303223718.31937-1-adamski.dominik@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Vxa5joy26gVGOrvU"
+Content-Disposition: inline
+In-Reply-To: <1551360342-23981-2-git-send-email-gareth.williams.jx@renesas.com>
+X-Cookie: Murphy was an optimist.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--Vxa5joy26gVGOrvU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/3/4 6:37, Dominik Adamski wrote:
-> Fix checkpatch issues: "CHECK: Alignment should match open parenthesis"
-> 
-> Signed-off-by: Dominik Adamski <adamski.dominik@gmail.com>
-> ---
->  drivers/staging/erofs/dir.c | 8 ++++----
+On Thu, Feb 28, 2019 at 01:25:41PM +0000, Gareth Williams wrote:
+> From: Phil Edworthy <phil.edworthy@renesas.com>
+>=20
+> The driver requires a clock property, so detail it in the docs.
+> Fix a typo, 'pis' to 'pins'.
+> Add documentation for a separate, optional, interface clock.
 
-duplicated commit...
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/commit/drivers/staging/erofs/dir.c?h=staging-next&id=cbebe5d05dd7fe2fdd13cff7c4a62f22109f1f95
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
 
-Thanks,
-Gao Xiang
+--Vxa5joy26gVGOrvU
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
-> index 833f052f79d0..e1955703ab8f 100644
-> --- a/drivers/staging/erofs/dir.c
-> +++ b/drivers/staging/erofs/dir.c
-> @@ -24,8 +24,8 @@ static const unsigned char erofs_filetype_table[EROFS_FT_MAX] = {
->  };
->  
->  static int erofs_fill_dentries(struct dir_context *ctx,
-> -	void *dentry_blk, unsigned int *ofs,
-> -	unsigned int nameoff, unsigned int maxsize)
-> +			       void *dentry_blk, unsigned int *ofs,
-> +			       unsigned int nameoff, unsigned int maxsize)
->  {
->  	struct erofs_dirent *de = dentry_blk;
->  	const struct erofs_dirent *end = dentry_blk + nameoff;
-> @@ -104,9 +104,9 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
->  		nameoff = le16_to_cpu(de->nameoff);
->  
->  		if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
-> -			nameoff >= PAGE_SIZE)) {
-> +			     nameoff >= PAGE_SIZE)) {
->  			errln("%s, invalid de[0].nameoff %u",
-> -				__func__, nameoff);
-> +			      __func__, nameoff);
->  
->  			err = -EIO;
->  			goto skip_this;
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlx8Y+AACgkQJNaLcl1U
+h9Axywf5ATfT/UOnBvU8MseRTp4zANwg1TdBhCNVMBtJXhAY8I/beO9iGjeT0XCR
+zDBZI2I1mnhLqoTvQON38XSaZsdDiOZ+uJsQK3T2LIam80sKEn/jTKomj/1exz3D
+f958wKv3vRW4MdzBX3K9A7kFKVrnetZnUL9a1wVETkYlZCFx0E9s9uo+FVLUvo8Y
+nAxF8kl1UCgWfNT44QnNYDbDEDpbaM7cT3rOr5OTJrHq23mwh6bH5AgrjeulJD8J
+b+J3cZOi+UqtowufhzuIhe/d1xxepIeDWGfFtIEfTmmiMrhoMz3kIch3u+t2AJCy
+9wn/BCklmV9jaTs7CAKIKs8C5XzLsQ==
+=OdOn
+-----END PGP SIGNATURE-----
+
+--Vxa5joy26gVGOrvU--
