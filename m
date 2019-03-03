@@ -2,123 +2,176 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DC8C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15786C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027D320835
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C709F20835
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="de5RSEzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfCCVi2 (ORCPT
+        id S1726683AbfCCVlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 16:38:28 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34961 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfCCVi2 (ORCPT
+        Sun, 3 Mar 2019 16:41:01 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41636 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfCCVlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 16:38:28 -0500
-Received: by mail-pf1-f196.google.com with SMTP id j5so1502942pfa.2;
-        Sun, 03 Mar 2019 13:38:27 -0800 (PST)
+        Sun, 3 Mar 2019 16:41:01 -0500
+Received: by mail-io1-f68.google.com with SMTP id 9so2480150iog.8;
+        Sun, 03 Mar 2019 13:41:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sAs6pZLWOZiL9ot6Y8AZZHgU1XK0sPZul9PnLc4+yMY=;
+        b=de5RSEzKZrY6UM+xZ80l/BZEgCN4VLLonGAuAxu2MCAvlOgke4wVuivkYHekr60aoL
+         wDaANjbDmR84aduK++yg7LpQGz/uTirYhyAcpeu8lFes5QwZfNf1sDrM0JcuCTZDHAvQ
+         E0jBda9PSHX9XjFQE2XgaExiv/XoPc98sJGa0AJz1JEcD7Ki8yyEQJlkelOpkeiwsfvI
+         UGlTs+3aRKl9rLDgAN3aelWWn1p0OllkNltoh2Gs7wJjhOeQE49qYBGmJJhadGYJl+pI
+         sl1jEVR2mq6NrNlu0sWD9et587MqK6e6GV7cWhlU7YyQdA0VaALD1cVi0p+1NPWsSgu/
+         eVkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pg6OAWezlHEgEyezC++mZ0YL1uamRN+hXgbWPD/6Z58=;
-        b=sTP+By0MsAB8mbalEcogC6tF4fwtrsmHyL+ea76IUIlcWFjuEk2DuXQSZm0fXqDv+y
-         T+FzCoDG07NT1HuYkJMMhaySi2yB+Y/LbygatkSgadaXzREH6RNaEiUV5j+lv5QhBVHk
-         bPOcB6LGSbmys7WS+hGcuK+F2+HyMF3ilbkMDVXoLzeh0y+2Hks4CUDoNMTdsV7MphWn
-         dY96EO5YLlF/zRhsOkr0FrGDZuWdqCwCDmXZZkCcqJyUwWCNAr53lGBkj3/cGeX8Hp+q
-         R8vJVGRZVIkB8ihcye/QnB4IlyHfH9TBhoU6SXB2No+5VHlFJED1mMEo24revDDZzr5g
-         bOqg==
-X-Gm-Message-State: APjAAAUnGwmd0QLGyCt9ZQ/8/f0Q2lgGns5228TXJrx3VelWMmb+uY6w
-        q4Fj/7PmxJZ+sX4u0pGdhPI=
-X-Google-Smtp-Source: APXvYqx3UJVKVGluAMHP6FLtkR7UZbZQa5AqzJaQNc6sCiAc5pubTp1HmwXgby/1FMh0qVynFG3t3g==
-X-Received: by 2002:a65:5844:: with SMTP id s4mr15319649pgr.77.1551649107133;
-        Sun, 03 Mar 2019 13:38:27 -0800 (PST)
-Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
-        by smtp.gmail.com with ESMTPSA id 145sm6241081pgb.66.2019.03.03.13.38.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Mar 2019 13:38:26 -0800 (PST)
-Subject: Re: KASAN: use-after-free Read in alloc_workqueue
-To:     syzbot <syzbot+17335689e239ce135d8b@syzkaller.appspotmail.com>,
-        danitg@mellanox.com, dledford@redhat.com, jgg@ziepe.ca,
-        leon@kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, roland@purestorage.com,
-        sean.hefty@intel.com, swise@opengridcomputing.com,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-References: <0000000000008a8bf4058334b76e@google.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <e0ef3cb3-111b-2b89-16df-3da89f937d4e@acm.org>
-Date:   Sun, 3 Mar 2019 13:38:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sAs6pZLWOZiL9ot6Y8AZZHgU1XK0sPZul9PnLc4+yMY=;
+        b=pQaDoIWb92i5xOKVRnQkXOpwzgflX6VYFiZECtav1R+m1/aUrHg7+fZDPcLdODvToE
+         a/lLp2lp4Kuvk4GIEFuae2ibOQ00mHCW4VHRStSNnOYvd0SErIjq3WLgHJmPbDPLZd39
+         bNvaVki8OK0m4HajHSV4fSt7oHlP5SXD5hMelySl+NoUzhqtlPf04WM62m5HedvSpF70
+         pucLTaozdeM25Uxm7WwOl4oyl16izr+RFJ7OeT6uL/K3mkY5f4rjwfqTbpQCeX0bQisk
+         CYW9zF7wAehr6uxvQq9f8zylAruCJunnJep15Otv6IsnACbLA4jXrxDdJwh8ppoQcYHK
+         Qoow==
+X-Gm-Message-State: APjAAAWxZo4u3uffAZUUDpKBHIg9x14TlAsS4t+2c2c63KO0PwmFoIwN
+        aeCcMKZSQgO0e8+ZfyyMj4U=
+X-Google-Smtp-Source: APXvYqy2zlqWXPoyPZiw6KbNSA9kZHICDfFF3PcU7cwMq7mvJwoi2LS7KWApTs5IKCaSg1OnsB+4kg==
+X-Received: by 2002:a6b:914:: with SMTP id t20mr8073596ioi.63.1551649259788;
+        Sun, 03 Mar 2019 13:40:59 -0800 (PST)
+Received: from ubu-Virtual-Machine (66-188-57-61.dhcp.bycy.mi.charter.com. [66.188.57.61])
+        by smtp.gmail.com with ESMTPSA id l19sm1568958iob.46.2019.03.03.13.40.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 Mar 2019 13:40:59 -0800 (PST)
+Date:   Sun, 3 Mar 2019 16:40:56 -0500
+From:   Kimberly Brown <kimbrownkd@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Long Li <longli@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] Drivers: hv: vmbus: Expose monitor data only when
+ monitor pages are used
+Message-ID: <20190303214056.GB2071@ubu-Virtual-Machine>
+References: <20190226053530.GA2897@ubu-Virtual-Machine>
+ <20190301191824.GA4108@ubu-Virtual-Machine>
+ <DM5PR2101MB091825C55612FBCEA3322119D7770@DM5PR2101MB0918.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <0000000000008a8bf4058334b76e@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR2101MB091825C55612FBCEA3322119D7770@DM5PR2101MB0918.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/19 10:22 AM, syzbot wrote:
-> syzbot found the following crash on:
+On Sat, Mar 02, 2019 at 06:39:30PM +0000, Michael Kelley wrote:
+> From: Kimberly Brown <kimbrownkd@gmail.com>  Sent: Friday, March 1, 2019 11:18 AM
+> > 
+> > +/*
+> > + * Channel-level attribute_group callback function. Returns the permission for
+> > + * each attribute, and returns 0 if an attribute is not visible.
+> > + */
+> > +static umode_t vmbus_chan_attr_is_visible(struct kobject *kobj,
+> > +					  struct attribute *attr, int idx)
+> > +{
+> > +	const struct vmbus_channel *channel =
+> > +		container_of(kobj, struct vmbus_channel, kobj);
+> > +
+> > +	/* Hide the monitor attributes if the monitor mechanism is not used. */
+> > +	if (!channel->offermsg.monitor_allocated &&
+> > +	    (attr == &chan_attr_pending.attr ||
+> > +	     attr == &chan_attr_latency.attr ||
+> > +	     attr == &chan_attr_monitor_id.attr))
+> > +		return 0;
+> > +
+> > +	return attr->mode;
+> > +}
+> > +
+> > +static struct attribute_group vmbus_chan_group = {
+> > +	.attrs = vmbus_chan_attrs,
+> > +	.is_visible = vmbus_chan_attr_is_visible
+> > +};
+> > +
+> >  static struct kobj_type vmbus_chan_ktype = {
+> >  	.sysfs_ops = &vmbus_chan_sysfs_ops,
+> >  	.release = vmbus_chan_release,
+> > -	.default_attrs = vmbus_chan_attrs,
 > 
-> HEAD commit:    c63e9e91a254 Add linux-next specific files for 20190301
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16ac728d200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f5875f9dc6e009b2
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=17335689e239ce135d8b
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=134808fb200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1541889d200000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+17335689e239ce135d8b@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in __read_once_size 
-> include/linux/compiler.h:197 [inline]
-> BUG: KASAN: use-after-free in lockdep_register_key+0x3b9/0x490 
-> kernel/locking/lockdep.c:1023
-> Read of size 8 at addr ffff888090fc2698 by task syz-executor134/7858
-> 
-> CPU: 1 PID: 7858 Comm: syz-executor134 Not tainted 
-> 5.0.0-rc8-next-20190301 #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS 
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->   print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
->   kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
->   __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
->   __read_once_size include/linux/compiler.h:197 [inline]
->   lockdep_register_key+0x3b9/0x490 kernel/locking/lockdep.c:1023
->   wq_init_lockdep kernel/workqueue.c:3444 [inline]
->   alloc_workqueue+0x427/0xe70 kernel/workqueue.c:4263
->   ucma_open+0x76/0x290 drivers/infiniband/core/ucma.c:1732
->   misc_open+0x398/0x4c0 drivers/char/misc.c:141
->   chrdev_open+0x247/0x6b0 fs/char_dev.c:417
->   do_dentry_open+0x488/0x1160 fs/open.c:771
->   vfs_open+0xa0/0xd0 fs/open.c:880
->   do_last fs/namei.c:3416 [inline]
->   path_openat+0x10e9/0x46e0 fs/namei.c:3533
->   do_filp_open+0x1a1/0x280 fs/namei.c:3563
->   do_sys_open+0x3fe/0x5d0 fs/open.c:1063
->   __do_sys_openat fs/open.c:1090 [inline]
->   __se_sys_openat fs/open.c:1084 [inline]
->   __x64_sys_openat+0x9d/0x100 fs/open.c:1084
->   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> Just to double-check my understanding, removing the default_attrs
+> here means that in vmbus_add_channel_kobj(), the call to
+> kobject_init_and_add() will only create the sub-directory that is the
+> channel number.  The sub-directory will be empty.  Then the new
+> call to sysfs_create_group() that you added below will populate
+> the subdirectory, as filtered by vmbus_chan_attr_is_visible().
 
-I think this is caused by a change I made in the workqueue 
-implementation. I will submit a fix.
+Yes, that's my understanding as well.
 
-Bart.
+> 
+> >  };
+> > 
+> >  /*
+> > @@ -1571,6 +1624,12 @@ int vmbus_add_channel_kobj(struct hv_device *dev, struct
+> > vmbus_channel *channel)
+> >  	if (ret)
+> >  		return ret;
+> > 
+> > +	ret = sysfs_create_group(kobj, &vmbus_chan_group);
+> > +	if (ret) {
+> > +		pr_err("Unable to set up channel sysfs files\n");
+> > +		return ret;
+> 
+> In this error case, the previously created sub-directory that is the
+> channel number needs to be deleted/cleaned up.
+
+I was going to let the kobject and sysfs systems take care of that. If
+vmbus_add_channel_kobj() returns an error to the calling functions, they
+call kobject_put(), which eventually removes the directory.
+
+There are two functions that call vmbus_add_channel_kobj():
+vmbus_add_channel_work() and vmbus_device_register(). If
+vmbus_add_channel_kobj() returns an error to vmbus_add_channel_work(),
+the function calls are:
+
+free_channel() => kobject_put() (channel kobj ref. count should now be
+0) => kobject_release() => kobject_cleanup() => kobject_del() =>
+sysfs_remove_dir()
+
+If vmbus_add_channel_kobject() returns an error to
+vmbus_device_register(), the device's sub-directory is removed:
+
+device_unregister() => put_device() => kobject_put() (device kobj ref.
+count should now be 0) => kobject_release() => ...
+
+
+So, I don't think its necessary to cleanup the subdirectory created by
+kobject_init_and_add() here.
+
+Thanks,
+Kim
+
+
+> 
+> > +	}
+> > +
+> 
+> Michael
