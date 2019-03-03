@@ -2,189 +2,138 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E7FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3030C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D34A20857
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551632683;
-	bh=dJvcg4dBrUI8szjbEoHhaYmBa0hsibcAAIK0WaNRVE0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vThVCj9UIipTw/e4UBFmC5OJcdw6fYluiPfVIvi072HngnUgh6eedfutK65G+p6ZL
-	 PYv03TLfQbxH3M2jF0TTlRzFWMqd+KlaGqog9vo5a0bioT+u1u76Lb18M+rthR2oAa
-	 LApmTprYTjXwuInohKMq13gCbTJxfB/DtnPQ0Jb4=
+	by mail.kernel.org (Postfix) with ESMTP id AC13C20818
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:07:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNhW5r4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfCCREm (ORCPT
+        id S1726482AbfCCRG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 12:04:42 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45892 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfCCREl (ORCPT
+        Sun, 3 Mar 2019 12:06:59 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38493 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfCCRG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 12:04:41 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i12so2274005otp.12;
-        Sun, 03 Mar 2019 09:04:40 -0800 (PST)
+        Sun, 3 Mar 2019 12:06:58 -0500
+Received: by mail-io1-f65.google.com with SMTP id p18so2173504ioh.5;
+        Sun, 03 Mar 2019 09:06:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PQdwPgrYQIaK+JSzk6KwOnnr9WbfAiUl8ZSpdunwhC4=;
+        b=fNhW5r4KfDovU2iF1KNuaOxj3t4W2LJSemv+HUxeLmbKOXgbAofwlepdoTjXoW9I8+
+         IeCmKi9cV6DK8n4rd8bQjC8ANzFlfZRaN8+jFeQ8bEGgeK84wYSFJXyqmXFSa9uBXUfu
+         bh0rXPUW1a7MsXaNPk6/Rm4opeZZGkZ2lWBPMdoQRNBm1GHmElCCC0ZHhONTnG7roW9Q
+         FGZQm94iolQ3jtBo0pS+9HelO1m9iInUHQVlmFQKhwPj6llQHDtcgP+S8udzTwkwRlES
+         K9fvm+2xTo/Qg+UzS/rEIXIcG1sPEZjSNMCSgvoqkzCaC/4OL+cmiTbXepdN+mAWU4nk
+         d+DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PvH3PSkQa49dwm3/QkaK5+/zzINkN9NyBLJdwDDZ1mI=;
-        b=b3RPxt+CR+RhzC4/QlQIpkXtFESTgc63EqRP321i1ZegWff0KHqoAoBHDkF/XldDww
-         /93w+CoxzYmVvAwToh/zspeoIiEk9ppwNrHSuWcGQo1+vDhDqdK3n+3wreuDnLVAdsgH
-         N/pbdZ77SsRjnXZ/iwjrVRvx2eOZPD38tAhjpXblHxUiFRuVWb7rLXrl21r7QIYeOnam
-         FDulcfAOYhF4UGj4LRvkyTvkCq/xSXIwZajX3WvkuITQh6l9+Vr55/9qH3n1dztmJVzf
-         XvYc8og3o0hxB1PIsZh9U0dvrBO2nBVS0SXcBeRsAkD2JDTSKJYUMIg99mKOwLNVnGtY
-         44Tg==
-X-Gm-Message-State: APjAAAWq40kkUQQYPQ/htMMXLD6i/0OaR4pypeRlsy5GsId4y0+jo98U
-        O47k22vaVmjKrebKTx0jbknr4fMduByqWXUSmZM=
-X-Google-Smtp-Source: APXvYqyxI4bcBn4TlFMgKlSjKQXZjLZop8uvKziM+i7Y7kQxaASw0mP8PFHirkDAFGgL+HcUTxN7n73gh2gJJNZgjJU=
-X-Received: by 2002:a9d:7cd3:: with SMTP id r19mr10184394otn.139.1551632680471;
- Sun, 03 Mar 2019 09:04:40 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PQdwPgrYQIaK+JSzk6KwOnnr9WbfAiUl8ZSpdunwhC4=;
+        b=YoajDpQWrWUk15BsxDe9Ox1VA2g44v9cSyqETK62hPx1j7fQU/2c6WV/qkWnaSM7Hu
+         u6Ccvsf+dbxIswgBS5MXcWiM0HcLfXyD/Nfnrayjp6KKVp1JWsMiWIdKL9m1RYlXSe4O
+         qmTmtY3OryY43hWYzgGptLZKsIb683rpTDtUZVImStaAT68+LTn787eSJZQSDcoVOezN
+         n1rvWCsEAOph9RJF6uIwZ6KL2/O4quBDsPVAGcMaiEhT/APyZoYZh4MvM0SFNadpdDyv
+         Yb+AJ09eZ7dJIaHSRTULAxJIw7vvsS6KeEs/oIgjcAdBO1js2fBRS7zWbENOU2CJZZFO
+         eiOw==
+X-Gm-Message-State: APjAAAXgBPxO6ALN06ulHGBvQlPjYMfa0JI8Z85FbUdpCF6xZWM5Jk39
+        +FZ9CBuEcX6P7O/83DCh3Yhyub8TxOgRtpoMMk8=
+X-Google-Smtp-Source: APXvYqzO7vUUltjcoAcnkc8d8oAbSRT4Zuzk1u+NDe7Rxrjgb3BmfwYlwBprkLiQfIU66CQTgum+5h2tMDMvOwSMcX4=
+X-Received: by 2002:a5e:8c14:: with SMTP id n20mr7441262ioj.200.1551632817394;
+ Sun, 03 Mar 2019 09:06:57 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1551375162.git.yu.c.chen@intel.com> <bd3c5e04e882e5a4c977211a8d268440b36276a4.1551375162.git.yu.c.chen@intel.com>
- <CAJZ5v0g4CGfAMH0pM-wWSt6pXZrw3ckqBbbUzNwjqScwRjrK3g@mail.gmail.com> <20190302100420.GA7044@chenyu-office.sh.intel.com>
-In-Reply-To: <20190302100420.GA7044@chenyu-office.sh.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 3 Mar 2019 18:04:26 +0100
-Message-ID: <CAJZ5v0jkMDXQOheu9yVzZt-E=_YHrVvYwuWVREO4GxV8WdsSXQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2][RFC v2] ACPI: Update cpuinfo.max after bootup if necessary
-To:     Yu Chen <yu.c.chen@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yu Chen <yu.chen.surf@gmail.com>
+References: <CAKgT0UeMqmojVrNV1i-DdY18EBwbJ_4zVTUggAWas5D5yeU1PQ@mail.gmail.com>
+ <20190303034847.GA8699@redhat.com>
+In-Reply-To: <20190303034847.GA8699@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Sun, 3 Mar 2019 09:06:46 -0800
+Message-ID: <CAKgT0Ue9+wSL60Bj0drkgVQwem=mh_eTrFMda+inX4=qBgi3dA@mail.gmail.com>
+Subject: Re: x86 VM Boot hang with latest linux-next
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        dm-devel@redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 2, 2019 at 10:55 AM Yu Chen <yu.c.chen@intel.com> wrote:
+On Sat, Mar 2, 2019 at 7:48 PM Mike Snitzer <snitzer@redhat.com> wrote:
 >
-> On Thu, Feb 28, 2019 at 11:56:48PM +0100, Rafael J. Wysocki wrote:
-> > On Thu, Feb 28, 2019 at 6:59 PM Chen Yu <yu.c.chen@intel.com> wrote:
-> > >
-> > > On Dell Inc. XPS13 9333, the BIOS changes the value of
-> > > MSR_IA32_MISC_ENABLE_TURBO_DISABLE at runtime (e.g., when
-> > > the power source changes), the maximum frequency of the
-> > > CPU is not updated accordingly. This is due to the policy's
-> > > cpuinfo.max is not updated when _PPC notifier fires.
-> > >
-> > > Fix this problem by updating the policy's cpuinfo.max when
-> > > necessary.
-> > >
-> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=200759
-> > > Reported-and-tested-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
-> > > Originally-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> > > ---
-> > >  drivers/cpufreq/cpufreq.c      |  2 ++
-> > >  drivers/cpufreq/intel_pstate.c | 15 +++++++++++++--
-> > >  2 files changed, 15 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > index e35a886e00bc..95e08816b512 100644
-> > > --- a/drivers/cpufreq/cpufreq.c
-> > > +++ b/drivers/cpufreq/cpufreq.c
-> > > @@ -2237,6 +2237,8 @@ static int cpufreq_set_policy(struct cpufreq_policy *policy,
-> > >
-> > >         policy->min = new_policy->min;
-> > >         policy->max = new_policy->max;
-> > > +       policy->cpuinfo.max_freq = new_policy->cpuinfo.max_freq;
-> > > +       policy->cpuinfo.min_freq = new_policy->cpuinfo.min_freq;
-> > >         trace_cpu_frequency_limits(policy);
-> > >
-> > >         policy->cached_target_freq = UINT_MAX;
-> > > diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-> > > index dd66decf2087..841c74f69f66 100644
-> > > --- a/drivers/cpufreq/intel_pstate.c
-> > > +++ b/drivers/cpufreq/intel_pstate.c
-> > > @@ -2081,11 +2081,17 @@ static void intel_pstate_adjust_policy_max(struct cpufreq_policy *policy,
-> > >
-> > >  static int intel_pstate_verify_policy(struct cpufreq_policy *policy)
-> > >  {
-> > > +       int max_freq;
-> > >         struct cpudata *cpu = all_cpu_data[policy->cpu];
-> > >
-> > >         update_turbo_state();
-> > > +       max_freq = intel_pstate_get_max_freq(cpu);
-> > > +
-> > > +       if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
-> > > +               policy->cpuinfo.max_freq = policy->max = max_freq;
+> On Sat, Mar 02 2019 at  6:34pm -0500,
+> Alexander Duyck <alexander.duyck@gmail.com> wrote:
+>
+> > So I have been seeing an issue with an intermittent boot hang on my
+> > x86 KVM VM with the latest linux-next and have bisected it down to the
+> > following commit:
+> > 1efa3bb79d3de8ca1b7f6770313a1fc0bebe25c7 is the first bad commit
+> > commit 1efa3bb79d3de8ca1b7f6770313a1fc0bebe25c7
+> > Author: Mike Snitzer <snitzer@redhat.com>
+> > Date:   Fri Feb 22 11:23:01 2019 -0500
 > >
-> > Updating cpuinfo.max_freq here only causes the current limit to be
-> > reported via sysfs, because intel_pstate doesn't actually use
-> > cpuinfo.max_freq for anything and the core doesn't enforce it as a
-> > limit.
+> >     dm: must allocate dm_noclone for stacked noclone devices
 > >
-> > All of the computations in the active mode in the driver actually use
-> > the current limit anyway AFAICS.
+> >     Otherwise various lvm2 testsuite tests fail because the lower layer=
+s of
+> >     the stacked noclone device aren't updated to allocate a new 'struct
+> >     dm_clone' that reflects the upper layer bio that was issued to it.
 > >
-> Yes, but it looks like we should also take care of the cpuinfo.max
-> if it changes, I searched the code, it seems that other components
-> might use the policy's cpuinfo.max for some purpose. They might use
-> cpufreq_cpu_get() to get the policy, and use the cpuinfo.max_freq
-> directly, no matter what the mode intel_pstate is in. Such as kvm
-> might use it as the max tsc khz if the tsc is not constant. And i915
-> might consider the cpuinfo.max_freq to adjust the IA frequency on
-> gen6 platforms. So changing cpuinfo.max might also impact not only
-> cpufreq but also other components too.
-> > > +
-> > >         cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
-> > > -                                    intel_pstate_get_max_freq(cpu));
-> > > +                                    max_freq);
-> > >
-> > >         if (policy->policy != CPUFREQ_POLICY_POWERSAVE &&
-> > >             policy->policy != CPUFREQ_POLICY_PERFORMANCE)
-> > > @@ -2192,11 +2198,16 @@ static struct cpufreq_driver intel_pstate = {
-> > >
-> > >  static int intel_cpufreq_verify_policy(struct cpufreq_policy *policy)
-> > >  {
-> > > +       int max_freq;
-> > >         struct cpudata *cpu = all_cpu_data[policy->cpu];
-> > >
-> > >         update_turbo_state();
-> > > +       max_freq = intel_pstate_get_max_freq(cpu);
-> > > +
-> > > +       if (acpi_ppc && max_freq != policy->cpuinfo.max_freq)
-> > > +               policy->cpuinfo.max_freq = policy->max = max_freq;
+> >     Fixes: 97a89458020b38 ("dm: improve noclone bio support")
+> >     Reported-by: Mikulas Patocka <mpatocka@redhat.com>
+> >     Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 > >
-> > In this case (passive mode) updating cpuinfo.max_freq will actually
-> > cause governors to use the new value in computations, so the P-state
-> > selection will work somewhat differently, but that isn't really
-> > consistent with what acpi-cpufreq does and with setting no_turbo in
-> > the intel_pstate sysfs to 1 without this patch.
+> > What I am seeing is in about 3 out of 4 boots the startup just hangs
+> > at the filesystem check stage with the following message:
+> > [  OK  ] Reached target Local File Systems (Pre).
+> >          Starting File System Check on /dev/=E2=80=A6127-ad57-426f-bb45=
+-363950544c0c...
+> > [    **] (1 of 2) A start job is running for=E2=80=A6n on device 252:2 =
+(19s / no limit)
 > >
-> > With acpi-cpufreq cpuinfo.max_freq is always the max frequency in the
-> > _PSS table regardless of what the _PSS limit is.  Also setting
-> > no_turbo to 1 in intel_pstate without this patch doesn't cause
-> > cpuinfo.max_freq to change and I don't really think that it should.
+> > I did some googling and it looks like a similar issue has been
+> > reported for s390. Based on the request for data there I have the
+> > following info:
+> > [root@localhost ~]# dmsetup ls --tree
+> > fedora-swap (253:1)
+> >  =E2=94=94=E2=94=80 (252:2)
+> > fedora-root (253:0)
+> >  =E2=94=94=E2=94=80 (252:2)
 > >
-> > I would be tempted to always initialize cpuinfo.max_freq to the max
-> > turbo frequency, but there is a concern about systems in which
-> > MSR_IA32_MISC_ENABLE_TURBO_DISABLE is never set on the fly (just in
-> > the BIOS setup as it should be) and where it doesn't make sense to
-> > consider turbo frequencies at all.
-> Ok, maybe we can check the bit during boot(consider BIOS's setting)?
-> >
-> > >         cpufreq_verify_within_limits(policy, policy->cpuinfo.min_freq,
-> > > -                                    intel_pstate_get_max_freq(cpu));
-> > > +                                    max_freq);
-> > >
-> > >         intel_pstate_adjust_policy_max(policy, cpu);
-> > >
-> > > --
-> >
-> > It looks like I need to think about this a bit more.
-> Ok, I'll test the patch you sent out.
+> > [root@localhost ~]# dmsetup table
+> > fedora-swap: 0 4194304 linear 252:2 2048
+> > fedora-root: 0 31457280 linear 252:2 4196352
+>
+> Thanks, which version of Fedora are you running?
 
-Please do.
+The VM is running Fedora 27 with a kernel built off of latest
+linux-next as of March 1st.
+
+> Your case is more straightforward in that you're clearly using bio-based
+> DM linear (which was updated to leverage "noclone" support); whereas the
+> s390 case is using request-based DM which isn't impacted by the commit
+> in question at all.
+>
+> I'll attempt to reproduce first thing Monday.
+>
+> Mike
+
+Thanks. The behavior of it has me wondering if we are looking at
+something like an uninitialized data issue or something like that
+since as I mentioned I don't see this occur on every boot, just on
+most of them. So every now and then I can boot up the VM without any
+issues, but most of the time it will boot and then get stuck waiting
+on jobs that take forever.
+
+- Alex
