@@ -2,151 +2,187 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD90C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DF4C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57DE220863
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9BB20863
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfCCK5R (ORCPT
+        id S1726170AbfCCK7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 05:57:17 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38531 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfCCK5Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 05:57:16 -0500
-Received: by mail-ed1-f67.google.com with SMTP id h58so1883445edb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 02:57:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qXhYNEsypCMY6KDX/zArd7ep+nVvYTSXNgjoraORk9g=;
-        b=rm6thjARcYw4NL8YZXYoL1rXiQXCzV+OElhls6PEX46OkKNiNAN4FqIXsoz5nzwUpn
-         JAQIUM4BJ0FF+SWTlLaTVltxT2UN1AbQn4pa0t8k7UmxgXIO85e/0zulj+/6xYMnOFAs
-         7+4xW42ElrZ9eIrhCLdoggGVo/MkSaBpdAsa3H1rx23s2ymxbML4IYAaLALRduejtZVP
-         T9qwO7TV9SBXMtepo1h1YW67hmyimWsUpxbvCgzw84c7OC8Mulmb7nXyLoGqq4BpvXIG
-         cIpNY0N3IVte+SPB+fMxPBlUX9q+ZTlN1gsAEry6TVZRGv5F3tG3RMOJe8I71sqFkCWt
-         gSkA==
-X-Gm-Message-State: APjAAAWa+VDg/80DW3ME2kNLUXMYDRDjgoZkUPszC0g37KgV8I+bqy4q
-        L0n51DAhlYliU/TKuurPCriuoRUFjgs=
-X-Google-Smtp-Source: APXvYqzmCjL5OrFqglb5esI1sLufNeZy1hRXtf0sL/0cStJsDV/jHldhr3aLfg7A/MjND099U3vxjg==
-X-Received: by 2002:aa7:da0f:: with SMTP id r15mr11346394eds.34.1551610634742;
-        Sun, 03 Mar 2019 02:57:14 -0800 (PST)
-Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id t9sm1153489edb.13.2019.03.03.02.57.13
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Mar 2019 02:57:14 -0800 (PST)
-Subject: Re: False positive "do_IRQ: #.55 No irq handler for vector" messages
- on AMD ryzen based laptops
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Borislav Petkov <bp@alien8.de>
-References: <95e76875-f6b2-cbea-cd74-dc14ee77b2f8@redhat.com>
- <alpine.DEB.2.21.1902192144390.1644@nanos.tec.linutronix.de>
- <13dbe818-a364-4cd4-3ac4-78bd7e8d28e3@amd.com>
- <9f17f1aa-f258-fb18-0736-04a5c03cf40e@redhat.com>
-Message-ID: <cef82f75-8dc6-8198-ac41-492c200f6d57@redhat.com>
-Date:   Sun, 3 Mar 2019 11:57:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sun, 3 Mar 2019 05:59:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41316 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726054AbfCCK7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 05:59:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8B7C9AD17;
+        Sun,  3 Mar 2019 10:59:13 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@redhat.com>
+Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hendrik Peyerl <hpeyerl@plusline.net>
+Subject: Re: [RFC PATCH 2/2] ceph: quota: fix quota subdir mounts
+References: <20190301175752.17808-1-lhenriques@suse.com>
+        <20190301175752.17808-3-lhenriques@suse.com>
+        <8f2993854b7c6c8b03571200f0c117ca5e0f5cb7.camel@redhat.com>
+Date:   Sun, 03 Mar 2019 10:59:12 +0000
+In-Reply-To: <8f2993854b7c6c8b03571200f0c117ca5e0f5cb7.camel@redhat.com> (Jeff
+        Layton's message of "Sat, 02 Mar 2019 19:34:36 -0500")
+Message-ID: <87a7icjkan.fsf@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <9f17f1aa-f258-fb18-0736-04a5c03cf40e@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Jeff Layton <jlayton@redhat.com> writes:
 
-On 21-02-19 13:30, Hans de Goede wrote:
-> Hi,
-> 
-> On 19-02-19 22:47, Lendacky, Thomas wrote:
->> On 2/19/19 3:01 PM, Thomas Gleixner wrote:
->>> Hans,
->>>
->>> On Tue, 19 Feb 2019, Hans de Goede wrote:
->>>
->>> Cc+: ACPI/AMD folks
->>>
->>>> Various people are reporting false positive "do_IRQ: #.55 No irq handler for
->>>> vector"
->>>> messages on AMD ryzen based laptops, see e.g.:
->>>>
->>>> https://bugzilla.redhat.com/show_bug.cgi?id=1551605
->>>>
->>>> Which contains this dmesg snippet:
->>>>
->>>> Feb 07 20:14:29 localhost.localdomain kernel: smp: Bringing up secondary CPUs
->>>> ...
->>>> Feb 07 20:14:29 localhost.localdomain kernel: x86: Booting SMP configuration:
->>>> Feb 07 20:14:29 localhost.localdomain kernel: .... node  #0, CPUs:      #1
->>>> Feb 07 20:14:29 localhost.localdomain kernel: do_IRQ: 1.55 No irq handler for
->>>> vector
->>>> Feb 07 20:14:29 localhost.localdomain kernel:  #2
->>>> Feb 07 20:14:29 localhost.localdomain kernel: do_IRQ: 2.55 No irq handler for
->>>> vector
->>>> Feb 07 20:14:29 localhost.localdomain kernel:  #3
->>>> Feb 07 20:14:29 localhost.localdomain kernel: do_IRQ: 3.55 No irq handler for
->>>> vector
->>>> Feb 07 20:14:29 localhost.localdomain kernel: smp: Brought up 1 node, 4 CPUs
->>>> Feb 07 20:14:29 localhost.localdomain kernel: smpboot: Max logical packages: 1
->>>> Feb 07 20:14:29 localhost.localdomain kernel: smpboot: Total of 4 processors
->>>> activated (15968.49 BogoMIPS)
->>>>
->>>> It seems that we get an IRQ for each CPU as we bring it online,
->>>> which feels to me like it is some sorta false-positive.
->>>
->>> Sigh, that looks like BIOS value add again.
->>>
->>> It's not a false positive. Something _IS_ sending a vector 55 to these CPUs
->>> for whatever reason.
->>>
->>
->> I remember seeing something like this in the past and it turned out to be
->> a BIOS issue.  BIOS was enabling the APs to interact with the legacy 8259
->> interrupt controller when only the BSP should. During POST the APs were
->> exposed to ExtINT/INTR events as a result of the mis-configuration
->> (probably due to a UEFI timer-tick using the 8259) and this left a pending
->> ExtINT/INTR interrupt latched on the APs.
->>
->> When the APs were started by the OS, the latched ExtINT/INTR interrupt is
->> processed shortly after the OS enables interrupts. The AP then queries the
->> 8259 to identify the vector number (which is the value of the 8259's ICW2
->> register + the IRQ level). The master 8259's ICW2 was set to 0x30 and,
->> since no interrupts are actually pending, the 8259 will respond with IRQ7
->> (spurious interrupt) yielding a vector of 0x37 or 55.
->>
->> The OS was not expecting vector 55 and printed the message.
->>
->>  From the Intel Developer's Manual: Vol 3a, Section 10.5.1:
->> "Only one processor in the system should have an LVT entry configured to
->> use the ExtINT delivery mode."
->>
->> Not saying this is the problem, but very well could be.
-> 
-> That sounds like a likely candidate, esp. also since this only happens
-> once per CPU when we first only the CPU.
-> 
-> Can you provide me with a patch with some printk-s / pr_debugs to
-> test for this, then I can build a kernel with that patch added and
-> we can see if your hypothesis is right.
+> On Fri, 2019-03-01 at 17:57 +0000, Luis Henriques wrote:
+>> The CephFS kernel client doesn't enforce quotas that are set in a
+>> directory that isn't visible in the mount point.  For example, given the
+>> path '/dir1/dir2', if quotas are set in 'dir1' and the mount is done in with
+>> 
+>>   mount -t ceph <server>:<port>:/dir1/ /mnt
+>> 
+>> then the client can't access the 'dir1' inode from the quota realm dir2
+>> belongs to.
+>> 
+>> This patch fixes this by simply doing an MDS LOOKUPINO Op and grabbing a
+>> reference to it (so that it doesn't disappear again).  This also requires an
+>> extra field in ceph_snap_realm so that we know we have to release that
+>> reference when destroying the realm.
+>> 
+>> Links: https://tracker.ceph.com/issues/3848
+>
+> This bug looks unrelated to the patch description. Are you sure it's
+> correct?
 
-Ping? I like your theory, can you provide some help with debugging this
-further (to prove that your theory is correct ) ?
+Ups!  Looks like I truncated the bug number.  Sorry about that, here's
+the correct link:
 
-Regards,
+ https://tracker.ceph.com/issues/38482
 
-Hans
+Cheers,
+-- 
+Luis
+
+
+>> Reported-by: Hendrik Peyerl <hpeyerl@plusline.net>
+>> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>> ---
+>>  fs/ceph/caps.c  |  2 +-
+>>  fs/ceph/quota.c | 30 +++++++++++++++++++++++++++---
+>>  fs/ceph/snap.c  |  3 +++
+>>  fs/ceph/super.h |  2 ++
+>>  4 files changed, 33 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+>> index bba28a5034ba..e79994ff53d6 100644
+>> --- a/fs/ceph/caps.c
+>> +++ b/fs/ceph/caps.c
+>> @@ -1035,7 +1035,7 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>>  	list_del_init(&ci->i_snap_realm_item);
+>>  	ci->i_snap_realm_counter++;
+>>  	ci->i_snap_realm = NULL;
+>> -	if (realm->ino == ci->i_vino.ino)
+>> +	if ((realm->ino == ci->i_vino.ino) && !realm->own_inode)
+>>  		realm->inode = NULL;
+>>  	spin_unlock(&realm->inodes_with_caps_lock);
+>>  	ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
+>> diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
+>> index 9455d3aef0c3..f6b972d222e4 100644
+>> --- a/fs/ceph/quota.c
+>> +++ b/fs/ceph/quota.c
+>> @@ -22,7 +22,16 @@ void ceph_adjust_quota_realms_count(struct inode *inode, bool inc)
+>>  static inline bool ceph_has_realms_with_quotas(struct inode *inode)
+>>  {
+>>  	struct ceph_mds_client *mdsc = ceph_inode_to_client(inode)->mdsc;
+>> -	return atomic64_read(&mdsc->quotarealms_count) > 0;
+>> +	struct super_block *sb = mdsc->fsc->sb;
+>> +
+>> +	if (atomic64_read(&mdsc->quotarealms_count) > 0)
+>> +		return true;
+>> +	/* if root is the real CephFS root, we don't have quota realms */
+>> +	if (sb->s_root->d_inode &&
+>> +	    (sb->s_root->d_inode->i_ino == CEPH_INO_ROOT))
+>> +		return false;
+>> +	/* otherwise, we can't know for sure */
+>> +	return true;
+>>  }
+>>  
+>>  void ceph_handle_quota(struct ceph_mds_client *mdsc,
+>> @@ -166,6 +175,7 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
+>>  		return false;
+>>  
+>>  	down_read(&mdsc->snap_rwsem);
+>> +restart:
+>>  	realm = ceph_inode(inode)->i_snap_realm;
+>>  	if (realm)
+>>  		ceph_get_snap_realm(mdsc, realm);
+>> @@ -176,8 +186,22 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
+>>  		spin_lock(&realm->inodes_with_caps_lock);
+>>  		in = realm->inode ? igrab(realm->inode) : NULL;
+>>  		spin_unlock(&realm->inodes_with_caps_lock);
+>> -		if (!in)
+>> -			break;
+>> +		if (!in) {
+>> +			up_read(&mdsc->snap_rwsem);
+>> +			in = ceph_lookup_inode(inode->i_sb, realm->ino);
+>> +			down_read(&mdsc->snap_rwsem);
+>> +			if (IS_ERR(in)) {
+>> +				pr_warn("Can't lookup inode %llx (err: %ld)\n",
+>> +					realm->ino, PTR_ERR(in));
+>> +				break;
+>> +			}
+>> +			spin_lock(&realm->inodes_with_caps_lock);
+>> +			realm->inode = in;
+>> +			realm->own_inode = true;
+>> +			spin_unlock(&realm->inodes_with_caps_lock);
+>> +			ceph_put_snap_realm(mdsc, realm);
+>> +			goto restart;
+>> +		}
+>>  
+>>  		ci = ceph_inode(in);
+>>  		spin_lock(&ci->i_ceph_lock);
+>> diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
+>> index f74193da0e09..c84ed8e8526a 100644
+>> --- a/fs/ceph/snap.c
+>> +++ b/fs/ceph/snap.c
+>> @@ -117,6 +117,7 @@ static struct ceph_snap_realm *ceph_create_snap_realm(
+>>  
+>>  	atomic_set(&realm->nref, 1);    /* for caller */
+>>  	realm->ino = ino;
+>> +	realm->own_inode = false;
+>>  	INIT_LIST_HEAD(&realm->children);
+>>  	INIT_LIST_HEAD(&realm->child_item);
+>>  	INIT_LIST_HEAD(&realm->empty_item);
+>> @@ -184,6 +185,8 @@ static void __destroy_snap_realm(struct ceph_mds_client *mdsc,
+>>  	kfree(realm->prior_parent_snaps);
+>>  	kfree(realm->snaps);
+>>  	ceph_put_snap_context(realm->cached_context);
+>> +	if (realm->own_inode && realm->inode)
+>> +		iput(realm->inode);
+>>  	kfree(realm);
+>>  }
+>>  
+>> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+>> index ce51e98b08ec..3f0d74d2150f 100644
+>> --- a/fs/ceph/super.h
+>> +++ b/fs/ceph/super.h
+>> @@ -764,6 +764,8 @@ struct ceph_snap_realm {
+>>  	atomic_t nref;
+>>  	struct rb_node node;
+>>  
+>> +	bool own_inode;     /* true if we hold a ref to the inode */
+>> +
+>>  	u64 created, seq;
+>>  	u64 parent_ino;
+>>  	u64 parent_since;   /* snapid when our current parent became so */
