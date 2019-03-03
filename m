@@ -2,46 +2,47 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5BEC4360F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A05FC10F00
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCD520857
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F5D20857
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551627042;
-	bh=IsqtGwrYku6pC1vL41Ziwj9ch2d4QaqpQ+uaEM0NEew=;
+	s=default; t=1551627132;
+	bh=Tg5EurnMIMPdCMGc4aOuceSYhOJyeuFB7usfSgHjbW4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kSNlafkvtxH/4tz8nhqp3Wr1EnG8r98JwrGt/6ba3NJHi4H4t/c+TTZPo66spEUIi
-	 6bkAzV85jFIzK3AW4CclwOT9VbBAby+ok73YFKcA8O0fBJX5GP4MbdrVOmfbBAH/+A
-	 0pP8/8W9qE9QcCJnMtLI+h5PN34RjkyYMgBduP9E=
+	b=EV216y7u6L9HKHy3xulta8BRGhPFggyRY+x+4N/frNnbbc2UQJNX2KibOpOlcETIt
+	 uzU2z9P09Egcy5xnUODnaKSInHIGAVyJdLAzgItOzun0bjuDRQ6wbtTfLtGTdJ0pKL
+	 aQ6rpoVFcQOAuFhi9IGlZx0We/zzzcM3poAD7aoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfCCPal (ORCPT
+        id S1726425AbfCCPcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 10:30:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37376 "EHLO mail.kernel.org"
+        Sun, 3 Mar 2019 10:32:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfCCPak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 10:30:40 -0500
+        id S1726242AbfCCPcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 10:32:10 -0500
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46DB720835;
-        Sun,  3 Mar 2019 15:30:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C604020835;
+        Sun,  3 Mar 2019 15:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551627040;
-        bh=IsqtGwrYku6pC1vL41Ziwj9ch2d4QaqpQ+uaEM0NEew=;
+        s=default; t=1551627129;
+        bh=Tg5EurnMIMPdCMGc4aOuceSYhOJyeuFB7usfSgHjbW4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BweXhYQEPqbuxsST1CTSJSiuajIcfjcxZW0LJJdvmprWtTHELlLaNUWy/CRoxSAep
-         H67puDT6xfTVGbAkUGtBQj4o1OGyhooX/NWE6hjOFNmVY9f6q9PmEFK2VhitpXVwx1
-         B8zSPp8WTqbXuij8GA0TDItVjFgYe8UKRSpi4Hps=
-Date:   Sun, 3 Mar 2019 15:30:32 +0000
+        b=oBzkuHBwt2cetWX4bXDlSRviJqmL7toEn03Gx2iVvjd1V6zSmEpr+A8iUtvNAJea0
+         +v0jS0ZUunYk0JWRnN0GSCUHGhG6q3YZRrHDMUHbAzgGDTA83aktQQH1KwXbkycNWd
+         IFj5uVHsYzRuYJLD2UslSEj5De/W+AcVw8J2/uxw=
+Date:   Sun, 3 Mar 2019 15:32:01 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -52,16 +53,19 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Jonathan Marek <jonathan@marek.ca>,
         Brian Masney <masneyb@onstation.org>,
         Stephan Gerhold <stephan@gerhold.net>,
-        letux-kernel@openphoenux.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/10] iio: ak8975: improve code readability
-Message-ID: <20190303153032.580537fe@archlinux>
-In-Reply-To: <8a4498a761bf63e38c16f17d437715be0399a957.1550768574.git.hns@goldelico.com>
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 00/10] iio mount matrix - revitalize missing bindings
+ documentation and provide code for bmc150, bmg160, bma180, itg3200, hmc584x
+Message-ID: <20190303153201.440ac325@archlinux>
+In-Reply-To: <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com>
 References: <cover.1550768574.git.hns@goldelico.com>
-        <8a4498a761bf63e38c16f17d437715be0399a957.1550768574.git.hns@goldelico.com>
+        <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -71,51 +75,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Feb 2019 18:02:55 +0100
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+On Fri, 22 Feb 2019 16:48:14 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> - use temporary variable in get_mount_matrix()
-> - remove , after { }
+> On Thu, Feb 21, 2019 at 7:04 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >
+> > Fixes V2:
+> > * make get_mount_matrix() functions more readable (use temp variable)
+> >   (suggested by Jonathan and Andy)
+> > * add these readability improvements also for ak8975 and mpu6050
+> >   (suggested by Jonathan and Andy)
+> > * squash bindings documentation into single commit for better discussion
+> >   (suggested by Linus)
+> > * FOR DISCUSSION: add some more clarifications to the bindings documentation
+> >   and an attempt to define the magnetometer orientation
+> > * add "iio: Allow to read mount matrix from ACPI" to the beginning of
+> >   the series to make it compile
+> >   (suggested by Andy)
+> > * replace of_iio_read_mount_matrix() by iio_read_mount_matrix()
+> >   (required by "iio: Allow to read mount matrix from ACPI")
+> > * drop patch to convert bma180 to devm (potential race)
+> >   (suggested by Jonathan)
+> >
+> > PATCH V1 2019-02-20 15:01:02:
+> > This patch series adds the mount-matrix to several iio sensor drivers
+> > used in handheld devices.
+> >
+> > The mount-matrix translates the quite arbitrary orientation of the sensor
+> > on some printed circuit board to user-tangible orientation in handheld
+> > devices that relates to typical screen orientation.
+> >
+> > There was a bindings documentation by Linus Walleij but the patch
+> > did not make it into mainline. Therefore I resend it here.
+> >
+> > Next I have added some clarifications (at least I hope it clarifies)
+> > in a second patch.
+> >
+> > Finally, the patch set implements the hooks for the mount matrix
+> > in several iio drivers: bmc150, bma180, bmg160, itg3200, hmc5843.
+> > This includes also one patch for the bma180 to convert it to devm API.
+> >
+> > We use them in different variants of the omap3-gta04 so a separate
+> > patch set will provide device tree additions for them.
+> >  
 > 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Applied.
+> Thank you, it looks nice.
+> FWIW,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+
+Thanks to Linus and Andy for reviews.
+I've picked up all but they documentation patch.  I think
+it is 'very nearly there', but would like a few really minor
+tweaks.  Seemed silly to stall the other patches on that though!
 
 Thanks,
 
 Jonathan
 
-> ---
->  drivers/iio/magnetometer/ak8975.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-> index db7214ac514c..43d08c089792 100644
-> --- a/drivers/iio/magnetometer/ak8975.c
-> +++ b/drivers/iio/magnetometer/ak8975.c
-> @@ -746,12 +746,14 @@ static const struct iio_mount_matrix *
->  ak8975_get_mount_matrix(const struct iio_dev *indio_dev,
->  			const struct iio_chan_spec *chan)
->  {
-> -	return &((struct ak8975_data *)iio_priv(indio_dev))->orientation;
-> +	struct ak8975_data *data = iio_priv(indio_dev);
-> +
-> +	return &data->orientation;
->  }
->  
->  static const struct iio_chan_spec_ext_info ak8975_ext_info[] = {
->  	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, ak8975_get_mount_matrix),
-> -	{ },
-> +	{ }
->  };
->  
->  #define AK8975_CHANNEL(axis, index)					\
-> @@ -792,7 +794,7 @@ static const struct acpi_device_id ak_acpi_match[] = {
->  	{"AK09911", AK09911},
->  	{"AKM9911", AK09911},
->  	{"AK09912", AK09912},
-> -	{ },
-> +	{ }
->  };
->  MODULE_DEVICE_TABLE(acpi, ak_acpi_match);
->  #endif
 
