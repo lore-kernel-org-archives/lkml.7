@@ -2,366 +2,432 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABDCC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621EEC10F00
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE08206DD
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=elka.pw.edu.pl header.i=@elka.pw.edu.pl header.b="MqQHoonT"
+	by mail.kernel.org (Postfix) with ESMTP id 0D1AB206DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551644550;
+	bh=jiivNQWQK1Fnf0sHv0X9wYaomYxwkoOUTfLFXMWK1lA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GrM6rPF1C1b9fL8LCBP2g+nDN6ovgjtm/n/xLzaHN/QGPZgZULiVSJ/z0T7YGqHBR
+	 eknViabSrMRY9xYSXTnfZENwYpOUDsROvpZrvv66ORngHxFh/+03kTO3Y+54oD2Ay2
+	 pglKNdZLv9vMThnhYiLAf8u1/35/jMXD/zrrsiIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfCCUVp (ORCPT
+        id S1726687AbfCCUW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 15:21:45 -0500
-Received: from elektron.elka.pw.edu.pl ([194.29.160.103]:36293 "EHLO
-        elektron.elka.pw.edu.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfCCUVo (ORCPT
+        Sun, 3 Mar 2019 15:22:28 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:37557 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfCCUW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 15:21:44 -0500
-X-Greylist: delayed 1300 seconds by postgrey-1.27 at vger.kernel.org; Sun, 03 Mar 2019 15:21:41 EST
-Received: from [172.19.8.42] (178235205188.warszawa.vectranet.pl [178.235.205.188])
-        (Authenticated sender: wzabolot@elektron.elka.pw.edu.pl)
-        by elektron.elka.pw.edu.pl (Postfix) with ESMTPSA id 0F47168AEAA;
-        Sun,  3 Mar 2019 20:59:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=elka.pw.edu.pl;
-        s=2007; t=1551643197;
-        bh=TCFwPM/8MsHI7+CEqZc/9oNXydFLPuZ0LSo1qiLtL/I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=MqQHoonTOLD350aCtAS6uOWaHBxTvsxLXvbZJDnhF1TMaqig2BFC7xeK+M2B4rBDx
-         MQF0Np+NMrsTranSOm78PZn7QCzjDCcN+Zj0K+aQFZLZvVFS/T2MY2/vbriml01kVb
-         L6JrZcHWMKMlUMVigbG32TPWFAip87VcGQT8lfs4=
-Subject: Re: The "udl" driver crashes the kernel.
-To:     Pavel Machek <pavel@ucw.cz>,
-        "wzabolot@elektron.elka.pw.edu.pl" <wzabolot@elektron.elka.pw.edu.pl>
-Cc:     LKML <linux-kernel@vger.kernel.org>, bernie@plugable.com,
-        linux-fbdev@vger.kernel.org, airlied@redhat.com, sean@poorly.run,
-        dri-devel@lists.freedesktop.org
-References: <31dc20a5-66f4-051c-dfec-73924b00c0f8@elektron.elka.pw.edu.pl>
- <20181125230722.GD30242@amd>
-From:   Wojtek Zabolotny <W.Zabolotny@elka.pw.edu.pl>
-Openpgp: preference=signencrypt
-Autocrypt: addr=W.Zabolotny@elka.pw.edu.pl; prefer-encrypt=mutual; keydata=
- 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
- /Xm2n+tTR7u0C80Uuw==
-Message-ID: <2ed5f5c1-80a1-0790-a6f8-64d84284e9df@elka.pw.edu.pl>
-Date:   Sun, 3 Mar 2019 20:59:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sun, 3 Mar 2019 15:22:28 -0500
+Received: by mail-yw1-f66.google.com with SMTP id k14so2521874ywe.4
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 12:22:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vWYe/SH4n5pQhn73EX2h3fENGFvia3GnHd1Qq7AyZVI=;
+        b=jYIT3kBJsp7Si2SMxh+Wc+Sr+apRFp2L49FpGQlrEq4CR/18x/rVo2PxuanL23Jy4K
+         uzpUIRFYJP55mK9QDTEbzsTsIc2LsaQXsZMGdF2mB9Ejfoqtim0aL+nKzA1iCoAoJxuu
+         I/Z6BzVGm3j2fOraGFlCwnH0oaMMROTIljcD6HJxrKO/iCDSLK6U3daAe6oI9RsCyNf7
+         vZiomG2B+tF3TfaOPtm3tDmvCFsX805PeZwlpWmf2Pt4QU8WuFDTuYXQm9gVKJLDgcL4
+         NenB+AMAsGmwjMeGh2omjPMbtQCN6PYMjjvYoE7+Sfnl8GUJe+KKFfaPXRvXrYrfqsrZ
+         J4pA==
+X-Gm-Message-State: APjAAAVC6pFj4Srd/ln5w+BCMca/bYqenVWwinNIgXlro/bbCX1iVjI9
+        bs1IWrKF1kx4rnYRn2WP+lU=
+X-Google-Smtp-Source: APXvYqxxnI4dFXphPrO3Xa618uZXKK+o6d9sqai/0+WFqAOeBHgY3P8K43unCfLjgEIACijg+vNZOA==
+X-Received: by 2002:a25:ed5:: with SMTP id 204mr12057601ybo.171.1551644546486;
+        Sun, 03 Mar 2019 12:22:26 -0800 (PST)
+Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c091:200::ffe8])
+        by smtp.gmail.com with ESMTPSA id g82sm1811658ywg.60.2019.03.03.12.22.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 03 Mar 2019 12:22:25 -0800 (PST)
+Date:   Sun, 3 Mar 2019 15:22:23 -0500
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Vlad Buslov <vladbu@mellanox.com>,
+        "kernel-team@fb.com" <kernel-team@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 11/12] percpu: convert chunk hints to be based on
+ pcpu_block_md
+Message-ID: <20190303202223.GA4868@dennisz-mbp.dhcp.thefacebook.com>
+References: <20190228021839.55779-1-dennis@kernel.org>
+ <20190228021839.55779-12-dennis@kernel.org>
+ <AM0PR04MB44813FA493D26E2E157FCAF388700@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20181125230722.GD30242@amd>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: pl-PL
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM0PR04MB44813FA493D26E2E157FCAF388700@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.11.2018 00:07, Pavel Machek wrote:
-> On Sun 2018-11-25 16:58:59, wzabolot@elektron.elka.pw.edu.pl wrote:
->> When I connect my Displaylink DL-165 adapter to my Debian/testing
->> machine, the "udl" driver is loaded and the following error messages
->> appears in kernel logs:
-> 4.18 kernel. Might be worth testing latest stable, and latest
-> mainline...
->
-> Is there version that worked for you?
->
-> I added udl maintainers to the Cc list.
->
-> Best regards,
+On Sun, Mar 03, 2019 at 08:18:49AM +0000, Peng Fan wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: owner-linux-mm@kvack.org [mailto:owner-linux-mm@kvack.org] On
+> > Behalf Of Dennis Zhou
+> > Sent: 2019年2月28日 10:19
+> > To: Dennis Zhou <dennis@kernel.org>; Tejun Heo <tj@kernel.org>; Christoph
+> > Lameter <cl@linux.com>
+> > Cc: Vlad Buslov <vladbu@mellanox.com>; kernel-team@fb.com;
+> > linux-mm@kvack.org; linux-kernel@vger.kernel.org
+> > Subject: [PATCH 11/12] percpu: convert chunk hints to be based on
+> > pcpu_block_md
+> > 
+> > As mentioned in the last patch, a chunk's hints are no different than a block
+> > just responsible for more bits. This converts chunk level hints to use a
+> > pcpu_block_md to maintain them. This lets us reuse the same hint helper
+> > functions as a block. The left_free and right_free are unused by the chunk's
+> > pcpu_block_md.
+> > 
+> > Signed-off-by: Dennis Zhou <dennis@kernel.org>
+> > ---
+> >  mm/percpu-internal.h |   5 +-
+> >  mm/percpu-stats.c    |   5 +-
+> >  mm/percpu.c          | 120 +++++++++++++++++++------------------------
+> >  3 files changed, 57 insertions(+), 73 deletions(-)
+> > 
+> > diff --git a/mm/percpu-internal.h b/mm/percpu-internal.h index
+> > 119bd1119aa7..0468ba500bd4 100644
+> > --- a/mm/percpu-internal.h
+> > +++ b/mm/percpu-internal.h
+> > @@ -39,9 +39,7 @@ struct pcpu_chunk {
+> > 
+> >  	struct list_head	list;		/* linked to pcpu_slot lists */
+> >  	int			free_bytes;	/* free bytes in the chunk */
+> > -	int			contig_bits;	/* max contiguous size hint */
+> > -	int			contig_bits_start; /* contig_bits starting
+> > -						      offset */
+> > +	struct pcpu_block_md	chunk_md;
+> >  	void			*base_addr;	/* base address of this chunk */
+> > 
+> >  	unsigned long		*alloc_map;	/* allocation map */
+> > @@ -49,7 +47,6 @@ struct pcpu_chunk {
+> >  	struct pcpu_block_md	*md_blocks;	/* metadata blocks */
+> > 
+> >  	void			*data;		/* chunk data */
+> > -	int			first_bit;	/* no free below this */
+> >  	bool			immutable;	/* no [de]population allowed */
+> >  	int			start_offset;	/* the overlap with the previous
+> >  						   region to have a page aligned
+> > diff --git a/mm/percpu-stats.c b/mm/percpu-stats.c index
+> > b5fdd43b60c9..ef5034a0464e 100644
+> > --- a/mm/percpu-stats.c
+> > +++ b/mm/percpu-stats.c
+> > @@ -53,6 +53,7 @@ static int find_max_nr_alloc(void)  static void
+> > chunk_map_stats(struct seq_file *m, struct pcpu_chunk *chunk,
+> >  			    int *buffer)
+> >  {
+> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+> >  	int i, last_alloc, as_len, start, end;
+> >  	int *alloc_sizes, *p;
+> >  	/* statistics */
+> > @@ -121,9 +122,9 @@ static void chunk_map_stats(struct seq_file *m,
+> > struct pcpu_chunk *chunk,
+> >  	P("nr_alloc", chunk->nr_alloc);
+> >  	P("max_alloc_size", chunk->max_alloc_size);
+> >  	P("empty_pop_pages", chunk->nr_empty_pop_pages);
+> > -	P("first_bit", chunk->first_bit);
+> > +	P("first_bit", chunk_md->first_free);
+> >  	P("free_bytes", chunk->free_bytes);
+> > -	P("contig_bytes", chunk->contig_bits * PCPU_MIN_ALLOC_SIZE);
+> > +	P("contig_bytes", chunk_md->contig_hint * PCPU_MIN_ALLOC_SIZE);
+> >  	P("sum_frag", sum_frag);
+> >  	P("max_frag", max_frag);
+> >  	P("cur_min_alloc", cur_min_alloc);
+> > diff --git a/mm/percpu.c b/mm/percpu.c
+> > index 7cdf14c242de..197479f2c489 100644
+> > --- a/mm/percpu.c
+> > +++ b/mm/percpu.c
+> > @@ -233,10 +233,13 @@ static int pcpu_size_to_slot(int size)
+> > 
+> >  static int pcpu_chunk_slot(const struct pcpu_chunk *chunk)  {
+> > -	if (chunk->free_bytes < PCPU_MIN_ALLOC_SIZE || chunk->contig_bits
+> > == 0)
+> > +	const struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+> > +
+> > +	if (chunk->free_bytes < PCPU_MIN_ALLOC_SIZE ||
+> > +	    chunk_md->contig_hint == 0)
+> >  		return 0;
+> > 
+> > -	return pcpu_size_to_slot(chunk->contig_bits * PCPU_MIN_ALLOC_SIZE);
+> > +	return pcpu_size_to_slot(chunk_md->contig_hint *
+> > PCPU_MIN_ALLOC_SIZE);
+> >  }
+> > 
+> >  /* set the pointer to a chunk in a page struct */ @@ -592,54 +595,6 @@
+> > static inline bool pcpu_region_overlap(int a, int b, int x, int y)
+> >  	return false;
+> >  }
+> > 
+> > -/**
+> > - * pcpu_chunk_update - updates the chunk metadata given a free area
+> > - * @chunk: chunk of interest
+> > - * @bit_off: chunk offset
+> > - * @bits: size of free area
+> > - *
+> > - * This updates the chunk's contig hint and starting offset given a free area.
+> > - * Choose the best starting offset if the contig hint is equal.
+> > - */
+> > -static void pcpu_chunk_update(struct pcpu_chunk *chunk, int bit_off, int bits)
+> > -{
+> > -	if (bits > chunk->contig_bits) {
+> > -		chunk->contig_bits_start = bit_off;
+> > -		chunk->contig_bits = bits;
+> > -	} else if (bits == chunk->contig_bits && chunk->contig_bits_start &&
+> > -		   (!bit_off ||
+> > -		    __ffs(bit_off) > __ffs(chunk->contig_bits_start))) {
+> > -		/* use the start with the best alignment */
+> > -		chunk->contig_bits_start = bit_off;
+> > -	}
+> > -}
+> > -
+> > -/**
+> > - * pcpu_chunk_refresh_hint - updates metadata about a chunk
+> > - * @chunk: chunk of interest
+> > - *
+> > - * Iterates over the metadata blocks to find the largest contig area.
+> > - * It also counts the populated pages and uses the delta to update the
+> > - * global count.
+> > - *
+> > - * Updates:
+> > - *      chunk->contig_bits
+> > - *      chunk->contig_bits_start
+> > - */
+> > -static void pcpu_chunk_refresh_hint(struct pcpu_chunk *chunk) -{
+> > -	int bit_off, bits;
+> > -
+> > -	/* clear metadata */
+> > -	chunk->contig_bits = 0;
+> > -
+> > -	bit_off = chunk->first_bit;
+> > -	bits = 0;
+> > -	pcpu_for_each_md_free_region(chunk, bit_off, bits) {
+> > -		pcpu_chunk_update(chunk, bit_off, bits);
+> > -	}
+> > -}
+> > -
+> >  /**
+> >   * pcpu_block_update - updates a block given a free area
+> >   * @block: block of interest
+> > @@ -753,6 +708,29 @@ static void pcpu_block_update_scan(struct
+> > pcpu_chunk *chunk, int bit_off,
+> >  	pcpu_block_update(block, s_off, e_off);  }
+> > 
+> > +/**
+> > + * pcpu_chunk_refresh_hint - updates metadata about a chunk
+> > + * @chunk: chunk of interest
+> > + *
+> > + * Iterates over the metadata blocks to find the largest contig area.
+> > + * It also counts the populated pages and uses the delta to update the
+> > + * global count.
+> > + */
+> > +static void pcpu_chunk_refresh_hint(struct pcpu_chunk *chunk) {
+> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+> > +	int bit_off, bits;
+> > +
+> > +	/* clear metadata */
+> > +	chunk_md->contig_hint = 0;
+> > +
+> > +	bit_off = chunk_md->first_free;
+> > +	bits = 0;
+> > +	pcpu_for_each_md_free_region(chunk, bit_off, bits) {
+> > +		pcpu_block_update(chunk_md, bit_off, bit_off + bits);
+> > +	}
+> > +}
+> > +
+> >  /**
+> >   * pcpu_block_refresh_hint
+> >   * @chunk: chunk of interest
+> > @@ -800,6 +778,7 @@ static void pcpu_block_refresh_hint(struct
+> > pcpu_chunk *chunk, int index)  static void
+> > pcpu_block_update_hint_alloc(struct pcpu_chunk *chunk, int bit_off,
+> >  					 int bits)
+> >  {
+> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+> >  	int nr_empty_pages = 0;
+> >  	struct pcpu_block_md *s_block, *e_block, *block;
+> >  	int s_index, e_index;	/* block indexes of the freed allocation */
+> > @@ -910,8 +889,9 @@ static void pcpu_block_update_hint_alloc(struct
+> > pcpu_chunk *chunk, int bit_off,
+> >  	 * contig hint is broken.  Otherwise, it means a smaller space
+> >  	 * was used and therefore the chunk contig hint is still correct.
+> >  	 */
+> > -	if (pcpu_region_overlap(chunk->contig_bits_start,
+> > -				chunk->contig_bits_start + chunk->contig_bits,
+> > +	if (pcpu_region_overlap(chunk_md->contig_hint_start,
+> > +				chunk_md->contig_hint_start +
+> > +				chunk_md->contig_hint,
+> >  				bit_off,
+> >  				bit_off + bits))
+> >  		pcpu_chunk_refresh_hint(chunk);
+> > @@ -930,9 +910,10 @@ static void pcpu_block_update_hint_alloc(struct
+> > pcpu_chunk *chunk, int bit_off,
+> >   *
+> >   * A chunk update is triggered if a page becomes free, a block becomes free,
+> >   * or the free spans across blocks.  This tradeoff is to minimize iterating
+> > - * over the block metadata to update chunk->contig_bits.
+> > chunk->contig_bits
+> > - * may be off by up to a page, but it will never be more than the available
+> > - * space.  If the contig hint is contained in one block, it will be accurate.
+> > + * over the block metadata to update chunk_md->contig_hint.
+> > + * chunk_md->contig_hint may be off by up to a page, but it will never
+> > + be more
+> > + * than the available space.  If the contig hint is contained in one
+> > + block, it
+> > + * will be accurate.
+> >   */
+> >  static void pcpu_block_update_hint_free(struct pcpu_chunk *chunk, int
+> > bit_off,
+> >  					int bits)
+> > @@ -1026,8 +1007,9 @@ static void pcpu_block_update_hint_free(struct
+> > pcpu_chunk *chunk, int bit_off,
+> >  	if (((end - start) >= PCPU_BITMAP_BLOCK_BITS) || s_index != e_index)
+> >  		pcpu_chunk_refresh_hint(chunk);
+> >  	else
+> > -		pcpu_chunk_update(chunk, pcpu_block_off_to_off(s_index, start),
+> > -				  end - start);
+> > +		pcpu_block_update(&chunk->chunk_md,
+> > +				  pcpu_block_off_to_off(s_index, start),
+> > +				  end);
+> >  }
+> > 
+> >  /**
+> > @@ -1082,6 +1064,7 @@ static bool pcpu_is_populated(struct pcpu_chunk
+> > *chunk, int bit_off, int bits,  static int pcpu_find_block_fit(struct pcpu_chunk
+> > *chunk, int alloc_bits,
+> >  			       size_t align, bool pop_only)
+> >  {
+> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+> >  	int bit_off, bits, next_off;
+> > 
+> >  	/*
+> > @@ -1090,12 +1073,12 @@ static int pcpu_find_block_fit(struct pcpu_chunk
+> > *chunk, int alloc_bits,
+> >  	 * cannot fit in the global hint, there is memory pressure and creating
+> >  	 * a new chunk would happen soon.
+> >  	 */
+> > -	bit_off = ALIGN(chunk->contig_bits_start, align) -
+> > -		  chunk->contig_bits_start;
+> > -	if (bit_off + alloc_bits > chunk->contig_bits)
+> > +	bit_off = ALIGN(chunk_md->contig_hint_start, align) -
+> > +		  chunk_md->contig_hint_start;
+> > +	if (bit_off + alloc_bits > chunk_md->contig_hint)
+> >  		return -1;
+> > 
+> > -	bit_off = chunk->first_bit;
+> > +	bit_off = chunk_md->first_free;
+> >  	bits = 0;
+> >  	pcpu_for_each_fit_region(chunk, alloc_bits, align, bit_off, bits) {
+> >  		if (!pop_only || pcpu_is_populated(chunk, bit_off, bits, @@ -1190,6
+> > +1173,7 @@ static unsigned long pcpu_find_zero_area(unsigned long *map,
+> > static int pcpu_alloc_area(struct pcpu_chunk *chunk, int alloc_bits,
+> >  			   size_t align, int start)
+> >  {
+> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+> >  	size_t align_mask = (align) ? (align - 1) : 0;
+> >  	unsigned long area_off = 0, area_bits = 0;
+> >  	int bit_off, end, oslot;
+> > @@ -1222,8 +1206,8 @@ static int pcpu_alloc_area(struct pcpu_chunk
+> > *chunk, int alloc_bits,
+> >  	chunk->free_bytes -= alloc_bits * PCPU_MIN_ALLOC_SIZE;
+> > 
+> >  	/* update first free bit */
+> > -	if (bit_off == chunk->first_bit)
+> > -		chunk->first_bit = find_next_zero_bit(
+> > +	if (bit_off == chunk_md->first_free)
+> > +		chunk_md->first_free = find_next_zero_bit(
+> >  					chunk->alloc_map,
+> >  					pcpu_chunk_map_bits(chunk),
+> >  					bit_off + alloc_bits);
+> > @@ -1245,6 +1229,7 @@ static int pcpu_alloc_area(struct pcpu_chunk
+> > *chunk, int alloc_bits,
+> >   */
+> >  static void pcpu_free_area(struct pcpu_chunk *chunk, int off)  {
+> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
+> >  	int bit_off, bits, end, oslot;
+> > 
+> >  	lockdep_assert_held(&pcpu_lock);
+> > @@ -1264,7 +1249,7 @@ static void pcpu_free_area(struct pcpu_chunk
+> > *chunk, int off)
+> >  	chunk->free_bytes += bits * PCPU_MIN_ALLOC_SIZE;
+> > 
+> >  	/* update first free bit */
+> > -	chunk->first_bit = min(chunk->first_bit, bit_off);
+> > +	chunk_md->first_free = min(chunk_md->first_free, bit_off);
+> > 
+> >  	pcpu_block_update_hint_free(chunk, bit_off, bits);
+> > 
+> > @@ -1285,6 +1270,9 @@ static void pcpu_init_md_blocks(struct pcpu_chunk
+> > *chunk)  {
+> >  	struct pcpu_block_md *md_block;
+> > 
+> > +	/* init the chunk's block */
+> > +	pcpu_init_md_block(&chunk->chunk_md,
+> > pcpu_chunk_map_bits(chunk));
+> > +
+> >  	for (md_block = chunk->md_blocks;
+> >  	     md_block != chunk->md_blocks + pcpu_chunk_nr_blocks(chunk);
+> >  	     md_block++)
+> > @@ -1352,7 +1340,6 @@ static struct pcpu_chunk * __init
+> > pcpu_alloc_first_chunk(unsigned long tmp_addr,
+> >  	chunk->nr_populated = chunk->nr_pages;
+> >  	chunk->nr_empty_pop_pages = chunk->nr_pages;
+> > 
+> > -	chunk->contig_bits = map_size / PCPU_MIN_ALLOC_SIZE;
+> >  	chunk->free_bytes = map_size;
+> > 
+> >  	if (chunk->start_offset) {
+> > @@ -1362,7 +1349,7 @@ static struct pcpu_chunk * __init
+> > pcpu_alloc_first_chunk(unsigned long tmp_addr,
+> >  		set_bit(0, chunk->bound_map);
+> >  		set_bit(offset_bits, chunk->bound_map);
+> > 
+> > -		chunk->first_bit = offset_bits;
+> > +		chunk->chunk_md.first_free = offset_bits;
+> > 
+> >  		pcpu_block_update_hint_alloc(chunk, 0, offset_bits);
+> >  	}
+> > @@ -1415,7 +1402,6 @@ static struct pcpu_chunk *pcpu_alloc_chunk(gfp_t
+> > gfp)
+> >  	pcpu_init_md_blocks(chunk);
+> > 
+> >  	/* init metadata */
+> > -	chunk->contig_bits = region_bits;
+> >  	chunk->free_bytes = chunk->nr_pages * PAGE_SIZE;
+> > 
+> >  	return chunk;
+> 
+> Reviewed-by: Peng Fan <peng.fan@nxp.com>
+> 
+> Nitpick, how about name a function __pcpu_md_update,
+> and let pcpu_chunk_update and pcpu_block_update to
+> call __pcpu_md_update. If you prefer, I could submit
+> a patch.
+> 
 
-I have repeated the tests with my current Debian/testing setup (kernel 4.=
-19.16), and still get warnings from kernel after loading the udl module:
+I don't have a preference. But I do not really want to have 2 functions
+that just wrap the same function. I think overall it'll make sense to
+rename it, but I haven't thought about what to rename it to as it'll
+probably be influence by the possible direction that percpu ends up
+going.
 
-[ 1208.605542] [drm] vendor descriptor length:22 data:22 5f 01 00 20 05 0=
-0 01 03 04 02
-[ 1208.706718] udl 4-1.2:1.0: fb1: udldrmfb frame buffer device
-[ 1208.706746] [drm] Initialized udl 0.0.1 20120220 for 4-1.2:1.0 on mino=
-r 2
-[ 1208.706753] [drm] Initialized udl on minor 2
-[ 1208.706876] usbcore: registered new interface driver udl
-[ 1210.003149] WARNING: CPU: 0 PID: 993 at drivers/gpu/drm/drm_gem.c:893 =
-drm_gem_object_put+0x33/0x40 [drm]
-[ 1210.003153] Modules linked in: udl evdi(OE) rfcomm ctr ccm bnep cpufre=
-q_userspace cpufreq_conservative cpufreq_powersave nft_counter xt_owner x=
-t_state xt_conntrack nf_conntrack nf_defrag_ipv6
-nf_defrag_ipv4 libcrc32c nft_compat nf_tables nfnetlink binfmt_misc arc4 =
-iwldvm mac80211 uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l=
-2 iwlwifi videobuf2_common nvidia_drm(POE)
-nvidia_modeset(POE) videodev intel_rapl media x86_pkg_temp_thermal intel_=
-powerclamp btusb snd_hda_codec_realtek snd_hda_codec_generic btrtl btbcm =
-btintel bluetooth snd_hda_intel i915 snd_hda_codec
-snd_hda_core drbg ansi_cprng snd_hwdep snd_pcm_oss snd_mixer_oss coretemp=
- kvm_intel snd_pcm ecdh_generic kvm snd_timer snd joydev serio_raw soundc=
-ore drm_kms_helper cfg80211 irqbypass dell_wmi
-sparse_keymap pcspkr drm dell_laptop
-[ 1210.003247]=C2=A0 dell_smbios mei_me rfkill i2c_algo_bit dcdbas intel_=
-cstate iTCO_wdt mei iTCO_vendor_support intel_uncore dell_smm_hwmon evdev=
- nvidia(POE) pcc_cpufreq intel_rapl_perf sg
-dell_wmi_descriptor wmi_bmof wmi video ac button battery dell_smo8800 ipm=
-i_devintf ipmi_msghandler parport_pc ppdev lp parport ip_tables x_tables =
-autofs4 ext4 crc16 mbcache jbd2 crc32c_generic
-fscrypto ecb algif_skcipher af_alg dm_crypt dm_mod sr_mod cdrom sd_mod um=
-s_realtek uas usb_storage crct10dif_pclmul crc32_pclmul crc32c_intel ghas=
-h_clmulni_intel pcbc ahci xhci_pci libahci xhci_hcd
-ehci_pci libata ehci_hcd realtek aesni_intel aes_x86_64 crypto_simd crypt=
-d usbcore psmouse glue_helper scsi_mod r8169 i2c_i801 libphy lpc_ich usb_=
-common thermal [last unloaded: udlfb]
-[ 1210.003358] CPU: 0 PID: 993 Comm: Xorg Tainted: P=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 OE=C2=A0=C2=A0=C2=A0=C2=A0 4.19.0=
--2-amd64 #1 Debian 4.19.16-1
-[ 1210.003360] Hardware name: Dell Inc.=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 Dell System Vostro 3750/0VP036, BIOS A14 09/26/2012
-[ 1210.003393] RIP: 0010:drm_gem_object_put+0x33/0x40 [drm]
-[ 1210.003397] Code: 28 53 48 8b 47 08 48 8b 40 68 48 a9 f8 ff ff ff 74 1=
-8 48 89 fb e8 ed 7f 05 f8 84 c0 75 02 5b c3 48 89 df 5b e9 0e fc ff ff c3=
- <0f> 0b eb e4 66 0f 1f 84 00 00 00 00 00 66 66 66 66
-90 48 85 ff 74
-[ 1210.003400] RSP: 0018:ffffaa4cc23b3d10 EFLAGS: 00010246
-[ 1210.003405] RAX: 0000000000000000 RBX: ffff9e749ad90800 RCX: 000000000=
-0000000
-[ 1210.003408] RDX: ffffffffffffffff RSI: 0000000000000000 RDI: ffff9e749=
-ad90800
-[ 1210.003411] RBP: ffff9e7496cbf020 R08: ffff9e74a720c910 R09: 000000000=
-10ffff0
-[ 1210.003413] R10: 0000000000100004 R11: 0000000000000000 R12: 000000000=
-0000000
-[ 1210.003416] R13: ffffaa4cc23b3dd0 R14: ffffaa4cc23b3dc8 R15: ffff9e74a=
-2695d00
-[ 1210.003420] FS:=C2=A0 00007ff1907cca80(0000) GS:ffff9e74ae200000(0000)=
- knlGS:0000000000000000
-[ 1210.003423] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1210.003426] CR2: 00007ff18c785278 CR3: 00000004290f6002 CR4: 000000000=
-00606f0
-[ 1210.003429] Call Trace:
-[ 1210.003446]=C2=A0 udl_gem_mmap+0x64/0xa0 [udl]
-[ 1210.003484]=C2=A0 ? drm_mode_create_dumb_ioctl+0x10/0x10 [drm]
-[ 1210.003515]=C2=A0 drm_ioctl_kernel+0xa1/0xf0 [drm]
-[ 1210.003549]=C2=A0 drm_ioctl+0x206/0x3a0 [drm]
-[ 1210.003584]=C2=A0 ? drm_mode_create_dumb_ioctl+0x10/0x10 [drm]
-[ 1210.003592]=C2=A0 ? datagram_poll+0x25/0xf0
-[ 1210.003599]=C2=A0 ? sock_poll+0x83/0xb0
-[ 1210.003605]=C2=A0 ? ep_item_poll.isra.16+0x40/0xc0
-[ 1210.003609]=C2=A0 ? sock_poll+0x83/0xb0
-[ 1210.003616]=C2=A0 do_vfs_ioctl+0xa4/0x630
-[ 1210.003621]=C2=A0 ? __x64_sys_epoll_ctl+0xe7/0x550
-[ 1210.003626]=C2=A0 ksys_ioctl+0x60/0x90
-[ 1210.003632]=C2=A0 __x64_sys_ioctl+0x16/0x20
-[ 1210.003639]=C2=A0 do_syscall_64+0x53/0x100
-[ 1210.003645]=C2=A0 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1210.003650] RIP: 0033:0x7ff190efd757
-[ 1210.003654] Code: 00 00 90 48 8b 05 39 a7 0c 00 64 c7 00 26 00 00 00 4=
-8 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05=
- <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 09 a7 0c 00 f7
-d8 64 89 01 48
-[ 1210.003657] RSP: 002b:00007ffd9dcaca98 EFLAGS: 00003246 ORIG_RAX: 0000=
-000000000010
-[ 1210.003662] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007ff19=
-0efd757
-[ 1210.003664] RDX: 00007ffd9dcacad0 RSI: 00000000c01064b3 RDI: 000000000=
-000003d
-[ 1210.003667] RBP: 00007ffd9dcacad0 R08: 0000000000000000 R09: 000055718=
-bf5d820
-[ 1210.003669] R10: 00007ffd9dcaca7c R11: 0000000000003246 R12: 00000000c=
-01064b3
-[ 1210.003672] R13: 000000000000003d R14: 000055718bd84f80 R15: 000000000=
-0000001
-[ 1210.003677] ---[ end trace 115b8e77b2a2c036 ]---
-[ 1210.005818] WARNING: CPU: 0 PID: 993 at drivers/gpu/drm/drm_gem.c:893 =
-drm_gem_object_put+0x33/0x40 [drm]
-[ 1210.005820] Modules linked in: udl evdi(OE) rfcomm ctr ccm bnep cpufre=
-q_userspace cpufreq_conservative cpufreq_powersave nft_counter xt_owner x=
-t_state xt_conntrack nf_conntrack nf_defrag_ipv6
-nf_defrag_ipv4 libcrc32c nft_compat nf_tables nfnetlink binfmt_misc arc4 =
-iwldvm mac80211 uvcvideo videobuf2_vmalloc videobuf2_memops videobuf2_v4l=
-2 iwlwifi videobuf2_common nvidia_drm(POE)
-nvidia_modeset(POE) videodev intel_rapl media x86_pkg_temp_thermal intel_=
-powerclamp btusb snd_hda_codec_realtek snd_hda_codec_generic btrtl btbcm =
-btintel bluetooth snd_hda_intel i915 snd_hda_codec
-snd_hda_core drbg ansi_cprng snd_hwdep snd_pcm_oss snd_mixer_oss coretemp=
- kvm_intel snd_pcm ecdh_generic kvm snd_timer snd joydev serio_raw soundc=
-ore drm_kms_helper cfg80211 irqbypass dell_wmi
-sparse_keymap pcspkr drm dell_laptop
-[ 1210.005907]=C2=A0 dell_smbios mei_me rfkill i2c_algo_bit dcdbas intel_=
-cstate iTCO_wdt mei iTCO_vendor_support intel_uncore dell_smm_hwmon evdev=
- nvidia(POE) pcc_cpufreq intel_rapl_perf sg
-dell_wmi_descriptor wmi_bmof wmi video ac button battery dell_smo8800 ipm=
-i_devintf ipmi_msghandler parport_pc ppdev lp parport ip_tables x_tables =
-autofs4 ext4 crc16 mbcache jbd2 crc32c_generic
-fscrypto ecb algif_skcipher af_alg dm_crypt dm_mod sr_mod cdrom sd_mod um=
-s_realtek uas usb_storage crct10dif_pclmul crc32_pclmul crc32c_intel ghas=
-h_clmulni_intel pcbc ahci xhci_pci libahci xhci_hcd
-ehci_pci libata ehci_hcd realtek aesni_intel aes_x86_64 crypto_simd crypt=
-d usbcore psmouse glue_helper scsi_mod r8169 i2c_i801 libphy lpc_ich usb_=
-common thermal [last unloaded: udlfb]
-[ 1210.006005] CPU: 0 PID: 993 Comm: Xorg Tainted: P=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 W=C2=A0 OE=C2=A0=C2=A0=C2=A0=C2=A0 4.19.0-2-amd64 #=
-1 Debian 4.19.16-1
-[ 1210.006007] Hardware name: Dell Inc.=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 Dell System Vostro 3750/0VP036, BIOS A14 09/26/2012
-[ 1210.006038] RIP: 0010:drm_gem_object_put+0x33/0x40 [drm]
-[ 1210.006042] Code: 28 53 48 8b 47 08 48 8b 40 68 48 a9 f8 ff ff ff 74 1=
-8 48 89 fb e8 ed 7f 05 f8 84 c0 75 02 5b c3 48 89 df 5b e9 0e fc ff ff c3=
- <0f> 0b eb e4 66 0f 1f 84 00 00 00 00 00 66 66 66 66
-90 48 85 ff 74
-[ 1210.006044] RSP: 0018:ffffaa4cc23b3d10 EFLAGS: 00010246
-[ 1210.006048] RAX: 0000000000000000 RBX: ffff9e749ad93800 RCX: 000000000=
-0000000
-[ 1210.006050] RDX: ffffffffffffffff RSI: 0000000000000000 RDI: ffff9e749=
-ad93800
-[ 1210.006053] RBP: ffff9e7496cbf020 R08: ffff9e74a720c910 R09: 000000000=
-10ffff0
-[ 1210.006055] R10: 0000000000100304 R11: 0000000000000000 R12: 000000000=
-0000000
-[ 1210.006058] R13: ffffaa4cc23b3dd0 R14: ffffaa4cc23b3dc8 R15: ffff9e74a=
-2695d00
-[ 1210.006062] FS:=C2=A0 00007ff1907cca80(0000) GS:ffff9e74ae200000(0000)=
- knlGS:0000000000000000
-[ 1210.006065] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1210.006067] CR2: 00007ff18c785278 CR3: 00000004290f6002 CR4: 000000000=
-00606f0
-[ 1210.006069] Call Trace:
-[ 1210.006080]=C2=A0 udl_gem_mmap+0x64/0xa0 [udl]
-[ 1210.006115]=C2=A0 ? drm_mode_create_dumb_ioctl+0x10/0x10 [drm]
-[ 1210.006146]=C2=A0 drm_ioctl_kernel+0xa1/0xf0 [drm]
-[ 1210.006178]=C2=A0 drm_ioctl+0x206/0x3a0 [drm]
-[ 1210.006212]=C2=A0 ? drm_mode_create_dumb_ioctl+0x10/0x10 [drm]
-[ 1210.006220]=C2=A0 ? do_mmap+0x3c7/0x5a0
-[ 1210.006227]=C2=A0 do_vfs_ioctl+0xa4/0x630
-[ 1210.006234]=C2=A0 ksys_ioctl+0x60/0x90
-[ 1210.006239]=C2=A0 __x64_sys_ioctl+0x16/0x20
-[ 1210.006246]=C2=A0 do_syscall_64+0x53/0x100
-[ 1210.006251]=C2=A0 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1210.006255] RIP: 0033:0x7ff190efd757
-[ 1210.006259] Code: 00 00 90 48 8b 05 39 a7 0c 00 64 c7 00 26 00 00 00 4=
-8 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05=
- <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 09 a7 0c 00 f7
-d8 64 89 01 48
-[ 1210.006261] RSP: 002b:00007ffd9dcaca98 EFLAGS: 00003246 ORIG_RAX: 0000=
-000000000010
-[ 1210.006265] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007ff19=
-0efd757
-[ 1210.006268] RDX: 00007ffd9dcacad0 RSI: 00000000c01064b3 RDI: 000000000=
-000003d
-[ 1210.006271] RBP: 00007ffd9dcacad0 R08: 000000000000003d R09: 000000010=
-0000000
-[ 1210.006273] R10: 0000000000000001 R11: 0000000000003246 R12: 00000000c=
-01064b3
-[ 1210.006275] R13: 000000000000003d R14: 000055718bd84f80 R15: 000000000=
-0000001
-[ 1210.006280] ---[ end trace 115b8e77b2a2c037 ]---
-
-With best regards,
-Wojtek
-
---=20
-Wojciech M Zabolotny, PhD
-Institute of Electronic Systems
-Faculty of Electronics and Information Technology
-Warsaw University of Technology
-
-
+Thanks,
+Dennis
