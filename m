@@ -2,106 +2,242 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9437C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 12:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90950C4360F
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 12:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FAD520863
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 12:38:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="FxCPFdBU"
+	by mail.kernel.org (Postfix) with ESMTP id 5439020866
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 12:46:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551617172;
+	bh=I0kx65nCYAK+HmbpXDS4vfsmvtWKxLnAmlY+ieIsn4Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VrF27mRRvjFVOuGnqZFof1uHVUdddY9AQQLHB3/5UFzJubuyM8u4CHwQawHGO+IA1
+	 Qpm68KvnLPT5cYgplh+iB/FPGXrsCW1BS22KJP+QNLWDa2RKJ0n/b4BDDuRbkhF7Q7
+	 PZuzWwqt7mcN9cXWRDqLaJ3cZMuksHHJBMof/w/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfCCMi0 (ORCPT
+        id S1726241AbfCCMqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 07:38:26 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53576 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfCCMi0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 07:38:26 -0500
-Received: by mail-wm1-f65.google.com with SMTP id e74so2073965wmg.3
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 04:38:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kragniz.eu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wmaRd8ftTs0lTwJsk22PI1aI1d7YGIyjW6+ZlePZZRA=;
-        b=FxCPFdBUCe/SxF0aNwT2urt3QRwAYO+32y3KXD4NuawGGWWesM+V1s3j51RWhqWy/g
-         dHSzL7u/vb39uewF5j5S0qOjap2XQRWo2rN4+peaLR6HJROoBv4+FzmXU9OurngAvvUq
-         +mAdo2zvj2sU4HDrsbuMjVTIA6sUn2JI9Wzoo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wmaRd8ftTs0lTwJsk22PI1aI1d7YGIyjW6+ZlePZZRA=;
-        b=QY4h0sG5sTIDt+nVIcy0q1wsf9gRZvxR8Qv+FVKR3juJ8/iOkK8bB9Wfzlk6M+0F73
-         Ki64h3y6ts29/MqoHkofpqJNTn6fvxPdIEAf5nygPhjDXMNZXRJnCM5SCx3hZsTd5eXT
-         QC8P5C6U+pkC1He+U0UEiJoFcSpfXtsirXoAAgNqIGwzm7cE+EntEEXuO6FsuWNKuUWP
-         kFRCefswwTEiDC88rl7Mwa6ySwO85o0BdqA1LGeGF1mwGIK7dqeLAe1QWG5jmgIoGT8O
-         hP6aUJKbh4kpa0c6N+OvO9a7S79jwQ38EGhD1/z5acTtO5icXJjfxwCfgGZnJVZGEb0M
-         LT/w==
-X-Gm-Message-State: AHQUAubbM1IwNhbpEu06WW28G6d2NYTy1kHhXeWigjoiqZIENMgLTrkA
-        f7Uj/3X3CdzHnkxVsifnOSJHhINSUsM9eg==
-X-Google-Smtp-Source: AHgI3IZkppvMGYiC8GNycYO8l2mL3PmpFcD4Znjme3vwD5cqO4IeHBz31wAvId4+qri99+h9IJxrBg==
-X-Received: by 2002:a7b:cbcd:: with SMTP id n13mr8701045wmi.92.1551616704496;
-        Sun, 03 Mar 2019 04:38:24 -0800 (PST)
-Received: from localhost.localdomain ([95.149.160.3])
-        by smtp.gmail.com with ESMTPSA id t202sm9450783wmt.0.2019.03.03.04.38.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Mar 2019 04:38:23 -0800 (PST)
-From:   Louis Taylor <louis@kragniz.eu>
-To:     corbet@lwn.net
-Cc:     pmladek@suse.com, geert+renesas@glider.be,
-        andriy.shevchenko@linux.intel.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        ndesaulniers@google.com, jflat@chromium.org,
-        Louis Taylor <louis@kragniz.eu>
-Subject: [PATCH] docs: add extra integer types to printk-formats
-Date:   Sun,  3 Mar 2019 12:36:47 +0000
-Message-Id: <20190303123647.22020-1-louis@kragniz.eu>
-X-Mailer: git-send-email 2.20.1
+        Sun, 3 Mar 2019 07:46:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726162AbfCCMqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 07:46:10 -0500
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB5D920857;
+        Sun,  3 Mar 2019 12:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551617168;
+        bh=I0kx65nCYAK+HmbpXDS4vfsmvtWKxLnAmlY+ieIsn4Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=b3dwE6pcVs6QE/ZQJQG/cRZKP0Zt6RHBjrHArSxyj/bVldZ07xXNXs7VeYy7RSWrd
+         jOvW9ywpSxJCHIarF2lSU17y4FnrTPn8uM150RnGMk6RthHLP00HKrX00VnDfqbwEn
+         2oLe2c7qJN6qtqjm4nVWE71Kjr1b5paRTbO3lYFU=
+Date:   Sun, 3 Mar 2019 12:46:03 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Stefan Popa <stefan.popa@analog.com>
+Cc:     <robh+dt@kernel.org>, <Michael.Hennerich@analog.com>,
+        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 1/7] iio: imu: adis16480: Add support for
+ configurable drdy indicator
+Message-ID: <20190303124603.4fcd506f@archlinux>
+In-Reply-To: <1551284068-4882-2-git-send-email-stefan.popa@analog.com>
+References: <1551284068-4882-1-git-send-email-stefan.popa@analog.com>
+        <1551284068-4882-2-git-send-email-stefan.popa@analog.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few commonly used integer types were absent from this table, so add
-them.
+On Wed, 27 Feb 2019 18:14:22 +0200
+Stefan Popa <stefan.popa@analog.com> wrote:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
----
- Documentation/core-api/printk-formats.rst | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> The FNCTIO_CTRL register provides configuration control for each I/O pin
+> (DIO1, DIO2, DIO3 and DIO4).
+> 
+> This patch adds the option to configure each DIOx pin as data ready
+> indicator with positive or negative polarity by reading the 'interrupts'
+> and 'interrupt-names' properties from the devicetree. The
+> 'interrupt-names' property is optional, if it is not specified, then the
+> DIO1 pin is used as default data ready signal.
+> 
+> Although the factory default assigns DIO2 as data ready signal, in the
+> versions previous this patch, DIO1 pin was used. We should leave this
+> configuration as is, since some devices might be expecting the interrupt
+> on the wrong physical pin.
+> 
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Nice detailed description.
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index a7fae4538946..6f08b1b6240a 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -19,8 +19,16 @@ Integer types
- 		unsigned long		%lu or %lx
- 		long long		%lld or %llx
- 		unsigned long long	%llu or %llx
-+		short int		%hd or %hx
-+		unsigned short int	%hu or %hx
-+		char			%hhd or %hhx
-+		unsigned char		%hhu or %hhx
- 		size_t			%zu or %zx
- 		ssize_t			%zd or %zx
-+		s8			%hhd or %hhx
-+		u8			%hhu or %hhx
-+		s16			%hd or %hx
-+		u16			%hu or %hx
- 		s32			%d or %x
- 		u32			%u or %x
- 		s64			%lld or %llx
--- 
-2.20.1
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/imu/adis16480.c | 97 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 95 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/adis16480.c b/drivers/iio/imu/adis16480.c
+> index a27fe20..98a23ac 100644
+> --- a/drivers/iio/imu/adis16480.c
+> +++ b/drivers/iio/imu/adis16480.c
+> @@ -9,6 +9,8 @@
+>   *
+>   */
+>  
+> +#include <linux/bitfield.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/delay.h>
+>  #include <linux/mutex.h>
+> @@ -107,6 +109,14 @@
+>  #define ADIS16480_FIR_COEF_C(x)			ADIS16480_FIR_COEF(0x09, (x))
+>  #define ADIS16480_FIR_COEF_D(x)			ADIS16480_FIR_COEF(0x0B, (x))
+>  
+> +/* ADIS16480_REG_FNCTIO_CTRL */
+> +#define ADIS16480_DRDY_SEL_MSK		GENMASK(1, 0)
+> +#define ADIS16480_DRDY_SEL(x)		FIELD_PREP(ADIS16480_DRDY_SEL_MSK, x)
+> +#define ADIS16480_DRDY_POL_MSK		BIT(2)
+> +#define ADIS16480_DRDY_POL(x)		FIELD_PREP(ADIS16480_DRDY_POL_MSK, x)
+> +#define ADIS16480_DRDY_EN_MSK		BIT(3)
+> +#define ADIS16480_DRDY_EN(x)		FIELD_PREP(ADIS16480_DRDY_EN_MSK, x)
+> +
+>  struct adis16480_chip_info {
+>  	unsigned int num_channels;
+>  	const struct iio_chan_spec *channels;
+> @@ -116,12 +126,26 @@ struct adis16480_chip_info {
+>  	unsigned int accel_max_scale;
+>  };
+>  
+> +enum adis16480_int_pin {
+> +	ADIS16480_PIN_DIO1,
+> +	ADIS16480_PIN_DIO2,
+> +	ADIS16480_PIN_DIO3,
+> +	ADIS16480_PIN_DIO4
+> +};
+> +
+>  struct adis16480 {
+>  	const struct adis16480_chip_info *chip_info;
+>  
+>  	struct adis adis;
+>  };
+>  
+> +static const char * const adis16480_int_pin_names[4] = {
+> +	[ADIS16480_PIN_DIO1] = "DIO1",
+> +	[ADIS16480_PIN_DIO2] = "DIO2",
+> +	[ADIS16480_PIN_DIO3] = "DIO3",
+> +	[ADIS16480_PIN_DIO4] = "DIO4",
+> +};
+> +
+>  #ifdef CONFIG_DEBUG_FS
+>  
+>  static ssize_t adis16480_show_firmware_revision(struct file *file,
+> @@ -741,8 +765,17 @@ static int adis16480_stop_device(struct iio_dev *indio_dev)
+>  
+>  static int adis16480_enable_irq(struct adis *adis, bool enable)
+>  {
+> -	return adis_write_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL,
+> -		enable ? BIT(3) : 0);
+> +	uint16_t val;
+> +	int ret;
+> +
+> +	ret = adis_read_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	val &= ~ADIS16480_DRDY_EN_MSK;
+> +	val |= ADIS16480_DRDY_EN(enable);
+> +
+> +	return adis_write_reg_16(adis, ADIS16480_REG_FNCTIO_CTRL, val);
+>  }
+>  
+>  static int adis16480_initial_setup(struct iio_dev *indio_dev)
+> @@ -826,6 +859,62 @@ static const struct adis_data adis16480_data = {
+>  	.enable_irq = adis16480_enable_irq,
+>  };
+>  
+> +static int adis16480_config_irq_pin(struct device_node *of_node,
+> +				    struct adis16480 *st)
+> +{
+> +	struct irq_data *desc;
+> +	enum adis16480_int_pin pin;
+> +	unsigned int irq_type;
+> +	uint16_t val;
+> +	int i, irq = 0;
+> +
+> +	desc = irq_get_irq_data(st->adis.spi->irq);
+> +	if (!desc) {
+> +		dev_err(&st->adis.spi->dev, "Could not find IRQ %d\n", irq);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Disable data ready since the default after reset is on */
+> +	val = ADIS16480_DRDY_EN(0);
+> +
+> +	/*
+> +	 * Get the interrupt from the devicetre by reading the interrupt-names
+> +	 * property. If it is not specified, use DIO1 pin as default.
+> +	 * According to the datasheet, the factory default assigns DIO2 as data
+> +	 * ready signal. However, in the previous versions of the driver, DIO1
+> +	 * pin was used. So, we should leave it as is since some devices might
+> +	 * be expecting the interrupt on the wrong physical pin.
+> +	 */
+> +	pin = ADIS16480_PIN_DIO1;
+> +	for (i = 0; i < ARRAY_SIZE(adis16480_int_pin_names); i++) {
+> +		irq = of_irq_get_byname(of_node, adis16480_int_pin_names[i]);
+> +		if (irq > 0) {
+> +			pin = i;
+> +			break;
+> +		}
+> +	}
+> +
+> +	val |= ADIS16480_DRDY_SEL(pin);
+> +
+> +	/*
+> +	 * Get the interrupt line behaviour. The data ready polarity can be
+> +	 * configured as positive or negative, corresponding to
+> +	 * IRQF_TRIGGER_RISING or IRQF_TRIGGER_FALLING respectively.
+> +	 */
+> +	irq_type = irqd_get_trigger_type(desc);
+> +	if (irq_type == IRQF_TRIGGER_RISING) { /* Default */
+> +		val |= ADIS16480_DRDY_POL(1);
+> +	} else if (irq_type == IRQF_TRIGGER_FALLING) {
+> +		val |= ADIS16480_DRDY_POL(0);
+> +	} else {
+> +		dev_err(&st->adis.spi->dev,
+> +			"Invalid interrupt type 0x%x specified\n", irq_type);
+> +		return -EINVAL;
+> +	}
+> +	/* Write the data ready configuration to the FNCTIO_CTRL register */
+> +	return adis_write_reg_16(&st->adis, ADIS16480_REG_FNCTIO_CTRL, val);
+> +}
+> +
+>  static int adis16480_probe(struct spi_device *spi)
+>  {
+>  	const struct spi_device_id *id = spi_get_device_id(spi);
+> @@ -853,6 +942,10 @@ static int adis16480_probe(struct spi_device *spi)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = adis16480_config_irq_pin(spi->dev.of_node, st);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = adis_setup_buffer_and_trigger(&st->adis, indio_dev, NULL);
+>  	if (ret)
+>  		return ret;
 
