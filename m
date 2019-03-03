@@ -2,97 +2,98 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D973C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827FEC43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5952120835
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:24:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjKGwJnU"
+	by mail.kernel.org (Postfix) with ESMTP id 4C6FF20842
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfCCUYo (ORCPT
+        id S1726670AbfCCUaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 15:24:44 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44752 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfCCUYo (ORCPT
+        Sun, 3 Mar 2019 15:30:25 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:39030 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfCCUaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 15:24:44 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w2so3287685wrt.11
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 12:24:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=v6FzZwUqk5EgW7A8NmcEo+WrIt7b3xUuIJmHfUMcNIw=;
-        b=ZjKGwJnU3YD9eRDVTORKz7nhAoBZT8xMbhLqzztnkYfYcIGHW005SnimOlJvUfjLGj
-         pLcs8nsGh9LKdx4YemGITYQTVQqfFEOqCpEIqXA1CWwSxC1Kb+FSNIv6pN6SwX4DzWXI
-         uTQ8pCtXPUfWaJXqGYdU2MIyaQk+JeBE2IqPhu55QS61XNiWV1aipijtHgfHGwzbeid/
-         wdqS0Ad7/w+/iGCiCsE/2zsSFFyJchwIfN4DvIOWfiEceHNGZbyb2ZWpWsXc3Cw4rciY
-         ZVmW6kBfh79fZOXK9eNYlbBplcnZgvEE5S9+xZF05S9yAceCOj2jpdG6lC8ZYxlRGg/h
-         XvZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=v6FzZwUqk5EgW7A8NmcEo+WrIt7b3xUuIJmHfUMcNIw=;
-        b=IjOt1H/hyPMCCUUxQzYaete0lv1abDJLWsxsBNt4njHgRFJuT3MSnlZqteJp14ud/+
-         RWDem9/arfoOrrlc0jlOl1wXXDKyaWUiicXL9kiwGjxkqjk6voF0v7QnKg3ZEDWCzXF4
-         2Nxwm6jpujIg4zMRMCHLlcToNZlXHW4EKKVbB0BMHLiUBl1hNTJXaz9mdEPrilB1+aId
-         KbZ1aoP+ZY5ow8FbHofNtcDihdfysypoImjjcJK57Of2JODcqOtN9XymACdDxTTkfLXI
-         kX1XxLafcsEws+UPoTl6r+ifEt+3qOo4zWVU7PxGcsfNlZ7JywyFVVYNBsMGgMgNaIT1
-         5EbQ==
-X-Gm-Message-State: APjAAAXUzKZpNtWDnHGPEGoo+A/V0KbVEZY8AC2pkzfgmC4VJM12NM+i
-        PIyJwQrgPF/I7YZG2lBkkec=
-X-Google-Smtp-Source: APXvYqxegLEL9aWo3RkaRyAzJ840LKSuJTZDyQr45RwJ18/eyvGD2uKBtLQzawhN9DuB+r8DZ6hMlg==
-X-Received: by 2002:a05:6000:1287:: with SMTP id f7mr10946274wrx.203.1551644682607;
-        Sun, 03 Mar 2019 12:24:42 -0800 (PST)
-Received: from debian.lan (host-92-20-66-190.as13285.net. [92.20.66.190])
-        by smtp.gmail.com with ESMTPSA id i13sm6986116wrm.86.2019.03.03.12.24.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Mar 2019 12:24:42 -0800 (PST)
-From:   Hugo Lange <hugolange7000@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.ousul.org, linux-kernel@vger.kernel.org,
-        Hugo Lange <hugolange7000@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: remove unnecessary braces from if/else
-Date:   Sun,  3 Mar 2019 20:24:39 +0000
-Message-Id: <20190303202439.15357-1-hugolange7000@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Sun, 3 Mar 2019 15:30:24 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1h0XkR-0002Y3-7R; Sun, 03 Mar 2019 20:30:11 +0000
+Date:   Sun, 3 Mar 2019 20:30:11 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jason Baron <jbaron@akamai.com>, kgraul@linux.ibm.com,
+        ktkhai@virtuozzo.com, kyeongdon.kim@lge.com,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, pabeni@redhat.com,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] aio: prevent the final fput() in the middle of
+ vfs_poll() (Re: KASAN: use-after-free Read in unix_dgram_poll)
+Message-ID: <20190303203011.GR2217@ZenIV.linux.org.uk>
+References: <000000000000f39c7b05832e0219@google.com>
+ <20190303135502.GP2217@ZenIV.linux.org.uk>
+ <20190303151846.GQ2217@ZenIV.linux.org.uk>
+ <CAHk-=wiQ2YNB+2FT+jbdcC6qfYqvS2kLLAZbmPE_7sLfUPwFJg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiQ2YNB+2FT+jbdcC6qfYqvS2kLLAZbmPE_7sLfUPwFJg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removed unnecessary braces for single blocks.
+On Sun, Mar 03, 2019 at 11:44:33AM -0800, Linus Torvalds wrote:
+> On Sun, Mar 3, 2019 at 7:18 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > > Maybe unrelated to this bug, but...  What's to prevent a wakeup
+> > > that happens just after we'd been added to a waitqueue by ->poll()
+> > > triggering aio_poll_wake(), which gets to aio_poll_complete()
+> > > with its fput() *before* we'd reached the end of ->poll() instance?
+> 
+> I'm assuming you're talking about the second vfs_poll() in
+> aio_poll_complete_work()? The one we call before we check for
+> "rew->cancelled" properly under the spinlock?
 
-Signed-off-by: Hugo Lange <hugolange7000@gmail.com>
----
- drivers/staging/rtl8188eu/hal/odm_hwconfig.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+No.  The first one, right in aio_poll().
 
-diff --git a/drivers/staging/rtl8188eu/hal/odm_hwconfig.c b/drivers/staging/rtl8188eu/hal/odm_hwconfig.c
-index 7ae476ffcd8c..149b0009ad66 100644
---- a/drivers/staging/rtl8188eu/hal/odm_hwconfig.c
-+++ b/drivers/staging/rtl8188eu/hal/odm_hwconfig.c
-@@ -394,11 +394,11 @@ static void ODM_PhyStatusQuery_92CSeries(struct odm_dm_struct *dm_odm,
- {
- 	odm_RxPhyStatus92CSeries_Parsing(dm_odm, pPhyInfo, pPhyStatus,
- 					 pPktinfo);
--	if (dm_odm->RSSI_test) {
-+	if (dm_odm->RSSI_test)
- 		;/*  Select the packets to do RSSI checking for antenna switching. */
--	} else {
-+	else
- 		odm_Process_RSSIForDM(dm_odm, pPhyInfo, pPktinfo);
--	}
-+
- }
+> But as far as I can tell, they *all* could do:
+> 
+>  - look up file in aio_submit() when allocating and creating the aio_kiocb
+> 
+>  - drop the filp in 'iocb_put()' (which happens whether things
+> complete successfully or not).
+>
+> and we'd have avoided a lot of complexity, and we'd have avoided this bug.
+> 
+> Your patch fixes the poll() case, but it does so by just letting the
+> existing complexity remain, and adding a second fget/fput pair in the
+> poll logic.
+> 
+> It would seem like it would be much better to rip all the complexity
+> out entirely, and replace it with sane, simple and obviously correct
+> code.
+> 
+> Hmm?
+> 
+> In other words, why wouldn't something like the attached work instead?
  
- void ODM_PhyStatusQuery(struct odm_dm_struct *dm_odm,
--- 
-2.11.0
+I'll need to dig out the mail archive from last year, but IIRC this
+had been considered and there'd been non-trivial problems.  Give me
+an hour or so and I'll dig that out (there'd been many rounds of
+review, with long threads involved, some private, some on fsdevel).
 
+> @@ -1060,6 +1071,7 @@ static inline void iocb_put(struct aio_kiocb *iocb)
+>  {
+>  	if (refcount_read(&iocb->ki_refcnt) == 0 ||
+>  	    refcount_dec_and_test(&iocb->ki_refcnt)) {
+> +		fput(iocb->ki_filp);
+
+Trivial oops here - it might be NULL.
