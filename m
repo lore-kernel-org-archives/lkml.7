@@ -2,212 +2,179 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6667DC10F00
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 09:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6335BC43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 09:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3472E20866
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 09:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265AB20818
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 09:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YdSHnZco"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="yHvqlUNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbfCCJih (ORCPT
+        id S1726041AbfCCJxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 04:38:37 -0500
-Received: from mail-it1-f196.google.com ([209.85.166.196]:35015 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfCCJig (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 04:38:36 -0500
-Received: by mail-it1-f196.google.com with SMTP id 188so3338926itb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 01:38:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Un0vf29LMkEfpXBA4SObsU1TOfaMdoff5ox9TFR/hYA=;
-        b=YdSHnZcokQsDZR+YYtY30S8ngEiddj+30Rp+74kCsP9+WdIj4foRi50581EqVjnpgD
-         1J3CyXkTWUo9jio14s7nTvTrmf8NrrKyUwIdMjxVGvHX5jtS2B6t2e0xy7VIvCp0su5V
-         0NU73bPmACaZS1/2GW3BiXYz3UnIMIJqVA5Kka5cVzKXBjGxmscOFfWkALdPFz9uxdUM
-         VthXpTh30b2lHmbMfF/afhabOR7EdM0KW6j7vJNybclBMm2s+U5XBrtxmZHzbDNOo/wq
-         F4aYlUoyM1ImrhvKntOD5jpJ1/zpJlawOZ5JO3TKVOBROF6wV+V1VMkx/P7LUfV5w8t6
-         KNHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Un0vf29LMkEfpXBA4SObsU1TOfaMdoff5ox9TFR/hYA=;
-        b=Qa8RALePILKf8Qx6TgOU/Uw5x0JPaPCtg1Ej9cLbtEuTWwVqMiiVfcJRS7I19y+o3d
-         Obn7dhjgf2swd89Lrg+0rgNjUxlYgToUv3CTCVg15upDaMxT5den5EIPUzZ/ghKdxGJT
-         BkDTilMgggKIw8PT/GV0/4lKDcOfWu9ROemSevHV8A+u25TU8WQMIJD+3jevyv3fvpQy
-         O3b26u/htZmgfhnAjp8oEGwAsXOPaklEJumoNRpM/WsSTq5QCnHCm2VGC90egg5YAkfI
-         4tVDnOMFYSKW53lsLLaMlQ6YpWjXdk7yXMKaY+QToT87hwYw9o8wI4zSSKfxpcfGlzKk
-         eueA==
-X-Gm-Message-State: AHQUAuYd6mIepJagfJlNAS9ft3MFzLboqlcztwCCwCIJUgVhHEahTmXC
-        iXSJwXrnMPhszqbQZCpINI8eaLGicJwohIHWicJwuA==
-X-Google-Smtp-Source: APXvYqwuSd4qVB6W0w1KY+t2ZIU/SGlkU43Mx9B22ee50iyTw+WsrIihVpLij3k1prjYj6DXtSvz48BnZRfH1xlkZ74=
-X-Received: by 2002:a24:3b01:: with SMTP id c1mr6939829ita.144.1551605914737;
- Sun, 03 Mar 2019 01:38:34 -0800 (PST)
-MIME-Version: 1.0
-References: <0000000000009af83005831724a4@google.com> <20190302200543.GA18446@sol.localdomain>
-In-Reply-To: <20190302200543.GA18446@sol.localdomain>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Sun, 3 Mar 2019 10:38:23 +0100
-Message-ID: <CACT4Y+b2Wv18yB5WVQY8R4Jm9B9R_8BAvCJkt_WPACS6ZXqQrw@mail.gmail.com>
-Subject: Re: kernel BUG at include/linux/mm.h:LINE! (4)
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     syzbot <syzbot+cc252aa9d2d3b576246f@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Sun, 3 Mar 2019 04:53:34 -0500
+Received: from mail-eopbgr00070.outbound.protection.outlook.com ([40.107.0.70]:34187
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725877AbfCCJxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 04:53:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qKla7ajTc5yB6+x/0Wo3/YSLiuf0G3cDL8t8DZs4SUU=;
+ b=yHvqlUNRWtPUkt9143w6K+O2v+YaMDd2nTdW3tqNXAzRy3GUJ6LDbtq6+fZ3MmnVeLyBZneZFMaq16M7e8qlQOojAx4Put0DOpty0ERZQdyYpk5+ly2Dz9H7TpPpVa8/UYW0aqdHaPNSW0vuEsdx7TPAhNTChz2A7zRGayp5thU=
+Received: from DB6PR0501CA0008.eurprd05.prod.outlook.com (2603:10a6:4:8f::18)
+ by DB6PR0501MB2631.eurprd05.prod.outlook.com (2603:10a6:4:8c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1665.16; Sun, 3 Mar
+ 2019 09:53:27 +0000
+Received: from DB5EUR03FT006.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::207) by DB6PR0501CA0008.outlook.office365.com
+ (2603:10a6:4:8f::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1665.16 via Frontend
+ Transport; Sun, 3 Mar 2019 09:53:27 +0000
+Authentication-Results: spf=pass (sender IP is 193.47.165.134)
+ smtp.mailfrom=mellanox.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none
+ header.from=mellanox.com;
+Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
+ 193.47.165.134 as permitted sender) receiver=protection.outlook.com;
+ client-ip=193.47.165.134; helo=mtlcas13.mtl.com;
+Received: from mtlcas13.mtl.com (193.47.165.134) by
+ DB5EUR03FT006.mail.protection.outlook.com (10.152.20.106) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1643.11 via Frontend Transport; Sun, 3 Mar 2019 09:53:27 +0000
+Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4; Sun, 3 Mar 2019 11:53:26
+ +0200
+Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Sun,
+ 3 Mar 2019 11:53:26 +0200
+Received: from [10.223.3.154] (10.223.3.154) by MTLCAS01.mtl.com (10.0.8.71)
+ with Microsoft SMTP Server (TLS) id 14.3.301.0; Sun, 3 Mar 2019 11:53:24
+ +0200
+Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error handling
+ paths
+To:     Ira Weiny <ira.weiny@intel.com>,
+        "john.hubbard@gmail.com" <john.hubbard@gmail.com>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+References: <20190302032726.11769-2-jhubbard@nvidia.com>
+ <20190302202435.31889-1-jhubbard@nvidia.com>
+ <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
+From:   Artemy Kovalyov <artemyko@mellanox.com>
+Message-ID: <2404c962-8f6d-1f6d-0055-eb82864ca7fc@mellanox.com>
+Date:   Sun, 3 Mar 2019 11:52:41 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.1
+MIME-Version: 1.0
+In-Reply-To: <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.223.3.154]
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:193.47.165.134;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(39860400002)(136003)(396003)(2980300002)(199004)(189003)(77096007)(26005)(8936002)(86362001)(81156014)(53546011)(81166006)(8676002)(31696002)(2906002)(65826007)(186003)(76176011)(230700001)(4326008)(47776003)(6246003)(65956001)(16526019)(3846002)(6116002)(6666004)(65806001)(356004)(58126008)(110136005)(23676004)(2486003)(106002)(54906003)(36756003)(16576012)(67846002)(50466002)(106466001)(336012)(2501003)(305945005)(7736002)(316002)(64126003)(476003)(126002)(486006)(11346002)(5660300002)(446003)(2616005)(31686004)(14444005)(229853002)(478600001)(3940600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2631;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:mail13.mellanox.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 078ea771-00ee-484f-1613-08d69fbe15a1
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060)(7193020);SRVR:DB6PR0501MB2631;
+X-MS-TrafficTypeDiagnostic: DB6PR0501MB2631:
+X-Microsoft-Exchange-Diagnostics: 1;DB6PR0501MB2631;20:tXDChfSYsZbIR8W+OsxCZ2t4Al6C5VLIzUtAXA9U74C4vwyc+GFd0sxK9y7rzvvy3XNggVnTT2txmVA9my4FkyMjh3kuRj2IJMMXjgv+LGfxyUCRd3eHEcJ5g8y9ERjpLSzRk3Rjzu6/AmH7ui4UYIxZDjBjW7zK5UyhumlcMpAFvHos9wN7eiTuG020ll7twi354uNmiN3Je0wtQQLWqAWJXdte/fvs36drZUhdeE6UD+vU0Koqeo3n9C/OIAsuyGH06h4nica+B+zaLSZFqFriBEZlzIJlta15EwmVbJHnzdlncSdkaa+hxWi7uLGc5/8q8n3/x+3ToMjFx5Lx18U0Dup/m52uBojVDo8KVVRnReR2OtHD6eXs3HArsmj+Mg76DquYqZWWZKbJd+jkGiteQ2psoVLnRizyB11SFXmqj68UZ7JFbc5AF6hejlBbzc1La25o6RR8+Z/xUysB3oNnOjXh9bHF/3Ddo4Ywk2kj3XffpoF2FdKsKAHxTw+L
+X-Microsoft-Antispam-PRVS: <DB6PR0501MB2631E2673D06A8BDEF08DF21B7700@DB6PR0501MB2631.eurprd05.prod.outlook.com>
+X-Forefront-PRVS: 096507C068
+X-Microsoft-Exchange-Diagnostics: =?utf-8?B?MTtEQjZQUjA1MDFNQjI2MzE7MjM6M2JSRmxaZEZ5ZlI0aTRrZ2FCVStkdHIr?=
+ =?utf-8?B?RDl5ai9HRFZ2ajFJdExWRE9TdjQ2UldMdEhWZnVkNkNya1dJRmpuQXhmTmpB?=
+ =?utf-8?B?ZVVBT01oRXcwZ2k1S1ZjdDB6aUFyaS9tQThBSDB6WCt6VDZBMGtOYkZqQzM0?=
+ =?utf-8?B?YlpPYlpMbWRNNlpBR0lsalJvS3hmVDNiN1loSmxuM1V1dzZxL0xncVI0L0Nw?=
+ =?utf-8?B?MEdFY2RvbEVWVVpQL1ZBUHNxMjBJSFhaQnJDYVBIMWxvdUZTQVN5NmV6L2xX?=
+ =?utf-8?B?UEgxN0UwVVQzcmx5MkhVSTlyV1dpSm9NcEVnWURsUC91aVJRSVU3d3RCRVhu?=
+ =?utf-8?B?MDdKeEowT0w3WmNFb0pqd2g1OVZ3dmN5RWFZMi9FNVB0OXVIWE5BdytTSjBn?=
+ =?utf-8?B?OVA3MGtpS3ZGY2xNeTlrdDM1UlYva2NhU2JubWxvZk55eU9nald5RG1aRU5N?=
+ =?utf-8?B?ZzI5ZU1GMkJKbDVDaVgraFlVeis5OGRVU2ZrZ0xVcm1melpLZTZCSm52WWRD?=
+ =?utf-8?B?OEV1c2lVUDQvR1dyeHRHNHlybms4Sm8rL3dHU0JUbitzSlpKSm50cHlHckxm?=
+ =?utf-8?B?OVNlTGFkcXJTRm5WbzI3WWN0ZnhZd2VEekd6cEZTb0NCTSsvbTdhR25LN1hS?=
+ =?utf-8?B?QmxxQXk1NU95bkhKNUJmdFFjVVJabnpXa082UXUwbG02cHRQYXlCL0pJcDUv?=
+ =?utf-8?B?N29kTFU3SmtSTk9NNlZjOFBVUS9TVi9ZUjhEc1ErNXdocG0wM3d1YWVtdzdZ?=
+ =?utf-8?B?SnROZy9NcmZPajcxdGhVY0ZtMjdzb0FpQXMxUGZKOGlRMkFLZGRMbUdldkpm?=
+ =?utf-8?B?QllVaEFoU0l3bnpZbi80Mzh1dGtMRjA2SFd4YlN3ay9KNXhnb2xEaWY5K0tI?=
+ =?utf-8?B?VklZUFRBMkpZMCs4OStvQkpUd1dUa3hiTE1EZ1NLdUk3WW4xemdSL09ma2pU?=
+ =?utf-8?B?K2dycktVMnNrdEl5R1NHL1RwM1UyWWRuZVhSMk1CVnhkbUppM0NwRHRFWXRv?=
+ =?utf-8?B?Tkg0ZTk3NXR2UW8zNXg4bXA4YWRaTTZNcXB4UWF0b2w5dHBWSnRxRWdvNUhB?=
+ =?utf-8?B?cG9veC9zalVKVkQ1OXF1Z3FJcW5wVlhtY05HMXVZcDJhK1QrV3oxZ1ZOcnV5?=
+ =?utf-8?B?ak81UHRDWkJkeUIyOFdjRlNNanZTS2twVFVFblBiVUVsQkxHUVBhUFl5QVdm?=
+ =?utf-8?B?a2F1N1VtaFg2UHAwb05FR1cwMDE5cXk1WEI5eXBrbEc5NjNyakFBcE5LOGtI?=
+ =?utf-8?B?ZnRVNGt6U0I4OWNqcUJINjhIUk0wbUMxSjQrQ0sxYTFvbE9mRCtiVmxQdWRL?=
+ =?utf-8?B?eHRkOHk4SDFqYjBWWFJwcEE4S2lqa0IvdXhqWkcyNVVUMVdISkxDSGVmY2NU?=
+ =?utf-8?B?VS9Ba09TVEhzTjFQS1doU3pjeTdkOUtsQUp4ZWRUajJWRDl5cUE3em9BNWdn?=
+ =?utf-8?B?VUZadGMvV25PUVZ3Y2V5RDdyajZiRXgzQlF3dzMwVTNVV0JTVGdUaTZtdm40?=
+ =?utf-8?B?UGZFYW1wM0N2QS9BSHgvMGw2M1NkWXU2a1BiVEsrTG5MVFNxTUZzeTZpbjR3?=
+ =?utf-8?B?TzV5Yit2VGFNeHBGaHZ2azFZZVlNbEhSUWVxc0F4YnFIbVVNaW1VVlRYdUZm?=
+ =?utf-8?B?Y0hYdXBGczBFb3BTSUhFekRBcEM1STBPSU5ibnkrZXlKaWNiK2FYNU1SK3U5?=
+ =?utf-8?B?bkpuMGYyT0c0alVwQVdVbEdPVUJmR0ZsaGtRc0hZQXYvbHZFVG1GM1BPNmR3?=
+ =?utf-8?B?Uis3Mjl5NGtUTkVlQjNyQ0xjZHFTTkQ1S3BhK0QxV1d1OUp6VVQ5OWJsTkE0?=
+ =?utf-8?Q?3x6OHtNYHBB/b9C?=
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: eBeEpP01KdR240Vh/zowf5wyUrmz7hiVtYcxJm1JPzMBgg1kLLlAgSfwv7m6suoNK1i7ou96AaI19CYteVaO0s7BJ7xzmBaH/aOCykjXoYgv4u8j3/PIEwQCfeT5nSRmYO7xEfMIxRl1GhVVWnutjIPshiv158yaD1Fay2eLTqt5dvakJi2ECOVeuroZXtLqJ+B+XvzBHsxJ5cYeilncylgP/JIytDF3GsZJhxnEblox2YPez7pHqDCr6f8SvmA3kmQT0CFQlR9BtBo3A2re2EXgC+sh+tZEBoGcNPQZ4YjvmYOI1MHyEmS/cQMLn/jqOnJoo9B53qPT8m5aAE6ZCc/mpmY/8+E/dfgSpRcqDBexLLefZ7cBXmK7S5GKtttxi1QobhDxzB6Lgf7qzRC0Rm+Q8ZyW6n/EjZEjfifb6k0=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2019 09:53:27.1596
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 078ea771-00ee-484f-1613-08d69fbe15a1
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.134];Helo=[mtlcas13.mtl.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2631
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 2, 2019 at 9:05 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Fri, Mar 01, 2019 at 11:05:05PM -0800, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    42fd8df9d1d9 Add linux-next specific files for 20190228
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16c3cd5cc00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c0f38652d28b522f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=cc252aa9d2d3b576246f
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+cc252aa9d2d3b576246f@syzkaller.appspotmail.com
-> >
-> > page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)
-> > page->mem_cgroup:ffff888059786cc0
-> > ------------[ cut here ]------------
-> > kernel BUG at include/linux/mm.h:579!
-> > invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 0 PID: 22405 Comm: syz-executor.3 Not tainted 5.0.0-rc8-next-20190228
-> > #45
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > RIP: 0010:put_page_testzero include/linux/mm.h:579 [inline]
-> > RIP: 0010:put_page include/linux/mm.h:1025 [inline]
-> > RIP: 0010:generic_pipe_buf_release+0x120/0x160 fs/pipe.c:224
-> > Code: bd ff 4c 89 e7 e8 90 43 db ff e8 5b 07 bd ff 5b 41 5c 41 5d 5d c3 e8
-> > 4f 07 bd ff 48 c7 c6 60 98 75 87 4c 89 e7 e8 c0 db e4 ff <0f> 0b e8 39 07 bd
-> > ff 4d 8d 65 ff e9 3d ff ff ff 48 89 df e8 e8 f8
-> > RSP: 0018:ffff888056c57920 EFLAGS: 00010246
-> > RAX: 0000000000040000 RBX: ffffea0002283db4 RCX: ffffc9000c456000
-> > RDX: 0000000000040000 RSI: ffffffff81984e72 RDI: ffffed100ad8af08
-> > RBP: ffff888056c57938 R08: 0000000000000021 R09: ffffed1015d05011
-> > R10: ffffed1015d05010 R11: ffff8880ae828087 R12: ffffea0002283d80
-> > R13: 0000000000000000 R14: ffff88809ad3c800 R15: ffff8880592ac928
-> > FS:  00007fb53aaf2700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 00007fff65e0fdb8 CR3: 0000000093a2f000 CR4: 00000000001406f0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  pipe_buf_release include/linux/pipe_fs_i.h:129 [inline]
-> >  iter_file_splice_write+0x7d1/0xbe0 fs/splice.c:759
-> >  do_splice_from fs/splice.c:847 [inline]
-> >  direct_splice_actor+0x126/0x1a0 fs/splice.c:1019
-> >  splice_direct_to_actor+0x369/0x970 fs/splice.c:974
-> >  do_splice_direct+0x1da/0x2a0 fs/splice.c:1062
-> >  do_sendfile+0x597/0xd00 fs/read_write.c:1442
-> >  __do_sys_sendfile64 fs/read_write.c:1503 [inline]
-> >  __se_sys_sendfile64 fs/read_write.c:1489 [inline]
-> >  __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1489
-> >  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x457e29
-> > Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> > 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007fb53aaf1c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-> > RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000457e29
-> > RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000003
-> > RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000102000000 R11: 0000000000000246 R12: 00007fb53aaf26d4
-> > R13: 00000000004c4dce R14: 00000000004d8af8 R15: 00000000ffffffff
-> > Modules linked in:
-> > ---[ end trace ce17ea3937b628f2 ]---
-> > RIP: 0010:put_page_testzero include/linux/mm.h:579 [inline]
-> > RIP: 0010:put_page include/linux/mm.h:1025 [inline]
-> > RIP: 0010:generic_pipe_buf_release+0x120/0x160 fs/pipe.c:224
-> > Code: bd ff 4c 89 e7 e8 90 43 db ff e8 5b 07 bd ff 5b 41 5c 41 5d 5d c3 e8
-> > 4f 07 bd ff 48 c7 c6 60 98 75 87 4c 89 e7 e8 c0 db e4 ff <0f> 0b e8 39 07 bd
-> > ff 4d 8d 65 ff e9 3d ff ff ff 48 89 df e8 e8 f8
-> > RSP: 0018:ffff888056c57920 EFLAGS: 00010246
-> > RAX: 0000000000040000 RBX: ffffea0002283db4 RCX: ffffc9000c456000
-> > RDX: 0000000000040000 RSI: ffffffff81984e72 RDI: ffffed100ad8af08
-> > RBP: ffff888056c57938 R08: 0000000000000021 R09: ffffed1015d05011
-> > R10: ffffed1015d05010 R11: ffff8880ae828087 R12: ffffea0002283d80
-> > R13: 0000000000000000 R14: ffff88809ad3c800 R15: ffff8880592ac928
-> > FS:  00007fb53aaf2700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000001b30225000 CR3: 0000000093a2f000 CR4: 00000000001406e0
-> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#bug-status-tracking for how to communicate with
-> > syzbot.
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000009af83005831724a4%40google.com.
-> > For more options, visit https://groups.google.com/d/optout.
->
-> Well it's probably the same as this:
-> https://groups.google.com/forum/#!topic/syzkaller-bugs/GTzYqK1FaPI, just
-> reported a day too late as it was already fixed in next-20190301 by the change
-> folded into "block: introduce mp_bvec_for_each_page() for iterating over page".
->
-> #syz invalid
->
-> Also Dmitry, I thought that syzbot is only supposed to report bugs on linux-next
-> when they have a reproducer?
 
-+syzkaller mailing list for more general discussion of linux-next handling
 
-This special support for linux-next was never implemented.
-As of now _all_ bugs without reproducers are moderated manually:
-https://github.com/google/syzkaller/blob/master/docs/syzbot.md#moderation-queue
-So the result is better then reporting only bugs with reproducers.
-Experience with linux-next to date shows that linux-next does not need
-any special handling. If anything it seems to be easier to root cause
-bugs in linux-next, because they are usually very fresh and there are
-usually only one/few commits that touched a particular part of code in
-non-trivial way recently. So frequently developers are like "oh, that
-must be that commit" without reproducers/bisection/etc.
-One of the original concerns with linux-next was that there can be
-lots of non-actionable reports if linux-next contains some memory
-corruption that is not detected by KASAN. And we indeed had such case
-about 1.5 years ago. However, there were no such cases in linux-next
-since then. There were few such cases in other trees. And in general
-if the corruption is not detected in linux-next and reaches upstream,
-then the impact will be no better (actually worse because at that
-point it will be harder to root cause and will take much longer to
-fix, especially if it will be backported to all trees by then).
-So at this point I don't have any plans for any special support for linux-next.
-When we have fix bisection, linux-next will probably need some special
-support because the tree is rebuilt and old HEADs are abandoned, so
-fixed can't be bisected.
+On 02/03/2019 21:44, Ira Weiny wrote:
+> 
+> On Sat, Mar 02, 2019 at 12:24:35PM -0800, john.hubbard@gmail.com wrote:
+>> From: John Hubbard <jhubbard@nvidia.com>
+>>
+>> ...
+>> 3. Dead code removal: the check for (user_virt & ~page_mask)
+>> is checking for a condition that can never happen,
+>> because earlier:
+>>
+>>      user_virt = user_virt & page_mask;
+>>
+>> ...so, remove that entire phrase.
+>>
+>>   
+>>   		bcnt -= min_t(size_t, npages << PAGE_SHIFT, bcnt);
+>>   		mutex_lock(&umem_odp->umem_mutex);
+>>   		for (j = 0; j < npages; j++, user_virt += PAGE_SIZE) {
+>> -			if (user_virt & ~page_mask) {
+>> -				p += PAGE_SIZE;
+>> -				if (page_to_phys(local_page_list[j]) != p) {
+>> -					ret = -EFAULT;
+>> -					break;
+>> -				}
+>> -				put_page(local_page_list[j]);
+>> -				continue;
+>> -			}
+>> -
+> 
+> I think this is trying to account for compound pages. (ie page_mask could
+> represent more than PAGE_SIZE which is what user_virt is being incrimented by.)
+> But putting the page in that case seems to be the wrong thing to do?
+> 
+> Yes this was added by Artemy[1] now cc'ed.
+
+Right, this is for huge pages, please keep it.
+put_page() needed to decrement refcount of the head page.
+
