@@ -2,143 +2,157 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFB4C10F06
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AC9C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C53E620863
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE3120836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:44:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPEjXNC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbfCCH2W (ORCPT
+        id S1726046AbfCCHoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 02:28:22 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:38332 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfCCH2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 02:28:22 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 44AEE308339D;
-        Sun,  3 Mar 2019 07:28:21 +0000 (UTC)
-Received: from dustball.brq.redhat.com (unknown [10.43.17.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4235C19C56;
-        Sun,  3 Mar 2019 07:28:15 +0000 (UTC)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
-        peterz@infradead.org, riel@surriel.com, mhocko@suse.com,
-        ying.huang@intel.com, jrdr.linux@gmail.com, jglisse@redhat.com,
-        aneesh.kumar@linux.ibm.com, david@redhat.com, aarcange@redhat.com,
-        raquini@redhat.com, rientjes@google.com, kirill@shutemov.name,
-        mgorman@techsingularity.net, jstancek@redhat.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v3] mm/memory.c: do_fault: avoid usage of stale vm_area_struct
-Date:   Sun,  3 Mar 2019 08:28:04 +0100
-Message-Id: <5b3fdf19e2a5be460a384b936f5b56e13733f1b8.1551595137.git.jstancek@redhat.com>
-In-Reply-To: <20190302185144.GD31083@redhat.com>
-References: <20190302185144.GD31083@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sun, 03 Mar 2019 07:28:21 +0000 (UTC)
+        Sun, 3 Mar 2019 02:44:25 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36245 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbfCCHoZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 02:44:25 -0500
+Received: by mail-pg1-f194.google.com with SMTP id r124so1028161pgr.3;
+        Sat, 02 Mar 2019 23:44:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FTGLQuMzA6NXFSyBaP9yP3iqhOjyb5SMy1QH7j0ioDk=;
+        b=nPEjXNC8eHDuVCCKg0hFBeTWLkXIf9gug1s8tDZkRAH4veV1F6D0HNzqgyWB5OXOvF
+         VhnhkAxOpVeWFdWrklMSbvHgs66ptkg5mlf8xjj2ESbwi2ktE0F8KISHLct2AEyeWSn+
+         /0NNxL5lRThwY+qOfPjXvNLIzsCOplg0rb2zcVSRD4XF1MFCyKJn//a1QMepNwUNQ5fJ
+         QzQOe1jW9eaVBEwFicONRSh33lJGqSyPYRrDgciTA4GFfSt6Zgd3CJnBTZPMRr3YVhR8
+         Fy6LHKqcir6trUMbU3gX7y89Ea22XKOXCP1Mp8PKrA6KYpcr2ZJXk7s07KiYrLOzJ5Nz
+         qZgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FTGLQuMzA6NXFSyBaP9yP3iqhOjyb5SMy1QH7j0ioDk=;
+        b=Tw6N2qSulNb0HTye5qZbB47sgZmR1qnQqhvwH83SacCMgC73ZelIusNx8SatDiLVGB
+         bs7Q0RmsRzZyAADtHg9VUF6nlLmbh0Dw4pw2SgF8+mWmtDYHtwUnrUhC7dx2r2vRGt4o
+         C2T9rdoPBLpOAUwDQpeo1X2aE+S73+Kcpnp42JijP1h2H9M/V63XLZDwo0IfkONLJrF8
+         St9my3D9cbqUWuxMXeoenPZM3JZT2N0fWIOMllvtQtrvC9u7pYlfUTpR0HKEDLxIbmqx
+         RUfOXSOORNPLOo4Z5pssjr7SHWQUfkvqVDMjM73Bs3XM7b8nYkGQSncY7V33FmPbTG7L
+         45Mg==
+X-Gm-Message-State: APjAAAWYEVODciSPRIZNg0Ap7QHmDRFHqa0U81BTyWtfJerlBp/7gqXj
+        ENpe7p7P3DbNfRl/+gQ7+eE=
+X-Google-Smtp-Source: APXvYqy8++rSVrwPju2JVlF/IVz2MhoJ6re+mU8TZ7A9KEwvMCt5ualJFTnG1r9P5E0cIKGviivqXg==
+X-Received: by 2002:a63:de48:: with SMTP id y8mr3745654pgi.253.1551599063897;
+        Sat, 02 Mar 2019 23:44:23 -0800 (PST)
+Received: from localhost.localdomain ([2001:268:c0a5:3b5c:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id f8sm3453113pgs.77.2019.03.02.23.44.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 02 Mar 2019 23:44:22 -0800 (PST)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        yamada.masahiro@socionext.com, bgolaszewski@baylibre.com,
+        linux-arm-kernel@lists.infradead.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v9 0/9] Introduce the for_each_set_clump8 macro
+Date:   Sun,  3 Mar 2019 16:44:39 +0900
+Message-Id: <cover.1551598603.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LTP testcase mtest06 [1] can trigger a crash on s390x running 5.0.0-rc8.
-This is a stress test, where one thread mmaps/writes/munmaps memory area
-and other thread is trying to read from it:
+Changes in v9:
+  - Return unsigned long for bitmap_get_value8 for consistency
 
-  CPU: 0 PID: 2611 Comm: mmap1 Not tainted 5.0.0-rc8+ #51
-  Hardware name: IBM 2964 N63 400 (z/VM 6.4.0)
-  Krnl PSW : 0404e00180000000 00000000001ac8d8 (__lock_acquire+0x7/0x7a8)
-  Call Trace:
-  ([<0000000000000000>]           (null))
-   [<00000000001adae4>] lock_acquire+0xec/0x258
-   [<000000000080d1ac>] _raw_spin_lock_bh+0x5c/0x98
-   [<000000000012a780>] page_table_free+0x48/0x1a8
-   [<00000000002f6e54>] do_fault+0xdc/0x670
-   [<00000000002fadae>] __handle_mm_fault+0x416/0x5f0
-   [<00000000002fb138>] handle_mm_fault+0x1b0/0x320
-   [<00000000001248cc>] do_dat_exception+0x19c/0x2c8
-   [<000000000080e5ee>] pgm_check_handler+0x19e/0x200
+While adding GPIO get_multiple/set_multiple callback support for various
+drivers, I noticed a pattern of looping manifesting that would be useful
+standardized as a macro.
 
-page_table_free() is called with NULL mm parameter, but because
-"0" is a valid address on s390 (see S390_lowcore), it keeps
-going until it eventually crashes in lockdep's lock_acquire.
-This crash is reproducible at least since 4.14.
+This patchset introduces the for_each_set_clump8 macro and utilizes it
+in several GPIO drivers. The for_each_set_clump macro8 facilitates a
+for-loop syntax that iterates over a memory region entire groups of set
+bits at a time.
 
-Problem is that "vmf->vma" used in do_fault() can become stale.
-Because mmap_sem may be released, other threads can come in,
-call munmap() and cause "vma" be returned to kmem cache, and
-get zeroed/re-initialized and re-used:
+For example, suppose you would like to iterate over a 32-bit integer 8
+bits at a time, skipping over 8-bit groups with no set bit, where
+XXXXXXXX represents the current 8-bit group:
 
-handle_mm_fault                           |
-  __handle_mm_fault                       |
-    do_fault                              |
-      vma = vmf->vma                      |
-      do_read_fault                       |
-        __do_fault                        |
-          vma->vm_ops->fault(vmf);        |
-            mmap_sem is released          |
-                                          |
-                                          | do_munmap()
-                                          |   remove_vma_list()
-                                          |     remove_vma()
-                                          |       vm_area_free()
-                                          |         # vma is released
-                                          | ...
-                                          | # same vma is allocated
-                                          | # from kmem cache
-                                          | do_mmap()
-                                          |   vm_area_alloc()
-                                          |     memset(vma, 0, ...)
-                                          |
-      pte_free(vma->vm_mm, ...);          |
-        page_table_free                   |
-          spin_lock_bh(&mm->context.lock);|
-            <crash>                       |
+    Example:        10111110 00000000 11111111 00110011
+    First loop:     10111110 00000000 11111111 XXXXXXXX
+    Second loop:    10111110 00000000 XXXXXXXX 00110011
+    Third loop:     XXXXXXXX 00000000 11111111 00110011
 
-Cache mm_struct to avoid using potentially stale "vma".
+Each iteration of the loop returns the next 8-bit group that has at
+least one set bit.
 
-[1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/mtest06/mmap1.c
+The for_each_set_clump8 macro has four parameters:
 
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
----
- mm/memory.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+    * start: set to the bit offset of the current clump
+    * clump: set to the current clump value
+    * bits: bitmap to search within
+    * size: bitmap size in number of bits
 
-diff --git a/mm/memory.c b/mm/memory.c
-index e11ca9dd823f..e8d69ade5acc 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3517,10 +3517,13 @@ static vm_fault_t do_shared_fault(struct vm_fault *vmf)
-  * but allow concurrent faults).
-  * The mmap_sem may have been released depending on flags and our
-  * return value.  See filemap_fault() and __lock_page_or_retry().
-+ * If mmap_sem is released, vma may become invalid (for example
-+ * by other thread calling munmap()).
-  */
- static vm_fault_t do_fault(struct vm_fault *vmf)
- {
- 	struct vm_area_struct *vma = vmf->vma;
-+	struct mm_struct *vm_mm = vma->vm_mm;
- 	vm_fault_t ret;
- 
- 	/*
-@@ -3561,7 +3564,7 @@ static vm_fault_t do_fault(struct vm_fault *vmf)
- 
- 	/* preallocated pagetable is unused: free it */
- 	if (vmf->prealloc_pte) {
--		pte_free(vma->vm_mm, vmf->prealloc_pte);
-+		pte_free(vm_mm, vmf->prealloc_pte);
- 		vmf->prealloc_pte = NULL;
- 	}
- 	return ret;
+In this version of the patchset, the for_each_set_clump macro has been
+reimplemented and simplified based on the suggestions provided by Rasmus
+Villemoes and Andy Shevchenko in the version 4 submission.
+
+In particular, the function of the for_each_set_clump macro has been
+restricted to handle only 8-bit clumps; the drivers that use the
+for_each_set_clump macro only handle 8-bit ports so a generic
+for_each_set_clump implementation is not necessary. Thus, a solution for
+large clumps (i.e. those larger than the width of a bitmap word) can be
+postponed until a driver appears that actually requires such a generic
+for_each_set_clump implementation.
+
+For what it's worth, a semi-generic for_each_set_clump (i.e. for clumps
+smaller than the width of a bitmap word) can be implemented by simply
+replacing the hardcoded '8' and '0xFF' instances with respective
+variables. I have not yet had a need for such an implementation, and
+since it falls short of a true generic for_each_set_clump function, I
+have decided to forgo such an implementation for now.
+
+In addition, the bitmap_get_value8 and bitmap_set_value8 functions are
+introduced to get and set 8-bit values respectively. Their use is based
+on the behavior suggested in the patchset version 4 review.
+
+William Breathitt Gray (9):
+  bitops: Introduce the for_each_set_clump8 macro
+  lib/test_bitmap.c: Add for_each_set_clump8 test cases
+  gpio: 104-dio-48e: Utilize for_each_set_clump8 macro
+  gpio: 104-idi-48: Utilize for_each_set_clump8 macro
+  gpio: gpio-mm: Utilize for_each_set_clump8 macro
+  gpio: ws16c48: Utilize for_each_set_clump8 macro
+  gpio: pci-idio-16: Utilize for_each_set_clump8 macro
+  gpio: pcie-idio-24: Utilize for_each_set_clump8 macro
+  gpio: uniphier: Utilize for_each_set_clump8 macro
+
+ drivers/gpio/gpio-104-dio-48e.c   |  73 ++++++--------------
+ drivers/gpio/gpio-104-idi-48.c    |  37 +++-------
+ drivers/gpio/gpio-gpio-mm.c       |  73 ++++++--------------
+ drivers/gpio/gpio-pci-idio-16.c   |  75 ++++++++------------
+ drivers/gpio/gpio-pcie-idio-24.c  | 111 +++++++++++-------------------
+ drivers/gpio/gpio-uniphier.c      |  16 ++---
+ drivers/gpio/gpio-ws16c48.c       |  72 ++++++-------------
+ include/asm-generic/bitops/find.h |  14 ++++
+ include/linux/bitops.h            |   5 ++
+ lib/find_bit.c                    |  81 ++++++++++++++++++++++
+ lib/test_bitmap.c                 |  65 +++++++++++++++++
+ 11 files changed, 313 insertions(+), 309 deletions(-)
+
 -- 
-1.8.3.1
+2.21.0
 
