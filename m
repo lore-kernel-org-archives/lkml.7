@@ -2,157 +2,108 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C1CC4360F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 13:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BAFC43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 13:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20A020866
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 13:32:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551619954;
-	bh=zoeb5Z64Oe5aT6A127U/7Dm2Kz+Q4+31DdQqC0+D2UM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pg5N4JKV43zrIowD/OiKCOZ9WdMSncAGpBwShipAws8GxZeh3kCf/A0cfsLMv8cnu
-	 TPGeXGCIOE1ccAS+aHczdGVcW061t5Bj6dnkULSvjZ2gP9khHPzeWMNjBWRN8I7jTV
-	 X6Mu4nv4s+eH1lyxD9OHfPSeQlAYnKcNuFb1JXyY=
+	by mail.kernel.org (Postfix) with ESMTP id DC43920836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 13:48:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=myself5.de header.i=@myself5.de header.b="c6keQmCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfCCNcd (ORCPT
+        id S1726299AbfCCNsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 08:32:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
+        Sun, 3 Mar 2019 08:48:13 -0500
+Received: from myself5.de ([5.230.26.43]:51520 "EHLO myself5.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfCCNcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 08:32:33 -0500
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 182D120857;
-        Sun,  3 Mar 2019 13:32:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551619952;
-        bh=zoeb5Z64Oe5aT6A127U/7Dm2Kz+Q4+31DdQqC0+D2UM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1Op0xkCgpQfRuNk3TzkyuWjNaR+Qg6P81C+HlvrVAyLdLZyapvwuiYOhZFGyS6MT3
-         eKvj2XMxdaSsEKDIA2p5QDgoalgxQBRk/MFNZbCPW4KQi/MUBkcGla8cAYz8KjoENM
-         Qe3mh19sLoGBecGiIaot23WynOZYLaWwjYokFUho=
-Date:   Sun, 3 Mar 2019 13:32:25 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Camylla =?UTF-8?B?R29uw6dhbHZlcw==?= Cantanheide 
-        <c.cantanheide@gmail.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH] iio: adc: ad7766: Change alignment to match paranthesis
-Message-ID: <20190303133225.6a102146@archlinux>
-In-Reply-To: <20190224214010.10894-1-c.cantanheide@gmail.com>
-References: <20190224214010.10894-1-c.cantanheide@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726195AbfCCNsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 08:48:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=myself5.de; s=mail;
+        h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From; bh=SBrZGwE2TfsT48jTXrshvYTdg6trXRsDlaV6C/MLUuk=;
+        b=c6keQmCyZZWapVZQ6nhZx42YZAy45UKglrhg9iu6HJ7tPrzypyNWHtsriMBRCvZYwTPiKZDFxB3tTO9Z0hajbwM7BhrLcfvIP5gTfvOgsvTViGqzYcuu3Y6mRLIBW+8FDQ1OQfTT9pJj0m4bzuz6qOrN76d2CnLLPjIPs+GmAbVodNDKTT7tIF2WSVPY5yqGAeR4IyTaqcDXC5bix8phpzb+dwmMpB4pM1Hx9BQ8XIddv/VGzZHOEd2EJjpA30F+JlS8lAFlvLBnjrLGxR571lkP3PKIspWUsKaJSbooGyBvw4HNMtuPNQyECru53C2k6q6hgH6/om6zwK+MBQwE7w==;
+Received: from hsi-kbw-085-216-078-008.hsi.kabelbw.de ([85.216.78.8] helo=M5MacBookPro.fritz.box)
+        by myself5.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_CBC_SHA1:128)
+        (Exim 4.84_2)
+        (envelope-from <me@myself5.de>)
+        id 1h0RTI-0005Tk-Ii; Sun, 03 Mar 2019 14:48:04 +0100
+From:   Christian Oder <me@myself5.de>
+To:     hdegoede@redhat.com
+Cc:     andy@infradead.org, dvhart@infradead.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        me@myself5.de, platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2] platform/x86: touchscreen_dmi: Add info for the CHUWI Hi10 Air tablet
+Date:   Sun,  3 Mar 2019 14:47:27 +0100
+Message-Id: <20190303134727.6680-1-me@myself5.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <c6b0c2ef-eed9-ffae-e974-92260d5356aa@redhat.com>
+References: <c6b0c2ef-eed9-ffae-e974-92260d5356aa@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 Feb 2019 18:40:10 -0300
-Camylla Gon=C3=A7alves Cantanheide <c.cantanheide@gmail.com> wrote:
+Add  touchscreen info for the CHUWUI Hi10 Air tablet.
 
-> This commit align broken line to match upper line parenthesis,
-> in lines 80, 130, 237, 242, 255, 264 and 293. Solves the checkpatch.pl's =
-message:
->=20
-> CHECK: Alignment should match open parenthesis
->=20
-> In lines 130, 255, 264 and 293 it was necessary to break a line.
-Applied to the togreg branch of iio.git and pushed out as testing
-because of other patches that are queued up.
+Signed-off-by: Christian Oder <me@myself5.de>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+- added review tag
 
-Thanks,
+ drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Jonathan
-
-> ---
->  drivers/iio/adc/ad7766.c | 22 +++++++++++++---------
->  1 file changed, 13 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ad7766.c b/drivers/iio/adc/ad7766.c
-> index 3ae14fc8c649..101502435768 100644
-> --- a/drivers/iio/adc/ad7766.c
-> +++ b/drivers/iio/adc/ad7766.c
-> @@ -77,7 +77,7 @@ static irqreturn_t ad7766_trigger_handler(int irq, void=
- *p)
->  		goto done;
-> =20
->  	iio_push_to_buffers_with_timestamp(indio_dev, ad7766->data,
-> -		pf->timestamp);
-> +					   pf->timestamp);
->  done:
->  	iio_trigger_notify_done(indio_dev->trig);
-> =20
-> @@ -127,7 +127,8 @@ static int ad7766_postdisable(struct iio_dev *indio_d=
-ev)
->  }
-> =20
->  static int ad7766_read_raw(struct iio_dev *indio_dev,
-> -	const struct iio_chan_spec *chan, int *val, int *val2, long info)
-> +			   const struct iio_chan_spec *chan, int *val,
-> +			   int *val2, long info)
->  {
->  	struct ad7766 *ad7766 =3D iio_priv(indio_dev);
->  	struct regulator *vref =3D ad7766->reg[AD7766_SUPPLY_VREF].consumer;
-> @@ -234,12 +235,12 @@ static int ad7766_probe(struct spi_device *spi)
->  	ad7766->reg[AD7766_SUPPLY_VREF].supply =3D "vref";
-> =20
->  	ret =3D devm_regulator_bulk_get(&spi->dev, ARRAY_SIZE(ad7766->reg),
-> -		ad7766->reg);
-> +				      ad7766->reg);
->  	if (ret)
->  		return ret;
-> =20
->  	ad7766->pd_gpio =3D devm_gpiod_get_optional(&spi->dev, "powerdown",
-> -		GPIOD_OUT_HIGH);
-> +						  GPIOD_OUT_HIGH);
->  	if (IS_ERR(ad7766->pd_gpio))
->  		return PTR_ERR(ad7766->pd_gpio);
-> =20
-> @@ -252,7 +253,8 @@ static int ad7766_probe(struct spi_device *spi)
-> =20
->  	if (spi->irq > 0) {
->  		ad7766->trig =3D devm_iio_trigger_alloc(&spi->dev, "%s-dev%d",
-> -			indio_dev->name, indio_dev->id);
-> +						      indio_dev->name,
-> +						      indio_dev->id);
->  		if (!ad7766->trig)
->  			return -ENOMEM;
-> =20
-> @@ -261,8 +263,9 @@ static int ad7766_probe(struct spi_device *spi)
->  		iio_trigger_set_drvdata(ad7766->trig, ad7766);
-> =20
->  		ret =3D devm_request_irq(&spi->dev, spi->irq, ad7766_irq,
-> -			IRQF_TRIGGER_FALLING, dev_name(&spi->dev),
-> -			ad7766->trig);
-> +				       IRQF_TRIGGER_FALLING,
-> +				       dev_name(&spi->dev),
-> +				       ad7766->trig);
->  		if (ret < 0)
->  			return ret;
-> =20
-> @@ -290,8 +293,9 @@ static int ad7766_probe(struct spi_device *spi)
->  	spi_message_add_tail(&ad7766->xfer, &ad7766->msg);
-> =20
->  	ret =3D devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-> -		&iio_pollfunc_store_time, &ad7766_trigger_handler,
-> -		&ad7766_buffer_setup_ops);
-> +					      &iio_pollfunc_store_time,
-> +					      &ad7766_trigger_handler,
-> +					      &ad7766_buffer_setup_ops);
->  	if (ret)
->  		return ret;
-> =20
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 167a156e3cc7..2d56ff7c8230 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -72,6 +72,25 @@ static const struct ts_dmi_data chuwi_hi8_pro_data = {
+ 	.properties	= chuwi_hi8_pro_props,
+ };
+ 
++static const struct property_entry chuwi_hi10_air_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1981),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1271),
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 99),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 9),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_U32("touchscreen-fuzz-x", 5),
++	PROPERTY_ENTRY_U32("touchscreen-fuzz-y", 4),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hi10-air.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
++
++static const struct ts_dmi_data chuwi_hi10_air_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= chuwi_hi10_air_props,
++};
++
+ static const struct property_entry chuwi_vi8_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
+@@ -546,6 +565,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "X1D3_C806N"),
+ 		},
+ 	},
++	{
++		/* Chuwi Hi10 Air */
++		.driver_data = (void *)&chuwi_hi10_air_data,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
++			DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
++		},
++	},
+ 	{
+ 		/* Chuwi Vi8 (CWI506) */
+ 		.driver_data = (void *)&chuwi_vi8_data,
+-- 
+2.20.1
 
