@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D353FC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C836C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E7D20818
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6096D20818
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GX66dTWe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ett46jcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfCCRNd (ORCPT
+        id S1726560AbfCCRNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 12:13:33 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35357 "EHLO
+        Sun, 3 Mar 2019 12:13:40 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36842 "EHLO
         mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbfCCRNc (ORCPT
+        with ESMTP id S1726416AbfCCRNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 12:13:32 -0500
-Received: by mail-pg1-f195.google.com with SMTP id e17so1355925pgd.2;
-        Sun, 03 Mar 2019 09:13:32 -0800 (PST)
+        Sun, 3 Mar 2019 12:13:40 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r124so1354038pgr.3;
+        Sun, 03 Mar 2019 09:13:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xRPWdDzEgjoLvgNLlDqRYxDvr6EyPAugVognUJGP4To=;
-        b=GX66dTWenzmhQlN/6AF7yMeSO+8lEdUWk3OCpxejXPDUIViLmNao/iQN2OXXJ8dJvw
-         QhGQpNA6WahNSHIAaoUF3HxcP/NfK7/KFTzohiWFAtrRjh8MtOapZ5QdhMnsn22ilHBf
-         8Q/lJ773NqYxwM/dejIWQ8ImZOC1u1bpUd9Ks0Pl3hv0y4NGWLlNDJcxI2+il/ltKNGQ
-         ZJbgeTWaEajaGFEnLzzxa/g42lEcg00QLt5xwEGgSj5RG3LkPzD3Fi97knSgclYyntf7
-         mPE84fmCNDl3idzCTpo/zbYH2WQX2oP0ldi1RAzHcDTTo1EU1HEoeQZ9IcNBiBcJACUC
-         vlVQ==
+        bh=Nazjdaxsj9lmT9Vl6H8Rm89SYIfCC9VqRFy4LFo9W5w=;
+        b=ett46jcBrstaPoGr+OcvcNG3g5Nqx3vsgVaTU45463dLWKaiPXYfxffSCLbACTusVx
+         PS05tflZftj9Q5WBja0o29O4sYLfpeHjxGFIFwGyqm+VCHCwKcQno5Xge5L6f1s4Hb5T
+         N5n4/yQWvKNQ9oa2lCfkIIBonYJ5fc39XvKwIRExFeiXeRwJxTyXsOByimLsxWJniVPh
+         sPaL6DX06o+VHjxHD/7EzpWGi9iJGsj+AsL0CZWenBD5+9KLqAlza2iPXm/g5a1XxZCX
+         Ll2BtVPm6Z1Ci1BtZeaTSkSTRYEONL+fdHQAJ4Q3pcbjg/jZhjT9tybii+cssFeW2yHW
+         ZSLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xRPWdDzEgjoLvgNLlDqRYxDvr6EyPAugVognUJGP4To=;
-        b=qs2TogYRtT4ZTMnQfXxbkQQzOTuN4t+uUJRZaLkAbDOuSTxasA0PY1Ae+i8K8N0GhJ
-         l6Z9pDO6rLhZeuqzFoXlf+bbnhmT7XP5J5T4EiWZZG3zplJzFXicjjI1M1BPeUrZMgvA
-         5f73nR4Jeama+ssEyOYgQOilLEbxCicAFg8nWDfwHEhbiJI3+66Dit3IPnI1TmX1fJvA
-         r9IwrZJ4oiBcDobp8lsMvT4wzl/4klTPR+bYHOTFMq8MLXMXL1QV5iI4suXdewFpy+pw
-         ym3lrkDaLlvahfSr/ARM7gEr81XgSpjZyJPkLebawPW7MCtJHlbS1lDgeVpTGixhmXOS
-         RiOQ==
-X-Gm-Message-State: APjAAAXjocUWMcLyZ5HTfuEM4rB363rywNvtfZXGd4AhHS5ciQ/pYkmi
-        qDDCmaxFrFRCrvpNnsFDKJlC/T7t
-X-Google-Smtp-Source: APXvYqxo0avGDODD2Ng7ahsZcZsdIAE0WSZBf83j2wK0402ss5WHfCLwakvdJMgd9pnTnpTuLTx9jg==
-X-Received: by 2002:a65:4384:: with SMTP id m4mr14493823pgp.375.1551633211778;
-        Sun, 03 Mar 2019 09:13:31 -0800 (PST)
+        bh=Nazjdaxsj9lmT9Vl6H8Rm89SYIfCC9VqRFy4LFo9W5w=;
+        b=rKikUJ1Y2FrKUB9fJZRlFwctsxaxarBvYuq9xEWf3rwTzQ+6YUTUDi/kOiPDRhP7RM
+         ZYf+hJMJPQ3aHDqwfGmHJ76PxEf8OSnOCBMuWMVM8/7n40YxL+dOCHP7hIVpguuy+i64
+         4JS0geWz0YjeylYdkizwO4vM4aw5CTm3L97d3KTExxqxMVwUqcwtOjcXJQmbi+OlERun
+         uA0R5XLZo0y2tA8NlIfQ3pyFqApEz2xb5gdKkQYTbymcRhoxcds+MF2Hax6q3x8kbQ2W
+         xddqWdeORAmHmBXa/YYIRZMbnYypAO7DqHaWuIKKFxvyWU26hNq+AmCnOAwH3TNrsWNM
+         opUQ==
+X-Gm-Message-State: APjAAAXjUb7HFRIL1Bx5tIxt+x4T2Tl5kFgA2Tu7X9OLPgnJTTaCW4Yn
+        e/Ec2TsZ88po+64Jnz1Rus4=
+X-Google-Smtp-Source: APXvYqxUgeWZMbINYs2QBq007Og5WRVCUI9Pm32mGYmR6jbN5jXkWaCvP1QqAXU8UWEfQ6RZSUKeAw==
+X-Received: by 2002:a63:4c18:: with SMTP id z24mr14761857pga.62.1551633219084;
+        Sun, 03 Mar 2019 09:13:39 -0800 (PST)
 Received: from localhost.localdomain (ppp91-79-175-49.pppoe.mtu-net.ru. [91.79.175.49])
-        by smtp.gmail.com with ESMTPSA id e22sm5349412pfi.126.2019.03.03.09.13.25
+        by smtp.gmail.com with ESMTPSA id e22sm5349412pfi.126.2019.03.03.09.13.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Mar 2019 09:13:31 -0800 (PST)
+        Sun, 03 Mar 2019 09:13:37 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Russell King <linux@armlinux.org.uk>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -64,9 +64,9 @@ To:     Russell King <linux@armlinux.org.uk>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v9 1/7] ARM: trusted_foundations: Support L2 cache maintenance
-Date:   Sun,  3 Mar 2019 20:12:08 +0300
-Message-Id: <20190303171214.24821-2-digetx@gmail.com>
+Subject: [PATCH v9 2/7] ARM: trusted_foundations: Make prepare_idle call to take mode argument
+Date:   Sun,  3 Mar 2019 20:12:09 +0300
+Message-Id: <20190303171214.24821-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190303171214.24821-1-digetx@gmail.com>
 References: <20190303171214.24821-1-digetx@gmail.com>
@@ -78,124 +78,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement L2 cache initialization firmware callback that should be
-invoked early during boot in order to set up the required outer cache
-driver's callbacks and add the callback required for L2X0 maintenance.
-
-Partially based on work done by Michał Mirosław [1].
-
-[1] https://www.spinics.net/lists/arm-kernel/msg594765.html
+The Trusted Foundations firmware call varies depending on the required
+suspend-mode. Make the firmware API to take the mode argument in order
+to expose all of the modes to firmware user.
 
 Tested-by: Robert Yang <decatf@gmail.com>
 Tested-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/firmware/trusted_foundations.c    | 41 ++++++++++++++++++++++
- arch/arm/include/asm/trusted_foundations.h | 12 +++++++
- 2 files changed, 53 insertions(+)
+ arch/arm/firmware/trusted_foundations.c    | 29 ++++++++++++++++++++--
+ arch/arm/include/asm/firmware.h            |  2 +-
+ arch/arm/include/asm/trusted_foundations.h |  6 +++++
+ arch/arm/mach-tegra/cpuidle-tegra114.c     |  3 ++-
+ 4 files changed, 36 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/firmware/trusted_foundations.c b/arch/arm/firmware/trusted_foundations.c
-index 689e6565abfc..d7ac05103a52 100644
+index d7ac05103a52..720904a43c00 100644
 --- a/arch/arm/firmware/trusted_foundations.c
 +++ b/arch/arm/firmware/trusted_foundations.c
-@@ -18,8 +18,15 @@
- #include <linux/init.h>
- #include <linux/of.h>
- #include <asm/firmware.h>
-+#include <asm/hardware/cache-l2x0.h>
-+#include <asm/outercache.h>
- #include <asm/trusted_foundations.h>
- 
-+#define TF_CACHE_MAINT		0xfffff100
-+
-+#define TF_CACHE_ENABLE		1
-+#define TF_CACHE_DISABLE	2
-+
- #define TF_SET_CPU_BOOT_ADDR_SMC 0xfffff200
- 
- #define TF_CPU_PM		0xfffffffc
-@@ -67,9 +74,43 @@ static int tf_prepare_idle(void)
+@@ -67,9 +67,34 @@ static int tf_set_cpu_boot_addr(int cpu, unsigned long boot_addr)
  	return 0;
  }
  
-+#ifdef CONFIG_CACHE_L2X0
-+static void tf_cache_write_sec(unsigned long val, unsigned int reg)
-+{
-+	u32 l2x0_way_mask = 0xff;
+-static int tf_prepare_idle(void)
++static int tf_prepare_idle(unsigned long mode)
+ {
+-	tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S1_NOFLUSH_L2, cpu_boot_addr);
++	switch (mode) {
++	case TF_PM_MODE_LP0:
++		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S3, cpu_boot_addr);
++		break;
 +
-+	switch (reg) {
-+	case L2X0_CTRL:
-+		if (l2x0_saved_regs.aux_ctrl & L310_AUX_CTRL_ASSOCIATIVITY_16)
-+			l2x0_way_mask = 0xffff;
++	case TF_PM_MODE_LP1:
++		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S2, cpu_boot_addr);
++		break;
 +
-+		if (val == L2X0_CTRL_EN)
-+			tf_generic_smc(TF_CACHE_MAINT, TF_CACHE_ENABLE,
-+				       l2x0_saved_regs.aux_ctrl);
-+		else
-+			tf_generic_smc(TF_CACHE_MAINT, TF_CACHE_DISABLE,
-+				       l2x0_way_mask);
++	case TF_PM_MODE_LP1_NO_MC_CLK:
++		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S2_NO_MC_CLK,
++			       cpu_boot_addr);
++		break;
++
++	case TF_PM_MODE_LP2:
++		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S1, cpu_boot_addr);
++		break;
++
++	case TF_PM_MODE_LP2_NOFLUSH_L2:
++		tf_generic_smc(TF_CPU_PM, TF_CPU_PM_S1_NOFLUSH_L2,
++			       cpu_boot_addr);
 +		break;
 +
 +	default:
-+		break;
++		return -EINVAL;
 +	}
-+}
-+
-+static int tf_init_cache(void)
-+{
-+	outer_cache.write_sec = tf_cache_write_sec;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_CACHE_L2X0 */
-+
- static const struct firmware_ops trusted_foundations_ops = {
- 	.set_cpu_boot_addr = tf_set_cpu_boot_addr,
- 	.prepare_idle = tf_prepare_idle,
-+#ifdef CONFIG_CACHE_L2X0
-+	.l2x0_init = tf_init_cache,
-+#endif
- };
  
- void register_trusted_foundations(struct trusted_foundations_platform_data *pd)
+ 	return 0;
+ }
+diff --git a/arch/arm/include/asm/firmware.h b/arch/arm/include/asm/firmware.h
+index 34c1d96ef46d..6698272bbcbf 100644
+--- a/arch/arm/include/asm/firmware.h
++++ b/arch/arm/include/asm/firmware.h
+@@ -24,7 +24,7 @@ struct firmware_ops {
+ 	/*
+ 	 * Inform the firmware we intend to enter CPU idle mode
+ 	 */
+-	int (*prepare_idle)(void);
++	int (*prepare_idle)(unsigned long mode);
+ 	/*
+ 	 * Enters CPU idle mode
+ 	 */
 diff --git a/arch/arm/include/asm/trusted_foundations.h b/arch/arm/include/asm/trusted_foundations.h
-index 00748350cf72..d5d1b7efa02e 100644
+index d5d1b7efa02e..40445389ffe7 100644
 --- a/arch/arm/include/asm/trusted_foundations.h
 +++ b/arch/arm/include/asm/trusted_foundations.h
-@@ -32,6 +32,9 @@
- #include <linux/cpu.h>
- #include <linux/smp.h>
+@@ -35,6 +35,12 @@
+ #include <asm/hardware/cache-l2x0.h>
+ #include <asm/outercache.h>
  
-+#include <asm/hardware/cache-l2x0.h>
-+#include <asm/outercache.h>
++#define TF_PM_MODE_LP0			0
++#define TF_PM_MODE_LP1			1
++#define TF_PM_MODE_LP1_NO_MC_CLK	2
++#define TF_PM_MODE_LP2			3
++#define TF_PM_MODE_LP2_NOFLUSH_L2	4
 +
  struct trusted_foundations_platform_data {
  	unsigned int version_major;
  	unsigned int version_minor;
-@@ -43,6 +46,11 @@ void register_trusted_foundations(struct trusted_foundations_platform_data *pd);
- void of_register_trusted_foundations(void);
+diff --git a/arch/arm/mach-tegra/cpuidle-tegra114.c b/arch/arm/mach-tegra/cpuidle-tegra114.c
+index e3fbcfedf845..3b9af4766cdf 100644
+--- a/arch/arm/mach-tegra/cpuidle-tegra114.c
++++ b/arch/arm/mach-tegra/cpuidle-tegra114.c
+@@ -24,6 +24,7 @@
+ #include <asm/cpuidle.h>
+ #include <asm/smp_plat.h>
+ #include <asm/suspend.h>
++#include <asm/trusted_foundations.h>
+ #include <asm/psci.h>
  
- #else /* CONFIG_TRUSTED_FOUNDATIONS */
-+static inline void tf_dummy_write_sec(unsigned long val, unsigned int reg)
-+{
-+	if (reg == L2X0_CTRL && val == L2X0_CTRL_EN)
-+		pr_err("Trusted Foundations unavailable, ignoring request to enable L2C\n");
-+}
+ #include "cpuidle.h"
+@@ -46,7 +47,7 @@ static int tegra114_idle_power_down(struct cpuidle_device *dev,
+ 	tegra_set_cpu_in_lp2();
+ 	cpu_pm_enter();
  
- static inline void register_trusted_foundations(
- 				   struct trusted_foundations_platform_data *pd)
-@@ -53,6 +61,10 @@ static inline void register_trusted_foundations(
- 	 */
- 	pr_err("No support for Trusted Foundations, continuing in degraded mode.\n");
- 	pr_err("Secondary processors as well as CPU PM will be disabled.\n");
-+#if IS_ENABLED(CONFIG_CACHE_L2X0)
-+	pr_err("L2X0 cache will be disabled.\n");
-+	outer_cache.write_sec = tf_dummy_write_sec;
-+#endif
- #if IS_ENABLED(CONFIG_SMP)
- 	setup_max_cpus = 0;
- #endif
+-	call_firmware_op(prepare_idle);
++	call_firmware_op(prepare_idle, TF_PM_MODE_LP2_NOFLUSH_L2);
+ 
+ 	/* Do suspend by ourselves if the firmware does not implement it */
+ 	if (call_firmware_op(do_idle, 0) == -ENOSYS)
 -- 
 2.20.1
 
