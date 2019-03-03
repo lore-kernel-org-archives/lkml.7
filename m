@@ -2,132 +2,169 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B37C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7C1C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B73620836
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DB020836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="UHZH84ki"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kxRrUF4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbfCCKF7 (ORCPT
+        id S1726143AbfCCKIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 05:05:59 -0500
-Received: from nbd.name ([46.4.11.11]:47036 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbfCCKF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 05:05:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9oBiZti/vu20O3nlFR+6+BgWj3kr/MO2+a3u5axqI6Y=; b=UHZH84kiliwO1BLeismm5Xbjwf
-        N6tI550Fkn10VvhD4togf7dXv/d1H2/vO3X/AmtsKc46adLwKHlWiEQR6C0rQYqerOIF7FTeg+RV6
-        h9j96Y5W2eBbDUz8n9EAFuLsivRBzrO5v2zd325TRufyrStDt4cb3DWNV2g5UpBMwYoo=;
-Subject: Re: [mt76/mt7603/mac] Question about missing variable assignment
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190302211046.GA20268@embeddedor.com>
-From:   Felix Fietkau <nbd@nbd.name>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <827d2ee6-04de-f4f9-15b4-40dac90bda9c@nbd.name>
-Date:   Sun, 3 Mar 2019 11:05:51 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.5.1
+        Sun, 3 Mar 2019 05:08:00 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46378 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfCCKH7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 05:07:59 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c17so1095995plz.13;
+        Sun, 03 Mar 2019 02:07:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=8e/W7PnR4rmEtm15we8NhHHmsnEM8GgTneAnV61w9jQ=;
+        b=kxRrUF4IXFc2cNMmBduGygMy8rmgtRgHhq+imLV+74jWxe+4VYA6HHem8DntRSWhY/
+         nuDj0gUdUgCvxFowpy9t4erHQ43YCj4Nn20PpYKMbbcRA2SkbUG3DP/6XnmklDYWb6Ng
+         RB7QN1yq3ism7WAq73j5OP598FgmVwQfvPOwPAUhWLl8Wbzq+vrWPej13zf3BvAzuwDM
+         z/7DG/c2Bg7Bewr+wejRdElUGdH8rH7F9zVN9PXklD5jIH33g08Iny7c2ZFxewKzPz9s
+         H+JkKEUjGpk4JccZod1SsCA804me68fuxSs8LaR5xIAi91PUWTucUMQDwjYvX/qZuPrK
+         5K6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=8e/W7PnR4rmEtm15we8NhHHmsnEM8GgTneAnV61w9jQ=;
+        b=ha8TRUIK/OpIw9KI0Y0xt7R6SnNrNpIolkb/+Q5Mw1ZN0eCH3RMr4xwqOIZSbNx+2E
+         l5rLNnhUSGmdRdAQxOJ9Aog/uBpvIZCiWyW+PUCQUKFu18iqGOsw1bpU68bLxCwlH1Pp
+         wSpgD+YWXwBWasE17uF0vAS66gmEcO0P4ZS69P27SeJFrTAahssIcSrlasFoyvi1aXM5
+         mukxJakVQ9PFS9SR12y+6h1172CqvufhMphUosNLLucPO8iVkRe/ZDgLlvq0ea243Ig/
+         SeCFNMKMPXx/MjmOmRzZjrEGvvxrxERjhDuS7TdKJltHhFEL43QuLdD+L/tr2m4QJBAs
+         qJdw==
+X-Gm-Message-State: APjAAAWZU6ih7FWSMyEg498Bhu64/XyLAPV8qOeOtM1qqKkazKo1cl6U
+        O4whhTklg0rcu4jUPxQxitegB1wM
+X-Google-Smtp-Source: APXvYqz/vxB9wvOkLxojSMK8HfAVW+pGJ8jlxEH3eoiDDrsl2UUx8mcmuAb+LCzEzjSCYTTL+xwZwg==
+X-Received: by 2002:a17:902:6b4b:: with SMTP id g11mr14273441plt.92.1551607678901;
+        Sun, 03 Mar 2019 02:07:58 -0800 (PST)
+Received: from localhost (193-116-74-175.tpgi.com.au. [193.116.74.175])
+        by smtp.gmail.com with ESMTPSA id 63sm4859744pfy.110.2019.03.03.02.07.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 Mar 2019 02:07:58 -0800 (PST)
+Date:   Sun, 03 Mar 2019 20:07:52 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 01/20] asm-generic/mmiowb: Add generic implementation of
+ mmiowb() tracking
+To:     linux-arch@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Rich Felker <dalias@libc.org>,
+        David Howells <dhowells@redhat.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Luck <tony.luck@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+References: <20190301140348.25175-1-will.deacon@arm.com>
+        <20190301140348.25175-2-will.deacon@arm.com>
+        <1551575210.6lwpiqtg5k.astroid@bobo.none>
+        <87tvgkia0k.fsf@concordia.ellerman.id.au>
+In-Reply-To: <87tvgkia0k.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20190302211046.GA20268@embeddedor.com>
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1551607531.yk1v9azmym.astroid@bobo.none>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-02 22:10, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> The following piece of code in drivers/net/wireless/mediatek/mt76/mt7603/mac.c
-> is missing a variable assignment before line 1058.  Notice that there
-> is a potential execution path in which variable *i* is compared against
-> magic number 15 at line 1075 without being initialized previously
-> (this was reported by Coverity):
-> 
-> 1055 out:
-> 1056         final_rate_flags = info->status.rates[final_idx].flags;
-> 1057 
-> 1058         switch (FIELD_GET(MT_TX_RATE_MODE, final_rate)) {
-> 1059         case MT_PHY_TYPE_CCK:
-> 1060                 cck = true;
-> 1061                 /* fall through */
-> 1062         case MT_PHY_TYPE_OFDM:
-> 1063                 if (dev->mt76.chandef.chan->band == NL80211_BAND_5GHZ)
-> 1064                         sband = &dev->mt76.sband_5g.sband;
-> 1065                 else
-> 1066                         sband = &dev->mt76.sband_2g.sband;
-> 1067                 final_rate &= GENMASK(5, 0);
-> 1068                 final_rate = mt7603_get_rate(dev, sband, final_rate, cck);
-> 1069                 final_rate_flags = 0;
-> 1070                 break;
-> 1071         case MT_PHY_TYPE_HT_GF:
-> 1072         case MT_PHY_TYPE_HT:
-> 1073                 final_rate_flags |= IEEE80211_TX_RC_MCS;
-> 1074                 final_rate &= GENMASK(5, 0);
-> 1075                 if (i > 15)
-> 1076                         return false;
-> 1077                 break;
-> 1078         default:
-> 1079                 return false;
-> 1080         }
-> 
-> My guess is that such missing assignment should be something similar
-> to the one at line 566:
-> 
-> 	i = FIELD_GET(MT_RXV1_TX_RATE, rxdg0);
-> 
-> but I'm not sure what the proper arguments for macro FIELD_GET should
-> be.
-> 
-> This code was introduced by commit c8846e1015022d2531ac4c895783e400b3e5babe
-> 
-> What do you think?
-Thanks for reporting this. The fix is simpler than that, the check
-should be: if (final_rate > 15)
-I will send a fix.
+Michael Ellerman's on March 3, 2019 7:26 pm:
+> Nicholas Piggin <npiggin@gmail.com> writes:
+>> Will Deacon's on March 2, 2019 12:03 am:
+>>> In preparation for removing all explicit mmiowb() calls from driver
+>>> code, implement a tracking system in asm-generic based loosely on the
+>>> PowerPC implementation. This allows architectures with a non-empty
+>>> mmiowb() definition to have the barrier automatically inserted in
+>>> spin_unlock() following a critical section containing an I/O write.
+>>
+>> Is there a reason to call this "mmiowb"? We already have wmb that
+>> orders cacheable stores vs mmio stores don't we?
+>>
+>> Yes ia64 "sn2" is broken in that case, but that can be fixed (if
+>> anyone really cares about the platform any more). Maybe that's
+>> orthogonal to what you're doing here, I just don't like seeing
+>> "mmiowb" spread.
+>>
+>> This series works for spin locks, but you would want a driver to
+>> be able to use wmb() to order locks vs mmio when using a bit lock
+>> or a mutex or whatever else. Calling your wmb-if-io-is-pending
+>> version io_mb_before_unlock() would kind of match with existing
+>> patterns.
+>>
+>>> +static inline void mmiowb_set_pending(void)
+>>> +{
+>>> +	struct mmiowb_state *ms =3D __mmiowb_state();
+>>> +	ms->mmiowb_pending =3D ms->nesting_count;
+>>> +}
+>>> +
+>>> +static inline void mmiowb_spin_lock(void)
+>>> +{
+>>> +	struct mmiowb_state *ms =3D __mmiowb_state();
+>>> +	ms->nesting_count++;
+>>> +}
+>>> +
+>>> +static inline void mmiowb_spin_unlock(void)
+>>> +{
+>>> +	struct mmiowb_state *ms =3D __mmiowb_state();
+>>> +
+>>> +	if (unlikely(ms->mmiowb_pending)) {
+>>> +		ms->mmiowb_pending =3D 0;
+>>> +		mmiowb();
+>>> +	}
+>>> +
+>>> +	ms->nesting_count--;
+>>> +}
+>>
+>> Humour me for a minute and tell me what this algorithm is doing, or
+>> what was broken about the powerpc one, which is basically:
+>>
+>> static inline void mmiowb_set_pending(void)
+>> {
+>> 	struct mmiowb_state *ms =3D __mmiowb_state();
+>> 	ms->mmiowb_pending =3D 1;
+>> }
+>>
+>> static inline void mmiowb_spin_lock(void)
+>> {
+>> }
+>=20
+> The current powerpc code clears io_sync in spin_lock().
+>=20
+> ie, it would be equivalent to:
+>=20
+> static inline void mmiowb_spin_lock(void)
+> {
+>  	ms->mmiowb_pending =3D 0;
+> }
 
-- Felix
+Ah okay that's what I missed. How about we just not do that?
+
+Thanks,
+Nick
+=
