@@ -2,111 +2,118 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9501CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABE8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58FC020815
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:31:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azRqFbE0"
+	by mail.kernel.org (Postfix) with ESMTP id F071720815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfCDFbg (ORCPT
+        id S1726098AbfCDFbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 00:31:36 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42426 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbfCDFbf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 00:31:35 -0500
-Received: by mail-pf1-f194.google.com with SMTP id n74so2137474pfi.9;
-        Sun, 03 Mar 2019 21:31:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dcw+pYVDabq+pJjV4TQ/WHaj/xJ4FSQRvERVdgBPt0g=;
-        b=azRqFbE0CBnghVCFfGa5xvTBPBaQvzwfGLSDEGP1JGVTznUich5r7FPPNRfeTXkhEB
-         I9oMBDHizV6vV6du7QeecfIiRx3UfrkeJTy3/v88BxWQjU/ZY2JaSqGNOBBwIAdFwvZK
-         2pBTaZ5FIlShGIq7setwsvtaYypVuT/K1d+w7u/wQW82CHBL//fNMn4sviXejRiaI1Hv
-         4GBQMcpMkr7/11ygLEXuGyMvlUSr9G/d0oIhN8LrW/riBEdycTIt0rJp4Q2Q9Y4ljXU9
-         CIdQnUukkHTCk8wVA7JMuRkeGKhA7AdNistPLwVgH6uRcrNAyoPe4pk2UJ/bMmhcswT4
-         ID2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dcw+pYVDabq+pJjV4TQ/WHaj/xJ4FSQRvERVdgBPt0g=;
-        b=K0P//tLeORzJZN+N+6RXfJ1EFL45HTvNkFS4bx8XUodtvzm7/65U5k74cQSatc3XRm
-         2r3fjY0hFhUn64PARpfrKUM880FsYGz3OZiHU0K/hm/BxQL1bkD/dPJTQG8qSz3FIJAA
-         R0qRWsAHaDbz9gosfHrBvw8WAJifPwnnM42hTrVpG8vZn90MLZwRojtZ9c1H/cCyCj+Y
-         6pkcvorsOFh0V2W9oT2lbV+7T9kVBA9aH/rkMQ3yp3yfF3IfmjQn2X7jHxTkLE5FMwdl
-         VE8CmVSnBpqXMvFK9TkrjjdwNXRJLyQVMKfFzQqNWf5zvfl/b4NrEzTpqyxfBsgzWew0
-         dCyw==
-X-Gm-Message-State: APjAAAXr2t7fI17xqJNTPhHRyozvGReHP96T3cvcvQ14N5B73SzOKlvr
-        qbalISvtfh2HZun1BoVEbYQ=
-X-Google-Smtp-Source: APXvYqzaNRO6LEijLiAOY6y1+B9VKU4mx3I516bQGSFoBO6mE4tcSyHu/A67YVWEumvBKvJKmYsHcg==
-X-Received: by 2002:a63:8d42:: with SMTP id z63mr17146639pgd.414.1551677494631;
-        Sun, 03 Mar 2019 21:31:34 -0800 (PST)
-Received: from localhost ([175.223.38.45])
-        by smtp.gmail.com with ESMTPSA id w23sm7033664pfn.60.2019.03.03.21.31.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 Mar 2019 21:31:33 -0800 (PST)
-Date:   Mon, 4 Mar 2019 14:31:30 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        linux-serial@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-Message-ID: <20190304053130.GB6648@jagdpanzerIV>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20190213014141.GB8097@jagdpanzerIV>
- <878syj22r5.fsf@linutronix.de>
+        Mon, 4 Mar 2019 00:31:39 -0500
+Received: from mga17.intel.com ([192.55.52.151]:33849 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbfCDFbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 00:31:39 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 21:31:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,438,1544515200"; 
+   d="scan'208";a="131357404"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Mar 2019 21:31:36 -0800
+Date:   Sun, 3 Mar 2019 20:26:08 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
+ enabled in Guest
+Message-ID: <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-7-weijiang.yang@intel.com>
+ <20190228161715.GF6166@linux.intel.com>
+ <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
+ <20190301145819.GC22584@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <878syj22r5.fsf@linutronix.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190301145819.GC22584@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (02/13/19 15:15), John Ogness wrote:
-> I don't like bust_spinlocks() because drivers end up implementing
-> oops_in_progress with exactly that... ignoring their own locks. I prefer
-> consoles are provided with a locking mechanism that they can use to
-> support a separate NMI-safe write function. My series introduces
-> console_atomic_lock() for exactly this purpose.
+On Fri, Mar 01, 2019 at 06:58:19AM -0800, Sean Christopherson wrote:
+> On Thu, Feb 28, 2019 at 04:38:44PM +0800, Yang Weijiang wrote:
+> > On Thu, Feb 28, 2019 at 08:17:15AM -0800, Sean Christopherson wrote:
+> > > On Mon, Feb 25, 2019 at 09:27:14PM +0800, Yang Weijiang wrote:
+> > > > "Load Guest CET state" bit controls whether guest CET states
+> > > > will be loaded at Guest entry. Before doing that, KVM needs
+> > > > to check if CPU CET feature is available.
+> > > > 
+> > > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > > > ---
+> > > >  arch/x86/kvm/vmx.c | 32 ++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 32 insertions(+)
+> > > > 
+> > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > > > index 89ee086e1729..d32cee9ee079 100644
+> > > > --- a/arch/x86/kvm/vmx.c
+> > > > +++ b/arch/x86/kvm/vmx.c
+> > > > @@ -55,6 +55,7 @@
+> > > >  #include <asm/mmu_context.h>
+> > > >  #include <asm/spec-ctrl.h>
+> > > >  #include <asm/mshyperv.h>
+> > > > +#include <asm/cet.h>
+> > > >  
+> > > >  #include "trace.h"
+> > > >  #include "pmu.h"
+> > > > @@ -4065,6 +4066,20 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
+> > > >  	return !(val & ~valid_bits);
+> > > >  }
+> > > >  
+> > > > +static int vmx_guest_cet_cap(struct kvm_vcpu *vcpu)
+> > > > +{
+> > > > +	u32 eax, ebx, ecx, edx;
+> > > > +
+> > > > +	/*
+> > > > +	 * Guest CET can work as long as HW supports the feature, independent
+> > > > +	 * to Host SW enabling status.
+> > > > +	 */
+> > > > +	cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+> > > > +
+> > > > +	return ((ecx & bit(X86_FEATURE_SHSTK)) |
+> > > > +		(edx & bit(X86_FEATURE_IBT))) ? 1 : 0;
+> > > 
+> > > Given the holes in the (current) architecture/spec, I think KVM has to
+> > > require both features to be supported in the guest to allow CR4.CET to
+> > > be enabled.
+> > The reason why I use a "OR" here is to keep CET enabling control the
+> > same as that on host, right now on host, users can select to enable  SHSTK or IBT
+> > feature by disabling the unexpected one. It's free to select SHSTK & IBT
+> > or SHSTK | IBT.
 > 
-> But this doesn't help here. Here we are talking about a crashing system
-> that does _not_ have an emergency console. And in this case I would say
-> messages would be lost (just like they are now if all you have is a vt
-> console and it was busy).
+> Which is not the same as SHSTK != IBT in *hardware*, which is effectively
+> what this is allowing for the guest.  The problem is that the architecture
+> doesn't cleanly separate the two features, i.e. we'd have a virtualization
+> hole where the guest could touch state for a disabled feature.
 > 
-> I suppose we could keep the current bust_spinlocks() stuff for the
-> special case that there are no emergency consoles available. It's better
-> than nothing, but also not really reliable. Preferrably we figure out
-> how to implement write_atomic for all console drivers.
+> Regardless, the guest would still be able to selectively enable each CET
+> feature, it would just never see a model where SHSTK != IBT.
+Hi, Sean,
+I'd like to understand your concerns. From my point of view, e.g., 
+when only IBT is enabled, PL3_SSP MSR would be unnecessrily exposed,
+this is the design "limitation", but PL3_SSP keeps 0 if SHSTK is not
+configured. Could you detail your concerns?
 
-Right. We set console loglevel to verbose before the final panic flush,
-so flush of all unseen messages (regardless of importance) does look quite
-reasonable (and this is what panic() has been doing for many years).
-
-	-ss
