@@ -2,143 +2,166 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13454C10F00
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 14:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9930C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 14:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA5420823
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 14:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcNwWM6Z"
+	by mail.kernel.org (Postfix) with ESMTP id 8AD7020823
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 14:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfCCOBR (ORCPT
+        id S1726347AbfCCODd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 09:01:17 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44674 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfCCOBQ (ORCPT
+        Sun, 3 Mar 2019 09:03:33 -0500
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:44016 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbfCCODd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 09:01:16 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d2so2507038qti.11;
-        Sun, 03 Mar 2019 06:01:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XzcbIbIjJxWYB1FT7VpeLNoZ8jMBhFFxl9MPY5fbVW0=;
-        b=IcNwWM6Z+798YB4TvVkCZcaWBgf+I6mZ/BupHRlPaZxAF+UZ/ok4zJjnYeXZe541GU
-         5Fe0zoM7rE4zAKbS60kY3WYZuObafuHI1ahYA14N8Cq+vdzTTJ3PDdWrHYXd77xXWpX8
-         CFs9IVD9zRtWC++no/ensNLj1JUuTWSXsav9PVsYmrLf1nR8E3cvv1UR12OH8LZyOREK
-         5+hB7/bPN1ZtGzspiKQr4NCM88tTK/YFwfjL1MznmSabV7DKvhnqCX6/AXOV5Bvnd67g
-         Nj9Bp5gFsVo/r1FzABhz7/Yt+iJtQ4NWlxcFQ0yGMgnLfbjFZrQ5rirEWdRGGz4+W7l8
-         wnSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XzcbIbIjJxWYB1FT7VpeLNoZ8jMBhFFxl9MPY5fbVW0=;
-        b=UR0ciYimNGx9sQisLvfnt3oS4lHvjbCKn5hYIkm4YggcWy1uDiebZqxGOSehwfx37D
-         /GiEdFJHErKO8V2Tt/87uOFIQe3V6KjTv35ijfixRLQq8Okw8Q78PhV6fgvCVqxtlwPn
-         03hin2ixX04WJR3t51oHd52jOB61PtZ2Kxoiq33jiEkq0/HoRGZl86uPhWXI0YSKX83p
-         U0Ean61USE6uxWgOxAM4u8x/h3g2I77PoN7oAOSY4nXHGjZX9Hfgjw3VabmPl9LebxKO
-         j+gRLrb5Y5SsIz7wua9wIghbnThB6Oo4rHTCh7KBaALSjKPVebRsO1aTDAkJPGyumd4H
-         EheA==
-X-Gm-Message-State: APjAAAW2msgHI/QGDplDSnmPFyEhvDZZv7zcniGodGtKH5rRUalGeUBc
-        iLxLqq7V6bH4WLGqzEWZ6Tk=
-X-Google-Smtp-Source: APXvYqz1rn1wTvuHZyVHCK9/GQMYyTJHHBcBp4JXeDilpLgnCEdQXsPOoYzXURrp7Thy97DNDYlABw==
-X-Received: by 2002:ac8:1735:: with SMTP id w50mr11343081qtj.361.1551621675023;
-        Sun, 03 Mar 2019 06:01:15 -0800 (PST)
-Received: from renatolg ([186.220.23.48])
-        by smtp.gmail.com with ESMTPSA id j139sm2067799qke.26.2019.03.03.06.01.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 Mar 2019 06:01:14 -0800 (PST)
-From:   Renato Lui Geh <renatogeh@gmail.com>
-X-Google-Original-From: Renato Lui Geh <renatogeh@renatolg>
-Date:   Sun, 3 Mar 2019 11:01:09 -0300
-To:     "Ardelean, Alexandru" <Alex.Ardelean@analog.com>
-Cc:     "lars@metafoo.de" <lars@metafoo.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "renatogeh@gmail.com" <renatogeh@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "giuliano.belinassi@usp.br" <giuliano.belinassi@usp.br>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 4/9] staging:iio:ad7780: add chip ID values and mask
-Message-ID: <20190303140107.ljjo3flatwmd44ya@renatolg>
-References: <cover.1551358569.git.renatogeh@gmail.com>
- <90c573cd53bb54d49de6ac270bcff66880ccfeb5.1551358569.git.renatogeh@gmail.com>
- <190e26b19b8ed6559b92d3a000d852bbb0099a52.camel@analog.com>
+        Sun, 3 Mar 2019 09:03:33 -0500
+Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x23E3Tkc002807;
+        Sun, 3 Mar 2019 23:03:30 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp);
+ Sun, 03 Mar 2019 23:03:29 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav401.sakura.ne.jp)
+Received: from [192.168.1.2] (119.104.232.153.ap.dti.ne.jp [153.232.104.119])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x23E3TnS002800
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sun, 3 Mar 2019 23:03:29 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH] arm64: dts: rockchip: decrease rising edge time of UART2
+To:     Heiko Stuebner <heiko@sntech.de>,
+        Akash Gajjar <Akash_Gajjar@mentor.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Levin Du <djw@t-chip.com.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Shohei Maruyama <cheat.sc.linux@outlook.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190303122705.27094-1-katsuhiro@katsuster.net>
+ <1623469.Hy6pdcMFRX@phil>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <e722acb4-167f-8333-5c8a-b693815273f4@katsuster.net>
+Date:   Sun, 3 Mar 2019 23:03:29 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <1623469.Hy6pdcMFRX@phil>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <190e26b19b8ed6559b92d3a000d852bbb0099a52.camel@analog.com>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/01, Ardelean, Alexandru wrote:
->On Thu, 2019-02-28 at 11:24 -0300, Renato Lui Geh wrote:
->>
->>
->> The ad7780 supports both the ad778x and ad717x families. Each chip has
->> a corresponding ID. This patch provides a mask for extracting ID values
->> from the status bits and also macros for the correct values for the
->> ad7170, ad7171, ad7780 and ad7781.
->>
->> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
->> ---
->>  drivers/staging/iio/adc/ad7780.c | 8 ++++++--
->>  1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/staging/iio/adc/ad7780.c
->> b/drivers/staging/iio/adc/ad7780.c
->> index 56c49e28f432..ad7617a3a141 100644
->> --- a/drivers/staging/iio/adc/ad7780.c
->> +++ b/drivers/staging/iio/adc/ad7780.c
->> @@ -26,10 +26,14 @@
->>  #define AD7780_RDY             BIT(7)
->>  #define AD7780_FILTER          BIT(6)
->>  #define AD7780_ERR             BIT(5)
->> -#define AD7780_ID1             BIT(4)
->> -#define AD7780_ID0             BIT(3)
->>  #define AD7780_GAIN            BIT(2)
->>
->> +#define AD7170_ID              0
->> +#define AD7171_ID              1
->> +#define AD7780_ID              1
->> +#define AD7781_ID              0
->> +
->> +#define AD7780_ID_MASK         (BIT(3) | BIT(4))
->
->This also doesn't have any functionality change.
->The AD7170_ID, AD7171_ID, AD7780_ID & AD7781_ID IDs are also unused (maybe
->in a later patch they are ?).
+Hello Heiko,
 
-They aren't. I added them following a previous review suggestion. Should
-I remove them?
->
->I would also leave the AD7780_ID1 & AD7780_ID0 definitions in place, since
->they're easier matched with the datasheet.
->
+Thank you for comments.
+
+On 2019/03/03 22:19, Heiko Stuebner wrote:
+> Hi,
+> 
+> Am Sonntag, 3. März 2019, 13:27:05 CET schrieb Katsuhiro Suzuki:
+>> This patch increases drive strength of UART2 from 3mA to 12mA for
+>> getting more faster rising edge.
 >>
->>  #define AD7780_PATTERN_GOOD    1
->>  #define AD7780_PATTERN_MASK    GENMASK(1, 0)
->> --
->> 2.21.0
+>> RockPro64 is using a very high speed rate (1.5Mbps) for UART2. In
+>> this setting, a bit width of UART is about 667ns.
 >>
+>> In my environment (RockPro64 UART2 with FTDI FT232RL UART-USB
+>> converter), falling time of RockPro64 UART2 is 40ns, but riging time
+>> is over 650ns. So UART receiver will get wrong data, because receiver
+>> read intermediate data of rising edge.
+>>
+>> Rising time becomes 300ns from 650ns if apply this patch. This is not
+>> perfect solution but better than now.
+>>
+>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 +++++++--
+>>   1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> your changing a core rk3399 property here, so I'd really like to get
+> input from other board stakeholders on this before applying a core
+> change.
+> 
+> Could you either include the submitters of other rk3399-boards in the
+> recipient list so that they're aware or limit the change to rockpro64 for
+> the time being (aka overriding the property in the board-dts) please?
+> 
+
+OK, I'm adding other boards members.
+by ./scripts/get_maintainer.pl arch/arm64/boot/dts/rockchip/rk3399-*.dts
+
+
+RockPro64 directly connect UART2 pins of RK3399 to external connector.
+I think maybe other RK3399 boards are facing same problem, but I cannot
+check it because I have RockPro64 only...
+
+I'm happy if someone tell me other boards situation.
+
+Best Regards,
+Katsuhiro Suzuki
+
+
+> Thanks
+> Heiko
+> 
+> 
+> 
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> index beaa92744a64..e3c8f91ead50 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> @@ -2000,6 +2000,11 @@
+>>   			drive-strength = <8>;
+>>   		};
+>>   
+>> +		pcfg_pull_up_12ma: pcfg-pull-up-12ma {
+>> +			bias-pull-up;
+>> +			drive-strength = <12>;
+>> +		};
+>> +
+>>   		pcfg_pull_up_18ma: pcfg-pull-up-18ma {
+>>   			bias-pull-up;
+>>   			drive-strength = <18>;
+>> @@ -2521,8 +2526,8 @@
+>>   		uart2c {
+>>   			uart2c_xfer: uart2c-xfer {
+>>   				rockchip,pins =
+>> -					<4 RK_PC3 RK_FUNC_1 &pcfg_pull_up>,
+>> -					<4 RK_PC4 RK_FUNC_1 &pcfg_pull_none>;
+>> +					<4 RK_PC3 RK_FUNC_1 &pcfg_pull_up_12ma>,
+>> +					<4 RK_PC4 RK_FUNC_1 &pcfg_pull_none_12ma>;
+>>   			};
+>>   		};
+>>   
+>>
+> 
+> 
+> 
+> 
+> 
+> 
+
