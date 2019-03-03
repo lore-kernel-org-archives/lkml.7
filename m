@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F19C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB33FC43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02D620866
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9937520866
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551626505;
-	bh=8UGTN9ThtQgrMoeGidYXDxur64lP+LGMC52lPFNpxEY=;
+	s=default; t=1551626545;
+	bh=cK/Ztr+6g037EKehlRtErEgNYsRIX2/hzzmcuemWVq4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HTihpsVi5pV4G1pn3wwuoOsgHvsrYk95eUMJ3WN0HdznjAEZ0gDZioZZLGPbNrvP6
-	 IyfgA7fgaPlNkwjvbz7Xz23phhkN7jXeXNI+Sra5KBoz76GW0I0cLFN2mhUNO3xi2Y
-	 tHlnoTQGAbHO0OEVXV1WhPIKHUKYnSqDAuqANHGU=
+	b=hBHuiL0IWSRkQLtBb1FEu+4+sT3+++RFw7brf2tZzvgSClZsY5RRnLSMZyuVf5bHH
+	 NqeELA+D/IFlkpaWOzIV4S4JnyfeiY2sRPSRya+ck0lcmq8hwojOVYYhtdQiADB7xL
+	 9F8IAERAjRXFpkebcw1XLiQtsUzT+Vg+bFXXTqRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbfCCPVo (ORCPT
+        id S1726423AbfCCPWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 10:21:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34184 "EHLO mail.kernel.org"
+        Sun, 3 Mar 2019 10:22:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726331AbfCCPVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 10:21:44 -0500
+        id S1726331AbfCCPWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 10:22:24 -0500
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0DF320836;
-        Sun,  3 Mar 2019 15:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F8CC20836;
+        Sun,  3 Mar 2019 15:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551626502;
-        bh=8UGTN9ThtQgrMoeGidYXDxur64lP+LGMC52lPFNpxEY=;
+        s=default; t=1551626543;
+        bh=cK/Ztr+6g037EKehlRtErEgNYsRIX2/hzzmcuemWVq4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Q116V3X2PLnEuEVM71OLMtvzBCfGvvTXZgeTLL+G2p0CfI763d7SwRWLkuaxaq+KV
-         RiqY98+9HLSVT5yKdQ0xqir9op3NiQp+kH+m++vp5j6/P/a4XAN5tP59E3UPCzB2tT
-         0gJRCBWD5MlT1V2lk9PRZk7nT+zUDow0DgFiP5P8=
-Date:   Sun, 3 Mar 2019 15:21:34 +0000
+        b=LuXSb6M1OXVF1xpECnS8eXX8w0NbZ1u0KlqXIG5lzA9REILIsV4ZgCz+EVTXAJ442
+         Fn582ENt1BGNEvyBUfYtn5UTauwfoiNGtqWRwn6cnu+xJf7tDo8RgX9QF+DpCGKGcd
+         axoySEtQhGAu/NNNgjDtzas9dONF+dEtA5MfH6sA=
+Date:   Sun, 3 Mar 2019 15:22:15 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -57,11 +57,11 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 05/10] iio: gyro: bmg160: add mount matrix support
-Message-ID: <20190303152134.23629e29@archlinux>
-In-Reply-To: <49a4b6c13b1d293050ad11bcdeb35f2694428574.1550768574.git.hns@goldelico.com>
+Subject: Re: [PATCH v2 06/10] iio: gyro: itg3200: add mount matrix support
+Message-ID: <20190303152215.52b0504c@archlinux>
+In-Reply-To: <ad1f1af237439dcf2a0769280f9e7b1806d484f2.1550768574.git.hns@goldelico.com>
 References: <cover.1550768574.git.hns@goldelico.com>
-        <49a4b6c13b1d293050ad11bcdeb35f2694428574.1550768574.git.hns@goldelico.com>
+        <ad1f1af237439dcf2a0769280f9e7b1806d484f2.1550768574.git.hns@goldelico.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -71,7 +71,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Feb 2019 18:02:50 +0100
+On Thu, 21 Feb 2019 18:02:51 +0100
 "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
 > This patch allows to read a mount-matrix device tree
@@ -82,61 +82,69 @@ On Thu, 21 Feb 2019 18:02:50 +0100
 Applied.
 
 Thanks,
+
+Jonathan
+
 > ---
->  drivers/iio/gyro/bmg160_core.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  drivers/iio/gyro/itg3200_core.c  | 20 ++++++++++++++++++++
+>  include/linux/iio/gyro/itg3200.h |  1 +
+>  2 files changed, 21 insertions(+)
 > 
-> diff --git a/drivers/iio/gyro/bmg160_core.c b/drivers/iio/gyro/bmg160_core.c
-> index 63ca31628a93..e7b38adee39a 100644
-> --- a/drivers/iio/gyro/bmg160_core.c
-> +++ b/drivers/iio/gyro/bmg160_core.c
-> @@ -102,6 +102,7 @@ struct bmg160_data {
->  	struct regmap *regmap;
->  	struct iio_trigger *dready_trig;
->  	struct iio_trigger *motion_trig;
-> +	struct iio_mount_matrix orientation;
->  	struct mutex mutex;
->  	s16 buffer[8];
->  	u32 dps_range;
-> @@ -794,6 +795,20 @@ static int bmg160_write_event_config(struct iio_dev *indio_dev,
->  	return 0;
+> diff --git a/drivers/iio/gyro/itg3200_core.c b/drivers/iio/gyro/itg3200_core.c
+> index 7adecb562c81..203a6be33b70 100644
+> --- a/drivers/iio/gyro/itg3200_core.c
+> +++ b/drivers/iio/gyro/itg3200_core.c
+> @@ -242,6 +242,20 @@ static int itg3200_initial_setup(struct iio_dev *indio_dev)
+>  	return ret;
 >  }
 >  
 > +static const struct iio_mount_matrix *
-> +bmg160_get_mount_matrix(const struct iio_dev *indio_dev,
-> +			 const struct iio_chan_spec *chan)
+> +itg3200_get_mount_matrix(const struct iio_dev *indio_dev,
+> +			  const struct iio_chan_spec *chan)
 > +{
-> +	struct bmg160_data *data = iio_priv(indio_dev);
+> +	struct itg3200 *data = iio_priv(indio_dev);
 > +
 > +	return &data->orientation;
 > +}
 > +
-> +static const struct iio_chan_spec_ext_info bmg160_ext_info[] = {
-> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmg160_get_mount_matrix),
+> +static const struct iio_chan_spec_ext_info itg3200_ext_info[] = {
+> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, itg3200_get_mount_matrix),
 > +	{ }
 > +};
 > +
->  static IIO_CONST_ATTR_SAMP_FREQ_AVAIL("100 200 400 1000 2000");
+>  #define ITG3200_ST						\
+>  	{ .sign = 's', .realbits = 16, .storagebits = 16, .endianness = IIO_BE }
 >  
->  static IIO_CONST_ATTR(in_anglvel_scale_available,
-> @@ -831,6 +846,7 @@ static const struct iio_event_spec bmg160_event = {
->  		.storagebits = 16,					\
->  		.endianness = IIO_LE,					\
->  	},								\
-> +	.ext_info = bmg160_ext_info,					\
->  	.event_spec = &bmg160_event,					\
->  	.num_event_specs = 1						\
+> @@ -255,6 +269,7 @@ static int itg3200_initial_setup(struct iio_dev *indio_dev)
+>  	.address = ITG3200_REG_GYRO_ ## _mod ## OUT_H, \
+>  	.scan_index = ITG3200_SCAN_GYRO_ ## _mod, \
+>  	.scan_type = ITG3200_ST, \
+> +	.ext_info = itg3200_ext_info, \
 >  }
-> @@ -1075,6 +1091,11 @@ int bmg160_core_probe(struct device *dev, struct regmap *regmap, int irq,
->  	data->irq = irq;
->  	data->regmap = regmap;
 >  
-> +	ret = iio_read_mount_matrix(dev, "mount-matrix",
-> +				&data->orientation);
+>  static const struct iio_chan_spec itg3200_channels[] = {
+> @@ -297,6 +312,11 @@ static int itg3200_probe(struct i2c_client *client,
+>  
+>  	st = iio_priv(indio_dev);
+>  
+> +	ret = iio_read_mount_matrix(&client->dev, "mount-matrix",
+> +				&st->orientation);
 > +	if (ret)
 > +		return ret;
 > +
->  	ret = bmg160_chip_init(data);
->  	if (ret < 0)
->  		return ret;
+>  	i2c_set_clientdata(client, indio_dev);
+>  	st->i2c = client;
+>  
+> diff --git a/include/linux/iio/gyro/itg3200.h b/include/linux/iio/gyro/itg3200.h
+> index 2a820850f284..0a30fddccfb3 100644
+> --- a/include/linux/iio/gyro/itg3200.h
+> +++ b/include/linux/iio/gyro/itg3200.h
+> @@ -104,6 +104,7 @@
+>  struct itg3200 {
+>  	struct i2c_client	*i2c;
+>  	struct iio_trigger	*trig;
+> +	struct iio_mount_matrix orientation;
+>  };
+>  
+>  enum ITG3200_SCAN_INDEX {
 
