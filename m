@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AC9C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDF7C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE3120836
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C6820836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPEjXNC8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2AmtxJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfCCHoZ (ORCPT
+        id S1726060AbfCCHrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 02:44:25 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36245 "EHLO
+        Sun, 3 Mar 2019 02:47:11 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40054 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbfCCHoZ (ORCPT
+        with ESMTP id S1725877AbfCCHrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 02:44:25 -0500
-Received: by mail-pg1-f194.google.com with SMTP id r124so1028161pgr.3;
-        Sat, 02 Mar 2019 23:44:24 -0800 (PST)
+        Sun, 3 Mar 2019 02:47:10 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u9so1021445pgo.7;
+        Sat, 02 Mar 2019 23:47:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=FTGLQuMzA6NXFSyBaP9yP3iqhOjyb5SMy1QH7j0ioDk=;
-        b=nPEjXNC8eHDuVCCKg0hFBeTWLkXIf9gug1s8tDZkRAH4veV1F6D0HNzqgyWB5OXOvF
-         VhnhkAxOpVeWFdWrklMSbvHgs66ptkg5mlf8xjj2ESbwi2ktE0F8KISHLct2AEyeWSn+
-         /0NNxL5lRThwY+qOfPjXvNLIzsCOplg0rb2zcVSRD4XF1MFCyKJn//a1QMepNwUNQ5fJ
-         QzQOe1jW9eaVBEwFicONRSh33lJGqSyPYRrDgciTA4GFfSt6Zgd3CJnBTZPMRr3YVhR8
-         Fy6LHKqcir6trUMbU3gX7y89Ea22XKOXCP1Mp8PKrA6KYpcr2ZJXk7s07KiYrLOzJ5Nz
-         qZgA==
+        bh=/u5JpEMLgwr02V2gRriGLKXF7uaEOCF/6ycWX9ITlAs=;
+        b=O2AmtxJ9ymOakpmW6FGMiDGlbJreMI/5BVJwpfFNtsF+JxOcG2B5YkZvosloqx4KTF
+         LUM9/9Ar5FTYleUx2lDT+ix9SJuwcpeqUNY2TK1YzGTBhDmYqbnyxa78j/Qpe3dICGcy
+         0G9gzTQlDyp1YADZP/1SUi43QFAtB79lnoffKnTIqIUVRFGfgQgEyy0/oq7OAvFkuGYV
+         ZIAMwC6mg5OlbwJLuB/iHtYDZcg8P6mz9WKaXOvMoKp9SJ5xweV6IR19H+XybHtfHxDN
+         +s7t1BbMgP4+nGqXrslvvP4Fh3mos9gyxyWzpYUARQGoBIna7gnfTk51/nLCO/GW2Cbo
+         /epQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=FTGLQuMzA6NXFSyBaP9yP3iqhOjyb5SMy1QH7j0ioDk=;
-        b=Tw6N2qSulNb0HTye5qZbB47sgZmR1qnQqhvwH83SacCMgC73ZelIusNx8SatDiLVGB
-         bs7Q0RmsRzZyAADtHg9VUF6nlLmbh0Dw4pw2SgF8+mWmtDYHtwUnrUhC7dx2r2vRGt4o
-         C2T9rdoPBLpOAUwDQpeo1X2aE+S73+Kcpnp42JijP1h2H9M/V63XLZDwo0IfkONLJrF8
-         St9my3D9cbqUWuxMXeoenPZM3JZT2N0fWIOMllvtQtrvC9u7pYlfUTpR0HKEDLxIbmqx
-         RUfOXSOORNPLOo4Z5pssjr7SHWQUfkvqVDMjM73Bs3XM7b8nYkGQSncY7V33FmPbTG7L
-         45Mg==
-X-Gm-Message-State: APjAAAWYEVODciSPRIZNg0Ap7QHmDRFHqa0U81BTyWtfJerlBp/7gqXj
-        ENpe7p7P3DbNfRl/+gQ7+eE=
-X-Google-Smtp-Source: APXvYqy8++rSVrwPju2JVlF/IVz2MhoJ6re+mU8TZ7A9KEwvMCt5ualJFTnG1r9P5E0cIKGviivqXg==
-X-Received: by 2002:a63:de48:: with SMTP id y8mr3745654pgi.253.1551599063897;
-        Sat, 02 Mar 2019 23:44:23 -0800 (PST)
+        bh=/u5JpEMLgwr02V2gRriGLKXF7uaEOCF/6ycWX9ITlAs=;
+        b=SOVkGVZXG/xtXuc38hGB20MStiEPYsnuCmRwLbUR7F/y38Kol3mpQrbMWCqGbSLtqE
+         eTl+aprByD3wYSZKgBic9a36YVJk0coH6qhI+eCq4FVyTcIpvGDjuwxqp2bWBScPhhqu
+         QyAH3suN+EDdJhRPZUYJh3mTJMueDxNTEVxZfdu2r575wV+iesbnv9LMCdmmdgyZEdZ9
+         oFoSBLpYdlKiWKjTbArl26A+vzpGCuci0HuAvMSZePGJgJiHkGPJYlnnxlC8jnA2VvOh
+         /8QbAi/2h23R8yWsdxIMZ0NVHjuhvMg7Zcl1SgUDaJY4Kschk+pjVYSujtjXa5qcSZ5O
+         rBsw==
+X-Gm-Message-State: AHQUAub+YBwC6owssfy4RuOBawoSIAFyvlquOR3lV0N7JgeGS7pO3jGY
+        5fNLVw9rXuQqxo/UXSRuj9Y=
+X-Google-Smtp-Source: AHgI3Iaj+sn6BL0GKzJAadiy7NCWEMW/nkLhoOIBPdbI9atRtCA/wl0fp/cx10YHoVqCUqh6gbcEzQ==
+X-Received: by 2002:a62:cf81:: with SMTP id b123mr14403062pfg.29.1551599229655;
+        Sat, 02 Mar 2019 23:47:09 -0800 (PST)
 Received: from localhost.localdomain ([2001:268:c0a5:3b5c:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id f8sm3453113pgs.77.2019.03.02.23.44.18
+        by smtp.gmail.com with ESMTPSA id c13sm4332927pfm.34.2019.03.02.23.47.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 02 Mar 2019 23:44:22 -0800 (PST)
+        Sat, 02 Mar 2019 23:47:09 -0800 (PST)
 From:   William Breathitt Gray <vilhelm.gray@gmail.com>
 To:     linus.walleij@linaro.org
 Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
@@ -65,7 +65,7 @@ Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         William Breathitt Gray <vilhelm.gray@gmail.com>
 Subject: [PATCH v9 0/9] Introduce the for_each_set_clump8 macro
-Date:   Sun,  3 Mar 2019 16:44:39 +0900
+Date:   Sun,  3 Mar 2019 16:47:58 +0900
 Message-Id: <cover.1551598603.git.vilhelm.gray@gmail.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
@@ -74,9 +74,11 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20190303074758.Xtgar1uR_VrmkKZogaoahkY90MrNxbqd9CmX37UJmkg@z>
 
 Changes in v9:
-  - Return unsigned long for bitmap_get_value8 for consistency
+  - Utilize for_each_set_clump8 in uniphier_gpio_set_multiple
 
 While adding GPIO get_multiple/set_multiple callback support for various
 drivers, I noticed a pattern of looping manifesting that would be useful
