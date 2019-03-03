@@ -2,357 +2,75 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAE0C10F00
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B20C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD75820857
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551631992;
-	bh=8QtOm4BjupGo7jGED8zJq1X4T+W+mpI8t9wSXM90/08=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=boyFIRwZ+0fA8BxEqtNG9z7lmwz/8u1ln0fHDjNObakY2VByRINyfzDt8AKPNeuEg
-	 pWXOfsNdbWZmAQPkSnF5uYxIIGf9XezoJSFShJSvUTjt2VBFv7LPxbVQSlZYmGLHdx
-	 UEjLqpa0IK6HJAT4EXde3Cc2fL6Wv+DVJP2ShFFI=
+	by mail.kernel.org (Postfix) with ESMTP id 2BFED2070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:55:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="Hhf5h7D1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfCCQxL (ORCPT
+        id S1726472AbfCCQzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 11:53:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44132 "EHLO mail.kernel.org"
+        Sun, 3 Mar 2019 11:55:47 -0500
+Received: from tomli.me ([153.92.126.73]:42626 "EHLO tomli.me"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfCCQxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 11:53:10 -0500
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C89812070B;
-        Sun,  3 Mar 2019 16:53:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551631988;
-        bh=8QtOm4BjupGo7jGED8zJq1X4T+W+mpI8t9wSXM90/08=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=baY+hrtLgzVpW1VyA/qQUr8/mYYBVih6i2CWVpn5jBdWHOPa1WKQHc23BigCC49eu
-         5ByHLceGM76eHFZuU4ktwvKDO7sniHJqbdMFHh/d8cFnNX7NE21fTrGrZlnJ4e+wpD
-         gaYm3ak4ISDHplQC/3GAIxA401rTiarR3IsmnIhM=
-Date:   Sun, 3 Mar 2019 16:53:03 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 5/7] power: supply: add Ingenic JZ47xx battery driver.
-Message-ID: <20190303165303.5e5c07bd@archlinux>
-In-Reply-To: <a53ba58dddea94c011d2ec839d438c51@artur-rojek.eu>
-References: <20190217142914.17433-1-contact@artur-rojek.eu>
-        <20190217142914.17433-5-contact@artur-rojek.eu>
-        <20190220111441.585eb3eb@archlinux>
-        <a53ba58dddea94c011d2ec839d438c51@artur-rojek.eu>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726293AbfCCQzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 11:55:47 -0500
+Received: from tomli.me (localhost [127.0.0.1])
+        by tomli.me (OpenSMTPD) with ESMTP id 8d4c55df;
+        Sun, 3 Mar 2019 16:55:44 +0000 (UTC)
+X-HELO: localhost.lan
+Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
+Received: from Unknown (HELO localhost.lan) (2402:f000:1:1501:200:5efe:3d30:3659)
+ by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Sun, 03 Mar 2019 16:55:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=from:to:cc:subject:date:message-id:mime-version:content-transfer-encoding; s=1490979754; bh=j2aS/gpg/PjviS0avQsDBOalno7p16vI2oEd/UZfID0=; b=Hhf5h7D1fO4HQukLKscMX6kjhgD0oNo9m6Q7HBSIfJdz9Pj//c7CHIB7M6qNd18oMz7okwY7S6oQwyKlejD5V+lBQn6pdpKSKMVE2VO6BZBGK0Nb6pEiGjBYQhARYLqHNLNmbcLalL/BVy6bTDXtQO7t0S1uW6sdZ4erE+Qo+DUeaIq7ykIJTsZ4DeiA7/zV6SMllLLBmxuXuTWHlViMNRqPSw1Dn0asZoG1noTUtmOtg+eY/CySq11oRYgmwx2rzot43yzscl74d1ddQNy2dni3KPX1sUgvURkN9hnMs1yCd4I93SuiNObgcc1QN+j6VLUCuSub6rwAZUotfp5DyQ==
+From:   Yifeng Li <tomli@tomli.me>
+To:     Jiri Kosina <trivial@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fbdev@vger.kernel.org, devel@driverdev.osuosl.org
+Cc:     Yifeng Li <tomli@tomli.me>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        linux-kernel@vger.kernel.org
+Subject: [RESEND][PATCH 0/2] staging: sm750fb: trivial style fixes.
+Date:   Mon,  4 Mar 2019 00:55:30 +0800
+Message-Id: <20190303165532.23727-1-tomli@tomli.me>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Feb 2019 20:18:36 +0100
-Artur Rojek <contact@artur-rojek.eu> wrote:
+Hello.
 
-> On 2019-02-20 12:14, Jonathan Cameron wrote:
-> > On Sun, 17 Feb 2019 15:29:14 +0100
-> > Artur Rojek <contact@artur-rojek.eu> wrote:
-> >   
-> >> Add a driver for battery present on Ingenic JZ47xx SoCs.
-> >> 
-> >> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>  
-> > A few things inline.
-> > 
-> > thanks,
-> > 
-> > Jonathan  
-> Hi Jonathan.
-> 
-> One thing inline.
-> 
-> Artur
-> >   
-> >> ---
-> >>  drivers/power/supply/Kconfig           |  11 ++
-> >>  drivers/power/supply/Makefile          |   1 +
-> >>  drivers/power/supply/ingenic-battery.c | 182 
-> >> +++++++++++++++++++++++++
-> >>  3 files changed, 194 insertions(+)
-> >>  create mode 100644 drivers/power/supply/ingenic-battery.c
-> >> 
-> >> diff --git a/drivers/power/supply/Kconfig 
-> >> b/drivers/power/supply/Kconfig
-> >> index e901b9879e7e..9bfb1637ec28 100644
-> >> --- a/drivers/power/supply/Kconfig
-> >> +++ b/drivers/power/supply/Kconfig
-> >> @@ -169,6 +169,17 @@ config BATTERY_COLLIE
-> >>  	  Say Y to enable support for the battery on the Sharp Zaurus
-> >>  	  SL-5500 (collie) models.
-> >> 
-> >> +config BATTERY_INGENIC
-> >> +	tristate "Ingenic JZ47xx SoCs battery driver"
-> >> +	depends on MIPS || COMPILE_TEST
-> >> +	depends on INGENIC_ADC
-> >> +	help
-> >> +	  Choose this option if you want to monitor battery status on
-> >> +	  Ingenic JZ47xx SoC based devices.
-> >> +
-> >> +	  This driver can also be built as a module. If so, the module will 
-> >> be
-> >> +	  called ingenic-battery.
-> >> +
-> >>  config BATTERY_IPAQ_MICRO
-> >>  	tristate "iPAQ Atmel Micro ASIC battery driver"
-> >>  	depends on MFD_IPAQ_MICRO
-> >> diff --git a/drivers/power/supply/Makefile 
-> >> b/drivers/power/supply/Makefile
-> >> index b731c2a9b695..9e2c481d0187 100644
-> >> --- a/drivers/power/supply/Makefile
-> >> +++ b/drivers/power/supply/Makefile
-> >> @@ -34,6 +34,7 @@ obj-$(CONFIG_BATTERY_PMU)	+= pmu_battery.o
-> >>  obj-$(CONFIG_BATTERY_OLPC)	+= olpc_battery.o
-> >>  obj-$(CONFIG_BATTERY_TOSA)	+= tosa_battery.o
-> >>  obj-$(CONFIG_BATTERY_COLLIE)	+= collie_battery.o
-> >> +obj-$(CONFIG_BATTERY_INGENIC)	+= ingenic-battery.o
-> >>  obj-$(CONFIG_BATTERY_IPAQ_MICRO) += ipaq_micro_battery.o
-> >>  obj-$(CONFIG_BATTERY_WM97XX)	+= wm97xx_battery.o
-> >>  obj-$(CONFIG_BATTERY_SBS)	+= sbs-battery.o
-> >> diff --git a/drivers/power/supply/ingenic-battery.c 
-> >> b/drivers/power/supply/ingenic-battery.c
-> >> new file mode 100644
-> >> index 000000000000..4ee75c1ac241
-> >> --- /dev/null
-> >> +++ b/drivers/power/supply/ingenic-battery.c
-> >> @@ -0,0 +1,182 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Battery driver for the Ingenic JZ47xx SoCs
-> >> + * Copyright (c) 2019 Artur Rojek <contact@artur-rojek.eu>
-> >> + *
-> >> + * based on drivers/power/supply/jz4740-battery.c  
-> > 
-> > What is the relationship between this driver and the older one?
-> >   
-> >> + */
-> >> +
-> >> +#include <linux/iio/consumer.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/power_supply.h>
-> >> +#include <linux/property.h>
-> >> +
-> >> +struct ingenic_battery {
-> >> +	struct device *dev;
-> >> +	struct iio_channel *channel;
-> >> +	struct power_supply_desc desc;
-> >> +	struct power_supply *battery;
-> >> +	struct power_supply_battery_info info;
-> >> +};
-> >> +
-> >> +static int ingenic_battery_get_property(struct power_supply *psy,
-> >> +					enum power_supply_property psp,
-> >> +					union power_supply_propval *val)
-> >> +{
-> >> +	struct ingenic_battery *bat = power_supply_get_drvdata(psy);
-> >> +	struct power_supply_battery_info *info = &bat->info;
-> >> +	int ret = 0;
-> >> +
-> >> +	switch (psp) {
-> >> +	case POWER_SUPPLY_PROP_HEALTH:
-> >> +		ret = iio_read_channel_processed(bat->channel, &val->intval);
-> >> +		val->intval *= 1000;
-> >> +		if (val->intval < info->voltage_min_design_uv)
-> >> +			val->intval = POWER_SUPPLY_HEALTH_DEAD;
-> >> +		else if (val->intval > info->voltage_max_design_uv)
-> >> +			val->intval = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-> >> +		else
-> >> +			val->intval = POWER_SUPPLY_HEALTH_GOOD;
-> >> +	break;
-> >> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> >> +		ret = iio_read_channel_processed(bat->channel, &val->intval);
-> >> +		val->intval *= 1000;
-> >> +	break;
-> >> +	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
-> >> +		val->intval = info->voltage_min_design_uv;
-> >> +	break;
-> >> +	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
-> >> +		val->intval = info->voltage_max_design_uv;
-> >> +	break;
-> >> +	default:
-> >> +		return -EINVAL;
-> >> +	};
-> >> +  
-> > Can't get here, so drop.  
-> Execution actually does reach this point.
-> Would you rather have me return in individual switch cases instead?
-good point. I'm clearly blind ;)
+From January to February, there have been two trivial sm750fb patches
+submitted to linux-fbdev, one by me, one by Jin Chen, but both without
+any response. Further, it seems both maintainers, Sudip Mukherjee and
+Teddy Wang, are currently unavailable, getting an "Ack-by" would be
+unfeasible.
 
-Yes, return in each case would probably be cleaner for consistency
-with the default case.  Either that or set ret and break in that
-path as well.
+Since they're extremely trivial. Hereby, I picked them up, reworded
+commit message, and now resubmit them as trivial patches, and send them
+to trivial@kernel.org. I hope it could be directly applied by either a
+fbdev, a staging maintainer or by Jiri Kosina.
 
-> >   
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +/* Set the most appropriate IIO channel voltage reference scale
-> >> + * based on the battery's max voltage.
-> >> + */
-> >> +static int ingenic_battery_set_scale(struct ingenic_battery *bat)
-> >> +{
-> >> +	const int *scale_raw;
-> >> +	int scale_len, scale_type, best_idx = -1, best_mV, max_raw, i, ret;
-> >> +	u64 max_mV;
-> >> +
-> >> +	ret = iio_read_max_channel_raw(bat->channel, &max_raw);
-> >> +	if (ret) {
-> >> +		dev_err(bat->dev, "Unable to read max raw channel value\n");
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	ret = iio_read_avail_channel_attribute(bat->channel, &scale_raw,
-> >> +					       &scale_type, &scale_len,
-> >> +					       IIO_CHAN_INFO_SCALE);
-> >> +	if (ret < 0) {
-> >> +		dev_err(bat->dev, "Unable to read channel avail scale\n");
-> >> +		return ret;
-> >> +	}  
-> > This works under the constraints of knowing what ADC we are talking to, 
-> > but
-> > this isn't generic.  The relationship between scale and the range isn't 
-> > always
-> > direct.  i.e. there are devices where you sample the same range at a 
-> > lower
-> > scale to be able to read it faster (can be thought of as oversampling, 
-> > or
-> > just not running the last stages of a pipelined ADC).
-> > Anyhow, doesn't matter here as I assume this is fine on this part.
-> >   
-> >> +	if (ret != IIO_AVAIL_LIST || scale_type != IIO_VAL_FRACTIONAL_LOG2)
-> >> +		return -EINVAL;
-> >> +
-> >> +	max_mV = bat->info.voltage_max_design_uv / 1000;
-> >> +
-> >> +	for (i = 1; i < scale_len; i += 2) {
-> >> +		u64 scale_mV = (max_raw * scale_raw[i - 1]) >> scale_raw[i];  
-> > Not keen on the offset in the index being backwards.
-> > 
-> > This would be clearer I think as
-> > 
-> > for (i = 0; i < scale_len; i+= 2) {
-> > 	u64 scale_mv = (max_raw * scale_raw[i]) >> scale_raw[i + 1];
-> > 	...
-> > 	best_idx = i;
-> > }
-> >   
-> >> +
-> >> +		if (scale_mV < max_mV)
-> >> +			continue;
-> >> +
-> >> +		if (best_idx >= 0 && scale_mV > best_mV)
-> >> +			continue;
-> >> +
-> >> +		best_mV = scale_mV;
-> >> +		best_idx = i - 1;
-> >> +	}
-> >> +
-> >> +	if (best_idx < 0) {
-> >> +		dev_err(bat->dev, "Unable to find matching voltage scale\n");
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	return iio_write_channel_attribute(bat->channel,
-> >> +					   scale_raw[best_idx],
-> >> +					   scale_raw[best_idx+1],  
-> > 
-> > Spacing around that +.
-> >   
-> >> +					   IIO_CHAN_INFO_SCALE);
-> >> +}
-> >> +
-> >> +static enum power_supply_property ingenic_battery_properties[] = {
-> >> +	POWER_SUPPLY_PROP_HEALTH,
-> >> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> >> +	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
-> >> +	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
-> >> +};
-> >> +
-> >> +static int ingenic_battery_probe(struct platform_device *pdev)
-> >> +{
-> >> +	struct device *dev = &pdev->dev;
-> >> +	struct ingenic_battery *bat;
-> >> +	struct power_supply_config psy_cfg = {};
-> >> +	struct power_supply_desc *desc;
-> >> +	int ret;
-> >> +
-> >> +	bat = devm_kzalloc(dev, sizeof(*bat), GFP_KERNEL);
-> >> +	if (!bat)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	bat->dev = dev;
-> >> +	bat->channel = devm_iio_channel_get(dev, "battery");
-> >> +	if (IS_ERR(bat->channel))
-> >> +		return PTR_ERR(bat->channel);
-> >> +
-> >> +	desc = &bat->desc;
-> >> +	desc->name = "jz-battery";
-> >> +	desc->type = POWER_SUPPLY_TYPE_BATTERY;
-> >> +	desc->properties = ingenic_battery_properties;
-> >> +	desc->num_properties = ARRAY_SIZE(ingenic_battery_properties);
-> >> +	desc->get_property = ingenic_battery_get_property;
-> >> +	psy_cfg.drv_data = bat;
-> >> +	psy_cfg.of_node = dev->of_node;
-> >> +
-> >> +	bat->battery = devm_power_supply_register(dev, desc, &psy_cfg);
-> >> +	if (IS_ERR(bat->battery)) {
-> >> +		dev_err(dev, "Unable to register battery\n");
-> >> +		return PTR_ERR(bat->battery);
-> >> +	}
-> >> +
-> >> +	ret = power_supply_get_battery_info(bat->battery, &bat->info);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "Unable to get battery info: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +	if (bat->info.voltage_min_design_uv < 0) {
-> >> +		dev_err(dev, "Unable to get voltage min design\n");
-> >> +		return bat->info.voltage_min_design_uv;
-> >> +	}
-> >> +	if (bat->info.voltage_max_design_uv < 0) {
-> >> +		dev_err(dev, "Unable to get voltage max design\n");
-> >> +		return bat->info.voltage_max_design_uv;
-> >> +	}
-> >> +
-> >> +	return ingenic_battery_set_scale(bat);
-> >> +}
-> >> +
-> >> +#ifdef CONFIG_OF
-> >> +static const struct of_device_id ingenic_battery_of_match[] = {
-> >> +	{ .compatible = "ingenic,jz4740-battery", },
-> >> +	{ },
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, ingenic_battery_of_match);
-> >> +#endif
-> >> +
-> >> +static struct platform_driver ingenic_battery_driver = {
-> >> +	.driver = {
-> >> +		.name = "ingenic-battery",
-> >> +		.of_match_table = of_match_ptr(ingenic_battery_of_match),
-> >> +	},
-> >> +	.probe = ingenic_battery_probe,
-> >> +};
-> >> +module_platform_driver(ingenic_battery_driver);  
-> 
+Thanks for your time!
+
+Yifeng Li (2):
+  staging: sm750fb: trivial comment indention fix.
+  staging: sm750fb: trivial Camel Case removal for setDisplayControl().
+
+ drivers/staging/sm750fb/ddk750_display.c |  6 ++---
+ drivers/staging/sm750fb/sm750_accel.c    | 32 ++++++++++++------------
+ 2 files changed, 19 insertions(+), 19 deletions(-)
+
+-- 
+2.20.1
 
