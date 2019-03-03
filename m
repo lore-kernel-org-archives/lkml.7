@@ -2,167 +2,179 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FAFC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 06:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E874C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD9320857
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 06:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="POlFOVAg"
+	by mail.kernel.org (Postfix) with ESMTP id F3DBA2086A
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbfCCGfm (ORCPT
+        id S1725997AbfCCHNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 01:35:42 -0500
-Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:34816
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725923AbfCCGfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 01:35:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kEtW5obe2/pHsmzQvB+ErO+srM1KYDkTV+yTZizdzrA=;
- b=POlFOVAg6cQL3maCsmWrO/YvKK/3OYpdPH3iax010C8lvJIL7uunTpjg5v6ILgZZdF9WZuX0ll6h8ghtffO3pesdJNEAsQC/iFIzOXbJBkHi9wB12ZfPoZHbfdofD9kAN5hHBfuYJEX1mcpaJnl6yKl3cv69Ie2KgfOC1NUgG18=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5491.eurprd04.prod.outlook.com (20.178.113.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.18; Sun, 3 Mar 2019 06:35:36 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185%5]) with mapi id 15.20.1665.019; Sun, 3 Mar 2019
- 06:35:36 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>
-CC:     Vlad Buslov <vladbu@mellanox.com>,
-        "kernel-team@fb.com" <kernel-team@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 10/12] percpu: make pcpu_block_md generic
-Thread-Topic: [PATCH 10/12] percpu: make pcpu_block_md generic
-Thread-Index: AQHUzwv/tukJuc5LL02ZOvuifi5i06X5eHAQ
-Date:   Sun, 3 Mar 2019 06:35:36 +0000
-Message-ID: <AM0PR04MB44813F889E555ABBE787576E88700@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <20190228021839.55779-1-dennis@kernel.org>
- <20190228021839.55779-11-dennis@kernel.org>
-In-Reply-To: <20190228021839.55779-11-dennis@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 98db45ce-635b-48e5-e01b-08d69fa271fe
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5491;
-x-ms-traffictypediagnostic: AM0PR04MB5491:
-x-microsoft-exchange-diagnostics: =?gb2312?B?MTtBTTBQUjA0TUI1NDkxOzIzOkl2cFZCU3lJa0NsL2Y4L1RKQmRIL0pDejdj?=
- =?gb2312?B?MFBUS2g5VkhNTDd5bjJ2cXh6NE1WUHovemNKSFg4R05wTUZsYnFCaFBuNEVZ?=
- =?gb2312?B?dWVxUGVoMTg5M2J3dzdheGlVK2VuZ0pzeFRhQis0MHZMQU9iSHptRmFUM1ZK?=
- =?gb2312?B?blpoNTJzY2QxNlhUQXI2MFd3aGdCUlJpbmxiOHQ5WFBOcm9kTGZaaHovczZH?=
- =?gb2312?B?amVJTC9IR2lHWEpvbmFDMDFGYVc4dkNxcTloTjV0SkpnV052Q3RDZ0VxZXVS?=
- =?gb2312?B?c1hPcDVxK1dmZTJiN2RCcDBCa0l4cW81c0NyTEg5dTBCOWVpL2F6ZU5nNTFl?=
- =?gb2312?B?L2tKbWVYSGJ3ZlJWVjZuR3RLdzRDUGlVOHdOSTBaNWhDUzJpSTNzaEdlMkR0?=
- =?gb2312?B?RlRmRWZxY3NsK0IyV2dxcXAyY0hBNE1SQmdEb1hmL2J2a2VaUGQxdVhDbTNF?=
- =?gb2312?B?NjVYeHJPNTFhNEpETlNjYlNGUW1ONGtsNGtmK2l5Z2RaV1hxTVp1NjArYits?=
- =?gb2312?B?RkVDWW5NdWhxSmVhU0hsYmhaakp6TWpKNUdNYzNwNWpTSkVxS2FKMDBadXBS?=
- =?gb2312?B?b1Q4YVBMVVNqWnFzNFhjN1A3SVhETWp5L2xzWEZmYzZ1bzVLNHFLZUd3WDZG?=
- =?gb2312?B?MzJLM1BwUEo4TFRtUFZsK3EwVmhrNXlmeVpOZHhjZFJiV0V2WG1UNWdYMGNr?=
- =?gb2312?B?TWNvakVETEdZTUI1N2dOV3JzQ0tJR3F0RjJuV3lVSEt2QW1xWlZMZGxUN2xn?=
- =?gb2312?B?MnhFTnZPelpvSVg0UngvZWFPc09OVTNNcTE0b01KQ1pVZmF1L3JUcVMzWXBM?=
- =?gb2312?B?cmZ2ZlVUVGFod2VwNkhhQUNEMmhoMVcwbG4yNFJPSmhSSGRtMzNRUkJJeVpV?=
- =?gb2312?B?NnNPREFEMStNcXZBYThNdDR3WTcxZUJSc0tRWHkrS1JESXhwUnluNlpmVmtL?=
- =?gb2312?B?aHNsNlVqZ2hzcUhpZFRYY1gxUUw2d3p2TXJZSHNjeE5wZC9uV0JxeHlDelgr?=
- =?gb2312?B?My9Nak1kdXppRHpnZHZFeTNldDlLckh6MW5EMnJvUEtqVDZnL3haNEE0SFhH?=
- =?gb2312?B?VG8wM3A1ZHhQeFdpczFHVTR1TjhvOGs3a1dXakJzUWs2SjBkb09JZDFHa0Qy?=
- =?gb2312?B?N1BWL2w3V24vNm5PeGY4bGQzb29QR0dDZkE4bGNyc0lQY1Rwb3pKeTJmTCth?=
- =?gb2312?B?VDlOS3IreUpYSGRXTTRVeCtNUTBiTlBFYXEyS3hlU1BYa0t4TGdUMTE4MUhC?=
- =?gb2312?B?RXd0Y29ZVlFHaUsvWktDaHd1b3VlS3BQWFJOSkpZN1NMa2lHY0l1elgzbXN5?=
- =?gb2312?B?R3duSHFGcC8rTzRyOUJVZHNBdkxNY1FKdVhheElPRkNEb1E3Qk1EczlIYmh1?=
- =?gb2312?B?L3MyWlROZ1BNS29VQ2FkNlphdUdmZ3NLUVY2cFYrMkVJeGVBU0xCdzJwaGpI?=
- =?gb2312?B?Z3M0QUdwTnBRMWczVkdFTnBYM2xGL1VaUEd0eEZndjFGOEV3RERNSDN0UzVD?=
- =?gb2312?B?b243RmhzMno1NU11c2s3REtMNGpQVlVkMVBaU3RiSVdTKzc0Sk9sUWRzRzJ2?=
- =?gb2312?B?TmgySkMrVEpXUTJYdnh1ODBheWFMWDJtYjNia1k5QnFFS01CdTlvclQ5Z0Nx?=
- =?gb2312?B?amw3b1Y3RG9ic04vMWdjeVl1Tm5PSmhJcWFENW5HT1BRYm41NE9oR0JlUi93?=
- =?gb2312?B?L0J4TFdja3lLVTB0bE5JWjdyNVU1QVRGMGtqZzJNNzhrUkQzeWhIYmFkTkFQ?=
- =?gb2312?Q?mQlbGbnfrvVyuqRzfesofNK5RJL1RRA+qX1bM=3D?=
-x-microsoft-antispam-prvs: <AM0PR04MB5491C3EF8B2638985BDB2BB388700@AM0PR04MB5491.eurprd04.prod.outlook.com>
-x-forefront-prvs: 096507C068
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(39860400002)(346002)(136003)(199004)(189003)(13464003)(99286004)(5660300002)(229853002)(66066001)(55016002)(53936002)(9686003)(71190400001)(71200400001)(256004)(14444005)(6246003)(106356001)(105586002)(6436002)(2906002)(8936002)(97736004)(86362001)(68736007)(74316002)(52536013)(33656002)(3846002)(305945005)(26005)(7736002)(186003)(4326008)(76176011)(7696005)(53546011)(25786009)(8676002)(102836004)(81156014)(81166006)(6506007)(14454004)(316002)(478600001)(54906003)(110136005)(476003)(486006)(446003)(11346002)(44832011)(6116002)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5491;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EKR0+cP41YoKoW4bE4V1APjdnxo+JLELbzBaF6IXtzLgTzHUR/CwqJJkAJXqav62Duhx3hy6LLUa5r4YMMmP6XZvBt4WICggP/AoIgoIY2uk2W8MuOTiV+BDSNMNVxotJ1Q5vr7mqQY+DShDuoegCnrypuUlPsPSJaF/Zq3lGIIMfNGaTjAlKrhQOUbnvzRkl3IERHJGKfpFHuN+/20yYvWi1QlQqsWJ7eXssuUh8mZihgwXESkyzcXK4q4zfA3yrT77VMoDqN1vfKoo3B79/YZSLgZu474ZXB/SvdacLIdA2WaMXqyFaH+SHDWjlwYhT8dO+Ys1sltay7dqSspu9NHpZRknUbF48jg0jwkoNleYizslq9uuA5PE3xudDpmF5hTkdqtvYMn2Dce+/FZzDyDI74w4A8ChYeU3j2viKoM=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Sun, 3 Mar 2019 02:13:08 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45456 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725923AbfCCHNH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 02:13:07 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2374qWk076142
+        for <linux-kernel@vger.kernel.org>; Sun, 3 Mar 2019 02:13:06 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r085gup0q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 02:13:05 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Sun, 3 Mar 2019 07:13:03 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 3 Mar 2019 07:12:57 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x237CuQi32702716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 3 Mar 2019 07:12:56 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFB4CA4055;
+        Sun,  3 Mar 2019 07:12:56 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 484ECA4040;
+        Sun,  3 Mar 2019 07:12:55 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.84])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sun,  3 Mar 2019 07:12:55 +0000 (GMT)
+Date:   Sun, 3 Mar 2019 09:12:53 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v2 03/13] mm: Add generic p?d_large() macros
+References: <20190221113502.54153-1-steven.price@arm.com>
+ <20190221113502.54153-4-steven.price@arm.com>
+ <20190221142812.oa53lfnnfmsuh6ys@kshutemo-mobl1>
+ <a3076d01-41b3-d59b-e98c-a0fd9ba5d3f5@arm.com>
+ <20190221145706.zqwfdoyiirn3lc7y@kshutemo-mobl1>
+ <e0c7fc0c-7924-1106-a7a3-fc12136b7b82@arm.com>
+ <20190221210618.voyfs5cnafpvgedh@kshutemo-mobl1>
+ <20190301115300.GE5156@rapoport-lnx>
+ <20190301123031.rw3dswcoaa2x7haq@kshutemo-mobl1>
+ <b8bd0f99-1c5e-7cf5-32dd-ab52d921e86c@arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98db45ce-635b-48e5-e01b-08d69fa271fe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2019 06:35:36.4520
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5491
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8bd0f99-1c5e-7cf5-32dd-ab52d921e86c@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19030307-4275-0000-0000-000003161E33
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030307-4276-0000-0000-000038246B23
+Message-Id: <20190303071253.GA7585@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-03_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903030057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogb3duZXItbGludXgtbW1A
-a3ZhY2sub3JnIFttYWlsdG86b3duZXItbGludXgtbW1Aa3ZhY2sub3JnXSBPbg0KPiBCZWhhbGYg
-T2YgRGVubmlzIFpob3UNCj4gU2VudDogMjAxOcTqMtTCMjjI1SAxMDoxOQ0KPiBUbzogRGVubmlz
-IFpob3UgPGRlbm5pc0BrZXJuZWwub3JnPjsgVGVqdW4gSGVvIDx0akBrZXJuZWwub3JnPjsgQ2hy
-aXN0b3BoDQo+IExhbWV0ZXIgPGNsQGxpbnV4LmNvbT4NCj4gQ2M6IFZsYWQgQnVzbG92IDx2bGFk
-YnVAbWVsbGFub3guY29tPjsga2VybmVsLXRlYW1AZmIuY29tOw0KPiBsaW51eC1tbUBrdmFjay5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogW1BBVENIIDEwLzEy
-XSBwZXJjcHU6IG1ha2UgcGNwdV9ibG9ja19tZCBnZW5lcmljDQo+IA0KPiBJbiByZWFsaXR5LCBh
-IGNodW5rIGlzIGp1c3QgYSBibG9jayBjb3ZlcmluZyBhIGxhcmdlciBudW1iZXIgb2YgYml0cy4N
-Cj4gVGhlIGhpbnRzIHRoZW1zZWx2ZXMgYXJlIG9uZSBpbiB0aGUgc2FtZS4gUmF0aGVyIHRoYW4g
-bWFpbnRhaW5pbmcgdGhlIGhpbnRzDQo+IHNlcGFyYXRlbHksIGZpcnN0IGludHJvZHVjZSBucl9i
-aXRzIHRvIGdlbmVyaWNpemUNCj4gcGNwdV9ibG9ja191cGRhdGUoKSB0byBjb3JyZWN0bHkgbWFp
-bnRhaW4gYmxvY2stPnJpZ2h0X2ZyZWUuIFRoZSBuZXh0IHBhdGNoDQo+IHdpbGwgY29udmVydCBj
-aHVuayBoaW50cyB0byBiZSBtYW5hZ2VkIGFzIGEgcGNwdV9ibG9ja19tZC4NCj4gDQo+IFNpZ25l
-ZC1vZmYtYnk6IERlbm5pcyBaaG91IDxkZW5uaXNAa2VybmVsLm9yZz4NCj4gLS0tDQo+ICBtbS9w
-ZXJjcHUtaW50ZXJuYWwuaCB8ICAxICsNCj4gIG1tL3BlcmNwdS5jICAgICAgICAgIHwgMjAgKysr
-KysrKysrKysrKy0tLS0tLS0NCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwg
-NyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9tbS9wZXJjcHUtaW50ZXJuYWwuaCBi
-L21tL3BlcmNwdS1pbnRlcm5hbC5oIGluZGV4DQo+IGVjNThiMjQ0NTQ1ZC4uMTE5YmQxMTE5YWE3
-IDEwMDY0NA0KPiAtLS0gYS9tbS9wZXJjcHUtaW50ZXJuYWwuaA0KPiArKysgYi9tbS9wZXJjcHUt
-aW50ZXJuYWwuaA0KPiBAQCAtMjgsNiArMjgsNyBAQCBzdHJ1Y3QgcGNwdV9ibG9ja19tZCB7DQo+
-ICAJaW50ICAgICAgICAgICAgICAgICAgICAgcmlnaHRfZnJlZTsgICAgIC8qIHNpemUgb2YgZnJl
-ZSBzcGFjZSBhbG9uZw0KPiAgCQkJCQkJICAgdGhlIHJpZ2h0IHNpZGUgb2YgdGhlIGJsb2NrICov
-DQo+ICAJaW50ICAgICAgICAgICAgICAgICAgICAgZmlyc3RfZnJlZTsgICAgIC8qIGJsb2NrIHBv
-c2l0aW9uIG9mIGZpcnN0IGZyZWUNCj4gKi8NCj4gKwlpbnQJCQlucl9iaXRzOwkvKiB0b3RhbCBi
-aXRzIHJlc3BvbnNpYmxlIGZvciAqLw0KPiAgfTsNCj4gDQo+ICBzdHJ1Y3QgcGNwdV9jaHVuayB7
-DQo+IGRpZmYgLS1naXQgYS9tbS9wZXJjcHUuYyBiL21tL3BlcmNwdS5jDQo+IGluZGV4IGU1MWMx
-NTFlZDY5Mi4uN2NkZjE0YzI0MmRlIDEwMDY0NA0KPiAtLS0gYS9tbS9wZXJjcHUuYw0KPiArKysg
-Yi9tbS9wZXJjcHUuYw0KPiBAQCAtNjU4LDcgKzY1OCw3IEBAIHN0YXRpYyB2b2lkIHBjcHVfYmxv
-Y2tfdXBkYXRlKHN0cnVjdCBwY3B1X2Jsb2NrX21kDQo+ICpibG9jaywgaW50IHN0YXJ0LCBpbnQg
-ZW5kKQ0KPiAgCWlmIChzdGFydCA9PSAwKQ0KPiAgCQlibG9jay0+bGVmdF9mcmVlID0gY29udGln
-Ow0KPiANCj4gLQlpZiAoZW5kID09IFBDUFVfQklUTUFQX0JMT0NLX0JJVFMpDQo+ICsJaWYgKGVu
-ZCA9PSBibG9jay0+bnJfYml0cykNCj4gIAkJYmxvY2stPnJpZ2h0X2ZyZWUgPSBjb250aWc7DQo+
-IA0KPiAgCWlmIChjb250aWcgPiBibG9jay0+Y29udGlnX2hpbnQpIHsNCj4gQEAgLTEyNzEsMTgg
-KzEyNzEsMjQgQEAgc3RhdGljIHZvaWQgcGNwdV9mcmVlX2FyZWEoc3RydWN0IHBjcHVfY2h1bmsN
-Cj4gKmNodW5rLCBpbnQgb2ZmKQ0KPiAgCXBjcHVfY2h1bmtfcmVsb2NhdGUoY2h1bmssIG9zbG90
-KTsNCj4gIH0NCj4gDQo+ICtzdGF0aWMgdm9pZCBwY3B1X2luaXRfbWRfYmxvY2soc3RydWN0IHBj
-cHVfYmxvY2tfbWQgKmJsb2NrLCBpbnQNCj4gK25yX2JpdHMpIHsNCj4gKwlibG9jay0+c2Nhbl9o
-aW50ID0gMDsNCj4gKwlibG9jay0+Y29udGlnX2hpbnQgPSBucl9iaXRzOw0KPiArCWJsb2NrLT5s
-ZWZ0X2ZyZWUgPSBucl9iaXRzOw0KPiArCWJsb2NrLT5yaWdodF9mcmVlID0gbnJfYml0czsNCj4g
-KwlibG9jay0+Zmlyc3RfZnJlZSA9IDA7DQo+ICsJYmxvY2stPm5yX2JpdHMgPSBucl9iaXRzOw0K
-PiArfQ0KPiArDQo+ICBzdGF0aWMgdm9pZCBwY3B1X2luaXRfbWRfYmxvY2tzKHN0cnVjdCBwY3B1
-X2NodW5rICpjaHVuaykgIHsNCj4gIAlzdHJ1Y3QgcGNwdV9ibG9ja19tZCAqbWRfYmxvY2s7DQo+
-IA0KPiAgCWZvciAobWRfYmxvY2sgPSBjaHVuay0+bWRfYmxvY2tzOw0KPiAgCSAgICAgbWRfYmxv
-Y2sgIT0gY2h1bmstPm1kX2Jsb2NrcyArIHBjcHVfY2h1bmtfbnJfYmxvY2tzKGNodW5rKTsNCj4g
-LQkgICAgIG1kX2Jsb2NrKyspIHsNCj4gLQkJbWRfYmxvY2stPnNjYW5faGludCA9IDA7DQo+IC0J
-CW1kX2Jsb2NrLT5jb250aWdfaGludCA9IFBDUFVfQklUTUFQX0JMT0NLX0JJVFM7DQo+IC0JCW1k
-X2Jsb2NrLT5sZWZ0X2ZyZWUgPSBQQ1BVX0JJVE1BUF9CTE9DS19CSVRTOw0KPiAtCQltZF9ibG9j
-ay0+cmlnaHRfZnJlZSA9IFBDUFVfQklUTUFQX0JMT0NLX0JJVFM7DQo+IC0JfQ0KPiArCSAgICAg
-bWRfYmxvY2srKykNCj4gKwkJcGNwdV9pbml0X21kX2Jsb2NrKG1kX2Jsb2NrLCBQQ1BVX0JJVE1B
-UF9CTE9DS19CSVRTKTsNCj4gIH0NCg0KUmV2aWV3ZWQtYnk6IFBlbmcgRmFuIDxwZW5nLmZhbkBu
-eHAuY29tPg0KDQo+IA0KPiAgLyoqDQo+IC0tDQo+IDIuMTcuMQ0KDQo=
+On Fri, Mar 01, 2019 at 01:39:30PM +0000, Steven Price wrote:
+> On 01/03/2019 12:30, Kirill A. Shutemov wrote:
+> > On Fri, Mar 01, 2019 at 01:53:01PM +0200, Mike Rapoport wrote:
+> >> Him Kirill,
+> >>
+> >> On Fri, Feb 22, 2019 at 12:06:18AM +0300, Kirill A. Shutemov wrote:
+> >>> On Thu, Feb 21, 2019 at 05:16:46PM +0000, Steven Price wrote:
+> >>>>>> Note that in terms of the new page walking code, these new defines are
+> >>>>>> only used when walking a page table without a VMA (which isn't currently
+> >>>>>> done), so architectures which don't use p?d_large currently will work
+> >>>>>> fine with the generic versions. They only need to provide meaningful
+> >>>>>> definitions when switching to use the walk-without-a-VMA functionality.
+> >>>>>
+> >>>>> How other architectures would know that they need to provide the helpers
+> >>>>> to get walk-without-a-VMA functionality? This looks very fragile to me.
+> >>>>
+> >>>> Yes, you've got a good point there. This would apply to the p?d_large
+> >>>> macros as well - any arch which (inadvertently) uses the generic version
+> >>>> is likely to be fragile/broken.
+> >>>>
+> >>>> I think probably the best option here is to scrap the generic versions
+> >>>> altogether and simply introduce a ARCH_HAS_PXD_LARGE config option which
+> >>>> would enable the new functionality to those arches that opt-in. Do you
+> >>>> think this would be less fragile?
+> >>>
+> >>> These helpers are useful beyond pagewalker.
+> >>>
+> >>> Can we actually do some grinding and make *all* archs to provide correct
+> >>> helpers? Yes, it's tedious, but not that bad.
+> >>
+> >> Many architectures simply cannot support non-leaf entries at the higher
+> >> levels. I think letting the use a generic helper actually does make sense.
+> > 
+> > I disagree.
+> > 
+> > It's makes sense if the level doesn't exists on the arch.
+> 
+> This is what patch 24 [1] of the series does - if the level doesn't
+> exist then appropriate stubs are provided.
+> 
+> > But if the level exists, it will be less frugile to ask the arch to
+> > provide the helper. Even if it is dummy always-false.
+> 
+> The problem (as I see it), is we need a reliable set of p?d_large()
+> implementations to be able to walk arbitrary page tables. Either the
+> entire functionality of walking page tables without a VMA has to be an
+> opt-in per architecture, or we need to mandate that every architecture
+> provide these implementations.
+
+I agree that we need a reliable set of p?d_large(), but I'm still not
+convinced that every architecture should provide these.
+
+Why having generic versions if p?d_large() is more fragile, than e.g.
+p??__access_permitted() or atomic ops?
+
+IMHO, adding those functions/macros for architectures that support large
+pages and providing defines to avoid override of 'static inline' implementations
+would be robust enough and will avoid unnecessary stubs in architectures
+that don't have large pages.
+ 
+> I could provide an asm-generic header to provide a complete set of dummy
+> implementations for architectures that don't support large pages at all,
+> but that seems a bit overkill when most architectures only need to
+> define 2 or 3 implementations (the rest being provided by the
+> folded-levels automatically).
+> 
+> Thanks,
+> 
+> Steve
+> 
+> [1]
+> https://lore.kernel.org/lkml/20190227170608.27963-25-steven.price@arm.com/
+
+-- 
+Sincerely yours,
+Mike.
+
