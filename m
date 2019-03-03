@@ -7,208 +7,147 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B59C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D51C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 418E920836
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF5C20836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAhL/+Ja"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9RuIhp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfCCPNT (ORCPT
+        id S1726367AbfCCPOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 10:13:19 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41029 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbfCCPNT (ORCPT
+        Sun, 3 Mar 2019 10:14:52 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38064 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbfCCPOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 10:13:19 -0500
-Received: by mail-oi1-f194.google.com with SMTP id e7so1900848oia.8
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 07:13:18 -0800 (PST)
+        Sun, 3 Mar 2019 10:14:51 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a188so2313463wmf.3
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 07:14:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1fOunaAKcyPCCNyw0ddTOu9T6+VMhiyYDrXiBKfml+A=;
-        b=aAhL/+JatGvuPMBAigDbOVHEkweouKjZFeODalSOj+JVSgfbyL8wY/VRl43Hbz8+uu
-         qclUOu3kYzD5iV1DE/dNol9mdGpTLZ2aEJwr834lkwvscnYMjCaFAe5MU0fEWAhcUTDG
-         XFsqDG7q3aD6PHhjF89Aglh7mjVqhHH72AwbaKa0KenC0KT3MEGDJM6KYv4IQlikc8wG
-         VxMzZjvP77GpbPHGP08UvBKcGhi3mva2i/uYXuw++vvhBTlNBlUtCMHxKcQz6WjRC4Wz
-         dy+TsIdcMocfT/r7qLr+T3lh0Sk3rgwcB6a0kBcvppcjPgFYQBl4KLzvm0E1OQFCtKMR
-         3pGg==
+         :cc;
+        bh=4VrZ5zk/YsYTYEWhFr1yM4k1yqQj7V8lxdL/Jl3sZTI=;
+        b=X9RuIhp1Lpa/MWGDdF2c1BjTj3uF3XOdSTluji5fLpXFbU0IKG7yxrLsV5jE/RwE4t
+         ddmSNyHxpxmnaS41/5ovjYAxx5ImPiXep3Lb77uyJwSkeskXEdDfmEnsRAKsQyD0CLUC
+         hJMdOW1PofMRehlAsVka8Wb2lMcnx+rI+WtMsHPDHgTbTxGjIoN0w0sddaMWeY6HT844
+         pBXWE7dyUZi/j+e/oAKwk+3X5MIn9NImnuJcE/HCyZzp1LT/evULH+/OKojbo55m8y+Y
+         sTVkgDrIhVS22EiEwer8GKMULE5zYV12F4J7BWz4s4PKptkDHLajJNXXMhu0WY8UwaFU
+         FjIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1fOunaAKcyPCCNyw0ddTOu9T6+VMhiyYDrXiBKfml+A=;
-        b=V7mga5gD2m86/BoffXuHGHk/Bp25rtMkDxseKB9Pcdwz1F0+nucIGV3ce34g5fGUhO
-         QcJhMRR4h9mpTM9lKBHUcHWawl1Lz1M9e2xa+jNSKiEEhufzru+Jj8YP92LTX4gWnqMD
-         F6rI8Wfoa/CL3hlnCdDHSabbMvPkLqGIW5mjZHmZfJH60fN00bzG2lxSMkitvbEnTi/n
-         WwNv/1gGonH+JTF2rgKANZenRZZpnQo1GrKP1Ik7yk58AZR5U+w7vPT8Q3sMfwfhwuWa
-         A+XIdHY1Z6YG05AcdWi9x6veeMsMXn0G90giTJoCkBc30zZq8OpZOjrBxvSLI5XSddff
-         7yUw==
-X-Gm-Message-State: APjAAAU08ZIvTTQBB03bGfLvkr3QCOXLDXZfsfJZd4CJjkG+HrprfgFD
-        fFv6115tzwlMEMlo2f9OJERElWYvbmu0fELJFD0=
-X-Google-Smtp-Source: APXvYqxLHLLYwbEGS82oFQjGF82HTGA+Q06iXs1dd7hbGvTSa/tU8gl0hCV+hyiEcABdkI9GCPw4clt9y9/VoJhlFJk=
-X-Received: by 2002:aca:bdd5:: with SMTP id n204mr4587007oif.14.1551625998206;
- Sun, 03 Mar 2019 07:13:18 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=4VrZ5zk/YsYTYEWhFr1yM4k1yqQj7V8lxdL/Jl3sZTI=;
+        b=PTbZzTC9r/LgEPItwbH+vmnSwf1w0B7urts4dGFa22XwC3lHJQSeGH7mfneHnaV/JV
+         xHelMtq+LxF29eXKJI+vYogCpZKaZQHQtnZRUcLQ1HhivfwwhJvtJ3dS5LScGxzuk4iR
+         5y2Vqwr7X1IPruAiomYKfkCK9Apac46EU9Mhs8szSvCoQIGKqVmFR+jOhYIR2V2cX3Yr
+         OD4YIKbkw+TFv7evI6UFWgKK1XIvSUuwNjIkMsUCqty0OOmW/oEDr0Hc8W31M2ykMdHu
+         vxP82kAfCe+Woil4F8HNM2RLMVs7mV0ApyaU4RzRi+k1TD1a7WyB4DIfOLB26vAqnUUX
+         ygjA==
+X-Gm-Message-State: AHQUAub+L7aVJSApT2mNUZvaslWjMDGMwe5Shfi+/i4ybzSMHaMrZ/Jc
+        OvsHQTjOSO85+XdfeYD7W9kXBCCSuqOs7QT/gVA=
+X-Google-Smtp-Source: APXvYqw6ZWrfRjVcSAnKzX6N6sExROh917opCEwHRhj/Gbu2c42Tg1prI0LZvI8BHB1mZwDFEQaBGGw+H0bTXB/13UI=
+X-Received: by 2002:a1c:2348:: with SMTP id j69mr8332833wmj.100.1551626089592;
+ Sun, 03 Mar 2019 07:14:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20190303122705.27094-1-katsuhiro@katsuster.net>
- <1623469.Hy6pdcMFRX@phil> <e722acb4-167f-8333-5c8a-b693815273f4@katsuster.net>
-In-Reply-To: <e722acb4-167f-8333-5c8a-b693815273f4@katsuster.net>
-From:   Tony McKahan <tonymckahan@gmail.com>
-Date:   Sun, 3 Mar 2019 10:13:05 -0500
-Message-ID: <CAERgoknAV1sACSPjM_u4WyWzLvmUntXMoEx=ccpFsqYZVeu__Q@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: decrease rising edge time of UART2
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Akash Gajjar <Akash_Gajjar@mentor.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Levin Du <djw@t-chip.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Shohei Maruyama <cheat.sc.linux@outlook.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+References: <1551497728-12576-1-git-send-email-yuzenghui@huawei.com>
+In-Reply-To: <1551497728-12576-1-git-send-email-yuzenghui@huawei.com>
+From:   Zenghui Yu <zenghuiyu96@gmail.com>
+Date:   Sun, 3 Mar 2019 23:14:38 +0800
+Message-ID: <CAKcZhuWa4UcsoFPRkZg=M3WeUJibX8T0_R+JHS3=cyd51N9cgQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] KVM: arm64: Force a PTE mapping when logging is enabled
+To:     christoffer.dall@arm.com, marc.zyngier@arm.com
+Cc:     Punit Agrawal <punit.agrawal@arm.com>, suzuki.poulose@arm.com,
+        julien.thierry@arm.com, LKML <linux-kernel@vger.kernel.org>,
+        james.morse@arm.com, Zenghui Yu <yuzenghui@huawei.com>,
+        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
         linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 3, 2019 at 9:04 AM Katsuhiro Suzuki <katsuhiro@katsuster.net> w=
-rote:
->
-> Hello Heiko,
->
-> Thank you for comments.
->
-> On 2019/03/03 22:19, Heiko Stuebner wrote:
-> > Hi,
-> >
-> > Am Sonntag, 3. M=C3=A4rz 2019, 13:27:05 CET schrieb Katsuhiro Suzuki:
-> >> This patch increases drive strength of UART2 from 3mA to 12mA for
-> >> getting more faster rising edge.
-> >>
-> >> RockPro64 is using a very high speed rate (1.5Mbps) for UART2. In
-> >> this setting, a bit width of UART is about 667ns.
-> >>
-> >> In my environment (RockPro64 UART2 with FTDI FT232RL UART-USB
-> >> converter), falling time of RockPro64 UART2 is 40ns, but riging time
-> >> is over 650ns. So UART receiver will get wrong data, because receiver
-> >> read intermediate data of rising edge.
-> >>
-> >> Rising time becomes 300ns from 650ns if apply this patch. This is not
-> >> perfect solution but better than now.
-> >>
-> >> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> >> ---
-> >>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 +++++++--
-> >>   1 file changed, 7 insertions(+), 2 deletions(-)
-> >
-> > your changing a core rk3399 property here, so I'd really like to get
-> > input from other board stakeholders on this before applying a core
-> > change.
-> >
-> > Could you either include the submitters of other rk3399-boards in the
-> > recipient list so that they're aware or limit the change to rockpro64 f=
-or
-> > the time being (aka overriding the property in the board-dts) please?
-> >
->
-> OK, I'm adding other boards members.
-> by ./scripts/get_maintainer.pl arch/arm64/boot/dts/rockchip/rk3399-*.dts
->
->
-> RockPro64 directly connect UART2 pins of RK3399 to external connector.
-> I think maybe other RK3399 boards are facing same problem, but I cannot
-> check it because I have RockPro64 only...
->
-> I'm happy if someone tell me other boards situation.
+I think there're still some problems in this patch... Details below.
 
-I'm pulling out other rockchip boards momentarily to see what kind of
-population we have.
-
-Note these are not all running 5.x kernels, however none of them have
-the UART2 drive levels modified to my knowledge, and regardless, none
-show over 100 ns.
-
-board:    rise/fall
-
-rk3399-roc-pc: 90ns/90ns
-rk3399-rockpro64 V2.0:  90ns/45ns
-rk3399-rockpro64 V2.1:  40ns/41ns
-
-Please make sure there's not a large amount of flux or something
-around the terminals on your board, that seems excessively high.
-
+On Sat, Mar 2, 2019 at 11:39 AM Zenghui Yu <yuzenghui@huawei.com> wrote:
 >
-> Best Regards,
-> Katsuhiro Suzuki
+> The idea behind this is: we don't want to keep tracking of huge pages when
+> logging_active is true, which will result in performance degradation.  We
+> still need to set vma_pagesize to PAGE_SIZE, so that we can make use of it
+> to force a PTE mapping.
 >
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Punit Agrawal <punit.agrawal@arm.com>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 >
-> > Thanks
-> > Heiko
-> >
-> >
-> >
-> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boo=
-t/dts/rockchip/rk3399.dtsi
-> >> index beaa92744a64..e3c8f91ead50 100644
-> >> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >> @@ -2000,6 +2000,11 @@
-> >>                      drive-strength =3D <8>;
-> >>              };
-> >>
-> >> +            pcfg_pull_up_12ma: pcfg-pull-up-12ma {
-> >> +                    bias-pull-up;
-> >> +                    drive-strength =3D <12>;
-> >> +            };
-> >> +
-> >>              pcfg_pull_up_18ma: pcfg-pull-up-18ma {
-> >>                      bias-pull-up;
-> >>                      drive-strength =3D <18>;
-> >> @@ -2521,8 +2526,8 @@
-> >>              uart2c {
-> >>                      uart2c_xfer: uart2c-xfer {
-> >>                              rockchip,pins =3D
-> >> -                                    <4 RK_PC3 RK_FUNC_1 &pcfg_pull_up=
->,
-> >> -                                    <4 RK_PC4 RK_FUNC_1 &pcfg_pull_no=
-ne>;
-> >> +                                    <4 RK_PC3 RK_FUNC_1 &pcfg_pull_up=
-_12ma>,
-> >> +                                    <4 RK_PC4 RK_FUNC_1 &pcfg_pull_no=
-ne_12ma>;
-> >>                      };
-> >>              };
-> >>
-> >>
-> >
-> >
-> >
-> >
-> >
-> >
+> ---
+> Atfer looking into https://patchwork.codeaurora.org/patch/647985/ , the
+> "vma_pagesize = PAGE_SIZE" logic was not intended to be deleted. As far
+> as I can tell, we used to have "hugetlb" to force the PTE mapping, but
+> we have "vma_pagesize" currently instead. We should set it properly for
+> performance reasons (e.g, in VM migration). Did I miss something important?
+>
+> ---
+>  virt/kvm/arm/mmu.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index 30251e2..7d41b16 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1705,6 +1705,13 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>              (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
+>             !force_pte) {
+>                 gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
+> +       } else {
+> +               /*
+> +                * Fallback to PTE if it's not one of the stage2
+> +                * supported hugepage sizes or the corresponding level
+> +                * doesn't exist, or logging is enabled.
+
+First, Instead of "logging is enabled", it should be "force_pte is true",
+since "force_pte" will be true when:
+
+        1) fault_supports_stage2_pmd_mappings() return false; or
+        2) "logging is enabled" (e.g, in VM migration).
+
+Second, fallback some unsupported hugepage sizes (e.g, 64K hugepage with
+4K pages) to PTE is somewhat strange. And it will then _unexpectedly_
+reach transparent_hugepage_adjust(), though no real adjustment will happen
+since commit fd2ef358282c ("KVM: arm/arm64: Ensure only THP is candidate
+for adjustment"). Keeping "vma_pagesize" there as it is will be better,
+right?
+
+So I'd just simplify the logic like:
+
+        } else if (force_pte) {
+                vma_pagesize = PAGE_SIZE;
+        }
+
+
+Will send a V2 later and waiting for your comments :)
+
+
+thanks,
+
+zenghui
+
+
+> +                */
+> +               vma_pagesize = PAGE_SIZE;
+>         }
+>         up_read(&current->mm->mmap_sem);
+>
+> --
+> 1.8.3.1
+>
 >
 >
 > _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
