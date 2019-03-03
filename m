@@ -2,98 +2,98 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827FEC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E95C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6FF20842
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AC72070B
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:38:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TifcXp9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfCCUaZ (ORCPT
+        id S1726637AbfCCUin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 15:30:25 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39030 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfCCUaY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 15:30:24 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1h0XkR-0002Y3-7R; Sun, 03 Mar 2019 20:30:11 +0000
-Date:   Sun, 3 Mar 2019 20:30:11 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jason Baron <jbaron@akamai.com>, kgraul@linux.ibm.com,
-        ktkhai@virtuozzo.com, kyeongdon.kim@lge.com,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, pabeni@redhat.com,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] aio: prevent the final fput() in the middle of
- vfs_poll() (Re: KASAN: use-after-free Read in unix_dgram_poll)
-Message-ID: <20190303203011.GR2217@ZenIV.linux.org.uk>
-References: <000000000000f39c7b05832e0219@google.com>
- <20190303135502.GP2217@ZenIV.linux.org.uk>
- <20190303151846.GQ2217@ZenIV.linux.org.uk>
- <CAHk-=wiQ2YNB+2FT+jbdcC6qfYqvS2kLLAZbmPE_7sLfUPwFJg@mail.gmail.com>
+        Sun, 3 Mar 2019 15:38:43 -0500
+Received: from ozlabs.org ([203.11.71.1]:58197 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbfCCUin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 15:38:43 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44CFNw1SFZz9s6w;
+        Mon,  4 Mar 2019 07:38:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1551645520;
+        bh=0d+YISAhExSxWFF/8jItjD2KxF+92pSF797e3FpqCG0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TifcXp9TJT6JxAFSSEcnpdTewBUrwnjmbwL28bjezMCk4E5U2cUuki/X2QUHiq2jc
+         8k/vtTIc27XpQ8o80IRwqOQNc4/+OUi9wccMyI7fdcLgausfrdx5nk4PS8a53JWeq9
+         aC2uRyd6sqRF0RmMlvvHfIip/1zLHaaZ/MrqFk1WhB2gCc9XpfCcQr4hWyFC1SpYN8
+         tLcq2PmK8K5DWsmjpRgKJPPJK/Ku8hjpejQfccG9SfixMqRYic5neZLYTQgD2Ufwr0
+         2cG+/ZlzFffEVx6S32QgjYxRWHO6IYqvCVG/J3ljQ8iN1XwVBlbLb9snST4geurSZy
+         F8W1vBouo4YXA==
+Date:   Mon, 4 Mar 2019 07:38:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the powerpc tree
+Message-ID: <20190304073831.228d3bff@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiQ2YNB+2FT+jbdcC6qfYqvS2kLLAZbmPE_7sLfUPwFJg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/VQR8vZIc74a6hsBJZ4U8JoN"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 03, 2019 at 11:44:33AM -0800, Linus Torvalds wrote:
-> On Sun, Mar 3, 2019 at 7:18 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > > Maybe unrelated to this bug, but...  What's to prevent a wakeup
-> > > that happens just after we'd been added to a waitqueue by ->poll()
-> > > triggering aio_poll_wake(), which gets to aio_poll_complete()
-> > > with its fput() *before* we'd reached the end of ->poll() instance?
-> 
-> I'm assuming you're talking about the second vfs_poll() in
-> aio_poll_complete_work()? The one we call before we check for
-> "rew->cancelled" properly under the spinlock?
+--Sig_/VQR8vZIc74a6hsBJZ4U8JoN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-No.  The first one, right in aio_poll().
+Hi all,
 
-> But as far as I can tell, they *all* could do:
-> 
->  - look up file in aio_submit() when allocating and creating the aio_kiocb
-> 
->  - drop the filp in 'iocb_put()' (which happens whether things
-> complete successfully or not).
->
-> and we'd have avoided a lot of complexity, and we'd have avoided this bug.
-> 
-> Your patch fixes the poll() case, but it does so by just letting the
-> existing complexity remain, and adding a second fget/fput pair in the
-> poll logic.
-> 
-> It would seem like it would be much better to rip all the complexity
-> out entirely, and replace it with sane, simple and obviously correct
-> code.
-> 
-> Hmm?
-> 
-> In other words, why wouldn't something like the attached work instead?
- 
-I'll need to dig out the mail archive from last year, but IIRC this
-had been considered and there'd been non-trivial problems.  Give me
-an hour or so and I'll dig that out (there'd been many rounds of
-review, with long threads involved, some private, some on fsdevel).
+In commit
 
-> @@ -1060,6 +1071,7 @@ static inline void iocb_put(struct aio_kiocb *iocb)
->  {
->  	if (refcount_read(&iocb->ki_refcnt) == 0 ||
->  	    refcount_dec_and_test(&iocb->ki_refcnt)) {
-> +		fput(iocb->ki_filp);
+  bd3524feac21 ("powerpc/64s: Fix unrelocated interrupt trampoline address =
+test")
 
-Trivial oops here - it might be NULL.
+Fixes tag
+
+  Fixes: ccd477028a ("powerpc/64s: Fix HV NMI vs HV interrupt recoverabilit=
+y test")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/VQR8vZIc74a6hsBJZ4U8JoN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx8O0cACgkQAVBC80lX
+0GyytAf/Z0tAAGHIvVIc8xBWFHBFgmFbZuycPMRvnV+8K8pHfN1wkGQr2KN1Nwsh
+DdSR5ZVAxnn0gZJU9AXlpJCAetoDOxY/GRuoBJ3UD8UrAm7JLpoDKIaXWkaxKmpX
+uxChu7WwEN1keYqDAqB6CspUrUDzS6Q0Qr1kjtsVvZ//FxfdBB2qLkRnPrGxIS8B
+to0UK0pCX7W4juPiGnTKSINz9FeWOk1aNDZQz69iz9hQQaUYKVGwbPXrd52phrbb
+SAI6DPeSX+zTcX5eSiWNo7fjaM4i6ufSRcZjuGUnLouTPWYpcRhETk1WmPK3pvIp
+ZwX+A/kXwlHIpkrGrALRk3TB9+Ku9A==
+=FgZP
+-----END PGP SIGNATURE-----
+
+--Sig_/VQR8vZIc74a6hsBJZ4U8JoN--
