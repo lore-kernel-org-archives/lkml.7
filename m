@@ -6,49 +6,57 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F8AC4360F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DF9C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EF720818
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CD920857
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 17:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551632235;
-	bh=CReKZODjbKJKyi8okuBnzjOD0fhxc5BgECcMG8mu9Xc=;
+	s=default; t=1551632570;
+	bh=R3eamD6lN/JCMxElhyRFMoPpOHrBWl6fRgkw7wq0Z2o=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fIU4LPLmxaDKFmaLCdFPWS1uSPus0I//fbhwWA0UPHZRI/r9o3kGNr4p7HXJnBW/a
-	 QxX3prBJijY1LECXgzcTfawvfbAKbv8JmWinw3ZvgFyMWmRlUk776G6ifK/QBAE9HT
-	 YrVTSwP1kvR72fp2A+tDpQ075Rs/Xx5TsGFEEkS0=
+	b=x+QgrJYBzEVqYfD+dHRAFz0mjznNJeKoETe9zhRwataPwXMrARhbqzyODQx0ReBgG
+	 PAAd/nVLUEX1oNAAgp2/zOoMAIsmYOgsj/sgE+aRDiK16koXeX0SKJF6PJGlUlDOc2
+	 jyMVp82rP7/FaAiCBZEoBj0S8+wWCxrh29lIaHyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfCCQ5O (ORCPT
+        id S1726465AbfCCRCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 11:57:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48456 "EHLO mail.kernel.org"
+        Sun, 3 Mar 2019 12:02:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfCCQ5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 11:57:13 -0500
+        id S1726293AbfCCRCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 12:02:48 -0500
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E73FB2070B;
-        Sun,  3 Mar 2019 16:57:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ADEB2070B;
+        Sun,  3 Mar 2019 17:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551632231;
-        bh=CReKZODjbKJKyi8okuBnzjOD0fhxc5BgECcMG8mu9Xc=;
+        s=default; t=1551632566;
+        bh=R3eamD6lN/JCMxElhyRFMoPpOHrBWl6fRgkw7wq0Z2o=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=omDuctF1VGld2rUWFURgjoGJ57PbVdOQ9OIOg61QLCvOPvhaQ3Bvp3ahfxICjQ98o
-         OEqfgj/pJtDDFt4EQ2ruQUS/zcXchSSTbd9AIEKyxDQT1EQUzZ7HnY9tGSgACut7zQ
-         IVOqueGZiWFo/ww8jA+JQRK2IsrdQHgE+dvGthEA=
-Date:   Sun, 3 Mar 2019 16:57:06 +0000
+        b=jSfnibrBMSLY8g7boqQPVREloqjyZ32NjTdtPWx0SP82BWiMIFm/1Gg9viVZHftxc
+         +sDO/cVQZK1FybtiKNFTdaAR4RRx59kneCOTjbuU/adOveWlPBUtTzzSRCsiDDoGDO
+         xBm+FNZCOoY//rMyp/EFTXYobsBRRCyDgerkkUKk=
+Date:   Sun, 3 Mar 2019 17:02:40 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-Cc:     linux-iio@vger.kernel.org, himanshujha199640@gmail.com,
-        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, dpfrey@gmail.com, colin.king@canonical.com
-Subject: Re: [PATCH v2] iio/chemical/bme680: Fix SPI read interface
-Message-ID: <20190303165706.08c81e80@archlinux>
-In-Reply-To: <1550740849-16029-1-git-send-email-mike.looijmans@topic.nl>
-References: <1550238475-25698-1-git-send-email-mike.looijmans@topic.nl>
-        <1550740849-16029-1-git-send-email-mike.looijmans@topic.nl>
+To:     "Bia, Beniamin" <Beniamin.Bia@analog.com>
+Cc:     "biabeniamin@outlook.com" <biabeniamin@outlook.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 1/2] staging: iio: frequency: ad9834: Move frequency
+ to standard iio types
+Message-ID: <20190303170240.4105c0c1@archlinux>
+In-Reply-To: <3b23e1b16272b3f45fa3cbe1811bbe85515d0606.camel@analog.com>
+References: <20190214164130.30085-1-beniamin.bia@analog.com>
+        <20190220115030.0de87cfc@archlinux>
+        <3b23e1b16272b3f45fa3cbe1811bbe85515d0606.camel@analog.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -58,398 +66,383 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Feb 2019 10:20:49 +0100
-Mike Looijmans <mike.looijmans@topic.nl> wrote:
+On Fri, 22 Feb 2019 13:10:26 +0000
+"Bia, Beniamin" <Beniamin.Bia@analog.com> wrote:
 
-> The SPI interface implementation was completely broken.
-> 
-> When using the SPI interface, there are only 7 address bits, the upper bit
-> is controlled by a page select register. The core needs access to both
-> ranges, so implement register read/write for both regions. The regmap
-> paging functionality didn't agree with a register that needs to be read
-> and modified, so I implemented a custom paging algorithm.
-> 
-> This fixes that the device wouldn't even probe in SPI mode.
-> 
-> The SPI interface then isn't different from I2C, merged them into the core,
-> and the I2C/SPI named registers are no longer needed.
-> 
-> Implemented register value caching for the registers to reduce the I2C/SPI
-> data transfers considerably.
-> 
-> The calibration set reads as all zeroes until some undefined point in time,
-> and I couldn't determine what makes it valid. The datasheet mentions these
-> registers but does not provide any hints on when they become valid, and they
-> aren't even enumerated in the memory map. So check the calibration and
-> retry reading it from the device after each measurement until it provides
-> something valid.
-> 
-> Report temperature in millidegrees Celcius instead of degrees.
-Hi Mike,
-
-This last bit is an unrelated issue. Would you mind splitting the patch into two?
-Please put the temperature one first as that is definitely a stable
-worthy patch.  The larger one is more debatable as it seems that it
-never worked and is a fairly large patch.
-
-I'll probably mark them both for stable, but it is possible not all
-the stable branches will pick them both up.
-
-Thanks,
-
-Jonathan
+> Thank you for taking some time reviewing my code.
+> Ad9833/ad9834 has two frequency and phase registers and only one
+> output. The user can select which register is selected as input with a
+> mux.Because I wanted to reduce as much as possible the custom
+> attributes, I mapped the frequency 0 from register to channel 0 and
+> frequency 1 to channel 1. Same rule applies for phase. 
+I can see the argument, but really don't think this ends up as an
+intuitive mapping.  I think we need something new to handle
+values that change with 'symbol'.
 
 > 
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> ---
-> v2: Remove unused 'addr7' variable
+> In order to keep the same structure as before:
+> out_altvoltage0_frequency0 and out_altvoltage1_frequency1,
+> we would have to create custom attributes for every frequency and phase value.
+> This is the only way as far as I know, but I don't have a lot of experience with iio. What is your opinion? Do you have a better solution?
+
+Sorry it took me so long to reply to this.
+
+So, we have had similar issues before, particularly around power
+meters where we need a 'broader' concept of index to allow for multiple
+related measurements.
+
+However, in this case I think we can sort of think of the values being
+aspects controlled by a symbol, which might map onto an 'axis' for
+example (stretching the definition).
+
+So maybe define some new modifiers, symbolA, symbolB for example giving
+us
+out_altvoltage0_symbolA_frequency
+out_altvoltage0_symbolB_frequency.
+
+This is a discussion I'd like others to contribute to though as
+interface design is always a pain to get right!
+
+
+
 > 
->  drivers/iio/chemical/bme680.h      |   6 +-
->  drivers/iio/chemical/bme680_core.c |  54 ++++++++++++++---
->  drivers/iio/chemical/bme680_i2c.c  |  21 -------
->  drivers/iio/chemical/bme680_spi.c  | 115 +++++++++++++++++++++++++------------
->  4 files changed, 125 insertions(+), 71 deletions(-)
-> 
-> diff --git a/drivers/iio/chemical/bme680.h b/drivers/iio/chemical/bme680.h
-> index 0ae89b87..4edc5d21 100644
-> --- a/drivers/iio/chemical/bme680.h
-> +++ b/drivers/iio/chemical/bme680.h
-> @@ -2,11 +2,9 @@
->  #ifndef BME680_H_
->  #define BME680_H_
->  
-> -#define BME680_REG_CHIP_I2C_ID			0xD0
-> -#define BME680_REG_CHIP_SPI_ID			0x50
-> +#define BME680_REG_CHIP_ID			0xD0
->  #define   BME680_CHIP_ID_VAL			0x61
-> -#define BME680_REG_SOFT_RESET_I2C		0xE0
-> -#define BME680_REG_SOFT_RESET_SPI		0x60
-> +#define BME680_REG_SOFT_RESET			0xE0
->  #define   BME680_CMD_SOFTRESET			0xB6
->  #define BME680_REG_STATUS			0x73
->  #define   BME680_SPI_MEM_PAGE_BIT		BIT(4)
-> diff --git a/drivers/iio/chemical/bme680_core.c b/drivers/iio/chemical/bme680_core.c
-> index 70c1fe4..ccde4c6 100644
-> --- a/drivers/iio/chemical/bme680_core.c
-> +++ b/drivers/iio/chemical/bme680_core.c
-> @@ -63,9 +63,23 @@ struct bme680_data {
->  	s32 t_fine;
->  };
->  
-> +static const struct regmap_range bme680_volatile_ranges[] = {
-> +	regmap_reg_range(BME680_REG_MEAS_STAT_0, BME680_REG_GAS_R_LSB),
-> +	regmap_reg_range(BME680_REG_STATUS, BME680_REG_STATUS),
-> +	regmap_reg_range(BME680_T2_LSB_REG, BME680_GH3_REG),
-> +};
-> +
-> +static const struct regmap_access_table bme680_volatile_table = {
-> +	.yes_ranges	= bme680_volatile_ranges,
-> +	.n_yes_ranges	= ARRAY_SIZE(bme680_volatile_ranges),
-> +};
-> +
->  const struct regmap_config bme680_regmap_config = {
->  	.reg_bits = 8,
->  	.val_bits = 8,
-> +	.max_register = 0xef,
-> +	.volatile_table = &bme680_volatile_table,
-> +	.cache_type = REGCACHE_RBTREE,
->  };
->  EXPORT_SYMBOL(bme680_regmap_config);
->  
-> @@ -316,6 +330,10 @@ static s16 bme680_compensate_temp(struct bme680_data *data,
->  	s64 var1, var2, var3;
->  	s16 calc_temp;
->  
-> +	/* If the calibration is invalid, attempt to reload it */
-> +	if (!calib->par_t2)
-> +		bme680_read_calib(data, calib);
-> +
->  	var1 = (adc_temp >> 3) - (calib->par_t1 << 1);
->  	var2 = (var1 * calib->par_t2) >> 11;
->  	var3 = ((var1 >> 1) * (var1 >> 1)) >> 12;
-> @@ -583,8 +601,7 @@ static int bme680_gas_config(struct bme680_data *data)
->  	return ret;
->  }
->  
-> -static int bme680_read_temp(struct bme680_data *data,
-> -			    int *val, int *val2)
-> +static int bme680_read_temp(struct bme680_data *data, int *val)
->  {
->  	struct device *dev = regmap_get_device(data->regmap);
->  	int ret;
-> @@ -617,10 +634,9 @@ static int bme680_read_temp(struct bme680_data *data,
->  	 * compensate_press/compensate_humid to get compensated
->  	 * pressure/humidity readings.
->  	 */
-> -	if (val && val2) {
-> -		*val = comp_temp;
-> -		*val2 = 100;
-> -		return IIO_VAL_FRACTIONAL;
-> +	if (val) {
-> +		*val = comp_temp * 10; /* Centidegrees to millidegrees */
-> +		return IIO_VAL_INT;
->  	}
->  
->  	return ret;
-> @@ -635,7 +651,7 @@ static int bme680_read_press(struct bme680_data *data,
->  	s32 adc_press;
->  
->  	/* Read and compensate temperature to get a reading of t_fine */
-> -	ret = bme680_read_temp(data, NULL, NULL);
-> +	ret = bme680_read_temp(data, NULL);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -668,7 +684,7 @@ static int bme680_read_humid(struct bme680_data *data,
->  	u32 comp_humidity;
->  
->  	/* Read and compensate temperature to get a reading of t_fine */
-> -	ret = bme680_read_temp(data, NULL, NULL);
-> +	ret = bme680_read_temp(data, NULL);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -761,7 +777,7 @@ static int bme680_read_raw(struct iio_dev *indio_dev,
->  	case IIO_CHAN_INFO_PROCESSED:
->  		switch (chan->type) {
->  		case IIO_TEMP:
-> -			return bme680_read_temp(data, val, val2);
-> +			return bme680_read_temp(data, val);
->  		case IIO_PRESSURE:
->  			return bme680_read_press(data, val, val2);
->  		case IIO_HUMIDITYRELATIVE:
-> @@ -867,8 +883,28 @@ int bme680_core_probe(struct device *dev, struct regmap *regmap,
->  {
->  	struct iio_dev *indio_dev;
->  	struct bme680_data *data;
-> +	unsigned int val;
->  	int ret;
->  
-> +	ret = regmap_write(regmap, BME680_REG_SOFT_RESET,
-> +			   BME680_CMD_SOFTRESET);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to reset chip\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_read(regmap, BME680_REG_CHIP_ID, &val);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Error reading chip ID\n");
-> +		return ret;
-> +	}
-> +
-> +	if (val != BME680_CHIP_ID_VAL) {
-> +		dev_err(dev, "Wrong chip ID, got %x expected %x\n",
-> +				val, BME680_CHIP_ID_VAL);
-> +		return -ENODEV;
-> +	}
-> +
->  	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
->  	if (!indio_dev)
->  		return -ENOMEM;
-> diff --git a/drivers/iio/chemical/bme680_i2c.c b/drivers/iio/chemical/bme680_i2c.c
-> index 06d4be5..cfc4449 100644
-> --- a/drivers/iio/chemical/bme680_i2c.c
-> +++ b/drivers/iio/chemical/bme680_i2c.c
-> @@ -23,8 +23,6 @@ static int bme680_i2c_probe(struct i2c_client *client,
->  {
->  	struct regmap *regmap;
->  	const char *name = NULL;
-> -	unsigned int val;
-> -	int ret;
->  
->  	regmap = devm_regmap_init_i2c(client, &bme680_regmap_config);
->  	if (IS_ERR(regmap)) {
-> @@ -33,25 +31,6 @@ static int bme680_i2c_probe(struct i2c_client *client,
->  		return PTR_ERR(regmap);
->  	}
->  
-> -	ret = regmap_write(regmap, BME680_REG_SOFT_RESET_I2C,
-> -			   BME680_CMD_SOFTRESET);
-> -	if (ret < 0) {
-> -		dev_err(&client->dev, "Failed to reset chip\n");
-> -		return ret;
-> -	}
-> -
-> -	ret = regmap_read(regmap, BME680_REG_CHIP_I2C_ID, &val);
-> -	if (ret < 0) {
-> -		dev_err(&client->dev, "Error reading I2C chip ID\n");
-> -		return ret;
-> -	}
-> -
-> -	if (val != BME680_CHIP_ID_VAL) {
-> -		dev_err(&client->dev, "Wrong chip ID, got %x expected %x\n",
-> -				val, BME680_CHIP_ID_VAL);
-> -		return -ENODEV;
-> -	}
-> -
->  	if (id)
->  		name = id->name;
->  
-> diff --git a/drivers/iio/chemical/bme680_spi.c b/drivers/iio/chemical/bme680_spi.c
-> index c9fb05e..881778e 100644
-> --- a/drivers/iio/chemical/bme680_spi.c
-> +++ b/drivers/iio/chemical/bme680_spi.c
-> @@ -11,28 +11,93 @@
->  
->  #include "bme680.h"
->  
-> +struct bme680_spi_bus_context {
-> +	struct spi_device *spi;
-> +	u8 current_page;
-> +};
-> +
-> +/*
-> + * In SPI mode there are only 7 address bits, a "page" register determines
-> + * which part of the 8-bit range is active. This function looks at the address
-> + * and writes the page selection bit if needed
-> + */
-> +static int bme680_regmap_spi_select_page(
-> +	struct bme680_spi_bus_context *ctx, u8 reg)
-> +{
-> +	struct spi_device *spi = ctx->spi;
-> +	int ret;
-> +	u8 buf[2];
-> +	u8 page = (reg & 0x80) ? 0 : 1; /* Page "1" is low range */
-> +
-> +	if (page == ctx->current_page)
-> +		return 0;
-> +
-> +	/*
-> +	 * Data sheet claims we're only allowed to change bit 4, so we must do
-> +	 * a read-modify-write on each and every page select
-> +	 */
-> +	buf[0] = BME680_REG_STATUS;
-> +	ret = spi_write_then_read(spi, buf, 1, buf + 1, 1);
-> +	if (ret < 0) {
-> +		dev_err(&spi->dev, "failed to set page %u\n", page);
-> +		return ret;
-> +	}
-> +
-> +	buf[0] = BME680_REG_STATUS;
-> +	if (page)
-> +		buf[1] |= BME680_SPI_MEM_PAGE_BIT;
-> +	else
-> +		buf[1] &= ~BME680_SPI_MEM_PAGE_BIT;
-> +
-> +	ret = spi_write(spi, buf, 2);
-> +	if (ret < 0) {
-> +		dev_err(&spi->dev, "failed to set page %u\n", page);
-> +		return ret;
-> +	}
-> +
-> +	ctx->current_page = page;
-> +
-> +	return 0;
-> +}
-> +
->  static int bme680_regmap_spi_write(void *context, const void *data,
->  				   size_t count)
->  {
-> -	struct spi_device *spi = context;
-> +	struct bme680_spi_bus_context *ctx = context;
-> +	struct spi_device *spi = ctx->spi;
-> +	int ret;
->  	u8 buf[2];
->  
->  	memcpy(buf, data, 2);
-> +
-> +	ret = bme680_regmap_spi_select_page(ctx, buf[0]);
-> +	if (ret)
-> +		return ret;
-> +
->  	/*
->  	 * The SPI register address (= full register address without bit 7)
->  	 * and the write command (bit7 = RW = '0')
->  	 */
->  	buf[0] &= ~0x80;
->  
-> -	return spi_write_then_read(spi, buf, 2, NULL, 0);
-> +	return spi_write(spi, buf, 2);
->  }
->  
->  static int bme680_regmap_spi_read(void *context, const void *reg,
->  				  size_t reg_size, void *val, size_t val_size)
->  {
-> -	struct spi_device *spi = context;
-> +	struct bme680_spi_bus_context *ctx = context;
-> +	struct spi_device *spi = ctx->spi;
-> +	int ret;
-> +	u8 addr = *(const u8 *)reg;
-> +
-> +	ret = bme680_regmap_spi_select_page(ctx, addr);
-> +	if (ret)
-> +		return ret;
->  
-> -	return spi_write_then_read(spi, reg, reg_size, val, val_size);
-> +	addr |= 0x80; /* bit7 = RW = '1' */
-> +
-> +	return spi_write_then_read(spi, &addr, 1, val, val_size);
->  }
->  
->  static struct regmap_bus bme680_regmap_bus = {
-> @@ -45,8 +110,8 @@ static int bme680_regmap_spi_read(void *context, const void *reg,
->  static int bme680_spi_probe(struct spi_device *spi)
->  {
->  	const struct spi_device_id *id = spi_get_device_id(spi);
-> +	struct bme680_spi_bus_context *bus_context;
->  	struct regmap *regmap;
-> -	unsigned int val;
->  	int ret;
->  
->  	spi->bits_per_word = 8;
-> @@ -56,45 +121,21 @@ static int bme680_spi_probe(struct spi_device *spi)
->  		return ret;
->  	}
->  
-> +	bus_context = devm_kzalloc(&spi->dev, sizeof(*bus_context), GFP_KERNEL);
-> +	if (!bus_context)
-> +		return -ENOMEM;
-> +
-> +	bus_context->spi = spi;
-> +	bus_context->current_page = 0xff; /* Undefined on warm boot */
-> +
->  	regmap = devm_regmap_init(&spi->dev, &bme680_regmap_bus,
-> -				  &spi->dev, &bme680_regmap_config);
-> +				  bus_context, &bme680_regmap_config);
->  	if (IS_ERR(regmap)) {
->  		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
->  				(int)PTR_ERR(regmap));
->  		return PTR_ERR(regmap);
->  	}
->  
-> -	ret = regmap_write(regmap, BME680_REG_SOFT_RESET_SPI,
-> -			   BME680_CMD_SOFTRESET);
-> -	if (ret < 0) {
-> -		dev_err(&spi->dev, "Failed to reset chip\n");
-> -		return ret;
-> -	}
-> -
-> -	/* after power-on reset, Page 0(0x80-0xFF) of spi_mem_page is active */
-> -	ret = regmap_read(regmap, BME680_REG_CHIP_SPI_ID, &val);
-> -	if (ret < 0) {
-> -		dev_err(&spi->dev, "Error reading SPI chip ID\n");
-> -		return ret;
-> -	}
-> -
-> -	if (val != BME680_CHIP_ID_VAL) {
-> -		dev_err(&spi->dev, "Wrong chip ID, got %x expected %x\n",
-> -				val, BME680_CHIP_ID_VAL);
-> -		return -ENODEV;
-> -	}
-> -	/*
-> -	 * select Page 1 of spi_mem_page to enable access to
-> -	 * to registers from address 0x00 to 0x7F.
-> -	 */
-> -	ret = regmap_write_bits(regmap, BME680_REG_STATUS,
-> -				BME680_SPI_MEM_PAGE_BIT,
-> -				BME680_SPI_MEM_PAGE_1_VAL);
-> -	if (ret < 0) {
-> -		dev_err(&spi->dev, "failed to set page 1 of spi_mem_page\n");
-> -		return ret;
-> -	}
-> -
->  	return bme680_core_probe(&spi->dev, regmap, id->name);
->  }
->  
+> Thanks,
+> Ben 
+> > [External]
+> > 
+> > 
+> > On Thu, 14 Feb 2019 18:41:29 +0200
+> > Beniamin Bia <beniamin.bia@analog.com> wrote:
+> >   
+> > > Frequency attribute is added with a standard type from iio
+> > > framework
+> > > instead of custom attribute. This is a small step towards removing
+> > > any
+> > > unnecessary custom attribute. Ad9834 will diverge from ad9833 in
+> > > the
+> > > future, that is why we have two identical arrays for ad9834 and
+> > > 9833.
+> > > 
+> > > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>  
+> > 
+> > Hi Beniamin
+> > 
+> > When you make a change like this, please explain in detail how the
+> > ABI
+> > changes.  Here I'm not sure we can actually map it to channels like
+> > this.
+> > We are controlling the two frequencies of FSK not independent
+> > channels.
+> > 
+> > The ABI around this needs very careful thinking out.  I would
+> > document
+> > your proposed ABI first and share that.  Once we reach agreement on
+> > the
+> > ABI, the actual code should be more straight forward!
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> > > ---
+> > > Changes in v2:
+> > >       -the personal email address was replaced by the work email
+> > >       -separate define for frequency channel
+> > >       -address field from channel specification was removed
+> > >       -frequency variables were replaced by an array
+> > >       -specified in comment why we have differente chan_spec for
+> > > ad9834 and ad9833
+> > >       -enum used for write_frequency function
+> > > 
+> > >  drivers/staging/iio/frequency/ad9834.c | 110 ++++++++++++++++++++-
+> > > ----
+> > >  1 file changed, 91 insertions(+), 19 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/iio/frequency/ad9834.c
+> > > b/drivers/staging/iio/frequency/ad9834.c
+> > > index f036f75d1f22..561617046c20 100644
+> > > --- a/drivers/staging/iio/frequency/ad9834.c
+> > > +++ b/drivers/staging/iio/frequency/ad9834.c
+> > > @@ -81,6 +81,8 @@ struct ad9834_state {
+> > >       struct spi_message              freq_msg;
+> > >       struct mutex                    lock;   /* protect sensor
+> > > state */
+> > > 
+> > > +     unsigned long                   frequency[2];
+> > > +
+> > >       /*
+> > >        * DMA (thus cache coherency maintenance) requires the
+> > >        * transfer buffers to live in their own cache lines.
+> > > @@ -89,6 +91,11 @@ struct ad9834_state {
+> > >       __be16                          freq_data[2];
+> > >  };
+> > > 
+> > > +enum ad9834_ch_addr {
+> > > +     AD9834_CHANNEL_ADDRESS0,
+> > > +     AD9834_CHANNEL_ADDRESS1,
+> > > +};
+> > > +
+> > >  /**
+> > >   * ad9834_supported_device_ids:
+> > >   */
+> > > @@ -100,6 +107,24 @@ enum ad9834_supported_device_ids {
+> > >       ID_AD9838,
+> > >  };
+> > > 
+> > > +#define AD9833_CHANNEL(chan)
+> > > {                                               \
+> > > +             .type =
+> > > IIO_ALTVOLTAGE,                                 \
+> > > +             .indexed =
+> > > 1,                                           \
+> > > +             .output =
+> > > 1,                                            \
+> > > +             .channel =
+> > > (chan),                                      \
+> > > +             .info_mask_separate =
+> > > BIT(IIO_CHAN_INFO_FREQUENCY)      \
+> > > +}
+> > > +
+> > > +static const struct iio_chan_spec ad9833_channels[] = {
+> > > +     AD9833_CHANNEL(0),
+> > > +     AD9833_CHANNEL(1),
+> > > +};
+> > > +
+> > > +static const struct iio_chan_spec ad9834_channels[] = {
+> > > +     AD9833_CHANNEL(0),
+> > > +     AD9833_CHANNEL(1),
+> > > +};
+> > > +
+> > >  static unsigned int ad9834_calc_freqreg(unsigned long mclk,
+> > > unsigned long fout)
+> > >  {
+> > >       unsigned long long freqreg = (u64)fout *
+> > > (u64)BIT(AD9834_FREQ_BITS);
+> > > @@ -109,10 +134,12 @@ static unsigned int
+> > > ad9834_calc_freqreg(unsigned long mclk, unsigned long fout)
+> > >  }
+> > > 
+> > >  static int ad9834_write_frequency(struct ad9834_state *st,
+> > > -                               unsigned long addr, unsigned long
+> > > fout)
+> > > +                               enum ad9834_ch_addr addr,
+> > > +                               unsigned long fout)
+> > >  {
+> > >       unsigned long clk_freq;
+> > >       unsigned long regval;
+> > > +     int ret;
+> > > 
+> > >       clk_freq = clk_get_rate(st->mclk);
+> > > 
+> > > @@ -121,13 +148,27 @@ static int ad9834_write_frequency(struct
+> > > ad9834_state *st,
+> > > 
+> > >       regval = ad9834_calc_freqreg(clk_freq, fout);
+> > > 
+> > > -     st->freq_data[0] = cpu_to_be16(addr | (regval &
+> > > -                                    RES_MASK(AD9834_FREQ_BITS /
+> > > 2)));
+> > > -     st->freq_data[1] = cpu_to_be16(addr | ((regval >>
+> > > -                                    (AD9834_FREQ_BITS / 2)) &
+> > > -                                    RES_MASK(AD9834_FREQ_BITS /
+> > > 2)));
+> > > +     if (addr == AD9834_CHANNEL_ADDRESS0) {  
+> > 
+> > So this if statement picks between the two addresses with no other
+> > differences?
+> > That's fine, but use a local variable for the register address to
+> > simplify
+> > the code.
+> >   
+> > > +             st->freq_data[0] = cpu_to_be16(AD9834_REG_FREQ0 |
+> > > (regval &
+> > > +                                            RES_MASK(AD9834_FREQ_B
+> > > ITS / 2)));
+> > > +             st->freq_data[1] = cpu_to_be16(AD9834_REG_FREQ0 |
+> > > ((regval >>
+> > > +                                            (AD9834_FREQ_BITS /
+> > > 2)) &
+> > > +                                            RES_MASK(AD9834_FREQ_B
+> > > ITS / 2)));
+> > > +     } else {
+> > > +             st->freq_data[0] = cpu_to_be16(AD9834_REG_FREQ1 |
+> > > (regval &
+> > > +                                            RES_MASK(AD9834_FREQ_B
+> > > ITS / 2)));
+> > > +             st->freq_data[1] = cpu_to_be16(AD9834_REG_FREQ1 |
+> > > ((regval >>
+> > > +                                            (AD9834_FREQ_BITS /
+> > > 2)) &
+> > > +                                            RES_MASK(AD9834_FREQ_B
+> > > ITS / 2)));
+> > > +     }
+> > > +
+> > > +     ret = spi_sync(st->spi, &st->freq_msg);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     st->frequency[(int)addr] = fout;
+> > > 
+> > > -     return spi_sync(st->spi, &st->freq_msg);
+> > > +     return 0;
+> > >  }
+> > > 
+> > >  static int ad9834_write_phase(struct ad9834_state *st,
+> > > @@ -140,6 +181,39 @@ static int ad9834_write_phase(struct
+> > > ad9834_state *st,
+> > >       return spi_sync(st->spi, &st->msg);
+> > >  }
+> > > 
+> > > +static int ad9834_read_raw(struct iio_dev *indio_dev,
+> > > +                        struct iio_chan_spec const *chan,
+> > > +                        int *val, int *val2, long mask)
+> > > +{
+> > > +     struct ad9834_state *st = iio_priv(indio_dev);
+> > > +
+> > > +     switch (mask) {
+> > > +     case IIO_CHAN_INFO_FREQUENCY:
+> > > +             *val = st->frequency[chan->channel];
+> > > +             return IIO_VAL_INT;
+> > > +     }
+> > > +
+> > > +     return -EINVAL;
+> > > +}
+> > > +
+> > > +static int ad9834_write_raw(struct iio_dev *indio_dev,
+> > > +                         struct iio_chan_spec const *chan,
+> > > +                         int val, int val2, long mask)
+> > > +{
+> > > +     struct ad9834_state *st = iio_priv(indio_dev);
+> > > +
+> > > +     switch (mask) {
+> > > +     case IIO_CHAN_INFO_FREQUENCY:
+> > > +             return ad9834_write_frequency(st,
+> > > +                                           (enum
+> > > ad9834_ch_addr)chan->channel,
+> > > +                                           val);
+> > > +     default:
+> > > +             return  -EINVAL;
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > >  static ssize_t ad9834_write(struct device *dev,
+> > >                           struct device_attribute *attr,
+> > >                           const char *buf,
+> > > @@ -157,10 +231,6 @@ static ssize_t ad9834_write(struct device
+> > > *dev,
+> > > 
+> > >       mutex_lock(&st->lock);
+> > >       switch ((u32)this_attr->address) {
+> > > -     case AD9834_REG_FREQ0:
+> > > -     case AD9834_REG_FREQ1:
+> > > -             ret = ad9834_write_frequency(st, this_attr->address,
+> > > val);
+> > > -             break;
+> > >       case AD9834_REG_PHASE0:
+> > >       case AD9834_REG_PHASE1:
+> > >               ret = ad9834_write_phase(st, this_attr->address,
+> > > val);
+> > > @@ -323,8 +393,6 @@ static
+> > > IIO_DEVICE_ATTR(out_altvoltage0_out1_wavetype_available, 0444,
+> > >   * see dds.h for further information
+> > >   */
+> > > 
+> > > -static IIO_DEV_ATTR_FREQ(0, 0, 0200, NULL, ad9834_write,
+> > > AD9834_REG_FREQ0);
+> > > -static IIO_DEV_ATTR_FREQ(0, 1, 0200, NULL, ad9834_write,
+> > > AD9834_REG_FREQ1);
+> > >  static IIO_DEV_ATTR_FREQSYMBOL(0, 0200, NULL, ad9834_write,
+> > > AD9834_FSEL);
+> > >  static IIO_CONST_ATTR_FREQ_SCALE(0, "1"); /* 1Hz */
+> > > 
+> > > @@ -342,8 +410,6 @@ static IIO_DEV_ATTR_OUT_WAVETYPE(0, 0,
+> > > ad9834_store_wavetype, 0);
+> > >  static IIO_DEV_ATTR_OUT_WAVETYPE(0, 1, ad9834_store_wavetype, 1);
+> > > 
+> > >  static struct attribute *ad9834_attributes[] = {
+> > > -     &iio_dev_attr_out_altvoltage0_frequency0.dev_attr.attr,
+> > > -     &iio_dev_attr_out_altvoltage0_frequency1.dev_attr.attr,
+> > >       &iio_const_attr_out_altvoltage0_frequency_scale.dev_attr.attr
+> > > ,
+> > >       &iio_dev_attr_out_altvoltage0_phase0.dev_attr.attr,
+> > >       &iio_dev_attr_out_altvoltage0_phase1.dev_attr.attr,
+> > > @@ -361,8 +427,6 @@ static struct attribute *ad9834_attributes[] =
+> > > {
+> > >  };
+> > > 
+> > >  static struct attribute *ad9833_attributes[] = {
+> > > -     &iio_dev_attr_out_altvoltage0_frequency0.dev_attr.attr,
+> > > -     &iio_dev_attr_out_altvoltage0_frequency1.dev_attr.attr,  
+> > 
+> > This may be a problem...  These don't fit in the existing ABI in that
+> > they
+> > are (IIRC) two different frequencies for the same channel, not two
+> > different
+> > channels...  This is meant for simple FSK modulation.
+> >   
+> > >       &iio_const_attr_out_altvoltage0_frequency_scale.dev_attr.attr
+> > > ,
+> > >       &iio_dev_attr_out_altvoltage0_phase0.dev_attr.attr,
+> > >       &iio_dev_attr_out_altvoltage0_phase1.dev_attr.attr,
+> > > @@ -384,11 +448,15 @@ static const struct attribute_group
+> > > ad9833_attribute_group = {
+> > >  };
+> > > 
+> > >  static const struct iio_info ad9834_info = {
+> > > +     .write_raw = &ad9834_write_raw,
+> > > +     .read_raw = &ad9834_read_raw,
+> > >       .attrs = &ad9834_attribute_group,
+> > >       .driver_module = THIS_MODULE,
+> > >  };
+> > > 
+> > >  static const struct iio_info ad9833_info = {
+> > > +     .write_raw = &ad9834_write_raw,
+> > > +     .read_raw = &ad9834_read_raw,
+> > >       .attrs = &ad9833_attribute_group,
+> > >       .driver_module = THIS_MODULE,
+> > >  };
+> > > @@ -435,9 +503,13 @@ static int ad9834_probe(struct spi_device
+> > > *spi)
+> > >       switch (st->devid) {
+> > >       case ID_AD9833:
+> > >       case ID_AD9837:
+> > > +             indio_dev->channels = ad9833_channels;
+> > > +             indio_dev->num_channels =
+> > > ARRAY_SIZE(ad9833_channels);
+> > >               indio_dev->info = &ad9833_info;
+> > >               break;
+> > >       default:  
+> > 
+> > For future reference, I would definitely like to see the options that
+> > lead to here explicitly listed.  Semantically it's not a 'default'
+> > but rather an alternative equally valid choice.
+> > People also tend to grep for their devid ;)
+> >   
+> > > +             indio_dev->channels = ad9834_channels;
+> > > +             indio_dev->num_channels =
+> > > ARRAY_SIZE(ad9834_channels);
+> > >               indio_dev->info = &ad9834_info;
+> > >               break;
+> > >       }
+> > > @@ -474,11 +546,11 @@ static int ad9834_probe(struct spi_device
+> > > *spi)
+> > >               goto error_clock_unprepare;
+> > >       }
+> > > 
+> > > -     ret = ad9834_write_frequency(st, AD9834_REG_FREQ0, 1000000);
+> > > +     ret = ad9834_write_frequency(st, AD9834_CHANNEL_ADDRESS0,
+> > > 1000000);
+> > >       if (ret)
+> > >               goto error_clock_unprepare;
+> > > 
+> > > -     ret = ad9834_write_frequency(st, AD9834_REG_FREQ1, 5000000);
+> > > +     ret = ad9834_write_frequency(st, AD9834_CHANNEL_ADDRESS1,
+> > > 5000000);
+> > >       if (ret)
+> > >               goto error_clock_unprepare;
+> > >   
+> > 
+> >   
 
