@@ -2,434 +2,157 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7140C4360F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7748C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2CF20857
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8789520842
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551631671;
+	bh=/WUQLVfiVQQ6IEi/ZjL2VXXVtZTzFkcrR1n6HytZEpc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yfpYYHyhH/YalYHmua1M94aCmabDV666aYgJurK1CLMGeftl3G3rPWl1DPYyTlbSA
+	 kMVCHP61wgb/Vb0M5XvKr19tAQ6VYNrCZFp2hU4Ojt7aEwa1yfm/X0ZuXFQN2Gr3dw
+	 7aS1ACaIguVHfieQEO9uC9RsvuCU0NqXvRIRu2ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfCCQrr (ORCPT
+        id S1726646AbfCCQru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 11:47:47 -0500
-Received: from mga01.intel.com ([192.55.52.88]:31315 "EHLO mga01.intel.com"
+        Sun, 3 Mar 2019 11:47:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfCCQrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 11:47:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 08:47:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,436,1544515200"; 
-   d="scan'208";a="128667518"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Mar 2019 08:47:12 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 2/9] HID: intel-ish-hid: Hide members of struct ishtp_cl_device
-Date:   Sun,  3 Mar 2019 08:46:47 -0800
-Message-Id: <20190303164654.29400-3-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190303164654.29400-1-srinivas.pandruvada@linux.intel.com>
-References: <20190303164654.29400-1-srinivas.pandruvada@linux.intel.com>
+        id S1726382AbfCCQrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 11:47:48 -0500
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A831206DD;
+        Sun,  3 Mar 2019 16:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551631667;
+        bh=/WUQLVfiVQQ6IEi/ZjL2VXXVtZTzFkcrR1n6HytZEpc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XbAXpB4be+mLM1OKqgHjwY0igy+UJ5+du3BPTZP1Kuni+W5d9BHOSivYFAiHIcCiP
+         tkHyPhWXqhcCFIXm/SaXVMrEL7oUqSj33LK2VQM78IYVcEX2V0RCTnPxEWvmcW0EaS
+         NHJKrl8SzvzsjZKVxR/FCiVpnQ9ZzjavLSKMANyE=
+Date:   Sun, 3 Mar 2019 16:47:41 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>, kernel@collabora.com,
+        Hartmut Knaack <knaack.h@gmx.de>
+Subject: Re: [PATCH] iio: cros_ec: Fix gyro scale calculation
+Message-ID: <20190303164741.6cb3c58b@archlinux>
+In-Reply-To: <7d36153b-65e9-6702-e72f-caaeeb032077@collabora.com>
+References: <20190220150300.3302-1-enric.balletbo@collabora.com>
+        <20190220160126.12568f92@archlinux>
+        <7d36153b-65e9-6702-e72f-caaeeb032077@collabora.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ISH clients don't need to access any field of struct ishtp_cl_device. To
-avoid this create an interface functions instead where it is required.
-In the case of ishtp_cl_allocate(), modify the parameters so that the
-clients don't have to dereference.
-Clients can also use tracing, here a new interface is added to get the
-common trace function pointer, instead of direct call.
-The new interface functions defined in one external header file, named
-intel-ish-client-if.h. This is the only header files all ISHTP clients
-must include.
+On Fri, 22 Feb 2019 11:24:24 +0100
+Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/hid/intel-ish-hid/ishtp-hid-client.c | 56 +++++++++++---------
- drivers/hid/intel-ish-hid/ishtp-hid.c        |  4 +-
- drivers/hid/intel-ish-hid/ishtp-hid.h        |  2 +-
- drivers/hid/intel-ish-hid/ishtp/bus.c        | 27 ++++++++++
- drivers/hid/intel-ish-hid/ishtp/client.c     |  4 +-
- drivers/hid/intel-ish-hid/ishtp/client.h     |  2 +-
- include/linux/intel-ish-client-if.h          | 18 +++++++
- 7 files changed, 84 insertions(+), 29 deletions(-)
- create mode 100644 include/linux/intel-ish-client-if.h
+> Hi Jonathan,
+> 
+> On 20/2/19 17:01, Jonathan Cameron wrote:
+> > On Wed, 20 Feb 2019 16:03:00 +0100
+> > Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+> >   
+> >> From: Gwendal Grignou <gwendal@chromium.org>
+> >>
+> >> Calculation was copied from IIO_DEGREE_TO_RAD, but offset added to avoid
+> >> rounding error is wrong. It should be only half of the divider.
+> >>
+> >> Fixes: c14dca07a31d ("iio: cros_ec_sensors: add ChromeOS EC Contiguous Sensors driver")
+> >> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>  
+> > 
+> > This one is kind of interesting. See below.
+> >   
+> >> ---
+> >>
+> >>  drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> >> index 89cb0066a6e0..600942af9f9c 100644
+> >> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> >> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> >> @@ -103,7 +103,7 @@ static int cros_ec_sensors_read(struct iio_dev *indio_dev,
+> >>  			 * Do not use IIO_DEGREE_TO_RAD to avoid precision
+> >>  			 * loss. Round to the nearest integer.
+> >>  			 */
+> >> -			*val = div_s64(val64 * 314159 + 9000000ULL, 1000);
+> >> +			*val = div_s64(val64 * 314159 + 500ULL, 1000);  
+> > That is only one of two divides going on.  Firstly we divide by 1000 here,
+> > then we provide it in fractional form which means that the actual value you get
+> > from sysfs etc is 
+> > val/val2.  It's this one we are protecting against rounding error on I guess.
+> > Now this is even less obviously because it's not 18000 either, but 
+> > 18000 * 2^CROS_EC_SENSOR_BITS.
+> > 
+> > Which ultimately means neither answer is correct. Hmm.
+> > Not totally sure what the right answer actually is..
+> >   
+> 
+> If I understood well the Gwendal's patch the problem that we're trying to solve
+> is that current calculation is not closer from the float calculation.
+> 
+> For 1000dps, the result should be:
+> 
+>     (1000 * pi ) / 180 >> 15 ~= 0.000532632218
+> 
+> But with current calculation we get
+> 
+>     $ cat scale
+>     0.000547890
+> 
+> With that patch (modifying the offset to avoid the rounding error) we get a
+> closer result
+> 
+>     $ cat scale
+>     0.000532631
+> 
+> So, what we're trying to do is have val/val2 closer to the real value. Makes
+> this sense to you or I'm missing something? I can improve the commit message if
+> it's not clear.
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp-hid-client.c b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
-index fbb9d85ba6df..ffed7c91bebf 100644
---- a/drivers/hid/intel-ish-hid/ishtp-hid-client.c
-+++ b/drivers/hid/intel-ish-hid/ishtp-hid-client.c
-@@ -15,6 +15,7 @@
- 
- #include <linux/module.h>
- #include <linux/hid.h>
-+#include <linux/intel-ish-client-if.h>
- #include <linux/sched.h>
- #include "ishtp/ishtp-dev.h"
- #include "ishtp/client.h"
-@@ -24,6 +25,8 @@
- #define HID_CL_RX_RING_SIZE	32
- #define HID_CL_TX_RING_SIZE	16
- 
-+#define cl_data_to_dev(client_data) ishtp_device(client_data->cl_device)
-+
- /**
-  * report_bad_packets() - Report bad packets
-  * @hid_ishtp_cl:	Client instance to get stats
-@@ -39,7 +42,7 @@ static void report_bad_packet(struct ishtp_cl *hid_ishtp_cl, void *recv_buf,
- 	struct hostif_msg *recv_msg = recv_buf;
- 	struct ishtp_cl_data *client_data = hid_ishtp_cl->client_data;
- 
--	dev_err(&client_data->cl_device->dev, "[hid-ish]: BAD packet %02X\n"
-+	dev_err(cl_data_to_dev(client_data), "[hid-ish]: BAD packet %02X\n"
- 		"total_bad=%u cur_pos=%u\n"
- 		"[%02X %02X %02X %02X]\n"
- 		"payload_len=%u\n"
-@@ -83,7 +86,7 @@ static void process_recv(struct ishtp_cl *hid_ishtp_cl, void *recv_buf,
- 
- 	do {
- 		if (cur_pos + sizeof(struct hostif_msg) > total_len) {
--			dev_err(&client_data->cl_device->dev,
-+			dev_err(cl_data_to_dev(client_data),
- 				"[hid-ish]: error, received %u which is less than data header %u\n",
- 				(unsigned int)data_len,
- 				(unsigned int)sizeof(struct hostif_msg_hdr));
-@@ -122,12 +125,12 @@ static void process_recv(struct ishtp_cl *hid_ishtp_cl, void *recv_buf,
- 			client_data->hid_dev_count = (unsigned int)*payload;
- 			if (!client_data->hid_devices)
- 				client_data->hid_devices = devm_kcalloc(
--						&client_data->cl_device->dev,
-+						cl_data_to_dev(client_data),
- 						client_data->hid_dev_count,
- 						sizeof(struct device_info),
- 						GFP_KERNEL);
- 			if (!client_data->hid_devices) {
--				dev_err(&client_data->cl_device->dev,
-+				dev_err(cl_data_to_dev(client_data),
- 				"Mem alloc failed for hid device info\n");
- 				wake_up_interruptible(&client_data->init_wait);
- 				break;
-@@ -135,7 +138,7 @@ static void process_recv(struct ishtp_cl *hid_ishtp_cl, void *recv_buf,
- 			for (i = 0; i < client_data->hid_dev_count; ++i) {
- 				if (1 + sizeof(struct device_info) * i >=
- 						payload_len) {
--					dev_err(&client_data->cl_device->dev,
-+					dev_err(cl_data_to_dev(client_data),
- 						"[hid-ish]: [ENUM_DEVICES]: content size %zu is bigger than payload_len %zu\n",
- 						1 + sizeof(struct device_info)
- 						* i, payload_len);
-@@ -170,7 +173,7 @@ static void process_recv(struct ishtp_cl *hid_ishtp_cl, void *recv_buf,
- 			}
- 			if (!client_data->hid_descr[curr_hid_dev])
- 				client_data->hid_descr[curr_hid_dev] =
--				devm_kmalloc(&client_data->cl_device->dev,
-+				devm_kmalloc(cl_data_to_dev(client_data),
- 					     payload_len, GFP_KERNEL);
- 			if (client_data->hid_descr[curr_hid_dev]) {
- 				memcpy(client_data->hid_descr[curr_hid_dev],
-@@ -195,7 +198,7 @@ static void process_recv(struct ishtp_cl *hid_ishtp_cl, void *recv_buf,
- 			}
- 			if (!client_data->report_descr[curr_hid_dev])
- 				client_data->report_descr[curr_hid_dev] =
--				devm_kmalloc(&client_data->cl_device->dev,
-+				devm_kmalloc(cl_data_to_dev(client_data),
- 					     payload_len, GFP_KERNEL);
- 			if (client_data->report_descr[curr_hid_dev])  {
- 				memcpy(client_data->report_descr[curr_hid_dev],
-@@ -501,12 +504,12 @@ static int ishtp_enum_enum_devices(struct ishtp_cl *hid_ishtp_cl)
- 					   sizeof(struct hostif_msg));
- 	}
- 	if (!client_data->enum_devices_done) {
--		dev_err(&client_data->cl_device->dev,
-+		dev_err(cl_data_to_dev(client_data),
- 			"[hid-ish]: timed out waiting for enum_devices\n");
- 		return -ETIMEDOUT;
- 	}
- 	if (!client_data->hid_devices) {
--		dev_err(&client_data->cl_device->dev,
-+		dev_err(cl_data_to_dev(client_data),
- 			"[hid-ish]: failed to allocate HID dev structures\n");
- 		return -ENOMEM;
- 	}
-@@ -549,13 +552,13 @@ static int ishtp_get_hid_descriptor(struct ishtp_cl *hid_ishtp_cl, int index)
- 						 client_data->hid_descr_done,
- 						 3 * HZ);
- 		if (!client_data->hid_descr_done) {
--			dev_err(&client_data->cl_device->dev,
-+			dev_err(cl_data_to_dev(client_data),
- 				"[hid-ish]: timed out for hid_descr_done\n");
- 			return -EIO;
- 		}
- 
- 		if (!client_data->hid_descr[index]) {
--			dev_err(&client_data->cl_device->dev,
-+			dev_err(cl_data_to_dev(client_data),
- 				"[hid-ish]: allocation HID desc fail\n");
- 			return -ENOMEM;
- 		}
-@@ -596,12 +599,12 @@ static int ishtp_get_report_descriptor(struct ishtp_cl *hid_ishtp_cl,
- 					 client_data->report_descr_done,
- 					 3 * HZ);
- 	if (!client_data->report_descr_done) {
--		dev_err(&client_data->cl_device->dev,
-+		dev_err(cl_data_to_dev(client_data),
- 				"[hid-ish]: timed out for report descr\n");
- 		return -EIO;
- 	}
- 	if (!client_data->report_descr[index]) {
--		dev_err(&client_data->cl_device->dev,
-+		dev_err(cl_data_to_dev(client_data),
- 			"[hid-ish]: failed to alloc report descr\n");
- 		return -ENOMEM;
- 	}
-@@ -631,12 +634,12 @@ static int hid_ishtp_cl_init(struct ishtp_cl *hid_ishtp_cl, int reset)
- 	int i;
- 	int rv;
- 
--	dev_dbg(&client_data->cl_device->dev, "%s\n", __func__);
-+	dev_dbg(cl_data_to_dev(client_data), "%s\n", __func__);
- 	hid_ishtp_trace(client_data,  "%s reset flag: %d\n", __func__, reset);
- 
- 	rv = ishtp_cl_link(hid_ishtp_cl, ISHTP_HOST_CLIENT_ID_ANY);
- 	if (rv) {
--		dev_err(&client_data->cl_device->dev,
-+		dev_err(cl_data_to_dev(client_data),
- 			"ishtp_cl_link failed\n");
- 		return	-ENOMEM;
- 	}
-@@ -651,7 +654,7 @@ static int hid_ishtp_cl_init(struct ishtp_cl *hid_ishtp_cl, int reset)
- 
- 	fw_client = ishtp_fw_cl_get_client(dev, &hid_ishtp_guid);
- 	if (!fw_client) {
--		dev_err(&client_data->cl_device->dev,
-+		dev_err(cl_data_to_dev(client_data),
- 			"ish client uuid not found\n");
- 		return -ENOENT;
- 	}
-@@ -661,7 +664,7 @@ static int hid_ishtp_cl_init(struct ishtp_cl *hid_ishtp_cl, int reset)
- 
- 	rv = ishtp_cl_connect(hid_ishtp_cl);
- 	if (rv) {
--		dev_err(&client_data->cl_device->dev,
-+		dev_err(cl_data_to_dev(client_data),
- 			"client connect fail\n");
- 		goto err_cl_unlink;
- 	}
-@@ -692,7 +695,7 @@ static int hid_ishtp_cl_init(struct ishtp_cl *hid_ishtp_cl, int reset)
- 		if (!reset) {
- 			rv = ishtp_hid_probe(i, client_data);
- 			if (rv) {
--				dev_err(&client_data->cl_device->dev,
-+				dev_err(cl_data_to_dev(client_data),
- 				"[hid-ish]: HID probe for #%u failed: %d\n",
- 				i, rv);
- 				goto err_cl_disconnect;
-@@ -748,7 +751,7 @@ static void hid_ishtp_cl_reset_handler(struct work_struct *work)
- 
- 	hid_ishtp_cl_deinit(hid_ishtp_cl);
- 
--	hid_ishtp_cl = ishtp_cl_allocate(cl_device->ishtp_dev);
-+	hid_ishtp_cl = ishtp_cl_allocate(cl_device);
- 	if (!hid_ishtp_cl)
- 		return;
- 
-@@ -762,15 +765,17 @@ static void hid_ishtp_cl_reset_handler(struct work_struct *work)
- 		rv = hid_ishtp_cl_init(hid_ishtp_cl, 1);
- 		if (!rv)
- 			break;
--		dev_err(&client_data->cl_device->dev, "Retry reset init\n");
-+		dev_err(cl_data_to_dev(client_data), "Retry reset init\n");
- 	}
- 	if (rv) {
--		dev_err(&client_data->cl_device->dev, "Reset Failed\n");
-+		dev_err(cl_data_to_dev(client_data), "Reset Failed\n");
- 		hid_ishtp_trace(client_data, "%s Failed hid_ishtp_cl %p\n",
- 				__func__, hid_ishtp_cl);
- 	}
- }
- 
-+void (*hid_print_trace)(void *dev, const char *format, ...);
-+
- /**
-  * hid_ishtp_cl_probe() - ISHTP client driver probe
-  * @cl_device:		ISHTP client device instance
-@@ -788,12 +793,13 @@ static int hid_ishtp_cl_probe(struct ishtp_cl_device *cl_device)
- 	if (!cl_device)
- 		return	-ENODEV;
- 
--	client_data = devm_kzalloc(&cl_device->dev, sizeof(*client_data),
-+	client_data = devm_kzalloc(ishtp_device(cl_device),
-+				   sizeof(*client_data),
- 				   GFP_KERNEL);
- 	if (!client_data)
- 		return -ENOMEM;
- 
--	hid_ishtp_cl = ishtp_cl_allocate(cl_device->ishtp_dev);
-+	hid_ishtp_cl = ishtp_cl_allocate(cl_device);
- 	if (!hid_ishtp_cl)
- 		return -ENOMEM;
- 
-@@ -807,6 +813,8 @@ static int hid_ishtp_cl_probe(struct ishtp_cl_device *cl_device)
- 
- 	INIT_WORK(&client_data->work, hid_ishtp_cl_reset_handler);
- 
-+	hid_print_trace = ishtp_trace_callback(cl_device);
-+
- 	rv = hid_ishtp_cl_init(hid_ishtp_cl, 0);
- 	if (rv) {
- 		ishtp_cl_free(hid_ishtp_cl);
-@@ -833,7 +841,7 @@ static int hid_ishtp_cl_remove(struct ishtp_cl_device *cl_device)
- 	hid_ishtp_trace(client_data, "%s hid_ishtp_cl %p\n", __func__,
- 			hid_ishtp_cl);
- 
--	dev_dbg(&cl_device->dev, "%s\n", __func__);
-+	dev_dbg(ishtp_device(cl_device), "%s\n", __func__);
- 	hid_ishtp_cl->state = ISHTP_CL_DISCONNECTING;
- 	ishtp_cl_disconnect(hid_ishtp_cl);
- 	ishtp_put_device(cl_device);
-diff --git a/drivers/hid/intel-ish-hid/ishtp-hid.c b/drivers/hid/intel-ish-hid/ishtp-hid.c
-index bc4c536f3c0d..cb71ad43ea3b 100644
---- a/drivers/hid/intel-ish-hid/ishtp-hid.c
-+++ b/drivers/hid/intel-ish-hid/ishtp-hid.c
-@@ -14,6 +14,7 @@
-  */
- 
- #include <linux/hid.h>
-+#include <linux/intel-ish-client-if.h>
- #include <uapi/linux/input.h>
- #include "ishtp/client.h"
- #include "ishtp-hid.h"
-@@ -204,7 +205,8 @@ int ishtp_hid_probe(unsigned int cur_hid_dev,
- 
- 	hid->ll_driver = &ishtp_hid_ll_driver;
- 	hid->bus = BUS_INTEL_ISHTP;
--	hid->dev.parent = &client_data->cl_device->dev;
-+	hid->dev.parent = ishtp_device(client_data->cl_device);
-+
- 	hid->version = le16_to_cpu(ISH_HID_VERSION);
- 	hid->vendor = le16_to_cpu(client_data->hid_devices[cur_hid_dev].vid);
- 	hid->product = le16_to_cpu(client_data->hid_devices[cur_hid_dev].pid);
-diff --git a/drivers/hid/intel-ish-hid/ishtp-hid.h b/drivers/hid/intel-ish-hid/ishtp-hid.h
-index 1cd07a441cd4..e1b00f5125c7 100644
---- a/drivers/hid/intel-ish-hid/ishtp-hid.h
-+++ b/drivers/hid/intel-ish-hid/ishtp-hid.h
-@@ -24,7 +24,7 @@
- #define	IS_RESPONSE	0x80
- 
- /* Used to dump to Linux trace buffer, if enabled */
--#define hid_ishtp_trace(client, ...)	\
-+#define hid_ishtp_trace(client, ...)   \
- 	client->cl_device->ishtp_dev->print_log(\
- 		client->cl_device->ishtp_dev, __VA_ARGS__)
- 
-diff --git a/drivers/hid/intel-ish-hid/ishtp/bus.c b/drivers/hid/intel-ish-hid/ishtp/bus.c
-index 6348fee8aadc..308853eab91c 100644
---- a/drivers/hid/intel-ish-hid/ishtp/bus.c
-+++ b/drivers/hid/intel-ish-hid/ishtp/bus.c
-@@ -827,6 +827,33 @@ int ishtp_use_dma_transfer(void)
- 	return ishtp_use_dma;
- }
- 
-+/**
-+ * ishtp_device() - Return device pointer
-+ *
-+ * This interface is used to return device pointer from ishtp_cl_device
-+ * instance.
-+ *
-+ * Return: device *.
-+ */
-+struct device *ishtp_device(struct ishtp_cl_device *device)
-+{
-+	return &device->dev;
-+}
-+EXPORT_SYMBOL(ishtp_device);
-+
-+/**
-+ * ishtp_trace_callback() - Return trace callback
-+ *
-+ * This interface is used to return trace callback function pointer.
-+ *
-+ * Return: void *.
-+ */
-+void *ishtp_trace_callback(struct ishtp_cl_device *cl_device)
-+{
-+	return cl_device->ishtp_dev->print_log;
-+}
-+EXPORT_SYMBOL(ishtp_trace_callback);
-+
- /**
-  * ishtp_bus_register() - Function to register bus
-  *
-diff --git a/drivers/hid/intel-ish-hid/ishtp/client.c b/drivers/hid/intel-ish-hid/ishtp/client.c
-index faeccdb1475b..760e48a368a8 100644
---- a/drivers/hid/intel-ish-hid/ishtp/client.c
-+++ b/drivers/hid/intel-ish-hid/ishtp/client.c
-@@ -126,7 +126,7 @@ static void ishtp_cl_init(struct ishtp_cl *cl, struct ishtp_device *dev)
-  *
-  * Return: The allocated client instance or NULL on failure
-  */
--struct ishtp_cl *ishtp_cl_allocate(struct ishtp_device *dev)
-+struct ishtp_cl *ishtp_cl_allocate(struct ishtp_cl_device *cl_device)
- {
- 	struct ishtp_cl *cl;
- 
-@@ -134,7 +134,7 @@ struct ishtp_cl *ishtp_cl_allocate(struct ishtp_device *dev)
- 	if (!cl)
- 		return NULL;
- 
--	ishtp_cl_init(cl, dev);
-+	ishtp_cl_init(cl, cl_device->ishtp_dev);
- 	return cl;
- }
- EXPORT_SYMBOL(ishtp_cl_allocate);
-diff --git a/drivers/hid/intel-ish-hid/ishtp/client.h b/drivers/hid/intel-ish-hid/ishtp/client.h
-index e0df3eb611e6..992625891a6c 100644
---- a/drivers/hid/intel-ish-hid/ishtp/client.h
-+++ b/drivers/hid/intel-ish-hid/ishtp/client.h
-@@ -170,7 +170,7 @@ static inline bool ishtp_cl_cmp_id(const struct ishtp_cl *cl1,
- }
- 
- /* exported functions from ISHTP under client management scope */
--struct ishtp_cl	*ishtp_cl_allocate(struct ishtp_device *dev);
-+struct ishtp_cl *ishtp_cl_allocate(struct ishtp_cl_device *cl_device);
- void ishtp_cl_free(struct ishtp_cl *cl);
- int ishtp_cl_link(struct ishtp_cl *cl, int id);
- void ishtp_cl_unlink(struct ishtp_cl *cl);
-diff --git a/include/linux/intel-ish-client-if.h b/include/linux/intel-ish-client-if.h
-new file mode 100644
-index 000000000000..11e285172735
---- /dev/null
-+++ b/include/linux/intel-ish-client-if.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Intel ISH client Interface definitions
-+ *
-+ * Copyright (c) 2019, Intel Corporation.
-+ */
-+
-+#ifndef _INTEL_ISH_CLIENT_IF_H_
-+#define _INTEL_ISH_CLIENT_IF_H_
-+
-+struct ishtp_cl_device;
-+
-+/* Get the device * from ishtp device instance */
-+struct device *ishtp_device(struct ishtp_cl_device *cl_device);
-+/* Trace interface for clients */
-+void *ishtp_trace_callback(struct ishtp_cl_device *cl_device);
-+
-+#endif /* _INTEL_ISH_CLIENT_IF_H_ */
--- 
-2.17.2
+I think we are in enough of a mess here with the different dividers that we
+should just do the maths here, then we can avoid the bia.
+
+aiming for nano value.
+val * pi * 10e12 / (180 * 2^15)
+div_s64(val * 3141592653000 + 2949120, 5898240) = 532632
+vs 532632 for floating point division.
+Then use IIO_INT_PLUS_NANO to return it.
+
+Even then I suspect the +2949120 is only effecting the last digit so
+you could probably drop it safely enough.
+
+I'd certainly rather we had all the magic in one place rather than
+trying to correct for divisions that aren't apparent here.
+
+> 
+> -- Enric
+> 
+> > Jonathan
+> >   
+> >>  			*val2 = 18000 << (CROS_EC_SENSOR_BITS - 1);
+> >>  			ret = IIO_VAL_FRACTIONAL;
+> >>  			break;  
+> >   
 
