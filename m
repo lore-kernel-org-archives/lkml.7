@@ -2,277 +2,292 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44CCC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 19:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F43C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 19:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9AC20830
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 19:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3179A20835
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 19:30:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sTVsD7vI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmiZJyl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfCCTNA (ORCPT
+        id S1726628AbfCCTaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 14:13:00 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38951 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfCCTM7 (ORCPT
+        Sun, 3 Mar 2019 14:30:14 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46975 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfCCTaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 14:12:59 -0500
-Received: by mail-ot1-f67.google.com with SMTP id e15so2440620otk.6
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 11:12:59 -0800 (PST)
+        Sun, 3 Mar 2019 14:30:14 -0500
+Received: by mail-qt1-f196.google.com with SMTP id z25so3016441qti.13;
+        Sun, 03 Mar 2019 11:30:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YbIdkywIH2VTWbLDmHSr4vQbZ6OY3Rh8ynYy3Ff1+4k=;
-        b=sTVsD7vIpqBiS4eKHGMV+71YnqZNlmLsNgKkfeV9qhsJmX/d+95aD+isWWWhj3Fuqt
-         NwuG7K13pnKs4MaZMowq90ssywlm5mFnv2BSStgSaHRiAQ5zDXvTz0z/64Y21fOs9mii
-         0d3AnMDErwm6FHkvhKaVUhcuIcnMzoe6YKAs16NJhE4bN0UuWgSH7p9TGJLY2HWI10dD
-         +1FGiS5/V48BUCov9eg3xgBhVjH+6zJwtxtqjNFYkvaiFHiQOuSVvlHXtShJRe5flo9U
-         FnK9CP7nOOz+oz0eVdM1hHJ5RCFz4VasDwT2RAQ/yIOWuYiIeW4ZxVCRB5ljn1587yKC
-         VC2g==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7LwkNeOQccyN4n3K/Df2XoYgzkpFPLKz3Wbx6cPlJ9Y=;
+        b=mmiZJyl3IeVS82gVRA6lMZ7GIFtlVyGQSeg68MoSYEr2qn5mCqRMVVWdMKRcKlD1Xf
+         5BglZ+8g1ApdN8mau6GRAHeiq2yDwc5/F2/p4rcUJeIOhvRgZ0SBVngt5dN/FjqoQMG2
+         jfgpnWspD4XEgjcqXXDMZSIRlBsMFsL/mMzhaxbGjjspoZbYvS0WPubV+z8iXznPnGyY
+         YKDCdlofHW+sr74Y48y9Y7DQuamiJSojh7x8ZYAdPFPcaYBCMTzlg4Rz8GoInX+q3DT+
+         AUJTmazK5fTYB4gfMnWXMwxZu9yLsSrusYwl4kEk6R4VICcM4UfRIFqoy7i5ic6uuhoh
+         OijQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YbIdkywIH2VTWbLDmHSr4vQbZ6OY3Rh8ynYy3Ff1+4k=;
-        b=Nshz4PsMaOGrfo1O2nJF+RmUvNUjBJ100hVD6Gk1cYVYt0raK0PHvGzy2J9pvqaOMv
-         LrCdAp4C1/BH/3/91egHMnVri5vi1muZ3Ybyz9L8zBXq3wdR8ozCg+HQFc68c5sTcDSR
-         UBmHPMXo1t7aBw81PYFzTHFN0F9Kc9GBuCuODEDKlBHyTdy6ZdOwBAZG+7Fu/O0avc5z
-         ipr7xy5+BHtJ+X8dsGgC5CqISYyybs4wCZSVC2W/ggg9V3DVjleVgbOlLafTVpvZyKNA
-         Few3RjDZGFC8234qlBC3AYFJRRTYqJrYXYmT9lYH5dPCIB+RCnFub3TiVss9NuKXsEB7
-         Xykg==
-X-Gm-Message-State: APjAAAVJncf789+Y/sDGAoOBgngtWFuqCVU15+3LRsb7NQmKVot7G/w/
-        ozTggSRgJMqKa4OEJ82kW8TKA6Zbx0L/PCByxX4=
-X-Google-Smtp-Source: APXvYqxa7yJClRVtt2XE1ZW+Eom5XYge+HqRvhHVJf4REvfpNReIunXq/jtyHWf4+o+2LYv1tzFLSjDcKR/Zz8Ts+4w=
-X-Received: by 2002:a9d:3f0:: with SMTP id f103mr7324489otf.223.1551640378271;
- Sun, 03 Mar 2019 11:12:58 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7LwkNeOQccyN4n3K/Df2XoYgzkpFPLKz3Wbx6cPlJ9Y=;
+        b=LnfiuqUsG12C/8LQKUhDihGEbhJjuky45Av8TZaDVjdPLJ3NexqbEsGFZ6muRwLNjM
+         +bJMkUC2494jhxpa7tOWeMh3q5a5kUX4FOX5hFyLcZOaeg6+ruXVo/Cm7hxxUL2Dzgl5
+         eVNu2zqH9VgLK3m2Bc7NRx43/UuPEHlUx0k4U2RwASzeqjb1xry6p927uzT92V/4bsec
+         TzRK0dLiv7kM+MYkABEFSjptTfsnZBKEm61l6dKIX83rJNKfo1nw9HLCbu5Q8YE7gCBp
+         8at2VcDWM5BZN5YU06qwLAyAFGc4M38A+mPuUl9xZQrTw1G2iPjCoFNao3bFmqkxh7i6
+         a4sA==
+X-Gm-Message-State: APjAAAXdbSJJ3+ISEvL5uM16UijL+HAAGxpogUh7WG3RQSWCF6aBWIUm
+        TwXZRjSxbr5Wrbgn6GDaA0s=
+X-Google-Smtp-Source: APXvYqxq3+lO6kleVAaJhVpO7+xF4yBaRtHEdL1Ka6mBYBVLYMv/jz414W7yfrzEcGtodEHhAlpA7w==
+X-Received: by 2002:aed:3504:: with SMTP id a4mr12232461qte.139.1551641412188;
+        Sun, 03 Mar 2019 11:30:12 -0800 (PST)
+Received: from smtp.gmail.com ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id x80sm3634297qkx.85.2019.03.03.11.30.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 03 Mar 2019 11:30:11 -0800 (PST)
+Date:   Sun, 3 Mar 2019 16:30:07 -0300
+From:   Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH v2 3/4] staging: iio: ad5933: add ABI documentation
+Message-ID: <20190303193007.2zyvil4gmr7pv2pp@smtp.gmail.com>
+References: <20190301025314.p53nlcfey3qarms4@smtp.gmail.com>
+ <20190303121341.7a689124@archlinux>
 MIME-Version: 1.0
-References: <20190303122705.27094-1-katsuhiro@katsuster.net>
- <1623469.Hy6pdcMFRX@phil> <e722acb4-167f-8333-5c8a-b693815273f4@katsuster.net>
- <CAERgoknAV1sACSPjM_u4WyWzLvmUntXMoEx=ccpFsqYZVeu__Q@mail.gmail.com>
- <26c3aea3-959f-bfb3-177f-3e5314494361@katsuster.net> <CAERgoknMO6xMzuhCn2kSHZm8Pt+6YH3jDvJckJq28u9OW08u2Q@mail.gmail.com>
-In-Reply-To: <CAERgoknMO6xMzuhCn2kSHZm8Pt+6YH3jDvJckJq28u9OW08u2Q@mail.gmail.com>
-From:   Tony McKahan <tonymckahan@gmail.com>
-Date:   Sun, 3 Mar 2019 14:12:46 -0500
-Message-ID: <CAERgok=cxtLqRmYXdrCaUF8mK2pPfGAPc6w3hdLaPgPmqKmkcw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: decrease rising edge time of UART2
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Akash Gajjar <Akash_Gajjar@mentor.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Levin Du <djw@t-chip.com.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Shohei Maruyama <cheat.sc.linux@outlook.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190303121341.7a689124@archlinux>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 3, 2019 at 1:45 PM Tony McKahan <tonymckahan@gmail.com> wrote:
->
-> Hello Katsushiro,
+On 03/03, Jonathan Cameron wrote:
+> On Thu, 28 Feb 2019 23:53:14 -0300
+> Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
+> 
+> > Add an ABI documentation for the ad5933 driver.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> Hi Marcelo,
+> 
+> The ABI that you have defined which is actually new is mostly fine,
+> however it seems that some of the existing ABI is not used correctly
+> and that will need to be fixed.
+> 
+> Jonathan
 
-And apologies for the extra "s", typing too quickly I'm afraid.
+Hi Jonathan,
+
+Thanks for the comments.
+
+> 
+> > ---
+> >  .../ABI/testing/sysfs-bus-iio-ad5933          | 91 +++++++++++++++++++
+> >  1 file changed, 91 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-ad5933
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-ad5933 b/Documentation/ABI/testing/sysfs-bus-iio-ad5933
+> > new file mode 100644
+> > index 000000000000..81e3d3f6f724
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-iio-ad5933
+> > @@ -0,0 +1,91 @@
+> > +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_scale
+> > +Date:		February 2019
+> > +KernelVersion:	Kernel 4.19
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		The output peak-to-peak voltage range. Writting 0 sets range
+> > +		to 2.0V p-p typical, 1 sets range to 200mV p-p typical, 2 sets
+> > +		range to 400mV p-p typical, 3 sets range to 1.0V p-p typical.
+> > +		The p-p value of the ac output exitation voltage scales with 
+> > +		supply voltage according to the following formula:
+> > +		Output Excitation Voltage (V p-p) = normalized_3v3 × [VDD/3.3]
+> > +		where normalized_3v3 is one of the four voltage range above and
+> > +		VDD is the supply voltage.
+> 
+> Definitely not. The device must comply with standard ABI and this is not
+> using it correctly (see below or the docs).
+> 
+> > +
+> > +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_scale_available
+> > +Date:		February 2019
+> > +KernelVersion:	Kernel 4.19
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:	
+> > +		Prints available peak-to-peak voltage range to buffer.
+> 
+> I really hope it doesn't.  Scale is a mulitplier not a range.  It should be
+> printing out the value by which the _raw reading should be multiplied to
+> get the voltage in the base units for voltage (millivolts)
+
+As the driver is right now I believe that calling this device attribute will
+print "1980, 970, 383, 198" which are the mean values of four distributions
+(called range1 to range4) of possible actual millivolt values used as the AC
+output excitation. Certainly they don't mean "the value by which the _raw
+reading should be multiplied to get the voltage in the base units for voltage"
+so, as you said, this ABI is probably being misused here. Hence, I guess
+I ought to change this attribute's call to something different than 
+out_voltage0_scale_available (as well as the out_voltage0_scale above). Maybe
+out_voltage0_excit_available or out_voltage0_mean_excit_available, any other
+suggestion?
+
+> 
+> > +
+> > +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_freq_start
+> > +Date:		February 2019
+> > +KernelVersion:	Kernel 4.19
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		The start frequency. Set this to define de frequency point at
+> > +		which the device should start the next frequency sweep. Default
+> > +		start frequency point set to 10000Hz.
+> 
+> No need to specify the default. It's trivial to read and any user of this
+> chip should set it to the value they want.
+
+OK, then I will remove these on the next patch.
+
+> 
+> > +
+> > +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_freq_increment
+> > +Date:		February 2019
+> > +KernelVersion:	Kernel 4.19
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		The frequency sweep increment. Set this to define at which rate
+> > +		frequency sweep points are incremented. 
+> Rate is a temporal term.  Perhaps "step by which the frequency is incremented"?
+
+Maybe
+
+"define the amount by which the frequency is incremented after each scan point."
+
+would it be ok?
+
+> 
+> > After the measurement at
+> > +		a frequency point is completed, the next measurement will be 
+> > +		made with a frequency 'frequency increment'Hz higher than the
+> > +		previous point until the defined number of increments has been
+> > +		made. Default frequency increment set to 200Hz.
+> 
+> No need to specify the default. People can just read the file to find that out.
+> 
+> > +		
+> > +
+> > +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_freq_points
+> > +Date:		February 2019
+> > +KernelVersion:	Kernel 4.19
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		The number of increments. This defines the number of frequency
+> > +		points in the frequency sweep. Device stores a 9-bit integer
+> > +		number in binary format for this so the maximum number of
+> > +		increments that can be programmed is 511.
+> I would relax this ABI description so that it doesn't describe the bit depth
+> and ideally doesn't describe the range either.  If we want to provide the
+> range, then provide an available attribute to pair with this.
+> 
+> The reason is that we should be looking to define interfaces in a way that
+> allows them to be potentially generalised to similar devices in future.
+> 
+> I suspect a lot of this is generic to impedance measuring ICs.
+> 
+
+Then I think we would keep just the very beginning of it "The number of ... 
+frequency sweep."
+
+> > +
+> > +What:/sys/bus/iio/devices/iio:deviceX/out_voltage0_settling_cycles
+> > +Date:		February 2019
+> > +KernelVersion:	Kernel 4.19
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Number of settling time cycles. This attribute is a 11 bit field
+> > +		divided in two parts. The 9 least significant bit define the
+> > +		number of output excitation cycles that are passed through the
+> > +		unknown impedance, after the receipt of a start frequency sweep,
+> > +		increment frequency, or repeat frequency command, before the ADC
+> > +		is triggered to perform a conversion of the response signal. The
+> > +		2 most significant bits define a multiplier for the number of
+> > +		cycles obtained from de least significant bits. Let D10 and D9
+> 
+> de -> the 
+
+oops, thanks for pointing it out.
+
+> 
+> > +		be these two bits, the resulting multiplier is defined as
+> > +		follows.
+> > +		D10 D9 = 0 0 => No. of cycles x 1 (default)
+> > +		D10 D9 = 0 1 => No. of cycles x 2
+> > +		D10 D9 = 1 0 => Reserved
+> > +		D10 D9 = 1 1 => No. of cycles x 4
+> > +
+> > +		See the datasheet for detailed information.
+> 
+> Hmm. This is a bizare interface - but such is hardware.
+> 
+> However, just because it is bizare in the hardware doesn't mean the
+> userspace interface should be.  Just hide all this complexity and
+> map whatever number of cycles is input to the nearest possible value.
 >
-> On Sun, Mar 3, 2019 at 12:31 PM Katsuhiro Suzuki
-> <katsuhiro@katsuster.net> wrote:
-> >
-> > Hello Tony,
-> >
-> > On 2019/03/04 0:13, Tony McKahan wrote:
-> > > On Sun, Mar 3, 2019 at 9:04 AM Katsuhiro Suzuki <katsuhiro@katsuster.=
-net> wrote:
-> > >>
-> > >> Hello Heiko,
-> > >>
-> > >> Thank you for comments.
-> > >>
-> > >> On 2019/03/03 22:19, Heiko Stuebner wrote:
-> > >>> Hi,
-> > >>>
-> > >>> Am Sonntag, 3. M=C3=A4rz 2019, 13:27:05 CET schrieb Katsuhiro Suzuk=
-i:
-> > >>>> This patch increases drive strength of UART2 from 3mA to 12mA for
-> > >>>> getting more faster rising edge.
-> > >>>>
-> > >>>> RockPro64 is using a very high speed rate (1.5Mbps) for UART2. In
-> > >>>> this setting, a bit width of UART is about 667ns.
-> > >>>>
-> > >>>> In my environment (RockPro64 UART2 with FTDI FT232RL UART-USB
-> > >>>> converter), falling time of RockPro64 UART2 is 40ns, but riging ti=
-me
-> > >>>> is over 650ns. So UART receiver will get wrong data, because recei=
-ver
-> > >>>> read intermediate data of rising edge.
-> > >>>>
-> > >>>> Rising time becomes 300ns from 650ns if apply this patch. This is =
-not
-> > >>>> perfect solution but better than now.
-> > >>>>
-> > >>>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> > >>>> ---
-> > >>>>    arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 +++++++--
-> > >>>>    1 file changed, 7 insertions(+), 2 deletions(-)
-> > >>>
-> > >>> your changing a core rk3399 property here, so I'd really like to ge=
-t
-> > >>> input from other board stakeholders on this before applying a core
-> > >>> change.
-> > >>>
-> > >>> Could you either include the submitters of other rk3399-boards in t=
-he
-> > >>> recipient list so that they're aware or limit the change to rockpro=
-64 for
-> > >>> the time being (aka overriding the property in the board-dts) pleas=
-e?
-> > >>>
-> > >>
-> > >> OK, I'm adding other boards members.
-> > >> by ./scripts/get_maintainer.pl arch/arm64/boot/dts/rockchip/rk3399-*=
-.dts
-> > >>
-> > >>
-> > >> RockPro64 directly connect UART2 pins of RK3399 to external connecto=
-r.
-> > >> I think maybe other RK3399 boards are facing same problem, but I can=
-not
-> > >> check it because I have RockPro64 only...
-> > >>
-> > >> I'm happy if someone tell me other boards situation.
-> > >
-> > > I'm pulling out other rockchip boards momentarily to see what kind of
-> > > population we have.
-> > >
-> > > Note these are not all running 5.x kernels, however none of them have
-> > > the UART2 drive levels modified to my knowledge, and regardless, none
-> > > show over 100 ns.
-> > >
-> > > board:    rise/fall
-> > >
-> > > rk3399-roc-pc: 90ns/90ns
-> > > rk3399-rockpro64 V2.0:  90ns/45ns
-> > > rk3399-rockpro64 V2.1:  40ns/41ns
-> > >
-> > > Please make sure there's not a large amount of flux or something
-> > > around the terminals on your board, that seems excessively high.
-> > >
-> >
-> > Thank you for valuable information. For more deeply discussion,
-> > I tried other conditions and watch the rise/fall times.
-> >
-> > 1) Not connect
-> > The rise/fall times are 40ns/5ns when nothing connect (impedance is
-> > very high) to external pin of RockPro64.
-> >
-> > What UART device are you using with RockPro64? If you use some device
-> > with RockPro64 and board shows rise/fall times =3D 90ns/45ns, my device
-> > is not suitable for RockPro64 by some reason. So it's better to drop
-> > my patch.
+
+Trying to be generic I would say:
+
+	Number of settling time cycles. This sets the delay between a start
+	frequency sweep/increment frequency /repeat frequency to be proportional
+	to the excitation signal frequency times the number of settling time
+	cycles.
+ 
+> > +
+> > +What:/sys/bus/iio/devices/iio:deviceX/in_voltage0_scale
+> > +Date:		February 2019
+> > +KernelVersion:	Kernel 4.19
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		The PGA gain amplifier for the response signal. Set this to 0
+> > +		to gain the output of the current-to-voltage amplifier by a
+> > +		factor of 5. Set to 1 (default) to amplify the response signal
+> > +		into the ADC by a multiplication factor of x1.
+> > +
+> > +What:/sys/bus/iio/devices/iio:deviceX/in_voltage0_scale_available
+> 
+> There is no need to document standard ABI.  If this isn't documented in the
+> main Documentation/ABI/testing/sysfs-bus-iio please add it there.
+
+I guess this would be /sys/bus/iio/devices/iio:deviceX/in_voltage_scale.
+
+> 
+> > +Date:		February 2019
+> > +KernelVersion:	Kernel 4.19
+> > +Contact:	linux-iio@vger.kernel.org
+> > +Description:
+> > +		Prints available PGA gain amplifier to buffer.
+> Pga is one element that should effect this, but it's not the only
+> one.  The resolution of the device also matters for example.
+> 
 >
-> The adapter is an FTDI FT232RL breakout board, attached with some
-> generic Dupont connector jumpers.
-> Interesting your RockPro is showing this symptom, perhaps there is a
-> cold solder joint somewhere introducing resistance?
->
-> >
-> > 2) Other SoC
-> > I have other SoC board rk3328-rock64, Rock64 shows rise/fall times =3D
-> > 90ns/80ns when same UART-USB device is connected to UART pin.
->
-> I measured similar on my Rock64 as well.
->
-> >
-> > I think it shows rk3399's (or RockPro64's?) drive strength is a little
-> > weak. So it's better to increase the drive strength of UART of rk3399.
->
-> I do not think this is a bad idea generally, it simply allows for more
-> available current from the interface.  I'll let others be the judge of
-> that, however.
->
-> >
-> > Best Regards,
-> > Katsuhiro Suzuki
-> >
-> > >>
-> > >> Best Regards,
-> > >> Katsuhiro Suzuki
-> > >>
-> > >>
-> > >>> Thanks
-> > >>> Heiko
-> > >>>
-> > >>>
-> > >>>
-> > >>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64=
-/boot/dts/rockchip/rk3399.dtsi
-> > >>>> index beaa92744a64..e3c8f91ead50 100644
-> > >>>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > >>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > >>>> @@ -2000,6 +2000,11 @@
-> > >>>>                       drive-strength =3D <8>;
-> > >>>>               };
-> > >>>>
-> > >>>> +            pcfg_pull_up_12ma: pcfg-pull-up-12ma {
-> > >>>> +                    bias-pull-up;
-> > >>>> +                    drive-strength =3D <12>;
-> > >>>> +            };
-> > >>>> +
-> > >>>>               pcfg_pull_up_18ma: pcfg-pull-up-18ma {
-> > >>>>                       bias-pull-up;
-> > >>>>                       drive-strength =3D <18>;
-> > >>>> @@ -2521,8 +2526,8 @@
-> > >>>>               uart2c {
-> > >>>>                       uart2c_xfer: uart2c-xfer {
-> > >>>>                               rockchip,pins =3D
-> > >>>> -                                    <4 RK_PC3 RK_FUNC_1 &pcfg_pul=
-l_up>,
-> > >>>> -                                    <4 RK_PC4 RK_FUNC_1 &pcfg_pul=
-l_none>;
-> > >>>> +                                    <4 RK_PC3 RK_FUNC_1 &pcfg_pul=
-l_up_12ma>,
-> > >>>> +                                    <4 RK_PC4 RK_FUNC_1 &pcfg_pul=
-l_none_12ma>;
-> > >>>>                       };
-> > >>>>               };
-> > >>>>
-> > >>>>
-> > >>>
-> > >>>
-> > >>>
-> > >>>
-> > >>>
-> > >>>
-> > >>
-> > >>
-> > >> _______________________________________________
-> > >> Linux-rockchip mailing list
-> > >> Linux-rockchip@lists.infradead.org
-> > >> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> > >
-> > >
-> >
+ 
+Weren't this one described in /sys/.../iio:deviceX/in_voltageX_scale_available?
+
