@@ -2,105 +2,125 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11100C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEAAC43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8AB920863
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6326220835
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551644035;
+	bh=B4PEBAkzx+BT56qVyTWe/iCzZs6ongEGTSFMkUsWq4I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tY9lQ6HMew3+JXxZi2PbfIOOJirzyeNY8EpbQs1eLuWOwiDLikZaQ/3bnn2R5oqkE
+	 AK6LHgmYEPAHLOz59OZGCJvrsmAaiulEvkrr6lpwzSp9tydEvUQMWRBbhgjcH4AEAT
+	 Wk/HnmH8UhGuYX/pYS/POtl2KP+3fcrrsd+9A1VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfCCUKW (ORCPT
+        id S1726615AbfCCUNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 15:10:22 -0500
-Received: from mga17.intel.com ([192.55.52.151]:15469 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726525AbfCCUKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 15:10:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 12:10:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,437,1544515200"; 
-   d="scan'208";a="148923767"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Mar 2019 12:10:18 -0800
-Received: from andy by smile with local (Exim 4.92-RC6)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1h0XRA-0000wE-Kr; Sun, 03 Mar 2019 22:10:16 +0200
-Date:   Sun, 3 Mar 2019 22:10:16 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Louis Taylor <louis@kragniz.eu>
-Cc:     corbet@lwn.net, pmladek@suse.com, geert+renesas@glider.be,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, ndesaulniers@google.com,
-        jflat@chromium.org
-Subject: Re: [PATCH] docs: add extra integer types to printk-formats
-Message-ID: <20190303201016.GO9224@smile.fi.intel.com>
-References: <20190303123647.22020-1-louis@kragniz.eu>
+        Sun, 3 Mar 2019 15:13:53 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46568 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfCCUNx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 15:13:53 -0500
+Received: by mail-lj1-f194.google.com with SMTP id v16so2456909ljg.13
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 12:13:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x1iMEQoPgXk1WJSYeb2Z3XqmYDbk/Fcp2JImzIRwCU0=;
+        b=e7/nVcpDoI+4NGiOf6LPzCJB5Ze7AbKuNZtJnKQEzPgLhf6oPrhDF3Tn+yYSZe0LMe
+         +g2CVcs9oK7MyTPL0HwQawhGLi6lHMvKH1+81RQxKAJuyByy3/hEqw4nm7pxJYdXFUMd
+         JdLaF2VbwOfr5PCvA8gEYXG62JzPN/RsRgx7c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x1iMEQoPgXk1WJSYeb2Z3XqmYDbk/Fcp2JImzIRwCU0=;
+        b=BQgT8XF6ET2sbRVvjFqvsJmTzBDY+zsvF1CWOVl2ndy32UqIhYbUBpaE+mAUv9Zvof
+         zOieN/6r25rFGMml/EofABLx39b5cKAY/lohCh9+/NT7ThD/ElxdrYzdna23G2kMeL3V
+         VAk0EvdnNain09p1H7gA2NjaUviHn2/uWbtF8wra66WM3hcjOYy4oIr9MTkIQueuf+EK
+         9xXsQQMkfgbserDBaVcpVRc7lUmjczUt2grkA7QUvV+Tqaxc0qyP/M4Ommh2+hp27uFK
+         oTb7idkUGfxWEN/RgjubeFoRCI1logMYYBaFWDimHSRiJ4PPzuoy2DIxT6GyfG/rORQD
+         aUlg==
+X-Gm-Message-State: APjAAAV9GZoDZU0oPndqkTO/lD4+YOwVwR2asQ89JoaFPDi9RyxK2YWt
+        EDtmIWjIBj9h4Z69eb6am5t6dN7HQZ8=
+X-Google-Smtp-Source: APXvYqxLuBIMF1ATLD6yKnThS3lRHnycwE7RdIurXAsHNbFqP1EDSwlSnAQdnwNsKxrqdQ+Tg+t1jQ==
+X-Received: by 2002:a2e:880a:: with SMTP id x10mr8580629ljh.12.1551644030734;
+        Sun, 03 Mar 2019 12:13:50 -0800 (PST)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id x2sm1130845ljd.30.2019.03.03.12.13.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 03 Mar 2019 12:13:49 -0800 (PST)
+Received: by mail-lj1-f178.google.com with SMTP id g80so2471868ljg.6
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 12:13:49 -0800 (PST)
+X-Received: by 2002:a2e:7a03:: with SMTP id v3mr8852138ljc.22.1551644029066;
+ Sun, 03 Mar 2019 12:13:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190303123647.22020-1-louis@kragniz.eu>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <000000000000f39c7b05832e0219@google.com> <20190303135502.GP2217@ZenIV.linux.org.uk>
+ <20190303151846.GQ2217@ZenIV.linux.org.uk> <CAHk-=wiQ2YNB+2FT+jbdcC6qfYqvS2kLLAZbmPE_7sLfUPwFJg@mail.gmail.com>
+In-Reply-To: <CAHk-=wiQ2YNB+2FT+jbdcC6qfYqvS2kLLAZbmPE_7sLfUPwFJg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 3 Mar 2019 12:13:33 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wheffK1OpNbBOfpLEvXXGmEu5+K9k5k-h44xw1KBo69Fg@mail.gmail.com>
+Message-ID: <CAHk-=wheffK1OpNbBOfpLEvXXGmEu5+K9k5k-h44xw1KBo69Fg@mail.gmail.com>
+Subject: Re: [PATCH] aio: prevent the final fput() in the middle of vfs_poll()
+ (Re: KASAN: use-after-free Read in unix_dgram_poll)
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jason Baron <jbaron@akamai.com>, kgraul@linux.ibm.com,
+        ktkhai@virtuozzo.com, kyeongdon.kim@lge.com,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, pabeni@redhat.com,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 03, 2019 at 12:36:47PM +0000, Louis Taylor wrote:
-> A few commonly used integer types were absent from this table, so add
-> them.
+On Sun, Mar 3, 2019 at 11:44 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> But doesn't it look nice to see
+>
+>  2 files changed, 41 insertions(+), 50 deletions(-)
+>
+> with actual code reduction, and a fundamental simplification in
+> handling of the file pointer?
 
-I'm not against the patch, but isn't obvious by reading POSIX and / or man
-printf(3)?
+A coupl,e of the changes are "useless", and do the same thing as not
+having them at all:
 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/378
+-               struct inode *inode = file_inode(kiocb->ki_filp);
++               struct inode *inode = file_inode(iocb->ki_filp);
 
-Thanks for the link.
+-               file_end_write(kiocb->ki_filp);
++               file_end_write(iocb->ki_filp);
 
-It's interesting to see how compiler type mindset applies to fixing drivers and
-hardware related code...
+because the "ki_filp" ends up existing in both kiocb and iocb. At one
+point of editing that file I decided to try to just remove it from the
+sub-structs entirely and only keep it in the top-level structure, but
+it needs to be inside the 'struct kiocb' anyway for all the other
+users outside of fs/aio.c.
 
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Louis Taylor <louis@kragniz.eu>
-> ---
->  Documentation/core-api/printk-formats.rst | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> index a7fae4538946..6f08b1b6240a 100644
-> --- a/Documentation/core-api/printk-formats.rst
-> +++ b/Documentation/core-api/printk-formats.rst
-> @@ -19,8 +19,16 @@ Integer types
->  		unsigned long		%lu or %lx
->  		long long		%lld or %llx
->  		unsigned long long	%llu or %llx
-> +		short int		%hd or %hx
-> +		unsigned short int	%hu or %hx
-> +		char			%hhd or %hhx
-> +		unsigned char		%hhu or %hhx
->  		size_t			%zu or %zx
->  		ssize_t			%zd or %zx
-> +		s8			%hhd or %hhx
-> +		u8			%hhu or %hhx
-> +		s16			%hd or %hx
-> +		u16			%hu or %hx
->  		s32			%d or %x
->  		u32			%u or %x
->  		s64			%lld or %llx
-> -- 
-> 2.20.1
-> 
+Anyway, I don't think the patch is wrong (although I haven't actually
+_tested_ it) but I wanted to point out that those two one-liner
+changes are just "noise" that doesn't matter for the working of the
+patch.
 
--- 
-With Best Regards,
-Andy Shevchenko
+In the above, we have 'kiocb' being the embedded 'struct kiocb', and
+'iocb' is the 'struct aio_kiocb' that contains it. 'ki_filp' is the
+exact same field in both cases.
 
+                 Linus
 
+               Linus
