@@ -2,171 +2,119 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13427C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 22:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B772C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 22:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB7820815
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 22:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9ADA20842
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 22:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfCCWAz (ORCPT
+        id S1725998AbfCCWHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 17:00:55 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40357 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbfCCWAz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 17:00:55 -0500
-Received: by mail-pg1-f193.google.com with SMTP id u9so1580672pgo.7;
-        Sun, 03 Mar 2019 14:00:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xOxcJj2JeDBzju7CadzruEc/ZHnJa/uKtghWKpZJdhI=;
-        b=iSTxcJYrUTCKgqpgG3nl2EPC3+LV9Wn3ioH+LHKGrVNvT+eLm3R7CXjWhUYKVuGnwB
-         X7z/fsTIJ1qTQ7YO028reQzVwc5gA0yj9DdlsKkDg4Kztq9G+Wcgm1zRl9qvGH8dkv5f
-         TB1WvtnmJvdbSeF+N55HMxT2dhKcRPl0ZHDJwS9wtpEgyNSu+5nsoqv0txS6JTH/9uhJ
-         7d+Sak7953IjZ8VDhqNKp8HAZNWtKUR8I9Cuv4YkLXAYIswRjfWP0L1Wj7fvp+smtT1r
-         NeY9OYuZZryAHlPQrigtLUsHvmGWe0yTRvGHdhOrwBQZPU4JbhNXOyfGvkMewx7QwRYS
-         y0oA==
-X-Gm-Message-State: APjAAAUOE+FNQ9uykTZhfGS/E4l9/oMWq2+46ryFkWPRdq65yZxXTjbl
-        tTp5RN/j2oHBb3LkaWxzaFs=
-X-Google-Smtp-Source: APXvYqwFCpq0U4lf4zoebEobAKk50Db/gxITdBT0eqb+BrCa9Uzu5Bu7lur9ao1r4t6AMt9j+6xJoA==
-X-Received: by 2002:a17:902:12e:: with SMTP id 43mr17178570plb.31.1551650454021;
-        Sun, 03 Mar 2019 14:00:54 -0800 (PST)
-Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
-        by smtp.gmail.com with ESMTPSA id z12sm5294062pgv.0.2019.03.03.14.00.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Mar 2019 14:00:53 -0800 (PST)
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        syzbot+17335689e239ce135d8b@syzkaller.appspotmail.com
-Subject: [PATCH] kernel/wq: Fix a alloc_workqueue() error path
-Date:   Sun,  3 Mar 2019 14:00:46 -0800
-Message-Id: <20190303220046.29448-1-bvanassche@acm.org>
-X-Mailer: git-send-email 2.20.1
+        Sun, 3 Mar 2019 17:07:25 -0500
+Received: from mga03.intel.com ([134.134.136.65]:51307 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbfCCWHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 17:07:25 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 14:07:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,437,1544515200"; 
+   d="scan'208";a="122332855"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 03 Mar 2019 14:07:23 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1h0ZGU-0009JX-G5; Mon, 04 Mar 2019 06:07:22 +0800
+Date:   Mon, 4 Mar 2019 06:07:18 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: mm/kasan/init.c:44:8-9: WARNING: return of 0/1 in function
+ 'kasan_p4d_table' with return type bool
+Message-ID: <201903040615.AFuPIoDo%fengguang.wu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a use-after-free and a memory leak in an alloc_workqueue()
-error path. This patch avoids that e.g. the following complaint gets
-reported:
+Hi Andrey,
 
-BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:197 [inline]
-BUG: KASAN: use-after-free in lockdep_register_key+0x3b9/0x490 kernel/locking/lockdep.c:1023
-Read of size 8 at addr ffff888090fc2698 by task syz-executor134/7858
+First bad commit (maybe != root cause):
 
-CPU: 1 PID: 7858 Comm: syz-executor134 Not tainted 5.0.0-rc8-next-20190301 #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
- kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
- __read_once_size include/linux/compiler.h:197 [inline]
- lockdep_register_key+0x3b9/0x490 kernel/locking/lockdep.c:1023
- wq_init_lockdep kernel/workqueue.c:3444 [inline]
- alloc_workqueue+0x427/0xe70 kernel/workqueue.c:4263
- ucma_open+0x76/0x290 drivers/infiniband/core/ucma.c:1732
- misc_open+0x398/0x4c0 drivers/char/misc.c:141
- chrdev_open+0x247/0x6b0 fs/char_dev.c:417
- do_dentry_open+0x488/0x1160 fs/open.c:771
- vfs_open+0xa0/0xd0 fs/open.c:880
- do_last fs/namei.c:3416 [inline]
- path_openat+0x10e9/0x46e0 fs/namei.c:3533
- do_filp_open+0x1a1/0x280 fs/namei.c:3563
- do_sys_open+0x3fe/0x5d0 fs/open.c:1063
- __do_sys_openat fs/open.c:1090 [inline]
- __se_sys_openat fs/open.c:1084 [inline]
- __x64_sys_openat+0x9d/0x100 fs/open.c:1084
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   c027c7cf1577bc2333449447c6e48c93126a56b0
+commit: b938fcf42739de8270e6ea41593722929c8a7dd0 kasan: rename source files to reflect the new naming scheme
+date:   9 weeks ago
 
-Allocated by task 7789:
- save_stack+0x45/0xd0 mm/kasan/common.c:75
- set_track mm/kasan/common.c:87 [inline]
- __kasan_kmalloc mm/kasan/common.c:497 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
- __do_kmalloc mm/slab.c:3726 [inline]
- __kmalloc+0x15c/0x740 mm/slab.c:3735
- kmalloc include/linux/slab.h:553 [inline]
- kzalloc include/linux/slab.h:743 [inline]
- alloc_workqueue+0x13c/0xe70 kernel/workqueue.c:4236
- ucma_open+0x76/0x290 drivers/infiniband/core/ucma.c:1732
- misc_open+0x398/0x4c0 drivers/char/misc.c:141
- chrdev_open+0x247/0x6b0 fs/char_dev.c:417
- do_dentry_open+0x488/0x1160 fs/open.c:771
- vfs_open+0xa0/0xd0 fs/open.c:880
- do_last fs/namei.c:3416 [inline]
- path_openat+0x10e9/0x46e0 fs/namei.c:3533
- do_filp_open+0x1a1/0x280 fs/namei.c:3563
- do_sys_open+0x3fe/0x5d0 fs/open.c:1063
- __do_sys_openat fs/open.c:1090 [inline]
- __se_sys_openat fs/open.c:1084 [inline]
- __x64_sys_openat+0x9d/0x100 fs/open.c:1084
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Freed by task 7789:
- save_stack+0x45/0xd0 mm/kasan/common.c:75
- set_track mm/kasan/common.c:87 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
- __cache_free mm/slab.c:3498 [inline]
- kfree+0xcf/0x230 mm/slab.c:3821
- alloc_workqueue+0xc3e/0xe70 kernel/workqueue.c:4295
- ucma_open+0x76/0x290 drivers/infiniband/core/ucma.c:1732
- misc_open+0x398/0x4c0 drivers/char/misc.c:141
- chrdev_open+0x247/0x6b0 fs/char_dev.c:417
- do_dentry_open+0x488/0x1160 fs/open.c:771
- vfs_open+0xa0/0xd0 fs/open.c:880
- do_last fs/namei.c:3416 [inline]
- path_openat+0x10e9/0x46e0 fs/namei.c:3533
- do_filp_open+0x1a1/0x280 fs/namei.c:3563
- do_sys_open+0x3fe/0x5d0 fs/open.c:1063
- __do_sys_openat fs/open.c:1090 [inline]
- __se_sys_openat fs/open.c:1084 [inline]
- __x64_sys_openat+0x9d/0x100 fs/open.c:1084
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+coccinelle warnings: (new ones prefixed by >>)
 
-The buggy address belongs to the object at ffff888090fc2580
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 280 bytes inside of
- 512-byte region [ffff888090fc2580, ffff888090fc2780)
+>> mm/kasan/init.c:44:8-9: WARNING: return of 0/1 in function 'kasan_p4d_table' with return type bool
+>> mm/kasan/init.c:68:8-9: WARNING: return of 0/1 in function 'kasan_pmd_table' with return type bool
+>> mm/kasan/init.c:56:8-9: WARNING: return of 0/1 in function 'kasan_pud_table' with return type bool
 
-Reported-by: syzbot+17335689e239ce135d8b@syzkaller.appspotmail.com
-Fixes: 669de8bda87b ("kernel/workqueue: Use dynamic lockdep keys for workqueues")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+vim +/kasan_p4d_table +44 mm/kasan/init.c
+
+69786cdb3 mm/kasan/kasan_init.c Andrey Ryabinin    2015-08-13  34  
+c2febafc6 mm/kasan/kasan_init.c Kirill A. Shutemov 2017-03-09  35  #if CONFIG_PGTABLE_LEVELS > 4
+c65e774fb mm/kasan/kasan_init.c Kirill A. Shutemov 2018-02-14  36  p4d_t kasan_zero_p4d[MAX_PTRS_PER_P4D] __page_aligned_bss;
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  37  static inline bool kasan_p4d_table(pgd_t pgd)
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  38  {
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  39  	return pgd_page(pgd) == virt_to_page(lm_alias(kasan_zero_p4d));
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  40  }
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  41  #else
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  42  static inline bool kasan_p4d_table(pgd_t pgd)
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  43  {
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17 @44  	return 0;
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  45  }
+c2febafc6 mm/kasan/kasan_init.c Kirill A. Shutemov 2017-03-09  46  #endif
+69786cdb3 mm/kasan/kasan_init.c Andrey Ryabinin    2015-08-13  47  #if CONFIG_PGTABLE_LEVELS > 3
+69786cdb3 mm/kasan/kasan_init.c Andrey Ryabinin    2015-08-13  48  pud_t kasan_zero_pud[PTRS_PER_PUD] __page_aligned_bss;
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  49  static inline bool kasan_pud_table(p4d_t p4d)
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  50  {
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  51  	return p4d_page(p4d) == virt_to_page(lm_alias(kasan_zero_pud));
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  52  }
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  53  #else
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  54  static inline bool kasan_pud_table(p4d_t p4d)
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  55  {
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17 @56  	return 0;
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  57  }
+69786cdb3 mm/kasan/kasan_init.c Andrey Ryabinin    2015-08-13  58  #endif
+69786cdb3 mm/kasan/kasan_init.c Andrey Ryabinin    2015-08-13  59  #if CONFIG_PGTABLE_LEVELS > 2
+69786cdb3 mm/kasan/kasan_init.c Andrey Ryabinin    2015-08-13  60  pmd_t kasan_zero_pmd[PTRS_PER_PMD] __page_aligned_bss;
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  61  static inline bool kasan_pmd_table(pud_t pud)
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  62  {
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  63  	return pud_page(pud) == virt_to_page(lm_alias(kasan_zero_pmd));
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  64  }
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  65  #else
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  66  static inline bool kasan_pmd_table(pud_t pud)
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  67  {
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17 @68  	return 0;
+0207df4fa mm/kasan/kasan_init.c Andrey Ryabinin    2018-08-17  69  }
+69786cdb3 mm/kasan/kasan_init.c Andrey Ryabinin    2015-08-13  70  #endif
+69786cdb3 mm/kasan/kasan_init.c Andrey Ryabinin    2015-08-13  71  pte_t kasan_zero_pte[PTRS_PER_PTE] __page_aligned_bss;
+69786cdb3 mm/kasan/kasan_init.c Andrey Ryabinin    2015-08-13  72  
+
+:::::: The code at line 44 was first introduced by commit
+:::::: 0207df4fa1a869281ddbf72db6203dbf036b3e1a kernel/memremap, kasan: make ZONE_DEVICE with work with KASAN
+
+:::::: TO: Andrey Ryabinin <aryabinin@virtuozzo.com>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+
 ---
- kernel/workqueue.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 497900263dbc..35fd0e697087 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -4291,6 +4291,8 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	return wq;
- 
- err_free_wq:
-+	wq_unregister_lockdep(wq);
-+	wq_free_lockdep(wq);
- 	free_workqueue_attrs(wq->unbound_attrs);
- 	kfree(wq);
- 	return NULL;
--- 
-2.20.1
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
