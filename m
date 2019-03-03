@@ -2,135 +2,132 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97EFC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B37C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A670420836
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B73620836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQsBWKzk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="UHZH84ki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbfCCKFc (ORCPT
+        id S1726133AbfCCKF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 05:05:32 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38416 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfCCKFb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 05:05:31 -0500
-Received: by mail-pg1-f196.google.com with SMTP id m2so1107834pgl.5;
-        Sun, 03 Mar 2019 02:05:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=b8vQYc9ep8TfoYWy1t/cwVZtTf+JFWkdkgDvyL2DYys=;
-        b=eQsBWKzko1lBtorrWr+b06pWwvf5bv7f9QI8605aY1Kw/dzLGRowS+gxr8N56VREuW
-         cABct7IuxrVOSnxC7ndkrBXi65G/LN1zEHDGeEIbTpXKbF46a2X1wSu7DOtVv3Wi3nK8
-         wA8xEsNVIs5+CW+h66uTLBqNev9THmAGa6TDrQINOgPFwYvNhFWu7k9uHJl1VtpYPKSp
-         QXw0/fbIa7u3XrwRt59pAXtPO1vRdyk5Tk1Oe7k76odFBjyQkE01qP1OIhrbf/IG/Y11
-         ZE7zHbC16oti7qnbCmN0U6CMrJ6j8qMmoPOHCYbeFc7KldHoBlJJ4zQDXaEkwgvrL9eH
-         xJqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=b8vQYc9ep8TfoYWy1t/cwVZtTf+JFWkdkgDvyL2DYys=;
-        b=hXZtSRd2KE5+rzmwiyS2IoY2EfWQWvaDVLuM+vAQJwfEATNlAqPuKQYJ7wK2DH2DVF
-         Nyc54pX7dvrFvSBAOMvAln9am6G3xX6UmwOf4464h49krkQldmNbNavazoXUXcSjgLTo
-         JsFe+i7w1FsmzZDI7VfsHpmKUB84Wx6En3fDtI3Kx+bJL9jm8yRjuNwInAlQk67eXnp2
-         AhQoTmw+ZGA9+xC2g9x/DDrW3P+aTG149A2yds4Fp73hvhTbA3DuOlwCwKIk67jvdcHu
-         A2A/6m310MEedqHvz8fhlaHQK5uU62TvVcFJAm7OH+skGD7aF1oXsnzFjY07uqRGKChp
-         8lBg==
-X-Gm-Message-State: APjAAAV9xF8hiotzSrQT2nOQpNMeTCw9JqBsbwt6h1O5W0vzWUxlhMGW
-        12I3Kq6TZVm2+EMuGfp8LSc=
-X-Google-Smtp-Source: APXvYqw6VAOgIqjNxc0p0slnJ2hgt5OBEUHaGw1eB/rnwZFE7hXi83hgipthHGM9ezdF/jVjdPWi/g==
-X-Received: by 2002:a65:5844:: with SMTP id s4mr13205327pgr.77.1551607530979;
-        Sun, 03 Mar 2019 02:05:30 -0800 (PST)
-Received: from localhost (193-116-74-175.tpgi.com.au. [193.116.74.175])
-        by smtp.gmail.com with ESMTPSA id m20sm5798295pfj.142.2019.03.03.02.05.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 Mar 2019 02:05:30 -0800 (PST)
-Date:   Sun, 03 Mar 2019 20:05:23 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 01/20] asm-generic/mmiowb: Add generic implementation of
- mmiowb() tracking
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rich Felker <dalias@libc.org>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Tony Luck <tony.luck@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-References: <20190301140348.25175-1-will.deacon@arm.com>
-        <20190301140348.25175-2-will.deacon@arm.com>
-        <1551575210.6lwpiqtg5k.astroid@bobo.none>
-        <CAHk-=whxaYGTmHyoWeegL=ihHMDW_FJehUJVN_nP++Su=foL+g@mail.gmail.com>
-        <1551583190.duzqnmfnvg.astroid@bobo.none>
-        <CAHk-=whVN58nWh29jvXx+X-Yx9dCC6BeAZOtKak+d01y_UVg=A@mail.gmail.com>
-In-Reply-To: <CAHk-=whVN58nWh29jvXx+X-Yx9dCC6BeAZOtKak+d01y_UVg=A@mail.gmail.com>
+        Sun, 3 Mar 2019 05:05:59 -0500
+Received: from nbd.name ([46.4.11.11]:47036 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfCCKF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 05:05:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9oBiZti/vu20O3nlFR+6+BgWj3kr/MO2+a3u5axqI6Y=; b=UHZH84kiliwO1BLeismm5Xbjwf
+        N6tI550Fkn10VvhD4togf7dXv/d1H2/vO3X/AmtsKc46adLwKHlWiEQR6C0rQYqerOIF7FTeg+RV6
+        h9j96Y5W2eBbDUz8n9EAFuLsivRBzrO5v2zd325TRufyrStDt4cb3DWNV2g5UpBMwYoo=;
+Subject: Re: [mt76/mt7603/mac] Question about missing variable assignment
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190302211046.GA20268@embeddedor.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <827d2ee6-04de-f4f9-15b4-40dac90bda9c@nbd.name>
+Date:   Sun, 3 Mar 2019 11:05:51 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.5.1
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1551606848.8cceyn7nhv.astroid@bobo.none>
+In-Reply-To: <20190302211046.GA20268@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds's on March 3, 2019 2:29 pm:
-> On Sat, Mar 2, 2019, 19:34 Nicholas Piggin <npiggin@gmail.com> wrote:
->=20
->>
->> It doesn't have to be done all at once with this series, obviously this
->> is a big improvement on its own. But why perpetuate the nomenclature
->> and concept for new code added now?
->>
->=20
-> What nomenclature?
->=20
-> Nobody will be using mmiowb(). That's the whole point of the patch series=
-.
->=20
-> It's now an entirely internal name, and nobody cares.
+On 2019-03-02 22:10, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> The following piece of code in drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+> is missing a variable assignment before line 1058.  Notice that there
+> is a potential execution path in which variable *i* is compared against
+> magic number 15 at line 1075 without being initialized previously
+> (this was reported by Coverity):
+> 
+> 1055 out:
+> 1056         final_rate_flags = info->status.rates[final_idx].flags;
+> 1057 
+> 1058         switch (FIELD_GET(MT_TX_RATE_MODE, final_rate)) {
+> 1059         case MT_PHY_TYPE_CCK:
+> 1060                 cck = true;
+> 1061                 /* fall through */
+> 1062         case MT_PHY_TYPE_OFDM:
+> 1063                 if (dev->mt76.chandef.chan->band == NL80211_BAND_5GHZ)
+> 1064                         sband = &dev->mt76.sband_5g.sband;
+> 1065                 else
+> 1066                         sband = &dev->mt76.sband_2g.sband;
+> 1067                 final_rate &= GENMASK(5, 0);
+> 1068                 final_rate = mt7603_get_rate(dev, sband, final_rate, cck);
+> 1069                 final_rate_flags = 0;
+> 1070                 break;
+> 1071         case MT_PHY_TYPE_HT_GF:
+> 1072         case MT_PHY_TYPE_HT:
+> 1073                 final_rate_flags |= IEEE80211_TX_RC_MCS;
+> 1074                 final_rate &= GENMASK(5, 0);
+> 1075                 if (i > 15)
+> 1076                         return false;
+> 1077                 break;
+> 1078         default:
+> 1079                 return false;
+> 1080         }
+> 
+> My guess is that such missing assignment should be something similar
+> to the one at line 566:
+> 
+> 	i = FIELD_GET(MT_RXV1_TX_RATE, rxdg0);
+> 
+> but I'm not sure what the proper arguments for macro FIELD_GET should
+> be.
+> 
+> This code was introduced by commit c8846e1015022d2531ac4c895783e400b3e5babe
+> 
+> What do you think?
+Thanks for reporting this. The fix is simpler than that, the check
+should be: if (final_rate > 15)
+I will send a fix.
 
-Why even bother with it at all, "internal" or not?  Just get rid of=20
-mmiowb, the concept is obsolete.
-
-> And none of this has anything to do with wmb(), since it's about IO being
-> ordered across cpu's by spin locks, not by barriers.
->=20
-> So I'm not seeing what you're arguing about.
-
-Pretend ia64 doesn't exist for a minute. Now the regular mb/wmb barriers=20
-orders IO across CPUs with respect to their cacheable accesses. =20
-Regardless of whether that cacheable access is a spin lock, a bit lock,=20
-an atomic, a mutex... This is how it was before mmiowb came along.
-
-Nothing wrong with this series to make spinlocks order mmio, but why=20
-call it mmiowb? Another patch could rename ia64's mmiowb and then the
-name can be removed from the tree completely.
-
-Thanks,
-Nick
-
-=
+- Felix
