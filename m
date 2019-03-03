@@ -2,135 +2,103 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A05FC10F00
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86661C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F5D20857
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 15:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551627132;
-	bh=Tg5EurnMIMPdCMGc4aOuceSYhOJyeuFB7usfSgHjbW4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EV216y7u6L9HKHy3xulta8BRGhPFggyRY+x+4N/frNnbbc2UQJNX2KibOpOlcETIt
-	 uzU2z9P09Egcy5xnUODnaKSInHIGAVyJdLAzgItOzun0bjuDRQ6wbtTfLtGTdJ0pKL
-	 aQ6rpoVFcQOAuFhi9IGlZx0We/zzzcM3poAD7aoQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5E114206DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfCCPcL (ORCPT
+        id S1726413AbfCCQLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 10:32:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37894 "EHLO mail.kernel.org"
+        Sun, 3 Mar 2019 11:11:20 -0500
+Received: from mga03.intel.com ([134.134.136.65]:36623 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfCCPcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 10:32:10 -0500
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C604020835;
-        Sun,  3 Mar 2019 15:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551627129;
-        bh=Tg5EurnMIMPdCMGc4aOuceSYhOJyeuFB7usfSgHjbW4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oBzkuHBwt2cetWX4bXDlSRviJqmL7toEn03Gx2iVvjd1V6zSmEpr+A8iUtvNAJea0
-         +v0jS0ZUunYk0JWRnN0GSCUHGhG6q3YZRrHDMUHbAzgGDTA83aktQQH1KwXbkycNWd
-         IFj5uVHsYzRuYJLD2UslSEj5De/W+AcVw8J2/uxw=
-Date:   Sun, 3 Mar 2019 15:32:01 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Song Qiang <songqiang1304521@gmail.com>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        Martin Kelly <mkelly@xevo.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Brian Masney <masneyb@onstation.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 00/10] iio mount matrix - revitalize missing bindings
- documentation and provide code for bmc150, bmg160, bma180, itg3200, hmc584x
-Message-ID: <20190303153201.440ac325@archlinux>
-In-Reply-To: <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com>
-References: <cover.1550768574.git.hns@goldelico.com>
-        <CAHp75VeMTd32S+bTgU2f1AS-NB67iuM+erT8qNJgPS7O0E1Cjg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726381AbfCCQLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 11:11:19 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 08:11:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,436,1544515200"; 
+   d="scan'208";a="138731368"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 03 Mar 2019 08:11:15 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1h0Thq-0009BM-PO; Mon, 04 Mar 2019 00:11:14 +0800
+Date:   Mon, 4 Mar 2019 00:10:16 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc:     kbuild-all@01.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+        jic23@kernel.org, knaack.h@gmx.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v2 4/4] staging: iio: ad5933: move out of staging
+Message-ID: <201903040037.6l3rI2yh%fengguang.wu@intel.com>
+References: <20190301025331.ucqd7unbgaqfcuaf@smtp.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190301025331.ucqd7unbgaqfcuaf@smtp.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Feb 2019 16:48:14 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Hi Marcelo,
 
-> On Thu, Feb 21, 2019 at 7:04 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >
-> > Fixes V2:
-> > * make get_mount_matrix() functions more readable (use temp variable)
-> >   (suggested by Jonathan and Andy)
-> > * add these readability improvements also for ak8975 and mpu6050
-> >   (suggested by Jonathan and Andy)
-> > * squash bindings documentation into single commit for better discussion
-> >   (suggested by Linus)
-> > * FOR DISCUSSION: add some more clarifications to the bindings documentation
-> >   and an attempt to define the magnetometer orientation
-> > * add "iio: Allow to read mount matrix from ACPI" to the beginning of
-> >   the series to make it compile
-> >   (suggested by Andy)
-> > * replace of_iio_read_mount_matrix() by iio_read_mount_matrix()
-> >   (required by "iio: Allow to read mount matrix from ACPI")
-> > * drop patch to convert bma180 to devm (potential race)
-> >   (suggested by Jonathan)
-> >
-> > PATCH V1 2019-02-20 15:01:02:
-> > This patch series adds the mount-matrix to several iio sensor drivers
-> > used in handheld devices.
-> >
-> > The mount-matrix translates the quite arbitrary orientation of the sensor
-> > on some printed circuit board to user-tangible orientation in handheld
-> > devices that relates to typical screen orientation.
-> >
-> > There was a bindings documentation by Linus Walleij but the patch
-> > did not make it into mainline. Therefore I resend it here.
-> >
-> > Next I have added some clarifications (at least I hope it clarifies)
-> > in a second patch.
-> >
-> > Finally, the patch set implements the hooks for the mount matrix
-> > in several iio drivers: bmc150, bma180, bmg160, itg3200, hmc5843.
-> > This includes also one patch for the bma180 to convert it to devm API.
-> >
-> > We use them in different variants of the omap3-gta04 so a separate
-> > patch set will provide device tree additions for them.
-> >  
-> 
-> Thank you, it looks nice.
-> FWIW,
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
+Thank you for the patch! Yet something to improve:
 
-Thanks to Linus and Andy for reviews.
-I've picked up all but they documentation patch.  I think
-it is 'very nearly there', but would like a few really minor
-tweaks.  Seemed silly to stall the other patches on that though!
+[auto build test ERROR on iio/togreg]
+[cannot apply to v5.0-rc8]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Thanks,
+url:    https://github.com/0day-ci/linux/commits/Marcelo-Schmitt/staging-iio-ad5933-move-out-of-staging/20190303-232039
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+config: xtensa-allyesconfig
+compiler: xtensa-linux-gcc (GCC) 8.2.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        GCC_VERSION=8.2.0 make.cross ARCH=xtensa  allyesconfig
+        GCC_VERSION=8.2.0 make.cross ARCH=xtensa 
 
-Jonathan
+All errors (new ones prefixed by >>):
 
+>> drivers/staging/iio/Kconfig:12: can't open file "drivers/staging/iio/impedance-analyzer/Kconfig"
+   make[2]: *** [allyesconfig] Error 1
+   make[1]: *** [allyesconfig] Error 2
+   make: *** [sub-make] Error 2
+--
+>> drivers/staging/iio/Kconfig:12: can't open file "drivers/staging/iio/impedance-analyzer/Kconfig"
+   make[2]: *** [oldconfig] Error 1
+   make[1]: *** [oldconfig] Error 2
+   make: *** [sub-make] Error 2
+--
+>> drivers/staging/iio/Kconfig:12: can't open file "drivers/staging/iio/impedance-analyzer/Kconfig"
+   make[2]: *** [olddefconfig] Error 1
+   make[1]: *** [olddefconfig] Error 2
+   make: *** [sub-make] Error 2
 
+vim +12 drivers/staging/iio/Kconfig
+
+f94aa354d6 Michael Hennerich 2011-08-02 @12  source "drivers/staging/iio/impedance-analyzer/Kconfig"
+09434ef7c2 Barry Song        2010-10-27  13  source "drivers/staging/iio/meter/Kconfig"
+f46d9f154a Graf Yang         2010-10-27  14  source "drivers/staging/iio/resolver/Kconfig"
+7f3a1fb998 Jonathan Cameron  2009-08-18  15  
+
+:::::: The code at line 12 was first introduced by commit
+:::::: f94aa354d676532448e8e222e737fdd0755fc786 iio: impedance-analyzer: New driver for AD5933/4 Impedance Converter, Network Analyzer
+
+:::::: TO: Michael Hennerich <michael.hennerich@analog.com>
+:::::: CC: Greg Kroah-Hartman <gregkh@suse.de>
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
