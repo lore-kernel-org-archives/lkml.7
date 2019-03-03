@@ -2,126 +2,94 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E502C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47362C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF3F62075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZicyOYPe"
+	by mail.kernel.org (Postfix) with ESMTP id 0E00120842
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 16:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551629778;
+	bh=YdZeHK05d26IuePhawNCPu5oOUZT6kJbdTCFG9iyqbI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hAVJS6h9xhiiYydEowbAeqfYDeGB1zutVM8gdc8wzLdRy6WH8QQp0cM/9opqWHvSv
+	 5jnqVHlWbpZX9Ougy7rr3Hy/7ZpNmEVqp4AQjHbsV2qMLGfBawY9dEsYJZBRpliiZp
+	 yc34aHeE3ru6UPvCs6N2gAeD1/2xqVLdK2TOTsrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfCCQMM (ORCPT
+        id S1726432AbfCCQQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 11:12:12 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40253 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfCCQML (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 11:12:11 -0500
-Received: by mail-qt1-f193.google.com with SMTP id j36so2726699qta.7
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 08:12:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Scldm7asFmkFv3RFdwemKhngiSVl7tHyiBYeIj/ElUA=;
-        b=ZicyOYPebOfcqWDlSm9bqi6Jv6gGnYB6GWPwpVakCgxS3XiA8fNZoD3ac2FyigjepJ
-         xtd5plynsXkzIFYV0CWK6LGo0rv/K5k+b5fkR2QOOvQ8SRmYbnjkdStIt1KxuiS71Zh8
-         14s7gAIJf9rbgpH1Pq1D6aJWBB5VjHoNn1oKY3es5TYPdEMBtb2vLCpXmthjYDtAzDqG
-         r+ziXl0Dj/DloABoXZmP9CZ5lyI/Fpmi/6xJhcGjlleI4AZB5Ph6LoAGYLJL+WBG0rga
-         6pKhY9re9rP6kcW9zwwwXeBNWFTx/gY46EGFRhs+cj4mQc+L9nAgjmJNYfnj8qop23eH
-         xptw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Scldm7asFmkFv3RFdwemKhngiSVl7tHyiBYeIj/ElUA=;
-        b=EAXXAy+noHY3c0HyuGDMSbmubsXflM3HmchsIx42dvrntzN9h9hwXcLij6x5lckwul
-         KxzJDY+6vB2D9HXY0G5kom/9KTb5al0nlrHmkwgOnJ8vfqceWgX3WU6YH2wZq7SIiOx9
-         OAGLYphXD5u9j75gwzh+IZnWiLA5+fR+Y/AWd+vH8o4iMUBCx5Cb9gnUEbNW85UUm4Kd
-         0ZE+E8WhF5gcHnx1M76Pq9NjnlM9Z1apNCdHq9lI237FO88AlI01MqQNgA4mHaNAmJyo
-         rLgs72GZ2+WKeWzzIZqnZZLjPEFd4YRn5b0oJNjiK5NPf/Yl4MRVA+bffOEdsJJ4Cdvd
-         6u0Q==
-X-Gm-Message-State: APjAAAV15MrMWhRXxl7FJCk2mvpuLKbYnoUtEcEMPU4JPGntPts3qu2n
-        +glN/Bpg5xTJhScoT/m25x4vmhqKcURbAvuba40J0Q==
-X-Google-Smtp-Source: APXvYqzEae83UdXzlFdX830+tuKK2j/CkNUvJ0+roUvZTP2BO2j0eUq6ccK1V5OdVKdgCzRbjUAuIl5ZQHSIWWdTEPI=
-X-Received: by 2002:a0c:bd97:: with SMTP id n23mr11452843qvg.58.1551629529955;
- Sun, 03 Mar 2019 08:12:09 -0800 (PST)
+        Sun, 3 Mar 2019 11:16:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfCCQQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 11:16:16 -0500
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D762075B;
+        Sun,  3 Mar 2019 16:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551629776;
+        bh=YdZeHK05d26IuePhawNCPu5oOUZT6kJbdTCFG9iyqbI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Z+uaMVe60yGOESlwpcKw44Rh61XkkIIARMe9JUVhvLkghOiOVJWfF9zHU9KBI+FN+
+         Hnp0jbFUhgx+V2E5+r+y0XfFi7VE2XPQ++20iejYhf1FlZF2p4/Ndo/LocTA3y7jW3
+         Sqb9Pe4+BGfe0XNsph+rcCLxP5vnUIczOP9bB7Jg=
+Date:   Sun, 3 Mar 2019 16:16:10 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] iio: st_accel: remove redundant unsigned less
+ than zero check
+Message-ID: <20190303161610.43a03ffa@archlinux>
+In-Reply-To: <20190221104636.1922-1-colin.king@canonical.com>
+References: <20190221104636.1922-1-colin.king@canonical.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190301160856.129678-1-joel@joelfernandes.org> <201903030526.3AuYFiuN%fengguang.wu@intel.com>
-In-Reply-To: <201903030526.3AuYFiuN%fengguang.wu@intel.com>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Sun, 3 Mar 2019 08:11:59 -0800
-Message-ID: <CAJWu+op541tQ_TBJs-kOyRRBYDWiN0Znpb=cUQFxuLg-SmjO_g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-To:     kbuild test robot <lkp@intel.com>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        kbuild-all@01.org, LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This report is for an older version of the patch so ignore it. The
-issue is already resolved.
+On Thu, 21 Feb 2019 10:46:36 +0000
+Colin King <colin.king@canonical.com> wrote:
 
-On Sat, Mar 2, 2019 at 2:00 PM kbuild test robot <lkp@intel.com> wrote:
->
-> Hi Joel,
->
-> Thank you for the patch! Yet something to improve:
->
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v5.0-rc8]
-> [cannot apply to next-20190301]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/Provide-in-kernel-headers-for-making-it-easy-to-extend-the-kernel/20190303-014850
-> config: sh-allmodconfig (attached as .config)
-> compiler: sh4-linux-gnu-gcc (Debian 8.2.0-11) 8.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=8.2.0 make.cross ARCH=sh
->
-> All errors (new ones prefixed by >>):
->
-> >> find: 'arch/sh/kernel/module.lds': No such file or directory
-> >> find: 'arch/sh/kernel/module.lds': No such file or directory
->
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The check that variable val is less than zero is redundant since val
+> is an unsigned int and hence can never be less than zero. Remove it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Applied.
+
+Thanks,
+
+Jonathan
+
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
->
-> --
-> You received this message because you are subscribed to the Google Groups "kernel-team" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>  drivers/iio/accel/st_accel_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+> index a3c0916479fa..9930edf423bf 100644
+> --- a/drivers/iio/accel/st_accel_core.c
+> +++ b/drivers/iio/accel/st_accel_core.c
+> @@ -992,7 +992,7 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev,
+>  			goto out;
+>  
+>  		val = elements[i].integer.value;
+> -		if (val < 0 || val > 2)
+> +		if (val > 2)
+>  			goto out;
+>  
+>  		/* Avoiding full matrix multiplication, we simply reorder the
+
