@@ -2,432 +2,476 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 621EEC10F00
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC24C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1AB206DD
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551644550;
-	bh=jiivNQWQK1Fnf0sHv0X9wYaomYxwkoOUTfLFXMWK1lA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GrM6rPF1C1b9fL8LCBP2g+nDN6ovgjtm/n/xLzaHN/QGPZgZULiVSJ/z0T7YGqHBR
-	 eknViabSrMRY9xYSXTnfZENwYpOUDsROvpZrvv66ORngHxFh/+03kTO3Y+54oD2Ay2
-	 pglKNdZLv9vMThnhYiLAf8u1/35/jMXD/zrrsiIk=
+	by mail.kernel.org (Postfix) with ESMTP id D0778206DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 20:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfCCUW2 (ORCPT
+        id S1726691AbfCCUXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 15:22:28 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:37557 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfCCUW2 (ORCPT
+        Sun, 3 Mar 2019 15:23:19 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:41514 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfCCUXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 15:22:28 -0500
-Received: by mail-yw1-f66.google.com with SMTP id k14so2521874ywe.4
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 12:22:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vWYe/SH4n5pQhn73EX2h3fENGFvia3GnHd1Qq7AyZVI=;
-        b=jYIT3kBJsp7Si2SMxh+Wc+Sr+apRFp2L49FpGQlrEq4CR/18x/rVo2PxuanL23Jy4K
-         uzpUIRFYJP55mK9QDTEbzsTsIc2LsaQXsZMGdF2mB9Ejfoqtim0aL+nKzA1iCoAoJxuu
-         I/Z6BzVGm3j2fOraGFlCwnH0oaMMROTIljcD6HJxrKO/iCDSLK6U3daAe6oI9RsCyNf7
-         vZiomG2B+tF3TfaOPtm3tDmvCFsX805PeZwlpWmf2Pt4QU8WuFDTuYXQm9gVKJLDgcL4
-         NenB+AMAsGmwjMeGh2omjPMbtQCN6PYMjjvYoE7+Sfnl8GUJe+KKFfaPXRvXrYrfqsrZ
-         J4pA==
-X-Gm-Message-State: APjAAAVC6pFj4Srd/ln5w+BCMca/bYqenVWwinNIgXlro/bbCX1iVjI9
-        bs1IWrKF1kx4rnYRn2WP+lU=
-X-Google-Smtp-Source: APXvYqxxnI4dFXphPrO3Xa618uZXKK+o6d9sqai/0+WFqAOeBHgY3P8K43unCfLjgEIACijg+vNZOA==
-X-Received: by 2002:a25:ed5:: with SMTP id 204mr12057601ybo.171.1551644546486;
-        Sun, 03 Mar 2019 12:22:26 -0800 (PST)
-Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c091:200::ffe8])
-        by smtp.gmail.com with ESMTPSA id g82sm1811658ywg.60.2019.03.03.12.22.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Mar 2019 12:22:25 -0800 (PST)
-Date:   Sun, 3 Mar 2019 15:22:23 -0500
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Vlad Buslov <vladbu@mellanox.com>,
-        "kernel-team@fb.com" <kernel-team@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 11/12] percpu: convert chunk hints to be based on
- pcpu_block_md
-Message-ID: <20190303202223.GA4868@dennisz-mbp.dhcp.thefacebook.com>
-References: <20190228021839.55779-1-dennis@kernel.org>
- <20190228021839.55779-12-dennis@kernel.org>
- <AM0PR04MB44813FA493D26E2E157FCAF388700@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        Sun, 3 Mar 2019 15:23:19 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id A1EC520032;
+        Sun,  3 Mar 2019 21:23:09 +0100 (CET)
+Date:   Sun, 3 Mar 2019 21:23:08 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] drm: rockchip: introduce rk3066 hdmi
+Message-ID: <20190303202308.GD13157@ravnborg.org>
+References: <20190302104116.1535-1-jbx6244@gmail.com>
+ <20190302104116.1535-2-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR04MB44813FA493D26E2E157FCAF388700@AM0PR04MB4481.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190302104116.1535-2-jbx6244@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=s8YR1HE3AAAA:8 a=pGLkceISAAAA:8
+        a=4y6Fq9xeSFUypJWi1pYA:9 a=CjuIK1q_8ugA:10 a=jGH_LyMDp9YhSvY-UuyI:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 03, 2019 at 08:18:49AM +0000, Peng Fan wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: owner-linux-mm@kvack.org [mailto:owner-linux-mm@kvack.org] On
-> > Behalf Of Dennis Zhou
-> > Sent: 2019年2月28日 10:19
-> > To: Dennis Zhou <dennis@kernel.org>; Tejun Heo <tj@kernel.org>; Christoph
-> > Lameter <cl@linux.com>
-> > Cc: Vlad Buslov <vladbu@mellanox.com>; kernel-team@fb.com;
-> > linux-mm@kvack.org; linux-kernel@vger.kernel.org
-> > Subject: [PATCH 11/12] percpu: convert chunk hints to be based on
-> > pcpu_block_md
-> > 
-> > As mentioned in the last patch, a chunk's hints are no different than a block
-> > just responsible for more bits. This converts chunk level hints to use a
-> > pcpu_block_md to maintain them. This lets us reuse the same hint helper
-> > functions as a block. The left_free and right_free are unused by the chunk's
-> > pcpu_block_md.
-> > 
-> > Signed-off-by: Dennis Zhou <dennis@kernel.org>
-> > ---
-> >  mm/percpu-internal.h |   5 +-
-> >  mm/percpu-stats.c    |   5 +-
-> >  mm/percpu.c          | 120 +++++++++++++++++++------------------------
-> >  3 files changed, 57 insertions(+), 73 deletions(-)
-> > 
-> > diff --git a/mm/percpu-internal.h b/mm/percpu-internal.h index
-> > 119bd1119aa7..0468ba500bd4 100644
-> > --- a/mm/percpu-internal.h
-> > +++ b/mm/percpu-internal.h
-> > @@ -39,9 +39,7 @@ struct pcpu_chunk {
-> > 
-> >  	struct list_head	list;		/* linked to pcpu_slot lists */
-> >  	int			free_bytes;	/* free bytes in the chunk */
-> > -	int			contig_bits;	/* max contiguous size hint */
-> > -	int			contig_bits_start; /* contig_bits starting
-> > -						      offset */
-> > +	struct pcpu_block_md	chunk_md;
-> >  	void			*base_addr;	/* base address of this chunk */
-> > 
-> >  	unsigned long		*alloc_map;	/* allocation map */
-> > @@ -49,7 +47,6 @@ struct pcpu_chunk {
-> >  	struct pcpu_block_md	*md_blocks;	/* metadata blocks */
-> > 
-> >  	void			*data;		/* chunk data */
-> > -	int			first_bit;	/* no free below this */
-> >  	bool			immutable;	/* no [de]population allowed */
-> >  	int			start_offset;	/* the overlap with the previous
-> >  						   region to have a page aligned
-> > diff --git a/mm/percpu-stats.c b/mm/percpu-stats.c index
-> > b5fdd43b60c9..ef5034a0464e 100644
-> > --- a/mm/percpu-stats.c
-> > +++ b/mm/percpu-stats.c
-> > @@ -53,6 +53,7 @@ static int find_max_nr_alloc(void)  static void
-> > chunk_map_stats(struct seq_file *m, struct pcpu_chunk *chunk,
-> >  			    int *buffer)
-> >  {
-> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
-> >  	int i, last_alloc, as_len, start, end;
-> >  	int *alloc_sizes, *p;
-> >  	/* statistics */
-> > @@ -121,9 +122,9 @@ static void chunk_map_stats(struct seq_file *m,
-> > struct pcpu_chunk *chunk,
-> >  	P("nr_alloc", chunk->nr_alloc);
-> >  	P("max_alloc_size", chunk->max_alloc_size);
-> >  	P("empty_pop_pages", chunk->nr_empty_pop_pages);
-> > -	P("first_bit", chunk->first_bit);
-> > +	P("first_bit", chunk_md->first_free);
-> >  	P("free_bytes", chunk->free_bytes);
-> > -	P("contig_bytes", chunk->contig_bits * PCPU_MIN_ALLOC_SIZE);
-> > +	P("contig_bytes", chunk_md->contig_hint * PCPU_MIN_ALLOC_SIZE);
-> >  	P("sum_frag", sum_frag);
-> >  	P("max_frag", max_frag);
-> >  	P("cur_min_alloc", cur_min_alloc);
-> > diff --git a/mm/percpu.c b/mm/percpu.c
-> > index 7cdf14c242de..197479f2c489 100644
-> > --- a/mm/percpu.c
-> > +++ b/mm/percpu.c
-> > @@ -233,10 +233,13 @@ static int pcpu_size_to_slot(int size)
-> > 
-> >  static int pcpu_chunk_slot(const struct pcpu_chunk *chunk)  {
-> > -	if (chunk->free_bytes < PCPU_MIN_ALLOC_SIZE || chunk->contig_bits
-> > == 0)
-> > +	const struct pcpu_block_md *chunk_md = &chunk->chunk_md;
-> > +
-> > +	if (chunk->free_bytes < PCPU_MIN_ALLOC_SIZE ||
-> > +	    chunk_md->contig_hint == 0)
-> >  		return 0;
-> > 
-> > -	return pcpu_size_to_slot(chunk->contig_bits * PCPU_MIN_ALLOC_SIZE);
-> > +	return pcpu_size_to_slot(chunk_md->contig_hint *
-> > PCPU_MIN_ALLOC_SIZE);
-> >  }
-> > 
-> >  /* set the pointer to a chunk in a page struct */ @@ -592,54 +595,6 @@
-> > static inline bool pcpu_region_overlap(int a, int b, int x, int y)
-> >  	return false;
-> >  }
-> > 
-> > -/**
-> > - * pcpu_chunk_update - updates the chunk metadata given a free area
-> > - * @chunk: chunk of interest
-> > - * @bit_off: chunk offset
-> > - * @bits: size of free area
-> > - *
-> > - * This updates the chunk's contig hint and starting offset given a free area.
-> > - * Choose the best starting offset if the contig hint is equal.
-> > - */
-> > -static void pcpu_chunk_update(struct pcpu_chunk *chunk, int bit_off, int bits)
-> > -{
-> > -	if (bits > chunk->contig_bits) {
-> > -		chunk->contig_bits_start = bit_off;
-> > -		chunk->contig_bits = bits;
-> > -	} else if (bits == chunk->contig_bits && chunk->contig_bits_start &&
-> > -		   (!bit_off ||
-> > -		    __ffs(bit_off) > __ffs(chunk->contig_bits_start))) {
-> > -		/* use the start with the best alignment */
-> > -		chunk->contig_bits_start = bit_off;
-> > -	}
-> > -}
-> > -
-> > -/**
-> > - * pcpu_chunk_refresh_hint - updates metadata about a chunk
-> > - * @chunk: chunk of interest
-> > - *
-> > - * Iterates over the metadata blocks to find the largest contig area.
-> > - * It also counts the populated pages and uses the delta to update the
-> > - * global count.
-> > - *
-> > - * Updates:
-> > - *      chunk->contig_bits
-> > - *      chunk->contig_bits_start
-> > - */
-> > -static void pcpu_chunk_refresh_hint(struct pcpu_chunk *chunk) -{
-> > -	int bit_off, bits;
-> > -
-> > -	/* clear metadata */
-> > -	chunk->contig_bits = 0;
-> > -
-> > -	bit_off = chunk->first_bit;
-> > -	bits = 0;
-> > -	pcpu_for_each_md_free_region(chunk, bit_off, bits) {
-> > -		pcpu_chunk_update(chunk, bit_off, bits);
-> > -	}
-> > -}
-> > -
-> >  /**
-> >   * pcpu_block_update - updates a block given a free area
-> >   * @block: block of interest
-> > @@ -753,6 +708,29 @@ static void pcpu_block_update_scan(struct
-> > pcpu_chunk *chunk, int bit_off,
-> >  	pcpu_block_update(block, s_off, e_off);  }
-> > 
-> > +/**
-> > + * pcpu_chunk_refresh_hint - updates metadata about a chunk
-> > + * @chunk: chunk of interest
-> > + *
-> > + * Iterates over the metadata blocks to find the largest contig area.
-> > + * It also counts the populated pages and uses the delta to update the
-> > + * global count.
-> > + */
-> > +static void pcpu_chunk_refresh_hint(struct pcpu_chunk *chunk) {
-> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
-> > +	int bit_off, bits;
-> > +
-> > +	/* clear metadata */
-> > +	chunk_md->contig_hint = 0;
-> > +
-> > +	bit_off = chunk_md->first_free;
-> > +	bits = 0;
-> > +	pcpu_for_each_md_free_region(chunk, bit_off, bits) {
-> > +		pcpu_block_update(chunk_md, bit_off, bit_off + bits);
-> > +	}
-> > +}
-> > +
-> >  /**
-> >   * pcpu_block_refresh_hint
-> >   * @chunk: chunk of interest
-> > @@ -800,6 +778,7 @@ static void pcpu_block_refresh_hint(struct
-> > pcpu_chunk *chunk, int index)  static void
-> > pcpu_block_update_hint_alloc(struct pcpu_chunk *chunk, int bit_off,
-> >  					 int bits)
-> >  {
-> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
-> >  	int nr_empty_pages = 0;
-> >  	struct pcpu_block_md *s_block, *e_block, *block;
-> >  	int s_index, e_index;	/* block indexes of the freed allocation */
-> > @@ -910,8 +889,9 @@ static void pcpu_block_update_hint_alloc(struct
-> > pcpu_chunk *chunk, int bit_off,
-> >  	 * contig hint is broken.  Otherwise, it means a smaller space
-> >  	 * was used and therefore the chunk contig hint is still correct.
-> >  	 */
-> > -	if (pcpu_region_overlap(chunk->contig_bits_start,
-> > -				chunk->contig_bits_start + chunk->contig_bits,
-> > +	if (pcpu_region_overlap(chunk_md->contig_hint_start,
-> > +				chunk_md->contig_hint_start +
-> > +				chunk_md->contig_hint,
-> >  				bit_off,
-> >  				bit_off + bits))
-> >  		pcpu_chunk_refresh_hint(chunk);
-> > @@ -930,9 +910,10 @@ static void pcpu_block_update_hint_alloc(struct
-> > pcpu_chunk *chunk, int bit_off,
-> >   *
-> >   * A chunk update is triggered if a page becomes free, a block becomes free,
-> >   * or the free spans across blocks.  This tradeoff is to minimize iterating
-> > - * over the block metadata to update chunk->contig_bits.
-> > chunk->contig_bits
-> > - * may be off by up to a page, but it will never be more than the available
-> > - * space.  If the contig hint is contained in one block, it will be accurate.
-> > + * over the block metadata to update chunk_md->contig_hint.
-> > + * chunk_md->contig_hint may be off by up to a page, but it will never
-> > + be more
-> > + * than the available space.  If the contig hint is contained in one
-> > + block, it
-> > + * will be accurate.
-> >   */
-> >  static void pcpu_block_update_hint_free(struct pcpu_chunk *chunk, int
-> > bit_off,
-> >  					int bits)
-> > @@ -1026,8 +1007,9 @@ static void pcpu_block_update_hint_free(struct
-> > pcpu_chunk *chunk, int bit_off,
-> >  	if (((end - start) >= PCPU_BITMAP_BLOCK_BITS) || s_index != e_index)
-> >  		pcpu_chunk_refresh_hint(chunk);
-> >  	else
-> > -		pcpu_chunk_update(chunk, pcpu_block_off_to_off(s_index, start),
-> > -				  end - start);
-> > +		pcpu_block_update(&chunk->chunk_md,
-> > +				  pcpu_block_off_to_off(s_index, start),
-> > +				  end);
-> >  }
-> > 
-> >  /**
-> > @@ -1082,6 +1064,7 @@ static bool pcpu_is_populated(struct pcpu_chunk
-> > *chunk, int bit_off, int bits,  static int pcpu_find_block_fit(struct pcpu_chunk
-> > *chunk, int alloc_bits,
-> >  			       size_t align, bool pop_only)
-> >  {
-> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
-> >  	int bit_off, bits, next_off;
-> > 
-> >  	/*
-> > @@ -1090,12 +1073,12 @@ static int pcpu_find_block_fit(struct pcpu_chunk
-> > *chunk, int alloc_bits,
-> >  	 * cannot fit in the global hint, there is memory pressure and creating
-> >  	 * a new chunk would happen soon.
-> >  	 */
-> > -	bit_off = ALIGN(chunk->contig_bits_start, align) -
-> > -		  chunk->contig_bits_start;
-> > -	if (bit_off + alloc_bits > chunk->contig_bits)
-> > +	bit_off = ALIGN(chunk_md->contig_hint_start, align) -
-> > +		  chunk_md->contig_hint_start;
-> > +	if (bit_off + alloc_bits > chunk_md->contig_hint)
-> >  		return -1;
-> > 
-> > -	bit_off = chunk->first_bit;
-> > +	bit_off = chunk_md->first_free;
-> >  	bits = 0;
-> >  	pcpu_for_each_fit_region(chunk, alloc_bits, align, bit_off, bits) {
-> >  		if (!pop_only || pcpu_is_populated(chunk, bit_off, bits, @@ -1190,6
-> > +1173,7 @@ static unsigned long pcpu_find_zero_area(unsigned long *map,
-> > static int pcpu_alloc_area(struct pcpu_chunk *chunk, int alloc_bits,
-> >  			   size_t align, int start)
-> >  {
-> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
-> >  	size_t align_mask = (align) ? (align - 1) : 0;
-> >  	unsigned long area_off = 0, area_bits = 0;
-> >  	int bit_off, end, oslot;
-> > @@ -1222,8 +1206,8 @@ static int pcpu_alloc_area(struct pcpu_chunk
-> > *chunk, int alloc_bits,
-> >  	chunk->free_bytes -= alloc_bits * PCPU_MIN_ALLOC_SIZE;
-> > 
-> >  	/* update first free bit */
-> > -	if (bit_off == chunk->first_bit)
-> > -		chunk->first_bit = find_next_zero_bit(
-> > +	if (bit_off == chunk_md->first_free)
-> > +		chunk_md->first_free = find_next_zero_bit(
-> >  					chunk->alloc_map,
-> >  					pcpu_chunk_map_bits(chunk),
-> >  					bit_off + alloc_bits);
-> > @@ -1245,6 +1229,7 @@ static int pcpu_alloc_area(struct pcpu_chunk
-> > *chunk, int alloc_bits,
-> >   */
-> >  static void pcpu_free_area(struct pcpu_chunk *chunk, int off)  {
-> > +	struct pcpu_block_md *chunk_md = &chunk->chunk_md;
-> >  	int bit_off, bits, end, oslot;
-> > 
-> >  	lockdep_assert_held(&pcpu_lock);
-> > @@ -1264,7 +1249,7 @@ static void pcpu_free_area(struct pcpu_chunk
-> > *chunk, int off)
-> >  	chunk->free_bytes += bits * PCPU_MIN_ALLOC_SIZE;
-> > 
-> >  	/* update first free bit */
-> > -	chunk->first_bit = min(chunk->first_bit, bit_off);
-> > +	chunk_md->first_free = min(chunk_md->first_free, bit_off);
-> > 
-> >  	pcpu_block_update_hint_free(chunk, bit_off, bits);
-> > 
-> > @@ -1285,6 +1270,9 @@ static void pcpu_init_md_blocks(struct pcpu_chunk
-> > *chunk)  {
-> >  	struct pcpu_block_md *md_block;
-> > 
-> > +	/* init the chunk's block */
-> > +	pcpu_init_md_block(&chunk->chunk_md,
-> > pcpu_chunk_map_bits(chunk));
-> > +
-> >  	for (md_block = chunk->md_blocks;
-> >  	     md_block != chunk->md_blocks + pcpu_chunk_nr_blocks(chunk);
-> >  	     md_block++)
-> > @@ -1352,7 +1340,6 @@ static struct pcpu_chunk * __init
-> > pcpu_alloc_first_chunk(unsigned long tmp_addr,
-> >  	chunk->nr_populated = chunk->nr_pages;
-> >  	chunk->nr_empty_pop_pages = chunk->nr_pages;
-> > 
-> > -	chunk->contig_bits = map_size / PCPU_MIN_ALLOC_SIZE;
-> >  	chunk->free_bytes = map_size;
-> > 
-> >  	if (chunk->start_offset) {
-> > @@ -1362,7 +1349,7 @@ static struct pcpu_chunk * __init
-> > pcpu_alloc_first_chunk(unsigned long tmp_addr,
-> >  		set_bit(0, chunk->bound_map);
-> >  		set_bit(offset_bits, chunk->bound_map);
-> > 
-> > -		chunk->first_bit = offset_bits;
-> > +		chunk->chunk_md.first_free = offset_bits;
-> > 
-> >  		pcpu_block_update_hint_alloc(chunk, 0, offset_bits);
-> >  	}
-> > @@ -1415,7 +1402,6 @@ static struct pcpu_chunk *pcpu_alloc_chunk(gfp_t
-> > gfp)
-> >  	pcpu_init_md_blocks(chunk);
-> > 
-> >  	/* init metadata */
-> > -	chunk->contig_bits = region_bits;
-> >  	chunk->free_bytes = chunk->nr_pages * PAGE_SIZE;
-> > 
-> >  	return chunk;
-> 
-> Reviewed-by: Peng Fan <peng.fan@nxp.com>
-> 
-> Nitpick, how about name a function __pcpu_md_update,
-> and let pcpu_chunk_update and pcpu_block_update to
-> call __pcpu_md_update. If you prefer, I could submit
-> a patch.
-> 
+Hi Johan.
 
-I don't have a preference. But I do not really want to have 2 functions
-that just wrap the same function. I think overall it'll make sense to
-rename it, but I haven't thought about what to rename it to as it'll
-probably be influence by the possible direction that percpu ends up
-going.
+Thanks for this nive driver.
+A few review comments follows.
 
-Thanks,
-Dennis
+	Sam
+
+On Sat, Mar 02, 2019 at 11:41:13AM +0100, Johan Jonker wrote:
+> From: Zheng Yang <zhengyang@rock-chips.com>
+> 
+> Introduce rk3066 hdmi.
+A little more info would be good here.
+Do not assume all reader knows as much as you do.
+
+> 
+> Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+> diff --git a/drivers/gpu/drm/rockchip/rk3066_hdmi.c b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
+> new file mode 100644
+> index 000000000..3c5b702dc
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
+> @@ -0,0 +1,911 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) Fuzhou Rockchip Electronics Co.Ltd
+> + *    Zheng Yang <zhengyang@rock-chips.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <drm/drm_of.h>
+> +#include <drm/drmP.h>
+> +#include <drm/drm_probe_helper.h>
+Please do not use drmP.h in new files. The usage of drmP.h is deprecated.
+Also please sort the include files, but keep the nice grouping.
+
+> +
+> +#include "rockchip_drm_drv.h"
+> +#include "rockchip_drm_vop.h"
+> +
+> +#include "rk3066_hdmi.h"
+> +
+> +#define DEFAULT_PLLA_RATE 30000000
+> +
+> +struct hdmi_data_info {
+> +	int vic;
+vic is used so much. It deserves an explanation.
+
+
+> +	bool sink_is_hdmi;
+> +	unsigned int enc_in_format;
+
+enc_in_format is in this patch only assinged.
+aybe drop it (if not used in later patches)
+
+> +	unsigned int enc_out_format;
+> +	unsigned int colorimetry;
+> +};
+> +
+> +struct rk3066_hdmi_i2c {
+> +	struct i2c_adapter adap;
+> +
+> +	u8 ddc_addr;
+> +	u8 segment_addr;
+The two members above are only used in rk3066_hdmi_i2c_write()
+Maybe they can be made local variables?
+
+> +	u8 stat;
+> +
+> +	struct mutex lock; /*for i2c operation*/
+Name the lock after what is protects, to avoid mis-use.
+
+> +	struct completion cmp;
+
+cmp is shorthand for "compare" - as we have a command named so.
+Find a better name.
+
+> +};
+> +
+> +struct rk3066_hdmi {
+> +	struct device *dev;
+> +	struct drm_device *drm_dev;
+The new way to do this is to embed the device.
+See latest patches by Noralf in drm-misc-next, which include a nice example.
+
+> +	struct regmap *regmap;
++1 for using regmap.
+But then there is still several readl_relaxed() writel_relaxed() calls?
+They are in hdmi_readb() and hdmi_writeb(). Should a regmap had been used here too?
+
+> +	int irq;
+> +	struct clk *hclk;
+> +	void __iomem *regs;
+> +
+> +	struct drm_connector connector;
+> +	struct drm_encoder encoder;
+> +
+> +	struct rk3066_hdmi_i2c *i2c;
+> +	struct i2c_adapter *ddc;
+> +
+> +	unsigned int tmdsclk;
+> +
+> +	struct hdmi_data_info hdmi_data;
+> +	struct drm_display_mode previous_mode;
+> +};
+> +
+> +#define to_rk3066_hdmi(x) container_of(x, struct rk3066_hdmi, x)
+> +
+> +static inline u8 hdmi_readb(struct rk3066_hdmi *hdmi, u16 offset)
+> +{
+> +	return readl_relaxed(hdmi->regs + offset);
+> +}
+> +
+> +static inline void hdmi_writeb(struct rk3066_hdmi *hdmi, u16 offset, u32 val)
+> +{
+> +	writel_relaxed(val, hdmi->regs + offset);
+> +}
+> +
+> +static inline void hdmi_modb(struct rk3066_hdmi *hdmi, u16 offset,
+> +			     u32 msk, u32 val)
+> +{
+> +	u8 temp = hdmi_readb(hdmi, offset) & ~msk;
+> +
+> +	temp |= val & msk;
+> +	hdmi_writeb(hdmi, offset, temp);
+> +}
+> +
+> +static void rk3066_hdmi_i2c_init(struct rk3066_hdmi *hdmi)
+> +{
+> +	int ddc_bus_freq;
+> +
+> +	ddc_bus_freq = (hdmi->tmdsclk >> 2) / HDMI_SCL_RATE;
+> +
+> +	hdmi_writeb(hdmi, HDMI_DDC_BUS_FREQ_L, ddc_bus_freq & 0xFF);
+> +	hdmi_writeb(hdmi, HDMI_DDC_BUS_FREQ_H, (ddc_bus_freq >> 8) & 0xFF);
+> +
+> +	/* Clear the EDID interrupt flag and mute the interrupt */
+> +	hdmi_modb(hdmi, HDMI_INTR_MASK1, HDMI_INTR_EDID_MASK, 0);
+> +	hdmi_writeb(hdmi, HDMI_INTR_STATUS1, HDMI_INTR_EDID_MASK);
+> +}
+> +
+> +static inline u8 rk3066_hdmi_get_power_mode(struct rk3066_hdmi *hdmi)
+> +{
+> +	return hdmi_readb(hdmi, HDMI_SYS_CTRL) & HDMI_SYS_POWER_MODE_MASK;
+> +}
+> +
+> +static void rk3066_hdmi_set_power_mode(struct rk3066_hdmi *hdmi, int mode)
+> +{
+> +	u8 current_mode, next_mode;
+> +	u8 i = 0;
+> +
+> +	current_mode = rk3066_hdmi_get_power_mode(hdmi);
+> +
+> +	dev_dbg(hdmi->dev, "mode         :%d\n", mode);
+> +	dev_dbg(hdmi->dev, "current_mode :%d\n", current_mode);
+> +
+> +	if (current_mode == mode)
+> +		return;
+> +
+> +	do {
+> +		if (current_mode > mode)
+> +			next_mode = current_mode / 2;
+> +		else {
+> +			if (current_mode < HDMI_SYS_POWER_MODE_A)
+> +				next_mode = HDMI_SYS_POWER_MODE_A;
+> +			else
+> +				next_mode = current_mode * 2;
+> +		}
+> +
+> +		dev_dbg(hdmi->dev, "%d: next_mode :%d\n", i, next_mode);
+> +
+> +		if (next_mode != HDMI_SYS_POWER_MODE_D) {
+> +			hdmi_modb(hdmi, HDMI_SYS_CTRL,
+> +				  HDMI_SYS_POWER_MODE_MASK, next_mode);
+> +		} else {
+> +			hdmi_writeb(hdmi, HDMI_SYS_CTRL,
+> +				    HDMI_SYS_POWER_MODE_D |
+> +				    HDMI_SYS_PLL_RESET_MASK);
+> +			usleep_range(90, 100);
+> +			hdmi_writeb(hdmi, HDMI_SYS_CTRL,
+> +				    HDMI_SYS_POWER_MODE_D |
+> +				    HDMI_SYS_PLLB_RESET);
+> +			usleep_range(90, 100);
+> +			hdmi_writeb(hdmi, HDMI_SYS_CTRL,
+> +				    HDMI_SYS_POWER_MODE_D);
+> +		}
+> +		current_mode = next_mode;
+> +		i = i + 1;
+> +	} while ((next_mode != mode) && (i < 5));
+> +
+> +	/*
+> +	 * When IP controller haven't configured to an accurate video
+> +	 * timing, DDC_CLK is equal to PLLA freq which is 30MHz,so we
+> +	 * need to init the TMDS rate to PCLK rate, and reconfigure
+> +	 * the DDC clock.
+> +	 */
+> +	if (mode < HDMI_SYS_POWER_MODE_D)
+> +		hdmi->tmdsclk = DEFAULT_PLLA_RATE;
+> +}
+> +
+> +static int
+> +rk3066_hdmi_upload_frame(struct rk3066_hdmi *hdmi, int setup_rc,
+> +			 union hdmi_infoframe *frame, u32 frame_index,
+> +			 u32 mask, u32 disable, u32 enable)
+> +{
+> +	if (mask)
+> +		hdmi_modb(hdmi, HDMI_CP_AUTO_SEND_CTRL, mask, disable);
+> +
+> +	hdmi_writeb(hdmi, HDMI_CP_BUF_INDEX, frame_index);
+> +
+> +	if (setup_rc >= 0) {
+> +		u8 packed_frame[HDMI_MAXIMUM_INFO_FRAME_SIZE];
+> +		ssize_t rc, i;
+> +
+> +		rc = hdmi_infoframe_pack(frame, packed_frame,
+> +					 sizeof(packed_frame));
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		for (i = 0; i < rc; i++)
+> +			hdmi_writeb(hdmi, HDMI_CP_BUF_ACC_HB0 + i * 4,
+> +				    packed_frame[i]);
+> +
+> +		if (mask)
+> +			hdmi_modb(hdmi, HDMI_CP_AUTO_SEND_CTRL, mask, enable);
+> +	}
+> +
+> +	return setup_rc;
+> +}
+> +
+> +static int rk3066_hdmi_config_avi(struct rk3066_hdmi *hdmi,
+> +				  struct drm_display_mode *mode)
+> +{
+> +	union hdmi_infoframe frame;
+> +	int rc;
+> +
+> +	rc = drm_hdmi_avi_infoframe_from_display_mode(&frame.avi,
+> +						      &hdmi->connector, mode);
+> +
+> +	if (hdmi->hdmi_data.enc_out_format == HDMI_COLORSPACE_YUV444)
+> +		frame.avi.colorspace = HDMI_COLORSPACE_YUV444;
+> +	else if (hdmi->hdmi_data.enc_out_format == HDMI_COLORSPACE_YUV422)
+> +		frame.avi.colorspace = HDMI_COLORSPACE_YUV422;
+> +	else
+> +		frame.avi.colorspace = HDMI_COLORSPACE_RGB;
+> +
+> +	frame.avi.colorimetry = hdmi->hdmi_data.colorimetry;
+> +	frame.avi.scan_mode = HDMI_SCAN_MODE_NONE;
+> +
+> +	return rk3066_hdmi_upload_frame(hdmi, rc, &frame,
+> +					HDMI_INFOFRAME_AVI, 0, 0, 0);
+> +}
+> +
+> +static int rk3066_hdmi_config_video_timing(struct rk3066_hdmi *hdmi,
+> +					   struct drm_display_mode *mode)
+> +{
+> +	int value, vsync_offset;
+> +
+> +	/* Set detail external video timing polarity and interlace mode */
+> +	value = HDMI_EXT_VIDEO_SET_EN;
+> +	value |= mode->flags & DRM_MODE_FLAG_PHSYNC ?
+> +		 HDMI_VIDEO_HSYNC_ACTIVE_HIGH : HDMI_VIDEO_HSYNC_ACTIVE_LOW;
+> +	value |= mode->flags & DRM_MODE_FLAG_PVSYNC ?
+> +		 HDMI_VIDEO_VSYNC_ACTIVE_HIGH : HDMI_VIDEO_VSYNC_ACTIVE_LOW;
+> +	value |= mode->flags & DRM_MODE_FLAG_INTERLACE ?
+> +		 HDMI_VIDEO_MODE_INTERLACE : HDMI_VIDEO_MODE_PROGRESSIVE;
+> +	if (hdmi->hdmi_data.vic == 2 || hdmi->hdmi_data.vic == 3)
+> +		vsync_offset = 6;
+> +	else
+> +		vsync_offset = 0;
+> +	value |= vsync_offset << 4; 
+Replace 4 with HDMI_VIDEO_VSYNC_OFFSET_SHIFT??
+
+> +	hdmi_writeb(hdmi, HDMI_EXT_VIDEO_PARA, value);
+> +
+
+ +
+> +static int rk3066_hdmi_bind(struct device *dev, struct device *master,
+> +			    void *data)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct drm_device *drm = data;
+> +	struct rk3066_hdmi *hdmi;
+> +	struct resource *iores;
+> +	int irq;
+> +	int ret;
+> +
+> +	hdmi = devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
+> +	if (!hdmi)
+> +		return -ENOMEM;
+> +
+> +	hdmi->dev = dev;
+> +	hdmi->drm_dev = drm;
+> +
+> +	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!iores)
+> +		return -ENXIO;
+> +
+> +	hdmi->regs = devm_ioremap_resource(dev, iores);
+> +	if (IS_ERR(hdmi->regs))
+> +		return PTR_ERR(hdmi->regs);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	hdmi->hclk = devm_clk_get(hdmi->dev, "hclk");
+> +	if (IS_ERR(hdmi->hclk)) {
+> +		dev_err(hdmi->dev, "unable to get HDMI hclk clock\n");
+> +		return PTR_ERR(hdmi->hclk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(hdmi->hclk);
+> +	if (ret) {
+> +		dev_err(hdmi->dev, "cannot enable HDMI hclk clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	hdmi->regmap =
+> +		syscon_regmap_lookup_by_phandle(hdmi->dev->of_node,
+> +						"rockchip,grf");
+
+dev->of_node would be fine here. No reason to go via hdmi->
+
+> +	if (IS_ERR(hdmi->regmap)) {
+> +		dev_err(hdmi->dev, "unable to get rockchip,grf\n");
+> +		ret = PTR_ERR(hdmi->regmap);
+> +		goto err_disable_hclk;
+> +	}
+> +
+> +	/* internal hclk = hdmi_hclk / 25 */
+> +	hdmi_writeb(hdmi, HDMI_INTERNAL_CLK_DIVIDER, 25);
+> +
+> +	hdmi->ddc = rk3066_hdmi_i2c_adapter(hdmi);
+> +	if (IS_ERR(hdmi->ddc)) {
+> +		ret = PTR_ERR(hdmi->ddc);
+> +		hdmi->ddc = NULL;
+> +		goto err_disable_hclk;
+> +	}
+> +
+> +	rk3066_hdmi_set_power_mode(hdmi, HDMI_SYS_POWER_MODE_B);
+> +	usleep_range(999, 1000);
+> +	hdmi_writeb(hdmi, HDMI_INTR_MASK1, HDMI_INTR_HOTPLUG);
+> +	hdmi_writeb(hdmi, HDMI_INTR_MASK2, 0);
+> +	hdmi_writeb(hdmi, HDMI_INTR_MASK3, 0);
+> +	hdmi_writeb(hdmi, HDMI_INTR_MASK4, 0);
+> +	rk3066_hdmi_set_power_mode(hdmi, HDMI_SYS_POWER_MODE_A);
+> +
+> +	ret = rk3066_hdmi_register(drm, hdmi);
+> +	if (ret)
+> +		goto err_disable_hclk;
+> +
+> +	dev_set_drvdata(dev, hdmi);
+> +
+> +	ret = devm_request_threaded_irq(dev, irq, rk3066_hdmi_hardirq,
+> +					rk3066_hdmi_irq, IRQF_SHARED,
+> +					dev_name(dev), hdmi);
+> +	if (ret) {
+> +		dev_err(hdmi->dev,
+> +			"failed to request hdmi irq: %d\n", ret);
+> +		goto err_disable_hclk;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_disable_hclk:
+> +	clk_disable_unprepare(hdmi->hclk);
+> +
+> +	return ret;
+> +}
+> +
+> +static void rk3066_hdmi_unbind(struct device *dev, struct device *master,
+> +			       void *data)
+> +{
+> +	struct rk3066_hdmi *hdmi = dev_get_drvdata(dev);
+> +
+> +	hdmi->connector.funcs->destroy(&hdmi->connector);
+> +	hdmi->encoder.funcs->destroy(&hdmi->encoder);
+I think the destroy() function should not be called directly.
+
+> +
+> +	clk_disable_unprepare(hdmi->hclk);
+> +	i2c_put_adapter(hdmi->ddc);
+> +}
+> +
+> +static const struct component_ops rk3066_hdmi_ops = {
+> +	.bind	= rk3066_hdmi_bind,
+> +	.unbind	= rk3066_hdmi_unbind,
+> +};
+> +
+> +static int rk3066_hdmi_probe(struct platform_device *pdev)
+> +{
+> +	return component_add(&pdev->dev, &rk3066_hdmi_ops);
+> +}
+> +
+> +static int rk3066_hdmi_remove(struct platform_device *pdev)
+> +{
+> +	component_del(&pdev->dev, &rk3066_hdmi_ops);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id rk3066_hdmi_dt_ids[] = {
+> +	{ .compatible = "rockchip,rk3066-hdmi",
+> +	},
+MAke this a one-liner.
+
+> +	{},
+Us { /* sentinal */ }, like most other drivers.
+
+> +	.driver = {
+> +		.name = "rockchip-rk3066hdmi",
+Different naming are used for the driver in this file.
+Coniser using a macro to align the naming.
+
+
+> +		.of_match_table = rk3066_hdmi_dt_ids,
+> +	},
+> +};
+
