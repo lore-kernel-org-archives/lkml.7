@@ -2,187 +2,154 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DF4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C21C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 12:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9BB20863
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 10:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E3620866
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 12:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551614519;
+	bh=YjxwWWvpW6yuX0IiUvg0tiNWFBIz09WOon+wWCI89nU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uEPQ/lxg9RXpDbntwPGkLbIwgxAwVT1UdUcPbLcXTZ4KWdl01dsF75DRcIB5nBgmM
+	 VXjRHPK7zOczD+8I019pI2B9xoBC05jgfIti3voLzBwOoCRdlZwsf03nns3r9Cjexu
+	 RENcpITzBjL6C3nlbUELQeyyw7u5+GmojvMTZMXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbfCCK7Q (ORCPT
+        id S1726127AbfCCMB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 05:59:16 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41316 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726054AbfCCK7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 05:59:15 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8B7C9AD17;
-        Sun,  3 Mar 2019 10:59:13 +0000 (UTC)
-From:   Luis Henriques <lhenriques@suse.com>
-To:     Jeff Layton <jlayton@redhat.com>
-Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hendrik Peyerl <hpeyerl@plusline.net>
-Subject: Re: [RFC PATCH 2/2] ceph: quota: fix quota subdir mounts
-References: <20190301175752.17808-1-lhenriques@suse.com>
-        <20190301175752.17808-3-lhenriques@suse.com>
-        <8f2993854b7c6c8b03571200f0c117ca5e0f5cb7.camel@redhat.com>
-Date:   Sun, 03 Mar 2019 10:59:12 +0000
-In-Reply-To: <8f2993854b7c6c8b03571200f0c117ca5e0f5cb7.camel@redhat.com> (Jeff
-        Layton's message of "Sat, 02 Mar 2019 19:34:36 -0500")
-Message-ID: <87a7icjkan.fsf@suse.com>
+        Sun, 3 Mar 2019 07:01:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726054AbfCCMB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 07:01:57 -0500
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B586720857;
+        Sun,  3 Mar 2019 12:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551614516;
+        bh=YjxwWWvpW6yuX0IiUvg0tiNWFBIz09WOon+wWCI89nU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bHOjgra8rlE3VoQJ+GX+3GCQJ6g55hO02Oq7jj2n8fbjU/1/n/v+XuYr2cX9uQKR8
+         DE4Q+YPdSm9I5+9wIu8qZjusz60wbPJg9bZE+ifddomch5Zy25+Fv0sxTQuDo9f/GS
+         RAm4ChkqfeZkXE5nVP7T4vL3MWggbWDQu83pTwAg=
+Date:   Sun, 3 Mar 2019 12:01:51 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: Re: [PATCH v2 1/4] staging: iio: ad5933: add SPDX identifier
+Message-ID: <20190303120151.6b40fe53@archlinux>
+In-Reply-To: <20190301025230.2cws5uths6yyuo5t@smtp.gmail.com>
+References: <20190301025230.2cws5uths6yyuo5t@smtp.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jeff Layton <jlayton@redhat.com> writes:
+On Thu, 28 Feb 2019 23:52:30 -0300
+Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-> On Fri, 2019-03-01 at 17:57 +0000, Luis Henriques wrote:
->> The CephFS kernel client doesn't enforce quotas that are set in a
->> directory that isn't visible in the mount point.  For example, given the
->> path '/dir1/dir2', if quotas are set in 'dir1' and the mount is done in with
->> 
->>   mount -t ceph <server>:<port>:/dir1/ /mnt
->> 
->> then the client can't access the 'dir1' inode from the quota realm dir2
->> belongs to.
->> 
->> This patch fixes this by simply doing an MDS LOOKUPINO Op and grabbing a
->> reference to it (so that it doesn't disappear again).  This also requires an
->> extra field in ceph_snap_realm so that we know we have to release that
->> reference when destroying the realm.
->> 
->> Links: https://tracker.ceph.com/issues/3848
->
-> This bug looks unrelated to the patch description. Are you sure it's
-> correct?
+> Add SPDX identifier of GPL-2.0 for the ad5933 driver.
+> Organize imports.
+> Make multi-line comments compliant with the preferred code style.
 
-Ups!  Looks like I truncated the bug number.  Sorry about that, here's
-the correct link:
+One type of change per patch please.
+So this is at least 3 patches.
+SPDX,
+Imports,
+comment style.
 
- https://tracker.ceph.com/issues/38482
+Actual contents looks fine.
 
-Cheers,
--- 
-Luis
+Jonathan
 
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> ---
+>  .../staging/iio/impedance-analyzer/ad5933.c   | 30 ++++++++++---------
+>  1 file changed, 16 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
+> index 3134295f014f..d75bdfbf93de 100644
+> --- a/drivers/staging/iio/impedance-analyzer/ad5933.c
+> +++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
+> @@ -1,27 +1,26 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * AD5933 AD5934 Impedance Converter, Network Analyzer
+>   *
+>   * Copyright 2011 Analog Devices Inc.
+> - *
+> - * Licensed under the GPL-2.
+>   */
+>  
+> -#include <linux/interrupt.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+>  #include <linux/device.h>
+> -#include <linux/kernel.h>
+> -#include <linux/sysfs.h>
+> +#include <linux/err.h>
+>  #include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/sysfs.h>
+>  #include <linux/types.h>
+> -#include <linux/err.h>
+> -#include <linux/delay.h>
+> -#include <linux/module.h>
+> -#include <linux/clk.h>
+>  
+> -#include <linux/iio/iio.h>
+> -#include <linux/iio/sysfs.h>
+>  #include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+>  #include <linux/iio/kfifo_buf.h>
+> +#include <linux/iio/sysfs.h>
+>  
+>  /* AD5933/AD5934 Registers */
+>  #define AD5933_REG_CONTROL_HB		0x80	/* R/W, 1 byte */
+> @@ -474,7 +473,8 @@ static IIO_DEVICE_ATTR(out_voltage0_settling_cycles, 0644,
+>  			ad5933_store,
+>  			AD5933_OUT_SETTLING_CYCLES);
+>  
+> -/* note:
+> +/*
+> + * note:
+>   * ideally we would handle the scale attributes via the iio_info
+>   * (read|write)_raw methods, however this part is a untypical since we
+>   * don't create dedicated sysfs channel attributes for out0 and in0.
+> @@ -572,7 +572,8 @@ static int ad5933_ring_postenable(struct iio_dev *indio_dev)
+>  {
+>  	struct ad5933_state *st = iio_priv(indio_dev);
+>  
+> -	/* AD5933_CTRL_INIT_START_FREQ:
+> +	/*
+> +	 * AD5933_CTRL_INIT_START_FREQ:
+>  	 * High Q complex circuits require a long time to reach steady state.
+>  	 * To facilitate the measurement of such impedances, this mode allows
+>  	 * the user full control of the settling time requirement before
+> @@ -663,7 +664,8 @@ static void ad5933_work(struct work_struct *work)
+>  	}
+>  
+>  	if (status & AD5933_STAT_SWEEP_DONE) {
+> -		/* last sample received - power down do
+> +		/*
+> +		 * last sample received - power down do
+>  		 * nothing until the ring enable is toggled
+>  		 */
+>  		ad5933_cmd(st, AD5933_CTRL_POWER_DOWN);
 
->> Reported-by: Hendrik Peyerl <hpeyerl@plusline.net>
->> Signed-off-by: Luis Henriques <lhenriques@suse.com>
->> ---
->>  fs/ceph/caps.c  |  2 +-
->>  fs/ceph/quota.c | 30 +++++++++++++++++++++++++++---
->>  fs/ceph/snap.c  |  3 +++
->>  fs/ceph/super.h |  2 ++
->>  4 files changed, 33 insertions(+), 4 deletions(-)
->> 
->> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
->> index bba28a5034ba..e79994ff53d6 100644
->> --- a/fs/ceph/caps.c
->> +++ b/fs/ceph/caps.c
->> @@ -1035,7 +1035,7 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
->>  	list_del_init(&ci->i_snap_realm_item);
->>  	ci->i_snap_realm_counter++;
->>  	ci->i_snap_realm = NULL;
->> -	if (realm->ino == ci->i_vino.ino)
->> +	if ((realm->ino == ci->i_vino.ino) && !realm->own_inode)
->>  		realm->inode = NULL;
->>  	spin_unlock(&realm->inodes_with_caps_lock);
->>  	ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
->> diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
->> index 9455d3aef0c3..f6b972d222e4 100644
->> --- a/fs/ceph/quota.c
->> +++ b/fs/ceph/quota.c
->> @@ -22,7 +22,16 @@ void ceph_adjust_quota_realms_count(struct inode *inode, bool inc)
->>  static inline bool ceph_has_realms_with_quotas(struct inode *inode)
->>  {
->>  	struct ceph_mds_client *mdsc = ceph_inode_to_client(inode)->mdsc;
->> -	return atomic64_read(&mdsc->quotarealms_count) > 0;
->> +	struct super_block *sb = mdsc->fsc->sb;
->> +
->> +	if (atomic64_read(&mdsc->quotarealms_count) > 0)
->> +		return true;
->> +	/* if root is the real CephFS root, we don't have quota realms */
->> +	if (sb->s_root->d_inode &&
->> +	    (sb->s_root->d_inode->i_ino == CEPH_INO_ROOT))
->> +		return false;
->> +	/* otherwise, we can't know for sure */
->> +	return true;
->>  }
->>  
->>  void ceph_handle_quota(struct ceph_mds_client *mdsc,
->> @@ -166,6 +175,7 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
->>  		return false;
->>  
->>  	down_read(&mdsc->snap_rwsem);
->> +restart:
->>  	realm = ceph_inode(inode)->i_snap_realm;
->>  	if (realm)
->>  		ceph_get_snap_realm(mdsc, realm);
->> @@ -176,8 +186,22 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
->>  		spin_lock(&realm->inodes_with_caps_lock);
->>  		in = realm->inode ? igrab(realm->inode) : NULL;
->>  		spin_unlock(&realm->inodes_with_caps_lock);
->> -		if (!in)
->> -			break;
->> +		if (!in) {
->> +			up_read(&mdsc->snap_rwsem);
->> +			in = ceph_lookup_inode(inode->i_sb, realm->ino);
->> +			down_read(&mdsc->snap_rwsem);
->> +			if (IS_ERR(in)) {
->> +				pr_warn("Can't lookup inode %llx (err: %ld)\n",
->> +					realm->ino, PTR_ERR(in));
->> +				break;
->> +			}
->> +			spin_lock(&realm->inodes_with_caps_lock);
->> +			realm->inode = in;
->> +			realm->own_inode = true;
->> +			spin_unlock(&realm->inodes_with_caps_lock);
->> +			ceph_put_snap_realm(mdsc, realm);
->> +			goto restart;
->> +		}
->>  
->>  		ci = ceph_inode(in);
->>  		spin_lock(&ci->i_ceph_lock);
->> diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
->> index f74193da0e09..c84ed8e8526a 100644
->> --- a/fs/ceph/snap.c
->> +++ b/fs/ceph/snap.c
->> @@ -117,6 +117,7 @@ static struct ceph_snap_realm *ceph_create_snap_realm(
->>  
->>  	atomic_set(&realm->nref, 1);    /* for caller */
->>  	realm->ino = ino;
->> +	realm->own_inode = false;
->>  	INIT_LIST_HEAD(&realm->children);
->>  	INIT_LIST_HEAD(&realm->child_item);
->>  	INIT_LIST_HEAD(&realm->empty_item);
->> @@ -184,6 +185,8 @@ static void __destroy_snap_realm(struct ceph_mds_client *mdsc,
->>  	kfree(realm->prior_parent_snaps);
->>  	kfree(realm->snaps);
->>  	ceph_put_snap_context(realm->cached_context);
->> +	if (realm->own_inode && realm->inode)
->> +		iput(realm->inode);
->>  	kfree(realm);
->>  }
->>  
->> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
->> index ce51e98b08ec..3f0d74d2150f 100644
->> --- a/fs/ceph/super.h
->> +++ b/fs/ceph/super.h
->> @@ -764,6 +764,8 @@ struct ceph_snap_realm {
->>  	atomic_t nref;
->>  	struct rb_node node;
->>  
->> +	bool own_inode;     /* true if we hold a ref to the inode */
->> +
->>  	u64 created, seq;
->>  	u64 parent_ino;
->>  	u64 parent_since;   /* snapid when our current parent became so */
