@@ -3,92 +3,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9CAC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DC8C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D245020815
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027D320835
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 21:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfCCVUn (ORCPT
+        id S1726670AbfCCVi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 16:20:43 -0500
-Received: from mga06.intel.com ([134.134.136.31]:53333 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726621AbfCCVUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 16:20:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 13:20:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,437,1544515200"; 
-   d="scan'208";a="151680209"
-Received: from spandruv-mobl3.jf.intel.com ([10.252.135.12])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Mar 2019 13:20:41 -0800
-Message-ID: <f214b0d82fce14c374aa6b548742c999513d9046.camel@linux.intel.com>
-Subject: Re: [RFT][PATCH 0/2] cpufreq: intel_pstate: Handle _PPC updates on
- global turbo disable/enable
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Date:   Sun, 03 Mar 2019 13:20:40 -0800
-In-Reply-To: <CAJZ5v0ik6oHCXD23tURsRXRj1-C-Z=S6y+KEiRxe0zJpGrKa+Q@mail.gmail.com>
-References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
-         <fa5e3e09eb32f5197bef2a50ced952850bf70748.camel@linux.intel.com>
-         <CAJZ5v0ik6oHCXD23tURsRXRj1-C-Z=S6y+KEiRxe0zJpGrKa+Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-1.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 3 Mar 2019 16:38:28 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34961 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfCCVi2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 16:38:28 -0500
+Received: by mail-pf1-f196.google.com with SMTP id j5so1502942pfa.2;
+        Sun, 03 Mar 2019 13:38:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pg6OAWezlHEgEyezC++mZ0YL1uamRN+hXgbWPD/6Z58=;
+        b=sTP+By0MsAB8mbalEcogC6tF4fwtrsmHyL+ea76IUIlcWFjuEk2DuXQSZm0fXqDv+y
+         T+FzCoDG07NT1HuYkJMMhaySi2yB+Y/LbygatkSgadaXzREH6RNaEiUV5j+lv5QhBVHk
+         bPOcB6LGSbmys7WS+hGcuK+F2+HyMF3ilbkMDVXoLzeh0y+2Hks4CUDoNMTdsV7MphWn
+         dY96EO5YLlF/zRhsOkr0FrGDZuWdqCwCDmXZZkCcqJyUwWCNAr53lGBkj3/cGeX8Hp+q
+         R8vJVGRZVIkB8ihcye/QnB4IlyHfH9TBhoU6SXB2No+5VHlFJED1mMEo24revDDZzr5g
+         bOqg==
+X-Gm-Message-State: APjAAAUnGwmd0QLGyCt9ZQ/8/f0Q2lgGns5228TXJrx3VelWMmb+uY6w
+        q4Fj/7PmxJZ+sX4u0pGdhPI=
+X-Google-Smtp-Source: APXvYqx3UJVKVGluAMHP6FLtkR7UZbZQa5AqzJaQNc6sCiAc5pubTp1HmwXgby/1FMh0qVynFG3t3g==
+X-Received: by 2002:a65:5844:: with SMTP id s4mr15319649pgr.77.1551649107133;
+        Sun, 03 Mar 2019 13:38:27 -0800 (PST)
+Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
+        by smtp.gmail.com with ESMTPSA id 145sm6241081pgb.66.2019.03.03.13.38.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 03 Mar 2019 13:38:26 -0800 (PST)
+Subject: Re: KASAN: use-after-free Read in alloc_workqueue
+To:     syzbot <syzbot+17335689e239ce135d8b@syzkaller.appspotmail.com>,
+        danitg@mellanox.com, dledford@redhat.com, jgg@ziepe.ca,
+        leon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, roland@purestorage.com,
+        sean.hefty@intel.com, swise@opengridcomputing.com,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
+References: <0000000000008a8bf4058334b76e@google.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <e0ef3cb3-111b-2b89-16df-3da89f937d4e@acm.org>
+Date:   Sun, 3 Mar 2019 13:38:25 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <0000000000008a8bf4058334b76e@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-03-03 at 18:03 +0100, Rafael J. Wysocki wrote:
-> On Fri, Mar 1, 2019 at 6:39 PM Srinivas Pandruvada
-> <srinivas.pandruvada@linux.intel.com> wrote:
-> > 
-> > On Fri, 2019-03-01 at 13:43 +0100, Rafael J. Wysocki wrote:
-> > > Hi All,
-> > > 
-> > > This is how I would fix the issue reported in BZ 200759 (see this
-> > > patch series
-> > > from Yu too: https://marc.info/?l=linux-pm&m=155137672924029&w=2)
-> > > .
-> > > 
-> > > Patch [1/2] causes intel_pstate to update all policies if it gets
-> > > a
-> > > _PPC change
-> > > notification and sees a global turbo disable/enable change.
-> > > 
-> > > Patch [2/2] makes it update cpuinfo.max_freq for all policies in
-> > > those cases.
-> > > 
-> > > The patches here have not been tested yet, so testing would be
-> > > much
-> > > appreciated.
-> > > 
-> > > Of course, comments are welcome too!
-> > 
-> > This is the only platform, someone reported such issue.
+On 3/3/19 10:22 AM, syzbot wrote:
+> syzbot found the following crash on:
 > 
-> I don't think this matters.
+> HEAD commit:    c63e9e91a254 Add linux-next specific files for 20190301
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16ac728d200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f5875f9dc6e009b2
+> dashboard link: 
+> https://syzkaller.appspot.com/bug?extid=17335689e239ce135d8b
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=134808fb200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1541889d200000
 > 
-> First, it doesn't mean that no other problems have this problem.
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+17335689e239ce135d8b@syzkaller.appspotmail.com
 > 
-> Second, the current handling of MSR_IA32_MISC_ENABLE_TURBO_DISABLE
-> changes in intel_pstate is not sufficient if the changes is from set
-> to unset anyway.
-Any platform with HWP, you can't even notify of this change. So any
-platform beyond SKL is not useful.
-Fixing is always good :-) 
+> ==================================================================
+> BUG: KASAN: use-after-free in __read_once_size 
+> include/linux/compiler.h:197 [inline]
+> BUG: KASAN: use-after-free in lockdep_register_key+0x3b9/0x490 
+> kernel/locking/lockdep.c:1023
+> Read of size 8 at addr ffff888090fc2698 by task syz-executor134/7858
+> 
+> CPU: 1 PID: 7858 Comm: syz-executor134 Not tainted 
+> 5.0.0-rc8-next-20190301 #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS 
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>   print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+>   kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+>   __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+>   __read_once_size include/linux/compiler.h:197 [inline]
+>   lockdep_register_key+0x3b9/0x490 kernel/locking/lockdep.c:1023
+>   wq_init_lockdep kernel/workqueue.c:3444 [inline]
+>   alloc_workqueue+0x427/0xe70 kernel/workqueue.c:4263
+>   ucma_open+0x76/0x290 drivers/infiniband/core/ucma.c:1732
+>   misc_open+0x398/0x4c0 drivers/char/misc.c:141
+>   chrdev_open+0x247/0x6b0 fs/char_dev.c:417
+>   do_dentry_open+0x488/0x1160 fs/open.c:771
+>   vfs_open+0xa0/0xd0 fs/open.c:880
+>   do_last fs/namei.c:3416 [inline]
+>   path_openat+0x10e9/0x46e0 fs/namei.c:3533
+>   do_filp_open+0x1a1/0x280 fs/namei.c:3563
+>   do_sys_open+0x3fe/0x5d0 fs/open.c:1063
+>   __do_sys_openat fs/open.c:1090 [inline]
+>   __se_sys_openat fs/open.c:1084 [inline]
+>   __x64_sys_openat+0x9d/0x100 fs/open.c:1084
+>   do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
+I think this is caused by a change I made in the workqueue 
+implementation. I will submit a fix.
 
+Bart.
