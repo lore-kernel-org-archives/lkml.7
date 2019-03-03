@@ -5,58 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CA3C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D604C43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E0720836
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D251D20836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 07:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pg2kb3Sy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5tdHdk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfCCHsH (ORCPT
+        id S1726126AbfCCHsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 02:48:07 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38120 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfCCHsG (ORCPT
+        Sun, 3 Mar 2019 02:48:30 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40114 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfCCHsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 02:48:06 -0500
-Received: by mail-pf1-f193.google.com with SMTP id n125so965548pfn.5;
-        Sat, 02 Mar 2019 23:48:05 -0800 (PST)
+        Sun, 3 Mar 2019 02:48:30 -0500
+Received: by mail-pg1-f195.google.com with SMTP id u9so1022174pgo.7;
+        Sat, 02 Mar 2019 23:48:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ElsNjzQ7K98lI/bHz/nS5DIDC37ffsppngWHxCUh4y8=;
-        b=Pg2kb3SyiFiHaFONBSKyoKCSYn7k0JkY9T1bWjWkklQDuMf7SeigsW9psZ0MXIdi0o
-         OIjXZv3fYQ/Ned1bAUGm6ZmxS2HgRyHUikRiaL2i5+EuW2s1G7iQUAH+2fKJj5hhHW2b
-         oXEnxot/6EFeD5V/BpKdXCN+bDX3f36684GL654E0rOJqZ/IukC/xTI3ve8ElTjKg5pY
-         pvcE71lkFAXer8x8c9B+KU6KYARhGjUuPp6yjelZyUh8NBStcprLtne1/NOPSFB3Gstn
-         IKuVYH1uBrArLWTwbucdd8FvOOACQ5GvwG15V2BCugcj8A+OUjv2j14psCvQkvUSv+ER
-         rOnw==
+        bh=5tnH02Yc3JnragyosQ4LQT3N7xcrc3Yee7t/cF7aZ1U=;
+        b=d5tdHdk/dXVHhpM/iwTFQAMCU6nxjlFGFA75JZfUDSO5n2uwMUpeA2mK27EEw4YDLc
+         nVML3HTHz9YU9l3JtOmcLVfB54Nyqs49wZcW0gbfIpy/oL50NDkGmZTvGgeIjm0YbYVE
+         FnnCpLuEwPETOPqcDi5xDA8dbmRrm41jH8Kb907N8tBgC1VzRsFj82x7o/B/+2rhHjvP
+         MtIJnJLEbtYgFwqVd+ICq/vBGAlG/S4CWEW/RfB1Cv9L1nuxuHQN9tKANt+PhgCKOgBa
+         A2S3eTMWWA3+XsKq2MsEHhKnL8aKBCA9oq/mifPrkS86ZF66DDVOZZIhpTdtFW9OJFi8
+         E2uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ElsNjzQ7K98lI/bHz/nS5DIDC37ffsppngWHxCUh4y8=;
-        b=rdXPNiKhR7rUV86of6uitz4hYnSKV+sim6utz68uckOH0K48EuvyVpDUNglIjj0Vkn
-         V0waY8JUduHF0Q2BHvdRSiFAF1CF3zac/WbyXXB+OR3zMLuxIJRriB7Nn7sxxV0cU43U
-         Up/UweAvMKV534oQeyLzzSAIVsNuwvm5taqzRSHoHKXa57Fo0qXjAV0QWo2+mwVTkay6
-         ndKok2uCkw+XLBNenr9aNa2bOUn4UyyE8XzlXEKsCLIkaJ6KfjyiAa9nYNOEIfNjkxHY
-         KaBPyoTQdateOYCC02V8zyijh1Y47Ac1gywptyrTu+TuREFZXEQBKnoTg+E4lIIZf/VY
-         T3BQ==
-X-Gm-Message-State: APjAAAVEuRo1pv0T41JOFUv8LPjKHCYR/ETecVwRtE7vnzG5nb2Ss+1o
-        96hQXkdjI6tMqs7WlmGLJ74=
-X-Google-Smtp-Source: APXvYqwSltqoEw9JKp+yIsusA5L0KKE4BlpoSKKUPKWyfM62T0xKFe79n2gcx85OxQve/J1AyinmKA==
-X-Received: by 2002:a63:d49:: with SMTP id 9mr12937777pgn.27.1551599285644;
-        Sat, 02 Mar 2019 23:48:05 -0800 (PST)
+        bh=5tnH02Yc3JnragyosQ4LQT3N7xcrc3Yee7t/cF7aZ1U=;
+        b=jqtAEtEN8vCdKobPUYz7of5eWQkPVfSj1a6LBapO1CRKlhAiuYKwDRSEgpp8HCKOGA
+         XqTVKb64TMNvZUWGahtyRSP78Ua0Bq5MSBwq558a+pzyEuSXB0oIepTPsgE6YALXXJWQ
+         tZlHuC/ET1hjPXjZKsRYQUOmKKUkDKwvgm7eMTcCLbQrgN85MIyMOOYgO+RgmiRVFI0G
+         FUnIbOg2F8SrQdbbHXaiJ8ei/+ZFx4e6xUYISZ7QJCMoMEnsw89PVbMH1eCch7mToIEv
+         pKtf0n/+UOSdIxeKJWNvsa+JLCZ4U4hlSYamNNBrjpliyFP46CXRdJqD+U1q7AiyxPbJ
+         fH9w==
+X-Gm-Message-State: APjAAAX5EWFVdv4VDg1wYIEgDoSzmwwCOL0PHx+Dbx6YIzPpDLaKVQtr
+        CJVzmbhWAX4QGufBkzSEMvM=
+X-Google-Smtp-Source: APXvYqz3Jsn9xW0QSB6jSVnOf2omraUyY0d2RgaTrdzAJJcObf4dOEla17HZKPdj8LV2z62687lNSg==
+X-Received: by 2002:a62:1b03:: with SMTP id b3mr14272320pfb.218.1551599309389;
+        Sat, 02 Mar 2019 23:48:29 -0800 (PST)
 Received: from localhost.localdomain ([2001:268:c0a5:3b5c:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id b7sm4572950pfi.36.2019.03.02.23.48.00
+        by smtp.gmail.com with ESMTPSA id y37sm1018524pgk.78.2019.03.02.23.48.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 02 Mar 2019 23:48:05 -0800 (PST)
+        Sat, 02 Mar 2019 23:48:28 -0800 (PST)
 From:   William Breathitt Gray <vilhelm.gray@gmail.com>
 To:     linus.walleij@linaro.org
 Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
@@ -64,11 +63,10 @@ Cc:     akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
         andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
         yamada.masahiro@socionext.com, bgolaszewski@baylibre.com,
         linux-arm-kernel@lists.infradead.org,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v9 2/9] lib/test_bitmap.c: Add for_each_set_clump8 test cases
-Date:   Sun,  3 Mar 2019 16:48:54 +0900
-Message-Id: <f56e40abde2464392de971c43fdd68396d03c84d.1551598603.git.vilhelm.gray@gmail.com>
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v9 3/9] gpio: 104-dio-48e: Utilize for_each_set_clump8 macro
+Date:   Sun,  3 Mar 2019 16:49:12 +0900
+Message-Id: <9e9563f0d3f627110c0b72620dee2921425967d6.1551598603.git.vilhelm.gray@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1551598603.git.vilhelm.gray@gmail.com>
 References: <cover.1551598603.git.vilhelm.gray@gmail.com>
@@ -79,117 +77,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The introduction of the for_each_set_clump8 macro warrants test cases to
-verify the implementation. This patch adds test case checks for whether
-an out-of-bounds clump index is returned, a zero clump is returned, or
-the returned clump value differs from the expected clump value.
+Replace verbose implementation in get_multiple/set_multiple callbacks
+with for_each_set_clump8 macro to simplify code and improve clarity.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 ---
- lib/test_bitmap.c | 65 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+ drivers/gpio/gpio-104-dio-48e.c | 73 ++++++++++-----------------------
+ 1 file changed, 22 insertions(+), 51 deletions(-)
 
-diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index 6cd7d0740005..66ddb3fb98cb 100644
---- a/lib/test_bitmap.c
-+++ b/lib/test_bitmap.c
-@@ -88,6 +88,36 @@ __check_eq_u32_array(const char *srcfile, unsigned int line,
- 	return true;
+diff --git a/drivers/gpio/gpio-104-dio-48e.c b/drivers/gpio/gpio-104-dio-48e.c
+index 92c8f944bf64..23413d90e944 100644
+--- a/drivers/gpio/gpio-104-dio-48e.c
++++ b/drivers/gpio/gpio-104-dio-48e.c
+@@ -183,46 +183,26 @@ static int dio48e_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 	return !!(port_state & mask);
  }
  
-+static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
-+				    const unsigned int offset,
-+				    const unsigned int size,
-+				    const unsigned char *const clump_exp,
-+				    const unsigned long *const clump)
-+{
-+	unsigned long exp;
++static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
 +
-+	if (offset >= size) {
-+		pr_warn("[%s:%u] bit offset for clump out-of-bounds: expected less than %u, got %u\n",
-+			srcfile, line, size, offset);
-+		return false;
-+	}
-+
-+	exp = clump_exp[offset / 8];
-+	if (!exp) {
-+		pr_warn("[%s:%u] bit offset for zero clump: expected nonzero clump, got bit offset %u with clump value 0",
-+			srcfile, line, offset);
-+		return false;
-+	}
-+
-+	if (*clump != exp) {
-+		pr_warn("[%s:%u] expected clump value of 0x%lX, got clump value of 0x%lX",
-+			srcfile, line, exp, *clump);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- #define __expect_eq(suffix, ...)					\
- 	({								\
- 		int result = 0;						\
-@@ -104,6 +134,7 @@ __check_eq_u32_array(const char *srcfile, unsigned int line,
- #define expect_eq_bitmap(...)		__expect_eq(bitmap, ##__VA_ARGS__)
- #define expect_eq_pbl(...)		__expect_eq(pbl, ##__VA_ARGS__)
- #define expect_eq_u32_array(...)	__expect_eq(u32_array, ##__VA_ARGS__)
-+#define expect_eq_clump8(...)		__expect_eq(clump8, ##__VA_ARGS__)
- 
- static void __init test_zero_clear(void)
+ static int dio48e_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
+ 	unsigned long *bits)
  {
-@@ -361,6 +392,39 @@ static void noinline __init test_mem_optimisations(void)
+ 	struct dio48e_gpio *const dio48egpio = gpiochip_get_data(chip);
+-	size_t i;
+-	static const size_t ports[] = { 0, 1, 2, 4, 5, 6 };
+-	const unsigned int gpio_reg_size = 8;
+-	unsigned int bits_offset;
+-	size_t word_index;
+-	unsigned int word_offset;
+-	unsigned long word_mask;
+-	const unsigned long port_mask = GENMASK(gpio_reg_size - 1, 0);
++	unsigned int offset;
++	unsigned long gpio_mask;
++	const unsigned int ngpio = ARRAY_SIZE(ports) * 8;
++	unsigned int port_addr;
+ 	unsigned long port_state;
+ 
+ 	/* clear bits array to a clean slate */
+ 	bitmap_zero(bits, chip->ngpio);
+ 
+-	/* get bits are evaluated a gpio port register at a time */
+-	for (i = 0; i < ARRAY_SIZE(ports); i++) {
+-		/* gpio offset in bits array */
+-		bits_offset = i * gpio_reg_size;
+-
+-		/* word index for bits array */
+-		word_index = BIT_WORD(bits_offset);
+-
+-		/* gpio offset within current word of bits array */
+-		word_offset = bits_offset % BITS_PER_LONG;
+-
+-		/* mask of get bits for current gpio within current word */
+-		word_mask = mask[word_index] & (port_mask << word_offset);
+-		if (!word_mask) {
+-			/* no get bits in this port so skip to next one */
+-			continue;
+-		}
+-
+-		/* read bits from current gpio port */
+-		port_state = inb(dio48egpio->base + ports[i]);
++	for_each_set_clump8(offset, gpio_mask, mask, ngpio) {
++		port_addr = dio48egpio->base + ports[offset / 8];
++		port_state = inb(port_addr) & gpio_mask;
+ 
+-		/* store acquired bits at respective bits array offset */
+-		bits[word_index] |= (port_state << word_offset) & word_mask;
++		bitmap_set_value8(bits, ngpio, port_state, offset);
+ 	}
+ 
+ 	return 0;
+@@ -252,37 +232,28 @@ static void dio48e_gpio_set_multiple(struct gpio_chip *chip,
+ 	unsigned long *mask, unsigned long *bits)
+ {
+ 	struct dio48e_gpio *const dio48egpio = gpiochip_get_data(chip);
+-	unsigned int i;
+-	const unsigned int gpio_reg_size = 8;
+-	unsigned int port;
+-	unsigned int out_port;
++	unsigned int offset;
++	unsigned long gpio_mask;
++	const unsigned int ngpio = ARRAY_SIZE(ports) * 8;
++	size_t index;
++	unsigned int port_addr;
+ 	unsigned int bitmask;
+ 	unsigned long flags;
+ 
+-	/* set bits are evaluated a gpio register size at a time */
+-	for (i = 0; i < chip->ngpio; i += gpio_reg_size) {
+-		/* no more set bits in this mask word; skip to the next word */
+-		if (!mask[BIT_WORD(i)]) {
+-			i = (BIT_WORD(i) + 1) * BITS_PER_LONG - gpio_reg_size;
+-			continue;
+-		}
++	for_each_set_clump8(offset, gpio_mask, mask, ngpio) {
++		index = offset / 8;
++		port_addr = dio48egpio->base + ports[index];
+ 
+-		port = i / gpio_reg_size;
+-		out_port = (port > 2) ? port + 1 : port;
+-		bitmask = mask[BIT_WORD(i)] & bits[BIT_WORD(i)];
++		bitmask = bitmap_get_value8(bits, ngpio, offset) & gpio_mask;
+ 
+ 		raw_spin_lock_irqsave(&dio48egpio->lock, flags);
+ 
+ 		/* update output state data and set device gpio register */
+-		dio48egpio->out_state[port] &= ~mask[BIT_WORD(i)];
+-		dio48egpio->out_state[port] |= bitmask;
+-		outb(dio48egpio->out_state[port], dio48egpio->base + out_port);
++		dio48egpio->out_state[index] &= ~gpio_mask;
++		dio48egpio->out_state[index] |= bitmask;
++		outb(dio48egpio->out_state[index], port_addr);
+ 
+ 		raw_spin_unlock_irqrestore(&dio48egpio->lock, flags);
+-
+-		/* prepare for next gpio register set */
+-		mask[BIT_WORD(i)] >>= gpio_reg_size;
+-		bits[BIT_WORD(i)] >>= gpio_reg_size;
  	}
  }
  
-+static const unsigned char clump_exp[] __initconst = {
-+	0x01,	/* 1 bit set */
-+	0x02,	/* non-edge 1 bit set */
-+	0x00,	/* zero bits set */
-+	0x28,	/* 3 bits set across 4-bit boundary */
-+	0x28,	/* Repeated clump */
-+	0x0F,	/* 4 bits set */
-+	0xFF,	/* all bits set */
-+	0x05,	/* non-adjacent 2 bits set */
-+};
-+
-+static void __init test_for_each_set_clump8(void)
-+{
-+#define CLUMP_EXP_NUMBITS 64
-+	DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS);
-+	unsigned int start;
-+	unsigned long clump;
-+
-+	/* set bitmap to test case */
-+	bitmap_zero(bits, CLUMP_EXP_NUMBITS);
-+	bitmap_set(bits, 0, 1);		/* 0x01 */
-+	bitmap_set(bits, 8, 1);		/* 0x02 */
-+	bitmap_set(bits, 27, 3);	/* 0x28 */
-+	bitmap_set(bits, 35, 3);	/* 0x28 */
-+	bitmap_set(bits, 40, 4);	/* 0x0F */
-+	bitmap_set(bits, 48, 8);	/* 0xFF */
-+	bitmap_set(bits, 56, 1);	/* 0x05 - part 1 */
-+	bitmap_set(bits, 58, 1);	/* 0x05 - part 2 */
-+
-+	for_each_set_clump8(start, clump, bits, CLUMP_EXP_NUMBITS)
-+		expect_eq_clump8(start, CLUMP_EXP_NUMBITS, clump_exp, &clump);
-+}
-+
- static int __init test_bitmap_init(void)
- {
- 	test_zero_clear();
-@@ -369,6 +433,7 @@ static int __init test_bitmap_init(void)
- 	test_bitmap_arr32();
- 	test_bitmap_parselist();
- 	test_mem_optimisations();
-+	test_for_each_set_clump8();
- 
- 	if (failed_tests == 0)
- 		pr_info("all %u tests passed\n", total_tests);
 -- 
 2.21.0
 
