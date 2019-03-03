@@ -2,180 +2,99 @@ Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19A4C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 03:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C6FC43381
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 03:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C192320863
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 03:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F7B20863
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 03:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfCCDpq (ORCPT
+        id S1726381AbfCCDsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 Mar 2019 22:45:46 -0500
-Received: from mga14.intel.com ([192.55.52.115]:54519 "EHLO mga14.intel.com"
+        Sat, 2 Mar 2019 22:48:51 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:36908 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbfCCDpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 Mar 2019 22:45:45 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2019 19:45:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,434,1544515200"; 
-   d="scan'208";a="128568232"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga008.fm.intel.com with ESMTP; 02 Mar 2019 19:45:44 -0800
-Date:   Sat, 2 Mar 2019 11:44:03 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     john.hubbard@gmail.com
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        artemyko@mellanox.com
-Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error
- handling paths
-Message-ID: <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
-References: <20190302032726.11769-2-jhubbard@nvidia.com>
- <20190302202435.31889-1-jhubbard@nvidia.com>
+        id S1726017AbfCCDsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 Mar 2019 22:48:51 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3518E307D91F;
+        Sun,  3 Mar 2019 03:48:51 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 185C1600CD;
+        Sun,  3 Mar 2019 03:48:49 +0000 (UTC)
+Date:   Sat, 2 Mar 2019 22:48:48 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        dm-devel@redhat.com
+Subject: Re: x86 VM Boot hang with latest linux-next
+Message-ID: <20190303034847.GA8699@redhat.com>
+References: <CAKgT0UeMqmojVrNV1i-DdY18EBwbJ_4zVTUggAWas5D5yeU1PQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190302202435.31889-1-jhubbard@nvidia.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKgT0UeMqmojVrNV1i-DdY18EBwbJ_4zVTUggAWas5D5yeU1PQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Sun, 03 Mar 2019 03:48:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FWIW I don't have ODP hardware either.  So I can't test this either.
+On Sat, Mar 02 2019 at  6:34pm -0500,
+Alexander Duyck <alexander.duyck@gmail.com> wrote:
 
-On Sat, Mar 02, 2019 at 12:24:35PM -0800, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
+> So I have been seeing an issue with an intermittent boot hang on my
+> x86 KVM VM with the latest linux-next and have bisected it down to the
+> following commit:
+> 1efa3bb79d3de8ca1b7f6770313a1fc0bebe25c7 is the first bad commit
+> commit 1efa3bb79d3de8ca1b7f6770313a1fc0bebe25c7
+> Author: Mike Snitzer <snitzer@redhat.com>
+> Date:   Fri Feb 22 11:23:01 2019 -0500
 > 
-> 1. Bug fix: the error handling release pages starting
-> at the first page that experienced an error.
+>     dm: must allocate dm_noclone for stacked noclone devices
 > 
-> 2. Refinement: release_pages() is better than put_page()
-> in a loop.
+>     Otherwise various lvm2 testsuite tests fail because the lower layers of
+>     the stacked noclone device aren't updated to allocate a new 'struct
+>     dm_clone' that reflects the upper layer bio that was issued to it.
 > 
-> 3. Dead code removal: the check for (user_virt & ~page_mask)
-> is checking for a condition that can never happen,
-> because earlier:
+>     Fixes: 97a89458020b38 ("dm: improve noclone bio support")
+>     Reported-by: Mikulas Patocka <mpatocka@redhat.com>
+>     Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 > 
->     user_virt = user_virt & page_mask;
+> What I am seeing is in about 3 out of 4 boots the startup just hangs
+> at the filesystem check stage with the following message:
+> [  OK  ] Reached target Local File Systems (Pre).
+>          Starting File System Check on /dev/…127-ad57-426f-bb45-363950544c0c...
+> [    **] (1 of 2) A start job is running for…n on device 252:2 (19s / no limit)
 > 
-> ...so, remove that entire phrase.
+> I did some googling and it looks like a similar issue has been
+> reported for s390. Based on the request for data there I have the
+> following info:
+> [root@localhost ~]# dmsetup ls --tree
+> fedora-swap (253:1)
+>  └─ (252:2)
+> fedora-root (253:0)
+>  └─ (252:2)
 > 
-> 4. Minor: As long as I'm here, shorten up a couple of long lines
-> in the same function, without harming the ability to
-> grep for the printed error message.
-> 
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Doug Ledford <dledford@redhat.com>
-> Cc: linux-rdma@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
-> 
-> v2: Fixes a kbuild test robot reported build failure, by directly
->     including pagemap.h
-> 
->  drivers/infiniband/core/umem_odp.c | 25 ++++++++++---------------
->  1 file changed, 10 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-> index acb882f279cb..83872c1f3f2c 100644
-> --- a/drivers/infiniband/core/umem_odp.c
-> +++ b/drivers/infiniband/core/umem_odp.c
-> @@ -40,6 +40,7 @@
->  #include <linux/vmalloc.h>
->  #include <linux/hugetlb.h>
->  #include <linux/interval_tree_generic.h>
-> +#include <linux/pagemap.h>
->  
->  #include <rdma/ib_verbs.h>
->  #include <rdma/ib_umem.h>
-> @@ -648,25 +649,17 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
->  
->  		if (npages < 0) {
->  			if (npages != -EAGAIN)
-> -				pr_warn("fail to get %zu user pages with error %d\n", gup_num_pages, npages);
-> +				pr_warn("fail to get %zu user pages with error %d\n",
-> +					gup_num_pages, npages);
->  			else
-> -				pr_debug("fail to get %zu user pages with error %d\n", gup_num_pages, npages);
-> +				pr_debug("fail to get %zu user pages with error %d\n",
-> +					 gup_num_pages, npages);
->  			break;
->  		}
->  
->  		bcnt -= min_t(size_t, npages << PAGE_SHIFT, bcnt);
->  		mutex_lock(&umem_odp->umem_mutex);
->  		for (j = 0; j < npages; j++, user_virt += PAGE_SIZE) {
-> -			if (user_virt & ~page_mask) {
-> -				p += PAGE_SIZE;
-> -				if (page_to_phys(local_page_list[j]) != p) {
-> -					ret = -EFAULT;
-> -					break;
-> -				}
-> -				put_page(local_page_list[j]);
-> -				continue;
-> -			}
-> -
+> [root@localhost ~]# dmsetup table
+> fedora-swap: 0 4194304 linear 252:2 2048
+> fedora-root: 0 31457280 linear 252:2 4196352
 
-I think this is trying to account for compound pages. (ie page_mask could
-represent more than PAGE_SIZE which is what user_virt is being incrimented by.)
-But putting the page in that case seems to be the wrong thing to do?
+Thanks, which version of Fedora are you running?
 
-Yes this was added by Artemy[1] now cc'ed.
+Your case is more straightforward in that you're clearly using bio-based
+DM linear (which was updated to leverage "noclone" support); whereas the
+s390 case is using request-based DM which isn't impacted by the commit
+in question at all.
 
->  			ret = ib_umem_odp_map_dma_single_page(
->  					umem_odp, k, local_page_list[j],
->  					access_mask, current_seq);
-> @@ -684,9 +677,11 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *umem_odp, u64 user_virt,
->  		mutex_unlock(&umem_odp->umem_mutex);
->  
->  		if (ret < 0) {
-> -			/* Release left over pages when handling errors. */
-> -			for (++j; j < npages; ++j)
-> -				put_page(local_page_list[j]);
-> +			/*
-> +			 * Release pages, starting at the the first page
-> +			 * that experienced an error.
-> +			 */
-> +			release_pages(&local_page_list[j], npages - j);
+I'll attempt to reproduce first thing Monday.
 
-My concern here is that release_pages handle compound pages, perhaps
-differently from the above code so calling it may may not work?  But I've not
-really spent a lot of time on it...
-
-:-/
-
-Ira
-
-[1]
-
-commit 403cd12e2cf759ead5cbdcb62bf9872b9618d400
-Author: Artemy Kovalyov <artemyko@mellanox.com>
-Date:   Wed Apr 5 09:23:55 2017 +0300
-
-    IB/umem: Add contiguous ODP support
-
-    Currenlty ODP supports only regular MMU pages.
-    Add ODP support for regions consisting of physically contiguous chunks
-    of arbitrary order (huge pages for instance) to improve performance.
-
-    Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
-    Signed-off-by: Leon Romanovsky <leon@kernel.org>
-    Signed-off-by: Doug Ledford <dledford@redhat.com>
-
-
+Mike
