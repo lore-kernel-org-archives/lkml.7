@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA381C43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 14:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A77C10F00
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 14:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776F020866
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 14:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C445220866
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 14:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551623997;
-	bh=v7+5k41XIxHF5iA690JssJYk7dh4dUpdONgkAa4vPto=;
+	s=default; t=1551624039;
+	bh=I5dE3gRoqLf4rVNydVf7iFmqqU7MECXQzNmVTa2jtFk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Gi28yQ9/od3NJwGorrpWjKJrOv+lNCYLWQJiP9q4JqCKfswuiaQKpkkk4i8NcOMVd
-	 2YsCqUHJR1ofxm27Ej9h6FfvGDE3c3ktxSuvIi4GxplTWnExf5BAbnUz2TqyNdWIoN
-	 LPQ32TfCzi8l5yVCPUEn26aG0Ou+q8Mnx6EVg0XA=
+	b=UpXqVdChH0FiRKkPqLT3yAZpIv5HxyDCIh8JS0Unhm2SjLZ1VWSzVbN44XTs4dTwe
+	 LSmkcUZSPFeRHbXCSADKCT6nL18wavAxzTXqpjEaCXPyDfhCv61TnClTC/zYYO5yu+
+	 xvl3ix+cIIPm1pIgJKpAxiHatMpl7Y7Ozk3YYOcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfCCOj4 (ORCPT
+        id S1726393AbfCCOkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 09:39:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44654 "EHLO mail.kernel.org"
+        Sun, 3 Mar 2019 09:40:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726241AbfCCOjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 09:39:55 -0500
+        id S1726241AbfCCOki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 09:40:38 -0500
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E54ED20836;
-        Sun,  3 Mar 2019 14:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8EE620836;
+        Sun,  3 Mar 2019 14:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551623995;
-        bh=v7+5k41XIxHF5iA690JssJYk7dh4dUpdONgkAa4vPto=;
+        s=default; t=1551624037;
+        bh=I5dE3gRoqLf4rVNydVf7iFmqqU7MECXQzNmVTa2jtFk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ngyVsFk9zFff6jA6zegnCuu7u6YCpXYiubGoTGYSun75PC+AOUZWeiSxn2jVlBTgV
-         VbBvysHiZe/bY2dDZ41VEoftNOYBQCYQTkGOYquaeUe4Vt48Hqd7SdufX4/dHrSeQD
-         vQwOCwlqGR6QpQYrPt1waurfOQaJs4zHtJVKzVWU=
-Date:   Sun, 3 Mar 2019 14:39:48 +0000
+        b=qofhbKL2TLdoMj5xb52j9tfi+0ZPtX/qX1iknni3Ico5H+oek7Tir0zoJX92lCtj3
+         +dHlm1BmREKfZlZFBYOPNsnq2rIitdWMw4xCSUIKK68wvgfhgJC7b9BqX5ioDK4VIX
+         Q+nKUW+dg6+XlY9i6UkZERjJTgClMVmHJvPNCG/U=
+Date:   Sun, 3 Mar 2019 14:40:31 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Fabrice Gasnier <fabrice.gasnier@st.com>
 Cc:     <robh+dt@kernel.org>, <alexandre.torgue@st.com>,
@@ -48,12 +48,12 @@ Cc:     <robh+dt@kernel.org>, <alexandre.torgue@st.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <benjamin.gaignard@linaro.org>,
         <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-lptimer-counter: document
- pinctrl sleep state
-Message-ID: <20190303143948.2ab9dff3@archlinux>
-In-Reply-To: <1551091367-21718-2-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH 2/2] iio: counter: stm32-lptimer: Add power management
+ support
+Message-ID: <20190303144031.520421cf@archlinux>
+In-Reply-To: <1551091367-21718-3-git-send-email-fabrice.gasnier@st.com>
 References: <1551091367-21718-1-git-send-email-fabrice.gasnier@st.com>
-        <1551091367-21718-2-git-send-email-fabrice.gasnier@st.com>
+        <1551091367-21718-3-git-send-email-fabrice.gasnier@st.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -63,51 +63,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Feb 2019 11:42:46 +0100
+On Mon, 25 Feb 2019 11:42:47 +0100
 Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-> Add documentation for optional pinctrl sleep state that can be used by
-> STM32 LPTimer encoder/counter.
+> Add suspend/resume PM sleep ops. When going to low power, disable
+> active counter. Only active counter should be resumed: don't touch
+> disabled counter, as it may be used by other LPTimer MFD child driver.
 > 
 > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-
-Note we are too late for the coming merge window so this will be
-for the next one now.
-
-Thanks,
+Applied. Thanks,
 
 Jonathan
 
 > ---
->  .../devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt         | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  drivers/iio/counter/stm32-lptimer-cnt.c | 55 +++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt b/Documentation/devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt
-> index a04aa5c..e90bc47 100644
-> --- a/Documentation/devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt
-> +++ b/Documentation/devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt
-> @@ -10,8 +10,9 @@ See ../mfd/stm32-lptimer.txt for details about the parent node.
+> diff --git a/drivers/iio/counter/stm32-lptimer-cnt.c b/drivers/iio/counter/stm32-lptimer-cnt.c
+> index 42fb8ba..2a49cce 100644
+> --- a/drivers/iio/counter/stm32-lptimer-cnt.c
+> +++ b/drivers/iio/counter/stm32-lptimer-cnt.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/mfd/stm32-lptimer.h>
+>  #include <linux/module.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
 >  
->  Required properties:
->  - compatible:		Must be "st,stm32-lptimer-counter".
-> -- pinctrl-names: 	Set to "default".
-> -- pinctrl-0: 		List of phandles pointing to pin configuration nodes,
-> +- pinctrl-names: 	Set to "default". An additional "sleep" state can be
-> +			defined to set pins in sleep state.
-> +- pinctrl-n: 		List of phandles pointing to pin configuration nodes,
->  			to set IN1/IN2 pins in mode of operation for Low-Power
->  			Timer input on external pin.
+>  struct stm32_lptim_cnt {
+> @@ -23,6 +24,7 @@ struct stm32_lptim_cnt {
+>  	u32 preset;
+>  	u32 polarity;
+>  	u32 quadrature_mode;
+> +	bool enabled;
+>  };
 >  
-> @@ -21,7 +22,8 @@ Example:
->  		...
->  		counter {
->  			compatible = "st,stm32-lptimer-counter";
-> -			pinctrl-names = "default";
-> +			pinctrl-names = "default", "sleep";
->  			pinctrl-0 = <&lptim1_in_pins>;
-> +			pinctrl-1 = <&lptim1_sleep_in_pins>;
->  		};
->  	};
+>  static int stm32_lptim_is_enabled(struct stm32_lptim_cnt *priv)
+> @@ -50,6 +52,7 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
+>  
+>  	if (!enable) {
+>  		clk_disable(priv->clk);
+> +		priv->enabled = false;
+>  		return 0;
+>  	}
+>  
+> @@ -79,6 +82,7 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
+>  		regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
+>  		return ret;
+>  	}
+> +	priv->enabled = true;
+>  
+>  	/* Start LP timer in continuous mode */
+>  	return regmap_update_bits(priv->regmap, STM32_LPTIM_CR,
+> @@ -361,6 +365,56 @@ static int stm32_lptim_cnt_probe(struct platform_device *pdev)
+>  	return devm_iio_device_register(&pdev->dev, indio_dev);
+>  }
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +static int stm32_lptim_cnt_suspend(struct device *dev)
+> +{
+> +	struct stm32_lptim_cnt *priv = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	/* Only take care of enabled counter: don't disturb other MFD child */
+> +	if (priv->enabled) {
+> +		ret = stm32_lptim_setup(priv, 0);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = stm32_lptim_set_enable_state(priv, 0);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Force enable state for later resume */
+> +		priv->enabled = true;
+> +	}
+> +
+> +	return pinctrl_pm_select_sleep_state(dev);
+> +}
+> +
+> +static int stm32_lptim_cnt_resume(struct device *dev)
+> +{
+> +	struct stm32_lptim_cnt *priv = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = pinctrl_pm_select_default_state(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (priv->enabled) {
+> +		priv->enabled = false;
+> +		ret = stm32_lptim_setup(priv, 1);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = stm32_lptim_set_enable_state(priv, 1);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(stm32_lptim_cnt_pm_ops, stm32_lptim_cnt_suspend,
+> +			 stm32_lptim_cnt_resume);
+> +
+>  static const struct of_device_id stm32_lptim_cnt_of_match[] = {
+>  	{ .compatible = "st,stm32-lptimer-counter", },
+>  	{},
+> @@ -372,6 +426,7 @@ static struct platform_driver stm32_lptim_cnt_driver = {
+>  	.driver = {
+>  		.name = "stm32-lptimer-counter",
+>  		.of_match_table = stm32_lptim_cnt_of_match,
+> +		.pm = &stm32_lptim_cnt_pm_ops,
+>  	},
+>  };
+>  module_platform_driver(stm32_lptim_cnt_driver);
 
