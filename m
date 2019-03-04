@@ -2,249 +2,160 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3C3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0151DC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19FE2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ufv8MCE0"
+	by mail.kernel.org (Postfix) with ESMTP id CECA52070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfCDWsf (ORCPT
+        id S1726652AbfCDWtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 17:48:35 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41617 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCDWsf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 17:48:35 -0500
-Received: by mail-ed1-f66.google.com with SMTP id x7so5603788eds.8;
-        Mon, 04 Mar 2019 14:48:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=De/Srx7WUOyxz1DI+PoziMwGsiszFhXMZy0h9TpGmHQ=;
-        b=ufv8MCE02RUD6oz+aakwASr+W0H0iVuYOw7AgTHBcRX9El78zphBohkSgnFi5E7y9+
-         KBDZCFYvgQ6Ma96DsZKH59EIh1PV0u+eDTlNQvKKbC9G50urcs1rn0rcJzkiKi/+7tB1
-         CbZF9wjBkFEmUBmRH53a0xZkBi1C6YvDrU10/shEjPMNKI/7+BMqbIxzX+AkP8X7mYsu
-         DeDYo1h2UihmlavoyDFFBjIz7s4TxIT4DMwVM32BgswWPrliRft+K1S6W1iYK8Pa5C0i
-         ASteu0C07aQuueGN/n1TAxdGfdClEeB66ASB8vkHmMRjBo5B8Ok118JeFdMrUf91tWNP
-         k8FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=De/Srx7WUOyxz1DI+PoziMwGsiszFhXMZy0h9TpGmHQ=;
-        b=cmbADePz2Pdr9+SW1emIX80jUnRhN8rtPqja5j2XtQQvOXXhA8ySMLwJ+hl+1kkwm9
-         /OcsXtFmdnEXJE221iYcGcmmlhg80MYRhbH0jZ+TfbAWKZ/C0zXXVgl84JyS7Jh/JBbO
-         AsTFh8Q0kkVBTUE80wXSAkBTkoTUlzcOL6e/NEFUMfGkD2l5/vVUbgiZgvpwXV0/G40o
-         48+DXcLP2r2KBOR/6w2a5a1QX7UaVfp58efAFxmVSzi2m8oYAl4PVNQW/FczuE6Z2e2c
-         jUvkx8/utCJ3GtfGrBWmmty4PR/JHlwy59Rk9BQpAGBCGzCRSEeULgJYvmrV5hbDseX5
-         fpFA==
-X-Gm-Message-State: APjAAAV2djy6TuWrN7e5G2A4nlJXveg0zVgW2byzkJDjnYV9yNhhclkm
-        7+Tu4sl4zdRBw4gLOQ0GNE0=
-X-Google-Smtp-Source: APXvYqze37nUY2yFupDiyWGJBbJReptQyUn4llRFiq935vtCn28rZ08/TK8Gghje6KOg6nT2vuo6qA==
-X-Received: by 2002:a17:906:1c02:: with SMTP id k2mr13886863ejg.119.1551739712846;
-        Mon, 04 Mar 2019 14:48:32 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id i42sm2427976eda.86.2019.03.04.14.48.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 14:48:32 -0800 (PST)
-Subject: Re: [PATCH v3 1/4] drm: rockchip: introduce rk3066 hdmi
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190302104116.1535-1-jbx6244@gmail.com>
- <20190302104116.1535-2-jbx6244@gmail.com>
- <20190303202308.GD13157@ravnborg.org>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <b6b818d5-8c24-e01a-572e-97c1754c80e8@gmail.com>
-Date:   Mon, 4 Mar 2019 23:48:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 4 Mar 2019 17:49:00 -0500
+Received: from sauhun.de ([88.99.104.3]:57554 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfCDWtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 17:49:00 -0500
+Received: from localhost (p54B337B5.dip0.t-ipconnect.de [84.179.55.181])
+        by pokefinder.org (Postfix) with ESMTPSA id 450192E4031;
+        Mon,  4 Mar 2019 23:48:57 +0100 (CET)
+Date:   Mon, 4 Mar 2019 23:48:56 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, Keerthy <j-keerthy@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Phil Reid <preid@electromag.com.au>,
+        Tero Kristo <t-kristo@ti.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 0/7] i2c: core: introduce atomic transfers
+Message-ID: <20190304224856.w7egngqynl3hlabp@ninjato>
+References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
+ <71aaab62-2965-8ad8-61b9-02d02694919d@axentia.se>
 MIME-Version: 1.0
-In-Reply-To: <20190303202308.GD13157@ravnborg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i2ufgd73rsxv6a7m"
+Content-Disposition: inline
+In-Reply-To: <71aaab62-2965-8ad8-61b9-02d02694919d@axentia.se>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the useful review comments.
 
-With regard to the bugs something between rc1 and rc8 results
-in a freeze on poweroff. Power domain doesn't seem to turn off
-the vop and hdmi in rc8.
-For testing only.
+--i2ufgd73rsxv6a7m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Forgot to ask rob+dt the prefered document name for "rockchip,rk3066-hdmi"
-Please advise if this is OK? "rockchip_rk3066-hdmi.txt"
+Hi Peda,
 
-On 3/3/19 9:23 PM, Sam Ravnborg wrote:> Hi Johan.
->
-> Thanks for this nive driver.
-> A few review comments follows.
->
-> 	Sam
->
-> On Sat, Mar 02, 2019 at 11:41:13AM +0100, Johan Jonker wrote:
->> From: Zheng Yang <zhengyang@rock-chips.com>
->>
->> Introduce rk3066 hdmi.
-> A little more info would be good here.
-> Do not assume all reader knows as much as you do.
+> The way I read this series, you are not giving atomic transfers priority.=
+ The
 
-Will add more text in V4.
+You are reading correctly. I could have made more clear that the issue
+pointed out by Russell is not handled by this series but discussion
+about it is welcome / needed to decide if we can take this series as is
+or if we need to redesign it. But here we are anyhow :)
 
->> +#include <linux/clk.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <drm/drm_of.h>
->> +#include <drm/drmP.h>
->> +#include <drm/drm_probe_helper.h>
-> Please do not use drmP.h in new files. The usage of drmP.h is deprecated.
-> Also please sort the include files, but keep the nice grouping.
+> only thing that happens is that if an xfer happens in atomic/irq context,
+> trylock is used instead of an ordinary (unconditional) lock (this is just
+> like it is already). If a mux is sitting in between the client device and
+> the root adapter, the trylock operation will percolate to the root. Sure,
+> there are more trylock ops that may fail and abort the xfer, but if
+> everything is uncontended, then things should proceed in orderly fashion.
+> Also, sure, the mux may need additional resources that are no longer
+> available if the machine is half way down (or worse). But I don't see any
+> fundamental *locking* issue with muxes that is different from the case
+> without a mux.
 
-You try to get rid of it and now I add one more to it ...
-Thank you for letting me know.
-The file drmP.h is used for:
-to_platform_device, platform_get_resource, platform_get_irq
-Replaced <drm/drmP.h> by <linux/platform_device.h>
+Good, that was my conclusion as well. The series, as is, doesn't change
+the locking behaviour, so that will work exactly as before. Or, it will
+not work in the case described by Russell. Like before.
 
->> +	int vic;
-> vic is used so much. It deserves an explanation.
+> That said, if you then want to introduce xfers that want to circumvent the
+> locking, then parent-locked muxes are easier since the actual muxing oper=
+ation
+> is performed as an unlocked xfer (if one is needed) while the client devi=
+ce
+> has grabbed the adapter lock "from the outside". Sure, there is a list of
+> locks going up through the adapter tree to handle, but that can probably =
+be
+> handled in one place. I.e. the locking must have been avoided prior to the
+> actual muxing operation, but the code to do so can be in one place. The
 
-Is this OK?
-	int vic; // pointer to the current cea mode in the edid_cea_modes array
+That was my gut feeling, too...
 
-hdmi->hdmi_data.vic = drm_match_cea_mode(mode);
+> mux-locked case is where the trouble is, since the muxing operation is do=
+ne
+> as a normal xfer and needs to be classified as a special xfer that just l=
+ike
+> the original client xfer also needs to break through any existing locks in
+> the adapter tree. And those muxing xfers might come from anywhere, e.g.
+>=20
+> 	- IO-expander controlling a gpio/pinctrl mux
+> 	- dedicated I2C mux (e.g. the LTC4306)
+> 	- regmap device
+> 	- etc, who knows what muxing options will evolve?
+>=20
+> So, any scheme that require a white-list will work poorly for mux-locked
+> muxes, unless you can add some new grip/pinctrl/regmap flags to
+> gpios/pins/registers so that the particular accesses can be white-listed.
+> Adding those flags seem rather invasive?
 
->> +	unsigned int enc_in_format;
->
-> enc_in_format is in this patch only assinged.
-> aybe drop it (if not used in later patches)
+=2E.. and sadly, this too. We would need the same kind of flag which I
+described in my first paragraph of the original posting where I wanted
+the flag to detect "unauthorized" uses of late I2C transfers. And this
+is gonna be invasive. And I am not sure it is worth the effort.
 
-Will drop it. Possible leftover when they reused
-the inno-hdmi driver as template?
+I wonder what a reasonable effort is? Simply ignore the lock from the
+"current" adapter and hope for the best that there is no mux or at
+least no mux which needs interrupts / a lock attached to it?
 
->> +	u8 ddc_addr;
->> +	u8 segment_addr;
-> The two members above are only used in rk3066_hdmi_i2c_write()
-> Maybe they can be made local variables?
+> But of course, you need to actually do something about the added FIXME in
+> the demux-pinctrl driver... BTW, that driver should forward ->smbus_xfer
+> just like it does for ->master_xfer, no?
 
-ddc_addr and segment_addr only get a value in the condition below and
-are reused.
-Should remain global.
+Yes. The idea of having two seperate SMBus controllers in one SoC which
+would need demuxing is amusing, but still, it exists for I2C and you are
+right.
 
-	if (msgs->addr == DDC_SEGMENT_ADDR)
-		hdmi->i2c->segment_addr = msgs->buf[0];
-	if (msgs->addr == DDC_ADDR)
-		hdmi->i2c->ddc_addr = msgs->buf[0];
+Thanks,
 
->> +	struct mutex lock; /*for i2c operation*/
-> Name the lock after what is protects, to avoid mis-use.
+   Wolfram
 
-Will change the name to i2c_lock.
 
->> +	struct completion cmp;
->
-> cmp is shorthand for "compare" - as we have a command named so.
-> Find a better name.
+--i2ufgd73rsxv6a7m
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Agree.
+-----BEGIN PGP SIGNATURE-----
 
->> +	struct drm_device *drm_dev;
-> The new way to do this is to embed the device.
-> See latest patches by Noralf in drm-misc-next, which include a nice
-example.
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlx9q1gACgkQFA3kzBSg
+KbYX3BAAjQDCFpbGfGXB8PlBXZzY6XS+1sO3YC6TcePKhtRbKNzfW4QConML5j+g
+KlTrgTUx82i4bv7IVtbOw5in2PB/rMiv6FyZ68Ezy5Z2dmCnH9WS9T7+OWIMNDwB
+6F4YJZ+1JfsL6G7IlapHMlDuIcXIXJzL4UMzcpQHQXrkoxO6dPOkbRGGvSA9u0/K
+Lw+IPnkBa/TROkUrWMzmjqKiAXNw7Ddr8fBPopllklAmD+lL6ZtElrgS95tjHS1X
+pGEKNZgZC7AY+7v7kzieLbtDIBQalOaixJbSZ3Ckm+Eo+ejpnWxjqLAnxZ2zjBGS
+N4opb/qvklrxCv+/vUTqtWqTQ3XhLnIlY4+tZINJF4BxTTqaWXheREYuHOn7fFN8
+fAxeU8p6aYDiszl4djPBBuRha+NDHEY8MySklHh5H8iR495c1vM+aYq4N/dTXlta
+J/AVwAbq89Nh/rSlkxcxNbNu/eb2IP/4ZmFCk62+xtklydaH8yOv1jiKl/oCmHVD
+PCnd8Sd8siY9s0fyUnaxAeaverSyjdu/kucrVdqs4AYDn57iMqsNB4CmeGjxx6ko
+3sAiJQb5mwLONtDW3viQ6zCBrnQ3I+/vxS/7u7q+AXnOzpSy/nid/0zY9eXeJBHh
+WFSVTwuhq4IGzGaqUSHGqcfO4FsjL0KgXnP7cSJWzmBURW0JgzE=
+=Al+e
+-----END PGP SIGNATURE-----
 
-That sounds more like a job for the Rockchip maintainers and
-not for a individual. With this driver they have 8 more to go ...
-
-	ADD_ROCKCHIP_SUB_DRIVER(vop_platform_driver, CONFIG_DRM_ROCKCHIP);
-	ADD_ROCKCHIP_SUB_DRIVER(rockchip_lvds_driver,
-				CONFIG_ROCKCHIP_LVDS);
-	ADD_ROCKCHIP_SUB_DRIVER(rockchip_dp_driver,
-				CONFIG_ROCKCHIP_ANALOGIX_DP);
-	ADD_ROCKCHIP_SUB_DRIVER(cdn_dp_driver, CONFIG_ROCKCHIP_CDN_DP);
-	ADD_ROCKCHIP_SUB_DRIVER(dw_hdmi_rockchip_pltfm_driver,
-				CONFIG_ROCKCHIP_DW_HDMI);
-	ADD_ROCKCHIP_SUB_DRIVER(dw_mipi_dsi_rockchip_driver,
-				CONFIG_ROCKCHIP_DW_MIPI_DSI);
-	ADD_ROCKCHIP_SUB_DRIVER(inno_hdmi_driver, CONFIG_ROCKCHIP_INNO_HDMI);
-	ADD_ROCKCHIP_SUB_DRIVER(rk3066_hdmi_driver,
-				CONFIG_ROCKCHIP_RK3066_HDMI);
-
->> +	struct regmap *regmap;
-> +1 for using regmap.
-> But then there is still several readl_relaxed() writel_relaxed() calls?
-> They are in hdmi_readb() and hdmi_writeb(). Should a regmap had been
-used here too?
-
-Will rename hdmi->regmap to hdmi->grf_regmap to make it look more different
-between hdmi devm_ioremap and grf syscon_regmap.
-
->> +	value |= vsync_offset << 4;
-> Replace 4 with HDMI_VIDEO_VSYNC_OFFSET_SHIFT??
-
-Looks like it. That's something only the author can tell.
-
->> +	hdmi->regmap =
->> +		syscon_regmap_lookup_by_phandle(hdmi->dev->of_node,
->> +						"rockchip,grf");
->
-> dev->of_node would be fine here. No reason to go via hdmi->
-
-Will replace the other hdmi->dev in this function by dev as well.
-
->> +	hdmi->connector.funcs->destroy(&hdmi->connector);
->> +	hdmi->encoder.funcs->destroy(&hdmi->encoder);
-> I think the destroy() function should not be called directly.
-
-Don't know what should be used instead. Please advise.
-
->> +static const struct of_device_id rk3066_hdmi_dt_ids[] = {
->> +	{ .compatible = "rockchip,rk3066-hdmi",
->> +	},
-> MAke this a one-liner.
->
->> +	{},
-> Us { /* sentinal */ }, like most other drivers.
-
-Agree. But I prefere sentinel ...
-
-{ .compatible = "rockchip,rk3066-hdmi"},
-{ /* sentinel */ },
-
->> +	.driver = {
->> +		.name = "rockchip-rk3066hdmi",
-> Different naming are used for the driver in this file.
-> Coniser using a macro to align the naming.
-
-"rockchip,rk3066-hdmi" is related to "rockchip,rk3066-vop"
-
-"rockchip-rk3066hdmi" should remain in line with the other debug messages,
-else it gets a mess if you do a dmesg | grep ...
-
-[    0.576237] rockchip-pm-domain 20004000.pmu:power-controller:
-rockchip_pm_domain_probe
-[    1.198354] rockchip-vop 1010c000.vop: attaching to power domain 'pd_vio'
-[    1.437444] rockchip-drm display-subsystem: bound 10116000.hdmi (ops
-0xc0842d38)
-[    0.397567] rockchip-rk3066hdmi 10116000.hdmi: registered RK3066 HDMI
-I2C bus driver
-
-Not so good example.
-[   12.726332] dwmmc_rockchip 10214000.dwmmc: Using external DMA controller.
+--i2ufgd73rsxv6a7m--
