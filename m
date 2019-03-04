@@ -2,102 +2,120 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A873C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9CAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4EA2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:50:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJcdJQWu"
+	by mail.kernel.org (Postfix) with ESMTP id DB01B2146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551682449;
+	bh=6VuAjyAddotNq2EYZx+fOq8K4a8Mvh/0OZ3+vmq28q4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TI6drEkPVKRFpLqx+ngHT0CXtC+1EyqfkbLBc1pSU4YUKX/jmJDMo8gqQljHkHDgZ
+	 2OoaOyLxgKwEE/FTvjcWIcKXue2xTAsdOQ58NGf52ypzxTyuXSiBYeRaB1d2YYqAVq
+	 lrOqN3Y1inlDQCv6XfCMGMUbKlj82cAnIT5UI1ZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbfCDGux (ORCPT
+        id S1726126AbfCDGyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 01:50:53 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38075 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfCDGuw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 01:50:52 -0500
-Received: by mail-pg1-f195.google.com with SMTP id m2so2363506pgl.5;
-        Sun, 03 Mar 2019 22:50:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=utd9FipREVw8GzeDY94dAXqZI7jNESLDQpsdA3+E4UM=;
-        b=hJcdJQWuszHaZGu5m70osy8T0thtRfp3RvMgMqKqjliE5wkNrkyApy8BZMX1/K8OB5
-         hVisv+HXbkpWWvAPC7nuk6olsPezSdOTqrrHnM5FVuc6O6pnNSHf9J5CAO5xDpMTZv1z
-         y4efP602usZE3+qsXDLwMdIUPLIzkQ/y8FjZu/cXuhzOfXelGUZTxnBC82LdqGOshczf
-         F33M76Q2achduRwyJnXNe7T7/byeBY5nNzTQqN0T9ok1+UQQUkAH3G5dJCxMZ1+jbwu/
-         54ric/fONZsLbGbUyVkyd2/Z4/WilBJcHNYvTnJuV/09q7mpW6BvGMjB5EHN+Im8NISS
-         R9xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=utd9FipREVw8GzeDY94dAXqZI7jNESLDQpsdA3+E4UM=;
-        b=FlCVvUXFmo5l5DXssJE0Sm6tGBc4kayepRxWCYeAEetO51pEhOhaP7vu7MBAWJNKtt
-         86MqVzQhjBxk7hUQUfU1GIKf8EvhsNsPNQ2ldcnHGbL6MXrC+YS7ygqz0CIsAqlUboOC
-         FwFGdY8qyjkBdj6sbs3L7zlbBeITbBaLSFs6byHVJYJdNQ/ZCF2hsLUm2ErYfn2vyVAb
-         yaReADM9nQZ0Rb8IKIkAKzIoxf3+p1oW0qBCJsIDCZZUWj2V1lql+37NmIEUhu+bvO0u
-         zLglBQg4puZ3hQFIyVXmuD0IoFdO4WmONYrvHN5ziNVxPR9DwuMGkdWSpqWDn56HcxQq
-         1ILQ==
-X-Gm-Message-State: APjAAAVwOaqK6GZLTrx3EotCwbHzAR4G7xPUJT51QtQEvx31PvnzDUIK
-        hrax96ekHf702CXR0gD0FHnDI7ZM9W7JGdPFoWg=
-X-Google-Smtp-Source: APXvYqxr7TQKjPsmi5d29EUl+vQlUTDMZfkXHdUCKElqAcnxAGcPsYbvqnHSOwq8By9rVE4RyhVivJqDrr2iJCFs+jM=
-X-Received: by 2002:a63:1a25:: with SMTP id a37mr17688632pga.428.1551682251687;
- Sun, 03 Mar 2019 22:50:51 -0800 (PST)
+        Mon, 4 Mar 2019 01:54:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfCDGyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 01:54:07 -0500
+Received: from dragon (61-216-91-114.HINET-IP.hinet.net [61.216.91.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88A3A21019;
+        Mon,  4 Mar 2019 06:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551682446;
+        bh=6VuAjyAddotNq2EYZx+fOq8K4a8Mvh/0OZ3+vmq28q4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PGNaDuIZrzn8JSBn5hZopIHxQgqmB0y4sHpRnbYReTDUG3tQACtvejPaBjf97ydYc
+         VG8fNr4eRr+BFYGYtDhIxoe6QxVfk1vsGk+5h7tPkx3WNFsfJmRndwo5ULif2t19Xw
+         JYGNLL2vlrWEhURkCxb/UIRqZYZioZ1j9QAr2OhQ=
+Date:   Mon, 4 Mar 2019 14:53:03 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andy Tang <andy.tang@nxp.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
+Message-ID: <20190304065302.GD26041@dragon>
+References: <20190304032111.21770-1-andy.tang@nxp.com>
+ <20190304062115.GB26041@dragon>
+ <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190302090505.65542-1-chenyu56@huawei.com> <20190302090505.65542-11-chenyu56@huawei.com>
- <1551664069.2210.64.camel@mhfsdcap03>
-In-Reply-To: <1551664069.2210.64.camel@mhfsdcap03>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 4 Mar 2019 08:50:39 +0200
-Message-ID: <CAHp75Vdkp40e5-Bv+LnLBxgPkTDJ0FA1ooq+C4-do=4k5prTiQ@mail.gmail.com>
-Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Yu Chen <chenyu56@huawei.com>, USB <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Suzhuangluan <suzhuangluan@hisilicon.com>,
-        Kongfei <kongfei@hisilicon.com>, liuyu712@hisilicon.com,
-        wanghu17@hisilicon.com, butao@hisilicon.com,
-        Yao Chen <chenyao11@huawei.com>, fangshengzhou@hisilicon.com,
-        lipengcheng8@huawei.com, songxiaowei <songxiaowei@hisilicon.com>,
-        xu yiping <xuyiping@hisilicon.com>, xuyoujun4@huawei.com,
-        yudongbin@hisilicon.com, zangleigang@hisilicon.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB433386B86A5E6AA804E9C3B5F3710@VI1PR04MB4333.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 3:47 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
-> On Sat, 2019-03-02 at 17:05 +0800, Yu Chen wrote:
+On Mon, Mar 04, 2019 at 06:46:32AM +0000, Andy Tang wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Shawn Guo <shawnguo@kernel.org>
+> > Sent: 2019年3月4日 14:21
+> > To: Andy Tang <andy.tang@nxp.com>
+> > Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; linux-pm@vger.kernel.org;
+> > daniel.lezcano@linaro.org; rui.zhang@intel.com; edubezval@gmail.com
+> > Subject: Re: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
+> > 
+> > On Mon, Mar 04, 2019 at 11:21:11AM +0800, Yuantian Tang wrote:
+> > > Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core
+> > > cluster sensor is used to monitor the temperature of core and SoC
+> > > platform is for platform. The current dts only support the first sensor.
+> > > This patch adds the second sensor node to dts to enable it.
+> > >
+> > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> > > ---
+> > > v2:
+> > > 	- Add more information about sensors to description
+> > > PS: In order to keep consistency to the first thermal-zone node, there
+> > > will be "WARNING: line over 80 characters" warnings.
+> > >
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43
+> > +++++++++++++++++++++--
+> > >  1 files changed, 39 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > index 661137f..9f52bc9 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > @@ -129,19 +129,19 @@
+> > >  	};
+> > >
+> > >  	thermal-zones {
+> > > -		cpu_thermal: cpu-thermal {
+> > > +		ccu {
+> > 
+> > Is this change really necessary?  What does 'ccu' stand for?
+> I think so. ccu stands for core cluster unit. cpu is too general.
+> On some platforms, there are more than one core clusters.
+> At least we should change it to "core cluster" if short form is not appropriate.
 
-> > +     hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
-> > +     if (!hisi_hikey_usb->role_sw)
-> > +             return -EPROBE_DEFER;
-> Here return EPROBE_DEFFER means the related device_connection is
-> registered after this probe is called, right?
-> if not, use IS_ERR_OR_NULL then return PTR_ERR is enough
+Yes, please give it a more descriptive name.
 
-How enough? If return value is NULL it would be transformered to 0,
-which is success return code from the ->probe() which means we will
-have ->probed() and not functional device.
-
-Am I missing something?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Shawn
