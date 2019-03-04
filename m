@@ -2,213 +2,137 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E91C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D673C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1561320657
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A22420823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551720949;
+	bh=38tLZkWZIXN2FoXVwkQVv8/snPeJ9vD5u5f5EA6yjNw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=plYv+7pjMlnrx5bRyHGTqa8JqeUDhBBrWait6i9FYGQ5bDY7ImtwyEQyL/QnXX3sQ
+	 OMb7069FiYyvGSFR2rNKK10LfaYB89fDXmQgGSNQSrQx87pTGx8CWVIg7m/ogtESwH
+	 xLPKVPPd7q8X3R8B2Xrgq2o0JtP42FwFmF/9hsmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfCDReO (ORCPT
+        id S1727430AbfCDRfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:34:14 -0500
-Received: from foss.arm.com ([217.140.101.70]:36542 "EHLO foss.arm.com"
+        Mon, 4 Mar 2019 12:35:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727178AbfCDReO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:34:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F803A78;
-        Mon,  4 Mar 2019 09:34:13 -0800 (PST)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFC473F703;
-        Mon,  4 Mar 2019 09:34:11 -0800 (PST)
-Subject: Re: [RFC PATCH] KVM: arm64: Force a PTE mapping when logging is
- enabled
-To:     Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-        Zenghui Yu <zenghuiyu96@gmail.com>
-Cc:     christoffer.dall@arm.com, Punit Agrawal <punit.agrawal@arm.com>,
-        julien.thierry@arm.com, LKML <linux-kernel@vger.kernel.org>,
-        james.morse@arm.com, Zenghui Yu <yuzenghui@huawei.com>,
-        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-References: <1551497728-12576-1-git-send-email-yuzenghui@huawei.com>
- <CAKcZhuWa4UcsoFPRkZg=M3WeUJibX8T0_R+JHS3=cyd51N9cgQ@mail.gmail.com>
- <20190304171320.GA3984@en101>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <32f302eb-ef89-7de4-36b4-3c3df907c732@arm.com>
-Date:   Mon, 4 Mar 2019 17:34:10 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726181AbfCDRfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:35:47 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62D7720835;
+        Mon,  4 Mar 2019 17:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551720945;
+        bh=38tLZkWZIXN2FoXVwkQVv8/snPeJ9vD5u5f5EA6yjNw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jVsTZaEoBwuO1+CvyPn6PWI5oKSuG7uuf1lvUMLrQCIDToKl3oiNzWPpJIxEjRIFL
+         oreyMWiIzNSg7Ve4L3w+iNKYkJMlP6JNB/bynS1UFItiG2nxWCu/gepAoT77duBW19
+         pim8+fmyW6E/6M/kzePYBzH0/PFr8w2N+SHfh9YM=
+Received: by mail-qk1-f174.google.com with SMTP id z13so3237173qki.2;
+        Mon, 04 Mar 2019 09:35:45 -0800 (PST)
+X-Gm-Message-State: APjAAAWjWNQDAZgU3kWuyjheZRGgzOcfeOXjbOF1XQio+/PYWiCngDDt
+        zJotLuNsQb+6vStgoQATH2aaSGexfSrT6nmnbg==
+X-Google-Smtp-Source: APXvYqxOmV4QBHGwKG/YTrrvxP+9+Ki2yadJOLLpV6xXzpK4PcFEEand02OEeC3gP73/OTRT2VgkVdCm6zGxRRnJ3K0=
+X-Received: by 2002:a37:a381:: with SMTP id m123mr14534890qke.147.1551720944588;
+ Mon, 04 Mar 2019 09:35:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190304171320.GA3984@en101>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190120172534.24617-1-lkundrak@v3.sk> <20190120172534.24617-5-lkundrak@v3.sk>
+ <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com>
+ <b92426e9f5c50c71fa89ea5b53396c1885cc396f.camel@v3.sk> <CAL_JsqJsfwC4fAJaVEvKwtZkZwapu5jojEFn6Ddx34a6jZ_dSQ@mail.gmail.com>
+ <4e89406842c4821d590dc6518076cfe6f19cc6b9.camel@v3.sk>
+In-Reply-To: <4e89406842c4821d590dc6518076cfe6f19cc6b9.camel@v3.sk>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 Mar 2019 11:35:33 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ8rovEM4RtkJKwTeDrRotVr59EmU-_1ApR+c9yxB8k2Q@mail.gmail.com>
+Message-ID: <CAL_JsqJ8rovEM4RtkJKwTeDrRotVr59EmU-_1ApR+c9yxB8k2Q@mail.gmail.com>
+Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem binding
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui, Suzuki,
+On Sun, Feb 24, 2019 at 10:15 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> On Fri, 2019-02-22 at 14:23 -0600, Rob Herring wrote:
+> > On Wed, Feb 13, 2019 at 4:37 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> > > On Mon, 2019-01-21 at 09:35 -0600, Rob Herring wrote:
+> > > > On Sun, Jan 20, 2019 at 11:26 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> > > > > The Marvell Armada DRM master device is a virtual device needed to list all
+> > > > > nodes that comprise the graphics subsystem.
+> > > > >
+> > > > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > > > > ---
+> > > > >  .../display/armada/marvell-armada-drm.txt     | 24 +++++++++++++++++++
+> > > > >  1 file changed, 24 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
+> > > > > index de4cca9432c8..3dbfa8047f0b 100644
+> > > > > --- a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
+> > > > > +++ b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
+> > > > > @@ -1,3 +1,27 @@
+> > > > > +Marvell Armada DRM master device
+> > > > > +================================
+> > > > > +
+> > > > > +The Marvell Armada DRM master device is a virtual device needed to list all
+> > > > > +nodes that comprise the graphics subsystem.
+> > > > > +
+> > > > > +Required properties:
+> > > > > +
+> > > > > + - compatible: value should be "marvell,dove-display-subsystem",
+> > > > > +   "marvell,armada-display-subsystem"
+> > > > > + - ports: a list of phandles pointing to display interface ports of CRTC
+> > > > > +   devices
+> > > > > + - memory-region: phandle to a node describing memory to be used for the
+> > > > > +   framebuffer
+> > > > > +
+> > > > > +Example:
+> > > > > +
+> > > > > +       display-subsystem {
+> > > > > +               compatible = "marvell,dove-display-subsystem",
+> > > > > +                            "marvell,armada-display-subsystem";
+> > > > > +               memory-region = <&display_reserved>;
+> > > > > +               ports = <&lcd0_port>;
+> > > >
+> > > > If there is only one device, you don't need this virtual node.
+> > >
+> > > Before I follow up on this and submit a version without the virtual
+> > > node, I'm wondering: is it okay that the bindings for the LCDC and the
+> > > framebuffer are in the same file, or would it be preferrable if they
+> > > were separate? Both styles seem to be used for the display bindings.
+> >
+> > framebuffer as in the kernel fbdev? Really, that should be the same
+> > binding. It's the same h/w after all. However, there have been cases
+> > where things deviated. So I don't have a good answer.
+>
+> No, not the fbdev device, that one is managed by drmfb and is not
+> expressed in DT. I meant the reserved-memory node that sets aside
+> memory for the framebuffers.
+>
+> See patch "[RFC 03/16] dt-bindings: display: armada: Add framebuffer
+> reserved-mem binding". Perhaps that part should even go to
+> Documentation/devicetree/bindings/reserved-memory/.
 
-On 04/03/2019 17:13, Suzuki K Poulose wrote:
-> Hi Zenghui,
-> 
-> On Sun, Mar 03, 2019 at 11:14:38PM +0800, Zenghui Yu wrote:
->> I think there're still some problems in this patch... Details below.
->>
->> On Sat, Mar 2, 2019 at 11:39 AM Zenghui Yu <yuzenghui@huawei.com> wrote:
->>>
->>> The idea behind this is: we don't want to keep tracking of huge pages when
->>> logging_active is true, which will result in performance degradation.  We
->>> still need to set vma_pagesize to PAGE_SIZE, so that we can make use of it
->>> to force a PTE mapping.
-> 
-> Yes, you're right. We are indeed ignoring the force_pte flag.
-> 
->>>
->>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->>> Cc: Punit Agrawal <punit.agrawal@arm.com>
->>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->>>
->>> ---
->>> Atfer looking into https://patchwork.codeaurora.org/patch/647985/ , the
->>> "vma_pagesize = PAGE_SIZE" logic was not intended to be deleted. As far
->>> as I can tell, we used to have "hugetlb" to force the PTE mapping, but
->>> we have "vma_pagesize" currently instead. We should set it properly for
->>> performance reasons (e.g, in VM migration). Did I miss something important?
->>>
->>> ---
->>>  virt/kvm/arm/mmu.c | 7 +++++++
->>>  1 file changed, 7 insertions(+)
->>>
->>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->>> index 30251e2..7d41b16 100644
->>> --- a/virt/kvm/arm/mmu.c
->>> +++ b/virt/kvm/arm/mmu.c
->>> @@ -1705,6 +1705,13 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->>>              (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
->>>             !force_pte) {
->>>                 gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
->>> +       } else {
->>> +               /*
->>> +                * Fallback to PTE if it's not one of the stage2
->>> +                * supported hugepage sizes or the corresponding level
->>> +                * doesn't exist, or logging is enabled.
->>
->> First, Instead of "logging is enabled", it should be "force_pte is true",
->> since "force_pte" will be true when:
->>
->>         1) fault_supports_stage2_pmd_mappings() return false; or
->>         2) "logging is enabled" (e.g, in VM migration).
->>
->> Second, fallback some unsupported hugepage sizes (e.g, 64K hugepage with
->> 4K pages) to PTE is somewhat strange. And it will then _unexpectedly_
->> reach transparent_hugepage_adjust(), though no real adjustment will happen
->> since commit fd2ef358282c ("KVM: arm/arm64: Ensure only THP is candidate
->> for adjustment"). Keeping "vma_pagesize" there as it is will be better,
->> right?
->>
->> So I'd just simplify the logic like:
-> 
-> We could fix this right in the beginning. See patch below:
-> 
->>
->>         } else if (force_pte) {
->>                 vma_pagesize = PAGE_SIZE;
->>         }
->>
->>
->> Will send a V2 later and waiting for your comments :)
-> 
-> 
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index 30251e2..529331e 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -1693,7 +1693,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  		return -EFAULT;
->  	}
->  
-> -	vma_pagesize = vma_kernel_pagesize(vma);
-> +	/* If we are forced to map at page granularity, force the pagesize here */
-> +	vma_pagesize = force_pte ? PAGE_SIZE : vma_kernel_pagesize(vma);
-> +
->  	/*
->  	 * The stage2 has a minimum of 2 level table (For arm64 see
->  	 * kvm_arm_setup_stage2()). Hence, we are guaranteed that we can
-> @@ -1701,11 +1703,10 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  	 * As for PUD huge maps, we must make sure that we have at least
->  	 * 3 levels, i.e, PMD is not folded.
->  	 */
-> -	if ((vma_pagesize == PMD_SIZE ||
-> -	     (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
-> -	    !force_pte) {
-> +	if (vma_pagesize == PMD_SIZE ||
-> +	    (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm)))
->  		gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
-> -	}
-> +
->  	up_read(&current->mm->mmap_sem);
->  
->  	/* We need minimum second+third level pages */
-That's pretty interesting, because this is almost what we already have
-in the NV code:
+Okay.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/tree/virt/kvm/arm/mmu.c?h=kvm-arm64/nv-wip-v5.0-rc7#n1752
+A separate file will be better and probably
+Documentation/devicetree/bindings/reserved-memory/ is the best
+location.
 
-(note that force_pte is gone in that branch).
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Rob
