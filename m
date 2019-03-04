@@ -2,239 +2,486 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39542C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E30EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38C32070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QwzYOmRg"
+	by mail.kernel.org (Postfix) with ESMTP id 302B72070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbfCDS25 (ORCPT
+        id S1727844AbfCDS3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:28:57 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:50286 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfCDS25 (ORCPT
+        Mon, 4 Mar 2019 13:29:36 -0500
+Received: from mailproxy03.manitu.net ([217.11.48.67]:52036 "EHLO
+        mailproxy03.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfCDS3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:28:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1551724135; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FIq1xnL6VphFapUwETOD7dRwlJk0U+6eZD8t0ZDyKyY=;
-        b=QwzYOmRgavdOKDcPaMXbEGfr2ELeTuh2YesAZG78pALT3df/kytgTAfN8HZAKnEt4NGJqn
-        A9nXt84/SjPs7Nc5nRJGIVVMSuBDNFawuqippP0zox8mQor2cJrD8wNCG+dVPN9WUiUOsh
-        r+MMVpqbcK4ASUpmubkfIqvSQ1y3oy4=
-Date:   Mon, 04 Mar 2019 19:28:49 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 7/9] mtd: rawnand: ingenic: Add support for the JZ4740
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        Mon, 4 Mar 2019 13:29:36 -0500
+Received: from [10.0.30.7] (dslb-178-010-196-220.178.010.pools.vodafone-ip.de [178.10.196.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: wg@grandegger.com)
+        by mailproxy03.manitu.net (Postfix) with ESMTPSA id C6EF2D40032;
+        Mon,  4 Mar 2019 19:33:02 +0100 (CET)
+Subject: Re: [PATCH v6 4/4] can: tcan4x5x: Add tcan4x5x driver to the kernel
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
+        davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Message-Id: <1551724129.4932.5@crapouillou.net>
-In-Reply-To: <20190304113412.24b64e3d@xps13>
-References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190209192305.4434-7-paul@crapouillou.net> <20190304113412.24b64e3d@xps13>
+References: <20190301185043.9037-1-dmurphy@ti.com>
+ <20190301185043.9037-4-dmurphy@ti.com>
+From:   Wolfgang Grandegger <wg@grandegger.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8QEfHnPzgykCs2DOOQ==
+Message-ID: <1b66dbcc-8fa9-5ad4-6f30-a397d0779cb2@grandegger.com>
+Date:   Mon, 4 Mar 2019 19:29:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190301185043.9037-4-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Dan,
 
-On Mon, Mar 4, 2019 at 11:34 AM, Miquel Raynal=20
-<miquel.raynal@bootlin.com> wrote:
-> Hi Paul,
->=20
-> Paul Cercueil <paul@crapouillou.net <mailto:paul@crapouillou.net>>=20
-> wrote on Sat,  9 Feb 2019 16:23:03
-> -0300:
->=20
->>  Add support for probing the ingenic-nand driver on the JZ4740 SoC=20
->> from
->>  Ingenic, and the jz4740-ecc driver to support the JZ4740-specific
->>  ECC hardware.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net=20
->> <mailto:paul@crapouillou.net>>
->>  ---
->>=20
->>  Changes:
->>=20
->>  v2: New patch
->>=20
->>  v3: Also add support for the hardware ECC of the JZ4740 in this=20
->> patch
->>=20
->>  v4: - Fix formatting issues
->>      - Add MODULE_* macros
->>=20
->>   drivers/mtd/nand/raw/ingenic/Kconfig        |  10 ++
->>   drivers/mtd/nand/raw/ingenic/Makefile       |   1 +
->>   drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  48 +++++--
->>   drivers/mtd/nand/raw/ingenic/jz4740_ecc.c   | 196=20
->> ++++++++++++++++++++++++++++
->>   4 files changed, 244 insertions(+), 11 deletions(-)
->>   create mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
->>=20
->=20
-> [...]
->=20
->>   	switch (chip->ecc.mode) {
->>   	case NAND_ECC_HW:
->>  @@ -270,8 +279,8 @@ static int ingenic_nand_init_chip(struct=20
->> platform_device *pdev,
->>   		return -ENOMEM;
->>   	mtd->dev.parent =3D dev;
->>=20
->>  -	chip->legacy.IO_ADDR_R =3D cs->base + OFFSET_DATA;
->>  -	chip->legacy.IO_ADDR_W =3D cs->base + OFFSET_DATA;
->>  +	chip->legacy.IO_ADDR_R =3D cs->base + nfc->soc_info->data_offset;
->>  +	chip->legacy.IO_ADDR_W =3D cs->base + nfc->soc_info->data_offset;
->>   	chip->legacy.chip_delay =3D RB_DELAY_US;
->>   	chip->options =3D NAND_NO_SUBPAGE_WRITE;
->>   	chip->legacy.select_chip =3D ingenic_nand_select_chip;
->=20
-> I think Boris already asked for it, but it would be really great that
-> you update this driver to not use any legacy interface anymore.
+Am 01.03.19 um 19:50 schrieb Dan Murphy:
+> Add the TCAN4x5x SPI CAN driver.  This device uses the
+> Bosch MCAN IP core along with a SPI interface map.
+> Register to the MCAN common core code to manage the MCAN IP.
+> 
+> This device has a special method to indicate a write/read
+> operation on the data payload.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v6 - Updated Kconfig help and added REGMAP_SPI dependency, fixed coding style issues,
+> removed setting GPIO high in wake routine, change -EIO to return ret in init and
+> setup functions - https://lore.kernel.org/patchwork/patch/1042443/
+> 
+>  drivers/net/can/m_can/Kconfig    |   9 +
+>  drivers/net/can/m_can/Makefile   |   1 +
+>  drivers/net/can/m_can/tcan4x5x.c | 529 +++++++++++++++++++++++++++++++
+>  3 files changed, 539 insertions(+)
+>  create mode 100644 drivers/net/can/m_can/tcan4x5x.c
+> 
+> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
+> index f7119fd72df4..cf4f32765efa 100644
+> --- a/drivers/net/can/m_can/Kconfig
+> +++ b/drivers/net/can/m_can/Kconfig
+> @@ -12,3 +12,12 @@ config CAN_M_CAN_PLATFORM
+>  	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
+>  	  This support is for devices that have the Bosch M_CAN controller
+>  	  IP embedded into the device and the IP is IO Mapped to the processor.
+> +
+> +config CAN_M_CAN_TCAN4X5X
+> +	depends on CAN_M_CAN
+> +	depends on REGMAP_SPI
+> +	tristate "TCAN4X5X M_CAN device"
+> +	---help---
+> +	  Say Y here if you want support for Texas Instruments TCAN4x5x
+> +	  M_CAN controller.  This device is a peripherial device that uses the
+> +	  SPI bus for communication.
+> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
+> index 057bbcdb3c74..e77f0eccff97 100644
+> --- a/drivers/net/can/m_can/Makefile
+> +++ b/drivers/net/can/m_can/Makefile
+> @@ -4,3 +4,4 @@
+>  
+>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
+>  obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
+> +obj-$(CONFIG_CAN_M_CAN_TCAN4X5X) += tcan4x5x.o
+> diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
+> new file mode 100644
+> index 000000000000..a91b976bb522
+> --- /dev/null
+> +++ b/drivers/net/can/m_can/tcan4x5x.c
+> @@ -0,0 +1,529 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// SPI to CAN driver for the Texas Instruments TCAN4x5x
+> +// Copyright (C) 2018-19 Texas Instruments Incorporated - http://www.ti.com/
+> +
+> +#include <linux/regmap.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/gpio/consumer.h>
+> +
+> +#include "m_can.h"
+> +
+> +#define DEVICE_NAME "tcan4x5x"
+> +#define TCAN4X5X_EXT_CLK_DEF	40000000
+> +
+> +#define TCAN4X5X_DEV_ID0	0x00
+> +#define TCAN4X5X_DEV_ID1	0x04
+> +#define TCAN4X5X_REV		0x08
+> +#define TCAN4X5X_STATUS		0x0C
+> +#define TCAN4X5X_ERROR_STATUS	0x10
+> +#define TCAN4X5X_CONTROL	0x14
+> +
+> +#define TCAN4X5X_CONFIG		0x800
+> +#define TCAN4X5X_TS_PRESCALE	0x804
+> +#define TCAN4X5X_TEST_REG	0x808
+> +#define TCAN4X5X_INT_FLAGS	0x820
+> +#define TCAN4X5X_MCAN_INT_REG	0x824
+> +#define TCAN4X5X_INT_EN		0x830
+> +
+> +/* Interrupt bits */
+> +#define TCAN4X5X_CANBUSTERMOPEN_INT_EN	BIT(30)
+> +#define TCAN4X5X_CANHCANL_INT_EN	BIT(29)
+> +#define TCAN4X5X_CANHBAT_INT_EN		BIT(28)
+> +#define TCAN4X5X_CANLGND_INT_EN		BIT(27)
+> +#define TCAN4X5X_CANBUSOPEN_INT_EN	BIT(26)
+> +#define TCAN4X5X_CANBUSGND_INT_EN	BIT(25)
+> +#define TCAN4X5X_CANBUSBAT_INT_EN	BIT(24)
+> +#define TCAN4X5X_UVSUP_INT_EN		BIT(22)
+> +#define TCAN4X5X_UVIO_INT_EN		BIT(21)
+> +#define TCAN4X5X_TSD_INT_EN		BIT(19)
+> +#define TCAN4X5X_ECCERR_INT_EN		BIT(16)
+> +#define TCAN4X5X_CANINT_INT_EN		BIT(15)
+> +#define TCAN4X5X_LWU_INT_EN		BIT(14)
+> +#define TCAN4X5X_CANSLNT_INT_EN		BIT(10)
+> +#define TCAN4X5X_CANDOM_INT_EN		BIT(8)
+> +#define TCAN4X5X_CANBUS_ERR_INT_EN	BIT(5)
+> +#define TCAN4X5X_BUS_FAULT		BIT(4)
+> +#define TCAN4X5X_MCAN_INT		BIT(1)
+> +#define TCAN4X5X_ENABLE_TCAN_INT	(TCAN4X5X_MCAN_INT | \
+> +					TCAN4X5X_BUS_FAULT | \
+> +					TCAN4X5X_CANBUS_ERR_INT_EN | \
+> +					TCAN4X5X_CANINT_INT_EN)
+> +
+> +/* MCAN Interrupt bits */
+> +#define TCAN4X5X_MCAN_IR_ARA		BIT(29)
+> +#define TCAN4X5X_MCAN_IR_PED		BIT(28)
+> +#define TCAN4X5X_MCAN_IR_PEA		BIT(27)
+> +#define TCAN4X5X_MCAN_IR_WD		BIT(26)
+> +#define TCAN4X5X_MCAN_IR_BO		BIT(25)
+> +#define TCAN4X5X_MCAN_IR_EW		BIT(24)
+> +#define TCAN4X5X_MCAN_IR_EP		BIT(23)
+> +#define TCAN4X5X_MCAN_IR_ELO		BIT(22)
+> +#define TCAN4X5X_MCAN_IR_BEU		BIT(21)
+> +#define TCAN4X5X_MCAN_IR_BEC		BIT(20)
+> +#define TCAN4X5X_MCAN_IR_DRX		BIT(19)
+> +#define TCAN4X5X_MCAN_IR_TOO		BIT(18)
+> +#define TCAN4X5X_MCAN_IR_MRAF		BIT(17)
+> +#define TCAN4X5X_MCAN_IR_TSW		BIT(16)
+> +#define TCAN4X5X_MCAN_IR_TEFL		BIT(15)
+> +#define TCAN4X5X_MCAN_IR_TEFF		BIT(14)
+> +#define TCAN4X5X_MCAN_IR_TEFW		BIT(13)
+> +#define TCAN4X5X_MCAN_IR_TEFN		BIT(12)
+> +#define TCAN4X5X_MCAN_IR_TFE		BIT(11)
+> +#define TCAN4X5X_MCAN_IR_TCF		BIT(10)
+> +#define TCAN4X5X_MCAN_IR_TC		BIT(9)
+> +#define TCAN4X5X_MCAN_IR_HPM		BIT(8)
+> +#define TCAN4X5X_MCAN_IR_RF1L		BIT(7)
+> +#define TCAN4X5X_MCAN_IR_RF1F		BIT(6)
+> +#define TCAN4X5X_MCAN_IR_RF1W		BIT(5)
+> +#define TCAN4X5X_MCAN_IR_RF1N		BIT(4)
+> +#define TCAN4X5X_MCAN_IR_RF0L		BIT(3)
+> +#define TCAN4X5X_MCAN_IR_RF0F		BIT(2)
+> +#define TCAN4X5X_MCAN_IR_RF0W		BIT(1)
+> +#define TCAN4X5X_MCAN_IR_RF0N		BIT(0)
+> +#define TCAN4X5X_ENABLE_MCAN_INT	(TCAN4X5X_MCAN_IR_TC | \
+> +					TCAN4X5X_MCAN_IR_RF0N | \
+> +					TCAN4X5X_MCAN_IR_RF1N | \
+> +					TCAN4X5X_MCAN_IR_RF0F | \
+> +					TCAN4X5X_MCAN_IR_RF1F)
+> +#define TCAN4X5X_MRAM_START	0x8000
+> +#define TCAN4X5X_MCAN_OFFSET	0x1000
+> +#define TCAN4X5X_MAX_REGISTER	0x8fff
+> +
+> +#define TCAN4X5X_CLEAR_ALL_INT	0xffffffff
+> +#define TCAN4X5X_SET_ALL_INT	0xffffffff
+> +
+> +#define TCAN4X5X_WRITE_CMD	(0x61 << 24)
+> +#define TCAN4X5X_READ_CMD	(0x41 << 24)
+> +
+> +#define TCAN4X5X_MODE_SEL_MASK		(BIT(7) | BIT(6))
+> +#define TCAN4X5X_MODE_SLEEP		0x00
+> +#define TCAN4X5X_MODE_STANDBY		BIT(6)
+> +#define TCAN4X5X_MODE_NORMAL		BIT(7)
+> +
+> +#define TCAN4X5X_SW_RESET	BIT(2)
+> +
+> +#define TCAN4X5X_MCAN_CONFIGURED	BIT(5)
+> +#define TCAN4X5X_WATCHDOG_EN		BIT(3)
+> +#define TCAN4X5X_WD_60_MS_TIMER		0
+> +#define TCAN4X5X_WD_600_MS_TIMER	BIT(28)
+> +#define TCAN4X5X_WD_3_S_TIMER		BIT(29)
+> +#define TCAN4X5X_WD_6_S_TIMER		(BIT(28) | BIT(29))
+> +
+> +struct tcan4x5x_priv {
+> +	struct regmap *regmap;
+> +	struct spi_device *spi;
+> +	struct mutex tcan4x5x_lock; /* SPI device lock */
+> +
+> +	struct m_can_classdev *mcan_dev;
+> +
+> +	struct gpio_desc *reset_gpio;
+> +	struct gpio_desc *interrupt_gpio;
+> +	struct gpio_desc *device_wake_gpio;
+> +	struct gpio_desc *device_state_gpio;
+> +	struct regulator *power;
+> +
+> +	/* Register based ip */
+> +	int mram_start;
+> +	int reg_offset;
+> +};
+> +
+> +static struct can_bittiming_const tcan4x5x_bittiming_const = {
+> +	.name = DEVICE_NAME,
+> +	.tseg1_min = 2,
+> +	.tseg1_max = 31,
+> +	.tseg2_min = 2,
+> +	.tseg2_max = 16,
+> +	.sjw_max = 16,
+> +	.brp_min = 1,
+> +	.brp_max = 32,
+> +	.brp_inc = 1,
+> +};
+> +
+> +static struct can_bittiming_const tcan4x5x_data_bittiming_const = {
+> +	.name = DEVICE_NAME,
+> +	.tseg1_min = 1,
+> +	.tseg1_max = 32,
+> +	.tseg2_min = 1,
+> +	.tseg2_max = 16,
+> +	.sjw_max = 16,
+> +	.brp_min = 1,
+> +	.brp_max = 32,
+> +	.brp_inc = 1,
+> +};
+> +
+> +static void tcan4x5x_check_wake(struct tcan4x5x_priv *priv)
+> +{
+> +	int wake_state = 0;
+> +
+> +	if (priv->device_state_gpio)
+> +		wake_state = gpiod_get_value(priv->device_state_gpio);
+> +
+> +	if (priv->device_wake_gpio && wake_state) {
+> +		gpiod_set_value(priv->device_wake_gpio, 0);
+> +		usleep_range(5, 50);
+> +		gpiod_set_value(priv->device_wake_gpio, 1);
+> +	}
+> +}
+> +
+> +static int regmap_spi_gather_write(void *context, const void *reg,
+> +				   size_t reg_len, const void *val,
+> +				   size_t val_len)
+> +{
+> +	struct device *dev = context;
+> +	struct spi_device *spi = to_spi_device(dev);
+> +	struct spi_message m;
+> +	u32 addr;
+> +	struct spi_transfer t[2] = {
+> +		{ .tx_buf = &addr, .len = reg_len, .cs_change = 0,},
+> +		{ .tx_buf = val, .len = val_len, },
+> +	};
+> +
+> +	addr = TCAN4X5X_WRITE_CMD | (*((u16 *)reg) << 8) | val_len >> 3;
+> +
+> +	spi_message_init(&m);
+> +	spi_message_add_tail(&t[0], &m);
+> +	spi_message_add_tail(&t[1], &m);
+> +
+> +	return spi_sync(spi, &m);
+> +}
+> +
+> +static int tcan4x5x_regmap_write(void *context, const void *data, size_t count)
+> +{
+> +	u16 *reg = (u16 *)(data);
+> +	const u32 *val = data + 4;
+> +
+> +	return regmap_spi_gather_write(context, reg, 4, val, count);
+> +}
+> +
+> +static int regmap_spi_async_write(void *context,
+> +				  const void *reg, size_t reg_len,
+> +				  const void *val, size_t val_len,
+> +				  struct regmap_async *a)
+> +{
+> +	return -ENOTSUPP;
+> +}
+> +
+> +static struct regmap_async *regmap_spi_async_alloc(void)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static int tcan4x5x_regmap_read(void *context,
+> +				const void *reg, size_t reg_size,
+> +				void *val, size_t val_size)
+> +{
+> +	struct device *dev = context;
+> +	struct spi_device *spi = to_spi_device(dev);
+> +
+> +	u32 addr = TCAN4X5X_READ_CMD | (*((u16 *)reg) << 8) | val_size >> 2;
+> +
+> +	return spi_write_then_read(spi, &addr, reg_size, (u32 *)val, val_size);
+> +}
+> +
+> +static struct regmap_bus tcan4x5x_bus = {
+> +	.write = tcan4x5x_regmap_write,
+> +	.gather_write = regmap_spi_gather_write,
+> +	.async_write = regmap_spi_async_write,
+> +	.async_alloc = regmap_spi_async_alloc,
+> +	.read = tcan4x5x_regmap_read,
+> +	.read_flag_mask = 0x00,
+> +	.reg_format_endian_default = REGMAP_ENDIAN_NATIVE,
+> +	.val_format_endian_default = REGMAP_ENDIAN_NATIVE,
+> +};
+> +
+> +static u32 tcan4x5x_read_reg(struct m_can_classdev *m_can_class, int reg)
+> +{
+> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+> +	u32 val;
+> +
+> +	tcan4x5x_check_wake(priv);
+> +
+> +	regmap_read(priv->regmap, priv->reg_offset + reg, &val);
+> +
+> +	return val;
+> +}
+> +
+> +static u32 tcan4x5x_read_fifo(struct m_can_classdev *m_can_class,
+> +			      int addr_offset)
+> +{
+> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+> +	u32 val;
+> +
+> +	tcan4x5x_check_wake(priv);
+> +
+> +	regmap_read(priv->regmap, priv->mram_start + addr_offset, &val);
+> +
+> +	return val;
+> +}
+> +
+> +static int tcan4x5x_write_reg(struct m_can_classdev *m_can_class,
+> +			      int reg, int val)
+> +{
+> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+> +
+> +	tcan4x5x_check_wake(priv);
+> +
+> +	return regmap_write(priv->regmap, priv->reg_offset + reg, val);
+> +}
+> +
+> +static int tcan4x5x_write_fifo(struct m_can_classdev *m_can_class,
+> +			       int addr_offset, int val)
+> +{
+> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+> +
+> +	tcan4x5x_check_wake(priv);
+> +
+> +	return regmap_write(priv->regmap, priv->mram_start + addr_offset, val);
+> +}
+> +
+> +static int tcan4x5x_power_enable(struct regulator *reg, int enable)
+> +{
+> +	if (IS_ERR_OR_NULL(reg))
+> +		return 0;
+> +
+> +	if (enable)
+> +		return regulator_enable(reg);
+> +	else
+> +		return regulator_disable(reg);
+> +}
+> +
+> +static int tcan4x5x_write_tcan_reg(struct m_can_classdev *m_can_class,
+> +				   int reg, int val)
+> +{
+> +	struct tcan4x5x_priv *priv = (struct tcan4x5x_priv *)m_can_class->device_data;
+> +
+> +	tcan4x5x_check_wake(priv);
+> +
+> +	return regmap_write(priv->regmap, reg, val);
+> +}
+> +
+> +static int tcan4x5x_clear_interrupts(struct m_can_classdev *class_dev)
+> +{
+> +	struct tcan4x5x_priv *tcan4x5x = (struct tcan4x5x_priv *)class_dev->device_data;
+> +	int ret;
+> +
+> +	tcan4x5x_check_wake(tcan4x5x);
+> +
+> +	ret = tcan4x5x_write_tcan_reg(class_dev, TCAN4X5X_STATUS,
+> +				      TCAN4X5X_CLEAR_ALL_INT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = tcan4x5x_write_tcan_reg(class_dev, TCAN4X5X_MCAN_INT_REG,
+> +				      TCAN4X5X_ENABLE_MCAN_INT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = tcan4x5x_write_tcan_reg(class_dev, TCAN4X5X_INT_FLAGS,
+> +				      TCAN4X5X_CLEAR_ALL_INT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = tcan4x5x_write_tcan_reg(class_dev, TCAN4X5X_ERROR_STATUS,
+> +				      TCAN4X5X_CLEAR_ALL_INT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ret;
+> +}
 
-I thought I'd send a patch later. But I don't mind doing the update in
-this patchset.
+Hm, handling the interrupt seems to be a quite heavy operation. How does
+the device and system digest small messages (dlc=0) coming in at a very
+high rate?
 
->>  diff --git a/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c=20
->> b/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
->>  new file mode 100644
->>  index 000000000000..83b42881720e
->>  --- /dev/null
->>  +++ b/drivers/mtd/nand/raw/ingenic/jz4740_ecc.c
->>  @@ -0,0 +1,196 @@
->>  +// SPDX-License-Identifier: GPL-2.0
->>  +/*
->>  + * JZ4740 ECC controller driver
->>  + *
->>  + * Copyright (c) 2019 Paul Cercueil <paul@crapouillou.net=20
->> <mailto:paul@crapouillou.net>>
->>  + *
->>  + * based on jz4740-nand.c
->>  + */
->>  +
->>  +#include <linux/bitops.h>
->>  +#include <linux/device.h>
->>  +#include <linux/io.h>
->>  +#include <linux/module.h>
->>  +#include <linux/of_platform.h>
->>  +#include <linux/platform_device.h>
->>  +
->>  +#include "ingenic_ecc.h"
->>  +
->>  +#define JZ_REG_NAND_ECC_CTRL	0x00
->>  +#define JZ_REG_NAND_DATA	0x04
->>  +#define JZ_REG_NAND_PAR0	0x08
->>  +#define JZ_REG_NAND_PAR1	0x0C
->>  +#define JZ_REG_NAND_PAR2	0x10
->>  +#define JZ_REG_NAND_IRQ_STAT	0x14
->>  +#define JZ_REG_NAND_IRQ_CTRL	0x18
->>  +#define JZ_REG_NAND_ERR(x)	(0x1C + ((x) << 2))
->>  +
->>  +#define JZ_NAND_ECC_CTRL_PAR_READY	BIT(4)
->>  +#define JZ_NAND_ECC_CTRL_ENCODING	BIT(3)
->>  +#define JZ_NAND_ECC_CTRL_RS		BIT(2)
->>  +#define JZ_NAND_ECC_CTRL_RESET		BIT(1)
->>  +#define JZ_NAND_ECC_CTRL_ENABLE		BIT(0)
->>  +
->>  +#define JZ_NAND_STATUS_ERR_COUNT	(BIT(31) | BIT(30) | BIT(29))
->>  +#define JZ_NAND_STATUS_PAD_FINISH	BIT(4)
->>  +#define JZ_NAND_STATUS_DEC_FINISH	BIT(3)
->>  +#define JZ_NAND_STATUS_ENC_FINISH	BIT(2)
->>  +#define JZ_NAND_STATUS_UNCOR_ERROR	BIT(1)
->>  +#define JZ_NAND_STATUS_ERROR		BIT(0)
->>  +
->>  +static const uint8_t empty_block_ecc[] =3D {
->>  +	0xcd, 0x9d, 0x90, 0x58, 0xf4, 0x8b, 0xff, 0xb7, 0x6f
->>  +};
->>  +
->>  +static void jz4740_ecc_init(struct ingenic_ecc *ecc, bool encode)
->>  +{
->>  +	uint32_t reg;
->>  +
->>  +	/* Clear interrupt status */
->>  +	writel(0, ecc->base + JZ_REG_NAND_IRQ_STAT);
->>  +
->>  +	/* Initialize and enable ECC hardware */
->>  +	reg =3D readl(ecc->base + JZ_REG_NAND_ECC_CTRL);
->>  +	reg |=3D JZ_NAND_ECC_CTRL_RESET;
->>  +	reg |=3D JZ_NAND_ECC_CTRL_ENABLE;
->>  +	reg |=3D JZ_NAND_ECC_CTRL_RS;
->>  +	if (encode)
->>  +		reg |=3D JZ_NAND_ECC_CTRL_ENCODING;
->>  +	else
->>  +		reg &=3D ~JZ_NAND_ECC_CTRL_ENCODING;
->>  +
->>  +	writel(reg, ecc->base + JZ_REG_NAND_ECC_CTRL);
->>  +}
->>  +
->>  +static int jz4740_ecc_calculate(struct ingenic_ecc *ecc,
->>  +				struct ingenic_ecc_params *params,
->>  +				const u8 *buf, u8 *ecc_code)
->>  +{
->>  +	uint32_t reg, status;
->>  +	unsigned int timeout =3D 1000;
->>  +	int i;
->>  +
->>  +	jz4740_ecc_init(ecc, true);
->>  +
->>  +	do {
->>  +		status =3D readl(ecc->base + JZ_REG_NAND_IRQ_STAT);
->>  +	} while (!(status & JZ_NAND_STATUS_ENC_FINISH) && --timeout);
->>  +
->>  +	if (timeout =3D=3D 0)
->>  +		return -ETIMEDOUT;
->>  +
->>  +	reg =3D readl(ecc->base + JZ_REG_NAND_ECC_CTRL);
->>  +	reg &=3D ~JZ_NAND_ECC_CTRL_ENABLE;
->>  +	writel(reg, ecc->base + JZ_REG_NAND_ECC_CTRL);
->>  +
->>  +	for (i =3D 0; i < params->bytes; ++i)
->>  +		ecc_code[i] =3D readb(ecc->base + JZ_REG_NAND_PAR0 + i);
->>  +
->>  +	/* If the written data is completely 0xff, we also want to write=20
->> 0xff as
->>  +	 * ecc, otherwise we will get in trouble when doing subpage=20
->> writes.
->>  +	 */
->=20
-> Comment formatting
->=20
-> s/ecc/ECC/ in plain English
->=20
->>  +	if (memcmp(ecc_code, empty_block_ecc,=20
->> ARRAY_SIZE(empty_block_ecc)) =3D=3D 0)
->>  +		memset(ecc_code, 0xff, ARRAY_SIZE(empty_block_ecc));
->>  +
->>  +	return 0;
->>  +}
->>  +
->=20
->=20
-> Thanks,
-> Miqu=E8l
+Any chance to optimize accesses be reading more than on word?
 
-=
-
+Wolfgang.
