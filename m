@@ -2,218 +2,136 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB95C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7CBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AB720830
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=420blaze.it header.i=@420blaze.it header.b="z+HctLYu"
+	by mail.kernel.org (Postfix) with ESMTP id 04D1E20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbfCDUpS (ORCPT
+        id S1726672AbfCDUpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:45:18 -0500
-Received: from mx1.cock.li ([185.10.68.5]:54975 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726294AbfCDUpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:45:17 -0500
-X-Greylist: delayed 595 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Mar 2019 15:45:15 EST
+        Mon, 4 Mar 2019 15:45:40 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:39135 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbfCDUpk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 15:45:40 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MTznQ-1gbA6M1Szq-00QywR; Mon, 04 Mar 2019 21:45:28 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Max Kellermann <max.kellermann@gmail.com>,
+        Wolfgang Rohdewald <wolfgang@rohdewald.de>,
+        stable@vger.kernel.org, Akihiro Tsukada <tskd08@gmail.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [RESEND] media: don't drop front-end reference count for ->detach
+Date:   Mon,  4 Mar 2019 21:45:07 +0100
+Message-Id: <20190304204525.2283399-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=420blaze.it; s=mail;
-        t=1551731717; bh=W2PpgaMOfx4TnceHjzHLfJSHMtffmmBXJ0QXAn8AFY8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=z+HctLYuQGkWa9iB4Qmt5VBFgAwwRi703MI5c8T2W/P7htgH6YvI1Htnxo4RIkmOi
-         1bjjRQGfKRqDrpp7VW4cMhnJsfiebcdw1oI0RhIH+c6REd2w0pYYw/hHS2BxkY1OwW
-         Jb2CKxojxZhnpkk5tP+tP/PmhyF1fPKIpB2SDkFnPTP7mb/Ig3osrgT611yx12pDBN
-         ca8w2kEX8q9Ten3Pym/bK+KgQTNcn1/u+OtomYM8dvFuw5AMuoY3WxBG6EvWur5hEb
-         i/Zvc9vUoQTYgmIcu92YQZ43gMD3C3BlWEE/BRzjLYMUhk99l6D+jheRao4niEv8Pj
-         CLxX8GxNT/rCQ==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 04 Mar 2019 20:35:16 +0000
-From:   intele1000bricksself@420blaze.it
-To:     e1000-devel@lists.sf.net
-Cc:     linux-kernel@vger.kernel.org, misc@openbsd.org
-Subject: Intel Pro 1000MT Dual Port nic. Need eeprom dump from working card
- via ethtool. It ff ff ff...d out it's EEPROM, but I got one port working after
- a day... but not the second.
-Message-ID: <3776e8e049416d7444836af1e7144b44@420blaze.it>
-X-Sender: intele1000bricksself@420blaze.it
-User-Agent: Roundcube Webmail/1.3.6
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:iI74MnyTBaXWF8tbrf+pNC1Oojm3y2POdwWl4TEPZLyoh5CmnTP
+ Nruwx81FdKEr7tPiQUdTLiorqdtpDshY82RJko3tC6QX1RrPkxgON9SSySfZx0g+bGk6v2W
+ EaZzbVxlolwwhoQgU1dShBaNO+vdFEKUGUMaseLEVs24TtCcicAw+AjU3nAgNfkub4N6CI2
+ YrFcGI4Na/RqzEZBHjGfA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZtKn1Z0UpbU=:He3v2Sb2TeeN/7q4AkRnn1
+ HHBPkv00h9vt/m7fbMgZH5yoirS6b1+CLRioRn89JApFOIl+yzUSrKLTdHU8oRBjAQU7YXCGe
+ w/nQdVZjd3nywv+hbfdWVMbBGhGYkmi8L9MSbDiB/0PwTW4XV3n1pIoj7fcdmaWdkmpxh5ehy
+ AwERIwynB1nVSvp+sbSu9KCEpj2keVN37PtjmaEmkgQVZYu47Nf1Lr2nD4rnjPIms4jpo66XK
+ pXF0x8tMb4qw692PH90jXLrFwYwoZTaFNH0290WafyQ2fuBk2IaHCZM8jIYKTCilDKEwfjhD7
+ MGnfkbbV9MRTUCwhA/SjBOIVbEYcJDGxnUEkrWu1kmwZK4mNCvi7HzQWXA2gksvMxIwMSF4Em
+ ijERTOgZuexGltM+nIIprSJJ7Lwh+0P0k4rkTsGokb2NXdrs00K1es9QlhyzMShg0DxEJztwo
+ WMm+yA/Aa1CSUHhuRozpZIuaRBbSRKufYsHhCaEFg05Aleq1IhOqKMQb8pnBmhwLhtRISu9Mb
+ c1E1eYS+geT9p7NhJyzrB0PY+tPxOw9TKKaNB0tuLOaUvFtGP02tolTDdacnhRbi3SD1hYlUt
+ KqRlYgJyro4jho4P26b6EhGge299eIw5eldXCFRx5QKpDbVGg3aFxMyKkVlV+ko2AiomiuJTk
+ YyEgte0B8K1Kw7gzqyjZ6MQwvK2aA/3ofrPSiDgK8jLG8wiYpihd/ICEhkQ54QSTPUNBVHgUb
+ 5gZWT0xPRNvFYPOLnUYstXxs2EsfDUrvnFolfw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-does anyone have a intel Pro 1000MT Dual port gigabit card they could 
-give an eeprom dump of (via ethtool -e eth1 ), I now have one port 
-working but the other is not, the eeprom someone posted seems to be only 
-for the 1st port
+A bugfix introduce a link failure in configurations without CONFIG_MODULES:
 
+In file included from drivers/media/usb/dvb-usb/pctv452e.c:20:0:
+drivers/media/usb/dvb-usb/pctv452e.c: In function 'pctv452e_frontend_attach':
+drivers/media/dvb-frontends/stb0899_drv.h:151:36: error: weak declaration of 'stb0899_attach' being applied to a already existing, static definition
 
-I need help with an intel dual port gigabit nic. It' zeroed out it's 
-eprom (well... 1'd it out) and thus I had to reload the eeprom
+The problem is that the !IS_REACHABLE() declaration of stb0899_attach()
+is a 'static inline' definition that clashes with the weak definition.
 
-the dump someone posted seems to be only for the single port card tho, 
-and the 2nd port is inactive (it worked yesterday before the 
-self-bricking)
-(That has been hugely helpful however)
+I further observed that the bugfix was only done for one of the five users
+of stb0899_attach(), the other four still have the problem.  This reverts
+the bugfix and instead addresses the problem by not dropping the reference
+count when calling '->detach()', instead we call this function directly
+in dvb_frontend_put() before dropping the kref on the front-end.
 
-The magic number for the intel PRO 1000MT is:
-0x10798086
+I first submitted this in early 2018, and after some discussion it
+was apparently discarded.  While there is a long-term plan in place,
+that plan is obviously not nearing completion yet, and the current
+kernel is still broken unless this patch is applied.
 
+Cc: Max Kellermann <max.kellermann@gmail.com>
+Cc: Wolfgang Rohdewald <wolfgang@rohdewald.de>
+Cc: stable@vger.kernel.org
+Fixes: f686c14364ad ("[media] stb0899: move code to "detach" callback")
+Fixes: 6cdeaed3b142 ("media: dvb_usb_pctv452e: module refcount changes were unbalanced")
+Link: https://patchwork.kernel.org/patch/10140175/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/media/dvb-core/dvb_frontend.c | 4 +++-
+ drivers/media/usb/dvb-usb/pctv452e.c  | 8 --------
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index fbdb4ecc7c50..eb5da50ff95e 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -164,6 +164,9 @@ static void dvb_frontend_free(struct kref *ref)
+ 
+ static void dvb_frontend_put(struct dvb_frontend *fe)
+ {
++	/* call detach before dropping the reference count */
++	if (fe->ops.detach)
++		fe->ops.detach(fe);
+ 	/*
+ 	 * Check if the frontend was registered, as otherwise
+ 	 * kref was not initialized yet.
+@@ -3038,7 +3041,6 @@ void dvb_frontend_detach(struct dvb_frontend *fe)
+ 	dvb_frontend_invoke_release(fe, fe->ops.release_sec);
+ 	dvb_frontend_invoke_release(fe, fe->ops.tuner_ops.release);
+ 	dvb_frontend_invoke_release(fe, fe->ops.analog_ops.release);
+-	dvb_frontend_invoke_release(fe, fe->ops.detach);
+ 	dvb_frontend_put(fe);
+ }
+ EXPORT_SYMBOL(dvb_frontend_detach);
+diff --git a/drivers/media/usb/dvb-usb/pctv452e.c b/drivers/media/usb/dvb-usb/pctv452e.c
+index 150081128196..5c653b660272 100644
+--- a/drivers/media/usb/dvb-usb/pctv452e.c
++++ b/drivers/media/usb/dvb-usb/pctv452e.c
+@@ -913,14 +913,6 @@ static int pctv452e_frontend_attach(struct dvb_usb_adapter *a)
+ 						&a->dev->i2c_adap);
+ 	if (!a->fe_adap[0].fe)
+ 		return -ENODEV;
+-
+-	/*
+-	 * dvb_frontend will call dvb_detach for both stb0899_detach
+-	 * and stb0899_release but we only do dvb_attach(stb0899_attach).
+-	 * Increment the module refcount instead.
+-	 */
+-	symbol_get(stb0899_attach);
+-
+ 	if ((dvb_attach(lnbp22_attach, a->fe_adap[0].fe,
+ 					&a->dev->i2c_adap)) == NULL)
+ 		err("Cannot attach lnbp22\n");
+-- 
+2.20.0
 
-
-The offset file worked for one port, but not the other.
-
-[code]
-Offset		Values
-------		------
-0x0000		00 04 23 cb 27 cc 10 02 ff ff ff ff ff ff ff ff
-0x0010		84 a7 07 08 0a 66 2e 00 86 80 00 61 4e 00 20 b2
-0x0020		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-0x0030		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-0x0040		cf 00 61 78 0b 28 00 00 c8 04 ff ff ff ff ff ff
-0x0050		ff ff ff ff ff ff ff ff ff ff ff ff ff ff 02 06
-0x0060		2c 01 00 40 1f 12 ff ff ff ff ff ff ff ff ff ff
-0x0070		ff ff ff ff ff ff ff ff ff ff ff ff ff fe 24 31
-[/code]
-
-These commands got 1 port of the intel Pro 1000MT Dual Port working:
-[code]
-ethtool -E eth1 magic 0x10798086 offset 0x0 value 0x00
-ethtool -E eth1 magic 0x10798086 offset 0x1 value 0x04
-ethtool -E eth1 magic 0x10798086 offset 0x2 value 0x23
-ethtool -E eth1 magic 0x10798086 offset 0x3 value 0xcb
-ethtool -E eth1 magic 0x10798086 offset 0x4 value 0x27
-ethtool -E eth1 magic 0x10798086 offset 0x5 value 0xcc
-ethtool -E eth1 magic 0x10798086 offset 0x6 value 0x10
-ethtool -E eth1 magic 0x10798086 offset 0x7 value 0x02
-ethtool -E eth1 magic 0x10798086 offset 0x8 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x9 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0xa value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0xb value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0xc value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0xd value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0xe value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0xf value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x10 value 0x84
-ethtool -E eth1 magic 0x10798086 offset 0x11 value 0xa7
-ethtool -E eth1 magic 0x10798086 offset 0x12 value 0x07
-ethtool -E eth1 magic 0x10798086 offset 0x13 value 0x08
-ethtool -E eth1 magic 0x10798086 offset 0x14 value 0x0a
-ethtool -E eth1 magic 0x10798086 offset 0x15 value 0x66
-ethtool -E eth1 magic 0x10798086 offset 0x16 value 0x2e
-ethtool -E eth1 magic 0x10798086 offset 0x17 value 0x00
-ethtool -E eth1 magic 0x10798086 offset 0x18 value 0x86
-ethtool -E eth1 magic 0x10798086 offset 0x19 value 0x80
-ethtool -E eth1 magic 0x10798086 offset 0x1a value 0x00
-ethtool -E eth1 magic 0x10798086 offset 0x1b value 0x61
-ethtool -E eth1 magic 0x10798086 offset 0x1c value 0x4e
-ethtool -E eth1 magic 0x10798086 offset 0x1d value 0x00
-ethtool -E eth1 magic 0x10798086 offset 0x1e value 0x20
-ethtool -E eth1 magic 0x10798086 offset 0x1f value 0xb2
-ethtool -E eth1 magic 0x10798086 offset 0x20 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x21 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x22 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x23 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x24 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x25 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x26 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x27 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x28 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x29 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x2a value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x2b value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x2c value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x2d value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x2e value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x2f value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x30 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x31 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x32 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x33 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x34 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x35 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x36 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x37 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x38 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x39 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x3a value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x3b value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x3c value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x3d value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x3e value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x3f value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x40 value 0xcf
-ethtool -E eth1 magic 0x10798086 offset 0x41 value 0x00
-ethtool -E eth1 magic 0x10798086 offset 0x42 value 0x61
-ethtool -E eth1 magic 0x10798086 offset 0x43 value 0x78
-ethtool -E eth1 magic 0x10798086 offset 0x44 value 0x0b
-ethtool -E eth1 magic 0x10798086 offset 0x45 value 0x28
-ethtool -E eth1 magic 0x10798086 offset 0x46 value 0x00
-ethtool -E eth1 magic 0x10798086 offset 0x47 value 0x00
-ethtool -E eth1 magic 0x10798086 offset 0x48 value 0xc8
-ethtool -E eth1 magic 0x10798086 offset 0x49 value 0x04
-ethtool -E eth1 magic 0x10798086 offset 0x4a value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x4b value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x4c value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x4d value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x4e value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x4f value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x50 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x51 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x52 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x53 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x54 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x55 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x56 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x57 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x58 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x59 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x5a value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x5b value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x5c value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x5d value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x5e value 0x02
-ethtool -E eth1 magic 0x10798086 offset 0x5f value 0x06
-ethtool -E eth1 magic 0x10798086 offset 0x60 value 0x2c
-ethtool -E eth1 magic 0x10798086 offset 0x61 value 0x01
-ethtool -E eth1 magic 0x10798086 offset 0x62 value 0x00
-ethtool -E eth1 magic 0x10798086 offset 0x63 value 0x40
-ethtool -E eth1 magic 0x10798086 offset 0x64 value 0x1f
-ethtool -E eth1 magic 0x10798086 offset 0x65 value 0x12
-ethtool -E eth1 magic 0x10798086 offset 0x66 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x67 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x68 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x69 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x6a value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x6b value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x6c value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x6d value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x6e value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x6f value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x70 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x71 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x72 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x73 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x74 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x75 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x76 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x77 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x78 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x79 value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x7a value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x7b value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x7c value 0xff
-ethtool -E eth1 magic 0x10798086 offset 0x7d value 0xfe
-ethtool -E eth1 magic 0x10798086 offset 0x7e value 0x24
-ethtool -E eth1 magic 0x10798086 offset 0x7f value 0x31
-
-[/code]
