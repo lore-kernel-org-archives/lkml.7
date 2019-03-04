@@ -2,63 +2,74 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B04C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3861DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B3E21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551677711;
-	bh=+NDWsq69MPdEECStCttJ7igQIyhcnQ1r0tDiKvgK4+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dabNKwE5cJV5gF60/wnSJ85YTyYC7981LGoSSreANfB7yO8B1QqWaOMeXcgdcqTg1
-	 KtHqqTBHa2W3suGx16RKWn5C4SNXeV+QCOjQ5xmsn97b6+B9iYvZvlFlGGTjMAKC/B
-	 ASK/VQkHBrnZRzrVncoihdqIy+cSEFcgV939M/oQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0B1F720815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726158AbfCDFfK (ORCPT
+        id S1726041AbfCDFiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 00:35:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35628 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 00:38:02 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:60418 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfCDFfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 00:35:10 -0500
-Received: from dragon (61-216-91-114.HINET-IP.hinet.net [61.216.91.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1725781AbfCDFiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 00:38:02 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C53520815;
-        Mon,  4 Mar 2019 05:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551677709;
-        bh=+NDWsq69MPdEECStCttJ7igQIyhcnQ1r0tDiKvgK4+o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dR4rg1YpBAi7fbVCTSRMYF98QJk4m0Wh1F5ePaj7rVDRDnTnb6HLiv7zQ1Wl07nyM
-         IjIuRh6NZxw3RBYGC/mcwxR9h7fCvUz5Kk0LuSFckLzrHyAJiA7411JOm2BtufvrUL
-         v7mFDjm82hmgTo2vYJH8PR8VcPMk9gYuNhaMqMkg=
-Date:   Mon, 4 Mar 2019 13:34:10 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Alison Wang <alison.wang@nxp.com>
-Cc:     leoyang.li@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] arm64: dts: ls1028a: Add Audio DT nodes
-Message-ID: <20190304053409.GY26041@dragon>
-References: <20190301074632.887-1-alison.wang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190301074632.887-1-alison.wang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3383430832E8;
+        Mon,  4 Mar 2019 05:38:02 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B55E19C58;
+        Mon,  4 Mar 2019 05:38:00 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     fanc.fnst@cn.fujitsu.com, bp@alien8.de, Baoquan He <bhe@redhat.com>
+Subject: [PATCH v2] x86/boot: Fix incorrect ifdeffery scope
+Date:   Mon,  4 Mar 2019 13:37:56 +0800
+Message-Id: <20190304053756.16886-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 04 Mar 2019 05:38:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 03:46:32PM +0800, Alison Wang wrote:
-> This patch adds Audio DT nodes for LS1028ARDB and LS1028AQDS boards.
-> 
-> Signed-off-by: Alison Wang <alison.wang@nxp.com>
+The declarations related to immovable memory handling are put out of
+the BOOT_COMPRESSED_MISC_H #ifdef scope, wrap them inside.
 
-Applied, thanks.
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+v1->v2:
+  Add the lost line which could be made by git.
+
+ arch/x86/boot/compressed/misc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index fd13655e0f9b..8bbaf362855c 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -120,8 +120,6 @@ static inline void console_init(void)
+ 
+ void set_sev_encryption_mask(void);
+ 
+-#endif
+-
+ /* acpi.c */
+ #ifdef CONFIG_ACPI
+ acpi_physical_address get_rsdp_addr(void);
+@@ -135,3 +133,5 @@ int count_immovable_mem_regions(void);
+ #else
+ static inline int count_immovable_mem_regions(void) { return 0; }
+ #endif
++
++#endif
+-- 
+2.17.2
+
