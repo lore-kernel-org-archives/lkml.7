@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A4FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE326C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A8320863
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC6920863
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687835;
-	bh=gBWDXwjNEq+JsPda45TvLrgrRVlOSSjbfCEIoS2BXBA=;
+	s=default; t=1551687838;
+	bh=zhKSGJOZvCLj6sn0vIifAUIX80hxZeIjfNbimSqeoi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ymj3BFqRpZ0tQp7nU4Osa3L1KjgkM24k7rjebZ1hvoQyUkynkjq9kuKNc5Ubv2JRO
-	 6f9LfX3JjSFP6Uo8yPzSGFWRS1AZ0mMx4ZA9FIyu0qIhPvBTEP2ejGN6on8ue0fv6f
-	 pwQwWzrxQ4O47drbpSv8Vj5s1jzx25R1qUusPytg=
+	b=e03vXXRnmoZ0h+J2/q+n6D56dYQOWKY3SSShckf8Dp1epG9aFrClMASiyb8j9Nq7G
+	 818rc07G8KezwuTFRvZ92il80zOuJ3t8pUVW2Vst8dpfFeSDwACGVUweHScOxlRCuB
+	 kr1TKIknIPOR/HswNmMZ+3SvqG7YpW9pyl3VroSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfCDIXx (ORCPT
+        id S1726727AbfCDIX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:23:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40710 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:23:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfCDIXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:23:51 -0500
+        id S1726711AbfCDIXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:23:53 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C14C320823;
-        Mon,  4 Mar 2019 08:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7989420823;
+        Mon,  4 Mar 2019 08:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687830;
-        bh=gBWDXwjNEq+JsPda45TvLrgrRVlOSSjbfCEIoS2BXBA=;
+        s=default; t=1551687833;
+        bh=zhKSGJOZvCLj6sn0vIifAUIX80hxZeIjfNbimSqeoi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jgBzfsU7XCV8Gv7db1dum2q7cFdvCoeSD8J/Y/bnrUzaJxXj0UuAKPIKH8zYbFzR4
-         owYh3sL3gm6mMDA5QJkLSis/FD0VC5ldccVA9eIEdkKSgAuqadCf5yXSDPpDMrJfFP
-         a0FBBB/TsJvu1qS3XYp0g3qaYAQBotSHcxh2GsdU=
+        b=Ji3vSfsL/sm+5cyHVj/Mg8ZJWlvW0Sx5cTJle3WlTYR2/YG4zlI3S+Y8NiuXItkdB
+         oVL6rTOhvnP+qi1GAyuRmnSe9nYYq5esYtDqPAMv3uHzo7jK3SymUcO3tpB6ifbor6
+         ZXaX86MlycsWbX03I7eRLtqX1+O9SZ2e1NK9Pt28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 06/32] ASoC: Intel: Haswell/Broadwell: fix setting for .dynamic field
-Date:   Mon,  4 Mar 2019 09:21:54 +0100
-Message-Id: <20190304081602.761786323@linuxfoundation.org>
+Subject: [PATCH 4.9 07/32] ALSA: compress: prevent potential divide by zero bugs
+Date:   Mon,  4 Mar 2019 09:21:55 +0100
+Message-Id: <20190304081602.831039210@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081602.307094059@linuxfoundation.org>
 References: <20190304081602.307094059@linuxfoundation.org>
@@ -67,48 +66,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 906a9abc5de73c383af518f5a806f4be2993a0c7 ]
+[ Upstream commit 678e2b44c8e3fec3afc7202f1996a4500a50be93 ]
 
-For some reason this field was set to zero when all other drivers use
-.dynamic = 1 for front-ends. This change was tested on Dell XPS13 and
-has no impact with the existing legacy driver. The SOF driver also works
-with this change which enables it to override the fixed topology.
+The problem is seen in the q6asm_dai_compr_set_params() function:
 
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+	ret = q6asm_map_memory_regions(dir, prtd->audio_client, prtd->phys,
+				       (prtd->pcm_size / prtd->periods),
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				       prtd->periods);
+
+In this code prtd->pcm_size is the buffer_size and prtd->periods comes
+from params->buffer.fragments.  If we allow the number of fragments to
+be zero then it results in a divide by zero bug.  One possible fix would
+be to use prtd->pcm_count directly instead of using the division to
+re-calculate it.  But I decided that it doesn't really make sense to
+allow zero fragments.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/broadwell.c | 2 +-
- sound/soc/intel/boards/haswell.c   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/core/compress_offload.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/boards/broadwell.c b/sound/soc/intel/boards/broadwell.c
-index 7486a0022fdea..993d2c105ae14 100644
---- a/sound/soc/intel/boards/broadwell.c
-+++ b/sound/soc/intel/boards/broadwell.c
-@@ -191,7 +191,7 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] = {
- 		.stream_name = "Loopback",
- 		.cpu_dai_name = "Loopback Pin",
- 		.platform_name = "haswell-pcm-audio",
--		.dynamic = 0,
-+		.dynamic = 1,
- 		.codec_name = "snd-soc-dummy",
- 		.codec_dai_name = "snd-soc-dummy-dai",
- 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
-diff --git a/sound/soc/intel/boards/haswell.c b/sound/soc/intel/boards/haswell.c
-index 863f1d5e2a2c9..11d0cc2b0e390 100644
---- a/sound/soc/intel/boards/haswell.c
-+++ b/sound/soc/intel/boards/haswell.c
-@@ -145,7 +145,7 @@ static struct snd_soc_dai_link haswell_rt5640_dais[] = {
- 		.stream_name = "Loopback",
- 		.cpu_dai_name = "Loopback Pin",
- 		.platform_name = "haswell-pcm-audio",
--		.dynamic = 0,
-+		.dynamic = 1,
- 		.codec_name = "snd-soc-dummy",
- 		.codec_dai_name = "snd-soc-dummy-dai",
- 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 4490a699030b1..555df64d46ffc 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -529,7 +529,8 @@ static int snd_compress_check_input(struct snd_compr_params *params)
+ {
+ 	/* first let's check the buffer parameter's */
+ 	if (params->buffer.fragment_size == 0 ||
+-	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size)
++	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size ||
++	    params->buffer.fragments == 0)
+ 		return -EINVAL;
+ 
+ 	/* now codec parameters */
 -- 
 2.19.1
 
