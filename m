@@ -2,121 +2,118 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFBCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB6CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76A420830
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 156B120835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:11:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wb9t+2vK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tvDXohdJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfCDULH (ORCPT
+        id S1726392AbfCDULU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:11:07 -0500
-Received: from mail-it1-f196.google.com ([209.85.166.196]:53995 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfCDULG (ORCPT
+        Mon, 4 Mar 2019 15:11:20 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44403 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfCDULU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:11:06 -0500
-Received: by mail-it1-f196.google.com with SMTP id v2so721835ith.3;
-        Mon, 04 Mar 2019 12:11:05 -0800 (PST)
+        Mon, 4 Mar 2019 15:11:20 -0500
+Received: by mail-lf1-f65.google.com with SMTP id u9so328434lfe.11;
+        Mon, 04 Mar 2019 12:11:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NkAvcNis1yANsM164bBt2ZIwfA7Sfa3Z1ZOJLiJAp5Q=;
-        b=Wb9t+2vK2cN5b0rq89jvXYOyqsNKekYUC9aiaRMSSiOkjDb7TNiV/S/tOJOEpV3IZH
-         ma/3G1ymk0zXCJNzjsO72dFtaXFCY/labXpvSb1JIHk7gBpC4eQLZje9prhNvZ1iwO5M
-         rcbhsxxAnCwVlV4EU8GSl4XBOJocxYF+WOs+A+tF3A/gSOxpKOS2ROgY/7xdpTEyvqO5
-         rcx4n9d1Qd6v0Bolahn894yesUHAsBSmJmmk6AuyRtSHPGnOrdR4e/OHNRI7A2qYuoPD
-         b8V4vYMc+Kewl3ti373UZL9IEYVxDoq3f4EwMmovsOlctv++lzoNEJsZ4RHyJbCRj/B/
-         uKOg==
+        h=from:to:cc:subject:date:message-id;
+        bh=SiDdRvkV8Vz7kT3zpo46WOrXWzcN/Rv4xYz6C7lBoYE=;
+        b=tvDXohdJ1nMAYzDQux3WeaYk/+Q2l3D66dm9pmKtlCCVgmnDq2WEovh5rMZPUyVLUJ
+         QMA7jE2VtDSPjZBwD1s68lIbPieH9qACttfxtWGRFbClP2PGfPPVFV/Sr1onLBTB3j0A
+         slimGDATgZyAHQrNz/tmVYo35v9NtN6shilt3GLsX3Ka0BBLxxn4RWZwJFUuFtDlkT4Z
+         nOOPAMpAn/kQSPc8YV+e6mvyhvNn3fKvUc5U9biAJ+d4PyNx4hroo/q4u5MzEjvlU6aY
+         ci0vvwOb5QyYv34NOR4h0sbqkIPDf3JLB6DQ+ArzybxOi5tJIkGWtZr+lXqpRjKlcRdJ
+         qIgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NkAvcNis1yANsM164bBt2ZIwfA7Sfa3Z1ZOJLiJAp5Q=;
-        b=a06Tu5THRRLsGXmy/11B2t6Ry/jfIzQk60CLVHsVEKXI/7sTaZLAyTVjXLGCfdOHxi
-         GXZFoMu9f1TPyKaHGwSHYegFcRQHBv0enMVgxGhdsfC2cEj5hPEIM9ES8/hPGPlO5HX+
-         RwbLjk7hEv+papOSXFui6kDt6hLXtoUvzLCPiSXSyckXLbSLbOwh4Hy8zdyj5C4qgmhO
-         okq1HtbIPlhqsFCA7tq/ccV9dP43VlgXcmNi7KWuzEPWarBcxlDoPFf9NpcAEuLrw1iC
-         xygT/XXDP6NXqVqeTDGEc4qhmT8WVvoCsc+4NCsgC8WNcpwKS0vEYucSNNyJ5vyDCeuX
-         C7BA==
-X-Gm-Message-State: APjAAAUP/ZGwy3Q/knsOsv1iY2+FZrMgkgxC7CSfyCrNF1oLPUwqZHrT
-        XBcQq37UZI1qVFfoiguYUNm93owh
-X-Google-Smtp-Source: APXvYqx5gpt5jtMQU7bzBy1K5yuNDrV/+NWEN3odzjoyqv66ghG3KuMMGXICgjmcT7chxCu78HoHXg==
-X-Received: by 2002:a24:5c07:: with SMTP id q7mr617711itb.22.1551730265553;
-        Mon, 04 Mar 2019 12:11:05 -0800 (PST)
-Received: from tzanussi-mobl ([2601:246:0:7004:bd8e:3a2f:85e3:54d1])
-        by smtp.googlemail.com with ESMTPSA id r65sm3685990itb.19.2019.03.04.12.11.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Mar 2019 12:11:04 -0800 (PST)
-Message-ID: <1551730263.4658.1.camel@gmail.com>
-Subject: Re: [PATCH 0/2] A couple hist trigger patches
-From:   Tom Zanussi <tzanussi@gmail.com>
-To:     rostedt@goodmis.org
-Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-Date:   Mon, 04 Mar 2019 14:11:03 -0600
-In-Reply-To: <cover.1549309756.git.tom.zanussi@linux.intel.com>
-References: <cover.1549309756.git.tom.zanussi@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SiDdRvkV8Vz7kT3zpo46WOrXWzcN/Rv4xYz6C7lBoYE=;
+        b=ml3aqgBXAqFJ+CbccrYRM52W0AhoL+GMMdTq4t/OctjYMXOHgbS2G+jk/EnuXinSeQ
+         +ECge4d+lkuwZLKJgXRMsZRuGLAs9iCxENRWOQor3xRgWlOfD/1X+c7q9kpFSNqqXtvd
+         R7aHgutkDIT4LuzYBK/fbVKdxmGdnW94X/sqQW19uWI9YNZC2muDl7Rc6LljGygElgir
+         h7dzZNPMmPHFfshdqbNhKMz/vuweVTwdm9AH/y+HilQf3lIC5kMXahGS1Ciyram5PS5v
+         NKoBsn57uavpiZBAg/s90hojo4cMFsMPpebakpqdOoawIVvqY5ADVFRLcBfmUfqAWQZE
+         o6zA==
+X-Gm-Message-State: APjAAAXFV3kYNOid0s8v5+JS1Bj3iiwdY4X0F/1fHyHEpx2snouOgjcH
+        Ade1hgA9drf7SUpVzlYl9qQ=
+X-Google-Smtp-Source: APXvYqy3kCosg0J3b0zomI+Br1JbW8DlleSMQsKDHEDEmt8hCKBS4E7yGxSreGTOtI2Gj36++TYNnw==
+X-Received: by 2002:ac2:5230:: with SMTP id i16mr11325865lfl.119.1551730277971;
+        Mon, 04 Mar 2019 12:11:17 -0800 (PST)
+Received: from myhost.home (cjk115.neoplus.adsl.tpnet.pl. [83.31.60.115])
+        by smtp.gmail.com with ESMTPSA id q3sm1383190lfb.37.2019.03.04.12.11.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 12:11:17 -0800 (PST)
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, krzk@kernel.org, michal@plume.com
+Subject: [GIT PULL] LED updates for 5.1-rc1
+Date:   Mon,  4 Mar 2019 21:11:10 +0100
+Message-Id: <20190304201110.3969-1-jacek.anaszewski@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping...
+Hi Linus,
 
-On Mon, 2019-02-04 at 15:07 -0600, Tom Zanussi wrote:
-> From: Tom Zanussi <tom.zanussi@linux.intel.com>
-> 
-> Hi,
-> 
-> Here are a couple miscellaneous hist trigger patches which can be
-> applied independently of the onchange/snapshot patches.
-> 
-> The first is just an additional use of str_has_prefix() that was
-> apparently missed in the original str_has_prefix() conversion, with
-> an
-> update suggested by Joe Perches.
-> 
-> The second fixes a bug I noticed when testing the onchange/snapshot
-> fixes.
-> 
-> I pulled these out into this separate patchset because they should be
-> applied regardless of what happens with the onchange/snapshot
-> patchset.
-> 
-> Thanks,
-> 
-> Tom
-> 
-> 
-> The following changes since commit
-> 67748dbeaf2b1240c0b87588df4bb0fb9471a751:
-> 
->   sh: ftrace: Fix missing parenthesis in WARN_ON() (2019-01-08
-> 10:19:02 -0600)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-
-> trace.git ftrace/hist-fixes-v1
-> 
-> Tom Zanussi (2):
->   tracing: Use str_has_prefix() in synth_event_create()
->   tracing: Use strncpy instead of memcpy for string keys in hist
->     triggers
-> 
->  kernel/trace/trace_events_hist.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
+Please pull LED updates for 5.1-rc1.
+
+We finalize previously announced support for initialization of pattern triggers
+from Device Tree.
+
+Beside that there is a single fix for null deref on firmware load failure
+in leds-lp55xx-common.c.
+
+The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
+
+  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/leds-for-5.1-rc1
+
+for you to fetch changes up to 5ddb0869bfc1bca6cfc592c74c64a026f936638c:
+
+  leds: lp55xx: fix null deref on firmware load failure (2019-02-14 22:03:44 +0100)
+
+Thanks,
+Jacek Anaszewski
+
+----------------------------------------------------------------
+LED updates for 5.1-rc1
+----------------------------------------------------------------
+Krzysztof Kozlowski (5):
+      dt-bindings: leds: Add pattern initialization from Device Tree
+      leds: Add helper for getting default pattern from Device Tree
+      leds: trigger: pattern: Add pattern initialization from Device Tree
+      leds: trigger: oneshot: Add initialization from Device Tree
+      leds: trigger: timer: Add initialization from Device Tree
+
+Michal Kazior (1):
+      leds: lp55xx: fix null deref on firmware load failure
+
+ .../ABI/testing/sysfs-class-led-trigger-pattern    | 51 +----------
+ Documentation/devicetree/bindings/leds/common.txt  | 12 +++
+ .../bindings/leds/leds-trigger-pattern.txt         | 49 +++++++++++
+ drivers/leds/led-core.c                            | 30 +++++++
+ drivers/leds/leds-lp55xx-common.c                  |  4 +-
+ drivers/leds/trigger/ledtrig-oneshot.c             | 38 ++++++++-
+ drivers/leds/trigger/ledtrig-pattern.c             | 99 +++++++++++++++++-----
+ drivers/leds/trigger/ledtrig-timer.c               | 34 ++++++++
+ include/linux/leds.h                               | 13 +++
+ 9 files changed, 259 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-trigger-pattern.txt
