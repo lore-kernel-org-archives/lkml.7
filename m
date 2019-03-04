@@ -2,120 +2,140 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9E3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8E0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1E620836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCCB20836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:03:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lnwho8bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbfCDJBL convert rfc822-to-8bit (ORCPT
+        id S1726158AbfCDJDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 04:01:11 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:36247 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfCDJBL (ORCPT
+        Mon, 4 Mar 2019 04:03:33 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:60987 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfCDJDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 04:01:11 -0500
-X-Originating-IP: 90.88.147.150
-Received: from xps13 (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 1BF8D1C0002;
-        Mon,  4 Mar 2019 09:01:07 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 10:01:06 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-mtd@lists.infradead.org,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH v2 02/10] mtd: rawnand: denali: refactor syndrome layout
- handling for raw access
-Message-ID: <20190304100106.72ad49c3@xps13>
-In-Reply-To: <1549955582-30346-3-git-send-email-yamada.masahiro@socionext.com>
-References: <1549955582-30346-1-git-send-email-yamada.masahiro@socionext.com>
-        <1549955582-30346-3-git-send-email-yamada.masahiro@socionext.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 4 Mar 2019 04:03:33 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190304090331euoutp027b29da6a7bdf9cacf15f78494fb86bfd~ItgaUrmSQ1539615396euoutp02U
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 09:03:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190304090331euoutp027b29da6a7bdf9cacf15f78494fb86bfd~ItgaUrmSQ1539615396euoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1551690211;
+        bh=nwOumAwPcP7vlmwx+ohrkmuipfj4cLo/fD6g7NCCVkQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=lnwho8bcC5uv5PdCWgHmU+odBfL58FtOsOO59iRRcEWPV9aN9bOE5Dc887Ww5PQVz
+         70Ylb5VIPlUxKXavDqMy9Q4/sAtuZKDv/4Rrm8VkCtm8lqnL5QGjilU8249FCiWbnf
+         vvYmBioeL8q2bSNNh2x4mxMYuqiphcSaH2yrOupg=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190304090330eucas1p1a0507a7e7436c967da95d4744e2c70bf~ItgZrN32m2302123021eucas1p1Z;
+        Mon,  4 Mar 2019 09:03:30 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 47.2F.04806.2E9EC7C5; Mon,  4
+        Mar 2019 09:03:30 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190304090329eucas1p2ff0ead1486d09d059765fe793a0c99b9~ItgY3o8LL3164731647eucas1p2h;
+        Mon,  4 Mar 2019 09:03:29 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190304090329eusmtrp1d10041107e1de7108f82ebb3a6bead32~ItgYpP-8S1359313593eusmtrp16;
+        Mon,  4 Mar 2019 09:03:29 +0000 (GMT)
+X-AuditID: cbfec7f5-367ff700000012c6-5f-5c7ce9e22f93
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id DB.D8.04128.1E9EC7C5; Mon,  4
+        Mar 2019 09:03:29 +0000 (GMT)
+Received: from [106.116.147.30] (unknown [106.116.147.30]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190304090328eusmtip28ecc1c5c814a25428a5ae8772e9d6acf~ItgYMKZcv2720727207eusmtip2U;
+        Mon,  4 Mar 2019 09:03:28 +0000 (GMT)
+Subject: Re: [PATCH 4.20 12/88] usb: dwc3: gadget: synchronize_irq dwc irq
+ in suspend
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "He, Bo" <bo.he@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Wang, Yu Y" <yu.y.wang@intel.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <a3d017c7-d671-3ba9-15d6-0028595d5d59@samsung.com>
+Date:   Mon, 4 Mar 2019 10:03:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190304085350.GA18354@kroah.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsWy7djPc7qPXtbEGOxbz2xx5+lLFov5N5Ms
+        mhevZ7O4vGsOm8WmNdfYLBZsfMRose3kNxYHdo/Fe14yeWxa1cnmMe9koMf+uWvYPT5vkgtg
+        jeKySUnNySxLLdK3S+DK2Dl5N3vBBLaKVSvUGhjfs3QxcnJICJhIvHsxnR3EFhJYwSix9QVH
+        FyMXkP2FUeLAqrlsEM5nRonGO02MMB3Pl+9hhkgsZ5R4dPoHO4TznlHiVNMLZpAqYYFwiVtn
+        Z4DNFREIlLj7uResiFngDaPEpy/XwRJsAoYSXW+72EBsXgE7iZUvW8GOYhFQkTg9cTbQOg4O
+        UYEYiUOLyyBKBCVOznwCVsIpoC+xc3cnWCuzgLzE9rdzmCFscYlbT+YzgeySEFjHLtH27AMz
+        xNkuEg/mbod6QVji1fEt7BC2jMTpyT0sEA3NjBLtM2axQzg9wNCYs4MNospa4vDxi6wgFzEL
+        aEqs36UPEXaUaFx8hQUkLCHAJ3HjrSDEEXwSk7ZNZ4YI80p0tAlBVKtJzDq+Dm7twQuXmCcw
+        Ks1C8tosJO/MQvLOLIS9CxhZVjGKp5YW56anFhvnpZbrFSfmFpfmpesl5+duYgSmn9P/jn/d
+        wbjvT9IhRgEORiUeXgOVmhgh1sSy4srcQ4wSHMxKIrzOd4FCvCmJlVWpRfnxRaU5qcWHGKU5
+        WJTEeasZHkQLCaQnlqRmp6YWpBbBZJk4OKUaGFPKVIQkHqdyu+3han5c/comtsxx5/rGSl7B
+        /T9v/vXdKnRh+19Rn++VhQvD5RcEHJn2akd5YWWM847zabGT7K4n9eixTfhj8ct5+ROfTzEt
+        H/VjT52fr7nzysRFB/KPfl98uE493OrFrrLJIttl8zaF/pd+niT4MDKBJU7vtWzwtsVJN01y
+        dJVYijMSDbWYi4oTARrza407AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsVy+t/xe7oPX9bEGHz+yWpx5+lLFov5N5Ms
+        mhevZ7O4vGsOm8WmNdfYLBZsfMRose3kNxYHdo/Fe14yeWxa1cnmMe9koMf+uWvYPT5vkgtg
+        jdKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL2Dl5
+        N3vBBLaKVSvUGhjfs3QxcnJICJhIPF++h7mLkYtDSGApo8TUMxsYIRIyEienNbBC2MISf651
+        sUEUvWWUmLRsJTtIQlggXOLIzYNMILaIQKBES/cqFpAiZoE3jBKvPzRBjV3HJDF971awDjYB
+        Q4mutyCjODl4BewkVr5sBbuDRUBF4vTE2WCrRQViJD7cvcEEUSMocXLmE7AaTgF9iZ27O8F6
+        mQXUJf7Mu8QMYctLbH87B8oWl7j1ZD7TBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN
+        9IoTc4tL89L1kvNzNzECY27bsZ9bdjB2vQs+xCjAwajEw2ugUhMjxJpYVlyZe4hRgoNZSYTX
+        +S5QiDclsbIqtSg/vqg0J7X4EKMp0HMTmaVEk/OB6SCvJN7Q1NDcwtLQ3Njc2MxCSZz3vEFl
+        lJBAemJJanZqakFqEUwfEwenVAOj+u2PJn9n7/At4Sr33eCce6px2TeF+ZLm9b3FMZ90Ty3a
+        uCXzGcPGHap68orsadqKfAaV1+2tz1f2bTS3zWEvnbB8/725U3/u9m3bF7FUgX3W1T0rDnws
+        U7pe8O6bqb8qA9fiU0un8/jXdPy99/toG1tqXq3pp47d5snnsyZ+YDygPWnj0quhSizFGYmG
+        WsxFxYkAwpoZJc8CAAA=
+X-CMS-MailID: 20190304090329eucas1p2ff0ead1486d09d059765fe793a0c99b9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190304085654epcas2p1284f13532438678e8ba53d232ca02a34
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190304085654epcas2p1284f13532438678e8ba53d232ca02a34
+References: <20190304081630.610632175@linuxfoundation.org>
+        <20190304081631.046461963@linuxfoundation.org>
+        <CD6925E8781EFD4D8E11882D20FC406D52A5C632@SHSMSX104.ccr.corp.intel.com>
+        <CGME20190304085654epcas2p1284f13532438678e8ba53d232ca02a34@epcas2p1.samsung.com>
+        <20190304085350.GA18354@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+Hi Greg,
 
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 12 Feb
-2019 16:12:54 +0900:
+On 2019-03-04 09:53, Greg Kroah-Hartman wrote:
+> On Mon, Mar 04, 2019 at 08:46:30AM +0000, He, Bo wrote:
+>> Hi, Greg:
+>> 	Marek Szyprowski report the patch has issue that calling synchronize_irq() under dwc->lock spinlock, he has upload the below patch for the issue:
+>>
+>> dwc3_gadget_suspend() is called under dwc->lock spinlock. In such context calling synchronize_irq() is not allowed. Move the problematic call out of the protected block to fix the following kernel BUG during system
+> <snip>
+>
+> Is this patch in Linus's tree yet?  If so, what is the git commit id?
+>
+> If not, is this also an issue in 5.0?
 
-> The Denali IP adopts the syndrome page layout (payload and ECC are
-> interleaved). The *_page_raw() and *_oob() callbacks are complicated
-> because they must hide the underlying layout used by the hardware,
-> and always return contiguous in-band and out-of-band data.
-> 
-> Currently, similar code is duplicated to reorganize the data layout.
-> For example, denali_read_page_raw() and denali_write_page_raw() look
-> almost the same.
-> 
-> The idea for refactoring is to split the code into two parts:
->   [1] conversion of page layout
->   [2] what to do at every ECC chunk boundary
-> 
-> For [1], I wrote denali_raw_payload_op() and denali_raw_oob_op().
-> They manipulate data for the Denali controller's specific page layout
-> of in-band, out-of-band, respectively.
+The fix has not been merged yet. The issue is also present in v5.0.
 
-Could you please comment the purpose of these two functions in the code
-as well?
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-> 
-> The difference between write and read is just the operation at
-> ECC chunk boundaries. For example, denali_read_oob() calls
-> nand_change_read_column_op(), whereas denali_write_oob() calls
-> nand_change_write_column_op(). So, I implemented [2] as a callback
-> passed into [1].
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Changes in v2: None
-> 
-> drivers/mtd/nand/raw/denali.c | 354 +++++++++++++++++++-----------------------
-> 1 file changed, 163 insertions(+), 191 deletions(-)
-
-Too bad that the size of the driver did not shrink more than that :)
-
-[...]
-
-> -	/* OOB free */
-> -	len = oobsize - (bufpoi - chip->oob_poi);
-> -	if (write)
-> -		nand_change_write_column_op(chip, size - len, bufpoi, len,
-> -					    false);
-> -	else
-> -		nand_change_read_column_op(chip, size - len, bufpoi, len,
-> -					   false);
-> +	return 0;
-> +}
-> +
-> +static int denali_memcpy_in(void *buf, unsigned int offset, unsigned int len,
-> +			    void *priv)
-> +{
-> +	memcpy(buf, priv + offset, len);
-> +	return 0;
->  }
-
-Maybe this "callback" and the (_out cousin) could be part of you
-controller's structure, and you could use a read/write flag instead of
-passing the functions' pointer?
-
-
-Thanks,
-Miquèl
