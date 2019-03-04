@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B722C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CADDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F3520863
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5DD208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687854;
-	bh=eAXHzcf/YUyrwT9QVSneBxRyhZSCq753zJWOJS3sbFE=;
+	s=default; t=1551687858;
+	bh=xJ0vLH6GZ8If+DhLBc4rIWmPQSv2HHiw+yZVDCqCLx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bilp+OT8yNBsPo/lf6d726K304pb6gpZR85ySVbe7bjrvKI4YfZz1bulDYKkmD4BO
-	 RxquXVpt7GaPfdqdEXruD3vvzkp/DbBgQRpAtIutKOY7l2cfr2cXgT6RYUtkCPBWO9
-	 XluECyZfSHPEeOVhbWzcXU5SGJyIR0K9PbG7P89s=
+	b=e6J9JDMIuqJJquigqFtYeev6g09LwyDCB/0taDevdPnYwogdIF2X2gACSyuRk/ms0
+	 AaDzFMLBvYq+XwLgCRzoc6XFwUdETfsmdqEx9jl6t9CoFC5v0BOwdDz0zyQj7TMx9l
+	 2KHyWnp/2bIH70Ckk2qFSYRuQ5kRr/J9eHop54Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfCDIYM (ORCPT
+        id S1726817AbfCDIYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:24:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41482 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:24:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbfCDIYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:24:10 -0500
+        id S1726799AbfCDIYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:24:13 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D960620863;
-        Mon,  4 Mar 2019 08:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A297F20823;
+        Mon,  4 Mar 2019 08:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687849;
-        bh=eAXHzcf/YUyrwT9QVSneBxRyhZSCq753zJWOJS3sbFE=;
+        s=default; t=1551687852;
+        bh=xJ0vLH6GZ8If+DhLBc4rIWmPQSv2HHiw+yZVDCqCLx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qenffC8agNe3Yw6fsah4fR1B04uYJt9/7S2pGmBYOU61X9ZUn06aAjNMRYmq+0iNC
-         b2de7RHrsE9gAgB67VVFjRgYauxdCnfhuKH8Zc+dlumk9ekhpcPqN0/bf+o5XGgvlV
-         r9YjJKPQ+IkUcBACKbQQL2D9CuujsxpUWP0y/6oo=
+        b=Uco+iMjnw4msMazEpRRI/mBeNrhv4ZoWNp5U1SLrFTHwtPfKQGdH06od8QN5wDTOr
+         1xi7SjX6aeLnUYgLllK5Kp4BtNjXayZiRRW0027nUGUkg+N9KNNP66/b/l/tSLSpQ9
+         WmNUzAqcPTlmkFUZpoRIisp+vexL3DLbQ8kjBgTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.9 30/32] mmc: spi: Fix card detection during probe
-Date:   Mon,  4 Mar 2019 09:22:18 +0100
-Message-Id: <20190304081604.527445692@linuxfoundation.org>
+        Thomas Lindroth <thomas.lindroth@gmail.com>,
+        Jan Kara <jack@suse.cz>,
+        syzbot <syzbot+c0138741c2290fc5e63f@syzkaller.appspotmail.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 01/52] Revert "loop: Fix double mutex_unlock(&loop_ctl_mutex) in loop_control_ioctl()"
+Date:   Mon,  4 Mar 2019 09:21:59 +0100
+Message-Id: <20190304081617.240319884@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190304081602.307094059@linuxfoundation.org>
-References: <20190304081602.307094059@linuxfoundation.org>
+In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
+References: <20190304081617.159014799@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -62,56 +66,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit c9bd505dbd9d3dc80c496f88eafe70affdcf1ba6 upstream.
+This reverts commit d2762edcb6af99fc9322bab0b1d4e71a427760e8 which is
+commit 628bd85947091830a8c4872adfd5ed1d515a9cf2 upstream.
 
-When using the mmc_spi driver with a card-detect pin, I noticed that the
-card was not detected immediately after probe, but only after it was
-unplugged and plugged back in (and the CD IRQ fired).
+It does not work properly in the 4.14.y tree and causes more problems
+than it fixes, so revert it.
 
-The call tree looks something like this:
-
-mmc_spi_probe
-  mmc_add_host
-    mmc_start_host
-      _mmc_detect_change
-        mmc_schedule_delayed_work(&host->detect, 0)
-          mmc_rescan
-            host->bus_ops->detect(host)
-              mmc_detect
-                _mmc_detect_card_removed
-                  host->ops->get_cd(host)
-                    mmc_gpio_get_cd -> -ENOSYS (ctx->cd_gpio not set)
-  mmc_gpiod_request_cd
-    ctx->cd_gpio = desc
-
-To fix this issue, call mmc_detect_change after the card-detect GPIO/IRQ
-is registered.
-
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: Thomas Lindroth <thomas.lindroth@gmail.com>
+Reported-by: Jan Kara <jack@suse.cz>
+Cc: syzbot <syzbot+c0138741c2290fc5e63f@syzkaller.appspotmail.com>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/mmc/host/mmc_spi.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/block/loop.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/mmc/host/mmc_spi.c
-+++ b/drivers/mmc/host/mmc_spi.c
-@@ -1450,6 +1450,7 @@ static int mmc_spi_probe(struct spi_devi
- 		mmc->caps &= ~MMC_CAP_NEEDS_POLL;
- 		mmc_gpiod_request_cd_irq(mmc);
- 	}
-+	mmc_detect_change(mmc, 0);
- 
- 	if (host->pdata && host->pdata->flags & MMC_SPI_USE_RO_GPIO) {
- 		has_ro = true;
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -1996,10 +1996,12 @@ static long loop_control_ioctl(struct fi
+ 			break;
+ 		if (lo->lo_state != Lo_unbound) {
+ 			ret = -EBUSY;
++			mutex_unlock(&loop_ctl_mutex);
+ 			break;
+ 		}
+ 		if (atomic_read(&lo->lo_refcnt) > 0) {
+ 			ret = -EBUSY;
++			mutex_unlock(&loop_ctl_mutex);
+ 			break;
+ 		}
+ 		lo->lo_disk->private_data = NULL;
 
 
