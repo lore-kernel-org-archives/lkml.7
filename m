@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 952DCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A36C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B18208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7372320836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688544;
-	bh=FCNvQ+y3/Xuhgyc+0HGBq/fjquQaiqFj9VNWsQKipdo=;
+	s=default; t=1551688548;
+	bh=zq1/92WjjSGPk2JZGDkz0joLxlYkQfDhO3TgerARLzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZlJ8JTjna8QFFvT+MfkBKG/1a3ccuT7fBkLmIHEVmjzrjwkGRP9aZOawx2ukXDDB
-	 7S0D40I7lzbygZbj17bm9JxsHb5z4s4yqG/c3yOf7mTp6onUT6R6NAFJUgQ5GgFpRP
-	 +RHvuWzp0+cKHqurNNN5Gjhlr1VNtCAvxeiTQwYo=
+	b=MFiJKyVYXPnyvv3HOLF+R2rERVwvPuv9EK6IHUl1ka16boI8+Sa8Z65BAlfvwwtfd
+	 d0QfZ0VTPXocrClG6luDTDWkvf+4fH8s1rxZI6KDGjlEbw1JV78v3tNQCzrmtrVd6I
+	 pmbg3HOCWgRrkMa/DNMA/w0WZ6btokmTANHczo9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfCDIfm (ORCPT
+        id S1728501AbfCDIfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:35:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43962 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:35:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbfCDIfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:35:40 -0500
+        id S1728118AbfCDIfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:35:44 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16FE521473;
-        Mon,  4 Mar 2019 08:35:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A098D20823;
+        Mon,  4 Mar 2019 08:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688539;
-        bh=FCNvQ+y3/Xuhgyc+0HGBq/fjquQaiqFj9VNWsQKipdo=;
+        s=default; t=1551688543;
+        bh=zq1/92WjjSGPk2JZGDkz0joLxlYkQfDhO3TgerARLzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TJPDzxec1N716XyPu/3yZQGjVbmhGi1eRxEhtcvPceEFJmXg0tBEBZLD6Za/MuC7K
-         0KfdgOMDYTaMlB8S4SzsdPCHpof9FfHwtm3pte+hHocPCwrxb5tMXV4kiPXXOB19wX
-         1hbJCDPTJEvgi4KXNOTZcA5sR6g2QF+hOinRcY1I=
+        b=eQlfwgVg8zMIwAbQEMcbAqg72PoNGyyC0oT1UQ7+2gRt7+t2rdDsHlXT5Vk97Lbg1
+         5/rfzuuCGfyM9OU2v9mOX43Mc3IGL5bS2Z0YumdW7deTxSFUjaMiHSem2qlyAe/E1Q
+         E1MsdC4xEdO9jNflazq0mdEsPIGvb5MsKE/MfQRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 4.20 76/88] drm: Block fb changes for async plane updates
-Date:   Mon,  4 Mar 2019 09:22:59 +0100
-Message-Id: <20190304081633.653211310@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.20 77/88] hugetlbfs: fix races and page leaks during migration
+Date:   Mon,  4 Mar 2019 09:23:00 +0100
+Message-Id: <20190304081633.699086771@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -69,88 +72,216 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-commit 2216322919c8608a448d7ebc560a845238a5d6b6 upstream.
+commit cb6acd01e2e43fd8bad11155752b7699c3d0fb76 upstream.
 
-The prepare_fb call always happens on new_plane_state.
+hugetlb pages should only be migrated if they are 'active'.  The
+routines set/clear_page_huge_active() modify the active state of hugetlb
+pages.
 
-The drm_atomic_helper_cleanup_planes checks to see if
-plane state pointer has changed when deciding to call cleanup_fb on
-either the new_plane_state or the old_plane_state.
+When a new hugetlb page is allocated at fault time, set_page_huge_active
+is called before the page is locked.  Therefore, another thread could
+race and migrate the page while it is being added to page table by the
+fault code.  This race is somewhat hard to trigger, but can be seen by
+strategically adding udelay to simulate worst case scheduling behavior.
+Depending on 'how' the code races, various BUG()s could be triggered.
 
-For a non-async atomic commit the state pointer is swapped, so this
-helper calls prepare_fb on the new_plane_state and cleanup_fb on the
-old_plane_state. This makes sense, since we want to prepare the
-framebuffer we are going to use and cleanup the the framebuffer we are
-no longer using.
+To address this issue, simply delay the set_page_huge_active call until
+after the page is successfully added to the page table.
 
-For the async atomic update helpers this differs. The async atomic
-update helpers perform in-place updates on the existing state. They call
-drm_atomic_helper_cleanup_planes but the state pointer is not swapped.
-This means that prepare_fb is called on the new_plane_state and
-cleanup_fb is called on the new_plane_state (not the old).
+Hugetlb pages can also be leaked at migration time if the pages are
+associated with a file in an explicitly mounted hugetlbfs filesystem.
+For example, consider a two node system with 4GB worth of huge pages
+available.  A program mmaps a 2G file in a hugetlbfs filesystem.  It
+then migrates the pages associated with the file from one node to
+another.  When the program exits, huge page counts are as follows:
 
-In the case where old_plane_state->fb == new_plane_state->fb then
-there should be no behavioral difference between an async update
-and a non-async commit. But there are issues that arise when
-old_plane_state->fb != new_plane_state->fb.
+  node0
+  1024    free_hugepages
+  1024    nr_hugepages
 
-The first is that the new_plane_state->fb is immediately cleaned up
-after it has been prepared, so we're using a fb that we shouldn't
-be.
+  node1
+  0       free_hugepages
+  1024    nr_hugepages
 
-The second occurs during a sequence of async atomic updates and
-non-async regular atomic commits. Suppose there are two framebuffers
-being interleaved in a double-buffering scenario, fb1 and fb2:
+  Filesystem                         Size  Used Avail Use% Mounted on
+  nodev                              4.0G  2.0G  2.0G  50% /var/opt/hugepool
 
-- Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
-- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
-- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
+That is as expected.  2G of huge pages are taken from the free_hugepages
+counts, and 2G is the size of the file in the explicitly mounted
+filesystem.  If the file is then removed, the counts become:
 
-We call cleanup_fb on fb2 twice in this example scenario, and any
-further use will result in use-after-free.
+  node0
+  1024    free_hugepages
+  1024    nr_hugepages
 
-The simple fix to this problem is to block framebuffer changes
-in the drm_atomic_helper_async_check function for now.
+  node1
+  1024    free_hugepages
+  1024    nr_hugepages
 
-v2: Move check by itself, add a FIXME (Daniel)
+  Filesystem                         Size  Used Avail Use% Mounted on
+  nodev                              4.0G  2.0G  2.0G  50% /var/opt/hugepool
 
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Cc: <stable@vger.kernel.org> # v4.14+
-Fixes: fef9df8b5945 ("drm/atomic: initial support for asynchronous plane update")
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Acked-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Acked-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Daniel Vetter <daniel@ffwll.ch>
-Signed-off-by: Harry Wentland <harry.wentland@amd.com>
-Link: https://patchwork.freedesktop.org/patch/275364/
-Signed-off-by: Dave Airlie <airlied@redhat.com>
+Note that the filesystem still shows 2G of pages used, while there
+actually are no huge pages in use.  The only way to 'fix' the filesystem
+accounting is to unmount the filesystem
+
+If a hugetlb page is associated with an explicitly mounted filesystem,
+this information in contained in the page_private field.  At migration
+time, this information is not preserved.  To fix, simply transfer
+page_private from old to new page at migration time if necessary.
+
+There is a related race with removing a huge page from a file and
+migration.  When a huge page is removed from the pagecache, the
+page_mapping() field is cleared, yet page_private remains set until the
+page is actually freed by free_huge_page().  A page could be migrated
+while in this state.  However, since page_mapping() is not set the
+hugetlbfs specific routine to transfer page_private is not called and we
+leak the page count in the filesystem.
+
+To fix that, check for this condition before migrating a huge page.  If
+the condition is detected, return EBUSY for the page.
+
+Link: http://lkml.kernel.org/r/74510272-7319-7372-9ea6-ec914734c179@oracle.com
+Link: http://lkml.kernel.org/r/20190212221400.3512-1-mike.kravetz@oracle.com
+Fixes: bcc54222309c ("mm: hugetlb: introduce page_huge_active")
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: <stable@vger.kernel.org>
+[mike.kravetz@oracle.com: v2]
+  Link: http://lkml.kernel.org/r/7534d322-d782-8ac6-1c8d-a8dc380eb3ab@oracle.com
+[mike.kravetz@oracle.com: update comment and changelog]
+  Link: http://lkml.kernel.org/r/420bcfd6-158b-38e4-98da-26d0cd85bd01@oracle.com
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_atomic_helper.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/hugetlbfs/inode.c |   12 ++++++++++++
+ mm/hugetlb.c         |   16 +++++++++++++---
+ mm/migrate.c         |   11 +++++++++++
+ 3 files changed, 36 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1584,6 +1584,15 @@ int drm_atomic_helper_async_check(struct
- 	    old_plane_state->crtc != new_plane_state->crtc)
- 		return -EINVAL;
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -859,6 +859,18 @@ static int hugetlbfs_migrate_page(struct
+ 	rc = migrate_huge_page_move_mapping(mapping, newpage, page);
+ 	if (rc != MIGRATEPAGE_SUCCESS)
+ 		return rc;
++
++	/*
++	 * page_private is subpool pointer in hugetlb pages.  Transfer to
++	 * new page.  PagePrivate is not associated with page_private for
++	 * hugetlb pages and can not be set here as only page_huge_active
++	 * pages can be migrated.
++	 */
++	if (page_private(page)) {
++		set_page_private(newpage, page_private(page));
++		set_page_private(page, 0);
++	}
++
+ 	if (mode != MIGRATE_SYNC_NO_COPY)
+ 		migrate_page_copy(newpage, page);
+ 	else
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3625,7 +3625,6 @@ retry_avoidcopy:
+ 	copy_user_huge_page(new_page, old_page, address, vma,
+ 			    pages_per_huge_page(h));
+ 	__SetPageUptodate(new_page);
+-	set_page_huge_active(new_page);
+ 
+ 	mmun_start = haddr;
+ 	mmun_end = mmun_start + huge_page_size(h);
+@@ -3647,6 +3646,7 @@ retry_avoidcopy:
+ 				make_huge_pte(vma, new_page, 1));
+ 		page_remove_rmap(old_page, true);
+ 		hugepage_add_new_anon_rmap(new_page, vma, haddr);
++		set_page_huge_active(new_page);
+ 		/* Make the old page be freed below */
+ 		new_page = old_page;
+ 	}
+@@ -3731,6 +3731,7 @@ static vm_fault_t hugetlb_no_page(struct
+ 	pte_t new_pte;
+ 	spinlock_t *ptl;
+ 	unsigned long haddr = address & huge_page_mask(h);
++	bool new_page = false;
+ 
+ 	/*
+ 	 * Currently, we are forced to kill the process in the event the
+@@ -3792,7 +3793,7 @@ retry:
+ 		}
+ 		clear_huge_page(page, address, pages_per_huge_page(h));
+ 		__SetPageUptodate(page);
+-		set_page_huge_active(page);
++		new_page = true;
+ 
+ 		if (vma->vm_flags & VM_MAYSHARE) {
+ 			int err = huge_add_to_page_cache(page, mapping, idx);
+@@ -3863,6 +3864,15 @@ retry:
+ 	}
+ 
+ 	spin_unlock(ptl);
++
++	/*
++	 * Only make newly allocated pages active.  Existing pages found
++	 * in the pagecache could be !page_huge_active() if they have been
++	 * isolated for migration.
++	 */
++	if (new_page)
++		set_page_huge_active(page);
++
+ 	unlock_page(page);
+ out:
+ 	return ret;
+@@ -4097,7 +4107,6 @@ int hugetlb_mcopy_atomic_pte(struct mm_s
+ 	 * the set_pte_at() write.
+ 	 */
+ 	__SetPageUptodate(page);
+-	set_page_huge_active(page);
+ 
+ 	mapping = dst_vma->vm_file->f_mapping;
+ 	idx = vma_hugecache_offset(h, dst_vma, dst_addr);
+@@ -4165,6 +4174,7 @@ int hugetlb_mcopy_atomic_pte(struct mm_s
+ 	update_mmu_cache(dst_vma, dst_addr, dst_pte);
+ 
+ 	spin_unlock(ptl);
++	set_page_huge_active(page);
+ 	if (vm_shared)
+ 		unlock_page(page);
+ 	ret = 0;
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1293,6 +1293,16 @@ static int unmap_and_move_huge_page(new_
+ 		lock_page(hpage);
+ 	}
  
 +	/*
-+	 * FIXME: Since prepare_fb and cleanup_fb are always called on
-+	 * the new_plane_state for async updates we need to block framebuffer
-+	 * changes. This prevents use of a fb that's been cleaned up and
-+	 * double cleanups from occuring.
++	 * Check for pages which are in the process of being freed.  Without
++	 * page_mapping() set, hugetlbfs specific move page routine will not
++	 * be called and we could leak usage counts for subpools.
 +	 */
-+	if (old_plane_state->fb != new_plane_state->fb)
-+		return -EINVAL;
++	if (page_private(hpage) && !page_mapping(hpage)) {
++		rc = -EBUSY;
++		goto out_unlock;
++	}
 +
- 	funcs = plane->helper_private;
- 	if (!funcs->atomic_async_update)
- 		return -EINVAL;
+ 	if (PageAnon(hpage))
+ 		anon_vma = page_get_anon_vma(hpage);
+ 
+@@ -1323,6 +1333,7 @@ put_anon:
+ 		put_new_page = NULL;
+ 	}
+ 
++out_unlock:
+ 	unlock_page(hpage);
+ out:
+ 	if (rc != -EAGAIN)
 
 
