@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FEBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B075C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163FB20836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C4E20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688172;
-	bh=Y3Ufj1ah8Xv8Nm/KJ044h5UlPJvb7VpMLT8ffnmYcT8=;
+	s=default; t=1551688175;
+	bh=tHVN2wY3LcUk5+1qPgFAN3i2TBqTI7WmkK1HsT01adM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pXRSZ7jFHCGnm0lpnOaUMdXElik2HjHFenLUsapFrR3Ax8N3d4i1xTWbXbo5bBXch
-	 Fwt21XDQyw47Fnsilv0ZziOM2kAOVPkCA9s604pUUnR1fJjFC2hVbqZfuTLc+B90hy
-	 RYrjJIskpthPZMkfS5DbRDtscGmYeiIHyoGOmap0=
+	b=kxa5xBSWhcc+79clqCTboSATDKMX7GNhSSmqqeYge0ZF8BFjrWguA6+40x09hQv/H
+	 WwEMj+lQUNxmPTVxSgVYQ4xwBkqC9TbEE34gUNoITSEy+AjYKMAaU1WZPWufHjZEYO
+	 JiKl5xM5uIEz1WXaFWy8vORrhVy9wLjoHN6IGr4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfCDI3a (ORCPT
+        id S1727575AbfCDI3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:29:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:29:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbfCDI31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:29:27 -0500
+        id S1726211AbfCDI3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:29:31 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E5F20823;
-        Mon,  4 Mar 2019 08:29:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 365C420836;
+        Mon,  4 Mar 2019 08:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688167;
-        bh=Y3Ufj1ah8Xv8Nm/KJ044h5UlPJvb7VpMLT8ffnmYcT8=;
+        s=default; t=1551688170;
+        bh=tHVN2wY3LcUk5+1qPgFAN3i2TBqTI7WmkK1HsT01adM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=suONsUt6941HliknTah1K1BgJAluwWH466QiF9XuLyRgHD+G3eqr5FpPJG7aFFpkA
-         GZTU3DSBqB+kyykPGqMQPc5elnP1a+Lierw5rKg5Mbvz2zhsjVe/sI8hmAi9+xzNzy
-         1i04R/iUfJT7dqDVHzVMZqUbkiiqrJfSHx5fzjhk=
+        b=YU2uSy3giTGjNsnQKI5ofkQsl7czFqXtiE7fn2jUIl1w1gvahLIEBlPwYJ7v6V9Q1
+         5rY+ik77TM4XbboXH/2tdVoXPjYAAwL880fOaJffeoY9jqDFZr22cStG8ZwfqGLX3L
+         deNxrWXrqaOkAipq1BccMo3juiw/8G0PO+cbPywo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xie Yongji <xieyongji@baidu.com>,
-        Zhang Yu <zhangyu31@baidu.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/78] locking/rwsem: Fix (possible) missed wakeup
-Date:   Mon,  4 Mar 2019 09:22:21 +0100
-Message-Id: <20190304081627.203548879@linuxfoundation.org>
+        stable@vger.kernel.org, Kenneth Feng <kenneth.feng@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 39/78] drm/amd/powerplay: OD setting fix on Vega10
+Date:   Mon,  4 Mar 2019 09:22:22 +0100
+Message-Id: <20190304081627.243268939@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -69,61 +67,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e158488be27b157802753a59b336142dc0eb0380 ]
+[ Upstream commit 6d87dc97eb3341de3f7b1efa3156cb0e014f4a96 ]
 
-Because wake_q_add() can imply an immediate wakeup (cmpxchg failure
-case), we must not rely on the wakeup being delayed. However, commit:
+gfxclk for OD setting is limited to 1980M for non-acg
+ASICs of Vega10
 
-  e38513905eea ("locking/rwsem: Rework zeroing reader waiter->task")
-
-relies on exactly that behaviour in that the wakeup must not happen
-until after we clear waiter->task.
-
-[ peterz: Added changelog. ]
-
-Signed-off-by: Xie Yongji <xieyongji@baidu.com>
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: e38513905eea ("locking/rwsem: Rework zeroing reader waiter->task")
-Link: https://lkml.kernel.org/r/1543495830-2644-1-git-send-email-xieyongji@baidu.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Kenneth Feng <kenneth.feng@amd.com>
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/rwsem-xadd.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ .../powerplay/hwmgr/vega10_processpptables.c  | 22 ++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
-index 3064c50e181e1..ef909357b84e1 100644
---- a/kernel/locking/rwsem-xadd.c
-+++ b/kernel/locking/rwsem-xadd.c
-@@ -198,15 +198,22 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 		woken++;
- 		tsk = waiter->task;
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
+index 16b1a9cf6cf08..743d3c983082d 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
+@@ -32,6 +32,7 @@
+ #include "vega10_pptable.h"
  
--		wake_q_add(wake_q, tsk);
-+		get_task_struct(tsk);
- 		list_del(&waiter->list);
- 		/*
--		 * Ensure that the last operation is setting the reader
-+		 * Ensure calling get_task_struct() before setting the reader
- 		 * waiter to nil such that rwsem_down_read_failed() cannot
- 		 * race with do_exit() by always holding a reference count
- 		 * to the task to wakeup.
- 		 */
- 		smp_store_release(&waiter->task, NULL);
-+		/*
-+		 * Ensure issuing the wakeup (either by us or someone else)
-+		 * after setting the reader waiter to nil.
-+		 */
-+		wake_q_add(wake_q, tsk);
-+		/* wake_q_add() already take the task ref */
-+		put_task_struct(tsk);
- 	}
+ #define NUM_DSPCLK_LEVELS 8
++#define VEGA10_ENGINECLOCK_HARDMAX 198000
  
- 	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
+ static void set_hw_cap(struct pp_hwmgr *hwmgr, bool enable,
+ 		enum phm_platform_caps cap)
+@@ -258,7 +259,26 @@ static int init_over_drive_limits(
+ 		struct pp_hwmgr *hwmgr,
+ 		const ATOM_Vega10_POWERPLAYTABLE *powerplay_table)
+ {
+-	hwmgr->platform_descriptor.overdriveLimit.engineClock =
++	const ATOM_Vega10_GFXCLK_Dependency_Table *gfxclk_dep_table =
++			(const ATOM_Vega10_GFXCLK_Dependency_Table *)
++			(((unsigned long) powerplay_table) +
++			le16_to_cpu(powerplay_table->usGfxclkDependencyTableOffset));
++	bool is_acg_enabled = false;
++	ATOM_Vega10_GFXCLK_Dependency_Record_V2 *patom_record_v2;
++
++	if (gfxclk_dep_table->ucRevId == 1) {
++		patom_record_v2 =
++			(ATOM_Vega10_GFXCLK_Dependency_Record_V2 *)gfxclk_dep_table->entries;
++		is_acg_enabled =
++			(bool)patom_record_v2[gfxclk_dep_table->ucNumEntries-1].ucACGEnable;
++	}
++
++	if (powerplay_table->ulMaxODEngineClock > VEGA10_ENGINECLOCK_HARDMAX &&
++		!is_acg_enabled)
++		hwmgr->platform_descriptor.overdriveLimit.engineClock =
++			VEGA10_ENGINECLOCK_HARDMAX;
++	else
++		hwmgr->platform_descriptor.overdriveLimit.engineClock =
+ 			le32_to_cpu(powerplay_table->ulMaxODEngineClock);
+ 	hwmgr->platform_descriptor.overdriveLimit.memoryClock =
+ 			le32_to_cpu(powerplay_table->ulMaxODMemoryClock);
 -- 
 2.19.1
 
