@@ -2,105 +2,90 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD0BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B8AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D5E20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="T/lY1fHW"
+	by mail.kernel.org (Postfix) with ESMTP id BFACF20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfCDTyt (ORCPT
+        id S1726180AbfCDTz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:54:49 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45889 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfCDTys (ORCPT
+        Mon, 4 Mar 2019 14:55:59 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:52615 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfCDTz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:54:48 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d18so6458735qtg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 11:54:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X6Y8iExaiXetD91Man6/qdqhOVahCq446nFmMUqaAmw=;
-        b=T/lY1fHWqGFk23ncovG8fBFPFUFvXBV7k1ukT452qi6Uszy+/i12mnUb4JxJ0PIR43
-         DTnPRByoWwj6jr/rFQoEajHdmIXkVVJN59TTzHezJjO1J8cCr9se/MVlUvNXyIWYBApO
-         wjrXWNoRxcW9G7BEATLMejlFDYSdNKRfCTs2OTP+Qzae9x3NxBZmNscZfhxHuIKhe2ku
-         fHB5bbFBzzdYaAFlDY2OF71SyK4DnPnmxvAuKMzq7qOv4+vYeCixyjJmXgsbuUUtZbA5
-         EqBAyAIfCckbnqVMszxX9hclSzqLyoqWDAd2S7Wwkbfqvzvraia49xQR4+0rR+J+yHy+
-         CpBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X6Y8iExaiXetD91Man6/qdqhOVahCq446nFmMUqaAmw=;
-        b=GTLB+2aitA8V7O8ylCfecppoujn3Vc1AyklT2roK1HeVSzwP4SAYjsF6KEpOolsfpo
-         PkbArwsXBzR/2X6mpyA7Ez5GVXBzw6bLIFcU8DunDxbqEGkyWyH3chqbfl7bnZgUppFU
-         xYZaxvWByIAMReYbhkW2Ji5ljQ89taiJbc0ud3/pgJTY5AOMzhOXlepCJaGj/ysQjq2Y
-         PW4ORrYWwWsMEyc6PipgiuSfn6E//uyjvRT+3bu9YItL3em5V0beddghoM1tmSeV2+mM
-         2+YIgeSOsTR9z0Oq4oLsPbweku0YBxDAZhM08xs1QgYAg36bLjXry30fkQ4CLAmbpmpT
-         a5Bw==
-X-Gm-Message-State: APjAAAXIbPykm1sDWQeV/NOENE7M590vmbjG+no6fLSaTkJgcZhkLqvI
-        WO0Oal8fBBHkKtL7nOH6mmaBrA==
-X-Google-Smtp-Source: APXvYqxQbn/6sOfi37x7xxkhdoKWr2Z1bzq5FX52garMKz/2r6HYVwOPksen/jVI2SB0SPfWI/yqOQ==
-X-Received: by 2002:ac8:2d7a:: with SMTP id o55mr16444056qta.158.1551729287773;
-        Mon, 04 Mar 2019 11:54:47 -0800 (PST)
-Received: from ziepe.ca ([24.137.65.181])
-        by smtp.gmail.com with ESMTPSA id o29sm4666041qtk.56.2019.03.04.11.54.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Mar 2019 11:54:47 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1h0tfi-00021s-6u; Mon, 04 Mar 2019 15:54:46 -0400
-Date:   Mon, 4 Mar 2019 15:54:46 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Shaobo He <shaobo@cs.utah.edu>
-Cc:     linux-rdma@vger.kernel.org, Steve Wise <swise@chelsio.com>,
-        Doug Ledford <dledford@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxgb4: fix undefined behavior in mem.c
-Message-ID: <20190304195446.GA7751@ziepe.ca>
-References: <1551393519-96595-1-git-send-email-shaobo@cs.utah.edu>
+        Mon, 4 Mar 2019 14:55:59 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N95qT-1h4SQ513KR-016A9E; Mon, 04 Mar 2019 20:55:50 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     NOGUCHI Hiroshi <drvlabo@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: hid-asus: select CONFIG_POWER_SUPPLY
+Date:   Mon,  4 Mar 2019 20:54:43 +0100
+Message-Id: <20190304195536.1019650-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1551393519-96595-1-git-send-email-shaobo@cs.utah.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:f+i+OrDzGO5H4U2g4SqZUp9c0UQmPl0RW7oYspPkrcB5i49uSJn
+ NzL/ZrRU2mKFqYAHpn3s5zcgYzdivprMCE1lopi5HT0NHuRdsTxpZevB006Ps4xo1sF0QMR
+ +9ULLpfK28inUcSySNcgfwjFYG5WfsH3aZrsHoELYXrZ0NqetQzrQBzsCgPGiLX8NvOVsLI
+ BKdHO6VFVGzUh97iaC+Mg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8USgwDmB/OY=:gy//9rVrQEESBN2+gLPbj+
+ nuDyqOROJII3exPtGEnI/QNEbcPICR4qqqbgFbpNn9EGoiG12B5EbjqyQwLqbxXKuq9jzsuPk
+ DVB4sMigqjh+TKkkBI44wE9IwSWY1QJi1+c9ygNC16Kel1epATeUWaLyfkNkD0DYAOZCUiNJi
+ cQfOqcN4hnmFzb3gJbVhgllgaa2d7TCUnVIcWUPMmsqug6TQyRZkAbOQZitbu/Z/FXk6bG7/x
+ MbJbtPuLvaRIfoSBIFB7IOL8qbNpHQe/zseqTe/P6VLP9it4teMEHa69FVX+APT0Sjej1MdXh
+ EeK1fnxBuSgGKvot1V2Zg2xsSegOOx4S/JmwDMrtYNYbkaB3WyZxYnElY3FudKtZqxwEISVmh
+ sir4mp0bB2Lz4FaUiK+bz51Ign8tA241GT49VkRMbDo13DZv3bVx2+KYGcUDbjpkcMCVCTxNW
+ en53xbV6dJzqa7HvjbklsOpexaVQsW/QrhWsLcKnF38x8Mj+cTxCp1BpE1cR876PSdQris/iq
+ Sk7ZhnwKL6fbce6ZI305wQd4E5DMK7xmypYNMmBOv/vQuJkAWWlfSFY9TjzJGQxPYuT0YuMe/
+ BqoRatQjoICDb4BWbXc8HmlLc/f5zO0JFcFom06xZtXEBczaTGW7ggNtrdEP5vIq8gZ8JUYL/
+ /JHcsbvfqzGTtZ67zdHjEV/2Wgt+oQD0lkc6h33fqp+69yRrooZ/a4NkNM6h+EephxctKYjCv
+ fTJkdVN6L5jEVX7vKTVAXfAbSBJ1/fWQJfKS/g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 03:38:38PM -0700, Shaobo He wrote:
-> In function `c4iw_dealloc_mw`, variable mhp's value is printed after
-> freed, which triggers undefined behavior according to this post:
-> https://trust-in-soft.com/dangling-pointer-indeterminate/.
-> 
-> This commit fixes it by swapping the order of `kfree` and `pr_debug`.
-> 
-> Signed-off-by: Shaobo He <shaobo@cs.utah.edu>
-> ---
->  drivers/infiniband/hw/cxgb4/mem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+The newly added power supply code fails to link when the power supply core
+code is disabled:
 
-Discussion aside, this is a worthwile fix. I rewrote the commit
-message to avoid referencing 'undefined behavior' though, this is just
-a straight up bug in the logging. Another thread could get the same
-pointer value for the mhp before the print creating a confusing log.
+drivers/hid/hid-asus.o: In function `asus_battery_get_property':
+hid-asus.c:(.text+0x11de): undefined reference to `power_supply_get_drvdata'
+drivers/hid/hid-asus.o: In function `asus_probe':
+hid-asus.c:(.text+0x170c): undefined reference to `devm_power_supply_register'
+hid-asus.c:(.text+0x1734): undefined reference to `power_supply_powers'
+drivers/hid/hid-asus.o: In function `asus_raw_event':
+hid-asus.c:(.text+0x1914): undefined reference to `power_supply_changed'
 
-    cxgb4: kfree mhp after the debug print
-    
-    In function `c4iw_dealloc_mw`, variable mhp's value is printed after
-    freed, it is clearer to have the print before the kfree.
-    
-    Otherwise racing threads could allocate another mhp with the same pointer
-    value and create confusing tracing.
+Select the subsystem from Kconfig as we do for other hid drivers already.
 
-Jason
+Fixes: 6311d329e12a ("HID: hid-asus: Add BT keyboard dock battery monitoring support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/hid/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 6ca8d322b487..4ca0cdfa6b33 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -150,6 +150,7 @@ config HID_ASUS
+ 	tristate "Asus"
+ 	depends on LEDS_CLASS
+ 	depends on ASUS_WMI || ASUS_WMI=n
++	select POWER_SUPPLY
+ 	---help---
+ 	Support for Asus notebook built-in keyboard and touchpad via i2c, and
+ 	the Asus Republic of Gamers laptop keyboard special keys.
+-- 
+2.20.0
+
