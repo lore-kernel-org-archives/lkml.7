@@ -2,131 +2,100 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178CDC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC286C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBEEC20645
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70BC20645
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPLxhhUG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EaU2K1YQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbfCDMCi (ORCPT
+        id S1726121AbfCDMHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 07:02:38 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43462 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfCDMCh (ORCPT
+        Mon, 4 Mar 2019 07:07:23 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34626 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfCDMHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 07:02:37 -0500
-Received: by mail-lf1-f68.google.com with SMTP id p73so2713180lfe.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 04:02:36 -0800 (PST)
+        Mon, 4 Mar 2019 07:07:22 -0500
+Received: by mail-lj1-f194.google.com with SMTP id l5so4112499lje.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 04:07:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=guNt41lbGYnWxFVBh6b7n+727OGehx1dipKcWFoG7GU=;
-        b=ZPLxhhUGFE6sMjm3CSX4MszZlekzYseSBuXShoSJEbve7Xpt+HQY7w3aeVVyLg4Q0E
-         rz7SXNHehlssV433+XEAIW+tp2lSezTqc63anXsa40gxQxPKcIq0TAONzL0VJ9OskPbj
-         cW9TXVBRh4OsrAbIh/rubW5G2pUGiuBhpaaI8DCsn1cPa94gFdXHKiOs2tk9j2Vs5UD/
-         uCaUrU4iFVtcw6CzLfZz++4nKr1QmZM8aNt4MW5ACPNOBmdSQBZx4rqcM0LExoa5rwmF
-         AvM1oSs13MP69AGzes7Y+Hro3O0a6R+ve/0ZfnI3ZQ/LLFc0W1qDaDpeMudvr0MEYGWP
-         H66A==
+         :cc:content-transfer-encoding;
+        bh=at4ZF0j+vQkCFni4N26l3CmGY+lWq9dF5tMlQCCPPh8=;
+        b=EaU2K1YQLAerwE2uX+DWTZLZS3087UpEMGoOh3Q6wCUE+EodlT5Aut8ajO4Nj9OobG
+         eMcmw9hylpM8pwB0q235SSLfvOBJfU/CZxAtTI9sN+SuSUzRL9u86S8zpsiIWggBk6Aa
+         PfZB+ZFzatO37ysOJj7k98NPXsdma6YwGonvx4Pi4PaHaD+Ls2uUqGFz3Jg2yl3lNNKR
+         vS1M81nCnbtdP7dDkOcjbVvLJAFhycU8Rnb8tgBExNrDS+aO/c8e36XP8qt1vO+V8vJ+
+         6F9Gncnwiett5THlp/AbGlOHmDsUhYY32H4nnezXX2+NFLY0s9bMonMWY2Y+VBh6xiqw
+         kNrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=guNt41lbGYnWxFVBh6b7n+727OGehx1dipKcWFoG7GU=;
-        b=UQBddc6GFLKsz6wP8YxqWjHC4qvmRELOJFTQoT8ty0mvKq4J+B4bl9fpwATQakWLxH
-         0pMvCa3aNHzoyMtAElCzIYfX5ANYMlF2Pn5tgo01lJiOs7Bt8Ha//AdmQanDoOIwbnLM
-         ftQX0QPupGkffs15ozk4xwdWnMENZsIwCRFrptrUpBIGzhz6UN6zMzOUN7TOznbS7xb3
-         WCR4aIpeoDFpwJ2ArMs5oe59QtOzdEOGa9xPGplEqAN9lIRmN/0QK26c8tYO0+UfSJvi
-         haO0eebUJtIIfFnu0jLhnnFTkzugLv/skdraMqIdVGB3qKYDsHRKiNxJblwXoGJsy4r8
-         aE3g==
-X-Gm-Message-State: APjAAAX5wSo/fbr32uVdX7QvzdFkj7v2XT1fFLnipTqooOuUvl3zRiVd
-        dRXybbGFw5FSlgY+Pv10aSvAjHAuYZTIxKPH91g=
-X-Google-Smtp-Source: APXvYqwTv7X0l7CJX5Q+fwXLGzCLGVXxXCL2whRIaEOeg66goYUFjExi/LN7QkAWUW581E0nKcG2hg5XtTmEUY4VBZk=
-X-Received: by 2002:a19:4bd1:: with SMTP id y200mr1046951lfa.64.1551700955508;
- Mon, 04 Mar 2019 04:02:35 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=at4ZF0j+vQkCFni4N26l3CmGY+lWq9dF5tMlQCCPPh8=;
+        b=Ezq1+OrYe8j5S5xNAQnKN88nMWpCA1O2qAQCPUu0JViT5GR1+mxgKGebeTYpaImHi3
+         d18vdlIKuEtKgkiuN/Xhq/S7DgjsLVSBwBxRYQ1IbBSSKMhPFgO/0PuCDJiapUseKTn1
+         +/Jj1oydwp1F4Y46Equ+Xvfdk5T7sX6dbls7B/kYHoVTeXuvxD8tbI2gjbUHf9wuthH0
+         TyyDdk5KGsDQv+vWekcEXFdhrZ7Rs4IDFSvXvNRnA46QMBEEXaVUGGUtp1d02TNlpvBw
+         dIn8HShhIK20boEtSm2iBrPOBtDQS9CPjepTYRDyJoL0gIElQMuUuWxMJziArSKYZgoz
+         7gGQ==
+X-Gm-Message-State: APjAAAVz3nMTWUeLW3PAw1+L/rOWOD7bBHRCeovxr27H0/Pwn2LfISub
+        7i9G8LN3wcvb8HIoDsMbOTR2nm3H+0u26WiwaW+l/EI2
+X-Google-Smtp-Source: APXvYqy6gjedxOnXAsinq7Ytrx4l/odOLshf9UZnnLXJyb3HV+Bl8BcVeDbhRlbz8krHT3XdnT2XNrWo85hSd6RD9/4=
+X-Received: by 2002:a2e:2ce:: with SMTP id y75mr10106341lje.126.1551701240486;
+ Mon, 04 Mar 2019 04:07:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20190301221956.97493-1-cai@lca.pw>
-In-Reply-To: <20190301221956.97493-1-cai@lca.pw>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Mon, 4 Mar 2019 17:32:23 +0530
-Message-ID: <CAFqt6zZr8ZCM6_7QDzDEf=5gH=+EkaumXk86X35dGTdn_SLvvA@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/hugepages: fix "orig_pud" set but not used
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+References: <20190301035852.26780-1-marek.behun@nic.cz> <20190301035852.26780-4-marek.behun@nic.cz>
+ <CACRpkdam_CYGtph16McpQQ_WwohpZr+Rzi1B=re4UrGxXmSEqg@mail.gmail.com> <20190301161510.20b15183@nic.cz>
+In-Reply-To: <20190301161510.20b15183@nic.cz>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 4 Mar 2019 13:07:09 +0100
+Message-ID: <CACRpkdb0Bv1iwtd61GUQLU25nAKrfk-VS0PGKTYh_LoyjYWHFg@mail.gmail.com>
+Subject: Re: [PATCH v3 bus+gpio 3/5] bus: moxtet: Add sysfs documentation
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 2, 2019 at 3:50 AM Qian Cai <cai@lca.pw> wrote:
->
-> The commit a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent
-> hugepages") introduced pudp_huge_get_and_clear_full() but no one uses
-> its return code. In order to not diverge from
-> pmdp_huge_get_and_clear_full(), just change zap_huge_pud() to not assign
-> the return value from pudp_huge_get_and_clear_full().
->
-> mm/huge_memory.c: In function 'zap_huge_pud':
-> mm/huge_memory.c:1982:8: warning: variable 'orig_pud' set but not used
-> [-Wunused-but-set-variable]
->   pud_t orig_pud;
->         ^~~~~~~~
->
+On Fri, Mar 1, 2019 at 4:15 PM Marek Behun <marek.behun@nic.cz> wrote:
 
-4th argument passed to pudp_huge_get_and_clear_full() is not used.
-Is it fine to remove *int full * in  pudp_huge_get_and_clear_full() if
-there is no plan to use it in future ?
-
-This is applicable to below functions as well -
-pmdp_huge_get_and_clear_full()
-ptep_get_and_clear_full()
-pte_clear_not_present_full()
-
-
-
-
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
+> On Fri, 1 Mar 2019 15:34:26 +0100
+> Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> v2: keep returning a code from pudp_huge_get_and_clear_full() for possible
->     future uses.
+> > > +What:          /sys/bus/moxtet/devices/moxtet-<name>.<addr>/output_v=
+alue
+> > > +Date:          March 2019
+> > > +KernelVersion: 5.2
+> > > +Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
+> > > +Description:   (RW) Read last written value or write value to the
+> > > module on
+> > > +               this Moxtet address. Format: %x
+> >
+> > What is the usecase for these?
+> >
+> > If this is for debugging it should be in debugfs rather than in sysfs.
+> >
+> > If it is here for random userspace drivers, we need some good
+> > explanation as to why they can't just be kernel drivers.
 >
->  mm/huge_memory.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index faf357eaf0ce..9f57a1173e6a 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1979,7 +1979,6 @@ spinlock_t *__pud_trans_huge_lock(pud_t *pud, struct vm_area_struct *vma)
->  int zap_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
->                  pud_t *pud, unsigned long addr)
->  {
-> -       pud_t orig_pud;
->         spinlock_t *ptl;
->
->         ptl = __pud_trans_huge_lock(pud, vma);
-> @@ -1991,8 +1990,7 @@ int zap_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
->          * pgtable_trans_huge_withdraw after finishing pudp related
->          * operations.
->          */
-> -       orig_pud = pudp_huge_get_and_clear_full(tlb->mm, addr, pud,
-> -                       tlb->fullmm);
-> +       pudp_huge_get_and_clear_full(tlb->mm, addr, pud, tlb->fullmm);
->         tlb_remove_pud_tlb_entry(tlb, pud, addr);
->         if (vma_is_dax(vma)) {
->                 spin_unlock(ptl);
-> --
-> 2.17.2 (Apple Git-113)
->
+> Hmm, it was for debugging purposes but the ability to write there is
+> not needed anymore... Shall I make it read/only? Or completely remove
+> it?
+
+I would either remove it or move it to debugfs.
+
+Yours,
+Linus Walleij
