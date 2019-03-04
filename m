@@ -2,171 +2,125 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B5EC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E085C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42644206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:42:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LGUwTvtb"
+	by mail.kernel.org (Postfix) with ESMTP id 452B62146F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:43:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfCDSm4 (ORCPT
+        id S1727342AbfCDSnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:42:56 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34111 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfCDSmz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:42:55 -0500
-Received: by mail-lj1-f193.google.com with SMTP id l5so5250104lje.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 10:42:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sAVKJLfR2/0/hXyK9IveKJMuinQ06nFz9F/bf1iroeA=;
-        b=LGUwTvtbb8Wx1QaBIk5HR/xJWFCmyD5+NFRTXusBVkIdfkJyMORUQL6dOK+c3DRlRB
-         VVMflaBGIteIEN8VLluVUcmqOZYqGmAAejS2dxwlfwrr846BLJolNjLsK9ciypDD7Qx1
-         GihFsGaUkNMCMS9KC+RUX9zsIyE6bEw+oDoq3JKd7I5wCGUZm1RUYJWter8d8yjbTQ++
-         4HddpeUVYQoE5KhSdVQuivi5XrcMHU2+w3RVYuA0a0TJrT2AealJttAcPX0/JZSR6OFU
-         fe/04hbcpaRqCBgQbyZGHGvOICEgyQFFowiYY03+g8WnO/ndxBzhzSfmECgyhxQQnX5I
-         aevA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sAVKJLfR2/0/hXyK9IveKJMuinQ06nFz9F/bf1iroeA=;
-        b=oxzhQ6Ii0Xd7kgKfLp07UC+wmzmDrhdcGCE089xJG0Tcz7stI/avB5bXSV+cQnq2na
-         zkxt9VdfSnqNGTQL0A+KzuzTEP/+tEsNzjHtsfIjjUwMw8w1D8lMJIZePAn2017Nhf3O
-         Em+zCbhsECL4V8UoTHhv3mJb2aohka9cmlNZIct4ZSbZKrYZtlWIcTrAMOhhaoYVX5/V
-         74DevmmZJyyTMUNKVGRVz52CL6fong9FodDo0paSmvR/W45tQvELfyOQ4jwEZ8t9yjUf
-         KJPc7l8j7GgJxsqbwnXjIDE0nVT4+PdZBgEYwGJ1/ts5TwzXZLNpt1RBbdVuD103ilD/
-         50JA==
-X-Gm-Message-State: APjAAAWiStG8CwkqWgkOg7SkP/AvBFCRsi8pmBrmtNerteghT6U0bESO
-        Ds3kE8t1jQ9aMnAJaaZY/ZIIlVeqSnHj6OBYhIcN7w==
-X-Google-Smtp-Source: APXvYqwolq2x7fjWEHJ58hBKLLDnFCuXxfop+2/IYAjJu8boX1pMhuslcxfucKKj8Fz/s3Gtb4iqb/OQ7+IgeSKHFf0=
-X-Received: by 2002:a2e:3807:: with SMTP id f7mr11411982lja.9.1551724973511;
- Mon, 04 Mar 2019 10:42:53 -0800 (PST)
+        Mon, 4 Mar 2019 13:43:11 -0500
+Received: from mga02.intel.com ([134.134.136.20]:57918 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfCDSnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 13:43:10 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 10:43:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,440,1544515200"; 
+   d="scan'208";a="149171257"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Mar 2019 10:43:07 -0800
+Date:   Mon, 4 Mar 2019 10:43:07 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
+ enabled in Guest
+Message-ID: <20190304184307.GC17120@linux.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-7-weijiang.yang@intel.com>
+ <20190228161715.GF6166@linux.intel.com>
+ <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
+ <20190301145819.GC22584@linux.intel.com>
+ <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
 MIME-Version: 1.0
-References: <20190304081617.159014799@linuxfoundation.org>
-In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 5 Mar 2019 00:12:41 +0530
-Message-ID: <CA+G9fYtWwESNwy+Lxz-1LWwLePFfC9QJ6Jt6SgGNPcrSTF5yag@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/52] 4.14.105-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Mar 2019 at 13:54, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.105 release.
-> There are 52 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed Mar  6 08:15:55 UTC 2019.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.105-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Sun, Mar 03, 2019 at 08:26:08PM +0800, Yang Weijiang wrote:
+> On Fri, Mar 01, 2019 at 06:58:19AM -0800, Sean Christopherson wrote:
+> > On Thu, Feb 28, 2019 at 04:38:44PM +0800, Yang Weijiang wrote:
+> > > On Thu, Feb 28, 2019 at 08:17:15AM -0800, Sean Christopherson wrote:
+> > > > On Mon, Feb 25, 2019 at 09:27:14PM +0800, Yang Weijiang wrote:
+> > > > > "Load Guest CET state" bit controls whether guest CET states
+> > > > > will be loaded at Guest entry. Before doing that, KVM needs
+> > > > > to check if CPU CET feature is available.
+> > > > > 
+> > > > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > > > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > > > > ---
+> > > > >  arch/x86/kvm/vmx.c | 32 ++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 32 insertions(+)
+> > > > > 
+> > > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > > > > index 89ee086e1729..d32cee9ee079 100644
+> > > > > --- a/arch/x86/kvm/vmx.c
+> > > > > +++ b/arch/x86/kvm/vmx.c
+> > > > > @@ -55,6 +55,7 @@
+> > > > >  #include <asm/mmu_context.h>
+> > > > >  #include <asm/spec-ctrl.h>
+> > > > >  #include <asm/mshyperv.h>
+> > > > > +#include <asm/cet.h>
+> > > > >  
+> > > > >  #include "trace.h"
+> > > > >  #include "pmu.h"
+> > > > > @@ -4065,6 +4066,20 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
+> > > > >  	return !(val & ~valid_bits);
+> > > > >  }
+> > > > >  
+> > > > > +static int vmx_guest_cet_cap(struct kvm_vcpu *vcpu)
+> > > > > +{
+> > > > > +	u32 eax, ebx, ecx, edx;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Guest CET can work as long as HW supports the feature, independent
+> > > > > +	 * to Host SW enabling status.
+> > > > > +	 */
+> > > > > +	cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+> > > > > +
+> > > > > +	return ((ecx & bit(X86_FEATURE_SHSTK)) |
+> > > > > +		(edx & bit(X86_FEATURE_IBT))) ? 1 : 0;
+> > > > 
+> > > > Given the holes in the (current) architecture/spec, I think KVM has to
+> > > > require both features to be supported in the guest to allow CR4.CET to
+> > > > be enabled.
+> > > The reason why I use a "OR" here is to keep CET enabling control the
+> > > same as that on host, right now on host, users can select to enable  SHSTK or IBT
+> > > feature by disabling the unexpected one. It's free to select SHSTK & IBT
+> > > or SHSTK | IBT.
+> > 
+> > Which is not the same as SHSTK != IBT in *hardware*, which is effectively
+> > what this is allowing for the guest.  The problem is that the architecture
+> > doesn't cleanly separate the two features, i.e. we'd have a virtualization
+> > hole where the guest could touch state for a disabled feature.
+> > 
+> > Regardless, the guest would still be able to selectively enable each CET
+> > feature, it would just never see a model where SHSTK != IBT.
+> Hi, Sean,
+> I'd like to understand your concerns. From my point of view, e.g., 
+> when only IBT is enabled, PL3_SSP MSR would be unnecessrily exposed,
+> this is the design "limitation", but PL3_SSP keeps 0 if SHSTK is not
+> configured. Could you detail your concerns?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.14.105-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: b0f58e2dfb7cf26c240d8e0fe6e08b5d11976e22
-git describe: v4.14.104-53-gb0f58e2dfb7c
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.104-53-gb0f58e2dfb7c
-
-No regressions (compared to build v4.14.104)
-
-No fixes (compared to build v4.14.104)
-
-Ran 21829 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* spectre-meltdown-checker-test
-* ltp-dio-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+In your approach, IA32_{S,U}_CET can be written if SHSTK or IBT is exposed
+to the guest.  If only SHSTK is exposed, a devious guest can still use IBT
+because it can set CR4.CET as well as the enable bits in IA32_{S,U}_CET.
+Preventing the guest from using IBT in this scenario is infeasible as it
+would require trapping and emulating the XSAVE as well as the relevent CET
+MSRs.
