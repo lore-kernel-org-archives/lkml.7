@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BCAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0C8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA35220823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C80320863
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688012;
-	bh=W/WMs0jx0jINr3aVnGH1vJ2BmfCA5h7Ao0nt+PUz0oE=;
+	s=default; t=1551688023;
+	bh=62R3a1UT+N4uyijFIrtuzxDvrgOESHlyY+N20KKBVkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m98FWNy0hORR5k6YD0C3GUS6oBDFyDATN8Igp/uPwrdjcT6UjyMjlUSXXIl/6u8zW
-	 25Gvsbs/3BKhAqq5dKgpTARfEwis+AjjKIZZAxbyQKKh21xEvAdkwANcIZhe80U5Bd
-	 0rM98VSQRL6Tnq2HwHbjYAInEtUjr4tDZvyXDVb0=
+	b=vBH7KcBLAD4MgtOhY/cNBoKJtDs+J96yVIrWZZDgK4Vy6FHin1TccDvwP/v0kCXUg
+	 ffIpD1XvoW+SSSfHq9tu98reodHkt6MoUkYgiHdl0R5GM75YkNEfo8yRfWI5RE0Suq
+	 jGe9e8wUFYomhUDfrRcX32Oci7S8DTpOL5WPm9CE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfCDI0v (ORCPT
+        id S1726170AbfCDI1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:26:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:27:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727145AbfCDI0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:26:47 -0500
+        id S1727163AbfCDI04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:26:56 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C848420823;
-        Mon,  4 Mar 2019 08:26:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF88020823;
+        Mon,  4 Mar 2019 08:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688007;
-        bh=W/WMs0jx0jINr3aVnGH1vJ2BmfCA5h7Ao0nt+PUz0oE=;
+        s=default; t=1551688016;
+        bh=62R3a1UT+N4uyijFIrtuzxDvrgOESHlyY+N20KKBVkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wo4AmOg7SjcNDdBhgtxx//2yrUUnNaOwTLDf9ISFUw8XlLjVN+0Y+WLnXH0yOmfyW
-         TpctP3qZfUwbmB5LpapDsvuu7yuH61CR52jLkgOE0w8uHtUgBGjlLDuEEb+nm69PQ6
-         jaf1Fci3kXehNhO383fPLkXKw8CI3mNBxRzSeYd4=
+        b=dQ27U6uvIvlBK5wGCXi/5bSFEazRDPek8p9HSJmjwy9+nlqTtSwXQwEBM88cBl2pk
+         M5TpQCyiCFmdL3IvN1Q7WgDCwaxbp+qpuvTlmzaAMygERUSica3DytS9Dg/iYW38fe
+         jV4sJiuAAoOPahjckQAIYPjb3mZ693cYyUZeUkb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Balaji Pothunoori <bpothuno@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 39/52] mac80211: dont initiate TDLS connection if station is not associated to AP
-Date:   Mon,  4 Mar 2019 09:22:37 +0100
-Message-Id: <20190304081619.366363351@linuxfoundation.org>
+Subject: [PATCH 4.14 42/52] svm: Fix AVIC incomplete IPI emulation
+Date:   Mon,  4 Mar 2019 09:22:40 +0100
+Message-Id: <20190304081619.532424243@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -67,54 +67,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7ed5285396c257fd4070b1e29e7b2341aae2a1ce ]
+[ Upstream commit bb218fbcfaaa3b115d4cd7a43c0ca164f3a96e57 ]
 
-Following call trace is observed while adding TDLS peer entry in driver
-during TDLS setup.
+In case of incomplete IPI with invalid interrupt type, the current
+SVM driver does not properly emulate the IPI, and fails to boot
+FreeBSD guests with multiple vcpus when enabling AVIC.
 
-Call Trace:
-[<c1301476>] dump_stack+0x47/0x61
-[<c10537d2>] __warn+0xe2/0x100
-[<fa22415f>] ? sta_apply_parameters+0x49f/0x550 [mac80211]
-[<c1053895>] warn_slowpath_null+0x25/0x30
-[<fa22415f>] sta_apply_parameters+0x49f/0x550 [mac80211]
-[<fa20ad42>] ? sta_info_alloc+0x1c2/0x450 [mac80211]
-[<fa224623>] ieee80211_add_station+0xe3/0x160 [mac80211]
-[<c1876fe3>] nl80211_new_station+0x273/0x420
-[<c170f6d9>] genl_rcv_msg+0x219/0x3c0
-[<c170f4c0>] ? genl_rcv+0x30/0x30
-[<c170ee7e>] netlink_rcv_skb+0x8e/0xb0
-[<c170f4ac>] genl_rcv+0x1c/0x30
-[<c170e8aa>] netlink_unicast+0x13a/0x1d0
-[<c170ec18>] netlink_sendmsg+0x2d8/0x390
-[<c16c5acd>] sock_sendmsg+0x2d/0x40
-[<c16c6369>] ___sys_sendmsg+0x1d9/0x1e0
+Fix this by update APIC ICR high/low registers, which also
+emulate sending the IPI.
 
-Fixing this by allowing TDLS setup request only when we have completed
-association.
-
-Signed-off-by: Balaji Pothunoori <bpothuno@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/cfg.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kvm/svm.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index ebc8045ddee68..150dd2160cefb 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1466,6 +1466,10 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
- 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
- 		sta->sta.tdls = true;
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 656ac12f54392..a94beaecd3e02 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -4006,25 +4006,14 @@ static int avic_incomplete_ipi_interception(struct vcpu_svm *svm)
+ 		kvm_lapic_reg_write(apic, APIC_ICR, icrl);
+ 		break;
+ 	case AVIC_IPI_FAILURE_TARGET_NOT_RUNNING: {
+-		int i;
+-		struct kvm_vcpu *vcpu;
+-		struct kvm *kvm = svm->vcpu.kvm;
+ 		struct kvm_lapic *apic = svm->vcpu.arch.apic;
  
-+	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
-+	    !sdata->u.mgd.associated)
-+		return -EINVAL;
-+
- 	err = sta_apply_parameters(local, sta, params);
- 	if (err) {
- 		sta_info_free(local, sta);
+ 		/*
+-		 * At this point, we expect that the AVIC HW has already
+-		 * set the appropriate IRR bits on the valid target
+-		 * vcpus. So, we just need to kick the appropriate vcpu.
++		 * Update ICR high and low, then emulate sending IPI,
++		 * which is handled when writing APIC_ICR.
+ 		 */
+-		kvm_for_each_vcpu(i, vcpu, kvm) {
+-			bool m = kvm_apic_match_dest(vcpu, apic,
+-						     icrl & KVM_APIC_SHORT_MASK,
+-						     GET_APIC_DEST_FIELD(icrh),
+-						     icrl & KVM_APIC_DEST_MASK);
+-
+-			if (m && !avic_vcpu_is_running(vcpu))
+-				kvm_vcpu_wake_up(vcpu);
+-		}
++		kvm_lapic_reg_write(apic, APIC_ICR2, icrh);
++		kvm_lapic_reg_write(apic, APIC_ICR, icrl);
+ 		break;
+ 	}
+ 	case AVIC_IPI_FAILURE_INVALID_TARGET:
 -- 
 2.19.1
 
