@@ -2,168 +2,110 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE9AC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B79C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90672070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1439D20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fwlOmLl0"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="KW00z5e8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbfCDXgF (ORCPT
+        id S1726692AbfCDXgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 18:36:05 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17623 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCDXgF (ORCPT
+        Mon, 4 Mar 2019 18:36:38 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:44268 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCDXgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 18:36:05 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c7db65b0003>; Mon, 04 Mar 2019 15:35:56 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 04 Mar 2019 15:36:03 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 04 Mar 2019 15:36:03 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Mar
- 2019 23:36:03 +0000
-Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error handling
- paths
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Ira Weiny <ira.weiny@intel.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>
-CC:     "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-References: <20190302032726.11769-2-jhubbard@nvidia.com>
- <20190302202435.31889-1-jhubbard@nvidia.com>
- <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
- <2404c962-8f6d-1f6d-0055-eb82864ca7fc@mellanox.com>
- <20190303165550.GB27123@iweiny-DESK2.sc.intel.com>
- <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <f73f326b-1ef3-075a-ca11-88d0d881dacb@nvidia.com>
-Date:   Mon, 4 Mar 2019 15:36:02 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551742556; bh=LUypKyWAgSGyWeHvdhOBpuLWhC2w577ik03jidPipkE=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fwlOmLl0bA1eSZQSHtrtyySK3uXtyYQNojUOe98wUXJuDL0XQXYZx5dI+BUXIkkUE
-         io0h06ZVgQ5wgEDK7p+XIJVPQ6G/OwNmqo269Ob8b2+kDDwCuMuYABBIPrgB1eDcCW
-         vyTLErz7dXLyE93JSquox3by49k4sUg+OU+6bBagQBO1ie7qJnaz8BpNitzoZT0b6b
-         nU9IHAf19k8bqcdaQjDFYmDAvK978fFxrzopTxp2LSk9NIQQGiI5bgR61Mtirmfi1I
-         hlB5MC1721tALbWwhAe2ZP8NFT6SjUD8/Ysnez4F/7IA8uatSL40zNlLMB2vVfGEHp
-         vkqcqkjgAYRbw==
+        Mon, 4 Mar 2019 18:36:38 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 53EAD707
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 23:36:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id wyZJGcMa-umZ for <linux-kernel@vger.kernel.org>;
+        Mon,  4 Mar 2019 17:36:36 -0600 (CST)
+Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 24B76151
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 17:36:36 -0600 (CST)
+Received: by mail-it1-f198.google.com with SMTP id 190so810080itl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 15:36:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=4tGCreSBZDaFxjT/bNRD0L/Mus0ZRPPRaDZGQQ8UJ7o=;
+        b=KW00z5e8R8g4mp76/B3rb77voxAwHWqWtg9mvGCA1oPjNJSEMtbOEPg2lbzW93MZqb
+         f7Q0e+F+qHAEGb5xf6l7x3hK3wqStQzxX2Kx+PIzEZ6PL4cawF/7mX+7g9qugw5727+L
+         BeHtyXOuIj2NRek4ro+x0Qh19tOb4FCEE02053DXKHz6efBVdSRYfug5076vTKrIse6p
+         ChRkxrKI6n8ndQ2YPYTnHyXSdO8Q/i0ezXNo9Kdp8QKBrt+0FbAJJsPMOGWUCUU4aZA8
+         BUuoovcz612FLnIjwQLHcZDxQ4GYBaJ9pi5McXToFgO8Mabc/EkL673GuUj2APs7aXhB
+         3Acg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4tGCreSBZDaFxjT/bNRD0L/Mus0ZRPPRaDZGQQ8UJ7o=;
+        b=U8Avw4+7vJdmt2mGdxC8qHVQrLEYlMafnx+oESz6RA5WQxuOWqwl06QRXk/2QfOxpv
+         VihT7imf3lvkwuULbeb+J34rUQC8u3Wxu6yPUzAaB91iL2Edr2PUd0RSUt5MnmOrqZmF
+         NxyW70i5kdTIvVINuzU/+o0vMmh9oLtVLIGRVVupRw3DspiZYsZzfXB/PYO/LVPNShbP
+         NR0onYKge078i5xMT8Lj2vjL+M5y15qyq2fO3Fj//AAzV/VshQn9TaBTqZWf76ZiKrkX
+         K7ZciN/MQ9bSXs5CEitlqElnikd4yIGTXtsyGX45P+WoyVT0Qz/QW6KJonFDS9wK7TPN
+         45kQ==
+X-Gm-Message-State: APjAAAVQnwdRAG5PNTZmSXyLKVHq9EMPE7Uk2k9kNwMOHTlJzfT0V7ij
+        gkCALavJ0arJL/HS60KqlFh9ZDAuVGVKOOnLeAiB5z5+9ebnvAnvM2end46Zffh04PVze6ew0DI
+        ggILEqAfF7mDXDlm4Y8UTQx3zemFO
+X-Received: by 2002:a24:730f:: with SMTP id y15mr1102065itb.126.1551742595815;
+        Mon, 04 Mar 2019 15:36:35 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx0wiXrVNrWRTm0hjM67QyXW6DORG1MojYa25ZExPBhRDUaZnfLuUS6evfQp1m+Kva5CiEmgg==
+X-Received: by 2002:a24:730f:: with SMTP id y15mr1102054itb.126.1551742595587;
+        Mon, 04 Mar 2019 15:36:35 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id d139sm3898132itc.44.2019.03.04.15.36.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 15:36:35 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: ethernet: Fix phy_set_max_speed by checking for NULL
+Date:   Mon,  4 Mar 2019 17:36:22 -0600
+Message-Id: <20190304233622.13981-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 3:11 PM, John Hubbard wrote:
-> On 3/3/19 8:55 AM, Ira Weiny wrote:
->> On Sun, Mar 03, 2019 at 11:52:41AM +0200, Artemy Kovalyov wrote:
->>>
->>>
->>> On 02/03/2019 21:44, Ira Weiny wrote:
->>>>
->>>> On Sat, Mar 02, 2019 at 12:24:35PM -0800, john.hubbard@gmail.com wrote:
->>>>> From: John Hubbard <jhubbard@nvidia.com>
->>>>>
->>>>> ...
->>>>> 3. Dead code removal: the check for (user_virt & ~page_mask)
->>>>> is checking for a condition that can never happen,
->>>>> because earlier:
->>>>>
->>>>>      user_virt = user_virt & page_mask;
->>>>>
->>>>> ...so, remove that entire phrase.
->>>>>
->>>>>   		bcnt -= min_t(size_t, npages << PAGE_SHIFT, bcnt);
->>>>>   		mutex_lock(&umem_odp->umem_mutex);
->>>>>   		for (j = 0; j < npages; j++, user_virt += PAGE_SIZE) {
->>>>> -			if (user_virt & ~page_mask) {
->>>>> -				p += PAGE_SIZE;
->>>>> -				if (page_to_phys(local_page_list[j]) != p) {
->>>>> -					ret = -EFAULT;
->>>>> -					break;
->>>>> -				}
->>>>> -				put_page(local_page_list[j]);
->>>>> -				continue;
->>>>> -			}
->>>>> -
->>>>
->>>> I think this is trying to account for compound pages. (ie page_mask could
->>>> represent more than PAGE_SIZE which is what user_virt is being incrimented by.)
->>>> But putting the page in that case seems to be the wrong thing to do?
->>>>
->>>> Yes this was added by Artemy[1] now cc'ed.
->>>
->>> Right, this is for huge pages, please keep it.
->>> put_page() needed to decrement refcount of the head page.
->>
->> You mean decrement the refcount of the _non_-head pages?
->>
->> Ira
->>
-> 
-> Actually, I'm sure Artemy means head page, because put_page() always
-> operates on the head page. 
-> 
-> And this reminds me that I have a problem to solve nearby: get_user_pages
-> on huge pages increments the page->_refcount *for each tail page* as well.
-> That's a minor problem for my put_user_page() 
-> patchset, because my approach so far assumed that I could just change us
-> over to:
-> 
-> get_user_page(): increments page->_refcount by a large amount (1024)
-> 
-> put_user_page(): decrements page->_refcount by a large amount (1024)
-> 
-> ...and just stop doing the odd (to me) technique of incrementing once for
-> each tail page. I cannot see any reason why that's actually required, as
-> opposed to just "raise the page->_refcount enough to avoid losing the head
-> page too soon".
-> 
-> However, it may be tricky to do this in one pass. Probably at first, I'll have
-> to do this horrible thing approach:
-> 
-> get_user_page(): increments page->_refcount by a large amount (1024)
-> 
-> put_user_page(): decrements page->_refcount by a large amount (1024) MULTIPLIED
->                  by the number of tail pages. argghhh that's ugly.
-> 
+phy_device can be a NULL pointer which is further dereferenced
+downstream in phy_set_max_speed. This patch avoids such a scenario.
 
-I see that this is still not stated quite right.
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-...to clarify, I mean to leave the existing behavior alone. So it would be
-the call sites (not put_user_page as the above says) that would be doing all
-that decrementing. The call sites know how many decrements are appropriate.
-
-Unless someone thinks of a clever way to clean this up in one shot. I'm not
-really seeing any way.
-
-thanks,
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index aceb9b7b55bd..7eaaecb53aa2 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -213,6 +213,8 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+ 		break;
+ 
+ 	case PHY_INTERFACE_MODE_MII:
++		if (!phydev)
++			return -ENODEV;
+ 		phy_name = "external MII";
+ 		phy_set_max_speed(phydev, SPEED_100);
+ 		bcmgenet_sys_writel(priv,
 -- 
-John Hubbard
-NVIDIA
+2.17.1
+
