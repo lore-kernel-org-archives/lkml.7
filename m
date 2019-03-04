@@ -2,177 +2,149 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA68EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87077C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A382082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE4220842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 05:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfCEFlL (ORCPT
+        id S1727070AbfCEFm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 00:41:11 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4212 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725782AbfCEFlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 00:41:11 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A45019DE3A9E89E7109F;
-        Tue,  5 Mar 2019 13:41:08 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.408.0; Tue, 5 Mar 2019
- 13:40:59 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <sean@mess.org>, <mchehab@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] media: serial_ir: Fix use-after-free in serial_ir_init_module
-Date:   Tue, 5 Mar 2019 13:40:26 +0800
-Message-ID: <20190305054026.27744-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 5 Mar 2019 00:42:28 -0500
+Received: from mga06.intel.com ([134.134.136.31]:12655 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfCEFm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 00:42:28 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 21:42:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,442,1544515200"; 
+   d="scan'208";a="148645342"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2019 21:42:24 -0800
+Date:   Mon, 4 Mar 2019 20:36:55 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>,
+        wei.w.wang@intel.com, weijiang.yang@inte.com
+Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
+ enabled in Guest
+Message-ID: <20190304123655.GB4185@local-michael-cet-test.sh.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-7-weijiang.yang@intel.com>
+ <20190228161715.GF6166@linux.intel.com>
+ <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
+ <20190301145819.GC22584@linux.intel.com>
+ <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
+ <20190304184307.GC17120@linux.intel.com>
+ <20190304095640.GA3576@local-michael-cet-test.sh.intel.com>
+ <20190305031202.GI17120@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190305031202.GI17120@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-
-Syzkaller report this:
-
-BUG: KASAN: use-after-free in sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
-Read of size 8 at addr ffff8881dc7ae030 by task syz-executor.0/6249
-
-CPU: 1 PID: 6249 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- ? 0xffffffffc1728000
- sysfs_remove_file_ns+0x5f/0x70 fs/sysfs/file.c:468
- sysfs_remove_file include/linux/sysfs.h:519 [inline]
- driver_remove_file+0x40/0x50 drivers/base/driver.c:122
- remove_bind_files drivers/base/bus.c:585 [inline]
- bus_remove_driver+0x186/0x220 drivers/base/bus.c:725
- driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
- serial_ir_init_module+0x169/0x1000 [serial_ir]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f9450132c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000100 RDI: 0000000000000003
-RBP: 00007f9450132c70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f94501336bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-
-Allocated by task 6249:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:495
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- bus_add_driver+0xc0/0x610 drivers/base/bus.c:651
- driver_register+0x1bb/0x3f0 drivers/base/driver.c:170
- serial_ir_init_module+0xe8/0x1000 [serial_ir]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 6249:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:457
- slab_free_hook mm/slub.c:1430 [inline]
- slab_free_freelist_hook mm/slub.c:1457 [inline]
- slab_free mm/slub.c:3005 [inline]
- kfree+0xe1/0x270 mm/slub.c:3957
- kobject_cleanup lib/kobject.c:662 [inline]
- kobject_release lib/kobject.c:691 [inline]
- kref_put include/linux/kref.h:67 [inline]
- kobject_put+0x146/0x240 lib/kobject.c:708
- bus_remove_driver+0x10e/0x220 drivers/base/bus.c:732
- driver_unregister+0x6c/0xa0 drivers/base/driver.c:197
- serial_ir_init_module+0x14c/0x1000 [serial_ir]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881dc7ae000
- which belongs to the cache kmalloc-256 of size 256
-The buggy address is located 48 bytes inside of
- 256-byte region [ffff8881dc7ae000, ffff8881dc7ae100)
-The buggy address belongs to the page:
-page:ffffea000771eb80 count:1 mapcount:0 mapping:ffff8881f6c02e00 index:0x0
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 ffffea0007d14800 0000000400000002 ffff8881f6c02e00
-raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881dc7adf00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881dc7adf80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff8881dc7ae000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                     ^
- ffff8881dc7ae080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881dc7ae100: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
-
-There are already cleanup handlings in serial_ir_init error path,
-no need to call serial_ir_exit do it again in serial_ir_init_module,
-otherwise will trigger a use-after-free issue.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: fa5dc29c1fcc ("[media] lirc_serial: move out of staging and rename to serial_ir")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/media/rc/serial_ir.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/drivers/media/rc/serial_ir.c b/drivers/media/rc/serial_ir.c
-index ffe2c67..3998ba2 100644
---- a/drivers/media/rc/serial_ir.c
-+++ b/drivers/media/rc/serial_ir.c
-@@ -773,8 +773,6 @@ static void serial_ir_exit(void)
- 
- static int __init serial_ir_init_module(void)
- {
--	int result;
--
- 	switch (type) {
- 	case IR_HOMEBREW:
- 	case IR_IRDEO:
-@@ -802,12 +800,7 @@ static int __init serial_ir_init_module(void)
- 	if (sense != -1)
- 		sense = !!sense;
- 
--	result = serial_ir_init();
--	if (!result)
--		return 0;
--
--	serial_ir_exit();
--	return result;
-+	return serial_ir_init();
- }
- 
- static void __exit serial_ir_exit_module(void)
--- 
-2.7.0
-
-
+On Mon, Mar 04, 2019 at 07:12:02PM -0800, Sean Christopherson wrote:
+> On Mon, Mar 04, 2019 at 05:56:40PM +0800, Yang Weijiang wrote:
+> > On Mon, Mar 04, 2019 at 10:43:07AM -0800, Sean Christopherson wrote:
+> > > On Sun, Mar 03, 2019 at 08:26:08PM +0800, Yang Weijiang wrote:
+> > > > On Fri, Mar 01, 2019 at 06:58:19AM -0800, Sean Christopherson wrote:
+> > > > > On Thu, Feb 28, 2019 at 04:38:44PM +0800, Yang Weijiang wrote:
+> > > > > > On Thu, Feb 28, 2019 at 08:17:15AM -0800, Sean Christopherson wrote:
+> > > > > > > On Mon, Feb 25, 2019 at 09:27:14PM +0800, Yang Weijiang wrote:
+> > > > > > > > "Load Guest CET state" bit controls whether guest CET states
+> > > > > > > > will be loaded at Guest entry. Before doing that, KVM needs
+> > > > > > > > to check if CPU CET feature is available.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > > > > > > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > > > > > > > ---
+> > > > > > > >  arch/x86/kvm/vmx.c | 32 ++++++++++++++++++++++++++++++++
+> > > > > > > >  1 file changed, 32 insertions(+)
+> > > > > > > > 
+> > > > > > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+> > > > > > > > index 89ee086e1729..d32cee9ee079 100644
+> > > > > > > > --- a/arch/x86/kvm/vmx.c
+> > > > > > > > +++ b/arch/x86/kvm/vmx.c
+> > > > > > > > @@ -55,6 +55,7 @@
+> > > > > > > >  #include <asm/mmu_context.h>
+> > > > > > > >  #include <asm/spec-ctrl.h>
+> > > > > > > >  #include <asm/mshyperv.h>
+> > > > > > > > +#include <asm/cet.h>
+> > > > > > > >  
+> > > > > > > >  #include "trace.h"
+> > > > > > > >  #include "pmu.h"
+> > > > > > > > @@ -4065,6 +4066,20 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
+> > > > > > > >  	return !(val & ~valid_bits);
+> > > > > > > >  }
+> > > > > > > >  
+> > > > > > > > +static int vmx_guest_cet_cap(struct kvm_vcpu *vcpu)
+> > > > > > > > +{
+> > > > > > > > +	u32 eax, ebx, ecx, edx;
+> > > > > > > > +
+> > > > > > > > +	/*
+> > > > > > > > +	 * Guest CET can work as long as HW supports the feature, independent
+> > > > > > > > +	 * to Host SW enabling status.
+> > > > > > > > +	 */
+> > > > > > > > +	cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+> > > > > > > > +
+> > > > > > > > +	return ((ecx & bit(X86_FEATURE_SHSTK)) |
+> > > > > > > > +		(edx & bit(X86_FEATURE_IBT))) ? 1 : 0;
+> > > > > > > 
+> > > > > > > Given the holes in the (current) architecture/spec, I think KVM has to
+> > > > > > > require both features to be supported in the guest to allow CR4.CET to
+> > > > > > > be enabled.
+> > > > > > The reason why I use a "OR" here is to keep CET enabling control the
+> > > > > > same as that on host, right now on host, users can select to enable  SHSTK or IBT
+> > > > > > feature by disabling the unexpected one. It's free to select SHSTK & IBT
+> > > > > > or SHSTK | IBT.
+> > > > > 
+> > > > > Which is not the same as SHSTK != IBT in *hardware*, which is effectively
+> > > > > what this is allowing for the guest.  The problem is that the architecture
+> > > > > doesn't cleanly separate the two features, i.e. we'd have a virtualization
+> > > > > hole where the guest could touch state for a disabled feature.
+> > > > > 
+> > > > > Regardless, the guest would still be able to selectively enable each CET
+> > > > > feature, it would just never see a model where SHSTK != IBT.
+> > > > Hi, Sean,
+> > > > I'd like to understand your concerns. From my point of view, e.g., 
+> > > > when only IBT is enabled, PL3_SSP MSR would be unnecessrily exposed,
+> > > > this is the design "limitation", but PL3_SSP keeps 0 if SHSTK is not
+> > > > configured. Could you detail your concerns?
+> > > 
+> > > In your approach, IA32_{S,U}_CET can be written if SHSTK or IBT is exposed
+> > > to the guest.  If only SHSTK is exposed, a devious guest can still use IBT
+> > > because it can set CR4.CET as well as the enable bits in IA32_{S,U}_CET.
+> > > Preventing the guest from using IBT in this scenario is infeasible as it
+> > > would require trapping and emulating the XSAVE as well as the relevent CET
+> > > MSRs.
+> > Cannot agree with you more!
+> > This is some design limitation, but from my point of view, once vmm
+> > exposes CET capability to guest via CPUID, it grants the guest kernel freedom to choose
+> > which features to be enabled, we don't need to add extra constraints on
+> > the usage.
+> 
+> But if KVM allows SHSTK and IBT to be toggled independently then the VMM
+> has only exposed SHSTK or IBT, not CET as whole.
+> 
+> Even if SHSTK and IBT are bundled together the guest still has to opt-in
+> to enabling each feature.  I don't see what we gain by pretending that
+> SHSTK/IBT can be individually exposed to the guest, and on the flip side
+> doing so creates a virtualization hole.
+you almost convinced me ;-), maybe I'll make the feature as a bundle in
+next release after check with kernel team. BTW, what do you mean by
+saying "create a virtualization hole"? Is it what you stated in above
+reply?
