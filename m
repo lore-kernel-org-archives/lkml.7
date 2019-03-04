@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1826BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BF7C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF90920823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DED20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551689301;
-	bh=A2Z1Cr0jmseJa1A6X8HhOmiVctKkvEI5XEqPkjLz2Uk=;
+	s=default; t=1551689307;
+	bh=qjldsCivrzESreFPKrmGj2NY8YUxsZQbFhWHeSUUsQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OEwm919mtw6nafmQ8ji/VB7dq4q4SYdCWA/qn/BkxjSwzQmE1lQqERjnYJh6Uchj/
-	 JNIfj2GRGtoRbH6ial88kdkkrCBpsjtRDRH0ta1msxM85tDuVg415kgZS+e3S7GWQd
-	 /Jx1QybZbZeOP8p7zEHDTzky4DFPOGQoGLGfPGyc=
+	b=NjtTYWkQjfs72b5JCHNAqSRSlVnGpdslTbGWdo74vVzPY80MOE0uSQoOFNXeKRVY2
+	 m2gk0UA4Yz+CgVkEB4m/2EP3nCq/If3I0P/ke/kmXU0NESASY5GlX9xxIz0IUKktZV
+	 GmHIZ0sjsYXPNL9WmfOY6X5C69ut3NPs8uS99Adc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfCDIsU (ORCPT
+        id S1726308AbfCDIWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:48:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37870 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:22:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726344AbfCDIWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:22:53 -0500
+        id S1726260AbfCDIWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:22:44 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DF2421019;
-        Mon,  4 Mar 2019 08:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61EA921473;
+        Mon,  4 Mar 2019 08:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687772;
-        bh=A2Z1Cr0jmseJa1A6X8HhOmiVctKkvEI5XEqPkjLz2Uk=;
+        s=default; t=1551687762;
+        bh=qjldsCivrzESreFPKrmGj2NY8YUxsZQbFhWHeSUUsQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I4qEfacWEWZPftRhKh8Oa9GdRTGSFJCraQWU4iJx8Vlwj/KrDBGLRFWZ0orcaXgMy
-         m+bl7i1dTREcYJI2XrZAJAucYgG+NGG8pvkL7Gv4SrlEEpFw8IsD1MJ+BAyeK4Rdtx
-         jOLsNmL99G6OEWrSGiFz48CumMfJOy66j5gyjqaw=
+        b=hMg52xP7eIkg99+pDWOtKE4zlws7sLrhy3oFreyfY4ltgA5+7meRsS5VufrI2U0Ar
+         GhR6yqE2Jh22PhJy6pN8zVCsRdG9zxLqwe1tvTeYw/yPj1CUmdXKDDiQrbxmP2aiyn
+         CNg6yw9kec4xU+shqZWGoNreLtuMdCmA8XX9xP3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Copeland <bobcopeland@fb.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 16/32] mac80211: fix miscounting of ttl-dropped frames
-Date:   Mon,  4 Mar 2019 09:22:04 +0100
-Message-Id: <20190304081603.455621727@linuxfoundation.org>
+        stable@vger.kernel.org, Silvio Cesare <silvio.cesare@gmail.com>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will.deacon@arm.com>, Greg KH <greg@kroah.com>,
+        Willy Tarreau <w@1wt.eu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 13/32] ASoC: imx-audmux: change snprintf to scnprintf for possible overflow
+Date:   Mon,  4 Mar 2019 09:22:01 +0100
+Message-Id: <20190304081603.247465810@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081602.307094059@linuxfoundation.org>
 References: <20190304081602.307094059@linuxfoundation.org>
@@ -66,41 +73,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a0dc02039a2ee54fb4ae400e0b755ed30e73e58c ]
+[ Upstream commit c407cd008fd039320d147088b52d0fa34ed3ddcb ]
 
-In ieee80211_rx_h_mesh_fwding, we increment the 'dropped_frames_ttl'
-counter when we decrement the ttl to zero.  For unicast frames
-destined for other hosts, we stop processing the frame at that point.
+Change snprintf to scnprintf. There are generally two cases where using
+snprintf causes problems.
 
-For multicast frames, we do not rebroadcast it in this case, but we
-do pass the frame up the stack to process it on this STA.  That
-doesn't match the usual definition of "dropped," so don't count
-those as such.
+1) Uses of size += snprintf(buf, SIZE - size, fmt, ...)
+In this case, if snprintf would have written more characters than what the
+buffer size (SIZE) is, then size will end up larger than SIZE. In later
+uses of snprintf, SIZE - size will result in a negative number, leading
+to problems. Note that size might already be too large by using
+size = snprintf before the code reaches a case of size += snprintf.
 
-With this change, something like `ping6 -i0.2 ff02::1%mesh0` from a
-peer in a ttl=1 network no longer increments the counter rapidly.
+2) If size is ultimately used as a length parameter for a copy back to user
+space, then it will potentially allow for a buffer overflow and information
+disclosure when size is greater than SIZE. When the size is used to index
+the buffer directly, we can have memory corruption. This also means when
+size = snprintf... is used, it may also cause problems since size may become
+large.  Copying to userspace is mitigated by the HARDENED_USERCOPY kernel
+configuration.
 
-Signed-off-by: Bob Copeland <bobcopeland@fb.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+The solution to these issues is to use scnprintf which returns the number of
+characters actually written to the buffer, so the size variable will never
+exceed SIZE.
+
+Signed-off-by: Silvio Cesare <silvio.cesare@gmail.com>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Greg KH <greg@kroah.com>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/fsl/imx-audmux.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index af02d2136a066..7013b37637556 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -2510,7 +2510,9 @@ ieee80211_rx_h_mesh_fwding(struct ieee80211_rx_data *rx)
- 	skb_set_queue_mapping(skb, q);
+diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
+index fc57da341d610..136df38c4536c 100644
+--- a/sound/soc/fsl/imx-audmux.c
++++ b/sound/soc/fsl/imx-audmux.c
+@@ -86,49 +86,49 @@ static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
+ 	if (!buf)
+ 		return -ENOMEM;
  
- 	if (!--mesh_hdr->ttl) {
--		IEEE80211_IFSTA_MESH_CTR_INC(ifmsh, dropped_frames_ttl);
-+		if (!is_multicast_ether_addr(hdr->addr1))
-+			IEEE80211_IFSTA_MESH_CTR_INC(ifmsh,
-+						     dropped_frames_ttl);
- 		goto out;
+-	ret = snprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
++	ret = scnprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
+ 		       pdcr, ptcr);
+ 
+ 	if (ptcr & IMX_AUDMUX_V2_PTCR_TFSDIR)
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxFS output from %s, ",
+ 				audmux_port_string((ptcr >> 27) & 0x7));
+ 	else
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxFS input, ");
+ 
+ 	if (ptcr & IMX_AUDMUX_V2_PTCR_TCLKDIR)
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxClk output from %s",
+ 				audmux_port_string((ptcr >> 22) & 0x7));
+ 	else
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"TxClk input");
+ 
+-	ret += snprintf(buf + ret, PAGE_SIZE - ret, "\n");
++	ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
+ 
+ 	if (ptcr & IMX_AUDMUX_V2_PTCR_SYN) {
+-		ret += snprintf(buf + ret, PAGE_SIZE - ret,
++		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 				"Port is symmetric");
+ 	} else {
+ 		if (ptcr & IMX_AUDMUX_V2_PTCR_RFSDIR)
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxFS output from %s, ",
+ 					audmux_port_string((ptcr >> 17) & 0x7));
+ 		else
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxFS input, ");
+ 
+ 		if (ptcr & IMX_AUDMUX_V2_PTCR_RCLKDIR)
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxClk output from %s",
+ 					audmux_port_string((ptcr >> 12) & 0x7));
+ 		else
+-			ret += snprintf(buf + ret, PAGE_SIZE - ret,
++			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 					"RxClk input");
  	}
+ 
+-	ret += snprintf(buf + ret, PAGE_SIZE - ret,
++	ret += scnprintf(buf + ret, PAGE_SIZE - ret,
+ 			"\nData received from %s\n",
+ 			audmux_port_string((pdcr >> 13) & 0x7));
  
 -- 
 2.19.1
