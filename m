@@ -2,36 +2,43 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA66C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C15C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA9B20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905C320835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbfCDD6A (ORCPT
+        id S1726096AbfCDD6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 22:58:00 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:36741 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725974AbfCDD6A (ORCPT
+        Sun, 3 Mar 2019 22:58:11 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:43853 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725974AbfCDD6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 22:58:00 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TLtwN0Q_1551671875;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TLtwN0Q_1551671875)
+        Sun, 3 Mar 2019 22:58:11 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TLtryTT_1551671887;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TLtryTT_1551671887)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 04 Mar 2019 11:57:56 +0800
+          Mon, 04 Mar 2019 11:58:07 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     linux-kernel@zh-kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, harryxiyou@gmail.com, corbet@lwn.net
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>
-Subject: [PATCH 00/20] origanize Chinese kernel docs
-Date:   Mon,  4 Mar 2019 11:57:23 +0800
-Message-Id: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Li Zefan <lizefan@huawei.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Coly Li <colyli@suse.de>,
+        Federico Vaga <federico.vaga@vaga.pv.it>
+Subject: [PATCH 01/20] docs/zh_CN: add disclaimer file
+Date:   Mon,  4 Mar 2019 11:57:24 +0800
+Message-Id: <20190304035744.155203-2-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
+In-Reply-To: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
+References: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -39,71 +46,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This a disclaimer file which will be included in Chinese files
+as header. To reduce the same common contents copy.
 
-The following patch aims to upstream kernel doc.
+Most of contents quoted from Federico Vaga's file:
+Documentation/translations/it_IT/disclaimer-ita.rst.
+Thanks a lot!
 
-you can view them with the link http://176.122.172.82/translations/zh_CN/index.html 
-
-Or make and review docs on your self box:
-
-	make htmldocs SPHINXDIRS=translations/zh_CN 
-	lynx Documentation/output/translations/zh_CN/index.html
-
-Any comments are appreciated!
-
-Cheers!
-Alex
-
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Harry Wei <harryxiyou@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Li Zefan <lizefan@huawei.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Coly Li <colyli@suse.de>
+Cc: Federico Vaga <federico.vaga@vaga.pv.it>
 ---
-Alex Shi (20):
-  docs/zh_CN: add disclaimer file
-  docs/zh_CN: move process related docs into process dir
-  docs/zh_CN: change Chinese index to know process dir
-  docs/zh_CN: add index file into process dir
-  docs/zh_CN: rename HOWTO into process directory
-  docs/zh_CN: howto format changes
-  docs/zh_CN: rename SubmittingPatches for html links
-  docs/zh_CN: format the submitting-patches doc to rst
-  docs/zh_CN: rename stable_kernel_rules doc
-  docs/zh_CN: rst format change for stable-kernel-rules
-  docs/zh_CN: rename email-clients.txt as email-clients.rst
-  docs/zh_CN: do rst format for email-clients.rst
-  docs/zh_CN: rename volatile-consider-harmful doc
-  docs/zh_CN: volatile doc format changes
-  docs/zh_CN: rename SubmittingDrivers
-  docs/zh_CN: format submitting drivers as rst
-  docs/zh_CN: rename magic-numbers as rst doc
-  docs/zh_CN: format the magic-number doc as rst
-  docs/zh_CN: rename stable_api_nonsense.txt as stable-api-nonsense.rst
-  docs/zh_CN: format stable-api-nonsense
-
- .../translations/zh_CN/disclaimer-zh_CN.rst   |  11 ++
- Documentation/translations/zh_CN/index.rst    |  17 +-
- .../translations/zh_CN/magic-number.txt       | 153 ------------------
- .../zh_CN/{ => process}/coding-style.rst      |   0
- .../email-clients.rst}                        |  53 +++---
- .../zh_CN/{HOWTO => process/howto.rst}        |  37 ++---
- .../translations/zh_CN/process/index.rst      |  55 +++++++
- .../zh_CN/process/magic-number.rst            | 151 +++++++++++++++++
- .../stable-api-nonsense.rst}                  |  32 ++--
- .../stable-kernel-rules.rst}                  |  32 ++--
- .../submitting-drivers.rst}                   |  30 ++--
- .../submitting-patches.rst}                   |  36 ++---
- .../volatile-considered-harmful.rst}          |  35 ++--
- 13 files changed, 334 insertions(+), 308 deletions(-)
+ Documentation/translations/zh_CN/disclaimer-zh_CN.rst | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
  create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
- delete mode 100644 Documentation/translations/zh_CN/magic-number.txt
- rename Documentation/translations/zh_CN/{ => process}/coding-style.rst (100%)
- rename Documentation/translations/zh_CN/{email-clients.txt => process/email-clients.rst} (82%)
- rename Documentation/translations/zh_CN/{HOWTO => process/howto.rst} (95%)
- create mode 100644 Documentation/translations/zh_CN/process/index.rst
- create mode 100644 Documentation/translations/zh_CN/process/magic-number.rst
- rename Documentation/translations/zh_CN/{stable_api_nonsense.txt => process/stable-api-nonsense.rst} (89%)
- rename Documentation/translations/zh_CN/{stable_kernel_rules.txt => process/stable-kernel-rules.rst} (76%)
- rename Documentation/translations/zh_CN/{SubmittingDrivers => process/submitting-drivers.rst} (86%)
- rename Documentation/translations/zh_CN/{SubmittingPatches => process/submitting-patches.rst} (93%)
- rename Documentation/translations/zh_CN/{volatile-considered-harmful.txt => process/volatile-considered-harmful.rst} (81%)
 
+diff --git a/Documentation/translations/zh_CN/disclaimer-zh_CN.rst b/Documentation/translations/zh_CN/disclaimer-zh_CN.rst
+new file mode 100644
+index 000000000000..0de5dfb069ca
+--- /dev/null
++++ b/Documentation/translations/zh_CN/disclaimer-zh_CN.rst
+@@ -0,0 +1,11 @@
++:orphan:
++
++.. warning::
++   The purpose of this file is to be easier to read and understand for Chinese
++   speakers and is not intended as a fork. So, if you have any comments or
++   updates for this file please try to update the original English file first.
++
++.. note::
++   If you find any difference between this document and the original file or a
++   problem with the translation, please contact the maintainer of this file,
++   or get help from Alex Shi <alex.shi@linux.alibaba.com>
 -- 
 2.19.1.856.g8858448bb
 
