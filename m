@@ -2,797 +2,144 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB7FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5732C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFF920830
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:05:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Hjk2QivE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aPKJ53+Z"
+	by mail.kernel.org (Postfix) with ESMTP id A672120830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551657972;
+	bh=vmM9GAzgfSke43zWaIHKxOMAgkbDQLdo28Fr0H9TmwQ=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=do4nIaUXz1rk5VeYb1q312046wGXGidfvFPLDndJcn9m85P47cVc2ynzE8ZUSB0oK
+	 proXOdgWtOSDtilPZ+xoWIhz/oTunmjHnDaEOxWEjfs+nkN3WIpAh/B8Wp8Y/T5pM0
+	 BTY8g1enNU8TDSNLOLscMQOFBkhTROe4i/oU+ZDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfCDAEp (ORCPT
+        id S1726095AbfCDAGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 19:04:45 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:33473 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725933AbfCDAEp (ORCPT
+        Sun, 3 Mar 2019 19:06:10 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53130 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfCDAGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 19:04:45 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id B88C521A29;
-        Sun,  3 Mar 2019 19:04:43 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 03 Mar 2019 19:04:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        message-id:in-reply-to:references:date:from:to:cc:subject
-        :content-type; s=fm2; bh=34Gi6QpAI5R57Hv1oLiSah0KDNglWoPGsH61jOT
-        HrtA=; b=Hjk2QivEpC6gxfJzN3pcHWwmQ7qRMpjQg7WVu9PJ8IiOtut+nN52zpN
-        QATgd6u4cRqOCCnN+6dunUF0D16XxArFKM/NkeOj+vC1BsUlm8ipYrs6/tK4N0PF
-        Od0dU1runWR4IPQYFVxxapavI/sajN2bYfEy3l5k7ZoZ2220JqaK3pxsHn0auMh0
-        BzZ1UdNfRskdoX34zeXe54P6G9bLSorvtabgJwdUNjNtnj6YXAYwxtt1HUWNHZDa
-        Zp/NqPplVkaLUUACoPl45N0WprFVJwkUaJku1bjEuHhYhgnFgTr7mhvAYNtdSdhe
-        sPCD2IZMpdbXqot/6M9+uH+NW/AzqyA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:references:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=34Gi6QpAI5R57Hv1o
-        LiSah0KDNglWoPGsH61jOTHrtA=; b=aPKJ53+ZBjwoosO3YicXbPuexWAQT5fcp
-        57GZywncZUlym7bA8YLTYOaj/L0QRJntKnU3KbVyFAv7lBEqItPIZJFfHlG5rA+B
-        H2fwOZ1wLlJ7rP/4HuCUpevMuP5QAkT4hNRz9qImztr5ydSYGb+kudWgjr1X10w1
-        H4mNnHeJPBVyoNAdrb6ZMgkhwbJAg/7MBZ63kEbmq32A3CY6kq5yaap/2bR9kNo0
-        lbRTD3K6oP/jY1Vsv9bxGi4u2P+yWMuz9hsMYEt/NwPpXzv0463W5c6xEfH39/Ad
-        j0msiRtoOo9aZVHWacqmo46jdBM/Wd6zNNKQTBkNndf2+5A2HGd/w==
-X-ME-Sender: <xms:mWt8XO5zyeqm1087ef3AwrFneB7y5ghgBQdB0gGZQPvIeJM9zyTiog>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrfedtgdduhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgurhgv
-    ficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgvrhfu
-    ihiivgeptd
-X-ME-Proxy: <xmx:mWt8XDx_WRUhOi-DZLU9wxh_tbCzhM_7CZ--dam95NVu-RWQKnJ0hA>
-    <xmx:mWt8XI_7ztvJ2Lj2DwHkX9Po3KAM0SieCfiUU88JzbH3Q3I-GS8-PQ>
-    <xmx:mWt8XPF_asoMPqXHScakRw4Wdxfz6KiZg1oQdqr6RUK1fy2BBVm9rw>
-    <xmx:m2t8XLnxNjFDRj6PW-7tMNhTkfxsLwDNelgl2SfuaOeRpBvxVA2kIg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 29B147C1EB; Sun,  3 Mar 2019 19:04:41 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.5-925-g644bf8c-fmstable-20190228v5
-X-Me-Personality: 52947553
-Message-Id: <19097a78-7066-4fcd-aa79-aca4a8c3cb0c@www.fastmail.com>
-In-Reply-To: <20190228015223.34563-1-venture@google.com>
-References: <20190228015223.34563-1-venture@google.com>
-Date:   Sun, 03 Mar 2019 19:04:40 -0500
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Patrick Venture" <venture@google.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Joel Stanley" <joel@jms.id.au>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-Subject: Re: [PATCH v5 2/2] drivers/misc: Add Aspeed P2A control driver
-Content-Type: text/plain
+        Sun, 3 Mar 2019 19:06:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=ESXILQAfTfwpf/2QlyTG4dCNJGuUnCFuCDAA0h5hZSE=; b=JiYGkU2LSUxP
+        wX4HtgXfd/J1QbIgaxkzxI95O5FS5W8hvDpC4bYfWw/WDBdrnZ9wRgci1Aj8QJKZ9Jxn6Pd72tP6N
+        Q4W0h9fdL3fYMJhExxXDbyChXmfw4PuwfwqWyK4K/d0N8+0W9MuKfXA6Gibj8TFUk3xwU7uyzZk1P
+        ea0FY=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h0b7F-0007O0-QE; Mon, 04 Mar 2019 00:05:57 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id F3B20440082; Mon,  4 Mar 2019 00:05:56 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
+        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: stm32: sai: fix oversampling mode" to the asoc tree
+In-Reply-To:  <1551359965-25228-5-git-send-email-olivier.moysan@st.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190304000556.F3B20440082@finisterre.ee.mobilebroadband>
+Date:   Mon,  4 Mar 2019 00:05:56 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrick.
+The patch
 
-I've got some minor comments, otherwise it looks reasonable to me.
+   ASoC: stm32: sai: fix oversampling mode
 
-On Thu, 28 Feb 2019, at 12:22, Patrick Venture wrote:
-> The ASPEED AST2400, and AST2500 in some configurations include a
-> PCI-to-AHB MMIO bridge.  This bridge allows a server to read and write
-> in the BMC's physical address space.  This feature is especially useful
-> when using this bridge to send large files to the BMC.
-> 
-> The host may use this to send down a firmware image by staging data at a
-> specific memory address, and in a coordinated effort with the BMC's
-> software stack and kernel, transmit the bytes.
-> 
-> This driver enables the BMC to unlock the PCI bridge on demand, and
-> configure it via ioctl to allow the host to write bytes to an agreed
-> upon location.  In the primary use-case, the region to use is known
-> apriori on the BMC, and the host requests this information.  Once this
-> request is received, the BMC's software stack will enable the bridge and
-> the region and then using some software flow control (possibly via IPMI
-> packets), copy the bytes down.  Once the process is complete, the BMC
-> will disable the bridge and unset any region involved.
-> 
-> The default behavior of this bridge when present is: enabled and all
-> regions marked read-write.  This driver will fix the regions to be
-> read-only and then disable the bridge entirely.
-> 
-> The memory regions protected are:
->  * BMC flash MMIO window
->  * System flash MMIO windows
->  * SOC IO (peripheral MMIO)
->  * DRAM
-> 
-> The DRAM region itself is all of DRAM and cannot be further specified.
-> Once the PCI bridge is enabled, the host can read all of DRAM, and if
-> the DRAM section is write-enabled, then it can write to all of it.
-> 
-> Signed-off-by: Patrick Venture <venture@google.com>
-> ---
-> Changes for v5:
-> - Fixup missing exit condition and remove extra jump.
-> Changes for v4:
-> - Added ioctl for reading back the memory-region configuration.
-> - Cleaned up some unused variables.
-> Changes for v3:
-> - Deleted unused read and write methods.
-> Changes for v2:
-> - Dropped unused reads.
-> - Moved call to disable bridge to before registering device.
-> - Switch from using regs to using a syscon regmap. <<< IN PROGRESS
-> - Updated the commit message. <<< TODO
-> - Updated the bit flipped for SCU180_ENP2A
-> - Dropped boolean region_specified variable.
-> - Renamed p2a_ctrl in _probe to misc_ctrl per suggestion.
-> - Renamed aspeed_p2a_region_search to aspeed_p2a_region_acquire
-> - Updated commit message.
-> ---
->  drivers/misc/Kconfig                 |   8 +
->  drivers/misc/Makefile                |   1 +
->  drivers/misc/aspeed-p2a-ctrl.c       | 456 +++++++++++++++++++++++++++
->  include/uapi/linux/aspeed-p2a-ctrl.h |  59 ++++
->  4 files changed, 524 insertions(+)
->  create mode 100644 drivers/misc/aspeed-p2a-ctrl.c
->  create mode 100644 include/uapi/linux/aspeed-p2a-ctrl.h
-> 
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index f417b06e11c5..9de1bafe5606 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -485,6 +485,14 @@ config VEXPRESS_SYSCFG
->  	  bus. System Configuration interface is one of the possible means
->  	  of generating transactions on this bus.
->  
-> +config ASPEED_P2A_CTRL
-> +	depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-> +	tristate "Aspeed ast2400/2500 HOST P2A VGA MMIO to BMC bridge control"
-> +	help
-> +	  Control Aspeed ast2400/2500 HOST P2A VGA MMIO to BMC mappings 
-> through
-> +	  ioctl()s, the driver also provides an interface for userspace 
-> mappings to
-> +	  a pre-defined region.
-> +
->  config ASPEED_LPC_CTRL
->  	depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
->  	tristate "Aspeed ast2400/2500 HOST LPC to BMC bridge control"
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index e39ccbbc1b3a..57577aee354f 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -55,6 +55,7 @@ obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
->  obj-$(CONFIG_CXL_BASE)		+= cxl/
->  obj-$(CONFIG_ASPEED_LPC_CTRL)	+= aspeed-lpc-ctrl.o
->  obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
-> +obj-$(CONFIG_ASPEED_P2A_CTRL)	+= aspeed-p2a-ctrl.o
->  obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
->  obj-$(CONFIG_OCXL)		+= ocxl/
->  obj-y				+= cardreader/
-> diff --git a/drivers/misc/aspeed-p2a-ctrl.c 
-> b/drivers/misc/aspeed-p2a-ctrl.c
-> new file mode 100644
-> index 000000000000..6bde4f64632d
-> --- /dev/null
-> +++ b/drivers/misc/aspeed-p2a-ctrl.c
-> @@ -0,0 +1,456 @@
-> +/*
-> + * Copyright 2019 Google Inc
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
+has been applied to the asoc tree at
 
-Should be a SPDX header instead.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> + *
-> + * Provides a simple driver to control the ASPEED P2A interface which 
-> allows
-> + * the host to read and write to various regions of the BMC's memory.
-> + */
-> +
-> +#include <linux/fs.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/mm.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include <linux/aspeed-p2a-ctrl.h>
-> +
-> +#define DEVICE_NAME	"aspeed-p2a-ctrl"
-> +
-> +/* SCU2C is a Misc. Control Register. */
-> +#define SCU2C 0x2c
-> +/* SCU180 is the PCIe Configuration Setting Control Register. */
-> +#define SCU180 0x180
-> +/* Bit 1 controls the P2A bridge, while bit 0 controls the entire VGA 
-> device
-> + * on the PCI bus. */
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-As this wraps to multiple lines the trailing `*/` should be on a separate line.
-There are a few instances of this throughout.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> +#define SCU180_ENP2A BIT(1)
-> +
-> +/* The ast2400/2500 both have six ranges. */
-> +#define P2A_REGION_COUNT 6
-> +
-> +struct region {
-> +	u32 min;
-> +	u32 max;
-> +	u32 bit;
-> +};
-> +
-> +struct aspeed_p2a_model_data {
-> +	/* min, max, bit */
-> +	struct region regions[P2A_REGION_COUNT];
-> +};
-> +
-> +struct aspeed_p2a_ctrl {
-> +	struct miscdevice miscdev;
-> +	struct regmap *regmap;
-> +
-> +	const struct aspeed_p2a_model_data *config;
-> +
-> +	/* Access to these needs to be locked, held via probe, mapping ioctl,
-> +	 * and release, remove.
-> +	 */
-> +	struct mutex tracking;
-> +	u32 readers;
-> +	u32 readerwriters[P2A_REGION_COUNT];
-> +
-> +	phys_addr_t mem_base;
-> +	resource_size_t mem_size;
-> +};
-> +
-> +struct aspeed_p2a_user {
-> +	struct file *file;
-> +	struct aspeed_p2a_ctrl *parent;
-> +
-> +	/** The entire memory space is opened for reading once the bridge is
-> +	 * enabled, therefore this needs only to be tracked once per user.
-> +	 * If any user has it open for read, the bridge must stay enabled.
-> +	 */
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Generally the descriptions for the members are described in a kerneldoc
-comment above the struct definition. Also you're mixing the kernel-doc
-comment opener (`/**`) with non-kernel-doc comments (`/*` on the
-tracking` mutex in `struct aspeed_p2a_ctrl` above).
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> +	u32 read;
-> +
-> +	/** Each entry of the array corresponds to a P2A Region.  If the user
-> +	 * opens for read or readwrite, the reference goes up here.  On 
-> release,
-> +	 * this array is walked and references adjusted accordingly.
-> +	 */
-> +	u32 readwrite[P2A_REGION_COUNT];
-> +};
-> +
-> +static void aspeed_p2a_enable_bridge(struct aspeed_p2a_ctrl *p2a_ctrl)
-> +{
-> +	regmap_update_bits(p2a_ctrl->regmap, SCU180, SCU180_ENP2A, 
-> SCU180_ENP2A);
+Thanks,
+Mark
 
-Wrap this at 80 chars.
+From 71d9537fada47762a1a1b33a8a1f95a92d7edc11 Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Thu, 28 Feb 2019 14:19:24 +0100
+Subject: [PATCH] ASoC: stm32: sai: fix oversampling mode
 
-> +}
-> +
-> +static void aspeed_p2a_disable_bridge(struct aspeed_p2a_ctrl *p2a_ctrl)
-> +{
-> +	regmap_update_bits(p2a_ctrl->regmap, SCU180, SCU180_ENP2A, 0);
-> +}
-> +
-> +static int aspeed_p2a_mmap(struct file *file, struct vm_area_struct 
-> *vma)
-> +{
-> +	struct aspeed_p2a_user *priv = file->private_data;
-> +	struct aspeed_p2a_ctrl *ctrl = priv->parent;
-> +
-> +	if (ctrl->mem_base == 0 && ctrl->mem_size == 0)
-> +		return -EINVAL;
-> +
-> +	unsigned long vsize = vma->vm_end - vma->vm_start;
-> +	pgprot_t prot = vma->vm_page_prot;
-> +
-> +	if (vma->vm_pgoff + vsize > ctrl->mem_base + ctrl->mem_size)
-> +		return -EINVAL;
-> +
-> +	/* ast2400/2500 AHB accesses are not cache coherent */
-> +	prot = pgprot_noncached(prot);
-> +
-> +	if (remap_pfn_range(vma, vma->vm_start,
-> +		(ctrl->mem_base >> PAGE_SHIFT) + vma->vm_pgoff,
-> +		vsize, prot))
-> +		return -EAGAIN;
-> +
-> +	return 0;
-> +}
-> +
-> +static void aspeed_p2a_region_acquire(struct aspeed_p2a_user *priv,
-> +		struct aspeed_p2a_ctrl *ctrl,
-> +		struct aspeed_p2a_ctrl_mapping *map)
-> +{
-> +	int i;
-> +	u32 base, end;
-> +
-> +	base = map->addr;
-> +	end = map->addr + (map->length - 1);
-> +
-> +	/* If the value is a legal u32, it will find a match. */
-> +	for (i = 0; i < P2A_REGION_COUNT; i++) {
-> +		const struct region *curr = &ctrl->config->regions[i];
-> +
-> +		/* If the top of this region is lower than your base, skip it.
-> +		 */
-> +		if (curr->max < base)
-> +			continue;
-> +
-> +		/* If the bottom of this region is higher than your end, bail.
-> +		 */
-> +		if (curr->min > end)
-> +			break;
-> +		/* Lock this and update it, therefore it someone else is
-> +		 * closing their file out, this'll preserve the increment.
-> +		 */
-> +		mutex_lock(&ctrl->tracking);
-> +		ctrl->readerwriters[i] += 1;
-> +		mutex_unlock(&ctrl->tracking);
-> +
-> +		/* Track with the user, so when they close their file, we can
-> +		 * decrement properly.
-> +		 */
+Set OSR bit if mclk/fs ratio is 512.
 
-The comments about tracking for decrement-on-release purposes is
-useful, but I think the other comments in this loop are probably
-unnecessary. Up to you though.
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/stm/stm32_sai_sub.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-> +		priv->readwrite[i] += 1;
-> +
-> +		/* Enable the region as read-write. */
-> +		regmap_update_bits(ctrl->regmap, SCU2C, curr->bit, 0);
-> +	}
-> +}
-> +
-> +static long aspeed_p2a_ioctl(struct file *file, unsigned int cmd,
-> +		unsigned long data)
-> +{
-> +	struct aspeed_p2a_user *priv = file->private_data;
-> +	struct aspeed_p2a_ctrl *ctrl = priv->parent;
-> +	void __user *arg = (void __user *)data;
-> +	struct aspeed_p2a_ctrl_mapping map;
-> +
-> +	if (copy_from_user(&map, arg, sizeof(map)))
-> +		return -EFAULT;
-> +
-> +	switch (cmd) {
-> +	case ASPEED_P2A_CTRL_IOCTL_SET_WINDOW:
-> +		/* If they want a region to be read-only, since the entire
-> +		 * region is read-only once enabled, we just need to track this
-> +		 * user wants to read from the bridge, and if it's not enabled.
-> +		 * Enable it.
-> +		 */
-> +		if (map.flags == ASPEED_P2A_CTRL_READ_ONLY) {
-> +			mutex_lock(&ctrl->tracking);
-> +			ctrl->readers += 1;
-> +			mutex_unlock(&ctrl->tracking);
-> +
-> +			/* Track with the user, so when they close their file,
-> +			 * we can decrement properly.
-> +			 */
-> +			priv->read += 1;
-> +		} else if (map.flags == ASPEED_P2A_CTRL_READWRITE) {
-> +			aspeed_p2a_region_acquire(priv, ctrl, &map);
-> +		} else {
-> +			/* Invalid map flags. */
-> +			return -EINVAL;
-> +		}
-> +
-> +		aspeed_p2a_enable_bridge(ctrl);
-> +		return 0;
-> +	case ASPEED_P2A_CTRL_IOCTL_GET_MEMORY_CONFIG:
-> +		/* This is a request for the memory-region and corresponding
-> +		 * length that is used by the driver for mmap. */
-> +
-> +		map.flags = 0;
-> +		map.addr = ctrl->mem_base;
-> +		map.length = ctrl->mem_size;
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index cad415e03b5e..cb658463ccd1 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -913,7 +913,7 @@ static int stm32_sai_configure_clock(struct snd_soc_dai *cpu_dai,
+ 				     struct snd_pcm_hw_params *params)
+ {
+ 	struct stm32_sai_sub_data *sai = snd_soc_dai_get_drvdata(cpu_dai);
+-	int div = 0;
++	int div = 0, cr1 = 0;
+ 	int sai_clk_rate, mclk_ratio, den;
+ 	unsigned int rate = params_rate(params);
+ 
+@@ -958,13 +958,19 @@ static int stm32_sai_configure_clock(struct snd_soc_dai *cpu_dai,
+ 		} else {
+ 			if (sai->mclk_rate) {
+ 				mclk_ratio = sai->mclk_rate / rate;
+-				if ((mclk_ratio != 512) &&
+-				    (mclk_ratio != 256)) {
++				if (mclk_ratio == 512) {
++					cr1 = SAI_XCR1_OSR;
++				} else if (mclk_ratio != 256) {
+ 					dev_err(cpu_dai->dev,
+ 						"Wrong mclk ratio %d\n",
+ 						mclk_ratio);
+ 					return -EINVAL;
+ 				}
++
++				regmap_update_bits(sai->regmap,
++						   STM_SAI_CR1_REGX,
++						   SAI_XCR1_OSR, cr1);
++
+ 				div = stm32_sai_get_clk_div(sai, sai_clk_rate,
+ 							    sai->mclk_rate);
+ 				if (div < 0)
+-- 
+2.20.1
 
-Thinking out loud here - do we want to allow ourselves an escape hatch
-for supporting multiple reserved memory locations? Otherwise we might
-need a new ioctl() for it. On the flip-side, not actually having this use-case
-means we might break the implementation anyway, so it could be a
-double-edged sword. Thoughts?
-
-> +
-> +		return copy_to_user(arg, &map, sizeof(map)) ? -EFAULT : 0;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +
-> +/**
-> + * When a user opens this file, we create a structure to track their 
-> mappings.
-> + *
-> + * A user can map a region as read-only (bridge enabled), or 
-> read-write (bit
-> + * flipped, and bridge enabled).  Either way, this tracking is used, 
-> s.t. when
-> + * they release the device references are handled.
-> + *
-> + * The bridge is not enabled until a user calls an ioctl to map a 
-> region,
-> + * simply opening the device does not enable it.
-> + */
-> +static int aspeed_p2a_open(struct inode *inode, struct file *file)
-> +{
-> +	struct aspeed_p2a_user *priv;
-> +
-> +	priv = kmalloc(sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->file = file;
-> +	priv->read = 0;
-> +	memset(priv->readwrite, 0, sizeof(priv->readwrite));
-> +
-> +	/* The file's private_data is initialized to the p2a_ctrl. */
-> +	priv->parent = file->private_data;
-> +
-> +	/* Set the file's private_data to the user's data. */
-> +	file->private_data = priv;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * This will close the users mappings.  It will go through what they 
-> had opened
-> + * for readwrite, and decrement those counts.  If at the end, this is 
-> the last
-> + * user, it'll close the bridge.
-> + */
-> +static int aspeed_p2a_release(struct inode *inode, struct file *file)
-> +{
-> +	int i;
-> +	u32 value;
-> +	u32 bits = 0;
-> +	bool open_regions = false;
-> +	struct aspeed_p2a_user *priv = file->private_data;
-> +
-> +	/* Lock others from changing these values until everything is updated
-> +	 * in one pass */
-> +	mutex_lock(&priv->parent->tracking);
-> +
-> +	priv->parent->readers -= priv->read;;
-> +
-> +	for (i = 0; i < P2A_REGION_COUNT; i++) {
-> +		priv->parent->readerwriters[i] -= priv->readwrite[i];
-> +
-> +		if (priv->parent->readerwriters[i] > 0)
-> +			open_regions = true;
-> +		else
-> +			bits |= priv->parent->config->regions[i].bit;
-> +	}
-> +
-> +	/* Setting a bit to 1 disables the region, so let's just OR with the
-> +	 * above to disable any.
-> +	 */
-> +
-> +	/* Note, if another user is trying to ioctl, they can't grab tracking,
-> +	 * and therefore can't grab either register mutex.
-> +	 * If another user is trying to close, they can't grab tracking 
-> either.
-> +	 */
-> +	regmap_update_bits(priv->parent->regmap, SCU2C, bits, bits);
-> +
-> +	/* If parent->readers is zero and open windows is 0, disable the
-> +	 * bridge.
-> +	 */
-> +	if (!open_regions && priv->parent->readers == 0)
-> +		aspeed_p2a_disable_bridge(priv->parent);
-> +
-> +	mutex_unlock(&priv->parent->tracking);
-> +
-> +	kfree(priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations aspeed_p2a_ctrl_fops = {
-> +	.owner = THIS_MODULE,
-> +	.mmap = aspeed_p2a_mmap,
-> +	.unlocked_ioctl = aspeed_p2a_ioctl,
-> +	.open = aspeed_p2a_open,
-> +	.release = aspeed_p2a_release,
-> +};
-> +
-> +/** The regions are controlled by SCU2C */
-> +static void aspeed_p2a_disable_all(struct aspeed_p2a_ctrl *p2a_ctrl)
-> +{
-> +	int i;
-> +	u32 value = 0;
-> +
-> +	for (i = 0; i < P2A_REGION_COUNT; i++)
-> +		value |= p2a_ctrl->config->regions[i].bit;
-> +
-> +	regmap_update_bits(p2a_ctrl->regmap, SCU2C, value, value);
-> +
-> +	/* Disable the bridge. */
-> +	aspeed_p2a_disable_bridge(p2a_ctrl);
-> +}
-> +
-> +static int aspeed_p2a_ctrl_probe(struct platform_device *pdev)
-> +{
-> +	struct aspeed_p2a_ctrl *misc_ctrl;
-> +	struct device *dev;
-> +	struct resource *res, resm;
-> +	struct device_node *node;
-> +	int rc = 0;
-> +
-> +	dev = &pdev->dev;
-> +
-> +	misc_ctrl = devm_kzalloc(dev, sizeof(*misc_ctrl), GFP_KERNEL);
-> +	if (!misc_ctrl)
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&misc_ctrl->tracking);
-> +	misc_ctrl->readers = 0;
-> +	memset(misc_ctrl->readerwriters, 0, sizeof(misc_ctrl->readerwriters));
-> +
-> +	misc_ctrl->mem_size = 0;
-> +	misc_ctrl->mem_base = 0;
-> +
-> +	/* optional. */
-> +	node = of_parse_phandle(dev->of_node, "memory-region", 0);
-> +	if (node) {
-> +		rc = of_address_to_resource(node, 0, &resm);
-> +		of_node_put(node);
-> +		if (rc) {
-> +			dev_err(dev, "Couldn't address to resource for reserved memory\n");
-
-I think the message could be improved, something like "No reserved memory
-specified". Having said that, I don't think it should be an error condition either;
-our experience with aspeed-lpc-ctrl was that it was useful for the memory-region
-property to be optional. You already have:
-
-> +
-> +	if (ctrl->mem_base == 0 && ctrl->mem_size == 0)
-> +		return -EINVAL;
-
-in the mmap() callback, but we don't get that far unless someone has specified a
-zero-sized reserved-memory node. I think supporting memory-region as optional
-is just a matter of adding the same check to the GET_MEMORY_CONFIG ioctl().
-
-> +			return -ENOMEM;
-
-The system isn't out of memory so this isn't an ENOMEM condition. I think ENODEV
-is more appropriate, but if we make the memory region optional then this goes
-away anyway.
-
-> +		}
-> +
-> +		misc_ctrl->mem_size = resource_size(&resm);
-> +		misc_ctrl->mem_base = resm.start;
-> +	}
-> +
-> +	node = of_parse_phandle(dev->of_node, "syscon", 0);
-> +	if (!node) {
-> +		dev_err(dev, "Couldn't find syscon property\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	misc_ctrl->regmap = syscon_node_to_regmap(node);
-> +	if (IS_ERR(misc_ctrl->regmap)) {
-> +		dev_err(dev, "Couldn't get regmap\n");
-> +		return -ENODEV;
-> +	}
-> +	of_node_put(node);
-> +
-> +	misc_ctrl->config = of_device_get_match_data(dev);
-> +
-> +	dev_set_drvdata(&pdev->dev, misc_ctrl);
-> +
-> +	aspeed_p2a_disable_all(misc_ctrl);
-> +
-> +	misc_ctrl->miscdev.minor = MISC_DYNAMIC_MINOR;
-> +	misc_ctrl->miscdev.name = DEVICE_NAME;
-> +	misc_ctrl->miscdev.fops = &aspeed_p2a_ctrl_fops;
-> +	misc_ctrl->miscdev.parent = dev;
-> +
-> +	rc = misc_register(&misc_ctrl->miscdev);
-> +	if (rc)
-> +		dev_err(dev, "Unable to register device\n");
-> +
-> +	return rc;
-> +}
-> +
-> +static int aspeed_p2a_ctrl_remove(struct platform_device *pdev)
-> +{
-> +	struct aspeed_p2a_ctrl *p2a_ctrl = dev_get_drvdata(&pdev->dev);
-> +
-> +	misc_deregister(&p2a_ctrl->miscdev);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * bit | SCU2C | ast2400
-> + *  25 | DRAM  | 0x40000000 - 0x5FFFFFFF
-> + *  24 | SPI   | 0x30000000 - 0x3FFFFFFF
-> + *  23 | SOC   | 0x18000000 - 0x1FFFFFFF, 0x60000000 - 0xFFFFFFFF
-> + *  22 | FLASH | 0x00000000 - 0x17FFFFFF, 0x20000000 - 0x2FFFFFFF
-> + *
-> + * bit | SCU2C | ast2500
-> + *  25 | DRAM  | 0x80000000 - 0xFFFFFFFF
-> + *  24 | SPI   | 0x60000000 - 0x7FFFFFFF
-> + *  23 | SOC   | 0x10000000 - 0x1FFFFFFF, 0x40000000 - 0x5FFFFFFF
-> + *  22 | FLASH | 0x00000000 - 0x0FFFFFFF, 0x20000000 - 0x3FFFFFFF
-> + */
-
-The comment is probably unnecessary given the structure declarations
-below.
-
-> +
-> +#define SCU2C_DRAM	BIT(25)
-> +#define SCU2C_SPI	BIT(24)
-> +#define SCU2C_SOC	BIT(23)
-> +#define SCU2C_FLASH	BIT(22)
-> +
-> +static const struct aspeed_p2a_model_data ast2400_model_data = {
-> +	.regions = {
-> +		{0x00000000, 0x17FFFFFF, SCU2C_FLASH},
-> +		{0x18000000, 0x1FFFFFFF, SCU2C_SOC},
-> +		{0x20000000, 0x2FFFFFFF, SCU2C_FLASH},
-> +		{0x30000000, 0x3FFFFFFF, SCU2C_SPI},
-> +		{0x40000000, 0x5FFFFFFF, SCU2C_DRAM},
-> +		{0x60000000, 0xFFFFFFFF, SCU2C_SOC},
-> +	}
-> +};
-> +
-> +static const struct aspeed_p2a_model_data ast2500_model_data = {
-> +	.regions = {
-> +		{0x00000000, 0x0FFFFFFF, SCU2C_FLASH},
-> +		{0x10000000, 0x1FFFFFFF, SCU2C_SOC},
-> +		{0x20000000, 0x3FFFFFFF, SCU2C_FLASH},
-> +		{0x40000000, 0x5FFFFFFF, SCU2C_SOC},
-> +		{0x60000000, 0x7FFFFFFF, SCU2C_SPI},
-> +		{0x80000000, 0xFFFFFFFF, SCU2C_DRAM},
-> +	}
-> +};
-> +
-> +static const struct of_device_id aspeed_p2a_ctrl_match[] = {
-> +	{ .compatible = "aspeed,ast2400-p2a-ctrl",
-> +	  .data = &ast2400_model_data },
-> +	{ .compatible = "aspeed,ast2500-p2a-ctrl",
-> +	  .data = &ast2500_model_data },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver aspeed_p2a_ctrl_driver = {
-> +	.driver = {
-> +		.name		= DEVICE_NAME,
-> +		.of_match_table = aspeed_p2a_ctrl_match,
-> +	},
-> +	.probe = aspeed_p2a_ctrl_probe,
-> +	.remove = aspeed_p2a_ctrl_remove,
-> +};
-> +
-> +module_platform_driver(aspeed_p2a_ctrl_driver);
-> +
-> +MODULE_DEVICE_TABLE(of, aspeed_p2a_ctrl_match);
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Patrick Venture <venture@google.com>");
-> +MODULE_DESCRIPTION("Control for aspeed 2400/2500 P2A VGA HOST to BMC 
-> mappings");
-> diff --git a/include/uapi/linux/aspeed-p2a-ctrl.h 
-> b/include/uapi/linux/aspeed-p2a-ctrl.h
-> new file mode 100644
-> index 000000000000..e839cdc31db9
-> --- /dev/null
-> +++ b/include/uapi/linux/aspeed-p2a-ctrl.h
-> @@ -0,0 +1,59 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
-> +/*
-> + * Copyright 2019 Google Inc
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-
-SPDX again.
-
-> + *
-> + * Provides a simple driver to control the ASPEED P2A interface which 
-> allows
-> + * the host to read and write to various regions of the BMC's memory.
-> + */
-> +
-> +#ifndef _UAPI_LINUX_ASPEED_P2A_CTRL_H
-> +#define _UAPI_LINUX_ASPEED_P2A_CTRL_H
-> +
-> +#include <linux/ioctl.h>
-> +#include <linux/types.h>
-> +
-> +#define ASPEED_P2A_CTRL_READ_ONLY 0
-> +#define ASPEED_P2A_CTRL_READWRITE 1
-> +
-> +/*
-> + * This driver provides a mechanism for enabling or disabling the 
-> read-write
-> + * property of specific windows into the ASPEED BMC's memory.
-> + *
-> + * A user can map a region of the BMC's memory as read-only or 
-> read-write, with
-> + * the caveat that once any region is mapped, all regions are unlocked 
-> for
-> + * reading.
-> + */
-> +
-> +/**
-> + * Unlock a region of BMC physical memory for access from the host.
-> + *
-> + * Also used to read back the optional memory-region configuration for 
-> the
-> + * driver.
-> + */
-> +struct aspeed_p2a_ctrl_mapping {
-> +	__u32 addr;
-> +	__u32 length;
-> +	__u32 flags;
-> +};
-> +
-> +#define __ASPEED_P2A_CTRL_IOCTL_MAGIC 0xb3
-> +
-> +/**
-> + * This IOCTL is meant to configure a region or regions of memory 
-> given a
-> + * starting address and length to be readable by the host, or
-> + * readable-writeable. */
-> +#define ASPEED_P2A_CTRL_IOCTL_SET_WINDOW 
-> _IOW(__ASPEED_P2A_CTRL_IOCTL_MAGIC, \
-> +		0x00, struct aspeed_p2a_ctrl_mapping)
-> +
-> +/**
-> + * This IOCTL is meant to read back to the user the base address and 
-> length of
-> + * the memory-region specified to the driver for use with mmap. */
-> +#define ASPEED_P2A_CTRL_IOCTL_GET_MEMORY_CONFIG 
-> _IOWR(__ASPEED_P2A_CTRL_IOCTL_MAGIC, \
-
-Wrap this at 80?
-
-Cheers,
-
-Andrew
-
-> +		0x01, struct aspeed_p2a_ctrl_mapping)
-> +
-> +#endif /* _UAPI_LINUX_ASPEED_P2A_CTRL_H */
-> -- 
-> 2.21.0.rc2.261.ga7da99ff1b-goog
-> 
->
