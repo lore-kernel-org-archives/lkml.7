@@ -2,101 +2,57 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF09CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF04DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35D4206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8674E206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbfCDSyc (ORCPT
+        id S1727464AbfCDSzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:54:32 -0500
-Received: from mga05.intel.com ([192.55.52.43]:64202 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726787AbfCDSyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:54:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 10:54:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,440,1544515200"; 
-   d="scan'208";a="128937291"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Mar 2019 10:54:29 -0800
-Date:   Mon, 4 Mar 2019 10:54:29 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Subject: Re: [PATCH v3 3/8] KVM:CPUID: Add CPUID support for Guest CET
-Message-ID: <20190304185429.GF17120@linux.intel.com>
-References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-4-weijiang.yang@intel.com>
- <20190304184753.GD17120@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304184753.GD17120@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 4 Mar 2019 13:55:04 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:37636 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbfCDSzD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 13:55:03 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AD604147120F6;
+        Mon,  4 Mar 2019 10:55:02 -0800 (PST)
+Date:   Mon, 04 Mar 2019 10:55:02 -0800 (PST)
+Message-Id: <20190304.105502.1287424121311510730.davem@davemloft.net>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, isdn@linux-pingi.de, gustavo@embeddedor.com,
+        bigeasy@linutronix.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] isdn: mISDN: Fix potential NULL pointer dereference of
+ kzalloc
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190302212044.13638-1-pakki001@umn.edu>
+References: <20190302212044.13638-1-pakki001@umn.edu>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 04 Mar 2019 10:55:03 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 10:47:53AM -0800, Sean Christopherson wrote:
-> On Mon, Feb 25, 2019 at 09:27:11PM +0800, Yang Weijiang wrote:
-> > Guest CET SHSTK and IBT capability are reported via
-> > CPUID.(EAX=7, ECX=0):ECX[bit 7] and EDX[bit 20] respectively.
-> > Guest user mode and supervisor mode xsaves component size
-> > is reported via CPUID.(EAX=0xD, ECX=1):ECX[bit 11] and ECX[bit 12]
-> > respectively.
-> > 
-> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > ---
-> >  arch/x86/kvm/cpuid.c | 60 +++++++++++++++++++++++++++++++++-----------
-> >  arch/x86/kvm/x86.h   |  4 +++
-> >  2 files changed, 50 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > index cb1aece25b17..5e05756cc6db 100644
-> > --- a/arch/x86/kvm/cpuid.c
-> > +++ b/arch/x86/kvm/cpuid.c
-> > @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
-> >  	return xcr0;
-> >  }
-> >  
-> > +u64 kvm_supported_xss(void)
-> > +{
-> > +	u64 xss;
-> > +
-> > +	rdmsrl(MSR_IA32_XSS, xss);
-> 
-> Honest question as I haven't thought through the flows: do we actually
-> need to restrict XSS based on what's enabled in the host?  This
-> conflicts with your other statements that CET features can be enabled
-> independent of host support.
+From: Aditya Pakki <pakki001@umn.edu>
+Date: Sat,  2 Mar 2019 15:20:43 -0600
 
-Never mind, just saw Paolo's comment in a previous version about XSAVE
-being dependent on host XSS.  The below comment about caching still
-applies though.
-
-> And if we do incorporate the host status, the value should be read once
-> and cached unless we're expecting the host value to change dynamically,
-> e.g. see host_efer.
+> Allocating memory via kzalloc for phi may fail and causes a
+> NULL pointer dereference. This patch avoids such a scenario.
 > 
-> > +	xss &= KVM_SUPPORTED_XSS;
-> > +	return xss;
-> > +}
-> > +EXPORT_SYMBOL(kvm_supported_xss);
-> > +
-> >  #define F(x) bit(X86_FEATURE_##x)
-> >  
-> >  /* For scattered features from cpufeatures.h; we currently expose none */
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+
+Applied.
