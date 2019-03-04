@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AE9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6AEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5504D20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DC520823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688921;
-	bh=f7G41DJwiKagxMza1GqKVDMISw13Des8+fBCOY9qJjM=;
+	s=default; t=1551688945;
+	bh=bX3SEkUlbvyXTcQBlP/+rRt/TYEVA3VGCbGbOXPc+kY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t8RrgouFEG2lINco1n20VcPkZzBuHgckftdxXpNIgnmARVOnUnN8Bmp5WqCG3otZz
-	 7Lk7Yngadp1f8ADqhzL7Up4EN9YIW7Vb7brnHVxtjURE8C0IMPKcZIpUruIxbA0cA5
-	 z7GusWZ5xm6J1crnZcLu5t7mBybBppQXLVtygQoQ=
+	b=x9TwITtccbKYYsfQ3d2PBP9s1cLOnE9Nc/+q4F9J4XjudWdPkMReePrzSTIq4o6WQ
+	 kHO+2sUGrMSTh3qlqBvJl4yJZiWK6pkCSMaPysuUtizjUjh37yPmyhcYjT7cBzH67U
+	 4n9pt9n3HVKrlf2Jx3HoQzxI+A8c61tfRmQZ8JD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfCDIba (ORCPT
+        id S1727521AbfCDIa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:31:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33264 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:30:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbfCDIb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:31:26 -0500
+        id S1727792AbfCDIaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:30:55 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FFC9208E4;
-        Mon,  4 Mar 2019 08:31:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDD5C20823;
+        Mon,  4 Mar 2019 08:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688285;
-        bh=f7G41DJwiKagxMza1GqKVDMISw13Des8+fBCOY9qJjM=;
+        s=default; t=1551688254;
+        bh=bX3SEkUlbvyXTcQBlP/+rRt/TYEVA3VGCbGbOXPc+kY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxi6UFqEfyz8XCxeagDge6V4chuqNpG7TY4H/3B44SzFvsTixyxQsDmOL7kYcjR36
-         QStdGkJ7dYyA6FEqJ8H6Ydum3KshB8XrHaqet8X0tnOl79fvRxMQ4ZApUVI8USfvns
-         ZUXJ32QlWHGkeqGzjOQAXfq955AT/jnCASQSLCxM=
+        b=zrdavAOo/oV0zsAOBqYAysYO7UzJv+PDMTOUxJWht2REibQo8q4Nl5LUQX1y/bVhF
+         Z9XvqG+e9AAihemDmd46xr1DFZr9yVdUzfeB578E2ur4zqx2BEyoJoKfzxKss47vj4
+         WVANO9ZbXYb1MqJUj6ZKu7/ItGlzTxWt+MUCCh6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, RISC-V Patches <patches@groups.riscv.org>,
-        Linux RISC-V <linux-riscv@lists.infradead.org>,
-        Linux MIPS <linux-mips@linux-mips.org>,
-        Michael Clark <michaeljclark@mac.com>,
-        Paul Burton <paul.burton@mips.com>
-Subject: [PATCH 4.19 75/78] MIPS: fix truncation in __cmpxchg_small for short values
-Date:   Mon,  4 Mar 2019 09:22:58 +0100
-Message-Id: <20190304081628.949874227@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 66/78] mmc: tmio_mmc_core: dont claim spurious interrupts
+Date:   Mon,  4 Mar 2019 09:22:49 +0100
+Message-Id: <20190304081628.530600545@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -68,48 +68,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Clark <michaeljclark@mac.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-commit 94ee12b507db8b5876e31c9d6c9d84f556a4b49f upstream.
+commit 5c27ff5db1491a947264d6d4e4cbe43ae6535bae upstream.
 
-__cmpxchg_small erroneously uses u8 for load comparison which can
-be either char or short. This patch changes the local variable to
-u32 which is sufficiently sized, as the loaded value is already
-masked and shifted appropriately. Using an integer size avoids
-any unnecessary canonicalization from use of non native widths.
+I have encountered an interrupt storm during the eMMC chip probing (and
+the chip finally didn't get detected).  It turned out that U-Boot left
+the DMAC interrupts enabled while the Linux driver  didn't use those.
+The SDHI driver's interrupt handler somehow assumes that, even if an
+SDIO interrupt didn't happen, it should return IRQ_HANDLED.  I think
+that if none of the enabled interrupts happened and got handled, we
+should return IRQ_NONE -- that way the kernel IRQ code recoginizes
+a spurious interrupt and masks it off pretty quickly...
 
-This patch is part of a series that adapts the MIPS small word
-atomics code for xchg and cmpxchg on short and char to RISC-V.
-
-Cc: RISC-V Patches <patches@groups.riscv.org>
-Cc: Linux RISC-V <linux-riscv@lists.infradead.org>
-Cc: Linux MIPS <linux-mips@linux-mips.org>
-Signed-off-by: Michael Clark <michaeljclark@mac.com>
-[paul.burton@mips.com:
-  - Fix varialble typo per Jonas Gorski.
-  - Consolidate load variable with other declarations.]
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: 3ba7f44d2b19 ("MIPS: cmpxchg: Implement 1 byte & 2 byte cmpxchg()")
-Cc: stable@vger.kernel.org # v4.13+
+Fixes: 7729c7a232a9 ("mmc: tmio: Provide separate interrupt handlers")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/cmpxchg.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/mmc/host/tmio_mmc_core.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/arch/mips/kernel/cmpxchg.c
-+++ b/arch/mips/kernel/cmpxchg.c
-@@ -54,10 +54,9 @@ unsigned long __xchg_small(volatile void
- unsigned long __cmpxchg_small(volatile void *ptr, unsigned long old,
- 			      unsigned long new, unsigned int size)
- {
--	u32 mask, old32, new32, load32;
-+	u32 mask, old32, new32, load32, load;
- 	volatile u32 *ptr32;
- 	unsigned int shift;
--	u8 load;
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -703,7 +703,7 @@ static bool __tmio_mmc_sdcard_irq(struct
+ 	return false;
+ }
  
- 	/* Check that ptr is naturally aligned */
- 	WARN_ON((unsigned long)ptr & (size - 1));
+-static void __tmio_mmc_sdio_irq(struct tmio_mmc_host *host)
++static bool __tmio_mmc_sdio_irq(struct tmio_mmc_host *host)
+ {
+ 	struct mmc_host *mmc = host->mmc;
+ 	struct tmio_mmc_data *pdata = host->pdata;
+@@ -711,7 +711,7 @@ static void __tmio_mmc_sdio_irq(struct t
+ 	unsigned int sdio_status;
+ 
+ 	if (!(pdata->flags & TMIO_MMC_SDIO_IRQ))
+-		return;
++		return false;
+ 
+ 	status = sd_ctrl_read16(host, CTL_SDIO_STATUS);
+ 	ireg = status & TMIO_SDIO_MASK_ALL & ~host->sdio_irq_mask;
+@@ -724,6 +724,8 @@ static void __tmio_mmc_sdio_irq(struct t
+ 
+ 	if (mmc->caps & MMC_CAP_SDIO_IRQ && ireg & TMIO_SDIO_STAT_IOIRQ)
+ 		mmc_signal_sdio_irq(mmc);
++
++	return ireg;
+ }
+ 
+ irqreturn_t tmio_mmc_irq(int irq, void *devid)
+@@ -742,9 +744,10 @@ irqreturn_t tmio_mmc_irq(int irq, void *
+ 	if (__tmio_mmc_sdcard_irq(host, ireg, status))
+ 		return IRQ_HANDLED;
+ 
+-	__tmio_mmc_sdio_irq(host);
++	if (__tmio_mmc_sdio_irq(host))
++		return IRQ_HANDLED;
+ 
+-	return IRQ_HANDLED;
++	return IRQ_NONE;
+ }
+ EXPORT_SYMBOL_GPL(tmio_mmc_irq);
+ 
 
 
