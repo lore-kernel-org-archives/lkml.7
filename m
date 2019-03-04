@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04AFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05551C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F6A21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57E620823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688051;
-	bh=g9IO4o4vDjS1xstoE4+2YKUGn8WwtN8iQoPcBvMUBDA=;
+	s=default; t=1551688058;
+	bh=Nr1FNx4QjlVCneYiy3kLotJJb9kq2p4qFt6BacLByYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qpTwz8CMo/SIBf4USyZFKan/PqABBtSe5YJryReUJ5H8wPqz99ftnWpH2GH+s8dIv
-	 T+v+U6sp0V3JYZtlDDLx/vRkEtqrYaRzkIOJOG5zCCLx5WhMRfwlWGAf/h6ZUXHsdM
-	 qTgYb70MzkOS6/vrmPMZkGEE5GX/iWordBeRthUM=
+	b=DVl7dEOsE7bMGs3yFiO0yxddJrEFp8T9SHqzARYkOo74mPARtaNcqBxST8cA1F+/m
+	 1EZGas1lnCU8HuMzhgaubfpdy4ybGyQ9OQHVaLy2Q5aa3gukbZY3bHbE96XxNU0EOO
+	 tXkkBTtRVpY7dtpNBemcAs2vBnx+YJgnnMZq4Wus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfCDI1a (ORCPT
+        id S1727258AbfCDI1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:27:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:27:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727246AbfCDI1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:27:25 -0500
+        id S1726808AbfCDI1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:27:33 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13C9121019;
-        Mon,  4 Mar 2019 08:27:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59D48208E4;
+        Mon,  4 Mar 2019 08:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688044;
-        bh=g9IO4o4vDjS1xstoE4+2YKUGn8WwtN8iQoPcBvMUBDA=;
+        s=default; t=1551688051;
+        bh=Nr1FNx4QjlVCneYiy3kLotJJb9kq2p4qFt6BacLByYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hhb7emmqgshFanFzv3kBM8NCYCmnVwRynRdkYKgTd8HVIEwHdIDd0A5g4dEPa1VSW
-         dbTLgk449/3QvM4YxpTOR4ppOYlML+hPzMEYth0NmHwuYzWSAJw6gAHmkof3JbUzDg
-         GKsIifGcbmtIBOLSHRvlP0YHXYtYrNarhRUW2axY=
+        b=SRrV4cc+NyhWuwZf3paHMv3FEY8bcNboHid7EJkqH8w26cupj59r50QtGSx3sAAVk
+         aa9TOdBQak9ntDC7v6ERgFDjLPWq7zULvRb1HTa4MPW+jGezRHWOLfMDfG/nvP5htz
+         7ZJ3cAwIro5sO2tgsBW1VbHMSIQZKYzpgFRdgwYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Takeshi Saito <takeshi.saito.xv@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        stable@kernel.org, Simon Horman <horms+renesas@verge.net.au>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 45/52] mmc: spi: Fix card detection during probe
-Date:   Mon,  4 Mar 2019 09:22:43 +0100
-Message-Id: <20190304081619.702944643@linuxfoundation.org>
+Subject: [PATCH 4.14 47/52] mmc: tmio: fix access width of Block Count Register
+Date:   Mon,  4 Mar 2019 09:22:45 +0100
+Message-Id: <20190304081619.799079982@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -67,52 +68,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+From: Takeshi Saito <takeshi.saito.xv@renesas.com>
 
-commit c9bd505dbd9d3dc80c496f88eafe70affdcf1ba6 upstream.
+commit 5603731a15ef9ca317c122cc8c959f1dee1798b4 upstream.
 
-When using the mmc_spi driver with a card-detect pin, I noticed that the
-card was not detected immediately after probe, but only after it was
-unplugged and plugged back in (and the CD IRQ fired).
+In R-Car Gen2 or later, the maximum number of transfer blocks are
+changed from 0xFFFF to 0xFFFFFFFF. Therefore, Block Count Register
+should use iowrite32().
 
-The call tree looks something like this:
+If another system (U-boot, Hypervisor OS, etc) uses bit[31:16], this
+value will not be cleared. So, SD/MMC card initialization fails.
 
-mmc_spi_probe
-  mmc_add_host
-    mmc_start_host
-      _mmc_detect_change
-        mmc_schedule_delayed_work(&host->detect, 0)
-          mmc_rescan
-            host->bus_ops->detect(host)
-              mmc_detect
-                _mmc_detect_card_removed
-                  host->ops->get_cd(host)
-                    mmc_gpio_get_cd -> -ENOSYS (ctx->cd_gpio not set)
-  mmc_gpiod_request_cd
-    ctx->cd_gpio = desc
+So, check for the bigger register and use apropriate write. Also, mark
+the register as extended on Gen2.
 
-To fix this issue, call mmc_detect_change after the card-detect GPIO/IRQ
-is registered.
-
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: stable@vger.kernel.org
+Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
+[wsa: use max_blk_count in if(), add Gen2, update commit message]
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: stable@kernel.org
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+[Ulf: Fixed build error]
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/mmc_spi.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/renesas_sdhi_sys_dmac.c |    1 +
+ drivers/mmc/host/tmio_mmc.h              |    5 +++++
+ drivers/mmc/host/tmio_mmc_core.c         |    6 +++++-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/mmc_spi.c
-+++ b/drivers/mmc/host/mmc_spi.c
-@@ -1447,6 +1447,7 @@ static int mmc_spi_probe(struct spi_devi
- 		mmc->caps &= ~MMC_CAP_NEEDS_POLL;
- 		mmc_gpiod_request_cd_irq(mmc);
- 	}
-+	mmc_detect_change(mmc, 0);
+--- a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
++++ b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
+@@ -68,6 +68,7 @@ static const struct renesas_sdhi_of_data
+ 	.scc_offset	= 0x0300,
+ 	.taps		= rcar_gen2_scc_taps,
+ 	.taps_num	= ARRAY_SIZE(rcar_gen2_scc_taps),
++	.max_blk_count  = 0xffffffff,
+ };
  
- 	if (host->pdata && host->pdata->flags & MMC_SPI_USE_RO_GPIO) {
- 		has_ro = true;
+ /* Definitions for sampling clocks */
+--- a/drivers/mmc/host/tmio_mmc.h
++++ b/drivers/mmc/host/tmio_mmc.h
+@@ -286,6 +286,11 @@ static inline void sd_ctrl_write32_as_16
+ 	writew(val >> 16, host->ctl + ((addr + 2) << host->bus_shift));
+ }
+ 
++static inline void sd_ctrl_write32(struct tmio_mmc_host *host, int addr, u32 val)
++{
++	iowrite32(val, host->ctl + (addr << host->bus_shift));
++}
++
+ static inline void sd_ctrl_write32_rep(struct tmio_mmc_host *host, int addr,
+ 				       const u32 *buf, int count)
+ {
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -46,6 +46,7 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/mmc/sdio.h>
+ #include <linux/scatterlist.h>
++#include <linux/sizes.h>
+ #include <linux/spinlock.h>
+ #include <linux/swiotlb.h>
+ #include <linux/workqueue.h>
+@@ -761,7 +762,10 @@ static int tmio_mmc_start_data(struct tm
+ 
+ 	/* Set transfer length / blocksize */
+ 	sd_ctrl_write16(host, CTL_SD_XFER_LEN, data->blksz);
+-	sd_ctrl_write16(host, CTL_XFER_BLK_COUNT, data->blocks);
++	if (host->mmc->max_blk_count >= SZ_64K)
++		sd_ctrl_write32(host, CTL_XFER_BLK_COUNT, data->blocks);
++	else
++		sd_ctrl_write16(host, CTL_XFER_BLK_COUNT, data->blocks);
+ 
+ 	tmio_mmc_start_dma(host, data);
+ 
 
 
