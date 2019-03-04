@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C469BC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5E4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD84208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5139120836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688391;
-	bh=DOfVXKSdfbJlGNXbihxBKy7hldGfobdoGXNWgVK3LBg=;
+	s=default; t=1551688395;
+	bh=0+pdLQihd5WFDWvNgEzgMMOH1Cfw5lo3IDrG0kBtJeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqsDaXZsmmZomuj1/e2q6iM+BWsl9oK3XbOmpOARLZiA4B8nN2KSqjDw2dSoC3Fhe
-	 7WAwoef2yvrQt8swWrVUW7tlmLTajHQab6lPRm8kBPr2WlpRQ8c6iPIcGl6LVcUS6c
-	 d+FUzLbTh6+57nDcznlQgDYzYViOHaqz6ZyEVmZk=
+	b=ybhrMVHrmHcB6LqQ0EwLqmC2T+Obb5T/TGzleo1wk1vCMppdaryK4wngvonpZeOVX
+	 0UqOX6X+7TjQI9p0blbu07dHHK1IM8kQ6JkT5pdkvSxKnboKHMQinbWGDw6pe5hmgp
+	 h0ba3ZqjY0ZrisIOXb6a6dUMeChiETk2+rFi/lAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbfCDIdJ (ORCPT
+        id S1727958AbfCDIdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:33:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37368 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:33:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728158AbfCDIdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:33:05 -0500
+        id S1728166AbfCDIdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:33:09 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A388E21473;
-        Mon,  4 Mar 2019 08:33:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F3AC20823;
+        Mon,  4 Mar 2019 08:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688385;
-        bh=DOfVXKSdfbJlGNXbihxBKy7hldGfobdoGXNWgVK3LBg=;
+        s=default; t=1551688388;
+        bh=0+pdLQihd5WFDWvNgEzgMMOH1Cfw5lo3IDrG0kBtJeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zlwYREc017t4+zBbSCj48ajVW06/4z0bO1iHmTN5Cbyeb/wtNy8NM3+PesKIq7xpW
-         /xS8llrlOG5IZix01C8QIiq8qbZMHcn2M7DqPvm3E5E743KPAOAUdm3KQSNVpDCkRz
-         ky5mwnxzj9JxMnApwJ8VptIsImRLAgXjIASRktAQ=
+        b=F+A/cMIU+e+jefhqYO7ph68WTth0CQMTXkPW/l+aZms9LRMyZTf7ERg8Cdo+6ktEL
+         QAQiF7BBXULyOYaH0Z7KdtlxJ+8nuhBJx0B+Jx7ouQAWRC5v+2XBbI9tlpaa92Di8R
+         exvRKxmzKtJAmbW0965v486yQOsmdFrYRODo2/yA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        stable@vger.kernel.org, Bo He <bo.he@intel.com>,
+        Yu Wang <yu.y.wang@intel.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 29/88] irqchip/gic-v3-mbi: Fix uninitialized mbi_lock
-Date:   Mon,  4 Mar 2019 09:22:12 +0100
-Message-Id: <20190304081631.756766978@linuxfoundation.org>
+Subject: [PATCH 4.20 12/88] usb: dwc3: gadget: synchronize_irq dwc irq in suspend
+Date:   Mon,  4 Mar 2019 09:21:55 +0100
+Message-Id: <20190304081631.046461963@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,32 +67,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c530bb8a726a37811e9fb5d68cd6b5408173b545 ]
+[ Upstream commit 01c10880d24291a96a4ab0da773e3c5ce4d12da8 ]
 
-The mbi_lock mutex is left uninitialized, so let's use DEFINE_MUTEX
-to initialize it statically.
+We see dwc3 endpoint stopped by unwanted irq during
+suspend resume test, which is caused dwc3 ep can't be started
+with error "No Resource".
 
-Fixes: 505287525c24d ("irqchip/gic-v3: Add support for Message Based Interrupts as an MSI controller")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Here, add synchronize_irq before suspend to sync the
+pending IRQ handlers complete.
+
+Signed-off-by: Bo He <bo.he@intel.com>
+Signed-off-by: Yu Wang <yu.y.wang@intel.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-mbi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
-index ad70e7c416e30..fbfa7ff6deb16 100644
---- a/drivers/irqchip/irq-gic-v3-mbi.c
-+++ b/drivers/irqchip/irq-gic-v3-mbi.c
-@@ -24,7 +24,7 @@ struct mbi_range {
- 	unsigned long		*bm;
- };
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 5a5b37e0a140f..a7f6255606443 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3283,6 +3283,8 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+ 	dwc3_disconnect_gadget(dwc);
+ 	__dwc3_gadget_stop(dwc);
  
--static struct mutex		mbi_lock;
-+static DEFINE_MUTEX(mbi_lock);
- static phys_addr_t		mbi_phys_base;
- static struct mbi_range		*mbi_ranges;
- static unsigned int		mbi_range_nr;
++	synchronize_irq(dwc->irq_gadget);
++
+ 	return 0;
+ }
+ 
 -- 
 2.19.1
 
