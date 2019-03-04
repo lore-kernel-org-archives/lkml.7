@@ -2,88 +2,87 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA48C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE1BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2E620823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6B720823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfCDUgd (ORCPT
+        id S1726776AbfCDUgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:36:33 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:59103 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfCDUgd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:36:33 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N94uf-1h4SrB47Oh-0169tH; Mon, 04 Mar 2019 21:36:07 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] phy: mdio-mux: fix Kconfig dependencies
-Date:   Mon,  4 Mar 2019 21:35:10 +0100
-Message-Id: <20190304203554.2017178-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 4 Mar 2019 15:36:40 -0500
+Received: from mga06.intel.com ([134.134.136.31]:14352 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726319AbfCDUgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 15:36:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 12:36:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,441,1544515200"; 
+   d="scan'208";a="148528335"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2019 12:36:37 -0800
+Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 4 Mar 2019 12:36:37 -0800
+Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.220]) by
+ FMSMSX153.amr.corp.intel.com ([169.254.9.137]) with mapi id 14.03.0415.000;
+ Mon, 4 Mar 2019 12:36:37 -0800
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] libnvdimm/namespace: Clean up holder_class_store()
+Thread-Topic: [PATCH] libnvdimm/namespace: Clean up holder_class_store()
+Thread-Index: AQHU0sic3P6LyihHdE+rLyus8q2G8KX8dHQA
+Date:   Mon, 4 Mar 2019 20:36:35 +0000
+Message-ID: <a96203c060b8e7d589a251f53bec2cd0e57292d7.camel@intel.com>
+References: <155173044436.4154095.17954771880753980013.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <155173044436.4154095.17954771880753980013.stgit@dwillia2-desk3.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [10.232.112.185]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EFC28E659EF09A458B0AC603C40B4DBB@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:lMToDzxsVtImwok1DJRlSK0nCTEFOdnwRwOwW86IB/AInuyleKX
- Psg9SQAg9oJbsFlHmASmX1xlhCUw74aowClG4dxZ4yTEzxtZzdP5RhhkwZ8Hpy/EWF0RZTC
- B/aRBXHhxzfFlKHh8SrvV0ei4BYi53A56TgVeFgKOv2V99/XQnVtkTDrDWjMEuV6mzLj+Mw
- zZDYvsD/gbAvT1C4RLyVQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eUfh0Ry6Yoo=:yFOmhaLZLk1WLO8RPVH430
- 5J6ebgelqeS/AMKV2XXQn8X4Dzc2XHnI1Jj8BZQ65TIhtdi2W47hUffpLwjqMU9OWQea5BkRa
- slirtb/LutgHkmzbqlHQJIiqqLx9ZUbF4IcKV/MdzI3TEIeAker30nXA5j5Ro5FWPV55nCom6
- t4PKn71NH/mvCfeuMQMEApIkX367V47BsNqwLNmOIHfdEDY8nQlcUhwiLlNqrIyD2hnNHl+o8
- VVvjsgn98e4Q8liSzr3ALESNBIJ92oaBMzI/7RqpvFBdQfI0bWblobIkEj67AxsaUEuHByRG+
- NSAlE8SgCNNtGbs/FqxTyd3rIQf8/6pDW69TKgqexZ7UJhrjXNDFgTdJXXy5bYBKfz4AbITVc
- I4jvu01kXIrfz1l2IsAM2AY16a2v2ZIl7oBIhfSrXnfRfp2RsfTaOiVu3oF5DpgKNbpVMiF5O
- slWZXP6ZEbdMawX/uvx2FJ6Dj2oisqdYPdQ+RLbWehWjm7P7/oqC+mEQMIxdybvrhXdheWd6O
- Wy/4BnK6E4mCKnWXG/n/ThdANJub7d3mqxrwzxfB0fksGejWWh54ZANQtCSWI5kTDMKsdtbaE
- yxIg21KNbDlGy+pI2SN3BhNm21e5eQNlBLcarojphFH2HVYJ+UeaCo5im1KfjHWuBJIp2MMvs
- 7mz7dsY2cJgHcxbCpexyZIxrGYWJ4Dbiniy4dTDQv/O4nCdDSukMbWmUlKjldM4EglB0Dc4a6
- CqqnqGgVJHa1FxFNyy9ZdaRtrtz0PQaQDvhp/w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MDIO_BUS_MUX can only be selected if OF_MDIO is already turned on:
-
-WARNING: unmet direct dependencies detected for MDIO_BUS_MUX
-  Depends on [n]: NETDEVICES [=y] && MDIO_BUS [=m] && OF_MDIO [=n]
-  Selected by [m]:
-  - MDIO_BUS_MUX_MULTIPLEXER [=m] && NETDEVICES [=y] && MDIO_BUS [=m] && OF [=y]
-
-Fixes: 7865ad6551c9 ("drivers: net: phy: mdio-mux: Add support for Generic Mux controls")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/phy/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 7f66af446ec7..071869db44cf 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -89,7 +89,7 @@ config MDIO_BUS_MUX_MMIOREG
- 
- config MDIO_BUS_MUX_MULTIPLEXER
- 	tristate "MDIO bus multiplexer using kernel multiplexer subsystem"
--	depends on OF
-+	depends on OF_MDIO
- 	select MULTIPLEXER
- 	select MDIO_BUS_MUX
- 	help
--- 
-2.20.0
-
+T24gTW9uLCAyMDE5LTAzLTA0IGF0IDEyOjE0IC0wODAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
+IFVzZSBzeXNmc19zdHJlcSgpIGluIHBsYWNlIG9mIG9wZW4tY29kZWQgc3RyY21wKCkncyB0aGF0
+IGNoZWNrIGZvciBhbg0KPiBvcHRpb25hbCAiXG4iIGF0IHRoZSBlbmQgb2YgdGhlIGlucHV0Lg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5j
+b20+DQo+IC0tLQ0KPiAgZHJpdmVycy9udmRpbW0vbmFtZXNwYWNlX2RldnMuYyB8ICAgIDggKysr
+Ky0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0p
+DQoNCkxvb2tzIGdvb2QsDQpSZXZpZXdlZC1ieTogVmlzaGFsIFZlcm1hIDx2aXNoYWwubC52ZXJt
+YUBpbnRlbC5jb20+DQoNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL252ZGltbS9uYW1lc3Bh
+Y2VfZGV2cy5jDQo+IGIvZHJpdmVycy9udmRpbW0vbmFtZXNwYWNlX2RldnMuYw0KPiBpbmRleCAz
+Njc3YjBjNGEzM2QuLjE3ZmI3ZjkzMWYwYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9udmRpbW0v
+bmFtZXNwYWNlX2RldnMuYw0KPiArKysgYi9kcml2ZXJzL252ZGltbS9uYW1lc3BhY2VfZGV2cy5j
+DQo+IEBAIC0xNTA2LDEzICsxNTA2LDEzIEBAIHN0YXRpYyBzc2l6ZV90IF9faG9sZGVyX2NsYXNz
+X3N0b3JlKHN0cnVjdA0KPiBkZXZpY2UgKmRldiwgY29uc3QgY2hhciAqYnVmKQ0KPiAgCWlmIChk
+ZXYtPmRyaXZlciB8fCBuZG5zLT5jbGFpbSkNCj4gIAkJcmV0dXJuIC1FQlVTWTsNCj4gIA0KPiAt
+CWlmIChzdHJjbXAoYnVmLCAiYnR0IikgPT0gMCB8fCBzdHJjbXAoYnVmLCAiYnR0XG4iKSA9PSAw
+KQ0KPiArCWlmIChzeXNmc19zdHJlcShidWYsICJidHQiKSkNCj4gIAkJbmRucy0+Y2xhaW1fY2xh
+c3MgPSBidHRfY2xhaW1fY2xhc3MoZGV2KTsNCj4gLQllbHNlIGlmIChzdHJjbXAoYnVmLCAicGZu
+IikgPT0gMCB8fCBzdHJjbXAoYnVmLCAicGZuXG4iKSA9PSAwKQ0KPiArCWVsc2UgaWYgKHN5c2Zz
+X3N0cmVxKGJ1ZiwgInBmbiIpKQ0KPiAgCQluZG5zLT5jbGFpbV9jbGFzcyA9IE5WRElNTV9DQ0xB
+U1NfUEZOOw0KPiAtCWVsc2UgaWYgKHN0cmNtcChidWYsICJkYXgiKSA9PSAwIHx8IHN0cmNtcChi
+dWYsICJkYXhcbiIpID09IDApDQo+ICsJZWxzZSBpZiAoc3lzZnNfc3RyZXEoYnVmLCAiZGF4Iikp
+DQo+ICAJCW5kbnMtPmNsYWltX2NsYXNzID0gTlZESU1NX0NDTEFTU19EQVg7DQo+IC0JZWxzZSBp
+ZiAoc3RyY21wKGJ1ZiwgIiIpID09IDAgfHwgc3RyY21wKGJ1ZiwgIlxuIikgPT0gMCkNCj4gKwll
+bHNlIGlmIChzeXNmc19zdHJlcShidWYsICIiKSkNCj4gIAkJbmRucy0+Y2xhaW1fY2xhc3MgPSBO
+VkRJTU1fQ0NMQVNTX05PTkU7DQo+ICAJZWxzZQ0KPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gDQoN
+Cg==
