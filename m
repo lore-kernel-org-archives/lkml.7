@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C4EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBCDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B383A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B814F20835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="d6zhVoUy"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="O8OrZhm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfCDNQU (ORCPT
+        id S1726825AbfCDNQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:16:20 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37282 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbfCDNQU (ORCPT
+        Mon, 4 Mar 2019 08:16:25 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37222 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbfCDNQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:16:20 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s22so3015719pfh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 05:16:19 -0800 (PST)
+        Mon, 4 Mar 2019 08:16:23 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q206so3095837pgq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 05:16:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=Lk0lozmpSr6PhGIcaMsKSY28zfWmmH4+w3MioZAgWWU=;
-        b=d6zhVoUydFbkEaddPp7k12nE0MWBo602H0+5LbHQqB4BhBoVkZ/rc3Xnzfi4gpAmmG
-         wfbIz8GXpQsdWBJunfUXypR008bmoVKlPNej0RxGMMjNkl/KcCtHD4wRNYh0tcokvY8i
-         UcU67zhUP8pD/Fhyu0UD3H9fdHlCs7x8yXXPH3POPq4RHBF47kNg5Vw3OksTJ2RqxAqJ
-         WfVQ1FB2TqxttzoAO5Vbzg4jeHe7dQ414NpgFTXU7kMa3N63iXhOqc3Hh0Chkhtx+zIz
-         N9IL49bZxN57HIN6+VR45fLXMUtDl2rM8rbFKYPYJk7/2Z26yJ2ysjE7wF5NeHwLDSkH
-         rgjQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=YJDRYCxk20K4JKC9hkgYoKpQYmGzgltavWE7rVF4G0o=;
+        b=O8OrZhm6uSA6imgPaGUBEoTSyknftwp2wJiVtLMzI6fDr3CvSs3ref27q12qCW92On
+         BcL6BunXc7ZwBjnH65jrnnsdBYmjSndvgGiXM6u+6X+a/JtLycWP1CgZlsunlqBSwMz+
+         2aaWzPIj71ptmtyBEeKdQP2IspB0j7Br3E7t5C55Tlo128vqbLx3LmSlXylUgyhY/EsE
+         6x9VSOjvax/dqZT9sBWsbVXZcXluydZrD3L8okAVcCegWYEPZzoD/lXVJumYgxEKALAd
+         kGWjDKBLghp8rionHeIfQiEfyIgTNBnnURCShobZ1YlA9OlqNTV4x5wudUmDq4FE7xms
+         pXNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Lk0lozmpSr6PhGIcaMsKSY28zfWmmH4+w3MioZAgWWU=;
-        b=cAbI/A5K/w/wV8a070kAOVf4nsZA0cvReqGRTw5rJ509t1caa5yPNJ426ZxXphzI8i
-         /+ePR6uOuo8xQomqlGw5sChkvI87g9o9bjAb3VJ5t0bIrHTo10H9v2AWgjQODgTcGv9i
-         oyL7DRs6H1iqufcJdKcoD4ZkaGjTLc7tjNZxIdHVmkFH2Q+kyPSVR9nvz0WmX3FM55M+
-         GFDaAaqxKfmHIurENbxwvPghQbvWvruGaZ0ZxAN5AaoPSkSn7hGq4y74Yy0l/x6HAdzy
-         bNvwSOb1DTd/ZIwKei5Te0wZQ8tHvOWsfuPbGw8rUr0ufRpXgZah6vPlzkRZLXWOcj2E
-         LfYw==
-X-Gm-Message-State: APjAAAXLOhIrJ3D9dUd6B11IFH+g23ht1Wdmcv6PL1+IqMn8cnXdPGrA
-        sGuvuufIDvjBkSUWoaxfnhSFqA==
-X-Google-Smtp-Source: APXvYqy+I+TSE9uHx3Ct+aCjAO9YrZpyr9e4cm1JvsjdDIAXle/J8h7j7obIzepCUqf41xPAPzatSw==
-X-Received: by 2002:a17:902:2947:: with SMTP id g65mr20279424plb.258.1551705378845;
-        Mon, 04 Mar 2019 05:16:18 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=YJDRYCxk20K4JKC9hkgYoKpQYmGzgltavWE7rVF4G0o=;
+        b=AG4i8l+7JjVGxk8mottrTsl5vILdZ/QXcYb5l7xuIeV8KtowwSOkLR0v9jWKH2H4P4
+         63FlnuBXruNHBxFaIQ6MKv7ldIRoIRb5mMyzMRePsqO09PY2B6+M2D4EEuWEfxGqXGSv
+         bhbH1xb6jZnWfF0hzuH7hJPY/ahUiN/42ZRwphDmWPfIcfMMxtNmk+tyrYKm5XD+iNO7
+         MpsZ6aTDYLZZ1v8/deQTQYe/XmRoUp6BbVYxMiZkKktoi52BPTfWzmxo7sMqOe+rvtN9
+         Pb36CsGsXCrJNvF5GNJ+bKsw3nXboZ1CfQSHDKq4O5FUaXzZzvVuCuOqQTEyfovQZdqS
+         2axw==
+X-Gm-Message-State: APjAAAV/E+vivP59YbuYPrdT3YicFJWoO3sUg2NgRE+0ZTSnPMVr0jDT
+        9HB2/gH2ES0Bxb0NaIv5ZsX80w==
+X-Google-Smtp-Source: APXvYqzeHI/FqhgAihCkMOjv8/VRLzepD92yDSpw5S7DVihrGcjgBUcSPqYCoVR2gSsJvMftlkw/8w==
+X-Received: by 2002:a63:cd06:: with SMTP id i6mr18556701pgg.267.1551705382979;
+        Mon, 04 Mar 2019 05:16:22 -0800 (PST)
 Received: from localhost.localdomain (218-164-96-47.dynamic-ip.hinet.net. [218.164.96.47])
-        by smtp.gmail.com with ESMTPSA id j1sm6956774pgp.84.2019.03.04.05.16.15
+        by smtp.gmail.com with ESMTPSA id j1sm6956774pgp.84.2019.03.04.05.16.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 05:16:17 -0800 (PST)
+        Mon, 04 Mar 2019 05:16:22 -0800 (PST)
 From:   Axel Lin <axel.lin@ingics.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Steve Twiss <stwiss.opensource@diasemi.com>,
@@ -61,10 +62,12 @@ Cc:     Steve Twiss <stwiss.opensource@diasemi.com>,
         Support Opensource <support.opensource@diasemi.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 1/2] regulator: da9062: Convert to use regulator_set/get_current_limit_regmap
-Date:   Mon,  4 Mar 2019 21:16:02 +0800
-Message-Id: <20190304131603.15730-1-axel.lin@ingics.com>
+Subject: [PATCH 2/2] regulator: da9063: Convert to use regulator_set/get_current_limit_regmap
+Date:   Mon,  4 Mar 2019 21:16:03 +0800
+Message-Id: <20190304131603.15730-2-axel.lin@ingics.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190304131603.15730-1-axel.lin@ingics.com>
+References: <20190304131603.15730-1-axel.lin@ingics.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -74,31 +77,54 @@ Use regulator_set/get_current_limit_regmap helpers to save some code.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/regulator/da9062-regulator.c | 125 +++++++--------------------
- 1 file changed, 32 insertions(+), 93 deletions(-)
+ drivers/regulator/da9063-regulator.c | 107 +++++++--------------------
+ 1 file changed, 28 insertions(+), 79 deletions(-)
 
-diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index b064d8a19d4c..ad0facb2be6a 100644
---- a/drivers/regulator/da9062-regulator.c
-+++ b/drivers/regulator/da9062-regulator.c
-@@ -53,16 +53,12 @@ enum {
- /* Regulator capabilities and registers description */
- struct da9062_regulator_info {
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 2b0c7a85306a..ceaaac602c6f 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -38,17 +38,12 @@
+ struct da9063_regulator_info {
  	struct regulator_desc desc;
+ 
 -	/* Current limiting */
--	unsigned int n_current_limits;
--	const int *current_limits;
- 	/* Main register fields */
- 	struct reg_field mode;
+-	unsigned	n_current_limits;
+-	const int	*current_limits;
+-
+ 	/* DA9063 main register fields */
+ 	struct reg_field mode;		/* buck mode of operation */
  	struct reg_field suspend;
  	struct reg_field sleep;
  	struct reg_field suspend_sleep;
  	unsigned int suspend_vsel_reg;
 -	struct reg_field ilimit;
- 	/* Event detection bit */
+ 
+ 	/* DA9063 event detection bit */
  	struct reg_field oc_event;
- };
-@@ -78,7 +74,6 @@ struct da9062_regulator {
+@@ -73,15 +68,18 @@ struct da9063_regulator_info {
+ 	.suspend_vsel_reg = DA9063_REG_V##regl_name##_B
+ 
+ /* Macros for voltage DC/DC converters (BUCKs) */
+-#define DA9063_BUCK(chip, regl_name, min_mV, step_mV, max_mV, limits_array) \
++#define DA9063_BUCK(chip, regl_name, min_mV, step_mV, max_mV, limits_array, \
++		    creg, cmask) \
+ 	.desc.id = chip##_ID_##regl_name, \
+ 	.desc.name = __stringify(chip##_##regl_name), \
+ 	.desc.ops = &da9063_buck_ops, \
+ 	.desc.min_uV = (min_mV) * 1000, \
+ 	.desc.uV_step = (step_mV) * 1000, \
+ 	.desc.n_voltages = ((max_mV) - (min_mV))/(step_mV) + 1, \
+-	.current_limits = limits_array, \
+-	.n_current_limits = ARRAY_SIZE(limits_array)
++	.desc.csel_reg = (creg), \
++	.desc.csel_mask = (cmask), \
++	.desc.curr_table = limits_array, \
++	.desc.n_current_limits = ARRAY_SIZE(limits_array)
+ 
+ #define DA9063_BUCK_COMMON_FIELDS(regl_name) \
+ 	.desc.enable_reg = DA9063_REG_##regl_name##_CONT, \
+@@ -112,7 +110,6 @@ struct da9063_regulator {
  	struct regmap_field			*suspend;
  	struct regmap_field			*sleep;
  	struct regmap_field			*suspend_sleep;
@@ -106,45 +132,60 @@ index b064d8a19d4c..ad0facb2be6a 100644
  };
  
  /* Encapsulates all information for the regulators driver */
-@@ -104,7 +99,7 @@ enum {
-  * - DA9062_ID_[BUCK1|BUCK2|BUCK4]
-  * Entry indexes corresponds to register values.
-  */
--static const int da9062_buck_a_limits[] = {
-+static const unsigned int da9062_buck_a_limits[] = {
+@@ -134,65 +131,32 @@ enum {
+ 
+ /* Current limits array (in uA) for BCORE1, BCORE2, BPRO.
+    Entry indexes corresponds to register values. */
+-static const int da9063_buck_a_limits[] = {
++static const unsigned int da9063_buck_a_limits[] = {
  	 500000,  600000,  700000,  800000,  900000, 1000000, 1100000, 1200000,
  	1300000, 1400000, 1500000, 1600000, 1700000, 1800000, 1900000, 2000000
  };
-@@ -114,44 +109,11 @@ static const int da9062_buck_a_limits[] = {
-  * - DA9062_ID_BUCK3
-  * Entry indexes corresponds to register values.
-  */
--static const int da9062_buck_b_limits[] = {
-+static const unsigned int da9062_buck_b_limits[] = {
+ 
+ /* Current limits array (in uA) for BMEM, BIO, BPERI.
+    Entry indexes corresponds to register values. */
+-static const int da9063_buck_b_limits[] = {
++static const unsigned int da9063_buck_b_limits[] = {
  	1500000, 1600000, 1700000, 1800000, 1900000, 2000000, 2100000, 2200000,
  	2300000, 2400000, 2500000, 2600000, 2700000, 2800000, 2900000, 3000000
  };
  
--static int da9062_set_current_limit(struct regulator_dev *rdev,
--				    int min_ua, int max_ua)
+ /* Current limits array (in uA) for merged BCORE1 and BCORE2.
+    Entry indexes corresponds to register values. */
+-static const int da9063_bcores_merged_limits[] = {
++static const unsigned int da9063_bcores_merged_limits[] = {
+ 	1000000, 1200000, 1400000, 1600000, 1800000, 2000000, 2200000, 2400000,
+ 	2600000, 2800000, 3000000, 3200000, 3400000, 3600000, 3800000, 4000000
+ };
+ 
+ /* Current limits array (in uA) for merged BMEM and BIO.
+    Entry indexes corresponds to register values. */
+-static const int da9063_bmem_bio_merged_limits[] = {
++static const unsigned int da9063_bmem_bio_merged_limits[] = {
+ 	3000000, 3200000, 3400000, 3600000, 3800000, 4000000, 4200000, 4400000,
+ 	4600000, 4800000, 5000000, 5200000, 5400000, 5600000, 5800000, 6000000
+ };
+ 
+-static int da9063_set_current_limit(struct regulator_dev *rdev,
+-							int min_uA, int max_uA)
 -{
--	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
--	const struct da9062_regulator_info *rinfo = regl->info;
+-	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+-	const struct da9063_regulator_info *rinfo = regl->info;
 -	int n, tval;
 -
 -	for (n = rinfo->n_current_limits - 1; n >= 0; n--) {
 -		tval = rinfo->current_limits[n];
--		if (tval >= min_ua && tval <= max_ua)
+-		if (tval >= min_uA && tval <= max_uA)
 -			return regmap_field_write(regl->ilimit, n);
 -	}
 -
 -	return -EINVAL;
 -}
 -
--static int da9062_get_current_limit(struct regulator_dev *rdev)
+-static int da9063_get_current_limit(struct regulator_dev *rdev)
 -{
--	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
--	const struct da9062_regulator_info *rinfo = regl->info;
+-	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+-	const struct da9063_regulator_info *rinfo = regl->info;
 -	unsigned int sel;
 -	int ret;
 -
@@ -158,204 +199,120 @@ index b064d8a19d4c..ad0facb2be6a 100644
 -	return rinfo->current_limits[sel];
 -}
 -
- static int da9062_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
+ static int da9063_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
  {
- 	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
-@@ -395,8 +357,8 @@ static const struct regulator_ops da9062_buck_ops = {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+@@ -434,8 +398,8 @@ static const struct regulator_ops da9063_buck_ops = {
  	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
  	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
  	.list_voltage		= regulator_list_voltage_linear,
--	.set_current_limit	= da9062_set_current_limit,
--	.get_current_limit	= da9062_get_current_limit,
+-	.set_current_limit	= da9063_set_current_limit,
+-	.get_current_limit	= da9063_get_current_limit,
 +	.set_current_limit	= regulator_set_current_limit_regmap,
 +	.get_current_limit	= regulator_get_current_limit_regmap,
- 	.set_mode		= da9062_buck_set_mode,
- 	.get_mode		= da9062_buck_get_mode,
- 	.get_status		= da9062_buck_get_status,
-@@ -433,8 +395,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.min_uV = (300) * 1000,
- 		.desc.uV_step = (10) * 1000,
- 		.desc.n_voltages = ((1570) - (300))/(10) + 1,
--		.current_limits = da9062_buck_a_limits,
--		.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.curr_table = da9062_buck_a_limits,
-+		.desc.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.csel_reg = DA9062AA_BUCK_ILIM_C,
-+		.desc.csel_mask = DA9062AA_BUCK1_ILIM_MASK,
- 		.desc.enable_reg = DA9062AA_BUCK1_CONT,
- 		.desc.enable_mask = DA9062AA_BUCK1_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VBUCK1_A,
-@@ -457,10 +421,6 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
--		.ilimit = REG_FIELD(DA9062AA_BUCK_ILIM_C,
--			__builtin_ffs((int)DA9062AA_BUCK1_ILIM_MASK) - 1,
--			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_BUCK1_ILIM_MASK)) - 1),
+ 	.set_mode		= da9063_buck_set_mode,
+ 	.get_mode		= da9063_buck_get_mode,
+ 	.get_status		= da9063_buck_get_status,
+@@ -465,69 +429,61 @@ static const struct regulator_ops da9063_ldo_ops = {
+ static const struct da9063_regulator_info da9063_regulator_info[] = {
+ 	{
+ 		DA9063_BUCK(DA9063, BCORE1, 300, 10, 1570,
+-			    da9063_buck_a_limits),
++			    da9063_buck_a_limits,
++			    DA9063_REG_BUCK_ILIM_C, DA9063_BCORE1_ILIM_MASK),
+ 		DA9063_BUCK_COMMON_FIELDS(BCORE1),
+ 		.suspend = BFIELD(DA9063_REG_DVC_1, DA9063_VBCORE1_SEL),
+-		.ilimit = BFIELD(DA9063_REG_BUCK_ILIM_C,
+-				 DA9063_BCORE1_ILIM_MASK),
  	},
  	{
- 		.desc.id = DA9061_ID_BUCK2,
-@@ -471,8 +431,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.min_uV = (800) * 1000,
- 		.desc.uV_step = (20) * 1000,
- 		.desc.n_voltages = ((3340) - (800))/(20) + 1,
--		.current_limits = da9062_buck_b_limits,
--		.n_current_limits = ARRAY_SIZE(da9062_buck_b_limits),
-+		.desc.curr_table = da9062_buck_b_limits,
-+		.desc.n_current_limits = ARRAY_SIZE(da9062_buck_b_limits),
-+		.desc.csel_reg = DA9062AA_BUCK_ILIM_A,
-+		.desc.csel_mask = DA9062AA_BUCK3_ILIM_MASK,
- 		.desc.enable_reg = DA9062AA_BUCK3_CONT,
- 		.desc.enable_mask = DA9062AA_BUCK3_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VBUCK3_A,
-@@ -495,10 +457,6 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
--		.ilimit = REG_FIELD(DA9062AA_BUCK_ILIM_A,
--			__builtin_ffs((int)DA9062AA_BUCK3_ILIM_MASK) - 1,
--			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_BUCK3_ILIM_MASK)) - 1),
+ 		DA9063_BUCK(DA9063, BCORE2, 300, 10, 1570,
+-			    da9063_buck_a_limits),
++			    da9063_buck_a_limits,
++			    DA9063_REG_BUCK_ILIM_C, DA9063_BCORE2_ILIM_MASK),
+ 		DA9063_BUCK_COMMON_FIELDS(BCORE2),
+ 		.suspend = BFIELD(DA9063_REG_DVC_1, DA9063_VBCORE2_SEL),
+-		.ilimit = BFIELD(DA9063_REG_BUCK_ILIM_C,
+-				 DA9063_BCORE2_ILIM_MASK),
  	},
  	{
- 		.desc.id = DA9061_ID_BUCK3,
-@@ -509,8 +467,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.min_uV = (530) * 1000,
- 		.desc.uV_step = (10) * 1000,
- 		.desc.n_voltages = ((1800) - (530))/(10) + 1,
--		.current_limits = da9062_buck_a_limits,
--		.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.curr_table = da9062_buck_a_limits,
-+		.desc.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.csel_reg = DA9062AA_BUCK_ILIM_B,
-+		.desc.csel_mask = DA9062AA_BUCK4_ILIM_MASK,
- 		.desc.enable_reg = DA9062AA_BUCK4_CONT,
- 		.desc.enable_mask = DA9062AA_BUCK4_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VBUCK4_A,
-@@ -533,10 +493,6 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
--		.ilimit = REG_FIELD(DA9062AA_BUCK_ILIM_B,
--			__builtin_ffs((int)DA9062AA_BUCK4_ILIM_MASK) - 1,
--			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_BUCK4_ILIM_MASK)) - 1),
+ 		DA9063_BUCK(DA9063, BPRO, 530, 10, 1800,
+-			    da9063_buck_a_limits),
++			    da9063_buck_a_limits,
++			    DA9063_REG_BUCK_ILIM_B, DA9063_BPRO_ILIM_MASK),
+ 		DA9063_BUCK_COMMON_FIELDS(BPRO),
+ 		.suspend = BFIELD(DA9063_REG_DVC_1, DA9063_VBPRO_SEL),
+-		.ilimit = BFIELD(DA9063_REG_BUCK_ILIM_B,
+-				 DA9063_BPRO_ILIM_MASK),
  	},
  	{
- 		.desc.id = DA9061_ID_LDO1,
-@@ -679,8 +635,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.min_uV = (300) * 1000,
- 		.desc.uV_step = (10) * 1000,
- 		.desc.n_voltages = ((1570) - (300))/(10) + 1,
--		.current_limits = da9062_buck_a_limits,
--		.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.curr_table = da9062_buck_a_limits,
-+		.desc.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.csel_reg = DA9062AA_BUCK_ILIM_C,
-+		.desc.csel_mask = DA9062AA_BUCK1_ILIM_MASK,
- 		.desc.enable_reg = DA9062AA_BUCK1_CONT,
- 		.desc.enable_mask = DA9062AA_BUCK1_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VBUCK1_A,
-@@ -703,10 +661,6 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
--		.ilimit = REG_FIELD(DA9062AA_BUCK_ILIM_C,
--			__builtin_ffs((int)DA9062AA_BUCK1_ILIM_MASK) - 1,
--			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_BUCK1_ILIM_MASK)) - 1),
+ 		DA9063_BUCK(DA9063, BMEM, 800, 20, 3340,
+-			    da9063_buck_b_limits),
++			    da9063_buck_b_limits,
++			    DA9063_REG_BUCK_ILIM_A, DA9063_BMEM_ILIM_MASK),
+ 		DA9063_BUCK_COMMON_FIELDS(BMEM),
+ 		.suspend = BFIELD(DA9063_REG_DVC_1, DA9063_VBMEM_SEL),
+-		.ilimit = BFIELD(DA9063_REG_BUCK_ILIM_A,
+-				 DA9063_BMEM_ILIM_MASK),
  	},
  	{
- 		.desc.id = DA9062_ID_BUCK2,
-@@ -717,8 +671,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.min_uV = (300) * 1000,
- 		.desc.uV_step = (10) * 1000,
- 		.desc.n_voltages = ((1570) - (300))/(10) + 1,
--		.current_limits = da9062_buck_a_limits,
--		.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.curr_table = da9062_buck_a_limits,
-+		.desc.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.csel_reg = DA9062AA_BUCK_ILIM_C,
-+		.desc.csel_mask = DA9062AA_BUCK2_ILIM_MASK,
- 		.desc.enable_reg = DA9062AA_BUCK2_CONT,
- 		.desc.enable_mask = DA9062AA_BUCK2_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VBUCK2_A,
-@@ -741,10 +697,6 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK2_SEL_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_VBUCK2_SEL_MASK)) - 1),
--		.ilimit = REG_FIELD(DA9062AA_BUCK_ILIM_C,
--			__builtin_ffs((int)DA9062AA_BUCK2_ILIM_MASK) - 1,
--			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_BUCK2_ILIM_MASK)) - 1),
+ 		DA9063_BUCK(DA9063, BIO, 800, 20, 3340,
+-			    da9063_buck_b_limits),
++			    da9063_buck_b_limits,
++			    DA9063_REG_BUCK_ILIM_A, DA9063_BIO_ILIM_MASK),
+ 		DA9063_BUCK_COMMON_FIELDS(BIO),
+ 		.suspend = BFIELD(DA9063_REG_DVC_2, DA9063_VBIO_SEL),
+-		.ilimit = BFIELD(DA9063_REG_BUCK_ILIM_A,
+-				 DA9063_BIO_ILIM_MASK),
  	},
  	{
- 		.desc.id = DA9062_ID_BUCK3,
-@@ -755,8 +707,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.min_uV = (800) * 1000,
- 		.desc.uV_step = (20) * 1000,
- 		.desc.n_voltages = ((3340) - (800))/(20) + 1,
--		.current_limits = da9062_buck_b_limits,
--		.n_current_limits = ARRAY_SIZE(da9062_buck_b_limits),
-+		.desc.curr_table = da9062_buck_b_limits,
-+		.desc.n_current_limits = ARRAY_SIZE(da9062_buck_b_limits),
-+		.desc.csel_reg = DA9062AA_BUCK_ILIM_A,
-+		.desc.csel_mask = DA9062AA_BUCK3_ILIM_MASK,
- 		.desc.enable_reg = DA9062AA_BUCK3_CONT,
- 		.desc.enable_mask = DA9062AA_BUCK3_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VBUCK3_A,
-@@ -779,10 +733,6 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
--		.ilimit = REG_FIELD(DA9062AA_BUCK_ILIM_A,
--			__builtin_ffs((int)DA9062AA_BUCK3_ILIM_MASK) - 1,
--			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_BUCK3_ILIM_MASK)) - 1),
+ 		DA9063_BUCK(DA9063, BPERI, 800, 20, 3340,
+-			    da9063_buck_b_limits),
++			    da9063_buck_b_limits,
++			    DA9063_REG_BUCK_ILIM_B, DA9063_BPERI_ILIM_MASK),
+ 		DA9063_BUCK_COMMON_FIELDS(BPERI),
+ 		.suspend = BFIELD(DA9063_REG_DVC_1, DA9063_VBPERI_SEL),
+-		.ilimit = BFIELD(DA9063_REG_BUCK_ILIM_B,
+-				 DA9063_BPERI_ILIM_MASK),
  	},
  	{
- 		.desc.id = DA9062_ID_BUCK4,
-@@ -793,8 +743,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.min_uV = (530) * 1000,
- 		.desc.uV_step = (10) * 1000,
- 		.desc.n_voltages = ((1800) - (530))/(10) + 1,
--		.current_limits = da9062_buck_a_limits,
--		.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.curr_table = da9062_buck_a_limits,
-+		.desc.n_current_limits = ARRAY_SIZE(da9062_buck_a_limits),
-+		.desc.csel_reg = DA9062AA_BUCK_ILIM_B,
-+		.desc.csel_mask = DA9062AA_BUCK4_ILIM_MASK,
- 		.desc.enable_reg = DA9062AA_BUCK4_CONT,
- 		.desc.enable_mask = DA9062AA_BUCK4_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VBUCK4_A,
-@@ -817,10 +769,6 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
--		.ilimit = REG_FIELD(DA9062AA_BUCK_ILIM_B,
--			__builtin_ffs((int)DA9062AA_BUCK4_ILIM_MASK) - 1,
--			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_BUCK4_ILIM_MASK)) - 1),
+ 		DA9063_BUCK(DA9063, BCORES_MERGED, 300, 10, 1570,
+-			    da9063_bcores_merged_limits),
++			    da9063_bcores_merged_limits,
++			    DA9063_REG_BUCK_ILIM_C, DA9063_BCORE1_ILIM_MASK),
+ 		/* BCORES_MERGED uses the same register fields as BCORE1 */
+ 		DA9063_BUCK_COMMON_FIELDS(BCORE1),
+ 		.suspend = BFIELD(DA9063_REG_DVC_1, DA9063_VBCORE1_SEL),
+-		.ilimit = BFIELD(DA9063_REG_BUCK_ILIM_C,
+-				 DA9063_BCORE1_ILIM_MASK),
  	},
  	{
- 		.desc.id = DA9062_ID_LDO1,
-@@ -1063,15 +1011,6 @@ static int da9062_regulator_probe(struct platform_device *pdev)
+ 		DA9063_BUCK(DA9063, BMEM_BIO_MERGED, 800, 20, 3340,
+-			    da9063_bmem_bio_merged_limits),
++			    da9063_bmem_bio_merged_limits,
++			    DA9063_REG_BUCK_ILIM_A, DA9063_BMEM_ILIM_MASK),
+ 		/* BMEM_BIO_MERGED uses the same register fields as BMEM */
+ 		DA9063_BUCK_COMMON_FIELDS(BMEM),
+ 		.suspend = BFIELD(DA9063_REG_DVC_1, DA9063_VBMEM_SEL),
+-		.ilimit = BFIELD(DA9063_REG_BUCK_ILIM_A,
+-				 DA9063_BMEM_ILIM_MASK),
+ 	},
+ 	{
+ 		DA9063_LDO(DA9063, LDO3, 900, 20, 3440),
+@@ -861,13 +817,6 @@ static int da9063_regulator_probe(struct platform_device *pdev)
  				return PTR_ERR(regl->suspend_sleep);
  		}
  
 -		if (regl->info->ilimit.reg) {
--			regl->ilimit = devm_regmap_field_alloc(
--					&pdev->dev,
--					chip->regmap,
--					regl->info->ilimit);
+-			regl->ilimit = devm_regmap_field_alloc(&pdev->dev,
+-					da9063->regmap, regl->info->ilimit);
 -			if (IS_ERR(regl->ilimit))
 -				return PTR_ERR(regl->ilimit);
 -		}
 -
  		/* Register regulator */
  		memset(&config, 0, sizeof(config));
- 		config.dev = chip->dev;
+ 		config.dev = &pdev->dev;
 -- 
 2.17.1
 
