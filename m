@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC976C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0091CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7E821019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7EF20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687796;
-	bh=Nudw5AQ8D3YjadM+eLhic+vormZw4DE745udpYtNUAk=;
+	s=default; t=1551687800;
+	bh=v+wZK+/1xryGNpXsLv+C/4R48a6j67sHYsBT3ExJY7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kx1zL6CQzq8M7lfnyQ6M1OXdpwKSDV1JnOrBxqAhJijnt3Kymm6eORfk0WOmLyTre
-	 v1rnC2X/v0Ely+njX7rv1sd7KT2Y38IHnQXWvu+KdITQSsjVO5UFbKEiIIqUHoXDKJ
-	 ERGAbkb/90WhEZ/3yl40D5gk34DWo2UFs3sVqbPc=
+	b=n2si1au5g4kXEWkiv/bnoTz+tORUjFukTSOGuDClboPgzJu7T49PEfNNjRbLGdOAu
+	 NleClOU18aSSplC6Eu6hV8n+pxR2Ciw+zMyP0kvAl8sF8djdERG2CI+S/FuXdVLcjI
+	 d8PgfRr76U6y4mUS6UzOv7zGT0hqhT4GVwngShe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfCDIXP (ORCPT
+        id S1726536AbfCDIXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:23:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38712 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:23:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfCDIXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:23:13 -0500
+        id S1726128AbfCDIXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:23:16 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F48220863;
-        Mon,  4 Mar 2019 08:23:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47D3C20863;
+        Mon,  4 Mar 2019 08:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687793;
-        bh=Nudw5AQ8D3YjadM+eLhic+vormZw4DE745udpYtNUAk=;
+        s=default; t=1551687795;
+        bh=v+wZK+/1xryGNpXsLv+C/4R48a6j67sHYsBT3ExJY7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S/s4rmScMC7Ji2ZwgAT1tHofyclXnWa7eMj75NsdAnCyYjpDbgUF93njUi9lM9m84
-         ih9j6fBkIyVOVCC7g4piTHqXLKdos4oiBbxZ1ufwwEgnlg7Q4TQHCtcCTnysYe2632
-         1Y1GNRKB1r5JiKK1zqNjoY92yRu/JtM13id1IfrQ=
+        b=VmbS2amvceVqnqKAPn5km+Y+X+pNZBBqYjldJ/Ic7M1izjIbHUFfxOtffgbdYkpVX
+         kfG7LYjWdFGo3jD2nDSu9KeNSj95/kmlzRavhleJa+s+jIuI+WCc+5D8v/M2zmCQBA
+         PvDUsZLOuzOAmc6FT/J2LXgVgIlxjMIyEX2CDfIU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
+        stable@vger.kernel.org, Zhang Run <zhang.run@zte.com.cn>,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 21/32] net: altera_tse: fix connect_local_phy error path
-Date:   Mon,  4 Mar 2019 09:22:09 +0100
-Message-Id: <20190304081603.813359629@linuxfoundation.org>
+Subject: [PATCH 4.9 22/32] net: usb: asix: ax88772_bind return error when hw_reset fail
+Date:   Mon,  4 Mar 2019 09:22:10 +0100
+Message-Id: <20190304081603.893834224@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081602.307094059@linuxfoundation.org>
 References: <20190304081602.307094059@linuxfoundation.org>
@@ -67,35 +68,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 17b42a20d7ca59377788c6a2409e77569570cc10 ]
+[ Upstream commit 6eea3527e68acc22483f4763c8682f223eb90029 ]
 
-The connect_local_phy should return NULL (not negative errno) on
-error, since its caller expects it.
+The ax88772_bind() should return error code immediately when the PHY
+was not reset properly through ax88772a_hw_reset().
+Otherwise, The asix_get_phyid() will block when get the PHY
+Identifier from the PHYSID1 MII registers through asix_mdio_read()
+due to the PHY isn't ready. Furthermore, it will produce a lot of
+error message cause system crash.As follows:
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to write
+ reg index 0x0000: -71
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to send
+ software reset: ffffffb9
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to write
+ reg index 0x0000: -71
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to enable
+ software MII access
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to read
+ reg index 0x0000: -71
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to write
+ reg index 0x0000: -71
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to enable
+ software MII access
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to read
+ reg index 0x0000: -71
+...
 
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: Zhang Run <zhang.run@zte.com.cn>
+Reviewed-by: Yang Wei <yang.wei9@zte.com.cn>
+Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/altera/altera_tse_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/usb/asix_devices.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-index a0eee72186957..e306342506f1f 100644
---- a/drivers/net/ethernet/altera/altera_tse_main.c
-+++ b/drivers/net/ethernet/altera/altera_tse_main.c
-@@ -692,8 +692,10 @@ static struct phy_device *connect_local_phy(struct net_device *dev)
+diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devices.c
+index 5be6b67492d52..393fd3ed6b94c 100644
+--- a/drivers/net/usb/asix_devices.c
++++ b/drivers/net/usb/asix_devices.c
+@@ -729,8 +729,13 @@ static int ax88772_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	asix_read_cmd(dev, AX_CMD_STATMNGSTS_REG, 0, 0, 1, &chipcode, 0);
+ 	chipcode &= AX_CHIPCODE_MASK;
  
- 		phydev = phy_connect(dev, phy_id_fmt, &altera_tse_adjust_link,
- 				     priv->phy_iface);
--		if (IS_ERR(phydev))
-+		if (IS_ERR(phydev)) {
- 			netdev_err(dev, "Could not attach to PHY\n");
-+			phydev = NULL;
-+		}
+-	(chipcode == AX_AX88772_CHIPCODE) ? ax88772_hw_reset(dev, 0) :
+-					    ax88772a_hw_reset(dev, 0);
++	ret = (chipcode == AX_AX88772_CHIPCODE) ? ax88772_hw_reset(dev, 0) :
++						  ax88772a_hw_reset(dev, 0);
++
++	if (ret < 0) {
++		netdev_dbg(dev->net, "Failed to reset AX88772: %d\n", ret);
++		return ret;
++	}
  
- 	} else {
- 		int ret;
+ 	/* Read PHYID register *AFTER* the PHY was reset properly */
+ 	phyid = asix_get_phyid(dev);
 -- 
 2.19.1
 
