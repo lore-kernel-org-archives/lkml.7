@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8383EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEC6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550B8208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6638620836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688610;
-	bh=L2f2rrBPA1R8LUwfmPMEwa6x7Dz+3AgKfbuXi95KKU4=;
+	s=default; t=1551688617;
+	bh=PCiqS4qx9dzXr1ylZBZ1yAdQ1+PAOngffy9n8W8M4u0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n6JH7WAIu8A2q/sU/CEjcHxUPSpL6WQcwrFypYNU/NSar/4mQYV4cMYkKvje7zbQD
-	 nib2bk1PzjHZ3HMxrTb0wXfv0ulkX/YkTGBuvYFxIGwPXYa0sSHnTLlRfxrbmMj5fc
-	 FJf30gO5UkooYa+7Lb/ooIeHNFykjdtBoRrvu9fQ=
+	b=weYp0uHqkGEz49oJOg+NMf0dBTfVFpr2pZFShEnGAS5WPemMsaFJHWQxC6sjuBDIE
+	 RFuMYUmLYaIAMuGcPv3seBikoau87t7WiLd7p0xofXlDd3YhMpVHdBTaAbiauqV5/C
+	 wUMLr4/jij4IoJ6PTjqxAlZCn1tlW9BPV1ykj2SM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfCDIgs (ORCPT
+        id S1728479AbfCDIg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:36:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46774 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:36:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728708AbfCDIgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:36:41 -0500
+        id S1728138AbfCDIgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:36:43 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17C30208E4;
-        Mon,  4 Mar 2019 08:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7E8D21019;
+        Mon,  4 Mar 2019 08:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688600;
-        bh=L2f2rrBPA1R8LUwfmPMEwa6x7Dz+3AgKfbuXi95KKU4=;
+        s=default; t=1551688603;
+        bh=PCiqS4qx9dzXr1ylZBZ1yAdQ1+PAOngffy9n8W8M4u0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cx5WK/pVimDkTlV1dp0Kn0BqL5fZoa7iOlskaRAXKa7N92HDqRjFp4yYMdd/fkqk/
-         ITeIlpchmrmqvw8uWcNP+iTFGDyzIBbwy67MYAz5DIOYHABKK6rgYb/7/KKAVn18Fz
-         Rg4JgS1/mzTUD5yOqKGIWChLoGB1D/LmccAGWsAU=
+        b=X4a8NVt6OXrK/04qDK3FF4Ca/DRfO28MjvqLelHpPOZcxT8F47gbdOjk70L4lmXEL
+         ey8IsDBberMihB9mLk9Xn/ovqnrleFbsZSXYOsFNjAMSfewJhAgbe9tdy2vnntoqTx
+         V2LSTtFZXsacl4vTqXJ48Z3bDZTXNqIKeHmKEozA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>
-Subject: [PATCH 4.20 88/88] x86/uaccess: Dont leak the AC flag into __put_user() value evaluation
-Date:   Mon,  4 Mar 2019 09:23:11 +0100
-Message-Id: <20190304081634.180902760@linuxfoundation.org>
+        stable@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Andy Gross <andy.gross@linaro.org>
+Subject: [PATCH 4.20 86/88] arm64: dts: qcom: msm8998: Extend TZ reserved memory area
+Date:   Mon,  4 Mar 2019 09:23:09 +0100
+Message-Id: <20190304081634.102402773@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -70,62 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Marc Gonzalez <marc.w.gonzalez@free.fr>
 
-commit 2a418cf3f5f1caf911af288e978d61c9844b0695 upstream.
+commit 6e53330909672bd9a8c9f826e989a5945d9d9fdf upstream.
 
-When calling __put_user(foo(), ptr), the __put_user() macro would call
-foo() in between __uaccess_begin() and __uaccess_end().  If that code
-were buggy, then those bugs would be run without SMAP protection.
+My console locks up as soon as Linux writes to [88800000,88f00000[
+AFAIU, that memory area is reserved for trustzone.
 
-Fortunately, there seem to be few instances of the problem in the
-kernel. Nevertheless, __put_user() should be fixed to avoid doing this.
-Therefore, evaluate __put_user()'s argument before setting AC.
+Extend TZ reserved memory range, to prevent Linux from stepping on
+trustzone's toes.
 
-This issue was noticed when an objtool hack by Peter Zijlstra complained
-about genregs_get() and I compared the assembly output to the C source.
-
- [ bp: Massage commit message and fixed up whitespace. ]
-
-Fixes: 11f1a4b9755f ("x86: reorganize SMAP handling in user space accesses")
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190225125231.845656645@infradead.org
+Cc: stable@vger.kernel.org # 4.20+
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Fixes: c7833949564ec ("arm64: dts: qcom: msm8998: Add smem related nodes")
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/uaccess.h |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8998.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -293,8 +293,7 @@ do {									\
- 		__put_user_asm(x, ptr, retval, "l", "k", "ir", errret);	\
- 		break;							\
- 	case 8:								\
--		__put_user_asm_u64((__typeof__(*ptr))(x), ptr, retval,	\
--				   errret);				\
-+		__put_user_asm_u64(x, ptr, retval, errret);		\
- 		break;							\
- 	default:							\
- 		__put_user_bad();					\
-@@ -440,8 +439,10 @@ do {									\
- #define __put_user_nocheck(x, ptr, size)			\
- ({								\
- 	int __pu_err;						\
-+	__typeof__(*(ptr)) __pu_val;				\
-+	__pu_val = x;						\
- 	__uaccess_begin();					\
--	__put_user_size((x), (ptr), (size), __pu_err, -EFAULT);	\
-+	__put_user_size(__pu_val, (ptr), (size), __pu_err, -EFAULT);\
- 	__uaccess_end();					\
- 	__builtin_expect(__pu_err, 0);				\
- })
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -36,7 +36,7 @@
+ 		};
+ 
+ 		memory@86200000 {
+-			reg = <0x0 0x86200000 0x0 0x2600000>;
++			reg = <0x0 0x86200000 0x0 0x2d00000>;
+ 			no-map;
+ 		};
+ 
 
 
