@@ -2,189 +2,133 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6DBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E786C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6B720823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DC8206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:08:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wu88MN+9"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Vc9E9Aeq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfCDVI1 (ORCPT
+        id S1726535AbfCDVIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 16:08:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44710 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfCDVI1 (ORCPT
+        Mon, 4 Mar 2019 16:08:39 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39992 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfCDVIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 16:08:27 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w2so7104644wrt.11
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 13:08:25 -0800 (PST)
+        Mon, 4 Mar 2019 16:08:39 -0500
+Received: by mail-ed1-f66.google.com with SMTP id 10so5414122eds.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 13:08:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I/ZTNIwVZwY2itPle1SBk0RQrisDKbFqslX3qr21jsY=;
-        b=Wu88MN+9tg6yvf7poSl2rjFOrZZW3Hy6QVdPlSADplRzjvGdDTNJIBWKeFjYHosoA7
-         iQs5lFQWxTBtJgEwBvnX55PJ7Xbx7w564lk1a4m4GmGkTUUe9YMWPVLqFQMN6DnWaEoY
-         WWOFjP2+mvV+dsNicTHvhbDJqwBMNjyIL/+3MlzQolXJsHfDCmyCID+bigvzVW0iR5fx
-         +2yM17fP+SVQ3C6KkyUnmVDvlxOsHcs/WDs+nvxm7PFMSx6NgJM86oZhgnJVwerZEv7s
-         Yng0ClDDvhWc2NOabcyHDNUV2kdhxQVeCGhydPZXYgSy3v2kr0pQwS9QGEOtbo2ukELh
-         1gpA==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Xi0XdFTCf8NeV+jIYlO5na2vh2J2DcCHyyItFCX1l0M=;
+        b=Vc9E9AeqGPizsHCe6KkjaId6FYyAtMA2mwVAJOPXzsK93VYaIWCgA2O8ScLyNA6yw3
+         dw4Gp1ALjJ62XvvYLQtwjWDzeBg59S2hOzd/053To+9vlcr43H5EHQSTklUV8ElZ6yFA
+         X/hsZxCgNfgndu8a/oYqSvpFUljVeYGhsEO4g+lTBxcJiTesVYCg8EjU0MHlS33WLBCi
+         LKdmHfICbZMV59rmscPaCHOhEngjbvFssroFKHXgPVtEDiSMLD2YRfcJeWQrwo8hWZle
+         qgdjiIisIGJZstE81z79vATvQqNXgeuF7JQns7YnocGtPudjpRvjt5ghlu56asiMo8JR
+         Qlew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=I/ZTNIwVZwY2itPle1SBk0RQrisDKbFqslX3qr21jsY=;
-        b=LF1YFP0tMiRBNUZKt67jzHF8ZD2DrBBT6rWLYo6IRUa1P+u/BLCUJn/sutEFhHEvKX
-         4QrZBPn3wXN/YF8fTx0ldKWrUnEoULR5oF/3s1pApBOPU5T7KlwyYpy4uGBKHGW4dEO4
-         ItG1fDMdArTA2QHSsRb+NZsgPtZck5LKwPgBxuo846AfSxzRl1+KSGORnli7sD/7FgNJ
-         lGUcn+GCCx2S4O7D5C1GcWxjK5Xz9hhOTH4VHc802uduZJSWb620dDwfSWh9lg5zGgCO
-         wGMV3m16wJWwfUcLu/DsTvTy38nkVPvb7YUJC2DVoDeTGlTOlAyYxj9chZyUs9Ggd6nr
-         UCXw==
-X-Gm-Message-State: APjAAAVMvLrBcq4W4tu9fxzw33Y5nhKQElVhn8HIJ9VJVrjS2iG5h/wo
-        PCKOXsudUc61aGnwIwvKAvE=
-X-Google-Smtp-Source: APXvYqwC6GmyVpazhjpknGBogZTw6us9D+79ECEKBQ7e4WS2VjZ74mX2v2AXj5YZpzitBQ5duklF4Q==
-X-Received: by 2002:adf:a4c9:: with SMTP id h9mr13687030wrb.254.1551733704784;
-        Mon, 04 Mar 2019 13:08:24 -0800 (PST)
-Received: from [10.67.50.0] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id x17sm22764832wrd.95.2019.03.04.13.08.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 13:08:23 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] soc: bcm: bcm2835-pm: Fix PM_IMAGE_PERI power
- domain support.
-To:     Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        bcm-kernel-feedback-list@broadcom.com
-References: <20190220181951.12670-1-eric@anholt.net>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <c4625edb-be9d-97eb-0139-29e940901d91@gmail.com>
-Date:   Mon, 4 Mar 2019 13:08:20 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xi0XdFTCf8NeV+jIYlO5na2vh2J2DcCHyyItFCX1l0M=;
+        b=sahHz3i7lyclecIw30qbl/NJt/7FS/yTae5nfBE5a/8S06XraMSw9M2uyl7sQZR4Rd
+         lA6xmEWkl16btFoHpSiuygzwHZmIcQE3Ksc6rTEBacgvZmXOJTOoOmOMexJDT4y6iv8S
+         /g/oZvIbwE1Kinb7RcjDrrmmQ1gWPCB7VhLW3cja+tU05gkA1S7Te5xRp3wrMu34Wp04
+         LxkLSXQMpEHkJMbm28KTa4NLF6v/JfBhfuyKu38SzapuKpClbJW75mAyigovUceXUd6Y
+         FbRUCB7kSr4mypKX6T5/wNT7dl4QishPvrf5yUxl3vJLZSYWuybcRUDS5p3A/DD52MJA
+         RiYA==
+X-Gm-Message-State: APjAAAUS7u99ifhLLoRrzbm2K0sRfbkQZUKrYfAQDxt1nO0e/KMA64FD
+        l6FomjNv5ci/LKXSA0zoztXkmw==
+X-Google-Smtp-Source: AHgI3IbmIPl/wy+QEYJmdxLjpd0A+EdNA3gR3FHdpPUcnY6eeaPGEO9BBrsrvIArbFVRu6ubNEFP/g==
+X-Received: by 2002:a50:ac09:: with SMTP id v9mr16782631edc.3.1551733717724;
+        Mon, 04 Mar 2019 13:08:37 -0800 (PST)
+Received: from brauner.io ([2a02:8109:b6c0:76e:3ddf:44fc:d22b:95ce])
+        by smtp.gmail.com with ESMTPSA id q55sm2424999eda.19.2019.03.04.13.08.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 04 Mar 2019 13:08:37 -0800 (PST)
+Date:   Mon, 4 Mar 2019 22:08:35 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Zhu Yanjun <Yanjun.Zhu@windriver.com>,
+        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        David Ahern <dsahern@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: ignore sysctl_devconf_inherit_init_net without
+ SYSCTL
+Message-ID: <20190304210834.ozejr3y6yyvh5i5n@brauner.io>
+References: <20190304203822.2094613-1-arnd@arndb.de>
+ <20190304210007.sqlkp5ylt5qy2hjf@brauner.io>
+ <CAK8P3a2NGnvnNhLBBrEGC1SNE+TV13hPC7_P6TQu8cy5kro91A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190220181951.12670-1-eric@anholt.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2NGnvnNhLBBrEGC1SNE+TV13hPC7_P6TQu8cy5kro91A@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/19 10:19 AM, Eric Anholt wrote:
-> We don't have ASB master/slave regs for this domain, so just skip that
-> step.
+On Mon, Mar 04, 2019 at 10:07:17PM +0100, Arnd Bergmann wrote:
+> On Mon, Mar 4, 2019 at 10:00 PM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > On Mon, Mar 04, 2019 at 09:38:03PM +0100, Arnd Bergmann wrote:
+> > > When CONFIG_SYSCTL is turned off, we get a link failure for
+> > > the newly introduced tuning knob.
+> > >
+> > > net/ipv6/addrconf.o: In function `addrconf_init_net':
+> > > addrconf.c:(.text+0x31dc): undefined reference to `sysctl_devconf_inherit_init_net'
+> > >
+> > > Add an IS_ENABLED() check to fall back to the default behavior
+> > > (sysctl_devconf_inherit_init_net=0) here.
+> > >
+> > > Fixes: 856c395cfa63 ("net: introduce a knob to control whether to inherit devconf config")
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > ---
+> > >  net/ipv4/devinet.c  | 4 +++-
+> > >  net/ipv6/addrconf.c | 3 ++-
+> > >  2 files changed, 5 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/net/ipv4/devinet.c b/net/ipv4/devinet.c
+> > > index cd9033245b98..eb514f312e6f 100644
+> > > --- a/net/ipv4/devinet.c
+> > > +++ b/net/ipv4/devinet.c
+> > > @@ -2614,7 +2614,9 @@ static __net_init int devinet_init_net(struct net *net)
+> > >       tbl[0].extra2 = net;
+> > >  #endif
+> > >
+> > > -     if (sysctl_devconf_inherit_init_net != 2 && !net_eq(net, &init_net)) {
+> > > +     if ((!IS_ENABLED(CONFIG_SYSCTL) ||
+> > > +          sysctl_devconf_inherit_init_net != 2) &&
+> >
+> > I'm sure I'm just being stupid here but wouldn't this still trigger the
+> > warning or is sysctl_devconf_inherit_init_net unconditionally defined?
+> > The error you're reporting makes it look like it isn't.
 > 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> Fixes: 670c672608a1 ("soc: bcm: bcm2835-pm: Add support for power domains under a new binding.")
-
-Eric, do you want put that in a pull request for me to send to the ARM
-SoC maintainers?
-
-> ---
->  drivers/soc/bcm/bcm2835-power.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
+> The declaration is unconditional in include/linux/netdevice.h, so the
+> compiler does not see a problem, it simply doesn't create a reference
+> when it sees that the code path is dead.
 > 
-> diff --git a/drivers/soc/bcm/bcm2835-power.c b/drivers/soc/bcm/bcm2835-power.c
-> index 48412957ec7a..4a1b99b773c0 100644
-> --- a/drivers/soc/bcm/bcm2835-power.c
-> +++ b/drivers/soc/bcm/bcm2835-power.c
-> @@ -150,7 +150,12 @@ struct bcm2835_power {
->  
->  static int bcm2835_asb_enable(struct bcm2835_power *power, u32 reg)
->  {
-> -	u64 start = ktime_get_ns();
-> +	u64 start;
-> +
-> +	if (!reg)
-> +		return 0;
-> +
-> +	start = ktime_get_ns();
->  
->  	/* Enable the module's async AXI bridges. */
->  	ASB_WRITE(reg, ASB_READ(reg) & ~ASB_REQ_STOP);
-> @@ -165,7 +170,12 @@ static int bcm2835_asb_enable(struct bcm2835_power *power, u32 reg)
->  
->  static int bcm2835_asb_disable(struct bcm2835_power *power, u32 reg)
->  {
-> -	u64 start = ktime_get_ns();
-> +	u64 start;
-> +
-> +	if (!reg)
-> +		return 0;
-> +
-> +	start = ktime_get_ns();
->  
->  	/* Enable the module's async AXI bridges. */
->  	ASB_WRITE(reg, ASB_READ(reg) | ASB_REQ_STOP);
-> 
+> The error message I quoted is from the linker, so this is in turn
+> not a problem after there is no reference to the variable.
 
+Perfect!
 
--- 
-Florian
+Acked-by: Christian Brauner <christian@brauner.io>
