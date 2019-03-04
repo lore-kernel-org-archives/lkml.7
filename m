@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4993AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1250C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BCC20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD8120823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551689138;
-	bh=aK9Dly1DPvFp1pOd96nLwQAHfZO3piYaJ9n/IUOlVLw=;
+	s=default; t=1551689145;
+	bh=F2U/OcCtAzPTwXcZFO4GBLjKermEkDNLZeXrVqKQu5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZgKyd//f7Qdn++DvU22YMC5ly98x67gKM7/RBsi0z0qvGWd9RswEl+iGvVjqr8QS0
-	 C6Xo1QQqKCTLyecN6jEKHZtyterTCIPeprV2uSo8s0op93lWdeju/WDhJg0teu9qnC
-	 Cj/Tq0X13kV+bg3Vs8/xK3loHptEDn6BqWK7coGU=
+	b=X+v+qMiV1nQfMdEiXKCsEXMSj+lF40G9GLEExtNa0fvMOFo62Ra8q0639AvuIFojb
+	 cyiOslxQfUuZS+Pvpy8M/IJwtjE0nA4LuAzjLOnlM3qFVgZRu6sOPI2vqKE2RhluxL
+	 aVytC7ZSR0fw13XZI4/LJcHHN+951tr8hQxMRXoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfCDIpg (ORCPT
+        id S1727170AbfCDIpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:45:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51452 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:45:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727259AbfCDI1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:27:35 -0500
+        id S1726591AbfCDI13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:27:29 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33C6120823;
-        Mon,  4 Mar 2019 08:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5F7D20823;
+        Mon,  4 Mar 2019 08:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688054;
-        bh=aK9Dly1DPvFp1pOd96nLwQAHfZO3piYaJ9n/IUOlVLw=;
+        s=default; t=1551688048;
+        bh=F2U/OcCtAzPTwXcZFO4GBLjKermEkDNLZeXrVqKQu5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EQ6E8iNZo83jbz/jm14uIsu/dtfwCVBQR83N0ENz9OwxnFpgNB9QDqgP8uU1LWExT
-         e24EhHS9eeVSNBadl6W1tg351rBLafMWP56R+eG/WF3L7YJTNF7E6xIRe0Mkjf79y+
-         yf0lP3yO/Djn5XqnITFNpT850tkc/gKEwdaU7YmY=
+        b=ErYapC++x4rzgY93ZjvrtwpzmF1vQ18HslcG2oe2WRHGefoUwRhgkXihcuJVWCtxz
+         mrO4yIzT4byvDTm902qVKXnzIwGixNb80cmQfZvGdXGSnNkWFaVtcRE/XIJ7En2Jnm
+         APfiNsy6NNBmZC/DdwcqOni4L4SlhdnGYk5cOIm0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haibo Chen <haibo.chen@nxp.com>,
+        stable@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 48/52] mmc: sdhci-esdhc-imx: correct the fix of ERR004536
-Date:   Mon,  4 Mar 2019 09:22:46 +0100
-Message-Id: <20190304081619.859387660@linuxfoundation.org>
+Subject: [PATCH 4.14 46/52] mmc: tmio_mmc_core: dont claim spurious interrupts
+Date:   Mon,  4 Mar 2019 09:22:44 +0100
+Message-Id: <20190304081619.749399174@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -65,83 +68,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: BOUGH CHEN <haibo.chen@nxp.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-commit e30be063d6dbcc0f18b1eb25fa709fdef89201fb upstream.
+commit 5c27ff5db1491a947264d6d4e4cbe43ae6535bae upstream.
 
-Commit 18094430d6b5 ("mmc: sdhci-esdhc-imx: add ADMA Length
-Mismatch errata fix") involve the fix of ERR004536, but the
-fix is incorrect. Double confirm with IC, need to clear the
-bit 7 of register 0x6c rather than set this bit 7.
-Here is the definition of bit 7 of 0x6c:
-    0: enable the new IC fix for ERR004536
-    1: do not use the IC fix, keep the same as before
+I have encountered an interrupt storm during the eMMC chip probing (and
+the chip finally didn't get detected).  It turned out that U-Boot left
+the DMAC interrupts enabled while the Linux driver  didn't use those.
+The SDHI driver's interrupt handler somehow assumes that, even if an
+SDIO interrupt didn't happen, it should return IRQ_HANDLED.  I think
+that if none of the enabled interrupts happened and got handled, we
+should return IRQ_NONE -- that way the kernel IRQ code recoginizes
+a spurious interrupt and masks it off pretty quickly...
 
-Find this issue on i.MX845s-evk board when enable CMDQ, and
-let system in heavy loading.
-
-root@imx8mmevk:~# dd if=/dev/mmcblk2 of=/dev/null bs=1M &
-root@imx8mmevk:~# memtester 1000M > /dev/zero &
-root@imx8mmevk:~# [  139.897220] mmc2: cqhci: timeout for tag 16
-[  139.901417] mmc2: cqhci: ============ CQHCI REGISTER DUMP ===========
-[  139.907862] mmc2: cqhci: Caps:      0x0000310a | Version:  0x00000510
-[  139.914311] mmc2: cqhci: Config:    0x00001001 | Control:  0x00000000
-[  139.920753] mmc2: cqhci: Int stat:  0x00000000 | Int enab: 0x00000006
-[  139.927193] mmc2: cqhci: Int sig:   0x00000006 | Int Coal: 0x00000000
-[  139.933634] mmc2: cqhci: TDL base:  0x7809c000 | TDL up32: 0x00000000
-[  139.940073] mmc2: cqhci: Doorbell:  0x00030000 | TCN:      0x00000000
-[  139.946518] mmc2: cqhci: Dev queue: 0x00010000 | Dev Pend: 0x00010000
-[  139.952967] mmc2: cqhci: Task clr:  0x00000000 | SSC1:     0x00011000
-[  139.959411] mmc2: cqhci: SSC2:      0x00000001 | DCMD rsp: 0x00000000
-[  139.965857] mmc2: cqhci: RED mask:  0xfdf9a080 | TERRI:    0x00000000
-[  139.972308] mmc2: cqhci: Resp idx:  0x0000002e | Resp arg: 0x00000900
-[  139.978761] mmc2: sdhci: ============ SDHCI REGISTER DUMP ===========
-[  139.985214] mmc2: sdhci: Sys addr:  0xb2c19000 | Version:  0x00000002
-[  139.991669] mmc2: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000400
-[  139.998127] mmc2: sdhci: Argument:  0x40110400 | Trn mode: 0x00000033
-[  140.004618] mmc2: sdhci: Present:   0x01088a8f | Host ctl: 0x00000030
-[  140.011113] mmc2: sdhci: Power:     0x00000002 | Blk gap:  0x00000080
-[  140.017583] mmc2: sdhci: Wake-up:   0x00000008 | Clock:    0x0000000f
-[  140.024039] mmc2: sdhci: Timeout:   0x0000008f | Int stat: 0x00000000
-[  140.030497] mmc2: sdhci: Int enab:  0x107f4000 | Sig enab: 0x107f4000
-[  140.036972] mmc2: sdhci: AC12 err:  0x00000000 | Slot int: 0x00000502
-[  140.043426] mmc2: sdhci: Caps:      0x07eb0000 | Caps_1:   0x8000b407
-[  140.049867] mmc2: sdhci: Cmd:       0x00002c1a | Max curr: 0x00ffffff
-[  140.056314] mmc2: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0xffffffff
-[  140.062755] mmc2: sdhci: Resp[2]:   0x328f5903 | Resp[3]:  0x00d00f00
-[  140.069195] mmc2: sdhci: Host ctl2: 0x00000008
-[  140.073640] mmc2: sdhci: ADMA Err:  0x00000007 | ADMA Ptr: 0x7809c108
-[  140.080079] mmc2: sdhci: ============================================
-[  140.086662] mmc2: running CQE recovery
-
-Fixes: 18094430d6b5 ("mmc: sdhci-esdhc-imx: add ADMA Length Mismatch errata fix")
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Fixes: 7729c7a232a9 ("mmc: tmio: Provide separate interrupt handlers")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Cc: stable@vger.kernel.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-esdhc-imx.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/mmc/host/tmio_mmc_core.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1077,11 +1077,12 @@ static void sdhci_esdhc_imx_hwinit(struc
- 		writel(readl(host->ioaddr + SDHCI_HOST_CONTROL)
- 			| ESDHC_BURST_LEN_EN_INCR,
- 			host->ioaddr + SDHCI_HOST_CONTROL);
-+
- 		/*
--		* erratum ESDHC_FLAG_ERR004536 fix for MX6Q TO1.2 and MX6DL
--		* TO1.1, it's harmless for MX6SL
--		*/
--		writel(readl(host->ioaddr + 0x6c) | BIT(7),
-+		 * erratum ESDHC_FLAG_ERR004536 fix for MX6Q TO1.2 and MX6DL
-+		 * TO1.1, it's harmless for MX6SL
-+		 */
-+		writel(readl(host->ioaddr + 0x6c) & ~BIT(7),
- 			host->ioaddr + 0x6c);
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -688,7 +688,7 @@ static bool __tmio_mmc_sdcard_irq(struct
+ 	return false;
+ }
  
- 		/* disable DLL_CTRL delay line settings */
+-static void __tmio_mmc_sdio_irq(struct tmio_mmc_host *host)
++static bool __tmio_mmc_sdio_irq(struct tmio_mmc_host *host)
+ {
+ 	struct mmc_host *mmc = host->mmc;
+ 	struct tmio_mmc_data *pdata = host->pdata;
+@@ -696,7 +696,7 @@ static void __tmio_mmc_sdio_irq(struct t
+ 	unsigned int sdio_status;
+ 
+ 	if (!(pdata->flags & TMIO_MMC_SDIO_IRQ))
+-		return;
++		return false;
+ 
+ 	status = sd_ctrl_read16(host, CTL_SDIO_STATUS);
+ 	ireg = status & TMIO_SDIO_MASK_ALL & ~host->sdio_irq_mask;
+@@ -709,6 +709,8 @@ static void __tmio_mmc_sdio_irq(struct t
+ 
+ 	if (mmc->caps & MMC_CAP_SDIO_IRQ && ireg & TMIO_SDIO_STAT_IOIRQ)
+ 		mmc_signal_sdio_irq(mmc);
++
++	return ireg;
+ }
+ 
+ irqreturn_t tmio_mmc_irq(int irq, void *devid)
+@@ -727,9 +729,10 @@ irqreturn_t tmio_mmc_irq(int irq, void *
+ 	if (__tmio_mmc_sdcard_irq(host, ireg, status))
+ 		return IRQ_HANDLED;
+ 
+-	__tmio_mmc_sdio_irq(host);
++	if (__tmio_mmc_sdio_irq(host))
++		return IRQ_HANDLED;
+ 
+-	return IRQ_HANDLED;
++	return IRQ_NONE;
+ }
+ EXPORT_SYMBOL_GPL(tmio_mmc_irq);
+ 
 
 
