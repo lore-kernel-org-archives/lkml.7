@@ -2,128 +2,134 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FB9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275BFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9542082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8A6C2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:00:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZnGBaH1/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLf/KRas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfCDKAg (ORCPT
+        id S1726399AbfCDKAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 05:00:36 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:42412 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfCDKAg (ORCPT
+        Mon, 4 Mar 2019 05:00:50 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37390 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbfCDKAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 05:00:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3KISdEsEat/4nexUPYnK+FWnprlUbr4DUHRy5J9S4g8=; b=ZnGBaH1/RZuMcN96Flh2wEeoA
-        gUxGHW6MGJe1jFw1tpAuBA4OmAPCfmT1QooX/TR+OH5JWn3xXyo+mZ8E7r0JPTeEgTbLcYk9BV0XH
-        WplgcmEoYGCTLehVzQITmb2Ume/leYMrBabzbkPxYLq6wCZZnT+IadyUE2VdDiUMZVTujoeKqFe68
-        HeTiAqicr2pz3Z4EJ6HQiVoZkqH4Fb/7TYzE9YveZ3nXqCepKpP2FLe8zMM3NdJAWcIozdrrsSHif
-        m2549ozPGF0indfkJ7Qv3jRQNeF8/1tjWZC+xWhV7m80GqX1xyhKfPXc8k6xXp2XhUVLyPIAZd1JV
-        gJ24VjJVg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h0kOW-0003aB-Ld; Mon, 04 Mar 2019 10:00:25 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AEDF120295AAE; Mon,  4 Mar 2019 11:00:22 +0100 (CET)
-Date:   Mon, 4 Mar 2019 11:00:22 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 02/17] drivers/net/b44: Align pwol_mask to unsigned
- long for better performance
-Message-ID: <20190304100022.GA32477@hirez.programming.kicks-ass.net>
-References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
- <1551494711-213533-3-git-send-email-fenghua.yu@intel.com>
+        Mon, 4 Mar 2019 05:00:50 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s22so2657776pfh.4;
+        Mon, 04 Mar 2019 02:00:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3LqBJvC3jKnzcjK7P9LIYsrh8zKUbPYSgARU78sfxG0=;
+        b=NLf/KRasE9w3kpuz7AanPk5LUi1sUOk8BrFRDpdmIbK+Tlw7t2iYis+i2AhbuTAN8Z
+         IJhkUugh1jCek0JJ3zsA9GaxntrjkvMNvjN1oEeyt/2RvhhvZmqYx8vOatiZGuEr5Of6
+         t9YIM3dQQjO7eqBTrowVY6eztZvYfg9AvPZyIasqiWCYPlCJoQxFiSN1NksoeMk5ncW9
+         GwJhiMKmMWLevSchJdLoBSgdC6YSR9mGkQJyZ4homBiTXjYL2OHBokKpsD6GveqLmXfe
+         /uIBANNF6/dfyGawjZh+K9pQbT7oDXvbxEqJfLqS7Uhodzkv5rJ83p8LgIy1d+HiVcan
+         MZRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3LqBJvC3jKnzcjK7P9LIYsrh8zKUbPYSgARU78sfxG0=;
+        b=Vbv1KzKCQscbYq3HEnMECbUMGQvniw7G2WgdK7uIAhTkZikbWHmhQOTjtzoAqZrX48
+         6ZYmPPn3wsQ+DiYOusCjbbJmzzPtbrbSDLmQVCWAXU/mNWBvngDi6gElCIqOs2YU9/2T
+         vChbWRBP7Ldt+b0KGGoIE+WL8nOBaboginz/geaSi5oCuyLatlR7EsuXJMh9Uq+dgywu
+         6UupSZfRSLP7AyTLMy4jydRL6dGPW2gxLXmRYvm//u/HcBGj26nhCyYM3DSbh3UYcRJB
+         DkR7Vr9jAj4kadkxg/zMww7Wn567fRT9+LGRSFTGj8uX7sqVG80n2mwF6pNBJMyfVDFY
+         zuMg==
+X-Gm-Message-State: APjAAAVf75DCO7aaDAU0PLSZ3YUE0LioQtoRjp1+Kg9kaFxnr9yPeBLL
+        62fD/rUfuDjL3iMZt6ScsJE=
+X-Google-Smtp-Source: APXvYqwd9NeIU+MiQhQ68Za8a8+ftMRcl/20MZiherfu7OEtx2AjJzofExzbQz4TDRbiZJatMcQrJg==
+X-Received: by 2002:a17:902:4124:: with SMTP id e33mr19599079pld.236.1551693649139;
+        Mon, 04 Mar 2019 02:00:49 -0800 (PST)
+Received: from localhost ([175.223.38.45])
+        by smtp.gmail.com with ESMTPSA id e26sm7680460pfd.124.2019.03.04.02.00.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 Mar 2019 02:00:48 -0800 (PST)
+Date:   Mon, 4 Mar 2019 19:00:44 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
+Message-ID: <20190304100044.GC21004@jagdpanzerIV>
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+ <20190212143003.48446-9-john.ogness@linutronix.de>
+ <20190304073856.GA552@jagdpanzerIV>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1551494711-213533-3-git-send-email-fenghua.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190304073856.GA552@jagdpanzerIV>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 06:44:56PM -0800, Fenghua Yu wrote:
-> A bit in pwol_mask is set in b44_magic_pattern automatically by set_bit.
-> set_bit sets the bit in a single unsigned long location. Since pwol_mask
-> may not be aligned to unsigned long, the location may cross two cache
-> lines and accessing the location degradates performance. On x86, accessing
-> two cache lines in locked instruction in set_bit is called split lock and
-> can cause overall performance degradation.
-> 
-> To avoid to impact performance by accessing two cache lines in set_bit,
-> align pwol_mask to unsigned long.
-> 
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> ---
->  drivers/net/ethernet/broadcom/b44.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
-> index 97ab0dd25552..bc544b6b9c3a 100644
-> --- a/drivers/net/ethernet/broadcom/b44.c
-> +++ b/drivers/net/ethernet/broadcom/b44.c
-> @@ -1547,7 +1547,8 @@ static void b44_setup_pseudo_magicp(struct b44 *bp)
->  	u32 val;
->  	int plen0, plen1, plen2;
->  	u8 *pwol_pattern;
-> -	u8 pwol_mask[B44_PMASK_SIZE];
-> +	/* Align to unsigned long for better performance in set_bit() */
-> +	u8 pwol_mask[B44_PMASK_SIZE] __aligned(sizeof(unsigned long));
->  
->  	pwol_pattern = kzalloc(B44_PATTERN_SIZE, GFP_KERNEL);
->  	if (!pwol_pattern)
+On (03/04/19 16:38), Sergey Senozhatsky wrote:
+> This, theoretically, creates a whole new world of possibilities for
+> console drivers. Now they can do GFP_KERNEL allocations and stall
+> printk_kthread during OOM; or they can explicitly reschedule from
+> ->write() callback (via console_conditional_schedule()) because
+> console_lock() sets console_may_schedule.
 
-That is truly horrid code. But afaict pwol_mask is local and never
-exposed to concurrency, so _why_ does it need atomic bitset in the first
-place?
+To demonstrate what kind of damage preemptible printk can do, some
+of the reports I have in my inbox:
 
-Would not the below be a _much_ better solution?
+> ** 45 printk messages dropped ** [ 2637.275312] i2c-msm-v2 7af5000.i2c: NACK: slave not responding, ensure its powered: msgs(n:1 cur:0 tx) bc(rx:0 tx:2) mode:FIFO slv_addr:0x68 MSTR_STS:0x011363c8 OPER:0x00000090
+> ** 59 printk messages dropped ** [ 2637.294937] i2c-msm-v2 7af5000.i2c: NACK: slave not responding, ensure its powered: msgs(n:1 cur:0 tx) bc(rx:0 tx:2) mode:FIFO slv_addr:0x68 MSTR_STS:0x011363c8 OPER:0x00000090
+> ** 54 printk messages dropped ** ...
 
+or
 
-diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
-index 97ab0dd25552..0b4226b406b1 100644
---- a/drivers/net/ethernet/broadcom/b44.c
-+++ b/drivers/net/ethernet/broadcom/b44.c
-@@ -1520,7 +1520,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
- 
- 	memset(ppattern + offset, 0xff, magicsync);
- 	for (j = 0; j < magicsync; j++)
--		set_bit(len++, (unsigned long *) pmask);
-+		__set_bit(len++, (unsigned long *) pmask);
- 
- 	for (j = 0; j < B44_MAX_PATTERNS; j++) {
- 		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
-@@ -1532,7 +1532,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
- 		for (k = 0; k< ethaddr_bytes; k++) {
- 			ppattern[offset + magicsync +
- 				(j * ETH_ALEN) + k] = macaddr[k];
--			set_bit(len++, (unsigned long *) pmask);
-+			__set_bit(len++, (unsigned long *) pmask);
- 		}
- 	}
- 	return len - 1;
+[..]
+> ** 2499 printk messages dropped ** [   60.095515] CPU: 1 PID: 7148 Comm: syz-executor5 Tainted: G    B           4.4.104-ged884eb #2
+> ** 5042 printk messages dropped ** [   60.107433]  [<ffffffff82564f65>] sg_finish_rem_req+0x255/0x2f0
+> ** 3861 printk messages dropped ** [   60.116522] 	entry_SYSCALL_64_fastpath+0x16/0x76
+> ** 3313 printk messages dropped ** [   60.124312] Object ffff8800b903e960: 00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+> ** 5311 printk messages dropped ** [   60.136772] INFO: Freed in fasync_free_rcu+0x14/0x20 age=624 cpu=0 pid=3
+> ** 4200 printk messages dropped ** [   60.146612] 	__slab_free+0x18c/0x2b0
+> ** 2864 printk messages dropped ** [   60.153322] Object ffff8800b903e990: 00 50 8b 83 ff ff ff ff 01 46 00 00 07 00 00 00  .P.......F......
+> ** 5323 printk messages dropped ** [   60.165806] Object ffff8800b903e980: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> ** 5308 printk messages dropped ** [   60.178233] 	entry_SYSCALL_64_fastpath+0x16/0x76
+> ** 3313 printk messages dropped ** [   60.186014] Object ffff8800b903e960: 00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+> ** 5306 printk messages dropped ** [   60.198451] 	kmem_cache_alloc+0x155/0x290
+[..]
+
+One can lose tens, hundreds or even thousands of messages between
+consecutive call_console_drivers(). These reports are back from the
+days when printk used to be preemptible. I don't see that many dropped
+messages starting from 4.15 (when we disabled preemption), at least not
+in those syzbot reports which I have.
+
+Some of those lost messages are probably going to be handled by ->atomic
+path (depending on the loglevel), assuming that ->atomic console is
+available. At the same time we might see a notable conversion of some
+pr_foo-s to "a more safer emergency levels".
+
+But in general, channels which depend on preemptible printk will become
+totally useless in some cases.
+
+	-ss
