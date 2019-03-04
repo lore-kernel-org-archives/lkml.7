@@ -2,134 +2,163 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A151C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA7AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494E72054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:18:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5aouGOZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9A04820663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfCDSSw (ORCPT
+        id S1727772AbfCDSV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:18:52 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45001 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCDSSv (ORCPT
+        Mon, 4 Mar 2019 13:21:27 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39958 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfCDSV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:18:51 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w2so6620240wrt.11;
-        Mon, 04 Mar 2019 10:18:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vV+EaqFjH5ne+abJs+foKJw4TQKfXvD1njkQg2X5ybU=;
-        b=R5aouGOZdajmgTKkQRVCEMvoh+EcFych9fjflh8ZP9pjd5873OnBQx0ygudD/RHwMp
-         2qhtCQRARNNxuWXJHHUgYqkN6WD8IGXFDgP2OnjcncPQfxhyV4vs7tHHdjcw8urEzGih
-         bE2zmUewS6kaj3kvY5yCamMWz/+sDqKOUaWop7vgJeqQamS83JUkRWsAy2iIW9VZqp6j
-         kLiPE91jEUQ666ljqtnU/8+QsxY3+pVhHUEUxPO1BQFrGshResHpRdBeIPHpUSecAVtm
-         6xOmQvHFv3tcgE2A7F05745nrLmzEEfKZN5I2s7JiJ12sXeEq6br+Sbu5+UXsBJX9dh2
-         ylUg==
+        Mon, 4 Mar 2019 13:21:26 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u9so3650985pgo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 10:21:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=vV+EaqFjH5ne+abJs+foKJw4TQKfXvD1njkQg2X5ybU=;
-        b=NQJDmTs2MUc18E6iEd8e9loOZ1DIA1pTkoJxdjiEchQ3wvbznld94ZtMzBTUBJLVae
-         DVadHMvcIzpDapzTGmqQrBvxBoT0ayjWKB4+41OFAZZ4vj4xsv4aW+t012xJGD2oQRZK
-         C1D1UxYDs2HTFVunEsZaPsI2Xk3qM0fCdHPqJ8UuSOgHP8PQUelYbDalp3AY1XiazTtg
-         gtq4SOW6O9M/EVTwgtka/QC30Vx5FxBDt/DVMDZETelxY0NdK9Ku9o45jJBXDP+KuT/e
-         8q6goZIdFlg/N9llpbVwX5iLCE0ZKU+b56OOpYUYKyKwc0uGo1wMmQ9ZMo10HVns5tBp
-         x1Bg==
-X-Gm-Message-State: APjAAAVL+HI4a9m+U4OjIGpwuyNmz6d+iXlulkAjcZKbKd28/Z6yUMaP
-        sQYx914hoZJDiD7i1Ej00JA=
-X-Google-Smtp-Source: APXvYqxn/1XVpVbh6RbXpASMjJnDtgTYlFShiXSDbJFoEd090S+jX/f/CzuIwcwptZoo7rEiSbcmVg==
-X-Received: by 2002:adf:e8c7:: with SMTP id k7mr14006827wrn.298.1551723529487;
-        Mon, 04 Mar 2019 10:18:49 -0800 (PST)
-Received: from ?IPv6:2003:ea:8bf1:e200:d8e4:889a:5ed6:37cb? (p200300EA8BF1E200D8E4889A5ED637CB.dip0.t-ipconnect.de. [2003:ea:8bf1:e200:d8e4:889a:5ed6:37cb])
-        by smtp.googlemail.com with ESMTPSA id w3sm6943760wrl.22.2019.03.04.10.18.48
+        bh=5qqT4ZRf/LnelivIm5A7ePD1SDllKAfmDoHjg3x74hA=;
+        b=X2oHyNPsqLxStKZOli4HY5OLRXn6aVEwbpr+9lWTNhmGrfg6+JIW4WUibeUmoSHdUp
+         qQb6WcpSjAObq+dniNbrumTF7FD7BbTcr5IrDWREsj9OSOtv1+jAGeak7JeftDa+hhMq
+         fWzHWPCz/FWSshgyuimUXAOv9qZWngssNQKbIbCkgeIcNblJ+BDnyQdARAKnBCOf3DYL
+         M5OO0X19Xw1qGtFQWwkE4y/58H+vYFYyS3TgVlgsdOLomc3ks450EwvEiAQOwj51BO97
+         KpPcvXB6BpRUfLeUEjR2NmUJ76TqsUlzV+f2qQcXmzgh4rCKYAmzarjUZbHOFT8H6p0C
+         XpbQ==
+X-Gm-Message-State: APjAAAWkobi04Zhm669pYDEjBHnMAeSeJG3y73yaunI90dVzdK62VrSh
+        xQM/avDSzmlmvKadNd+7J/gKVDf4
+X-Google-Smtp-Source: APXvYqx3h43yn9TLA/gX255CpV5YhddmYYvexQyTsRT/2ybYVxpXPheNqdaL6kBbmMXQDxoljlUxqA==
+X-Received: by 2002:a63:1021:: with SMTP id f33mr19627983pgl.392.1551723685239;
+        Mon, 04 Mar 2019 10:21:25 -0800 (PST)
+Received: from ?IPv6:2601:647:4800:973f:b459:1755:7327:66f8? ([2601:647:4800:973f:b459:1755:7327:66f8])
+        by smtp.gmail.com with ESMTPSA id o2sm10283834pgq.29.2019.03.04.10.21.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 10:18:48 -0800 (PST)
-Subject: Re: [PATCH -next] net: dsa: mv88e6xxx: Fix build warning when
- CONFIG_NET_DSA_LEGACY is n
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <1551703381-52115-1-git-send-email-zhangshaokun@hisilicon.com>
- <20190304132617.GB26378@lunn.ch>
- <bc528808-2ad5-90ae-4bc0-afa47a7c4f42@hisilicon.com>
- <20190304145710.GA17097@lunn.ch>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <74a6581e-f761-0fb0-3200-e82b7ac88e75@gmail.com>
-Date:   Mon, 4 Mar 2019 19:18:41 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 04 Mar 2019 10:21:24 -0800 (PST)
+Subject: Re: [LKP] [workqueue] 4d43d395fe:
+ WARNING:at_kernel/workqueue.c:#__flush_work
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <keith.busch@intel.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        James Smart <jsmart2021@gmail.com>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@01.org
+References: <20190304134116.GF25100@shao2-debian>
+ <d6c6c236-7546-b5a4-47bd-d64b8b37083c@i-love.sakura.ne.jp>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <b247096b-9033-a06b-fd2b-2d0f8611eb97@grimberg.me>
+Date:   Mon, 4 Mar 2019 10:21:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190304145710.GA17097@lunn.ch>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d6c6c236-7546-b5a4-47bd-d64b8b37083c@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.03.2019 15:57, Andrew Lunn wrote:
-> On Mon, Mar 04, 2019 at 10:16:08PM +0800, Zhangshaokun wrote:
->> Hi Andrew,
+
+> Forwarding to NMVE people:
+> 
+> kernel test robot found that
+> flush_work(&ctrl->async_event_work) is called from nvmet_ctrl_free()
+> without INIT_WORK(&ctrl->async_event_work, nvmet_async_event_work)
+> after ctrl was allocated (probably initialized with 0).
+> Will you make sure that INIT_WORK() is always called?
+
+I cannot reproduce this issue. When following the code I don't
+immediately see how this can happen.. Was there something special
+in this specific test run? Is it 100% reproduce-able?
+
+> 
+> On 2019/03/04 22:41, kernel test robot wrote:
+>> FYI, we noticed the following commit (built with gcc-7):
 >>
->> On 2019/3/4 21:26, Andrew Lunn wrote:
->>> On Mon, Mar 04, 2019 at 08:43:01PM +0800, Shaokun Zhang wrote:
->>>> When CONFIG_NET_DSA_LEGACY is n, there is a GCC bulid warning:
->>>> drivers/net/dsa/mv88e6xxx/chip.c:4623:13: warning: ‘mv88e6xxx_ports_cmode_init’ defined but not used [-Wunused-function]
->>>> static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
->>>> Let's fix it.
->>>
->>> Hi Shaokun, Heiner
->>>
->>> Although this fixes the warning, i suspect there i something wrong
->>> with the original patch adding mv88e6390x_port_set_cmode(). It should
->>> also be used without CONFIG_NET_DSA_LEGACY.
+>> commit: 4d43d395fed124631ca02356c711facb90185175 ("workqueue: Try to catch flush_work() without INIT_WORK().")
+>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 >>
->> I checked the commit-id 2a93c1a3651f ("net: dsa: Allow compiling out legacy support") by Florian.
->> Do you mean that CONFIG_NET_DSA_LEGACY shall be removed completely? :-)
+>> in testcase: blktests
+>> with following parameters:
+>>
+>> 	disk: 1SSD
+>> 	test: nvme-005
+>>
+>>
+>>
+>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
+>>
+>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+>>
+>>
+>> +---------------------------------------------+------------+------------+
+>> |                                             | d73aba1115 | 4d43d395fe |
+>> +---------------------------------------------+------------+------------+
+>> | boot_successes                              | 11         | 15         |
+>> | boot_failures                               | 0          | 4          |
+>> | WARNING:at_kernel/workqueue.c:#__flush_work | 0          | 4          |
+>> | RIP:__flush_work                            | 0          | 4          |
+>> +---------------------------------------------+------------+------------+
+>>
+>>
+>>
+>> [   62.446979] WARNING: CPU: 0 PID: 169 at kernel/workqueue.c:2911 __flush_work+0x1eb/0x200
+>> [   62.450153] Modules linked in: nvme_loop nvme_fabrics nvmet nvme_core loop sr_mod cdrom sd_mod sg crct10dif_pclmul crc32_pclmul ppdev crc32c_intel ata_generic pata_acpi ghash_clmulni_intel snd_pcm snd_timer aesni_intel crypto_simd snd cryptd glue_helper soundcore i2c_piix4 pcspkr virtio_scsi ata_piix serio_raw libata parport_pc floppy parport ip_tables
+>> [   62.461143] CPU: 0 PID: 169 Comm: kworker/u4:2 Not tainted 5.0.0-rc3-00131-g4d43d39 #1
+>> [   62.463444] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+>> [   62.465843] Workqueue: nvme-reset-wq nvme_loop_reset_ctrl_work [nvme_loop]
+>> [   62.467769] RIP: 0010:__flush_work+0x1eb/0x200
+>> [   62.469176] Code: 66 66 90 65 ff 0d b5 de f6 7e 31 c0 eb a2 8b 4d 00 48 8b 55 08 83 e1 08 48 0f ba 6d 00 03 80 c9 f0 e9 58 ff ff ff 0f 0b eb 86 <0f> 0b 31 c0 eb 80 e8 0a 0d fe ff 66 2e 0f 1f 84 00 00 00 00 00 66
+>> [   62.475512] RSP: 0000:ffffc9000093fcf8 EFLAGS: 00010246
+>> [   62.477040] RAX: 0000000000000000 RBX: ffff888077f9c148 RCX: 0000000000000000
+>> [   62.478944] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff888077f9c148
+>> [   62.480945] RBP: ffff888077f9c148 R08: ffff88812ec00000 R09: ffff88812ec00028
+>> [   62.483203] R10: 0000000000000000 R11: ffffffff8265eef8 R12: 0000000000000000
+>> [   62.485841] R13: ffffc9000093fd90 R14: ffffffff810a49a0 R15: 0000000000000000
+>> [   62.488334] FS:  0000000000000000(0000) GS:ffff88813fc00000(0000) knlGS:0000000000000000
+>> [   62.491077] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [   62.492692] CR2: 0000558ad08acff0 CR3: 000000007f398000 CR4: 00000000000006f0
+>> [   62.494662] Call Trace:
+>> [   62.495566]  ? del_timer+0x53/0x80
+>> [   62.496668]  __cancel_work_timer+0x12b/0x1b0
+>> [   62.497961]  ? wake_up_q+0x80/0x80
+>> [   62.499361]  ? pcpu_free_area+0x270/0x2e0
+>> [   62.501054]  nvmet_ctrl_free+0x10f/0x1b0 [nvmet]
+>> [   62.502767]  ? free_percpu+0x7c/0x1c0
+>> [   62.504193]  nvmet_sq_destroy+0x74/0x110 [nvmet]
+>> [   62.505566]  nvme_loop_destroy_admin_queue+0x20/0x40 [nvme_loop]
+>> [   62.507223]  nvme_loop_reset_ctrl_work+0x2a/0xe0 [nvme_loop]
+>> [   62.508876]  process_one_work+0x19c/0x3b0
+>> [   62.510167]  worker_thread+0x1e5/0x3b0
+>> [   62.511357]  ? process_one_work+0x3b0/0x3b0
+>> [   62.512890]  kthread+0x11e/0x140
+>> [   62.514273]  ? kthread_park+0x90/0x90
+>> [   62.515735]  ret_from_fork+0x35/0x40
+>> [   62.517157] ---[ end trace d741a57df27dcf91 ]---
+>>
+>>
+>> To reproduce:
+>>
+>>          git clone https://github.com/intel/lkp-tests.git
+>>          cd lkp-tests
+>>          bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+>>
+>>
+>>
+>> Thanks,
+>> lkp
+>>
 > 
-> No, i suspect mv88e6390x_ports_cmode_init() is being called from the
-> wrong place, or needs to be called from a second location.
-> 
-> [Goes and looks at the code]
-> 
-> Yes, it should also be called in mv88e6xxx_probe(). I would call it
-> just after the call to mv88e6xxx_detect(), so that it is the same as
-> in mv88e6xxx_drv_probe().
-> 
-> There are two ways DSA drivers can be probed. The legacy way, which is
-> optional, and is slowly getting removed, and the current way. Heiner
-> is new to DSA and probably missed that, and only handled the legacy
-> probe method. I also missed checking when i reviewed to patch :-(
-> 
-Right, I missed that, will submit a fix.
-
-I just saw that the Kconfig entry comment for NET_DSA_LEGACY says:
-"This feature is scheduled for removal in 4.17."
-
-Was forgotten to remove it or did somebody scream loud enough
-"But I depend on it" ?
-
->    Andrew
-> 
-Heiner
-> 
-> 
-> 
-
