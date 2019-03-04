@@ -2,92 +2,100 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA6FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3B3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515F520823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54B720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:42:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1Fs01IF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfCDUlI (ORCPT
+        id S1726649AbfCDUml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:41:08 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:53797 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfCDUlH (ORCPT
+        Mon, 4 Mar 2019 15:42:41 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45681 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726101AbfCDUmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:41:07 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MGQWr-1gkAkD0R3N-00GmYZ; Mon, 04 Mar 2019 21:40:52 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
+        Mon, 4 Mar 2019 15:42:40 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w17so7034721wrn.12;
+        Mon, 04 Mar 2019 12:42:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yEDxlqcGNZWjbAwI/KNaFadWLU/mUR+0LdgFi3waQKk=;
+        b=l1Fs01IFqcrVADJWq7C0L7akOJLOF3mEjkX9m2vAkP1QXEW81vwR+RB89ZsMT8RI8p
+         PP16LpZ1w41WfYCljSkMEBohPQWXZeWkfVjRKbzk2Wu1qXp6Svk1+ybRJRoj6EBzDz3C
+         xSFj4G3lQyJJvv60qtswCKUXfDi6EtLqw19Aarf7nLEayR18pxZvq99se7WRHURk6Cv7
+         eRJS2oCKqnm283Gacp5iedUqkJSkMVnh+4mbS+C4og+WaPQMq/jJ7ufc4iCkQw5TZn/n
+         38TsbtHZ6jf1gWwWSzG6L5wfarqXTc/aamws5di2qEyFgaHPageQpijU+1MWIEoyVB0/
+         1T0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yEDxlqcGNZWjbAwI/KNaFadWLU/mUR+0LdgFi3waQKk=;
+        b=RRy7sjB3qnieORqgW0KDqPsdiKhN4VmkiSp8KlPjKlnuZ6nk4fc0XMxbT+Tq9G1Th2
+         teE7Pk7NeXYHhhd2CEdycmel+2JkaBAd/ZC0DYUoW7Dy1yUoBVwHLt2LkpbilPBm+hDz
+         0XmXNUEuSI/38YXFGXrKdBo4HT7C6MQvRumWHpg1xGFuDxB4sP8h+hn0XL8kgtJ7d8s4
+         1njC2oBHyH8PRg4khzuCD9+F2EPPfHEy53RKbDMVz9BkTVDyZ4GUTMcJWlGGKhF+8ZyF
+         73/xQcJszauQWhyQnLITf8kmY7yjycx8zU5hrODtKVEMOCSndC++v3ZrsIPMB/ah3ZdU
+         oEfw==
+X-Gm-Message-State: APjAAAXsm6vM0eVvnn5/+baLFcVwHqO1/Z6+UgxDWiCGlUSiq9NRnrD2
+        Yzl0FXF4De9aplh/wq8q+U5mM1Rm
+X-Google-Smtp-Source: APXvYqwH93Fu0Bo8lmy3AM8Tv6hw623NWe4w3Y1z5Qj12kswWvMx9DXWBpmlg1jfASuFYZoYv10dAA==
+X-Received: by 2002:adf:8447:: with SMTP id 65mr13204174wrf.328.1551732158886;
+        Mon, 04 Mar 2019 12:42:38 -0800 (PST)
+Received: from ?IPv6:2003:ea:8bf1:e200:d8e4:889a:5ed6:37cb? (p200300EA8BF1E200D8E4889A5ED637CB.dip0.t-ipconnect.de. [2003:ea:8bf1:e200:d8e4:889a:5ed6:37cb])
+        by smtp.googlemail.com with ESMTPSA id x11sm17774553wrt.27.2019.03.04.12.42.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 12:42:38 -0800 (PST)
+Subject: Re: [PATCH] net: dsa: mv88e6xxx: fix unused function warning
+To:     Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Vlad Buslov <vladbu@mellanox.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Davide Caratti <dcaratti@redhat.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Adi Nissim <adin@mellanox.com>, wenxu <wenxu@ucloud.cn>,
+Cc:     =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net/sched: avoid unused-label warning
-Date:   Mon,  4 Mar 2019 21:40:32 +0100
-Message-Id: <20190304204049.2150878-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+References: <20190304203641.2052975-1-arnd@arndb.de>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <50a3d69d-2096-a4d9-7c5f-54496671ec85@gmail.com>
+Date:   Mon, 4 Mar 2019 21:42:30 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:TmlPpxdDUF2mU4VYOam276FDHamkTtbq9FgbDJ70+3oAXHtU1oE
- mbTzcuj2OiZbE13vRAaMF9EboBjorTOsVy5l+1+vvK6IOkm9q+Hz/hMZtnAEdoPHn9cFujy
- Ae2XkzIZAWwBJdHkWdXHqSflPs/t+n5U3kdpTtJvbu+92WVF88DeAmSUePinUA9v056GYkt
- 9r8ZiUZdbnkfiGsD9hWbw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GQxPCzYySJo=:q6CITUG3lTzjN9T/GwaIOi
- r/PA32LQxTeWZe7oBBSiGKzOBedxJLQFtnuRITrqpFcMzUwwUNnAMviLSyreGzx1ZhZ2qIURD
- 51oFk/zmqvTrPYFlv6MMMQtt5naF9iKhj9sti8Xh6jQUXbq5TPUIRVxLISH167N/n0WubBStI
- 4hJ05KX8BLt5pVcesjdAusrvzjyi8UUOeOy0QaoryT12d6tpAOfw9SOfp60urjlcL9Yd8gOT2
- KLyBVRUbACjeEYAGXzPENboG/ROM6Qkd6TQ7/8k8Vk6XLEdarxxM5UdoClT6fbZwXsGtdYXal
- mwF92t3nB7BZGP+NJt2ZAiDb0G00nseFoL7egg93i78Z+2W1yWvOYj3FJQMRnS2+1hmjb9iLD
- 2O2Nq5yYoeleAYKL8WbK5lQtLX42Ppk9C+WFH/AFV0n/EJ1aO2ZZVJYEOW1fI282k/jcxsLSr
- sOLUw7Awgcxx2Hh88bMNYDTTp+3YJJl2VsIVPozhesWpBn5PhiWsNfCsCmxDn4uiNDLZ9+C6Z
- K6So8xG/SWVDiG4kQUKtsr+7s8tU4I4a7sgGznw+0Gps2OuXEnku1YM2m46c/YCRwUzSRnBSi
- v4vaM/uSZchvr6u7WanwBsSYakWQBr8/ldNjZTEJhm6s6le5h8ikGYbBdiGXiVDxCEK0C0HgD
- Xwse5NcBFGNqKmrWlaBsJuh1uUwpoPuUe1SibRSBjgqhDBsnlIM5Omggw+vamlDRONd4qCMNK
- aMEoc3zO61BVaBg05rups5Ua3wMb+1nI0lVvSA==
+In-Reply-To: <20190304203641.2052975-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The label is only used from inside the #ifdef and should be
-hidden the same way, to avoid this warning:
+On 04.03.2019 21:36, Arnd Bergmann wrote:
+> The newly introduced function is only used inside of an #ifdef
+> and causes a warning when that is disabled:
+> 
+> drivers/net/dsa/mv88e6xxx/chip.c:4623:13: error: unused function 'mv88e6xxx_ports_cmode_init' [-Werror,-Wunused-function]
+> 
+> Move it into the same #ifdef block to shut up the warning.
+> 
+> Fixes: ed8fe20205ac ("net: dsa: mv88e6xxx: prevent interrupt storm caused by mv88e6390x_port_set_cmode")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+A fix has been submitted already. See discussion here:
+https://marc.info/?t=155170356600004&r=1&w=2
+and the fix here:
+https://patchwork.ozlabs.org/patch/1051275/
 
-net/sched/act_tunnel_key.c: In function 'tunnel_key_init':
-net/sched/act_tunnel_key.c:389:1: error: label 'release_tun_meta' defined but not used [-Werror=unused-label]
- release_tun_meta:
-
-Fixes: 41411e2fd6b8 ("net/sched: act_tunnel_key: Add dst_cache support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- net/sched/act_tunnel_key.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/sched/act_tunnel_key.c b/net/sched/act_tunnel_key.c
-index 2a5f215ae876..3beb4717d3b7 100644
---- a/net/sched/act_tunnel_key.c
-+++ b/net/sched/act_tunnel_key.c
-@@ -392,8 +392,8 @@ static int tunnel_key_init(struct net *net, struct nlattr *nla,
- #ifdef CONFIG_DST_CACHE
- 	if (metadata)
- 		dst_cache_destroy(&metadata->u.tun_info.dst_cache);
--#endif
- release_tun_meta:
-+#endif
- 	if (metadata)
- 		dst_release(&metadata->dst);
- 
--- 
-2.20.0
-
+Heiner
