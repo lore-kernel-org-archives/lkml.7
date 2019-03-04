@@ -2,55 +2,54 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C91BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E38C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE0A21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA0321019
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688281;
-	bh=JRO0p/rDBqcnPhvy/yV69tyEu3bwZe2HrhDgIKBqkYE=;
+	s=default; t=1551688285;
+	bh=6KNTh94rpHJW5ymXvFQA/KY/BW0tMT3N6a3xp2I9Iu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bd/6g6msQfg82dztLJPhBMpVolSwaWzGAaVnvUnkpRHn2UmvVKU9Tg44KLGvfshSG
-	 s3kp+4Hp+ZV9Nacoxy0jrDyOk1ufg3Kb9/BD23Pe0j580NOif6mr4YQgyS9U73jzP9
-	 LxFZAmwYz+hOpNuVU/gFgLxUw9Z6TDJzEjsIhkx4=
+	b=J97Z38KxEKzp+48S7Se6N9gFchBTkjfN+z45KukUyzDii6CcVVcfjQXaaUEtVHKz3
+	 pj1E2T3M3mSyNFQ2Znv4vDi4AJcBwEh1wVn83JTXu2wpY4RALian96qOIb3312cWHj
+	 3vhvCcmoFBCMwVC3DJTTVCUfXyM/4ZpekuTBvPYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfCDIbT (ORCPT
+        id S1727888AbfCDIbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:31:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60984 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:31:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727139AbfCDIbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:31:16 -0500
+        id S1727852AbfCDIbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:31:20 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D79C208E4;
-        Mon,  4 Mar 2019 08:31:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25A1D20836;
+        Mon,  4 Mar 2019 08:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688276;
-        bh=JRO0p/rDBqcnPhvy/yV69tyEu3bwZe2HrhDgIKBqkYE=;
+        s=default; t=1551688279;
+        bh=6KNTh94rpHJW5ymXvFQA/KY/BW0tMT3N6a3xp2I9Iu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MSOx1ihq6QI+O+s+tsg+PJFHqU1GZYr63o5l1mw6x/SxelD6zHTY5L68eJKxfvViL
-         s1KwV++SalmA/2wWLd28aM0dOKvo4G4wD+bzfsZ8mgxUU5gW1kh0MMn5hcb497xx0w
-         rusvhR0YW9FMYXVxBek7mqO/wBm1tKHE5XTMOLJo=
+        b=qczwKcBpCfXtQPoMiGQf0yEvOp229Iq0MXHrcNP3ELQtq5OPR6yXjZSlFoBcS4SaF
+         nWoAXB1fLAYzly9+ArDhEAr1G5GzAiTXb+VE72Ro6MfEtAo5NANvTtIrByN3r+m4Xc
+         0mmUGzHdLc4agnsgETlkuSCCkOppW0L9gsqIB+gE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 4.19 73/78] drm: Block fb changes for async plane updates
-Date:   Mon,  4 Mar 2019 09:22:56 +0100
-Message-Id: <20190304081628.856960251@linuxfoundation.org>
+        stable@vger.kernel.org, Zhang Run <zhang.run@zte.com.cn>,
+        Yang Wei <yang.wei9@zte.com.cn>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 56/78] net: usb: asix: ax88772_bind return error when hw_reset fail
+Date:   Mon,  4 Mar 2019 09:22:39 +0100
+Message-Id: <20190304081628.034951014@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -69,88 +68,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+[ Upstream commit 6eea3527e68acc22483f4763c8682f223eb90029 ]
 
-commit 2216322919c8608a448d7ebc560a845238a5d6b6 upstream.
+The ax88772_bind() should return error code immediately when the PHY
+was not reset properly through ax88772a_hw_reset().
+Otherwise, The asix_get_phyid() will block when get the PHY
+Identifier from the PHYSID1 MII registers through asix_mdio_read()
+due to the PHY isn't ready. Furthermore, it will produce a lot of
+error message cause system crash.As follows:
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to write
+ reg index 0x0000: -71
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to send
+ software reset: ffffffb9
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to write
+ reg index 0x0000: -71
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to enable
+ software MII access
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to read
+ reg index 0x0000: -71
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to write
+ reg index 0x0000: -71
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to enable
+ software MII access
+asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to read
+ reg index 0x0000: -71
+...
 
-The prepare_fb call always happens on new_plane_state.
-
-The drm_atomic_helper_cleanup_planes checks to see if
-plane state pointer has changed when deciding to call cleanup_fb on
-either the new_plane_state or the old_plane_state.
-
-For a non-async atomic commit the state pointer is swapped, so this
-helper calls prepare_fb on the new_plane_state and cleanup_fb on the
-old_plane_state. This makes sense, since we want to prepare the
-framebuffer we are going to use and cleanup the the framebuffer we are
-no longer using.
-
-For the async atomic update helpers this differs. The async atomic
-update helpers perform in-place updates on the existing state. They call
-drm_atomic_helper_cleanup_planes but the state pointer is not swapped.
-This means that prepare_fb is called on the new_plane_state and
-cleanup_fb is called on the new_plane_state (not the old).
-
-In the case where old_plane_state->fb == new_plane_state->fb then
-there should be no behavioral difference between an async update
-and a non-async commit. But there are issues that arise when
-old_plane_state->fb != new_plane_state->fb.
-
-The first is that the new_plane_state->fb is immediately cleaned up
-after it has been prepared, so we're using a fb that we shouldn't
-be.
-
-The second occurs during a sequence of async atomic updates and
-non-async regular atomic commits. Suppose there are two framebuffers
-being interleaved in a double-buffering scenario, fb1 and fb2:
-
-- Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
-- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
-- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
-
-We call cleanup_fb on fb2 twice in this example scenario, and any
-further use will result in use-after-free.
-
-The simple fix to this problem is to block framebuffer changes
-in the drm_atomic_helper_async_check function for now.
-
-v2: Move check by itself, add a FIXME (Daniel)
-
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Cc: <stable@vger.kernel.org> # v4.14+
-Fixes: fef9df8b5945 ("drm/atomic: initial support for asynchronous plane update")
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Acked-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Acked-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Daniel Vetter <daniel@ffwll.ch>
-Signed-off-by: Harry Wentland <harry.wentland@amd.com>
-Link: https://patchwork.freedesktop.org/patch/275364/
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Zhang Run <zhang.run@zte.com.cn>
+Reviewed-by: Yang Wei <yang.wei9@zte.com.cn>
+Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_atomic_helper.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/usb/asix_devices.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1564,6 +1564,15 @@ int drm_atomic_helper_async_check(struct
- 	    old_plane_state->crtc != new_plane_state->crtc)
- 		return -EINVAL;
+diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devices.c
+index b654f05b2ccd0..3d93993e74da0 100644
+--- a/drivers/net/usb/asix_devices.c
++++ b/drivers/net/usb/asix_devices.c
+@@ -739,8 +739,13 @@ static int ax88772_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	asix_read_cmd(dev, AX_CMD_STATMNGSTS_REG, 0, 0, 1, &chipcode, 0);
+ 	chipcode &= AX_CHIPCODE_MASK;
  
-+	/*
-+	 * FIXME: Since prepare_fb and cleanup_fb are always called on
-+	 * the new_plane_state for async updates we need to block framebuffer
-+	 * changes. This prevents use of a fb that's been cleaned up and
-+	 * double cleanups from occuring.
-+	 */
-+	if (old_plane_state->fb != new_plane_state->fb)
-+		return -EINVAL;
+-	(chipcode == AX_AX88772_CHIPCODE) ? ax88772_hw_reset(dev, 0) :
+-					    ax88772a_hw_reset(dev, 0);
++	ret = (chipcode == AX_AX88772_CHIPCODE) ? ax88772_hw_reset(dev, 0) :
++						  ax88772a_hw_reset(dev, 0);
 +
- 	funcs = plane->helper_private;
- 	if (!funcs->atomic_async_update)
- 		return -EINVAL;
++	if (ret < 0) {
++		netdev_dbg(dev->net, "Failed to reset AX88772: %d\n", ret);
++		return ret;
++	}
+ 
+ 	/* Read PHYID register *AFTER* the PHY was reset properly */
+ 	phyid = asix_get_phyid(dev);
+-- 
+2.19.1
+
 
 
