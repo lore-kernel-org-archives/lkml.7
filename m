@@ -2,201 +2,151 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185DEC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3DFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF367206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA592206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:50:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVatIOjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfCDXs6 (ORCPT
+        id S1726733AbfCDXuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 18:48:58 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36742 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726095AbfCDXs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 18:48:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D8405ADC1;
-        Mon,  4 Mar 2019 23:48:53 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Date:   Tue, 05 Mar 2019 10:48:45 +1100
-Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfsd: fix memory corruption caused by readdir
-In-Reply-To: <20190304164725.GE13690@fieldses.org>
-References: <87lg1vs5eh.fsf@notabene.neil.brown.name> <20190304164725.GE13690@fieldses.org>
-Message-ID: <877ederyjm.fsf@notabene.neil.brown.name>
+        Mon, 4 Mar 2019 18:50:06 -0500
+Received: from mail-it1-f196.google.com ([209.85.166.196]:52591 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfCDXuF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 18:50:05 -0500
+Received: by mail-it1-f196.google.com with SMTP id g17so1561791ita.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 15:50:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jFIL/Lm1iT14hvIKAqaYjpV6FqyFVUKsClKXD2NFliQ=;
+        b=PVatIOjj1000QxqyOlaoOe5jsaYynSbnejWceXOyCDODBOjEIyPHlkyZ4HZ112FhFf
+         S6cNkdttUWdPEI0sDhaQXZ/40FC3Z8SGjWGkux8D7FqGyG/GSUkFOtDNpkm16AEss5as
+         d2UlvYzPpL+6l5fnu2a48K6YHbbf3dlJ9j6QZbd5yoWUPOfO3U9DPt9XBl7CyFNW1m2Y
+         tshwmmCO8dRJcTaCSbkSWmYDW9MeD282qPu2zWqKpn8f34mlCk9LaEfopvFeDX0PS5Uh
+         gNQzrcdWLGxPbygIQaPwyb72EYUqNXNXMrZotm6HestNmpAskhRtyFqJBwk7R0hv909Q
+         2lMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jFIL/Lm1iT14hvIKAqaYjpV6FqyFVUKsClKXD2NFliQ=;
+        b=MOlSJSfPuc3xGFOsMIQOMCBtqSEvlqyT9Hql2sHX19nq33uOhviysUz+GBNxt63pDV
+         KOrDMmB+XlKyYO8iB5zW5hoMCWcOqolgEruucHSWcXzy6fI+ryXIbHbKZMN19a499XWt
+         Qdy35uHE0HqB1FIdDCravLi31UOd0469CVeCopuPTyTO6wF5bvz/wG5vq0CK2U/RWW4h
+         K/SlPLt5cCIeYlcnB6C90BdJraGxRd38G2gGRae4GhVN8X/GoD9wt5FwCfmRwjqcwU6o
+         /Sm7toV/EqWngI7n5HgZ5VK7FLRto25UPo30tQlyKop/QwlTHaKO7LYZYKATDQIgc07L
+         7KYg==
+X-Gm-Message-State: APjAAAUFUS93HnM3xm8a47gcx9t8TmHmzaRX1crY53FnECwhObPY5nrV
+        O1DQdnZI/ZJ74xhqvGgIGpRED7ct/vqnkzwiIq8=
+X-Google-Smtp-Source: APXvYqyqeyIFuHQ1kH2NEIuQU4veZE+3CzdT2TpNj7M0Mv8zcKs60nw3+CrhxTw3AW57sgc7AWOdet7DVHbo2KXXyJU=
+X-Received: by 2002:a02:6a0b:: with SMTP id l11mr12048860jac.138.1551743404622;
+ Mon, 04 Mar 2019 15:50:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20190109124044.GA11935@altlinux.org> <20190109124320.GI11981@altlinux.org>
+ <20190227153051.GE23744@altlinux.org>
+In-Reply-To: <20190227153051.GE23744@altlinux.org>
+From:   Vincent Chen <deanbo422@gmail.com>
+Date:   Tue, 5 Mar 2019 07:49:54 +0800
+Message-ID: <CAJsyPhxEX-LttRC+F4a+jE3uyjMCFLhHW6=O35W9eQNWjK8ODQ@mail.gmail.com>
+Subject: Re: [PATCH 09/14] nds32: define syscall_get_arch()
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Greentime Hu <green.hu@gmail.com>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paul Moore <paul@paul-moore.com>, linux-audit@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 04 2019, J. Bruce Fields wrote:
-
-> On Mon, Mar 04, 2019 at 02:08:22PM +1100, NeilBrown wrote:
->> (Note that the commit hash in the Fixes tag is from the 'history'
->>  tree - this bug predates git).
->> Fixes: eb229d253e6c ("[PATCH] kNFSd: fix two xdr-encode bugs for readdir=
-plus reply")
->
-> It'd be nice to provide a URL for that.  The one I originally cloned one
-> seems to have disappeared.
-
-Fixes-URL: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.=
-git/commit/?id=3Deb229d253e6c
-
-Though on reflection, that didn't introduce the bug, it just failed to
-fix it properly.  It should be:
-
-Fixes: 0b1d57cf7654 ("[PATCH] kNFSd: Fix nfs3 dentry encoding")
-Fixes-URL: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.=
-git/commit/?id=3D0b1d57cf7654
+Dmitry V. Levin <ldv@altlinux.org> =E6=96=BC 2019=E5=B9=B42=E6=9C=8827=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=8811:30=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 
 >
-
->> Cc: stable@vger.kernel.org (v2.6.12+)
->> Signed-off-by: NeilBrown <neilb@suse.com>
->> ---
->>=20
->> Can I still get extra credit for fixing a bug that is 14.5 years old, if
->> I'm the one who introduced it?
+> syscall_get_arch() is required to be implemented on all architectures
+> in addition to already implemented syscall_get_nr(),
+> syscall_get_arguments(), syscall_get_error(), and
+> syscall_get_return_value() functions in order to extend the generic
+> ptrace API with PTRACE_GET_SYSCALL_INFO request.
 >
-> Good grief, yes!  Great fix.  Is that a record?
+> Acked-by: Paul Moore <paul@paul-moore.com>
+> Cc: Elvira Khabirova <lineprinter@altlinux.org>
+> Cc: Eugene Syromyatnikov <esyr@redhat.com>
+> Cc: Greentime Hu <green.hu@gmail.com>
+> Cc: Vincent Chen <deanbo422@gmail.com>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: linux-audit@redhat.com
+> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> ---
+>  This is just a gentle ping, the patch is unchanged.
 >
-> And how did it go undetected so long, and what caused it to surface just
-> now?
-
-I suspect two different things need to come together to trigger the bug.
-1/ a directory needs to have filename lengths which cause the xdr
-   encoding of the readdirplus reply to place the offset across a page
-   boundary.
-   A typical entry is around 200 bytes, or 50 quads, so there should be
-   a 1:50 chance of hitting that, assuming name lengths are evenly
-   distributed (which they aren't).
-   In the case which triggered the bug, all file names were 43 bytes,
-   all filehandles 28 bytes. This means 192 bytes per entry.
-   21 entries fit in a page leaving 64 bytes.  This puts the cookie
-   on the page boundary.
-
-2/ The *next* entry after the one that crosses the page boundary doesn't
-   fit.  In the cases which triggered, the requested size was 0x1110
-   (4368).
-   That is enough room for 21 entries, but not for 22.
-
-So presumably the client doesn't run Linux - which always asks
-for 4096 bytes of directory entry (from a Linux server).
-I have no idea what clients the customer was using, but these clients
-seem to have a fairly good chance of triggering the bug (when configured
-like the customer configured them - maybe).
-
+>  arch/nds32/include/asm/syscall.h | 9 +++++++++
+>  include/uapi/linux/audit.h       | 2 ++
+>  2 files changed, 11 insertions(+)
 >
-> I once thought about converting this over to the xdr_stream api that
-> NFSv4 uses to hide the page-crossing logic now.  But I think it's better
-> to leave it alone.
-
-I agree - the code isn't being actively developed, so stability wins
-over elegance.
-
-
-BTW, the readdir (non-plus) code doesn't really need fixing.
-nfs3svc_decode_readdirargs() caps the ->count at PAGE_SIZE, so the cookie
-can never cross pages. nfs3svc_decode_readdirplusargs() caps it
-at max_blocksize.  So if you feel like leaving that part of the change
-out, I probably wouldn't complain.
-
-Thanks,
-NeilBrown
-
+> diff --git a/arch/nds32/include/asm/syscall.h b/arch/nds32/include/asm/sy=
+scall.h
+> index f7e5e86765fe..cc56a3962f8b 100644
+> --- a/arch/nds32/include/asm/syscall.h
+> +++ b/arch/nds32/include/asm/syscall.h
+> @@ -5,6 +5,7 @@
+>  #ifndef _ASM_NDS32_SYSCALL_H
+>  #define _ASM_NDS32_SYSCALL_H   1
 >
-> --b.
+> +#include <uapi/linux/audit.h>
+>  #include <linux/err.h>
+>  struct task_struct;
+>  struct pt_regs;
+> @@ -185,4 +186,12 @@ void syscall_set_arguments(struct task_struct *task,=
+ struct pt_regs *regs,
 >
->>=20
->>  fs/nfsd/nfs3proc.c | 16 ++++++++++++++--
->>  fs/nfsd/nfs3xdr.c  |  1 +
->>  2 files changed, 15 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
->> index 9eb8086ea841..c9cf46e0c040 100644
->> --- a/fs/nfsd/nfs3proc.c
->> +++ b/fs/nfsd/nfs3proc.c
->> @@ -463,8 +463,19 @@ nfsd3_proc_readdir(struct svc_rqst *rqstp)
->>  					&resp->common, nfs3svc_encode_entry);
->>  	memcpy(resp->verf, argp->verf, 8);
->>  	resp->count =3D resp->buffer - argp->buffer;
->> -	if (resp->offset)
->> -		xdr_encode_hyper(resp->offset, argp->cookie);
->> +	if (resp->offset) {
->> +		loff_t offset =3D argp->cookie;
->> +
->> +		if (unlikely(resp->offset1)) {
->> +			/* we ended up with offset on a page boundary */
->> +			*resp->offset =3D htonl(offset >> 32);
->> +			*resp->offset1 =3D htonl(offset & 0xffffffff);
->> +			resp->offset1 =3D NULL;
->> +		} else {
->> +			xdr_encode_hyper(resp->offset, offset);
->> +		}
->> +		resp->offset =3D NULL;
->> +	}
->>=20=20
->>  	RETURN_STATUS(nfserr);
->>  }
->> @@ -533,6 +544,7 @@ nfsd3_proc_readdirplus(struct svc_rqst *rqstp)
->>  		} else {
->>  			xdr_encode_hyper(resp->offset, offset);
->>  		}
->> +		resp->offset =3D NULL;
->>  	}
->>=20=20
->>  	RETURN_STATUS(nfserr);
->> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
->> index 9b973f4f7d01..83919116d5cb 100644
->> --- a/fs/nfsd/nfs3xdr.c
->> +++ b/fs/nfsd/nfs3xdr.c
->> @@ -921,6 +921,7 @@ encode_entry(struct readdir_cd *ccd, const char *nam=
-e, int namlen,
->>  		} else {
->>  			xdr_encode_hyper(cd->offset, offset64);
->>  		}
->> +		cd->offset =3D NULL;
->>  	}
->>=20=20
->>  	/*
->> --=20
->> 2.14.0.rc0.dirty
->>=20
+>         memcpy(&regs->uregs[0] + i, args, n * sizeof(args[0]));
+>  }
+> +
+> +static inline int
+> +syscall_get_arch(void)
+> +{
+> +       return IS_ENABLED(CONFIG_CPU_BIG_ENDIAN)
+> +               ? AUDIT_ARCH_NDS32BE : AUDIT_ARCH_NDS32;
+> +}
+> +
+>  #endif /* _ASM_NDS32_SYSCALL_H */
+> diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+> index b1602dcc13bc..1568ddc1c945 100644
+> --- a/include/uapi/linux/audit.h
+> +++ b/include/uapi/linux/audit.h
+> @@ -401,6 +401,8 @@ enum {
+>  #define AUDIT_ARCH_MIPSEL64    (EM_MIPS|__AUDIT_ARCH_64BIT|__AUDIT_ARCH_=
+LE)
+>  #define AUDIT_ARCH_MIPSEL64N32 (EM_MIPS|__AUDIT_ARCH_64BIT|__AUDIT_ARCH_=
+LE|\
+>                                  __AUDIT_ARCH_CONVENTION_MIPS64_N32)
+> +#define AUDIT_ARCH_NDS32       (EM_NDS32|__AUDIT_ARCH_LE)
+> +#define AUDIT_ARCH_NDS32BE     (EM_NDS32)
+>  #define AUDIT_ARCH_OPENRISC    (EM_OPENRISC)
+>  #define AUDIT_ARCH_PARISC      (EM_PARISC)
+>  #define AUDIT_ARCH_PARISC64    (EM_PARISC|__AUDIT_ARCH_64BIT)
+> --
+> ldv
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks for fixing this.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlx9uV0ACgkQOeye3VZi
-gbky4Q//Z5AWbh/lnaOGlKsI6a1mYW5eydPR+waDfj+NZJKlLZg7I+Ump7hDJVqb
-JaW3wXmG4tIjdsIU6j2M6qr2LvR6q/wR4z0CSW08nBPtxGcuo6eUAFj7z3IMLQ2f
-XPx3G3tWyxpiITK2fI26yZY6S74lOrkgmuEtrAYJmC102uBTflgoz4CiOYaMg8dI
-/ioGG6trVZw2X4L7i8SkpeDGiV7vrjzVkodI2FUfyCbnGuQtBMLeZCZpQi5LFRZr
-zvodSvmkvUKEjXG8XvNuGNS4aBoet6S7+Jen60zyAcYVIt8dHIIxwbY9P90dv11y
-eY8IRtpsO9Sc9BGEZPaaYI+Q8M1csWbLyrYfwDavb5UpdV5vqbuhllwYxeMls/zg
-u7dtPMW1K8KHLivIv3brq58htHq3/O8AAcd8qKYvsPdMi37n7TEdz3yIMJ/qLdZU
-g19qnXpCWPq/qheuVE2R5yhm+Cbo4nosoaHyRzlUBAOL9S1tH1ha5jW3/QVyT3mg
-7sc8GuEFfMLV7LQ1FX8ZIVQrneezbactbRNqmSyc0F8ytr3T0GJdsSRKLrCbF4Mz
-dpmw5aDkrq3ZHE6xI8CL6rfQo/o+mbVswKSIl9PrEsgPgf/XYHnNdnbOLLABXJLq
-RfAdoB40oalQBVA4tBeSoLudiUSI4QzrQ9LU8wYwX7LwMU7yHr4=
-=EUDx
------END PGP SIGNATURE-----
---=-=-=--
+Acked-by Vincent Chen
