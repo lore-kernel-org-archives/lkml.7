@@ -2,91 +2,123 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B3CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F15C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3053020823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FC520835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfCDUkk (ORCPT
+        id S1726775AbfCDUlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:40:40 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:55217 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfCDUkk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:40:40 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M8xsm-1gvyQi1a6Q-0066QL; Mon, 04 Mar 2019 21:40:22 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?q?M=C3=A1t=C3=A9=20Eckl?= <ecklm94@gmail.com>,
-        Fernando Fernandez Mancera <ffmancera@riseup.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] netfilter: nf_conntrack_sip: fix IPV6 dependency
-Date:   Mon,  4 Mar 2019 21:40:12 +0100
-Message-Id: <20190304204019.2142770-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 4 Mar 2019 15:41:04 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:38528 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726101AbfCDUlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 15:41:04 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DDF35C049E38;
+        Mon,  4 Mar 2019 20:41:03 +0000 (UTC)
+Received: from krava (ovpn-204-135.brq.redhat.com [10.40.204.135])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 64D6760851;
+        Mon,  4 Mar 2019 20:41:01 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 21:41:00 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "acme@redhat.com" <acme@redhat.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: Re: [PATCH v4 perf,bpf 14/15] perf: introduce side band thread
+Message-ID: <20190304204100.GE2563@krava>
+References: <20190226002019.3748539-1-songliubraving@fb.com>
+ <20190226002019.3748539-15-songliubraving@fb.com>
+ <20190227132105.GC18893@krava>
+ <2506D6CF-F0E3-4640-B385-DD0843AD2928@fb.com>
+ <20190304135224.GD19809@krava>
+ <3B7ECDFA-E6F7-4136-A2E4-6115C5A4791B@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:AqACvfLz5KyJslLuX6CJ+n57xkzbsTQoy30Pi/s2JNSW8Yfo4QH
- zU9Y52zixx4e3Q1eAXnKlxI9aNmKDhvCJXP6WDq7u4Q4Qq6xdEyDSNPdHNM0WsqFKu3usj4
- kUx9h7UG8J2eHi7rtdlR2pCz/ntZf2+Sqa3xKTU1NbNowYKqbmlr1ADcEiaXjC9REbLO0F7
- RIAYbHa9nwvQws1YNstxg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:y/hHEmpsu/U=:A6ZOLaqW9UArD0P/Z5PJG7
- IQ49Shbw+ESgBxck2nLWOHQ3zvLK1q0xH/NFl1W6tdZqZMGjYDNsL7zyVMgutCMaPKsV81DK/
- rjp4eoexuFb64ED1AEZQuxT/3tm0sjAv2h2ptClStmdW5cXWuEkg2Nj6ob0gxl0+Wa7UQspNC
- yNYiHlS7XJMhUA3JfbwzVm89qlEIjwSi83M/tmdwH74EwAiqrL8dL4Lb9p8/Qh9RScTwFsO8G
- bVhbY79bkcfzN7O2AjtINlNyQey+6VCfPPcwbev9XHdJ4QYtKprFWtPfe31EHxD5Jc77rQO0C
- i6e7FQbluy64vBr+X4CHP7wVcVaXKVtpK769BgFidAO+mpy1cuEHc5LVhSLi4OrSRSjB9C6Cl
- WuaBzcD2BoL86C2W5XFwhUV7NtZ2bQbrUgoGQj2XK2I2/OFG7rTLZeSirqyVegqSnWtHoBFc+
- 1TCfFMoaMJSQK1cBqWJwiqFUof0zyoY769Yehede8FRox44ghKOpRy+OuNVyGzNlgvuewCPOL
- psYchzBgW5sDb0PEC9N8hmOoF07vS26pCs2n3szWj4EclYxjKAynjkAhNILVTJyP5cen0AAN/
- eVnL7chXhqLKu03jg/ZTGSPwdvVM1BR4gANu9ZTKiUN8gnW/bGUftC53Ko84mNyvOj7t9KFKM
- szmd4Y+aLkM1ZEmPhuwjMNt+s6d1cxBkKQajDi6o7srAPAruvQZWLmh2u65Yf0AOjNvCVdLvS
- WBnW/oFt7q3WxhAU+YGpXeOFAOGfIYtHtY/BMQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3B7ECDFA-E6F7-4136-A2E4-6115C5A4791B@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 04 Mar 2019 20:41:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With CONFIG_IPV6=m and CONFIG_NF_CONNTRACK_SIP=y, we now get a link failure:
+On Mon, Mar 04, 2019 at 07:49:06PM +0000, Song Liu wrote:
+> 
+> 
+> > On Mar 4, 2019, at 5:52 AM, Jiri Olsa <jolsa@redhat.com> wrote:
+> > 
+> > On Wed, Feb 27, 2019 at 05:52:52PM +0000, Song Liu wrote:
+> >> 
+> >> 
+> >>> On Feb 27, 2019, at 5:21 AM, Jiri Olsa <jolsa@redhat.com> wrote:
+> >>> 
+> >>> On Mon, Feb 25, 2019 at 04:20:18PM -0800, Song Liu wrote:
+> >>> 
+> >>> SNIP
+> >>> 
+> >>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> >>>> index 8c902276d4b4..61b87c8111e6 100644
+> >>>> --- a/tools/perf/util/evlist.c
+> >>>> +++ b/tools/perf/util/evlist.c
+> >>>> @@ -19,6 +19,7 @@
+> >>>> #include "debug.h"
+> >>>> #include "units.h"
+> >>>> #include "asm/bug.h"
+> >>>> +#include "bpf-event.h"
+> >>>> #include <signal.h>
+> >>>> #include <unistd.h>
+> >>>> 
+> >>>> @@ -1841,3 +1842,102 @@ struct perf_evsel *perf_evlist__reset_weak_group(struct perf_evlist *evsel_list,
+> >>>> 	}
+> >>>> 	return leader;
+> >>>> }
+> >>>> +
+> >>>> +static struct perf_evlist *sb_evlist;
+> >>>> +pthread_t poll_thread;
+> >>> 
+> >>> so some of the things are static and some like poll_args
+> >>> you alloced on the stack.. I dont like this interface,
+> >>> could we come up with something generic? perhaps
+> >>> encapsulated in perf_evlist, like:
+> >> 
+> >> I picked global sb_evlist and poll_thread because there 
+> >> should be only one sb_evlist and one thread polling it. 
+> >> There might be multiple evsel on the sb_evlist. 
+> >> 
+> >> I am not sure I understand your suggestion..
+> >> 
+> >>> struct perf_evlist {
+> >>> 	...
+> >>> 	struct {
+> >>> 		pthread_t	th;
+> >>> 		int		state;
+> >>> 	} thread;
+> >> 
+> >> This will not be used by the main perf_evlist, right?
+> > 
+> > no, just by the thread interface
+> 
+> What is "state" here?
 
-net/netfilter/nf_conntrack_sip.o: In function `process_sdp':
-nf_conntrack_sip.c:(.text+0x4344): undefined reference to `ip6_route_output_flags'
+it's replacement for the 'done' pointer u had,
+which I did not like.. leting each thread having
+its own state is better IMO
 
-Fix this by adding a dependency that forces CONFIG_NF_CONNTRACK_SIP to be =m
-when CONFIG_IPV6=m, as we already do for several other drivers with a similar
-requirement.
-
-Fixes: a3419ce3356c ("netfilter: nf_conntrack_sip: add sip_external_media logic")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- net/netfilter/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
-index d43ffb09939b..964bc317ad0a 100644
---- a/net/netfilter/Kconfig
-+++ b/net/netfilter/Kconfig
-@@ -333,6 +333,7 @@ config NF_CONNTRACK_SANE
- 
- config NF_CONNTRACK_SIP
- 	tristate "SIP protocol support"
-+	depends on IPV6 || IPV6=n
- 	default m if NETFILTER_ADVANCED=n
- 	help
- 	  SIP is an application-layer control protocol that can establish,
--- 
-2.20.0
-
+jirka
