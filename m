@@ -2,56 +2,54 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E5DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DDCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D23208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A492146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688300;
-	bh=ZSu+Sipp7MeDbCpNyvvEXUMQ70CJAlj2Ioeh2mVdYxQ=;
+	s=default; t=1551688304;
+	bh=ZII+5kFh7/oSg3GFZ7RIFcM7Kd+LOYU8JhNAXrT+nVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJZujm44+6K9s1SOmRPSnBFzGH4+/+uQzL9bqNa/zjdK/KA3bavkSdG3OgfZ0nk0Q
-	 bnmbHFymbfYlRpH+xZS8W5drzrlEEYJoynGFEfd7sy2MU8k+Ni+t6U0iCD+IpfJK3N
-	 huTTq+Fa71LXsszY8A6Utr0g/CLwVDsKgAkRutz4=
+	b=iP0wIapXL43XjG9WHZPdhjlmngxbU7SpJ49nBiexNNsHcOR5XpDsO+gl1lPNZOz2t
+	 Ibvp8h8VZCQP/9Z3Ug8gkGL1E+gHNKUV74asfpBRZYw1fWDghWkW0hLq7csd33+2C1
+	 jlSaYL4GQQ9JeUOny3xi+O+r6l8R3y6SJN5ziZRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfCDIbi (ORCPT
+        id S1727979AbfCDIbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:31:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33748 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:31:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbfCDIbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:31:35 -0500
+        id S1727970AbfCDIbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:31:39 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 674B1208E4;
-        Mon,  4 Mar 2019 08:31:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37E9221019;
+        Mon,  4 Mar 2019 08:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688294;
-        bh=ZSu+Sipp7MeDbCpNyvvEXUMQ70CJAlj2Ioeh2mVdYxQ=;
+        s=default; t=1551688298;
+        bh=ZII+5kFh7/oSg3GFZ7RIFcM7Kd+LOYU8JhNAXrT+nVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vPgJytVJTxtFLdaOP5Np1gBKYmmTinLQjhgCJJ2L69ZQoKSbXAOjnD9MtBnfHf6B7
-         ruo4TciplifChGS1MlhCW2rJ6uWzYtfzJzHdnyMCNOlIrFNuco2QjTYB4FKpm+rY89
-         8ZGvCBPkmxAjZ5TmOw3kYjl4BMqmVEjS4zGX10oM=
+        b=uUjbXIQelcE8trTTJombi0vcNlTrOoB3R+SPq+GySMLv/i9y0RAi0A/4e+FYWSEj1
+         kyS8OhuBGTyYGqY4bmlsI5MO7/NhHMDAAHeKmPd2GDCuXD66wbQaJ5WEcijFF+EiMN
+         Jg6KglQnZkG2E2/uhwBGA3V1MAeNeyk8+TQGYpSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>
-Subject: [PATCH 4.19 78/78] x86/uaccess: Dont leak the AC flag into __put_user() value evaluation
-Date:   Mon,  4 Mar 2019 09:23:01 +0100
-Message-Id: <20190304081629.092506413@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 57/78] net: dev_is_mac_header_xmit() true for ARPHRD_RAWIP
+Date:   Mon,  4 Mar 2019 09:22:40 +0100
+Message-Id: <20190304081628.092526651@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -70,62 +68,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andy Lutomirski <luto@kernel.org>
+[ Upstream commit 3b707c3008cad04604c1f50e39f456621821c414 ]
 
-commit 2a418cf3f5f1caf911af288e978d61c9844b0695 upstream.
+__bpf_redirect() and act_mirred checks this boolean
+to determine whether to prefix an ethernet header.
 
-When calling __put_user(foo(), ptr), the __put_user() macro would call
-foo() in between __uaccess_begin() and __uaccess_end().  If that code
-were buggy, then those bugs would be run without SMAP protection.
-
-Fortunately, there seem to be few instances of the problem in the
-kernel. Nevertheless, __put_user() should be fixed to avoid doing this.
-Therefore, evaluate __put_user()'s argument before setting AC.
-
-This issue was noticed when an objtool hack by Peter Zijlstra complained
-about genregs_get() and I compared the assembly output to the C source.
-
- [ bp: Massage commit message and fixed up whitespace. ]
-
-Fixes: 11f1a4b9755f ("x86: reorganize SMAP handling in user space accesses")
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190225125231.845656645@infradead.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/uaccess.h |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/if_arp.h | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -293,8 +293,7 @@ do {									\
- 		__put_user_asm(x, ptr, retval, "l", "k", "ir", errret);	\
- 		break;							\
- 	case 8:								\
--		__put_user_asm_u64((__typeof__(*ptr))(x), ptr, retval,	\
--				   errret);				\
-+		__put_user_asm_u64(x, ptr, retval, errret);		\
- 		break;							\
- 	default:							\
- 		__put_user_bad();					\
-@@ -440,8 +439,10 @@ do {									\
- #define __put_user_nocheck(x, ptr, size)			\
- ({								\
- 	int __pu_err;						\
-+	__typeof__(*(ptr)) __pu_val;				\
-+	__pu_val = x;						\
- 	__uaccess_begin();					\
--	__put_user_size((x), (ptr), (size), __pu_err, -EFAULT);	\
-+	__put_user_size(__pu_val, (ptr), (size), __pu_err, -EFAULT);\
- 	__uaccess_end();					\
- 	__builtin_expect(__pu_err, 0);				\
- })
+diff --git a/include/linux/if_arp.h b/include/linux/if_arp.h
+index 6756fea18b69f..e44746de95cdf 100644
+--- a/include/linux/if_arp.h
++++ b/include/linux/if_arp.h
+@@ -54,6 +54,7 @@ static inline bool dev_is_mac_header_xmit(const struct net_device *dev)
+ 	case ARPHRD_IPGRE:
+ 	case ARPHRD_VOID:
+ 	case ARPHRD_NONE:
++	case ARPHRD_RAWIP:
+ 		return false;
+ 	default:
+ 		return true;
+-- 
+2.19.1
+
 
 
