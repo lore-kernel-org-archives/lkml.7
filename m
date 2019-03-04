@@ -2,90 +2,95 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B652AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 01:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4E1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 01:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E30920842
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 01:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551664182;
-	bh=zRo6OZVs2iaEmQkB/4mwvw7u1FMqfZRQgoiE5VVlvv0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Oj7RXyVdEcFsloGL1AThmLoN+v/gD0Oa/FHqW/rMQnqMQPmW2OfQ/00w8wWRZ+vXK
-	 IauJ7ThQPkQToByNKI87AHJ8UMBNUxMzlmRZbUQ5bgeq5IlQrZDbJll6uYcBmfAeQB
-	 Etjlis1uGjACJC8gWPno0n8l5iDuRA7CCA8UVN9s=
+	by mail.kernel.org (Postfix) with ESMTP id 9004020842
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 01:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbfCDBtl (ORCPT
+        id S1726237AbfCDBzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 20:49:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbfCDBtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 20:49:40 -0500
-Received: from dragon (61-216-91-114.HINET-IP.hinet.net [61.216.91.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C608A20835;
-        Mon,  4 Mar 2019 01:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551664180;
-        bh=zRo6OZVs2iaEmQkB/4mwvw7u1FMqfZRQgoiE5VVlvv0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i+gSSXFi5R5Q9EXHyD3ScWTcQHUtohbA5fxjKcGiLX3X7p0yXcbapXdpvw+6XYL+/
-         50hXHKvxQyxocn7cbfwJ3BxloIivkymaNSgbPBthdNUIPIwotleHRr3oiRrMfocbkx
-         OjhlWsoruKg6FC7PbN+dP305Ssegg8pWmI054EiE=
-Date:   Mon, 4 Mar 2019 09:48:40 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Alison Wang <alison.wang@nxp.com>
-Cc:     leoyang.li@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: ls1028a: add pmu dt nodes
-Message-ID: <20190304014838.GV26041@dragon>
-References: <20190227015752.18342-1-alison.wang@nxp.com>
+        Sun, 3 Mar 2019 20:55:52 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4202 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726012AbfCDBzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 20:55:52 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B038DC8A4609FE46AA7B;
+        Mon,  4 Mar 2019 09:55:49 +0800 (CST)
+Received: from [127.0.0.1] (10.142.63.192) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.408.0; Mon, 4 Mar 2019
+ 09:55:39 +0800
+CC:     <liuyu712@hisilicon.com>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <john.stultz@linaro.org>, <suzhuangluan@hisilicon.com>,
+        <kongfei@hisilicon.com>, <wanghu17@hisilicon.com>,
+        <butao@hisilicon.com>, <chenyao11@huawei.com>,
+        <fangshengzhou@hisilicon.com>, <lipengcheng8@huawei.com>,
+        <songxiaowei@hisilicon.com>, <xuyiping@hisilicon.com>,
+        <xuyoujun4@huawei.com>, <yudongbin@hisilicon.com>,
+        <zangleigang@hisilicon.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+References: <20190302090505.65542-1-chenyu56@huawei.com>
+ <20190302090505.65542-11-chenyu56@huawei.com>
+ <1551664069.2210.64.camel@mhfsdcap03>
+From:   Chen Yu <chenyu56@huawei.com>
+Message-ID: <2708b188-d318-6758-a5fd-8573559b2e70@huawei.com>
+Date:   Mon, 4 Mar 2019 09:55:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190227015752.18342-1-alison.wang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1551664069.2210.64.camel@mhfsdcap03>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.142.63.192]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 09:57:52AM +0800, Alison Wang wrote:
-> This patch adds pmu dt nodes for LS1028A.
-> 
-> Signed-off-by: Alison Wang <alison.wang@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |    5 +++++
->  1 files changed, 5 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index a8cf92a..36ef9c5 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -89,6 +89,11 @@
->  					  IRQ_TYPE_LEVEL_LOW)>;
->  	};
->  
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
+Hi Chunfeng Yun,
 
-Shouldn't we use "arm,cortex-a72-pmu" as compatible for better?
+On 2019/3/4 9:47, Chunfeng Yun wrote:
 
-Shawn
+>> +
+>> +	hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
+>> +	if (!hisi_hikey_usb->role_sw)
+>> +		return -EPROBE_DEFER;
+> Here return EPROBE_DEFFER means the related device_connection is
+> registered after this probe is called, right?
+> if not, use IS_ERR_OR_NULL then return PTR_ERR is enough
+Yes, the driver which register the usb_role_switch may finish probe after
+this driver is probed for the first time.
+>> +	else if (IS_ERR(hisi_hikey_usb->role_sw))
+>> +		return PTR_ERR(hisi_hikey_usb->role_sw);
+>> +
+>> +	ret = usb_role_switch_register_notifier(hisi_hikey_usb->role_sw,
+>> +			&hisi_hikey_usb->nb);
+>> +	if (ret) {
+>> +		usb_role_switch_put(hisi_hikey_usb->role_sw);
+>> +		return ret;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, hisi_hikey_usb);
+>> +
+>> +	return 0;
+>> +}
+>> +
 
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
->  	gic: interrupt-controller@6000000 {
->  		compatible= "arm,gic-v3";
->  		#address-cells = <2>;
-> -- 
-> 1.7.1
 > 
+> 
+> .
+> 
+
