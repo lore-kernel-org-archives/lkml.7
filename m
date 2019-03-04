@@ -2,145 +2,89 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97E0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517AAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8500C20815
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ACD320663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:12:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1XiiH+DH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfCDLKJ (ORCPT
+        id S1726342AbfCDLMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 06:10:09 -0500
-Received: from mga02.intel.com ([134.134.136.20]:61172 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbfCDLKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 06:10:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 03:10:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,439,1544515200"; 
-   d="scan'208";a="151846217"
-Received: from lxy-dell.sh.intel.com ([10.239.159.147])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2019 03:10:03 -0800
-Message-ID: <08b44b2b7aede11a350f234768d5c17f8445984e.camel@linux.intel.com>
-Subject: Re: [PATCH v4 15/17] kvm: x86: Report CORE_CAPABILITY on
- GET_SUPPORTED_CPUID
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        kvm@vger.kernel.org
-Date:   Mon, 04 Mar 2019 19:10:06 +0800
-In-Reply-To: <79b659fb-1c16-463d-aa74-f1b3d8a9db5d@redhat.com>
-References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
-         <1551494711-213533-16-git-send-email-fenghua.yu@intel.com>
-         <697ee0bd-a5f6-7712-017e-455eed5bc185@redhat.com>
-         <f5053983dc12550edabc418b0493c6ec8deb1412.camel@linux.intel.com>
-         <79b659fb-1c16-463d-aa74-f1b3d8a9db5d@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 4 Mar 2019 06:12:21 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37517 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbfCDLMU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 06:12:20 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w6so5064412wrs.4
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 03:12:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kt+Hk5/oMuNB0FtHQXSEVhQxJl+kK6ZHXguTCM5Bsq8=;
+        b=1XiiH+DHPD22LPCcQOXYW8hkyG8hMpajX3zQzlFpBqGikf6VFZIvjCVrhh7LcxOu9l
+         mINZ35XkSO/p1k/VZbvjpsuAqK/OU7cKotpvnsPxR02YjaQV2RVGXKpjFgG0m/mI7suu
+         VaZzbhGfZ9bbuOC5oFrOv1FLrlcFugLCpT6SUVXpTTu18ipBBUOBHrhphKovtKBAWP+d
+         PW8sWJil70g2PZr66NACwQaUWGYQ5BiVDiGJsDokkdPowIWlEXB1YVJVJZktUo47Jscu
+         BNFjowVmpcHAa7UsBdj49RSbwE5ff+DWZHlHnu0/FAQMNpKpM2bzRmam+oSGwYoAOGLY
+         SKOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kt+Hk5/oMuNB0FtHQXSEVhQxJl+kK6ZHXguTCM5Bsq8=;
+        b=aHSo6wZO8kg2F08SZ+8UvB99XlgCmtussyq950TDDefpUW59+hllmOpgo831ORTtBZ
+         C9Np+yd6jX9KNqwYF82tu1X1mgnJWchVA3J4p600w4J0OGJws6cAc09a1KLV+7GegaHU
+         VgXWzG2s0qcTHXZEzDfuGPsf38kyle4dptRETM+tVHBohrFm3LspYz3fL+Zd/9CMyCBT
+         AZ4NdR6hk7emdw1lrLBgQx1F0HmvP/jVMN1cV736X2O4IJwr/aJde4xDgULkAGZKbaE3
+         A9UO/is6SsCBhsWWb/oBTI5pRgsQy9mB/0wEOG0yapcqTU0AC92gsK9NdcnguuQOuXlz
+         Ao7Q==
+X-Gm-Message-State: APjAAAXDQHiFLiSUqb54xdXmgHtLDpNKj+nEZyZ6sQDYrGEnmz7jkap3
+        l2yWtSQnT98logIkP0eYhtnf1g==
+X-Google-Smtp-Source: APXvYqxmtZiRHWjqyZ8LPaJKvzRXF1dSEQP7xsRNBQUM9LjMtG2cTEOoWkUweH2jMjpiSNfewul6Ng==
+X-Received: by 2002:adf:f388:: with SMTP id m8mr12993720wro.133.1551697939218;
+        Mon, 04 Mar 2019 03:12:19 -0800 (PST)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id x22sm37727402wmc.19.2019.03.04.03.12.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 04 Mar 2019 03:12:18 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     linux-iio@vger.kernel.org, martin.blumenstingl@googlemail.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Add Meson SAR ADC support for G12A
+Date:   Mon,  4 Mar 2019 12:12:15 +0100
+Message-Id: <20190304111217.882-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-04 at 11:49 +0100, Paolo Bonzini wrote:
-> On 04/03/19 11:47, Xiaoyao Li wrote:
-> > On Mon, 2019-03-04 at 09:38 +0100, Paolo Bonzini wrote:
-> > > On 02/03/19 03:45, Fenghua Yu wrote:
-> > > > From: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> > > > 
-> > > > In the latest Intel SDM, CPUID.(EAX=7H,ECX=0):EDX[30] will enumerate
-> > > > the presence of the IA32_CORE_CAPABILITY MSR.
-> > > > 
-> > > > Update GET_SUPPORTED_CPUID to expose this feature bit to user space, so
-> > > > that user space know this bit can be enabled in CPUID.
-> > > > 
-> > > > Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> > > > ---
-> > > >  arch/x86/kvm/cpuid.c | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > > > index c07958b59f50..e0e17b9c65da 100644
-> > > > --- a/arch/x86/kvm/cpuid.c
-> > > > +++ b/arch/x86/kvm/cpuid.c
-> > > > @@ -410,7 +410,8 @@ static inline int __do_cpuid_ent(struct
-> > > > kvm_cpuid_entry2
-> > > > *entry, u32 function,
-> > > >  	/* cpuid 7.0.edx*/
-> > > >  	const u32 kvm_cpuid_7_0_edx_x86_features =
-> > > >  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
-> > > > -		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) |
-> > > > F(INTEL_STIBP);
-> > > > +		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) |
-> > > > F(CORE_CAPABILITY) |
-> > > > +		F(INTEL_STIBP);
-> > > 
-> > > This should be enabled always if
-> > > boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT),
-> > > since the MSR is emulated.  This way, guests can always rely on
-> > > IA32_CORE_CAPABILITY_MSR and it won't have to rely on the FMS
-> > > (which means nothing inside a guest).
-> > > 
-> > > Paolo
-> > 
-> > Hi, Paolo
-> > Do you mean that we don't need this here, but to add the handling below?
-> > 
-> > static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 * entry, u32
-> > function,
-> > ...
-> > 	switch (function) {
-> > 	...
-> > 	case 7: {
-> > 		...
-> > 		if (index ==0) {
-> > 			...
-> > 			if(boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
-> > 				entry->edx |= F(CORE_CAPABILITY);
-> > 		}
-> > 		...
-> > 	...
-> > 	}
-> > ...
-> > }
-> 
-> Yes, exactly.
-> 
-> Paolo
+These patches adds SAR ADC support for the G12A SoCs, using
+the same setup/configuration as AXG and GXL.
 
-Like you said before, I think we don't need the condition judgment
-"if(boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))", but to set F(CORE_CAPABILITY)
-always for guest since MSR_IA32_CORE_CAPABILITY is emulated.
+The only change is the clocks, they are now handled by the AO
+Clock Controller, but it doesn't change the bindings or the driver.
 
-And we should set the right emulated value of MSR_IA32_CORE_CAPABILITY for guest
-in function kvm_get_core_capability() based on whether
-boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) just as you commented in the next
-patch.
+Neil Armstrong (2):
+  dt-bindings: iio: adc: document the Meson G12A support
+  iio: adc: meson-saradc: add support for Meson G12A
 
-Xiaoyao
+ .../devicetree/bindings/iio/adc/amlogic,meson-saradc.txt  | 1 +
+ drivers/iio/adc/meson_saradc.c                            | 8 ++++++++
+ 2 files changed, 9 insertions(+)
 
-> > > >  	/* all calls to cpuid_count() should be made on the same cpu */
-> > > >  	get_cpu();
-> > > > 
-> > > 
-> > > 
-> 
-> 
+-- 
+2.20.1
 
