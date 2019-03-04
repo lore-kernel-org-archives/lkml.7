@@ -2,120 +2,70 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3B1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 735F3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02C12070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458B120675
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l98T0rxB"
+	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="es4z+Xbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfCDSOm (ORCPT
+        id S1727687AbfCDSOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:14:42 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52196 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfCDSOl (ORCPT
+        Mon, 4 Mar 2019 13:14:51 -0500
+Received: from one.firstfloor.org ([193.170.194.197]:51714 "EHLO
+        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfCDSOt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:14:41 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x24IEViO016041;
-        Mon, 4 Mar 2019 12:14:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1551723271;
-        bh=4cKfhvIjucjeGcQqckVjBRHPZUS7ElJUKfj1d9nZ71E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=l98T0rxB+SRY4x1Ui8Fq/YxY6wo5THhbLB2a/53Dvs0bwo7Kzi+RO8dbG6lj++Qow
-         NIV3jxYTTAUYZIeLTiRdzI+EWKYfcuLp0zAC+D6xfM1muNBGXfQ2E6BbaVererSNia
-         opJciiYdUcGwm4+DKxcCkC1WlBaHDMuo5iTOFGoY=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x24IEUmK101437
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Mar 2019 12:14:30 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 4
- Mar 2019 12:14:30 -0600
-Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Mon, 4 Mar 2019 12:14:30 -0600
-Received: from [172.22.70.95] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x24IEUvm030129;
-        Mon, 4 Mar 2019 12:14:30 -0600
-Subject: Re: [PATCH v6 2/4] can: m_can: Rename m_can_priv to m_can_classdev
-To:     Wolfgang Grandegger <wg@grandegger.com>, <mkl@pengutronix.de>,
-        <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190301185043.9037-1-dmurphy@ti.com>
- <20190301185043.9037-2-dmurphy@ti.com>
- <093eb838-ab28-0bc0-8855-a8b22f3392b4@grandegger.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <85e03abc-82ce-6fa9-f1bd-1a068fabba53@ti.com>
-Date:   Mon, 4 Mar 2019 12:14:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Mon, 4 Mar 2019 13:14:49 -0500
+Received: by one.firstfloor.org (Postfix, from userid 503)
+        id 44D6186862; Mon,  4 Mar 2019 19:14:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
+        s=mail; t=1551723288;
+        bh=En25mHiy37yuHednDGPhpoa0IwCcj2T12xmdYSdz5R0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=es4z+XbfozD6iEYzm1Sn8stByTh3GZUVEcalhgHhrDkOwL8dPm1peu1JX18to8mbv
+         zixzy9RlfNSZXwk9AGKarhldWzYPHe4AxgSNdLB8jHaDr6Kb14jWdxFrw7A1WIUA9x
+         6SRfQQiMuMzj9h9Y1iLlWqjk9Sk1dq9XYfBao0fc=
+Date:   Mon, 4 Mar 2019 10:14:48 -0800
+From:   Andi Kleen <andi@firstfloor.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
+        jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v3 02/11] perf tools script: Support insn output for
+ normal samples
+Message-ID: <20190304181448.bnuwf2gvtxdgs7tg@two.firstfloor.org>
+References: <20190228183550.14126-1-andi@firstfloor.org>
+ <20190228183550.14126-3-andi@firstfloor.org>
+ <20190304144832.GI30476@krava>
 MIME-Version: 1.0
-In-Reply-To: <093eb838-ab28-0bc0-8855-a8b22f3392b4@grandegger.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304144832.GI30476@krava>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wolfgang
-
-On 3/4/19 11:31 AM, Wolfgang Grandegger wrote:
-> Hello,
+> > +	uname(&uts);
+> > +	if (!strcmp(uts.machine, session->header.env.arch) ||
+> > +		(!strcmp(uts.machine, "x86_64") &&
+> > +		 !strcmp(session->header.env.arch, "i386")))
 > 
-> there are still "LTL" after renaming m_can_priv to m_can_classdev.
-> 
+> why is this check and native_arch bool necessary?
+> i386 data will be overed by arch/x86
 
-Yes I know but some of those become unreadable if I break them apart.
+This is so that e.g. if someone displays an ARM perf.data
+on x86 it won't try to decode the ARM instructions as x86
+instructions.
 
-But if you want me to break them I can do it.
+It also assumes that noone parses 64bit x86 on 32bit,
+but I guess that's ok.
 
-For instance
-	struct m_can_plat_priv *priv = (struct m_can_plat_priv *)m_can_class->device_data;
-
-will become
-
-	struct m_can_plat_priv *priv =
-				(struct m_can_plat_priv *)m_can_class->device_data;
-
-> Am 01.03.19 um 19:50 schrieb Dan Murphy:
->> Rename the common m_can_priv class structure to
->> m_can_classdev as this is more descriptive.
-> 
-> If you change the struct name, I think you should also change the
-> variable name to something more meaning full e.g.:
-> 
->   struct m_can_classdev *cdev
-> 
-> instead of
-> 
->   struct m_can_classdev *priv
-> 
-> 
-
-Ack.  This change will grow this patch as s/priv/cdev is used 250x
-
-Dan
-
-> ... snip ...
-> 
-> Wolfgang.
-> 
-
-
--- 
-------------------
-Dan Murphy
+-Andi
