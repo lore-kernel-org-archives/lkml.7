@@ -2,68 +2,81 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC744C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C6AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C9220823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E2520823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbfCDIwQ (ORCPT
+        id S1726552AbfCDIwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:52:16 -0500
-Received: from smtp.nue.novell.com ([195.135.221.5]:33001 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfCDIwN (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Mon, 4 Mar 2019 03:52:13 -0500
-Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Mon, 04 Mar 2019 09:52:11 +0100
-Received: from d104.suse.de (nwb-a10-snat.microfocus.com [10.120.13.201])
-        by emea4-mta.ukb.novell.com with ESMTP (NOT encrypted); Mon, 04 Mar 2019 08:52:01 +0000
-From:   Oscar Salvador <osalvador@suse.de>
-To:     akpm@linux-foundation.org
-Cc:     mhocko@suse.com, david@redhat.com, mike.kravetz@oracle.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH 2/2] mm,memory_hotplug: Drop redundant hugepage_migration_supported check
-Date:   Mon,  4 Mar 2019 09:51:47 +0100
-Message-Id: <20190304085147.556-3-osalvador@suse.de>
-X-Mailer: git-send-email 2.13.7
-In-Reply-To: <20190304085147.556-1-osalvador@suse.de>
-References: <20190304085147.556-1-osalvador@suse.de>
+        Mon, 4 Mar 2019 03:52:24 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:46046 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726328AbfCDIwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:52:15 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D4908308FB9D;
+        Mon,  4 Mar 2019 08:52:14 +0000 (UTC)
+Received: from localhost (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C83106013A;
+        Mon,  4 Mar 2019 08:52:13 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 16:52:10 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, keescook@chromium.org, thgarnie@google.com
+Subject: Re: [PATCH v2 0/2] x86/mm/KASLR: Change the granularity of
+ randomization to PUD size in 5-level
+Message-ID: <20190304085210.GY14858@MiWiFi-R3L-srv>
+References: <20190228003522.9957-1-bhe@redhat.com>
+ <20190228091001.5wvkwe7cqkf2euzc@kshutemo-mobl1>
+ <20190228092346.GQ14858@MiWiFi-R3L-srv>
+ <20190228095503.jy44nwqhtmr4qeaq@kshutemo-mobl1>
+ <20190228100419.GS14858@MiWiFi-R3L-srv>
+ <20190228103051.dvqiy2slwwt56ag2@kshutemo-mobl1>
+ <20190301144502.GV14858@MiWiFi-R3L-srv>
+ <20190304081529.nuneutcjhoa56fw7@kshutemo-mobl1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304081529.nuneutcjhoa56fw7@kshutemo-mobl1>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 04 Mar 2019 08:52:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-has_unmovable_pages() does alreay check whether the hugetlb page supports
-migration, so all non-migrateable hugetlb pages should have been caught there.
-Let us drop the check from scan_movable_pages() as is redundant.
+On 03/04/19 at 11:15am, Kirill A. Shutemov wrote:
+> On Fri, Mar 01, 2019 at 10:45:02PM +0800, Baoquan He wrote:
+> > Hi Kirill,
+> > 
+> > I updated patch per your comments. While I kept the 'paddr' variable and
+> > the '0' initilization stuffs. My thought is there are two kinds of mapping
+> > in the handling, so keeping these names from old codes can make it more
+> > understandable. What do you think?
+> > 
+> > Kind               Physical address            Virtual address
+> > ----------------------------------------------------------------
+> > Direct mapping     paddr                vaddr = paddr+PAGE_OFFSET
+> > 1:1 mapping        paddr                    paddr
+> 
+> I agree with your logic and patch looks good to me. But maybe you should
+> exmplain this in the comments too?
 
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
- mm/memory_hotplug.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+OK, will add this into code comment, and sent a v3 patchset to wrap all
+these changes according to your suggestions. Thanks a lot.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 0f479c710615..2dfd9a0b0832 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1346,8 +1346,7 @@ static unsigned long scan_movable_pages(unsigned long start, unsigned long end)
- 		if (!PageHuge(page))
- 			continue;
- 		head = compound_head(page);
--		if (hugepage_migration_supported(page_hstate(head)) &&
--		    page_huge_active(head))
-+		if (page_huge_active(head))
- 			return pfn;
- 		skip = (1 << compound_order(head)) - (page - head);
- 		pfn += skip - 1;
--- 
-2.13.7
+Thanks
+Baoquan
 
