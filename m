@@ -2,186 +2,124 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF34C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9442BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D594206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9A2206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfCDPyb (ORCPT
+        id S1727356AbfCDPys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 10:54:31 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:57326 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726552AbfCDPya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 10:54:30 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2CF05C057F87;
-        Mon,  4 Mar 2019 15:54:30 +0000 (UTC)
-Received: from [10.36.112.48] (ovpn-112-48.ams2.redhat.com [10.36.112.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DACB55D732;
-        Mon,  4 Mar 2019 15:54:25 +0000 (UTC)
-Subject: Re: [PATCH v4 03/17] wlcore: Align reg_ch_conf_pending and
- tmp_ch_bitmap to unsigned long for better performance
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
- <1551494711-213533-4-git-send-email-fenghua.yu@intel.com>
- <20190304101141.GB32477@hirez.programming.kicks-ass.net>
- <44bb6771-7aea-c44d-6605-45e7a1499d1b@redhat.com>
- <20190304144050.GA230561@romley-ivt3.sc.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <7312a322-aae1-3aab-c8af-e16a5d8ee316@redhat.com>
-Date:   Mon, 4 Mar 2019 16:54:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 4 Mar 2019 10:54:48 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:57733 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726552AbfCDPys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 10:54:48 -0500
+X-Originating-IP: 185.94.189.188
+Received: from localhost (unknown [185.94.189.188])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 24FB6E001C;
+        Mon,  4 Mar 2019 15:54:44 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 16:54:44 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v9 1/5] drm/sun4i: sun6i_mipi_dsi: Fix hsync_porch
+ overflow
+Message-ID: <20190304155444.rwslksn57uggpazw@flea>
+References: <20190303173527.31055-1-jagan@amarulasolutions.com>
+ <20190303173527.31055-2-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-In-Reply-To: <20190304144050.GA230561@romley-ivt3.sc.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 04 Mar 2019 15:54:30 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mr4wnokcjpwb6vbq"
+Content-Disposition: inline
+In-Reply-To: <20190303173527.31055-2-jagan@amarulasolutions.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/19 15:40, Fenghua Yu wrote:
 
->> +	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
-> 
-> Now __aligned() is unnecessary because __set_bit_le() handles tmp_ch_bitmap,
-> right?
+--mr4wnokcjpwb6vbq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It's still needed because, as explained by Peter, bitmap functions
-should always operate on properly aligned variables.
+On Sun, Mar 03, 2019 at 11:05:23PM +0530, Jagan Teki wrote:
+> Loop N1 instruction delay for burst mode devices are computed
+> based on horizontal sync and porch timing values.
+>=20
+> The current driver is using u16 type for computing this hsync_porch
+> value, which would failed to fit within the u16 type for large sync
+> and porch timings devices. This would result in hsync_porch overflow
+> and eventually computed wrong instruction delay value.
+>=20
+> Example, timings, where it produces the overflow
+> {
+> 	.hdisplay       =3D 1080,
+> 	.hsync_start    =3D 1080 + 408,
+>         .hsync_end      =3D 1080 + 408 + 4,
+>         .htotal         =3D 1080 + 408 + 4 + 38,
+> }
+>=20
+> It reproduces the desired delay value 65487 but the correct working
+> value should be 7.
+>=20
+> So, Fix it by computing hsync_porch value separately with u32 type.
+>=20
+> Fixes: 1c1a7aa3663c ("drm/sun4i: dsi: Add burst support")
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun=
+4i/sun6i_mipi_dsi.c
+> index 6ff585055a07..465e7fc57899 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> @@ -457,8 +457,9 @@ static void sun6i_dsi_setup_inst_loop(struct sun6i_ds=
+i *dsi,
+>  	u16 delay =3D 50 - 1;
+> =20
+>  	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+> -		delay =3D (mode->htotal - mode->hdisplay) * 150;
+> -		delay /=3D (mode->clock / 1000) * 8;
+> +		u32 hsync_porch =3D (mode->htotal - mode->hdisplay);
+> +
+> +		delay =3D ((hsync_porch * 150) / ((mode->clock / 1000) * 8));
 
->>  	struct wiphy *wiphy = wl->hw->wiphy;
->>  	struct ieee80211_supported_band *band;
->>  	bool timeout = false;
->> @@ -1717,7 +1717,7 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
->>  
->>  	wl1271_debug(DEBUG_CMD, "cmd reg domain config");
->>  
->> -	memset(tmp_ch_bitmap, 0, sizeof(tmp_ch_bitmap));
->> +	memcpy(tmp_ch_bitmap, wl->reg_ch_conf_pending, sizeof(tmp_ch_bitmap));
->>  
->>  	for (b = NL80211_BAND_2GHZ; b <= NL80211_BAND_5GHZ; b++) {
->>  		band = wiphy->bands[b];
->> @@ -1738,13 +1738,10 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
->>  			if (ch_bit_idx < 0)
->>  				continue;
->>  
->> -			set_bit(ch_bit_idx, (long *)tmp_ch_bitmap);
->> +			__set_bit_le(ch_bit_idx, (long *)tmp_ch_bitmap);
-> 
-> Is __test_and_set_bit_le() more meaningful to avoid duplicate bit setting ?
+shouldn't we keep the multiplication by 150 in the u32 assignation?
+Otherwise, we could keep a u16 for the delay
 
-No, since the return value would be unused.
+Maxime
 
-Note that this patch is missing the removal of cpu_to_le32, as noticed
-by Peter.
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Thanks,
+--mr4wnokcjpwb6vbq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Paolo
+-----BEGIN PGP SIGNATURE-----
 
-> 
->>  		}
->>  	}
->>  
->> -	tmp_ch_bitmap[0] |= wl->reg_ch_conf_pending[0];
->> -	tmp_ch_bitmap[1] |= wl->reg_ch_conf_pending[1];
->> -
->>  	if (!memcmp(tmp_ch_bitmap, wl->reg_ch_conf_last, sizeof(tmp_ch_bitmap)))
->>  		goto out;
->>  
->> diff --git a/drivers/net/wireless/ti/wlcore/wlcore.h b/drivers/net/wireless/ti/wlcore/wlcore.h
->> index dd14850b0603..870eea3e7a27 100644
->> --- a/drivers/net/wireless/ti/wlcore/wlcore.h
->> +++ b/drivers/net/wireless/ti/wlcore/wlcore.h
->> @@ -320,9 +320,9 @@ struct wl1271 {
->>  	bool watchdog_recovery;
->>  
->>  	/* Reg domain last configuration */
->> -	u32 reg_ch_conf_last[2]  __aligned(8);
->> +	DECLARE_BITMAP(reg_ch_conf_last, 64);
->>  	/* Reg domain pending configuration */
->> -	u32 reg_ch_conf_pending[2];
->> +	DECLARE_BITMAP(reg_ch_conf_pending, 64);
->>  
->>  	/* Pointer that holds DMA-friendly block for the mailbox */
->>  	void *mbox;
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH1KRAAKCRDj7w1vZxhR
+xZafAQD6uiqAMuKggWx309kfrFfKHuWFY/3zVKpCznVU6qqbZAD/bOyu/0FojYfa
+dEwRdepXajH5hSDlAoKHVG4fWH4itAQ=
+=3ZL1
+-----END PGP SIGNATURE-----
 
+--mr4wnokcjpwb6vbq--
