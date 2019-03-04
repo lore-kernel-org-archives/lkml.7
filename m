@@ -2,122 +2,91 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04892C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69411C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8529206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:26:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tehbl+iL"
+	by mail.kernel.org (Postfix) with ESMTP id 314F920661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbfCDN0W (ORCPT
+        id S1726828AbfCDN2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:26:22 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:45722 "EHLO vps0.lunn.ch"
+        Mon, 4 Mar 2019 08:28:08 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:58959 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbfCDN0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:26:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=CcXkJR0K8l/JwAJGw4v3ASDsnbQebYOnLOqsHHLjaiI=; b=tehbl+iLMJB3JfWwwemPk7aWg5
-        TLRqMwglUE3NT2TymvldtVkt5jGV5Y6vIAwk/g1qLlKIjhkIIrdG5XL0SledJHV8u2mjF64UWFF7g
-        sx30RQAziaeNU4ZSDpwE6OINWCg/DN5xxU00SIbRw4p5TuIVN+QeQltozwVn50JA1dD4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1h0nbl-0003WB-LL; Mon, 04 Mar 2019 14:26:17 +0100
-Date:   Mon, 4 Mar 2019 14:26:17 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH -next] net: dsa: mv88e6xxx: Fix build warning when
- CONFIG_NET_DSA_LEGACY is n
-Message-ID: <20190304132617.GB26378@lunn.ch>
-References: <1551703381-52115-1-git-send-email-zhangshaokun@hisilicon.com>
+        id S1726592AbfCDN2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 08:28:08 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 57A6D307D84F;
+        Mon,  4 Mar 2019 13:28:08 +0000 (UTC)
+Received: from localhost (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AC1126013A;
+        Mon,  4 Mar 2019 13:28:07 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 21:28:04 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org
+Cc:     fanc.fnst@cn.fujitsu.com, bp@alien8.de
+Subject: Re: [PATCH v3] x86/boot: Fix incorrect ifdeffery scope
+Message-ID: <20190304132804.GA14858@MiWiFi-R3L-srv>
+References: <20190304055546.18566-1-bhe@redhat.com>
+ <20190304101709.GZ14858@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1551703381-52115-1-git-send-email-zhangshaokun@hisilicon.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190304101709.GZ14858@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 04 Mar 2019 13:28:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 08:43:01PM +0800, Shaokun Zhang wrote:
-> When CONFIG_NET_DSA_LEGACY is n, there is a GCC bulid warning:
-> drivers/net/dsa/mv88e6xxx/chip.c:4623:13: warning: ‘mv88e6xxx_ports_cmode_init’ defined but not used [-Wunused-function]
-> static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
-> Let's fix it.
+On 03/04/19 at 06:17pm, Baoquan He wrote:
+> Add Thomas and Ingo to CC, and x86 ML.
 
-Hi Shaokun, Heiner
-
-Although this fixes the warning, i suspect there i something wrong
-with the original patch adding mv88e6390x_port_set_cmode(). It should
-also be used without CONFIG_NET_DSA_LEGACY.
-
-     Andrew
-
+Sorry, forgot saying this is on tip/x86/boot branch.
 
 > 
-> Fixes: ed8fe20205ac ("net: dsa: mv88e6xxx: prevent interrupt storm caused by mv88e6390x_port_set_cmode")
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Vivien Didelot <vivien.didelot@gmail.com> 
-> Cc: Florian Fainelli <f.fainelli@gmail.com> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> ---
->  drivers/net/dsa/mv88e6xxx/chip.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-> index e4ad16b2dc38..168d4898c36f 100644
-> --- a/drivers/net/dsa/mv88e6xxx/chip.c
-> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-> @@ -4620,14 +4620,6 @@ static int mv88e6xxx_smi_init(struct mv88e6xxx_chip *chip,
->  	return 0;
->  }
->  
-> -static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
-> -{
-> -	int i;
-> -
-> -	for (i = 0; i < mv88e6xxx_num_ports(chip); i++)
-> -		chip->ports[i].cmode = MV88E6XXX_PORT_STS_CMODE_INVALID;
-> -}
-> -
->  static enum dsa_tag_protocol mv88e6xxx_get_tag_protocol(struct dsa_switch *ds,
->  							int port)
->  {
-> @@ -4637,6 +4629,14 @@ static enum dsa_tag_protocol mv88e6xxx_get_tag_protocol(struct dsa_switch *ds,
->  }
->  
->  #if IS_ENABLED(CONFIG_NET_DSA_LEGACY)
-> +static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < mv88e6xxx_num_ports(chip); i++)
-> +		chip->ports[i].cmode = MV88E6XXX_PORT_STS_CMODE_INVALID;
-> +}
-> +
->  static const char *mv88e6xxx_drv_probe(struct device *dsa_dev,
->  				       struct device *host_dev, int sw_addr,
->  				       void **priv)
-> -- 
-> 2.7.4
-> 
+> On 03/04/19 at 01:55pm, Baoquan He wrote:
+> > The declarations related to immovable memory handling are put out of
+> > the BOOT_COMPRESSED_MISC_H #ifdef scope, wrap them inside.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> > v2->v3:
+> >   Add code comment to clearly note the end of the ifdeffery for better
+> >   code reading.
+> > v1->v2:
+> >   Add the lost line which could be made by git.
+> >  arch/x86/boot/compressed/misc.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+> > index fd13655e0f9b..d2f184165934 100644
+> > --- a/arch/x86/boot/compressed/misc.h
+> > +++ b/arch/x86/boot/compressed/misc.h
+> > @@ -120,8 +120,6 @@ static inline void console_init(void)
+> >  
+> >  void set_sev_encryption_mask(void);
+> >  
+> > -#endif
+> > -
+> >  /* acpi.c */
+> >  #ifdef CONFIG_ACPI
+> >  acpi_physical_address get_rsdp_addr(void);
+> > @@ -135,3 +133,5 @@ int count_immovable_mem_regions(void);
+> >  #else
+> >  static inline int count_immovable_mem_regions(void) { return 0; }
+> >  #endif
+> > +
+> > +#endif /* BOOT_COMPRESSED_MISC_H */
+> > -- 
+> > 2.17.2
+> > 
