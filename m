@@ -2,78 +2,58 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920E2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1F0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C12A21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551677656;
-	bh=USy8jk1ELoDHhaPW3oVOInoK71M+Yok2MDMXGPHVToY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cx39S1o5uDl4RbYRoY2SvC2e2hlyTgKpamGnOr5EP5Ds2/4z0lvtdZANotrQO4sUX
-	 jtqUkBbl9upN4k435ph+R6/Onxx8mOFqsZ0BISy8YNTQiRp24N6h52bnqzjyPItHQt
-	 AJLOaNfMrgQgWpxor1pxGx6Q5mGbQzB9Lgo7cKfQ=
+	by mail.kernel.org (Postfix) with ESMTP id DB5AF20815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbfCDFeO (ORCPT
+        id S1726126AbfCDFex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 00:34:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35352 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 00:34:53 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:54010 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbfCDFeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 00:34:14 -0500
-Received: from dragon (61-216-91-114.HINET-IP.hinet.net [61.216.91.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1725938AbfCDFew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 00:34:52 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B964A20815;
-        Mon,  4 Mar 2019 05:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551677653;
-        bh=USy8jk1ELoDHhaPW3oVOInoK71M+Yok2MDMXGPHVToY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a7lFYmU/c7zrbBZxw1yffWE7DrJd8saPS6p76ZpbUM9QcUDq6iI7x6DqGNU1R7wzq
-         IX/P8kX7OLzWZYterQwjJvYYaWE2fzNyheshqNsb+wh1+Z64sco6qya/zK/4E4TSNF
-         +84/6mdyU+QPT6H7a1GYKE0JW6zR9GYjGFMeJTVM=
-Date:   Mon, 4 Mar 2019 13:33:13 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: imx6dl-yapp4: Use rgmii-id phy mode on the
- cpu port
-Message-ID: <20190304053311.GX26041@dragon>
-References: <1551425202-8871-1-git-send-email-michal.vokac@ysoft.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 98D17308625A;
+        Mon,  4 Mar 2019 05:34:52 +0000 (UTC)
+Received: from localhost (ovpn-12-18.pek2.redhat.com [10.72.12.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 320705D71A;
+        Mon,  4 Mar 2019 05:34:50 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 13:34:48 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc:     linux-kernel@vger.kernel.org, bp@alien8.de
+Subject: Re: [PATCH] x86/boot: Fix incorrect ifdeffery scope
+Message-ID: <20190304053448.GX14858@MiWiFi-R3L-srv>
+References: <20190304041820.14409-1-bhe@redhat.com>
+ <20190304053255.GC28322@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1551425202-8871-1-git-send-email-michal.vokac@ysoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190304053255.GC28322@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 04 Mar 2019 05:34:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 08:26:42AM +0100, Michal Vokáč wrote:
-> Use rgmii-id phy mode for the CPU port (MAC0) of the QCA8334 switch
-> to add delays to both Tx and Rx clock.
+On 03/04/19 at 01:32pm, Chao Fan wrote:
+> On Mon, Mar 04, 2019 at 12:18:20PM +0800, Baoquan He wrote:
+> >The declarations related to immovable memory handling are put out of
+> >
+> >Signed-off-by: Baoquan He <bhe@redhat.com>
 > 
-> It worked with the rgmii mode before because the qca8k driver
-> (incorrectly) enabled delays in that mode and rgmii-id was not
-> implemented at all.
-> 
-> Commit 5ecdd77c61c8 ("net: dsa: qca8k: disable delay for RGMII mode")
-> removed the delays from the RGMII mode and hence broke the networking.
-> 
-> To fix the problem, commit a968b5e9d587 ("net: dsa: qca8k: Enable delay
-> for RGMII_ID mode") was introduced.
-> 
-> Now the correct phy mode is available so use it.
-> 
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> Are there some problems in your mail tool?
+> I can only see one line in the PATCH log and seems a half sentence.
 
-Applied, thanks.
+Yeah, just notice it. I will send a new one. Sorry.
