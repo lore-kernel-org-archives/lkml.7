@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9056BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE896C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B3320823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B626520836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688696;
-	bh=4bwbRpX9kABEWX1p+XFR0y+b+F3pi/T7U6M2d/uWD0A=;
+	s=default; t=1551688706;
+	bh=h5fb5tliEYxgXh/WjjtcJvvucnn0fCj5K7YgO34HPgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FdRla+Pq+VLin7NqYlKAZ4oknbkbDcrpizO4JYPUDoinb8lM7rTV0nqQiw1dKSjgn
-	 SRpWNeidkxq7AwfOzUoOCxyvU2Y61rEpO3ojeEdE3xiWLrdEIqHwPEOBfRL7B17RBD
-	 AN9kQ6GjYuGvBV7beWdkGtVapkQO6GPTPvKVlJA0=
+	b=2eyd1YulRmEah5B5eap18CWM0YaAoebx7T8uFWWzEeP74gLp8TtimmkRXuCR9N75u
+	 pKEehXzvs5EPUHpA9GlJF6XoU6LNmwhoT4iIj7+FjsMdvtldjcHuqsH3rJP7dFDpMT
+	 QmcGLP88XjLlgI1QLU+2Ufhe5F5cZsZj6eZyR2/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfCDIiO (ORCPT
+        id S1728366AbfCDIez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:38:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42880 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:34:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbfCDIfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:35:11 -0500
+        id S1728352AbfCDIew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:34:52 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7946B208E4;
-        Mon,  4 Mar 2019 08:35:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE04520823;
+        Mon,  4 Mar 2019 08:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688511;
-        bh=4bwbRpX9kABEWX1p+XFR0y+b+F3pi/T7U6M2d/uWD0A=;
+        s=default; t=1551688491;
+        bh=h5fb5tliEYxgXh/WjjtcJvvucnn0fCj5K7YgO34HPgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CB9hk6YvbBu7UPKF0ptQ4cPSrvCY1jXOobeQ86RwmNIp2H8CfHzX18mqlFEEyiCeZ
-         Kia7OIpqc4PnVSaAobY7MeWQWFuozYSnSu7oDBGSV4Q0XKLK4rd6NBQw4fMTOp/2zm
-         U8R0sLBfPIFU6R4g11egw0c4FfzjURerDYt6QGjY=
+        b=FddleHwUHEJNG8SF7hskqmEpljHB0apNz6sqy6aWJdtaj4acuM3iG7kV/ISYWv95j
+         euCONYkVa6R+/NIz6egbpjeTt6+TMBywZMxd3wMa59MfwQYOsUqwi2e4enpbMlLVzx
+         6UZYwE8eISOGxue5QR3nYNpzqmd9JL7XhBA33wg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Hu <weh@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Mathieu Malaterre <malat@debian.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 50/88] hv_netvsc: Fix ethtool change hash key error
-Date:   Mon,  4 Mar 2019 09:22:33 +0100
-Message-Id: <20190304081632.531946807@linuxfoundation.org>
+Subject: [PATCH 4.20 62/88] mac80211: Add attribute aligned(2) to struct action
+Date:   Mon,  4 Mar 2019 09:22:45 +0100
+Message-Id: <20190304081633.004408556@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -67,79 +67,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit b4a10c750424e01b5e37372fef0a574ebf7b56c3 ]
+[ Upstream commit 7c53eb5d87bc21464da4268c3c0c47457b6d9c9b ]
 
-Hyper-V hosts require us to disable RSS before changing RSS key,
-otherwise the changing request will fail. This patch fixes the
-coding error.
+During refactor in commit 9e478066eae4 ("mac80211: fix MU-MIMO
+follow-MAC mode") a new struct 'action' was declared with packed
+attribute as:
 
-Fixes: ff4a44199012 ("netvsc: allow get/set of RSS indirection table")
-Reported-by: Wei Hu <weh@microsoft.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-[sl: fix up subject line]
+  struct {
+          struct ieee80211_hdr_3addr hdr;
+          u8 category;
+          u8 action_code;
+  } __packed action;
+
+But since struct 'ieee80211_hdr_3addr' is declared with an aligned
+keyword as:
+
+  struct ieee80211_hdr {
+  	__le16 frame_control;
+  	__le16 duration_id;
+  	u8 addr1[ETH_ALEN];
+  	u8 addr2[ETH_ALEN];
+  	u8 addr3[ETH_ALEN];
+  	__le16 seq_ctrl;
+  	u8 addr4[ETH_ALEN];
+  } __packed __aligned(2);
+
+Solve the ambiguity of placing aligned structure in a packed one by
+adding the aligned(2) attribute to struct 'action'.
+
+This removes the following warning (W=1):
+
+  net/mac80211/rx.c:234:2: warning: alignment 1 of 'struct <anonymous>' is less than 2 [-Wpacked-not-aligned]
+
+Cc: Johannes Berg <johannes.berg@intel.com>
+Suggested-by: Johannes Berg <johannes@sipsolutions.net>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/rndis_filter.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ net/mac80211/rx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index 8b537a049c1e5..a4661d396e3cd 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -774,8 +774,8 @@ rndis_filter_set_offload_params(struct net_device *ndev,
- 	return ret;
- }
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 2ee3f09eced1c..cc9be69af44cb 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -231,7 +231,7 @@ static void ieee80211_handle_mu_mimo_mon(struct ieee80211_sub_if_data *sdata,
+ 		struct ieee80211_hdr_3addr hdr;
+ 		u8 category;
+ 		u8 action_code;
+-	} __packed action;
++	} __packed __aligned(2) action;
  
--int rndis_filter_set_rss_param(struct rndis_device *rdev,
--			       const u8 *rss_key)
-+static int rndis_set_rss_param_msg(struct rndis_device *rdev,
-+				   const u8 *rss_key, u16 flag)
- {
- 	struct net_device *ndev = rdev->ndev;
- 	struct rndis_request *request;
-@@ -804,7 +804,7 @@ int rndis_filter_set_rss_param(struct rndis_device *rdev,
- 	rssp->hdr.type = NDIS_OBJECT_TYPE_RSS_PARAMETERS;
- 	rssp->hdr.rev = NDIS_RECEIVE_SCALE_PARAMETERS_REVISION_2;
- 	rssp->hdr.size = sizeof(struct ndis_recv_scale_param);
--	rssp->flag = 0;
-+	rssp->flag = flag;
- 	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
- 			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
- 			 NDIS_HASH_TCP_IPV6;
-@@ -829,9 +829,12 @@ int rndis_filter_set_rss_param(struct rndis_device *rdev,
- 
- 	wait_for_completion(&request->wait_event);
- 	set_complete = &request->response_msg.msg.set_complete;
--	if (set_complete->status == RNDIS_STATUS_SUCCESS)
--		memcpy(rdev->rss_key, rss_key, NETVSC_HASH_KEYLEN);
--	else {
-+	if (set_complete->status == RNDIS_STATUS_SUCCESS) {
-+		if (!(flag & NDIS_RSS_PARAM_FLAG_DISABLE_RSS) &&
-+		    !(flag & NDIS_RSS_PARAM_FLAG_HASH_KEY_UNCHANGED))
-+			memcpy(rdev->rss_key, rss_key, NETVSC_HASH_KEYLEN);
-+
-+	} else {
- 		netdev_err(ndev, "Fail to set RSS parameters:0x%x\n",
- 			   set_complete->status);
- 		ret = -EINVAL;
-@@ -842,6 +845,16 @@ int rndis_filter_set_rss_param(struct rndis_device *rdev,
- 	return ret;
- }
- 
-+int rndis_filter_set_rss_param(struct rndis_device *rdev,
-+			       const u8 *rss_key)
-+{
-+	/* Disable RSS before change */
-+	rndis_set_rss_param_msg(rdev, rss_key,
-+				NDIS_RSS_PARAM_FLAG_DISABLE_RSS);
-+
-+	return rndis_set_rss_param_msg(rdev, rss_key, 0);
-+}
-+
- static int rndis_filter_query_device_link_status(struct rndis_device *dev,
- 						 struct netvsc_device *net_device)
- {
+ 	if (!sdata)
+ 		return;
 -- 
 2.19.1
 
