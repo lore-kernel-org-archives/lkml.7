@@ -2,70 +2,114 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6609DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA829C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36CA52054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA0720823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfCDVsv (ORCPT
+        id S1726452AbfCDVuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 16:48:51 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50768 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfCDVsv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 16:48:51 -0500
-Received: from localhost.localdomain (unknown [IPv6:2804:431:9718:a1b1:9d17:4c45:79a4:9c61])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 4 Mar 2019 16:50:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfCDVuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 16:50:03 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A385D27ECD0;
-        Mon,  4 Mar 2019 21:48:46 +0000 (GMT)
-From:   Helen Koike <helen.koike@collabora.com>
-To:     eric@anholt.net
-Cc:     linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stefan.wahren@i2se.com, linus.walleij@linaro.org, lkundrak@v3.sk,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        kernel@collabora.com
-Subject: [PATCH] ARM: dts: bcm283x: Fix hdmi hpd gpio pull
-Date:   Mon,  4 Mar 2019 18:48:37 -0300
-Message-Id: <20190304214837.9045-1-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B889206B6;
+        Mon,  4 Mar 2019 21:50:02 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 16:50:00 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH 2/2] tracing: Use strncpy instead of memcpy for string
+ keys in hist triggers
+Message-ID: <20190304165000.0ce0fbdd@gandalf.local.home>
+In-Reply-To: <50c35ae1267d64eee975b8125e151e600071d4dc.1549309756.git.tom.zanussi@linux.intel.com>
+References: <cover.1549309756.git.tom.zanussi@linux.intel.com>
+        <50c35ae1267d64eee975b8125e151e600071d4dc.1549309756.git.tom.zanussi@linux.intel.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Raspberry pi board model B revison 2 have the hot plug detector gpio
-active high (and not low as it was in the dts).
+On Mon,  4 Feb 2019 15:07:24 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Eric Anholt <eric@anholt.net>
----
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Tom Zanussi <tom.zanussi@linux.intel.com>
+> 
+> Because there may be random garbage beyond a string's null terminator,
+> it's not correct to copy the the complete character array for use as a
+> hist trigger key.  This results in multiple histogram entries for the
+> 'same' string key.
+> 
+> So, in the case of a string key, use strncpy instead of memcpy to
+> avoid copying in the extra bytes.
+> 
+> Before, using the gdbus entries in the following hist trigger as an
+> example:
+> 
+>   # echo 'hist:key=comm' > /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+>   # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist
+> 
+>   ...
+> 
+>   { comm: ImgDecoder #4                      } hitcount:        203
+>   { comm: gmain                              } hitcount:        213
+>   { comm: gmain                              } hitcount:        216
+>   { comm: StreamTrans #73                    } hitcount:        221
+>   { comm: mozStorage #3                      } hitcount:        230
+>   { comm: gdbus                              } hitcount:        233
+>   { comm: StyleThread#5                      } hitcount:        253
+>   { comm: gdbus                              } hitcount:        256
+>   { comm: gdbus                              } hitcount:        260
+>   { comm: StyleThread#4                      } hitcount:        271
+> 
+>   ...
+> 
+>   # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
+>   51
+> 
+> After:
+> 
+>   # cat /sys/kernel/debug/tracing/events/sched/sched_waking/hist | egrep gdbus | wc -l
+>   1
+> 
+> Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  kernel/trace/trace_events_hist.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index c4a667503bf0..1b349689b897 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -4695,9 +4695,10 @@ static inline void add_to_key(char *compound_key, void *key,
+>  		/* ensure NULL-termination */
+>  		if (size > key_field->size - 1)
+>  			size = key_field->size - 1;
+> -	}
+>  
+> -	memcpy(compound_key + key_field->offset, key, size);
+> +		strncpy(compound_key + key_field->offset, (char *)key, size);
+> +	} else
+> +		memcpy(compound_key + key_field->offset, key, size);
+>  }
+>  
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index 5641d162dfdb..28e7513ce617 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -93,7 +93,7 @@
- };
- 
- &hdmi {
--	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
-+	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
- };
- 
- &pwm {
--- 
-2.20.1
+Shouldn't we use strncpy() in save_comm() too. Feels safer.
 
+-- Steve
