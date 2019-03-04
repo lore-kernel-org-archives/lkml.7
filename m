@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE61C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C4AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2106E20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE2C20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688727;
-	bh=k7v/O//98hs+glhuNToKN+VL21zVJBnd2COAegwivTo=;
+	s=default; t=1551688743;
+	bh=J+NFwq+LpauCqkIEiMTTh+ulw8zllk3YEWAd0qTCwrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d60gMSAoEfpTB9keu9WUh6k8w6YBzPD+uFPp/2952vvP4hIxnBBertT+QVbwewVZ+
-	 oh3HgIsd325PPmDj38RxnAcDPYS5yJJ5gBHhEYg6hAdacpaLi1k2fZ/N4bRQK/bv/v
-	 KxEj4UbJyhvYG0yr72B2PG2GjNQqLaS5ySgwWRs0=
+	b=fwRjtt9y2RZ09gkjdb39tqUPpaGI2h/HGFvl22wzm1gjfy2afn4HSwovgxpJh7rif
+	 xD+MUYFhO3f1p4mM8Nm8s8RDHSiM/qKe3AExE60URnclO+FgNiuDhaaz+/6GKqq8MJ
+	 uSObTdmlbuxBGOT2Cxok1tn0oOVKOnoA+yxHkA5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbfCDIee (ORCPT
+        id S1727832AbfCDIjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:34:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40672 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:39:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfCDIe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:34:29 -0500
+        id S1726518AbfCDIeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:34:13 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0956F20823;
-        Mon,  4 Mar 2019 08:34:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63F75208E4;
+        Mon,  4 Mar 2019 08:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688468;
-        bh=k7v/O//98hs+glhuNToKN+VL21zVJBnd2COAegwivTo=;
+        s=default; t=1551688452;
+        bh=J+NFwq+LpauCqkIEiMTTh+ulw8zllk3YEWAd0qTCwrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w6nVNWpv+J8n8ED19e1WKIsAVhN7uhboutQpogfMMywcN0kBDRXP4B+AuuMMow/6H
-         0BwOpVs+Tt44SEfoKLiAyp1EJZmWELa5GC7qOwS1CwSBH1EFXYO8c6dPJ1pN2fbfI4
-         WxHWhP/cgXeoGGhxwVq34B7XJVdItUsq1GUvCigs=
+        b=XV1GMSUMm4TruPZtDQMVSpEJR+5HsaTSE1hKUlUYgjPtQ7lGzlQ0rZHSdimn2GbwI
+         XWeCRxVCL5LuANUg6c67grjKzbW9fJv7i8pjraYqkElNVfKF/7D+vFkD/4i2EWP/yo
+         AVby7tPxdf7n+tozZHuZNUsfn9d1VIBp4H9rpcps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Srinivas Ramana <sramana@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-msm@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 19/88] genirq: Make sure the initial affinity is not empty
-Date:   Mon,  4 Mar 2019 09:22:02 +0100
-Message-Id: <20190304081631.354951328@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 14/88] usb: gadget: Potential NULL dereference on allocation error
+Date:   Mon,  4 Mar 2019 09:21:57 +0100
+Message-Id: <20190304081631.129995747@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,37 +66,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit bddda606ec76550dd63592e32a6e87e7d32583f7 ]
+[ Upstream commit df28169e1538e4a8bcd8b779b043e5aa6524545c ]
 
-If all CPUs in the irq_default_affinity mask are offline when an interrupt
-is initialized then irq_setup_affinity() can set an empty affinity mask for
-a newly allocated interrupt.
+The source_sink_alloc_func() function is supposed to return error
+pointers on error.  The function is called from usb_get_function() which
+doesn't check for NULL returns so it would result in an Oops.
 
-Fix this by falling back to cpu_online_mask in case the resulting affinity
-mask is zero.
+Of course, in the current kernel, small allocations always succeed so
+this doesn't affect runtime.
 
-Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-msm@vger.kernel.org
-Link: https://lkml.kernel.org/r/1545312957-8504-1-git-send-email-sramana@codeaurora.org
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq/manage.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/gadget/function/f_sourcesink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 9dbdccab3b6a3..5c0ba5ca59308 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -393,6 +393,9 @@ int irq_setup_affinity(struct irq_desc *desc)
- 	}
+diff --git a/drivers/usb/gadget/function/f_sourcesink.c b/drivers/usb/gadget/function/f_sourcesink.c
+index 9cdef108fb1b3..ed68a4860b7d8 100644
+--- a/drivers/usb/gadget/function/f_sourcesink.c
++++ b/drivers/usb/gadget/function/f_sourcesink.c
+@@ -838,7 +838,7 @@ static struct usb_function *source_sink_alloc_func(
  
- 	cpumask_and(&mask, cpu_online_mask, set);
-+	if (cpumask_empty(&mask))
-+		cpumask_copy(&mask, cpu_online_mask);
-+
- 	if (node != NUMA_NO_NODE) {
- 		const struct cpumask *nodemask = cpumask_of_node(node);
+ 	ss = kzalloc(sizeof(*ss), GFP_KERNEL);
+ 	if (!ss)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	ss_opts =  container_of(fi, struct f_ss_opts, func_inst);
  
 -- 
 2.19.1
