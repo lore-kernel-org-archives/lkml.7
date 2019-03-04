@@ -2,176 +2,196 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FE0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A57C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C4E20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F43206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:58:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gi58neNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfCDK4m (ORCPT
+        id S1726226AbfCDK6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 05:56:42 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60168 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbfCDK4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 05:56:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DAA4EBD;
-        Mon,  4 Mar 2019 02:56:41 -0800 (PST)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 185783F703;
-        Mon,  4 Mar 2019 02:56:36 -0800 (PST)
-Subject: Re: [PATCH v6 4/6] arm64/kvm: add a userspace option to enable
- pointer authentication
-To:     James Morse <james.morse@arm.com>,
+        Mon, 4 Mar 2019 05:58:07 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45367 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfCDK6G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 05:58:06 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w17so5004369wrn.12
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 02:58:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+NgtwWtuC29F27eufSWdAd18iEdNfLM9/qUuy/ZRY+Q=;
+        b=gi58neNLjfxzF9XN+uzR4rq2lPrTk2SI5aE8CnL2oHd2yYAKhYxyAN/+fDNAwoNBt4
+         6Rm5JX1eGhyrMa16km98QA3koKGeB86cVPVsVYrifXheCck9lOkIdwOKIq0eY4T6qfpQ
+         NNBmgozURb86hM9myyU17vwAzsXAtPNM8/VrB9aTSuPhOZYo3PtdGWAfTyPBsrwhxobv
+         7fbXGNnLj0weAuOM+ojln3QPWB0Y1K/fg7yUTow9+Vki1eoq0z2iNjThep5xVdYSkWYg
+         no9l3W/52e9oSnUAgVldCYwpYZqa699mGZasVLezlj95iOLnXKeTKAoKyHDqTf4SDi1z
+         60oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+NgtwWtuC29F27eufSWdAd18iEdNfLM9/qUuy/ZRY+Q=;
+        b=fy5wGWwich0IrU09tNYHbM27cXP2oQE93M59vVZyJRaqCoJoIUChyjAI+3meQ7ilca
+         Xm7hIcXqw44MiDzvgZ4aELZYlB//k+gfSWT4ExezfyZO6iZlY+MNN10eGSfW3cQiQBnv
+         fUn10+cLpfSXH8VNTB1Xn7jBCuqXKik4EphsbckzJb8+MlSVKo5fkJOdHWMvpEaGe1p0
+         hjLwZq7AQlotbyOErOv0C8fcOrhKxThhpdmKLzX3bEAQR0pwXj7oEgYy5XiT3nu/NgoR
+         knLuebLYzeoI0B4Tg1RY7eNaxfWhmFf8cWz/qBgpAIAEcLSwxTEeH77Tw+mZfqsrjN34
+         YFWg==
+X-Gm-Message-State: APjAAAW3Wk/pasm8PagQ7fj8BCA9rg7esL+1nxyoA94l98PQhVm1DEIP
+        RHtgZAIEzExMe1Zfu9TrAEDCKA==
+X-Google-Smtp-Source: APXvYqyIcdlK+lbLVNxV+ui8IL2XFxXNxLlfDqWCiJA4vYjfpaXkaVv13IkojX1pngcBKDpC63P1xw==
+X-Received: by 2002:adf:9e47:: with SMTP id v7mr12658314wre.190.1551697084774;
+        Mon, 04 Mar 2019 02:58:04 -0800 (PST)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id w4sm8038165wrk.85.2019.03.04.02.58.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 04 Mar 2019 02:58:04 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     daniel@ffwll.ch
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-References: <1550568271-5319-1-git-send-email-amit.kachhap@arm.com>
- <1550568271-5319-5-git-send-email-amit.kachhap@arm.com>
- <f7e4156e-c9aa-0356-d9a4-6b01ff23c5c0@arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <4e485492-50ef-3162-af3c-7af80b4a17cc@arm.com>
-Date:   Mon, 4 Mar 2019 16:26:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+Subject: [PATCH v3] dt-bindings: gpu: add bindings for the ARM Mali Bifrost GPU
+Date:   Mon,  4 Mar 2019 11:58:02 +0100
+Message-Id: <20190304105802.6010-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <f7e4156e-c9aa-0356-d9a4-6b01ff23c5c0@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+Add the bindings for the Bifrost family of ARM Mali GPUs.
 
-On 2/27/19 12:03 AM, James Morse wrote:
-> Hi Amit,
-> 
-> On 19/02/2019 09:24, Amit Daniel Kachhap wrote:
->> This feature will allow the KVM guest to allow the handling of
->> pointer authentication instructions or to treat them as undefined
->> if not set. It uses the existing vcpu API KVM_ARM_VCPU_INIT to
->> supply this parameter instead of creating a new API.
->>
->> A new register is not created to pass this parameter via
->> SET/GET_ONE_REG interface as just a flag (KVM_ARM_VCPU_PTRAUTH)
->> supplied is enough to enable this feature.
-> 
-> and an attempt to restore the id register with the other version would fail.
-> 
-> 
->> diff --git a/Documentation/arm64/pointer-authentication.txt b/Documentation/arm64/pointer-authentication.txt
->> index a25cd21..0529a7d 100644
->> --- a/Documentation/arm64/pointer-authentication.txt
->> +++ b/Documentation/arm64/pointer-authentication.txt
->> @@ -82,7 +82,8 @@ pointers).
->>   Virtualization
->>   --------------
->>   
->> -Pointer authentication is not currently supported in KVM guests. KVM
->> -will mask the feature bits from ID_AA64ISAR1_EL1, and attempted use of
->> -the feature will result in an UNDEFINED exception being injected into
->> -the guest.
-> 
->> +Pointer authentication is enabled in KVM guest when virtual machine is
->> +created by passing a flag (KVM_ARM_VCPU_PTRAUTH)
-> 
-> (This is still mixing VM and VCPU)
-> 
-> 
->> + requesting this feature to be enabled.
-> 
-> .. on each vcpu?
-> 
-> 
->> +Without this flag, pointer authentication is not enabled
->> +in KVM guests and attempted use of the feature will result in an UNDEFINED
->> +exception being injected into the guest.
-> 
-> 'guests' here suggests its a VM property. If you set it on some VCPU but not others KVM
-> will generate undefs instead of enabling the feature. (which is the right thing to do)
-> 
-> I think it needs to be clear this is a per-vcpu property.
-ok.
-> 
-> 
->> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
->> index 97c3478..5f82ca1 100644
->> --- a/arch/arm64/include/uapi/asm/kvm.h
->> +++ b/arch/arm64/include/uapi/asm/kvm.h
->> @@ -102,6 +102,7 @@ struct kvm_regs {
->>   #define KVM_ARM_VCPU_EL1_32BIT		1 /* CPU running a 32bit VM */
->>   #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
->>   #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
-> 
->> +#define KVM_ARM_VCPU_PTRAUTH		4 /* VCPU uses address authentication */
-> 
-> Just address authentication? I agree with Mark we should have two bits to match what gets
-> exposed to EL0. One would then be address, the other generic.
-ok.
-> 
-> 
->> diff --git a/arch/arm64/kvm/hyp/ptrauth-sr.c b/arch/arm64/kvm/hyp/ptrauth-sr.c
->> index 528ee6e..6846a23 100644
->> --- a/arch/arm64/kvm/hyp/ptrauth-sr.c
->> +++ b/arch/arm64/kvm/hyp/ptrauth-sr.c
->> @@ -93,9 +93,23 @@ void kvm_arm_vcpu_ptrauth_reset(struct kvm_vcpu *vcpu)
-> 
->> +/**
->> + * kvm_arm_vcpu_ptrauth_allowed - checks if ptrauth feature is allowed by user
->> + *
->> + * @vcpu: The VCPU pointer
->> + *
->> + * This function will be used to check userspace option to have ptrauth or not
->> + * in the guest kernel.
->> + */
->> +bool kvm_arm_vcpu_ptrauth_allowed(const struct kvm_vcpu *vcpu)
->> +{
->> +	return kvm_supports_ptrauth() &&
->> +		test_bit(KVM_ARM_VCPU_PTRAUTH, vcpu->arch.features);
->> +}
-> 
-> This isn't used from world-switch, could it be moved to guest.c?
-yes sure.
-> 
-> 
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index 12529df..f7bcc60 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -1055,7 +1055,7 @@ static bool access_cntp_cval(struct kvm_vcpu *vcpu,
->>   }
->>   
->>   /* Read a sanitised cpufeature ID register by sys_reg_desc */
->> -static u64 read_id_reg(struct sys_reg_desc const *r, bool raz)
->> +static u64 read_id_reg(struct kvm_vcpu *vcpu, struct sys_reg_desc const *r, bool raz)
-> 
-> (It might be easier on the reviewer to move these mechanical changes to an earlier patch)
-Yes with including some of Dave SVE patches this wont be required.
+The Bifrost GPU architecture is similar to the Midgard family,
+but with a different Shader Core & Execution Engine structures.
 
-Thanks,
-Amit D
-> 
-> 
-> Looks good,
-> 
-> Thanks,
-> 
-> James
-> 
+Bindings are based on the Midgard family bindings, but the inner
+architectural changes makes it a separate family needing separate
+bindings.
+
+The Bifrost GPUs are present in a number of recent SoCs, like the
+Amlogic G12A Family, and many other vendors.
+The Amlogic vendor specific compatible is added to handle the
+specific IP integration differences and dependencies.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/gpu/arm,mali-bifrost.txt         | 90 +++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+
+Changes since v2:
+- moved to a single compatible since HW is fully discoverable
+
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+new file mode 100644
+index 000000000000..e068fccf4ce9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
+@@ -0,0 +1,90 @@
++ARM Mali Bifrost GPU
++====================
++
++Required properties:
++
++- compatible :
++  * Must contain one the following:
++    + "arm,mali-bifrost"
++  * which must be preceded by one of the following vendor specifics:
++    + "amlogic,meson-g12a-mali"
++
++- reg : Physical base address of the device and length of the register area.
++
++- interrupts : Contains the three IRQ lines required by Mali Bifrost devices.
++
++- interrupt-names : Contains the names of IRQ resources in the order they were
++  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
++
++Optional properties:
++
++- clocks : Phandle to clock for the Mali Bifrost device.
++
++- mali-supply : Phandle to regulator for the Mali device. Refer to
++  Documentation/devicetree/bindings/regulator/regulator.txt for details.
++
++- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
++  for details.
++
++- resets : Phandle of the GPU reset line.
++
++Vendor-specific bindings
++------------------------
++
++The Mali GPU is integrated very differently from one SoC to
++another. In order to accomodate those differences, you have the option
++to specify one more vendor-specific compatible, among:
++
++- "amlogic,meson-g12a-mali"
++  Required properties:
++  - resets : Should contain phandles of :
++    + GPU reset line
++    + GPU APB glue reset line
++
++Example for a Mali-G31:
++
++gpu@ffa30000 {
++	compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
++	reg = <0xffe40000 0x10000>;
++	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "job", "mmu", "gpu";
++	clocks = <&clk CLKID_MALI>;
++	mali-supply = <&vdd_gpu>;
++	operating-points-v2 = <&gpu_opp_table>;
++	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
++};
++
++gpu_opp_table: opp_table0 {
++	compatible = "operating-points-v2";
++
++	opp@533000000 {
++		opp-hz = /bits/ 64 <533000000>;
++		opp-microvolt = <1250000>;
++	};
++	opp@450000000 {
++		opp-hz = /bits/ 64 <450000000>;
++		opp-microvolt = <1150000>;
++	};
++	opp@400000000 {
++		opp-hz = /bits/ 64 <400000000>;
++		opp-microvolt = <1125000>;
++	};
++	opp@350000000 {
++		opp-hz = /bits/ 64 <350000000>;
++		opp-microvolt = <1075000>;
++	};
++	opp@266000000 {
++		opp-hz = /bits/ 64 <266000000>;
++		opp-microvolt = <1025000>;
++	};
++	opp@160000000 {
++		opp-hz = /bits/ 64 <160000000>;
++		opp-microvolt = <925000>;
++	};
++	opp@100000000 {
++		opp-hz = /bits/ 64 <100000000>;
++		opp-microvolt = <912500>;
++	};
++};
+-- 
+2.20.1
+
