@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C46C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED67C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C0321019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8E921019
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688430;
-	bh=P+9Fco+ZYZrtBC+y/RN6QEdRgjtHFLcKr+wUmYHZJwc=;
+	s=default; t=1551688435;
+	bh=++K8YRj4aPa7iN0BqUC8ojLvuDVqIeEyHePi6dYUw28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dTytx+Kx3vAK6ci6ND2fgl8JjYtkYPgsxPhGkbcxLyJdDmJJjCk48HhgbWWaZCYV6
-	 iW4qj9YTS1AtZQktJfRxh6VO0gGBmoiX109Hdq8rSc1vQ4x01LvS+/U5nYyXtr+Cn+
-	 Ez8PcY66czkGhNyOqWbtiygTD5TtsMAjpMPTCkgg=
+	b=XeFdvKEK/yxAVeCmuc14OhEKQjXr2bdEbAQ6FrOd8LN/EfC5V2iuSpcpGwZc7n6mo
+	 keURjMazlBG55pkbYnHicmdmGJhILIvjg2eka9YQjiG6duj8mbJ60XaeArSsXD2CNq
+	 hlH8lnIVIqI5vMtz+cMivBZAOMRRw6i+kWSt3mGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfCDIdt (ORCPT
+        id S1728199AbfCDIdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:33:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:33:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbfCDIdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:33:47 -0500
+        id S1727426AbfCDIdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:33:50 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD85F20823;
-        Mon,  4 Mar 2019 08:33:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68D4820823;
+        Mon,  4 Mar 2019 08:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688427;
-        bh=P+9Fco+ZYZrtBC+y/RN6QEdRgjtHFLcKr+wUmYHZJwc=;
+        s=default; t=1551688429;
+        bh=++K8YRj4aPa7iN0BqUC8ojLvuDVqIeEyHePi6dYUw28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fOmU0g4bSPYXHhIwrzQhqC4C7MIPiAzUDW5eRaq2zwMzJlXpn2cEfxnpwuPAiq6L8
-         oeffP24fDeOoVk4sh99+mSh0AP8zPQNj4indmB+iOcM7QU7b7ME//d/QspZopo1Abn
-         m/rMrXxapu1PZLTsBnonNCKiM70B5Dmv4Wq15dPY=
+        b=EpVz5IQqkZbtCwQUHWgqB7UHbl6ELoWS8t94zHwBO+sKRNzeY/cBe/xQ+LV+DEREo
+         9WWoXWLp1MMauzxsZUOYhytj8Ols6E/dt6u8ML0vk8LDo7yuJVUvZSBmORy97icwEC
+         KUYY8UB+9wa/kzuMB9N0ImekZQ4BNlKGLq7XgwZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
+        stable@vger.kernel.org,
+        Tomonori Sakita <tomonori.sakita@sord.co.jp>,
+        Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 40/88] tty: serial: qcom_geni_serial: Allow mctrl when flow control is disabled
-Date:   Mon,  4 Mar 2019 09:22:23 +0100
-Message-Id: <20190304081632.163670707@linuxfoundation.org>
+Subject: [PATCH 4.20 41/88] serial: fsl_lpuart: fix maximum acceptable baud rate with over-sampling
+Date:   Mon,  4 Mar 2019 09:22:24 +0100
+Message-Id: <20190304081632.200073272@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,43 +67,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e8a6ca808c5ed1e2b43ab25f1f2cbd43a7574f73 ]
+[ Upstream commit 815d835b7ba46685c316b000013367dacb2b461b ]
 
-The geni set/get_mctrl() functions currently do nothing unless
-hardware flow control is enabled. Remove this arbitrary limitation.
+Using over-sampling ratio, lpuart can accept baud rate upto uartclk / 4.
 
-Suggested-by: Johan Hovold <johan@kernel.org>
-Fixes: 8a8a66a1a18a ("tty: serial: qcom_geni_serial: Add support for flow control")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Tomonori Sakita <tomonori.sakita@sord.co.jp>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/qcom_geni_serial.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index d3b5261ee80af..76e0ad7251e1f 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -221,7 +221,7 @@ static unsigned int qcom_geni_serial_get_mctrl(struct uart_port *uport)
- 	unsigned int mctrl = TIOCM_DSR | TIOCM_CAR;
- 	u32 geni_ios;
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 086642ea4b26e..020af95ea9e7a 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1697,7 +1697,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	}
  
--	if (uart_console(uport) || !uart_cts_enabled(uport)) {
-+	if (uart_console(uport)) {
- 		mctrl |= TIOCM_CTS;
- 	} else {
- 		geni_ios = readl_relaxed(uport->membase + SE_GENI_IOS);
-@@ -237,7 +237,7 @@ static void qcom_geni_serial_set_mctrl(struct uart_port *uport,
- {
- 	u32 uart_manual_rfr = 0;
+ 	/* ask the core to calculate the divisor */
+-	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 16);
++	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 4);
  
--	if (uart_console(uport) || !uart_cts_enabled(uport))
-+	if (uart_console(uport))
- 		return;
+ 	spin_lock_irqsave(&sport->port.lock, flags);
  
- 	if (!(mctrl & TIOCM_RTS))
 -- 
 2.19.1
 
