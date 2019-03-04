@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E095C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C469BC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F23F208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD84208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688386;
-	bh=mWD5U+0mVrMC3GRndAsbljhYa9TCEJvHZKL+KZAl7FY=;
+	s=default; t=1551688391;
+	bh=DOfVXKSdfbJlGNXbihxBKy7hldGfobdoGXNWgVK3LBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xus+sLhL6Sg0nGeF0rjHf5Sgdx5KubEn/0lEEHvu0vb03Zp8t9Npri+iYuBfHik9t
-	 BqGs31sdzxf+WxaxUU9uNScqN/S9nxVjL+Fa8St0eWHotj2/5Uys814ybrjFxVtD2A
-	 SkdqD4qhtLW4GAKxtU7qYhBZPBMlFiLaeMytt17w=
+	b=nqsDaXZsmmZomuj1/e2q6iM+BWsl9oK3XbOmpOARLZiA4B8nN2KSqjDw2dSoC3Fhe
+	 7WAwoef2yvrQt8swWrVUW7tlmLTajHQab6lPRm8kBPr2WlpRQ8c6iPIcGl6LVcUS6c
+	 d+FUzLbTh6+57nDcznlQgDYzYViOHaqz6ZyEVmZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfCDIdF (ORCPT
+        id S1728168AbfCDIdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:33:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37244 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:33:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728143AbfCDIdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:33:03 -0500
+        id S1728158AbfCDIdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:33:05 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8ACC21019;
-        Mon,  4 Mar 2019 08:33:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A388E21473;
+        Mon,  4 Mar 2019 08:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688382;
-        bh=mWD5U+0mVrMC3GRndAsbljhYa9TCEJvHZKL+KZAl7FY=;
+        s=default; t=1551688385;
+        bh=DOfVXKSdfbJlGNXbihxBKy7hldGfobdoGXNWgVK3LBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8soHJdNtkGHLRg5M415rMuXo/+26xaAtmeu2+Y8+llM4GjYxUF9u2SFHzOdUGj4L
-         Avquq0fLG/Ie4feDxBfx6VaX7+PhnNVR+wcejvN0Ia2xd0VIXIsWDmGjIi7MD2Qwvu
-         B5RYaL5QYkN75176l8CkTXM7QkLywmum3fKI1tmU=
+        b=zlwYREc017t4+zBbSCj48ajVW06/4z0bO1iHmTN5Cbyeb/wtNy8NM3+PesKIq7xpW
+         /xS8llrlOG5IZix01C8QIiq8qbZMHcn2M7DqPvm3E5E743KPAOAUdm3KQSNVpDCkRz
+         ky5mwnxzj9JxMnApwJ8VptIsImRLAgXjIASRktAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 28/88] selftests: gpio-mockup-chardev: Check asprintf() for error
-Date:   Mon,  4 Mar 2019 09:22:11 +0100
-Message-Id: <20190304081631.718723847@linuxfoundation.org>
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 29/88] irqchip/gic-v3-mbi: Fix uninitialized mbi_lock
+Date:   Mon,  4 Mar 2019 09:22:12 +0100
+Message-Id: <20190304081631.756766978@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,51 +66,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 508cacd7da6659ae7b7bdd0a335f675422277758 ]
+[ Upstream commit c530bb8a726a37811e9fb5d68cd6b5408173b545 ]
 
-With gcc 7.3.0:
+The mbi_lock mutex is left uninitialized, so let's use DEFINE_MUTEX
+to initialize it statically.
 
-    gpio-mockup-chardev.c: In function ‘get_debugfs’:
-    gpio-mockup-chardev.c:62:3: warning: ignoring return value of ‘asprintf’, declared with attribute warn_unused_result [-Wunused-result]
-       asprintf(path, "%s/gpio", mnt_fs_get_target(fs));
-       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Handle asprintf() failures to fix this.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Shuah Khan <shuah@kernel.org>
+Fixes: 505287525c24d ("irqchip/gic-v3: Add support for Message Based Interrupts as an MSI controller")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/gpio/gpio-mockup-chardev.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-gic-v3-mbi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/gpio/gpio-mockup-chardev.c b/tools/testing/selftests/gpio/gpio-mockup-chardev.c
-index f8d468f54e986..aaa1e9f083c37 100644
---- a/tools/testing/selftests/gpio/gpio-mockup-chardev.c
-+++ b/tools/testing/selftests/gpio/gpio-mockup-chardev.c
-@@ -37,7 +37,7 @@ static int get_debugfs(char **path)
- 	struct libmnt_table *tb;
- 	struct libmnt_iter *itr = NULL;
- 	struct libmnt_fs *fs;
--	int found = 0;
-+	int found = 0, ret;
+diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
+index ad70e7c416e30..fbfa7ff6deb16 100644
+--- a/drivers/irqchip/irq-gic-v3-mbi.c
++++ b/drivers/irqchip/irq-gic-v3-mbi.c
+@@ -24,7 +24,7 @@ struct mbi_range {
+ 	unsigned long		*bm;
+ };
  
- 	cxt = mnt_new_context();
- 	if (!cxt)
-@@ -58,8 +58,11 @@ static int get_debugfs(char **path)
- 			break;
- 		}
- 	}
--	if (found)
--		asprintf(path, "%s/gpio", mnt_fs_get_target(fs));
-+	if (found) {
-+		ret = asprintf(path, "%s/gpio", mnt_fs_get_target(fs));
-+		if (ret < 0)
-+			err(EXIT_FAILURE, "failed to format string");
-+	}
- 
- 	mnt_free_iter(itr);
- 	mnt_free_context(cxt);
+-static struct mutex		mbi_lock;
++static DEFINE_MUTEX(mbi_lock);
+ static phys_addr_t		mbi_phys_base;
+ static struct mbi_range		*mbi_ranges;
+ static unsigned int		mbi_range_nr;
 -- 
 2.19.1
 
