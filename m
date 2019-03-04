@@ -2,164 +2,179 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40D0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C07C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9257C20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551692497;
-	bh=4P8RoLiYD0ZUyjPuCiGHblcYRulJJlpt54LavqE0KZg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xbJTegYd3j++WwU6fewJeq33I0wcDPyWY6LgtyTKiIyFWs0OcvXMDGpvM9VGITZCd
-	 x+g8Xuna9eHtSeQrAuRw7lC9hwgHSa2i8FDan3IXK+YSR0qnEoE7WN66wQVezI33nc
-	 Blk8OhkpSX92uU9IirBHSi4AUFo3GN60/bxiAg/I=
+	by mail.kernel.org (Postfix) with ESMTP id EB73C208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:42:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VifnmWCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfCDJlg (ORCPT
+        id S1726428AbfCDJm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 04:41:36 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44989 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfCDJlf (ORCPT
+        Mon, 4 Mar 2019 04:42:26 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:48638 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfCDJmZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 04:41:35 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a81so3327146oii.11;
-        Mon, 04 Mar 2019 01:41:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IxZOjL8rfcQsaR3p+fMtLJ2bMc9ap3yM1eKP4htytYk=;
-        b=mApk3H3FDmOhLSxqCY2GAnkxHO5FG9GbaD2TygagxL/ESzCkPC/YyAPlTJypjij5d3
-         AUbnr/FnhDKxFWh11nbWdoBCng4bnK3qA/GOwFWvzF2eBby4e8BauGoL7mkxVMy9XTU4
-         zp/PgZKUlyB52M+l7V8FDW069koMuThNpp26K5hIP+37/A/tw3tJtntZdRryije98C1Z
-         jLHfBCEzcJzx8XU+Yh08MQK1pl0rTHuUl2QW1p/ESj9Q2OJGK4K63pl6dxRw9NXDfKMq
-         biukHM335AuMCoe+OrmK0Xj8HsZ5bDFGaigwknifUhEAF9ZuXsJ1fc/Q4yl35m5Q1lve
-         Qi4Q==
-X-Gm-Message-State: AHQUAuYQCJ2KuCLxzkNYMZvTrvoPvwEr1J/JHBAuUD2GjjfQtSKhzMDd
-        Gexv8uP2P5KxHmYUc9sIsFj6ViX2U/TBuuMK7yY=
-X-Google-Smtp-Source: AHgI3IaifYeuDFK/1uNtGzeSZfaNBZU5RElHsOZPEtvGZc3d3u/ZJv9RvsUt76N0wq65PVOW4v6B7EF62a5PaqRf6H0=
-X-Received: by 2002:aca:355:: with SMTP id 82mr11997841oid.30.1551692494720;
- Mon, 04 Mar 2019 01:41:34 -0800 (PST)
+        Mon, 4 Mar 2019 04:42:25 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190304094224euoutp02cbc775d831670846b9cc0c026ecf251c~IuCXXL_jZ0429704297euoutp02C
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 09:42:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190304094224euoutp02cbc775d831670846b9cc0c026ecf251c~IuCXXL_jZ0429704297euoutp02C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1551692544;
+        bh=3/o9Onbf4Pjb/+y4x4YautGoWFsU4CPKxVSL5OfB2Gw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=VifnmWCtEjXOU23/Q3m4EvEAgkUqV6lG0YoRjowe86fGDn5RaWFLtUy9xXWVVSDMo
+         +NsS5CoZ5OJNUg6f/chFk+gvUxoNxOb7kt7kZ1TcQsT5SUl3SjzBP/SLAk+VplyVOL
+         lpDziGuE5sDm4BF0Ffqj/mgzHq1bRQ+JIWcrBhaM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190304094223eucas1p1b954a512e880aa29c0ef8d97b18794cc~IuCWpZRoo1950319503eucas1p1h;
+        Mon,  4 Mar 2019 09:42:23 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 55.E8.04441.FF2FC7C5; Mon,  4
+        Mar 2019 09:42:23 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190304094222eucas1p117ddcb0f2ef906c896504eaa0dc225a7~IuCVndmxm1950519505eucas1p1q;
+        Mon,  4 Mar 2019 09:42:22 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190304094222eusmtrp13a1caf478b0ad0f284bb6a6d1c3c4dc9~IuCVUulZv2559225592eusmtrp1y;
+        Mon,  4 Mar 2019 09:42:22 +0000 (GMT)
+X-AuditID: cbfec7f2-5e3ff70000001159-96-5c7cf2ffcf37
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id E6.35.04284.DF2FC7C5; Mon,  4
+        Mar 2019 09:42:21 +0000 (GMT)
+Received: from [106.120.43.17] (unknown [106.120.43.17]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190304094221eusmtip2ac3a3e639b1b6008105d201303ced4be~IuCU6MJct0543705437eusmtip2Z;
+        Mon,  4 Mar 2019 09:42:21 +0000 (GMT)
+Subject: Re: [PATCH 2/9] drm/bridge: tc358767: Simplify
+ tc_stream_clock_calc()
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     Archit Taneja <architt@codeaurora.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <bad3c902-8ead-dbe4-fa77-e365dd29e6f2@samsung.com>
+Date:   Mon, 4 Mar 2019 10:42:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <9956076.F4luUDm1Dq@aspire.rjw.lan> <fa5e3e09eb32f5197bef2a50ced952850bf70748.camel@linux.intel.com>
- <CAJZ5v0ik6oHCXD23tURsRXRj1-C-Z=S6y+KEiRxe0zJpGrKa+Q@mail.gmail.com>
- <f214b0d82fce14c374aa6b548742c999513d9046.camel@linux.intel.com>
- <CAJZ5v0huRALvfFBeo067dNMyUJn+Oyp8eFR3JRR+C9g7QhaekA@mail.gmail.com> <47ce61b9df7701e047ef6f59afd54c854db8a538.camel@linux.intel.com>
-In-Reply-To: <47ce61b9df7701e047ef6f59afd54c854db8a538.camel@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 4 Mar 2019 10:41:22 +0100
-Message-ID: <CAJZ5v0iCVhj-HmToGnSBuYE99LMn0BZpB-Ax48Aqh9hVc1+qwQ@mail.gmail.com>
-Subject: Re: [RFT][PATCH 0/2] cpufreq: intel_pstate: Handle _PPC updates on
- global turbo disable/enable
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190226193609.9862-3-andrew.smirnov@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djPc7r/P9XEGPxYy2HR3GFr0dTxltXi
+        4J7jTBZXvr5ns3gw9yaTRefEJewWl3fNYXNg97jc18vksXPWXXaP2R0zWT3udx9n8uj/a+Dx
+        eZNcAFsUl01Kak5mWWqRvl0CV0bDv1tMBU/5Kras62duYPzL3cXIySEhYCJxYdViJhBbSGAF
+        o8S5j9ldjFxA9hdGieMftjBDOJ8ZJTqPNTHBdLy4MZ0VIrGcUWLWn0XsEM5bRomdvyeyglQJ
+        CwRI9J2YBtYhAmR/atrJBmIzC5xklOhvcQex2QQ0Jf5uvgkW5xWwk7jW8R+sl0VARWLt9jXM
+        ILaoQITE4d53jBA1ghInZz5hAbE5BWwldv76zwIxU16ieetsZghbXOLWk/lMIAdJCGxil7j4
+        4zorxNkuEv9bNrFD2MISr45vgbJlJE5P7mGBsOslmmZeYYZo7mCUOLF4ORtEwlri8PGLQIM4
+        gDZoSqzfpQ8RdpR41v+WHSQsIcAnceOtIMQNfBKTtk1nhgjzSnS0CUFUK0rcP7uVGcIWl1h6
+        4SvbBEalWUg+m4Xkm1lIvpmFsHcBI8sqRvHU0uLc9NRiw7zUcr3ixNzi0rx0veT83E2MwER0
+        +t/xTzsYv15KOsQowMGoxMNroFITI8SaWFZcmXuIUYKDWUmEl+kDUIg3JbGyKrUoP76oNCe1
+        +BCjNAeLkjhvNcODaCGB9MSS1OzU1ILUIpgsEwenVAOjwNcPLseYZ7Uab1n05pjwZxPxTX5b
+        LZzXhCmn+t1gFr8wkZf/w6Td8gu3fTvbob1utYX69hSJ4qVhe2JbXm7i2GihnrzdI2/V5imr
+        Os9sWbl2xYfCtJw/xhW6f+xrdG/fv5T2krOgadu/civPKTdOVMszethYbqy5HRku5fOA/dNE
+        3SC+6SlXlFiKMxINtZiLihMBWdYKukADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xe7p/P9XEGPw/a2PR3GFr0dTxltXi
+        4J7jTBZXvr5ns3gw9yaTRefEJewWl3fNYXNg97jc18vksXPWXXaP2R0zWT3udx9n8uj/a+Dx
+        eZNcAFuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2C
+        XkbDv1tMBU/5Kras62duYPzL3cXIySEhYCLx4sZ01i5GLg4hgaWMEle2HmeHSIhL7J7/lhnC
+        Fpb4c62LDaLoNaPE/QdvWUESwgJ+Erc+fAErEgGyu+YdYAIpYhY4zSix/9BWqLGHGSXOru4F
+        62AT0JT4u/kmG4jNK2Anca3jP1icRUBFYu32NWCTRAUiJD4+3ccEUSMocXLmExYQm1PAVmLn
+        r/9gNrOAusSfeZeYIWx5ieats6FscYlbT+YzTWAUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3
+        PbfYUK84Mbe4NC9dLzk/dxMjMP62Hfu5eQfjpY3BhxgFOBiVeHgNVGpihFgTy4orcw8xSnAw
+        K4nwMn0ACvGmJFZWpRblxxeV5qQWH2I0BXpuIrOUaHI+MDXklcQbmhqaW1gamhubG5tZKInz
+        njeojBISSE8sSc1OTS1ILYLpY+LglGpg1Dwos5O/3aZ6skbgeknXtWcvJ3+NaTxmtKP1stvB
+        pkVFN0KkXdfJ3a5ytVrVlfL02uR9m54FrH6wwvnn/vPt+dlRmfGMUkJeefU1bAFnF4eeN87O
+        /xwxv9b8eH/Kqwtrqt+8DX4aLjU/zudJZ6nnIdsDWy1an/lvLKo8H3zqjv3JdDdLw0gXJZbi
+        jERDLeai4kQALmVrwNUCAAA=
+X-CMS-MailID: 20190304094222eucas1p117ddcb0f2ef906c896504eaa0dc225a7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190226193632epcas4p139e0002746989958fef4913a0af9fc0d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190226193632epcas4p139e0002746989958fef4913a0af9fc0d
+References: <20190226193609.9862-1-andrew.smirnov@gmail.com>
+        <CGME20190226193632epcas4p139e0002746989958fef4913a0af9fc0d@epcas4p1.samsung.com>
+        <20190226193609.9862-3-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 5:06 AM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
+On 26.02.2019 20:36, Andrey Smirnov wrote:
+> Drop the use of tc_write() as well as "magicly" used "ret" and "err:"
+> and replace it with a simple call to regmap_write(). No functional
+> change intended.
 >
-> On Sun, 2019-03-03 at 22:51 +0100, Rafael J. Wysocki wrote:
-> > On Sun, Mar 3, 2019 at 10:20 PM Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com> wrote:
-> > >
-> > > On Sun, 2019-03-03 at 18:03 +0100, Rafael J. Wysocki wrote:
-> > > > On Fri, Mar 1, 2019 at 6:39 PM Srinivas Pandruvada
-> > > > <srinivas.pandruvada@linux.intel.com> wrote:
-> > > > >
-> > > > > On Fri, 2019-03-01 at 13:43 +0100, Rafael J. Wysocki wrote:
-> > > > > > Hi All,
-> > > > > >
-> > > > > > This is how I would fix the issue reported in BZ 200759 (see
-> > > > > > thisdev
-> > > > > > patch series
-> > > > > > from Yu too:
-> > > > > > https://marc.info/?l=linux-pm&m=155137672924029&w=2)
-> > > > > > .
-> > > > > >
-> > > > > > Patch [1/2] causes intel_pstate to update all policies if it
-> > > > > > gets
-> > > > > > a
-> > > > > > _PPC change
-> > > > > > notification and sees a global turbo disable/enable change.
-> > > > > >
-> > > > > > Patch [2/2] makes it update cpuinfo.max_freq for all policies
-> > > > > > in
-> > > > > > those cases.
-> > > > > >
-> > > > > > The patches here have not been tested yet, so testing would
-> > > > > > be
-> > > > > > much
-> > > > > > appreciated.
-> > > > > >
-> > > > > > Of course, comments are welcome too!
-> > > > >
-> > > > > This is the only platform, someone reported such issue.
-> > > >
-> > > > I don't think this matters.
-> > > >
-> > > > First, it doesn't mean that no other problems have this problem.
-> > > >
-> > > > Second, the current handling of
-> > > > MSR_IA32_MISC_ENABLE_TURBO_DISABLE
-> > > > changes in intel_pstate is not sufficient if the changes is from
-> > > > set
-> > > > to unset anyway.
-> > >
-> > > Any platform with HWP, you can't even notify of this change. So any
-> > > platform beyond SKL is not useful.
-> >
-> > Do you mean that HWP platforms don't supply _PPS (as a rule) and so
-> > they don't send _PPC notifications?  Is there anything they do
-> > instead
-> > of it?
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Archit Taneja <architt@codeaurora.org>
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/gpu/drm/bridge/tc358767.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 >
-> There are other methods like PL1 budget limit for such cases. FW can
-> just change the config TDP level.
+> diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+> index b0f8264a1285..86ebd49194b7 100644
+> --- a/drivers/gpu/drm/bridge/tc358767.c
+> +++ b/drivers/gpu/drm/bridge/tc358767.c
+> @@ -504,7 +504,6 @@ static int tc_pxl_pll_dis(struct tc_data *tc)
+>  
+>  static int tc_stream_clock_calc(struct tc_data *tc)
+>  {
+> -	int ret;
+>  	/*
+>  	 * If the Stream clock and Link Symbol clock are
+>  	 * asynchronous with each other, the value of M changes over
+> @@ -520,11 +519,7 @@ static int tc_stream_clock_calc(struct tc_data *tc)
+>  	 * M/N = f_STRMCLK / f_LSCLK
+>  	 *
+>  	 */
+> -	tc_write(DP0_VIDMNGEN1, 32768);
+> -
+> -	return 0;
+> -err:
+> -	return ret;
+> +	return regmap_write(tc->regmap, DP0_VIDMNGEN1, 32768);
 
-OK, but that would be done without notification I suppose?
 
-> > That's fair enough, but the point is that the driver doesn'dev_t do
-> > the right thing even if the platform does send a _PPC notification.
->
-> _PPC notification is to indicate levels in _PSS not to disable/enable
-> turbo via IA32_MISC_*.
+The patch looks semantically correct, but you are dropping here custom
+accessor (tc_write) in favor of regmap API.
 
-I was not talking about notifications, but about what the driver does
-when MSR_IA32_MISC_ENABLE_TURBO_DISABLE is set or unset by FW on the
-fly: this only really works if the change is from unset to set,
-because the range of frequencies to use is restricted then, even
-though user-visible policy limits are not updated.  However, if the
-change is from set to unset, the update of policy limits is actually
-necessary for the change to really take effect (otherwise the user
-policy max prevents turbo frequencies from being requested).  HWP
-seems to be affected too, for that matter, because the upper limit in
-the MSR is not updated too then AFAICS.
+I think the best would be consistent across the whole driver: either use
+only  accessors, either drop them entirely and use regmap API.
 
-> The platform could have just set _PPC to 1 or to TAR-1. Here _PPC is sent for somthing more than just changing _PSS max
-> level. Do we have bug in if _PPC just changes performance level?
+And it would be good to have comment of the original authors about this
+change.
 
-I think that we just need to live with the fact that _PPC may be
-triggered for something more than changing _PSS max.
 
-Note that the driver could trigger policy updates on
-MSR_IA32_MISC_ENABLE_TURBO_DISABLE changes even without _PPC
-notifications, but that would require more intrusive changes, because
-work items cannot be queued up from scheduler context.  It would need
-to use irq_work for that and with some extra synchronization etc, and
-for the time being it looks like we can piggy back on the _PPC change
-notification mechanism.
+Regards
+
+Andrzej
+
+
+>  }
+>  
+>  static int tc_aux_link_setup(struct tc_data *tc)
+
+
