@@ -6,95 +6,87 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514BDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B3CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2878820823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3053020823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbfCDUjm (ORCPT
+        id S1726680AbfCDUkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:39:42 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:37963 "EHLO
+        Mon, 4 Mar 2019 15:40:40 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:55217 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfCDUjl (ORCPT
+        with ESMTP id S1726101AbfCDUkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:39:41 -0500
+        Mon, 4 Mar 2019 15:40:40 -0500
 Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N2jO8-1h6MTk0psC-01343O; Mon, 04 Mar 2019 21:39:28 +0100
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M8xsm-1gvyQi1a6Q-0066QL; Mon, 04 Mar 2019 21:40:22 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
         "David S. Miller" <davem@davemloft.net>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Avraham Stern <avraham.stern@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iwlwifi: fix 64-bit division
-Date:   Mon,  4 Mar 2019 21:38:42 +0100
-Message-Id: <20190304203924.2111146-1-arnd@arndb.de>
+        =?UTF-8?q?M=C3=A1t=C3=A9=20Eckl?= <ecklm94@gmail.com>,
+        Fernando Fernandez Mancera <ffmancera@riseup.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] netfilter: nf_conntrack_sip: fix IPV6 dependency
+Date:   Mon,  4 Mar 2019 21:40:12 +0100
+Message-Id: <20190304204019.2142770-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:13EZ5ioXLeca3oDvMvnCC57FRaccHP0KkoFmR49OnkNxuNVJvQc
- 41NyjHrRl/9BY5rDFB2nJPGdb1UBSbFSt2I75lD+xL+v5fFZipAXUaSt4xb9nCl82Qd+4JO
- aQiQQNPxErP6jawROrzHXPYSP7HSSvrDM4NzNGFakNCcfO0JbTXvApA6knoFSkCTzVeVLEP
- wvWwscEI8I6R3EGPVptew==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GIf2ikZWptk=:KKmIE00iaWcF6F9QVVLJq7
- 6kIsUPRoGhR/C4fBzu3QZRrcS9jRDVmGsq9lUyGgXBZtLLL6xjDgrn1X1OW/eVSfaHpYR5YBR
- g2tyP2c8rEggz9/fkAwbMQ9HJv1p/hx4c5CpfqBqOlio++yce8PHiA3SnXIc/79A5AVWiKIF6
- ph/f67wwzq0qNdL4+K6Jr39TBKfOdODYG2jISqvg7mi0qUaB8xvy5q8rNBW6afmeIXPb9iifo
- 8YkziKT8tzFZilVWzEJ2t45be7yJay86mpzRakq46e/BZE+5jvj79wSlk6FI9iZMJYQuiBD3D
- s4OVXPlJ4iXpK6ZQi+yEJgGsVBc4+z4L8Z4zW7jv4/C9s+yipd2eeMqZeLspCYALLBDIQtsTD
- NwYYKYreD5Wl+/KX3dLB4k28lABedVkHhEndMOoHTd3mjjB/7WiP2oaGdX/W8Mzyz2CiTOpyo
- i4AMM38AxofZzQon3dNvq1mHWynZe5733LSXsgyq+qgfTkm0Nk8i5yeDCJQCrGqJFAQqsEVJ2
- lPj1arY5w265+TWzkxaaAzIJnJA9nLabchbn5W1toJvBFvippkcUank9HImSNocGku9f+8p/Q
- i1wEg7lx901Pjtgw7D8YOi5pxhL8/5J1az0Qa4bhl5meGnKKO+6Yym6mLEvZMA4C9D/c1+VPf
- cqmUtFblvJuBH6oW4Hzvp1CySY8Owoy95eVO85MzHh0BDJXbKGz5O+FRiQGSvmwQ7DqyJIr1K
- 4KA1lEPM41f3Yarbnx6gZAekQABJZNm80TOvsA==
+X-Provags-ID: V03:K1:AqACvfLz5KyJslLuX6CJ+n57xkzbsTQoy30Pi/s2JNSW8Yfo4QH
+ zU9Y52zixx4e3Q1eAXnKlxI9aNmKDhvCJXP6WDq7u4Q4Qq6xdEyDSNPdHNM0WsqFKu3usj4
+ kUx9h7UG8J2eHi7rtdlR2pCz/ntZf2+Sqa3xKTU1NbNowYKqbmlr1ADcEiaXjC9REbLO0F7
+ RIAYbHa9nwvQws1YNstxg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:y/hHEmpsu/U=:A6ZOLaqW9UArD0P/Z5PJG7
+ IQ49Shbw+ESgBxck2nLWOHQ3zvLK1q0xH/NFl1W6tdZqZMGjYDNsL7zyVMgutCMaPKsV81DK/
+ rjp4eoexuFb64ED1AEZQuxT/3tm0sjAv2h2ptClStmdW5cXWuEkg2Nj6ob0gxl0+Wa7UQspNC
+ yNYiHlS7XJMhUA3JfbwzVm89qlEIjwSi83M/tmdwH74EwAiqrL8dL4Lb9p8/Qh9RScTwFsO8G
+ bVhbY79bkcfzN7O2AjtINlNyQey+6VCfPPcwbev9XHdJ4QYtKprFWtPfe31EHxD5Jc77rQO0C
+ i6e7FQbluy64vBr+X4CHP7wVcVaXKVtpK769BgFidAO+mpy1cuEHc5LVhSLi4OrSRSjB9C6Cl
+ WuaBzcD2BoL86C2W5XFwhUV7NtZ2bQbrUgoGQj2XK2I2/OFG7rTLZeSirqyVegqSnWtHoBFc+
+ 1TCfFMoaMJSQK1cBqWJwiqFUof0zyoY769Yehede8FRox44ghKOpRy+OuNVyGzNlgvuewCPOL
+ psYchzBgW5sDb0PEC9N8hmOoF07vS26pCs2n3szWj4EclYxjKAynjkAhNILVTJyP5cen0AAN/
+ eVnL7chXhqLKu03jg/ZTGSPwdvVM1BR4gANu9ZTKiUN8gnW/bGUftC53Ko84mNyvOj7t9KFKM
+ szmd4Y+aLkM1ZEmPhuwjMNt+s6d1cxBkKQajDi6o7srAPAruvQZWLmh2u65Yf0AOjNvCVdLvS
+ WBnW/oFt7q3WxhAU+YGpXeOFAOGfIYtHtY/BMQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_div() expects unsigned operands and otherwise triggers a warning like:
+With CONFIG_IPV6=m and CONFIG_NF_CONNTRACK_SIP=y, we now get a link failure:
 
-drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c:465:2: error: comparison of distinct pointer types ('typeof ((rtt_avg)) *' (aka 'long long *') and 'uint64_t *' (aka 'unsigned long long *')) [-Werror,-Wcompare-distinct-pointer-types]
-        do_div(rtt_avg, 6666);
-        ^~~~~~~~~~~~~~~~~~~~~
-include/asm-generic/div64.h:222:28: note: expanded from macro 'do_div'
-        (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
-               ~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~
-1 error generated.
+net/netfilter/nf_conntrack_sip.o: In function `process_sdp':
+nf_conntrack_sip.c:(.text+0x4344): undefined reference to `ip6_route_output_flags'
 
-Change the do_div() to the simpler div_s64() that can handle
-negative inputs correctly.
+Fix this by adding a dependency that forces CONFIG_NF_CONNTRACK_SIP to be =m
+when CONFIG_IPV6=m, as we already do for several other drivers with a similar
+requirement.
 
-Fixes: 937b10c0de68 ("iwlwifi: mvm: add debug prints for FTM")
+Fixes: a3419ce3356c ("netfilter: nf_conntrack_sip: add sip_external_media logic")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/netfilter/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-index e9822a3ec373..94132cfd1f56 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/ftm-initiator.c
-@@ -460,9 +460,7 @@ static int iwl_mvm_ftm_range_resp_valid(struct iwl_mvm *mvm, u8 request_id,
- static void iwl_mvm_debug_range_resp(struct iwl_mvm *mvm, u8 index,
- 				     struct cfg80211_pmsr_result *res)
- {
--	s64 rtt_avg = res->ftm.rtt_avg * 100;
--
--	do_div(rtt_avg, 6666);
-+	s64 rtt_avg = div_s64(res->ftm.rtt_avg * 100, 6666);
+diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
+index d43ffb09939b..964bc317ad0a 100644
+--- a/net/netfilter/Kconfig
++++ b/net/netfilter/Kconfig
+@@ -333,6 +333,7 @@ config NF_CONNTRACK_SANE
  
- 	IWL_DEBUG_INFO(mvm, "entry %d\n", index);
- 	IWL_DEBUG_INFO(mvm, "\tstatus: %d\n", res->status);
+ config NF_CONNTRACK_SIP
+ 	tristate "SIP protocol support"
++	depends on IPV6 || IPV6=n
+ 	default m if NETFILTER_ADVANCED=n
+ 	help
+ 	  SIP is an application-layer control protocol that can establish,
 -- 
 2.20.0
 
