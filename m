@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4009AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522B8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE1C20836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245FE20836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688261;
-	bh=Mv4H7Oo0Wnz0J5Vi55kE9/anan7MoHin7VTB79+CAvY=;
+	s=default; t=1551688270;
+	bh=TcKecyf0YLCADO4ZwIY8hejKSksXT01V7tceF/PICwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DyNPH8rNBmIffyGflabzkAlTt1aVwtdQb6HPSNZWCfgcUs/FxUdG6hs+r8kcU0RRm
-	 4tkaF0ILoEHU8/7WFQ4Wz8NeuUlTDqYt/bsZWhup8LOx/rAG8ODvldO9RDXCAmzMfY
-	 YPdMVt4yoXhy74Zx6ghjXtVrnqu9vDvlQK6gr7j0=
+	b=RaN9A01gh34UHl58IVTJe3gag3BZUM+33B4NsvQvtbYIeelLqQlU0dCGOVAdMj3rc
+	 H+6LpaC/xy7EpPImSrM9gZKjHrMsHh87oqzgpJz3YSoZBeuWyg1ataQLKwjmaz0mrO
+	 8TMPawnIZA7Bn5keRReZvWBLOfo2V8drqGttls0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfCDIa7 (ORCPT
+        id S1727829AbfCDIbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:30:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60040 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:31:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727807AbfCDIa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:30:58 -0500
+        id S1726485AbfCDIbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:31:04 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C3E220836;
-        Mon,  4 Mar 2019 08:30:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C03E020836;
+        Mon,  4 Mar 2019 08:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688257;
-        bh=Mv4H7Oo0Wnz0J5Vi55kE9/anan7MoHin7VTB79+CAvY=;
+        s=default; t=1551688263;
+        bh=TcKecyf0YLCADO4ZwIY8hejKSksXT01V7tceF/PICwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CkV+RRndNaDajkE/O39vdABfWFSHjOED9AFDiqBVzID2TsoC/lwgLlEvzN71T+2Sf
-         EerL3jo3k4eZOPYOt6h7EEhvCseTi8ndhER/bgUR6KeOIWnxKQsesyXRL46NjaPdJh
-         cPbp+UgF3HEVBiNwuFTppDPm54tXzBRpfiwETQgo=
+        b=h44gwcjPiNW7CSBYWNd3ujyjH9gUMJNy0YvDRFPus5tv+YrTTawW8bpx1HKaqUX8a
+         bxhbbfWXC2H3XQGJoE5fr20zhqNz/k8c9DRYl5156e5UQtD3zjtAOYzQBAdi2r3TQW
+         RD+VA/w3wF8AgSE9DLfuwWlOFQT06wANG2ODwQGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Takeshi Saito <takeshi.saito.xv@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        stable@kernel.org, Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Alamy Liu <alamy.liu@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 67/78] mmc: tmio: fix access width of Block Count Register
-Date:   Mon,  4 Mar 2019 09:22:50 +0100
-Message-Id: <20190304081628.581153012@linuxfoundation.org>
+Subject: [PATCH 4.19 69/78] mmc: cqhci: fix space allocated for transfer descriptor
+Date:   Mon,  4 Mar 2019 09:22:52 +0100
+Message-Id: <20190304081628.676968683@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -68,80 +66,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takeshi Saito <takeshi.saito.xv@renesas.com>
+From: Alamy Liu <alamy.liu@gmail.com>
 
-commit 5603731a15ef9ca317c122cc8c959f1dee1798b4 upstream.
+commit 27ec9dc17c48ea2e642ccb90b4ebf7fd47468911 upstream.
 
-In R-Car Gen2 or later, the maximum number of transfer blocks are
-changed from 0xFFFF to 0xFFFFFFFF. Therefore, Block Count Register
-should use iowrite32().
+There is not enough space being allocated when DCMD is disabled.
 
-If another system (U-boot, Hypervisor OS, etc) uses bit[31:16], this
-value will not be cleared. So, SD/MMC card initialization fails.
+CQE_DCMD is not necessary to be enabled when CQE is enabled.
+(Software could halt CQE to send command)
 
-So, check for the bigger register and use apropriate write. Also, mark
-the register as extended on Gen2.
+In the case that CQE_DCMD is not enabled, it still needs to allocate
+space for data transfer. For instance:
+  CQE_DCMD is enabled:  31 slots space (one slot used by DCMD)
+  CQE_DCMD is disabled: 32 slots space
 
-Signed-off-by: Takeshi Saito <takeshi.saito.xv@renesas.com>
-[wsa: use max_blk_count in if(), add Gen2, update commit message]
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: stable@kernel.org
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-[Ulf: Fixed build error]
+Fixes: a4080225f51d ("mmc: cqhci: support for command queue enabled host")
+Signed-off-by: Alamy Liu <alamy.liu@gmail.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/renesas_sdhi_sys_dmac.c |    1 +
- drivers/mmc/host/tmio_mmc.h              |    5 +++++
- drivers/mmc/host/tmio_mmc_core.c         |    6 +++++-
- 3 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/mmc/host/cqhci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-+++ b/drivers/mmc/host/renesas_sdhi_sys_dmac.c
-@@ -68,6 +68,7 @@ static const struct renesas_sdhi_of_data
- 	.scc_offset	= 0x0300,
- 	.taps		= rcar_gen2_scc_taps,
- 	.taps_num	= ARRAY_SIZE(rcar_gen2_scc_taps),
-+	.max_blk_count  = 0xffffffff,
- };
+--- a/drivers/mmc/host/cqhci.c
++++ b/drivers/mmc/host/cqhci.c
+@@ -201,7 +201,7 @@ static int cqhci_host_alloc_tdl(struct c
+ 	cq_host->desc_size = cq_host->slot_sz * cq_host->num_slots;
  
- /* Definitions for sampling clocks */
---- a/drivers/mmc/host/tmio_mmc.h
-+++ b/drivers/mmc/host/tmio_mmc.h
-@@ -279,6 +279,11 @@ static inline void sd_ctrl_write32_as_16
- 	iowrite16(val >> 16, host->ctl + ((addr + 2) << host->bus_shift));
- }
+ 	cq_host->data_size = cq_host->trans_desc_len * cq_host->mmc->max_segs *
+-		(cq_host->num_slots - 1);
++		cq_host->mmc->cqe_qdepth;
  
-+static inline void sd_ctrl_write32(struct tmio_mmc_host *host, int addr, u32 val)
-+{
-+	iowrite32(val, host->ctl + (addr << host->bus_shift));
-+}
-+
- static inline void sd_ctrl_write32_rep(struct tmio_mmc_host *host, int addr,
- 				       const u32 *buf, int count)
- {
---- a/drivers/mmc/host/tmio_mmc_core.c
-+++ b/drivers/mmc/host/tmio_mmc_core.c
-@@ -46,6 +46,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/mmc/sdio.h>
- #include <linux/scatterlist.h>
-+#include <linux/sizes.h>
- #include <linux/spinlock.h>
- #include <linux/swiotlb.h>
- #include <linux/workqueue.h>
-@@ -777,7 +778,10 @@ static int tmio_mmc_start_data(struct tm
- 
- 	/* Set transfer length / blocksize */
- 	sd_ctrl_write16(host, CTL_SD_XFER_LEN, data->blksz);
--	sd_ctrl_write16(host, CTL_XFER_BLK_COUNT, data->blocks);
-+	if (host->mmc->max_blk_count >= SZ_64K)
-+		sd_ctrl_write32(host, CTL_XFER_BLK_COUNT, data->blocks);
-+	else
-+		sd_ctrl_write16(host, CTL_XFER_BLK_COUNT, data->blocks);
- 
- 	tmio_mmc_start_dma(host, data);
- 
+ 	pr_debug("%s: cqhci: desc_size: %zu data_sz: %zu slot-sz: %d\n",
+ 		 mmc_hostname(cq_host->mmc), cq_host->desc_size, cq_host->data_size,
 
 
