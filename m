@@ -2,107 +2,184 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1491C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990C8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB7520675
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5D020815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:09:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="iwOmvDFJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWeN8FfK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfCDOJQ (ORCPT
+        id S1726260AbfCDOJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:09:16 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45543 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfCDOJP (ORCPT
+        Mon, 4 Mar 2019 09:09:50 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42067 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfCDOJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:09:15 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d18so5209802qtg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 06:09:14 -0800 (PST)
+        Mon, 4 Mar 2019 09:09:49 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r5so5689505wrg.9;
+        Mon, 04 Mar 2019 06:09:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XeUZ0bSuaagpODDaNgkebhSpO4mdjSfmcYJ84JIvp08=;
-        b=iwOmvDFJyslQ30B84EdbQ9EcU0e9z0nlF7veasjUif1D/2vlMYSgIj9v/R4afuGm66
-         wCCf6sJ25kH2fJMu3lsfy6eAZm1KlksFQih5qpltw+Qr8dshZKnHMCFEs/Esu3jMh+sH
-         nGUFsAVx5cBV11ddc0bK/Q99QD0unMqIVe0ZaxbglNDwwjg9YOW/YBCRD76CseCKJhkN
-         FvmVTKEPJF5GRRemIlvy8WaDd61LFbb3WBUm1yc6hXH+Wsa8u4iMROz9FF+p3J39PPMT
-         dnPjt4HVnZGB90xEwwgOM/6+M+5ckD7AKD2KV1U1Lt7nVlbuMLMJGMjpyGF0n1VWGGAz
-         58bA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nN/HouzY1Flz0hUlrqZq76NzSUguswjwokKqk+UDjrY=;
+        b=PWeN8FfKA53N1mZ8qKYZTUfrYQLWDi+/alwe4KG7FlD/YmLmOA0AR/el9Il5nfS/SH
+         1XpLIOU5bFsVHxco0DsyZF9G+j3f68TxDsPo//FoguHCykXISwkF+T2myDj78SyIakMG
+         G4IT/LeHruhMH7f1ZGNYfeCvBIK4Q5hhuVE90EfYlw4fi8KDAtVeqe0RQvklqeFtHplK
+         nJ/94tmwMvd6///jjbios5JlXP4cgVHLb7xoGWF192oOBJDe8uRJ13gdlUUSYXK27kYo
+         YQm09pgAHyFXusFCxWptw5dR9EdtKwZLFmtJQF/CMt8fSy6UevoK0cJu+yINf/W4Rm+3
+         QXfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XeUZ0bSuaagpODDaNgkebhSpO4mdjSfmcYJ84JIvp08=;
-        b=hpbFOeSzhLA3/iclEciHIuMxOLUpHaBrTBfPVKuwv+RYbGS90A8zEQaFm5Qsp3S3xi
-         V0CUkaaCF97xixhlqe0EJGy6faJsvrVKE/3pTN3ZHFUTMZJ3+vdXUdCy0gzJM901rtnu
-         LllLhSchFMESZAvW8oupfH2r70G2VCZIVfimSbpsZ+VyALIid2IqMpVUvhK8kceICNHH
-         Ly0cncWEpCUHTMoIZl/y6tEC2TOmiNzaxmLchSv6DUuZKyYfa+RKcVnOiDUM4CD5K+T7
-         uY+vLn2OFXYKoUScaiTCycmLf/PVDlJAn/dxzD1oheNu5pkKc1Le/ULDa+W5l3xABqhu
-         bKdQ==
-X-Gm-Message-State: APjAAAW8JRNADRMfLB/EJD4jFcM9nA4gVmCFjQkWoqLP0bScFtmqlD8P
-        f0QEosvl0ljfMur51cTNSoeBVLwihE4=
-X-Google-Smtp-Source: APXvYqxebk4cygCw66b8m5/eWF71BIN2+jlrN1rpbLDw4AjriPIoka3S/L5IeqOWgi//Y9xk4xIwzw==
-X-Received: by 2002:ac8:67ca:: with SMTP id r10mr14668266qtp.134.1551708554226;
-        Mon, 04 Mar 2019 06:09:14 -0800 (PST)
-Received: from ovpn-120-151.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id x25sm4186313qtx.71.2019.03.04.06.09.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 06:09:13 -0800 (PST)
-Subject: Re: [PATCH v2] mm/hugepages: fix "orig_pud" set but not used
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-References: <20190301221956.97493-1-cai@lca.pw>
- <CAFqt6zZr8ZCM6_7QDzDEf=5gH=+EkaumXk86X35dGTdn_SLvvA@mail.gmail.com>
-From:   Qian Cai <cai@lca.pw>
-Message-ID: <935fc484-70e3-ed7a-ed82-329529e0e280@lca.pw>
-Date:   Mon, 4 Mar 2019 09:09:12 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.3.3
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nN/HouzY1Flz0hUlrqZq76NzSUguswjwokKqk+UDjrY=;
+        b=pdxkHbUMam1EpbZ+71gRvTkngaYbHB2pCUfx6uuWZNzRkkODn3Ju6W0v9iUxf07gW6
+         hA+hEPaSU4dkY8uFayFoIBvN5tpraCTLhXAY7G79ObQ+hKab+JHUlKk2wl2YXO92q/SV
+         9cFXB5oI5ExHknv2bKgW6HyOMvnir+sPh55/fKnUmZC+QbFy+94GxteLoyurVEFyha+Z
+         s8Sa+wulbHxZtIsV6smQFtczTNh3bbNrydjQspQl4U9s2l/gm3R0fJ4y2z9ZhzjeYQ4+
+         lRvf2dok7++zVXFlFyRP2gflxS0aIacnf6Rt2IzdP2P5pl44vYQw0xfOOcna2ZRJw1nY
+         JIOQ==
+X-Gm-Message-State: APjAAAVHczqkIP1uzHqgH+BqRbVNriC2+/v8EAwEOAZ1ypQphRvYoN36
+        t1GfvpxaOpOIpX0k2Rbd6Cqjt91dlRCfZcN15KA=
+X-Google-Smtp-Source: APXvYqzoCOdC5LJTLGJu0zpc+6GKgd7bxxxwD7bjDRYP+7udgDhhQ9Q3Uw3tzG+uSIH9EstmB/NXLd5CwxXMyLLhWd0=
+X-Received: by 2002:a5d:4711:: with SMTP id y17mr13554464wrq.141.1551708586530;
+ Mon, 04 Mar 2019 06:09:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAFqt6zZr8ZCM6_7QDzDEf=5gH=+EkaumXk86X35dGTdn_SLvvA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190203094233.12177-1-hdegoede@redhat.com> <CAHp75Veb-QarB-9mQtNWcrL5qr0-ZeXwgscBeS-O-=cgpOjE_w@mail.gmail.com>
+In-Reply-To: <CAHp75Veb-QarB-9mQtNWcrL5qr0-ZeXwgscBeS-O-=cgpOjE_w@mail.gmail.com>
+From:   Maxim Mikityanskiy <maxtram95@gmail.com>
+Date:   Mon, 4 Mar 2019 16:09:18 +0200
+Message-ID: <CAKErNvpXbqOzQRogHEyEnS1WHmJ005YemB33bL54Jx6QDBKHrg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Only implement
+ irq_set_wake on Bay Trail
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 5, 2019 at 8:20 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Sun, Feb 3, 2019 at 11:42 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > Commit c3b8e884defa ("platform/x86: intel_int0002_vgpio: Implement
+> > irq_set_wake"), was written to fix some wakeup issues on Bay Trail (BYT)
+> > devices.
+> >
+> > We've received a bug report that this causes a suspend regression on some
+> > Cherry Trail (CHT) based devices.
+> >
+> > To fix the issues this causes on CHT devices, this commit modifies the
+> > irq_set_wake support so that we only implement irq_set_wake on BYT devices,
+> >
+>
+> Pushed to my review and testing queue, thanks!
 
+Kernel 5.0 was released without this patch, is it still planned to merge it?
 
-On 3/4/19 7:02 AM, Souptick Joarder wrote:
-> On Sat, Mar 2, 2019 at 3:50 AM Qian Cai <cai@lca.pw> wrote:
->>
->> The commit a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent
->> hugepages") introduced pudp_huge_get_and_clear_full() but no one uses
->> its return code. In order to not diverge from
->> pmdp_huge_get_and_clear_full(), just change zap_huge_pud() to not assign
->> the return value from pudp_huge_get_and_clear_full().
->>
->> mm/huge_memory.c: In function 'zap_huge_pud':
->> mm/huge_memory.c:1982:8: warning: variable 'orig_pud' set but not used
->> [-Wunused-but-set-variable]
->>   pud_t orig_pud;
->>         ^~~~~~~~
->>
-> 
-> 4th argument passed to pudp_huge_get_and_clear_full() is not used.
-> Is it fine to remove *int full * in  pudp_huge_get_and_clear_full() if
-> there is no plan to use it in future ?
-> 
-> This is applicable to below functions as well -
-> pmdp_huge_get_and_clear_full()
-> ptep_get_and_clear_full()
-> pte_clear_not_present_full()
-
-I suppose arches may override those that could make use of "int full".
+> > Fixes: c3b8e884defa ("platform/x86: intel_int0002_vgpio: ... irq_set_wake")
+> > Reported-and-tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > ---
+> >  drivers/platform/x86/intel_int0002_vgpio.c | 32 ++++++++++++++++++----
+> >  1 file changed, 26 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> > index 4b8f7305fc8a..78787934b572 100644
+> > --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> > +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> > @@ -51,11 +51,14 @@
+> >  #define GPE0A_STS_PORT                 0x420
+> >  #define GPE0A_EN_PORT                  0x428
+> >
+> > -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
+> > +#define BAYTRAIL                       0x01
+> > +#define CHERRYTRAIL                    0x02
+> > +
+> > +#define ICPU(model, data) { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, data}
+> >
+> >  static const struct x86_cpu_id int0002_cpu_ids[] = {
+> > -       ICPU(INTEL_FAM6_ATOM_SILVERMONT),       /* Valleyview, Bay Trail  */
+> > -       ICPU(INTEL_FAM6_ATOM_AIRMONT),          /* Braswell, Cherry Trail */
+> > +       ICPU(INTEL_FAM6_ATOM_SILVERMONT, BAYTRAIL), /* Valleyview, Bay Trail  */
+> > +       ICPU(INTEL_FAM6_ATOM_AIRMONT, CHERRYTRAIL), /* Braswell, Cherry Trail */
+> >         {}
+> >  };
+> >
+> > @@ -135,7 +138,7 @@ static irqreturn_t int0002_irq(int irq, void *data)
+> >         return IRQ_HANDLED;
+> >  }
+> >
+> > -static struct irq_chip int0002_irqchip = {
+> > +static struct irq_chip int0002_byt_irqchip = {
+> >         .name                   = DRV_NAME,
+> >         .irq_ack                = int0002_irq_ack,
+> >         .irq_mask               = int0002_irq_mask,
+> > @@ -143,10 +146,22 @@ static struct irq_chip int0002_irqchip = {
+> >         .irq_set_wake           = int0002_irq_set_wake,
+> >  };
+> >
+> > +static struct irq_chip int0002_cht_irqchip = {
+> > +       .name                   = DRV_NAME,
+> > +       .irq_ack                = int0002_irq_ack,
+> > +       .irq_mask               = int0002_irq_mask,
+> > +       .irq_unmask             = int0002_irq_unmask,
+> > +       /*
+> > +        * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
+> > +        * and we don't want to mess with the ACPI SCI irq settings.
+> > +        */
+> > +};
+> > +
+> >  static int int0002_probe(struct platform_device *pdev)
+> >  {
+> >         struct device *dev = &pdev->dev;
+> >         const struct x86_cpu_id *cpu_id;
+> > +       struct irq_chip *irq_chip;
+> >         struct gpio_chip *chip;
+> >         int irq, ret;
+> >
+> > @@ -195,14 +210,19 @@ static int int0002_probe(struct platform_device *pdev)
+> >                 return ret;
+> >         }
+> >
+> > -       ret = gpiochip_irqchip_add(chip, &int0002_irqchip, 0, handle_edge_irq,
+> > +       if (cpu_id->driver_data == BAYTRAIL)
+> > +               irq_chip = &int0002_byt_irqchip;
+> > +       else
+> > +               irq_chip = &int0002_cht_irqchip;
+> > +
+> > +       ret = gpiochip_irqchip_add(chip, irq_chip, 0, handle_edge_irq,
+> >                                    IRQ_TYPE_NONE);
+> >         if (ret) {
+> >                 dev_err(dev, "Error adding irqchip: %d\n", ret);
+> >                 return ret;
+> >         }
+> >
+> > -       gpiochip_set_chained_irqchip(chip, &int0002_irqchip, irq, NULL);
+> > +       gpiochip_set_chained_irqchip(chip, irq_chip, irq, NULL);
+> >
+> >         return 0;
+> >  }
+> > --
+> > 2.20.1
+> >
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
