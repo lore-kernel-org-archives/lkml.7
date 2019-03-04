@@ -2,134 +2,168 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B23C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE9AC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE503204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90672070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:36:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fwlOmLl0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726172AbfCDXb7 convert rfc822-to-8bit (ORCPT
+        id S1726344AbfCDXgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 18:31:59 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44929 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCDXb7 (ORCPT
+        Mon, 4 Mar 2019 18:36:05 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:17623 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCDXgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 18:31:59 -0500
-Received: by mail-ot1-f66.google.com with SMTP id g1so5808380otj.11;
-        Mon, 04 Mar 2019 15:31:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+c3uJmrhVEjaVapM7vNizW7J+PWDa1subOrbmknF5+E=;
-        b=g/AhOcuz2OcPgwWryQhb0zer7fkwrHGDNlGNHGEf0Klztx49vLseoeKL0DzcGL9NMr
-         Ex1DJogVSa3VqQllrxQPl+07oojwWbr6YlAIZjqEnmn8jx5e3nOzUuFPCbfj3qlLWsrn
-         hxx029RCx6uo9/sI77pdqZ3CWM/fDJFGyPYUYQ2ZUTeZ3M5K0+T0fkX6ixRxwIuAdwKH
-         3zfcD2RhteWnHPLvSyP3PEtV+M1fGkM1xykcD576cMq21InRK0wifvF+xLnAixb7RaeV
-         J8FES8ZjfsbRPB41GPHbnCrdFnfZnEbGAHiMiaKMdU4iq+JCp0bZQJLXb1rB7WbDsOCN
-         jWkw==
-X-Gm-Message-State: APjAAAULXAjkc1Tt3Uwk5sBIEfSzw0L0Pfb7Et9YSTpoQrfSr3YZtLM6
-        sWVMd+hp0Rh/x1c48hMfQPAYU1BN56Y=
-X-Google-Smtp-Source: APXvYqyek19PF9qwEICD8J3iCctXBw0/aLJwfuAos5fx1zqeHqKkVXgztMAg9x5ogdF12y2eYsu7xw==
-X-Received: by 2002:a9d:7b49:: with SMTP id f9mr13814355oto.211.1551742317972;
-        Mon, 04 Mar 2019 15:31:57 -0800 (PST)
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com. [209.85.210.45])
-        by smtp.gmail.com with ESMTPSA id d67sm3239733oig.36.2019.03.04.15.31.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 15:31:56 -0800 (PST)
-Received: by mail-ot1-f45.google.com with SMTP id c18so5793167otl.13;
-        Mon, 04 Mar 2019 15:31:56 -0800 (PST)
-X-Received: by 2002:a9d:6255:: with SMTP id i21mr14048069otk.158.1551742315884;
- Mon, 04 Mar 2019 15:31:55 -0800 (PST)
+        Mon, 4 Mar 2019 18:36:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c7db65b0003>; Mon, 04 Mar 2019 15:35:56 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 Mar 2019 15:36:03 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 Mar 2019 15:36:03 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Mar
+ 2019 23:36:03 +0000
+Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error handling
+ paths
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Ira Weiny <ira.weiny@intel.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>
+CC:     "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+References: <20190302032726.11769-2-jhubbard@nvidia.com>
+ <20190302202435.31889-1-jhubbard@nvidia.com>
+ <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
+ <2404c962-8f6d-1f6d-0055-eb82864ca7fc@mellanox.com>
+ <20190303165550.GB27123@iweiny-DESK2.sc.intel.com>
+ <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <f73f326b-1ef3-075a-ca11-88d0d881dacb@nvidia.com>
+Date:   Mon, 4 Mar 2019 15:36:02 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
- <20190304035744.155203-2-alex.shi@linux.alibaba.com> <b2cb92de-ef4a-d628-0dd3-76d8d1b953d0@linux.alibaba.com>
- <CADRPPNSjf4P14bwUMsa10XzBUVLszx4iMsL6gk-XQ0x3vTFr+g@mail.gmail.com>
- <e342a3fa-20f6-46cd-4240-8403fa1aa736@linux.alibaba.com> <AM6PR04MB586370DDB6E73A43673339568F710@AM6PR04MB5863.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB586370DDB6E73A43673339568F710@AM6PR04MB5863.eurprd04.prod.outlook.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Mon, 4 Mar 2019 17:31:44 -0600
-X-Gmail-Original-Message-ID: <CADRPPNTxDDquY=OT4MV6cQ8OHhAdbazMjngDhtRBCE9_UESg_w@mail.gmail.com>
-Message-ID: <CADRPPNTxDDquY=OT4MV6cQ8OHhAdbazMjngDhtRBCE9_UESg_w@mail.gmail.com>
-Subject: Re: [PATCH 01/20] docs/zh_CN: add disclaimer file
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Coly Li <colyli@suse.de>, Federico Vaga <federico.vaga@vaga.pv.it>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Li Zefan <lizefan@huawei.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "harryxiyou@gmail.com" <harryxiyou@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kernel@zh-kernel.org" <linux-kernel@zh-kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1551742556; bh=LUypKyWAgSGyWeHvdhOBpuLWhC2w577ik03jidPipkE=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=fwlOmLl0bA1eSZQSHtrtyySK3uXtyYQNojUOe98wUXJuDL0XQXYZx5dI+BUXIkkUE
+         io0h06ZVgQ5wgEDK7p+XIJVPQ6G/OwNmqo269Ob8b2+kDDwCuMuYABBIPrgB1eDcCW
+         vyTLErz7dXLyE93JSquox3by49k4sUg+OU+6bBagQBO1ie7qJnaz8BpNitzoZT0b6b
+         nU9IHAf19k8bqcdaQjDFYmDAvK978fFxrzopTxp2LSk9NIQQGiI5bgR61Mtirmfi1I
+         hlB5MC1721tALbWwhAe2ZP8NFT6SjUD8/Ysnez4F/7IA8uatSL40zNlLMB2vVfGEHp
+         vkqcqkjgAYRbw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 1:22 PM Leo Li <leoyang.li@nxp.com> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Alex Shi <alex.shi@linux.alibaba.com>
-> > Sent: Monday, March 4, 2019 1:58 AM
-> > To: Leo Li <leoyang.li@nxp.com>
-> > Cc: Coly Li <colyli@suse.de>; Federico Vaga <federico.vaga@vaga.pv.it>;
-> > Fengguang Wu <fengguang.wu@intel.com>; Li Zefan
-> > <lizefan@huawei.com>; Shawn Guo <shawn.guo@linaro.org>;
-> > corbet@lwn.net; harryxiyou@gmail.com; linux-doc@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-kernel@zh-kernel.org
-> > Subject: Re: [PATCH 01/20] docs/zh_CN: add disclaimer file
-> >
-> > Hi Leo.
-> >
-> > Do you know others' email address except yourself. I guess leoyang.li is same
-> > one as mailto:leo@zh-kernel.org, is this right? :)
->
-> Hi Alex,
->
-> I will try to get the new email addresses for others too.   Yes.  But probably I will use a private email for this instead of the company email.
+On 3/4/19 3:11 PM, John Hubbard wrote:
+> On 3/3/19 8:55 AM, Ira Weiny wrote:
+>> On Sun, Mar 03, 2019 at 11:52:41AM +0200, Artemy Kovalyov wrote:
+>>>
+>>>
+>>> On 02/03/2019 21:44, Ira Weiny wrote:
+>>>>
+>>>> On Sat, Mar 02, 2019 at 12:24:35PM -0800, john.hubbard@gmail.com wrote:
+>>>>> From: John Hubbard <jhubbard@nvidia.com>
+>>>>>
+>>>>> ...
+>>>>> 3. Dead code removal: the check for (user_virt & ~page_mask)
+>>>>> is checking for a condition that can never happen,
+>>>>> because earlier:
+>>>>>
+>>>>>      user_virt = user_virt & page_mask;
+>>>>>
+>>>>> ...so, remove that entire phrase.
+>>>>>
+>>>>>   		bcnt -= min_t(size_t, npages << PAGE_SHIFT, bcnt);
+>>>>>   		mutex_lock(&umem_odp->umem_mutex);
+>>>>>   		for (j = 0; j < npages; j++, user_virt += PAGE_SIZE) {
+>>>>> -			if (user_virt & ~page_mask) {
+>>>>> -				p += PAGE_SIZE;
+>>>>> -				if (page_to_phys(local_page_list[j]) != p) {
+>>>>> -					ret = -EFAULT;
+>>>>> -					break;
+>>>>> -				}
+>>>>> -				put_page(local_page_list[j]);
+>>>>> -				continue;
+>>>>> -			}
+>>>>> -
+>>>>
+>>>> I think this is trying to account for compound pages. (ie page_mask could
+>>>> represent more than PAGE_SIZE which is what user_virt is being incrimented by.)
+>>>> But putting the page in that case seems to be the wrong thing to do?
+>>>>
+>>>> Yes this was added by Artemy[1] now cc'ed.
+>>>
+>>> Right, this is for huge pages, please keep it.
+>>> put_page() needed to decrement refcount of the head page.
+>>
+>> You mean decrement the refcount of the _non_-head pages?
+>>
+>> Ira
+>>
+> 
+> Actually, I'm sure Artemy means head page, because put_page() always
+> operates on the head page. 
+> 
+> And this reminds me that I have a problem to solve nearby: get_user_pages
+> on huge pages increments the page->_refcount *for each tail page* as well.
+> That's a minor problem for my put_user_page() 
+> patchset, because my approach so far assumed that I could just change us
+> over to:
+> 
+> get_user_page(): increments page->_refcount by a large amount (1024)
+> 
+> put_user_page(): decrements page->_refcount by a large amount (1024)
+> 
+> ...and just stop doing the odd (to me) technique of incrementing once for
+> each tail page. I cannot see any reason why that's actually required, as
+> opposed to just "raise the page->_refcount enough to avoid losing the head
+> page too soon".
+> 
+> However, it may be tricky to do this in one pass. Probably at first, I'll have
+> to do this horrible thing approach:
+> 
+> get_user_page(): increments page->_refcount by a large amount (1024)
+> 
+> put_user_page(): decrements page->_refcount by a large amount (1024) MULTIPLIED
+>                  by the number of tail pages. argghhh that's ugly.
+> 
 
-Here are the updated email address for me and others.
+I see that this is still not stated quite right.
 
-TripleX Chung <xxx.phy@gmail.com>
-Li Yang <pku.leo@gmail.com>
-Zhang Wei <wezhang@outlook.com>
+...to clarify, I mean to leave the existing behavior alone. So it would be
+the call sites (not put_user_page as the above says) that would be doing all
+that decrementing. The call sites know how many decrements are appropriate.
 
-Since you have created the patch to update my email address to my
-company email, it is ok to keep that.  Thanks a lot for the effort to
-address the issue.
+Unless someone thinks of a clever way to clean this up in one shot. I'm not
+really seeing any way.
 
-Regards,
-Leo
-
->
-> >
-> > Thanks
-> > Alex
-> > On 2019/3/4 2:30 下午, Li Yang wrote:
-> >
-> >
-> > On Mon, Mar 4, 2019 at 12:23 AM Alex Shi
-> > <mailto:alex.shi@linux.alibaba.com> wrote:
-> > BTW, Corbet,
-> >
-> > Some of email address are unused and
-> > https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fzh-
-> > kernel.org&data=02%7C01%7Cleoyang.li%40nxp.com%7C6b64721b126944de
-> > 835c08d6a0771379%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C1%7C63
-> > 6872830634024412&sdata=cMnFjRjAzodh5IgFVaZvZpmXNXfHb%2FwWCTxwt
-> > t%2FO6e4%3D&reserved=0 web site are unused and on sale. That are:
-> >
-> > The website has been down for a while and won’t be reopen.  But we can
-> > definitely update these email addresses.
-> >
-> >
->
+thanks,
+-- 
+John Hubbard
+NVIDIA
