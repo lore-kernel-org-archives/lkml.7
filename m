@@ -2,54 +2,52 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B28C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3218C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3922120823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D1120823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687950;
-	bh=ugzjylJRrkDOy1zqJeOZhJETgi2HcWvkSWrLI6rt1kk=;
+	s=default; t=1551687959;
+	bh=0p8AZC2HaXunAYoPZc7xTCeytp0Y/XYTL7kJf3f8U7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MctC6q3W8DJDcQOMjrANRAeJZivkpxVQ3kSZh0u5uWVbxWrTUtoB58LuOgkEwjqW8
-	 gF40vPO6JOJruYnmwlY06GjnKBYjwsB7zwGE2b/nzQ0dstOp3vYvC4bSUeM4r3GVmd
-	 PuwEakvB4WWPkdtle9zZUUW5HtEbEpJxNSOOCf1E=
+	b=giL6FtcQ4n5enZZTK6oJxTSMNZvJIuc2AvcS0+e7LyrsQBR05xZXuakBaY65MvjnE
+	 PLFxm3RW0vF/LMUaZkHa+VbSRKD1KKs0LoGkyibAUfDwtTfC9hzTjT7SN1GDoJNUCP
+	 C/kYxy6sjir4JgI3kHFU6uGU6zrbTBe7IP9O7WBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfCDIZs (ORCPT
+        id S1727064AbfCDIZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:25:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45224 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:25:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726639AbfCDIZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:25:26 -0500
+        id S1726620AbfCDIZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:25:23 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C150A20823;
-        Mon,  4 Mar 2019 08:25:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3290820823;
+        Mon,  4 Mar 2019 08:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687926;
-        bh=ugzjylJRrkDOy1zqJeOZhJETgi2HcWvkSWrLI6rt1kk=;
+        s=default; t=1551687922;
+        bh=0p8AZC2HaXunAYoPZc7xTCeytp0Y/XYTL7kJf3f8U7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QqszO6UXps27LVmRZ6plHOHfXdXXzTLvxX2sPaPYKKHpMIr9N/2ePopzoa2jvJ6IJ
-         BYfr0sJszMxRIWPfFrzpYmY2LyqQO2Q0sibgfnsFyhUTWAL6Z7R7b+duHqt6Fy+POy
-         jIp7PCwwwG2qC2z7G/7vsdlEb5iIV3R1/JKK7LAY=
+        b=UNLtbzxlfpQY4MxoFj3EbeKR61SgpwPe41ifHD4yPZ13Co4XULVSQIzhQ/oa+oxTh
+         eeLUtNT97ZpxegA/UHKCoYuOm2lsm2NVpLCR5Nsn02D9RgbNhQh4j557YA0y1Q/uOD
+         OHUFmgafSToKTFqxmHTMBPPXi+iWtXn7EEo8KC0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        "=?UTF-8?q?Ernesto=20A . =20Fern=C3=A1ndez?=" 
-        <ernesto.mnd.fernandez@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 31/52] direct-io: allow direct writes to empty inodes
-Date:   Mon,  4 Mar 2019 09:22:29 +0100
-Message-Id: <20190304081618.955279776@linuxfoundation.org>
+        stable@vger.kernel.org, Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        "Andrew F. Davis" <afd@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 30/52] staging: android: ion: Support cpu access during dma_buf_detach
+Date:   Mon,  4 Mar 2019 09:22:28 +0100
+Message-Id: <20190304081618.906201602@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -68,50 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8b9433eb4de3c26a9226c981c283f9f4896ae030 ]
+[ Upstream commit 31eb79db420a3f94c4c45a8c0a05cd30e333f981 ]
 
-On a DIO_SKIP_HOLES filesystem, the ->get_block() method is currently
-not allowed to create blocks for an empty inode.  This confusion comes
-from trying to bit shift a negative number, so check the size of the
-inode first.
+Often userspace doesn't know when the kernel will be calling dma_buf_detach
+on the buffer.
+If userpace starts its CPU access at the same time as the sg list is being
+freed it could end up accessing the sg list after it has been freed.
 
-The problem is most visible for hfsplus, because the fallback to
-buffered I/O doesn't happen and the write fails with EIO.  This is in
-part the fault of the module, because it gives a wrong return value on
-->get_block(); that will be fixed in a separate patch.
+Thread A				Thread B
+- DMA_BUF_IOCTL_SYNC IOCT
+ - ion_dma_buf_begin_cpu_access
+  - list_for_each_entry
+					- ion_dma_buf_detatch
+					 - free_duped_table
+   - dma_sync_sg_for_cpu
 
-Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Ernesto A. Fernández <ernesto.mnd.fernandez@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fix this by getting the ion_buffer lock before freeing the sg table memory.
+
+Fixes: 2a55e7b5e544 ("staging: android: ion: Call dma_map_sg for syncing and mapping")
+Signed-off-by: Liam Mark <lmark@codeaurora.org>
+Acked-by: Laura Abbott <labbott@redhat.com>
+Acked-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/direct-io.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/staging/android/ion/ion.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/direct-io.c b/fs/direct-io.c
-index 40567501015f2..2c90d541f5275 100644
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -658,6 +658,7 @@ static int get_more_blocks(struct dio *dio, struct dio_submit *sdio,
- 	unsigned long fs_count;	/* Number of filesystem-sized blocks */
- 	int create;
- 	unsigned int i_blkbits = sdio->blkbits + sdio->blkfactor;
-+	loff_t i_size;
+diff --git a/drivers/staging/android/ion/ion.c b/drivers/staging/android/ion/ion.c
+index 24cb666c92242..dd96ca61a5152 100644
+--- a/drivers/staging/android/ion/ion.c
++++ b/drivers/staging/android/ion/ion.c
+@@ -257,10 +257,10 @@ static void ion_dma_buf_detatch(struct dma_buf *dmabuf,
+ 	struct ion_dma_buf_attachment *a = attachment->priv;
+ 	struct ion_buffer *buffer = dmabuf->priv;
  
- 	/*
- 	 * If there was a memory error and we've overwritten all the
-@@ -687,8 +688,8 @@ static int get_more_blocks(struct dio *dio, struct dio_submit *sdio,
- 		 */
- 		create = dio->op == REQ_OP_WRITE;
- 		if (dio->flags & DIO_SKIP_HOLES) {
--			if (fs_startblk <= ((i_size_read(dio->inode) - 1) >>
--							i_blkbits))
-+			i_size = i_size_read(dio->inode);
-+			if (i_size && fs_startblk <= (i_size - 1) >> i_blkbits)
- 				create = 0;
- 		}
+-	free_duped_table(a->table);
+ 	mutex_lock(&buffer->lock);
+ 	list_del(&a->list);
+ 	mutex_unlock(&buffer->lock);
++	free_duped_table(a->table);
  
+ 	kfree(a);
+ }
 -- 
 2.19.1
 
