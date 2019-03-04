@@ -2,160 +2,128 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0151DC10F03
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C42C4360F
 	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CECA52070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906E62070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfCDWtA (ORCPT
+        id S1726706AbfCDWtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 17:49:00 -0500
-Received: from sauhun.de ([88.99.104.3]:57554 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbfCDWtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 17:49:00 -0500
-Received: from localhost (p54B337B5.dip0.t-ipconnect.de [84.179.55.181])
-        by pokefinder.org (Postfix) with ESMTPSA id 450192E4031;
-        Mon,  4 Mar 2019 23:48:57 +0100 (CET)
-Date:   Mon, 4 Mar 2019 23:48:56 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, Keerthy <j-keerthy@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Phil Reid <preid@electromag.com.au>,
-        Tero Kristo <t-kristo@ti.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 0/7] i2c: core: introduce atomic transfers
-Message-ID: <20190304224856.w7egngqynl3hlabp@ninjato>
-References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com>
- <71aaab62-2965-8ad8-61b9-02d02694919d@axentia.se>
+        Mon, 4 Mar 2019 17:49:02 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41120 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726470AbfCDWtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 17:49:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 273D3EBD;
+        Mon,  4 Mar 2019 14:49:00 -0800 (PST)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22B923F706;
+        Mon,  4 Mar 2019 14:48:54 -0800 (PST)
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        mhiramat@kernel.org, qais.yousef@arm.com, rdunlap@infradead.org,
+        rostedt@goodmis.org, Shuah Khan <shuah@kernel.org>, yhs@fb.com
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <934dc2dc-18b6-bc7c-9845-dac0577f7b47@arm.com>
+Date:   Mon, 4 Mar 2019 23:48:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i2ufgd73rsxv6a7m"
-Content-Disposition: inline
-In-Reply-To: <71aaab62-2965-8ad8-61b9-02d02694919d@axentia.se>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190301160856.129678-1-joel@joelfernandes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/1/19 5:08 PM, Joel Fernandes (Google) wrote:
+> Introduce in-kernel headers and other artifacts which are made available
+> as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> it possible to build kernel modules, run eBPF programs, and other
+> tracing programs that need to extend the kernel for tracing purposes
+> without any dependency on the file system having headers and build
+> artifacts.
+> 
+> On Android and embedded systems, it is common to switch kernels but not
+> have kernel headers available on the file system. Raw kernel headers
+> also cannot be copied into the filesystem like they can be on other
+> distros, due to licensing and other issues. There's no linux-headers
+> package on Android. Further once a different kernel is booted, any
+> headers stored on the file system will no longer be useful. By storing
+> the headers as a compressed archive within the kernel, we can avoid these
+> issues that have been a hindrance for a long time.
+> 
+> The feature is also buildable as a module just in case the user desires
+> it not being part of the kernel image. This makes it possible to load
+> and unload the headers on demand. A tracing program, or a kernel module
+> builder can load the module, do its operations, and then unload the
+> module to save kernel memory. The total memory needed is 3.8MB.
+> 
+> The code to read the headers is based on /proc/config.gz code and uses
+> the same technique to embed the headers.
+> 
+> To build a module, the below steps have been tested on an x86 machine:
+> modprobe kheaders
+> rm -rf $HOME/headers
+> mkdir -p $HOME/headers
+> tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> cd my-kernel-module
+> make -C $HOME/headers M=$(pwd) modules
+> rmmod kheaders
+> 
+> Additional notes:
+> (1) external modules must be built on the same arch as the host that
+> built vmlinux. This can be done either in a qemu emulated chroot on the
+> target, or natively. This is due to host arch dependency of kernel
+> scripts.
+> 
+> (2)
+> A limitation of module building with this is, since Module.symvers is
+> not available in the archive due to a cyclic dependency with building of
+> the archive into the kernel or module binaries, the modules built using
+> the archive will not contain symbol versioning (modversion). This is
+> usually not an issue since the idea of this patch is to build a kernel
+> module on the fly and load it into the same kernel. An appropriate
+> warning is already printed by the kernel to alert the user of modules
+> not having modversions when built using the archive. For building with
+> modversions, the user can use traditional header packages. For our
+> tracing usecases, we build modules on the fly with this so it is not a
+> concern.
+> 
+> (3) I have left IKHD_ST and IKHD_ED markers as is to facilitate
+> future patches that would extract the headers from a kernel or module
+> image.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+> 
+>      Changes since v3:
+>      - Blank tar was being generated because of a one line I
+>        forgot to push. It is updated now.
+>      - Added module.lds since arm64 needs it to build modules.
 
---i2ufgd73rsxv6a7m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested on x86 with eBPF scripts and exporting an alternative 
+BCC_KERNEL_SOURCE.
 
-Hi Peda,
-
-> The way I read this series, you are not giving atomic transfers priority.=
- The
-
-You are reading correctly. I could have made more clear that the issue
-pointed out by Russell is not handled by this series but discussion
-about it is welcome / needed to decide if we can take this series as is
-or if we need to redesign it. But here we are anyhow :)
-
-> only thing that happens is that if an xfer happens in atomic/irq context,
-> trylock is used instead of an ordinary (unconditional) lock (this is just
-> like it is already). If a mux is sitting in between the client device and
-> the root adapter, the trylock operation will percolate to the root. Sure,
-> there are more trylock ops that may fail and abort the xfer, but if
-> everything is uncontended, then things should proceed in orderly fashion.
-> Also, sure, the mux may need additional resources that are no longer
-> available if the machine is half way down (or worse). But I don't see any
-> fundamental *locking* issue with muxes that is different from the case
-> without a mux.
-
-Good, that was my conclusion as well. The series, as is, doesn't change
-the locking behaviour, so that will work exactly as before. Or, it will
-not work in the case described by Russell. Like before.
-
-> That said, if you then want to introduce xfers that want to circumvent the
-> locking, then parent-locked muxes are easier since the actual muxing oper=
-ation
-> is performed as an unlocked xfer (if one is needed) while the client devi=
-ce
-> has grabbed the adapter lock "from the outside". Sure, there is a list of
-> locks going up through the adapter tree to handle, but that can probably =
-be
-> handled in one place. I.e. the locking must have been avoided prior to the
-> actual muxing operation, but the code to do so can be in one place. The
-
-That was my gut feeling, too...
-
-> mux-locked case is where the trouble is, since the muxing operation is do=
-ne
-> as a normal xfer and needs to be classified as a special xfer that just l=
-ike
-> the original client xfer also needs to break through any existing locks in
-> the adapter tree. And those muxing xfers might come from anywhere, e.g.
->=20
-> 	- IO-expander controlling a gpio/pinctrl mux
-> 	- dedicated I2C mux (e.g. the LTC4306)
-> 	- regmap device
-> 	- etc, who knows what muxing options will evolve?
->=20
-> So, any scheme that require a white-list will work poorly for mux-locked
-> muxes, unless you can add some new grip/pinctrl/regmap flags to
-> gpios/pins/registers so that the particular accesses can be white-listed.
-> Adding those flags seem rather invasive?
-
-=2E.. and sadly, this too. We would need the same kind of flag which I
-described in my first paragraph of the original posting where I wanted
-the flag to detect "unauthorized" uses of late I2C transfers. And this
-is gonna be invasive. And I am not sure it is worth the effort.
-
-I wonder what a reasonable effort is? Simply ignore the lock from the
-"current" adapter and hope for the best that there is no mux or at
-least no mux which needs interrupts / a lock attached to it?
-
-> But of course, you need to actually do something about the added FIXME in
-> the demux-pinctrl driver... BTW, that driver should forward ->smbus_xfer
-> just like it does for ->master_xfer, no?
-
-Yes. The idea of having two seperate SMBus controllers in one SoC which
-would need demuxing is amusing, but still, it exists for I2C and you are
-right.
-
-Thanks,
-
-   Wolfram
-
-
---i2ufgd73rsxv6a7m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlx9q1gACgkQFA3kzBSg
-KbYX3BAAjQDCFpbGfGXB8PlBXZzY6XS+1sO3YC6TcePKhtRbKNzfW4QConML5j+g
-KlTrgTUx82i4bv7IVtbOw5in2PB/rMiv6FyZ68Ezy5Z2dmCnH9WS9T7+OWIMNDwB
-6F4YJZ+1JfsL6G7IlapHMlDuIcXIXJzL4UMzcpQHQXrkoxO6dPOkbRGGvSA9u0/K
-Lw+IPnkBa/TROkUrWMzmjqKiAXNw7Ddr8fBPopllklAmD+lL6ZtElrgS95tjHS1X
-pGEKNZgZC7AY+7v7kzieLbtDIBQalOaixJbSZ3Ckm+Eo+ejpnWxjqLAnxZ2zjBGS
-N4opb/qvklrxCv+/vUTqtWqTQ3XhLnIlY4+tZINJF4BxTTqaWXheREYuHOn7fFN8
-fAxeU8p6aYDiszl4djPBBuRha+NDHEY8MySklHh5H8iR495c1vM+aYq4N/dTXlta
-J/AVwAbq89Nh/rSlkxcxNbNu/eb2IP/4ZmFCk62+xtklydaH8yOv1jiKl/oCmHVD
-PCnd8Sd8siY9s0fyUnaxAeaverSyjdu/kucrVdqs4AYDn57iMqsNB4CmeGjxx6ko
-3sAiJQb5mwLONtDW3viQ6zCBrnQ3I+/vxS/7u7q+AXnOzpSy/nid/0zY9eXeJBHh
-WFSVTwuhq4IGzGaqUSHGqcfO4FsjL0KgXnP7cSJWzmBURW0JgzE=
-=Al+e
------END PGP SIGNATURE-----
-
---i2ufgd73rsxv6a7m--
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
