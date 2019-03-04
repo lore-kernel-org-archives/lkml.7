@@ -2,209 +2,165 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD09C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498FAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AED320830
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:34:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="DK8DwhUs"
+	by mail.kernel.org (Postfix) with ESMTP id 1CD7C20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfCDOeV (ORCPT
+        id S1726908AbfCDOgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:34:21 -0500
-Received: from smtp65.iad3a.emailsrvr.com ([173.203.187.65]:46852 "EHLO
-        smtp65.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726095AbfCDOeV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:34:21 -0500
-Received: from smtp1.relay.iad3a.emailsrvr.com (localhost [127.0.0.1])
-        by smtp1.relay.iad3a.emailsrvr.com (SMTP Server) with ESMTP id 47D115C8E;
-        Mon,  4 Mar 2019 09:34:19 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1551710059;
-        bh=qyjfk7ShMOHNghs1hLCxsg9fKVB4zw67M/LGPp9fxmk=;
-        h=From:To:Subject:Date:From;
-        b=DK8DwhUsOJPjm2bmWAxvagzSoXLOG/0Zo52UMZANWLSM2x2N734XxHJQ+wl25XKsk
-         A0w9dchf3AAzY3cREwjIGTuuVayj7CVPo29dsVk3x60XAgsTHaf8BuOHL6g6ysB7Ya
-         7mmz1EVAjKxpE60lPMdKV39+uINVO9EVDC/HTWb0=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp1.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 2FD345CEE;
-        Mon,  4 Mar 2019 09:34:18 -0500 (EST)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Mon, 04 Mar 2019 09:34:19 -0500
-From:   Ian Abbott <abbotti@mev.co.uk>
-To:     devel@driverdev.osuosl.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Spencer E . Olson" <olsonse@umich.edu>
-Subject: [PATCH] staging: comedi: ni_mio_common: Fix divide-by-zero for DIO cmdtest
-Date:   Mon,  4 Mar 2019 14:33:54 +0000
-Message-Id: <20190304143354.4964-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.20.1
+        Mon, 4 Mar 2019 09:36:02 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34320 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbfCDOgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 09:36:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EB00EBD;
+        Mon,  4 Mar 2019 06:36:01 -0800 (PST)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EA493F575;
+        Mon,  4 Mar 2019 06:35:58 -0800 (PST)
+Subject: Re: [PATCH v2 03/13] mm: Add generic p?d_large() macros
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Morse <james.morse@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20190221113502.54153-1-steven.price@arm.com>
+ <20190221113502.54153-4-steven.price@arm.com>
+ <20190221142812.oa53lfnnfmsuh6ys@kshutemo-mobl1>
+ <a3076d01-41b3-d59b-e98c-a0fd9ba5d3f5@arm.com>
+ <20190221145706.zqwfdoyiirn3lc7y@kshutemo-mobl1>
+ <e0c7fc0c-7924-1106-a7a3-fc12136b7b82@arm.com>
+ <20190221210618.voyfs5cnafpvgedh@kshutemo-mobl1>
+ <20190301115300.GE5156@rapoport-lnx>
+ <20190301123031.rw3dswcoaa2x7haq@kshutemo-mobl1>
+ <b8bd0f99-1c5e-7cf5-32dd-ab52d921e86c@arm.com>
+ <20190303071253.GA7585@rapoport-lnx>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <2adbc516-3ffd-8e34-887a-843ccab72d51@arm.com>
+Date:   Mon, 4 Mar 2019 14:35:56 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190303071253.GA7585@rapoport-lnx>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`ni_cdio_cmdtest()` validates Comedi asynchronous commands for the DIO
-subdevice (subdevice 2) of supported National Instruments M-series
-cards.  It is called when handling the `COMEDI_CMD` and `COMEDI_CMDTEST`
-ioctls for this subdevice.  There are two causes for a possible
-divide-by-zero error when validating that the `stop_arg` member of the
-passed-in command is not too large.
+On 03/03/2019 07:12, Mike Rapoport wrote:
+> On Fri, Mar 01, 2019 at 01:39:30PM +0000, Steven Price wrote:
+>> On 01/03/2019 12:30, Kirill A. Shutemov wrote:
+>>> On Fri, Mar 01, 2019 at 01:53:01PM +0200, Mike Rapoport wrote:
+>>>> Him Kirill,
+>>>>
+>>>> On Fri, Feb 22, 2019 at 12:06:18AM +0300, Kirill A. Shutemov wrote:
+>>>>> On Thu, Feb 21, 2019 at 05:16:46PM +0000, Steven Price wrote:
+>>>>>>>> Note that in terms of the new page walking code, these new defines are
+>>>>>>>> only used when walking a page table without a VMA (which isn't currently
+>>>>>>>> done), so architectures which don't use p?d_large currently will work
+>>>>>>>> fine with the generic versions. They only need to provide meaningful
+>>>>>>>> definitions when switching to use the walk-without-a-VMA functionality.
+>>>>>>>
+>>>>>>> How other architectures would know that they need to provide the helpers
+>>>>>>> to get walk-without-a-VMA functionality? This looks very fragile to me.
+>>>>>>
+>>>>>> Yes, you've got a good point there. This would apply to the p?d_large
+>>>>>> macros as well - any arch which (inadvertently) uses the generic version
+>>>>>> is likely to be fragile/broken.
+>>>>>>
+>>>>>> I think probably the best option here is to scrap the generic versions
+>>>>>> altogether and simply introduce a ARCH_HAS_PXD_LARGE config option which
+>>>>>> would enable the new functionality to those arches that opt-in. Do you
+>>>>>> think this would be less fragile?
+>>>>>
+>>>>> These helpers are useful beyond pagewalker.
+>>>>>
+>>>>> Can we actually do some grinding and make *all* archs to provide correct
+>>>>> helpers? Yes, it's tedious, but not that bad.
+>>>>
+>>>> Many architectures simply cannot support non-leaf entries at the higher
+>>>> levels. I think letting the use a generic helper actually does make sense.
+>>>
+>>> I disagree.
+>>>
+>>> It's makes sense if the level doesn't exists on the arch.
+>>
+>> This is what patch 24 [1] of the series does - if the level doesn't
+>> exist then appropriate stubs are provided.
+>>
+>>> But if the level exists, it will be less frugile to ask the arch to
+>>> provide the helper. Even if it is dummy always-false.
+>>
+>> The problem (as I see it), is we need a reliable set of p?d_large()
+>> implementations to be able to walk arbitrary page tables. Either the
+>> entire functionality of walking page tables without a VMA has to be an
+>> opt-in per architecture, or we need to mandate that every architecture
+>> provide these implementations.
+> 
+> I agree that we need a reliable set of p?d_large(), but I'm still not
+> convinced that every architecture should provide these.
+> 
+> Why having generic versions if p?d_large() is more fragile, than e.g.
+> p??__access_permitted() or atomic ops?
 
-The first cause for the divide-by-zero is that calls to
-`comedi_bytes_per_scan()` are only valid once the command has been
-copied to `s->async->cmd`, but that copy is only done for the
-`COMEDI_CMD` ioctl.  For the `COMEDI_CMDTEST` ioctl, it will use
-whatever was left there by the previous `COMEDI_CMD` ioctl, if any.
-(This is very likely, as it is usual for the application to use
-`COMEDI_CMDTEST` before `COMEDI_CMD`.) If there has been no previous,
-valid `COMEDI_CMD` for this subdevice, then `comedi_bytes_per_scan()`
-will return 0, so the subsequent division in `ni_cdio_cmdtest()` of
-`s->async->prealloc_bufsz / comedi_bytes_per_scan(s)` will be a
-divide-by-zero error.  To fix this error, call a new function
-`comedi_bytes_per_scan_cmd(s, cmd)`, based on the existing
-`comedi_bytes_per_scan(s)` but using a specified `struct comedi_cmd` for
-its calculations.  (Also refactor `comedi_bytes_per_scan()` to call the
-new function.)
+Personally I feel having p?d_large implemented for each arch has the
+following benefits:
 
-Once the first cause for the divide-by-zero has been fixed, the second
-cause is that `comedi_bytes_per_scan_cmd()` can legitimately return 0 if
-the `scan_end_arg` member of the `struct comedi_cmd` being tested is 0.
-Fix it by only performing the division (and validating that `stop_arg`
-is no more than the maximum value) if `comedi_bytes_per_scan_cmd()`
-returns a non-zero value.
+ * Matches p?d_present/p?d_none/p?d_bad which all similarly have to be
+implemented for all arches except for folded levels (when folded using
+the generic code).
 
-The problem was reported on the COMEDI mailing list here:
-https://groups.google.com/forum/#!topic/comedi_list/4t9WlHzMhKM
+ * Gives the architecture maintainers a heads-up and an opportunity to
+ensure that the implementations I've written are correct rather than
+silently picking up the generic version.
 
-Fixes: f164cbf98fa8 ("staging: comedi: ni_mio_common: add finite regeneration to dio output")
-Cc: <stable@vger.kernel.org> # 4.6+
-Cc: Spencer E. Olson <olsonse@umich.edu>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
- drivers/staging/comedi/comedidev.h            |  2 ++
- drivers/staging/comedi/drivers.c              | 33 ++++++++++++++++---
- .../staging/comedi/drivers/ni_mio_common.c    | 10 ++++--
- 3 files changed, 38 insertions(+), 7 deletions(-)
+ * When adding a new architecture it will be obvious that p?d_large
+implementations are needed.
 
-diff --git a/drivers/staging/comedi/comedidev.h b/drivers/staging/comedi/comedidev.h
-index a7d569cfca5d..0dff1ac057cd 100644
---- a/drivers/staging/comedi/comedidev.h
-+++ b/drivers/staging/comedi/comedidev.h
-@@ -1001,6 +1001,8 @@ int comedi_dio_insn_config(struct comedi_device *dev,
- 			   unsigned int mask);
- unsigned int comedi_dio_update_state(struct comedi_subdevice *s,
- 				     unsigned int *data);
-+unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
-+				       struct comedi_cmd *cmd);
- unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s);
- unsigned int comedi_nscans_left(struct comedi_subdevice *s,
- 				unsigned int nscans);
-diff --git a/drivers/staging/comedi/drivers.c b/drivers/staging/comedi/drivers.c
-index eefa62f42c0f..5a32b8fc000e 100644
---- a/drivers/staging/comedi/drivers.c
-+++ b/drivers/staging/comedi/drivers.c
-@@ -394,11 +394,13 @@ unsigned int comedi_dio_update_state(struct comedi_subdevice *s,
- EXPORT_SYMBOL_GPL(comedi_dio_update_state);
- 
- /**
-- * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
-+ * comedi_bytes_per_scan_cmd() - Get length of asynchronous command "scan" in
-+ * bytes
-  * @s: COMEDI subdevice.
-+ * @cmd: COMEDI command.
-  *
-  * Determines the overall scan length according to the subdevice type and the
-- * number of channels in the scan.
-+ * number of channels in the scan for the specified command.
-  *
-  * For digital input, output or input/output subdevices, samples for
-  * multiple channels are assumed to be packed into one or more unsigned
-@@ -408,9 +410,9 @@ EXPORT_SYMBOL_GPL(comedi_dio_update_state);
-  *
-  * Returns the overall scan length in bytes.
-  */
--unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
-+unsigned int comedi_bytes_per_scan_cmd(struct comedi_subdevice *s,
-+				       struct comedi_cmd *cmd)
- {
--	struct comedi_cmd *cmd = &s->async->cmd;
- 	unsigned int num_samples;
- 	unsigned int bits_per_sample;
- 
-@@ -427,6 +429,29 @@ unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
- 	}
- 	return comedi_samples_to_bytes(s, num_samples);
- }
-+EXPORT_SYMBOL_GPL(comedi_bytes_per_scan_cmd);
-+
-+/**
-+ * comedi_bytes_per_scan() - Get length of asynchronous command "scan" in bytes
-+ * @s: COMEDI subdevice.
-+ *
-+ * Determines the overall scan length according to the subdevice type and the
-+ * number of channels in the scan for the current command.
-+ *
-+ * For digital input, output or input/output subdevices, samples for
-+ * multiple channels are assumed to be packed into one or more unsigned
-+ * short or unsigned int values according to the subdevice's %SDF_LSAMPL
-+ * flag.  For other types of subdevice, samples are assumed to occupy a
-+ * whole unsigned short or unsigned int according to the %SDF_LSAMPL flag.
-+ *
-+ * Returns the overall scan length in bytes.
-+ */
-+unsigned int comedi_bytes_per_scan(struct comedi_subdevice *s)
-+{
-+	struct comedi_cmd *cmd = &s->async->cmd;
-+
-+	return comedi_bytes_per_scan_cmd(s, cmd);
-+}
- EXPORT_SYMBOL_GPL(comedi_bytes_per_scan);
- 
- static unsigned int __comedi_nscans_left(struct comedi_subdevice *s,
-diff --git a/drivers/staging/comedi/drivers/ni_mio_common.c b/drivers/staging/comedi/drivers/ni_mio_common.c
-index 5edf59ac6706..b04dad8c7092 100644
---- a/drivers/staging/comedi/drivers/ni_mio_common.c
-+++ b/drivers/staging/comedi/drivers/ni_mio_common.c
-@@ -3545,6 +3545,7 @@ static int ni_cdio_cmdtest(struct comedi_device *dev,
- 			   struct comedi_subdevice *s, struct comedi_cmd *cmd)
- {
- 	struct ni_private *devpriv = dev->private;
-+	unsigned int bytes_per_scan;
- 	int err = 0;
- 
- 	/* Step 1 : check if triggers are trivially valid */
-@@ -3579,9 +3580,12 @@ static int ni_cdio_cmdtest(struct comedi_device *dev,
- 	err |= comedi_check_trigger_arg_is(&cmd->convert_arg, 0);
- 	err |= comedi_check_trigger_arg_is(&cmd->scan_end_arg,
- 					   cmd->chanlist_len);
--	err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
--					    s->async->prealloc_bufsz /
--					    comedi_bytes_per_scan(s));
-+	bytes_per_scan = comedi_bytes_per_scan_cmd(s, cmd);
-+	if (bytes_per_scan) {
-+		err |= comedi_check_trigger_arg_max(&cmd->stop_arg,
-+						    s->async->prealloc_bufsz /
-+						    bytes_per_scan);
-+	}
- 
- 	if (err)
- 		return 3;
--- 
-2.20.1
+The benefits of having a generic version seem to be:
 
+ * No boiler plate for the architectures that don't support large pages
+(saves a handful of lines).
+
+ * Easier to merge (fewer patches).
+
+While the last one is certainly appealing (to me at least), I'm not
+convinced the benefits of the generic version outweigh those of
+providing implementations per-arch.
+
+Am I missing something?
+
+> IMHO, adding those functions/macros for architectures that support large
+> pages and providing defines to avoid override of 'static inline' implementations
+> would be robust enough and will avoid unnecessary stubs in architectures
+> that don't have large pages.
+
+Clearly at run time there's no difference in the "robustness" - the code
+generation should be the same. So it's purely down to development processes.
+
+However, if you prefer I can resurrect the generic versions and drop the
+patches that simply add dummy implementations.
+
+Steve
