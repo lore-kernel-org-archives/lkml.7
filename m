@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1E5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC76C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6466C21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE3E20836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688313;
-	bh=M3Zp06f+NNaun/b0HLm3ZtBxGYq+cWZd7t6mwF5viKo=;
+	s=default; t=1551688318;
+	bh=YfYSP15nRGYcwFvRpY+E2szTONJJgk/9JL+Hm6N3UQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sLOeo291BM19SZzpIGPcZwhdw+A1j+2EykJmodiS8+wtvexmH+mHRYUVGN4bckggX
-	 p1Iyz7FWYTj0l7YlB85Zstm/bfrpHIDPsGVUMFIU29AoOuBJPLdsfSR1sOjNRD16aN
-	 uWWZQq3isx60cdLH7RwODe19nWHohQPSDgiBocmc=
+	b=dIE+Awc2HdF00Gs7e19UWeCBNqZAhNVloZYqtRletAhN7MY9wQEf/shqPafEvSak0
+	 VUe+T/igM9Aw4wVArXAyakyF7QeZL6NlO2RASFDRgbW9AeHlkMXJ9HnkprJBHGhk8n
+	 1Kblu86KEVBvJRkYge6EsUAfzSy2F9JrB4WAIZho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfCDIbw (ORCPT
+        id S1728008AbfCDIb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:31:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34380 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:31:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727572AbfCDIbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:31:48 -0500
+        id S1727984AbfCDIbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:31:45 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52266208E4;
-        Mon,  4 Mar 2019 08:31:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A2F421473;
+        Mon,  4 Mar 2019 08:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688307;
-        bh=M3Zp06f+NNaun/b0HLm3ZtBxGYq+cWZd7t6mwF5viKo=;
+        s=default; t=1551688305;
+        bh=YfYSP15nRGYcwFvRpY+E2szTONJJgk/9JL+Hm6N3UQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=itwbSvZcFsINyvqVdoYaw609ocf5DIq+jiZZO1//HpsaFJYDsJEl9RJe3mlZQePR+
-         6VVWq/eKvzTpMp/iV68hDFdQodkiewUGyrqlpqUNyz+mzgp6HLneiCIYrG8yb8RDk+
-         AbQV8vV+iAGeJiyddlLh2j+qayDOOEVZN1qTHZBo=
+        b=oaU3HBG+nQ1peVy6HtqZAWuasnk8lVJtXLW5FTPPsV8iikobBR/Ve2QBFTrh7/OtD
+         DoWzZNO7sc1S39pTErBflqS57azM2ZpQhvvOkMApX4a43uBjK/sp2i/lzM3MbBfNyV
+         l5d/RMZnsLZ8aBnHTEFsHg4eE4NZ7g4BEpa+wCIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Mathieu Malaterre <malat@debian.org>,
+        stable@vger.kernel.org,
+        Balaji Pothunoori <bpothuno@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 60/78] mac80211: Add attribute aligned(2) to struct action
-Date:   Mon,  4 Mar 2019 09:22:43 +0100
-Message-Id: <20190304081628.236183451@linuxfoundation.org>
+Subject: [PATCH 4.19 59/78] mac80211: dont initiate TDLS connection if station is not associated to AP
+Date:   Mon,  4 Mar 2019 09:22:42 +0100
+Message-Id: <20190304081628.188777022@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -67,60 +67,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7c53eb5d87bc21464da4268c3c0c47457b6d9c9b ]
+[ Upstream commit 7ed5285396c257fd4070b1e29e7b2341aae2a1ce ]
 
-During refactor in commit 9e478066eae4 ("mac80211: fix MU-MIMO
-follow-MAC mode") a new struct 'action' was declared with packed
-attribute as:
+Following call trace is observed while adding TDLS peer entry in driver
+during TDLS setup.
 
-  struct {
-          struct ieee80211_hdr_3addr hdr;
-          u8 category;
-          u8 action_code;
-  } __packed action;
+Call Trace:
+[<c1301476>] dump_stack+0x47/0x61
+[<c10537d2>] __warn+0xe2/0x100
+[<fa22415f>] ? sta_apply_parameters+0x49f/0x550 [mac80211]
+[<c1053895>] warn_slowpath_null+0x25/0x30
+[<fa22415f>] sta_apply_parameters+0x49f/0x550 [mac80211]
+[<fa20ad42>] ? sta_info_alloc+0x1c2/0x450 [mac80211]
+[<fa224623>] ieee80211_add_station+0xe3/0x160 [mac80211]
+[<c1876fe3>] nl80211_new_station+0x273/0x420
+[<c170f6d9>] genl_rcv_msg+0x219/0x3c0
+[<c170f4c0>] ? genl_rcv+0x30/0x30
+[<c170ee7e>] netlink_rcv_skb+0x8e/0xb0
+[<c170f4ac>] genl_rcv+0x1c/0x30
+[<c170e8aa>] netlink_unicast+0x13a/0x1d0
+[<c170ec18>] netlink_sendmsg+0x2d8/0x390
+[<c16c5acd>] sock_sendmsg+0x2d/0x40
+[<c16c6369>] ___sys_sendmsg+0x1d9/0x1e0
 
-But since struct 'ieee80211_hdr_3addr' is declared with an aligned
-keyword as:
+Fixing this by allowing TDLS setup request only when we have completed
+association.
 
-  struct ieee80211_hdr {
-  	__le16 frame_control;
-  	__le16 duration_id;
-  	u8 addr1[ETH_ALEN];
-  	u8 addr2[ETH_ALEN];
-  	u8 addr3[ETH_ALEN];
-  	__le16 seq_ctrl;
-  	u8 addr4[ETH_ALEN];
-  } __packed __aligned(2);
-
-Solve the ambiguity of placing aligned structure in a packed one by
-adding the aligned(2) attribute to struct 'action'.
-
-This removes the following warning (W=1):
-
-  net/mac80211/rx.c:234:2: warning: alignment 1 of 'struct <anonymous>' is less than 2 [-Wpacked-not-aligned]
-
-Cc: Johannes Berg <johannes.berg@intel.com>
-Suggested-by: Johannes Berg <johannes@sipsolutions.net>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: Balaji Pothunoori <bpothuno@codeaurora.org>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/cfg.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index d7a05a9944421..e946ee4f335bd 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -221,7 +221,7 @@ static void ieee80211_handle_mu_mimo_mon(struct ieee80211_sub_if_data *sdata,
- 		struct ieee80211_hdr_3addr hdr;
- 		u8 category;
- 		u8 action_code;
--	} __packed action;
-+	} __packed __aligned(2) action;
+diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+index c2abe9db1ea24..40c5102234679 100644
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1478,6 +1478,10 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
+ 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
+ 		sta->sta.tdls = true;
  
- 	if (!sdata)
- 		return;
++	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
++	    !sdata->u.mgd.associated)
++		return -EINVAL;
++
+ 	err = sta_apply_parameters(local, sta, params);
+ 	if (err) {
+ 		sta_info_free(local, sta);
 -- 
 2.19.1
 
