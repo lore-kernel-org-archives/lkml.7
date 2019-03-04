@@ -2,52 +2,55 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ECFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FEBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51E820836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163FB20836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688163;
-	bh=bEFp7G5ee5yXFJQMrmFPXY4YJEHznxy5UBc9ttfLwKU=;
+	s=default; t=1551688172;
+	bh=Y3Ufj1ah8Xv8Nm/KJ044h5UlPJvb7VpMLT8ffnmYcT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vKr3zEpXNpc3RnLZjgbFR4/hd97USqBwsMZjBX/P0GjJAHm9fe9nP1c1AIZ2S21qD
-	 G4dt6eIMAWfhEC1L4EdSmdHsDPW6VaNqFG0+2lI/CHapyqYXtasPfCaDgGcBj5i2LR
-	 GOOK4qchl7KApCTtyGbfT0CON3WLZOWN7mwp/eqU=
+	b=pXRSZ7jFHCGnm0lpnOaUMdXElik2HjHFenLUsapFrR3Ax8N3d4i1xTWbXbo5bBXch
+	 Fwt21XDQyw47Fnsilv0ZziOM2kAOVPkCA9s604pUUnR1fJjFC2hVbqZfuTLc+B90hy
+	 RYrjJIskpthPZMkfS5DbRDtscGmYeiIHyoGOmap0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfCDI3W (ORCPT
+        id S1727568AbfCDI3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:29:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55710 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:29:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727524AbfCDI3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:29:19 -0500
+        id S1727560AbfCDI31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:29:27 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0660A20836;
-        Mon,  4 Mar 2019 08:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88E5F20823;
+        Mon,  4 Mar 2019 08:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688158;
-        bh=bEFp7G5ee5yXFJQMrmFPXY4YJEHznxy5UBc9ttfLwKU=;
+        s=default; t=1551688167;
+        bh=Y3Ufj1ah8Xv8Nm/KJ044h5UlPJvb7VpMLT8ffnmYcT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q4+Hkg1iHxN93n/Ynj55geLWohXNd2EKKRRB5ev5n7RY2Sjvf3IzRpKMDHaJYMCJi
-         UslM9ttcFE8wNNLfG/1nHhPRfxrOxdKTD5ivM+TG6oldonuRt27nZ/1HMaKaoA0JIr
-         6L1vFSlum+IOv1XU7ORfbWdFwjDN32koeWB7bVbY=
+        b=suONsUt6941HliknTah1K1BgJAluwWH466QiF9XuLyRgHD+G3eqr5FpPJG7aFFpkA
+         GZTU3DSBqB+kyykPGqMQPc5elnP1a+Lierw5rKg5Mbvz2zhsjVe/sI8hmAi9+xzNzy
+         1i04R/iUfJT7dqDVHzVMZqUbkiiqrJfSHx5fzjhk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 18/78] selftests: rtc: rtctest: add alarm test on minute boundary
-Date:   Mon,  4 Mar 2019 09:22:01 +0100
-Message-Id: <20190304081626.315972549@linuxfoundation.org>
+        stable@vger.kernel.org, Xie Yongji <xieyongji@baidu.com>,
+        Zhang Yu <zhangyu31@baidu.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 38/78] locking/rwsem: Fix (possible) missed wakeup
+Date:   Mon,  4 Mar 2019 09:22:21 +0100
+Message-Id: <20190304081627.203548879@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -66,131 +69,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7b3027728f4d4f6763f4d7e771acfc9424cdd0e6 ]
+[ Upstream commit e158488be27b157802753a59b336142dc0eb0380 ]
 
-Unfortunately, some RTC don't have a second resolution for alarm so also
-test for alarm on a minute boundary.
+Because wake_q_add() can imply an immediate wakeup (cmpxchg failure
+case), we must not rely on the wakeup being delayed. However, commit:
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Shuah Khan <shuah@kernel.org>
+  e38513905eea ("locking/rwsem: Rework zeroing reader waiter->task")
+
+relies on exactly that behaviour in that the wakeup must not happen
+until after we clear waiter->task.
+
+[ peterz: Added changelog. ]
+
+Signed-off-by: Xie Yongji <xieyongji@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: e38513905eea ("locking/rwsem: Rework zeroing reader waiter->task")
+Link: https://lkml.kernel.org/r/1543495830-2644-1-git-send-email-xieyongji@baidu.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/rtc/rtctest.c | 102 ++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+ kernel/locking/rwsem-xadd.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
-index dea4e3d6d9e18..b2065536d4075 100644
---- a/tools/testing/selftests/rtc/rtctest.c
-+++ b/tools/testing/selftests/rtc/rtctest.c
-@@ -211,6 +211,108 @@ TEST_F(rtc, alarm_wkalm_set) {
- 	ASSERT_EQ(new, secs);
- }
+diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
+index 3064c50e181e1..ef909357b84e1 100644
+--- a/kernel/locking/rwsem-xadd.c
++++ b/kernel/locking/rwsem-xadd.c
+@@ -198,15 +198,22 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ 		woken++;
+ 		tsk = waiter->task;
  
-+TEST_F(rtc, alarm_alm_set_minute) {
-+	struct timeval tv = { .tv_sec = 62 };
-+	unsigned long data;
-+	struct rtc_time tm;
-+	fd_set readfds;
-+	time_t secs, new;
-+	int rc;
-+
-+	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
-+	ASSERT_NE(-1, rc);
-+
-+	secs = timegm((struct tm *)&tm) + 60 - tm.tm_sec;
-+	gmtime_r(&secs, (struct tm *)&tm);
-+
-+	rc = ioctl(self->fd, RTC_ALM_SET, &tm);
-+	if (rc == -1) {
-+		ASSERT_EQ(EINVAL, errno);
-+		TH_LOG("skip alarms are not supported.");
-+		return;
-+	}
-+
-+	rc = ioctl(self->fd, RTC_ALM_READ, &tm);
-+	ASSERT_NE(-1, rc);
-+
-+	TH_LOG("Alarm time now set to %02d:%02d:%02d.",
-+	       tm.tm_hour, tm.tm_min, tm.tm_sec);
-+
-+	/* Enable alarm interrupts */
-+	rc = ioctl(self->fd, RTC_AIE_ON, 0);
-+	ASSERT_NE(-1, rc);
-+
-+	FD_ZERO(&readfds);
-+	FD_SET(self->fd, &readfds);
-+
-+	rc = select(self->fd + 1, &readfds, NULL, NULL, &tv);
-+	ASSERT_NE(-1, rc);
-+	ASSERT_NE(0, rc);
-+
-+	/* Disable alarm interrupts */
-+	rc = ioctl(self->fd, RTC_AIE_OFF, 0);
-+	ASSERT_NE(-1, rc);
-+
-+	rc = read(self->fd, &data, sizeof(unsigned long));
-+	ASSERT_NE(-1, rc);
-+	TH_LOG("data: %lx", data);
-+
-+	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
-+	ASSERT_NE(-1, rc);
-+
-+	new = timegm((struct tm *)&tm);
-+	ASSERT_EQ(new, secs);
-+}
-+
-+TEST_F(rtc, alarm_wkalm_set_minute) {
-+	struct timeval tv = { .tv_sec = 62 };
-+	struct rtc_wkalrm alarm = { 0 };
-+	struct rtc_time tm;
-+	unsigned long data;
-+	fd_set readfds;
-+	time_t secs, new;
-+	int rc;
-+
-+	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
-+	ASSERT_NE(-1, rc);
-+
-+	secs = timegm((struct tm *)&alarm.time) + 60 - alarm.time.tm_sec;
-+	gmtime_r(&secs, (struct tm *)&alarm.time);
-+
-+	alarm.enabled = 1;
-+
-+	rc = ioctl(self->fd, RTC_WKALM_SET, &alarm);
-+	if (rc == -1) {
-+		ASSERT_EQ(EINVAL, errno);
-+		TH_LOG("skip alarms are not supported.");
-+		return;
-+	}
-+
-+	rc = ioctl(self->fd, RTC_WKALM_RD, &alarm);
-+	ASSERT_NE(-1, rc);
-+
-+	TH_LOG("Alarm time now set to %02d/%02d/%02d %02d:%02d:%02d.",
-+	       alarm.time.tm_mday, alarm.time.tm_mon + 1,
-+	       alarm.time.tm_year + 1900, alarm.time.tm_hour,
-+	       alarm.time.tm_min, alarm.time.tm_sec);
-+
-+	FD_ZERO(&readfds);
-+	FD_SET(self->fd, &readfds);
-+
-+	rc = select(self->fd + 1, &readfds, NULL, NULL, &tv);
-+	ASSERT_NE(-1, rc);
-+	ASSERT_NE(0, rc);
-+
-+	rc = read(self->fd, &data, sizeof(unsigned long));
-+	ASSERT_NE(-1, rc);
-+
-+	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
-+	ASSERT_NE(-1, rc);
-+
-+	new = timegm((struct tm *)&tm);
-+	ASSERT_EQ(new, secs);
-+}
-+
- static void __attribute__((constructor))
- __constructor_order_last(void)
- {
+-		wake_q_add(wake_q, tsk);
++		get_task_struct(tsk);
+ 		list_del(&waiter->list);
+ 		/*
+-		 * Ensure that the last operation is setting the reader
++		 * Ensure calling get_task_struct() before setting the reader
+ 		 * waiter to nil such that rwsem_down_read_failed() cannot
+ 		 * race with do_exit() by always holding a reference count
+ 		 * to the task to wakeup.
+ 		 */
+ 		smp_store_release(&waiter->task, NULL);
++		/*
++		 * Ensure issuing the wakeup (either by us or someone else)
++		 * after setting the reader waiter to nil.
++		 */
++		wake_q_add(wake_q, tsk);
++		/* wake_q_add() already take the task ref */
++		put_task_struct(tsk);
+ 	}
+ 
+ 	adjustment = woken * RWSEM_ACTIVE_READ_BIAS - adjustment;
 -- 
 2.19.1
 
