@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC351C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E5DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9977D2146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D23208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688297;
-	bh=nOHZIZxlFgkstYyXw3LWOWmyz97E/eqa8M6Fzue3v0M=;
+	s=default; t=1551688300;
+	bh=ZSu+Sipp7MeDbCpNyvvEXUMQ70CJAlj2Ioeh2mVdYxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oSMROMYqq0hNJWi4hMGAM3txbypbOMOZCFmSwTPsGCRAOuH8JBJ2rGtQVDttFKmNa
-	 g9RbssJw+hpmtgoh5BCZ7BTSTxwtsyrKClv+DSxdjoRgXDbyREg0crspDR4vkcY5Fg
-	 UwZhA6m7uHCW0MXdgqrpwC4R7l+PG6mlEAdOruEE=
+	b=uJZujm44+6K9s1SOmRPSnBFzGH4+/+uQzL9bqNa/zjdK/KA3bavkSdG3OgfZ0nk0Q
+	 bnmbHFymbfYlRpH+xZS8W5drzrlEEYJoynGFEfd7sy2MU8k+Ni+t6U0iCD+IpfJK3N
+	 huTTq+Fa71LXsszY8A6Utr0g/CLwVDsKgAkRutz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfCDIbf (ORCPT
+        id S1727968AbfCDIbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:31:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33618 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:31:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbfCDIbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:31:32 -0500
+        id S1727436AbfCDIbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:31:35 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A415820836;
-        Mon,  4 Mar 2019 08:31:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 674B1208E4;
+        Mon,  4 Mar 2019 08:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688292;
-        bh=nOHZIZxlFgkstYyXw3LWOWmyz97E/eqa8M6Fzue3v0M=;
+        s=default; t=1551688294;
+        bh=ZSu+Sipp7MeDbCpNyvvEXUMQ70CJAlj2Ioeh2mVdYxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mJFhHv5kYgL81/Bc1YD2FC+DNj9EoPdQhioTQWdzt5ZoeV2dFqqq2VjVB1h9xsAhs
-         6NT+SlVfhCS79YzGumXqqrHuUMXfVLqAoDIWxbfxqqdFtsguGq4cxx2eB4dNOkCTvK
-         SlWEw7t+mJon9mgHxtSFo/2jfavbefbR+AS8wCPo=
+        b=vPgJytVJTxtFLdaOP5Np1gBKYmmTinLQjhgCJJ2L69ZQoKSbXAOjnD9MtBnfHf6B7
+         ruo4TciplifChGS1MlhCW2rJ6uWzYtfzJzHdnyMCNOlIrFNuco2QjTYB4FKpm+rY89
+         8ZGvCBPkmxAjZ5TmOw3kYjl4BMqmVEjS4zGX10oM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 4.19 77/78] MIPS: eBPF: Fix icache flush end address
-Date:   Mon,  4 Mar 2019 09:23:00 +0100
-Message-Id: <20190304081629.043690167@linuxfoundation.org>
+        stable@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>
+Subject: [PATCH 4.19 78/78] x86/uaccess: Dont leak the AC flag into __put_user() value evaluation
+Date:   Mon,  4 Mar 2019 09:23:01 +0100
+Message-Id: <20190304081629.092506413@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -70,55 +70,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paul Burton <paul.burton@mips.com>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit d1a2930d8a992fb6ac2529449f81a0056e1b98d1 upstream.
+commit 2a418cf3f5f1caf911af288e978d61c9844b0695 upstream.
 
-The MIPS eBPF JIT calls flush_icache_range() in order to ensure the
-icache observes the code that we just wrote. Unfortunately it gets the
-end address calculation wrong due to some bad pointer arithmetic.
+When calling __put_user(foo(), ptr), the __put_user() macro would call
+foo() in between __uaccess_begin() and __uaccess_end().  If that code
+were buggy, then those bugs would be run without SMAP protection.
 
-The struct jit_ctx target field is of type pointer to u32, and as such
-adding one to it will increment the address being pointed to by 4 bytes.
-Therefore in order to find the address of the end of the code we simply
-need to add the number of 4 byte instructions emitted, but we mistakenly
-add the number of instructions multiplied by 4. This results in the call
-to flush_icache_range() operating on a memory region 4x larger than
-intended, which is always wasteful and can cause crashes if we overrun
-into an unmapped page.
+Fortunately, there seem to be few instances of the problem in the
+kernel. Nevertheless, __put_user() should be fixed to avoid doing this.
+Therefore, evaluate __put_user()'s argument before setting AC.
 
-Fix this by correcting the pointer arithmetic to remove the bogus
-multiplication, and use braces to remove the need for a set of brackets
-whilst also making it obvious that the target field is a pointer.
+This issue was noticed when an objtool hack by Peter Zijlstra complained
+about genregs_get() and I compared the assembly output to the C source.
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: b6bd53f9c4e8 ("MIPS: Add missing file for eBPF JIT.")
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.13+
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+ [ bp: Massage commit message and fixed up whitespace. ]
+
+Fixes: 11f1a4b9755f ("x86: reorganize SMAP handling in user space accesses")
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190225125231.845656645@infradead.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/net/ebpf_jit.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/uaccess.h |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/arch/mips/net/ebpf_jit.c
-+++ b/arch/mips/net/ebpf_jit.c
-@@ -1818,7 +1818,7 @@ struct bpf_prog *bpf_int_jit_compile(str
- 
- 	/* Update the icache */
- 	flush_icache_range((unsigned long)ctx.target,
--			   (unsigned long)(ctx.target + ctx.idx * sizeof(u32)));
-+			   (unsigned long)&ctx.target[ctx.idx]);
- 
- 	if (bpf_jit_enable > 1)
- 		/* Dump JIT code */
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -293,8 +293,7 @@ do {									\
+ 		__put_user_asm(x, ptr, retval, "l", "k", "ir", errret);	\
+ 		break;							\
+ 	case 8:								\
+-		__put_user_asm_u64((__typeof__(*ptr))(x), ptr, retval,	\
+-				   errret);				\
++		__put_user_asm_u64(x, ptr, retval, errret);		\
+ 		break;							\
+ 	default:							\
+ 		__put_user_bad();					\
+@@ -440,8 +439,10 @@ do {									\
+ #define __put_user_nocheck(x, ptr, size)			\
+ ({								\
+ 	int __pu_err;						\
++	__typeof__(*(ptr)) __pu_val;				\
++	__pu_val = x;						\
+ 	__uaccess_begin();					\
+-	__put_user_size((x), (ptr), (size), __pu_err, -EFAULT);	\
++	__put_user_size(__pu_val, (ptr), (size), __pu_err, -EFAULT);\
+ 	__uaccess_end();					\
+ 	__builtin_expect(__pu_err, 0);				\
+ })
 
 
