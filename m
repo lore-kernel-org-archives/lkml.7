@@ -2,154 +2,126 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CD0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E25FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D761F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A0D20835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:27:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TY1g7/9P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EP5B99ge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfCDL0n (ORCPT
+        id S1726470AbfCDL13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 06:26:43 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16246 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfCDL0n (ORCPT
+        Mon, 4 Mar 2019 06:27:29 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41881 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfCDL13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 06:26:43 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c7d0b690000>; Mon, 04 Mar 2019 03:26:33 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 04 Mar 2019 03:26:41 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 04 Mar 2019 03:26:41 -0800
-Received: from [10.24.242.33] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Mar
- 2019 11:26:35 +0000
-Subject: Re: [PATCH] of: reserved_mem: disable kmemleak scan on removed memory
- blocks
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Will Deacon <will.deacon@arm.com>, <matt@codeblueprint.co.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <talho@nvidia.com>,
-        Stephen Warren <swarren@nvidia.com>, <vdumpa@nvidia.com>,
-        <snikam@nvidia.com>, Mike Rapoport <rppt@linux.vnet.ibm.com>
-References: <1541747389-28544-1-git-send-email-prpatel@nvidia.com>
- <CAL_JsqKOH0SQRXuRW5Y5dmWeUTSxhf2Nmn_0uNLeKXFPRc549Q@mail.gmail.com>
- <39d4161b-bcc0-0f1c-e7a3-5ad552fae724@nvidia.com>
- <CANMq1KDU=rTbwBdej+E0=RaWGQCOJrtKo_0W6kc=EdomNrKzog@mail.gmail.com>
- <CANMq1KDr7QdP3oJR2+w4mh_Gf3JUUNmV8h_KffBRjN7kA3P4EA@mail.gmail.com>
-From:   Prateek Patel <prpatel@nvidia.com>
-Message-ID: <b2127d64-0ea1-d7b1-6cf7-fb63e2a140db@nvidia.com>
-Date:   Mon, 4 Mar 2019 16:56:24 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 4 Mar 2019 06:27:29 -0500
+Received: by mail-wr1-f66.google.com with SMTP id n2so5117216wrw.8;
+        Mon, 04 Mar 2019 03:27:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hfkvHciGTCF/pgtOcV4srOUnmhn4Bpy49tSPJIowWr0=;
+        b=EP5B99ge8gAJGhnAwzhDSCNJfFFillYWGwc8ksAqLsizAnYG769rzeGMGiB/l6huSi
+         xCOjpohuFFP+S/j3lSY2BJjmH9GOyrkqOicR0x6BkFNAvKFsPfsZp8EgVecctULmKl+P
+         ziuuEMqCclgpH8ExMg+38CohTAHLkwUDGLXZJVh0O62WjH9jQ2GA0OEk9D2ZHydzlIi8
+         0IgmWpxYjlbr732tonA/7aS1C/90OmMeJkJDoCFEEPza/GXGvFloiWe2BOmqFAox60RN
+         PSn6mcoXWL/rp69OhdTyO4U6bPBuTocRu1em3V/DIq09dIhnfL4ekJG+C9EZO/1YgGxK
+         p4jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hfkvHciGTCF/pgtOcV4srOUnmhn4Bpy49tSPJIowWr0=;
+        b=nPbKpEFG8QF59MnLr+xXKviLps4rsmGHUYKUPJgU3ruIKHYE8cHFBTrssNsONW1uW3
+         NDoKscU2fmH3EcoFLMn7aC1ZDbMct+Wg2jwTIijorzPW/fcIIntpyMrsgtWqKGO0MgHq
+         UcGk5kTe6FRjUoSODwrgITDKK0kmm4aat2ysmdKeEctv8WmX6DapVjkvgh5M9NqRRKC/
+         ae9s/zeDPCaQIkPt0wtqndt9F+/9Efrx3AZbrfm0T0Bda3m56D9RyYIwxQoHx0UGvKOK
+         qWqjkn9wNUq0z6xEUdbUn4ur6Kr4jKiHkPMIX5jqdzs4PA7sr7kE90bWkAbBR5M1dFGs
+         WVbA==
+X-Gm-Message-State: APjAAAWABLdRnjvwxJDomgRxM164ACUYrzt2CxplhPL69PrFLNwsVkgd
+        6/En9m7raas2IfJ75hGBBxo=
+X-Google-Smtp-Source: APXvYqz1A33rg86/BfH+Efxi7Lq18z96y1e3MGE9BqHu/FiCphjkD1pIu85smoe6GFC85mmtE4e0Rw==
+X-Received: by 2002:adf:8251:: with SMTP id 75mr13227356wrb.112.1551698847479;
+        Mon, 04 Mar 2019 03:27:27 -0800 (PST)
+Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
+        by smtp.gmail.com with ESMTPSA id a82sm17966023wmf.11.2019.03.04.03.27.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 Mar 2019 03:27:26 -0800 (PST)
+Date:   Mon, 4 Mar 2019 12:27:25 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: pwm: pwm-bcm-kona: update macros to remove
+ braces around numbers
+Message-ID: <20190304112725.GB7617@ulmo>
+References: <1547667682-5095-1-git-send-email-sheetal.tigadoli@broadcom.com>
 MIME-Version: 1.0
-In-Reply-To: <CANMq1KDr7QdP3oJR2+w4mh_Gf3JUUNmV8h_KffBRjN7kA3P4EA@mail.gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551698793; bh=pa+/UtAHpTbSiS4249G2BVZAn/eGzsdv4R8WNC6QNiw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=TY1g7/9Po8x0W3x1ai3JmA2Ns/p/yDOM4XZLbadYN2zJAPmp0TolfqgZutbOJDxN4
-         SnIbUNQbcWWj338+w8tJSUC0xi55iiwzG+RqHFWIBqov3gZl4tX6NQcIAQrWpkHSQH
-         jXjfnp61b05TQ4OY1IxN6rpPRyPYrZEZ+JuYycrBkEPeUBlWWSw5/PZ8wKhSL5RaOQ
-         BMziRAW2MviyObSVxFbO8czDJbMrjzqtpfsCLipF21iIxRFKeSvo5TfnlCF0cePU2t
-         E2rS2ORZZceDenos1BthrLE9Q4pQ1Ti5hU1XQutVvtI45zAcUL6XRTSEdjFOzEV76U
-         TMHdbZbJfr5pQ==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
+Content-Disposition: inline
+In-Reply-To: <1547667682-5095-1-git-send-email-sheetal.tigadoli@broadcom.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 3/4/2019 4:04 PM, Nicolas Boichat wrote:
-> On Wed, Feb 13, 2019 at 4:56 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->> On Tue, Jan 22, 2019 at 4:46 PM Prateek Patel <prpatel@nvidia.com> wrote:
->>>
->>> On 11/10/2018 2:58 AM, Rob Herring wrote:
->>>> On Fri, Nov 9, 2018 at 1:09 AM Prateek Patel <prpatel@nvidia.com> wrote:
->>>>> From: Sri Krishna chowdary <schowdary@nvidia.com>
->>>>>
->>>>> Memory reserved with "nomap" DT property in of_reserved_mem.c
->>>>> removes the memory block. The removed memory blocks don't have
->>>>> VA to PA mapping created in kernel page table. Kmemleak scan on
->>>>> removed memory blocks is causing page faults and leading to
->>>>> kernel panic. So, Disable kmemleak scan on the removed memory
->>>>> blocks.
->>>>>
->>>>> Following is the observed crash log:
->>>>> [  154.846370] Unable to handle kernel paging request at virtual address ffffffc070a00000
->>>>> <1>[  154.846576] Mem abort info:
->>>>> <1>[  154.846635]   Exception class = DABT (current EL), IL = 32 bits
->>>>> <1>[  154.846737]   SET = 0, FnV = 0
->>>>> <1>[  154.846796]   EA = 0, S1PTW = 0
->>>>> <1>[  154.846859] Data abort info:
->>>>> <1>[  154.846913]   ISV = 0, ISS = 0x00000006
->>>>> <1>[  154.846983]   CM = 0, WnR = 0
->>>>> <1>[  154.847053] swapper pgtable: 4k pages, 39-bit VAs, pgd = ffffff8009df7000
->>>>> <1>[  154.847228] [ffffffc070a00000] *pgd=000000087fff5803, *pud=000000087fff5803, *pmd=0000000000000000
->>>>> <0>[  154.847408] Internal error: Oops: 96000006 [#1] PREEMPT SMP
->>>>> <4>[  154.847511] Modules linked in: nvs_led_test nvs_bmi160 nvs_cm3218 nvs_bh1730fvc nvi_bmpX80 nvi_ak89xx nvi_mpu cdc_acm uas lr388k7_ts imx268 imx318 imx204 imx274 imx185 lc898212 ov23850 ov10823 ov9281 ov5693 tc358840 pca9570 nvs snd_soc_tegra_machine_driver_mobile lp855x_bl spidev input_cfboost pwm_tegra tegra_cryptodev tegra_se_nvhost tegra_se_elp tegra_se ghash_ce sha2_ce sha1_ce aes_ce_ccm cryptd nvgpu cpufreq_userspace snd_soc_tegra186_alt_dspk snd_soc_tegra186_alt_asrc snd_soc_tegra186_alt_arad snd_soc_tegra210_alt_ope snd_soc_tegra210_alt_mvc snd_soc_tegra210_alt_dmic snd_soc_tegra210_alt_amx snd_soc_tegra210_alt_adx snd_soc_tegra210_alt_afc snd_soc_tegra210_alt_mixer snd_soc_tegra210_alt_i2s snd_soc_tegra210_alt_sfc snd_soc_tegra210_alt_adsp snd_soc_tegra210_alt_admaif snd_soc_tegra210_alt_xbar
->>>>> <4>[  154.882606]  snd_soc_tegra_alt_utils snd_hda_tegra
->>>>> <4>[  154.888133] CPU: 2 PID: 8079 Comm: sh Not tainted 4.14.53-tegra-05132-g9c33465 #2
->>>>> <4>[  154.895983] Hardware name: e3360_1099 (DT)
->>>>> <4>[  154.900447] task: ffffffc7d62dda00 task.stack: ffffff800e2b0000
->>>>> <4>[  154.906502] PC is at scan_block+0x7c/0x148
->>>>> <4>[  154.911234] LR is at scan_block+0x78/0x148
->>>>> <4>[  154.915689] pc : [<ffffff8008271724>] lr : [<ffffff8008271720>] pstate: 804000c9
->>>>> <4>[  154.923290] sp : ffffff800e2b3b80
->>>>> <4>[  154.927228] x29: ffffff800e2b3b80 x28: ffffffc7d62dda00
->>>>> <4>[  154.932999] x27: ffffff8009aaa000 x26: ffffffc070c00000
->>>>> <4>[  154.938769] x25: 00000000000000c0 x24: ffffff8009d90608
->>>>> <4>[  154.944287] x23: ffffffc7dc6c6000 x22: ffffff8009d90000
->>>>> <4>[  154.950320] x21: ffffff8009aeb320 x20: ffffffc070a00ff9
->>>>> <4>[  154.955919] x19: ffffffc070a00000 x18: 00000000bec4c3f2
->>>>> <4>[  154.961438] x17: 0000002224777924 x16: ffffff80080bb0e0
->>>>> <4>[  154.967124] x15: 0000000000000000 x14: 0000000000000f75
->>>>> <4>[  154.973069] x13: 000fffffffffffff x12: ffffffbf1e9f4240
->>>>> <4>[  154.978670] x11: 0000000000000040 x10: 0000000000000ad0
->>>>> <4>[  154.984107] x9 : ffffff800e2b3ab0 x8 : ffffffc7d62de530
->>>>> <4>[  154.989958] x7 : 0000000780000000 x6 : 0000000000000018
->>>>> <4>[  154.995645] x5 : 0000000000000000 x4 : 0000000000000000
->>>>> <4>[  155.001245] x3 : ffffff8009aaa000 x2 : 00000047f6712000
->>>>> <4>[  155.006846] x1 : ffffffc7d1ae6900 x0 : 0000000000000000
-> [snip]
->
-> For reference, there is another patch series that fixes the problem,
-> by Mike Rapoport (https://lore.kernel.org/patchwork/patch/1041790/),
-> already in linux-next (through mmotm):
-> 42c9c0ac24393c of: fix kmemleak crash caused by imbalance in early
-> memory reservation
-> 48ec6d51f7d3f2 of: fix parameters order for call to memblock_find_in_range()
->
-> If anyone is interested, I backported these patch to our 4.19 tree
-> here, and they fix the issue:
-> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1496707
-> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1496708
->
-> Thanks,
+--l76fUT7nc3MelDdI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Nicolas for the reference,
+On Thu, Jan 17, 2019 at 01:11:22AM +0530, Sheetal Tigadoli wrote:
+> update macros to remove braces around numbers
+>=20
+> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+> ---
+>  drivers/pwm/pwm-bcm-kona.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 
-My acked-by is already present in the patch 
-(https://lore.kernel.org/patchwork/patch/1041790/)
+Applied, thanks.
 
+I dropped the "drivers: " prefix and shortened pwm-bcm-kona to bcm-kona
+because PWM is already implied by the "pwm: " prefix. I've also replaced
+the commit message with a real rationale rather than repeating the
+subject.
+
+Please keep this in mind for future patches.
+
+Thierry
+
+--l76fUT7nc3MelDdI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlx9C50ACgkQ3SOs138+
+s6EL9hAAhKtTMkUPAPy7awGRhP1g8u0EYPLDrMEyywa89xRkDOZDaxZjMnlOGFwU
+oBNBaK1Ibq+dT3C8beWcXXcviRemaMdJiX9zgbwOPpiWMDtl0TfMyDYC5Q3wGYHi
+/RVfQhGl26Z2D96irtXH3dmNzbHib+P1yE2kkEihd1YLwqOdNXvx3+eRMH0bHOpJ
+VcGHlO0JH2OOBjOf6rvsn6W94mHd6wqQl4agnCHIHVq8IPnki0/QgO/rCrvOwDtl
+n3BXqu5bUZs7Vn5jFsLyjO1zbDBw/Ms2SXrtySCJfOUiFiaVbsKElwgN7l5dVj9M
+2m9lJiaJHvOqLATD2IjY9pCHZcvJLMtB7R7zPX6eYlmwpEUCNndR2Dtz5WTGyvQJ
+O0PRWjNldCLJBcLNdGNvDOHXnWQeIvGKXhzr6rcNEB+1X2NLJWv5S7lBqRdaqAnK
+E6QQRByImLIvjYefom3H/aH4dkeEkg0GeeNXoeRn424rEGaNVIL9dlUl56ht6IWX
+n369nH8z+ysmAwEhcaOFx+R2DTfHeKvDb4TrJqHwypZCCyUaIadkTJw8QixkCWIM
+djLSmkTuDsYNz1hh75lImUbcIFAWUlEQthxrAenaZa/PCC1+vnH9hEhgsfnQQBnx
+kNJGuN/EuOUtlRkCuzUo7w7GXLA9ujB/2wwS4qgVCAJ2UI+Ipsk=
+=P3qZ
+-----END PGP SIGNATURE-----
+
+--l76fUT7nc3MelDdI--
