@@ -2,180 +2,134 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B81C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A151C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FE82070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494E72054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:18:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="oNkqm2Rw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5aouGOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbfCDSSQ (ORCPT
+        id S1727736AbfCDSSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:18:16 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:37784 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCDSSP (ORCPT
+        Mon, 4 Mar 2019 13:18:52 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45001 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbfCDSSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:18:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1551723491; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vcimyzTYq93+Ws1z9JT7iEZu19RErpFY3H0Q4NoTYU0=;
-        b=oNkqm2Rw2GhCIBirxZNnkm1HpGHP2fouvlDlDIW2LD2m9bbPUoSR6yznIJ4KPoboDO7GA9
-        0h+SXFc6ElVj7uI53nMAyWDcnzq48pQz/45KimDlI6tk993EHkAlsX4DW7vX34X0bI3PVp
-        tk9s42mHMnKU8PDb8keZep1LVDn39iM=
-Date:   Mon, 04 Mar 2019 19:18:00 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v10 13/27] pwm: jz4740: Use clocks from TCU driver
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Message-Id: <1551723480.4932.1@crapouillou.net>
-In-Reply-To: <20190304123003.GE9040@ulmo>
-References: <20190302233413.14813-1-paul@crapouillou.net>
-        <20190302233413.14813-14-paul@crapouillou.net> <20190304123003.GE9040@ulmo>
+        Mon, 4 Mar 2019 13:18:51 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w2so6620240wrt.11;
+        Mon, 04 Mar 2019 10:18:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vV+EaqFjH5ne+abJs+foKJw4TQKfXvD1njkQg2X5ybU=;
+        b=R5aouGOZdajmgTKkQRVCEMvoh+EcFych9fjflh8ZP9pjd5873OnBQx0ygudD/RHwMp
+         2qhtCQRARNNxuWXJHHUgYqkN6WD8IGXFDgP2OnjcncPQfxhyV4vs7tHHdjcw8urEzGih
+         bE2zmUewS6kaj3kvY5yCamMWz/+sDqKOUaWop7vgJeqQamS83JUkRWsAy2iIW9VZqp6j
+         kLiPE91jEUQ666ljqtnU/8+QsxY3+pVhHUEUxPO1BQFrGshResHpRdBeIPHpUSecAVtm
+         6xOmQvHFv3tcgE2A7F05745nrLmzEEfKZN5I2s7JiJ12sXeEq6br+Sbu5+UXsBJX9dh2
+         ylUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vV+EaqFjH5ne+abJs+foKJw4TQKfXvD1njkQg2X5ybU=;
+        b=NQJDmTs2MUc18E6iEd8e9loOZ1DIA1pTkoJxdjiEchQ3wvbznld94ZtMzBTUBJLVae
+         DVadHMvcIzpDapzTGmqQrBvxBoT0ayjWKB4+41OFAZZ4vj4xsv4aW+t012xJGD2oQRZK
+         C1D1UxYDs2HTFVunEsZaPsI2Xk3qM0fCdHPqJ8UuSOgHP8PQUelYbDalp3AY1XiazTtg
+         gtq4SOW6O9M/EVTwgtka/QC30Vx5FxBDt/DVMDZETelxY0NdK9Ku9o45jJBXDP+KuT/e
+         8q6goZIdFlg/N9llpbVwX5iLCE0ZKU+b56OOpYUYKyKwc0uGo1wMmQ9ZMo10HVns5tBp
+         x1Bg==
+X-Gm-Message-State: APjAAAVL+HI4a9m+U4OjIGpwuyNmz6d+iXlulkAjcZKbKd28/Z6yUMaP
+        sQYx914hoZJDiD7i1Ej00JA=
+X-Google-Smtp-Source: APXvYqxn/1XVpVbh6RbXpASMjJnDtgTYlFShiXSDbJFoEd090S+jX/f/CzuIwcwptZoo7rEiSbcmVg==
+X-Received: by 2002:adf:e8c7:: with SMTP id k7mr14006827wrn.298.1551723529487;
+        Mon, 04 Mar 2019 10:18:49 -0800 (PST)
+Received: from ?IPv6:2003:ea:8bf1:e200:d8e4:889a:5ed6:37cb? (p200300EA8BF1E200D8E4889A5ED637CB.dip0.t-ipconnect.de. [2003:ea:8bf1:e200:d8e4:889a:5ed6:37cb])
+        by smtp.googlemail.com with ESMTPSA id w3sm6943760wrl.22.2019.03.04.10.18.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 10:18:48 -0800 (PST)
+Subject: Re: [PATCH -next] net: dsa: mv88e6xxx: Fix build warning when
+ CONFIG_NET_DSA_LEGACY is n
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <1551703381-52115-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20190304132617.GB26378@lunn.ch>
+ <bc528808-2ad5-90ae-4bc0-afa47a7c4f42@hisilicon.com>
+ <20190304145710.GA17097@lunn.ch>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <74a6581e-f761-0fb0-3200-e82b7ac88e75@gmail.com>
+Date:   Mon, 4 Mar 2019 19:18:41 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+In-Reply-To: <20190304145710.GA17097@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Mon, Mar 4, 2019 at 1:30 PM, Thierry Reding 
-<thierry.reding@gmail.com> wrote:
-> On Sat, Mar 02, 2019 at 08:33:59PM -0300, Paul Cercueil wrote:
->>  The ingenic-timer "TCU" driver provides us with clocks, that can be
->>  (un)gated, reparented or reclocked from devicetree, instead of 
->> having
->>  these settings hardcoded in this driver.
->> 
->>  While this driver is devicetree-compatible, it is never (as of now)
->>  probed from devicetree, so this change does not introduce a ABI 
->> problem
->>  with current devicetree files.
->> 
->>  Note that the "select REGMAP" has been dropped because it's
->>  already enabled by the "select INGENIC_TIMER".
->> 
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net 
->> <mailto:paul@crapouillou.net>>
->>  Tested-by: Mathieu Malaterre <malat@debian.org 
->> <mailto:malat@debian.org>>
->>  Tested-by: Artur Rojek <contact@artur-rojek.eu 
->> <mailto:contact@artur-rojek.eu>>
->>  ---
->> 
->>  Notes:
->>           v9: New patch
->> 
->>           v10: Explain in commit message why "select REGMAP" was 
->> dropped
->> 
->>   drivers/pwm/Kconfig      |  3 ++-
->>   drivers/pwm/pwm-jz4740.c | 39 
->> ++++++++++++++++++++++++++-------------
->>   2 files changed, 28 insertions(+), 14 deletions(-)
->> 
->>  diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->>  index ace8ea4b6247..4e201e970509 100644
->>  --- a/drivers/pwm/Kconfig
->>  +++ b/drivers/pwm/Kconfig
->>  @@ -204,7 +204,8 @@ config PWM_IMX
->>   config PWM_JZ4740
->>   	tristate "Ingenic JZ47xx PWM support"
->>   	depends on MACH_INGENIC
->>  -	select REGMAP
->>  +	depends on COMMON_CLK
->>  +	select INGENIC_TIMER
+On 04.03.2019 15:57, Andrew Lunn wrote:
+> On Mon, Mar 04, 2019 at 10:16:08PM +0800, Zhangshaokun wrote:
+>> Hi Andrew,
+>>
+>> On 2019/3/4 21:26, Andrew Lunn wrote:
+>>> On Mon, Mar 04, 2019 at 08:43:01PM +0800, Shaokun Zhang wrote:
+>>>> When CONFIG_NET_DSA_LEGACY is n, there is a GCC bulid warning:
+>>>> drivers/net/dsa/mv88e6xxx/chip.c:4623:13: warning: ‘mv88e6xxx_ports_cmode_init’ defined but not used [-Wunused-function]
+>>>> static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
+>>>> Let's fix it.
+>>>
+>>> Hi Shaokun, Heiner
+>>>
+>>> Although this fixes the warning, i suspect there i something wrong
+>>> with the original patch adding mv88e6390x_port_set_cmode(). It should
+>>> also be used without CONFIG_NET_DSA_LEGACY.
+>>
+>> I checked the commit-id 2a93c1a3651f ("net: dsa: Allow compiling out legacy support") by Florian.
+>> Do you mean that CONFIG_NET_DSA_LEGACY shall be removed completely? :-)
 > 
-> Okay... sounds like this would be okay. I'm assuming you go through 
-> that
-> extra step of selecting REGMAP in the prior patch and dropping it here
-> again so that you keep the series bisectible?
-
-Yes, exactly.
-
->>   	help
->>   	  Generic PWM framework driver for Ingenic JZ47xx based
->>   	  machines.
->>  diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
->>  index 8dfac5ffd71c..c6136bd4434b 100644
->>  --- a/drivers/pwm/pwm-jz4740.c
->>  +++ b/drivers/pwm/pwm-jz4740.c
->>  @@ -28,7 +28,7 @@
->> 
->>   struct jz4740_pwm_chip {
->>   	struct pwm_chip chip;
->>  -	struct clk *clk;
->>  +	struct clk *clks[NUM_PWM];
->>   	struct regmap *map;
->>   };
->> 
->>  @@ -40,6 +40,9 @@ static inline struct jz4740_pwm_chip 
->> *to_jz4740(struct pwm_chip *chip)
->>   static int jz4740_pwm_request(struct pwm_chip *chip, struct 
->> pwm_device *pwm)
->>   {
->>   	struct jz4740_pwm_chip *jz = to_jz4740(chip);
->>  +	struct clk *clk;
->>  +	char clk_name[16];
->>  +	int ret;
->> 
->>   	/*
->>   	 * Timers 0 and 1 are used for system tasks, so they are 
->> unavailable
->>  @@ -48,16 +51,29 @@ static int jz4740_pwm_request(struct pwm_chip 
->> *chip, struct pwm_device *pwm)
->>   	if (pwm->hwpwm < 2)
->>   		return -EBUSY;
->> 
->>  -	regmap_write(jz->map, TCU_REG_TSCR, BIT(pwm->hwpwm));
->>  +	snprintf(clk_name, sizeof(clk_name), "timer%u", pwm->hwpwm);
->> 
->>  +	clk = clk_get(chip->dev, clk_name);
->>  +	if (IS_ERR(clk))
->>  +		return PTR_ERR(clk);
->>  +
->>  +	ret = clk_prepare_enable(clk);
->>  +	if (ret) {
->>  +		clk_put(clk);
->>  +		return ret;
->>  +	}
->>  +
->>  +	jz->clks[pwm->hwpwm] = clk;
->>   	return 0;
->>   }
+> No, i suspect mv88e6390x_ports_cmode_init() is being called from the
+> wrong place, or needs to be called from a second location.
 > 
-> Since you're already using ->request(), why not add a per-PWM 
-> structure
-> that tracks the clock? There are a number of other PWMs that already 
-> do
-> something similar. You can use pwm_{set,get}_chip_data() to associate
-> chip-specific extra data with a PWM.
+> [Goes and looks at the code]
 > 
-> Thierry
+> Yes, it should also be called in mv88e6xxx_probe(). I would call it
+> just after the call to mv88e6xxx_detect(), so that it is the same as
+> in mv88e6xxx_drv_probe().
+> 
+> There are two ways DSA drivers can be probed. The legacy way, which is
+> optional, and is slowly getting removed, and the current way. Heiner
+> is new to DSA and probably missed that, and only handled the legacy
+> probe method. I also missed checking when i reviewed to patch :-(
+> 
+Right, I missed that, will submit a fix.
 
-Good idea.
+I just saw that the Kconfig entry comment for NET_DSA_LEGACY says:
+"This feature is scheduled for removal in 4.17."
 
--Paul
+Was forgotten to remove it or did somebody scream loud enough
+"But I depend on it" ?
 
+>    Andrew
+> 
+Heiner
+> 
+> 
+> 
 
