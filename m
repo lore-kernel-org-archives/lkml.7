@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138D3C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC52C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D633C20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E1020823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688770;
-	bh=OchKs05qdkjClU5WOqV2loJQE5fk7oCW8/Jw1KUXi7U=;
+	s=default; t=1551688772;
+	bh=1y4ayOV0q3V0jBtsI2qzd7COkPHDMPnyw3NVR1WFN5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qgzodcgIlFzTCIIYN2lqiBVSmiARYiUuOtHVSmCYdiGkLl2qOR8QKfar+9KRyvdXI
-	 OG5FdRZBh3EL5/4B2TqkJbTWJiZI0ArYN8eOPp7Vv7I3jM0ePQ5kN0Mw1KOyel7uda
-	 TevEJs2VKAVd/hbIsw5W5eWla8uY8PrIIViRak0Q=
+	b=HcdZSYYtV/AxrbDctc0nscLRN4utuesNtk9cv/o0sJ8vgYExzB2bgUirifhd5Ds1r
+	 rB4TzMGDZWCEgjL4YGXq+I/5o6xnMwlGmVKqo8Cnr/hjetxQiR2TCUm0OhyAeOSZGW
+	 tx6GsiNcuoeNFEtNARDKQlNjrCq+81uLzaEojmsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbfCDIdo (ORCPT
+        id S1727819AbfCDIja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:33:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38648 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:39:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbfCDIdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:33:41 -0500
+        id S1728012AbfCDIdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:33:44 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3531420836;
-        Mon,  4 Mar 2019 08:33:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B2820836;
+        Mon,  4 Mar 2019 08:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688420;
-        bh=OchKs05qdkjClU5WOqV2loJQE5fk7oCW8/Jw1KUXi7U=;
+        s=default; t=1551688423;
+        bh=1y4ayOV0q3V0jBtsI2qzd7COkPHDMPnyw3NVR1WFN5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KwvTTRtca2K/p9goGruKcpfJ76HB6RuAiLMFZtuHQhzKeIPDMH9fwDNByAPdynASb
-         6pxxnKUnfoKjfZFIsEirVp9M3MCQ5MXyBWHEe4dTnUjviZVQqDVv2dsFLkWuRY/RHo
-         ljHFst4Q2i3z6muIn2OZPhpQWtvpdgNrNMYBzuzo=
+        b=beCDxFTr7655mNfo3C7VmZO/Q3RhVM7V8wFLjSISUS4DmKKMlp4ns1S9rc3ofRtRa
+         4N5v4Q2omZFv0oyJTDpQwM/YzBI8KZwdreLnBEDaf/AX9e4LzT2z2XSmGFwec/4TwA
+         XarCt0aRb/qrBh9bgRbuBUDcXsa4FCX7dNlR1CmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kenneth Feng <kenneth.feng@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Zeng Tao <prime.zeng@hisilicon.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 39/88] drm/amd/powerplay: OD setting fix on Vega10
-Date:   Mon,  4 Mar 2019 09:22:22 +0100
-Message-Id: <20190304081632.126851076@linuxfoundation.org>
+Subject: [PATCH 4.20 13/88] usb: dwc3: gadget: Fix the uninitialized link_state when udc starts
+Date:   Mon,  4 Mar 2019 09:21:56 +0100
+Message-Id: <20190304081631.091905298@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -67,59 +66,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6d87dc97eb3341de3f7b1efa3156cb0e014f4a96 ]
+[ Upstream commit 88b1bb1f3b88e0bf20b05d543a53a5b99bd7ceb6 ]
 
-gfxclk for OD setting is limited to 1980M for non-acg
-ASICs of Vega10
+Currently the link_state is uninitialized and the default value is 0(U0)
+before the first time we start the udc, and after we start the udc then
+ stop the udc, the link_state will be undefined.
+We may have the following warnings if we start the udc again with
+an undefined link_state:
 
-Signed-off-by: Kenneth Feng <kenneth.feng@amd.com>
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+WARNING: CPU: 0 PID: 327 at drivers/usb/dwc3/gadget.c:294 dwc3_send_gadget_ep_cmd+0x304/0x308
+dwc3 100e0000.hidwc3_0: wakeup failed --> -22
+[...]
+Call Trace:
+[<c010f270>] (unwind_backtrace) from [<c010b3d8>] (show_stack+0x10/0x14)
+[<c010b3d8>] (show_stack) from [<c034a4dc>] (dump_stack+0x84/0x98)
+[<c034a4dc>] (dump_stack) from [<c0118000>] (__warn+0xe8/0x100)
+[<c0118000>] (__warn) from [<c0118050>](warn_slowpath_fmt+0x38/0x48)
+[<c0118050>] (warn_slowpath_fmt) from [<c0442ec0>](dwc3_send_gadget_ep_cmd+0x304/0x308)
+[<c0442ec0>] (dwc3_send_gadget_ep_cmd) from [<c0445e68>](dwc3_ep0_start_trans+0x48/0xf4)
+[<c0445e68>] (dwc3_ep0_start_trans) from [<c0446750>](dwc3_ep0_out_start+0x64/0x80)
+[<c0446750>] (dwc3_ep0_out_start) from [<c04451c0>](__dwc3_gadget_start+0x1e0/0x278)
+[<c04451c0>] (__dwc3_gadget_start) from [<c04452e0>](dwc3_gadget_start+0x88/0x10c)
+[<c04452e0>] (dwc3_gadget_start) from [<c045ee54>](udc_bind_to_driver+0x88/0xbc)
+[<c045ee54>] (udc_bind_to_driver) from [<c045f29c>](usb_gadget_probe_driver+0xf8/0x140)
+[<c045f29c>] (usb_gadget_probe_driver) from [<bf005424>](gadget_dev_desc_UDC_store+0xac/0xc4 [libcomposite])
+[<bf005424>] (gadget_dev_desc_UDC_store [libcomposite]) from[<c023d8e0>] (configfs_write_file+0xd4/0x160)
+[<c023d8e0>] (configfs_write_file) from [<c01d51e8>] (__vfs_write+0x1c/0x114)
+[<c01d51e8>] (__vfs_write) from [<c01d5ff4>] (vfs_write+0xa4/0x168)
+[<c01d5ff4>] (vfs_write) from [<c01d6d40>] (SyS_write+0x3c/0x90)
+[<c01d6d40>] (SyS_write) from [<c0107400>] (ret_fast_syscall+0x0/0x3c)
+
+Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../powerplay/hwmgr/vega10_processpptables.c  | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/gadget.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
-index b8747a5c9204d..99d596dc0e897 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
-@@ -32,6 +32,7 @@
- #include "vega10_pptable.h"
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index a7f6255606443..bf1cb91ef494d 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1873,6 +1873,7 @@ static int __dwc3_gadget_start(struct dwc3 *dwc)
  
- #define NUM_DSPCLK_LEVELS 8
-+#define VEGA10_ENGINECLOCK_HARDMAX 198000
+ 	/* begin to receive SETUP packets */
+ 	dwc->ep0state = EP0_SETUP_PHASE;
++	dwc->link_state = DWC3_LINK_STATE_SS_DIS;
+ 	dwc3_ep0_out_start(dwc);
  
- static void set_hw_cap(struct pp_hwmgr *hwmgr, bool enable,
- 		enum phm_platform_caps cap)
-@@ -258,7 +259,26 @@ static int init_over_drive_limits(
- 		struct pp_hwmgr *hwmgr,
- 		const ATOM_Vega10_POWERPLAYTABLE *powerplay_table)
- {
--	hwmgr->platform_descriptor.overdriveLimit.engineClock =
-+	const ATOM_Vega10_GFXCLK_Dependency_Table *gfxclk_dep_table =
-+			(const ATOM_Vega10_GFXCLK_Dependency_Table *)
-+			(((unsigned long) powerplay_table) +
-+			le16_to_cpu(powerplay_table->usGfxclkDependencyTableOffset));
-+	bool is_acg_enabled = false;
-+	ATOM_Vega10_GFXCLK_Dependency_Record_V2 *patom_record_v2;
-+
-+	if (gfxclk_dep_table->ucRevId == 1) {
-+		patom_record_v2 =
-+			(ATOM_Vega10_GFXCLK_Dependency_Record_V2 *)gfxclk_dep_table->entries;
-+		is_acg_enabled =
-+			(bool)patom_record_v2[gfxclk_dep_table->ucNumEntries-1].ucACGEnable;
-+	}
-+
-+	if (powerplay_table->ulMaxODEngineClock > VEGA10_ENGINECLOCK_HARDMAX &&
-+		!is_acg_enabled)
-+		hwmgr->platform_descriptor.overdriveLimit.engineClock =
-+			VEGA10_ENGINECLOCK_HARDMAX;
-+	else
-+		hwmgr->platform_descriptor.overdriveLimit.engineClock =
- 			le32_to_cpu(powerplay_table->ulMaxODEngineClock);
- 	hwmgr->platform_descriptor.overdriveLimit.memoryClock =
- 			le32_to_cpu(powerplay_table->ulMaxODMemoryClock);
+ 	dwc3_gadget_enable_irq(dwc);
 -- 
 2.19.1
 
