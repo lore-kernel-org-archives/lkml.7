@@ -2,171 +2,141 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A480C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D73FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D0620643
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC1D2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wSulFOfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfCDLku (ORCPT
+        id S1726471AbfCDLou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 06:40:50 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:64660 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfCDLku (ORCPT
+        Mon, 4 Mar 2019 06:44:50 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44154 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbfCDLou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 06:40:50 -0500
-Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x24Belmv046174;
-        Mon, 4 Mar 2019 20:40:47 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp);
- Mon, 04 Mar 2019 20:40:47 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126126163036.bbtec.net [126.126.163.36])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x24BegDK046097
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 4 Mar 2019 20:40:47 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [RFC PATCH] printk: Introduce "store now but print later" prefix.
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-References: <1550896930-12324-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190304032202.GD23578@jagdpanzerIV>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
-Date:   Mon, 4 Mar 2019 20:40:37 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Mon, 4 Mar 2019 06:44:50 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x24BiQvX057296;
+        Mon, 4 Mar 2019 05:44:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1551699866;
+        bh=V3kgIuSWnEvtfqPkX44tTeFC5VFR47wme3mhOcRjuJ0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wSulFOfeZd4hL5M1jIjig3ysJwYczQ30m64fyUzqC/eAx5K8F/7MV8RzMxMAUqgrv
+         I2UVcCWmeaMpSWO4sOQKh5nJKjNZjsE7jkJUn0jlCLK9bgQTJW+Tsfsq2xQiKNi1WN
+         X43eRiDeXThNUtxyhXcHwLKDVVi8uyUxsHeRcGoE=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x24BiQUU105510
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 Mar 2019 05:44:26 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 4
+ Mar 2019 05:44:24 -0600
+Received: from dlep32.itg.ti.com (157.170.170.100) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Mon, 4 Mar 2019 05:44:24 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x24BiMPt017639;
+        Mon, 4 Mar 2019 05:44:23 -0600
+Subject: Re: [PATCH v2] ASoC: tlv320aic3x: fix reset gpio reference counting
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20190227151733.4419-1-philipp.puschmann@emlix.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <860b91b9-0131-323b-fa62-f37ff2c9d23b@ti.com>
+Date:   Mon, 4 Mar 2019 13:45:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190304032202.GD23578@jagdpanzerIV>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190227151733.4419-1-philipp.puschmann@emlix.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/03/04 12:22, Sergey Senozhatsky wrote:
-> On (02/23/19 13:42), Tetsuo Handa wrote:
-> [..]
->> This patch tries to address "don't lockup the system" with minimal risk of
->> failing to "print out printk() messages", by allowing printk() callers to
->> tell printk() "store $body_text_lines lines into logbuf but start actual
->> printing after $trailer_text_line line is stored into logbuf". This patch
->> is different from existing printk_deferred(), for printk_deferred() is
->> intended for scheduler/timekeeping use only. Moreover, what this patch
->> wants to do is "do not try to print out printk() messages as soon as
->> possible", for accumulated stalling period cannot be decreased if
->> printk_deferred() from e.g. dump_tasks() from out_of_memory() immediately
->> prints out the messages. The point of this patch is to defer the stalling
->> duration to after leaving the critical section.
-> 
-> We can export printk deferred, I guess; but I'm not sure if it's going
-> to be easy to switch OOM to printk_deferred - there are lots of direct
-> printk callers: warn-s, dump_stacks, etc; it might even be simpler to
-> start re-directing OOM printouts to printk_safe buffer.
 
-I confirmed that printk_deferred() is not suitable for this purpose, for
-it suddenly stalls for seconds at random locations flushing pending output
-accumulated by printk_deferred(). Stalling inside critical section (e.g.
-RCU read lock held) is what I don't like.
+
+On 27/02/2019 17.17, Philipp Puschmann wrote:
+> This patch fixes a bug that prevents freeing the reset gpio on unloading
+> the module.
+> 
+> aic3x_i2c_probe is called when loading the module and it calls list_add
+> with a probably uninitialized list entry aic3x->list (next = prev = NULL)).
+> So even if list_del is called it does nothing and in the end the gpio_reset
+> is not freed. Then a repeated module probing fails silently because
+> gpio_request fails.
+> 
+> When moving INIT_LIST_HEAD to aic3x_i2c_probe we also have to move
+> list_del to aic3x_i2c_remove because aic3x_remove may be called
+> multiple times without aic3x_i2c_remove being called which leads to
+> a NULL pointer dereference.
+
+Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
 > 
-> This is a bit of a strange issue, to be honest. If OOM prints too
-> many messages then we might want to do some work on the OOM side.
+> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+> ---
+> Changes in v2: Fix typo in title tlv320aix3x -> tlv320aic3x
 > 
-> But, to begin with, can you give an example of such a lockup? Just
-> to understand how big/real the problem is.
+>  sound/soc/codecs/tlv320aic3x.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> What is that "OOM critical section" which printk can stall?
-
-dump_task() is the OOM critical section from RCU perspective.
-We can minimize RCU critical section by just getting a refcount on possible
-candidates and then printing information and putting that refcount after
-leaving RCU critical section.
-
-----------
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f9b43c9..4781439 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1182,6 +1182,7 @@ struct task_struct {
- #ifdef CONFIG_MMU
- 	struct task_struct		*oom_reaper_list;
- #endif
-+	struct list_head		oom_candidate_list;
- #ifdef CONFIG_VMAP_STACK
- 	struct vm_struct		*stack_vm_area;
- #endif
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 26ea863..6750b18 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -399,6 +399,7 @@ static void dump_tasks(struct mem_cgroup *memcg, const nodemask_t *nodemask)
- {
- 	struct task_struct *p;
- 	struct task_struct *task;
-+	LIST_HEAD(candidates);
- 
- 	pr_info("Tasks state (memory values in pages):\n");
- 	pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
-@@ -407,6 +408,11 @@ static void dump_tasks(struct mem_cgroup *memcg, const nodemask_t *nodemask)
- 		if (oom_unkillable_task(p, memcg, nodemask))
- 			continue;
- 
-+		get_task_struct(p);
-+		list_add_tail(&p->oom_candidate_list, &candidates);
-+	}
-+	rcu_read_unlock();
-+	list_for_each_entry(p, &candidates, oom_candidate_list) {
- 		task = find_lock_task_mm(p);
- 		if (!task) {
- 			/*
-@@ -425,7 +431,8 @@ static void dump_tasks(struct mem_cgroup *memcg, const nodemask_t *nodemask)
- 			task->signal->oom_score_adj, task->comm);
- 		task_unlock(task);
- 	}
--	rcu_read_unlock();
-+	list_for_each_entry_safe(p, task, &candidates, oom_candidate_list)
-+		put_task_struct(p);
- }
- 
- static void dump_oom_summary(struct oom_control *oc, struct task_struct *victim)
-----------
-
-But almost all out_of_memory() (where oom_lock mutex is held) is the OOM critical
-section from memory reclaiming perspective, for we cannot reclaim memory (and
-other concurrently allocating threads are needlessly wasting CPU time) unless
-SIGKILL is sent after all printk() completed. Therefore, despite out_of_memory()
-prints a lot of messages, it is expected to complete quickly as if it is an interrupt
-handler. We could disable preemption inside out_of_memory() if all printk() with
-oom_lock mutex held is deferrable until oom_lock mutex is released.
-
+> diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
+> index 6aa0edf8c5ef..cea3ebecdb12 100644
+> --- a/sound/soc/codecs/tlv320aic3x.c
+> +++ b/sound/soc/codecs/tlv320aic3x.c
+> @@ -1609,7 +1609,6 @@ static int aic3x_probe(struct snd_soc_component *component)
+>  	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
+>  	int ret, i;
+>  
+> -	INIT_LIST_HEAD(&aic3x->list);
+>  	aic3x->component = component;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++) {
+> @@ -1692,7 +1691,6 @@ static void aic3x_remove(struct snd_soc_component *component)
+>  	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
+>  	int i;
+>  
+> -	list_del(&aic3x->list);
+>  	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++)
+>  		regulator_unregister_notifier(aic3x->supplies[i].consumer,
+>  					      &aic3x->disable_nb[i].nb);
+> @@ -1890,6 +1888,7 @@ static int aic3x_i2c_probe(struct i2c_client *i2c,
+>  	if (ret != 0)
+>  		goto err_gpio;
+>  
+> +	INIT_LIST_HEAD(&aic3x->list);
+>  	list_add(&aic3x->list, &reset_list);
+>  
+>  	return 0;
+> @@ -1906,6 +1905,8 @@ static int aic3x_i2c_remove(struct i2c_client *client)
+>  {
+>  	struct aic3x_priv *aic3x = i2c_get_clientdata(client);
+>  
+> +	list_del(&aic3x->list);
+> +
+>  	if (gpio_is_valid(aic3x->gpio_reset) &&
+>  	    !aic3x_is_shared_reset(aic3x)) {
+>  		gpio_set_value(aic3x->gpio_reset, 0);
 > 
-> [..]
->> The possibility of failing to store all printk() messages to logbuf might
->> be increased by using "async" printk(). But since we have a lot of RAM
->> nowadays, allocating large logbuf enough to hold the entire SysRq-t output
->> using log_buf_len= kernel command line parameter won't be difficult.
-> 
-> Note, logbuf size is limited - 2G. Might be not as large as people
-> would want it to be.
 
-Are "machines which want to use 2GB logbuf" hosting millions of threads such
-that even 2GB is not enough for holding SysRq-t output? If yes, then I guess
-that tasklist traversal under RCU read lock would lockup even without printk().
+- Péter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
