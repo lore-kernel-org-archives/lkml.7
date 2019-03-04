@@ -4,141 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9174CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A32C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0310C2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961862075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="sddgU2aR"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="N8cidJa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfCDNLA (ORCPT
+        id S1726803AbfCDNLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:11:00 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40984 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfCDNK7 (ORCPT
+        Mon, 4 Mar 2019 08:11:19 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43582 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfCDNLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:10:59 -0500
-Received: by mail-pf1-f193.google.com with SMTP id d25so3000733pfn.8
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 05:10:59 -0800 (PST)
+        Mon, 4 Mar 2019 08:11:18 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l11so3082911pgq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 05:11:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=i+uJsIH9vVyOV5Tk28y23klIfxYci68lEiPowiIlx3E=;
-        b=sddgU2aRtJ2zYqDNcOUZzUk3M/eU6C/dPxzI/yarFrk5YXqKXTlkj9+V6Ej1gWGl5S
-         0Y00j8efBGBPNa38B9fwNBevPWrW4bRQn/oqwpPZl2mEOu7VDUlL2/NWR7kGcp/8ayOP
-         N0WFcpQyvsiYdHTddw0D88Z+w4eW1PNS5EVEa0YW+pdelsy46Nk5okbwiL+l56G1rLRp
-         29tRCiS9Q840vVihdOrq3YC8lfunYrw3EvcMZxWUyrk195VG02sK+7l5nCxai5WslBOr
-         mtj248N5e1raENfLI4cliIs/J1DmKCHFfC8aLYUNyNcKMYIUGSOidPjGzeTm7Brf/ltu
-         pTEA==
+        bh=0mz8hR/PW+TukAB77KzXlPfAhIvUFB5c4A/6VIejvxk=;
+        b=N8cidJa+RBPGSL+FpF/dmOQUuLI1A9v0JjWx4C3aX+xibANTueBDzft2D+a3cvEHdu
+         ZBbZPzSMgIcHuBY8biFXoXeJo85Qodj1KzLd5RsEJda/rl8QB/jcFckZllQYBND4I9db
+         IFXv1KogTJk3/eGYvqccL6WziE2Oz9xj/ktRqxWvtARahwOh22wYKWaseQ5OqyzEDi3q
+         z/To1xy/WMuTBcGyGNxUp5sWGAJS7/dBCr2ouCq0CXGRFzkC5eySyZKUYSVGNxzhnE6O
+         jV25/GxjZcafM4uCvTHkUX1FvmvZ8UHrqXoAdE6HGE/cfws19vborK26vWJlV9v2XcpR
+         OguQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i+uJsIH9vVyOV5Tk28y23klIfxYci68lEiPowiIlx3E=;
-        b=nmnrDjpDO0vN/WMi39oTbVV4AF4VYSv7ds50QZ/LpoeXdUwX3E6wmFkwYnHHOUCPLj
-         Y3bp14zgOLF0Kl7LGvcHMiT6eHqFpmvhyjwebTLmh9Ab2CVksXQwqVMRzjOoUsKQQNDG
-         wNs6bCIvsaEhevhIA8i4jXUMDOGc7N7az6ltHDJXLjiW2d6NrE0iPmFRy6ci98qOGlH2
-         jZQDwZxTwtjkEiow47Xe7V8w1pbkjxlaL0dNOtwbX5eQZv4OBmr22oM6zlBN20uuD3BH
-         Ryc6tcpy9n0JIJLnoMO2JD1sU5jVZAfbX2p6+cpnr8W/hCxNByn820MiNz7tq5ChHZv2
-         6RUw==
-X-Gm-Message-State: APjAAAXZ/XtXOIo6OU7gnN7l3NpQ14GEddZ15czUf3+Y09LAD+hjfEf/
-        lFSaYJK49bVuv2Cla+yULDukow==
-X-Google-Smtp-Source: APXvYqzHr+bDim597mkyh4dboXKIfYc7NYQ38mxKFIYbp8RFyPZGLKWjB/Fag6abhRGxq7b6vqo/4Q==
-X-Received: by 2002:a17:902:9a48:: with SMTP id x8mr13344843plv.98.1551705058879;
-        Mon, 04 Mar 2019 05:10:58 -0800 (PST)
-Received: from kshutemo-mobl1.localdomain ([134.134.139.83])
-        by smtp.gmail.com with ESMTPSA id 20sm8185700pgr.80.2019.03.04.05.10.57
+        bh=0mz8hR/PW+TukAB77KzXlPfAhIvUFB5c4A/6VIejvxk=;
+        b=iNYxsLFAiP0oUhpqe2vGgGWqWHKhqS4vaVQIi6BgzyyjUplnmGoUvslf+A1aGndT0U
+         jWCGolN74qhE381nswpH9nTNkEDVNMnTMFXSAG5bX6AyoYElBPXvJslk2w0S8FYvO53X
+         doXnQ5F9LOA0pKEI2v8swnygjwsFzWDFGg2CQ91LE7u94yLsp195sMZo7mvM9M+l/HCz
+         Q4kpVfFJ6hYw5uLkAHI2rriZFq1YGroE0XvH4IIjWY2XjNJwTELbyXO1Q43Z6oQDj4z/
+         2pPdoWNM6IFCTE4+RdDkG9qTgjXcPrLO1WDLmUw82ZwsyuRFoBwe2OjSh1ailDA9FLgO
+         tHRQ==
+X-Gm-Message-State: APjAAAU8+EMxBg8c1INr8O160jaPFH5Q1jwGTw+/M+w4iBndkknE1lYP
+        rg3/hgbPWaxLqMnAwuFIOKKzJw==
+X-Google-Smtp-Source: APXvYqzAWJ2k3k7IQ3uno9qOI/nhQp7EloMYKyZOcYGMZpgzNkdiqKlyXi09LWDL4bNZVmSSr/me3Q==
+X-Received: by 2002:a65:620f:: with SMTP id d15mr18557884pgv.112.1551705077993;
+        Mon, 04 Mar 2019 05:11:17 -0800 (PST)
+Received: from kshutemo-mobl1.localdomain ([192.55.54.40])
+        by smtp.gmail.com with ESMTPSA id v6sm8704444pgb.2.2019.03.04.05.11.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 05:10:58 -0800 (PST)
+        Mon, 04 Mar 2019 05:11:17 -0800 (PST)
 Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
-        id 72ACC300429; Mon,  4 Mar 2019 16:10:54 +0300 (+03)
-Date:   Mon, 4 Mar 2019 16:10:54 +0300
+        id 0B911300429; Mon,  4 Mar 2019 16:11:14 +0300 (+03)
+Date:   Mon, 4 Mar 2019 16:11:14 +0300
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 To:     Steven Price <steven.price@arm.com>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-mm@kvack.org,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will.deacon@arm.com>, linux-mm@kvack.org,
         "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        linux-c6x-dev@linux-c6x.org, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Salter <msalter@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH v3 03/34] arm: mm: Add p?d_large() definitions
-Message-ID: <20190304131054.goxpqsosolkg7khf@kshutemo-mobl1>
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v3 05/34] c6x: mm: Add p?d_large() definitions
+Message-ID: <20190304131113.qlf4bs7to77wm3ui@kshutemo-mobl1>
 References: <20190227170608.27963-1-steven.price@arm.com>
- <20190227170608.27963-4-steven.price@arm.com>
- <20190301214715.hyzy5tevvwgki4w5@kshutemo-mobl1>
- <974310a0-0114-9a0c-9041-4e0394c4b9aa@arm.com>
+ <20190227170608.27963-6-steven.price@arm.com>
+ <20190301214851.ucems2icwt64iabx@kshutemo-mobl1>
+ <f840db0e-bbb3-db7e-d883-79b5a630767c@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <974310a0-0114-9a0c-9041-4e0394c4b9aa@arm.com>
+In-Reply-To: <f840db0e-bbb3-db7e-d883-79b5a630767c@arm.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 11:56:13AM +0000, Steven Price wrote:
-> On 01/03/2019 21:47, Kirill A. Shutemov wrote:
-> > On Wed, Feb 27, 2019 at 05:05:37PM +0000, Steven Price wrote:
+On Mon, Mar 04, 2019 at 12:01:37PM +0000, Steven Price wrote:
+> On 01/03/2019 21:48, Kirill A. Shutemov wrote:
+> > On Wed, Feb 27, 2019 at 05:05:39PM +0000, Steven Price wrote:
 > >> walk_page_range() is going to be allowed to walk page tables other than
 > >> those of user space. For this it needs to know when it has reached a
-> >> 'leaf' entry in the page tables. This information will be provided by the
+> >> 'leaf' entry in the page tables. This information is provided by the
 > >> p?d_large() functions/macros.
 > >>
-> >> For arm, we already provide most p?d_large() macros. Add a stub for PUD
-> >> as we don't have huge pages at that level.
+> >> For c6x there's no MMU so there's never a large page, so just add stubs.
 > > 
-> > We do not have PUD for 2- and 3-level paging. Macros from generic header
-> > should cover it, shouldn't it?
+> > Other option would be to provide the stubs via generic headers form !MMU.
 > > 
 > 
-> I'm not sure of the reasoning behind this, but levels are folded in a
-> slightly strange way. arm/include/asm/pgtable.h defines
-> __ARCH_USE_5LEVEL_HACK which means:
+> I agree that could be done, but equally the definitions of
+> p?d_present/p?d_none/p?d_bad etc could be provided by a generic header
+> for !MMU but currently are not. It makes sense to keep the p?d_large
+> definitions next to the others.
 > 
-> PGD has 2048 (2-level) or 4 (3-level) entries which are always
-> considered 'present' (pgd_present() returns 1 defined in
-> asm-generic/pgtables-nop4d-hack.h).
-> 
-> P4D has 1 entry which is always present (see asm-generic/5level-fixup.h)
-> 
-> PUD has 1 entry (see asm-generic/pgtable-nop4d-hack.h). This is always
-> present for 2-level, and present only if the first level of real page
-> table is present with a 3-level.
-> 
-> PMD/PTE are as you might expect.
-> 
-> So in terms of tables which are more than one entry you have PGD,
-> (optionally) PMD, PTE. But the levels which actually read the table
-> entries are PUD, PMD, PTE.
-> 
-> This means that the corresponding p?d_large() macros are needed for
-> PUD/PMD as that is where the actual entries are read. The asm-generic
-> files provide the definitions for PGD/P4D.
+> I'd prefer to stick with a (relatively) small change here - it's already
+> quite a long series! But this is certainly something that could be
+> tidied up for !MMU archs.
 
-Makes sense.
-
-Only additional thing worth nothing that ARM in 2-level paging case folds
-PMD manually without help from generic headres.
-
-I'm partly responsible for the mess with folding. Sorry that you need to
-explain this to :P
+Agreed.
 
 -- 
  Kirill A. Shutemov
