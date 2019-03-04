@@ -2,77 +2,129 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4883FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E15C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1511F20657
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:27:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jjjozfw6"
+	by mail.kernel.org (Postfix) with ESMTP id 8BCB020657
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:32:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551713539;
+	bh=9LA78jFKqLuj0A3b4AFtYkf2IODbBqKzsN9DmPj8Cew=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=s+pC6iZNAdtsywZrpiYNucAXAyqfYXtC71i2NlQ3OJ0qMZQ58NO9qjt5ZyxMpuD0E
+	 FvT162B0EZtlXH9v1SbIpwGc9ec2pBpcQjtQKiTMRbfTHigtR6MhFaN1RaBMZMSlnf
+	 XCJC7iSR3qQNtvDqDOAtUpgBXtJvxndfJnitvdes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfCDP1u (ORCPT
+        id S1727024AbfCDPcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 10:27:50 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:45294 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfCDP1t (ORCPT
+        Mon, 4 Mar 2019 10:32:18 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54814 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfCDPcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 10:27:49 -0500
+        Mon, 4 Mar 2019 10:32:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kZQuhXmk8qRb0qhXSfsRFvygnvQmGOk//z4N4EZvYrU=; b=jjjozfw6nonSqAWJWm6pqjYvI
-        WxZ4tkFZWMK6eaFfNhB7Xaxur/ON3qvs73Z0hc/hK0W4j6/8SoQHT/9GiB1fgC41RWfYxO16q+P5K
-        CWsf2w2R4xstB7gR+LgHNZ5aSqM6Z5I2LLuqXd/aaPLtFVE5UckJTnIVohuqmdDtgszmLa15JxIGX
-        5icQTEy3yp2+GGdW4IwBv10v4VH+DCir7TJ2cTsnsYbOYmg50uiaSfDxAC7zRPijCI/DUpuHjKXCr
-        jvxZnobNL3MmeMeHnFoZfANQStM88RtiiQH3HUqXy7y5LubSp7NmT84akp7wO9rsQj3Zs/AG/Q5wc
-        AiXbUNXdw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h0pVD-0005qo-0T; Mon, 04 Mar 2019 15:27:39 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9BA3B20288BAA; Mon,  4 Mar 2019 16:27:36 +0100 (CET)
-Date:   Mon, 4 Mar 2019 16:27:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [PATCH v4 02/17] drivers/net/b44: Align pwol_mask to unsigned
- long for better performance
-Message-ID: <20190304152736.GN32494@hirez.programming.kicks-ass.net>
-References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
- <1551494711-213533-3-git-send-email-fenghua.yu@intel.com>
- <20190304100022.GA32477@hirez.programming.kicks-ass.net>
- <20190304144526.GB230561@romley-ivt3.sc.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304144526.GB230561@romley-ivt3.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=jiVWuDT/GQk6Wlskt4mJQBm18D9PbJVEOjeeu06zrvA=; b=QQiKmKF8z2Fu
+        OqRXoxgR4g7Cv6ehq6FQ1qK90axTBNL/iSHZgUFBNgHIyMFiiPdfkL2Lu1L3TTyVHj0G+SMgnqlTi
+        s1OpzVzRQ+FVokFLF3ELK9FkKqf8hk/ghtdBGXPWf11c3bre1yMBK1xtEtBqJtuEZivDhUCdIPBCV
+        ghgB0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h0pZW-000307-GW; Mon, 04 Mar 2019 15:32:06 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 4F5D71128814; Mon,  4 Mar 2019 15:32:05 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Curtis Malainey <cujomalainey@google.com>,
+        linux-tegra@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Applied "ASoC: soc-core: Fix probe deferral following prelink failure" to the asoc tree
+In-Reply-To:  <1551706274-22571-1-git-send-email-jonathanh@nvidia.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190304153205.4F5D71128814@debutante.sirena.org.uk>
+Date:   Mon,  4 Mar 2019 15:32:05 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 06:45:26AM -0800, Fenghua Yu wrote:
+The patch
 
-> Sure. I will change the patch to your code. And add
-> Signed-off-by: Peter Zijlstra <peterz@infradead.org>
-> to this patch?
+   ASoC: soc-core: Fix probe deferral following prelink failure
 
-Sure..
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From c342febcde452f817cbd3896dc40953ab17c309d Mon Sep 17 00:00:00 2001
+From: Jonathan Hunter <jonathanh@nvidia.com>
+Date: Mon, 4 Mar 2019 13:31:14 +0000
+Subject: [PATCH] ASoC: soc-core: Fix probe deferral following prelink failure
+
+Commit 78a24e10cd94 ("ASoC: soc-core: clear platform pointers on error")
+re-worked the clean-up of any platform pointers that may have been
+initialised by the function snd_soc_init_platform(). This commit missed
+one error path where if any of the prelinks for a soundcard failed to
+initialise, then these platform pointers would not be cleaned-up. This
+then prevents the soundcard from being initialised following a probe
+deferral when any of the soundcard prelinks cannot be found.
+
+Fix this by ensuring that soc_cleanup_platform() is called when
+initialising the soundcard prelinks fails.
+
+Fixes: 78a24e10cd94 ("ASoC: soc-core: clear platform pointers on error")
+
+Signed-off-by: Jonathan Hunter <jonathanh@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/soc-core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 93d316d5bf8e..5a5764dba147 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -2797,6 +2797,7 @@ int snd_soc_register_card(struct snd_soc_card *card)
+ 
+ 		ret = soc_init_dai_link(card, link);
+ 		if (ret) {
++			soc_cleanup_platform(card);
+ 			dev_err(card->dev, "ASoC: failed to init link %s\n",
+ 				link->name);
+ 			mutex_unlock(&client_mutex);
+-- 
+2.20.1
+
