@@ -2,141 +2,104 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D73FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEE2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC1D2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:44:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wSulFOfe"
+	by mail.kernel.org (Postfix) with ESMTP id 9E5082070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbfCDLou (ORCPT
+        id S1726498AbfCDLpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 06:44:50 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44154 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbfCDLou (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 06:44:50 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x24BiQvX057296;
-        Mon, 4 Mar 2019 05:44:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1551699866;
-        bh=V3kgIuSWnEvtfqPkX44tTeFC5VFR47wme3mhOcRjuJ0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wSulFOfeZd4hL5M1jIjig3ysJwYczQ30m64fyUzqC/eAx5K8F/7MV8RzMxMAUqgrv
-         I2UVcCWmeaMpSWO4sOQKh5nJKjNZjsE7jkJUn0jlCLK9bgQTJW+Tsfsq2xQiKNi1WN
-         X43eRiDeXThNUtxyhXcHwLKDVVi8uyUxsHeRcGoE=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x24BiQUU105510
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Mar 2019 05:44:26 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 4
- Mar 2019 05:44:24 -0600
-Received: from dlep32.itg.ti.com (157.170.170.100) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Mon, 4 Mar 2019 05:44:24 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x24BiMPt017639;
-        Mon, 4 Mar 2019 05:44:23 -0600
-Subject: Re: [PATCH v2] ASoC: tlv320aic3x: fix reset gpio reference counting
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <20190227151733.4419-1-philipp.puschmann@emlix.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <860b91b9-0131-323b-fa62-f37ff2c9d23b@ti.com>
-Date:   Mon, 4 Mar 2019 13:45:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 4 Mar 2019 06:45:21 -0500
+Received: from mga11.intel.com ([192.55.52.93]:16060 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbfCDLpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 06:45:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 03:45:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,439,1544515200"; 
+   d="scan'208";a="151851798"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.172])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2019 03:45:19 -0800
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [PATCH] log2: make is_power_of_2() integer constant expression when possible
+In-Reply-To: <201903041956.eLAFVhUK%fengguang.wu@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190301125207.30973-1-jani.nikula@intel.com> <201903041956.eLAFVhUK%fengguang.wu@intel.com>
+Date:   Mon, 04 Mar 2019 13:47:17 +0200
+Message-ID: <87o96qn9oa.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190227151733.4419-1-philipp.puschmann@emlix.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 04 Mar 2019, kbuild test robot <lkp@intel.com> wrote:
+> Hi Jani,
+>
+> I love your patch! Perhaps something to improve:
+>
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v5.0 next-20190301]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Jani-Nikula/log2-make-is_power_of_2-integer-constant-expression-when-possible/20190304-153529
+> config: microblaze-mmu_defconfig (attached as .config)
+> compiler: microblaze-linux-gcc (GCC) 8.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=8.2.0 make.cross ARCH=microblaze 
+>
+> All warnings (new ones prefixed by >>):
+>
+>>> arch/microblaze/mm/pgtable.c:185: warning: "is_power_of_2" redefined
+>     #define is_power_of_2(x) ((x) != 0 && (((x) & ((x) - 1)) == 0))
+
+Oh wow, a copy of is_power_of_2() introduced 10 years ago, apparently
+unused since its introduction.
 
 
-On 27/02/2019 17.17, Philipp Puschmann wrote:
-> This patch fixes a bug that prevents freeing the reset gpio on unloading
-> the module.
-> 
-> aic3x_i2c_probe is called when loading the module and it calls list_add
-> with a probably uninitialized list entry aic3x->list (next = prev = NULL)).
-> So even if list_del is called it does nothing and in the end the gpio_reset
-> is not freed. Then a repeated module probing fails silently because
-> gpio_request fails.
-> 
-> When moving INIT_LIST_HEAD to aic3x_i2c_probe we also have to move
-> list_del to aic3x_i2c_remove because aic3x_remove may be called
-> multiple times without aic3x_i2c_remove being called which leads to
-> a NULL pointer dereference.
+BR,
+Jani.
 
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-> 
-> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+>     
+>    In file included from include/linux/kernel.h:12,
+>                     from arch/microblaze/mm/pgtable.c:30:
+>    include/linux/log2.h:56: note: this is the location of the previous definition
+>     #define is_power_of_2(n) \
+>     
+>
+> vim +/is_power_of_2 +185 arch/microblaze/mm/pgtable.c
+>
+> 15902bf6 Michal Simek 2009-05-26  183  
+> 15902bf6 Michal Simek 2009-05-26  184  /* is x a power of 2? */
+> 15902bf6 Michal Simek 2009-05-26 @185  #define is_power_of_2(x)	((x) != 0 && (((x) & ((x) - 1)) == 0))
+> 15902bf6 Michal Simek 2009-05-26  186  
+>
+> :::::: The code at line 185 was first introduced by commit
+> :::::: 15902bf63c8332946e5a1f48a72e3ae22874b11b microblaze_mmu_v2: Page table - ioremap - pgtable.c/h, section update
+>
+> :::::: TO: Michal Simek <monstr@monstr.eu>
+> :::::: CC: Michal Simek <monstr@monstr.eu>
+>
 > ---
-> Changes in v2: Fix typo in title tlv320aix3x -> tlv320aic3x
-> 
->  sound/soc/codecs/tlv320aic3x.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
-> index 6aa0edf8c5ef..cea3ebecdb12 100644
-> --- a/sound/soc/codecs/tlv320aic3x.c
-> +++ b/sound/soc/codecs/tlv320aic3x.c
-> @@ -1609,7 +1609,6 @@ static int aic3x_probe(struct snd_soc_component *component)
->  	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
->  	int ret, i;
->  
-> -	INIT_LIST_HEAD(&aic3x->list);
->  	aic3x->component = component;
->  
->  	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++) {
-> @@ -1692,7 +1691,6 @@ static void aic3x_remove(struct snd_soc_component *component)
->  	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
->  	int i;
->  
-> -	list_del(&aic3x->list);
->  	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++)
->  		regulator_unregister_notifier(aic3x->supplies[i].consumer,
->  					      &aic3x->disable_nb[i].nb);
-> @@ -1890,6 +1888,7 @@ static int aic3x_i2c_probe(struct i2c_client *i2c,
->  	if (ret != 0)
->  		goto err_gpio;
->  
-> +	INIT_LIST_HEAD(&aic3x->list);
->  	list_add(&aic3x->list, &reset_list);
->  
->  	return 0;
-> @@ -1906,6 +1905,8 @@ static int aic3x_i2c_remove(struct i2c_client *client)
->  {
->  	struct aic3x_priv *aic3x = i2c_get_clientdata(client);
->  
-> +	list_del(&aic3x->list);
-> +
->  	if (gpio_is_valid(aic3x->gpio_reset) &&
->  	    !aic3x_is_shared_reset(aic3x)) {
->  		gpio_set_value(aic3x->gpio_reset, 0);
-> 
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+Jani Nikula, Intel Open Source Graphics Center
