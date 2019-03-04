@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0091CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1ECC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7EF20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF29B208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687800;
-	bh=v+wZK+/1xryGNpXsLv+C/4R48a6j67sHYsBT3ExJY7g=;
+	s=default; t=1551687802;
+	bh=svo9nt25iSieDbHUNg6rNQv5Y7EE1j5EtblB58ZF1f0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n2si1au5g4kXEWkiv/bnoTz+tORUjFukTSOGuDClboPgzJu7T49PEfNNjRbLGdOAu
-	 NleClOU18aSSplC6Eu6hV8n+pxR2Ciw+zMyP0kvAl8sF8djdERG2CI+S/FuXdVLcjI
-	 d8PgfRr76U6y4mUS6UzOv7zGT0hqhT4GVwngShe0=
+	b=vmzBJnBkazp7PtS3I9i8N6yQUUcSHlAahLBieZGdpfP2JsPBs8vebvWK/pLrY74ZQ
+	 M3k400vioAifRGpn/JgpBZe6YsqUWIQr1uOEXZXdG9u9VXGZk7m5yTTsR9zVeCJ4Mg
+	 +vvBWfKKA2p0f4Cmd3ZlvtMn2POM6mlS84uJji1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfCDIXT (ORCPT
+        id S1726551AbfCDIXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:23:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38840 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:23:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfCDIXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:23:16 -0500
+        id S1726531AbfCDIXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:23:19 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47D3C20863;
-        Mon,  4 Mar 2019 08:23:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3DCE208E4;
+        Mon,  4 Mar 2019 08:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687795;
-        bh=v+wZK+/1xryGNpXsLv+C/4R48a6j67sHYsBT3ExJY7g=;
+        s=default; t=1551687798;
+        bh=svo9nt25iSieDbHUNg6rNQv5Y7EE1j5EtblB58ZF1f0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VmbS2amvceVqnqKAPn5km+Y+X+pNZBBqYjldJ/Ic7M1izjIbHUFfxOtffgbdYkpVX
-         kfG7LYjWdFGo3jD2nDSu9KeNSj95/kmlzRavhleJa+s+jIuI+WCc+5D8v/M2zmCQBA
-         PvDUsZLOuzOAmc6FT/J2LXgVgIlxjMIyEX2CDfIU=
+        b=unXJI5+ZUpndOn1xw4n1bhQxXoql+mKHA1dzoRFdqFXb0CHtPF6nLyqppbzlcLdc0
+         4L9F5m+V3U1n9gFZ7pJa+xeVxdQTCEDQ8SJcHxHDHsnbo+Kaa8S6SjgtiVOyVtf8O3
+         2iwNghjQlGWzRv+Gu5Z0Z3IVQc8H+2cm2r1zbK4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Run <zhang.run@zte.com.cn>,
-        Yang Wei <yang.wei9@zte.com.cn>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 22/32] net: usb: asix: ax88772_bind return error when hw_reset fail
-Date:   Mon,  4 Mar 2019 09:22:10 +0100
-Message-Id: <20190304081603.893834224@linuxfoundation.org>
+Subject: [PATCH 4.9 23/32] ibmveth: Do not process frames after calling napi_reschedule
+Date:   Mon,  4 Mar 2019 09:22:11 +0100
+Message-Id: <20190304081603.972053420@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081602.307094059@linuxfoundation.org>
 References: <20190304081602.307094059@linuxfoundation.org>
@@ -68,61 +66,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6eea3527e68acc22483f4763c8682f223eb90029 ]
+[ Upstream commit e95d22c69b2c130ccce257b84daf283fd82d611e ]
 
-The ax88772_bind() should return error code immediately when the PHY
-was not reset properly through ax88772a_hw_reset().
-Otherwise, The asix_get_phyid() will block when get the PHY
-Identifier from the PHYSID1 MII registers through asix_mdio_read()
-due to the PHY isn't ready. Furthermore, it will produce a lot of
-error message cause system crash.As follows:
-asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to write
- reg index 0x0000: -71
-asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to send
- software reset: ffffffb9
-asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to write
- reg index 0x0000: -71
-asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to enable
- software MII access
-asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to read
- reg index 0x0000: -71
-asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to write
- reg index 0x0000: -71
-asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to enable
- software MII access
-asix 1-1:1.0 (unnamed net_device) (uninitialized): Failed to read
- reg index 0x0000: -71
-...
+The IBM virtual ethernet driver's polling function continues
+to process frames after rescheduling NAPI, resulting in a warning
+if it exhausted its budget. Do not restart polling after calling
+napi_reschedule. Instead let frames be processed in the following
+instance.
 
-Signed-off-by: Zhang Run <zhang.run@zte.com.cn>
-Reviewed-by: Yang Wei <yang.wei9@zte.com.cn>
-Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/asix_devices.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ibmveth.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/usb/asix_devices.c b/drivers/net/usb/asix_devices.c
-index 5be6b67492d52..393fd3ed6b94c 100644
---- a/drivers/net/usb/asix_devices.c
-+++ b/drivers/net/usb/asix_devices.c
-@@ -729,8 +729,13 @@ static int ax88772_bind(struct usbnet *dev, struct usb_interface *intf)
- 	asix_read_cmd(dev, AX_CMD_STATMNGSTS_REG, 0, 0, 1, &chipcode, 0);
- 	chipcode &= AX_CHIPCODE_MASK;
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index 4996228fd7e61..955f658f3b65f 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1240,7 +1240,6 @@ static int ibmveth_poll(struct napi_struct *napi, int budget)
+ 	struct iphdr *iph;
+ 	u16 mss = 0;
  
--	(chipcode == AX_AX88772_CHIPCODE) ? ax88772_hw_reset(dev, 0) :
--					    ax88772a_hw_reset(dev, 0);
-+	ret = (chipcode == AX_AX88772_CHIPCODE) ? ax88772_hw_reset(dev, 0) :
-+						  ax88772a_hw_reset(dev, 0);
-+
-+	if (ret < 0) {
-+		netdev_dbg(dev->net, "Failed to reset AX88772: %d\n", ret);
-+		return ret;
-+	}
+-restart_poll:
+ 	while (frames_processed < budget) {
+ 		if (!ibmveth_rxq_pending_buffer(adapter))
+ 			break;
+@@ -1338,7 +1337,6 @@ static int ibmveth_poll(struct napi_struct *napi, int budget)
+ 		    napi_reschedule(napi)) {
+ 			lpar_rc = h_vio_signal(adapter->vdev->unit_address,
+ 					       VIO_IRQ_DISABLE);
+-			goto restart_poll;
+ 		}
+ 	}
  
- 	/* Read PHYID register *AFTER* the PHY was reset properly */
- 	phyid = asix_get_phyid(dev);
 -- 
 2.19.1
 
