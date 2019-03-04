@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659B3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04AFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2817C20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F6A21019
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688047;
-	bh=DAWtxxgiNVhKaONEp9V9LRagRiv8GlLXoJf8Q5lc5TE=;
+	s=default; t=1551688051;
+	bh=g9IO4o4vDjS1xstoE4+2YKUGn8WwtN8iQoPcBvMUBDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gU8e2qp7R14FqAtO8VG7LhZ4ZbTFu0ZWWYP4Er+3uwz01LRFN7STCX/xVbbNRTtrz
-	 SuOneWxvmh6CfNpe1kE7k2OiHvAZcfJD5FVsH71biMCiIfmVaB9CDuj7RTVpYuNmSv
-	 nqII/jEvAs6iZgLzYk8Fsx0vzrVYWkbHFcQ52M1M=
+	b=qpTwz8CMo/SIBf4USyZFKan/PqABBtSe5YJryReUJ5H8wPqz99ftnWpH2GH+s8dIv
+	 T+v+U6sp0V3JYZtlDDLx/vRkEtqrYaRzkIOJOG5zCCLx5WhMRfwlWGAf/h6ZUXHsdM
+	 qTgYb70MzkOS6/vrmPMZkGEE5GX/iWordBeRthUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfCDI1Z (ORCPT
+        id S1727256AbfCDI1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:27:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50684 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:27:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbfCDI1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:27:22 -0500
+        id S1727246AbfCDI1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:27:25 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487CC20823;
-        Mon,  4 Mar 2019 08:27:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13C9121019;
+        Mon,  4 Mar 2019 08:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688041;
-        bh=DAWtxxgiNVhKaONEp9V9LRagRiv8GlLXoJf8Q5lc5TE=;
+        s=default; t=1551688044;
+        bh=g9IO4o4vDjS1xstoE4+2YKUGn8WwtN8iQoPcBvMUBDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XNe3HYRFKk5DKGzAUS4AItuZhX5Pni7414A/1bpKkS02OG0WSCbsM+LBaHbCGHQmO
-         2avEuaZ8ovV/zU2msWE1wqEjcXfgxUVosmr2e0iRN/ayFXIzETjH7fdc1tUTBmJzTM
-         tk8r1tPy07m+kCBmMLAFzRohBq+Iv52J4UyysKrM=
+        b=hhb7emmqgshFanFzv3kBM8NCYCmnVwRynRdkYKgTd8HVIEwHdIDd0A5g4dEPa1VSW
+         dbTLgk449/3QvM4YxpTOR4ppOYlML+hPzMEYth0NmHwuYzWSAJw6gAHmkof3JbUzDg
+         GKsIifGcbmtIBOLSHRvlP0YHXYtYrNarhRUW2axY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, dann frazier <dann.frazier@canonical.com>,
-        John Garry <john.garry@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 06/52] scsi: libsas: Fix rphy phy_identifier for PHYs with end devices attached
-Date:   Mon,  4 Mar 2019 09:22:04 +0100
-Message-Id: <20190304081617.510146514@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 45/52] mmc: spi: Fix card detection during probe
+Date:   Mon,  4 Mar 2019 09:22:43 +0100
+Message-Id: <20190304081619.702944643@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -66,85 +67,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: John Garry <john.garry@huawei.com>
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-commit ffeafdd2bf0b280d67ec1a47ea6287910d271f3f upstream.
+commit c9bd505dbd9d3dc80c496f88eafe70affdcf1ba6 upstream.
 
-The sysfs phy_identifier attribute for a sas_end_device comes from the rphy
-phy_identifier value.
+When using the mmc_spi driver with a card-detect pin, I noticed that the
+card was not detected immediately after probe, but only after it was
+unplugged and plugged back in (and the CD IRQ fired).
 
-Currently this is not being set for rphys with an end device attached, so
-we see incorrect symlinks from systemd disk/by-path:
+The call tree looks something like this:
 
-root@localhost:~# ls -l /dev/disk/by-path/
-total 0
-lrwxrwxrwx 1 root root  9 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0 -> ../../sdb
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part1 -> ../../sdb1
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part2 -> ../../sdb2
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part3 -> ../../sdc3
+mmc_spi_probe
+  mmc_add_host
+    mmc_start_host
+      _mmc_detect_change
+        mmc_schedule_delayed_work(&host->detect, 0)
+          mmc_rescan
+            host->bus_ops->detect(host)
+              mmc_detect
+                _mmc_detect_card_removed
+                  host->ops->get_cd(host)
+                    mmc_gpio_get_cd -> -ENOSYS (ctx->cd_gpio not set)
+  mmc_gpiod_request_cd
+    ctx->cd_gpio = desc
 
-Indeed, each sas_end_device phy_identifier value is 0:
+To fix this issue, call mmc_detect_change after the card-detect GPIO/IRQ
+is registered.
 
-root@localhost:/# more sys/class/sas_device/end_device-0\:0\:2/phy_identifier
-0
-root@localhost:/# more sys/class/sas_device/end_device-0\:0\:10/phy_identifier
-0
-
-This patch fixes the discovery code to set the phy_identifier.  With this,
-we now get proper symlinks:
-
-root@localhost:~# ls -l /dev/disk/by-path/
-total 0
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy10-lun-0 -> ../../sdg
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy11-lun-0 -> ../../sdh
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0 -> ../../sda
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0-part1 -> ../../sda1
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0 -> ../../sdb
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part1 -> ../../sdb1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part2 -> ../../sdb2
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0 -> ../../sdc
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part1 -> ../../sdc1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part2 -> ../../sdc2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part3 -> ../../sdc3
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy5-lun-0 -> ../../sdd
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0 -> ../../sde
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part1 -> ../../sde1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part2 -> ../../sde2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part3 -> ../../sde3
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0 -> ../../sdf
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part1 -> ../../sdf1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part2 -> ../../sdf2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part3 -> ../../sdf3
-
-Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
-Reported-by: dann frazier <dann.frazier@canonical.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Jason Yan <yanaijie@huawei.com>
-Tested-by: dann frazier <dann.frazier@canonical.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/libsas/sas_expander.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/mmc_spi.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -829,6 +829,7 @@ static struct domain_device *sas_ex_disc
- 		rphy = sas_end_device_alloc(phy->port);
- 		if (!rphy)
- 			goto out_free;
-+		rphy->identify.phy_identifier = phy_id;
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1447,6 +1447,7 @@ static int mmc_spi_probe(struct spi_devi
+ 		mmc->caps &= ~MMC_CAP_NEEDS_POLL;
+ 		mmc_gpiod_request_cd_irq(mmc);
+ 	}
++	mmc_detect_change(mmc, 0);
  
- 		child->rphy = rphy;
- 		get_device(&rphy->dev);
-@@ -856,6 +857,7 @@ static struct domain_device *sas_ex_disc
- 
- 		child->rphy = rphy;
- 		get_device(&rphy->dev);
-+		rphy->identify.phy_identifier = phy_id;
- 		sas_fill_in_rphy(child, rphy);
- 
- 		list_add_tail(&child->disco_list_node, &parent->port->disco_list);
+ 	if (host->pdata && host->pdata->flags & MMC_SPI_USE_RO_GPIO) {
+ 		has_ro = true;
 
 
