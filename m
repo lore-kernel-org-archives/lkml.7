@@ -2,113 +2,134 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC0AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F45AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE6920645
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF1120645
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hkERcFjv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hkERcFjv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyGou3wF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbfCDL7K (ORCPT
+        id S1726443AbfCDL7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 06:59:10 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:50296 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfCDL7K (ORCPT
+        Mon, 4 Mar 2019 06:59:14 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34081 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbfCDL7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 06:59:10 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A52FD6072E; Mon,  4 Mar 2019 11:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551700748;
-        bh=R1Xr0H/NKVgnNbfohNKDzq8vY4aVBUMDERVoqOIH5cs=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=hkERcFjvE88zwyedXMzT39oSoNEPbrHoRlqTLBe66i2R38G0hOVYgDgp4jGAlflnf
-         PywcwZbWt6op/nZAu7l5VfjgfAilMmyJrjE8AbtGl+9UGtGQPRWCj8P2z7AEk2ZVLD
-         pvbBH8TjodSnWhS6nEd74BJMJvq8cb65FtArlhz8=
-Received: from x230.qca.qualcomm.com (85-76-165-27-nat.elisa-mobile.fi [85.76.165.27])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BAE5F6063A;
-        Mon,  4 Mar 2019 11:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551700748;
-        bh=R1Xr0H/NKVgnNbfohNKDzq8vY4aVBUMDERVoqOIH5cs=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=hkERcFjvE88zwyedXMzT39oSoNEPbrHoRlqTLBe66i2R38G0hOVYgDgp4jGAlflnf
-         PywcwZbWt6op/nZAu7l5VfjgfAilMmyJrjE8AbtGl+9UGtGQPRWCj8P2z7AEk2ZVLD
-         pvbBH8TjodSnWhS6nEd74BJMJvq8cb65FtArlhz8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BAE5F6063A
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Gabriel C <nix.or.die@gmail.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>, ath10k@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Warning at drivers/net/wireless/ath/ath10k/mac.c:5625 ath10k_bss_info_changed
-References: <362a9b5f-8908-17f5-3594-6c3c68789dea@molgen.mpg.de>
-        <CAEJqkggKGTn0ojWzuYGfoYehDnOf=je5L-7-M1kWogutPGMg3g@mail.gmail.com>
-Date:   Mon, 04 Mar 2019 13:59:03 +0200
-In-Reply-To: <CAEJqkggKGTn0ojWzuYGfoYehDnOf=je5L-7-M1kWogutPGMg3g@mail.gmail.com>
-        (Gabriel C.'s message of "Mon, 4 Mar 2019 12:47:40 +0100")
-Message-ID: <874l8ic0l4.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 4 Mar 2019 06:59:12 -0500
+Received: by mail-ed1-f65.google.com with SMTP id a16so4028149edn.1;
+        Mon, 04 Mar 2019 03:59:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0SXc/ccBIqDOJFDdSRXSkpspHO0OCRRSHCA1+2sr5WA=;
+        b=JyGou3wFbwGmsPDE99fghHzJcuJpz3zT2b/dih9xdl6tw4JSIUAOpnD8/Ci+zTwZ7P
+         qYpFakUauHhAbwpTyTgqC/uCrtx8Hwq+JyajluO/kyFpSgF/cDIbr3zHxI4HBI9ofX1Z
+         ggCb5iCotUMUuYmvVXHvd/MSTIQiy383yrfgfpZU4n25zdlCtJvmxYyLRUDFG3WPTzYy
+         xA67Bwug3tRBmJaF5dfEcKVfKd2UTmKqUas15A+knYLusl+xpgX8hXWVXVM6Zxg7W4lN
+         6mN6xbqXm9P01x/oxpr+G5+oe8PTvnEtvbTAUz/IkqwrpzWZo73iz85YOeZz7EWHIugV
+         OoHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0SXc/ccBIqDOJFDdSRXSkpspHO0OCRRSHCA1+2sr5WA=;
+        b=FbCxhrF65ZIQz6tvC6pV5IsoKiTK8bwrMRYNkazjyTNMmLgx+yS4LX4g9mQ3HS7lRY
+         +VGmkl0LxA6cVkJXrIM4RGrLaIpVNPxbOvde55yen7DB9vltCb/4XQxskTkWIpXPphJO
+         gRAoXkEgCz6xq/gnIaa9+d/QGDtUJa6Jvdm8DleA91dPTtNrd5FwKnzvpydhvbzy7e8T
+         0rNKcYpNSv+l9mmCCZKtBHRvV+12B2Z/x+RWCsRt4PAd/K9sAHSIoMjkgTx6nbA3HQQI
+         gN2v4rqMFx9z2HnJ1iEwulKA++kCXMI2f1uFbO0/OZsjPpXPHslBUMu2zx5A1xOtTHwb
+         /YrQ==
+X-Gm-Message-State: APjAAAWXH2bQOtU2vTuzaZSkU8YeDlZAsroe4fNLcmnNUq6tSiX/XTov
+        5fucq4LT1PpF8CkihF45G0w=
+X-Google-Smtp-Source: APXvYqy6rcZGrjftTo+4MbdLz8wqDGECwGBXyvFG7KXPhXYwLG0KgJD234CzYcz706qDeh0Vv45XTA==
+X-Received: by 2002:a50:978e:: with SMTP id e14mr14463735edb.234.1551700749634;
+        Mon, 04 Mar 2019 03:59:09 -0800 (PST)
+Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
+        by smtp.gmail.com with ESMTPSA id z49sm2025549edb.15.2019.03.04.03.59.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 Mar 2019 03:59:08 -0800 (PST)
+Date:   Mon, 4 Mar 2019 12:59:07 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH v10 11/27] pwm: jz4740: Apply configuration atomically
+Message-ID: <20190304115907.GB9040@ulmo>
+References: <20190302233413.14813-1-paul@crapouillou.net>
+ <20190302233413.14813-12-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+Content-Disposition: inline
+In-Reply-To: <20190302233413.14813-12-paul@crapouillou.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gabriel C <nix.or.die@gmail.com> writes:
 
-> Am Mo., 4. M=C3=A4rz 2019 um 12:28 Uhr schrieb Paul Menzel <pmenzel@molge=
-n.mpg.de>:
->
->> Resuming from ACPI S3 on the Dell XPS 13 9370 with Debian Sid/unstable,
->> Linux 4.19.20 showed the warning below. It=E2=80=99s not reproducible.
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[...]
+On Sat, Mar 02, 2019 at 08:33:57PM -0300, Paul Cercueil wrote:
+> This is cleaner, more future-proof, and incidentally it also fixes the
+> PWM resetting its config when stopped/started several times.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>=20
+> Notes:
+>          v9: New patch
+>    =20
+>          v10: No change
+>=20
+>  drivers/pwm/pwm-jz4740.c | 37 ++++++++++++-------------------------
+>  1 file changed, 12 insertions(+), 25 deletions(-)
 
->> [ 3018.992916] Call Trace:
->> [ 3018.992921]  ? ath10k_conf_tx+0x7a/0x4b0 [ath10k_core]
->> [ 3018.992937]  ieee80211_bss_info_change_notify+0xab/0x1a0 [mac80211]
->> [ 3018.992946]  ieee80211_reconfig+0x661/0x12a0 [mac80211]
->> [ 3018.992962]  wiphy_resume+0x7f/0x120 [cfg80211]
->> [ 3018.992969]  ? wiphy_suspend+0x270/0x270 [cfg80211]
->> [ 3018.992971]  dpm_run_callback+0x59/0x150
->> [ 3018.992972]  device_resume+0x97/0x190
->> [ 3018.992973]  async_resume+0x19/0x30
->> [ 3018.992974]  async_run_entry_fn+0x39/0x160
->> [ 3018.992976]  process_one_work+0x1a7/0x3a0
->> [ 3018.992978]  worker_thread+0x30/0x390
->> [ 3018.992979]  ? pwq_unbound_release_workfn+0xd0/0xd0
->> [ 3018.992980]  kthread+0x112/0x130
->> [ 3018.992981]  ? kthread_bind+0x30/0x30
->> [ 3018.992983]  ret_from_fork+0x35/0x40
->> [ 3018.992984] ---[ end trace 3af618ca97bd4a0a ]---
->> ```
->>
->> Please find all Linux messages attached.
->
-> I reported that twice and no one seems to care about.
->
-> http://lists.infradead.org/pipermail/ath10k/2018-November/012398.html
-> http://lists.infradead.org/pipermail/ath10k/2018-December/012658.html
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Does this patch help:
+--qlTNgmc+xy1dBmNv
+Content-Type: application/pgp-signature; name="signature.asc"
 
-ath10k: Drop WARN_ON()s that always trigger during system resume
+-----BEGIN PGP SIGNATURE-----
 
-https://patchwork.kernel.org/patch/10837139/
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlx9EwsACgkQ3SOs138+
+s6Fifw//f2H2kWj6n++VBIr3qcpgyLlpnGP7IdO8SjFN1SopHRC1vHqhKao7IdRf
+7HfK6sbCuisohUtSedMVcj5aD8fDlf2eUoaLwmErr/RKtQZiOmS7oSsYCFXaWvCf
+YpXCycCtRX00UT0dVAw3uVIftDnYJ1sYJbXBM4SPZC9VmYSBz4UVOy7XoY+HhOBv
+f+4LKs61FYgZmKDY10FWW2Wpq8Tw36Pdh8Szl9f8H8pFc+tgGCue7EaO7JN+TR3d
+ZTSJmxlF0hwzzGbouA7Y1UcLDnZrCZqgkf/SCSpyOqn4JkbaxWUdYwtIUTD9N22Q
+STfBGCCLlfXVEHQkEBvbgk84PwWBlEmPCcs/6ujnJCtD9mBKUJleOnF3aiqOpfCA
+KplgKB+tR+YN866fG+A9JhbbX0JkAwdiCF/DRdJAajqW4gY2pyxkiEC1FwmIe/YM
+vqLqaU7KqqeDso4HHjMbpBiJkznvUszfRJDrkboMygZ9WoMkUCseRJSLKXlyoRLX
+buG5vHVkjJkhhuEL5Af7CguZzNUvTIMrvKd5Zn4/fRdMolj7m5vksQ1V1Wb7qWTI
+G6CvNQO8S8cYwBkKYpXuMYWmsB8agHFnmzr98op8R6toc9/3i8EGOo0kV9V8NxmX
+21KrsQr738C981dGRLoBVJRVlfnSHZgv67Dni+uj2+y2MBElhxk=
+=DBKx
+-----END PGP SIGNATURE-----
 
---=20
-Kalle Valo
+--qlTNgmc+xy1dBmNv--
