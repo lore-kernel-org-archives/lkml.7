@@ -2,94 +2,162 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B59EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C925C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A6A20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SF6Z79xJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6794820823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfCDDGb (ORCPT
+        id S1726252AbfCDDIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 22:06:31 -0500
-Received: from mail-qk1-f170.google.com ([209.85.222.170]:39871 "EHLO
-        mail-qk1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfCDDGb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 22:06:31 -0500
-Received: by mail-qk1-f170.google.com with SMTP id x6so2068718qki.6
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 19:06:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SZenl6cB66qwgrDNL51fYcS3OY/z1uUQwYTqTUFbEgU=;
-        b=SF6Z79xJdSaEQZ/iHzLjAgb1Qg7lrK2m9tSemuPBjAy8Gb6X5ah6Fj1GeSmn/8hzTH
-         oZlP1UmUqeiZi22edQVKw5NIpzivPy0ylQlu8ZIFDUSjyKEi5goKQHh7SHFuRFNLvy4+
-         pnuFjuyXMgAJOPT8aJgdsV3q7kFS1cnq467XpWQQGDdTM451XFRRr5HqfIXnbyPLDgss
-         DT3hXAepGlHNUhttCriph3D5XhUpZG5xBLmopLAivgl+Rize8PGKZPcgJ9YJ3UH9NJNC
-         yVRPJWGxtuJhTk66G6QXMAAhqmdZsnA5tYNc09AcS4/oVZEnZnrNIU4DZS0EWxNSenEh
-         V6Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SZenl6cB66qwgrDNL51fYcS3OY/z1uUQwYTqTUFbEgU=;
-        b=Ym+cWZonUc06H5+iTIcqgN11aOhCuFYcyeLBzjgg6Pp6VJVe73N/57Gfl2Nk8cB2+k
-         TgoLQAB3a7LN2bG1vDX9kwrk1b8ASXlYk+JCKlE7CCN6+FBnUcPi1X93pNOB0lSwzJWZ
-         f1yFkDiVmlEUhTL5MK0QJKt/UzQMuQug2ZtuwO0741DIGOzlt/olZH7AcM/cuELGECzw
-         US2L3PTzjB8xw2641cDH3tIbRjFFswXlikOJPiELX/a1q+nc4g4WBPzmu3LcxU2DFJwt
-         UM0xkAIAGxtpfUorJcV+bT0fMgVQ3UMJ0Sc4q9LRrv4qjdgAlCb+JwxIrL/jnKm5vwu0
-         xPhw==
-X-Gm-Message-State: APjAAAUm8mZKbmMy3sE2LHOcs2LIEgHe8rfvffNSuGmIv+EwOdl4b2Ra
-        Tkd9s+SbNYAItdlMU9oQbkawsDQJIL0=
-X-Google-Smtp-Source: APXvYqwJzjftsVzLEzEBfxBPtBg3hMpSp01DFN0IbUdtxC3UsWcNOgA2+Lw7Bz5g/e4K0lRv6OBpgQ==
-X-Received: by 2002:a37:c554:: with SMTP id p81mr12134479qki.337.1551668790240;
-        Sun, 03 Mar 2019 19:06:30 -0800 (PST)
-Received: from ovpn-120-151.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 46sm3644139qto.87.2019.03.03.19.06.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Mar 2019 19:06:29 -0800 (PST)
-Subject: Re: [PATCH -next] lockdep: skip debugobjects for lock_classes[] init
-To:     Bart Van Assche <bvanassche@acm.org>, peterz@infradead.org,
-        mingo@redhat.com, will.deacon@arm.com
-Cc:     longman@redhat.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org
-References: <20190303040224.7666-1-cai@lca.pw>
- <c20aa0f0-42ab-a884-d931-7d4ec2bf0cdc@acm.org>
-From:   Qian Cai <cai@lca.pw>
-Message-ID: <59ac7210-03f5-99db-8ffd-47dbfc307709@lca.pw>
-Date:   Sun, 3 Mar 2019 22:06:27 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.3.3
+        Sun, 3 Mar 2019 22:08:32 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41782 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725938AbfCDDIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 22:08:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 622F1AEDF;
+        Mon,  4 Mar 2019 03:08:30 +0000 (UTC)
+From:   NeilBrown <neilb@suse.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@kernel.org>
+Date:   Mon, 04 Mar 2019 14:08:22 +1100
+Subject: [PATCH] nfsd: fix memory corruption caused by readdir
+cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <87lg1vs5eh.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <c20aa0f0-42ab-a884-d931-7d4ec2bf0cdc@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-On 3/3/19 1:19 PM, Bart Van Assche wrote:
-> [PATCH] locking/lockdep: Only call init_rcu_head() after RCU has been
->  initialized
-> 
-> init_data_structures_once() is called for the first time before RCU has
-> been initialized. Make sure that init_rcu_head() is called before the
-> RCU head is used and after RCU has been initialized.
-> 
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+If the result of an NFSv3 readdir{,plus} request results in the
+"offset" on one entry having to be split across 2 pages, and is sized
+so that the next directory entry doesn't fix in the requested size,
+then memory corruption can happen.
 
-I like your approach more.
+When encode_entry() is called after encoding the last entry that fits,
+it notices that ->offset and ->offset1 are set, and so stores the
+offset value in the two pages as required.  It clears ->offset1 but
+*does not* clear ->offset.
 
-Tested-by: Qian Cai <cai@lca.pw>
+Normally this omission doesn't matter as encode_entry_baggage() will
+be called, and will set ->offset to a suitable value (not on a page
+boundary).
+But in the case where cd->buflen < elen and nfserr_toosmall is
+returned, ->offset is not reset.
+
+This means that nfsd3proc_readdirplus will see ->offset with a value 4
+bytes before the end of a page, and ->offset1 set to NULL.
+It will try to write 8bytes to ->offset.
+If we are lucky, the next page will be read-only, and the system will
+  BUG: unable to handle kernel paging request at...
+
+If we are unlucky, some innocent page will have the first 4 bytes
+corrupted.
+
+nfsd3proc_readdir() doesn't even check for ->offset1, it just blindly
+writes 8 bytes to the offset wherever it is.
+
+Fix this by clearing ->offset after it is used, and copying the
+=2D>offset handling code from nfsd3_proc_readdirplus into
+nfsd3_proc_readdir.
+
+(Note that the commit hash in the Fixes tag is from the 'history'
+ tree - this bug predates git).
+Fixes: eb229d253e6c ("[PATCH] kNFSd: fix two xdr-encode bugs for readdirplu=
+s reply")
+Cc: stable@vger.kernel.org (v2.6.12+)
+Signed-off-by: NeilBrown <neilb@suse.com>
+=2D--
+
+Can I still get extra credit for fixing a bug that is 14.5 years old, if
+I'm the one who introduced it?
+
+ fs/nfsd/nfs3proc.c | 16 ++++++++++++++--
+ fs/nfsd/nfs3xdr.c  |  1 +
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index 9eb8086ea841..c9cf46e0c040 100644
+=2D-- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -463,8 +463,19 @@ nfsd3_proc_readdir(struct svc_rqst *rqstp)
+ 					&resp->common, nfs3svc_encode_entry);
+ 	memcpy(resp->verf, argp->verf, 8);
+ 	resp->count =3D resp->buffer - argp->buffer;
+=2D	if (resp->offset)
+=2D		xdr_encode_hyper(resp->offset, argp->cookie);
++	if (resp->offset) {
++		loff_t offset =3D argp->cookie;
++
++		if (unlikely(resp->offset1)) {
++			/* we ended up with offset on a page boundary */
++			*resp->offset =3D htonl(offset >> 32);
++			*resp->offset1 =3D htonl(offset & 0xffffffff);
++			resp->offset1 =3D NULL;
++		} else {
++			xdr_encode_hyper(resp->offset, offset);
++		}
++		resp->offset =3D NULL;
++	}
+=20
+ 	RETURN_STATUS(nfserr);
+ }
+@@ -533,6 +544,7 @@ nfsd3_proc_readdirplus(struct svc_rqst *rqstp)
+ 		} else {
+ 			xdr_encode_hyper(resp->offset, offset);
+ 		}
++		resp->offset =3D NULL;
+ 	}
+=20
+ 	RETURN_STATUS(nfserr);
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index 9b973f4f7d01..83919116d5cb 100644
+=2D-- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -921,6 +921,7 @@ encode_entry(struct readdir_cd *ccd, const char *name, =
+int namlen,
+ 		} else {
+ 			xdr_encode_hyper(cd->offset, offset64);
+ 		}
++		cd->offset =3D NULL;
+ 	}
+=20
+ 	/*
+=2D-=20
+2.14.0.rc0.dirty
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlx8lqcACgkQOeye3VZi
+gbmMZQ//X3PHTu3swQ0759WwQhkkdqXWlyt2uv8yzx3rcYeeP45AIzq2NS7tDsbJ
+JwD2qWS+QciC0VhizPVQ+pgPRJvGMrGOwTZGGiDxKIDVauCKTPLMLzSh2do8zO0o
+z9dyltflNwixZoeDp4l8mByQhx3Qh2yXkY6iHoNGmQVsnHltnC/t2akQDz2XlXJF
+/eoamBN6vmrjnniXTR5TivgygOC0LCBKnawbJNbWUPA7UhG+sP8mWiHTqz8jquym
+qOQRJnA7aOzxebA6RBTJScmcnT86S8bOFvY4lBbsxO6vVK9fsY0pQG2GALnT+S4R
+8NMfGbO3dmcIn5ayCAEOYUp195O98PclJLeTqGyF9Pro25JCBI/9BUF2jQTSUhrh
+W8fNnGtGiEgMU25sX779q44jE4W20q/RENkyMH0u6bJUoaCc4mUVg0OTNRcO94NU
+1ysnu3f6Pl90kwaWtS8xR0dZFOsiCTyZH2dKZQSOgfocM+pUk8wk4cCvkN2dcu6c
+H3oSPYP+lAIeFAuFWWljkHyIhheL6xAsP79548ixGiZDdebyMwt1b9zFDcF95aqV
+EsYaEmZaVmjDupPq/c9Kwhn8NUogK8E62wK6O0+D7wpntXB0y/TX5+3/j1e75qDD
+0v3IguvlL30o62trjuLV/3vdPEiaeNPgML2QH9WyrtDBUKkVPXI=
+=D6y8
+-----END PGP SIGNATURE-----
+--=-=-=--
