@@ -2,151 +2,136 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A019C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8640DC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DE920835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587A8206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="QXW8gE66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfCDRzC (ORCPT
+        id S1727550AbfCDR4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:55:02 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:60106 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfCDRzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:55:02 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 320F8FB03;
-        Mon,  4 Mar 2019 18:55:00 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tSJ5gJM4tyRW; Mon,  4 Mar 2019 18:54:58 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 52DB0414EA; Mon,  4 Mar 2019 18:54:58 +0100 (CET)
-Date:   Mon, 4 Mar 2019 18:54:58 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 3/3] drm/panel: Add Rocktech jh057n00900 panel driver
-Message-ID: <20190304175458.GA4566@bogon.m.sigxcpu.org>
-References: <cover.1551445106.git.agx@sigxcpu.org>
- <21f8e44a5f65c97ef77d159c6be6603dba29232b.1551445106.git.agx@sigxcpu.org>
- <20190301223906.GB30998@ravnborg.org>
+        Mon, 4 Mar 2019 12:56:52 -0500
+Received: from sonic316-26.consmr.mail.ne1.yahoo.com ([66.163.187.152]:32803
+        "EHLO sonic316-26.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727504AbfCDR4v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:56:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1551722209; bh=GC069wVlaL0TLFD227ZH92fWAUBkMXO4kaPfz/TDKoA=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=QXW8gE66dmMl1rt9zIM53upJKN7DUDLMsP+7982OQSYZNEJl1367SZR4UH7tUoW+DQaFHwuekES/w+M2FJCrvYgOSAd3bYVjuMjL3j0GdX2HV+x7AwFhoyMT2tcyrNvHErFaSU3C5Tu2JxeTHgKETbB9SUWICPgKpaT5oMoF4xivkqzC7SNR1l86TS1sNw3uFEqGR5p2t7cTAPm41H35BvkUS2lsb5TWxtmiKeAcIhMAgzeMNHjOEC7rqZnuJtpICU2rAnita2a5PtM6heuBhLIcSxTLHwj/4cXd/jf/A9WVj7u9xdteCxtoenOewrklargYxVtqcGwnUMm5qpghcg==
+X-YMail-OSG: AMBDSy0VM1mRDl1r7Q3cCvDCHwVIzHs9HolytX6yVh5mbGzM4MxT8bgAVRJqVoH
+ vV9lEiJ0N6zEC.NnbrA7UDX85c5CKXgcauoC7D7nbYFIMooYxIhp9ogamZQp0jxOhcj_QFn4gWBJ
+ yF5JD847JRD8sLtARKLqz..gw.I6yLU62j2VbiJDOYgC1SXaVSeiD6MghgcfOCOqFWHPjcxJn5Pg
+ lvOgqgpnf.MQyFcAnX8kFnCo2AByZXkX6Ti8UOVJDvK2GTpK6ellW6HHu2qNwXEjKqqxQGofzEYA
+ 0t7V9buL3za.c5kkK9hwdlvyyABpIJpF_YQyG9K7OUKyniIbQC9G5Sod.QcyYlBZRySbRT1.5xyX
+ 8bFpk2v9mzrNJ0pzbdPjPOTPoct18b5ZiljzEF3wnlRgqPM7xTY0veep2zL2NX._SgtXj6InA7LR
+ aGPLzaG0_GQ2.76CikwE8fvDQidfducay20FVFULMp998cVK5x5_3gmJmLdm9lnplOra9vdYqmMF
+ RVAS5_eSQiz_MommxWhjV7Mh0NbuIb2oZmb4_CkBNuszmVW_DLNmpC1SDjU00qu0QhoH2pB5xMV4
+ rZa7FePgn55.WbJn9A8Isww4yA.9Wcr7cHyOwCv_A54FanwGdYTayjzvB5ynk8G79M9LpnbVXdM8
+ 7cF4lbwKevoRrB9_bKN2L0oalPP5_jn9ghjXUAhlDa23fIg34DyV_6CglZLO2K_1JP4V5D9C0NEb
+ 2gu3gvfLkLN2Vlbv7CiCztfKPniNDCRyNcgO21mkADRNPq_JKJVF7h7BgJ8GHCnA8VXW29TUJ3dx
+ PliWV5KaS4BcNaQx_RbK4CzOO6BGl8hdebXQ_ubCb9sDAraIi7BqyX3R8.6K8WZgOYxDOx_.MYkJ
+ Qn3OQGcmeKeHZ6RJZexFtI56.dUANGA_Mu77.nJj4MV0iccJ9mkWqX3UkE5yAVvOqgTL6Dm0f_ec
+ CVXnoSQAeD8OI7d0APBrtvQ4dduWbjlWCVaqM4BAeop2Z8HupZ4GmqG9wBvjSg46bJF4Xa8C6qgy
+ ijF5WZX6D6N2y75sH3k6ujADvdm9b6RryvoU1xHKNSfayltZAZ7gxFrzBbtw_FCar
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Mon, 4 Mar 2019 17:56:49 +0000
+Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
+          by smtp424.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID bed51b671e44fa380576cbee08ed0a10;
+          Mon, 04 Mar 2019 17:56:48 +0000 (UTC)
+Subject: Re: overlayfs access checks on underlying layers
+To:     Mark Salyzyn <salyzyn@android.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org,
+        Daniel J Walsh <dwalsh@redhat.com>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>
+References: <CAJfpegs9JjkXguemL4qSiBvRP6Dnut-D+nJo-oLFXkfCL1Egvw@mail.gmail.com>
+ <CAJfpegvfqx+0D32n1h2X7oj5d1mZWiLTcSSGpBnD+ba7AKzPyA@mail.gmail.com>
+ <20181127210542.GA2599@redhat.com>
+ <CAJfpegtQGM2z9TOt3DWwd39fC60cQknsC4vNnj7YimVEubRzUg@mail.gmail.com>
+ <20181128170302.GA12405@redhat.com>
+ <377b7d4f-eb1d-c281-5c67-8ab6de77c881@tycho.nsa.gov>
+ <CAJfpegtNhcWD0VWy6LPtoDtQBfPu4x5iFsB053UMCidj6oMsuw@mail.gmail.com>
+ <26bce3be-49c2-cdd8-af03-1a78d0f268ae@tycho.nsa.gov>
+ <CAJfpeguL9xOh9Eq8LOP=ddJ4YD6nbp2UY6e2AYDVoHeCLuVhZA@mail.gmail.com>
+ <20181129134943.GA16762@redhat.com>
+ <fe78aaed-5fb1-3c51-1330-39de46ae39c5@android.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <6e31bc53-0a27-63d1-2d07-a403dfe36ce1@schaufler-ca.com>
+Date:   Mon, 4 Mar 2019 09:56:48 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190301223906.GB30998@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fe78aaed-5fb1-3c51-1330-39de46ae39c5@android.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Fri, Mar 01, 2019 at 11:39:06PM +0100, Sam Ravnborg wrote:
-> Hi Guido.
-> 
-> Thanks for addressing review comments in first round.
-> Just a few nits in this follow-up.
-> With these nits addressed:
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+On 3/4/2019 9:01 AM, Mark Salyzyn wrote:
 
-Thanks! I made all the suggested changes in v3, on top of that I
-prepended 'panel-rockteck-' to the driver name to be more consistent
-with other drivers.
- -- Guido
+Adding linux-security-module to the CC. Please keep the general
+LSM community in to loop.
 
-> 
-> On Fri, Mar 01, 2019 at 02:02:04PM +0100, Guido Günther wrote:
-> 
-> > +#include <video/display_timing.h>
-> This include file is, as far as I could tell, no longer used and can be dropped.
-> 
-> > +
-> > +static int jh057n_get_modes(struct drm_panel *panel)
-> > +{
-> > +	struct drm_display_mode *mode;
-> > +
-> > +	mode = drm_mode_duplicate(panel->drm, &default_mode);
-> > +	if (!mode) {
-> > +		DRM_ERROR("Failed to add mode %ux%u@%u",
-> > +			  default_mode.hdisplay, default_mode.vdisplay,
-> > +			  default_mode.vrefresh);
-> > +		return -ENOMEM;
-> Use DRM_DEV_ERROR()
-> You can find dev via: panel->base.drm-dev
-> 
-> > +
-> > +static int jh057n_probe(struct mipi_dsi_device *dsi)
-> > +{
-> > +	struct device *dev = &dsi->dev;
-> > +	struct jh057n *ctx;
-> > +	int ret;
-> > +
-> > +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> > +	if (!ctx)
-> > +		return -ENOMEM;
-> > +
-> > +	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-> > +	if (IS_ERR(ctx->reset_gpio)) {
-> > +		DRM_DEV_ERROR(dev, "cannot get reset gpio");
-> > +		return PTR_ERR(ctx->reset_gpio);
-> > +	}
-> > +
-> > +	mipi_dsi_set_drvdata(dsi, ctx);
-> > +
-> > +	ctx->dev = dev;
-> > +
-> > +	dsi->lanes = 4;
-> > +	dsi->format = MIPI_DSI_FMT_RGB888;
-> > +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO |
-> > +		MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
-> > +
-> > +	ctx->backlight = devm_of_find_backlight(dev);
-> > +	if (IS_ERR(ctx->backlight))
-> > +		return PTR_ERR(ctx->backlight);
-> > +
-> > +	drm_panel_init(&ctx->panel);
-> > +	ctx->panel.dev = dev;
-> > +	ctx->panel.funcs = &jh057n_drm_funcs;
-> > +
-> > +	drm_panel_add(&ctx->panel);
-> > +
-> > +	ret = mipi_dsi_attach(dsi);
-> > +	if (ret < 0) {
-> > +		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed. Is host ready?");
-> > +		drm_panel_remove(&ctx->panel);
-> > +		return ret;
-> > +	}
-> > +
-> > +	DRM_INFO(DRV_NAME "_panel %ux%u@%u %ubpp dsi %udl - ready",
-> > +		 default_mode.hdisplay, default_mode.vdisplay,
-> > +		 default_mode.vrefresh,
-> > +		 mipi_dsi_pixel_format_to_bpp(dsi->format), dsi->lanes);
-> 
-> You already have dev, so use DRM_DEV_INFO() and drop DRV_NAME
-> 
-> > +
-> > +static const struct of_device_id jh057n_of_match[] = {
-> > +	{ .compatible = "rocktech,jh057n00900" },
-> > +	{ /* Sentinel */ }
-> Lower case 's' (sorry, likely my bad)
-> 
-> > +	.probe	= jh057n_probe,
-> > +	.remove = jh057n_remove,
-> > +	.shutdown = jh057n_shutdown,
-> > +	.driver = {
-> > +		.name = DRV_NAME "_panel",
-> Drop "_panel" postfix. Other drivers do not use it.
-> 
-> 	Sam
-> 
+
+> On 11/29/2018 05:49 AM, Vivek Goyal wrote:
+>> So will override_creds=off solve the NFS issue also where all access 
+>> will
+>> happen with the creds of task now? Though it will stil require more
+>> priviliges in task for other operations in overlay to succeed.
+>
+> NFS problems seems to have ended the discussion, too many 
+> stakeholders? too many outstanding questions?
+>
+> Do we accept the limitations of the override_creds patch as is, and 
+> then have the folks more familiar with the NFS scenario(s) build on it?
+>
+> [TL;DR]
+>
+> After looking at all this discussion, it feels like a larger audited 
+> rewrite of the security model is in order and override_creds=off may 
+> be a disservice (although expediently deals with Android's needs) to a 
+> correct general solution. I admit I have little idea where to go from 
+> here for a general solution.
+>
+> As far as I see it, the model of creator && caller credentials is a 
+> problem for any non-overlapping (MAC) privilege models. This patch 
+> allows one to drop any creator privilege escalation, re-introducing 
+> the "caller" to the lower layers.
+>
+> As such I would expect a better model is to _always_ check the caller 
+> credentials again in the lower layers, and only check the creator 
+> credentials, some without caller credentials, for some special cases? 
+> Change an && to an || for some of the checks? What are those special 
+> cases? I must admit _none_ of those special cases need attention in 
+> the Android usage models though making it difficult for me to do the 
+> fight thing for the associated stakeholders.
+>
+> The lower privileged application access to the directory cache 
+> inherited by other callers troubles me (not for Android, but in 
+> general) and feels troublesome (flush out the directory cache? how to 
+> tag the privileges associated with the current instance of the 
+> directory cache?). Some operations (eg: delete a file for incoming, 
+> create mknod in upperdir) are special cases requiring the checking of 
+> caller credentaisl to function (not a problem for Android as the 
+> caller that deletes a file just so happens to have the necessary 
+> privileges).
+>
+> Also, mount namespaces (in upper, lower, etc), how will they affect 
+> this all, is there a need for more attention to this as well?
+>
+> -- Mark
+>
