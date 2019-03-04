@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8896EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F4FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5870120815
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDC820815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfCDOt3 (ORCPT
+        id S1726767AbfCDOtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:49:29 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49286 "EHLO
+        Mon, 4 Mar 2019 09:49:35 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49314 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbfCDOt2 (ORCPT
+        with ESMTP id S1726161AbfCDOte (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:49:28 -0500
+        Mon, 4 Mar 2019 09:49:34 -0500
 Received: from localhost.localdomain (unknown [IPv6:2804:431:9718:a1b1:9d17:4c45:79a4:9c61])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 58BB1261176;
-        Mon,  4 Mar 2019 14:49:23 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 12B432807AF;
+        Mon,  4 Mar 2019 14:49:27 +0000 (GMT)
 From:   Helen Koike <helen.koike@collabora.com>
 To:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com
 Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
@@ -34,9 +34,9 @@ Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
         Sean Paul <seanpaul@google.com>, kernel@collabora.com,
         harry.wentland@amd.com,
         =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@google.com>
-Subject: [PATCH 1/5] drm: don't block fb changes for async plane updates
-Date:   Mon,  4 Mar 2019 11:49:05 -0300
-Message-Id: <20190304144909.6267-2-helen.koike@collabora.com>
+Subject: [PATCH 2/5] drm/rockchip: fix fb references in async update
+Date:   Mon,  4 Mar 2019 11:49:06 -0300
+Message-Id: <20190304144909.6267-3-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190304144909.6267-1-helen.koike@collabora.com>
 References: <20190304144909.6267-1-helen.koike@collabora.com>
@@ -48,122 +48,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the case of a normal sync update, the preparation of framebuffers (be
-it calling drm_atomic_helper_prepare_planes() or doing setups with
-drm_framebuffer_get()) are performed in the new_state and the respective
-cleanups are performed in the old_state.
+In the case of async update, modifications are done in place, i.e. in the
+current plane state, so the new_state is prepared and the new_state is
+cleanup up (instead of the old_state, diferrently on what happen in a
+normal sync update).
+To cleanup the old_fb properly, it needs to be placed in the new_state
+in the end of async_update, so cleanup call will unreference the old_fb
+correctly.
 
-In the case of async updates, the preparation is also done in the
-new_state but the cleanups are done in the new_state (because updates
-are performed in place, i.e. in the current state).
+Also, the previous code had a:
 
-The current code blocks async udpates when the fb is changed, turning
-async updates into sync updates, slowing down cursor updates and
-introducing regressions in igt tests with errors of type:
+	plane_state = plane->funcs->atomic_duplicate_state(plane);
+	...
+	swap(plane_state, plane->state);
 
-"CRITICAL: completed 97 cursor updated in a period of 30 flips, we
-expect to complete approximately 15360 updates, with the threshold set
-at 7680"
+	if (plane->state->fb && plane->state->fb != new_state->fb) {
+	...
+	}
 
-Fb changes in async updates were prevented to avoid the following scenario:
+Which was wrong, as the fb were just assigned to be equal, so this if
+statement nevers evaluates to true.
 
-- Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
-- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
-- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
-Where we have a single call to prepare fb2 but double cleanup call to fb2.
+Another details is that the function drm_crtc_vblank_get() can only be
+called when vop->is_enabled is true, otherwise it has no effect and
+trows a WARN_ON().
 
-To solve the above problems, instead of blocking async fb changes, we
-place the old framebuffer in the new_state object, so when the code
-performs cleanups in the new_state it will cleanup the old_fb and we
-will have the following scenario instead:
+Calling drm_atomic_set_fb_for_plane() (which get a referent of the new
+fb and pus the old fb) is not required, as it is taken care by
+drm_mode_cursor_universal() when calling
+drm_atomic_helper_update_plane().
 
-- Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
-- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
-- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
-
-Where calls to prepare/cleanup are ballanced.
-
-Cc: <stable@vger.kernel.org> # v4.14+: 25dc194b34dd: drm: Block fb changes for async plane updates
-Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
-Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
 ---
 Hello,
 
-As mentioned in the cover letter,
-I tested on the rockchip and on i915 (with a patch I am still working on for
-replacing cursors by async update), with igt plane_cursor_legacy and
+I tested on the rockchip ficus v1.1 using igt plane_cursor_legacy and
 kms_cursor_legacy and I didn't see any regressions.
-I couldn't test on MSM and AMD because I don't have the hardware (and I am
-having some issues testing on vc4) and I would appreciate if anyone could help
-me testing those.
 
-I also think it would be a better solution if, instead of having async
-to do in-place updates in the current state, the async path should be
-equivalent to a syncronous update, i.e., modifying new_state and
-performing a flip
-IMHO, the only difference between sync and async should be that async update
-doesn't wait for vblank and applies the changes immeditally to the hw,
-but the code path could be almost the same.
-But for now I think this solution is ok (swaping new_fb/old_fb), and
-then we can adjust things little by little, what do you think?
+It was me who worked on the first version and I am really sorry about that
+dead code in the if statement.
+Now I understand drm better and I know better how to properly test things with
+more care/details.
+
+Also, I didn't CC to stable here as I saw the async_update function was only
+added on v4.20, please let me know if I should CC to stable.
 
 Thanks!
 Helen
 
- drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 42 ++++++++++++---------
+ 1 file changed, 24 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 540a77a2ade9..e7eb96f1efc2 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
- 	    old_plane_state->crtc != new_plane_state->crtc)
- 		return -EINVAL;
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index c7d4c6073ea5..a1ee8c156a7b 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -912,30 +912,31 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
+ 					  struct drm_plane_state *new_state)
+ {
+ 	struct vop *vop = to_vop(plane->state->crtc);
+-	struct drm_plane_state *plane_state;
++	struct drm_framebuffer *old_fb = plane->state->fb;
  
--	/*
--	 * FIXME: Since prepare_fb and cleanup_fb are always called on
--	 * the new_plane_state for async updates we need to block framebuffer
--	 * changes. This prevents use of a fb that's been cleaned up and
--	 * double cleanups from occuring.
--	 */
--	if (old_plane_state->fb != new_plane_state->fb)
--		return -EINVAL;
+-	plane_state = plane->funcs->atomic_duplicate_state(plane);
+-	plane_state->crtc_x = new_state->crtc_x;
+-	plane_state->crtc_y = new_state->crtc_y;
+-	plane_state->crtc_h = new_state->crtc_h;
+-	plane_state->crtc_w = new_state->crtc_w;
+-	plane_state->src_x = new_state->src_x;
+-	plane_state->src_y = new_state->src_y;
+-	plane_state->src_h = new_state->src_h;
+-	plane_state->src_w = new_state->src_w;
 -
- 	funcs = plane->helper_private;
- 	if (!funcs->atomic_async_update)
- 		return -EINVAL;
-@@ -1657,6 +1648,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
- 	int i;
- 
- 	for_each_new_plane_in_state(state, plane, plane_state, i) {
-+		struct drm_framebuffer *new_fb = plane_state->fb;
-+		struct drm_framebuffer *old_fb = plane->state->fb;
-+
- 		funcs = plane->helper_private;
- 		funcs->atomic_async_update(plane, plane_state);
- 
-@@ -1665,11 +1659,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
- 		 * plane->state in-place, make sure at least common
- 		 * properties have been properly updated.
- 		 */
--		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
-+		WARN_ON_ONCE(plane->state->fb != new_fb);
- 		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
- 		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
- 		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
- 		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
-+
-+		/*
-+		 * Make sure the FBs have been swapped so that cleanups in the
-+		 * new_state performs a cleanup in the old FB.
-+		 */
-+		WARN_ON_ONCE(plane_state->fb != old_fb);
+-	if (plane_state->fb != new_state->fb)
+-		drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
+-
+-	swap(plane_state, plane->state);
+-
+-	if (plane->state->fb && plane->state->fb != new_state->fb) {
++	/*
++	 * A scanout can still be occurring, so we can't drop the reference to
++	 * the old framebuffer. To solve this we get a reference to old_fb and
++	 * set a worker to release it later.
++	 */
++	if (vop->is_enabled &&
++	    plane->state->fb && plane->state->fb != new_state->fb) {
+ 		drm_framebuffer_get(plane->state->fb);
+ 		WARN_ON(drm_crtc_vblank_get(plane->state->crtc) != 0);
+ 		drm_flip_work_queue(&vop->fb_unref_work, plane->state->fb);
+ 		set_bit(VOP_PENDING_FB_UNREF, &vop->pending);
  	}
+ 
++	plane->state->crtc_x = new_state->crtc_x;
++	plane->state->crtc_y = new_state->crtc_y;
++	plane->state->crtc_h = new_state->crtc_h;
++	plane->state->crtc_w = new_state->crtc_w;
++	plane->state->src_x = new_state->src_x;
++	plane->state->src_y = new_state->src_y;
++	plane->state->src_h = new_state->src_h;
++	plane->state->src_w = new_state->src_w;
++	plane->state->fb = new_state->fb;
++
+ 	if (vop->is_enabled) {
+ 		rockchip_drm_psr_inhibit_get_state(new_state->state);
+ 		vop_plane_atomic_update(plane, plane->state);
+@@ -945,7 +946,12 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
+ 		rockchip_drm_psr_inhibit_put_state(new_state->state);
+ 	}
+ 
+-	plane->funcs->atomic_destroy_state(plane, plane_state);
++	/*
++	 * In async update we perform inplace modifications and release the
++	 * new_state. The following is required so we release the reference of
++	 * the old framebuffer.
++	 */
++	new_state->fb = old_fb;
  }
- EXPORT_SYMBOL(drm_atomic_helper_async_commit);
+ 
+ static const struct drm_plane_helper_funcs plane_helper_funcs = {
 -- 
 2.20.1
 
