@@ -2,98 +2,122 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99000C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A01C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBE4206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF75206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:47:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LglIhCV0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lVI2eVjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbfCDSrA (ORCPT
+        id S1727616AbfCDSrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:47:00 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36209 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726136AbfCDSrA (ORCPT
+        Mon, 4 Mar 2019 13:47:23 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:46804 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfCDSrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:47:00 -0500
-Received: by mail-pg1-f196.google.com with SMTP id r124so3701445pgr.3;
-        Mon, 04 Mar 2019 10:47:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=0zv5Aviw3gCUYkW1jZEsaZvHrGOTu+ThRxqvIs9s/JU=;
-        b=LglIhCV0pNrKe/EMI26cweuVxWI+c/zXwTJb6X0+8wb9d/UTBuuju2kIntJZRwtN8D
-         F2CHrWUfnohaPNQCkWyBkT6OzuWu8aMK9KQ7F/iMhuE2GDllFgc2AVCO5z8zYGhWS3Zq
-         afiLR1nsiXXaidJwj1KdK2o0nGosDijO5P+AQ1r5Rj8kOIiB5MGIf/1H22Ime6RHsllR
-         UpvF9gnKxjAKmgvgikQYSAip+gM7PmRPxGsohaJadYmPwZJwsBGjdibwi6OiHl84fuE8
-         ZdklfrK17jhJB7d5UC0/gCWRoWJRHOrn58pfsUTUi4s9YNTfx4z0suhzfxkpFnLa3FQS
-         e7EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=0zv5Aviw3gCUYkW1jZEsaZvHrGOTu+ThRxqvIs9s/JU=;
-        b=XAJ5SPQM+Z+8LH4V26YBHryOnun00PyanufrR909hcILWmalmYsA5TSt6I99rm0Guz
-         a1V5RcLyiYMM5iKxFeDKCBfyNVb4EV+225UouaGEs1VupzL+wgfAfX55v34y4pZQV/5/
-         o0zIg+EC3+Vky4qwrqYiGwrDx9XZ1/FXlb9zz3mtbbFVysILZtr67P9jWwm+C+pdO+el
-         bHHHX0xXv/zBGrLOFqv7Isp2D+apiPSZNsCOZ2yIdaFXfk3v7+2vg2C+5QrHxQTshBbX
-         vSAwHWNpuBk3DgnurwAYkjvZRr9o6sGpMmLEY4h1RoPiVQeNgmGVl2spSE97pCNQysSf
-         JGAA==
-X-Gm-Message-State: APjAAAXL+CDMqPB/R0s9Vsqgb1+fvQt1BrbPMaf6wwYbVADecCx9tmzk
-        0cDjK334zg7b7JM9P3PMLU4=
-X-Google-Smtp-Source: AHgI3IZ8kdBnQJpIXPdfEbZMJKX18niiMZJcg32dK3PK3+poR0FkGQtYPksGeClGbDzz34jWNBsQrw==
-X-Received: by 2002:a62:6383:: with SMTP id x125mr20977464pfb.239.1551725219715;
-        Mon, 04 Mar 2019 10:46:59 -0800 (PST)
-Received: from jordon-HP-15-Notebook-PC ([106.51.18.146])
-        by smtp.gmail.com with ESMTPSA id d6sm10532090pfg.47.2019.03.04.10.46.58
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 04 Mar 2019 10:46:58 -0800 (PST)
-Date:   Tue, 5 Mar 2019 00:21:27 +0530
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     shuah@kernel.org
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sabyasachi.linux@gmail.com
-Subject: [PATCH] selftest/x86/mpx-dig.c: Remove duplicate header
-Message-ID: <20190304185127.GA6951@jordon-HP-15-Notebook-PC>
+        Mon, 4 Mar 2019 13:47:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Qo0Oeh0RpzAZbpvBZeV1g3vpvW8KYSofTIrjzx3Di2w=; b=lVI2eVjRZSGsTwBssHFPQU+MY
+        AvpaOlYqoswNkqFrNbRWCS6zGEwQPgkC2qQZlaY+Sq+D7uxibAGs1Ag5SIdmk15LndzIxj4Z9ZWjS
+        xEnlhHf9o+zBn7p8EcrLiXNPL71x0Kjc3jT0yqiI93nC/SId2+cITg+rIM5mGrGZb39doHSFf5HW9
+        s81nSLOBmXQztSah6BJfDKf5+Rca4kc1PWaj0vWecH2NbWAm/AIgU1QEkRtPzXinfH8PoIUFE86DS
+        s8PV6rsv+NzP3Ca8DF3CCO/XZCrQHJNZPwnS3jBeyd3r2uy/O72jwOpPSMZLxbS79iUMft0njzwTu
+        MAuQxNuyA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h0scI-0007vp-Cj; Mon, 04 Mar 2019 18:47:10 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 218E329AB097E; Mon,  4 Mar 2019 19:47:08 +0100 (CET)
+Date:   Mon, 4 Mar 2019 19:47:08 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     =?utf-8?B?V2FuZywgVmluY2VudCAo546L5LqJKQ==?= 
+        <Vincent.Wang@unisoc.com>,
+        =?utf-8?B?WmhhbmcsIENodW55YW4gKOW8oOaYpeiJsyk=?= 
+        <Chunyan.Zhang@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0ggVjRdIHNj?=
+ =?utf-8?Q?hed=2Fcpufreq=3A_initializ?= =?utf-8?Q?e?= iowait_boost_max and
+ iowait_boost with cpu capacity
+Message-ID: <20190304184708.GQ32494@hirez.programming.kicks-ass.net>
+References: <1550831866-32749-1-git-send-email-chunyan.zhang@unisoc.com>
+ <20190222105957.wxhlcmoag5f3i4fi@queper01-lin>
+ <9099990618e242e1bab77ce3f9d9b1e3@BJMBX02.spreadtrum.com>
+ <20190304135810.rq2ojnbn5vezrab3@queper01-lin>
+ <20190304152616.GM32494@hirez.programming.kicks-ass.net>
+ <20190304164816.4fnxxesjwzdoqria@queper01-lin>
+ <20190304174028.GO32494@hirez.programming.kicks-ass.net>
+ <20190304175030.4slf247y2eftkmu4@queper01-lin>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190304175030.4slf247y2eftkmu4@queper01-lin>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove duplicate header which is included twice.
+On Mon, Mar 04, 2019 at 05:50:32PM +0000, Quentin Perret wrote:
+> On Monday 04 Mar 2019 at 18:40:28 (+0100), Peter Zijlstra wrote:
+> > > Perhaps you could keep the 'util' and 'max' pointers in
+> > > sugov_iowait_apply() and overwrite them like before, but in the
+> > > SCHED_CAPACITY_SCALE scale as you suggest ?
+> > 
+> > Urgh; but then we're back to having that boostrap problem.
+> 
+> Hmm, I don't understand :/
 
-Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- tools/testing/selftests/x86/mpx-dig.c | 2 --
- 1 file changed, 2 deletions(-)
+Yeah, I seen to have reading comprehension issues today. Ignore that.
 
-diff --git a/tools/testing/selftests/x86/mpx-dig.c b/tools/testing/selftests/x86/mpx-dig.c
-index c13607e..880fbf6 100644
---- a/tools/testing/selftests/x86/mpx-dig.c
-+++ b/tools/testing/selftests/x86/mpx-dig.c
-@@ -8,9 +8,7 @@
- #include <unistd.h>
- #include <stdio.h>
- #include <errno.h>
--#include <sys/types.h>
- #include <sys/stat.h>
--#include <unistd.h>
- #include <sys/mman.h>
- #include <string.h>
- #include <fcntl.h>
--- 
-1.9.1
+> > Now; at this time; @max is in fact scale_cpu_capacity, so can't we
+> > change this:
+> > 
+> > -       /*
+> > -        * Apply the current boost value: a CPU is boosted only if its current
+> > -        * utilization is smaller then the current IO boost level.
+> > -        */
+> > -       boost_util = sg_cpu->iowait_boost;
+> > -       boost_max = sg_cpu->iowait_boost_max;
+> 
+> I was basically suggesting to do 'boost_max = 1024;' here and you
+> should be good with you way of computing 'min' no ?
 
+Right, but then we keep having to retain those two mults.
+
+> > -       if (*util * boost_max < *max * boost_util) {
+> > -               *util = boost_util;
+> > -               *max = boost_max;
+> > -       }
+> > +       sg_cpu->iowait_boost_pending = false;
+> > +
+> > +       return min(max(util, sg_cpu->iowait_boost), max);
+> > }
+> > 
+> > to something like:
+> > 
+> > 	/*
+> > 	 * @util is already in capacity scale, convert iowait_boost
+> > 	 * into the same scale so we can compare.
+> > 	 */
+> > 	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
+> > 	util = max(boost, util);
+> > 	return min(util, max);
+> > 
+> 
+> But this should work too, I think.
+
+While that is only a single mult.
