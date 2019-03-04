@@ -2,143 +2,145 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83240C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA2BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EFA2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:06:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=plaes.org header.i=@plaes.org header.b="ZrYFiFHa"
+	by mail.kernel.org (Postfix) with ESMTP id EC78D208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:06:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbfCDNGf (ORCPT
+        id S1726772AbfCDNGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:06:35 -0500
-Received: from plaes.org ([188.166.43.21]:51628 "EHLO plaes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfCDNGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:06:34 -0500
-Received: from localhost (unknown [193.40.103.250])
-        by plaes.org (Postfix) with ESMTPSA id EDBC840960;
-        Mon,  4 Mar 2019 13:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=plaes.org; s=mail;
-        t=1551704792; bh=F4Cj8QjZPj4Qdf1avfLjzBR1P6PcKWxJtjJWPwy7J5k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZrYFiFHaepmU/we/IfrDK4OqYLCwm8X+GIBaoZ+S98j3ixqagi0dNxwUg4AepEA5G
-         LqRTmBtdnwchPUaXD8s+KpVrEcdgtb66zUBa4a1sOUZ4INXgzet4K3CVUxXPKZroXr
-         NwnSmIO9w5y7xqwv6MHOHO55d1ykjcNADUQe3Zg2D6OG0yW300u3GHNa1fo4cMhClb
-         bfSVBhgk3aqrBzXankYIZCTRP4EV8GRbJzLva8eeY4CTgmWYXpmzh3VnSkdXkpW5ZC
-         v9gurgJRoiY3LRe0r1cStaZxxFWnYY2UzyTve3c/zp2sHKhTsbYhy4JcGDm5Q9/K5n
-         TtVRD0kFYLeyA==
-From:   Priit Laes <plaes@plaes.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     linux-sunxi@googlegroups.com, Priit Laes <priit.laes@paf.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [RESEND PATCH] drm/sun4i: hdmi: Improve compatibility with hpd-less HDMI displays
-Date:   Mon,  4 Mar 2019 15:06:16 +0200
-Message-Id: <20190304130616.27525-1-plaes@plaes.org>
-X-Mailer: git-send-email 2.11.0
+        Mon, 4 Mar 2019 08:06:48 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:37336 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726098AbfCDNGs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 08:06:48 -0500
+Received: from [192.168.2.10] ([212.251.195.8])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 0nIohHNuUI8AW0nIrh0iRm; Mon, 04 Mar 2019 14:06:45 +0100
+Subject: Re: [PATCH] media: uvcvideo: Read support
+To:     Hugues Fruchet <hugues.fruchet@st.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1551702925-7739-1-git-send-email-hugues.fruchet@st.com>
+ <1551702925-7739-2-git-send-email-hugues.fruchet@st.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <fa37bb60-974c-3d96-c236-3366a08440b5@xs4all.nl>
+Date:   Mon, 4 Mar 2019 14:06:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <1551702925-7739-2-git-send-email-hugues.fruchet@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfN/NYULSd8amEnnVxDR/XBrRqgUktUpL7X3jduWIcsgObdYGGTNYAODNkqMnd0nNeCMkgPZf1Ay0NznPV4dr0FO7CWqkYAsDyIbh1njtusB3H+onsotW
+ 4TfpQisRYLFbBSVV2MzasG52w81jSB+qbFoa2l/zcdV8CiFs0+jY8TdW1pj7Wd5CDpubZC90E3Bf3tLKIDYR23Ogm+PgP5kapoTOTrQhiWgEuEdoi1B5uz8s
+ b4+WIpdlUa/vlnSvRhkJ7I84K95tdj8VOwz1Qhm6pZgobd3psjHGkbP5wBhUm4Er1JTFklazTIdGGXyElNZr0i0ppi31jU2jVpUzKQHhfzk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Priit Laes <priit.laes@paf.com>
+On 3/4/19 1:35 PM, Hugues Fruchet wrote:
+> Add support of read() call from userspace by implementing
+> uvc_v4l2_read() with vb2_read() helper.
+> 
+> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+> ---
+>  drivers/media/usb/uvc/uvc_queue.c | 15 ++++++++++++++-
+>  drivers/media/usb/uvc/uvc_v4l2.c  | 11 ++++++++---
+>  drivers/media/usb/uvc/uvcvideo.h  |  2 ++
+>  3 files changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
+> index 682698e..0c8a0a8 100644
+> --- a/drivers/media/usb/uvc/uvc_queue.c
+> +++ b/drivers/media/usb/uvc/uvc_queue.c
+> @@ -227,7 +227,7 @@ int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type,
+>  	int ret;
+>  
+>  	queue->queue.type = type;
+> -	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR;
+> +	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR | VB2_READ;
+>  	queue->queue.drv_priv = queue;
+>  	queue->queue.buf_struct_size = sizeof(struct uvc_buffer);
+>  	queue->queue.mem_ops = &vb2_vmalloc_memops;
+> @@ -361,6 +361,19 @@ int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type)
+>  	return ret;
+>  }
+>  
+> +ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
+> +		       char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	ssize_t ret;
+> +
+> +	mutex_lock(&queue->mutex);
+> +	ret = vb2_read(&queue->queue, buf, count, ppos,
+> +		       file->f_flags & O_NONBLOCK);
+> +	mutex_unlock(&queue->mutex);
 
-Even though HDMI connector features hotplug detect pin (HPD), there
-are older devices which do not support it. For these devices fall
-back to additional check on I2C bus to probe for EDID data.
+This is now used for both video capture and metadata capture. I don't think it
+makes sense to support this for metadata capture, so you should test for that.
 
-One known example is HDMI/DVI display with following edid:
+Regards,
 
-$ xxd -p display.edid
-00ffffffffffff0005a1e00301000000150f0103800f05780a0f6ea05748
-9a2610474f200000010101010101010101010101010101012a08804520e0
-0b1020004000953600000018000000fd0034441a2403000a202020202020
-0000001000310a20202020202020202020200000001000002a4030701300
-782d1100001e006b
+	Hans
 
-$ edid-decode display.edid
-EDID version: 1.3
-Manufacturer: AMA Model 3e0 Serial Number 1
-Digital display
-Maximum image size: 15 cm x 5 cm
-Gamma: 2.20
-RGB color display
-First detailed timing is preferred timing
-Display x,y Chromaticity:
-  Red:   0.6250, 0.3398
-  Green: 0.2841, 0.6044
-  Blue:  0.1494, 0.0644
-  White: 0.2802, 0.3105
-
-Established timings supported:
-  640x480@60Hz 4:3 HorFreq: 31469 Hz Clock: 25.175 MHz
-Standard timings supported:
-Detailed mode: Clock 20.900 MHz, 149 mm x 54 mm
-               640  672  672  709 hborder 0
-               480  484  484  491 vborder 0
-               -hsync -vsync
-               VertFreq: 60 Hz, HorFreq: 29478 Hz
-Monitor ranges (GTF): 52-68Hz V, 26-36kHz H, max dotclock 30MHz
-Dummy block
-Dummy block
-Checksum: 0x6b (valid)
-
-Now, current implementation is still flawed, as HDMI uses the
-HPD signal to indicate that the source should re-read the EDID
-due to change in device capabilities. With current HPD polling
-implementation we would most certainly miss those notifications
-as one can try just swapping two HDMI monitors really fast.
-
-Proper fix would be skipping the HPD pin detection and relying
-on just EDID fetching and acting on its changes.
-
-CC: Russell King <linux@armlinux.org.uk>
-Signed-off-by: Priit Laes <priit.laes@paf.com>
----
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-index 416da5376701..44d5d50b7ada 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-@@ -242,14 +242,18 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
- 	struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
- 	unsigned long reg;
- 
--	if (readl_poll_timeout(hdmi->base + SUN4I_HDMI_HPD_REG, reg,
--			       reg & SUN4I_HDMI_HPD_HIGH,
--			       0, 500000)) {
--		cec_phys_addr_invalidate(hdmi->cec_adap);
--		return connector_status_disconnected;
--	}
--
--	return connector_status_connected;
-+	/* TODO: Drop HPD polling and instead keep track of EDID changes */
-+	if (!readl_poll_timeout(hdmi->base + SUN4I_HDMI_HPD_REG, reg,
-+				reg & SUN4I_HDMI_HPD_HIGH,
-+				0, 500000))
-+		return connector_status_connected;
-+
-+	/* Fall back to EDID in case display does not support HPD */
-+	if (!IS_ERR(hdmi->i2c) && drm_probe_ddc(hdmi->i2c))
-+		return connector_status_connected;
-+
-+	cec_phys_addr_invalidate(hdmi->cec_adap);
-+	return connector_status_disconnected;
- }
- 
- static const struct drm_connector_funcs sun4i_hdmi_connector_funcs = {
--- 
-2.11.0
+> +
+> +	return ret;
+> +}
+> +
+>  int uvc_queue_mmap(struct uvc_video_queue *queue, struct vm_area_struct *vma)
+>  {
+>  	return vb2_mmap(&queue->queue, vma);
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 84be596..3866832 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -594,7 +594,8 @@ static int uvc_ioctl_querycap(struct file *file, void *fh,
+>  	strscpy(cap->driver, "uvcvideo", sizeof(cap->driver));
+>  	strscpy(cap->card, vdev->name, sizeof(cap->card));
+>  	usb_make_path(stream->dev->udev, cap->bus_info, sizeof(cap->bus_info));
+> -	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING
+> +	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING |
+> +			    V4L2_CAP_READWRITE
+>  			  | chain->caps;
+>  
+>  	return 0;
+> @@ -1434,8 +1435,12 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+>  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
+>  		    size_t count, loff_t *ppos)
+>  {
+> -	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read: not implemented.\n");
+> -	return -EINVAL;
+> +	struct uvc_fh *handle = file->private_data;
+> +	struct uvc_streaming *stream = handle->stream;
+> +
+> +	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read\n");
+> +
+> +	return uvc_queue_read(&stream->queue, file, data, count, ppos);
+>  }
+>  
+>  static int uvc_v4l2_mmap(struct file *file, struct vm_area_struct *vma)
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index c7c1baa..5d0515c 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -766,6 +766,8 @@ struct uvc_buffer *uvc_queue_next_buffer(struct uvc_video_queue *queue,
+>  					 struct uvc_buffer *buf);
+>  struct uvc_buffer *uvc_queue_get_current_buffer(struct uvc_video_queue *queue);
+>  void uvc_queue_buffer_release(struct uvc_buffer *buf);
+> +ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
+> +		       char __user *buf, size_t count, loff_t *ppos);
+>  int uvc_queue_mmap(struct uvc_video_queue *queue,
+>  		   struct vm_area_struct *vma);
+>  __poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
+> 
 
