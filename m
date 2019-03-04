@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C24C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EB5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C6920823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC92A20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688810;
-	bh=nmYsrNqggNzbbY1Vip6CwIbcERnkAct8cbJeMSV0P1k=;
+	s=default; t=1551688829;
+	bh=EoJbkOQtQz0i9BmwvDUQOyFZsORnpTo2B+kS8AUy98U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZ0GeGgyJiB+Thcg4LOXrwaYLXQlEJ3PBQ/4zyKnaY2L0xsisMZKKpkdn9AxsuGlJ
-	 vp2tLjlUC7MUX6pJptaCn3WsYNlnzy4Hf1Q0aOIfJ8uXLWgbzDnWOhSjzalYC/U20J
-	 GcK9YWMtopKAaLUpKnXaR7ouHM+4t6aIh3SfysJQ=
+	b=mcEms6HsAZzYEhbvkyfzsI98X+jzGT8ZJ3P83ToRlnBOOgSio/7uuAYArrQqIErux
+	 yuHju9SqomePHkWOleXfTcGjoEwSgdI8i3APwit0uftUMcoggT1GWEY/jMBLD+edT6
+	 6+9IF0DMPil+u2ZWLICPum4k2U+I7IVYm9WwBiMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfCDIkJ (ORCPT
+        id S1727671AbfCDIk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:40:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37542 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:40:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbfCDIdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:33:12 -0500
+        id S1727641AbfCDIcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:32:50 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D28F20823;
-        Mon,  4 Mar 2019 08:33:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60FE52146E;
+        Mon,  4 Mar 2019 08:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688391;
-        bh=nmYsrNqggNzbbY1Vip6CwIbcERnkAct8cbJeMSV0P1k=;
+        s=default; t=1551688369;
+        bh=EoJbkOQtQz0i9BmwvDUQOyFZsORnpTo2B+kS8AUy98U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0NZ0AqWQteQxkHcmPvqwTTXqnM7Onmnl4C6tkm8rWwwIRJhmUmMc95ezjJWoJcPHs
-         21xgw6JMBWJJUL6K3uvpLyrnohrop9quSJ5iaSDAbRssgDmS4RYunYci1znQKzdz5P
-         UwdYb5rpSHElSKkTcB75P832sOPkAQmkQGJu/zV8=
+        b=1PT3eQStHvMW7kgIX5Ke0YVOK2kQCr/mevUJWoP9ad/jUh0Wxl0AQwZIfb3Pzs2Ma
+         2jAt6/LFUWHi5sgkCq/2JbfYCE632MGGPtzPZOaS7I3IkP5V03UuHb5gGmUEyuhQ1r
+         QPmQccWtnOoRa3qtUoeaBiBbYLgQnvcfqnZZ5gi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 30/88] ARC: fix __ffs return value to avoid build warnings
-Date:   Mon,  4 Mar 2019 09:22:13 +0100
-Message-Id: <20190304081631.793778354@linuxfoundation.org>
+        Alison Schofield <alison.schofield@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 24/88] selftests/vm/gup_benchmark.c: match gup struct to kernel
+Date:   Mon,  4 Mar 2019 09:22:07 +0100
+Message-Id: <20190304081631.565868394@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -67,72 +67,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4e868f8419cb4cb558c5d428e7ab5629cef864c7 ]
+[ Upstream commit 91cd63d320f84dcbf21d4327f31f7e1f85adebd0 ]
 
-|  CC      mm/nobootmem.o
-|In file included from ./include/asm-generic/bug.h:18:0,
-|                 from ./arch/arc/include/asm/bug.h:32,
-|                 from ./include/linux/bug.h:5,
-|                 from ./include/linux/mmdebug.h:5,
-|                 from ./include/linux/gfp.h:5,
-|                 from ./include/linux/slab.h:15,
-|                 from mm/nobootmem.c:14:
-|mm/nobootmem.c: In function '__free_pages_memory':
-|./include/linux/kernel.h:845:29: warning: comparison of distinct pointer types lacks a cast
-|   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-|                             ^
-|./include/linux/kernel.h:859:4: note: in expansion of macro '__typecheck'
-|   (__typecheck(x, y) && __no_side_effects(x, y))
-|    ^~~~~~~~~~~
-|./include/linux/kernel.h:869:24: note: in expansion of macro '__safe_cmp'
-|  __builtin_choose_expr(__safe_cmp(x, y), \
-|                        ^~~~~~~~~~
-|./include/linux/kernel.h:878:19: note: in expansion of macro '__careful_cmp'
-| #define min(x, y) __careful_cmp(x, y, <)
-|                   ^~~~~~~~~~~~~
-|mm/nobootmem.c:104:11: note: in expansion of macro 'min'
-|   order = min(MAX_ORDER - 1UL, __ffs(start));
+An expansion field was added to the kernel copy of this structure for
+future use. See mm/gup_benchmark.c.
 
-Change __ffs return value from 'int' to 'unsigned long' as it
-is done in other implementations (like asm-generic, x86, etc...)
-to avoid build-time warnings in places where type is strictly
-checked.
+Add the same expansion field here, so that the IOCTL command decodes
+correctly. Otherwise, it fails with EINVAL.
 
-As __ffs may return values in [0-31] interval changing return
-type to unsigned is valid.
-
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/include/asm/bitops.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/testing/selftests/vm/gup_benchmark.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arc/include/asm/bitops.h b/arch/arc/include/asm/bitops.h
-index 8da87feec59aa..99e6d8948f4ac 100644
---- a/arch/arc/include/asm/bitops.h
-+++ b/arch/arc/include/asm/bitops.h
-@@ -340,7 +340,7 @@ static inline __attribute__ ((const)) int __fls(unsigned long x)
- /*
-  * __ffs: Similar to ffs, but zero based (0-31)
-  */
--static inline __attribute__ ((const)) int __ffs(unsigned long word)
-+static inline __attribute__ ((const)) unsigned long __ffs(unsigned long word)
- {
- 	if (!word)
- 		return word;
-@@ -400,9 +400,9 @@ static inline __attribute__ ((const)) int ffs(unsigned long x)
- /*
-  * __ffs: Similar to ffs, but zero based (0-31)
-  */
--static inline __attribute__ ((const)) int __ffs(unsigned long x)
-+static inline __attribute__ ((const)) unsigned long __ffs(unsigned long x)
- {
--	int n;
-+	unsigned long n;
+diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/selftests/vm/gup_benchmark.c
+index 880b96fc80d4c..c0534e298b512 100644
+--- a/tools/testing/selftests/vm/gup_benchmark.c
++++ b/tools/testing/selftests/vm/gup_benchmark.c
+@@ -25,6 +25,7 @@ struct gup_benchmark {
+ 	__u64 size;
+ 	__u32 nr_pages_per_call;
+ 	__u32 flags;
++	__u64 expansion[10];	/* For future use */
+ };
  
- 	asm volatile(
- 	"	ffs.f	%0, %1		\n"  /* 0:31; 31(Z) if src 0 */
+ int main(int argc, char **argv)
 -- 
 2.19.1
 
