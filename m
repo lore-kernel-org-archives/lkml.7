@@ -2,80 +2,111 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EA3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9501CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9573D21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551677196;
-	bh=i1mdTNwlT+9/KI72W9F3JVKrnoPS7734UOheh/YqMtQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o9YjOfx3mh7EVlrmj/gFguKrgdowdGOJMiG1DRIcOdkNj+AbNb7E3Utor6MFI8diV
-	 BE0+vX5ttV0QPDgRki45qUygL9CfgHKgFnxJeHRhBdEFCs6hUV9ePyzYnjcu2dBKyO
-	 EBPfkS5hFz3wKXIvrLbWamj/rp+1+O4qhKSDrlJE=
+	by mail.kernel.org (Postfix) with ESMTP id 58FC020815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azRqFbE0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbfCDF0f (ORCPT
+        id S1726034AbfCDFbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 00:26:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725550AbfCDF0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 00:26:35 -0500
-Received: from dragon (61-216-91-114.HINET-IP.hinet.net [61.216.91.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBD112082F;
-        Mon,  4 Mar 2019 05:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551677194;
-        bh=i1mdTNwlT+9/KI72W9F3JVKrnoPS7734UOheh/YqMtQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HD5lPhYN5Zuz62AYozgTry2GabnsPVnA0wtrNtrIq8RXftKzgVeb4nC3/4Xo+/paq
-         wVI6e6yBEGfvx+F4WyBCXXv0pjZa5KUwu3A13Bm4NOWA2ms/SFx2r+B0XBSfZhRg3B
-         UygDQO+XDJkq+PischFOfLtJ9RojGScjVZ6Sxl+A=
-Date:   Mon, 4 Mar 2019 13:25:30 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Angus Ainslie <angus.ainslie@puri.sm>,
-        Anson Huang <anson.huang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 0/3] arm: dts: imx8mq: Add cpufreq support
-Message-ID: <20190304052528.GW26041@dragon>
-References: <1551390149-15443-1-git-send-email-abel.vesa@nxp.com>
+        Mon, 4 Mar 2019 00:31:36 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42426 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725550AbfCDFbf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 00:31:35 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n74so2137474pfi.9;
+        Sun, 03 Mar 2019 21:31:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dcw+pYVDabq+pJjV4TQ/WHaj/xJ4FSQRvERVdgBPt0g=;
+        b=azRqFbE0CBnghVCFfGa5xvTBPBaQvzwfGLSDEGP1JGVTznUich5r7FPPNRfeTXkhEB
+         I9oMBDHizV6vV6du7QeecfIiRx3UfrkeJTy3/v88BxWQjU/ZY2JaSqGNOBBwIAdFwvZK
+         2pBTaZ5FIlShGIq7setwsvtaYypVuT/K1d+w7u/wQW82CHBL//fNMn4sviXejRiaI1Hv
+         4GBQMcpMkr7/11ygLEXuGyMvlUSr9G/d0oIhN8LrW/riBEdycTIt0rJp4Q2Q9Y4ljXU9
+         CIdQnUukkHTCk8wVA7JMuRkeGKhA7AdNistPLwVgH6uRcrNAyoPe4pk2UJ/bMmhcswT4
+         ID2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dcw+pYVDabq+pJjV4TQ/WHaj/xJ4FSQRvERVdgBPt0g=;
+        b=K0P//tLeORzJZN+N+6RXfJ1EFL45HTvNkFS4bx8XUodtvzm7/65U5k74cQSatc3XRm
+         2r3fjY0hFhUn64PARpfrKUM880FsYGz3OZiHU0K/hm/BxQL1bkD/dPJTQG8qSz3FIJAA
+         R0qRWsAHaDbz9gosfHrBvw8WAJifPwnnM42hTrVpG8vZn90MLZwRojtZ9c1H/cCyCj+Y
+         6pkcvorsOFh0V2W9oT2lbV+7T9kVBA9aH/rkMQ3yp3yfF3IfmjQn2X7jHxTkLE5FMwdl
+         VE8CmVSnBpqXMvFK9TkrjjdwNXRJLyQVMKfFzQqNWf5zvfl/b4NrEzTpqyxfBsgzWew0
+         dCyw==
+X-Gm-Message-State: APjAAAXr2t7fI17xqJNTPhHRyozvGReHP96T3cvcvQ14N5B73SzOKlvr
+        qbalISvtfh2HZun1BoVEbYQ=
+X-Google-Smtp-Source: APXvYqzaNRO6LEijLiAOY6y1+B9VKU4mx3I516bQGSFoBO6mE4tcSyHu/A67YVWEumvBKvJKmYsHcg==
+X-Received: by 2002:a63:8d42:: with SMTP id z63mr17146639pgd.414.1551677494631;
+        Sun, 03 Mar 2019 21:31:34 -0800 (PST)
+Received: from localhost ([175.223.38.45])
+        by smtp.gmail.com with ESMTPSA id w23sm7033664pfn.60.2019.03.03.21.31.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 Mar 2019 21:31:33 -0800 (PST)
+Date:   Mon, 4 Mar 2019 14:31:30 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+Message-ID: <20190304053130.GB6648@jagdpanzerIV>
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+ <20190213014141.GB8097@jagdpanzerIV>
+ <878syj22r5.fsf@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1551390149-15443-1-git-send-email-abel.vesa@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <878syj22r5.fsf@linutronix.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 09:42:43PM +0000, Abel Vesa wrote:
-> Changes since v2:
->  * renamed the regulator
->  * removed the useless enable-active-high from the regulator 
->  * renamed a53_0_opp_table to a53_opp_table
+On (02/13/19 15:15), John Ogness wrote:
+> I don't like bust_spinlocks() because drivers end up implementing
+> oops_in_progress with exactly that... ignoring their own locks. I prefer
+> consoles are provided with a locking mechanism that they can use to
+> support a separate NMI-safe write function. My series introduces
+> console_atomic_lock() for exactly this purpose.
 > 
-> Abel Vesa (3):
->   arm64: dts: imx8mq: Add the clocks and the latencies for the A53 cores
->   arm64: dts: imx8mq: Add the buck vdd_arm regulator
->   arm64: dts: imx8mq: Add the opp table and cores opp properties
+> But this doesn't help here. Here we are talking about a crashing system
+> that does _not_ have an emergency console. And in this case I would say
+> messages would be lost (just like they are now if all you have is a vt
+> console and it was busy).
+> 
+> I suppose we could keep the current bust_spinlocks() stuff for the
+> special case that there are no emergency consoles available. It's better
+> than nothing, but also not really reliable. Preferrably we figure out
+> how to implement write_atomic for all console drivers.
 
-Applied all, thanks.
+Right. We set console loglevel to verbose before the final panic flush,
+so flush of all unseen messages (regardless of importance) does look quite
+reasonable (and this is what panic() has been doing for many years).
+
+	-ss
