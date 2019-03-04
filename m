@@ -2,124 +2,126 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9610C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DC0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F20520823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:14:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jtJ7iMll"
+	by mail.kernel.org (Postfix) with ESMTP id B73AF2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfCDTOe (ORCPT
+        id S1726810AbfCDTTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:14:34 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54888 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfCDTOe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:14:34 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x24JEG3n092792;
-        Mon, 4 Mar 2019 13:14:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1551726856;
-        bh=SdSdaTUKGuTQV33VcADHbb+AiiyloRtVau1XhnnuVnM=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=jtJ7iMllcML2O3VT+EDP5cd+6rptJznlqApixvn89Ld+6twko/YQKxejXGZp9Z3G4
-         g5X6mtYZ6xOpo/5K1XA8fYBf8HME4a5djD2XdxiFkbpt7KQsZyw6t0R+36KEq0s0rk
-         WZ0BefpYnHCmVN2VE5+86iAR0IYC9jwaeWEu9xpU=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x24JEGsT129524
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Mar 2019 13:14:16 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 4
- Mar 2019 13:14:15 -0600
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Mon, 4 Mar 2019 13:14:15 -0600
-Received: from [172.22.87.21] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x24JEFI8032326;
-        Mon, 4 Mar 2019 13:14:15 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4 2/7] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <lee.jones@linaro.org>, <tony@atomide.com>
-References: <20181023170623.31820-1-dmurphy@ti.com>
- <20181023170623.31820-2-dmurphy@ti.com> <20181024090421.GB24997@amd>
- <e8800c2e-8ada-7a0d-c1a6-14ddcbe1576d@ti.com> <20181024145434.GC9327@bogus>
- <beb1a6e1-8120-be94-b1a4-60ea6721765d@ti.com>
- <ade3121a-58ab-c0c3-6605-cf7d6a638da0@gmail.com> <20181026083703.GB19434@amd>
- <bdb73aa2-60d9-3356-f934-091f738e20a0@ti.com> <20190302230725.GA9225@amd>
-Message-ID: <46624fe6-c767-1872-c8c0-06cbf9a59e05@ti.com>
-Date:   Mon, 4 Mar 2019 13:14:04 -0600
+        Mon, 4 Mar 2019 14:19:33 -0500
+Received: from mga07.intel.com ([134.134.136.100]:28417 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726217AbfCDTTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:19:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 11:19:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,441,1544515200"; 
+   d="scan'208";a="304312899"
+Received: from ray.jf.intel.com (HELO [10.7.201.19]) ([10.7.201.19])
+  by orsmga005.jf.intel.com with ESMTP; 04 Mar 2019 11:19:31 -0800
+From:   Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v4 07/17] x86/split_lock: Enumerate #AC for split lock by
+ MSR IA32_CORE_CAPABILITY
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
+ <1551494711-213533-8-git-send-email-fenghua.yu@intel.com>
+ <8b810f50-e4ed-7020-c0df-203cf98c3ce8@intel.com>
+ <20190304185922.GA231946@romley-ivt3.sc.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <d582d469-40aa-287e-4368-723bf3ff4251@intel.com>
+Date:   Mon, 4 Mar 2019 11:19:31 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190302230725.GA9225@amd>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20190304185922.GA231946@romley-ivt3.sc.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
-
-On 3/2/19 5:07 PM, Pavel Machek wrote:
-> Hi!
-> 
->> I just want to follow up here and let you know that I have not abandoned this.
->> I am trying to rework and fix up the ti lmu binding as asked by Pavel.  Its proving
->> to be a bit of a challenge based on looking forward to what will be the implementation.
+On 3/4/19 10:59 AM, Fenghua Yu wrote:
+>> But, it goes unmentioned why you do the boot-cpu-only restriction here.
+>>  It doesn't match the behavior of the two functions called before
+>> init_core_capability():
 >>
->> I also did go offline and speak with Tony.  I have a Droid 4 so I can test all of this on
->> production hardware as well.
+>>         init_scattered_cpuid_features(c);
+>>         init_speculation_control(c);
 >>
->> Updated patchset will take some time to get out.
-> 
-> Is there any progress here?
-> 
-> This is needed for display on Droid 4, so it is somehow
-> important... and Milo Kim's patches are pretty reasonable.
-> 
-> I still believe best way forward is to merge them, and let you submit
-> any improvements on top of them...
-> 
+>> So why is this new function special?
+> The function sets the split_lock_detect feature which needs to be
+> applied before BSP calls apply_enforced_caps() in get_cpu_cap(). 
 
-I had looked at this a while back.  And I will pick this up again as it seems that the
-multi color framework will take longer than expected.
+Why does it need to be applied that way?
 
-For the Droid 4 it uses the lm3552 backlight driver, at least that is what is in the DT.
+> And I want to enable split lock detection in earlier phase to detect
+> split lock earlier.
 
-There is a lm3530 backlight driver that is already available and could be upgraded to DT support and have the lm3552
-added to it but the issues are the 3532 has 3 outputs and the 3530 has 1 and the register map is a bit different.
+Why do you want to do this?  Why is this *required* as part of this
+implementation?
 
-There are register differences between the two devices but the driver already has ramp support, PWM support (exponential/linear),
-ALS support and manual support already available along with user space configuration.
-
-I was working on creating a new lm3532 driver based off the lm3530 driver or adapting the 3530 to include the 3532 and
-making the driver generic to this family.
-
-Dan
-
-> Best regards,
-> 									Pavel
-> 
-
-
--- 
-------------------
-Dan Murphy
+... and how is this different than the other features that are processed
+for cpus other than the boot CPU?
