@@ -2,193 +2,125 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168FBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D85FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51742075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487FC20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:20:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BbnFOFST"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbfCDMUM (ORCPT
+        id S1726413AbfCDMU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 07:20:12 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:32784 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfCDMUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 07:20:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 986BEA78;
-        Mon,  4 Mar 2019 04:20:11 -0800 (PST)
-Received: from [10.1.197.2] (ostrya.cambridge.arm.com [10.1.197.2])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E41BC3F575;
-        Mon,  4 Mar 2019 04:20:09 -0800 (PST)
-Subject: Re: [RFC PATCH v1 05/15] iommu/arm-smmu: Add auxiliary domain support
- for arm-smmuv2
-To:     Jordan Crouse <jcrouse@codeaurora.org>,
-        freedreno@lists.freedesktop.org
-Cc:     linux-arm-msm@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        dianders@chromimum.org, hoegsberg@google.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <1551469117-3404-1-git-send-email-jcrouse@codeaurora.org>
- <1551469117-3404-6-git-send-email-jcrouse@codeaurora.org>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <d0d0849f-56ab-94c6-f081-210f94353a2d@arm.com>
-Date:   Mon, 4 Mar 2019 12:19:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 4 Mar 2019 07:20:29 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36224 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfCDMU3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 07:20:29 -0500
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ED1D1322;
+        Mon,  4 Mar 2019 13:20:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1551702027;
+        bh=UUt7uxYVF+P4/h6B+6jShHNIZvXptTdwrd75a0yc2js=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BbnFOFSTgPy3aOlER6Ia45QvtsOh2N5FzlvoDBH1oPK+5qRlpra5SfOLxSe+scdlb
+         A0XxI7rrfkc66nYowMkGUsOUeTDLgK7wG++UvMW4K7W4Ksxax5BEJB/mxcZXshl3hj
+         vb3odFVozf/iUIJRhOzlV+ei3jBQs5hdjS5BvZ74=
+Date:   Mon, 4 Mar 2019 14:20:21 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Archit Taneja <architt@codeaurora.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/9] drm/bridge: tc358767: Simplify tc_stream_clock_calc()
+Message-ID: <20190304122021.GD6325@pendragon.ideasonboard.com>
+References: <20190226193609.9862-1-andrew.smirnov@gmail.com>
+ <CGME20190226193632epcas4p139e0002746989958fef4913a0af9fc0d@epcas4p1.samsung.com>
+ <20190226193609.9862-3-andrew.smirnov@gmail.com>
+ <bad3c902-8ead-dbe4-fa77-e365dd29e6f2@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <1551469117-3404-6-git-send-email-jcrouse@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bad3c902-8ead-dbe4-fa77-e365dd29e6f2@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jordan,
+Hello,
 
-On 01/03/2019 19:38, Jordan Crouse wrote:
-> Support the new auxiliary domain API for arm-smmuv2 to initialize and
-> support multiple pagetables for a SMMU device. Since the smmu-v2 hardware
-> doesn't have any built in support for switching the pagetable base it is
-> left as an exercise to the caller to actually use the pagetable; aux
-> domains in the IOMMU driver are only preoccupied with creating and managing
-> the pagetable memory.
+On Mon, Mar 04, 2019 at 10:42:20AM +0100, Andrzej Hajda wrote:
+> On 26.02.2019 20:36, Andrey Smirnov wrote:
+> > Drop the use of tc_write() as well as "magicly" used "ret" and "err:"
+> > and replace it with a simple call to regmap_write(). No functional
+> > change intended.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Archit Taneja <architt@codeaurora.org>
+> > Cc: Andrzej Hajda <a.hajda@samsung.com>
+> > Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  drivers/gpu/drm/bridge/tc358767.c | 7 +------
+> >  1 file changed, 1 insertion(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+> > index b0f8264a1285..86ebd49194b7 100644
+> > --- a/drivers/gpu/drm/bridge/tc358767.c
+> > +++ b/drivers/gpu/drm/bridge/tc358767.c
+> > @@ -504,7 +504,6 @@ static int tc_pxl_pll_dis(struct tc_data *tc)
+> >  
+> >  static int tc_stream_clock_calc(struct tc_data *tc)
+> >  {
+> > -	int ret;
+> >  	/*
+> >  	 * If the Stream clock and Link Symbol clock are
+> >  	 * asynchronous with each other, the value of M changes over
+> > @@ -520,11 +519,7 @@ static int tc_stream_clock_calc(struct tc_data *tc)
+> >  	 * M/N = f_STRMCLK / f_LSCLK
+> >  	 *
+> >  	 */
+> > -	tc_write(DP0_VIDMNGEN1, 32768);
+> > -
+> > -	return 0;
+> > -err:
+> > -	return ret;
+> > +	return regmap_write(tc->regmap, DP0_VIDMNGEN1, 32768);
 > 
-> Following is a pseudo code example of how a domain can be created
 > 
->  /* Check to see if aux domains are supported */
->  if (iommu_dev_has_feature(dev, IOMMU_DEV_FEAT_AUX)) {
-> 	 iommu = iommu_domain_alloc(...);
+> The patch looks semantically correct, but you are dropping here custom
+> accessor (tc_write) in favor of regmap API.
 > 
-> 	 if (iommu_aux_attach_device(domain, dev))
-> 		 return FAIL;
+> I think the best would be consistent across the whole driver: either use
+> only  accessors, either drop them entirely and use regmap API.
+
+I agree with this. The tc_write macro with its goto err is pretty nasty,
+and I'd like to see it removed from the whole driver, or at least
+replaced with an accessor that wouldn't hide the goto.
+
+> And it would be good to have comment of the original authors about this
+> change.
 > 
-> 	/* Save the base address of the pagetable for use by the driver
-> 	iommu_domain_get_attr(domain, DOMAIN_ATTR_PTBASE, &ptbase);
->  }
+> >  }
+> >  
+> >  static int tc_aux_link_setup(struct tc_data *tc)
 
-> After this 'domain' can be used like any other iommu domain to map and
-> unmap iova addresses in the pagetable. The driver/hardware can be used
-> to switch the pagetable according to its own specific implementation.
-> 
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+-- 
+Regards,
 
-[...]
-> +static bool arm_smmu_dev_has_feat(struct device *dev,
-> +		enum iommu_dev_features feat)
-> +{
-> +	/*
-> +	 * FIXME: Should we do some hardware checking here, like to be sure this
-> +	 * is a stage 1 and such?
-> +	 */
-> +
-> +	/* Always allow aux domains */
-> +	if (feat == IOMMU_DEV_FEAT_AUX)
-> +		return true;
-
-If possible, we should only return true when SMMU and GPU are able to
-coordinate and switch contexts. Can the feature be identified through ID
-reg or compatible string?
-
-If we plug a PCIe card with PASID behind a SMMUv2 'classic', and its
-driver attempts to enable AUXD support, then this should return false.
-
-> +
-> +	return false;
-> +}
-> +
-> +/* FIXME: Add stubs for dev_enable_feat and dev_disable_feat? */
-
-Ideally yes. Although SMMUv2 support for aux domains will likely only be
-used by the MSM driver, using the same model in all IOMMU drivers would
-ease moving things to common code later.
-
-> +
-> +/* Set up a new aux domain and create a new pagetable with the same
-> + * characteristics as the master
-> + */
-> +static int arm_smmu_aux_attach_dev(struct iommu_domain *domain,
-> +		struct device *dev)
-> +{
-> +	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
-> +	struct arm_smmu_device *smmu = fwspec_smmu(fwspec);
-> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> +
-> +	smmu_domain->is_aux = true;
-
-The API allows to attach the same domain to one device using
-aux_attach_dev() and another using attach_dev(). For SMMUv3 we'll reject
-this, since normal and aux domain are different things (one has PASID
-tables, the other doesn't). Is this supported by SMMUv2? Otherwise some
-sanity-check here might be necessary
-
-> +
-> +	/* No power is needed because aux domain doesn't touch the hardware */
-> +	return arm_smmu_init_domain_context(domain, smmu);
-> +}
-> +
->  static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  {
->  	int ret;
-> @@ -1342,6 +1414,8 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  		return -ENXIO;
->  	}
->  
-> +	/* FIXME: Reject unmanged domains since those should be aux? */
-
-No, unmanaged domains are also used by VFIO and a couple other drivers
-that want to setup IOMMU mappings themselves.
-
-Thanks,
-Jean
-
-> +
->  	/*
->  	 * FIXME: The arch/arm DMA API code tries to attach devices to its own
->  	 * domains between of_xlate() and add_device() - we have no way to cope
-> @@ -1388,7 +1462,13 @@ arm_smmu_get_pgtbl_ops(struct iommu_domain *domain, unsigned long iova)
->  {
->  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->  	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-> -	struct arm_smmu_cb *cb = &smmu_domain->smmu->cbs[cfg->cbndx];
-> +	struct arm_smmu_cb *cb;
-> +
-> +	/* quick escape for domains that don't have split pagetables enabled */
-> +	if (!smmu_domain->pgtbl_ops[1])
-> +		return smmu_domain->pgtbl_ops[0];
-> +
-> +	cb = &smmu_domain->smmu->cbs[cfg->cbndx];
->  
->  	if (iova & cb->split_table_mask)
->  		return smmu_domain->pgtbl_ops[1];
-> @@ -1700,6 +1780,11 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
->  				!!(smmu_domain->attributes &
->  				   (1 << DOMAIN_ATTR_SPLIT_TABLES));
->  			return 0;
-> +		case DOMAIN_ATTR_PTBASE:
-> +			if (!smmu_domain->is_aux)
-> +				return -ENODEV;
-> +			*((u64 *)data) = smmu_domain->ttbr0;
-> +			return 0;
->  		default:
->  			return -ENODEV;
->  		}
-> @@ -1810,7 +1895,9 @@ static struct iommu_ops arm_smmu_ops = {
->  	.capable		= arm_smmu_capable,
->  	.domain_alloc		= arm_smmu_domain_alloc,
->  	.domain_free		= arm_smmu_domain_free,
-> +	.dev_has_feat		= arm_smmu_dev_has_feat,
->  	.attach_dev		= arm_smmu_attach_dev,
-> +	.aux_attach_dev		= arm_smmu_aux_attach_dev,
->  	.map			= arm_smmu_map,
->  	.unmap			= arm_smmu_unmap,
->  	.flush_iotlb_all	= arm_smmu_flush_iotlb_all,
-> 
-
+Laurent Pinchart
