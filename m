@@ -2,147 +2,78 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EB5C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1764C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCE021019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:41:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rzeLVpeH"
+	by mail.kernel.org (Postfix) with ESMTP id 72BB120863
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbfCDFl3 (ORCPT
+        id S1726047AbfCDFr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 00:41:29 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:47900 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfCDFl2 (ORCPT
+        Mon, 4 Mar 2019 00:47:27 -0500
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:14355 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725550AbfCDFr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 00:41:28 -0500
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x245fLAA025290;
-        Mon, 4 Mar 2019 14:41:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x245fLAA025290
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1551678082;
-        bh=fd7Of/RFciDnI4bwj/V+dn8GdN2GPKprLJQyL4wxXBo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rzeLVpeHhvhjaYqrZPwzSjiGj6fQr4nHdGGLHLFTTlTm+KNTfqrW7SeR3dxmJn+7H
-         9v9gxfe54Sc9/lZtmsFsyLvhfcBrFeaFicXGLuMgsIERwGXnDrnCP+yTF9VlaQ+pEk
-         D4/YgkC0oghPcx9AtlWf3BkfmHhNntzwjlhYuAC8CYsYfdEzixo+wUarLU6IdoMrqS
-         OYF578TAkJPHdHFDV9lHa5nRKXp4oKcu7oVjovg40/om8cZYP1Wkto9+BM/jfq2uE8
-         TIIcCU47G7R1TxKr3xci3lacfra1k+pxwLKgqw5d4/N32BcgpnVeQnhyluVEFC22T+
-         XUE+LBmyDtoTw==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id f88so3341693uaf.2;
-        Sun, 03 Mar 2019 21:41:21 -0800 (PST)
-X-Gm-Message-State: APjAAAVC2XSIcRt+dvC2VOiCt6dE5PoAdLvZ2Q7XFFXPOftYQYP/2gDp
-        heKxP4qL2KhCBZ+FOB3/PzYPv2txAYwcLJl3GAI=
-X-Google-Smtp-Source: APXvYqyPPEx0wGlFVEm5kGkNBVxHvI83kgzQe50YS8QPN8XSsohyGA0FlLJZ79hNleEgd4ICUcEybcckSWwaCV9cGyk=
-X-Received: by 2002:a05:6102:18f:: with SMTP id r15mr8771531vsq.215.1551678080712;
- Sun, 03 Mar 2019 21:41:20 -0800 (PST)
+        Mon, 4 Mar 2019 00:47:27 -0500
+X-IronPort-AV: E=Sophos;i="5.58,438,1544457600"; 
+   d="scan'208";a="55845583"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 04 Mar 2019 13:47:24 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id EB1CC4C5347A;
+        Mon,  4 Mar 2019 13:47:07 +0800 (CST)
+Received: from ubuntu.g08.fujitsu.local (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 4 Mar 2019 13:47:23 +0800
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+To:     <davem@davemloft.net>, <steffen.klassert@secunet.com>,
+        <fw@strlen.de>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <suyj.fnst@cn.fujitsu.com>
+Subject: [PATCH] net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_xfrm
+Date:   Mon, 4 Mar 2019 00:46:43 -0500
+Message-ID: <1551678403-23132-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190227193748.132301-1-joel@joelfernandes.org>
- <CAK7LNAR=dpw7y+Y20m0n4ZqzQtqY2XrS3CKk5bQA-Azhp0SN6g@mail.gmail.com>
- <20190228144306.GA138215@google.com> <CAK7LNARTHJP=HzyBg_oBBL4whpxHXeijqk=zKLYpt=1GBLNGAA@mail.gmail.com>
- <20190301171954.GA217990@google.com> <CAK7LNAShVt=zOPP1TUuBbR_H8kmc+zuLAyRXucjMMKrALkW_6A@mail.gmail.com>
- <20190302023940.GA55262@google.com>
-In-Reply-To: <20190302023940.GA55262@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 4 Mar 2019 14:40:44 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATjNE2g_HJnuqvTU7NuUeeUCa0Ogxf0Qru0yzkOT+n2-w@mail.gmail.com>
-Message-ID: <CAK7LNATjNE2g_HJnuqvTU7NuUeeUCa0Ogxf0Qru0yzkOT+n2-w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        qais.yousef@arm.com, Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: EB1CC4C5347A.A0F39
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > Let me ask one more question.
-> > > >
-> > > > I guess this patch is motivated by
-> > > > how difficult to convey kernel headers
-> > > > from vendors to users.
-> > > >
-> > > > In that situation, how will the user find
-> > > > the right compiler to use for building external modules?
-> > > >
-> > > >
-> > > >
-> > > >
-> > > > Greg KH said:
-> > > >
-> > > > We don't ever support the system of loading a module built with anything
-> > > > other than the _exact_ same compiler than the kernel was.
-> > > >
-> > > >
-> > > > For the full context, see this:
-> > > > https://lore.kernel.org/patchwork/patch/836247/#1031547
-> > >
-> > > IMO this issue is not related to this patch but is just an issue with
-> > > building external modules in general.
-> >
-> >
-> > I do not think it is an issue of the build system, at least.
-> >
-> > As far as I understood Greg's comment, it is troublesome
-> > without the assumption that vmlinux and modules are built
-> > by the same compiler.
-> > It is related to this patch since this patch assumes use-cases
-> > where external modules are built in a completely different environment,
-> > where a different compiler is probably installed.
->
-> Yes, but what I'm trying to say is the same issue exists with all other
-> solutions today that do this. Such as debian you have linux-headers package.
+For rcu protected pointers, we'd bettter add '__rcu' for them.
 
+No functional change.
 
-Distributions provide the compiler in the standard path (/usr/bin/gcc),
-and users are supposed to use it for building external modules.
-That's the difference.
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+---
+ include/net/netns/xfrm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/net/netns/xfrm.h b/include/net/netns/xfrm.h
+index 59f45b1..d2a36fb 100644
+--- a/include/net/netns/xfrm.h
++++ b/include/net/netns/xfrm.h
+@@ -57,7 +57,7 @@ struct netns_xfrm {
+ 	struct list_head	inexact_bins;
+ 
+ 
+-	struct sock		*nlsk;
++	struct sock		__rcu *nlsk;
+ 	struct sock		*nlsk_stash;
+ 
+ 	u32			sysctl_aevent_etime;
+-- 
+2.7.4
 
 
 
-> A user could totally use the build artifacts obtained from somewhere to build
-> a kernel module with a completely different compiler. That issue has just to
-> do with the reality, and isn't an issue caused by any one solution such as
-> this one.  I agree care must be taken whenever user is building external
-> kernel modules independent of kernel sources.  Did I miss something else?
->
-> thanks a lot,
->
->  - Joel
->
-
---
-Best Regards
-Masahiro Yamada
