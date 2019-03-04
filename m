@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A325C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65BCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03DB21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A80032146E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688221;
-	bh=2ply1yMZ0avhW8Im/DztGM0nZhTp9JsYXcg4Sq6yPWU=;
+	s=default; t=1551688224;
+	bh=6KJqldyJFtZgBoYCw6K6mi9Ny5Bh+M8drlMfVMngkag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pmNGTF+zcLUNy7EDktdXkFriPVWLl3VchJAWcTlRZFY+xKruT1FpBONYhuV86ssM6
-	 nmbjs2VQRDSmTkIDVfSq8heP5iUeBM+s6YLBwTb4jX1o77Zdu28u4l89ng8pTTTySF
-	 yWdogLzhC+1V0nviGih3GOxgCDr3lzOtMsC9gNyM=
+	b=s1MtCUOTwWlzvTy2kZPWwM0jzPpwElvMza1zONZcZ+yWQM24veQRGgMnj8Vytmev7
+	 TQOGQ0N2FhypXgfo+J/AN+vaOFwwpkyhmc6usv9Z2lhLViKX3nLz2VUyleymMUZJoE
+	 XgQfH02FTPqotEfYEmSHoF40m83kwqKpxBk/VQB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfCDIaT (ORCPT
+        id S1727692AbfCDIaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:30:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:30:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726807AbfCDIaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:30:16 -0500
+        id S1727678AbfCDIaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:30:19 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA7620836;
-        Mon,  4 Mar 2019 08:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FC6520836;
+        Mon,  4 Mar 2019 08:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688215;
-        bh=2ply1yMZ0avhW8Im/DztGM0nZhTp9JsYXcg4Sq6yPWU=;
+        s=default; t=1551688218;
+        bh=6KJqldyJFtZgBoYCw6K6mi9Ny5Bh+M8drlMfVMngkag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wkN9fU5IB/MCt+6kbwC9I/9Hl+FbMAKBF8hlpPpjrxVd8n1S58PoItpv9gLTgn2C2
-         ThA6OZsgdrxgpp0ynr6Mp33dKJsEJW4wYlWHHHXdj2n6cDnQHmGHS0h0K0q7NSkPEg
-         VJqHsFVsyjKOOh1134xgnUrld4FMCMfa6TuVfCWY=
+        b=wbI66h6Oc/poLDGdqxISlgnv2r+fIXL9YW6IMvjfozg71COpbGd26qDYYxuPqn1dp
+         ZVA36WB6Z+dqdfJXFmQ2B2pYrcR98IsDmGKf6X65usUHbsRitrK0t1rjjbVKaOSeiM
+         QJzQghM4LsMNQqU/vZY2DbEmC3+9r99owiyzM35E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
+        stable@vger.kernel.org, Jaesoo Lee <jalee@purestorage.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 52/78] hv_netvsc: Fix hash key value reset after other ops
-Date:   Mon,  4 Mar 2019 09:22:35 +0100
-Message-Id: <20190304081627.817068988@linuxfoundation.org>
+Subject: [PATCH 4.19 53/78] nvme-rdma: fix timeout handler
+Date:   Mon,  4 Mar 2019 09:22:36 +0100
+Message-Id: <20190304081627.864774756@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -66,131 +67,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 17d91256898402daf4425cc541ac9cbf64574d9a ]
+[ Upstream commit 4c174e6366746ae8d49f9cc409f728eebb7a9ac9 ]
 
-Changing mtu, channels, or buffer sizes ops call to netvsc_attach(),
-rndis_set_subchannel(), which always reset the hash key to default
-value. That will override hash key changed previously. This patch
-fixes the problem by save the hash key, then restore it when we re-
-add the netvsc device.
+Currently, we have several problems with the timeout
+handler:
+1. If we timeout on the controller establishment flow, we will hang
+because we don't execute the error recovery (and we shouldn't because
+the create_ctrl flow needs to fail and cleanup on its own)
+2. We might also hang if we get a disconnet on a queue while the
+controller is already deleting. This racy flow can cause the controller
+disable/shutdown admin command to hang.
 
-Fixes: ff4a44199012 ("netvsc: allow get/set of RSS indirection table")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-[sl: fix up subject line]
+We cannot complete a timed out request from the timeout handler without
+mutual exclusion from the teardown flow (e.g. nvme_rdma_error_recovery_work).
+So we serialize it in the timeout handler and teardown io and admin
+queues to guarantee that no one races with us from completing the
+request.
+
+Reported-by: Jaesoo Lee <jalee@purestorage.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/hyperv_net.h   | 10 +++++++---
- drivers/net/hyperv/netvsc.c       |  2 +-
- drivers/net/hyperv/netvsc_drv.c   |  5 ++++-
- drivers/net/hyperv/rndis_filter.c |  9 +++++++--
- 4 files changed, 19 insertions(+), 7 deletions(-)
+ drivers/nvme/host/rdma.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index a32ded5b4f416..42d284669b03a 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -144,6 +144,8 @@ struct hv_netvsc_packet {
- 	u32 total_data_buflen;
- };
- 
-+#define NETVSC_HASH_KEYLEN 40
-+
- struct netvsc_device_info {
- 	unsigned char mac_adr[ETH_ALEN];
- 	u32  num_chn;
-@@ -151,6 +153,8 @@ struct netvsc_device_info {
- 	u32  recv_sections;
- 	u32  send_section_size;
- 	u32  recv_section_size;
-+
-+	u8 rss_key[NETVSC_HASH_KEYLEN];
- };
- 
- enum rndis_device_state {
-@@ -160,8 +164,6 @@ enum rndis_device_state {
- 	RNDIS_DEV_DATAINITIALIZED,
- };
- 
--#define NETVSC_HASH_KEYLEN 40
--
- struct rndis_device {
- 	struct net_device *ndev;
- 
-@@ -210,7 +212,9 @@ int netvsc_recv_callback(struct net_device *net,
- void netvsc_channel_cb(void *context);
- int netvsc_poll(struct napi_struct *napi, int budget);
- 
--int rndis_set_subchannel(struct net_device *ndev, struct netvsc_device *nvdev);
-+int rndis_set_subchannel(struct net_device *ndev,
-+			 struct netvsc_device *nvdev,
-+			 struct netvsc_device_info *dev_info);
- int rndis_filter_open(struct netvsc_device *nvdev);
- int rndis_filter_close(struct netvsc_device *nvdev);
- struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index fe01e141c8f87..1a942feab9548 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -84,7 +84,7 @@ static void netvsc_subchan_work(struct work_struct *w)
- 
- 	rdev = nvdev->extension;
- 	if (rdev) {
--		ret = rndis_set_subchannel(rdev->ndev, nvdev);
-+		ret = rndis_set_subchannel(rdev->ndev, nvdev, NULL);
- 		if (ret == 0) {
- 			netif_device_attach(rdev->ndev);
- 		} else {
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index bece935567c14..c9e2a986ccb72 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -875,6 +875,9 @@ static struct netvsc_device_info *netvsc_devinfo_get
- 		dev_info->send_section_size = nvdev->send_section_size;
- 		dev_info->recv_sections = nvdev->recv_section_cnt;
- 		dev_info->recv_section_size = nvdev->recv_section_size;
-+
-+		memcpy(dev_info->rss_key, nvdev->extension->rss_key,
-+		       NETVSC_HASH_KEYLEN);
- 	} else {
- 		dev_info->num_chn = VRSS_CHANNEL_DEFAULT;
- 		dev_info->send_sections = NETVSC_DEFAULT_TX;
-@@ -937,7 +940,7 @@ static int netvsc_attach(struct net_device *ndev,
- 		return PTR_ERR(nvdev);
- 
- 	if (nvdev->num_chn > 1) {
--		ret = rndis_set_subchannel(ndev, nvdev);
-+		ret = rndis_set_subchannel(ndev, nvdev, dev_info);
- 
- 		/* if unavailable, just proceed with one queue */
- 		if (ret) {
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index 0b05f7ebeb01e..53c6039bffb67 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1075,7 +1075,9 @@ static void netvsc_sc_open(struct vmbus_channel *new_sc)
-  * This breaks overlap of processing the host message for the
-  * new primary channel with the initialization of sub-channels.
-  */
--int rndis_set_subchannel(struct net_device *ndev, struct netvsc_device *nvdev)
-+int rndis_set_subchannel(struct net_device *ndev,
-+			 struct netvsc_device *nvdev,
-+			 struct netvsc_device_info *dev_info)
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index b6a28de682e85..0939a4e178fb9 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -1672,18 +1672,28 @@ static enum blk_eh_timer_return
+ nvme_rdma_timeout(struct request *rq, bool reserved)
  {
- 	struct nvsp_message *init_packet = &nvdev->channel_init_pkt;
- 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
-@@ -1116,7 +1118,10 @@ int rndis_set_subchannel(struct net_device *ndev, struct netvsc_device *nvdev)
- 		   atomic_read(&nvdev->open_chn) == nvdev->num_chn);
+ 	struct nvme_rdma_request *req = blk_mq_rq_to_pdu(rq);
++	struct nvme_rdma_queue *queue = req->queue;
++	struct nvme_rdma_ctrl *ctrl = queue->ctrl;
  
- 	/* ignore failues from setting rss parameters, still have channels */
--	rndis_filter_set_rss_param(rdev, netvsc_hash_key);
-+	if (dev_info)
-+		rndis_filter_set_rss_param(rdev, dev_info->rss_key);
-+	else
-+		rndis_filter_set_rss_param(rdev, netvsc_hash_key);
+-	dev_warn(req->queue->ctrl->ctrl.device,
+-		 "I/O %d QID %d timeout, reset controller\n",
+-		 rq->tag, nvme_rdma_queue_idx(req->queue));
++	dev_warn(ctrl->ctrl.device, "I/O %d QID %d timeout\n",
++		 rq->tag, nvme_rdma_queue_idx(queue));
  
- 	netif_set_real_num_tx_queues(ndev, nvdev->num_chn);
- 	netif_set_real_num_rx_queues(ndev, nvdev->num_chn);
+-	/* queue error recovery */
+-	nvme_rdma_error_recovery(req->queue->ctrl);
++	if (ctrl->ctrl.state != NVME_CTRL_LIVE) {
++		/*
++		 * Teardown immediately if controller times out while starting
++		 * or we are already started error recovery. all outstanding
++		 * requests are completed on shutdown, so we return BLK_EH_DONE.
++		 */
++		flush_work(&ctrl->err_work);
++		nvme_rdma_teardown_io_queues(ctrl, false);
++		nvme_rdma_teardown_admin_queue(ctrl, false);
++		return BLK_EH_DONE;
++	}
+ 
+-	/* fail with DNR on cmd timeout */
+-	nvme_req(rq)->status = NVME_SC_ABORT_REQ | NVME_SC_DNR;
++	dev_warn(ctrl->ctrl.device, "starting error recovery\n");
++	nvme_rdma_error_recovery(ctrl);
+ 
+-	return BLK_EH_DONE;
++	return BLK_EH_RESET_TIMER;
+ }
+ 
+ static blk_status_t nvme_rdma_queue_rq(struct blk_mq_hw_ctx *hctx,
 -- 
 2.19.1
 
