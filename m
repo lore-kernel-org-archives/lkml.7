@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B02EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DBDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CEF2146F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660E320652
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lEX58afM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjMp/l2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfCDPTh (ORCPT
+        id S1727021AbfCDPTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 10:19:37 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:47080 "EHLO
+        Mon, 4 Mar 2019 10:19:49 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40368 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfCDPTe (ORCPT
+        with ESMTP id S1726166AbfCDPTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 10:19:34 -0500
-Received: by mail-io1-f68.google.com with SMTP id k21so4202204ior.13;
-        Mon, 04 Mar 2019 07:19:34 -0800 (PST)
+        Mon, 4 Mar 2019 10:19:35 -0500
+Received: by mail-io1-f68.google.com with SMTP id p17so4207948iol.7;
+        Mon, 04 Mar 2019 07:19:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xBdSxOpRVCPLT+WOZO0rjdgqq+WENx8KAyprRn80FIA=;
-        b=lEX58afMkYcjZRG5lmr+tGUJuaWuIIV8ASdNBbJlpmsV4PToEUpUqqu9skivru2HBa
-         MZiFTM1ZjholnQs99n228dc1RCrN9gqr5ScUolaEdK4aua3xSj18CJCTct9l9ijNb7Jf
-         thZh8KOeWL8wpyuEMluHyklbNTifubGEi3oTBihMPOTY7chzLH7ddEJjgXCUpMc/7t7h
-         RjM+dBK5CpApCQOsVyjOF1TXsQYDRjlU3TmDLOQefOyFxm25ZulZPBqAEBLWeOodOImw
-         cFWB4gc00rxVrxXPu2ZG7414qA0ar62jMm7Wcxu8W/lfh05dVZBJFn4S6IlTXS4co7JX
-         pqgA==
+        bh=dkcNqktpR8yNEegl0ynANTKXSHlu6lgX/Bw/77RWtQM=;
+        b=ZjMp/l2eoG6Z99R1rB3QPaja9RhIl651Wy1VooAJtYTD7R8sfvCboAqJpon9XeNJJQ
+         x195ywgdzNtkuid85a7qyiHI6iJUXppSOrRvQyy2gCuI6TirCuTQUP6nZ3bDx0h3zEJ9
+         f4ha28pcgZgL4xOCzr1vNU9ADX/FxRcdcSQJ8EoE0bNHvZGOSP/ibaAIsx91ZUXTdWev
+         lOLQ3nJfIJMXm99GbzCRnwE3NtgmOioNxTDUjPwpymYpfIcBrxGBNYSmB2/337Eg2ccO
+         DuMlfSreeVvWhZoob6Mq656uIOwthTpsnkWOpyLOTFhKiMaMmZ8QLodffO/wlpveh3rg
+         HlRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=xBdSxOpRVCPLT+WOZO0rjdgqq+WENx8KAyprRn80FIA=;
-        b=gJdH+tVEjcFnZztvtSIQxXHysOZKtFEDQTSGcYeNbuli3tT6t0LnfwjhLlvb2P8gTX
-         qze1r+7hEh+QYpf1UkXz4CWz6hlXqsHWTO4rT3pYj4jSRY/6FCsAemVZBfoTxG5GkyX/
-         HTyrmtsHj5zQBFs2bn1m1UYLIxUrJIsX4GDTvHyOXdZ6bydMetzm7YCG2SWycPYRnJb5
-         GXHLw84Tn+oYH6wQcJ12lMu1frwhy7YWySqDNRWOuC64zP599UuPrv+/4FNFP6CrMIfc
-         kIFKXYi6oq94FfsXG5vjyqVl7PydfjGmyoJ8hIXXiGe8tnBe+gieV//+nH5WcwmPKX4w
-         IAcQ==
-X-Gm-Message-State: APjAAAWc46gMqM/Lganx5htNZgrFPVzLtIXfWnpb1Y660+x1/6hOG9ri
-        hKLaMy1yhLM6VmpfnFWqMA9CO/k=
-X-Google-Smtp-Source: APXvYqx0X4wEZm14rqO7qL+nHSqmpxUgkCsMzzndWWirMNtW83WF2UmSL5ISomxuvBtLgHtlFcYXaw==
-X-Received: by 2002:a6b:6a14:: with SMTP id x20mr11234305iog.147.1551712773697;
-        Mon, 04 Mar 2019 07:19:33 -0800 (PST)
+        bh=dkcNqktpR8yNEegl0ynANTKXSHlu6lgX/Bw/77RWtQM=;
+        b=sd7Lya2FkjcH4znDU0naQlirrjF4Hy6ESVSEL6JtJje5Ncqbpg3o/pIO3Cxwp4ryw/
+         Y0jAiN/q3e6qPHLQ9shlxzKB7BTWQmImyQWPEA98ypfsmQ1ojVbdk+xURRo0gX1acbKX
+         t6QlPA8igTRhvFgh/fJho7VADwBFOTn9kC7dmMbDC8RClLIvgeMxBQrHVCCAeIuuIuHV
+         9eUdohQ5e7gI+tCHh/5wuPg/xOVftA9guy8f9L7GbfbvKNSs11mrUoNXvS4NMEtB4Xdx
+         hGJoDR5FpIGQuMZneTWAcTKEC5mlK7e/OYxVBv+KPSWGWx2xyePKjs934KuwyjbZ4Hca
+         KHfg==
+X-Gm-Message-State: APjAAAUgRJ3wmk/HhpyDem58nj409KA0M+SXS1veke0Yp2AyIN5ylnM8
+        zdkm0F3fSfQOXBBN56RqR9MM4t0=
+X-Google-Smtp-Source: APXvYqx4nFxkgQA4Qvp5kh38vS+O+LVho5YsfFIUSGPZLlYaMZjJCQSqntgmKoKS29gaICqjWNbHzg==
+X-Received: by 2002:a5d:91d3:: with SMTP id k19mr10030875ior.258.1551712774783;
+        Mon, 04 Mar 2019 07:19:34 -0800 (PST)
 Received: from localhost.localdomain (CPE1cabc0918a93-CM1cabc0918a90.cpe.net.cable.rogers.com. [99.229.26.117])
-        by smtp.gmail.com with ESMTPSA id 5sm3240615ity.40.2019.03.04.07.19.32
+        by smtp.gmail.com with ESMTPSA id 5sm3240615ity.40.2019.03.04.07.19.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 07:19:33 -0800 (PST)
+        Mon, 04 Mar 2019 07:19:34 -0800 (PST)
 From:   Robert Yang <decatf@gmail.com>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Robert Yang <decatf@gmail.com>
-Subject: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Kionix, Inc.
-Date:   Mon,  4 Mar 2019 10:19:10 -0500
-Message-Id: <20190304151912.11485-2-decatf@gmail.com>
+Subject: [PATCH v2 2/3] dt-bindings: iio: accel: kxcjk1013: Add device tree binding documentation
+Date:   Mon,  4 Mar 2019 10:19:11 -0500
+Message-Id: <20190304151912.11485-3-decatf@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190304151912.11485-1-decatf@gmail.com>
 References: <20190304151912.11485-1-decatf@gmail.com>
@@ -72,26 +72,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kionix manufactured MEMs sensors. There are Kionix acceleromoter sensor
-drivers which can be used with device tree.
+Document device tree bindings for Kionix KXCJK-1013 Accelerometer driver.
 
 Signed-off-by: Robert Yang <decatf@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/iio/accel/kionix,kxcjk1013.txt     | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index bb6f6e8a2eee..e389904ee9bf 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -210,6 +210,7 @@ kiebackpeter    Kieback & Peter GmbH
- kinetic Kinetic Technologies
- kingdisplay	King & Display Technology Co., Ltd.
- kingnovel	Kingnovel Technology Co., Ltd.
-+kionix	Kionix, Inc.
- koe	Kaohsiung Opto-Electronics Inc.
- kosagi	Sutajio Ko-Usagi PTE Ltd.
- kyo	Kyocera Corporation
+diff --git a/Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt b/Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
+new file mode 100644
+index 000000000000..eb76a02e2a82
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
+@@ -0,0 +1,17 @@
++Kionix KXCJK-1013 Accelerometer device tree bindings
++
++Required properties:
++
++- compatible: Must be one of:
++    "kionix,kxcjk1013"
++    "kionix,kxcj91008"
++    "kionix,kxtj21009"
++    "kionix,kxtf9"
++ - reg: i2c slave address
++
++Example:
++
++kxtf9@f {
++	compatible = "kionix,kxtf9";
++	reg = <0x0F>;
++};
 -- 
 2.17.1
 
