@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95A1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C91BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8915A21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE0A21019
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688277;
-	bh=IpWykuczM/Rf0lYKkW8LMfw1+5q9jXTLR4oTMAPERf8=;
+	s=default; t=1551688281;
+	bh=JRO0p/rDBqcnPhvy/yV69tyEu3bwZe2HrhDgIKBqkYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TZx6nCCNaPxVvHSDFjP7A2Vo0wrr3xDLRb+v4ieGp5WjEWgSs0yvI3lAUammYB5Vc
-	 ThaiEMgyAa2RbxTLeZSbfVfdBY7T3ETp5vX/HvFrSdWxYLSWvW5jeLs7sTQeZxoKpk
-	 39n5K79sQVsn2RZTD9v0mPTvZKOeYJqDbOqdsqDM=
+	b=Bd/6g6msQfg82dztLJPhBMpVolSwaWzGAaVnvUnkpRHn2UmvVKU9Tg44KLGvfshSG
+	 s3kp+4Hp+ZV9Nacoxy0jrDyOk1ufg3Kb9/BD23Pe0j580NOif6mr4YQgyS9U73jzP9
+	 LxFZAmwYz+hOpNuVU/gFgLxUw9Z6TDJzEjsIhkx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfCDIbQ (ORCPT
+        id S1727593AbfCDIbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:31:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60836 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:31:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbfCDIbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:31:13 -0500
+        id S1727139AbfCDIbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:31:16 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA4BC20836;
-        Mon,  4 Mar 2019 08:31:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D79C208E4;
+        Mon,  4 Mar 2019 08:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688273;
-        bh=IpWykuczM/Rf0lYKkW8LMfw1+5q9jXTLR4oTMAPERf8=;
+        s=default; t=1551688276;
+        bh=JRO0p/rDBqcnPhvy/yV69tyEu3bwZe2HrhDgIKBqkYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xV17qMr1wuUacqhFX9kkjZZbWEnijYY3zLjkLUrjCWei/gIYuhd6463qLxos8g1CF
-         wF5ujBejYsEoXXqtPQ5Fodom9mqMPDStcVEtw0TVF4OxF7tVcmtEAMRgixIVYB8IWq
-         R+WOidT3VzWhddQMCoh4q3Ylbiv6voIZy3zmEUJM=
+        b=MSOx1ihq6QI+O+s+tsg+PJFHqU1GZYr63o5l1mw6x/SxelD6zHTY5L68eJKxfvViL
+         s1KwV++SalmA/2wWLd28aM0dOKvo4G4wD+bzfsZ8mgxUU5gW1kh0MMn5hcb497xx0w
+         rusvhR0YW9FMYXVxBek7mqO/wBm1tKHE5XTMOLJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 72/78] mm: enforce min addr even if capable() in expand_downwards()
-Date:   Mon,  4 Mar 2019 09:22:55 +0100
-Message-Id: <20190304081628.814683805@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>
+Subject: [PATCH 4.19 73/78] drm: Block fb changes for async plane updates
+Date:   Mon,  4 Mar 2019 09:22:56 +0100
+Message-Id: <20190304081628.856960251@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -66,44 +69,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jann Horn <jannh@google.com>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-commit 0a1d52994d440e21def1c2174932410b4f2a98a1 upstream.
+commit 2216322919c8608a448d7ebc560a845238a5d6b6 upstream.
 
-security_mmap_addr() does a capability check with current_cred(), but
-we can reach this code from contexts like a VFS write handler where
-current_cred() must not be used.
+The prepare_fb call always happens on new_plane_state.
 
-This can be abused on systems without SMAP to make NULL pointer
-dereferences exploitable again.
+The drm_atomic_helper_cleanup_planes checks to see if
+plane state pointer has changed when deciding to call cleanup_fb on
+either the new_plane_state or the old_plane_state.
 
-Fixes: 8869477a49c3 ("security: protect from stack expansion into low vm addresses")
-Cc: stable@kernel.org
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+For a non-async atomic commit the state pointer is swapped, so this
+helper calls prepare_fb on the new_plane_state and cleanup_fb on the
+old_plane_state. This makes sense, since we want to prepare the
+framebuffer we are going to use and cleanup the the framebuffer we are
+no longer using.
+
+For the async atomic update helpers this differs. The async atomic
+update helpers perform in-place updates on the existing state. They call
+drm_atomic_helper_cleanup_planes but the state pointer is not swapped.
+This means that prepare_fb is called on the new_plane_state and
+cleanup_fb is called on the new_plane_state (not the old).
+
+In the case where old_plane_state->fb == new_plane_state->fb then
+there should be no behavioral difference between an async update
+and a non-async commit. But there are issues that arise when
+old_plane_state->fb != new_plane_state->fb.
+
+The first is that the new_plane_state->fb is immediately cleaned up
+after it has been prepared, so we're using a fb that we shouldn't
+be.
+
+The second occurs during a sequence of async atomic updates and
+non-async regular atomic commits. Suppose there are two framebuffers
+being interleaved in a double-buffering scenario, fb1 and fb2:
+
+- Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
+- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
+- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
+
+We call cleanup_fb on fb2 twice in this example scenario, and any
+further use will result in use-after-free.
+
+The simple fix to this problem is to block framebuffer changes
+in the drm_atomic_helper_async_check function for now.
+
+v2: Move check by itself, add a FIXME (Daniel)
+
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Cc: <stable@vger.kernel.org> # v4.14+
+Fixes: fef9df8b5945 ("drm/atomic: initial support for asynchronous plane update")
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Acked-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Reviewed-by: Daniel Vetter <daniel@ffwll.ch>
+Signed-off-by: Harry Wentland <harry.wentland@amd.com>
+Link: https://patchwork.freedesktop.org/patch/275364/
+Signed-off-by: Dave Airlie <airlied@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/mmap.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/drm_atomic_helper.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -2391,12 +2391,11 @@ int expand_downwards(struct vm_area_stru
- {
- 	struct mm_struct *mm = vma->vm_mm;
- 	struct vm_area_struct *prev;
--	int error;
-+	int error = 0;
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1564,6 +1564,15 @@ int drm_atomic_helper_async_check(struct
+ 	    old_plane_state->crtc != new_plane_state->crtc)
+ 		return -EINVAL;
  
- 	address &= PAGE_MASK;
--	error = security_mmap_addr(address);
--	if (error)
--		return error;
-+	if (address < mmap_min_addr)
-+		return -EPERM;
- 
- 	/* Enforce stack_guard_gap */
- 	prev = vma->vm_prev;
++	/*
++	 * FIXME: Since prepare_fb and cleanup_fb are always called on
++	 * the new_plane_state for async updates we need to block framebuffer
++	 * changes. This prevents use of a fb that's been cleaned up and
++	 * double cleanups from occuring.
++	 */
++	if (old_plane_state->fb != new_plane_state->fb)
++		return -EINVAL;
++
+ 	funcs = plane->helper_private;
+ 	if (!funcs->atomic_async_update)
+ 		return -EINVAL;
 
 
