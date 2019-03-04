@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87F4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F7AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6D821871
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4767520823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687885;
-	bh=WWMW12dc14MFYFk7qx+CzIjn9iK0Y+kIvrWpC7EWa78=;
+	s=default; t=1551687892;
+	bh=zVVg6NqC+SYfXlBZkLyH+NxWcFti8HQoYAYrkybnEJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=McQAZqSI/wd2bwXxfpMTpLXj473VLQ/Ccea6q8meiL9boeyXW2ICXZkGq42Y3cppk
-	 hnhEsf7FM6zfxC5cE7qHWKV3ID7F7pwWtc2aw9KuqZwkAPprzR2txQN+bk3wBGZHtZ
-	 miqlYOJbDOAuTHjL1u2ANHkfUHB8b3WUTfSVb32I=
+	b=GEcZ7QFcxxD1AxUQK/ozZaEUiATsXHm7IB88nXsD7e2oMhepDvnF2YLpCIbYDQUso
+	 hK6HPbT4gc/EVdYTkbLkUxyOTYV7CGSXTP7T9UTMEC/psjiW5dviXD5ulZfFpT4Hux
+	 i4ngZobCvsEEv9bkgCx/8xsTJHkKRN1dHXXBE0Nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfCDIYo (ORCPT
+        id S1726932AbfCDIYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:24:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42990 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:24:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbfCDIYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:24:42 -0500
+        id S1726411AbfCDIYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:24:45 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D663C214AE;
-        Mon,  4 Mar 2019 08:24:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92FA12146E;
+        Mon,  4 Mar 2019 08:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687881;
-        bh=WWMW12dc14MFYFk7qx+CzIjn9iK0Y+kIvrWpC7EWa78=;
+        s=default; t=1551687884;
+        bh=zVVg6NqC+SYfXlBZkLyH+NxWcFti8HQoYAYrkybnEJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xgw8zi1dmI7Wjdi0kPiw+jAENF2I6gYkjT6HowNaknTHl2TyJeZI9YOiRygbA7jSl
-         C13W5+zV+nbwYb1aRZRujx3kr3SM05EtIZIk2hrnBoXb35gmb/l1YdZ0LdULEgS0cP
-         1LHANKVbsBeEw4j5mpC/ywDymUb1iJ8CQAU5OHN4=
+        b=yEsWgtMVjDA9PEfEac6nC8pBM4BUyu9HhCrZEUMAxwQnaZTpdoHYN8rs7wkBCyXwZ
+         SJESGrCKUFgxHPbxyJ9omBUwV6n2WU4917w4CVxoRF73TfogTu7juoFsugu4yDlq+z
+         npm/TEyv6XAUjUshYdHPgdssv2S4br9/OQacZSmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Silvio Cesare <silvio.cesare@gmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, Fathi Boudra <fathi.boudra@linaro.org>,
         Kees Cook <keescook@chromium.org>,
-        Will Deacon <will.deacon@arm.com>, Greg KH <greg@kroah.com>,
-        Willy Tarreau <w@1wt.eu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 18/52] ASoC: imx-audmux: change snprintf to scnprintf for possible overflow
-Date:   Mon,  4 Mar 2019 09:22:16 +0100
-Message-Id: <20190304081618.336045846@linuxfoundation.org>
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 19/52] selftests: seccomp: use LDLIBS instead of LDFLAGS
+Date:   Mon,  4 Mar 2019 09:22:17 +0100
+Message-Id: <20190304081618.416536551@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -73,115 +66,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c407cd008fd039320d147088b52d0fa34ed3ddcb ]
+[ Upstream commit 5bbc73a841d7f0bbe025a342146dde462a796a5a ]
 
-Change snprintf to scnprintf. There are generally two cases where using
-snprintf causes problems.
+seccomp_bpf fails to build due to undefined reference errors:
 
-1) Uses of size += snprintf(buf, SIZE - size, fmt, ...)
-In this case, if snprintf would have written more characters than what the
-buffer size (SIZE) is, then size will end up larger than SIZE. In later
-uses of snprintf, SIZE - size will result in a negative number, leading
-to problems. Note that size might already be too large by using
-size = snprintf before the code reaches a case of size += snprintf.
+ aarch64-linaro-linux-gcc --sysroot=/build/tmp-rpb-glibc/sysroots/hikey
+ -O2 -pipe -g -feliminate-unused-debug-types -Wl,-no-as-needed -Wall
+ -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed -lpthread seccomp_bpf.c -o
+ /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf
+ /tmp/ccrlR3MW.o: In function `tsync_sibling':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1920: undefined reference to `sem_post'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1920: undefined reference to `sem_post'
+ /tmp/ccrlR3MW.o: In function `TSYNC_setup':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1863: undefined reference to `sem_init'
+ /tmp/ccrlR3MW.o: In function `TSYNC_teardown':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1904: undefined reference to `sem_destroy'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1897: undefined reference to `pthread_kill'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1898: undefined reference to `pthread_cancel'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1899: undefined reference to `pthread_join'
+ /tmp/ccrlR3MW.o: In function `tsync_start_sibling':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /tmp/ccrlR3MW.o: In function `TSYNC_siblings_fail_prctl':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1978: undefined reference to `sem_wait'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1990: undefined reference to `pthread_join'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1992: undefined reference to `pthread_join'
+ /tmp/ccrlR3MW.o: In function `tsync_start_sibling':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /tmp/ccrlR3MW.o: In function `TSYNC_two_siblings_with_ancestor':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2016: undefined reference to `sem_wait'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2032: undefined reference to `pthread_join'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2034: undefined reference to `pthread_join'
+ /tmp/ccrlR3MW.o: In function `tsync_start_sibling':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /tmp/ccrlR3MW.o: In function `TSYNC_two_sibling_want_nnp':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2046: undefined reference to `sem_wait'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2058: undefined reference to `pthread_join'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2060: undefined reference to `pthread_join'
+ /tmp/ccrlR3MW.o: In function `tsync_start_sibling':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /tmp/ccrlR3MW.o: In function `TSYNC_two_siblings_with_no_filter':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2073: undefined reference to `sem_wait'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2098: undefined reference to `pthread_join'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2100: undefined reference to `pthread_join'
+ /tmp/ccrlR3MW.o: In function `tsync_start_sibling':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /tmp/ccrlR3MW.o: In function `TSYNC_two_siblings_with_one_divergence':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2125: undefined reference to `sem_wait'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2143: undefined reference to `pthread_join'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2145: undefined reference to `pthread_join'
+ /tmp/ccrlR3MW.o: In function `tsync_start_sibling':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
+ /tmp/ccrlR3MW.o: In function `TSYNC_two_siblings_not_under_filter':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2169: undefined reference to `sem_wait'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2202: undefined reference to `pthread_join'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:2227: undefined reference to `pthread_join'
+ /tmp/ccrlR3MW.o: In function `tsync_start_sibling':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/seccomp/seccomp_bpf.c:1941: undefined reference to `pthread_create'
 
-2) If size is ultimately used as a length parameter for a copy back to user
-space, then it will potentially allow for a buffer overflow and information
-disclosure when size is greater than SIZE. When the size is used to index
-the buffer directly, we can have memory corruption. This also means when
-size = snprintf... is used, it may also cause problems since size may become
-large.  Copying to userspace is mitigated by the HARDENED_USERCOPY kernel
-configuration.
+It's GNU Make and linker specific.
 
-The solution to these issues is to use scnprintf which returns the number of
-characters actually written to the buffer, so the size variable will never
-exceed SIZE.
+The default Makefile rule looks like:
 
-Signed-off-by: Silvio Cesare <silvio.cesare@gmail.com>
-Cc: Timur Tabi <timur@kernel.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Greg KH <greg@kroah.com>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+$(CC) $(CFLAGS) $(LDFLAGS) $@ $^ $(LDLIBS)
+
+When linking is done by gcc itself, no issue, but when it needs to be passed
+to proper ld, only LDLIBS follows and then ld cannot know what libs to link
+with.
+
+More detail:
+https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+
+LDFLAGS
+Extra flags to give to compilers when they are supposed to invoke the linker,
+‘ld’, such as -L. Libraries (-lfoo) should be added to the LDLIBS variable
+instead.
+
+LDLIBS
+Library flags or names given to compilers when they are supposed to invoke the
+linker, ‘ld’. LOADLIBES is a deprecated (but still supported) alternative to
+LDLIBS. Non-library linker flags, such as -L, should go in the LDFLAGS
+variable.
+
+https://lkml.org/lkml/2010/2/10/362
+
+tools/perf: libraries must come after objects
+
+Link order matters, use LDLIBS instead of LDFLAGS to properly link against
+libpthread.
+
+Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/imx-audmux.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ tools/testing/selftests/seccomp/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
-index 392d5eef356d3..99e07b01a2ce9 100644
---- a/sound/soc/fsl/imx-audmux.c
-+++ b/sound/soc/fsl/imx-audmux.c
-@@ -86,49 +86,49 @@ static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
- 	if (!buf)
- 		return -ENOMEM;
+diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+index fce7f4ce06925..1760b3e397306 100644
+--- a/tools/testing/selftests/seccomp/Makefile
++++ b/tools/testing/selftests/seccomp/Makefile
+@@ -9,7 +9,7 @@ BINARIES := seccomp_bpf seccomp_benchmark
+ CFLAGS += -Wl,-no-as-needed -Wall
  
--	ret = snprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
-+	ret = scnprintf(buf, PAGE_SIZE, "PDCR: %08x\nPTCR: %08x\n",
- 		       pdcr, ptcr);
+ seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+-	$(CC) $(CFLAGS) $(LDFLAGS) -lpthread $< -o $@
++	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
  
- 	if (ptcr & IMX_AUDMUX_V2_PTCR_TFSDIR)
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"TxFS output from %s, ",
- 				audmux_port_string((ptcr >> 27) & 0x7));
- 	else
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"TxFS input, ");
- 
- 	if (ptcr & IMX_AUDMUX_V2_PTCR_TCLKDIR)
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"TxClk output from %s",
- 				audmux_port_string((ptcr >> 22) & 0x7));
- 	else
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"TxClk input");
- 
--	ret += snprintf(buf + ret, PAGE_SIZE - ret, "\n");
-+	ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
- 
- 	if (ptcr & IMX_AUDMUX_V2_PTCR_SYN) {
--		ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+		ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 				"Port is symmetric");
- 	} else {
- 		if (ptcr & IMX_AUDMUX_V2_PTCR_RFSDIR)
--			ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 					"RxFS output from %s, ",
- 					audmux_port_string((ptcr >> 17) & 0x7));
- 		else
--			ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 					"RxFS input, ");
- 
- 		if (ptcr & IMX_AUDMUX_V2_PTCR_RCLKDIR)
--			ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 					"RxClk output from %s",
- 					audmux_port_string((ptcr >> 12) & 0x7));
- 		else
--			ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+			ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 					"RxClk input");
- 	}
- 
--	ret += snprintf(buf + ret, PAGE_SIZE - ret,
-+	ret += scnprintf(buf + ret, PAGE_SIZE - ret,
- 			"\nData received from %s\n",
- 			audmux_port_string((pdcr >> 13) & 0x7));
- 
+ TEST_PROGS += $(BINARIES)
+ EXTRA_CLEAN := $(BINARIES)
 -- 
 2.19.1
 
