@@ -2,81 +2,96 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5E3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B80BC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E40D22075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:45:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qIv8qN6U"
+	by mail.kernel.org (Postfix) with ESMTP id 3401A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfCDNpk (ORCPT
+        id S1726860AbfCDNsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:45:40 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:45735 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726032AbfCDNpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:45:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ZkJsQMa37i0+gZtz4rq4RCQr08pWxEa3n1iwoFozQEI=; b=qIv8qN6UmrwHs2+bFkLZTf9lda
-        rj8hJvwq68HsRg8Qf/qimrbUdyCStxZG4ARIfV/fEu2pkqS9ZUgbt1MCDL7Jw4mYC+QWDNsu+oqbR
-        UHCCsXaUM8ZuHwuGPXZVFHOn5nLRZKTYeEnvmoTcGHDyybPxitrGMqN8JbbqDkFkM0g0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1h0nuH-0003co-Bw; Mon, 04 Mar 2019 14:45:25 +0100
-Date:   Mon, 4 Mar 2019 14:45:25 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        Per Noergaard Christensen <pnc@deif.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] net: dsa: mv88e6xxx: support single chip sw_addr
- offset
-Message-ID: <20190304134525.GC26378@lunn.ch>
-References: <20190304125933.5653-1-rasmus.villemoes@prevas.dk>
+        Mon, 4 Mar 2019 08:48:14 -0500
+Received: from charybdis-ext.suse.de ([195.135.221.2]:59719 "EHLO suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726243AbfCDNsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 08:48:13 -0500
+Received: by suse.de (Postfix, from userid 1000)
+        id 7704E446F; Mon,  4 Mar 2019 14:48:12 +0100 (CET)
+Date:   Mon, 4 Mar 2019 14:48:12 +0100
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>, mhocko@kernel.org,
+        hughd@google.com, linux-mm@kvack.org, n-horiguchi@ah.jp.nec.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] mm/hugetlb: Fix unsigned overflow in
+ __nr_hugepages_store_common()
+Message-ID: <20190304134809.2aprjskb6z6gv6c5@d104.suse.de>
+References: <388cbbf5-7086-1d04-4c49-049021504b9d@oracle.com>
+ <alpine.DEB.2.21.1902241913000.34632@chino.kir.corp.google.com>
+ <8c167be7-06fa-a8c0-8ee7-0bfad41eaba2@oracle.com>
+ <13400ee2-3d3b-e5d6-2d78-a770820417de@oracle.com>
+ <alpine.DEB.2.21.1902251116180.167839@chino.kir.corp.google.com>
+ <5C74A2DA.1030304@huawei.com>
+ <alpine.DEB.2.21.1902252220310.40851@chino.kir.corp.google.com>
+ <e2bded2f-40ca-c308-5525-0a21777ed221@oracle.com>
+ <20190226143620.c6af15c7c897d3362b191e36@linux-foundation.org>
+ <086c4a4b-a37d-f144-00c0-d9a4062cc5fe@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190304125933.5653-1-rasmus.villemoes@prevas.dk>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <086c4a4b-a37d-f144-00c0-d9a4062cc5fe@oracle.com>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 12:59:42PM +0000, Rasmus Villemoes wrote:
-> From: Per Noergaard Christensen <pnc@deif.com>
+On Tue, Feb 26, 2019 at 04:03:23PM -0800, Mike Kravetz wrote:
+> I was just going to update the comments and send you a new patch, but
+> but your comment got me thinking about this situation.  I did not really
+> change the way this code operates.  As a reminder, the original code is like:
 > 
-> The 88e6250 does not support multi-chip addressing. However, one can
-> still have two of them on the same mdio bus, since the device only
-> uses 16 of the 32 possible addresses, either addresses 0x00-0x0F or
-> 0x10-0x1F depending on the ADDR4 pin at reset [since ADDR4 is
-> internally pulled high, the latter is the default].
+> NODEMASK_ALLOC(nodemask_t, nodes_allowed, GFP_KERNEL | __GFP_NORETRY);
 > 
-> In order to prepare for supporting the 88e6250, change
-> mv88e6xxx_smi_init and the single_chip_{read,write} functions to allow
-> and honour a non-zero sw_addr in single chip mode. Since this only
-> changes the behaviour in the sw_addr!=0 && !chip->info->multi_chip
-> case from returning -EINVAL, it should not break existing setups.
+> if (nid == NUMA_NO_NODE) {
+> 	/* do something */
+> } else if (nodes_allowed) {
+> 	/* do something else */
+> } else {
+> 	nodes_allowed = &node_states[N_MEMORY];
+> }
+> 
+> So, the only way we get to that final else if if we can not allocate
+> a node mask (kmalloc a few words).  Right?  I wonder why we should
+> even try to continue in this case.  Why not just return right there?
+> 
+> The specified count value is either a request to increase number of
+> huge pages or decrease.  If we can't allocate a few words, we certainly
+> are not going to find memory to create huge pages.  There 'might' be
+> surplus pages which can be converted to permanent pages.  But remember
+> this is a 'node specific' request and we can't allocate a mask to pass
+> down to the conversion routines.  So, chances are good we would operate
+> on the wrong node.  The same goes for a request to 'free' huge pages.
+> Since, we can't allocate a node mask we are likely to free them from
+> the wrong node.
+> 
+> Unless my reasoning above is incorrect, I think that final else block
+> in __nr_hugepages_store_common() is wrong.
+> 
+> Any additional thoughts?
 
-Hi Rasmus
+Could not we kill the NODEMASK_ALLOC there?
+__nr_hugepages_store_common() should be called from a rather shallow stack,
+and unless I am wrong, the maximum value we can get for a nodemask_t is 128bytes
+(1024 NUMA nodes).
 
-We have the nice abstraction of mv88e6xxx_smi_multi_chip_ops and
-mv88e6xxx_smi_single_chip_ops. I think we should extend this
-abstraction and implement mv88e6xxx_smi_dual_chip_ops. Also, add a
-chip->info->dual_chip flag, so we know when it can be used.
-
-	Andrew
+-- 
+Oscar Salvador
+SUSE L3
