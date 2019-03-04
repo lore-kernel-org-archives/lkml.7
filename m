@@ -2,110 +2,153 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88917C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFC2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6255F20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2962920823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551725985;
+	bh=PdVpKqa6zG3t65OiMq5t1VjuY/IwFGviASrU1YkZ7f8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UlfYpHsKw8QtnJSXDP/CtOib3ZnOX7BmXI00YjzzjW+hLW295Ks2CYpir2IUn/XIo
+	 fI/bpqydc4uzkoYxhhbX8usjdgPQIxwQxCyG8wm3gpEEUJioOvWNDZP+mmkVG4yRqh
+	 t9291KEknKYxAWzX8awkk/Jk/cYgfE6UDJQ5doMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfCDS7E convert rfc822-to-8bit (ORCPT
+        id S1727333AbfCDS7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:59:04 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:37403 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbfCDS7E (ORCPT
+        Mon, 4 Mar 2019 13:59:43 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43025 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfCDS7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:59:04 -0500
-X-Originating-IP: 77.136.15.76
-Received: from xps13 (76.15.136.77.rev.sfr.net [77.136.15.76])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id B8CA7E0002;
-        Mon,  4 Mar 2019 18:58:55 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 19:58:52 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/9] dt-bindings: mtd: ingenic: Change 'BCH' to 'ECC'
- in documentation
-Message-ID: <20190304195852.45c056f6@xps13>
-In-Reply-To: <1551723830.4932.3@crapouillou.net>
-References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190209192305.4434-2-paul@crapouillou.net>
-        <20190304105014.0cceea0a@xps13>
-        <1551723830.4932.3@crapouillou.net>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 4 Mar 2019 13:59:43 -0500
+Received: by mail-lj1-f193.google.com with SMTP id z20so5271334ljj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 10:59:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yE+A6Ro1kbWYGtoM40CkVF6mD9YIFegD3mYZ1fKQXaQ=;
+        b=XX8J49GV8ukp8qE8rp37ZNhRUawnBauPGx0Q3S9bhAoU33nufkTS5kPZTAhduDdyyC
+         RC3G8mlsS0KuoJvgsI2YE48ldtNPGOWPMrbfZ+8fUeiaQbnQw+ArVzuJ4RFiWjd/ZQiX
+         j399kZIC0bDHWbo4AnF2Kgu6FBuRoScCWaojg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yE+A6Ro1kbWYGtoM40CkVF6mD9YIFegD3mYZ1fKQXaQ=;
+        b=KsOKzUYfMzK7UPxS8GHXpia8/rUB1vIhtuF2isjbrS2QkKkuCYyt2zVGItXORJ5xov
+         F+FVp+14yCiuRB8bBghnF30PNhhCEqyMHtu7XlXVoPseKAOhNe+V9Z7IwJDp9y/hmVsZ
+         oztlZillxQzatk+GP4N2wenQUddluHU4QFVeeOudn6mZeMxtIEx8xdJf6BOhygMAkyMw
+         MukPExnZXu2J1rNUAisXzjs6Z9FCqfJ3nhrwUsVUYSivr6g1jPE7chAsRfgqC/OiG5uY
+         LeOz5sfqIuz1yZDkh/AX3qo5nG1TyjsLRSdMpbVhGhdJCdKcSXWUfngQFa18BxTNZLD9
+         sGgg==
+X-Gm-Message-State: APjAAAXoXgRc7SPHQMxYrpwIuO8jIFevqEAtrlOiC2ViCHIOE8XHHwXt
+        xq9zL2g32eoVwfjYBvi+GOk+8E5+Uyw=
+X-Google-Smtp-Source: APXvYqzn8OWGLP4Ee3RHok8J/+I/xhXpO9/CszUy9m6aLkHkOm+/cq8bK6aOiW1Ue64WKqAcEu6oyg==
+X-Received: by 2002:a2e:968d:: with SMTP id q13mr11613413lji.189.1551725980204;
+        Mon, 04 Mar 2019 10:59:40 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id m16sm1662293lfg.49.2019.03.04.10.59.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 10:59:39 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id p73so3689049lfe.10
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 10:59:38 -0800 (PST)
+X-Received: by 2002:a19:3f44:: with SMTP id m65mr10702163lfa.136.1551725978177;
+ Mon, 04 Mar 2019 10:59:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <155136980507.2968.15165201054223875356.stgit@devbox>
+ <20190303173954.kliegojbuigqi5tn@inn2.lkp.intel.com> <CAHk-=wij8VLupHh1U-fFhFBjin9Fch3mG2_2=aL9h1L+WBvm2g@mail.gmail.com>
+ <20190304101434.8429ffffb17813c0e7930130@kernel.org> <CAHk-=whYMvevgF4yh7uhQug=Wt1A1Eg7abyM=RCi=bQiqiMBvQ@mail.gmail.com>
+ <20190304180610.2d4f6f08d9ad89d6abae3597@kernel.org>
+In-Reply-To: <20190304180610.2d4f6f08d9ad89d6abae3597@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 4 Mar 2019 10:59:22 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiQM84VsAiw92UWyQZTQxr+F032Gm5BiFBXk7tC+LQohQ@mail.gmail.com>
+Message-ID: <CAHk-=wiQM84VsAiw92UWyQZTQxr+F032Gm5BiFBXk7tC+LQohQ@mail.gmail.com>
+Subject: Re: [uaccess] 780464aed0: WARNING:at_arch/x86/include/asm/uaccess.h:#strnlen_user/0x
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com, lkp@01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Mon, Mar 4, 2019 at 1:06 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> On Sun, 3 Mar 2019 18:37:59 -0800
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > We've had this before. We've gotten rid of the actual "use system
+> > calls", but we still have some of the init sequence in particular just
+> > calling the wrappers instead.
+>
+> Are those safe if we are in init sequence?
 
-Paul Cercueil <paul@crapouillou.net> wrote on Mon, 04 Mar 2019 19:23:50
-+0100:
+Yes, they are, it runs with set_fs(KERNEL_DS).
 
-> On Mon, Mar 4, 2019 at 10:50 AM, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > Hi Paul,
-> > 
-> > Paul Cercueil <paul@crapouillou.net <mailto:paul@crapouillou.net>> > wrote on Sat,  9 Feb 2019 16:22:58
-> > -0300:
-> >   
-> >>  The JZ4740 ECC hardware is not BCH but Reed-Solomon, so it makes >> more
-> >>  sense to use the more generic ECC term.  
-> >> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net >> <mailto:paul@crapouillou.net>>  
-> >>  ---  
-> >> >>  Changes:
-> >> >>  v3: New patch
-> >> >>  v4: No change
-> >> >>   .../devicetree/bindings/mtd/ingenic,jz4780-nand.txt    | 18 >> +++++++++---------  
-> >>   1 file changed, 9 insertions(+), 9 deletions(-)  
-> >> >>  diff --git >> a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt >> b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt  
-> >>  index a5b940f18bf6..5a45cc54f46d 100644
-> >>  --- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> >>  +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> >>  @@ -1,4 +1,4 @@
-> >>  -* Ingenic JZ4780 NAND/BCH
-> >>  +* Ingenic JZ4780 NAND/ECC  
-> >> >>   This file documents the device tree bindings for NAND flash >> devices on the  
-> >>   JZ4780. NAND devices are connected to the NEMC controller >> (described in
-> >>  @@ -14,10 +14,10 @@ Required NAND controller device properties:
-> >>     an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC >> bank).  
-> >> >>   Optional NAND controller device properties:  
-> >>  -- ingenic,bch-controller: To make use of the hardware BCH >> controller, this
-> >>  -  property must contain a phandle for the BCH controller node. The >> required
-> >>  +- ingenic,bch-controller: To make use of the hardware ECC >> controller, this
-> >>  +  property must contain a phandle for the ECC controller node. The >> required  
-> > 
-> > I think there is already a 'ecc-engine' property used by MTK and Atmel
-> > NAND controllers to point to the ECC engine block. Please use this
-> > property instead of the ingenic specific one.  
-> 
-> ingenic,bch-controller is already in the devicetree ABI. I can't change it now...
+But the patches made that now complain about copying from non-user
+space, even though it's fine.
 
-Oh, right...
+Basically, "strncpy_from_user()" shouldn't use "user_access_ok()",
+since it actually can take a kernel address (with set_fs()).
 
-Well, same thing as before, maybe you can change it and keep the driver
-backward compatible? I don't want new DT to use this property because
-it is not generic and we must have a way from the core to find the ECC
-engine handle when the controller does not embed one itself (thus, the
-ecc-engine property which is around for quite some time already).
+Your "unsafe" version for tracing that actually sets "set_fs(USER_DS)"
+is thje only thing that should use that helper.
 
-Thanks,
-Miquèl
+> > And yes, ksys_mount() takes __user pointers.
+> >
+> > It would be a lot better to use "do_mount()", which is the interface
+> > that takes actual "char *" pointers.
+>
+> Unfortunately, it still takes a __user pointer.
+
+Ahh, yes, the name remains in user space.
+
+Besides, I'm sure you'd just hit other cases instead where people use
+set_fs() and copy strings.
+
+> So what we need is
+>
+> long do_mount(const char *dev_name, struct path *dir_path,
+>                 const char *type_page, unsigned long flags, void *data_page)
+>
+> or introduce kern_do_mount()?
+
+It's actually fairly painful. Particularly because of that "void *data_page".
+
+Your second email with "Would this work?" helper function _wopuldn't_
+work correctly, exactly because you passed in a regular string to the
+data page.
+
+Also, I don't want to see code that replaces the unconditional "copy
+path from user space" with a conditional "do we have path in kernel
+space".
+
+So together with the whole "uyou'll hit other peoblems anyway", I
+don't think this is a good approach.
+
+I think you simply need to have a separate "unsafe_strncpy()"
+function, and not change the existing "strncpy_from_user()".
+
+                Linus
