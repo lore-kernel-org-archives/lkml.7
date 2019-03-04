@@ -2,153 +2,213 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D1CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E91C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8AF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S5GSCHnB"
+	by mail.kernel.org (Postfix) with ESMTP id 1561320657
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfCDRds (ORCPT
+        id S1727399AbfCDReO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:33:48 -0500
-Received: from mail-eopbgr30082.outbound.protection.outlook.com ([40.107.3.82]:5536
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725974AbfCDRdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:33:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XpIuBcTQGl6Afml3qil5bw1sM28kj/Byf0N9cMFIiaQ=;
- b=S5GSCHnB2N2IVEbRF6679rXf6Rateh5YAu8hcTj8ZFt1PmjbGTkQnBHtsJH/oA3vkx/5f+pdUW85UlRiH/hCw9bD+Gj7xhdG9YFA0AUYl9AoNR0EzFJEj6hSoCfbP2LXifWcV8Mbe4UDmxMT8GpK/60p9/PoRWT6KC7i1yc2W5c=
-Received: from AM6PR04MB5863.eurprd04.prod.outlook.com (20.179.1.11) by
- AM6PR04MB4520.eurprd04.prod.outlook.com (20.176.243.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.19; Mon, 4 Mar 2019 17:33:43 +0000
-Received: from AM6PR04MB5863.eurprd04.prod.outlook.com
- ([fe80::a4a8:ea0:40f6:5162]) by AM6PR04MB5863.eurprd04.prod.outlook.com
- ([fe80::a4a8:ea0:40f6:5162%3]) with mapi id 15.20.1665.020; Mon, 4 Mar 2019
- 17:33:43 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-CC:     Coly Li <colyli@suse.de>, Federico Vaga <federico.vaga@vaga.pv.it>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Li Zefan <lizefan@huawei.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "harryxiyou@gmail.com" <harryxiyou@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kernel@zh-kernel.org" <linux-kernel@zh-kernel.org>
-Subject: RE: [PATCH 01/20] docs/zh_CN: add disclaimer file
-Thread-Topic: [PATCH 01/20] docs/zh_CN: add disclaimer file
-Thread-Index: AQHU0lKQzuFmAQT00UCQM8j+2JkFKaX7G0BWgACfzoA=
-Date:   Mon, 4 Mar 2019 17:33:43 +0000
-Message-ID: <AM6PR04MB586370DDB6E73A43673339568F710@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
- <20190304035744.155203-2-alex.shi@linux.alibaba.com>
- <b2cb92de-ef4a-d628-0dd3-76d8d1b953d0@linux.alibaba.com>
- <CADRPPNSjf4P14bwUMsa10XzBUVLszx4iMsL6gk-XQ0x3vTFr+g@mail.gmail.com>
- <e342a3fa-20f6-46cd-4240-8403fa1aa736@linux.alibaba.com>
-In-Reply-To: <e342a3fa-20f6-46cd-4240-8403fa1aa736@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7262c07d-5de6-4e8f-d551-08d6a0c78c84
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB4520;
-x-ms-traffictypediagnostic: AM6PR04MB4520:
-x-ms-exchange-purlcount: 1
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtBTTZQUjA0TUI0NTIwOzIzOmtKQm11djE2Y2RnQXJ3RjdZNGx4OEg4azBp?=
- =?utf-8?B?M3g0QjZVd0lnTXprODJCNnNHQVZHTDBrYVlZallidENtc3plMmdCMHVnT1pm?=
- =?utf-8?B?YWdJVktiSGFLN2pEWDBVdG9oMjBndzViazNUajk4NnA0NGh5TGpMdi9jOWRB?=
- =?utf-8?B?S1BiZER4RWpqUjdaamtQL21JN2ZyQWJ3a2dBNGZTcXZyTHpTaHg1dWRMamsz?=
- =?utf-8?B?Vi9wTEZ4dXdyWS9TM3liNkI3YmthQmUzeHRKYWttdlE5cjR3TzI1L0UzTnRY?=
- =?utf-8?B?Qzl4eHp0cW92aUZRcGp6aExCL1IwcDlVdlVwVEpHblpaZFRsb2I0RUZkVjJj?=
- =?utf-8?B?YmQzcUo2SkJ3eTcva1p6a1o5NjJoaXpqWU9BUlRSeDRkUW0vZHd3MDNSQUR3?=
- =?utf-8?B?RFB2Q2luL05lWUxBV3pGNDVmeVJQS2c3elNKTCtWWlRWSXlCZVVNaGkrc3FF?=
- =?utf-8?B?OUQxTHhnclg2b0tYV2kvRnR0OG9JSFROdmpaZkpZQzRRdEVQR3lFb1hRUU00?=
- =?utf-8?B?RCt4ZnJSTUlMZThsN051VHFMRGpvN1g5YnpNc3FaYnNNS2Z2YXpCbGxDRVF1?=
- =?utf-8?B?TXBhbkFJNTdCSUY4MkVPTFo1RC9UeWtJNjNTNFBQV2dzSDFndGdqa1JtdUhI?=
- =?utf-8?B?Z1hZb3h3NVpwRjRzdWpodm9EYUpuS1MycnNBcWpQNTlERHR1S1kvVGIvWlBM?=
- =?utf-8?B?ZFdIMXdtYUE4L0ZORjcvcnNhK0pBaVh3eG1HQjJPb2d1MlVjTVhndGJkTVI5?=
- =?utf-8?B?Z1NrZXVtSHlTVDY5S0d2RTFqOWtYdG40dSsyczJ0NjVoWDFXRjQ1eDI5eEJm?=
- =?utf-8?B?TDhsSG0zTFZOcDVnRlR2MEV4Q0ZyQlVFVmNEWGU0OWE0bE9tWE9qcVBuOWw4?=
- =?utf-8?B?WGorbWxQTjZldkRxdGJKNFlyaTExQ1dwTTI5blBpMEp6d3NnUWRORXk0dWJj?=
- =?utf-8?B?bk8rR2NqM1l0ZDBYSHpidGNTeGZtM3ViMnM3bjIyejBXMlVQdEdsc1ZYbEE1?=
- =?utf-8?B?K0tGck1uOUZUMHBKNG1RbGg4S0ZUM3E1S2dNeEg3TEVlV0VzcmlUL0tRN2V5?=
- =?utf-8?B?S1QzazBRRDhxTTBEUFQyTno3dnIyZWJiQjRCY2RRa0IwZmZrdXZIbHg5ZVM1?=
- =?utf-8?B?UU1yR01KQThnSk9JS0MrYkZ3M0xHakN6S2MrVXVRc0JQaTNtZVg0K0hXaG1n?=
- =?utf-8?B?TW9FSUdyTTlLWmw2a0pQSFpuS1JwU0phVy9TMlpqTnRmcTNLR3N2RjQ4RkdB?=
- =?utf-8?B?WjF3ak5rSzhwU2tZNDdIbzI1S3ZrY1VyUlNhOXhWVkNJc3BmcmE1UG5zaFR6?=
- =?utf-8?B?WGUrOUt1dGl4VDN2YlI3eGdVRFRkOEY2dmtodThCUkJncDFPaHVqVGJFUTZx?=
- =?utf-8?B?azU3K0l5U1pIaXQ4azNhblVkdlcxR2JKUlVmTlVveitEdXBYelJ1MUkwZzdN?=
- =?utf-8?B?R3RwMnFWWFhFYzN2N3dBZVgxbFRkUDlqekhUQzhxZktUdVcxdXNiTHoxYWUr?=
- =?utf-8?B?WGZGWFJvYkxKcUl5NnQwL2RROVV0TUc4eEpua0g4c3BXTmFFZXV6MU9vaUZn?=
- =?utf-8?B?MlRDcTE3NzdKdTFJeEZJVi8vbWNsR3BwbmxKRWJ1RWhXKzY0aEFXRUROYUpW?=
- =?utf-8?B?ZFJNcEtoQ3ZOMUYwVWFrWW1vNmN4di9ndE1TUFFsK2c3YWZpTkQzRlNOWnJI?=
- =?utf-8?B?b25WdHdVbzJka0psVStSb1hXVmtWSnkzbnJXdUlHTEFyZWU0dzhzZ2xiWlAz?=
- =?utf-8?B?R0toNjlkTlMxTVQ1dlptLzFEZUNsYmhQcEZZU1VyaVlkNjJuY2dJVWIrSnRa?=
- =?utf-8?B?WVV6a3diVTM0VkJLelpJOHNFeWcxcExkSEFTUUlqQlBwcEFlR2xrRlFLWmZs?=
- =?utf-8?Q?h5yd+70e6Ow=3D?=
-x-microsoft-antispam-prvs: <AM6PR04MB4520B844D0E3BF41D4EB35A98F710@AM6PR04MB4520.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09669DB681
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(376002)(346002)(136003)(396003)(13464003)(189003)(199004)(486006)(105586002)(14454004)(478600001)(81156014)(81166006)(8676002)(106356001)(446003)(476003)(7416002)(11346002)(54906003)(316002)(93886005)(74316002)(68736007)(33656002)(966005)(6916009)(97736004)(66066001)(186003)(7736002)(8936002)(305945005)(14444005)(256004)(26005)(71200400001)(71190400001)(25786009)(6246003)(102836004)(53546011)(6506007)(6436002)(86362001)(5660300002)(45080400002)(6116002)(53936002)(55016002)(2906002)(9686003)(229853002)(6306002)(76176011)(3846002)(52536013)(99286004)(7696005)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4520;H:AM6PR04MB5863.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Zp3SPgRc/S/rwRSVzKc6tgOutvT32y2RrLjlNpyx625KJqwT2HOMOBpo9e6U8h2zX8VDx1QUVNZa09PYGllNcxF3IjLHdi5rd2/QCHLyG2jqwHXGmbZfS82HSR0PMQM+8zdB9h/QJaNIBLeZ/ZGjjPeJbbpx8BbqJuyaqiGyBhgvjNy+6/KKD2FP8RZlfRmtgXMmxNxEeu3fe2ScabHbKBVuUokcb2egbsTBS0gH/Il6kY1rz+62H1H0021IkcMg9CAGxQKhjP/5JWhJJkyfnlqxnSCitutc6avv04cZNPgwmnp+1uNiEgrLdKFZWmYfUCD5gGyx+UgDajizaDd439uo0A3DF9AKafE46pRJWGT5Mgl0k03N9Hb6xlQvRgRHKZBMvQyr2yJCafIjb/vcaXgOHg9vOoKR+C7uEuICNYA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 4 Mar 2019 12:34:14 -0500
+Received: from foss.arm.com ([217.140.101.70]:36542 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727178AbfCDReO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:34:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F803A78;
+        Mon,  4 Mar 2019 09:34:13 -0800 (PST)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFC473F703;
+        Mon,  4 Mar 2019 09:34:11 -0800 (PST)
+Subject: Re: [RFC PATCH] KVM: arm64: Force a PTE mapping when logging is
+ enabled
+To:     Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+        Zenghui Yu <zenghuiyu96@gmail.com>
+Cc:     christoffer.dall@arm.com, Punit Agrawal <punit.agrawal@arm.com>,
+        julien.thierry@arm.com, LKML <linux-kernel@vger.kernel.org>,
+        james.morse@arm.com, Zenghui Yu <yuzenghui@huawei.com>,
+        wanghaibin.wang@huawei.com, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+References: <1551497728-12576-1-git-send-email-yuzenghui@huawei.com>
+ <CAKcZhuWa4UcsoFPRkZg=M3WeUJibX8T0_R+JHS3=cyd51N9cgQ@mail.gmail.com>
+ <20190304171320.GA3984@en101>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <32f302eb-ef89-7de4-36b4-3c3df907c732@arm.com>
+Date:   Mon, 4 Mar 2019 17:34:10 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7262c07d-5de6-4e8f-d551-08d6a0c78c84
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2019 17:33:43.5024
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4520
+In-Reply-To: <20190304171320.GA3984@en101>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWxleCBTaGkgPGFsZXgu
-c2hpQGxpbnV4LmFsaWJhYmEuY29tPg0KPiBTZW50OiBNb25kYXksIE1hcmNoIDQsIDIwMTkgMTo1
-OCBBTQ0KPiBUbzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+DQo+IENjOiBDb2x5IExpIDxj
-b2x5bGlAc3VzZS5kZT47IEZlZGVyaWNvIFZhZ2EgPGZlZGVyaWNvLnZhZ2FAdmFnYS5wdi5pdD47
-DQo+IEZlbmdndWFuZyBXdSA8ZmVuZ2d1YW5nLnd1QGludGVsLmNvbT47IExpIFplZmFuDQo+IDxs
-aXplZmFuQGh1YXdlaS5jb20+OyBTaGF3biBHdW8gPHNoYXduLmd1b0BsaW5hcm8ub3JnPjsNCj4g
-Y29yYmV0QGx3bi5uZXQ7IGhhcnJ5eGl5b3VAZ21haWwuY29tOyBsaW51eC1kb2NAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHpo
-LWtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwMS8yMF0gZG9jcy96aF9DTjogYWRk
-IGRpc2NsYWltZXIgZmlsZQ0KPiANCj4gSGkgTGVvLg0KPiANCj4gRG8geW91IGtub3cgb3RoZXJz
-JyBlbWFpbCBhZGRyZXNzIGV4Y2VwdCB5b3Vyc2VsZi4gSSBndWVzcyBsZW95YW5nLmxpIGlzIHNh
-bWUNCj4gb25lIGFzIG1haWx0bzpsZW9Aemgta2VybmVsLm9yZywgaXMgdGhpcyByaWdodD8gOikN
-Cg0KSGkgQWxleCwNCg0KSSB3aWxsIHRyeSB0byBnZXQgdGhlIG5ldyBlbWFpbCBhZGRyZXNzZXMg
-Zm9yIG90aGVycyB0b28uICAgWWVzLiAgQnV0IHByb2JhYmx5IEkgd2lsbCB1c2UgYSBwcml2YXRl
-IGVtYWlsIGZvciB0aGlzIGluc3RlYWQgb2YgdGhlIGNvbXBhbnkgZW1haWwuIPCfmIoNCg0KPiAN
-Cj4gVGhhbmtzDQo+IEFsZXgNCj4gT24gMjAxOS8zLzQgMjozMCDkuIvljYgsIExpIFlhbmcgd3Jv
-dGU6DQo+IA0KPiANCj4gT24gTW9uLCBNYXIgNCwgMjAxOSBhdCAxMjoyMyBBTSBBbGV4IFNoaQ0K
-PiA8bWFpbHRvOmFsZXguc2hpQGxpbnV4LmFsaWJhYmEuY29tPiB3cm90ZToNCj4gQlRXLCBDb3Ji
-ZXQsDQo+IA0KPiBTb21lIG9mIGVtYWlsIGFkZHJlc3MgYXJlIHVudXNlZCBhbmQNCj4gaHR0cHM6
-Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJG
-JTJGemgtDQo+IGtlcm5lbC5vcmcmZGF0YT0wMiU3QzAxJTdDbGVveWFuZy5saSU0MG54cC5jb20l
-N0M2YjY0NzIxYjEyNjk0NGRlDQo+IDgzNWMwOGQ2YTA3NzEzNzklN0M2ODZlYTFkM2JjMmI0YzZm
-YTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MxJTdDNjMNCj4gNjg3MjgzMDYzNDAyNDQxMiZzZGF0YT1j
-TW5GalJqQXpvZGg1SWdGVmFadlpwbVhOWGZIYiUyRndXQ1R4d3QNCj4gdCUyRk82ZTQlM0QmcmVz
-ZXJ2ZWQ9MCB3ZWIgc2l0ZSBhcmUgdW51c2VkIGFuZCBvbiBzYWxlLiBUaGF0IGFyZToNCj4gDQo+
-IFRoZSB3ZWJzaXRlIGhhcyBiZWVuIGRvd24gZm9yIGEgd2hpbGUgYW5kIHdvbuKAmXQgYmUgcmVv
-cGVuLsKgIEJ1dCB3ZSBjYW4NCj4gZGVmaW5pdGVseSB1cGRhdGUgdGhlc2UgZW1haWwgYWRkcmVz
-c2VzLg0KPiANCj4gDQoNCg==
+Hi Zenghui, Suzuki,
+
+On 04/03/2019 17:13, Suzuki K Poulose wrote:
+> Hi Zenghui,
+> 
+> On Sun, Mar 03, 2019 at 11:14:38PM +0800, Zenghui Yu wrote:
+>> I think there're still some problems in this patch... Details below.
+>>
+>> On Sat, Mar 2, 2019 at 11:39 AM Zenghui Yu <yuzenghui@huawei.com> wrote:
+>>>
+>>> The idea behind this is: we don't want to keep tracking of huge pages when
+>>> logging_active is true, which will result in performance degradation.  We
+>>> still need to set vma_pagesize to PAGE_SIZE, so that we can make use of it
+>>> to force a PTE mapping.
+> 
+> Yes, you're right. We are indeed ignoring the force_pte flag.
+> 
+>>>
+>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> Cc: Punit Agrawal <punit.agrawal@arm.com>
+>>> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+>>>
+>>> ---
+>>> Atfer looking into https://patchwork.codeaurora.org/patch/647985/ , the
+>>> "vma_pagesize = PAGE_SIZE" logic was not intended to be deleted. As far
+>>> as I can tell, we used to have "hugetlb" to force the PTE mapping, but
+>>> we have "vma_pagesize" currently instead. We should set it properly for
+>>> performance reasons (e.g, in VM migration). Did I miss something important?
+>>>
+>>> ---
+>>>  virt/kvm/arm/mmu.c | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+>>> index 30251e2..7d41b16 100644
+>>> --- a/virt/kvm/arm/mmu.c
+>>> +++ b/virt/kvm/arm/mmu.c
+>>> @@ -1705,6 +1705,13 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>>>              (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
+>>>             !force_pte) {
+>>>                 gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
+>>> +       } else {
+>>> +               /*
+>>> +                * Fallback to PTE if it's not one of the stage2
+>>> +                * supported hugepage sizes or the corresponding level
+>>> +                * doesn't exist, or logging is enabled.
+>>
+>> First, Instead of "logging is enabled", it should be "force_pte is true",
+>> since "force_pte" will be true when:
+>>
+>>         1) fault_supports_stage2_pmd_mappings() return false; or
+>>         2) "logging is enabled" (e.g, in VM migration).
+>>
+>> Second, fallback some unsupported hugepage sizes (e.g, 64K hugepage with
+>> 4K pages) to PTE is somewhat strange. And it will then _unexpectedly_
+>> reach transparent_hugepage_adjust(), though no real adjustment will happen
+>> since commit fd2ef358282c ("KVM: arm/arm64: Ensure only THP is candidate
+>> for adjustment"). Keeping "vma_pagesize" there as it is will be better,
+>> right?
+>>
+>> So I'd just simplify the logic like:
+> 
+> We could fix this right in the beginning. See patch below:
+> 
+>>
+>>         } else if (force_pte) {
+>>                 vma_pagesize = PAGE_SIZE;
+>>         }
+>>
+>>
+>> Will send a V2 later and waiting for your comments :)
+> 
+> 
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index 30251e2..529331e 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1693,7 +1693,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>  		return -EFAULT;
+>  	}
+>  
+> -	vma_pagesize = vma_kernel_pagesize(vma);
+> +	/* If we are forced to map at page granularity, force the pagesize here */
+> +	vma_pagesize = force_pte ? PAGE_SIZE : vma_kernel_pagesize(vma);
+> +
+>  	/*
+>  	 * The stage2 has a minimum of 2 level table (For arm64 see
+>  	 * kvm_arm_setup_stage2()). Hence, we are guaranteed that we can
+> @@ -1701,11 +1703,10 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>  	 * As for PUD huge maps, we must make sure that we have at least
+>  	 * 3 levels, i.e, PMD is not folded.
+>  	 */
+> -	if ((vma_pagesize == PMD_SIZE ||
+> -	     (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
+> -	    !force_pte) {
+> +	if (vma_pagesize == PMD_SIZE ||
+> +	    (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm)))
+>  		gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
+> -	}
+> +
+>  	up_read(&current->mm->mmap_sem);
+>  
+>  	/* We need minimum second+third level pages */
+That's pretty interesting, because this is almost what we already have
+in the NV code:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/tree/virt/kvm/arm/mmu.c?h=kvm-arm64/nv-wip-v5.0-rc7#n1752
+
+(note that force_pte is gone in that branch).
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
