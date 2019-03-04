@@ -2,53 +2,53 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02DAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4F2208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C54208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688252;
-	bh=rae7IBApMra51kMwi+gjqMXUaiTupah0oHUHnsAEMDs=;
+	s=default; t=1551688255;
+	bh=nD5LMdzBOoX/D/CD8WkvTCfb7oz49uRwtzQwVfBk6Qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mPFkY5Ax1j8foOd374iYEOcpbVkkq26MaacPoWHdqm53QcXZ+cgjhPof6Yoc2Q3rn
-	 V7XARWnSgjnbP7cF88wWvSXFFePb8B2H6gwy5lzNyI6zD7h+ZQq/h7aKEaGBN8EQpd
-	 qGWLK/huX2FKwuI9RrmuEz4yZwXxohYmDlm4oY2k=
+	b=JAXp9nsMfCycwFuVPncSo6k2HLOSqPjPKHvvfSxanrFQrWHjN+90UFczWOvgsxDRV
+	 wA2px2t+WR3YpgaWDP65qtmJRyt+Tw0awiN3naLLvqG6LoltbEV8w65UHZPojKgdT4
+	 1KgIa5o5/3CiylBrMxMwdJD1vyBZ1wQANVbQn4ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfCDIau (ORCPT
+        id S1727803AbfCDIax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:30:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59586 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:30:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbfCDIas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:30:48 -0500
+        id S1727792AbfCDIau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:30:50 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C22A20823;
-        Mon,  4 Mar 2019 08:30:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B0120836;
+        Mon,  4 Mar 2019 08:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688247;
-        bh=rae7IBApMra51kMwi+gjqMXUaiTupah0oHUHnsAEMDs=;
+        s=default; t=1551688250;
+        bh=nD5LMdzBOoX/D/CD8WkvTCfb7oz49uRwtzQwVfBk6Qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v2Bo++TryMCaYb3i2dyBhCfNSAzYTZXpqqE8hgWvZ0LrEwuygvM1kDcPqFgt9luyQ
-         r+wErUoelRGADsdIgqbhYW1gOSe/qy2dk0dTWkAyFV8+0z+AdZf390s/PPAhT4ZXen
-         4vRowSPdhccitLUIl1lopYQHbDh+WY3izwYzJeUY=
+        b=VY6SE6623qF0UGW6oo5FvnhhsKZ1IFHgVGLjvpUyoL6wQ5+EhNJWfjpeELWbCSmzs
+         XAeA54wmPCt6KAuyEdCXNXA9NfkJSehIKnPRobGON8/ePa+BWyJHONviI4XgshFtnn
+         r6vn3vltljapVoIBfFL+ys5Yw/IoC+sGglZ1OcHc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 64/78] kvm: selftests: Fix region overlap check in kvm_util
-Date:   Mon,  4 Mar 2019 09:22:47 +0100
-Message-Id: <20190304081628.427365367@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 65/78] mmc: spi: Fix card detection during probe
+Date:   Mon,  4 Mar 2019 09:22:48 +0100
+Message-Id: <20190304081628.469946570@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -67,58 +67,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 94a980c39c8e3f8abaff5d3b5bbcd4ccf1c02c4f ]
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-Fix a call to userspace_mem_region_find to conform to its spec of
-taking an inclusive, inclusive range. It was previously being called
-with an inclusive, exclusive range. Also remove a redundant region bounds
-check in vm_userspace_mem_region_add. Region overlap checking is already
-performed by the call to userspace_mem_region_find.
+commit c9bd505dbd9d3dc80c496f88eafe70affdcf1ba6 upstream.
 
-Tested: Compiled tools/testing/selftests/kvm with -static
-	Ran all resulting test binaries on an Intel Haswell test machine
-	All tests passed
+When using the mmc_spi driver with a card-detect pin, I noticed that the
+card was not detected immediately after probe, but only after it was
+unplugged and plugged back in (and the CD IRQ fired).
 
-Signed-off-by: Ben Gardon <bgardon@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The call tree looks something like this:
+
+mmc_spi_probe
+  mmc_add_host
+    mmc_start_host
+      _mmc_detect_change
+        mmc_schedule_delayed_work(&host->detect, 0)
+          mmc_rescan
+            host->bus_ops->detect(host)
+              mmc_detect
+                _mmc_detect_card_removed
+                  host->ops->get_cd(host)
+                    mmc_gpio_get_cd -> -ENOSYS (ctx->cd_gpio not set)
+  mmc_gpiod_request_cd
+    ctx->cd_gpio = desc
+
+To fix this issue, call mmc_detect_change after the card-detect GPIO/IRQ
+is registered.
+
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/testing/selftests/kvm/lib/kvm_util.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/mmc/host/mmc_spi.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 6fd8c089cafcd..fb5d2d1e0c048 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -590,7 +590,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
- 	 * already exist.
- 	 */
- 	region = (struct userspace_mem_region *) userspace_mem_region_find(
--		vm, guest_paddr, guest_paddr + npages * vm->page_size);
-+		vm, guest_paddr, (guest_paddr + npages * vm->page_size) - 1);
- 	if (region != NULL)
- 		TEST_ASSERT(false, "overlapping userspace_mem_region already "
- 			"exists\n"
-@@ -606,15 +606,10 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
- 		region = region->next) {
- 		if (region->region.slot == slot)
- 			break;
--		if ((guest_paddr <= (region->region.guest_phys_addr
--				+ region->region.memory_size))
--			&& ((guest_paddr + npages * vm->page_size)
--				>= region->region.guest_phys_addr))
--			break;
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1447,6 +1447,7 @@ static int mmc_spi_probe(struct spi_devi
+ 		mmc->caps &= ~MMC_CAP_NEEDS_POLL;
+ 		mmc_gpiod_request_cd_irq(mmc);
  	}
- 	if (region != NULL)
- 		TEST_ASSERT(false, "A mem region with the requested slot "
--			"or overlapping physical memory range already exists.\n"
-+			"already exists.\n"
- 			"  requested slot: %u paddr: 0x%lx npages: 0x%lx\n"
- 			"  existing slot: %u paddr: 0x%lx size: 0x%lx",
- 			slot, guest_paddr, npages,
--- 
-2.19.1
-
++	mmc_detect_change(mmc, 0);
+ 
+ 	if (host->pdata && host->pdata->flags & MMC_SPI_USE_RO_GPIO) {
+ 		has_ro = true;
 
 
