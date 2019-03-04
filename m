@@ -2,199 +2,202 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDD2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534B1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1ED20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:02:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="YgKt7wk6"
+	by mail.kernel.org (Postfix) with ESMTP id 220B220823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfCDTCQ (ORCPT
+        id S1726915AbfCDTFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:02:16 -0500
-Received: from uphb19pa08.eemsg.mail.mil ([214.24.26.82]:13100 "EHLO
-        USFB19PA11.eemsg.mail.mil" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726073AbfCDTCP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:02:15 -0500
-X-Greylist: delayed 593 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Mar 2019 14:02:14 EST
-X-EEMSG-check-017: 117533107|USFB19PA11_EEMSG_MP7.csd.disa.mil
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by USFB19PA11.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 04 Mar 2019 18:52:19 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1551725539; x=1583261539;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=mOcW812sxEX8GI7oCIGPziVYsszmewLiDhWIvfUWgfQ=;
-  b=YgKt7wk6W5ZkBdrI4+ONzwBUf0ket7NEEm6I+arUTTZAM9PX68oLNRe/
-   aBUbmVRoTP9VEpOLZjxDNXxdA4D/jDrHaCl2RQ2XKwiJsXe75jN34v9fR
-   BZlEy4N1IL6RLkQ3BNkSjCxiW6lPRgJonBOYnNKtIBJSDhrxoyW2wD6/H
-   jb/20bfHTMOl02rworMu1pEBaaQJF85ylu3KURMIIw5zMJov+IHASpeqO
-   jSjRUJQiawfQc1UH85xhx613mNx7+626MypQZNXIHJ8VtP3lM+S1gAUVM
-   mVw0sMLrU6IgwQtv1Eg0Q3VxAidxgWVPIkPlmFwL+8e12kg5ByKWSmR+U
-   A==;
-X-IronPort-AV: E=Sophos;i="5.58,440,1544486400"; 
-   d="scan'208";a="21103139"
-IronPort-PHdr: =?us-ascii?q?9a23=3AadNgGxXY5asCdPP9fylRymMZLdrV8LGtZVwlr6?=
- =?us-ascii?q?E/grcLSJyIuqrYZRGDv6dThVPEFb/W9+hDw7KP9fy5ASpYuN6oizMrSNR0TR?=
- =?us-ascii?q?gLiMEbzUQLIfWuLgnFFsPsdDEwB89YVVVorDmROElRH9viNRWJ+iXhpTEdFQ?=
- =?us-ascii?q?/iOgVrO+/7BpDdj9it1+C15pbffxhEiCCybL9vMBm6txndutQLioZ+N6g9zQ?=
- =?us-ascii?q?fErGFVcOpM32NoIlyTnxf45siu+ZNo7jpdtfE8+cNeSKv2Z6s3Q6BWAzQgKG?=
- =?us-ascii?q?A1+dbktQLfQguV53sTSXsZnxxVCAXY9h76X5Pxsizntuph3SSRIMP7QawoVT?=
- =?us-ascii?q?mk8qxmUwHjhjsZODEl8WHXks1wg7xdoBK9vBx03orYbJiIOPZiYq/ReNUXSm?=
- =?us-ascii?q?RbXsZVSidPHIWyYYUSBOYFJOpVr43wq14IoBCjBwejGfnvxydViHHo06000+?=
- =?us-ascii?q?cvHw/I0wMvHd0BrHvaoc7pNKoQS+250LXEwDvBYv5QxDzz6JLIchckofyUQL?=
- =?us-ascii?q?xwbdTeyVEvFwzbiFWbtJHrPzaP2eQJt2iU8ephXv+ohm48tg5xuSOixtssi4?=
- =?us-ascii?q?bVhoIVzUrI9SNiwIkvP9G4R0l7YcC9HZZWqiqUNJN2T9s/T2xntys20L0LtY?=
- =?us-ascii?q?OhcCQUx5kr2QTTZ+GBfoOV+BzsTvyRLi19hH99fbK/gAu9/la4x+3nU8m0zE?=
- =?us-ascii?q?5Kri1YktnQrnwN1wLc6syASvZl4keuwyyP1wHO6uFfO0w0iaraJIIhwr43jJ?=
- =?us-ascii?q?YTt1jMHjTql0nsia+Wd0Ek9vCp6+ThfLrmuoeRO5J7hwzxKKgjmtGzDf4mPg?=
- =?us-ascii?q?UBQWSX4/mw2KXm/ULjQbVKivM2krPesJDfPckbvbO2AxRO34Y/6xewEzem0N?=
- =?us-ascii?q?MCkXkBN1JKYgiLj4fuO1HQOPz4F+uwg0ywkDd3wPDLJqbhDY/JLnnDkbbgfb?=
- =?us-ascii?q?B95lVGxwo10N9f/ZVUCrAcL/7pRkDxs9nYBAcjMwOo2+bnFMl91oQGVGKRDa?=
- =?us-ascii?q?+ZN6PTvkWM5u80OemDepIauDbnJPg5/fLhkXg5mVoFd6mzwZQXcGy4HuhhI0?=
- =?us-ascii?q?iBZHrsg9QBEWMNvgolV+Hqk1yDXiBJZ3msQq085ys3CIK7DY3bXICinKSB3D?=
- =?us-ascii?q?unHp1Rfm1GDVWMEXDzd4WCQfgDdDydL9R7kjMaSLehS5Uu1Q20uADmzLpnK/?=
- =?us-ascii?q?Le+jcEupL7yNh1++rTmAkp+jx6DsSSzWWNQHxvnm4TST823b5woUhgxVeYz6?=
- =?us-ascii?q?d4mOZUFdtJ5/NGSg06L4LTz/RmC9DuXQLMZs+JR0y7QtWiGjwxVsg+w8IKY0?=
- =?us-ascii?q?pkHtWiiRfD3zC0DLMPi7OLA5k0+LrG33ftP8Z912rG1K45glkiQ8tPM3Cmh6?=
- =?us-ascii?q?Fm+wjQGYHJiUOZmLiudakHwi7N+3mMzXCUsEFbTgFwS6PFUm4bZkfMqtT5/E?=
- =?us-ascii?q?zCRae0Cbs7KgtB1dKCKqxSZ93tjFVGQurjOdvHb2KsnWewBBGIxrWCbIrxYG?=
- =?us-ascii?q?gdwirdB1YekwwJ/naJKxI+BiG/rGLaFjBuEkjvY0z0++lktHy7VlM0zx2Nb0?=
- =?us-ascii?q?B507q1+xgVheGTSv8K0LIEozoupCtqHFmj29LbEMSApwV/c6VGe98940lI1X?=
- =?us-ascii?q?jftwNjOpysNadihkQRcw5vpUPhyw13CplckcgttH4q1xR9KaaZ0FNHajOZ0o?=
- =?us-ascii?q?v9OqPYKmbs5hCjca3W1U/E0NaQ5KgP7O40q1L5vAGmDkAi6Wlo08FJ03uA4Z?=
- =?us-ascii?q?XHFBcdUJzrXUYz7Bh6p6rXYjMj6IzJ1X1jK7W0viXe1NIuAesv0gygcMtHMK?=
- =?us-ascii?q?OYCA/yFNUXB8yvKOwshlioYQsIPPtM+6EoIsOmbfqG2LKrPep5mTKminlI4J?=
- =?us-ascii?q?150k2S7Cd8VOHI0Igfw/2C3QuISS38jFG/vcDzg4xEYisSHmXsgRTjUatYfK?=
- =?us-ascii?q?46Ro8PGHW/JYXj3dx6loz8XVZR8lK5AFIKnsSufEzWJ2L8wwBTnWsQsHWj0X?=
- =?us-ascii?q?+mwDtlmjUBtKeT3CXShe/lcUxDcktKR21llh/XM4WugtwbFBytbgstkwCN/l?=
- =?us-ascii?q?T33aVXpeJ/Mj+Ab11Pen3NM2x6Uqa2/oGHaspL5YJg5T5bS8ygcFuaTfj7uB?=
- =?us-ascii?q?Jc3CT9STgNjAsnfi2n782q1ydxj3iQeTMq8SvU?=
-X-IPAS-Result: =?us-ascii?q?A2CuBQAdc31c/wHyM5BlHAEBAQQBAQcEAQGBZYFhBSqBO?=
- =?us-ascii?q?DOEL5NlTAEBAQEBAQaBCC2JPJBgOAGEQAKEJSI4EgEBAwEBAQIBAwIBbCiCO?=
- =?us-ascii?q?ikBgmYBAQEBAgEjFUEFCwsYAgImAgJXBgEMCAEBF4JIP4FpBQipJoEvhUSEZ?=
- =?us-ascii?q?oELJIsoF3iBB4E4gmuEO4NQglcChzaCWoIIhRg7khkJizuDOoN5BhmBdIkqi?=
- =?us-ascii?q?ASKZJQoIYFWKwgCGAghD4MokGghA4E1AQGNQQ8XBIIjAQE?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 04 Mar 2019 18:52:17 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x24IoSsM026122;
-        Mon, 4 Mar 2019 13:50:28 -0500
-Subject: Re: overlayfs access checks on underlying layers
-To:     Mark Salyzyn <salyzyn@android.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Ondrej Mosnacek <omosnace@redhat.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org,
-        Daniel J Walsh <dwalsh@redhat.com>,
-        LSM <linux-security-module@vger.kernel.org>
-References: <CAJfpegs9JjkXguemL4qSiBvRP6Dnut-D+nJo-oLFXkfCL1Egvw@mail.gmail.com>
- <CAJfpegvfqx+0D32n1h2X7oj5d1mZWiLTcSSGpBnD+ba7AKzPyA@mail.gmail.com>
- <20181127210542.GA2599@redhat.com>
- <CAJfpegtQGM2z9TOt3DWwd39fC60cQknsC4vNnj7YimVEubRzUg@mail.gmail.com>
- <20181128170302.GA12405@redhat.com>
- <377b7d4f-eb1d-c281-5c67-8ab6de77c881@tycho.nsa.gov>
- <CAJfpegtNhcWD0VWy6LPtoDtQBfPu4x5iFsB053UMCidj6oMsuw@mail.gmail.com>
- <26bce3be-49c2-cdd8-af03-1a78d0f268ae@tycho.nsa.gov>
- <CAJfpeguL9xOh9Eq8LOP=ddJ4YD6nbp2UY6e2AYDVoHeCLuVhZA@mail.gmail.com>
- <20181129134943.GA16762@redhat.com>
- <fe78aaed-5fb1-3c51-1330-39de46ae39c5@android.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <ae2682f2-4a15-39e6-eb49-b9c0e72f10e4@tycho.nsa.gov>
-Date:   Mon, 4 Mar 2019 13:44:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 4 Mar 2019 14:05:14 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:48872 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfCDTFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:05:14 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9BAE5307D8F4;
+        Mon,  4 Mar 2019 19:05:13 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-116-218.phx2.redhat.com [10.3.116.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 07BC560261;
+        Mon,  4 Mar 2019 19:05:12 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 14:05:11 -0500
+From:   Phil Auld <pauld@redhat.com>
+To:     bsegall@google.com
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC]  sched/fair: hard lockup in sched_cfs_period_timer
+Message-ID: <20190304190510.GB5366@lorien.usersys.redhat.com>
+References: <20190301145209.GA9304@pauld.bos.csb>
+ <xm26ef7mzew2.fsf@bsegall-linux.svl.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <fe78aaed-5fb1-3c51-1330-39de46ae39c5@android.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xm26ef7mzew2.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 04 Mar 2019 19:05:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 12:01 PM, Mark Salyzyn wrote:
-> On 11/29/2018 05:49 AM, Vivek Goyal wrote:
->> So will override_creds=off solve the NFS issue also where all access will
->> happen with the creds of task now? Though it will stil require more
->> priviliges in task for other operations in overlay to succeed.
+On Mon, Mar 04, 2019 at 10:13:49AM -0800 bsegall@google.com wrote:
+> Phil Auld <pauld@redhat.com> writes:
 > 
-> NFS problems seems to have ended the discussion, too many stakeholders? 
-> too many outstanding questions?
+> > Hi,
+> >
+> > I have a reproducible case of this: 
+> >
+> > [  217.264946] NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
+> > [  217.264948] Modules linked in: sunrpc iTCO_wdt gpio_ich iTCO_vendor_support intel_powerclamp coretemp kvm_intel kvm ipmi_ssif irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel ipmi_si intel_cstate joydev ipmi_devintf pcspkr hpilo intel_uncore sg hpwdt ipmi_msghandler acpi_power_meter i7core_edac lpc_ich acpi_cpufreq ip_tables xfs libcrc32c sr_mod sd_mod cdrom ata_generic radeon i2c_algo_bit drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm ata_piix drm serio_raw crc32c_intel hpsa myri10ge libata dca scsi_transport_sas netxen_nic dm_mirror dm_region_hash dm_log dm_mod
+> > [  217.264964] CPU: 24 PID: 46684 Comm: myapp Not tainted 5.0.0-rc7+ #25
+> > [  217.264965] Hardware name: HP ProLiant DL580 G7, BIOS P65 08/16/2015
+> > [  217.264965] RIP: 0010:tg_nop+0x0/0x10
+> > [  217.264966] Code: 83 c9 08 f0 48 0f b1 0f 48 39 c2 74 0e 48 89 c2 f7 c2 00 00 20 00 75 dc 31 c0 c3 b8 01 00 00 00 c3 66 0f 1f 84 00 00 00 00 00 <66> 66 66 66 90 31 c0 c3 0f 1f 84 00 00 00 00 00 66 66 66 66 90 8b
+> > [  217.264967] RSP: 0000:ffff976a7f703e48 EFLAGS: 00000087
+> > [  217.264967] RAX: ffff976a7c7c8f00 RBX: ffff976a6f4fad00 RCX: ffff976a7c7c90f0
+> > [  217.264968] RDX: ffff976a6f4faee0 RSI: ffff976a7f961f00 RDI: ffff976a6f4fad00
+> > [  217.264968] RBP: ffff976a7f961f00 R08: 0000000000000002 R09: ffffffad2c9b3331
+> > [  217.264969] R10: 0000000000000000 R11: 0000000000000000 R12: ffff976a7c7c8f00
+> > [  217.264969] R13: ffffffffb2305c00 R14: 0000000000000000 R15: ffffffffb22f8510
+> > [  217.264970] FS:  00007f6240678740(0000) GS:ffff976a7f700000(0000) knlGS:0000000000000000
+> > [  217.264970] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  217.264971] CR2: 00000000006dee20 CR3: 000000bf2bffc005 CR4: 00000000000206e0
+> > [  217.264971] Call Trace:
+> > [  217.264971]  <IRQ>
+> > [  217.264972]  walk_tg_tree_from+0x29/0xb0
+> > [  217.264972]  unthrottle_cfs_rq+0xe0/0x1a0
+> > [  217.264972]  distribute_cfs_runtime+0xd3/0xf0
+> > [  217.264973]  sched_cfs_period_timer+0xcb/0x160
+> > [  217.264973]  ? sched_cfs_slack_timer+0xd0/0xd0
+> > [  217.264973]  __hrtimer_run_queues+0xfb/0x270
+> > [  217.264974]  hrtimer_interrupt+0x122/0x270
+> > [  217.264974]  smp_apic_timer_interrupt+0x6a/0x140
+> > [  217.264975]  apic_timer_interrupt+0xf/0x20
+> > [  217.264975]  </IRQ>
+> > [  217.264975] RIP: 0033:0x7f6240125fe5
+> > [  217.264976] Code: 44 17 d0 f3 44 0f 7f 47 30 f3 44 0f 7f 44 17 c0 48 01 fa 48 83 e2 c0 48 39 d1 74 a3 66 0f 1f 84 00 00 00 00 00 66 44 0f 7f 01 <66> 44 0f 7f 41 10 66 44 0f 7f 41 20 66 44 0f 7f 41 30 48 83 c1 40
+> > ...
+> >
+> > There's more but this is the juicy part. 
+> >
+> > The reproducer involves a large number of cgroups in a hierarchy and a very low cfs_period_us 
+> > setting. 
+> >
+> > The guts of sched_cfs_period_timer is this forever loop:
+> >
+> > 	raw_spin_lock(&cfs_b->lock);
+> > 	for (;;) {
+> > 		overrun = hrtimer_forward_now(timer, cfs_b->period);
+> > 		if (!overrun)
+> > 			break;
+> >
+> > 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
+> > 	}
+> > 	if (idle)
+> > 		cfs_b->period_active = 0;
+> > 	raw_spin_unlock(&cfs_b->lock);
+> >
+> >
+> > There's no guarantee that hrtimer_forward_now() will ever return 0 and also 
+> > do_sched_cfs_period_timer() will drop and re-acquire the cfs_b->lock to call 
+> > distribute_cfs_runtime. 
+> >
+> > I considered code to tune the period and quota up (proportionally so they have the same 
+> > relative effect) but I did not like that because of the above statement and the fact that 
+> > it would be changing the valid values the user configured. I have two versions that do that 
+> > differently but they both still call out for protection from the forever loop. I think they 
+> > add complexity for no real gain.
+> >
+> > For my current testing I'm using a more direct but less elegant approach of simply limiting 
+> > the number of times the loop can execute. This has the potential to skip handling a period 
+> > I think but will prevent the problem reliably. I'm not sure how many iterations this loop 
+> > was expected to take. I'm seeing numbers in the low thousands at times.
 > 
-> Do we accept the limitations of the override_creds patch as is, and then 
-> have the folks more familiar with the NFS scenario(s) build on it?
-> 
-> [TL;DR]
-> 
-> After looking at all this discussion, it feels like a larger audited 
-> rewrite of the security model is in order and override_creds=off may be 
-> a disservice (although expediently deals with Android's needs) to a 
-> correct general solution. I admit I have little idea where to go from 
-> here for a general solution.
-> 
-> As far as I see it, the model of creator && caller credentials is a 
-> problem for any non-overlapping (MAC) privilege models. This patch 
-> allows one to drop any creator privilege escalation, re-introducing the 
-> "caller" to the lower layers.
-> 
-> As such I would expect a better model is to _always_ check the caller 
-> credentials again in the lower layers, and only check the creator 
-> credentials, some without caller credentials, for some special cases? 
-> Change an && to an || for some of the checks? What are those special 
-> cases? I must admit _none_ of those special cases need attention in the 
-> Android usage models though making it difficult for me to do the fight 
-> thing for the associated stakeholders.
+> I mean the answer should be "do_sched_cfs_period_timer runs once" the
+> vast majority of the time; if it's not then your machine/setup can't
+> handle whatever super low period you've set, or there's some bad
+> behavior somewhere in the period timer handling.
+> CFS_PERIOD_TIMER_EXIT_COUNT could reasonably be like 2 or 3 - this would
+> mean that you've already spent an entire period inside the handler.
+>
 
-As I recall, there were multiple problems with using current process' 
-creds for the operations on the lower/upper/work directories:
+Thanks for looking at this.
 
-- Some overlayfs operations on the lower/upper/work directories required 
-privilege (capabilities) that the current process might lack, e.g. to 
-set ownership and the like on upper or work files, to set special xattrs 
-used internally by overlayfs for whiteouts or similar purposes, to act 
-on files within the work dir which was inaccessible to the current 
-process to prevent accessing files in an incomplete state, etc. 
-Originally that was handled by temporarily elevating the effective 
-capabilities around the privileged operation in the overlayfs code but 
-that didn't help with the SELinux or other LSM capability checking that 
-was triggered upon the capable calls.  Without some change there you'd 
-have to allow all client process domains all of the relevant 
-capabilities in policy, greatly increasing their privileges.
+That's sort of what I though, too. Would it not make more sense to get rid
+of the loop? I find forever loops inherently suspect.
 
-- The original logic was checking access to the lower dir/files in the 
-context of the current process when performing some operation that 
-modifies the file content or metadata, thereby triggering a SELinux/LSM 
-write or similar check, even though the actual data or metadata 
-modification occurs to the copied-up file instead and does not affect 
-the lower dir/files.  That was preventing making the lower dir/file 
-labels read-only to the client processes in the policy, which was 
-desired for the container use case.
+I think the fact that we drop the lock to do the distribue is the real cuplrit.
+It's not do_sched_cfs_period_timer()'s code itself that takes the time,
+I think, it's the re-acquire of the cfs_b->lock and the contention on it due
+to all the cgroups. Lock_stat smaples during that run show pretty high contention
+on that lock and some really long wait times.
 
-You'd need to solve those problems in some way.
+My reproducer is artificial, but is designed to trigger the issue as has
+been hit in various customer workloads. So yes, it's exaggerated, but only
+so I don't have to wait weeks between hits :)
 
-> The lower privileged application access to the directory cache inherited 
-> by other callers troubles me (not for Android, but in general) and feels 
-> troublesome (flush out the directory cache? how to tag the privileges 
-> associated with the current instance of the directory cache?). Some 
-> operations (eg: delete a file for incoming, create mknod in upperdir) 
-> are special cases requiring the checking of caller credentaisl to 
-> function (not a problem for Android as the caller that deletes a file 
-> just so happens to have the necessary privileges).
-> 
-> Also, mount namespaces (in upper, lower, etc), how will they affect this 
-> all, is there a need for more attention to this as well?
-> 
-> -- Mark
 
+Thanks,
+Phil
+
+> >
+> > A more complete fix to make sure do_sched_cfs_period_timer never takes longer than period 
+> > would be good but I'm not sure what that would be and we still have this potential forever
+> > loop. 
+> >
+> > Below is the bandaid version. 
+> >   
+> > Thoughts? 
+> >
+> >
+> > Cheers,
+> > Phil
+> >
+> > ---
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 310d0637fe4b..33e55620f891 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -4859,12 +4859,16 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+> >         return HRTIMER_NORESTART;
+> >  }
+> >  
+> > +/* This is pretty arbitrary just to escape the "forever" loop before the watchdog
+> > + * kills us as there is no guarantee hrtimer_forward_now ever returns 0. */
+> > +#define CFS_PERIOD_TIMER_EXIT_COUNT 100
+> >  static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+> >  {
+> >         struct cfs_bandwidth *cfs_b =
+> >                 container_of(timer, struct cfs_bandwidth, period_timer);
+> >         int overrun;
+> >         int idle = 0;
+> > +       int count = 0;
+> >  
+> >         raw_spin_lock(&cfs_b->lock);
+> >         for (;;) {
+> > @@ -4872,6 +4876,14 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+> >                 if (!overrun)
+> >                         break;
+> >  
+> > +               if (++count > CFS_PERIOD_TIMER_EXIT_COUNT) {
+> > +                       pr_warn_ratelimited("cfs_period_timer(%d): too many overruns. Consider raising cfs_period_us (%lld)\n",
+> > +                               smp_processor_id(), cfs_b->period/NSEC_PER_USEC);
+> > +                       // Make sure we restart the timer.
+> > +                       idle = 0;
+> > +                       break;
+> > +               }
+> > +
+> >                 idle = do_sched_cfs_period_timer(cfs_b, overrun);
+> >         }
+> >         if (idle)
+
+-- 
