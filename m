@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1541FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF9DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D731120836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4023A20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688242;
-	bh=xLLfwL/JRyLWV74Ty0se4q674jPUBq2rrKsLt/cODsg=;
+	s=default; t=1551688245;
+	bh=9eSsGQuCRdGG+BYwo+a+AWdvoOrDarnhXlVJXjZLtWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YUu2f2iUsGvLgRINIxCOCIyWr4X33v/HvKf8odOzlombjPZRHB4qtC6mz8eaTN9m6
-	 bQGx88n0qVx6MwmMVz64RlAE3QBdyzb3hdMym4b67wMxBTRC93j5ZOxk0TbYdA6ihS
-	 p5ZjarPi8NOsDmFbQDsi8jYJ3y9iKZ5Q9I1EEEZ0=
+	b=lwDFDzKmivwguTcEDHd8rtv2QvFoL25eBK8rn5ifL/Ll/hWN2ugLzSNqcOZ3wXwrF
+	 apiKP0QEGSRKsDcyNdN3vlKljZs7h6hS1APoTWcV/+IZ5BZeFslaUaIZ2nshCr9uZ5
+	 U9Fhgq0TnyZ3XVUZsNTqSMvq4O6MTWzWU+HmG70M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfCDIal (ORCPT
+        id S1727769AbfCDIao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:30:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59158 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:30:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727749AbfCDIai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:30:38 -0500
+        id S1727476AbfCDIal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:30:41 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A5A920823;
-        Mon,  4 Mar 2019 08:30:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06DB20823;
+        Mon,  4 Mar 2019 08:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688237;
-        bh=xLLfwL/JRyLWV74Ty0se4q674jPUBq2rrKsLt/cODsg=;
+        s=default; t=1551688241;
+        bh=9eSsGQuCRdGG+BYwo+a+AWdvoOrDarnhXlVJXjZLtWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fhem8l5r5iAzTRKwQC9M2DVY57/dD43YRBakxHa6CV/Z7bMCIEmigUDvFdXLtUMzz
-         3F8h6qwZed4l11l5/CrLVNWSSTM5iugRwnG7zoIPEv1qi8ZbDIRZWXKu8VUdGMuI08
-         8SkHnxpdyMckGiINCuf5SdPxuHR2ZNdKEeWCRX/Q=
+        b=fKqRz49rk8zWKLB+F2LfVJi1mQOryNd6P9N16HK27gQz4+XCjf7bM0hjtwoG44ZGR
+         Cnb8WK4O4Mgu+sZW3XgdAJLy+FiKjL989bbhqaeVAoTuKOtMOPwvxUUc4kI64vpwfo
+         Ej06xMvjQk/jCgY/wYPsJ5IsoLZ11P7x4vkmxKls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alban Bedel <albeu@free.fr>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 25/78] phy: ath79-usb: Fix the power on error path
-Date:   Mon,  4 Mar 2019 09:22:08 +0100
-Message-Id: <20190304081626.632499835@linuxfoundation.org>
+Subject: [PATCH 4.19 16/78] usb: gadget: Potential NULL dereference on allocation error
+Date:   Mon,  4 Mar 2019 09:21:59 +0100
+Message-Id: <20190304081626.229188629@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -66,32 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 009808154c69c48d5b41fc8cf5ad5ab5704efd8f ]
+[ Upstream commit df28169e1538e4a8bcd8b779b043e5aa6524545c ]
 
-In the power on function the error path doesn't return the suspend
-override to its proper state. It should should deassert this reset
-line to enable the suspend override.
+The source_sink_alloc_func() function is supposed to return error
+pointers on error.  The function is called from usb_get_function() which
+doesn't check for NULL returns so it would result in an Oops.
 
-Signed-off-by: Alban Bedel <albeu@free.fr>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Of course, in the current kernel, small allocations always succeed so
+this doesn't affect runtime.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/qualcomm/phy-ath79-usb.c | 2 +-
+ drivers/usb/gadget/function/f_sourcesink.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/qualcomm/phy-ath79-usb.c b/drivers/phy/qualcomm/phy-ath79-usb.c
-index 6fd6e07ab345f..f7d64f3910b4d 100644
---- a/drivers/phy/qualcomm/phy-ath79-usb.c
-+++ b/drivers/phy/qualcomm/phy-ath79-usb.c
-@@ -31,7 +31,7 @@ static int ath79_usb_phy_power_on(struct phy *phy)
+diff --git a/drivers/usb/gadget/function/f_sourcesink.c b/drivers/usb/gadget/function/f_sourcesink.c
+index 9cdef108fb1b3..ed68a4860b7d8 100644
+--- a/drivers/usb/gadget/function/f_sourcesink.c
++++ b/drivers/usb/gadget/function/f_sourcesink.c
+@@ -838,7 +838,7 @@ static struct usb_function *source_sink_alloc_func(
  
- 	err = reset_control_deassert(priv->reset);
- 	if (err && priv->no_suspend_override)
--		reset_control_assert(priv->no_suspend_override);
-+		reset_control_deassert(priv->no_suspend_override);
+ 	ss = kzalloc(sizeof(*ss), GFP_KERNEL);
+ 	if (!ss)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
  
- 	return err;
- }
+ 	ss_opts =  container_of(fi, struct f_ss_opts, func_inst);
+ 
 -- 
 2.19.1
 
