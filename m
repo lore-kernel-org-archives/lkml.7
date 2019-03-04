@@ -2,138 +2,118 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021DCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3083DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1CC20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F228020835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CF4eeDQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfCDUfF (ORCPT
+        id S1726483AbfCDUfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:35:05 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:36229 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfCDUfF (ORCPT
+        Mon, 4 Mar 2019 15:35:11 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36050 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfCDUfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:35:05 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mf0FY-1hTvJJ3PYI-00gV08; Mon, 04 Mar 2019 21:33:39 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sameer Pujar <spujar@nvidia.com>,
-        Mohan Kumar D <mkumard@nvidia.com>,
-        Ravindra Lokhande <rlokhande@nvidia.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: hda/tegra: avoid build error without CONFIG_PM
-Date:   Mon,  4 Mar 2019 21:33:25 +0100
-Message-Id: <20190304203337.1968705-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
+        Mon, 4 Mar 2019 15:35:10 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n22so3849206pfa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 12:35:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xNmRIXO0MDorylQ6to2ktdfK3KWc9juEpeOkY/XwoJA=;
+        b=CF4eeDQZAKbaUGzJA9fQrzNzkO+NVHMbfRrNep/Zh7xnCdV2i2ErmB04CC6jBQqoqk
+         hCfP4Dn9cDxs3zfMNFBlmeR7wANSPtqE4t6cu7eeKbr0YwyFvysVuUibBE9E7eAJ41tL
+         GqWbKYsVAmzlSdSWYZMozNM/IyRS5pZiqMJ/orvBDADJAw59YjXJH/1MwGFNaLaubEMQ
+         TZ4vC7oPA258zLV2nXE3/rplpdeR+ObDgk7ZXMiSm1XnCwHa5tOuu+qqtEGgp77hCQIR
+         nkGnJjQ5KOtV6v4FEVwVjzBX962VYSQBtbyINOxVkyNAfPT132cTXxOpIJljqe0XDgy8
+         lp/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=xNmRIXO0MDorylQ6to2ktdfK3KWc9juEpeOkY/XwoJA=;
+        b=JyvH6NGWsd5P7v8R18xDyGvoJiVYc4zb1TMWlgTkrY8w1+7s5hsDawJlU4kxlcF9NU
+         FRI4geza5HgaL2GfPfpVnRW7nR5t/o1ZOnTthfv9AhbEdT5/pTsTal6yPm1lCZb2iH5W
+         a99PoGbdYYvJCiLTV97csW9B69rROiEkXVtjHA1y/b/BXf0w4n8qTWmvOc6r72d2Dczb
+         ahBMFHUTB6Bbr1mnEpbHQOedDa71YOVeDEVfgYa0OEp3EXSotI9pXM3RRJaK7QW96krS
+         ZsDT0tmw1XmEUcZY67VXFwM/2rwKoalaR6ixZ51fTFPPjRVht6POpmKBYnOmGk7yhqW9
+         tKPw==
+X-Gm-Message-State: APjAAAXgF2iFi4TMRoAhcl4esc8HjimlpRq0KKdeT6wpR2rdasazRRaR
+        NoHE5nE+1DTUkRXDIj00Vjtssw==
+X-Google-Smtp-Source: APXvYqxja//u6kgFzU5DvfMkiEewZ3u55h1AEIkISeL6/xSWE/saZvaIZksEJL1uE6MRINFUnKohqQ==
+X-Received: by 2002:a17:902:728f:: with SMTP id d15mr22290851pll.156.1551731709722;
+        Mon, 04 Mar 2019 12:35:09 -0800 (PST)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id k74sm13911823pfb.172.2019.03.04.12.35.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 12:35:08 -0800 (PST)
+Date:   Mon, 04 Mar 2019 12:35:08 -0800 (PST)
+X-Google-Original-Date: Mon, 04 Mar 2019 12:34:41 PST (-0800)
+Subject:     Re: [PATCH 0/3] riscv: Fix debug instruction check and support trap-based WARN()
+In-Reply-To: <1551349891-22683-1-git-send-email-vincentc@andestech.com>
+CC:     aou@eecs.berkeley.edu, ebiederm@xmission.com,
+        Jim Wilson <jimw@sifive.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        deanbo422@gmail.com, vincentc@andestech.com
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     vincentc@andestech.com
+Message-ID: <mhng-76c68381-da6b-4b8c-97c9-e38d503b93bc@palmer-si-x1c4>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:gGK9SLW1WNjwagJZ5WFg+KFg0y7X0g2wg/CrYquepC0s5WUELGF
- o14XabNuJgO/suXkwp7p4K8TMKxHIrI4xDgg4lio6eVcYsmczGOnrevZ6X1DusS+X5o9ZYg
- 9+1hZ+MejNu3gcJdVciuuyH2Cgw1dRivtTjVj4zCAAKTXKrG/tfRzjmffH/usklhoebPNho
- RzQpWf2ohVS1a8ShyEL6A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XvlmZ2uJsrA=:q+bRwaMqf6nyDryl1YymE2
- 2nNh3fPQY1VfWN+cdrt5dYqQ4XUMAS0aFe7Bsm/zcoz1zuHLZzWoHD8XEKGZptRhHyWIfuObr
- giyQ6JpPjP99eXqUvhifbmXfdugRkcefJBQTVIOGlDB29gurC9HL6nIVrn9Q+3Mu4JVKvF5AS
- 7ROJEet1ZoJBEmLqzpOR89BkPA3HklXb6zwtmPAas5e5BJBCeJj7zbDLWLxBtN1FTuMIfWBU1
- SdLlWkrHZ+b495t8T3Vw5/VGOZfZMzrgWZkVfTiHc+oQkXXAAn0PMEoTgIpoZaEvP8BqPHJs2
- Eg3P+pdHBK+yG421GmuXZFRH9au5/Hv3P5XCU8tOeEHzFRNZAgH4+YaC7CBLhT1Z/RmJMDhVv
- 6n5LtLDWuSCgyyHa087e0WLIptyQ/F68Kbd2QOhyQUdVLsuM3+uMdp4A8o2Mq2RoqH3hiOlea
- tLyqoXGhYZJkgvSTu3lB35YxT94K+ltHbS2UL+Xikxhy40aw/unOJc2rfmU24Py8MMKj9XWI7
- tszfIA8VHFQu0cBxMXWpeze7ImHwymlPWQoB9dZHauKPLG/cyXYk/tE2VSsTY6Xt4gHckEUeM
- sGqmRtK0r6vbNjylBVrw2YlzX4rKVk/JQdRfklbk0xULEfHrUpclzXG/ryI9nWCGOwabNIOrt
- dPO+z83WWD8cGasbG5QHhKdJvMPpXNXVGsTYajedUfVNUz3E7bnE909Ua4/8M2KGo2A01B8ML
- SGxIQePQ8kehbi37jDVlgpw9nxvBL7LcM1Bo5w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The #ifdef protection around the PM functions is wrong, leading to
-a failed reference in some configurations:
+On Thu, 28 Feb 2019 02:31:28 PST (-0800), vincentc@andestech.com wrote:
+> The handler for the debug exception will call is_valid_bugaddr(bugaddr) to
+> check if the instruction in bugaddr is a real debug instruction. However,
+> the expected instruction, ebreak, is possibly translated to c.ebreak by
+> assmebler when C extension is supported. This patchset will add c.ebreak
+> into the check mechanism. In addition, BUG() is currently unable to work in
+> the kernel module due to an inappropriated condition in is_valid_bugaddr().
+> This issue will be fixed in this patchset. Finally, this patchset enables
+> WARN() related functions to trap the code to help developers debug it.
+>
+>
+>
+>
+>
+> Vincent Chen (3):
+>   riscv: Add the support for c.ebreak check in is_valid_bugaddr()
+>   riscv: Support BUG() in kernel module
+>   riscv: Make WARN() related functions able to trigger a trap exception
 
-sound/pci/hda/hda_tegra.c: In function 'hda_tegra_runtime_suspend':
-sound/pci/hda/hda_tegra.c:273:2: error: implicit declaration of function 'hda_tegra_disable_clocks'; did you mean 'hda_tegra_enable_clocks'? [-Werror=implicit-function-declaration]
+I'm finding this patch set a bit hard to follow, and I think it has more diff 
+than is necessary.  For example, the first patch introduces a new die() only to 
+have it removed by the third patch.  There's also some unnecessary 
+non-functional diff, like
 
-Better remove the #ifdefs entirely and rely on the compiler silently
-dropping unused functions marked __maybe_unused.
+    @@ -149,12 +161,13 @@ int is_valid_bugaddr(unsigned long pc)
+            if (probe_kernel_address((bug_insn_t *)pc, insn))
+                    return 0;
+            if ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32)
+    -               return insn == __BUG_INSN_32;
+    +               return (insn == __BUG_INSN_32);
+            else
+    -               return (insn & __COMPRESSED_INSN_MASK) == __BUG_INSN_16;
+    +               return ((insn & __COMPRESSED_INSN_MASK) == __BUG_INSN_16);
+     }
+     #endif /* CONFIG_GENERIC_BUG */
+    
+    +
+     void __init trap_init(void)
+     {
+            /*
 
-Fixes: 707e0759f2f4 ("ALSA: hda/tegra: implement runtime suspend/resume")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- sound/pci/hda/hda_tegra.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/sound/pci/hda/hda_tegra.c b/sound/pci/hda/hda_tegra.c
-index dbd8da5685cb..3d68f9ef7694 100644
---- a/sound/pci/hda/hda_tegra.c
-+++ b/sound/pci/hda/hda_tegra.c
-@@ -219,7 +219,6 @@ static int hda_tegra_enable_clocks(struct hda_tegra *data)
- 	return rc;
- }
- 
--#ifdef CONFIG_PM_SLEEP
- static void hda_tegra_disable_clocks(struct hda_tegra *data)
- {
- 	clk_disable_unprepare(data->hda2hdmi_clk);
-@@ -230,7 +229,7 @@ static void hda_tegra_disable_clocks(struct hda_tegra *data)
- /*
-  * power management
-  */
--static int hda_tegra_suspend(struct device *dev)
-+static int __maybe_unused hda_tegra_suspend(struct device *dev)
- {
- 	struct snd_card *card = dev_get_drvdata(dev);
- 	int rc;
-@@ -243,7 +242,7 @@ static int hda_tegra_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int hda_tegra_resume(struct device *dev)
-+static int __maybe_unused hda_tegra_resume(struct device *dev)
- {
- 	struct snd_card *card = dev_get_drvdata(dev);
- 	int rc;
-@@ -255,10 +254,8 @@ static int hda_tegra_resume(struct device *dev)
- 
- 	return 0;
- }
--#endif /* CONFIG_PM_SLEEP */
- 
--#ifdef CONFIG_PM
--static int hda_tegra_runtime_suspend(struct device *dev)
-+static int __maybe_unused hda_tegra_runtime_suspend(struct device *dev)
- {
- 	struct snd_card *card = dev_get_drvdata(dev);
- 	struct azx *chip = card->private_data;
-@@ -275,7 +272,7 @@ static int hda_tegra_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int hda_tegra_runtime_resume(struct device *dev)
-+static int __maybe_unused hda_tegra_runtime_resume(struct device *dev)
- {
- 	struct snd_card *card = dev_get_drvdata(dev);
- 	struct azx *chip = card->private_data;
-@@ -292,7 +289,6 @@ static int hda_tegra_runtime_resume(struct device *dev)
- 
- 	return 0;
- }
--#endif /* CONFIG_PM */
- 
- static const struct dev_pm_ops hda_tegra_pm = {
- 	SET_SYSTEM_SLEEP_PM_OPS(hda_tegra_suspend, hda_tegra_resume)
--- 
-2.20.0
-
+I like the idea of the patch set, though.  Do you have time to clean it up and 
+submit a v2?
