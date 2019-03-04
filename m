@@ -6,94 +6,92 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA2AC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260E3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0C82070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED782070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbfCDThh (ORCPT
+        id S1726233AbfCDTiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:37:37 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:41843 "EHLO
+        Mon, 4 Mar 2019 14:38:51 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:51421 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfCDThg (ORCPT
+        with ESMTP id S1726061AbfCDTiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:37:36 -0500
+        Mon, 4 Mar 2019 14:38:51 -0500
 Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MJVY8-1gh14P47YG-00JvBc; Mon, 04 Mar 2019 20:37:26 +0100
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MV6Bs-1gZpqD1spy-00SBO9; Mon, 04 Mar 2019 20:38:39 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-        Dave Chinner <dchinner@redhat.com>,
-        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] xfs: mark xfs_dir2_sf_entry_t as __packed again
-Date:   Mon,  4 Mar 2019 20:36:47 +0100
-Message-Id: <20190304193723.657089-1-arnd@arndb.de>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Joseph Lo <josephl@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: add regulator_get_linear_step() stub helper
+Date:   Mon,  4 Mar 2019 20:38:29 +0100
+Message-Id: <20190304193836.687473-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:wXjoFVzi3CaIX/kd0PSUSW/UMteqMiuiM0hOYrJAchPiuY8ucN2
- szrEsz+19lnKPNjoEl9LQgTRfObe0rGn1aFFWfSRR8mbvdZitzBOrcL9+GVS2mRNAIKbHh0
- oOH3xgrcveCiwx/TKDOhhqdd2dJa5YhL5859Hs7UxyrkYQFMV8IXNE+vecaYUqEOKANZBcM
- Qe0WFJix/pAqM3o4ncuug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6x01TYg4aRM=:STmeLI/8ogrJQE2/kLUYp+
- 1JeloQY3OSBYYrSeAKDpOwicDLnQO0PVirGa8XKz8oOFpj5VCNuVeOhoYkGWV01uYdHtJaIgL
- aJ3+DebPhMlQlinKQxs1qmc5AYjCjZFmMCM/KZIdKwSIc6JOyPjkkJWW3Ih5LFLPuea/WAkLt
- n5iofEPRkvwvi7f7WFcW3/UeB0sniRCook2AEDPpzzdWfx9sqXAmeQvpjSQ0T3wHVuy5WFdVN
- sPEw4rh6YVBuhnNyz/7Vjs8YZRt37IPG6yDLERxpNG6BjzUWJ2U0M58tTt1mgVA73VrScrfjZ
- jKxyHkkPd1eIJ9v4TvAyApyMEWwvHSIUg6ZSd4p9Enrc9ngvLI7PINw+9/xoIUsYibWI92RsY
- 4n9Wd5Ncl4wMG9OAmIjB/3QDJZzr875CEygyIUzQ2wkyav9aaSr0+djLc72qQHoy5H4qf1bEw
- 10TpsGRcrLwoNHeAMdWdAaHul6rxoam8KfOgXZ3GI9CWf9GgQE+1j0XSokkKPOUKgP/QDTLXq
- 2kPTk1UkrSLMdzxKDKfOdAKFSasGJuxEfdUc6FCMkddDY8Xd2ArN+QgRZuF68dCTFNP/H7dlR
- 8PF+afh0p+/S7ZQ2l0CPYO/jARMh17a1G2J2NPg+p2vVgfjgOoYQkaOQ+WPAk7su9iOuwq4PZ
- hR701LC4Mf17Ht8P63DMnDqFYrFZmN8Mfgt8ghn2RuJQzbTztEcfmkDDuPaG4D+KYpalu3EAn
- K9Fgtzm/PW4jfLZm844DyaCwjEIEA7U3K+DKLA==
+X-Provags-ID: V03:K1:QF9xFjS61cs6qTXNG1v/VSVuwsR/exTDfz0RJyZ49wR4KnR39l0
+ pVSKthku/csV7vWfOhXHgpR25lHjfQjtfovBkOK5a38IClzhBZ6tk6+HyITun3hqGSVDDCI
+ d060X0OQj/PaUItaCKA4dUT68gv1+V3G+AP4s+8VvVl+uf8UKNm6YBvp7Bcczj2aDXm9oL8
+ byKiPTkrHBNxhYkoPyJ/Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:n70Uf+NhApY=:l3EVPdQ7HcqN9r75rlyzO+
+ i0BC0BjxqcFXDtXM7zQc2Do7KWgAHjVQy6yQHPrYfq82vxm8emmbmtmc/jsnqTZQYw8WKcc2v
+ o6yQy8+8M2wp3GvSSfGjTCAu4pqdedJbrHwGcl4vUh2aIXzf/vFfKcPytIQi5/qxWnHcgUGU4
+ Cq2WTyemPC7uBFYvo/tich960wTEAPJ5rjigZtU1SPOoCrN24zEg2soOW33kblt2VdI+5VU/M
+ HOkOBdPTURj+Bb69S6Eb8sp1gyyUxkqgQ7EJJPezt8k2VVxYazKiIQAYRMAoo5WL+ADiuoJG5
+ 054B7emkb9ZHyS84qWj9Q+tfSlYdiy0VoEjw7WyQg564plAtUdxxtRVzL3+yqsSlZjaLZMWRo
+ vohlSOe3dB8NLhMFjy41ohuEZR7zPeJXHxW8gCsBHEQHcMJ4MtyjEH5AOAX6i2Daplx0gxD0O
+ jaVkR6eg1V1xwIqGAaNRVpzjA7Jkz63Ko2W2XVx5G3XSBWVQvOGpTJuyo/sxDDwA2iHQSRgxF
+ xnGw43GCAsRACmO+CoeqE7SM5XU06x3D2HqTYRIZP2QyngUbijH49xwxv1bgvrCH+L2epGGgu
+ orHpCxzupG6nY+EirjwEaMgLlwSart9owTsjXdpZV2ipojsAEGPiudrYi8NBvMODinuBS2j82
+ Q9VX7bcqG/0++HOi4dn9LS3VXlc6WlrCnVoY/2iq6czCZ+J4icaXo3COUHZH0HkhV0UQnAlRG
+ EdtN6vg5hERKUfVFI/zw8RAZY1I8RPNisu8WjQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For ARM OABI builds, we run into a compile time assertion:
+The regulator header has empty inline functions for most interfaces,
+but not regulator_get_linear_step(), which has just grown a user
+that does not depend on regulators otherwise:
 
-inlined from 'init_xfs_fs' at /git/arm-soc/fs/xfs/xfs_super.c:1991:2:
-fs/xfs/xfs_ondisk.h:119:208: error: call to '__compiletime_assert_119' declared with attribute error: XFS: sizeof(xfs_dir2_sf_entry_t) is wrong, expected 3
+drivers/clk/tegra/clk-tegra124-dfll-fcpu.c: In function 'get_alignment_from_regulator':
+drivers/clk/tegra/clk-tegra124-dfll-fcpu.c:555:19: error: implicit declaration of function 'regulator_get_linear_step'; did you mean 'regulator_get_drvdata'? [-Werror=implicit-function-declaration]
+  align->step_uv = regulator_get_linear_step(reg);
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~
+                   regulator_get_drvdata
+cc1: all warnings being treated as errors
+scripts/Makefile.build:278: recipe for target 'drivers/clk/tegra/clk-tegra124-dfll-fcpu.o' failed
 
-While ARM OABI is pretty much dead and fails to build for typical
-configurations on modern architectures (ARMv6 or higher), and has
-been declared deprecated in user space since gcc-4.6, the kernel
-still allows it to used for building the kernel.
+Add the missing stub along the others.
 
-In commit 8353a649f577 ("xfs: kill xfs_dir2_sf_off_t"), Christoph
-removed the old __arch_pack annotation that made it possible to
-build xfs with oddball ABIs. However, OABI not only requrires
-padding around short structure but still adds padding after this
-change. There is no harm to unconditionally mark the structure as
-__packed now, and that will do the right thing here.
-
-As of commit aa2dd0ad4d6d ("xfs: remove __arch_pack"), we need to
-use __packed here as well, instead of the old __arch_pack.
-
-Fixes: 8353a649f577 ("xfs: kill xfs_dir2_sf_off_t")
+Fixes: b3cf8d069505 ("clk: tegra: dfll: CVB calculation alignment with the regulator")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/xfs/libxfs/xfs_da_format.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/regulator/consumer.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
-index ae654e06b2fb..fa8f07451d39 100644
---- a/fs/xfs/libxfs/xfs_da_format.h
-+++ b/fs/xfs/libxfs/xfs_da_format.h
-@@ -230,7 +230,7 @@ typedef struct xfs_dir2_sf_entry {
- 	 * A 64-bit or 32-bit inode number follows here, at a variable offset
- 	 * after the name.
- 	 */
--} xfs_dir2_sf_entry_t;
-+} __packed xfs_dir2_sf_entry_t;
+diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
+index f3f76051e8b0..aaf3cee70439 100644
+--- a/include/linux/regulator/consumer.h
++++ b/include/linux/regulator/consumer.h
+@@ -478,6 +478,11 @@ static inline int regulator_is_supported_voltage(struct regulator *regulator,
+ 	return 0;
+ }
  
- static inline int xfs_dir2_sf_hdr_size(int i8count)
++static inline unsigned int regulator_get_linear_step(struct regulator *regulator)
++{
++	return 0;
++}
++
+ static inline int regulator_set_current_limit(struct regulator *regulator,
+ 					     int min_uA, int max_uA)
  {
 -- 
 2.20.0
