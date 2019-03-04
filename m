@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B075C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBD0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C4E20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F14720836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688175;
-	bh=tHVN2wY3LcUk5+1qPgFAN3i2TBqTI7WmkK1HsT01adM=;
+	s=default; t=1551688178;
+	bh=/sXOX+PrO+mfXJZ+Xzpb9kxnKmMO3ZH6paPQbd7UEvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kxa5xBSWhcc+79clqCTboSATDKMX7GNhSSmqqeYge0ZF8BFjrWguA6+40x09hQv/H
-	 WwEMj+lQUNxmPTVxSgVYQ4xwBkqC9TbEE34gUNoITSEy+AjYKMAaU1WZPWufHjZEYO
-	 JiKl5xM5uIEz1WXaFWy8vORrhVy9wLjoHN6IGr4M=
+	b=YZkPMZLjsSdx4MiKokEtJpxSfQucMIWiYVWz5j6vvjkQxtiJMm7i0IPY0WGsUStRn
+	 G0PnJNTmwdjgVSEPBwGQUxJrY+kNtOrwf71jRagYuUqMQ063RssBE97rPEdnYRGGaZ
+	 2TthcGhNvMM5wPMT7W1dGJPx9BSvUitlIIgf/yzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfCDI3d (ORCPT
+        id S1727582AbfCDI3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:29:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56196 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:29:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbfCDI3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:29:31 -0500
+        id S1727577AbfCDI3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:29:34 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 365C420836;
-        Mon,  4 Mar 2019 08:29:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0BAD20836;
+        Mon,  4 Mar 2019 08:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688170;
-        bh=tHVN2wY3LcUk5+1qPgFAN3i2TBqTI7WmkK1HsT01adM=;
+        s=default; t=1551688173;
+        bh=/sXOX+PrO+mfXJZ+Xzpb9kxnKmMO3ZH6paPQbd7UEvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YU2uSy3giTGjNsnQKI5ofkQsl7czFqXtiE7fn2jUIl1w1gvahLIEBlPwYJ7v6V9Q1
-         5rY+ik77TM4XbboXH/2tdVoXPjYAAwL880fOaJffeoY9jqDFZr22cStG8ZwfqGLX3L
-         deNxrWXrqaOkAipq1BccMo3juiw/8G0PO+cbPywo=
+        b=NXz4aJRHuxFp0mInGm6AthwfTcHMAyu/ZX4cCuemFpboMUqNg6dTqxb+8vxUibF/0
+         74VpRi47wUw/2poQmnwoKwvvh4+NyuA7oUzERsWxdc2WqnAda13KQDQl/w/VC1gfl6
+         pW+5diUL2DP/GyXsUBJ8XiT3qQJd7kp1qWSeg2VY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kenneth Feng <kenneth.feng@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/78] drm/amd/powerplay: OD setting fix on Vega10
-Date:   Mon,  4 Mar 2019 09:22:22 +0100
-Message-Id: <20190304081627.243268939@linuxfoundation.org>
+Subject: [PATCH 4.19 40/78] tty: serial: qcom_geni_serial: Allow mctrl when flow control is disabled
+Date:   Mon,  4 Mar 2019 09:22:23 +0100
+Message-Id: <20190304081627.288050940@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -67,59 +66,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6d87dc97eb3341de3f7b1efa3156cb0e014f4a96 ]
+[ Upstream commit e8a6ca808c5ed1e2b43ab25f1f2cbd43a7574f73 ]
 
-gfxclk for OD setting is limited to 1980M for non-acg
-ASICs of Vega10
+The geni set/get_mctrl() functions currently do nothing unless
+hardware flow control is enabled. Remove this arbitrary limitation.
 
-Signed-off-by: Kenneth Feng <kenneth.feng@amd.com>
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Suggested-by: Johan Hovold <johan@kernel.org>
+Fixes: 8a8a66a1a18a ("tty: serial: qcom_geni_serial: Add support for flow control")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../powerplay/hwmgr/vega10_processpptables.c  | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/tty/serial/qcom_geni_serial.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
-index 16b1a9cf6cf08..743d3c983082d 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
-@@ -32,6 +32,7 @@
- #include "vega10_pptable.h"
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 1515074e18fb6..35d1f6fa0e3c3 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -221,7 +221,7 @@ static unsigned int qcom_geni_serial_get_mctrl(struct uart_port *uport)
+ 	unsigned int mctrl = TIOCM_DSR | TIOCM_CAR;
+ 	u32 geni_ios;
  
- #define NUM_DSPCLK_LEVELS 8
-+#define VEGA10_ENGINECLOCK_HARDMAX 198000
- 
- static void set_hw_cap(struct pp_hwmgr *hwmgr, bool enable,
- 		enum phm_platform_caps cap)
-@@ -258,7 +259,26 @@ static int init_over_drive_limits(
- 		struct pp_hwmgr *hwmgr,
- 		const ATOM_Vega10_POWERPLAYTABLE *powerplay_table)
+-	if (uart_console(uport) || !uart_cts_enabled(uport)) {
++	if (uart_console(uport)) {
+ 		mctrl |= TIOCM_CTS;
+ 	} else {
+ 		geni_ios = readl_relaxed(uport->membase + SE_GENI_IOS);
+@@ -237,7 +237,7 @@ static void qcom_geni_serial_set_mctrl(struct uart_port *uport,
  {
--	hwmgr->platform_descriptor.overdriveLimit.engineClock =
-+	const ATOM_Vega10_GFXCLK_Dependency_Table *gfxclk_dep_table =
-+			(const ATOM_Vega10_GFXCLK_Dependency_Table *)
-+			(((unsigned long) powerplay_table) +
-+			le16_to_cpu(powerplay_table->usGfxclkDependencyTableOffset));
-+	bool is_acg_enabled = false;
-+	ATOM_Vega10_GFXCLK_Dependency_Record_V2 *patom_record_v2;
-+
-+	if (gfxclk_dep_table->ucRevId == 1) {
-+		patom_record_v2 =
-+			(ATOM_Vega10_GFXCLK_Dependency_Record_V2 *)gfxclk_dep_table->entries;
-+		is_acg_enabled =
-+			(bool)patom_record_v2[gfxclk_dep_table->ucNumEntries-1].ucACGEnable;
-+	}
-+
-+	if (powerplay_table->ulMaxODEngineClock > VEGA10_ENGINECLOCK_HARDMAX &&
-+		!is_acg_enabled)
-+		hwmgr->platform_descriptor.overdriveLimit.engineClock =
-+			VEGA10_ENGINECLOCK_HARDMAX;
-+	else
-+		hwmgr->platform_descriptor.overdriveLimit.engineClock =
- 			le32_to_cpu(powerplay_table->ulMaxODEngineClock);
- 	hwmgr->platform_descriptor.overdriveLimit.memoryClock =
- 			le32_to_cpu(powerplay_table->ulMaxODMemoryClock);
+ 	u32 uart_manual_rfr = 0;
+ 
+-	if (uart_console(uport) || !uart_cts_enabled(uport))
++	if (uart_console(uport))
+ 		return;
+ 
+ 	if (!(mctrl & TIOCM_RTS))
 -- 
 2.19.1
 
