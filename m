@@ -2,340 +2,223 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ECBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4526BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D9220863
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C8620863
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="WZjtw8Ir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbfCDG1M (ORCPT
+        id S1726126AbfCDG1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 01:27:12 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4204 "EHLO huawei.com"
+        Mon, 4 Mar 2019 01:27:34 -0500
+Received: from mail-eopbgr40056.outbound.protection.outlook.com ([40.107.4.56]:40078
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725550AbfCDG1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 01:27:12 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 16D69B823E423895F20C;
-        Mon,  4 Mar 2019 14:27:10 +0800 (CST)
-Received: from [127.0.0.1] (10.134.22.195) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Mon, 4 Mar 2019
- 14:27:06 +0800
-Subject: Re: [PATCH v3] f2fs: rebuild nat_bits during umount
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     Chao Yu <chao@kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>
-References: <20190216222645.18341-1-chao@kernel.org>
- <4c826d7c-0bd3-a63f-23f6-f15f8767719d@huawei.com>
- <20190301175502.GA8246@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <5421e7f9-1d56-dccb-3d97-cf3b570bc441@huawei.com>
-Date:   Mon, 4 Mar 2019 14:27:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190301175502.GA8246@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
+        id S1725550AbfCDG1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 01:27:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nzd+WP9QwjGYldelJPREV9VguArk6HTZmxt4yrGFb/8=;
+ b=WZjtw8IrIX/7eYg8zkzrPMfJ0B8nTDXN/l/GvceCIDg8GX8QHcTktpFsGXYaQo1bmdhF5eBMniEMucUmbyVqU3J58OJ+YxVn78IstuFPTgB6/U1iDIEhxbIL7ZpSOl04FOr92fvuBtiKdTlBoXZ97tkeCWuqr3wJANgE+aFEyc0=
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.135.8) by
+ VI1PR0501MB2206.eurprd05.prod.outlook.com (10.169.134.141) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.18; Mon, 4 Mar 2019 06:27:26 +0000
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0b8:7ed8:d657:2f59]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::a0b8:7ed8:d657:2f59%6]) with mapi id 15.20.1665.019; Mon, 4 Mar 2019
+ 06:27:26 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>
+CC:     Steve Wise <swise@opengridcomputing.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?utf-8?B?SMOla29uIEJ1Z2dl?= <haakon.bugge@oracle.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] RDMA/cma: Make CM response timeout and # CM retries
+ configurable
+Thread-Topic: [PATCH] RDMA/cma: Make CM response timeout and # CM retries
+ configurable
+Thread-Index: AQHUxuOLFTmJ2VByLkCUdOgKpY7Z6aXsC8eAgAAKpwCAAApjgIAA+sgAgA3x7NA=
+Date:   Mon, 4 Mar 2019 06:27:26 +0000
+Message-ID: <VI1PR0501MB2271E8A704DD21EF81C7DC24D1710@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+References: <20190217170909.1178575-1-haakon.bugge@oracle.com>
+ <20190222163637.GA9819@ziepe.ca>
+ <afadc799-b547-5c20-64d2-75fa0f64cd9e@opengridcomputing.com>
+ <C7922E85-CA43-479A-8021-DADD59FF5BE7@redhat.com>
+ <20190223084930.GJ23561@mtr-leonro.mtl.com>
+In-Reply-To: <20190223084930.GJ23561@mtr-leonro.mtl.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [68.203.16.89]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9b3822a0-87b2-4989-261a-08d6a06a7862
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0501MB2206;
+x-ms-traffictypediagnostic: VI1PR0501MB2206:
+x-microsoft-exchange-diagnostics: =?utf-8?B?MTtWSTFQUjA1MDFNQjIyMDY7MjM6ZDZUMDZyZkluOHdIdy9sRTA4OVp0b0Js?=
+ =?utf-8?B?UGowdDloeXd5N2tmZ1R0Q3puMjJOQUxlV3QyWjQ4M3NkbFNIb2MzT1drT1J4?=
+ =?utf-8?B?TE8wVmlBOXd1aVVoSEQrbFZibjVNaXZBaEJxN2hhUTMyaVZMODF0ekdYbytP?=
+ =?utf-8?B?YjAwY0U1M3dSaHhKbUZyRHlpSCthenpLRjF6WEFvYmt1NHA2bTkzY2xxcGhM?=
+ =?utf-8?B?UTVBb2lybkdKazh6M051Vy9uT1l5WXl3Y090YlVla0JQdUU5RCtZZjFCYjI5?=
+ =?utf-8?B?YzNjdVQxZ0xoUktyVnZvcEhJV1FQSUQ4aWlLU0pUbHFvQ3MycURVMVZkdFZx?=
+ =?utf-8?B?dmplMmRkdStxV3NrOHZVZGduV1VESW5PVFRNZVdoU09wYndpTGNScU9QWVJE?=
+ =?utf-8?B?dFdwZEoxd1BKWi9ydktaVG95ajB0WldVR3pEUkhzTWM4Qk1oL1BnUmpZMTBw?=
+ =?utf-8?B?QnQzTHNlRm84d3hvc0dEZE85c1MwMDZ5VUx0c25sWS9GUEJsamxORDJjUW1x?=
+ =?utf-8?B?am8yRWpEdm5mZVg4R2N4MkxHMHpodGF0YW9yVWN1YVpseGFOb3B4ZFFUaFp0?=
+ =?utf-8?B?dEZPZnY1aEsvWG5qWnFuMjdOS0ZXRTdRTjdlR3Q3enlGQlN5MXh6QnJtUmZn?=
+ =?utf-8?B?YWhFWFRZZ3lrRDBnd01KWkNpMWgvVjlLQllFL3ZvRERjRkp4TUM1UFIrWkRC?=
+ =?utf-8?B?UEtrdEtLVzFHQWJObzRWRHl2aXVNaS8wRlpEdFJvWXQyb1BUQWNIVng1bHFu?=
+ =?utf-8?B?aFV0dlZDWjB3TUVkMjR6MFRDRHZzbUhxbHJlTjJvU09ta2l2d0NWSkx0bHc3?=
+ =?utf-8?B?ekJ5WGsvOFAwNUM0NlJmSXhBN0dEeExhNURnMnpDSmdac1RGUnJaR3lTRkxC?=
+ =?utf-8?B?Qm5YbjBpUDAraFRVbDRKcTR6cTdoYjNtdm5RNmVUOEx4RXBsbVNhY3A1UDlu?=
+ =?utf-8?B?QTNsTGJYcTc2V2JVYlVzZzFzSEJ3QWxmekVzWEZweXU5M01jN1d3L21RODYv?=
+ =?utf-8?B?S3F6R1NOQ0xmOE5qdnZReXpqb0VYZW5Pc3lVVmdLN2pJZTZkVGt3UW9lRDhw?=
+ =?utf-8?B?Z2djbkhJRmhWdFl3dkhFeUk1MGR3V3g2cy91M1UxR3RkREM1Smgvc21lWnpx?=
+ =?utf-8?B?OVRNNGpGVXlYME1xYVRxT2VVV0lXeCtndmF4azhSUWFaNS9VWmF5M2t2Zmlp?=
+ =?utf-8?B?UTdheWd3ZGJIRTFMYzhuME9XOXR6eGl1NHEwVVU2S3RMUlJsRGxKK1pMS0VT?=
+ =?utf-8?B?V3cyU0NHRVFHUGM3bGZuZ01TV084RklQN0NTcU1IV0JZek1LajdDYm9xSnNp?=
+ =?utf-8?B?RzJkb1JBS0Zra0pvSFllc2MyTUpraHRtMkpRc3FpYnBDUU0wemZsT240RmFI?=
+ =?utf-8?B?MWIzbXJvQ3FwcGVBMVBMVFArUjltUjYxdUp4Sis0ZEN3eFZqVTBud2dSdTV6?=
+ =?utf-8?B?VnBXOTlFZWh3R3l5SGFBcVZHdlV5SG1Sa2lrRktVUDFZMC9YU2ErT2VFaEl3?=
+ =?utf-8?B?MFpYVnFObXpJcnQvQWtwbUxtbTlxaHRyb2tSd3ovZTlOamtmMmZHU0pDVXVV?=
+ =?utf-8?B?QldORm5PMFQ3eWgwOE9QTzdtV2JGVFZtRWlYaG9UN1c3QythcUtwMkcrM0Er?=
+ =?utf-8?B?L2s0cFdiVTRpNzlhZnczUElYZGNZWVE5bEJaa2lPREp0TFByN0RxS0V2YTlW?=
+ =?utf-8?Q?0VTuExI5+ClgxHCvcAPwrqAsFI7CHi2SpnOSGiogJ?=
+x-microsoft-antispam-prvs: <VI1PR0501MB220628F99D74E22032F1CAD9D1710@VI1PR0501MB2206.eurprd05.prod.outlook.com>
+x-forefront-prvs: 09669DB681
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(39860400002)(366004)(13464003)(189003)(199004)(97736004)(71200400001)(71190400001)(3846002)(256004)(4326008)(81166006)(305945005)(6246003)(6116002)(8936002)(25786009)(52536013)(81156014)(8676002)(76176011)(478600001)(53546011)(102836004)(6506007)(14454004)(5660300002)(66066001)(86362001)(7736002)(99286004)(74316002)(7696005)(229853002)(33656002)(93886005)(53936002)(55016002)(6436002)(186003)(446003)(2906002)(9686003)(110136005)(105586002)(26005)(106356001)(11346002)(486006)(68736007)(54906003)(476003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2206;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nyqXjj84Z5BpozcG7X+kTc0JFH4fgCmUsobRK/bqsfS+i51aN3fOJtiYU0V0g5ZKhIiVXmC0M7hc6xDf59NlXmTGNHFLQ7tt2tSYZcXN2nYdzQ6zOROX2hAkPxrS1W6BPQoaEK2sWk5Fj60w3O780EjYV4ZNb9jCIW2S69RX3HfbAu02LsaHQNLLACHcHnGnhjvdjJOSymF+87E9l8aBCYvbMQJ8KG6qR+rHkkrKrqmVMFIB1UDkeWkx0aH2sLgfFl9rWKzbTaeHcLVBoEuVU6CRx/low6wEiuO9P50hjGcav0wGPF6rdYWM4iMHBskFo3WPdGzmX9XYVFYrCLWJLxoDCuS2OGQ8phB5RShhcaI6OX8A8AbqH4CxpOT0iaOgNncCCmfq7eMFXBCJGLDQ4h8f5q/l1/PcNiZHNt473a4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b3822a0-87b2-4989-261a-08d6a06a7862
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2019 06:27:26.4147
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2206
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/2 1:55, Jaegeuk Kim wrote:
-> On 02/28, Chao Yu wrote:
->> Ping,
->>
->> Could you please try this new version?
-> 
-> It's in the queue, and I'll test this after the next pull request.
-
-Okay. :)
-
-Thanks,
-
-> 
->>
->> On 2019/2/17 6:26, Chao Yu wrote:
->>> From: Chao Yu <yuchao0@huawei.com>
->>>
->>> If all free_nat_bitmap are available, we can rebuild nat_bits from
->>> free_nat_bitmap entirely during umount, let's make another chance
->>> to reenable nat_bits for image.
->>>
->>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>> ---
->>> v3:
->>> - fix to remove nat journal during umount.
->>>  fs/f2fs/checkpoint.c | 23 +++++++++----
->>>  fs/f2fs/f2fs.h       | 29 ++--------------
->>>  fs/f2fs/node.c       | 82 +++++++++++++++++++++++++++++++++++++-------
->>>  3 files changed, 89 insertions(+), 45 deletions(-)
->>>
->>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->>> index 10a3ada28715..b4c9de4e6eb0 100644
->>> --- a/fs/f2fs/checkpoint.c
->>> +++ b/fs/f2fs/checkpoint.c
->>> @@ -1225,12 +1225,22 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->>>  	struct f2fs_checkpoint *ckpt = F2FS_CKPT(sbi);
->>>  	unsigned long flags;
->>>  
->>> -	spin_lock_irqsave(&sbi->cp_lock, flags);
->>> +	if (cpc->reason & CP_UMOUNT) {
->>> +		if (le32_to_cpu(ckpt->cp_pack_total_block_count) >
->>> +			sbi->blocks_per_seg - NM_I(sbi)->nat_bits_blocks) {
->>> +			clear_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
->>> +			f2fs_msg(sbi->sb, KERN_NOTICE,
->>> +				"Disable nat_bits due to no space");
->>> +		} else if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG) &&
->>> +						f2fs_nat_bitmap_enabled(sbi)) {
->>> +			f2fs_enable_nat_bits(sbi);
->>> +			set_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
->>> +			f2fs_msg(sbi->sb, KERN_NOTICE,
->>> +				"Rebuild and enable nat_bits");
->>> +		}
->>> +	}
->>>  
->>> -	if ((cpc->reason & CP_UMOUNT) &&
->>> -			le32_to_cpu(ckpt->cp_pack_total_block_count) >
->>> -			sbi->blocks_per_seg - NM_I(sbi)->nat_bits_blocks)
->>> -		disable_nat_bits(sbi, false);
->>> +	spin_lock_irqsave(&sbi->cp_lock, flags);
->>>  
->>>  	if (cpc->reason & CP_TRIMMED)
->>>  		__set_ckpt_flags(ckpt, CP_TRIMMED_FLAG);
->>> @@ -1395,7 +1405,8 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->>>  	start_blk = __start_cp_next_addr(sbi);
->>>  
->>>  	/* write nat bits */
->>> -	if (enabled_nat_bits(sbi, cpc)) {
->>> +	if ((cpc->reason & CP_UMOUNT) &&
->>> +			is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG)) {
->>>  		__u64 cp_ver = cur_cp_version(ckpt);
->>>  		block_t blk;
->>>  
->>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>> index c0d30810ef8a..a543354fc6bf 100644
->>> --- a/fs/f2fs/f2fs.h
->>> +++ b/fs/f2fs/f2fs.h
->>> @@ -1615,33 +1615,6 @@ static inline void clear_ckpt_flags(struct f2fs_sb_info *sbi, unsigned int f)
->>>  	spin_unlock_irqrestore(&sbi->cp_lock, flags);
->>>  }
->>>  
->>> -static inline void disable_nat_bits(struct f2fs_sb_info *sbi, bool lock)
->>> -{
->>> -	unsigned long flags;
->>> -
->>> -	/*
->>> -	 * In order to re-enable nat_bits we need to call fsck.f2fs by
->>> -	 * set_sbi_flag(sbi, SBI_NEED_FSCK). But it may give huge cost,
->>> -	 * so let's rely on regular fsck or unclean shutdown.
->>> -	 */
->>> -
->>> -	if (lock)
->>> -		spin_lock_irqsave(&sbi->cp_lock, flags);
->>> -	__clear_ckpt_flags(F2FS_CKPT(sbi), CP_NAT_BITS_FLAG);
->>> -	kvfree(NM_I(sbi)->nat_bits);
->>> -	NM_I(sbi)->nat_bits = NULL;
->>> -	if (lock)
->>> -		spin_unlock_irqrestore(&sbi->cp_lock, flags);
->>> -}
->>> -
->>> -static inline bool enabled_nat_bits(struct f2fs_sb_info *sbi,
->>> -					struct cp_control *cpc)
->>> -{
->>> -	bool set = is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
->>> -
->>> -	return (cpc) ? (cpc->reason & CP_UMOUNT) && set : set;
->>> -}
->>> -
->>>  static inline void f2fs_lock_op(struct f2fs_sb_info *sbi)
->>>  {
->>>  	down_read(&sbi->cp_rwsem);
->>> @@ -2970,6 +2943,7 @@ int f2fs_truncate_inode_blocks(struct inode *inode, pgoff_t from);
->>>  int f2fs_truncate_xattr_node(struct inode *inode);
->>>  int f2fs_wait_on_node_pages_writeback(struct f2fs_sb_info *sbi,
->>>  					unsigned int seq_id);
->>> +bool f2fs_nat_bitmap_enabled(struct f2fs_sb_info *sbi);
->>>  int f2fs_remove_inode_page(struct inode *inode);
->>>  struct page *f2fs_new_inode_page(struct inode *inode);
->>>  struct page *f2fs_new_node_page(struct dnode_of_data *dn, unsigned int ofs);
->>> @@ -2993,6 +2967,7 @@ int f2fs_recover_xattr_data(struct inode *inode, struct page *page);
->>>  int f2fs_recover_inode_page(struct f2fs_sb_info *sbi, struct page *page);
->>>  int f2fs_restore_node_summary(struct f2fs_sb_info *sbi,
->>>  			unsigned int segno, struct f2fs_summary_block *sum);
->>> +void f2fs_enable_nat_bits(struct f2fs_sb_info *sbi);
->>>  int f2fs_flush_nat_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc);
->>>  int f2fs_build_node_manager(struct f2fs_sb_info *sbi);
->>>  void f2fs_destroy_node_manager(struct f2fs_sb_info *sbi);
->>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
->>> index f6ff84e29749..e364c6a84f3c 100644
->>> --- a/fs/f2fs/node.c
->>> +++ b/fs/f2fs/node.c
->>> @@ -2038,6 +2038,24 @@ static void __move_free_nid(struct f2fs_sb_info *sbi, struct free_nid *i,
->>>  	}
->>>  }
->>>  
->>> +bool f2fs_nat_bitmap_enabled(struct f2fs_sb_info *sbi)
->>> +{
->>> +	struct f2fs_nm_info *nm_i = NM_I(sbi);
->>> +	unsigned int i;
->>> +	bool ret = true;
->>> +
->>> +	down_read(&nm_i->nat_tree_lock);
->>> +	for (i = 0; i < nm_i->nat_blocks; i++) {
->>> +		if (!test_bit_le(i, nm_i->nat_block_bitmap)) {
->>> +			ret = false;
->>> +			break;
->>> +		}
->>> +	}
->>> +	up_read(&nm_i->nat_tree_lock);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>>  static void update_free_nid_bitmap(struct f2fs_sb_info *sbi, nid_t nid,
->>>  							bool set, bool build)
->>>  {
->>> @@ -2698,7 +2716,7 @@ static void __update_nat_bits(struct f2fs_sb_info *sbi, nid_t start_nid,
->>>  	int valid = 0;
->>>  	int i = 0;
->>>  
->>> -	if (!enabled_nat_bits(sbi, NULL))
->>> +	if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG))
->>>  		return;
->>>  
->>>  	if (nat_index == 0) {
->>> @@ -2722,6 +2740,43 @@ static void __update_nat_bits(struct f2fs_sb_info *sbi, nid_t start_nid,
->>>  		__clear_bit_le(nat_index, nm_i->full_nat_bits);
->>>  }
->>>  
->>> +void f2fs_enable_nat_bits(struct f2fs_sb_info *sbi)
->>> +{
->>> +	struct f2fs_nm_info *nm_i = NM_I(sbi);
->>> +	int nat_ofs;
->>> +
->>> +	down_read(&nm_i->nat_tree_lock);
->>> +
->>> +	for (nat_ofs = 0; nat_ofs < nm_i->nat_blocks; nat_ofs++) {
->>> +		int valid = 0, nid_ofs = 0;
->>> +
->>> +		if (nat_ofs == 0) {
->>> +			valid = 1;
->>> +			nid_ofs = 1;
->>> +		}
->>> +
->>> +		for (; nid_ofs < NAT_ENTRY_PER_BLOCK; nid_ofs++) {
->>> +			if (!test_bit_le(nid_ofs,
->>> +					nm_i->free_nid_bitmap[nat_ofs]))
->>> +				valid++;
->>> +		}
->>> +
->>> +		if (valid == 0) {
->>> +			__set_bit_le(nat_ofs, nm_i->empty_nat_bits);
->>> +			__clear_bit_le(nat_ofs, nm_i->full_nat_bits);
->>> +			continue;
->>> +		}
->>> +
->>> +		__clear_bit_le(nat_ofs, nm_i->empty_nat_bits);
->>> +		if (valid == NAT_ENTRY_PER_BLOCK)
->>> +			__set_bit_le(nat_ofs, nm_i->full_nat_bits);
->>> +		else
->>> +			__clear_bit_le(nat_ofs, nm_i->full_nat_bits);
->>> +	}
->>> +
->>> +	up_read(&nm_i->nat_tree_lock);
->>> +}
->>> +
->>>  static int __flush_nat_entry_set(struct f2fs_sb_info *sbi,
->>>  		struct nat_entry_set *set, struct cp_control *cpc)
->>>  {
->>> @@ -2738,7 +2793,7 @@ static int __flush_nat_entry_set(struct f2fs_sb_info *sbi,
->>>  	 * #1, flush nat entries to journal in current hot data summary block.
->>>  	 * #2, flush nat entries to nat page.
->>>  	 */
->>> -	if (enabled_nat_bits(sbi, cpc) ||
->>> +	if ((cpc->reason & CP_UMOUNT) ||
->>>  		!__has_cursum_space(journal, set->entry_cnt, NAT_JOURNAL))
->>>  		to_journal = false;
->>>  
->>> @@ -2813,7 +2868,7 @@ int f2fs_flush_nat_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->>>  	int err = 0;
->>>  
->>>  	/* during unmount, let's flush nat_bits before checking dirty_nat_cnt */
->>> -	if (enabled_nat_bits(sbi, cpc)) {
->>> +	if (cpc->reason & CP_UMOUNT) {
->>>  		down_write(&nm_i->nat_tree_lock);
->>>  		remove_nats_in_journal(sbi);
->>>  		up_write(&nm_i->nat_tree_lock);
->>> @@ -2829,7 +2884,7 @@ int f2fs_flush_nat_entries(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->>>  	 * entries, remove all entries from journal and merge them
->>>  	 * into nat entry set.
->>>  	 */
->>> -	if (enabled_nat_bits(sbi, cpc) ||
->>> +	if ((cpc->reason & CP_UMOUNT) ||
->>>  		!__has_cursum_space(journal, nm_i->dirty_nat_cnt, NAT_JOURNAL))
->>>  		remove_nats_in_journal(sbi);
->>>  
->>> @@ -2864,15 +2919,18 @@ static int __get_nat_bitmaps(struct f2fs_sb_info *sbi)
->>>  	__u64 cp_ver = cur_cp_version(ckpt);
->>>  	block_t nat_bits_addr;
->>>  
->>> -	if (!enabled_nat_bits(sbi, NULL))
->>> -		return 0;
->>> -
->>>  	nm_i->nat_bits_blocks = F2FS_BLK_ALIGN((nat_bits_bytes << 1) + 8);
->>>  	nm_i->nat_bits = f2fs_kzalloc(sbi,
->>>  			nm_i->nat_bits_blocks << F2FS_BLKSIZE_BITS, GFP_KERNEL);
->>>  	if (!nm_i->nat_bits)
->>>  		return -ENOMEM;
->>>  
->>> +	nm_i->full_nat_bits = nm_i->nat_bits + 8;
->>> +	nm_i->empty_nat_bits = nm_i->full_nat_bits + nat_bits_bytes;
->>> +
->>> +	if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG))
->>> +		return 0;
->>> +
->>>  	nat_bits_addr = __start_cp_addr(sbi) + sbi->blocks_per_seg -
->>>  						nm_i->nat_bits_blocks;
->>>  	for (i = 0; i < nm_i->nat_bits_blocks; i++) {
->>> @@ -2889,13 +2947,13 @@ static int __get_nat_bitmaps(struct f2fs_sb_info *sbi)
->>>  
->>>  	cp_ver |= (cur_cp_crc(ckpt) << 32);
->>>  	if (cpu_to_le64(cp_ver) != *(__le64 *)nm_i->nat_bits) {
->>> -		disable_nat_bits(sbi, true);
->>> +		clear_ckpt_flags(sbi, CP_NAT_BITS_FLAG);
->>> +		f2fs_msg(sbi->sb, KERN_NOTICE,
->>> +			"Disable nat_bits due to incorrect cp_ver (%llu, %llu)",
->>> +			cp_ver, le64_to_cpu(*(__le64 *)nm_i->nat_bits));
->>>  		return 0;
->>>  	}
->>>  
->>> -	nm_i->full_nat_bits = nm_i->nat_bits + 8;
->>> -	nm_i->empty_nat_bits = nm_i->full_nat_bits + nat_bits_bytes;
->>> -
->>>  	f2fs_msg(sbi->sb, KERN_NOTICE, "Found nat_bits in checkpoint");
->>>  	return 0;
->>>  }
->>> @@ -2906,7 +2964,7 @@ static inline void load_free_nid_bitmap(struct f2fs_sb_info *sbi)
->>>  	unsigned int i = 0;
->>>  	nid_t nid, last_nid;
->>>  
->>> -	if (!enabled_nat_bits(sbi, NULL))
->>> +	if (!is_set_ckpt_flags(sbi, CP_NAT_BITS_FLAG))
->>>  		return;
->>>  
->>>  	for (i = 0; i < nm_i->nat_blocks; i++) {
->>>
-> 
-> .
-> 
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVvbiBSb21hbm92c2t5
+IDxsZW9uQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IFNhdHVyZGF5LCBGZWJydWFyeSAyMywgMjAxOSAy
+OjUwIEFNDQo+IFRvOiBEb3VnIExlZGZvcmQgPGRsZWRmb3JkQHJlZGhhdC5jb20+DQo+IENjOiBT
+dGV2ZSBXaXNlIDxzd2lzZUBvcGVuZ3JpZGNvbXB1dGluZy5jb20+OyBKYXNvbiBHdW50aG9ycGUN
+Cj4gPGpnZ0B6aWVwZS5jYT47IEjDpWtvbiBCdWdnZSA8aGFha29uLmJ1Z2dlQG9yYWNsZS5jb20+
+OyBQYXJhdiBQYW5kaXQNCj4gPHBhcmF2QG1lbGxhbm94LmNvbT47IGxpbnV4LXJkbWFAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
+ZTogW1BBVENIXSBSRE1BL2NtYTogTWFrZSBDTSByZXNwb25zZSB0aW1lb3V0IGFuZCAjIENNDQo+
+IHJldHJpZXMgY29uZmlndXJhYmxlDQo+IA0KPiBPbiBGcmksIEZlYiAyMiwgMjAxOSBhdCAxMjo1
+MTo1NVBNIC0wNTAwLCBEb3VnIExlZGZvcmQgd3JvdGU6DQo+ID4NCj4gPg0KPiA+ID4gT24gRmVi
+IDIyLCAyMDE5LCBhdCAxMjoxNCBQTSwgU3RldmUgV2lzZQ0KPiA8c3dpc2VAb3BlbmdyaWRjb21w
+dXRpbmcuY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPg0KPiA+ID4gT24gMi8yMi8yMDE5IDEwOjM2
+IEFNLCBKYXNvbiBHdW50aG9ycGUgd3JvdGU6DQo+ID4gPj4gT24gU3VuLCBGZWIgMTcsIDIwMTkg
+YXQgMDY6MDk6MDlQTSArMDEwMCwgSMOla29uIEJ1Z2dlIHdyb3RlOg0KPiA+ID4+PiBEdXJpbmcg
+Y2VydGFpbiB3b3JrbG9hZHMsIHRoZSBkZWZhdWx0IENNIHJlc3BvbnNlIHRpbWVvdXQgaXMgdG9v
+DQo+ID4gPj4+IHNob3J0LCBsZWFkaW5nIHRvIGV4Y2Vzc2l2ZSByZXRyaWVzLiBIZW5jZSwgbWFr
+ZSBpdCBjb25maWd1cmFibGUNCj4gPiA+Pj4gdGhyb3VnaCBzeXNjdGwuIFdoaWxlIGF0IGl0LCBh
+bHNvIG1ha2UgbnVtYmVyIG9mIENNIHJldHJpZXMNCj4gPiA+Pj4gY29uZmlndXJhYmxlLg0KPiA+
+ID4+Pg0KPiA+ID4+PiBUaGUgZGVmYXVsdHMgYXJlIG5vdCBjaGFuZ2VkLg0KPiA+ID4+Pg0KPiA+
+ID4+PiBTaWduZWQtb2ZmLWJ5OiBIw6Vrb24gQnVnZ2UgPGhhYWtvbi5idWdnZUBvcmFjbGUuY29t
+Pg0KPiA+ID4+PiBkcml2ZXJzL2luZmluaWJhbmQvY29yZS9jbWEuYyB8IDUxDQo+ID4gPj4+ICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tDQo+ID4gPj4+IDEgZmlsZSBjaGFuZ2Vk
+LCA0NCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiA+ID4+Pg0KPiA+ID4+PiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9pbmZpbmliYW5kL2NvcmUvY21hLmMNCj4gPiA+Pj4gYi9kcml2ZXJz
+L2luZmluaWJhbmQvY29yZS9jbWEuYyBpbmRleCBjNDM1MTI3NTJiOGEuLmNlOTllMWNkMTAyOQ0K
+PiA+ID4+PiAxMDA2NDQNCj4gPiA+Pj4gKysrIGIvZHJpdmVycy9pbmZpbmliYW5kL2NvcmUvY21h
+LmMNCj4gPiA+Pj4gQEAgLTQzLDYgKzQzLDcgQEANCj4gPiA+Pj4gI2luY2x1ZGUgPGxpbnV4L2lu
+ZXRkZXZpY2UuaD4NCj4gPiA+Pj4gI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPiA+Pj4gI2lu
+Y2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ID4+PiArI2luY2x1ZGUgPGxpbnV4L3N5c2N0bC5o
+Pg0KPiA+ID4+PiAjaW5jbHVkZSA8bmV0L3JvdXRlLmg+DQo+ID4gPj4+DQo+ID4gPj4+ICNpbmNs
+dWRlIDxuZXQvbmV0X25hbWVzcGFjZS5oPg0KPiA+ID4+PiBAQCAtNjgsMTMgKzY5LDQ2IEBAIE1P
+RFVMRV9BVVRIT1IoIlNlYW4gSGVmdHkiKTsNCj4gPiA+Pj4gTU9EVUxFX0RFU0NSSVBUSU9OKCJH
+ZW5lcmljIFJETUEgQ00gQWdlbnQiKTsNCj4gTU9EVUxFX0xJQ0VOU0UoIkR1YWwNCj4gPiA+Pj4g
+QlNEL0dQTCIpOw0KPiA+ID4+Pg0KPiA+ID4+PiAtI2RlZmluZSBDTUFfQ01fUkVTUE9OU0VfVElN
+RU9VVCAyMCAjZGVmaW5lDQo+ID4gPj4+IENNQV9RVUVSWV9DTEFTU1BPUlRfSU5GT19USU1FT1VU
+IDMwMDAgLSNkZWZpbmUNCj4gQ01BX01BWF9DTV9SRVRSSUVTDQo+ID4gPj4+IDE1ICNkZWZpbmUg
+Q01BX0NNX01SQV9TRVRUSU5HIChJQl9DTV9NUkFfRkxBR19ERUxBWSB8IDI0KQ0KPiAjZGVmaW5l
+DQo+ID4gPj4+IENNQV9JQk9FX1BBQ0tFVF9MSUZFVElNRSAxOCAjZGVmaW5lDQo+IENNQV9QUkVG
+RVJSRURfUk9DRV9HSURfVFlQRQ0KPiA+ID4+PiBJQl9HSURfVFlQRV9ST0NFX1VEUF9FTkNBUA0K
+PiA+ID4+Pg0KPiA+ID4+PiArI2RlZmluZSBDTUFfREZMVF9DTV9SRVNQT05TRV9USU1FT1VUIDIw
+IHN0YXRpYyBpbnQNCj4gPiA+Pj4gK2NtYV9jbV9yZXNwb25zZV90aW1lb3V0ID0gQ01BX0RGTFRf
+Q01fUkVTUE9OU0VfVElNRU9VVDsNCj4gc3RhdGljDQo+ID4gPj4+ICtpbnQgY21hX2NtX3Jlc3Bv
+bnNlX3RpbWVvdXRfbWluID0gODsgc3RhdGljIGludA0KPiA+ID4+PiArY21hX2NtX3Jlc3BvbnNl
+X3RpbWVvdXRfbWF4ID0gMzE7ICN1bmRlZg0KPiA+ID4+PiArQ01BX0RGTFRfQ01fUkVTUE9OU0Vf
+VElNRU9VVA0KPiA+ID4+PiArDQo+ID4gPj4+ICsjZGVmaW5lIENNQV9ERkxUX01BWF9DTV9SRVRS
+SUVTIDE1IHN0YXRpYyBpbnQNCj4gY21hX21heF9jbV9yZXRyaWVzDQo+ID4gPj4+ICs9IENNQV9E
+RkxUX01BWF9DTV9SRVRSSUVTOyBzdGF0aWMgaW50IGNtYV9tYXhfY21fcmV0cmllc19taW4NCj4g
+PSAxOw0KPiA+ID4+PiArc3RhdGljIGludCBjbWFfbWF4X2NtX3JldHJpZXNfbWF4ID0gMTAwOyAj
+dW5kZWYNCj4gPiA+Pj4gK0NNQV9ERkxUX01BWF9DTV9SRVRSSUVTDQo+ID4gPj4+ICsNCj4gPiA+
+Pj4gK3N0YXRpYyBzdHJ1Y3QgY3RsX3RhYmxlX2hlYWRlciAqY21hX2N0bF90YWJsZV9oZHI7IHN0
+YXRpYyBzdHJ1Y3QNCj4gPiA+Pj4gK2N0bF90YWJsZSBjbWFfY3RsX3RhYmxlW10gPSB7DQo+ID4g
+Pj4+ICsJew0KPiA+ID4+PiArCQkucHJvY25hbWUJPSAiY21hX2NtX3Jlc3BvbnNlX3RpbWVvdXQi
+LA0KPiA+ID4+PiArCQkuZGF0YQkJPSAmY21hX2NtX3Jlc3BvbnNlX3RpbWVvdXQsDQo+ID4gPj4+
+ICsJCS5tYXhsZW4JCT0gc2l6ZW9mKGNtYV9jbV9yZXNwb25zZV90aW1lb3V0KSwNCj4gPiA+Pj4g
+KwkJLm1vZGUJCT0gMDY0NCwNCj4gPiA+Pj4gKwkJLnByb2NfaGFuZGxlcgk9IHByb2NfZG9pbnR2
+ZWNfbWlubWF4LA0KPiA+ID4+PiArCQkuZXh0cmExCQk9ICZjbWFfY21fcmVzcG9uc2VfdGltZW91
+dF9taW4sDQo+ID4gPj4+ICsJCS5leHRyYTIJCT0gJmNtYV9jbV9yZXNwb25zZV90aW1lb3V0X21h
+eCwNCj4gPiA+Pj4gKwl9LA0KPiA+ID4+PiArCXsNCj4gPiA+Pj4gKwkJLnByb2NuYW1lCT0gImNt
+YV9tYXhfY21fcmV0cmllcyIsDQo+ID4gPj4+ICsJCS5kYXRhCQk9ICZjbWFfbWF4X2NtX3JldHJp
+ZXMsDQo+ID4gPj4+ICsJCS5tYXhsZW4JCT0gc2l6ZW9mKGNtYV9tYXhfY21fcmV0cmllcyksDQo+
+ID4gPj4+ICsJCS5tb2RlCQk9IDA2NDQsDQo+ID4gPj4+ICsJCS5wcm9jX2hhbmRsZXIJPSBwcm9j
+X2RvaW50dmVjX21pbm1heCwNCj4gPiA+Pj4gKwkJLmV4dHJhMQkJPSAmY21hX21heF9jbV9yZXRy
+aWVzX21pbiwNCj4gPiA+Pj4gKwkJLmV4dHJhMgkJPSAmY21hX21heF9jbV9yZXRyaWVzX21heCwN
+Cj4gPiA+Pj4gKwl9LA0KPiA+ID4+PiArCXsgfQ0KPiA+ID4+PiArfTsNCj4gPiA+PiBJcyBzeXNj
+dGwgdGhlIHJpZ2h0IGFwcHJvYWNoIGhlcmU/IFNob3VsZCBpdCBiZSByZG1hIHRvb2wgaW5zdGVh
+ZD8NCj4gPiA+Pg0KPiA+ID4+IEphc29uDQo+ID4gPg0KPiA+ID4gVGhlcmUgYXJlIG90aGVyIHJk
+bWEgc3lzY3RscyBjdXJyZW50bHk6ICBuZXQucmRtYV91Y20ubWF4X2JhY2tsb2cNCj4gPiA+IGFu
+ZCBuZXQuaXdfY20uZGVmYXVsdF9iYWNrbG9nLiAgVGhlIGNvcmUgbmV0d29yayBzdGFjayBzZWVt
+cyB0byB1c2UNCj4gPiA+IHN5c2N0bCBhbmQgbm90IGlwIHRvb2wgdG8gc2V0IGJhc2ljYWxseSBn
+bG9iYWxzLg0KPiA+ID4NCj4gPiA+IFRvIHVzZSByZG1hIHRvb2wsIHdlJ2QgaGF2ZSB0byBoYXZl
+IHNvbWUgY29uY2VwdCBvZiBhICJtb2R1bGUiDQo+ID4gPiBvYmplY3QsIEkgZ3Vlc3MuICBJRSB0
+aGVyZSdzIGRldiwgbGluaywgYW5kIHJlc291cmNlIHJkbWEgdG9vbCBvYmplY3RzDQo+IGN1cnJl
+bnRseS4NCj4gPiA+IEJ1dCB0aGVzZSBjbWEgdGltZW91dCBzZXR0aW5ncyBhcmUgcmVhbGx5IG5v
+dCBwZXIgZGV2LCBsaW5rLCBub3IgYQ0KPiA+ID4gcmVzb3VyY2UuICAgTWF5YmUgd2UgaGF2ZSBq
+dXN0IGEgImNvcmUiIG9iamVjdDogIHJkbWEgY29yZSBzZXQNCj4gPiA+IGNtYV9tYXhfY21fcmV0
+cmllcyBtaW4gOCBtYXggMzAuDQo+ID4NCj4gPiBJIGRvbuKAmXQga25vdywgSSB0aGluayB5b3Ug
+bWFrZSBhIGZhaXJseSBnb29kIGFyZ3VtZW50IGZvciBsZWF2aW5nIGl0IGFzIGENCj4gc3lzY3Rs
+LiAgV2UgaGF2ZSBpbmZyYXN0cnVjdHVyZSBpbiBwbGFjZSBmb3IgYWRtaW5zIHRvIHNldCBwZXJz
+aXN0ZW50IHN5c2N0bA0KPiBzZXR0aW5ncy4gIFRoZSBwZXIgZGV2aWNlL2xpbmsgc2V0dGluZ3Mg
+bmVlZCBzb21ldGhpbmcgZGlmZmVyZW50IGJlY2F1c2UgbGluaw0KPiBuYW1lcyBhbmQgc3VjaCBj
+YW4gY2hhbmdlLiAgU2luY2UgdGhlc2UgYXJlIGdsb2JhbHMsIEnigJlkIGxlYXZlIHRoZW0gd2hl
+cmUNCj4gdGhleSBhcmUuDQo+ID4NCj4gDQo+IEkgaGF2ZSBwYXRjaGVzIGZyb20gUGFyYXYgd2hp
+Y2ggZXh0ZW5kIHJkbWF0b29sIHRvIHNldCBnbG9iYWwgdG8gd2hvbGUNCj4gc3RhY2sgcGFyYW1l
+dGVycywgc29tZXRoaW5nIGxpa2UgInJkbWEgc3lzdGVtIC4uLiIsIHNvIHRoZSBvcHRpb24gdG8g
+c2V0DQo+IHRocm91Z2ggcmRtYXRvb2wgZ2xvYmFsIHBhcmFtZXRlcnMgZm9yIG1vZHVsZXMgZS5n
+LiAicmRtYSBzeXN0ZW0gY21hIHNldA0KPiAuLi4iDQo+IGV4aXN0cy4gQnV0IEknbSBub3Qgc3Vy
+ZSBpZiBpdCBpcyByaWdodCB0aGluZyB0byBkby4NCj4NCg0KSSB0aGluayB3ZSBzaG91bGQgdXNl
+IHJkbWFfbmxfcmVnaXN0ZXIoUkRNQV9OTF9SRE1BX0NNLCBjbWFfY2JfdGFibGUpIHdoaWNoIHdh
+cyByZW1vdmVkIGFzIHBhcnQgb2YgSUQgc3RhdHMgcmVtb3ZhbC4NCkJlY2F1c2Ugb2YgYmVsb3cg
+cmVhc29ucy4NCjEuIHJkbWEgbmV0bGluayBjb21tYW5kIGF1dG8gbG9hZHMgdGhlIG1vZHVsZQ0K
+Mi4gd2UgZG9uJ3QgbmVlZCB0byB3cml0ZSBhbnkgZXh0cmEgY29kZSB0byBkbyByZWdpc3Rlcl9u
+ZXRfc3lzY3RsICgpIGluIGVhY2ggbmV0bnMuDQpDYWxsZXIncyBza2IncyBuZXRucyB3aWxsIHJl
+YWQvd3JpdGUgdmFsdWUgb2YgcmVzcG9uc2VfdGltZW91dCBpbiAnc3RydWN0IGNtYV9wZXJuZXQn
+Lg0KMy4gbGFzdCB0aW1lIHN5c2N0bCBhZGRlZCBpbiBpcHY2IHdhcyBpbiAyMDE3IGluIG5ldC9p
+cHY2L2FkZHJjb25mLmMsIGhvd2V2ZXIgaXB2NCB3YXMgZG9uZSBpbiAyMDE4Lg0KDQpDdXJyZW50
+bHkgcmRtYV9jbS9yZG1hX3VjbWEgaGFzIGNvbmZpZ2ZzLCBzeXNjdGwuDQpXZSBhcmUgYWRkaW5n
+IG5ldGxpbmsgc3lzIHBhcmFtcyB0byBpYl9jb3JlLg0KDQpXZSBhbHJlYWR5IGhhdmUgMyBjbGll
+bnRzIGFuZCBpbmZyYSBidWlsdCB1c2luZyByZG1hX25sX3JlZ2lzdGVyKCkgbmV0bGluayAsIHNv
+IGhvb2tpbmcgdXAgdG8gbmV0bGluayB3aWxsIHByb3ZpZGUgdW5pZmllZCB3YXkgdG8gc2V0IHJk
+bWEgcGFyYW1zLg0KTGV0J3MganVzdCB1c2UgbmV0bGluayBmb3IgYW55IG5ldyBwYXJhbXMgdW5s
+ZXNzIGl0IGlzIG5vdCBkb2FibGUuDQoNCg==
