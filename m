@@ -3,29 +3,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E15C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33C8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E423206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEB2206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbfCDPtQ (ORCPT
+        id S1727294AbfCDPuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 10:49:16 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:49719 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfCDPtQ (ORCPT
+        Mon, 4 Mar 2019 10:50:19 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:56509 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfCDPuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 10:49:16 -0500
+        Mon, 4 Mar 2019 10:50:19 -0500
 X-Originating-IP: 185.94.189.188
 Received: from localhost (unknown [185.94.189.188])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 4AD3EE001A;
-        Mon,  4 Mar 2019 15:49:12 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 16:49:11 +0100
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 56C9940019;
+        Mon,  4 Mar 2019 15:50:15 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 16:50:14 +0100
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Jagan Teki <jagan@amarulasolutions.com>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -34,16 +34,16 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         linux-amarula@amarulasolutions.com,
         Michael Trimarchi <michael@amarulasolutions.com>,
         linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v9 3/5] drm/sun4i: sun6i_mipi_dsi: Support vblk timing
- for 4-lane devices
-Message-ID: <20190304154911.s6rcx6bzal5slcjk@flea>
+Subject: Re: [PATCH v9 5/5] drm/sun4i: sun6i_mipi_dsi: Simplify dsi setup
+ timings code
+Message-ID: <20190304155014.2c7mx4uvzqwy7yde@flea>
 References: <20190303173527.31055-1-jagan@amarulasolutions.com>
- <20190303173527.31055-4-jagan@amarulasolutions.com>
+ <20190303173527.31055-6-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4vyjlwpzptsmmtro"
+        protocol="application/pgp-signature"; boundary="v2ccyfomkb3u4ngk"
 Content-Disposition: inline
-In-Reply-To: <20190303173527.31055-4-jagan@amarulasolutions.com>
+In-Reply-To: <20190303173527.31055-6-jagan@amarulasolutions.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,92 +51,75 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---4vyjlwpzptsmmtro
+--v2ccyfomkb3u4ngk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 03, 2019 at 11:05:25PM +0530, Jagan Teki wrote:
-> Like other dsi setup timings, or hblk for that matter vblk would
-> also require compute the timings based payload equation along with
-> packet overhead.
+On Sun, Mar 03, 2019 at 11:05:27PM +0530, Jagan Teki wrote:
+> DSI timings are varies between burst/non-burst devices and
+> current driver is handling this support via if, else statements
+> which would difficult to read.
 >=20
-> But, on the other hand vblk computation is also depends on device
-> lane number.
-> - for 4 lane devices, it is computed based on vtotal, packet overhead
->   along with hblk value.
-> - for others devices, it is simply 0
+> Simplify it by using goto to make code more readable.
 >=20
-> BSP code from BPI-M64-bsp is computing vblk as for 4-lane devices
-> (from linux-sunxi
-> drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
->=20
-> tmp =3D (ht*dsi_pixel_bits[format]/8)*vt-(4+dsi_hblk+2);
-> dsi_vblk =3D (lane-tmp%lane);
->=20
-> So, update the vblk timing calculation to support all type of
-> devices.
->=20
-> Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
-
-You should be explaining which issue you faced, in which setup, what
-were its symptoms and how that solution is fixing it.
-
 > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > Tested-by: Merlijn Wajer <merlijn@wizzup.org>
 > ---
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 27 +++++++++++++++++++-------
->  1 file changed, 20 insertions(+), 7 deletions(-)
+> Note: This change is created based on previous version burst
+> changes [1] by addressing comment from [2] by Maxime to make
+> code readable.=20
+>=20
+> [1] https://patchwork.kernel.org/cover/10813623/
+> [2] https://patchwork.kernel.org/patch/10666607/
+>=20
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 79 ++++++++++++++------------
+>  1 file changed, 42 insertions(+), 37 deletions(-)
 >=20
 > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun=
 4i/sun6i_mipi_dsi.c
-> index 140e55f5ed2e..b38358465d87 100644
+> index 31ec4048804d..898f32319c2d 100644
 > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -527,6 +527,24 @@ static void sun6i_dsi_setup_format(struct sun6i_dsi =
+> @@ -550,7 +550,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi =
 *dsi,
->  		     SUN6I_DSI_PIXEL_CTL0_FORMAT(fmt));
->  }
-> =20
-> +static u16 sun6i_dsi_get_timings_vblk(struct sun6i_dsi *dsi,
-> +				      struct drm_display_mode *mode, u16 hblk)
-> +{
-> +	struct mipi_dsi_device *device =3D dsi->device;
-> +	unsigned int Bpp =3D mipi_dsi_pixel_format_to_bpp(device->format) / 8;
-> +	int tmp;
-> +
-> +	/*
-> +	 * The vertical blank is set using a blanking packet (4 bytes +
-> +	 * payload + 2 bytes). Its minimal size is therefore 6 bytes
-> +	 */
-> +#define VBLK_PACKET_OVERHEAD	6
-> +	tmp =3D (mode->htotal * Bpp) * mode->vtotal -
-> +	      (hblk + VBLK_PACKET_OVERHEAD);
-> +
-> +	return (device->lanes - tmp % device->lanes);
-
-This should have a comment explaining why it's needed
-
-> +}
-> +
->  static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
->  				    struct drm_display_mode *mode)
 >  {
-> @@ -586,13 +604,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi=
- *dsi,
->  			   (mode->htotal - (mode->hsync_end - mode->hsync_start)) * Bpp -
->  			   HBLK_PACKET_OVERHEAD);
+>  	struct mipi_dsi_device *device =3D dsi->device;
+>  	unsigned int Bpp =3D mipi_dsi_pixel_format_to_bpp(device->format) / 8;
+> -	u16 hbp =3D 0, hfp =3D 0, hsa =3D 0, hblk =3D 0, vblk =3D 0;
+> +	u16 hbp, hfp, hsa, hblk;
+> +	u16 vblk =3D 0;
+>  	u32 basic_ctl =3D 0;
+>  	size_t bytes;
+>  	u8 *buffer;
+> @@ -558,6 +559,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi =
+*dsi,
+>  	/* Do all timing calculations up front to allocate buffer space */
 > =20
-> -		/*
-> -		 * And I'm not entirely sure what vblk is about. The driver in
-> -		 * Allwinner BSP is using a rather convoluted calculation
-> -		 * there only for 4 lanes. However, using 0 (the !4 lanes
-> -		 * case) even with a 4 lanes screen seems to work...
-> -		 */
-> -		vblk =3D 0;
-> +		if (device->lanes =3D=3D 4)
+>  	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+> +		hbp =3D hfp =3D hsa =3D 0;
 
-And that can be done in the function itself.
+This raises a checkpatch warning and isn't necessary
+
+>  		hblk =3D mode->hdisplay * Bpp;
+>  		basic_ctl =3D SUN6I_DSI_BASIC_CTL_VIDEO_BURST |
+>  			    SUN6I_DSI_BASIC_CTL_HSA_HSE_DIS |
+> @@ -566,48 +568,51 @@ static void sun6i_dsi_setup_timings(struct sun6i_ds=
+i *dsi,
+>  		if (device->lanes =3D=3D 4)
+>  			basic_ctl |=3D SUN6I_DSI_BASIC_CTL_TRAIL_FILL |
+>  				     SUN6I_DSI_BASIC_CTL_TRAIL_INV(0xc);
+> -	} else {
+> -		/*
+> -		 * A sync period is composed of a blanking packet (4
+> -		 * bytes + payload + 2 bytes) and a sync event packet
+> -		 * (4 bytes). Its minimal size is therefore 10 bytes
+> -		 */
+> +
+> +		goto alloc_buf;
+
+And I'd rather not have a goto in the middle of the code for no
+particular reason.
 
 Maxime
 
@@ -145,15 +128,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---4vyjlwpzptsmmtro
+--v2ccyfomkb3u4ngk
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH1I9wAKCRDj7w1vZxhR
-xQodAQCrqnZbxF2fyl1NPVcnROU4AIK0N+R9W8jAMN9Z+0GiSAD/aQOiMHG7Z389
-2eYWjKGR050OLCOn/EsHwfkZYY4d7Qs=
-=O1dp
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH1JNgAKCRDj7w1vZxhR
+xagXAQC3dp3eEYhs1dGhQeIjY6JCqWMePKF3iMTgmhnEtSjcnwEAzPLaMnwcsBir
+cjFSa1r/ffjtERJIXV8n2y2ug6kJpg8=
+=Grgg
 -----END PGP SIGNATURE-----
 
---4vyjlwpzptsmmtro--
+--v2ccyfomkb3u4ngk--
