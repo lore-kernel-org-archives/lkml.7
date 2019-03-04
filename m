@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADB4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACC7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF3021019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009FA21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688599;
-	bh=DFKWDZiZpGQR4fxL5deNM7MyjhKDQlxssh38Lhc/UPg=;
+	s=default; t=1551688603;
+	bh=LhQbXAlQE1zve/fm15sBd6/AzGR316Nb0JZ40Rc5XfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GE+2rJdpgWvX1uQDgEdmIjWOOLOOlfmjYjNBUPPyFw5cEF9q3f2o8trzVavWgA1Bl
-	 oScoTnSyBkYtZcOcagOpufqxykYu1tdqtQn/1ctDNlOKfb/OSmd3e9Hy0BLJ9nXdJl
-	 1xv4PalghlrnFdU3To+zKOfPdSUrWjIvnczpTfjE=
+	b=jqaDil1RfSFteB1+0IAtl6ghFNc/T0ipBNyZDxfT0Z1DG8wlOOFVIVoWJwSPsFTEt
+	 MEsro0VV+zXzLUgUa1nKqKIKPKQAdDrKoJF+Jeqe/58qw3OV+qBtME7SspwNDiuuNz
+	 OMLpTb4lgt7eOBihcanDTojbCM0cnQXXyT5SM7yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbfCDIgh (ORCPT
+        id S1728713AbfCDIgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:36:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45980 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:36:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbfCDIgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:36:31 -0500
+        id S1727875AbfCDIgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:36:35 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78B6F2146E;
-        Mon,  4 Mar 2019 08:36:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED2E0208E4;
+        Mon,  4 Mar 2019 08:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688591;
-        bh=DFKWDZiZpGQR4fxL5deNM7MyjhKDQlxssh38Lhc/UPg=;
+        s=default; t=1551688594;
+        bh=LhQbXAlQE1zve/fm15sBd6/AzGR316Nb0JZ40Rc5XfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MKGOzDpGiTdpKUlrgvwm4LTTTFfT7E4dZv4QQsoVCzpYdjdyC1CPCd7dLWgwWNOXM
-         F61ym2tVlK2QQib50ph6dCUnuwjsqDHeAgGVWYXGftJnUAMUryfRQeoByGClP5vodh
-         lgy9+/mglmJcOVJuXxWxjNguhJKJ+Eqehnbyraw4=
+        b=XTDUIN211gzMzoV1rrTSAGJ77SOgBLtVCAMUt9x7pmgyq9LmA1V7DRhXGqKgtnMcz
+         VaNuepb7syjXWLlYecs6Gy3/f6/XUfjyCOPOrJJjUSj30XP4d0ZbR9Tk+rQQNm+GCv
+         VyJQ3jiLT3V/pIcxGuC+RbL/6ZyMhiljC9ekFLWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Rob Clark <robdclark@gmail.com>,
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 57/88] drm/msm: avoid unused function warning
-Date:   Mon,  4 Mar 2019 09:22:40 +0100
-Message-Id: <20190304081632.793815392@linuxfoundation.org>
+Subject: [PATCH 4.20 48/88] scsi: csiostor: fix NULL pointer dereference in csio_vport_set_state()
+Date:   Mon,  4 Mar 2019 09:22:31 +0100
+Message-Id: <20190304081632.457005165@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -67,63 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a840f690d3c6f2f27425ca7e7bd2d635cdec07d7 ]
+[ Upstream commit fe35a40e675473eb65f2f5462b82770f324b5689 ]
 
-drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c:368:13: error: 'dpu_plane_danger_signal_ctrl' defined but not used [-Werror=unused-function]
+Assign fc_vport to ln->fc_vport before calling csio_fcoe_alloc_vnp() to
+avoid a NULL pointer dereference in csio_vport_set_state().
 
-Fixes: 7b2e7adea732 ("drm/msm/dpu: Make dpu_plane_danger_signal_ctrl void")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Rob Clark <robdclark@gmail.com>
+ln->fc_vport is dereferenced in csio_vport_set_state().
+
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 26 +++++++++++------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/scsi/csiostor/csio_attr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index f549daf30fe6d..1d155a7cb08c3 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -365,19 +365,6 @@ static void _dpu_plane_set_qos_ctrl(struct drm_plane *plane,
- 			&pdpu->pipe_qos_cfg);
- }
+diff --git a/drivers/scsi/csiostor/csio_attr.c b/drivers/scsi/csiostor/csio_attr.c
+index 8a004036e3d72..9bd2bd8dc2be2 100644
+--- a/drivers/scsi/csiostor/csio_attr.c
++++ b/drivers/scsi/csiostor/csio_attr.c
+@@ -594,12 +594,12 @@ csio_vport_create(struct fc_vport *fc_vport, bool disable)
+ 	}
  
--static void dpu_plane_danger_signal_ctrl(struct drm_plane *plane, bool enable)
--{
--	struct dpu_plane *pdpu = to_dpu_plane(plane);
--	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
--
--	if (!pdpu->is_rt_pipe)
--		return;
--
--	pm_runtime_get_sync(&dpu_kms->pdev->dev);
--	_dpu_plane_set_qos_ctrl(plane, enable, DPU_PLANE_QOS_PANIC_CTRL);
--	pm_runtime_put_sync(&dpu_kms->pdev->dev);
--}
--
- /**
-  * _dpu_plane_set_ot_limit - set OT limit for the given plane
-  * @plane:		Pointer to drm plane
-@@ -1271,6 +1258,19 @@ static void dpu_plane_reset(struct drm_plane *plane)
- }
+ 	fc_vport_set_state(fc_vport, FC_VPORT_INITIALIZING);
++	ln->fc_vport = fc_vport;
  
- #ifdef CONFIG_DEBUG_FS
-+static void dpu_plane_danger_signal_ctrl(struct drm_plane *plane, bool enable)
-+{
-+	struct dpu_plane *pdpu = to_dpu_plane(plane);
-+	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
-+
-+	if (!pdpu->is_rt_pipe)
-+		return;
-+
-+	pm_runtime_get_sync(&dpu_kms->pdev->dev);
-+	_dpu_plane_set_qos_ctrl(plane, enable, DPU_PLANE_QOS_PANIC_CTRL);
-+	pm_runtime_put_sync(&dpu_kms->pdev->dev);
-+}
-+
- static ssize_t _dpu_plane_danger_read(struct file *file,
- 			char __user *buff, size_t count, loff_t *ppos)
- {
+ 	if (csio_fcoe_alloc_vnp(hw, ln))
+ 		goto error;
+ 
+ 	*(struct csio_lnode **)fc_vport->dd_data = ln;
+-	ln->fc_vport = fc_vport;
+ 	if (!fc_vport->node_name)
+ 		fc_vport->node_name = wwn_to_u64(csio_ln_wwnn(ln));
+ 	if (!fc_vport->port_name)
 -- 
 2.19.1
 
