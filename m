@@ -2,237 +2,211 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3E3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC59C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 120A7205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="swgzuo9G"
+	by mail.kernel.org (Postfix) with ESMTP id A10F520823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfCDO1l (ORCPT
+        id S1726760AbfCDOal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:27:41 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:42314 "EHLO pegase1.c-s.fr"
+        Mon, 4 Mar 2019 09:30:41 -0500
+Received: from mga09.intel.com ([134.134.136.24]:49488 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbfCDO1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:27:40 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Cj6F6R09z9v4wW;
-        Mon,  4 Mar 2019 15:27:33 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=swgzuo9G; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id IOOkahzk2WU8; Mon,  4 Mar 2019 15:27:33 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Cj6F56kSz9v1QP;
-        Mon,  4 Mar 2019 15:27:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1551709653; bh=74npQgHLavCFiHbVDB4xQO10uiwkD3vrFd5Z1BDGDTw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=swgzuo9Gt81C1bPoiK3qAfhtSTv6UFhTVEw5RrCJH2tSsLCP9NOSQAe3Gg3xWTQjY
-         JhOkykm6w+I0v9I+Zq5Kigjy0su/vJzt9T92iPDpsToRTQucB9N7Jo3GAUhbWzKcy2
-         lhfyaP2ioJXlbcgVgKydoI1/MNwo3WJAdbQYeC9w=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F2DB48B84E;
-        Mon,  4 Mar 2019 15:27:33 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id AqeOoWAo4L8F; Mon,  4 Mar 2019 15:27:33 +0100 (CET)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A612C8B876;
-        Mon,  4 Mar 2019 15:27:04 +0100 (CET)
-Subject: Re: [PATCH 2/3] powerpc: convert to generic builtin command line
-To:     Daniel Walker <danielwa@cisco.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     xe-linux-external@cisco.com, linux-kernel@vger.kernel.org,
-        Maksym Kokhan <maksym.kokhan@globallogic.com>,
-        Daniel Walker <dwalker@fifo99.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <1551469472-53043-3-git-send-email-danielwa@cisco.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <e6dc6500-0e33-da0c-c975-0d9125e38c0e@c-s.fr>
-Date:   Mon, 4 Mar 2019 15:26:59 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726061AbfCDOal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 09:30:41 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 06:30:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,440,1544515200"; 
+   d="scan'208";a="131088556"
+Received: from chenyu-office.sh.intel.com ([10.239.158.163])
+  by orsmga003.jf.intel.com with ESMTP; 04 Mar 2019 06:30:38 -0800
+Date:   Mon, 4 Mar 2019 22:39:28 +0800
+From:   Yu Chen <yu.c.chen@intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Subject: Re: [RFT][Update][PATCH 2/2] cpufreq: intel_pstate: Update max CPU
+ frequency on global turbo changes
+Message-ID: <20190304143928.GA13701@chenyu-office.sh.intel.com>
+References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
+ <2046937.YMVy5Qh3Pm@aspire.rjw.lan>
+ <3017597.CVkTxgYgAs@aspire.rjw.lan>
 MIME-Version: 1.0
-In-Reply-To: <1551469472-53043-3-git-send-email-danielwa@cisco.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3017597.CVkTxgYgAs@aspire.rjw.lan>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 01/03/2019 à 20:44, Daniel Walker a écrit :
-> This updates the powerpc code to use the CONFIG_GENERIC_CMDLINE
-> option.
-
-Please explain more in details how each powerpc option is replaced by 
-one of the generic options.
-
+On Fri, Mar 01, 2019 at 01:57:06PM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> [maksym.kokhan@globallogic.com: add strlcat to prom_init_check.sh
-> whitelist]
-> Cc: Daniel Walker <dwalker@fifo99.com>
-> Cc: Daniel Walker <danielwa@cisco.com>
-> Cc: xe-linux-external@cisco.com
-> Signed-off-by: Daniel Walker <danielwa@cisco.com>
-> Signed-off-by: Maksym Kokhan <maksym.kokhan@globallogic.com>
+> While the cpuinfo.max_freq value doesn't really matter for
+> intel_pstate in the active mode, in the passive mode it is used by
+> governors as the maximum physical frequency of the CPU and the
+> results of governor computations generally depend on it.  Also it
+> is made available to user space via sysfs and it should match the
+> current HW configuration.
+> 
+> For this reason, make intel_pstate update cpuinfo.max_freq for all
+> CPUs if it detects a global change of turbo frequency settings from
+> "disable" to "enable" or the other way associated with a _PPC change
+> notification from the platform firmware.
+> 
+> Note that policy_is_inactive() and cpufreq_set_policy() need to be
+> made available to it for this purpose.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=200759
+> Reported-by: Gabriele Mazzotta <gabriele.mzt@gmail.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->   arch/powerpc/Kconfig                   | 23 +----------------------
->   arch/powerpc/kernel/prom.c             |  4 ++++
->   arch/powerpc/kernel/prom_init.c        |  8 ++++----
->   arch/powerpc/kernel/prom_init_check.sh |  2 +-
->   4 files changed, 10 insertions(+), 27 deletions(-)
 > 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 8be31261aec8..6321b2a0b87b 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -172,6 +172,7 @@ config PPC
->   	select GENERIC_STRNCPY_FROM_USER
->   	select GENERIC_STRNLEN_USER
->   	select GENERIC_TIME_VSYSCALL
-> +	select GENERIC_CMDLINE
->   	select HAVE_ARCH_AUDITSYSCALL
->   	select HAVE_ARCH_JUMP_LABEL
->   	select HAVE_ARCH_KGDB
-> @@ -777,28 +778,6 @@ config PPC_DENORMALISATION
->   	  Add support for handling denormalisation of single precision
->   	  values.  Useful for bare metal only.  If unsure say Y here.
->   
-> -config CMDLINE_BOOL
-> -	bool "Default bootloader kernel arguments"
-> -
-> -config CMDLINE
-> -	string "Initial kernel command string"
-> -	depends on CMDLINE_BOOL
-> -	default "console=ttyS0,9600 console=tty0 root=/dev/sda2"
-> -	help
-> -	  On some platforms, there is currently no way for the boot loader to
-> -	  pass arguments to the kernel. For these platforms, you can supply
-> -	  some command-line options at build time by entering them here.  In
-> -	  most cases you will need to specify the root device here.
-> -
-> -config CMDLINE_FORCE
-> -	bool "Always use the default kernel command string"
-> -	depends on CMDLINE_BOOL
-> -	help
-> -	  Always use the default kernel command string, even if the boot
-> -	  loader passes other arguments to the kernel.
-> -	  This is useful if you cannot or don't want to change the
-> -	  command-line options your boot loader passes to the kernel.
-> -
->   config EXTRA_TARGETS
->   	string "Additional default image types"
->   	help
-> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-> index fe758cedb93f..d78b1d6fe1c8 100644
-> --- a/arch/powerpc/kernel/prom.c
-> +++ b/arch/powerpc/kernel/prom.c
-> @@ -34,6 +34,7 @@
->   #include <linux/of_fdt.h>
->   #include <linux/libfdt.h>
->   #include <linux/cpu.h>
-> +#include <linux/cmdline.h>
->   
->   #include <asm/prom.h>
->   #include <asm/rtas.h>
-> @@ -716,6 +717,9 @@ void __init early_init_devtree(void *params)
->   	 */
->   	of_scan_flat_dt(early_init_dt_scan_chosen_ppc, boot_command_line);
->   
-> +	/* append and prepend any arguments built into the kernel. */
-> +	cmdline_add_builtin(boot_command_line, NULL, COMMAND_LINE_SIZE);
-> +
-
-I don't think it is worth an implementation as complex as in the 
-previous patch just for the above line.
-Could easily define the temporary buffer in this file directely, then 
-just locally do:
-
-strlcpy(temp_buff, CONFIG_CMDLINE_PREPEND, COMMAND_LINE_SIZE);
-strlcat(temp_buff, boot_command_line, COMMAND_LINE_SIZE);
-strlcat(temp_buff, CONFIG_CMDLINE_APPEND, COMMAND_LINE_SIZE);
-strlcpy(boot_command_line, temp_buff, COMMAND_LINE_SIZE);
-
-
-
->   	/* Scan memory nodes and rebuild MEMBLOCKs */
->   	of_scan_flat_dt(early_init_dt_scan_root, NULL);
->   	of_scan_flat_dt(early_init_dt_scan_memory_ppc, NULL);
-> diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-> index f33ff4163a51..e8e9fca22470 100644
-> --- a/arch/powerpc/kernel/prom_init.c
-> +++ b/arch/powerpc/kernel/prom_init.c
-> @@ -30,6 +30,7 @@
->   #include <linux/delay.h>
->   #include <linux/initrd.h>
->   #include <linux/bitops.h>
-> +#include <linux/cmdline.h>
->   #include <asm/prom.h>
->   #include <asm/rtas.h>
->   #include <asm/page.h>
-> @@ -637,11 +638,10 @@ static void __init early_cmdline_parse(void)
->   	p = prom_cmd_line;
->   	if ((long)prom.chosen > 0)
->   		l = prom_getprop(prom.chosen, "bootargs", p, COMMAND_LINE_SIZE-1);
-> -#ifdef CONFIG_CMDLINE
-> +
->   	if (l <= 0 || p[0] == '\0') /* dbl check */
-> -		strlcpy(prom_cmd_line,
-> -			CONFIG_CMDLINE, sizeof(prom_cmd_line));
-> -#endif /* CONFIG_CMDLINE */
-> +		cmdline_add_builtin_section(prom_cmd_line, NULL, sizeof(prom_cmd_line), __prombss);
-> +
-
-You don't need something as complex as what your generic code does for 
-that. It could be done with the following simple line:
-
-strlcpy(prom_cmd_line, CONFIG_CMDLINE_PREPEND " " CONFIG_CMDLINE_APPEND, 
-sizeof(prom_cmd_line));
-
->   	prom_printf("command line: %s\n", prom_cmd_line);
->   
->   #ifdef CONFIG_PPC64
-> diff --git a/arch/powerpc/kernel/prom_init_check.sh b/arch/powerpc/kernel/prom_init_check.sh
-> index 667df97d2595..ab2acc8d8b5a 100644
-> --- a/arch/powerpc/kernel/prom_init_check.sh
-> +++ b/arch/powerpc/kernel/prom_init_check.sh
-> @@ -18,7 +18,7 @@
->   
->   WHITELIST="add_reloc_offset __bss_start __bss_stop copy_and_flush
->   _end enter_prom memcpy memset reloc_offset __secondary_hold
-> -__secondary_hold_acknowledge __secondary_hold_spinloop __start
-> +__secondary_hold_acknowledge __secondary_hold_spinloop __start strlcat
-
-The above is a big issue. In the scope of KASAN implementation, we are 
-getting rid of generic string functions from prom_init because they are 
-KASAN instrumented and that's far too early for prom_init. See series 
-https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=94949 and 
-especially patch [v9,03/11] powerpc/prom_init: don't use string 
-functions from lib/
-
->   strcmp strcpy strlcpy strlen strncmp strstr kstrtobool logo_linux_clut224
->   reloc_got2 kernstart_addr memstart_addr linux_banner _stext
->   __prom_init_toc_start __prom_init_toc_end btext_setup_display TOC."
+> Update, because the patch sent previously doesn't build, due to an extra
+> arg declared for intel_pstate_update_max_freq().
 > 
+> ---
+>  drivers/cpufreq/cpufreq.c      |   12 ++----------
+>  drivers/cpufreq/intel_pstate.c |   33 ++++++++++++++++++++++++++++++++-
+>  include/linux/cpufreq.h        |    7 +++++++
+>  3 files changed, 41 insertions(+), 11 deletions(-)
+> 
+> Index: linux-pm/drivers/cpufreq/intel_pstate.c
+> ===================================================================
+> --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
+> +++ linux-pm/drivers/cpufreq/intel_pstate.c
+> @@ -897,6 +897,36 @@ static void intel_pstate_update_policies
+>  		cpufreq_update_policy(cpu);
+>  }
+>  
+> +static void intel_pstate_update_max_freq(unsigned int cpu)
+> +{
+> +	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+> +	struct cpufreq_policy new_policy;
+> +	struct cpudata *cpudata;
+> +
+> +	if (!policy)
+> +		return;
+> +
+> +	down_write(&policy->rwsem);
+> +
+> +	if (policy_is_inactive(policy))
+> +		goto unlock;
+> +
+> +	cpudata = all_cpu_data[cpu];
+> +	policy->cpuinfo.max_freq = global.turbo_disabled_upd ?
+> +			cpudata->pstate.max_freq : cpudata->pstate.turbo_freq;
+> +
+> +	memcpy(&new_policy, policy, sizeof(*policy));
+> +	new_policy.max = min(policy->user_policy.max, policy->cpuinfo.max_freq);
+> +	new_policy.min = min(policy->user_policy.min, new_policy.max);
+> +
+> +	cpufreq_set_policy(policy, &new_policy);
+> +
+> +unlock:
+> +	up_write(&policy->rwsem);
+> +
+> +	cpufreq_cpu_put(policy);
+> +}
+> +
+I tried to test on a macbook in hand however I did not see the _PPC
+notifier on this machine so it might not cover the code path in
+this patch. I checked the cpufreq with this patch using
+different load and the cpufreq scales well.
 
-Thanks
-Christophe
+>  static void intel_pstate_update_limits(unsigned int cpu)
+>  {
+>  	mutex_lock(&intel_pstate_driver_lock);
+> @@ -908,7 +938,8 @@ static void intel_pstate_update_limits(u
+>  	 */
+>  	if (global.turbo_disabled_upd != global.turbo_disabled) {
+>  		global.turbo_disabled_upd = global.turbo_disabled;
+> -		intel_pstate_update_policies();
+> +		for_each_possible_cpu(cpu)
+> +			intel_pstate_update_max_freq(cpu);
+>  	} else {
+>  		cpufreq_update_policy(cpu);
+>  	}
+> Index: linux-pm/drivers/cpufreq/cpufreq.c
+> ===================================================================
+> --- linux-pm.orig/drivers/cpufreq/cpufreq.c
+> +++ linux-pm/drivers/cpufreq/cpufreq.c
+> @@ -34,11 +34,6 @@
+>  
+>  static LIST_HEAD(cpufreq_policy_list);
+>  
+> -static inline bool policy_is_inactive(struct cpufreq_policy *policy)
+> -{
+> -	return cpumask_empty(policy->cpus);
+> -}
+> -
+>  /* Macros to iterate over CPU policies */
+>  #define for_each_suitable_policy(__policy, __active)			 \
+>  	list_for_each_entry(__policy, &cpufreq_policy_list, policy_list) \
+> @@ -675,9 +670,6 @@ static ssize_t show_scaling_cur_freq(str
+>  	return ret;
+>  }
+>  
+> -static int cpufreq_set_policy(struct cpufreq_policy *policy,
+> -				struct cpufreq_policy *new_policy);
+> -
+>  /**
+>   * cpufreq_per_cpu_attr_write() / store_##file_name() - sysfs write access
+>   */
+> @@ -2235,8 +2227,8 @@ EXPORT_SYMBOL(cpufreq_get_policy);
+>   *
+>   * The cpuinfo part of @policy is not updated by this function.
+>   */
+There first seems to be some patching error when applying this on
+top of upstream 5.0, but I realized that this patch is based on
+intel-next.
+
+Thanks,
+Ryan
+
+> -static int cpufreq_set_policy(struct cpufreq_policy *policy,
+> -			      struct cpufreq_policy *new_policy)
+> +int cpufreq_set_policy(struct cpufreq_policy *policy,
+> +		       struct cpufreq_policy *new_policy)
+>  {
+>  	struct cpufreq_governor *old_gov;
+>  	int ret;
+> Index: linux-pm/include/linux/cpufreq.h
+> ===================================================================
+> --- linux-pm.orig/include/linux/cpufreq.h
+> +++ linux-pm/include/linux/cpufreq.h
+> @@ -178,6 +178,11 @@ static inline struct cpufreq_policy *cpu
+>  static inline void cpufreq_cpu_put(struct cpufreq_policy *policy) { }
+>  #endif
+>  
+> +static inline bool policy_is_inactive(struct cpufreq_policy *policy)
+> +{
+> +	return cpumask_empty(policy->cpus);
+> +}
+> +
+>  static inline bool policy_is_shared(struct cpufreq_policy *policy)
+>  {
+>  	return cpumask_weight(policy->cpus) > 1;
+> @@ -194,6 +199,8 @@ void disable_cpufreq(void);
+>  
+>  u64 get_cpu_idle_time(unsigned int cpu, u64 *wall, int io_busy);
+>  int cpufreq_get_policy(struct cpufreq_policy *policy, unsigned int cpu);
+> +int cpufreq_set_policy(struct cpufreq_policy *policy,
+> +		       struct cpufreq_policy *new_policy);
+>  void cpufreq_update_policy(unsigned int cpu);
+>  void cpufreq_update_limits(unsigned int cpu);
+>  bool have_governor_per_policy(void);
+> 
