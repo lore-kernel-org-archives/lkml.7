@@ -2,119 +2,104 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FFDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857B2C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D522206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55397206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfCDQsU (ORCPT
+        id S1727212AbfCDQtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 11:48:20 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35984 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbfCDQsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 11:48:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 487B0A78;
-        Mon,  4 Mar 2019 08:48:19 -0800 (PST)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E45CF3F703;
-        Mon,  4 Mar 2019 08:48:17 -0800 (PST)
-Date:   Mon, 4 Mar 2019 16:48:16 +0000
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     =?utf-8?B?V2FuZywgVmluY2VudCAo546L5LqJKQ==?= 
-        <Vincent.Wang@unisoc.com>,
-        =?utf-8?B?WmhhbmcsIENodW55YW4gKOW8oOaYpeiJsyk=?= 
-        <Chunyan.Zhang@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0ggVjRdIHNj?=
- =?utf-8?Q?hed=2Fcpufreq=3A_initializ?= =?utf-8?Q?e?= iowait_boost_max and
- iowait_boost with cpu capacity
-Message-ID: <20190304164816.4fnxxesjwzdoqria@queper01-lin>
-References: <1550831866-32749-1-git-send-email-chunyan.zhang@unisoc.com>
- <20190222105957.wxhlcmoag5f3i4fi@queper01-lin>
- <9099990618e242e1bab77ce3f9d9b1e3@BJMBX02.spreadtrum.com>
- <20190304135810.rq2ojnbn5vezrab3@queper01-lin>
- <20190304152616.GM32494@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304152616.GM32494@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+        Mon, 4 Mar 2019 11:49:36 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34184 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726063AbfCDQtg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 11:49:36 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x24GkSe0020646
+        for <linux-kernel@vger.kernel.org>; Mon, 4 Mar 2019 11:49:34 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r157vr36y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 11:49:34 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 4 Mar 2019 16:49:32 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 4 Mar 2019 16:49:28 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x24GnR8i58785998
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 4 Mar 2019 16:49:28 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D80AB4C040;
+        Mon,  4 Mar 2019 16:49:27 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED0BE4C04A;
+        Mon,  4 Mar 2019 16:49:26 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.93.84])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  4 Mar 2019 16:49:26 +0000 (GMT)
+Subject: Re: [PATCH] vfs: Move kernel_read_file() to fs/read_write.c
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 04 Mar 2019 11:49:16 -0500
+In-Reply-To: <12096.1551716540@warthog.procyon.org.uk>
+References: <1551715930.10911.468.camel@linux.ibm.com>
+         <155171231301.4764.5429281379303710262.stgit@warthog.procyon.org.uk>
+         <12096.1551716540@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19030416-0016-0000-0000-0000025DAEDB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19030416-0017-0000-0000-000032B82D2E
+Message-Id: <1551718156.10911.473.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-04_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903040122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 04 Mar 2019 at 16:26:16 (+0100), Peter Zijlstra wrote:
-> On Mon, Mar 04, 2019 at 01:58:12PM +0000, Quentin Perret wrote:
-> > You could also update the values in sugov_get_util() at the cost of a
-> > small overhead to compute 'min'. I'm not sure what's preferable since
-> > we wanted to avoid that kind of overhead in the first place ...
+On Mon, 2019-03-04 at 16:22 +0000, David Howells wrote:
+> Mimi Zohar <zohar@linux.ibm.com> wrote:
 > 
-> Or,... we could actually make things simpler.
+> > > Move kernel_read_file() to fs/read_write.c and out of fs/exec.c as it's not
+> > > actually used by anything in the execve subsystem.
+> > 
+> > All files being opened by the kernel should be calling one of these
+> > helper routines.  Has that changed?
 > 
-> How's the below? I have a feq questions wrt min, mostly:
+> prepare_binprm() uses kernel_read() and has done since at least 2014.  The
+> binfmt drivers also use kernel_read().
 > 
->  - what's the difference between policy->min and
->    policy->cpuinfo.min_freq; it used to be the former, the below uses
->    the latter.
+> Since kernel_read_file() is used by a bunch of things that aren't exec, even
+> if we switch exec to it, it should probably still go in fs/read_write.c since
+> it seems generic.
 
-As mentioned on IRC, IIRC policy->min is something that can be written
-from userspace (for example) to cap the min freq. OTOH, cpuinfo.min_freq
-is read-only and just reports the lowest OPP.
+Oh, commit bdd1d2d3d251 ("fs: fix kernel_read prototype") moved
+kernel_read() to fs/read_write.c without moving the helpers.
+ Definitely makes sense to move the helpers.  Please include a
+reference to the commit in this patch. 
 
-Rafael is this correct ?
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
->  - should we have a min_freq based value, instead of a constant; the
->    difference being that with this the actual boost speed depends in the
->    gap between min/max.
-
-If the above is correct, then I agree. Looking at min_freq simplifies
-things quite a bit since it doesn't need to be updated all the time,
-and the whole policy->min stuff is dealt with at the CPUFreq core level
-so it's not obvious sugov should care.
-
-> Anyway; the below converts iowait_boost to capacity scale (from kHz), it
-> side-steps the whole issue you guys are bickering about by limiting it
-> to SCHED_CAPACITY_SCALE (aka. 1024) on the boost path, and then limiting
-> it to @max by the time we figured out we ought to use it.
->
-> And since that means we never change @max anymore; we can simplify whole
-> return value thing.
-
-[...]
-
-> @@ -837,7 +818,9 @@ static int sugov_start(struct cpufreq_policy *policy)
->  		memset(sg_cpu, 0, sizeof(*sg_cpu));
->  		sg_cpu->cpu			= cpu;
->  		sg_cpu->sg_policy		= sg_policy;
-> -		sg_cpu->iowait_boost_max	= policy->cpuinfo.max_freq;
-> +		sg_cpu->min			=
-> +			(SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
-> +			policy->cpuinfo.max_freq;
-
-The 'funny' thing is that on big little this 'min' can end up being
-larger than 'max' ...
-
-On juno r0 for example, min_freq and max_freq for little CPUs are
-respectively 450MHz and 850MHz. So you get sg_cpu->min=542, but
-sg_cpu->max=446 ... So you'll max out after the first IO wakeup.
-And since iowait_boost is reset whenever it is smaller than sg_cpu->min,
-you end up with something that can either force max freq or apply no
-boost at all ...
-
-Perhaps you could keep the 'util' and 'max' pointers in
-sugov_iowait_apply() and overwrite them like before, but in the
-SCHED_CAPACITY_SCALE scale as you suggest ?
-
-Thanks,
-Quentin
