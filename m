@@ -2,103 +2,136 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15550C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909FBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19ED206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFC720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:01:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cs.msu.ru header.i=@cs.msu.ru header.b="lbA/PVFk"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="u/15sAWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfCDQ6B (ORCPT
+        id S1726960AbfCDRBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 11:58:01 -0500
-Received: from imap.cs.msu.ru ([188.44.42.39]:62109 "EHLO mail.cs.msu.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbfCDQ6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 11:58:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
-         s=dkim; h=Subject:Content-Transfer-Encoding:MIME-Version:References:
-        In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1hHDnrBWRgx1wOpaCGBwWc59L/HnawNq9sjy5Dr/Yyc=; b=lbA/PVFklmDFpvhjv74M8CgiNv
-        wybbfOSou8NjJR6iU+4nPmuWwc//5pUq020r82OxVXGeBwAAWA2ZTMqbmCC+rxU7PxW7LpWe88tts
-        6/rswrsPg9PEWS1tHfMoOvGgzrWPFmaMPXNLAelAkf5qnWcQrh1JXYlyFytdwF9fau8FOXdODu3Qj
-        plwJn+MP1Qu5+GbUw9GNKFT9K47gPxzPq/SfZ2+iD6lulyJPQJuy7Wr/IYFcefopiI+fSE14w5YNs
-        GPeDJK9VJMv98oasCZm2cXd+VLS9rnZ3GU/LDq12vmtWbEDmgyh0PqNBFNHbVDHP1Xvt7ikklsL9o
-        5gwLBE1w==;
-Received: from [10.7.4.141] (port=59860 helo=cello.cs.msu.ru)
-        by mail.cs.msu.ru with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91 (FreeBSD))
-        (envelope-from <ar@cs.msu.ru>)
-        id 1h0quO-000JP0-Bi; Mon, 04 Mar 2019 19:57:44 +0300
-From:   Arseny Maslennikov <ar@cs.msu.ru>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc:     Arseny Maslennikov <ar@cs.msu.ru>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-um@lists.infradead.org
-Date:   Mon,  4 Mar 2019 19:57:30 +0300
-Message-Id: <20190304165732.24043-2-ar@cs.msu.ru>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190304165732.24043-1-ar@cs.msu.ru>
-References: <20190304165732.24043-1-ar@cs.msu.ru>
+        Mon, 4 Mar 2019 12:01:11 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41030 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbfCDRBK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:01:10 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k11so2517226pgb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 09:01:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=NgpxjmBV3GaSEJloWQ0qOTaQZvSmlTVRb07fqyDgFDg=;
+        b=u/15sAWENuu3jsxE18EsKKD04gJljPSbXj6TAuU6UWlud40NuuA8HJic+zpb/V583N
+         B6pP+5pL9tDXFpL7yrsalbV9n22kAMgRMMnmgkyRS3i6EffVYh3W+9CbkSKwdbPF20om
+         /rr/GrVKYND6o7fNjUqnBbn9pKF96Hn41Hrki5wza48TbHLKnriw9zJrjs7TuCHUXXGK
+         yrMXzb+UdHxElAUL7d3+OsZpaFEWVlY9ESBe48BKuQV4O5CiXR8Cpbmzyjqc8jNjmIKE
+         JY/jE2YIFLrZ7cCnJlVDlqxmyuWpVoKKGaK/TP9NsFldpd56E+04/8xRhc/piAZmBFMF
+         RoWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=NgpxjmBV3GaSEJloWQ0qOTaQZvSmlTVRb07fqyDgFDg=;
+        b=NKkS8v7549+L9eYWyMUJBZC8YhosSra73p6d3b8VizbiJKflXw+DUNEkZlQnnYcQdO
+         /2y9NgY7RX1SC47UMXFkRAujDveixc/ZW+ajYWOtsNZhIUESKZDtgD1ckIttSnnay53C
+         ELrxk5N12xZoG01J+rtKPc3yXyj8uPOth28AwKiK4L9UDhUR+3gNtYhIP3sWwgreNt4k
+         juk1pMXp91L9CYosIOrW75jWvqZVcw8z9mwu5pTVcCPzx3LvzMg6rmGGKWVT4BBwCNtN
+         XkcRQcTQ98O2ncs9pFcsf9KAUlI0wRPMye3qazoiFa6hVuCPRlkpO+3ulSVTXPBDqiVI
+         9nHA==
+X-Gm-Message-State: APjAAAU0CATwR3U5USOEOE7XEIs4J5qlqcxiT5QXrmSLQdvIH2BeWPMT
+        qKN56uS8lFtnWmnnkXLJ/kn9nA==
+X-Google-Smtp-Source: APXvYqyXZzpKsXq1tjtTCWFq8nMRh0LcXq79aU2sm+JeaHi/ApTEtt7p+RAKvgQMr9gzIZKYdPg+Sw==
+X-Received: by 2002:a63:5362:: with SMTP id t34mr18972139pgl.81.1551718869633;
+        Mon, 04 Mar 2019 09:01:09 -0800 (PST)
+Received: from nebulus.mtv.corp.google.com ([2620:0:1000:1612:b4fb:6752:f21f:3502])
+        by smtp.googlemail.com with ESMTPSA id o7sm16694043pfi.105.2019.03.04.09.01.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 09:01:09 -0800 (PST)
+Subject: Re: overlayfs access checks on underlying layers
+To:     Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org,
+        Daniel J Walsh <dwalsh@redhat.com>
+References: <CAJfpegs9JjkXguemL4qSiBvRP6Dnut-D+nJo-oLFXkfCL1Egvw@mail.gmail.com>
+ <CAJfpegvfqx+0D32n1h2X7oj5d1mZWiLTcSSGpBnD+ba7AKzPyA@mail.gmail.com>
+ <20181127210542.GA2599@redhat.com>
+ <CAJfpegtQGM2z9TOt3DWwd39fC60cQknsC4vNnj7YimVEubRzUg@mail.gmail.com>
+ <20181128170302.GA12405@redhat.com>
+ <377b7d4f-eb1d-c281-5c67-8ab6de77c881@tycho.nsa.gov>
+ <CAJfpegtNhcWD0VWy6LPtoDtQBfPu4x5iFsB053UMCidj6oMsuw@mail.gmail.com>
+ <26bce3be-49c2-cdd8-af03-1a78d0f268ae@tycho.nsa.gov>
+ <CAJfpeguL9xOh9Eq8LOP=ddJ4YD6nbp2UY6e2AYDVoHeCLuVhZA@mail.gmail.com>
+ <20181129134943.GA16762@redhat.com>
+From:   Mark Salyzyn <salyzyn@android.com>
+Message-ID: <fe78aaed-5fb1-3c51-1330-39de46ae39c5@android.com>
+Date:   Mon, 4 Mar 2019 09:01:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 10.7.4.141
-X-SA-Exim-Mail-From: ar@cs.msu.ru
-Subject: [PATCH 1/3] kconfig/Makefile: localmodconfig: use KCONFIG_CONFIG
-X-SA-Exim-Version: 4.2
-X-SA-Exim-Scanned: Yes (on mail.cs.msu.ru)
+In-Reply-To: <20181129134943.GA16762@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the config file is reassigned through the KCONFIG_CONFIG
-makeflag/envvar, this rule still attempts to use the wrong, possibly
-nonexistent file.
-Let's fix that.
+On 11/29/2018 05:49 AM, Vivek Goyal wrote:
+> So will override_creds=off solve the NFS issue also where all access will
+> happen with the creds of task now? Though it will stil require more
+> priviliges in task for other operations in overlay to succeed.
 
-Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
----
- scripts/kconfig/Makefile | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+NFS problems seems to have ended the discussion, too many stakeholders? 
+too many outstanding questions?
 
-diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-index 1c7ac07def4d..28be91964a20 100644
---- a/scripts/kconfig/Makefile
-+++ b/scripts/kconfig/Makefile
-@@ -44,14 +44,14 @@ build_xconfig: $(obj)/qconf
- 
- localyesconfig localmodconfig: $(obj)/conf
- 	$(Q)perl $(srctree)/$(src)/streamline_config.pl --$@ $(srctree) $(Kconfig) > .tmp.config
--	$(Q)if [ -f .config ]; then 					\
--			cmp -s .tmp.config .config ||			\
--			(mv -f .config .config.old.1;			\
--			 mv -f .tmp.config .config;			\
-+	$(Q)if [ -f $(KCONFIG_CONFIG) ]; then 				\
-+			cmp -s .tmp.config $(KCONFIG_CONFIG) ||		\
-+			(mv -f $(KCONFIG_CONFIG) .tmp.config.old.1;	\
-+			 mv -f .tmp.config $(KCONFIG_CONFIG);		\
- 			 $< $(silent) --oldconfig $(Kconfig);		\
--			 mv -f .config.old.1 .config.old)		\
-+			 mv -f .tmp.config.old.1 $(KCONFIG_CONFIG).old)	\
- 	else								\
--			mv -f .tmp.config .config;			\
-+			mv -f .tmp.config $(KCONFIG_CONFIG);		\
- 			$< $(silent) --oldconfig $(Kconfig);		\
- 	fi
- 	$(Q)rm -f .tmp.config
--- 
-2.20.1
+Do we accept the limitations of the override_creds patch as is, and then 
+have the folks more familiar with the NFS scenario(s) build on it?
 
+[TL;DR]
+
+After looking at all this discussion, it feels like a larger audited 
+rewrite of the security model is in order and override_creds=off may be 
+a disservice (although expediently deals with Android's needs) to a 
+correct general solution. I admit I have little idea where to go from 
+here for a general solution.
+
+As far as I see it, the model of creator && caller credentials is a 
+problem for any non-overlapping (MAC) privilege models. This patch 
+allows one to drop any creator privilege escalation, re-introducing the 
+"caller" to the lower layers.
+
+As such I would expect a better model is to _always_ check the caller 
+credentials again in the lower layers, and only check the creator 
+credentials, some without caller credentials, for some special cases? 
+Change an && to an || for some of the checks? What are those special 
+cases? I must admit _none_ of those special cases need attention in the 
+Android usage models though making it difficult for me to do the fight 
+thing for the associated stakeholders.
+
+The lower privileged application access to the directory cache inherited 
+by other callers troubles me (not for Android, but in general) and feels 
+troublesome (flush out the directory cache? how to tag the privileges 
+associated with the current instance of the directory cache?). Some 
+operations (eg: delete a file for incoming, create mknod in upperdir) 
+are special cases requiring the checking of caller credentaisl to 
+function (not a problem for Android as the caller that deletes a file 
+just so happens to have the necessary privileges).
+
+Also, mount namespaces (in upper, lower, etc), how will they affect this 
+all, is there a need for more attention to this as well?
+
+-- Mark
