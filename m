@@ -2,198 +2,218 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FBAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB95C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC94920830
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AB720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Zd/RieQt";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="GwROwBWZ"
+	dkim=pass (2048-bit key) header.d=420blaze.it header.i=@420blaze.it header.b="z+HctLYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfCDUpC (ORCPT
+        id S1726748AbfCDUpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:45:02 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36634 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726355AbfCDUpB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:45:01 -0500
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x24KcItC023473;
-        Mon, 4 Mar 2019 12:44:34 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=jbW/i57cVnS6nGt/mk9YVuNeKGArxql2O1S8ODOBdTI=;
- b=Zd/RieQtPY22mWxUzvvtAe1p0+UkbG/rJSZp0xeH0/vOyxD7jkAkqdYQ5ttK7wSSkQca
- 3Jh5XU1MEuSqSOqfoXfbPjbeJdFVdzOEwYI3YJeb+M9zNWsgwbP4UnsPlWABuVNzjIgC
- nWf0XgmGG2VGTJ+1Dxc0NzNuQ7jLiT5ar60= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r19wg89wt-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 04 Mar 2019 12:44:34 -0800
-Received: from frc-mbx03.TheFacebook.com (2620:10d:c0a1:f82::27) by
- frc-hub04.TheFacebook.com (2620:10d:c021:18::174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 4 Mar 2019 12:44:28 -0800
-Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
- frc-mbx03.TheFacebook.com (2620:10d:c0a1:f82::27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 4 Mar 2019 12:44:28 -0800
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 4 Mar 2019 12:44:28 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jbW/i57cVnS6nGt/mk9YVuNeKGArxql2O1S8ODOBdTI=;
- b=GwROwBWZIcKDataYFdyWSYkh4mlCCc/KcxVvlEFyWramC/8tQNWRzx9sKKizUwa3eVfvTzCSkqdc5+4Z56RQUD08IYfNWOlalxl5MwUpDV+4MBIx9PTiMFUrrGWxdIaqmqWlArheOlGd3Bjpqr6nlmHJvIxd68i9trl/IezseIk=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
- MWHPR15MB1824.namprd15.prod.outlook.com (10.174.255.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.16; Mon, 4 Mar 2019 20:44:25 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f190:6de5:7e3:e065]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f190:6de5:7e3:e065%6]) with mapi id 15.20.1665.020; Mon, 4 Mar 2019
- 20:44:25 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     Netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "acme@redhat.com" <acme@redhat.com>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>
-Subject: Re: [PATCH v4 perf,bpf 14/15] perf: introduce side band thread
-Thread-Topic: [PATCH v4 perf,bpf 14/15] perf: introduce side band thread
-Thread-Index: AQHUzWlKCfZJunEblEKUEZkb6eySeqXzo8KAgABL74CAB5h6AIAAY6eAgAAOggCAAADzAA==
-Date:   Mon, 4 Mar 2019 20:44:25 +0000
-Message-ID: <DB8CAEB3-B02B-41DE-9BBE-55B3C899C806@fb.com>
-References: <20190226002019.3748539-1-songliubraving@fb.com>
- <20190226002019.3748539-15-songliubraving@fb.com>
- <20190227132105.GC18893@krava> <2506D6CF-F0E3-4640-B385-DD0843AD2928@fb.com>
- <20190304135224.GD19809@krava> <3B7ECDFA-E6F7-4136-A2E4-6115C5A4791B@fb.com>
- <20190304204100.GE2563@krava>
-In-Reply-To: <20190304204100.GE2563@krava>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.102.3)
-x-originating-ip: [2620:10d:c090:200::3:1d00]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: beaa2763-5077-4b44-82e1-08d6a0e23094
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1824;
-x-ms-traffictypediagnostic: MWHPR15MB1824:
-x-microsoft-exchange-diagnostics: 1;MWHPR15MB1824;20:4V5XqsyM+nxrR87iebew0y6jkgK133PLDWm8qOq+lre5WzQ6cpdJdgzM0uRYcUWiy7DMBNospq6ICuwOy4toKk5PSCaE4lRxMCxbTIPRTs9vEOiNkhQfzFpTqGZaEFDqKW9yrh9dZ0qrYtEYujZOM7q2qjYday+47vE7CKxP6Do=
-x-microsoft-antispam-prvs: <MWHPR15MB1824D2B84446C3B29DF8BC35B3710@MWHPR15MB1824.namprd15.prod.outlook.com>
-x-forefront-prvs: 09669DB681
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(39860400002)(136003)(396003)(376002)(189003)(199004)(54906003)(6486002)(71190400001)(6512007)(53936002)(7736002)(6116002)(229853002)(71200400001)(478600001)(93886005)(86362001)(256004)(33656002)(316002)(36756003)(83716004)(4326008)(14454004)(5660300002)(76176011)(81166006)(82746002)(81156014)(99286004)(25786009)(6506007)(53546011)(2906002)(8676002)(57306001)(102836004)(6246003)(106356001)(105586002)(97736004)(6436002)(305945005)(486006)(68736007)(186003)(6916009)(50226002)(8936002)(446003)(11346002)(476003)(46003)(2616005)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1824;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jL7/9N34Msl0OdvrJPfw/emT1EhPCGp6rZEx4O1Xk5S4jlQpceVRuu0NZBnFZpVLNUxptHwvwD2KA9I5gFRcv41TRqrNjD4fB+Kkpxj4E/QiM7YoguQvuP+b8VgBCrkHerz7zbZcz3CgLTknkDPoAzKaiq/Uath+BOk6t28McfTGQRX0JZSPm0UIAZipQ18kxpCiW4ncc6HqcxCV7VU5IulEAcMs0l1ztH/puZ2a42sqGaYw0qYvjrdLU2HM5qTAjYNeTHZdzYZxOd7Xd+7oW/1tInVC2bVFwgdMXi1X9oEH2arHBydoT+oVlDRISiYJ61iOeZI5uzp2WkaIVE2gT+eBHDnz3mEtWV3XVBenFs1Jev+uSDKOBh5EwzUU52IQpJaImoPjQhq9xNPCUbMyF4Apcihpq2gZHqSweRlV5Uk=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <40EEC074A2ADA34ABD11DAC299B4B905@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 4 Mar 2019 15:45:18 -0500
+Received: from mx1.cock.li ([185.10.68.5]:54975 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726294AbfCDUpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 15:45:17 -0500
+X-Greylist: delayed 595 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Mar 2019 15:45:15 EST
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: beaa2763-5077-4b44-82e1-08d6a0e23094
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2019 20:44:25.5514
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1824
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-04_11:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=420blaze.it; s=mail;
+        t=1551731717; bh=W2PpgaMOfx4TnceHjzHLfJSHMtffmmBXJ0QXAn8AFY8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=z+HctLYuQGkWa9iB4Qmt5VBFgAwwRi703MI5c8T2W/P7htgH6YvI1Htnxo4RIkmOi
+         1bjjRQGfKRqDrpp7VW4cMhnJsfiebcdw1oI0RhIH+c6REd2w0pYYw/hHS2BxkY1OwW
+         Jb2CKxojxZhnpkk5tP+tP/PmhyF1fPKIpB2SDkFnPTP7mb/Ig3osrgT611yx12pDBN
+         ca8w2kEX8q9Ten3Pym/bK+KgQTNcn1/u+OtomYM8dvFuw5AMuoY3WxBG6EvWur5hEb
+         i/Zvc9vUoQTYgmIcu92YQZ43gMD3C3BlWEE/BRzjLYMUhk99l6D+jheRao4niEv8Pj
+         CLxX8GxNT/rCQ==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 04 Mar 2019 20:35:16 +0000
+From:   intele1000bricksself@420blaze.it
+To:     e1000-devel@lists.sf.net
+Cc:     linux-kernel@vger.kernel.org, misc@openbsd.org
+Subject: Intel Pro 1000MT Dual Port nic. Need eeprom dump from working card
+ via ethtool. It ff ff ff...d out it's EEPROM, but I got one port working after
+ a day... but not the second.
+Message-ID: <3776e8e049416d7444836af1e7144b44@420blaze.it>
+X-Sender: intele1000bricksself@420blaze.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+does anyone have a intel Pro 1000MT Dual port gigabit card they could 
+give an eeprom dump of (via ethtool -e eth1 ), I now have one port 
+working but the other is not, the eeprom someone posted seems to be only 
+for the 1st port
 
 
-> On Mar 4, 2019, at 12:41 PM, Jiri Olsa <jolsa@redhat.com> wrote:
->=20
-> On Mon, Mar 04, 2019 at 07:49:06PM +0000, Song Liu wrote:
->>=20
->>=20
->>> On Mar 4, 2019, at 5:52 AM, Jiri Olsa <jolsa@redhat.com> wrote:
->>>=20
->>> On Wed, Feb 27, 2019 at 05:52:52PM +0000, Song Liu wrote:
->>>>=20
->>>>=20
->>>>> On Feb 27, 2019, at 5:21 AM, Jiri Olsa <jolsa@redhat.com> wrote:
->>>>>=20
->>>>> On Mon, Feb 25, 2019 at 04:20:18PM -0800, Song Liu wrote:
->>>>>=20
->>>>> SNIP
->>>>>=20
->>>>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
->>>>>> index 8c902276d4b4..61b87c8111e6 100644
->>>>>> --- a/tools/perf/util/evlist.c
->>>>>> +++ b/tools/perf/util/evlist.c
->>>>>> @@ -19,6 +19,7 @@
->>>>>> #include "debug.h"
->>>>>> #include "units.h"
->>>>>> #include "asm/bug.h"
->>>>>> +#include "bpf-event.h"
->>>>>> #include <signal.h>
->>>>>> #include <unistd.h>
->>>>>>=20
->>>>>> @@ -1841,3 +1842,102 @@ struct perf_evsel *perf_evlist__reset_weak_g=
-roup(struct perf_evlist *evsel_list,
->>>>>> 	}
->>>>>> 	return leader;
->>>>>> }
->>>>>> +
->>>>>> +static struct perf_evlist *sb_evlist;
->>>>>> +pthread_t poll_thread;
->>>>>=20
->>>>> so some of the things are static and some like poll_args
->>>>> you alloced on the stack.. I dont like this interface,
->>>>> could we come up with something generic? perhaps
->>>>> encapsulated in perf_evlist, like:
->>>>=20
->>>> I picked global sb_evlist and poll_thread because there=20
->>>> should be only one sb_evlist and one thread polling it.=20
->>>> There might be multiple evsel on the sb_evlist.=20
->>>>=20
->>>> I am not sure I understand your suggestion..
->>>>=20
->>>>> struct perf_evlist {
->>>>> 	...
->>>>> 	struct {
->>>>> 		pthread_t	th;
->>>>> 		int		state;
->>>>> 	} thread;
->>>>=20
->>>> This will not be used by the main perf_evlist, right?
->>>=20
->>> no, just by the thread interface
->>=20
->> What is "state" here?
->=20
-> it's replacement for the 'done' pointer u had,
-> which I did not like.. leting each thread having
-> its own state is better IMO
->=20
-> jirka
+I need help with an intel dual port gigabit nic. It' zeroed out it's 
+eprom (well... 1'd it out) and thus I had to reload the eeprom
 
-I see. Let me try that.=20
+the dump someone posted seems to be only for the single port card tho, 
+and the 2nd port is inactive (it worked yesterday before the 
+self-bricking)
+(That has been hugely helpful however)
 
-Song
+The magic number for the intel PRO 1000MT is:
+0x10798086
 
+
+
+
+The offset file worked for one port, but not the other.
+
+[code]
+Offset		Values
+------		------
+0x0000		00 04 23 cb 27 cc 10 02 ff ff ff ff ff ff ff ff
+0x0010		84 a7 07 08 0a 66 2e 00 86 80 00 61 4e 00 20 b2
+0x0020		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0030		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0040		cf 00 61 78 0b 28 00 00 c8 04 ff ff ff ff ff ff
+0x0050		ff ff ff ff ff ff ff ff ff ff ff ff ff ff 02 06
+0x0060		2c 01 00 40 1f 12 ff ff ff ff ff ff ff ff ff ff
+0x0070		ff ff ff ff ff ff ff ff ff ff ff ff ff fe 24 31
+[/code]
+
+These commands got 1 port of the intel Pro 1000MT Dual Port working:
+[code]
+ethtool -E eth1 magic 0x10798086 offset 0x0 value 0x00
+ethtool -E eth1 magic 0x10798086 offset 0x1 value 0x04
+ethtool -E eth1 magic 0x10798086 offset 0x2 value 0x23
+ethtool -E eth1 magic 0x10798086 offset 0x3 value 0xcb
+ethtool -E eth1 magic 0x10798086 offset 0x4 value 0x27
+ethtool -E eth1 magic 0x10798086 offset 0x5 value 0xcc
+ethtool -E eth1 magic 0x10798086 offset 0x6 value 0x10
+ethtool -E eth1 magic 0x10798086 offset 0x7 value 0x02
+ethtool -E eth1 magic 0x10798086 offset 0x8 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x9 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0xa value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0xb value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0xc value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0xd value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0xe value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0xf value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x10 value 0x84
+ethtool -E eth1 magic 0x10798086 offset 0x11 value 0xa7
+ethtool -E eth1 magic 0x10798086 offset 0x12 value 0x07
+ethtool -E eth1 magic 0x10798086 offset 0x13 value 0x08
+ethtool -E eth1 magic 0x10798086 offset 0x14 value 0x0a
+ethtool -E eth1 magic 0x10798086 offset 0x15 value 0x66
+ethtool -E eth1 magic 0x10798086 offset 0x16 value 0x2e
+ethtool -E eth1 magic 0x10798086 offset 0x17 value 0x00
+ethtool -E eth1 magic 0x10798086 offset 0x18 value 0x86
+ethtool -E eth1 magic 0x10798086 offset 0x19 value 0x80
+ethtool -E eth1 magic 0x10798086 offset 0x1a value 0x00
+ethtool -E eth1 magic 0x10798086 offset 0x1b value 0x61
+ethtool -E eth1 magic 0x10798086 offset 0x1c value 0x4e
+ethtool -E eth1 magic 0x10798086 offset 0x1d value 0x00
+ethtool -E eth1 magic 0x10798086 offset 0x1e value 0x20
+ethtool -E eth1 magic 0x10798086 offset 0x1f value 0xb2
+ethtool -E eth1 magic 0x10798086 offset 0x20 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x21 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x22 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x23 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x24 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x25 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x26 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x27 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x28 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x29 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x2a value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x2b value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x2c value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x2d value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x2e value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x2f value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x30 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x31 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x32 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x33 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x34 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x35 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x36 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x37 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x38 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x39 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x3a value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x3b value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x3c value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x3d value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x3e value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x3f value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x40 value 0xcf
+ethtool -E eth1 magic 0x10798086 offset 0x41 value 0x00
+ethtool -E eth1 magic 0x10798086 offset 0x42 value 0x61
+ethtool -E eth1 magic 0x10798086 offset 0x43 value 0x78
+ethtool -E eth1 magic 0x10798086 offset 0x44 value 0x0b
+ethtool -E eth1 magic 0x10798086 offset 0x45 value 0x28
+ethtool -E eth1 magic 0x10798086 offset 0x46 value 0x00
+ethtool -E eth1 magic 0x10798086 offset 0x47 value 0x00
+ethtool -E eth1 magic 0x10798086 offset 0x48 value 0xc8
+ethtool -E eth1 magic 0x10798086 offset 0x49 value 0x04
+ethtool -E eth1 magic 0x10798086 offset 0x4a value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x4b value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x4c value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x4d value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x4e value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x4f value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x50 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x51 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x52 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x53 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x54 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x55 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x56 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x57 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x58 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x59 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x5a value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x5b value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x5c value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x5d value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x5e value 0x02
+ethtool -E eth1 magic 0x10798086 offset 0x5f value 0x06
+ethtool -E eth1 magic 0x10798086 offset 0x60 value 0x2c
+ethtool -E eth1 magic 0x10798086 offset 0x61 value 0x01
+ethtool -E eth1 magic 0x10798086 offset 0x62 value 0x00
+ethtool -E eth1 magic 0x10798086 offset 0x63 value 0x40
+ethtool -E eth1 magic 0x10798086 offset 0x64 value 0x1f
+ethtool -E eth1 magic 0x10798086 offset 0x65 value 0x12
+ethtool -E eth1 magic 0x10798086 offset 0x66 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x67 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x68 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x69 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x6a value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x6b value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x6c value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x6d value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x6e value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x6f value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x70 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x71 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x72 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x73 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x74 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x75 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x76 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x77 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x78 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x79 value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x7a value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x7b value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x7c value 0xff
+ethtool -E eth1 magic 0x10798086 offset 0x7d value 0xfe
+ethtool -E eth1 magic 0x10798086 offset 0x7e value 0x24
+ethtool -E eth1 magic 0x10798086 offset 0x7f value 0x31
+
+[/code]
