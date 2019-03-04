@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4B2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59812C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755A420815
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0E220815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfCDOr5 (ORCPT
+        id S1726990AbfCDOsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:47:57 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:54342 "EHLO mx1.redhat.com"
+        Mon, 4 Mar 2019 09:48:14 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33860 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbfCDOr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:47:57 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1726111AbfCDOsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 09:48:14 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 447CD8123A;
-        Mon,  4 Mar 2019 14:47:57 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2345D7F7B2;
+        Mon,  4 Mar 2019 14:48:14 +0000 (UTC)
 Received: from krava (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E064051F0A;
-        Mon,  4 Mar 2019 14:47:55 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 15:47:55 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8880560145;
+        Mon,  4 Mar 2019 14:48:12 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 15:48:12 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Andi Kleen <andi@firstfloor.org>
 Cc:     acme@kernel.org, jolsa@kernel.org,
@@ -35,16 +35,17 @@ Cc:     acme@kernel.org, jolsa@kernel.org,
         Andi Kleen <ak@linux.intel.com>
 Subject: Re: [PATCH v3 10/11] perf tools report: Implement browsing of
  individual samples
-Message-ID: <20190304144755.GF30476@krava>
+Message-ID: <20190304144812.GG30476@krava>
 References: <20190228183550.14126-1-andi@firstfloor.org>
  <20190228183550.14126-11-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20190228183550.14126-11-andi@firstfloor.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 04 Mar 2019 14:47:57 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 04 Mar 2019 14:48:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -78,9 +79,37 @@ On Thu, Feb 28, 2019 at 10:35:49AM -0800, Andi Kleen wrote:
 > to directly jump the to the time stamp of the selected
 > sample.
 
-I'm getting this error for workload sampling:
+when I choose:
 
-File does not contain CPU events. Remove -C option to proceed.
+148156.305096328: CPU 0 tid 16402                                                                                                                                                                                  ▒
 
+I'm getting:
+
+ sched-messaging 16402 [000] 148156.305096328:     886205 cycles:ppp:  ffffffff93a001ad syscall_return_via_sysret+0xbc ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.305344526:     887134 cycles:ppp:  ffffffff933f8c7d avc_has_perm+0xcd ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.305594286:     888614 cycles:ppp:  ffffffff93208a02 stackleak_erase+0xa2 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.305843034:     888750 cycles:ppp:  ffffffff93986d30 _raw_spin_lock+0x10 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.306091824:     889265 cycles:ppp:  ffffffff932c623e __vfs_write+0xbe ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.306340739:     889802 cycles:ppp:  ffffffff937eaee4 skb_set_owner_w+0x54 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.306590950:     890449 cycles:ppp:  ffffffff93291e33 __kmalloc_node_track_caller+0xc3 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.306840144:     890348 cycles:ppp:  ffffffff932089a9 stackleak_erase+0x49 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.307089348:     890707 cycles:ppp:  ffffffff932e60e6 __fget_light+0x46 ([kernel.kallsyms])
+ sched-messaging 16402 [000] 148156.307338691:     891063 cycles:ppp:  ffffffff938ed2a3 unix_stream_sendmsg+0x213 ([kernel.kallsyms])
+ sched-messaging 16402 [001] 148156.323855201:     916081 cycles:ppp:  ffffffff93208a05 stackleak_erase+0xa5 ([kernel.kallsyms])
+ sched-messaging 16402 [001] 148156.324104737:     916330 cycles:ppp:  ffffffff93986d30 _raw_spin_lock+0x10 ([kernel.kallsyms])
+ sched-messaging 16402 [001] 148156.324354188:     916467 cycles:ppp:  ffffffff9324192f kmalloc_slab+0x4f ([kernel.kallsyms])
+ systemd-journal   882 [005] 148156.373698788: PERF_RECORD_FORK(882:16422):(882:882)
+ systemd-journal   882 [005] 148156.373718699: PERF_RECORD_FORK(882:16423):(882:882)
+ journal-offline 16422 [002] 148156.373720344: PERF_RECORD_COMM: journal-offline:882/16422
+ journal-offline 16423 [005] 148156.373766480: PERF_RECORD_COMM: journal-offline:882/16423
+ journal-offline 16423 [005] 148156.385947319: PERF_RECORD_EXIT(882:16423):(882:16423)
+ systemd-journal   882 [002] 148156.386052146: PERF_RECORD_FORK(882:16424):(882:882)
+ journal-offline 16424 [001] 148156.386069865: PERF_RECORD_COMM: journal-offline:882/16424
+ journal-offline 16422 [002] 148156.386132447: PERF_RECORD_EXIT(882:16422):(882:16422)
+ journal-offline 16424 [001] 148156.389171176: PERF_RECORD_EXIT(882:16424):(882:16424)
+ systemd-journal   882 [002] 148156.389263406: PERF_RECORD_FORK(882:16425):(882:882)
+
+
+some other cpus and threads mixed in
 
 jirka
