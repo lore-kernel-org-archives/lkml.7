@@ -2,228 +2,128 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD67C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9AAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1CE220863
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:59:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Iz5jlPC3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MVmqb9p6"
+	by mail.kernel.org (Postfix) with ESMTP id C1AB220835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfCDD7R (ORCPT
+        id S1726483AbfCDD7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 22:59:17 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:58852 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfCDD7R (ORCPT
+        Sun, 3 Mar 2019 22:59:01 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:44059 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726241AbfCDD6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 22:59:17 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A58D8606CF; Mon,  4 Mar 2019 03:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551671955;
-        bh=2TUrmt86MYLFFkvhslpp7nIdehyPFFbQTd4NMtx9JxY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Iz5jlPC3NBxcdgR1I9yv/fUqVng8aFxNizTOuml0ByuRF9fZja62RaJFTWxuD8R8F
-         CB/yBvfEFvLRt0yIQ7mHuv7HzswErWC82eBWaH+J8m4oX9va9us0ybuXM6EMeMHNgs
-         gfk7jaZk0zN7k/qX7ROHT+Y1TK6hJJ0PRyYpe8Vg=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 046FD606CF;
-        Mon,  4 Mar 2019 03:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1551671954;
-        bh=2TUrmt86MYLFFkvhslpp7nIdehyPFFbQTd4NMtx9JxY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MVmqb9p6C3gGLtdQ6omg8z2R3Hu+qVnI89gLEqRPBrFBEdXPUmCx5qzF9IFcb21ce
-         OZWRjU4+oJwI2j6C6Aimtm2nRXyvIQrEdJw6f+RmuKCNm6DLCMgsAGfNkK7nXgilq2
-         2C4JnDEsG0u77859qN3DXUZ9YG0TKsud5EAMcE/M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 046FD606CF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Mon, 4 Mar 2019 09:29:09 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to do sanity check with
- inode.i_inline_xattr_size
-Message-ID: <20190304035909.GA8377@codeaurora.org>
-References: <20190301073805.413-1-yuchao0@huawei.com>
+        Sun, 3 Mar 2019 22:58:22 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R851e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TLtryVh_1551671898;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TLtryVh_1551671898)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 04 Mar 2019 11:58:18 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     linux-kernel@zh-kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, harryxiyou@gmail.com, corbet@lwn.net
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Bryan Wu <bryan.wu@analog.com>, Li Zefan <lizefan@huawei.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
+Subject: [PATCH 14/20] docs/zh_CN: volatile doc format changes
+Date:   Mon,  4 Mar 2019 11:57:37 +0800
+Message-Id: <20190304035744.155203-15-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.856.g8858448bb
+In-Reply-To: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
+References: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190301073805.413-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 03:38:05PM +0800, Chao Yu wrote:
-> As Paul Bandha reported in bugzilla:
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=202709
-> 
-> When I run the poc on the mounted f2fs img I get a buffer overflow in
-> read_inline_xattr due to there being no sanity check on the value of
-> i_inline_xattr_size.
-> 
-> I created the img by just modifying the value of i_inline_xattr_size
-> in the inode:
-> 
-> i_name                        		[test1.txt]
-> i_ext: fofs:0 blkaddr:0 len:0
-> i_extra_isize                 		[0x      18 : 24]
-> i_inline_xattr_size           		[0x    ffff : 65535]
-> i_addr[ofs]                   		[0x       0 : 0]
-> 
-> mkdir /mnt/f2fs
-> mount ./f2fs1.img /mnt/f2fs
-> gcc poc.c -o poc
-> ./poc
-> 
-> int main() {
-> 	int y = syscall(SYS_listxattr, "/mnt/f2fs/test1.txt", NULL, 0);
-> 	printf("ret %d", y);
-> 	printf("errno: %d\n", errno);
-> 
-> }
-> 
->  BUG: KASAN: slab-out-of-bounds in read_inline_xattr+0x18f/0x260
->  Read of size 262140 at addr ffff88011035efd8 by task f2fs1poc/3263
-> 
->  CPU: 0 PID: 3263 Comm: f2fs1poc Not tainted 4.18.0-custom #1
->  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.1-0-g0551a4be2c-prebuilt.qemu-project.org 04/01/2014
->  Call Trace:
->   dump_stack+0x71/0xab
->   print_address_description+0x83/0x250
->   kasan_report+0x213/0x350
->   memcpy+0x1f/0x50
->   read_inline_xattr+0x18f/0x260
->   read_all_xattrs+0xba/0x190
->   f2fs_listxattr+0x9d/0x3f0
->   listxattr+0xb2/0xd0
->   path_listxattr+0x93/0xe0
->   do_syscall_64+0x9d/0x220
->   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Let's add sanity check for inode.i_inline_xattr_size during f2fs_iget()
-> to avoid this issue.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/inode.c | 14 ++++++++++++++
->  fs/f2fs/super.c |  7 ++-----
->  fs/f2fs/xattr.h |  9 +++++++++
->  3 files changed, 25 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> index bec52961630b..b132fe2ff779 100644
-> --- a/fs/f2fs/inode.c
-> +++ b/fs/f2fs/inode.c
-> @@ -14,6 +14,7 @@
->  #include "f2fs.h"
->  #include "node.h"
->  #include "segment.h"
-> +#include "xattr.h"
->  
->  #include <trace/events/f2fs.h>
->  
-> @@ -248,6 +249,19 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
->  		return false;
->  	}
->  
-> +	if (f2fs_has_extra_attr(inode) &&
-> +		f2fs_sb_has_flexible_inline_xattr(sbi) &&
-> +		(fi->i_inline_xattr_size < MIN_INLINE_XATTR_SIZE ||
-> +		fi->i_inline_xattr_size > MAX_INLINE_XATTR_SIZE)) {
-> +		set_sbi_flag(sbi, SBI_NEED_FSCK);
-> +		f2fs_msg(sbi->sb, KERN_WARNING,
-> +			"%s: inode (ino=%lx) has corrupted "
-> +			"i_inline_xattr_size: %d, min: %zu, max: %zu",
-> +			__func__, inode->i_ino, fi->i_inline_xattr_size,
-> +			MIN_INLINE_XATTR_SIZE, MAX_INLINE_XATTR_SIZE);
-> +		return false;
-> +	}
-> +
->  	if (F2FS_I(inode)->extent_tree) {
->  		struct extent_info *ei = &F2FS_I(inode)->extent_tree->largest;
->  
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 42eb5c86330a..9184b7524c03 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -835,12 +835,9 @@ static int parse_options(struct super_block *sb, char *options)
->  			return -EINVAL;
->  		}
->  		if (F2FS_OPTION(sbi).inline_xattr_size <
-> -			sizeof(struct f2fs_xattr_header) / sizeof(__le32) ||
-> +			MIN_INLINE_XATTR_SIZE ||
->  			F2FS_OPTION(sbi).inline_xattr_size >
-> -			DEF_ADDRS_PER_INODE -
-> -			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -
-> -			DEF_INLINE_RESERVED_SIZE -
-> -			MIN_INLINE_DENTRY_SIZE / sizeof(__le32)) {
-> +			MAX_INLINE_XATTR_SIZE) {
->  			f2fs_msg(sb, KERN_ERR,
->  					"inline xattr size is out of range");
->  			return -EINVAL;
-> diff --git a/fs/f2fs/xattr.h b/fs/f2fs/xattr.h
-> index 67db134da0f5..94e8a5eeaae1 100644
-> --- a/fs/f2fs/xattr.h
-> +++ b/fs/f2fs/xattr.h
-> @@ -55,6 +55,8 @@ struct f2fs_xattr_entry {
->  #define XATTR_FIRST_ENTRY(ptr)	(XATTR_ENTRY(XATTR_HDR(ptr) + 1))
->  #define XATTR_ROUND		(3)
->  
-> +#define XATTR_HDR_SIZE		(sizeof(struct f2fs_xattr_header))
-> +
->  #define XATTR_ALIGN(size)	(((size) + XATTR_ROUND) & ~XATTR_ROUND)
->  
->  #define ENTRY_SIZE(entry) (XATTR_ALIGN(sizeof(struct f2fs_xattr_entry) + \
-> @@ -78,6 +80,13 @@ struct f2fs_xattr_entry {
->  				sizeof(struct f2fs_xattr_header) -	\
->  				sizeof(struct f2fs_xattr_entry))
->  
-> +#define MAX_INLINE_XATTR_SIZE	(XATTR_HDR_SIZE / sizeof(__le32))
+make it readble as rst format for html etc doc making.
 
-I think this should be MIN_INLINE_XATTR_SIZE.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Harry Wei <harryxiyou@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Bryan Wu <bryan.wu@analog.com>
+Cc: Li Zefan <lizefan@huawei.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Coly Li <colyli@suse.de>
+---
+ .../process/volatile-considered-harmful.rst   | 35 ++++++++-----------
+ 1 file changed, 14 insertions(+), 21 deletions(-)
 
-> +#define MIN_INLINE_XATTR_SIZE						\
-> +			(DEF_ADDRS_PER_INODE -				\
-> +			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -	\
-> +			DEF_INLINE_RESERVED_SIZE -			\
-> +			MIN_INLINE_DENTRY_SIZE / sizeof(__le32))
-> +
-
-And this should be MAX_INLINE_XATTR_SIZE.
-
-Thanks,
-Sahitya.
-
->  /*
->   * On-disk structure of f2fs_xattr
->   * We use inline xattrs space + 1 block for xattr.
-> -- 
-> 2.18.0.rc1
-> 
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-
+diff --git a/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst b/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst
+index 475125967197..48b32ce58ef1 100644
+--- a/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst
++++ b/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst
+@@ -1,30 +1,23 @@
+-Chinese translated version of Documentation/process/volatile-considered-harmful.rst
++.. _cn_volatile_considered_harmful:
+ 
+-If you have any comment or update to the content, please contact the
+-original document maintainer directly.  However, if you have a problem
+-communicating in English you can also ask the Chinese maintainer for
+-help.  Contact the Chinese maintainer if this translation is outdated
+-or if there is a problem with the translation.
++.. include:: ../disclaimer-zh_CN.rst
+ 
+-Maintainer: Jonathan Corbet <corbet@lwn.net>
+-Chinese maintainer: Bryan Wu <bryan.wu@analog.com>
+----------------------------------------------------------------------
+-Documentation/process/volatile-considered-harmful.rst 的中文翻译
++:Original: :ref:`Documentation/process/volatile-considered-harmful.rst
++           <volatile_considered_harmful>`
+ 
+ 如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
+ 交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
+-译存在问题，请联系中文版维护者。
++译存在问题，请联系中文版维护者::
+ 
+-英文版维护者： Jonathan Corbet <corbet@lwn.net>
+-中文版维护者： 伍鹏  Bryan Wu <bryan.wu@analog.com>
+-中文版翻译者： 伍鹏  Bryan Wu <bryan.wu@analog.com>
+-中文版校译者： 张汉辉  Eugene Teo <eugeneteo@kernel.sg>
+-               杨瑞  Dave Young <hidave.darkstar@gmail.com>
+-以下为正文
+----------------------------------------------------------------------
++        英文版维护者： Jonathan Corbet <corbet@lwn.net>
++        中文版维护者： 伍鹏  Bryan Wu <bryan.wu@analog.com>
++        中文版翻译者： 伍鹏  Bryan Wu <bryan.wu@analog.com>
++        中文版校译者： 张汉辉  Eugene Teo <eugeneteo@kernel.sg>
++                       杨瑞  Dave Young <hidave.darkstar@gmail.com>
++                       时奎亮 Alex Shi <alex.shi@linux.alibaba.com>
+ 
+ 为什么不应该使用“volatile”类型
+-------------------------------
++==============================
+ 
+ C程序员通常认为volatile表示某个变量可以在当前执行的线程之外被改变；因此，在内核
+ 中用到共享数据结构时，常常会有C程序员喜欢使用volatile这类变量。换句话说，他们经
+@@ -41,7 +34,7 @@ C程序员通常认为volatile表示某个变量可以在当前执行的线程
+ 必要再使用volatile。如果仍然必须使用volatile，那么几乎可以肯定在代码的某处有一
+ 个bug。在正确设计的内核代码中，volatile能带来的仅仅是使事情变慢。
+ 
+-思考一下这段典型的内核代码：
++思考一下这段典型的内核代码::
+ 
+     spin_lock(&the_lock);
+     do_something_on(&shared_data);
+@@ -66,7 +59,7 @@ volatile的存储类型最初是为那些内存映射的I/O寄存器而定义。
+ 是必需的。
+ 
+ 另一种引起用户可能使用volatile的情况是当处理器正忙着等待一个变量的值。正确执行一
+-个忙等待的方法是：
++个忙等待的方法是::
+ 
+     while (my_variable != what_i_want)
+         cpu_relax();
 -- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+2.19.1.856.g8858448bb
+
