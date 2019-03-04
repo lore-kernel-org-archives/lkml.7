@@ -2,111 +2,85 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB65CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A281C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C92C20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575A520684
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfCDUik (ORCPT
+        id S1726761AbfCDUjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:38:40 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:54903 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfCDUij (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:38:39 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M58OQ-1gzntI03fA-0018L2; Mon, 04 Mar 2019 21:38:28 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc:     Zhu Yanjun <Yanjun.Zhu@windriver.com>,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Arnd Bergmann <arnd@arndb.de>, David Ahern <dsahern@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Xin Long <lucien.xin@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ignore sysctl_devconf_inherit_init_net without SYSCTL
-Date:   Mon,  4 Mar 2019 21:38:03 +0100
-Message-Id: <20190304203822.2094613-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 4 Mar 2019 15:39:03 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:49652 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbfCDUjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 15:39:02 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1h0uMX-0003up-AL; Mon, 04 Mar 2019 13:39:02 -0700
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
+References: <20190214170028.27862-1-logang@deltatee.com>
+ <20190304002351.GA26569@google.com>
+ <3e45b4ab-e848-cf3b-624f-121ad58b0250@deltatee.com>
+ <CAErSpo4U6Kys5OzPwfyFdbnJWfTZ-y0P830okf11BwfNv9Y82A@mail.gmail.com>
+ <ac64ba0e-e86a-f7ae-775b-753f933f178f@deltatee.com>
+ <CAErSpo5icDM2VgYoLdEp8C-CV5XEMThABMA8RBq64grhRSkRWA@mail.gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <d547770e-9c9d-a73d-8f2d-8bcb8ee4f363@deltatee.com>
+Date:   Mon, 4 Mar 2019 13:39:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:TnilO3lewj64uim7MWi4MdhUWNKmPKRRsNaiZ6G5qnw+GpZyr9I
- ov8XwQyobzhZNYM++/l4Rwiehs/Y4doVZ+94G8h2KoSdzpT9+mBU/YJIWGvZfJEVGXgg/eK
- ft0xb6UpP3xauuapeFIKsULHPCAkW/NhyqeCOktfzPfEfI45qUhnQqmE9MZlAXv+15OMdzW
- V2YfeiOfMkZHdk+Hiztnw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lJYKhv6F69k=:OALJeCLsYLqy9GJB33e9xm
- kBqCpfFgvsYLHVMjT7ioRkYDQUELqdhVchJXJahMQ0GjIrqFodZoHnIILJQi1dUMF8Utvfsbv
- i1hk5K/uuS9uw5ithkzgpDpwas9eS9S9bw+UhnS67uPb/HGXZCMXC8TT1oaUYrf4HqYw1mZti
- 3iQqMHiA7oNuozK5LAiWTbh3+bLStmCuaoNae0TCjUtrbmrWs6Neq67ZIlJh5G9/SDs1vHMFd
- chcnl9I24Sg2dMMH7FQEclKBiz6nJ0bEzorYuD3JPK8MCK7dQ23iWIQ7bIZYuzijJdBXkpcCq
- 52efS3WIzpuANOv3j0lyjV9y6bObGIqCplotpQa5R48OZMLBKawGy8bZWPs21sBIqLYU9d9d+
- e/mopFQkPRsIlzmTEzVZH+0ah0EhEJ/v1EsYvLsujDDIaY12PQtIWCZNzRB2lQhG6KffK5Dml
- u01BY5a3fzWCz/YjAkQQ6deCnoZ8C1tWW9JqRJsAoiA5PfvGJ4H60qXMZbT5xnt5+Fruvdqo4
- sk4sg1O+zqLqUnM4EtmomumPrYh/3MkHrBOaAxvUoVlAwXmHy4JmJoxjUr/0jcuqL2tgbYezB
- VjH67AnxCbeCyDQpjqtZjWBlge15U8S/5+PJy/vuxYxTgrI8jVdFW+NJ+wc2e1ENNMu/CLQVw
- wsXrQR0Ek2JVc0C9jvZ30H0/jJSB3R06/gw/Li5C3lr3KjAcpAhu6lan4y1G/1wSZA6rsuz9g
- rblxa7QzxDfvhOdcy+Ds30Mq9bpfvP0QBoCLDA==
+In-Reply-To: <CAErSpo5icDM2VgYoLdEp8C-CV5XEMThABMA8RBq64grhRSkRWA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: yinghai@kernel.org, kchow@gigaio.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org, bhelgaas@google.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 1/2] PCI: Prevent 64-bit resources from being counted in
+ 32-bit bridge region
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_SYSCTL is turned off, we get a link failure for
-the newly introduced tuning knob.
 
-net/ipv6/addrconf.o: In function `addrconf_init_net':
-addrconf.c:(.text+0x31dc): undefined reference to `sysctl_devconf_inherit_init_net'
 
-Add an IS_ENABLED() check to fall back to the default behavior
-(sysctl_devconf_inherit_init_net=0) here.
+On 2019-03-04 1:29 p.m., Bjorn Helgaas wrote:
+>> I agree, but reworking this code scares me and I suspect it was designed
+>> this way for a reason. I'm guessing there are a lot of corner cases and
+>> unusual bios issues this stuff works around. We might end up fixing a
+>> some cases and breaking a bunch of other cases.
+> 
+> Scares me too, which is one reason I haven't done anything about it.
+> 
+> I didn't mean to suggest that you should rework it for *this* issue.
+> I just keep hoping that we can chip away at teensy pieces and in ten
+> or twenty years maybe make some headway.
 
-Fixes: 856c395cfa63 ("net: introduce a knob to control whether to inherit devconf config")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- net/ipv4/devinet.c  | 4 +++-
- net/ipv6/addrconf.c | 3 ++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+Sure. Just trying to brainstorm some ideas.
 
-diff --git a/net/ipv4/devinet.c b/net/ipv4/devinet.c
-index cd9033245b98..eb514f312e6f 100644
---- a/net/ipv4/devinet.c
-+++ b/net/ipv4/devinet.c
-@@ -2614,7 +2614,9 @@ static __net_init int devinet_init_net(struct net *net)
- 	tbl[0].extra2 = net;
- #endif
- 
--	if (sysctl_devconf_inherit_init_net != 2 && !net_eq(net, &init_net)) {
-+	if ((!IS_ENABLED(CONFIG_SYSCTL) ||
-+	     sysctl_devconf_inherit_init_net != 2) &&
-+	    !net_eq(net, &init_net)) {
- 		memcpy(all, init_net.ipv4.devconf_all, sizeof(ipv4_devconf));
- 		memcpy(dflt, init_net.ipv4.devconf_dflt, sizeof(ipv4_devconf_dflt));
- 	}
-diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index da5a21050ba9..4ae17a966ae3 100644
---- a/net/ipv6/addrconf.c
-+++ b/net/ipv6/addrconf.c
-@@ -6905,7 +6905,8 @@ static int __net_init addrconf_init_net(struct net *net)
- 	if (!dflt)
- 		goto err_alloc_dflt;
- 
--	if (sysctl_devconf_inherit_init_net == 1 && !net_eq(net, &init_net)) {
-+	if (IS_ENABLED(CONFIG_SYSCTL) &&
-+	    sysctl_devconf_inherit_init_net == 1 && !net_eq(net, &init_net)) {
- 		memcpy(all, init_net.ipv6.devconf_all, sizeof(ipv6_devconf));
- 		memcpy(dflt, init_net.ipv6.devconf_dflt, sizeof(ipv6_devconf_dflt));
- 	}
--- 
-2.20.0
+Another idea to chip away at things might be that instead of
+pbus_size_mem() trying to find an appropriate bridge resources by
+looping, we simply pass the resource it's supposed to use (which I
+suspect __pci_bus_size_bridges should be able to figure out ahead of
+time. So instead of guessing and testing for a bunch of different
+resource window types we might have, just loop through the actually
+available windows and group the resources in what we have. Once we've
+sorted out these patches, when I have some free time, I might try
+working out a cleanup patch in this direction that we could test and
+merge slowly.
 
+Logan
