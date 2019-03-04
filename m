@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02155C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77189C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C53F520823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF5220823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688640;
-	bh=GobXGx/3twOMi39JZZtxzKhQT9Gm8uDUFaPeRgl+aMg=;
+	s=default; t=1551688646;
+	bh=TRt1CZic8GZiVyirG6/3cdlB66cN0akg98UsL4hDq0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WLlbkr+Nep6HYgW7CWLILU8ba13ZyimCgizK0ik78DBg5STO0g9U201HeLG81FN0q
-	 CLdnKO7O+o7USv+/n3Cvf0Wa+MRVIYcNmBOMm2fy00yEKJzI3we8BvoJYIvR2D3JAp
-	 TexpI1cW59quxJmBeeUUPiFPOGeuDohwDQr2MRgY=
+	b=zN94TpeOPsdhdCmtQtgv2xkhIug+Nj3NxXDMU6ywuchsVZxTrMHQe6GRYkdsWdHsb
+	 lgbrr1vH0xFmo2sYaTQBKEl3D+7XSS+N4H8mGjgD9w0o6vIvnOfyq96+Ox8CRNIJJ7
+	 cU3N5hx3565tYFcrfUuHffhUOgJigPluh3o4NA2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbfCDIgX (ORCPT
+        id S1726852AbfCDIhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:36:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45146 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:37:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfCDIgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:36:16 -0500
+        id S1728362AbfCDIgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:36:22 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A5920823;
-        Mon,  4 Mar 2019 08:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB3820836;
+        Mon,  4 Mar 2019 08:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688575;
-        bh=GobXGx/3twOMi39JZZtxzKhQT9Gm8uDUFaPeRgl+aMg=;
+        s=default; t=1551688581;
+        bh=TRt1CZic8GZiVyirG6/3cdlB66cN0akg98UsL4hDq0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sEeW9jB2aW7r4OIm8BofFCDhTONGrvzLJ23LPknqRFJlIBAz7LGS2XJM5p8mqNsoZ
-         xL1WK/DOIHdrJNMVBHWwczt+8m3t4a5oPM9bdAoj8dDw6S5yB4T+921aoYztTqyC7h
-         IbZWOFy3Gdml7JBYAGVsuHJBr3TAa2T3LCIY0+ak=
+        b=iKV75WYbk7/5a9Y81fvMmNC/yadM9nYSHHE2q2cE7bGSD5jr3BDdAdkVFIi+8J21U
+         vhRitVLXKuUZQrTkm0FPSVrKri6RNLj6YhEFPqOE8urL8uHFetWW3ckKzWnhkOa19/
+         kqTQNd6mZXMaUiCv5PorOBImDxVHAO+6Lw3kY5Mg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 52/88] hv_netvsc: Fix hash key value reset after other ops
-Date:   Mon,  4 Mar 2019 09:22:35 +0100
-Message-Id: <20190304081632.604330474@linuxfoundation.org>
+Subject: [PATCH 4.20 54/88] nvme-multipath: drop optimization for static ANA group IDs
+Date:   Mon,  4 Mar 2019 09:22:37 +0100
+Message-Id: <20190304081632.678161515@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,131 +67,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 17d91256898402daf4425cc541ac9cbf64574d9a ]
+[ Upstream commit 78a61cd42a64f3587862b372a79e1d6aaf131fd7 ]
 
-Changing mtu, channels, or buffer sizes ops call to netvsc_attach(),
-rndis_set_subchannel(), which always reset the hash key to default
-value. That will override hash key changed previously. This patch
-fixes the problem by save the hash key, then restore it when we re-
-add the netvsc device.
+Bit 6 in the ANACAP field is used to indicate that the ANA group ID
+doesn't change while the namespace is attached to the controller.
+There is an optimisation in the code to only allocate space
+for the ANA group header, as the namespace list won't change and
+hence would not need to be refreshed.
+However, this optimisation was never carried over to the actual
+workflow, which always assumes that the buffer is large enough
+to hold the ANA header _and_ the namespace list.
+So drop this optimisation and always allocate enough space.
 
-Fixes: ff4a44199012 ("netvsc: allow get/set of RSS indirection table")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-[sl: fix up subject line]
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/hyperv_net.h   | 10 +++++++---
- drivers/net/hyperv/netvsc.c       |  2 +-
- drivers/net/hyperv/netvsc_drv.c   |  5 ++++-
- drivers/net/hyperv/rndis_filter.c |  9 +++++++--
- 4 files changed, 19 insertions(+), 7 deletions(-)
+ drivers/nvme/host/multipath.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index ef6f766f63893..e598a684700b2 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -144,6 +144,8 @@ struct hv_netvsc_packet {
- 	u32 total_data_buflen;
- };
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 2b1d1f066efaf..6ea7c266a9cad 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -561,8 +561,7 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 	timer_setup(&ctrl->anatt_timer, nvme_anatt_timeout, 0);
+ 	ctrl->ana_log_size = sizeof(struct nvme_ana_rsp_hdr) +
+ 		ctrl->nanagrpid * sizeof(struct nvme_ana_group_desc);
+-	if (!(ctrl->anacap & (1 << 6)))
+-		ctrl->ana_log_size += ctrl->max_namespaces * sizeof(__le32);
++	ctrl->ana_log_size += ctrl->max_namespaces * sizeof(__le32);
  
-+#define NETVSC_HASH_KEYLEN 40
-+
- struct netvsc_device_info {
- 	unsigned char mac_adr[ETH_ALEN];
- 	u32  num_chn;
-@@ -151,6 +153,8 @@ struct netvsc_device_info {
- 	u32  recv_sections;
- 	u32  send_section_size;
- 	u32  recv_section_size;
-+
-+	u8 rss_key[NETVSC_HASH_KEYLEN];
- };
- 
- enum rndis_device_state {
-@@ -160,8 +164,6 @@ enum rndis_device_state {
- 	RNDIS_DEV_DATAINITIALIZED,
- };
- 
--#define NETVSC_HASH_KEYLEN 40
--
- struct rndis_device {
- 	struct net_device *ndev;
- 
-@@ -209,7 +211,9 @@ int netvsc_recv_callback(struct net_device *net,
- void netvsc_channel_cb(void *context);
- int netvsc_poll(struct napi_struct *napi, int budget);
- 
--int rndis_set_subchannel(struct net_device *ndev, struct netvsc_device *nvdev);
-+int rndis_set_subchannel(struct net_device *ndev,
-+			 struct netvsc_device *nvdev,
-+			 struct netvsc_device_info *dev_info);
- int rndis_filter_open(struct netvsc_device *nvdev);
- int rndis_filter_close(struct netvsc_device *nvdev);
- struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 922054c1d5448..1910810e55bd7 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -84,7 +84,7 @@ static void netvsc_subchan_work(struct work_struct *w)
- 
- 	rdev = nvdev->extension;
- 	if (rdev) {
--		ret = rndis_set_subchannel(rdev->ndev, nvdev);
-+		ret = rndis_set_subchannel(rdev->ndev, nvdev, NULL);
- 		if (ret == 0) {
- 			netif_device_attach(rdev->ndev);
- 		} else {
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 4055e12fce9ac..80d9297ad9d9c 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -876,6 +876,9 @@ static struct netvsc_device_info *netvsc_devinfo_get
- 		dev_info->send_section_size = nvdev->send_section_size;
- 		dev_info->recv_sections = nvdev->recv_section_cnt;
- 		dev_info->recv_section_size = nvdev->recv_section_size;
-+
-+		memcpy(dev_info->rss_key, nvdev->extension->rss_key,
-+		       NETVSC_HASH_KEYLEN);
- 	} else {
- 		dev_info->num_chn = VRSS_CHANNEL_DEFAULT;
- 		dev_info->send_sections = NETVSC_DEFAULT_TX;
-@@ -938,7 +941,7 @@ static int netvsc_attach(struct net_device *ndev,
- 		return PTR_ERR(nvdev);
- 
- 	if (nvdev->num_chn > 1) {
--		ret = rndis_set_subchannel(ndev, nvdev);
-+		ret = rndis_set_subchannel(ndev, nvdev, dev_info);
- 
- 		/* if unavailable, just proceed with one queue */
- 		if (ret) {
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index a4661d396e3cd..db81378e66242 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1134,7 +1134,9 @@ static void netvsc_sc_open(struct vmbus_channel *new_sc)
-  * This breaks overlap of processing the host message for the
-  * new primary channel with the initialization of sub-channels.
-  */
--int rndis_set_subchannel(struct net_device *ndev, struct netvsc_device *nvdev)
-+int rndis_set_subchannel(struct net_device *ndev,
-+			 struct netvsc_device *nvdev,
-+			 struct netvsc_device_info *dev_info)
- {
- 	struct nvsp_message *init_packet = &nvdev->channel_init_pkt;
- 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
-@@ -1175,7 +1177,10 @@ int rndis_set_subchannel(struct net_device *ndev, struct netvsc_device *nvdev)
- 		   atomic_read(&nvdev->open_chn) == nvdev->num_chn);
- 
- 	/* ignore failues from setting rss parameters, still have channels */
--	rndis_filter_set_rss_param(rdev, netvsc_hash_key);
-+	if (dev_info)
-+		rndis_filter_set_rss_param(rdev, dev_info->rss_key);
-+	else
-+		rndis_filter_set_rss_param(rdev, netvsc_hash_key);
- 
- 	netif_set_real_num_tx_queues(ndev, nvdev->num_chn);
- 	netif_set_real_num_rx_queues(ndev, nvdev->num_chn);
+ 	if (ctrl->ana_log_size > ctrl->max_hw_sectors << SECTOR_SHIFT) {
+ 		dev_err(ctrl->device,
 -- 
 2.19.1
 
