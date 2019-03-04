@@ -2,78 +2,96 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C678C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079ECC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C4120823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0002206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:57:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="sZK88eKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfCDOyR (ORCPT
+        id S1726900AbfCDO5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:54:17 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:25580 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726441AbfCDOyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:54:04 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x24EpUD1028366;
-        Mon, 4 Mar 2019 15:53:05 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2qygfxbxk1-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 04 Mar 2019 15:53:05 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 15D7B34;
-        Mon,  4 Mar 2019 14:53:04 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D27564DD7;
-        Mon,  4 Mar 2019 14:53:04 +0000 (GMT)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.44) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 4 Mar 2019
- 15:53:04 +0100
-Received: from localhost (10.201.23.16) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 4 Mar 2019 15:53:04
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
-        <arnaud.pouliquen@st.com>, <benjamin.gaignard@st.com>
-Subject: [PATCH 0/3] ASoC: stm32: dfsdm: fixes
-Date:   Mon, 4 Mar 2019 15:52:42 +0100
-Message-ID: <1551711165-28684-1-git-send-email-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 4 Mar 2019 09:57:16 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:45844 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbfCDO5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 09:57:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=n4linaU+uDO7QNRj5tUU6AY16NLLKMqeRHdXePGlAp8=; b=sZK88eKFrVgcXFF9q7ytCJwywR
+        G10FTLf5D5Y1ckCnvAslQeam5DFLoE0wk4q9vjIDHGfyA1JU6YAHux9/l+fXwgP7YyoOkjtH1VuaV
+        Y3gaE3thHFl+M8oRkHBx4SMfb2/ogz5WT7SkNm0MwZHV1cdtHxNJdT0G6MLmhx5AOxz0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1h0p1i-0004ll-K4; Mon, 04 Mar 2019 15:57:10 +0100
+Date:   Mon, 4 Mar 2019 15:57:10 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Zhangshaokun <zhangshaokun@hisilicon.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH -next] net: dsa: mv88e6xxx: Fix build warning when
+ CONFIG_NET_DSA_LEGACY is n
+Message-ID: <20190304145710.GA17097@lunn.ch>
+References: <1551703381-52115-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20190304132617.GB26378@lunn.ch>
+ <bc528808-2ad5-90ae-4bc0-afa47a7c4f42@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.16]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-04_06:,,
- signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bc528808-2ad5-90ae-4bc0-afa47a7c4f42@hisilicon.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch-set provides the following fixes for STM32 DFSDM:
-- manage multiple prepare
-- fix debugfs warnings on entry creation
-- add mmap support
+On Mon, Mar 04, 2019 at 10:16:08PM +0800, Zhangshaokun wrote:
+> Hi Andrew,
+> 
+> On 2019/3/4 21:26, Andrew Lunn wrote:
+> > On Mon, Mar 04, 2019 at 08:43:01PM +0800, Shaokun Zhang wrote:
+> >> When CONFIG_NET_DSA_LEGACY is n, there is a GCC bulid warning:
+> >> drivers/net/dsa/mv88e6xxx/chip.c:4623:13: warning: ‘mv88e6xxx_ports_cmode_init’ defined but not used [-Wunused-function]
+> >> static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
+> >> Let's fix it.
+> > 
+> > Hi Shaokun, Heiner
+> > 
+> > Although this fixes the warning, i suspect there i something wrong
+> > with the original patch adding mv88e6390x_port_set_cmode(). It should
+> > also be used without CONFIG_NET_DSA_LEGACY.
+> 
+> I checked the commit-id 2a93c1a3651f ("net: dsa: Allow compiling out legacy support") by Florian.
+> Do you mean that CONFIG_NET_DSA_LEGACY shall be removed completely? :-)
 
-Olivier Moysan (3):
-  ASoC: stm32: dfsdm: manage multiple prepare
-  ASoC: stm32: dfsdm: fix debugfs warnings on entry creation
-  ASoC: stm32: dfsdm: add mmap support
+No, i suspect mv88e6390x_ports_cmode_init() is being called from the
+wrong place, or needs to be called from a second location.
 
- sound/soc/stm/stm32_adfsdm.c | 40 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 35 insertions(+), 5 deletions(-)
+[Goes and looks at the code]
 
--- 
-2.7.4
+Yes, it should also be called in mv88e6xxx_probe(). I would call it
+just after the call to mv88e6xxx_detect(), so that it is the same as
+in mv88e6xxx_drv_probe().
+
+There are two ways DSA drivers can be probed. The legacy way, which is
+optional, and is slowly getting removed, and the current way. Heiner
+is new to DSA and probably missed that, and only handled the legacy
+probe method. I also missed checking when i reviewed to patch :-(
+
+   Andrew
+
+
 
