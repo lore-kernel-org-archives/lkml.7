@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC52C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF07C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E1020823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE2520823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688772;
-	bh=1y4ayOV0q3V0jBtsI2qzd7COkPHDMPnyw3NVR1WFN5w=;
+	s=default; t=1551688781;
+	bh=67SlgoKkwQ6/PHgmHf0FtsPgxu5DSPEUtWcSxSlYKiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HcdZSYYtV/AxrbDctc0nscLRN4utuesNtk9cv/o0sJ8vgYExzB2bgUirifhd5Ds1r
-	 rB4TzMGDZWCEgjL4YGXq+I/5o6xnMwlGmVKqo8Cnr/hjetxQiR2TCUm0OhyAeOSZGW
-	 tx6GsiNcuoeNFEtNARDKQlNjrCq+81uLzaEojmsY=
+	b=an+p887MY8encW7IrgRJngfgwSFBiRqwsBq2Wgdg3DCU2/ea3Za2H0NbGQTRIOrh8
+	 vE7Vcf1LSBbcKDBFSJr+nnAHwCtYpSzLwBfuYOvYrTwWOvwYa/FZypqWhFyxfYYTvO
+	 OYkia1V22ry8/xbuXskjpZkj/n3W0lm7Kh2GOkYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfCDIja (ORCPT
+        id S1728079AbfCDIjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:39:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38756 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:39:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbfCDIdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:33:44 -0500
+        id S1727866AbfCDIdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:33:31 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2B2820836;
-        Mon,  4 Mar 2019 08:33:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 545EA20836;
+        Mon,  4 Mar 2019 08:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688423;
-        bh=1y4ayOV0q3V0jBtsI2qzd7COkPHDMPnyw3NVR1WFN5w=;
+        s=default; t=1551688410;
+        bh=67SlgoKkwQ6/PHgmHf0FtsPgxu5DSPEUtWcSxSlYKiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=beCDxFTr7655mNfo3C7VmZO/Q3RhVM7V8wFLjSISUS4DmKKMlp4ns1S9rc3ofRtRa
-         4N5v4Q2omZFv0oyJTDpQwM/YzBI8KZwdreLnBEDaf/AX9e4LzT2z2XSmGFwec/4TwA
-         XarCt0aRb/qrBh9bgRbuBUDcXsa4FCX7dNlR1CmI=
+        b=rsHcNhSrnPnQBh/Icn0isZBe9Ziqq3FHFsFiGdNkzaNrzLIivA2gaX2NTb2YtHMFL
+         J6NPerClAEWDf8Z1wln9p//SWT7erdogoL3vAhZ8MwmruCX8jBjOXjJ2qKQ9U0GHxf
+         Eje0sJbgmnByweuA4ycWrHBMzDdn3T9w2+9W7+Zw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zeng Tao <prime.zeng@hisilicon.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 13/88] usb: dwc3: gadget: Fix the uninitialized link_state when udc starts
-Date:   Mon,  4 Mar 2019 09:21:56 +0100
-Message-Id: <20190304081631.091905298@linuxfoundation.org>
+        stable@vger.kernel.org, Yongji Xie <elohimes@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 36/88] sched/wake_q: Fix wakeup ordering for wake_q
+Date:   Mon,  4 Mar 2019 09:22:19 +0100
+Message-Id: <20190304081632.015155784@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,55 +71,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 88b1bb1f3b88e0bf20b05d543a53a5b99bd7ceb6 ]
+[ Upstream commit 4c4e3731564c8945ac5ac90fc2a1e1f21cb79c92 ]
 
-Currently the link_state is uninitialized and the default value is 0(U0)
-before the first time we start the udc, and after we start the udc then
- stop the udc, the link_state will be undefined.
-We may have the following warnings if we start the udc again with
-an undefined link_state:
+Notable cmpxchg() does not provide ordering when it fails, however
+wake_q_add() requires ordering in this specific case too. Without this
+it would be possible for the concurrent wakeup to not observe our
+prior state.
 
-WARNING: CPU: 0 PID: 327 at drivers/usb/dwc3/gadget.c:294 dwc3_send_gadget_ep_cmd+0x304/0x308
-dwc3 100e0000.hidwc3_0: wakeup failed --> -22
-[...]
-Call Trace:
-[<c010f270>] (unwind_backtrace) from [<c010b3d8>] (show_stack+0x10/0x14)
-[<c010b3d8>] (show_stack) from [<c034a4dc>] (dump_stack+0x84/0x98)
-[<c034a4dc>] (dump_stack) from [<c0118000>] (__warn+0xe8/0x100)
-[<c0118000>] (__warn) from [<c0118050>](warn_slowpath_fmt+0x38/0x48)
-[<c0118050>] (warn_slowpath_fmt) from [<c0442ec0>](dwc3_send_gadget_ep_cmd+0x304/0x308)
-[<c0442ec0>] (dwc3_send_gadget_ep_cmd) from [<c0445e68>](dwc3_ep0_start_trans+0x48/0xf4)
-[<c0445e68>] (dwc3_ep0_start_trans) from [<c0446750>](dwc3_ep0_out_start+0x64/0x80)
-[<c0446750>] (dwc3_ep0_out_start) from [<c04451c0>](__dwc3_gadget_start+0x1e0/0x278)
-[<c04451c0>] (__dwc3_gadget_start) from [<c04452e0>](dwc3_gadget_start+0x88/0x10c)
-[<c04452e0>] (dwc3_gadget_start) from [<c045ee54>](udc_bind_to_driver+0x88/0xbc)
-[<c045ee54>] (udc_bind_to_driver) from [<c045f29c>](usb_gadget_probe_driver+0xf8/0x140)
-[<c045f29c>] (usb_gadget_probe_driver) from [<bf005424>](gadget_dev_desc_UDC_store+0xac/0xc4 [libcomposite])
-[<bf005424>] (gadget_dev_desc_UDC_store [libcomposite]) from[<c023d8e0>] (configfs_write_file+0xd4/0x160)
-[<c023d8e0>] (configfs_write_file) from [<c01d51e8>] (__vfs_write+0x1c/0x114)
-[<c01d51e8>] (__vfs_write) from [<c01d5ff4>] (vfs_write+0xa4/0x168)
-[<c01d5ff4>] (vfs_write) from [<c01d6d40>] (SyS_write+0x3c/0x90)
-[<c01d6d40>] (SyS_write) from [<c0107400>] (ret_fast_syscall+0x0/0x3c)
+Andrea Parri provided:
 
-Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+  C wake_up_q-wake_q_add
+
+  {
+	int next = 0;
+	int y = 0;
+  }
+
+  P0(int *next, int *y)
+  {
+	int r0;
+
+	/* in wake_up_q() */
+
+	WRITE_ONCE(*next, 1);   /* node->next = NULL */
+	smp_mb();               /* implied by wake_up_process() */
+	r0 = READ_ONCE(*y);
+  }
+
+  P1(int *next, int *y)
+  {
+	int r1;
+
+	/* in wake_q_add() */
+
+	WRITE_ONCE(*y, 1);      /* wake_cond = true */
+	smp_mb__before_atomic();
+	r1 = cmpxchg_relaxed(next, 1, 2);
+  }
+
+  exists (0:r0=0 /\ 1:r1=0)
+
+  This "exists" clause cannot be satisfied according to the LKMM:
+
+  Test wake_up_q-wake_q_add Allowed
+  States 3
+  0:r0=0; 1:r1=1;
+  0:r0=1; 1:r1=0;
+  0:r0=1; 1:r1=1;
+  No
+  Witnesses
+  Positive: 0 Negative: 3
+  Condition exists (0:r0=0 /\ 1:r1=0)
+  Observation wake_up_q-wake_q_add Never 0 3
+
+Reported-by: Yongji Xie <elohimes@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/gadget.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/core.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index a7f6255606443..bf1cb91ef494d 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1873,6 +1873,7 @@ static int __dwc3_gadget_start(struct dwc3 *dwc)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 6fedf3a98581b..463af32de32cc 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -405,10 +405,11 @@ void wake_q_add(struct wake_q_head *head, struct task_struct *task)
+ 	 * its already queued (either by us or someone else) and will get the
+ 	 * wakeup due to that.
+ 	 *
+-	 * This cmpxchg() executes a full barrier, which pairs with the full
+-	 * barrier executed by the wakeup in wake_up_q().
++	 * In order to ensure that a pending wakeup will observe our pending
++	 * state, even in the failed case, an explicit smp_mb() must be used.
+ 	 */
+-	if (cmpxchg(&node->next, NULL, WAKE_Q_TAIL))
++	smp_mb__before_atomic();
++	if (cmpxchg_relaxed(&node->next, NULL, WAKE_Q_TAIL))
+ 		return;
  
- 	/* begin to receive SETUP packets */
- 	dwc->ep0state = EP0_SETUP_PHASE;
-+	dwc->link_state = DWC3_LINK_STATE_SS_DIS;
- 	dwc3_ep0_out_start(dwc);
- 
- 	dwc3_gadget_enable_irq(dwc);
+ 	get_task_struct(task);
 -- 
 2.19.1
 
