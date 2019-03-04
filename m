@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A475C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F46C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2D220836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951EB21019
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688456;
-	bh=KH2HEWqZB1p1MDITrIUNbFYsAvJKTR/Oz/Sed/XdKdc=;
+	s=default; t=1551688459;
+	bh=zPOfyGzNRP/9KepcR+LYiphi+vbDtO2u8/Q63+6+qOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KOpHnnVn5Q03aK9bEB1nVSlJcpG8ZWLyMIpx3nHgfJ8sKWERzXKvUZdIcr/LTZ/fo
-	 YOlurl58OfC3XllgSKvESFUUsF7KPzGqQtF3gPz3qtk65huxQsyhLe7173LlYyI+Cw
-	 KI/nLJsEo+E1/6S6QyCNLdPlUdvlw51p6c7WOFC0=
+	b=x9USWb3JX++QuhGknmuSS1jq/1pWuiWUESbkjwD0lMN1PEMP18TsCwYwI1/Fiv8pV
+	 dOzhzTs9cGq82MVSpjgPwl59hsUzgD8YfbeZHlKOa2o4kNn64oQ7c8zGoW9MOaTcbP
+	 SrFPNbneL2nVyIWMIKFbK2MzDyoxr7/QDJPH0Zew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfCDIeO (ORCPT
+        id S1728121AbfCDIeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:34:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39662 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:34:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbfCDIeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:34:10 -0500
+        id S1727266AbfCDIeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:34:16 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1E8820823;
-        Mon,  4 Mar 2019 08:34:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E2FD20823;
+        Mon,  4 Mar 2019 08:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688449;
-        bh=KH2HEWqZB1p1MDITrIUNbFYsAvJKTR/Oz/Sed/XdKdc=;
+        s=default; t=1551688455;
+        bh=zPOfyGzNRP/9KepcR+LYiphi+vbDtO2u8/Q63+6+qOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kdgItVKfxgUaxFFe8guo1pIZ49b2gs5fTXUr8kkjIVjlLV71q2HMHLrq3DAygyUFw
-         YhSYj94Y/BjVoKKKma84ftnHzpqMGwKus9KPqH145to9NNxHM7N82ggnNvZPTmLDAN
-         RL94bacqW6QkvVAg4df7gweBvlsTt4e+W11EI3mA=
+        b=moM/JAx/WgsROlqTrd3R2T4x9ooeJ5lN2v1Fk8Ulr6+D5Ses8Xze3bUCBrLYGihLi
+         tz8CQFbOA2H/xlhNoTKuez7W/JEir9Typ1G2/3mGFTtbAqWigAlpw004fc8Nv9akcc
+         Wjbozc9T8Ipkz3pLyF7LowLpbf32ZktLWkBB2QXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 47/88] scsi: lpfc: nvmet: avoid hang / use-after-free when destroying targetport
-Date:   Mon,  4 Mar 2019 09:22:30 +0100
-Message-Id: <20190304081632.419080774@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 15/88] HID: i2c-hid: Disable runtime PM on Goodix touchpad
+Date:   Mon,  4 Mar 2019 09:21:58 +0100
+Message-Id: <20190304081631.174545237@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -67,71 +66,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c41f59884be5cca293ed61f3d64637dbba3a6381 ]
+[ Upstream commit 77ae0d8e401f083ca69c202502da4fc0e38cb1b7 ]
 
-We cannot wait on a completion object in the lpfc_nvme_targetport structure
-in the _destroy_targetport() code path because the NVMe/fc transport will
-free that structure immediately after the .targetport_delete() callback.
-This results in a use-after-free, and a hang if slub_debug=FZPU is enabled.
+A Goodix touchpad doesn't work. Touching the touchpad can trigger IRQ
+but there's no input event from HID subsystem.
 
-Fix this by putting the completion on the stack.
+Turns out it reports some invalid data:
+[   22.136630] i2c_hid i2c-DELL091F:00: input: 0b 00 01 00 00 00 00 00 00 00 00
 
-Signed-off-by: Ewan D. Milne <emilne@redhat.com>
-Acked-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+After some trial and error, it's another device that doesn't work well
+with ON/SLEEP commands. Disable runtime PM to fix the issue.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvmet.c | 8 +++++---
- drivers/scsi/lpfc/lpfc_nvmet.h | 2 +-
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/hid/hid-ids.h              | 3 +++
+ drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
-index 6245f442d784b..95fee83090eb7 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.c
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.c
-@@ -1003,7 +1003,8 @@ lpfc_nvmet_targetport_delete(struct nvmet_fc_target_port *targetport)
- 	struct lpfc_nvmet_tgtport *tport = targetport->private;
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 27519eb8ee636..81bc2f6b93a34 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -459,6 +459,9 @@
+ #define USB_DEVICE_ID_GENERAL_TOUCH_WIN8_PIT_010A 0x010a
+ #define USB_DEVICE_ID_GENERAL_TOUCH_WIN8_PIT_E100 0xe100
  
- 	/* release any threads waiting for the unreg to complete */
--	complete(&tport->tport_unreg_done);
-+	if (tport->phba->targetport)
-+		complete(tport->tport_unreg_cmp);
- }
++#define I2C_VENDOR_ID_GOODIX		0x27c6
++#define I2C_DEVICE_ID_GOODIX_01F0	0x01f0
++
+ #define USB_VENDOR_ID_GOODTOUCH		0x1aad
+ #define USB_DEVICE_ID_GOODTOUCH_000f	0x000f
  
- static void
-@@ -1692,6 +1693,7 @@ lpfc_nvmet_destroy_targetport(struct lpfc_hba *phba)
- 	struct lpfc_nvmet_tgtport *tgtp;
- 	struct lpfc_queue *wq;
- 	uint32_t qidx;
-+	DECLARE_COMPLETION_ONSTACK(tport_unreg_cmp);
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index 8555ce7e737b3..c5edfa966343d 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -179,6 +179,8 @@ static const struct i2c_hid_quirks {
+ 		I2C_HID_QUIRK_DELAY_AFTER_SLEEP },
+ 	{ USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_8001,
+ 		I2C_HID_QUIRK_NO_RUNTIME_PM },
++	{ I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
++		I2C_HID_QUIRK_NO_RUNTIME_PM },
+ 	{ 0, 0 }
+ };
  
- 	if (phba->nvmet_support == 0)
- 		return;
-@@ -1701,9 +1703,9 @@ lpfc_nvmet_destroy_targetport(struct lpfc_hba *phba)
- 			wq = phba->sli4_hba.nvme_wq[qidx];
- 			lpfc_nvmet_wqfull_flush(phba, wq, NULL);
- 		}
--		init_completion(&tgtp->tport_unreg_done);
-+		tgtp->tport_unreg_cmp = &tport_unreg_cmp;
- 		nvmet_fc_unregister_targetport(phba->targetport);
--		wait_for_completion_timeout(&tgtp->tport_unreg_done, 5);
-+		wait_for_completion_timeout(&tport_unreg_cmp, 5);
- 		lpfc_nvmet_cleanup_io_context(phba);
- 	}
- 	phba->targetport = NULL;
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.h b/drivers/scsi/lpfc/lpfc_nvmet.h
-index 1aaff63f1f419..0ec1082ce7ef6 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.h
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.h
-@@ -34,7 +34,7 @@
- /* Used for NVME Target */
- struct lpfc_nvmet_tgtport {
- 	struct lpfc_hba *phba;
--	struct completion tport_unreg_done;
-+	struct completion *tport_unreg_cmp;
- 
- 	/* Stats counters - lpfc_nvmet_unsol_ls_buffer */
- 	atomic_t rcv_ls_req_in;
 -- 
 2.19.1
 
