@@ -2,144 +2,184 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256BDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E277C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEDA320663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D8320663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:26:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QLrIUJGK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfCDS0L (ORCPT
+        id S1727838AbfCDS0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:26:11 -0500
-Received: from mailproxy07.manitu.net ([217.11.48.71]:34058 "EHLO
-        mailproxy07.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfCDS0K (ORCPT
+        Mon, 4 Mar 2019 13:26:18 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:47208 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfCDS0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:26:10 -0500
-Received: from [10.0.30.7] (dslb-178-010-196-220.178.010.pools.vodafone-ip.de [178.10.196.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: wg@grandegger.com)
-        by mailproxy07.manitu.net (Postfix) with ESMTPSA id BE107C8105;
-        Mon,  4 Mar 2019 19:27:27 +0100 (CET)
-Subject: Re: [PATCH v6 2/4] can: m_can: Rename m_can_priv to m_can_classdev
-To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
-        davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        Mon, 4 Mar 2019 13:26:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1551723975; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AKYMXddv8sOWyO8ziFgxyWSaKQEpPo4k2jXSN/BG3dI=;
+        b=QLrIUJGKb06+ImxXzPaCvyfurdt1Z8g8RlCF//svkOvMC8Iotgil588hyyllTRftiIQ8dA
+        0xcat6W6R+x4m/2S4wIdSyTf2W5ndlkJIZoO2kCN6ebUnVD7V2d8lkxuv7A5wAGKXZtISC
+        d4h4r20n5fcS1cUxjwilckQqUtn48Gs=
+Date:   Mon, 04 Mar 2019 19:26:08 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 6/9] mtd: rawnand: ingenic: Separate top-level and SoC
+ specific code
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190301185043.9037-1-dmurphy@ti.com>
- <20190301185043.9037-2-dmurphy@ti.com>
- <093eb838-ab28-0bc0-8855-a8b22f3392b4@grandegger.com>
- <85e03abc-82ce-6fa9-f1bd-1a068fabba53@ti.com>
-From:   Wolfgang Grandegger <wg@grandegger.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
- 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
- 8QEfHnPzgykCs2DOOQ==
-Message-ID: <c49f915e-852c-fe4f-cf92-4b59d958e066@grandegger.com>
-Date:   Mon, 4 Mar 2019 19:26:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+Message-Id: <1551723968.4932.4@crapouillou.net>
+In-Reply-To: <20190304112058.67cd5194@xps13>
+References: <20190209192305.4434-1-paul@crapouillou.net>
+        <20190209192305.4434-6-paul@crapouillou.net> <20190304112058.67cd5194@xps13>
 MIME-Version: 1.0
-In-Reply-To: <85e03abc-82ce-6fa9-f1bd-1a068fabba53@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On Mon, Mar 4, 2019 at 11:20 AM, Miquel Raynal=20
+<miquel.raynal@bootlin.com> wrote:
+> Hi Paul,
+>=20
+> Paul Cercueil <paul@crapouillou.net <mailto:paul@crapouillou.net>>=20
+> wrote on Sat,  9 Feb 2019 16:23:02
+> -0300:
+>=20
+>>  The ingenic-nand driver uses an API provided by the jz4780-bch=20
+>> driver.
+>>  This makes it difficult to support other SoCs in the jz4780-bch=20
+>> driver.
+>>  To work around this, we separate the API functions from the=20
+>> SoC-specific
+>>  code, so that these API functions are SoC-agnostic.
+>>=20
+>=20
+> I like the idea, actually I am working on this separation (see
+> [1]) and I would really appreciate that you try to implement the
+> interface when it will be available (v2 is coming this week, I think=20
+> v3
+> will be the one to test when raw NAND devices will be properly
+> supported). I will add you in Cc: if you want to follow/review.
+>=20
+> [1]=20
+> <http://lists.infradead.org/pipermail/linux-mtd/2019-February/087815.html=
+>
 
-Am 04.03.19 um 19:14 schrieb Dan Murphy:
-> Wolfgang
-> 
-> On 3/4/19 11:31 AM, Wolfgang Grandegger wrote:
->> Hello,
->>
->> there are still "LTL" after renaming m_can_priv to m_can_classdev.
->>
-> 
-> Yes I know but some of those become unreadable if I break them apart.
-> 
-> But if you want me to break them I can do it.
-> 
-> For instance
-> 	struct m_can_plat_priv *priv = (struct m_can_plat_priv *)m_can_class->device_data;
-> 
-> will become
-> 
-> 	struct m_can_plat_priv *priv =
-> 				(struct m_can_plat_priv *)m_can_class->device_data;
+Do you think this will be ready for 5.2?
 
-Perfect! See also my comment below.
+You can add me in Cc:.
 
-> 
->> Am 01.03.19 um 19:50 schrieb Dan Murphy:
->>> Rename the common m_can_priv class structure to
->>> m_can_classdev as this is more descriptive.
->>
->> If you change the struct name, I think you should also change the
->> variable name to something more meaning full e.g.:
->>
->>   struct m_can_classdev *cdev
->>
->> instead of
->>
->>   struct m_can_classdev *priv
->>
->>
-> 
-> Ack.  This change will grow this patch as s/priv/cdev is used 250x
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net=20
+>> <mailto:paul@crapouillou.net>>
+>>  ---
+>>=20
+>>  v2: Add an optional .probe() callback. It is used for instance to=20
+>> set
+>>      the clock rate in the JZ4780 backend.
+>>=20
+>>  v3: The common code is now inside the ingenic-ecc module. Each
+>>      SoC-specific ECC code is now in its own module, which leaves to=20
+>> the
+>>      user the choice of which (if any) ECC code should be supported.
+>>=20
+>>  v4: No change
+>>=20
+>>   drivers/mtd/nand/raw/ingenic/Kconfig        |  17 +++
+>>   drivers/mtd/nand/raw/ingenic/Makefile       |   5 +-
+>>   drivers/mtd/nand/raw/ingenic/ingenic_ecc.c  | 157=20
+>> +++++++++++++++++++++++++
+>>   drivers/mtd/nand/raw/ingenic/ingenic_ecc.h  |  84 ++++++++++++++
+>>   drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  38 +++----
+>>   drivers/mtd/nand/raw/ingenic/jz4780_bch.c   | 170=20
+>> +++++-----------------------
+>>   drivers/mtd/nand/raw/ingenic/jz4780_bch.h   |  40 -------
+>>   7 files changed, 308 insertions(+), 203 deletions(-)
+>>   create mode 100644 drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
+>>   create mode 100644 drivers/mtd/nand/raw/ingenic/ingenic_ecc.h
+>>   delete mode 100644 drivers/mtd/nand/raw/ingenic/jz4780_bch.h
+>>=20
+>=20
+> [...]
+>=20
+>>  diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c=20
+>> b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
+>>  index 8c73f7c5be9a..0f51fd15fe79 100644
+>>  --- a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
+>>  +++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
+>>  @@ -22,7 +22,7 @@
+>>=20
+>>   #include <linux/jz4780-nemc.h>
+>>=20
+>>  -#include "jz4780_bch.h"
+>>  +#include "ingenic_ecc.h"
+>>=20
+>>   #define DRV_NAME	"ingenic-nand"
+>>=20
+>>  @@ -40,7 +40,7 @@ struct ingenic_nand_cs {
+>>=20
+>>   struct ingenic_nfc {
+>>   	struct device *dev;
+>>  -	struct jz4780_bch *bch;
+>>  +	struct ingenic_ecc *ecc;
+>>   	struct nand_controller controller;
+>>   	unsigned int num_banks;
+>>   	struct list_head chips;
+>>  @@ -124,10 +124,10 @@ static int ingenic_nand_ecc_calculate(struct=20
+>> nand_chip *chip, const u8 *dat,
+>>   {
+>>   	struct ingenic_nand *nand =3D to_ingenic_nand(nand_to_mtd(chip));
+>>   	struct ingenic_nfc *nfc =3D to_ingenic_nfc(nand->chip.controller);
+>>  -	struct jz4780_bch_params params;
+>>  +	struct ingenic_ecc_params params;
+>>=20
+>>   	/*
+>>  -	 * Don't need to generate the ECC when reading, BCH does it for=20
+>> us as
+>>  +	 * Don't need to generate the ECC when reading, ECC does it for=20
+>> us as
+>=20
+> "the ECC engine does it for us" would be more meaningful.
 
-That's the price for changing the name. As we have it in a separate
-patch, it should be OK.
+OK.
 
-Ideally, also m_can_platform.c and tcan4x5x.c should then use that name
-for "struct m_can_classdev".
+>>   	 * part of decoding/correction.
+>>   	 */
+>>   	if (nand->reading)
+>>  @@ -137,7 +137,7 @@ static int ingenic_nand_ecc_calculate(struct=20
+>> nand_chip *chip, const u8 *dat,
+>>   	params.bytes =3D nand->chip.ecc.bytes;
+>>   	params.strength =3D nand->chip.ecc.strength;
+>>=20
+>>  -	return jz4780_bch_calculate(nfc->bch, &params, dat, ecc_code);
+>>  +	return ingenic_ecc_calculate(nfc->ecc, &params, dat, ecc_code);
+>>   }
+>>=20
+>=20
+> Thanks,
+> Miqu=E8l
 
-Wolfgang.
+=
+
