@@ -2,748 +2,158 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0725AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F59C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABFE6206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LXJ7B5+2"
+	by mail.kernel.org (Postfix) with ESMTP id CF459206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfCDXy5 (ORCPT
+        id S1726793AbfCDX4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 18:54:57 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37815 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCDXy4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 18:54:56 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b3so5856782otp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 15:54:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Igzy1YGMpmP9BAbuf5YcClX9P0EMlxZnJ5i88ToQHD0=;
-        b=LXJ7B5+2KWEHpGG22QCdra/jQbSnjQCAgzVYK5SARxRZs3BpttRZza62x2l/MmP8Xc
-         iXp4/mJJ4a7Y+gs62MlM1OagOURiMJgrj0XLfj35R5ZppNNDTPZKrrPjofGS6ecBvAOq
-         q3dMDX9+N/Z9y8Fx9CP3m1oiCp5rJl7p9BdlM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Igzy1YGMpmP9BAbuf5YcClX9P0EMlxZnJ5i88ToQHD0=;
-        b=f5ecDdg00QRmxbQPqM04fZqYDlVSUtGDuIIWDe7rFhRlLtvdPRdNsBGySHefJXNQbp
-         OAttaeQWhMfrRHUfdUo/SPF25xndG9HCjejZUfsqgkQZVcWpLflUWCfUuWNJMLzIjg5a
-         4y//v7QFlFfcWbkFS3ZtUG1vpTClX7DhZApN/fXNZKEEsnzNVurRA0AHmBbHjOASz+F+
-         kc/8BrBFoy+m1PwoMraZBqmYjNPthGthUfokrVXGhOlDUZoOcSx/H+KA4Ce/515aeh0V
-         8CpyS0S+7f16Pd7+ePq5jQb6LDONjy+lvFBbUHj5S2dNlb6YN+HbS64icAIT7q93WQQ0
-         d6Gw==
-X-Gm-Message-State: APjAAAXTLYE8dsbsAaW0JqwDJ2z3NlfvZlYOZ5ofo3GJ7WLp0DCS6dmd
-        8L+A0WGgj9mMEUT+JUknv9RTR6QtBSU=
-X-Google-Smtp-Source: APXvYqyfg9t4iziXsEAgBM5uJwlqvVnLyMh9vbK/eGAoVCvnpf8sDqCTvU8SwUaEJQ75l9U6XzYaGg==
-X-Received: by 2002:a9d:76c5:: with SMTP id p5mr14429763otl.283.1551743694434;
-        Mon, 04 Mar 2019 15:54:54 -0800 (PST)
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com. [209.85.210.54])
-        by smtp.gmail.com with ESMTPSA id k15sm3147714otj.26.2019.03.04.15.54.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 15:54:53 -0800 (PST)
-Received: by mail-ot1-f54.google.com with SMTP id t7so5852255otk.8
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 15:54:52 -0800 (PST)
-X-Received: by 2002:a9d:7ac9:: with SMTP id m9mr13944333otn.236.1551743692117;
- Mon, 04 Mar 2019 15:54:52 -0800 (PST)
+        Mon, 4 Mar 2019 18:56:43 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41878 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbfCDX4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 18:56:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D31D11596;
+        Mon,  4 Mar 2019 15:56:41 -0800 (PST)
+Received: from [192.168.1.123] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 575163F706;
+        Mon,  4 Mar 2019 15:56:38 -0800 (PST)
+Subject: Re: [PATCH] Revert "swiotlb: remove SWIOTLB_MAP_ERROR"
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>, xen-devel@lists.xenproject.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20190304195951.1118807-1-arnd@arndb.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <b0b995a1-3211-870f-01af-ce837c18e8f9@arm.com>
+Date:   Mon, 4 Mar 2019 23:56:31 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-References: <20190225190957.40425-1-ncrews@chromium.org> <CAFqH_52NG0Zmc=dtZa=6o7kJc0fdueLqTaQiZdtM=2tBer+6vA@mail.gmail.com>
-In-Reply-To: <CAFqH_52NG0Zmc=dtZa=6o7kJc0fdueLqTaQiZdtM=2tBer+6vA@mail.gmail.com>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Mon, 4 Mar 2019 16:54:40 -0700
-X-Gmail-Original-Message-ID: <CAHX4x84gmrvnGMSE9Geb=8s+Htao+Z=Zp=rR0GpCV+FP5Ax+QQ@mail.gmail.com>
-Message-ID: <CAHX4x84gmrvnGMSE9Geb=8s+Htao+Z=Zp=rR0GpCV+FP5Ax+QQ@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/chrome: Add Wilco EC Event Handling
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Oleh Lamzin <lamzin@google.com>,
-        Bartosz Fabianowski <bartfab@google.com>, derat@google.com,
-        Guenter Roeck <groeck@google.com>,
-        Dmitry Torokhov <dtor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190304195951.1118807-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric,
+Hi Arnd,
 
-On Tue, Feb 26, 2019 at 8:04 AM Enric Balletbo Serra
-<eballetbo@gmail.com> wrote:
->
-> Hi Nick,
->
-> Missatge de Nick Crews <ncrews@chromium.org> del dia dl., 25 de febr.
-> 2019 a les 20:13:
-> >
-> > This patch is meant to be applied on top of the current
-> > for-next top of tree in the chrome/platform repo, at
-> > https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git/log/?h=for-next
-> >
-> > The Wilco Embedded Controller can return extended events that
-> > are not handled by standard ACPI objects. These events can
-> > contain information about changes in EC controlled features,
-> > such as the charger or battery getting plugged/unplugged.
-> >
->
-> To understand better this I think would be good to know what kind of
-> events or which specific events do you expect to handle through this
-> interface. Because if these events are like the ones you described
-> above (charger/battery plugged/unplugged) this should go again through
-> the power-supply subsystem and use the standard interface for that.
+On 2019-03-04 7:59 pm, Arnd Bergmann wrote:
+> This reverts commit b907e20508d0 ("swiotlb: remove SWIOTLB_MAP_ERROR"), which
+> introduced an overflow warning in configurations that have a larger
+> dma_addr_t than phys_addr_t:
+> 
+> In file included from include/linux/dma-direct.h:5,
+>                   from kernel/dma/swiotlb.c:23:
+> kernel/dma/swiotlb.c: In function 'swiotlb_tbl_map_single':
+> include/linux/dma-mapping.h:136:28: error: conversion from 'long long unsigned int' to 'phys_addr_t' {aka 'unsigned int'} changes value from '18446744073709551615' to '4294967295' [-Werror=overflow]
+>   #define DMA_MAPPING_ERROR  (~(dma_addr_t)0)
+>                              ^
+> kernel/dma/swiotlb.c:544:9: note: in expansion of macro 'DMA_MAPPING_ERROR'
+>    return DMA_MAPPING_ERROR;
+> 
+> The configuration that caused this is on 32-bit ARM, where the DMA address
+> space depends on the enabled hardware platforms, while the physical
+> address space depends on the type of MMU chosen (classic vs LPAE).
 
-I didn't fully understand what was going on here either, so I had to figure
-it out myself as well :)
+Are these real platforms, or random configs? Realistically I don't see a 
+great deal of need to support DMA_ADDR_T_64BIT for non-LPAE. 
+Particularly in this case since AFAIK the only selector of SWIOTLB on 
+Arm is Xen, and that by definition is never going to be useful on 
+non-LPAE hardware.
 
-I had a bad description for what sort of events this driver will be used for.
-There are two general classes of events that are generated by the EC and
-sent to the OS over ACPI: Standard ones (such as charger/battery/lid stuff
-as you mention) and the special ones that we care about. These special events
-include errors and notifications from the optional charging/display
-dock accessory,
-for instance "The cable you connected with is not supported". The
-standard ones are
-indeed handled through the standard interfaces. This interface also
-gets notified
-for a few of the standard events such as the battery getting plugged
-and unplugged,
-and that's why I was getting confused.
+Fair enough that we don't still don't want even randconfigs generating 
+warnings, though. As long as this change doesn't let SWIOTLB_MAP_ERROR 
+leak out to logic expecting DMA_MAP_ERROR - which does appear to be the 
+case - and is also still OK for the opposite weirdness of 
+PHYS_ADDR_T_64BIT && !DMA_ADDR_T_64BIT, then I think it's reasonable.
 
-You can see in some of the coreboot code where ACPI determines whether
-or not to forward these special "QS events" to this driver or to the
-standard ACPI system:
-https://review.coreboot.org/cgit/coreboot.git/tree/src/ec/google/wilco/acpi/event.asl#n80
+Robin.
 
->
-> I suspect that what you want here, is different kernel drivers
-> accessing this event interface. E.g a wilco_ec_charger hooked to this
-> event interface that is able to get the event when the battery is
-> charging or not charging or charged. Maybe something similar to MKBP
-> events in cros-ec? Is that what you want?
-
-This is not what we want, I should have explained the use case in my
-original message.
-The point of this driver is to allow telemetry and diagnostics management for
-enterprise uses. A telemetry daemon will be running on the device
-waiting for events,
-(such as "The video port on the dock is not working.") and will report
-them to a cloud service.
-An example daemon that will use this is here:
-https://chromium-review.googlesource.com/c/chromiumos/platform2/+/1390115
-
-With these explanations, do you now think that we should keep this structure,
-and not move to the power_supply subsystem?
-
-Thanks for your thoughts,
-Nick
-
->
-> Regards,
->  Enric
->
-> > These events are triggered with an ACPI Notify(0x90) and the
-> > event data buffer is read through an ACPI method provided by
-> > the BIOS which reads the event buffer from EC RAM.
-> >
-> > These events are put into a queue which can be read by a userspace daemon
-> > via a char device that implements read() and poll(). The char device
-> > will appear at /dev/wilco_event{n}, where n is some integer.
-> >
-> > This patch depends on a coreboot patch which adds the relevant
-> > ACPI device, so this driver can pick it up:
-> > https://review.coreboot.org/c/coreboot/+/31204
-> >
-> > To test, run the simple python script from
-> > https://gist.github.com/8a55050e353b7027ca3009074eec4200
-> > to poll() and read() the node. You can generate events
-> > in many ways, the easiest are to press fn+Esc or to
-> > plug/unplug the battery (with the AC in).
-> >
-> > I sent out an initial version of this driver a month ago,
-> > available at https://lkml.org/lkml/2019/1/23/676
-> > At that point, we were not sure about the requirements of the
-> > driver, and reviewers were not pleased with the abuses of the
-> > sysfs interface. In this version, we are more confident about
-> > the needs of the userspace daemon that will use this driver,
-> > and this driver addresses all of the previous concerns.
-> >
-> > Changes in v2:
-> > - Move sysfs node to /dev/wilco_ec{n}
-> > - Userspace daemon should now use poll() to check for available events
-> > - Userspace daemon should now use read() to pop an event from queue
-> > - Keyboard events are no longer forwarded to the input subsystem
-> > - The driver is a separate module
-> > - There is a new ACPI device GOOG00D that the driver binds to, not the
-> > old GOOG00C used by the core driver
-> > - The actual ACPI command code changed from "^QSET" to "QSET"
-> >
-> > Signed-off-by: Nick Crews <ncrews@chromium.org>
-> > ---
-> >  drivers/platform/chrome/wilco_ec/Kconfig  |   9 +
-> >  drivers/platform/chrome/wilco_ec/Makefile |   2 +
-> >  drivers/platform/chrome/wilco_ec/event.c  | 511 ++++++++++++++++++++++
-> >  3 files changed, 522 insertions(+)
-> >  create mode 100644 drivers/platform/chrome/wilco_ec/event.c
-> >
-> > diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
-> > index 4a119ced4d0c..9812242663cd 100644
-> > --- a/drivers/platform/chrome/wilco_ec/Kconfig
-> > +++ b/drivers/platform/chrome/wilco_ec/Kconfig
-> > @@ -18,3 +18,12 @@ config WILCO_EC_DEBUGFS
-> >           manipulation and allow for testing arbitrary commands.  This
-> >           interface is intended for debug only and will not be present
-> >           on production devices.
-> > +
-> > +config WILCO_EC_EVENTS
-> > +       tristate "Enable event forwarding from EC to userspace"
-> > +       depends on WILCO_EC
-> > +       help
-> > +         If you say Y here, you get support for the EC to send events
-> > +         (such as power state changes) to userspace. The EC sends the events
-> > +         over ACPI, and a driver queues up the events to be read by a
-> > +         userspace daemon from /dev/wilco_event using read() and poll().
-> > diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
-> > index 063e7fb4ea17..37452ab953de 100644
-> > --- a/drivers/platform/chrome/wilco_ec/Makefile
-> > +++ b/drivers/platform/chrome/wilco_ec/Makefile
-> > @@ -4,3 +4,5 @@ wilco_ec-objs                           := core.o mailbox.o
-> >  obj-$(CONFIG_WILCO_EC)                 += wilco_ec.o
-> >  wilco_ec_debugfs-objs                  := debugfs.o
-> >  obj-$(CONFIG_WILCO_EC_DEBUGFS)         += wilco_ec_debugfs.o
-> > +wilco_ec_events-objs                   := event.o
-> > +obj-$(CONFIG_WILCO_EC_EVENTS)          += wilco_ec_events.o
-> > diff --git a/drivers/platform/chrome/wilco_ec/event.c b/drivers/platform/chrome/wilco_ec/event.c
-> > new file mode 100644
-> > index 000000000000..48f637336920
-> > --- /dev/null
-> > +++ b/drivers/platform/chrome/wilco_ec/event.c
-> > @@ -0,0 +1,511 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * ACPI event handling for Wilco Embedded Controller
-> > + *
-> > + * Copyright 2019 Google LLC
-> > + *
-> > + * The Wilco Embedded Controller can return extended events that
-> > + * are not handled by standard ACPI objects. These events can
-> > + * contain information about changes in EC controlled features,
-> > + * such as the charger or battery getting plugged/unplugged.
-> > + *
-> > + * These events are triggered with an ACPI Notify(0x90) and the
-> > + * event data buffer is read through an ACPI method provided by
-> > + * the BIOS which reads the event buffer from EC RAM.
-> > + *
-> > + * These events are put into a queue which can be read by a userspace daemon
-> > + * via a char device that implements read() and poll(). The char device
-> > + * will appear at /dev/wilco_event{n}, where n is some integer.
-> > + *
-> > + * To test, run the simple python script from
-> > + * https://gist.github.com/11fa41edda69aa09e4a27f5f788d45ba
-> > + * to poll() and read() the node. You can generate events
-> > + * in many ways, the easiest are to press fn+Esc or to
-> > + * plug/unplug the battery (with the AC in).
-> > + */
-> > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/cdev.h>
-> > +#include <linux/device.h>
-> > +#include <linux/fs.h>
-> > +#include <linux/idr.h>
-> > +#include <linux/io.h>
-> > +#include <linux/list.h>
-> > +#include <linux/module.h>
-> > +#include <linux/poll.h>
-> > +#include <linux/uaccess.h>
-> > +#include <linux/wait.h>
-> > +
-> > +/* ACPI Notify event code indicating event data is available. */
-> > +#define EC_ACPI_NOTIFY_EVENT           0x90
-> > +/* ACPI Method to execute to retrieve event data buffer from the EC. */
-> > +#define EC_ACPI_GET_EVENT              "QSET"
-> > +/* Maximum number of words in event data returned by the EC. */
-> > +#define EC_ACPI_MAX_EVENT_DATA         6
-> > +#define EC_ACPI_MAX_EVENT_SIZE \
-> > +       (sizeof(struct ec_event) + (EC_ACPI_MAX_EVENT_DATA) * sizeof(u16))
-> > +
-> > +/* Node will appear in /dev/EVENT_DEV_NAME */
-> > +#define EVENT_DEV_NAME         "wilco_event"
-> > +#define EVENT_CLASS_NAME       EVENT_DEV_NAME
-> > +#define DRV_NAME               EVENT_DEV_NAME
-> > +#define EVENT_DEV_NAME_FMT     (EVENT_DEV_NAME "%d")
-> > +static struct class event_class = {
-> > +       .owner  = THIS_MODULE,
-> > +       .name   = EVENT_CLASS_NAME,
-> > +};
-> > +
-> > +/* Keep track of all the device numbers used. */
-> > +#define EVENT_MAX_DEV 128
-> > +static int event_major;
-> > +static DEFINE_IDA(event_ida);
-> > +
-> > +/**
-> > + * struct event_device_data - Data for a Wilco EC device that responds to ACPI.
-> > + * @events: Queue of EC events to be provided to userspace.
-> > + * @lock: Mutex to guard the queue.
-> > + * @wq: Wait queue to notify processes when events or available or the
-> > + *     device has been removed.
-> > + * @cdev: Char dev that userspace reads() and polls() from.
-> > + * @dev: Device associated with the %cdev.
-> > + * @exist: Has the device been not been removed? Once a device has been removed,
-> > + *        writes, reads, and new opens will fail.
-> > + *
-> > + * There will be one of these structs for each ACPI device registered. This data
-> > + * is the queue of events received from ACPI that still need to be read from
-> > + * userspace (plus a supporting lock and wait queue), as well as the device and
-> > + * char device that userspace is using, plus a flag on whether the ACPI device
-> > + * has been removed.
-> > + */
-> > +struct event_device_data {
-> > +       struct list_head events;
-> > +       struct mutex lock;
-> > +       wait_queue_head_t wq;
-> > +       struct device dev;
-> > +       struct cdev cdev;
-> > +       bool exist;
-> > +};
-> > +
-> > +/**
-> > + * struct ec_event - Extended event returned by the EC.
-> > + * @size: Number of words in structure after the size word.
-> > + * @type: Extended event type from &enum ec_event_type.
-> > + * @event: Event data words.  Max count is %EC_ACPI_MAX_EVENT_DATA.
-> > + */
-> > +struct ec_event {
-> > +       u16 size;
-> > +       u16 type;
-> > +       u16 event[0];
-> > +} __packed;
-> > +
-> > +/**
-> > + * struct ec_event_entry - Event queue entry.
-> > + * @list: List node.
-> > + * @size: Number of bytes in event structure.
-> > + * @event: Extended event returned by the EC.  This should be the last
-> > + *         element because &struct ec_event includes a zero length array.
-> > + */
-> > +struct ec_event_entry {
-> > +       struct list_head list;
-> > +       size_t size;
-> > +       struct ec_event event;
-> > +};
-> > +
-> > +/**
-> > + * enqueue_events() - Place EC events in queue to be read by userspace.
-> > + * @adev: Device the events came from.
-> > + * @buf: Buffer of event data.
-> > + * @length: Length of event data buffer.
-> > + *
-> > + * %buf contains a number of ec_event's, packed one after the other.
-> > + * Each ec_event is of variable length. Start with the first event, copy it
-> > + * into a containing ev_event_entry, store that entry in a list, move on
-> > + * to the next ec_event in buf, and repeat.
-> > + *
-> > + * Return: 0 on success or negative error code on failure.
-> > + */
-> > +static int enqueue_events(struct acpi_device *adev, const u8 *buf, u32 length)
-> > +{
-> > +       struct event_device_data *dev_data = adev->driver_data;
-> > +       struct ec_event *event;
-> > +       struct ec_event_entry *entry;
-> > +       size_t event_size, num_words, word_size;
-> > +       u32 offset = 0;
-> > +
-> > +       while (offset < length) {
-> > +               event = (struct ec_event *)(buf + offset);
-> > +               if (!event)
-> > +                       return -EINVAL;
-> > +
-> > +               /* Number of 16bit event data words is size - 1 */
-> > +               num_words = event->size - 1;
-> > +               word_size = num_words * sizeof(u16);
-> > +               event_size = sizeof(*event) + word_size;
-> > +               if (num_words > EC_ACPI_MAX_EVENT_DATA) {
-> > +                       dev_err(&adev->dev, "Too many event words: %d > %d\n",
-> > +                               num_words, EC_ACPI_MAX_EVENT_DATA);
-> > +                       return -EOVERFLOW;
-> > +               };
-> > +
-> > +               /* Ensure event does not overflow the available buffer */
-> > +               if ((offset + event_size) > length) {
-> > +                       dev_err(&adev->dev, "Event exceeds buffer: %d > %d\n",
-> > +                               offset + event_size, length);
-> > +                       return -EOVERFLOW;
-> > +               }
-> > +
-> > +               /* Point to the next event in the buffer */
-> > +               offset += event_size;
-> > +
-> > +               /* Create event entry for the queue */
-> > +               entry = kzalloc(sizeof(struct ec_event_entry) + word_size,
-> > +                               GFP_KERNEL);
-> > +               if (!entry)
-> > +                       return -ENOMEM;
-> > +               entry->size = event_size;
-> > +               memcpy(&entry->event, event, entry->size);
-> > +
-> > +               /* Add this event to the queue */
-> > +               mutex_lock(&dev_data->lock);
-> > +               list_add_tail(&entry->list, &dev_data->events);
-> > +               mutex_unlock(&dev_data->lock);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +/**
-> > + * event_device_notify() - Callback when EC generates an event over ACPI.
-> > + * @adev: The device that the event is coming from.
-> > + * @value: Value passed to Notify() in ACPI.
-> > + *
-> > + * This function will read the events from the device and enqueue them.
-> > + */
-> > +static void event_device_notify(struct acpi_device *adev, u32 value)
-> > +{
-> > +       struct acpi_buffer event_buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-> > +       struct event_device_data *dev_data = adev->driver_data;
-> > +       union acpi_object *obj;
-> > +       acpi_status status;
-> > +
-> > +       if (value != EC_ACPI_NOTIFY_EVENT) {
-> > +               dev_err(&adev->dev, "Invalid event: 0x%08x\n", value);
-> > +               return;
-> > +       }
-> > +
-> > +       /* Execute ACPI method to get event data buffer. */
-> > +       status = acpi_evaluate_object(adev->handle, EC_ACPI_GET_EVENT,
-> > +                                     NULL, &event_buffer);
-> > +       if (ACPI_FAILURE(status)) {
-> > +               dev_err(&adev->dev, "Error executing ACPI method %s()\n",
-> > +                       EC_ACPI_GET_EVENT);
-> > +               return;
-> > +       }
-> > +
-> > +       obj = (union acpi_object *)event_buffer.pointer;
-> > +       if (!obj) {
-> > +               dev_err(&adev->dev, "Nothing returned from %s()\n",
-> > +                       EC_ACPI_GET_EVENT);
-> > +               return;
-> > +       }
-> > +       if (obj->type != ACPI_TYPE_BUFFER) {
-> > +               dev_err(&adev->dev, "Invalid object returned from %s()\n",
-> > +                       EC_ACPI_GET_EVENT);
-> > +               kfree(obj);
-> > +               return;
-> > +       }
-> > +       if (obj->buffer.length < sizeof(struct ec_event)) {
-> > +               dev_err(&adev->dev, "Invalid buffer length %d from %s()\n",
-> > +                       obj->buffer.length, EC_ACPI_GET_EVENT);
-> > +               kfree(obj);
-> > +               return;
-> > +       }
-> > +
-> > +       enqueue_events(adev, obj->buffer.pointer, obj->buffer.length);
-> > +       kfree(obj);
-> > +
-> > +       if (!list_empty(&dev_data->events))
-> > +               wake_up_interruptible(&dev_data->wq);
-> > +}
-> > +
-> > +static int event_open(struct inode *inode, struct file *filp)
-> > +{
-> > +       struct event_device_data *dev_data;
-> > +
-> > +       dev_data = container_of(inode->i_cdev, struct event_device_data, cdev);
-> > +       if (!dev_data->exist)
-> > +               return -ENODEV;
-> > +
-> > +       /* Increase refcount on device so dev_data is not freed */
-> > +       get_device(&dev_data->dev);
-> > +       nonseekable_open(inode, filp);
-> > +       filp->private_data = dev_data;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static __poll_t event_poll(struct file *filp, poll_table *wait)
-> > +{
-> > +       struct event_device_data *dev_data = filp->private_data;
-> > +       __poll_t mask = 0;
-> > +
-> > +       poll_wait(filp, &dev_data->wq, wait);
-> > +       if (!dev_data->exist)
-> > +               return -ENODEV;
-> > +       if (!list_empty(&dev_data->events))
-> > +               mask |= EPOLLIN | EPOLLRDNORM | EPOLLPRI;
-> > +       return mask;
-> > +}
-> > +
-> > +/**
-> > + * event_read() - Callback for passing event data to userspace via read().
-> > + * @filp: The file we are reading from.
-> > + * @buf: Pointer to userspace buffer to fill with one event.
-> > + * @count: Number of bytes requested. Must be at least EC_ACPI_MAX_EVENT_SIZE.
-> > + * @pos: File position pointer, irrelevant since we don't support seeking.
-> > + *
-> > + * Fills the passed buffer with the data from the first event in the queue,
-> > + * removes that event from the queue. On error, the event remains in the queue.
-> > + *
-> > + * If there are no events in the the queue, then one of two things happens,
-> > + * depending on if the file was opened in nonblocking mode: If in nonblocking
-> > + * mode, then return -EAGAIN to say there's no data. If in blocking mode, then
-> > + * block until an event is available.
-> > + *
-> > + * Return: Number of bytes placed in buffer, negative error code on failure.
-> > + */
-> > +static ssize_t event_read(struct file *filp, char __user *buf, size_t count,
-> > +                         loff_t *pos)
-> > +{
-> > +       struct event_device_data *dev_data = filp->private_data;
-> > +       struct ec_event_entry *entry;
-> > +       ssize_t n_bytes_written = 0;
-> > +       int err;
-> > +
-> > +       /* We only will give them the entire event at once */
-> > +       if (count != 0 && count < EC_ACPI_MAX_EVENT_SIZE)
-> > +               return -EINVAL;
-> > +
-> > +       mutex_lock(&dev_data->lock);
-> > +
-> > +       while (list_empty(&dev_data->events)) {
-> > +               if (filp->f_flags & O_NONBLOCK) {
-> > +                       mutex_unlock(&dev_data->lock);
-> > +                       return -EAGAIN;
-> > +               }
-> > +               /* Need to unlock so that data can actually get added to the
-> > +                * queue, and since we recheck before use and it's just
-> > +                * comparing pointers, this is safe unlocked.
-> > +                */
-> > +               mutex_unlock(&dev_data->lock);
-> > +               err = wait_event_interruptible(dev_data->wq,
-> > +                                              !list_empty(&dev_data->events));
-> > +               if (err)
-> > +                       return err;
-> > +
-> > +               /* Device was removed as we waited? */
-> > +               if (!dev_data->exist)
-> > +                       return -ENODEV;
-> > +               mutex_lock(&dev_data->lock);
-> > +       }
-> > +
-> > +       entry = list_first_entry(&dev_data->events,
-> > +                                struct ec_event_entry, list);
-> > +       n_bytes_written = entry->size;
-> > +       if (copy_to_user(buf, &entry->event, n_bytes_written))
-> > +               return -EFAULT;
-> > +       list_del(&entry->list);
-> > +       kfree(entry);
-> > +
-> > +       mutex_unlock(&dev_data->lock);
-> > +
-> > +       return n_bytes_written;
-> > +}
-> > +
-> > +static int event_release(struct inode *inode, struct file *filp)
-> > +{
-> > +       struct event_device_data *dev_data = filp->private_data;
-> > +
-> > +       put_device(&dev_data->dev);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct file_operations event_fops = {
-> > +       .open = event_open,
-> > +       .poll  = event_poll,
-> > +       .read = event_read,
-> > +       .release = event_release,
-> > +       .llseek = no_llseek,
-> > +       .owner = THIS_MODULE,
-> > +};
-> > +
-> > +/**
-> > + * free_device_data() - Callback to free the event_device_data structure.
-> > + * @d: The device embedded in our device data, which we have been ref counting.
-> > + *
-> > + * This is called only after event_device_remove() has been called and all
-> > + * userspace programs have called event_release() on all the open file
-> > + * descriptors.
-> > + */
-> > +static void free_device_data(struct device *d)
-> > +{
-> > +       struct event_device_data *dev_data;
-> > +
-> > +       dev_data = container_of(d, struct event_device_data, dev);
-> > +       kfree(dev_data);
-> > +}
-> > +
-> > +static void hangup_device(struct event_device_data *dev_data)
-> > +{
-> > +       mutex_lock(&dev_data->lock);
-> > +       dev_data->exist = false;
-> > +       mutex_unlock(&dev_data->lock);
-> > +
-> > +       /* Wake up the waiting processes so they can close. */
-> > +       wake_up_interruptible(&dev_data->wq);
-> > +       put_device(&dev_data->dev);
-> > +}
-> > +
-> > +/**
-> > + * event_device_add() - Callback when creating a new device.
-> > + * @adev: ACPI device that we will be receiving events from.
-> > + *
-> > + * This finds a free minor number for the device, allocates and initializes
-> > + * some device data, and creates a new device and char dev node.
-> > + *
-> > + * The device data is freed in free_device_data(), which is called when
-> > + * %dev_data->dev is release()ed. This happens after all references to
-> > + * %dev_data->dev are dropped, which happens once both event_device_remove()
-> > + * has been called and every open()ed file descriptor has been release()ed.
-> > + *
-> > + * Return: 0 on success, negative error code on failure.
-> > + */
-> > +static int event_device_add(struct acpi_device *adev)
-> > +{
-> > +       struct event_device_data *dev_data;
-> > +       dev_t dev_num;
-> > +       int error, minor;
-> > +
-> > +       minor = ida_alloc_max(&event_ida, EVENT_MAX_DEV-1, GFP_KERNEL);
-> > +       if (minor < 0) {
-> > +               error = minor;
-> > +               dev_err(&adev->dev, "Failed to find minor number: %d", error);
-> > +               return error;
-> > +       }
-> > +
-> > +       dev_data = kzalloc(sizeof(*dev_data), GFP_KERNEL);
-> > +       if (!dev_data) {
-> > +               error = -ENOMEM;
-> > +               goto free_minor;
-> > +       }
-> > +
-> > +       /* Initialize the device data. */
-> > +       adev->driver_data = dev_data;
-> > +       INIT_LIST_HEAD(&dev_data->events);
-> > +       mutex_init(&dev_data->lock);
-> > +       init_waitqueue_head(&dev_data->wq);
-> > +       dev_data->exist = true;
-> > +
-> > +       /* Initialize the device. */
-> > +       dev_num = MKDEV(event_major, minor);
-> > +       dev_data->dev.devt = dev_num;
-> > +       dev_data->dev.class = &event_class;
-> > +       dev_data->dev.release = free_device_data;
-> > +       dev_set_name(&dev_data->dev, EVENT_DEV_NAME_FMT, minor);
-> > +       device_initialize(&dev_data->dev);
-> > +
-> > +       /* Initialize the character device, and add it to userspace. */
-> > +       cdev_init(&dev_data->cdev, &event_fops);
-> > +       error = cdev_device_add(&dev_data->cdev, &dev_data->dev);
-> > +       if (error)
-> > +               goto free_dev_data;
-> > +
-> > +       return 0;
-> > +
-> > +free_dev_data:
-> > +       hangup_device(dev_data);
-> > +free_minor:
-> > +       ida_simple_remove(&event_ida, minor);
-> > +       return error;
-> > +}
-> > +
-> > +static int event_device_remove(struct acpi_device *adev)
-> > +{
-> > +       struct event_device_data *dev_data = adev->driver_data;
-> > +
-> > +       cdev_device_del(&dev_data->cdev, &dev_data->dev);
-> > +       ida_simple_remove(&event_ida, MINOR(dev_data->dev.devt));
-> > +       hangup_device(dev_data);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct acpi_device_id event_acpi_ids[] = {
-> > +       { "GOOG000D", 0 },
-> > +       { }
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, event_acpi_ids);
-> > +
-> > +static struct acpi_driver event_driver = {
-> > +       .name = DRV_NAME,
-> > +       .class = DRV_NAME,
-> > +       .ids = event_acpi_ids,
-> > +       .ops = {
-> > +               .add = event_device_add,
-> > +               .notify = event_device_notify,
-> > +               .remove = event_device_remove,
-> > +       },
-> > +       .owner = THIS_MODULE,
-> > +};
-> > +
-> > +static int __init event_module_init(void)
-> > +{
-> > +       dev_t dev_num = 0;
-> > +       int ret;
-> > +
-> > +       ret = class_register(&event_class);
-> > +       if (ret) {
-> > +               pr_warn(DRV_NAME ": Failed registering class: %d", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       /* Request device numbers, starting with minor=0. Save the major num. */
-> > +       ret = alloc_chrdev_region(&dev_num, 0, EVENT_MAX_DEV, EVENT_DEV_NAME);
-> > +       if (ret) {
-> > +               pr_warn(DRV_NAME ": Failed allocating dev numbers: %d", ret);
-> > +               goto destroy_class;
-> > +       }
-> > +       event_major = MAJOR(dev_num);
-> > +
-> > +       ret = acpi_bus_register_driver(&event_driver);
-> > +       if (ret < 0) {
-> > +               pr_warn(DRV_NAME ": Failed registering driver: %d\n", ret);
-> > +               goto unregister_region;
-> > +       }
-> > +
-> > +       return 0;
-> > +
-> > +unregister_region:
-> > +       unregister_chrdev_region(MKDEV(event_major, 0), EVENT_MAX_DEV);
-> > +destroy_class:
-> > +       class_unregister(&event_class);
-> > +       ida_destroy(&event_ida);
-> > +       return ret;
-> > +}
-> > +
-> > +static void __exit event_module_exit(void)
-> > +{
-> > +       acpi_bus_unregister_driver(&event_driver);
-> > +       unregister_chrdev_region(MKDEV(event_major, 0), EVENT_MAX_DEV);
-> > +       class_unregister(&event_class);
-> > +       ida_destroy(&event_ida);
-> > +}
-> > +
-> > +module_init(event_module_init);
-> > +module_exit(event_module_exit);
-> > +
-> > +MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
-> > +MODULE_DESCRIPTION("Wilco EC ACPI event driver");
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_ALIAS("platform:" DRV_NAME);
-> > --
-> > 2.21.0.rc0.258.g878e2cd30e-goog
-> >
+> I tried a couple of alternative approaches, but the previous version
+> seems as good as any other, so I went back to that.
+> 
+> Fixes: b907e20508d0 ("swiotlb: remove SWIOTLB_MAP_ERROR")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/xen/swiotlb-xen.c | 4 ++--
+>   include/linux/swiotlb.h   | 3 +++
+>   kernel/dma/swiotlb.c      | 4 ++--
+>   3 files changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+> index 877baf2a94f4..57a98279bf4f 100644
+> --- a/drivers/xen/swiotlb-xen.c
+> +++ b/drivers/xen/swiotlb-xen.c
+> @@ -406,7 +406,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+>   
+>   	map = swiotlb_tbl_map_single(dev, start_dma_addr, phys, size, dir,
+>   				     attrs);
+> -	if (map == DMA_MAPPING_ERROR)
+> +	if (map == SWIOTLB_MAP_ERROR)
+>   		return DMA_MAPPING_ERROR;
+>   
+>   	dev_addr = xen_phys_to_bus(map);
+> @@ -557,7 +557,7 @@ xen_swiotlb_map_sg_attrs(struct device *hwdev, struct scatterlist *sgl,
+>   								 sg_phys(sg),
+>   								 sg->length,
+>   								 dir, attrs);
+> -			if (map == DMA_MAPPING_ERROR) {
+> +			if (map == SWIOTLB_MAP_ERROR) {
+>   				dev_warn(hwdev, "swiotlb buffer is full\n");
+>   				/* Don't panic here, we expect map_sg users
+>   				   to do proper error handling. */
+> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+> index 361f62bb4a8e..a65a36551f58 100644
+> --- a/include/linux/swiotlb.h
+> +++ b/include/linux/swiotlb.h
+> @@ -44,6 +44,9 @@ enum dma_sync_target {
+>   	SYNC_FOR_DEVICE = 1,
+>   };
+>   
+> +/* define the last possible byte of physical address space as a mapping error */
+> +#define SWIOTLB_MAP_ERROR (~(phys_addr_t)0x0)
+> +
+>   extern phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+>   					  dma_addr_t tbl_dma_addr,
+>   					  phys_addr_t phys, size_t size,
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index 12059b78b631..922880b84387 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -541,7 +541,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+>   	spin_unlock_irqrestore(&io_tlb_lock, flags);
+>   	if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
+>   		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes)\n", size);
+> -	return DMA_MAPPING_ERROR;
+> +	return SWIOTLB_MAP_ERROR;
+>   found:
+>   	io_tlb_used += nslots;
+>   	spin_unlock_irqrestore(&io_tlb_lock, flags);
+> @@ -659,7 +659,7 @@ bool swiotlb_map(struct device *dev, phys_addr_t *phys, dma_addr_t *dma_addr,
+>   	/* Oh well, have to allocate and map a bounce buffer. */
+>   	*phys = swiotlb_tbl_map_single(dev, __phys_to_dma(dev, io_tlb_start),
+>   			*phys, size, dir, attrs);
+> -	if (*phys == DMA_MAPPING_ERROR)
+> +	if (*phys == SWIOTLB_MAP_ERROR)
+>   		return false;
+>   
+>   	/* Ensure that the address returned is DMA'ble */
+> 
