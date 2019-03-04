@@ -2,203 +2,190 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E3DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6D0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74BDA206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:51:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nt2nP1Z8"
+	by mail.kernel.org (Postfix) with ESMTP id 80017206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfCDVvR (ORCPT
+        id S1726194AbfCDVxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 16:51:17 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60404 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfCDVvQ (ORCPT
+        Mon, 4 Mar 2019 16:53:10 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50838 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfCDVxK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 16:51:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=M1LlA0O36py7SEZ7WWbUKLyA+ZRRYPvZmGqyNruBKA4=; b=Nt2nP1Z8JtE6FCIldaO0qHxZi
-        N6iZiUWufNrLBmnPTG0OSzfanxAvuW9/3G4fqiknG8gqxGHUoDMbLSpWfTDpybqL3RORiKzol9Vjb
-        vFttS1WnS5GdMbU6GeayST0/y33vUeKdcN/UdZrWOHWIe548/+PfBBnsnIQjb5Y3As/ZmCFc4MfIp
-        1kCPRteXOXxdNkUJZDiD5y+4dwrUp5a9rR2nxmYOx7HTHFEwBznKeEKnbuW4tiPexREkAbDY9bnVm
-        YnWjQRo3KevLLSCNnc2aiqlqOLvE0F/p25a78hJ6WsIg6tSvAFvNyVPVwmmBhlsv1Zedfx5vzkWQ0
-        HLLeLwwzA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h0vUO-0007Un-8q; Mon, 04 Mar 2019 21:51:12 +0000
-Date:   Mon, 4 Mar 2019 13:51:12 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
-        mhocko@kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
-        cgroups@vger.kernel.org, hannes@cmpxchg.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com, vdavydov.dev@gmail.com,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
-Message-ID: <20190304215111.GA13380@bombadil.infradead.org>
-References: <00000000000006457e057c341ff8@google.com>
- <5C7BFE94.6070500@huawei.com>
+        Mon, 4 Mar 2019 16:53:10 -0500
+Received: from [IPv6:2804:431:9718:a1b1:9d17:4c45:79a4:9c61] (unknown [IPv6:2804:431:9718:a1b1:9d17:4c45:79a4:9c61])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A505E263971;
+        Mon,  4 Mar 2019 21:53:05 +0000 (GMT)
+Subject: Re: rpi-b-rev2 can't detect hdmi display due to wrong hpd gpio pull
+ in dts
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, lkundrak@v3.sk,
+        bcm-kernel-feedback-list@broadcom.com, eric@anholt.net,
+        devicetree@vger.kernel.org, kernel@collabora.com
+References: <20190304185454.18043-1-helen.koike@collabora.com>
+ <1194402400.301453.1551730542978@email.ionos.de>
+From:   Helen Koike <helen.koike@collabora.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=helen.koike@collabora.com; keydata=
+ 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
+Message-ID: <969f5b77-9b4f-f91d-40c0-07ca93d68cb9@collabora.com>
+Date:   Mon, 4 Mar 2019 18:52:52 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5C7BFE94.6070500@huawei.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+In-Reply-To: <1194402400.301453.1551730542978@email.ionos.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 12:19:32AM +0800, zhong jiang wrote:
-> I also hit the following issue. but it fails to reproduce the issue by the log.
+
+
+On 3/4/19 5:15 PM, Stefan Wahren wrote:
+> Hi Helen,
 > 
-> it seems to the case that we access the mm->owner and deference it will result in the UAF.
-> But it should not be possible that we specify the incomplete process to be the mm->owner.
-
-OK, so we've got thread 9325 calling fork() and failing due to the PID
-controller saying "no".  9325 calls free_task(), but somehow thread 9332
-has a reference to the struct task_struct.  There are two possibilities
-here: one is that 9332 really did manage to get a reference to the larval
-child of 9325, and the other is that 9332 has a stale reference to some
-memory which was reallocated to 9325's child.
-
-Andrea, is there any way for a UFFD thread to get access to the child's
-task_struct during the copy_process() call?  If so, I think copy_process()
-needs to call mm_update_next_owner().
-
-If there's no way for that to happen, then we have quite a bug-hunt ahead
-of us looking for who is missing a call to mm_update_next_owner().
-
-> On 2018/12/4 23:43, syzbot wrote:
-> > syzbot has found a reproducer for the following crash on:
-> >
-> > HEAD commit:    0072a0c14d5b Merge tag 'media/v4.20-4' of git://git.kernel..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=11c885a3400000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b9cc5a440391cbfd
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=cbb52e396df3e565ab02
-> > compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12835e25400000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172fa5a3400000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com
-> >
-> > cgroup: fork rejected by pids controller in /syz2
-> > ==================================================================
-> > BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:182 [inline]
-> > BUG: KASAN: use-after-free in task_css include/linux/cgroup.h:477 [inline]
-> > BUG: KASAN: use-after-free in mem_cgroup_from_task mm/memcontrol.c:815 [inline]
-> > BUG: KASAN: use-after-free in get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
-> > Read of size 8 at addr ffff8881b72af310 by task syz-executor198/9332
-> >
-> > CPU: 0 PID: 9332 Comm: syz-executor198 Not tainted 4.20.0-rc5+ #142
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x244/0x39d lib/dump_stack.c:113
-> >  print_address_description.cold.7+0x9/0x1ff mm/kasan/report.c:256
-> >  kasan_report_error mm/kasan/report.c:354 [inline]
-> >  kasan_report.cold.8+0x242/0x309 mm/kasan/report.c:412
-> >  __asan_report_load8_noabort+0x14/0x20 mm/kasan/report.c:433
-> >  __read_once_size include/linux/compiler.h:182 [inline]
-> >  task_css include/linux/cgroup.h:477 [inline]
-> >  mem_cgroup_from_task mm/memcontrol.c:815 [inline]
-> >  get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
-> >  get_mem_cgroup_from_mm mm/memcontrol.c:834 [inline]
-> >  mem_cgroup_try_charge+0x608/0xe20 mm/memcontrol.c:5888
-> >  mcopy_atomic_pte mm/userfaultfd.c:71 [inline]
-> >  mfill_atomic_pte mm/userfaultfd.c:418 [inline]
-> >  __mcopy_atomic mm/userfaultfd.c:559 [inline]
-> >  mcopy_atomic+0xb08/0x2c70 mm/userfaultfd.c:609
-> >  userfaultfd_copy fs/userfaultfd.c:1705 [inline]
-> >  userfaultfd_ioctl+0x29fb/0x5610 fs/userfaultfd.c:1851
-> >  vfs_ioctl fs/ioctl.c:46 [inline]
-> >  file_ioctl fs/ioctl.c:509 [inline]
-> >  do_vfs_ioctl+0x1de/0x1790 fs/ioctl.c:696
-> >  ksys_ioctl+0xa9/0xd0 fs/ioctl.c:713
-> >  __do_sys_ioctl fs/ioctl.c:720 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:718 [inline]
-> >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-> >  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x44c7e9
-> > Code: 5d c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007f906b69fdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > RAX: ffffffffffffffda RBX: 00000000006e4a08 RCX: 000000000044c7e9
-> > RDX: 0000000020000100 RSI: 00000000c028aa03 RDI: 0000000000000004
-> > RBP: 00000000006e4a00 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e4a0c
-> > R13: 00007ffdfd47813f R14: 00007f906b6a09c0 R15: 000000000000002d
-> >
-> > Allocated by task 9325:
-> >  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-> >  set_track mm/kasan/kasan.c:460 [inline]
-> >  kasan_kmalloc+0xc7/0xe0 mm/kasan/kasan.c:553
-> >  kasan_slab_alloc+0x12/0x20 mm/kasan/kasan.c:490
-> >  kmem_cache_alloc_node+0x144/0x730 mm/slab.c:3644
-> >  alloc_task_struct_node kernel/fork.c:158 [inline]
-> >  dup_task_struct kernel/fork.c:843 [inline]
-> >  copy_process+0x2026/0x87a0 kernel/fork.c:1751
-> >  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
-> >  __do_sys_clone kernel/fork.c:2323 [inline]
-> >  __se_sys_clone kernel/fork.c:2317 [inline]
-> >  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
-> >  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > Freed by task 9325:
-> >  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-> >  set_track mm/kasan/kasan.c:460 [inline]
-> >  __kasan_slab_free+0x102/0x150 mm/kasan/kasan.c:521
-> >  kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
-> >  __cache_free mm/slab.c:3498 [inline]
-> >  kmem_cache_free+0x83/0x290 mm/slab.c:3760
-> >  free_task_struct kernel/fork.c:163 [inline]
-> >  free_task+0x16e/0x1f0 kernel/fork.c:457
-> >  copy_process+0x1dcc/0x87a0 kernel/fork.c:2148
-> >  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
-> >  __do_sys_clone kernel/fork.c:2323 [inline]
-> >  __se_sys_clone kernel/fork.c:2317 [inline]
-> >  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
-> >  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > The buggy address belongs to the object at ffff8881b72ae240
-> >  which belongs to the cache task_struct(81:syz2) of size 6080
-> > The buggy address is located 4304 bytes inside of
-> >  6080-byte region [ffff8881b72ae240, ffff8881b72afa00)
-> > The buggy address belongs to the page:
-> > page:ffffea0006dcab80 count:1 mapcount:0 mapping:ffff8881d2dce0c0 index:0x0 compound_mapcount: 0
-> > flags: 0x2fffc0000010200(slab|head)
-> > raw: 02fffc0000010200 ffffea00074a1f88 ffffea0006ebbb88 ffff8881d2dce0c0
-> > raw: 0000000000000000 ffff8881b72ae240 0000000100000001 ffff8881d87fe580
-> > page dumped because: kasan: bad access detected
-> > page->mem_cgroup:ffff8881d87fe580
-> >
-> > Memory state around the buggy address:
-> >  ffff8881b72af200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >  ffff8881b72af280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >> ffff8881b72af300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >                          ^
-> >  ffff8881b72af380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >  ffff8881b72af400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ==================================================================
-> >
-> >
-> > .
-> >
+>> Helen Koike <helen.koike@collabora.com> hat am 4. März 2019 um 19:54 geschrieben:
+>>
+>>
+>> Hello,
+>>
+>> I have a rpi-b-rev2 (two holes, 512M) and when I was trying to test vc4
+>> driver, the HDMI wans't being detected.
+>>
+>> So I changed the hpd-gpios from ACTIVE_LOW to ACTIVE_HIGH and now it
+>> works correctly. I can see that modeprint from libdrm detects correctly
+>> when the display is plugged and when it is unpluggled.
+>>
+>> So I was wondering if this is just in my board or if there is an error
+>> in the dts (which I think it's unlikely).
+>>
+>> In any case I am dropping this email here in case anyone else see this
+>> problem, if you do, try appliying the patch below.
 > 
+> thanks for your report and the patch. I verified your change against dt-blob.dts / downstream file and it's correct.
 > 
+> I'm sorry but i cannot apply your patch because it doesn't have the proper format.
+> 
+> Should i take care of this?
+> Can i add your Signed-off-by including your mail address?
+
+I just resent it in a proper format, please check.
+
+Thanks!
+
+Helen
+
+> 
+> Stefan
+> 
+>>
+>> Regards,
+>> Helen
+>>
+>> ---
+>>  arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+>> index 5641d162dfdb..28e7513ce617 100644
+>> --- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+>> +++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+>> @@ -93,7 +93,7 @@
+>>  };
+>>  
+>>  &hdmi {
+>> -	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
+>> +	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
+>>  };
+>>  
+>>  &pwm {
+>> -- 
+>> 2.20.1
+>>
