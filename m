@@ -2,126 +2,271 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DC0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639C0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73AF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306812070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfCDTTd (ORCPT
+        id S1726138AbfCDTTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:19:33 -0500
-Received: from mga07.intel.com ([134.134.136.100]:28417 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfCDTTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:19:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 11:19:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,441,1544515200"; 
-   d="scan'208";a="304312899"
-Received: from ray.jf.intel.com (HELO [10.7.201.19]) ([10.7.201.19])
-  by orsmga005.jf.intel.com with ESMTP; 04 Mar 2019 11:19:31 -0800
-From:   Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v4 07/17] x86/split_lock: Enumerate #AC for split lock by
- MSR IA32_CORE_CAPABILITY
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
- <1551494711-213533-8-git-send-email-fenghua.yu@intel.com>
- <8b810f50-e4ed-7020-c0df-203cf98c3ce8@intel.com>
- <20190304185922.GA231946@romley-ivt3.sc.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <d582d469-40aa-287e-4368-723bf3ff4251@intel.com>
-Date:   Mon, 4 Mar 2019 11:19:31 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 4 Mar 2019 14:19:48 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57048 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726038AbfCDTTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:19:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E0317AE8D;
+        Mon,  4 Mar 2019 19:19:45 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id C825CDA7F5; Mon,  4 Mar 2019 20:21:04 +0100 (CET)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs updates for 5.1, part 1
+Date:   Mon,  4 Mar 2019 20:20:53 +0100
+Message-Id: <cover.1551726327.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190304185922.GA231946@romley-ivt3.sc.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 10:59 AM, Fenghua Yu wrote:
->> But, it goes unmentioned why you do the boot-cpu-only restriction here.
->>  It doesn't match the behavior of the two functions called before
->> init_core_capability():
->>
->>         init_scattered_cpuid_features(c);
->>         init_speculation_control(c);
->>
->> So why is this new function special?
-> The function sets the split_lock_detect feature which needs to be
-> applied before BSP calls apply_enforced_caps() in get_cpu_cap(). 
+Hi,
 
-Why does it need to be applied that way?
+the branch contains usual mix of new features, core changes and fixes;
+full list below. I'm planning 2nd pull request, with a few more fixes
+that arrived recently but too close to merge window, will send it next
+week.
 
-> And I want to enable split lock detection in earlier phase to detect
-> split lock earlier.
+Please pull, thanks.
 
-Why do you want to do this?  Why is this *required* as part of this
-implementation?
 
-... and how is this different than the other features that are processed
-for cpus other than the boot CPU?
+New features:
+
+- support zstd compression levels
+
+- new ioctl to unregister a device from the module (ie. reverse of device
+  scan)
+
+- scrub prints a message to log when it's about to start or finish
+
+
+Core changes:
+
+- qgroups can now skip part of a tree that does not get updated during
+  relocation, because this does not affect the quota accounting, estimated
+  speedup in run time is about 20%
+
+- the compression workspace management had to be enhanced due to zstd
+  requirements
+
+- various enospc fixes, when there's high fragmentation the
+  over-reservation can cause ENOSPC that might not happen after a flush,
+  in such cases try to wait if the situation improves
+
+
+Fixes:
+
+- various ioctls could overwrite previous return value if copy_to_user
+  fails, fix this so the original error is reported
+
+- more reclaim vs GFP_KERNEL fixes
+
+- other cleanups and refactoring
+
+- fix a (valid) lockdep warning in a test when device replace is
+  destroying worker threads
+
+- make qgroup async transaction commit more aggressive, this avoids some
+  'quota limit reached' errors if there are not enough data to trigger
+  transaction in order to flush
+
+- fix deadlock between snapshot deletion and quotas when backref walking
+  is called from context that already holds the same locks
+
+- fsync fixes:
+  - fix fsync after succession of renames of different files
+  - fix fsync after succession of renames and unlink/rmdir
+
+----------------------------------------------------------------
+The following changes since commit 5908e6b738e3357af42c10e1183753c70a0117a9:
+
+  Linux 5.0-rc8 (2019-02-24 16:46:45 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.1-part1-tag
+
+for you to fetch changes up to f65e25e343cfc0e6f4db9a687c4085fad268325d:
+
+  btrfs: Remove unnecessary casts in btrfs_read_root_item (2019-02-25 14:19:23 +0100)
+
+----------------------------------------------------------------
+Anand Jain (11):
+      btrfs: merge btrfs_find_device_missing_or_by_path() into parent
+      btrfs: cleanup btrfs_find_device_by_devspec()
+      btrfs: refactor btrfs_find_device() take fs_devices as argument
+      btrfs: refactor btrfs_free_stale_devices() to get return value
+      btrfs: merge btrfs_find_device and find_device
+      btrfs: scrub: print messages when started or finished
+      btrfs: introduce new ioctl to unregister a btrfs device
+      btrfs: fix comment its device list mutex not volume lock
+      btrfs: scrub: fix circular locking dependency warning
+      btrfs: scrub: add scrub_lock lockdep check in scrub_workers_get
+      btrfs: scrub: convert scrub_workers_refcnt to refcount_t
+
+Anders Roxell (1):
+      btrfs: let the assertion expression compile in all configs
+
+Dan Carpenter (1):
+      btrfs: drop the lock on error in btrfs_dev_replace_cancel
+
+Dan Robertson (1):
+      btrfs: init csum_list before possible free
+
+David Sterba (9):
+      btrfs: simplify workqueue name when allocating
+      btrfs: split btrfs_set_lock_blocking_rw to read and write helpers
+      btrfs: split btrfs_clear_lock_blocking_rw to read and write helpers
+      btrfs: replace btrfs_set_lock_blocking_rw with appropriate helpers
+      btrfs: open code now trivial btrfs_set_lock_blocking
+      btrfs: simplify waiting loop in btrfs_tree_lock
+      btrfs: merge btrfs_set_lock_blocking_rw with it's caller
+      btrfs: scrub: add assertions for worker pointers
+      btrfs: scrub: remove unused nocow worker pointer
+
+Dennis Zhou (12):
+      btrfs: add helpers for compression type and level
+      btrfs: rename workspaces_list to workspace_manager
+      btrfs: manage heuristic workspace as index 0
+      btrfs: unify compression ops with workspace_manager
+      btrfs: add helper methods for workspace manager init and cleanup
+      btrfs: add compression interface in (get/put)_workspace
+      btrfs: move to function pointers for get/put workspaces
+      btrfs: plumb level through the compression interface
+      btrfs: change set_level() to bound the level passed in
+      btrfs: zstd use the passed through level instead of default
+      btrfs: make zstd memory requirements monotonic
+      btrfs: add zstd compression level support
+
+Filipe Manana (14):
+      Btrfs: do not overwrite scrub error with fault error in scrub ioctl
+      Btrfs: do not overwrite error return value in scrub progress ioctl
+      Btrfs: do not overwrite error return value in the get device stats ioctl
+      Btrfs: setup a nofs context for memory allocation at btrfs_create_tree()
+      Btrfs: setup a nofs context for memory allocation at __btrfs_set_acl
+      Btrfs: remove redundant check for swapfiles when reflinking
+      Btrfs: do not overwrite error return value in the device replace ioctl
+      Btrfs: do not overwrite error return value in the balance ioctl
+      Btrfs: move duplicated nodatasum check into common reflink/dedupe helper
+      Btrfs: fix fsync after succession of renames of different files
+      Btrfs: fix fsync after succession of renames and unlink/rmdir
+      Btrfs: remove no longer needed range length checks for deduplication
+      Btrfs: add missing error handling after doing leaf/node binary search
+      Btrfs: remove assertion when searching for a key in a node/leaf
+
+Johannes Thumshirn (1):
+      btrfs: ensure that a DUP or RAID1 block group has exactly two stripes
+
+Josef Bacik (12):
+      btrfs: make btrfs_destroy_delayed_refs use btrfs_delayed_ref_lock
+      btrfs: make btrfs_destroy_delayed_refs use btrfs_delete_ref_head
+      btrfs: call btrfs_create_pending_block_groups unconditionally
+      btrfs: replace cleaner_delayed_iput_mutex with a waitqueue
+      btrfs: check if there are free block groups for commit
+      btrfs: dump block_rsv details when dumping space info
+      btrfs: don't use global reserve for chunk allocation
+      btrfs: don't enospc all tickets on flush failure
+      btrfs: loop in inode_rsv_refill
+      btrfs: be more explicit about allowed flush states
+      btrfs: reserve extra space during evict
+      btrfs: honor path->skip_locking in backref code
+
+Julia Lawall (1):
+      Btrfs: drop useless LIST_HEAD in merge_reloc_root
+
+Nikolay Borisov (17):
+      btrfs: Make first argument of btrfs_run_delalloc_range directly an inode
+      btrfs: Remove unused arguments from btrfs_get_extent_fiemap
+      btrfs: Refactor btrfs_get_extent_fiemap
+      btrfs: Remove redundant assignment in btrfs_get_extent_fiemap
+      btrfs: Remove inode argument from async_cow_submit
+      btrfs: Remove isize local variable in compress_file_range
+      btrfs: Use ihold instead of igrab in cow_file_range_async
+      btrfs: Remove WARN_ON in btrfs_alloc_delalloc_work
+      btrfs: Document logic regarding inode in async_cow_submit
+      btrfs: Refactor shrink_delalloc
+      btrfs: Remove impossible condition from mergable_maps
+      btrfs: Rename found_type to extent_type in btrfs_get_extent
+      btrfs: Consolidate retval checking of core btree functions
+      btrfs: Remove not_found_em label from btrfs_get_extent
+      btrfs: use WARN_ON in a canonical form btrfs_remove_block_group
+      btrfs: Remove EXTENT_FIRST_DELALLOC bit
+      btrfs: Fix grossly misleading argument names in extent io search
+
+Qu Wenruo (10):
+      btrfs: relocation: Delay reloc tree deletion after merge_reloc_roots
+      btrfs: qgroup: Refactor btrfs_qgroup_trace_subtree_swap
+      btrfs: qgroup: Introduce per-root swapped blocks infrastructure
+      btrfs: qgroup: Use delayed subtree rescan for balance
+      btrfs: qgroup: Cleanup old subtree swap code
+      btrfs: qgroup: Remove duplicated trace points for qgroup_rsv_add/release
+      btrfs: Output ENOSPC debug info in inc_block_group_ro
+      btrfs: extent_io: Kill the forward declaration of flush_write_bio
+      btrfs: qgroup: Move reserved data accounting from btrfs_delayed_ref_head to btrfs_qgroup_extent_record
+      btrfs: qgroup: Make qgroup async transaction commit more aggressive
+
+YueHaibing (2):
+      btrfs: remove set but not used variable 'num_pages'
+      btrfs: Remove unnecessary casts in btrfs_read_root_item
+
+ fs/btrfs/acl.c               |   9 ++
+ fs/btrfs/async-thread.c      |  10 +-
+ fs/btrfs/backref.c           |  22 ++-
+ fs/btrfs/compression.c       | 253 ++++++++++++++---------------
+ fs/btrfs/compression.h       |  52 +++++-
+ fs/btrfs/ctree.c             |  74 ++++-----
+ fs/btrfs/ctree.h             |  61 +++++--
+ fs/btrfs/delayed-ref.c       |  15 +-
+ fs/btrfs/delayed-ref.h       |  11 --
+ fs/btrfs/dev-replace.c       |   9 +-
+ fs/btrfs/disk-io.c           |  39 +++--
+ fs/btrfs/extent-tree.c       | 292 +++++++++++++++++++++------------
+ fs/btrfs/extent_io.c         |  87 +++++-----
+ fs/btrfs/extent_io.h         |  15 +-
+ fs/btrfs/extent_map.c        |   5 +-
+ fs/btrfs/extent_map.h        |   1 +
+ fs/btrfs/file.c              |   3 +-
+ fs/btrfs/inode.c             | 207 +++++++++++++++---------
+ fs/btrfs/ioctl.c             |  60 ++-----
+ fs/btrfs/locking.c           | 108 ++++++-------
+ fs/btrfs/locking.h           |  15 +-
+ fs/btrfs/lzo.c               |  31 +++-
+ fs/btrfs/qgroup.c            | 372 ++++++++++++++++++++++++++++++++-----------
+ fs/btrfs/qgroup.h            | 120 ++++++++++++--
+ fs/btrfs/ref-verify.c        |   4 +-
+ fs/btrfs/relocation.c        | 119 ++++++++++----
+ fs/btrfs/root-tree.c         |   4 +-
+ fs/btrfs/scrub.c             |  49 ++++--
+ fs/btrfs/super.c             |  13 +-
+ fs/btrfs/transaction.c       |   9 +-
+ fs/btrfs/tree-defrag.c       |   2 +-
+ fs/btrfs/tree-log.c          | 282 ++++++++++++++++++++++++++------
+ fs/btrfs/volumes.c           | 202 ++++++++++++-----------
+ fs/btrfs/volumes.h           |   5 +-
+ fs/btrfs/zlib.c              |  45 +++++-
+ fs/btrfs/zstd.c              | 316 ++++++++++++++++++++++++++++++++++--
+ include/trace/events/btrfs.h |  30 +---
+ include/uapi/linux/btrfs.h   |   2 +
+ 38 files changed, 1993 insertions(+), 960 deletions(-)
