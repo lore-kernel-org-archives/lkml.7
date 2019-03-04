@@ -2,214 +2,457 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F43C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A891C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B594206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACA220823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfCDOAo (ORCPT
+        id S1726727AbfCDOBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:00:44 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4211 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726063AbfCDOAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:00:44 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id ADB15737ACCDD4D5DECD;
-        Mon,  4 Mar 2019 22:00:39 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Mon, 4 Mar 2019
- 22:00:35 +0800
-Message-ID: <5C7D2F82.40907@huawei.com>
-Date:   Mon, 4 Mar 2019 22:00:34 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Mon, 4 Mar 2019 09:01:07 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:34080 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbfCDOBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 09:01:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D656CEBD;
+        Mon,  4 Mar 2019 06:01:05 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C2393F575;
+        Mon,  4 Mar 2019 06:01:01 -0800 (PST)
+Date:   Mon, 4 Mar 2019 14:00:59 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, ast@kernel.org,
+        atishp04@gmail.com, dancol@google.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        dietmar.eggemann@arm.com, gregkh@linuxfoundation.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, karim.yaghmour@opersys.com,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        mhiramat@kernel.org, rdunlap@infradead.org, rostedt@goodmis.org,
+        Shuah Khan <shuah@kernel.org>, yhs@fb.com
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190304140059.5t2bhq7x27jbiuqx@e107158-lin.cambridge.arm.com>
+References: <20190301160856.129678-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
-        "Michal Hocko" <mhocko@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        <cgroups@vger.kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Vlastimil Babka" <vbabka@suse.cz>
-Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
-References: <00000000000006457e057c341ff8@google.com> <5C7BFE94.6070500@huawei.com> <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com>
-In-Reply-To: <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190301160856.129678-1-joel@joelfernandes.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/4 15:40, Dmitry Vyukov wrote:
-> On Sun, Mar 3, 2019 at 5:19 PM zhong jiang <zhongjiang@huawei.com> wrote:
->> Hi, guys
->>
->> I also hit the following issue. but it fails to reproduce the issue by the log.
->>
->> it seems to the case that we access the mm->owner and deference it will result in the UAF.
->> But it should not be possible that we specify the incomplete process to be the mm->owner.
->>
->> Any thoughts?
-> FWIW syzbot was able to reproduce this with this reproducer.
-> This looks like a very subtle race (threaded reproducer that runs
-> repeatedly in multiple processes), so most likely we are looking for
-> something like few instructions inconsistency window.
->
+On 03/01/19 11:08, Joel Fernandes (Google) wrote:
+> Introduce in-kernel headers and other artifacts which are made available
+> as an archive through proc (/proc/kheaders.tar.xz file). This archive makes
+> it possible to build kernel modules, run eBPF programs, and other
+> tracing programs that need to extend the kernel for tracing purposes
+> without any dependency on the file system having headers and build
+> artifacts.
+> 
+> On Android and embedded systems, it is common to switch kernels but not
+> have kernel headers available on the file system. Raw kernel headers
+> also cannot be copied into the filesystem like they can be on other
+> distros, due to licensing and other issues. There's no linux-headers
+> package on Android. Further once a different kernel is booted, any
+> headers stored on the file system will no longer be useful. By storing
+> the headers as a compressed archive within the kernel, we can avoid these
+> issues that have been a hindrance for a long time.
+> 
+> The feature is also buildable as a module just in case the user desires
+> it not being part of the kernel image. This makes it possible to load
+> and unload the headers on demand. A tracing program, or a kernel module
+> builder can load the module, do its operations, and then unload the
+> module to save kernel memory. The total memory needed is 3.8MB.
+> 
+> The code to read the headers is based on /proc/config.gz code and uses
+> the same technique to embed the headers.
+> 
+> To build a module, the below steps have been tested on an x86 machine:
+> modprobe kheaders
+> rm -rf $HOME/headers
+> mkdir -p $HOME/headers
+> tar -xvf /proc/kheaders.tar.xz -C $HOME/headers >/dev/null
+> cd my-kernel-module
+> make -C $HOME/headers M=$(pwd) modules
+> rmmod kheaders
+> 
+> Additional notes:
+> (1) external modules must be built on the same arch as the host that
+> built vmlinux. This can be done either in a qemu emulated chroot on the
+> target, or natively. This is due to host arch dependency of kernel
+> scripts.
+> 
+> (2)
+> A limitation of module building with this is, since Module.symvers is
+> not available in the archive due to a cyclic dependency with building of
+> the archive into the kernel or module binaries, the modules built using
+> the archive will not contain symbol versioning (modversion). This is
+> usually not an issue since the idea of this patch is to build a kernel
+> module on the fly and load it into the same kernel. An appropriate
+> warning is already printed by the kernel to alert the user of modules
+> not having modversions when built using the archive. For building with
+> modversions, the user can use traditional header packages. For our
+> tracing usecases, we build modules on the fly with this so it is not a
+> concern.
+> 
+> (3) I have left IKHD_ST and IKHD_ED markers as is to facilitate
+> future patches that would extract the headers from a kernel or module
+> image.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-I has a little doubtful about the instrustions inconsistency window.
+I could get the headers using this patch in both built-in and modules options.
 
-I guess that you mean some smb barriers should be taken into account.:-)
+You can add my tested-and-reviewed-by: Qais Yousef <qais.yousef@arm.com>
 
-Because IMO, It should not be the lock case to result in the issue.
+I am not familiar with running kselftests so didn't get a chance to try the
+next patch.
 
+Thanks
 
-Thanks,
-zhong jinag
->> Thanks,
->> zhong jiang
->>
->> On 2018/12/4 23:43, syzbot wrote:
->>> syzbot has found a reproducer for the following crash on:
->>>
->>> HEAD commit:    0072a0c14d5b Merge tag 'media/v4.20-4' of git://git.kernel..
->>> git tree:       upstream
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=11c885a3400000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=b9cc5a440391cbfd
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=cbb52e396df3e565ab02
->>> compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
->>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12835e25400000
->>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172fa5a3400000
->>>
->>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>> Reported-by: syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com
->>>
->>> cgroup: fork rejected by pids controller in /syz2
->>> ==================================================================
->>> BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:182 [inline]
->>> BUG: KASAN: use-after-free in task_css include/linux/cgroup.h:477 [inline]
->>> BUG: KASAN: use-after-free in mem_cgroup_from_task mm/memcontrol.c:815 [inline]
->>> BUG: KASAN: use-after-free in get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
->>> Read of size 8 at addr ffff8881b72af310 by task syz-executor198/9332
->>>
->>> CPU: 0 PID: 9332 Comm: syz-executor198 Not tainted 4.20.0-rc5+ #142
->>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->>> Call Trace:
->>>  __dump_stack lib/dump_stack.c:77 [inline]
->>>  dump_stack+0x244/0x39d lib/dump_stack.c:113
->>>  print_address_description.cold.7+0x9/0x1ff mm/kasan/report.c:256
->>>  kasan_report_error mm/kasan/report.c:354 [inline]
->>>  kasan_report.cold.8+0x242/0x309 mm/kasan/report.c:412
->>>  __asan_report_load8_noabort+0x14/0x20 mm/kasan/report.c:433
->>>  __read_once_size include/linux/compiler.h:182 [inline]
->>>  task_css include/linux/cgroup.h:477 [inline]
->>>  mem_cgroup_from_task mm/memcontrol.c:815 [inline]
->>>  get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
->>>  get_mem_cgroup_from_mm mm/memcontrol.c:834 [inline]
->>>  mem_cgroup_try_charge+0x608/0xe20 mm/memcontrol.c:5888
->>>  mcopy_atomic_pte mm/userfaultfd.c:71 [inline]
->>>  mfill_atomic_pte mm/userfaultfd.c:418 [inline]
->>>  __mcopy_atomic mm/userfaultfd.c:559 [inline]
->>>  mcopy_atomic+0xb08/0x2c70 mm/userfaultfd.c:609
->>>  userfaultfd_copy fs/userfaultfd.c:1705 [inline]
->>>  userfaultfd_ioctl+0x29fb/0x5610 fs/userfaultfd.c:1851
->>>  vfs_ioctl fs/ioctl.c:46 [inline]
->>>  file_ioctl fs/ioctl.c:509 [inline]
->>>  do_vfs_ioctl+0x1de/0x1790 fs/ioctl.c:696
->>>  ksys_ioctl+0xa9/0xd0 fs/ioctl.c:713
->>>  __do_sys_ioctl fs/ioctl.c:720 [inline]
->>>  __se_sys_ioctl fs/ioctl.c:718 [inline]
->>>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
->>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
->>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>> RIP: 0033:0x44c7e9
->>> Code: 5d c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
->>> RSP: 002b:00007f906b69fdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->>> RAX: ffffffffffffffda RBX: 00000000006e4a08 RCX: 000000000044c7e9
->>> RDX: 0000000020000100 RSI: 00000000c028aa03 RDI: 0000000000000004
->>> RBP: 00000000006e4a00 R08: 0000000000000000 R09: 0000000000000000
->>> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e4a0c
->>> R13: 00007ffdfd47813f R14: 00007f906b6a09c0 R15: 000000000000002d
->>>
->>> Allocated by task 9325:
->>>  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
->>>  set_track mm/kasan/kasan.c:460 [inline]
->>>  kasan_kmalloc+0xc7/0xe0 mm/kasan/kasan.c:553
->>>  kasan_slab_alloc+0x12/0x20 mm/kasan/kasan.c:490
->>>  kmem_cache_alloc_node+0x144/0x730 mm/slab.c:3644
->>>  alloc_task_struct_node kernel/fork.c:158 [inline]
->>>  dup_task_struct kernel/fork.c:843 [inline]
->>>  copy_process+0x2026/0x87a0 kernel/fork.c:1751
->>>  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
->>>  __do_sys_clone kernel/fork.c:2323 [inline]
->>>  __se_sys_clone kernel/fork.c:2317 [inline]
->>>  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
->>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
->>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>
->>> Freed by task 9325:
->>>  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
->>>  set_track mm/kasan/kasan.c:460 [inline]
->>>  __kasan_slab_free+0x102/0x150 mm/kasan/kasan.c:521
->>>  kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
->>>  __cache_free mm/slab.c:3498 [inline]
->>>  kmem_cache_free+0x83/0x290 mm/slab.c:3760
->>>  free_task_struct kernel/fork.c:163 [inline]
->>>  free_task+0x16e/0x1f0 kernel/fork.c:457
->>>  copy_process+0x1dcc/0x87a0 kernel/fork.c:2148
->>>  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
->>>  __do_sys_clone kernel/fork.c:2323 [inline]
->>>  __se_sys_clone kernel/fork.c:2317 [inline]
->>>  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
->>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
->>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>
->>> The buggy address belongs to the object at ffff8881b72ae240
->>>  which belongs to the cache task_struct(81:syz2) of size 6080
->>> The buggy address is located 4304 bytes inside of
->>>  6080-byte region [ffff8881b72ae240, ffff8881b72afa00)
->>> The buggy address belongs to the page:
->>> page:ffffea0006dcab80 count:1 mapcount:0 mapping:ffff8881d2dce0c0 index:0x0 compound_mapcount: 0
->>> flags: 0x2fffc0000010200(slab|head)
->>> raw: 02fffc0000010200 ffffea00074a1f88 ffffea0006ebbb88 ffff8881d2dce0c0
->>> raw: 0000000000000000 ffff8881b72ae240 0000000100000001 ffff8881d87fe580
->>> page dumped because: kasan: bad access detected
->>> page->mem_cgroup:ffff8881d87fe580
->>>
->>> Memory state around the buggy address:
->>>  ffff8881b72af200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>  ffff8881b72af280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>> ffff8881b72af300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>                          ^
->>>  ffff8881b72af380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>  ffff8881b72af400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>> ==================================================================
->>>
->>>
->>> .
->>>
->>
->> --
->> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
->> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
->> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/5C7BFE94.6070500%40huawei.com.
->> For more options, visit https://groups.google.com/d/optout.
-> .
->
+--
+Qais Yousef
 
-
+> ---
+> 
+>     Changes since v3:
+>     - Blank tar was being generated because of a one line I
+>       forgot to push. It is updated now.
+>     - Added module.lds since arm64 needs it to build modules.
+> 
+>     Changes since v2:
+>     (Thanks to Masahiro Yamada for several excellent suggestions)
+>     - Added support for out of tree builds.
+>     - Added incremental build support bringing down build time of
+>       incremental builds from 50 seconds to 5 seconds.
+>     - Fixed various small nits / cleanups.
+>     - clean ups to kheaders.c pointed by Alexey Dobriyan.
+>     - Fixed MODULE_LICENSE in test module and kheaders.c
+>     - Dropped Module.symvers from archive due to circular dependency.
+> 
+>     Changes since v1:
+>     - removed IKH_EXTRA variable, not needed (Masahiro Yamada)
+>     - small fix ups to selftest
+>        - added target to main Makefile etc
+>        - added MODULE_LICENSE to test module
+>        - made selftest more quiet
+> 
+>     Changes since RFC:
+>     Both changes bring size down to 3.8MB:
+>     - use xz for compression
+>     - strip comments except SPDX lines
+>     - Call out the module name in Kconfig
+>     - Also added selftests in second patch to ensure headers are always
+>     working.
+> 
+> Other notes:
+> By the way I still see this error (without the patch) when doing a clean
+> build: Makefile:594: include/config/auto.conf: No such file or directory
+> 
+> It appears to be because of commit 0a16d2e8cb7e ("kbuild: use 'include'
+> directive to load auto.conf from top Makefile")
+> 
+>  Documentation/dontdiff    |  1 +
+>  init/Kconfig              | 11 ++++++
+>  kernel/.gitignore         |  3 ++
+>  kernel/Makefile           | 37 +++++++++++++++++++
+>  kernel/kheaders.c         | 72 ++++++++++++++++++++++++++++++++++++
+>  scripts/gen_ikh_data.sh   | 78 +++++++++++++++++++++++++++++++++++++++
+>  scripts/strip-comments.pl |  8 ++++
+>  7 files changed, 210 insertions(+)
+>  create mode 100644 kernel/kheaders.c
+>  create mode 100755 scripts/gen_ikh_data.sh
+>  create mode 100755 scripts/strip-comments.pl
+> 
+> diff --git a/Documentation/dontdiff b/Documentation/dontdiff
+> index 2228fcc8e29f..05a2319ee2a2 100644
+> --- a/Documentation/dontdiff
+> +++ b/Documentation/dontdiff
+> @@ -151,6 +151,7 @@ int8.c
+>  kallsyms
+>  kconfig
+>  keywords.c
+> +kheaders_data.h*
+>  ksym.c*
+>  ksym.h*
+>  kxgettext
+> diff --git a/init/Kconfig b/init/Kconfig
+> index c9386a365eea..63ff0990ae55 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -563,6 +563,17 @@ config IKCONFIG_PROC
+>  	  This option enables access to the kernel configuration file
+>  	  through /proc/config.gz.
+>  
+> +config IKHEADERS_PROC
+> +	tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
+> +	select BUILD_BIN2C
+> +	depends on PROC_FS
+> +	help
+> +	  This option enables access to the kernel header and other artifacts that
+> +          are generated during the build process. These can be used to build kernel
+> +          modules, and other in-kernel programs such as those generated by eBPF
+> +          and systemtap tools. If you build the headers as a module, a module
+> +          called kheaders.ko is built which can be loaded to get access to them.
+> +
+>  config LOG_BUF_SHIFT
+>  	int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
+>  	range 12 25
+> diff --git a/kernel/.gitignore b/kernel/.gitignore
+> index b3097bde4e9c..484018945e93 100644
+> --- a/kernel/.gitignore
+> +++ b/kernel/.gitignore
+> @@ -3,5 +3,8 @@
+>  #
+>  config_data.h
+>  config_data.gz
+> +kheaders.md5
+> +kheaders_data.h
+> +kheaders_data.tar.xz
+>  timeconst.h
+>  hz.bc
+> diff --git a/kernel/Makefile b/kernel/Makefile
+> index 6aa7543bcdb2..240685a6b638 100644
+> --- a/kernel/Makefile
+> +++ b/kernel/Makefile
+> @@ -70,6 +70,7 @@ obj-$(CONFIG_UTS_NS) += utsname.o
+>  obj-$(CONFIG_USER_NS) += user_namespace.o
+>  obj-$(CONFIG_PID_NS) += pid_namespace.o
+>  obj-$(CONFIG_IKCONFIG) += configs.o
+> +obj-$(CONFIG_IKHEADERS_PROC) += kheaders.o
+>  obj-$(CONFIG_SMP) += stop_machine.o
+>  obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
+>  obj-$(CONFIG_AUDIT) += audit.o auditfilter.o
+> @@ -130,3 +131,39 @@ filechk_ikconfiggz = \
+>  targets += config_data.h
+>  $(obj)/config_data.h: $(obj)/config_data.gz FORCE
+>  	$(call filechk,ikconfiggz)
+> +
+> +# Build a list of in-kernel headers for building kernel modules
+> +ikh_file_list := include/
+> +ikh_file_list += arch/$(SRCARCH)/Makefile
+> +ikh_file_list += arch/$(SRCARCH)/include/
+> +ikh_file_list += arch/$(SRCARCH)/kernel/module.lds
+> +ikh_file_list += scripts/
+> +ikh_file_list += Makefile
+> +
+> +# Things we need from the $objtree. "OBJDIR" is for the gen_ikh_data.sh
+> +# script to identify that this comes from the $objtree directory
+> +ikh_file_list += OBJDIR/scripts/
+> +ikh_file_list += OBJDIR/include/
+> +ikh_file_list += OBJDIR/arch/$(SRCARCH)/include/
+> +ifeq ($(CONFIG_STACK_VALIDATION), y)
+> +ikh_file_list += OBJDIR/tools/objtool/objtool
+> +endif
+> +
+> +$(obj)/kheaders.o: $(obj)/kheaders_data.h
+> +
+> +targets += kheaders_data.tar.xz
+> +
+> +quiet_cmd_genikh = GEN     $(obj)/kheaders_data.tar.xz
+> +cmd_genikh = $(srctree)/scripts/gen_ikh_data.sh $@ $(ikh_file_list)
+> +$(obj)/kheaders_data.tar.xz: FORCE
+> +	$(call cmd,genikh)
+> +
+> +filechk_ikheadersxz = \
+> +	echo "static const char kernel_headers_data[] __used = KH_MAGIC_START"; \
+> +	cat $< | scripts/bin2c; \
+> +	echo "KH_MAGIC_END;"
+> +
+> +targets += kheaders_data.h
+> +targets += kheaders.md5
+> +$(obj)/kheaders_data.h: $(obj)/kheaders_data.tar.xz FORCE
+> +	$(call filechk,ikheadersxz)
+> diff --git a/kernel/kheaders.c b/kernel/kheaders.c
+> new file mode 100644
+> index 000000000000..46a6358301e5
+> --- /dev/null
+> +++ b/kernel/kheaders.c
+> @@ -0,0 +1,72 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * kernel/kheaders.c
+> + * Provide headers and artifacts needed to build kernel modules.
+> + * (Borrowed code from kernel/configs.c)
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/proc_fs.h>
+> +#include <linux/init.h>
+> +#include <linux/uaccess.h>
+> +
+> +/*
+> + * Define kernel_headers_data and kernel_headers_data_size, which contains the
+> + * compressed kernel headers.  The file is first compressed with xz and then
+> + * bounded by two eight byte magic numbers to allow extraction from a binary
+> + * kernel image:
+> + *
+> + *   IKHD_ST
+> + *   <image>
+> + *   IKHD_ED
+> + */
+> +#define KH_MAGIC_START	"IKHD_ST"
+> +#define KH_MAGIC_END	"IKHD_ED"
+> +#include "kheaders_data.h"
+> +
+> +
+> +#define KH_MAGIC_SIZE (sizeof(KH_MAGIC_START) - 1)
+> +#define kernel_headers_data_size \
+> +	(sizeof(kernel_headers_data) - 1 - KH_MAGIC_SIZE * 2)
+> +
+> +static ssize_t
+> +ikheaders_read_current(struct file *file, char __user *buf,
+> +		      size_t len, loff_t *offset)
+> +{
+> +	return simple_read_from_buffer(buf, len, offset,
+> +				       kernel_headers_data + KH_MAGIC_SIZE,
+> +				       kernel_headers_data_size);
+> +}
+> +
+> +static const struct file_operations ikheaders_file_ops = {
+> +	.read = ikheaders_read_current,
+> +	.llseek = default_llseek,
+> +};
+> +
+> +static int __init ikheaders_init(void)
+> +{
+> +	struct proc_dir_entry *entry;
+> +
+> +	/* create the current headers file */
+> +	entry = proc_create("kheaders.tar.xz", S_IRUGO, NULL,
+> +			    &ikheaders_file_ops);
+> +	if (!entry)
+> +		return -ENOMEM;
+> +
+> +	proc_set_size(entry, kernel_headers_data_size);
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit ikheaders_cleanup(void)
+> +{
+> +	remove_proc_entry("kheaders.tar.xz", NULL);
+> +}
+> +
+> +module_init(ikheaders_init);
+> +module_exit(ikheaders_cleanup);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Joel Fernandes");
+> +MODULE_DESCRIPTION("Echo the kernel header artifacts used to build the kernel");
+> diff --git a/scripts/gen_ikh_data.sh b/scripts/gen_ikh_data.sh
+> new file mode 100755
+> index 000000000000..1fa5628fcc30
+> --- /dev/null
+> +++ b/scripts/gen_ikh_data.sh
+> @@ -0,0 +1,78 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +spath="$(dirname "$(readlink -f "$0")")"
+> +kroot="$spath/.."
+> +outdir="$(pwd)"
+> +tarfile=$1
+> +cpio_dir=$outdir/$tarfile.tmp
+> +
+> +file_list=${@:2}
+> +
+> +src_file_list=""
+> +for f in $file_list; do
+> +	src_file_list="$src_file_list $(echo $f | grep -v OBJDIR)"
+> +done
+> +
+> +obj_file_list=""
+> +for f in $file_list; do
+> +	f=$(echo $f | grep OBJDIR | sed -e 's/OBJDIR\///g')
+> +	obj_file_list="$obj_file_list $f";
+> +done
+> +
+> +# Support incremental builds by skipping archive generation
+> +# if timestamps of files being archived are not changed.
+> +
+> +# This block is useful for debugging the incremental builds.
+> +# Uncomment it for debugging.
+> +# iter=1
+> +# if [ ! -f /tmp/iter ]; then echo 1 > /tmp/iter;
+> +# else; 	iter=$(($(cat /tmp/iter) + 1)); fi
+> +# find $src_file_list -type f | xargs ls -lR > /tmp/src-ls-$iter
+> +# find $obj_file_list -type f | xargs ls -lR > /tmp/obj-ls-$iter
+> +
+> +# modules.order and include/generated/compile.h are ignored because these are
+> +# touched even when none of the source files changed. This causes pointless
+> +# regeneration, so let us ignore them for md5 calculation.
+> +pushd $kroot > /dev/null
+> +src_files_md5="$(find $src_file_list -type f ! -name modules.order |
+> +		grep -v "include/generated/compile.h"		   |
+> +		xargs ls -lR | md5sum | cut -d ' ' -f1)"
+> +popd > /dev/null
+> +obj_files_md5="$(find $obj_file_list -type f ! -name modules.order |
+> +		grep -v "include/generated/compile.h"		   |
+> +		xargs ls -lR | md5sum | cut -d ' ' -f1)"
+> +
+> +if [ -f $tarfile ]; then tarfile_md5="$(md5sum $tarfile | cut -d ' ' -f1)"; fi
+> +if [ -f kernel/kheaders.md5 ] &&
+> +	[ "$(cat kernel/kheaders.md5|head -1)" == "$src_files_md5" ] &&
+> +	[ "$(cat kernel/kheaders.md5|head -2|tail -1)" == "$obj_files_md5" ] &&
+> +	[ "$(cat kernel/kheaders.md5|tail -1)" == "$tarfile_md5" ]; then
+> +		exit
+> +fi
+> +
+> +rm -rf $cpio_dir
+> +mkdir $cpio_dir
+> +
+> +pushd $kroot > /dev/null
+> +for f in $src_file_list;
+> +	do find "$f" ! -name "*.c" ! -name "*.o" ! -name "*.cmd" ! -name ".*";
+> +done | cpio --quiet -pd $cpio_dir
+> +popd > /dev/null
+> +
+> +# The second CPIO can complain if files already exist which can
+> +# happen with out of tree builds. Just silence CPIO for now.
+> +for f in $obj_file_list;
+> +	do find "$f" ! -name "*.c" ! -name "*.o" ! -name "*.cmd" ! -name ".*";
+> +done | cpio --quiet -pd $cpio_dir >/dev/null 2>&1
+> +
+> +find  $cpio_dir -type f -print0 |
+> +	xargs -0 -P8 -n1 -I {} sh -c "$spath/strip-comments.pl {}"
+> +
+> +tar -Jcf $tarfile -C $cpio_dir/ . > /dev/null
+> +
+> +echo "$src_files_md5" > kernel/kheaders.md5
+> +echo "$obj_files_md5" >> kernel/kheaders.md5
+> +echo "$(md5sum $tarfile | cut -d ' ' -f1)" >> kernel/kheaders.md5
+> +
+> +rm -rf $cpio_dir
+> diff --git a/scripts/strip-comments.pl b/scripts/strip-comments.pl
+> new file mode 100755
+> index 000000000000..f8ada87c5802
+> --- /dev/null
+> +++ b/scripts/strip-comments.pl
+> @@ -0,0 +1,8 @@
+> +#!/usr/bin/perl -pi
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +# This script removes /**/ comments from a file, unless such comments
+> +# contain "SPDX". It is used when building compressed in-kernel headers.
+> +
+> +BEGIN {undef $/;}
+> +s/\/\*((?!SPDX).)*?\*\///smg;
+> -- 
+> 2.21.0.352.gf09ad66450-goog
