@@ -2,134 +2,86 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F45AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A70C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF1120645
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyGou3wF"
+	by mail.kernel.org (Postfix) with ESMTP id 17C6C20645
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfCDL7O (ORCPT
+        id S1726100AbfCDMBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 06:59:14 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34081 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfCDL7M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 06:59:12 -0500
-Received: by mail-ed1-f65.google.com with SMTP id a16so4028149edn.1;
-        Mon, 04 Mar 2019 03:59:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0SXc/ccBIqDOJFDdSRXSkpspHO0OCRRSHCA1+2sr5WA=;
-        b=JyGou3wFbwGmsPDE99fghHzJcuJpz3zT2b/dih9xdl6tw4JSIUAOpnD8/Ci+zTwZ7P
-         qYpFakUauHhAbwpTyTgqC/uCrtx8Hwq+JyajluO/kyFpSgF/cDIbr3zHxI4HBI9ofX1Z
-         ggCb5iCotUMUuYmvVXHvd/MSTIQiy383yrfgfpZU4n25zdlCtJvmxYyLRUDFG3WPTzYy
-         xA67Bwug3tRBmJaF5dfEcKVfKd2UTmKqUas15A+knYLusl+xpgX8hXWVXVM6Zxg7W4lN
-         6mN6xbqXm9P01x/oxpr+G5+oe8PTvnEtvbTAUz/IkqwrpzWZo73iz85YOeZz7EWHIugV
-         OoHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0SXc/ccBIqDOJFDdSRXSkpspHO0OCRRSHCA1+2sr5WA=;
-        b=FbCxhrF65ZIQz6tvC6pV5IsoKiTK8bwrMRYNkazjyTNMmLgx+yS4LX4g9mQ3HS7lRY
-         +VGmkl0LxA6cVkJXrIM4RGrLaIpVNPxbOvde55yen7DB9vltCb/4XQxskTkWIpXPphJO
-         gRAoXkEgCz6xq/gnIaa9+d/QGDtUJa6Jvdm8DleA91dPTtNrd5FwKnzvpydhvbzy7e8T
-         0rNKcYpNSv+l9mmCCZKtBHRvV+12B2Z/x+RWCsRt4PAd/K9sAHSIoMjkgTx6nbA3HQQI
-         gN2v4rqMFx9z2HnJ1iEwulKA++kCXMI2f1uFbO0/OZsjPpXPHslBUMu2zx5A1xOtTHwb
-         /YrQ==
-X-Gm-Message-State: APjAAAWXH2bQOtU2vTuzaZSkU8YeDlZAsroe4fNLcmnNUq6tSiX/XTov
-        5fucq4LT1PpF8CkihF45G0w=
-X-Google-Smtp-Source: APXvYqy6rcZGrjftTo+4MbdLz8wqDGECwGBXyvFG7KXPhXYwLG0KgJD234CzYcz706qDeh0Vv45XTA==
-X-Received: by 2002:a50:978e:: with SMTP id e14mr14463735edb.234.1551700749634;
-        Mon, 04 Mar 2019 03:59:09 -0800 (PST)
-Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
-        by smtp.gmail.com with ESMTPSA id z49sm2025549edb.15.2019.03.04.03.59.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Mar 2019 03:59:08 -0800 (PST)
-Date:   Mon, 4 Mar 2019 12:59:07 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mon, 4 Mar 2019 07:01:44 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60774 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfCDMBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 07:01:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73ED6A78;
+        Mon,  4 Mar 2019 04:01:43 -0800 (PST)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A32AD3F703;
+        Mon,  4 Mar 2019 04:01:39 -0800 (PST)
+Subject: Re: [PATCH v3 05/34] c6x: mm: Add p?d_large() definitions
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Will Deacon <will.deacon@arm.com>, linux-mm@kvack.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        linux-c6x-dev@linux-c6x.org, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Salter <msalter@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v10 11/27] pwm: jz4740: Apply configuration atomically
-Message-ID: <20190304115907.GB9040@ulmo>
-References: <20190302233413.14813-1-paul@crapouillou.net>
- <20190302233413.14813-12-paul@crapouillou.net>
+        linux-arm-kernel@lists.infradead.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>
+References: <20190227170608.27963-1-steven.price@arm.com>
+ <20190227170608.27963-6-steven.price@arm.com>
+ <20190301214851.ucems2icwt64iabx@kshutemo-mobl1>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <f840db0e-bbb3-db7e-d883-79b5a630767c@arm.com>
+Date:   Mon, 4 Mar 2019 12:01:37 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
-Content-Disposition: inline
-In-Reply-To: <20190302233413.14813-12-paul@crapouillou.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190301214851.ucems2icwt64iabx@kshutemo-mobl1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 01/03/2019 21:48, Kirill A. Shutemov wrote:
+> On Wed, Feb 27, 2019 at 05:05:39PM +0000, Steven Price wrote:
+>> walk_page_range() is going to be allowed to walk page tables other than
+>> those of user space. For this it needs to know when it has reached a
+>> 'leaf' entry in the page tables. This information is provided by the
+>> p?d_large() functions/macros.
+>>
+>> For c6x there's no MMU so there's never a large page, so just add stubs.
+> 
+> Other option would be to provide the stubs via generic headers form !MMU.
+> 
 
---qlTNgmc+xy1dBmNv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I agree that could be done, but equally the definitions of
+p?d_present/p?d_none/p?d_bad etc could be provided by a generic header
+for !MMU but currently are not. It makes sense to keep the p?d_large
+definitions next to the others.
 
-On Sat, Mar 02, 2019 at 08:33:57PM -0300, Paul Cercueil wrote:
-> This is cleaner, more future-proof, and incidentally it also fixes the
-> PWM resetting its config when stopped/started several times.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Mathieu Malaterre <malat@debian.org>
-> Tested-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->=20
-> Notes:
->          v9: New patch
->    =20
->          v10: No change
->=20
->  drivers/pwm/pwm-jz4740.c | 37 ++++++++++++-------------------------
->  1 file changed, 12 insertions(+), 25 deletions(-)
+I'd prefer to stick with a (relatively) small change here - it's already
+quite a long series! But this is certainly something that could be
+tidied up for !MMU archs.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---qlTNgmc+xy1dBmNv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlx9EwsACgkQ3SOs138+
-s6Fifw//f2H2kWj6n++VBIr3qcpgyLlpnGP7IdO8SjFN1SopHRC1vHqhKao7IdRf
-7HfK6sbCuisohUtSedMVcj5aD8fDlf2eUoaLwmErr/RKtQZiOmS7oSsYCFXaWvCf
-YpXCycCtRX00UT0dVAw3uVIftDnYJ1sYJbXBM4SPZC9VmYSBz4UVOy7XoY+HhOBv
-f+4LKs61FYgZmKDY10FWW2Wpq8Tw36Pdh8Szl9f8H8pFc+tgGCue7EaO7JN+TR3d
-ZTSJmxlF0hwzzGbouA7Y1UcLDnZrCZqgkf/SCSpyOqn4JkbaxWUdYwtIUTD9N22Q
-STfBGCCLlfXVEHQkEBvbgk84PwWBlEmPCcs/6ujnJCtD9mBKUJleOnF3aiqOpfCA
-KplgKB+tR+YN866fG+A9JhbbX0JkAwdiCF/DRdJAajqW4gY2pyxkiEC1FwmIe/YM
-vqLqaU7KqqeDso4HHjMbpBiJkznvUszfRJDrkboMygZ9WoMkUCseRJSLKXlyoRLX
-buG5vHVkjJkhhuEL5Af7CguZzNUvTIMrvKd5Zn4/fRdMolj7m5vksQ1V1Wb7qWTI
-G6CvNQO8S8cYwBkKYpXuMYWmsB8agHFnmzr98op8R6toc9/3i8EGOo0kV9V8NxmX
-21KrsQr738C981dGRLoBVJRVlfnSHZgv67Dni+uj2+y2MBElhxk=
-=DBKx
------END PGP SIGNATURE-----
-
---qlTNgmc+xy1dBmNv--
+Steve
