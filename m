@@ -2,111 +2,161 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E31AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E31C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA46206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:40:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="REJ0zfzP"
+	by mail.kernel.org (Postfix) with ESMTP id 713DD20835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfCDTku (ORCPT
+        id S1726270AbfCDTla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:40:50 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39428 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfCDTku (ORCPT
+        Mon, 4 Mar 2019 14:41:30 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:38145 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfCDTl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:40:50 -0500
-Received: by mail-lj1-f193.google.com with SMTP id g80so5379885ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 11:40:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JPOg+GSue9wrYWiMWrHItE1Mfe23cyDlrdIzF+BE7t4=;
-        b=REJ0zfzPFDjYqAWlMSnOUdPeacdxkIhjygwqAQZe0f79UBXtMVvwqkOFrGL/ZjWRff
-         n5tapeXNdcz3i6fFt6aP31hlP26nN0bH4co696abyYK9piIO2aoNfGBxi6esuLVDKeEk
-         dt7tzqB3wnHXmaCNxG7LegFgl+qoPXuOh2v6QT1VX68aB16VqG+r+TO6WeddhdNDKd20
-         uxjmIsECJ5qPoqs3J92shEVYbcnKgo9K5V+mPoVIjiEQQmMGAWIdEpiVrVQmX9qGU7HV
-         Rlg15na0EsmNOS95qXLa41yjjiis/lk3mZofmq0yJ0GXZysa0d3UjlcNt5TERUJ4Jl1r
-         +N4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JPOg+GSue9wrYWiMWrHItE1Mfe23cyDlrdIzF+BE7t4=;
-        b=rdm1AZ9pZ8WEhipqVTdHEkfqJhL18LcRI+DhzJc6wDzP9Sxq7/9OwmEgLj4cJRW4F6
-         rAmru0Z2goIt3spWXlpe50b7kMwGPE8fOYprHSTJJqTY1r3OPqbwNYN4bZoc1QyEphpK
-         aBUeNuI/JHNABwo8/nU6ugo0MZj1XtB+MijbPRdPehOjsWeSfufzNfZWQOZw0HdAiG41
-         Y+JclNSLzBdwUBPT+kKqgEq5R0v6AxHSg+sUYKFRYeNcDfGApodJDls4gV1xD58m7yHE
-         WHnKn0ioQJ99RttlYFwzMRagvgNpfQiY1IO3DNY2FeVlUCm/Kmb+soHyd5jIXTHy24IZ
-         9DRA==
-X-Gm-Message-State: APjAAAVUxYynqvbCv6ivTDHRNCTIMVmcuNktgPyhtcp4KUytceBlA5bw
-        fCJK5p4F0Yl2NHtzRxtB1ucr5w==
-X-Google-Smtp-Source: APXvYqx6APH2ZJPnfptAh+ZW4pmzAvrWkVXzCReedH5z7OJuSoz0pvCJPGv7PfXM1vXTEt6u+zpQaQ==
-X-Received: by 2002:a2e:5cc1:: with SMTP id q184mr11385180ljb.123.1551728447699;
-        Mon, 04 Mar 2019 11:40:47 -0800 (PST)
-Received: from centauri.lan (h-229-118.A785.priv.bahnhof.se. [5.150.229.118])
-        by smtp.gmail.com with ESMTPSA id w17sm1745527lfk.18.2019.03.04.11.40.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 04 Mar 2019 11:40:47 -0800 (PST)
-Date:   Mon, 4 Mar 2019 20:40:45 +0100
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: qcs404: evb: Fix voltage for l3
-Message-ID: <20190304194045.GA14044@centauri.lan>
-References: <20190219063222.15656-1-bjorn.andersson@linaro.org>
+        Mon, 4 Mar 2019 14:41:29 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N3bb1-1hA01h3Zcx-010fdQ; Mon, 04 Mar 2019 20:40:58 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Wei Li <liwei213@huawei.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] scsi: ufs: hisi: fix ufs_hba_variant_ops passing
+Date:   Mon,  4 Mar 2019 20:39:11 +0100
+Message-Id: <20190304193917.702601-4-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190304193917.702601-1-arnd@arndb.de>
+References: <20190304193917.702601-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190219063222.15656-1-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:iDV3wbl1jv0zwUySViRu9AW+5mW6LMS14QEtSMcadmyPsv4Df8/
+ u07BlmQ9TjYCgDNrvZ1eE6oJFOMi06PTI64CYLTPIgMKYPd1ySpKzxyWdWdYArHiyLEZZtQ
+ 1bBf3jsi6ueg6KTf2kTN8Be9CvEoOIxaXjJySentrCKRtHWNmujZ1jl5BAq4g/chPNw7VpV
+ jB64phSxE4cSXcCZPRx+g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FnSvrfJJWHo=:BzQ859kEH/Jrbpck8dqDH/
+ cwBRmsFEt9xhn5mb5/y/2OcDaQy5U4ncLDc08VTmY4e48K0aSqgXszcyocZ4pYY0gCyiqD2m9
+ yXcPgX6kbJmZL2Bdy2Rl+0XmTJk2hGLZ9DWWq6Ovtu6FhiLOj7lQrlD+nqFbDLd8TdGkUTBVx
+ kHTqJmDZ0FF9y3qbFw56fnxkHzS7R9f6+rfNUG5S05Dtnn8FOBiInPyN6PPyNpvSwEYwit7y7
+ DBdLocgCXf4O5TGGtPnm+gRA94NFy4WsFcViBv3/CIKh6vsXspX660YJ6nVMTXCvYKFUkMI8p
+ 1ZOmnMF2pnQLG0va/UN9RzYQBwZ5o497Z1EASU8wN1bGuO2bnZt7Jf/J5QKszrI5m9JHyCsq+
+ hVWtT8SrW89RiK01HLfQWHIrzRX7FVi/72RBsOGFXM0Hc8O0/cguWFDIOBVphXqAnalSMypfa
+ 6tNQ8IyJkcgpubQejhCnJb73ySUAZ8TL/JqPpA8AhX/zkbI26iVMKamwLT+GAysYnXSeG1wFZ
+ UZctqgKguW5c/tdx5FczJEQ8U16oS+S8Dd8VUbLqsnwXLRG7OWllxrIO7AwwEU0OJx5mAzl6C
+ 1ykmzvc6LPb3CS5jv1+m3lj/OFwYyAnyA7Ph/AtgiLydFSDkCx8kO9HTaN166U11Tcy5cktfQ
+ L7kjxCvDzjMOtxTQ06aXC0YfMFtMj6L+pPbtUWd8OzDcGMjSuE42YDu89KRXvhv5FffE3T4/w
+ 3LiJzzylegOglkz5SmmGOhyacvoJrAbTZdcd/g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 10:32:22PM -0800, Bjorn Andersson wrote:
-> PMS405 L3 is outside the acceptable range, causing PCIe to fail. Fix
-> this.
-> 
-> Fixes: 0b363f5b871c ("arm64: dts: qcom: qcs404: Add PMS405 RPM regulators")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - Rebased upon https://lore.kernel.org/lkml/20181213183200.3204-1-bjorn.andersson@linaro.org/
-> 
->  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> index 3a7f0d42e35a..6146f3577961 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-> @@ -87,7 +87,7 @@
->  		};
->  
->  		vreg_l3_1p05: l3 {
-> -			regulator-min-microvolt = <976000>;
-> +			regulator-min-microvolt = <1048000>;
->  			regulator-max-microvolt = <1160000>;
->  		};
->  
-> -- 
-> 2.18.0
-> 
+Without CONFIG_OF, the of_match_node() helper does not evaluate
+its argument, and the compiler warns about the unused variable:
 
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+drivers/scsi/ufs/ufs-hisi.c: In function 'ufs_hisi_probe':
+drivers/scsi/ufs/ufs-hisi.c:673:17: error: unused variable 'dev' [-Werror=unused-variable]
+
+Rework this code to pass the data directly, and while we're
+at it, correctly handle the const pointers.
+
+Fixes: 653fcb07d95e ("scsi: ufs: Add HI3670 SoC UFS driver support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/scsi/ufs/ufs-hisi.c      | 11 ++++-------
+ drivers/scsi/ufs/ufshcd-pltfrm.c |  2 +-
+ drivers/scsi/ufs/ufshcd-pltfrm.h |  2 +-
+ drivers/scsi/ufs/ufshcd.h        |  2 +-
+ 4 files changed, 7 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
+index f2d3df357a97..0e855b5afe82 100644
+--- a/drivers/scsi/ufs/ufs-hisi.c
++++ b/drivers/scsi/ufs/ufs-hisi.c
+@@ -640,7 +640,7 @@ static int ufs_hi3670_init(struct ufs_hba *hba)
+ 	return 0;
+ }
+ 
+-static struct ufs_hba_variant_ops ufs_hba_hi3660_vops = {
++static const struct ufs_hba_variant_ops ufs_hba_hi3660_vops = {
+ 	.name = "hi3660",
+ 	.init = ufs_hi3660_init,
+ 	.link_startup_notify = ufs_hisi_link_startup_notify,
+@@ -649,7 +649,7 @@ static struct ufs_hba_variant_ops ufs_hba_hi3660_vops = {
+ 	.resume = ufs_hisi_resume,
+ };
+ 
+-static struct ufs_hba_variant_ops ufs_hba_hi3670_vops = {
++static const struct ufs_hba_variant_ops ufs_hba_hi3670_vops = {
+ 	.name = "hi3670",
+ 	.init = ufs_hi3670_init,
+ 	.link_startup_notify = ufs_hisi_link_startup_notify,
+@@ -669,13 +669,10 @@ MODULE_DEVICE_TABLE(of, ufs_hisi_of_match);
+ static int ufs_hisi_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *of_id;
+-	struct ufs_hba_variant_ops *vops;
+-	struct device *dev = &pdev->dev;
+ 
+-	of_id = of_match_node(ufs_hisi_of_match, dev->of_node);
+-	vops = (struct ufs_hba_variant_ops *)of_id->data;
++	of_id = of_match_node(ufs_hisi_of_match, pdev->dev.of_node);
+ 
+-	return ufshcd_pltfrm_init(pdev, vops);
++	return ufshcd_pltfrm_init(pdev, of_id->data);
+ }
+ 
+ static int ufs_hisi_remove(struct platform_device *pdev)
+diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+index 895a9b5ac989..27213676329c 100644
+--- a/drivers/scsi/ufs/ufshcd-pltfrm.c
++++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+@@ -297,7 +297,7 @@ static void ufshcd_init_lanes_per_dir(struct ufs_hba *hba)
+  * Returns 0 on success, non-zero value on failure
+  */
+ int ufshcd_pltfrm_init(struct platform_device *pdev,
+-		       struct ufs_hba_variant_ops *vops)
++		       const struct ufs_hba_variant_ops *vops)
+ {
+ 	struct ufs_hba *hba;
+ 	void __iomem *mmio_base;
+diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.h b/drivers/scsi/ufs/ufshcd-pltfrm.h
+index df64c4180340..1f29e1fd6d52 100644
+--- a/drivers/scsi/ufs/ufshcd-pltfrm.h
++++ b/drivers/scsi/ufs/ufshcd-pltfrm.h
+@@ -17,7 +17,7 @@
+ #include "ufshcd.h"
+ 
+ int ufshcd_pltfrm_init(struct platform_device *pdev,
+-		       struct ufs_hba_variant_ops *vops);
++		       const struct ufs_hba_variant_ops *vops);
+ void ufshcd_pltfrm_shutdown(struct platform_device *pdev);
+ 
+ #ifdef CONFIG_PM
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 69ba7445d2b3..ecfa898b9ccc 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -546,7 +546,7 @@ struct ufs_hba {
+ 	int nutrs;
+ 	int nutmrs;
+ 	u32 ufs_version;
+-	struct ufs_hba_variant_ops *vops;
++	const struct ufs_hba_variant_ops *vops;
+ 	void *priv;
+ 	unsigned int irq;
+ 	bool is_irq_enabled;
+-- 
+2.20.0
+
