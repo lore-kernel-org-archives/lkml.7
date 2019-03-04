@@ -2,95 +2,99 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A75C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12853C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2C5206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB22720823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfCDU0w (ORCPT
+        id S1726640AbfCDU1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:26:52 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:37765 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfCDU0v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:26:51 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M42fG-1h0uAd0iga-0004G4; Mon, 04 Mar 2019 21:26:43 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Bai Ping <ping.bai@nxp.com>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: freescale: fix link errors
-Date:   Mon,  4 Mar 2019 21:26:25 +0100
-Message-Id: <20190304202640.1765847-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 4 Mar 2019 15:27:14 -0500
+Received: from anholt.net ([50.246.234.109]:55800 "EHLO anholt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbfCDU1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 15:27:14 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id 475FE10A2DE9;
+        Mon,  4 Mar 2019 12:27:13 -0800 (PST)
+X-Virus-Scanned: Debian amavisd-new at anholt.net
+Received: from anholt.net ([127.0.0.1])
+        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id A90-3hZxxNtb; Mon,  4 Mar 2019 12:27:12 -0800 (PST)
+Received: from eliezer.anholt.net (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id 1A67010A2A62;
+        Mon,  4 Mar 2019 12:27:12 -0800 (PST)
+Received: by eliezer.anholt.net (Postfix, from userid 1000)
+        id ACB862FE464E; Mon,  4 Mar 2019 12:27:11 -0800 (PST)
+From:   Eric Anholt <eric@anholt.net>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stefan.wahren@i2se.com, linus.walleij@linaro.org, lkundrak@v3.sk,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: rpi-b-rev2 can't detect hdmi display due to wrong hpd gpio pull in dts
+In-Reply-To: <20190304185454.18043-1-helen.koike@collabora.com>
+References: <20190304185454.18043-1-helen.koike@collabora.com>
+User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/25.2.2 (x86_64-pc-linux-gnu)
+Date:   Mon, 04 Mar 2019 12:27:11 -0800
+Message-ID: <8736o2tmg0.fsf@anholt.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:zyMEgrcou+Iot8SUeeR8TBkWtFOqcT6qNhUlnnP4FxD5o7vf/ja
- r565rI16bNQiu3SPRRhL8UYsobsECcVPeUEjNNe4r/CpW31bqWKpAZzw5aqusuFrEqRoyN5
- ij+mdgRGWT1Uwv/VK06Covlc4DuZn+JepTNw51MgSO1O+UuDY3EtrYdUL2ZBI4dAFINuQTc
- h40b0e5v0QWKUmzZKzr6Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZN/xFHvcVGc=:EcRh16FvLgBh1sZvl8C7XE
- NAupQFIHbBc4/4cKs+m8YxYNb1krhqYq83/xsWphI2aTB/JdW+Q1C+lca5ChGBzlfLW+fnMxo
- QTZ+IHP2FNCJUwMVZbZEVmXolHrRzCU84xN4Sa5nlZyJrZBkNczDScCpzsbqZ9jkvNRs3tlGD
- C4FwSfYZURhcU3N/7am5eRDiHhudnCIK/saUp2dTsGKUP4dJrJo/jVGZyPWMgTyS/GrrE1uLO
- fIHjMaZf3YEfGjq0h9FrAGzd8ZJYxeQGzlXH73dNmswxJ4+BRkVMzWKztLleko3OORU8iwCB1
- I4kbQHimrHckMevgreWO2XGS55eG/t4T9HulZBUuzba1TsgYSzDrne6OKFBdaL6icrjohVCj1
- T1qqeUPOnQvAYfHQlYK+pOpdmLz5LUAcHOxFL/Mjps4n7f82nN9v3F5dO7hsDSr8ELYJB6OGM
- TN68I8xfmhbyL4+Kse7qVW5XY6KmINF0Xea79Zaig+PVGDOjz0hyQgpa4xeykQzSb7XUwFwBh
- KZkU8nAHTcspXZrgrNRI01XTEGF52puRncQHvT7JXde//0jkcIRjjQztwyX8iltakbXxB8l7N
- GY7wqmRnucuTjXDR1+UwSZidaUPWelVehek6DN4v+00Jwm6jGhTLFdZL5Ey9e2AkqvyKToMuH
- UasZ4naDWNWzTe272ppw7l3rNOhvofkapPkkuNPrUnIWv91la8ufmynXQKgB7gzuT5V8lH6nw
- u0uSOV2YBSwrP+rduMlDozvGATj3mMKWi+6Mng==
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Submitted by Anders Roxell already
+--=-=-=
+Content-Type: text/plain
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/pinctrl/freescale/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Helen Koike <helen.koike@collabora.com> writes:
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index e6dff3167a67..e447b996e79f 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -138,14 +138,14 @@ config PINCTRL_IMX8MQ
- 
- config PINCTRL_IMX8QM
- 	bool "IMX8QM pinctrl driver"
--	depends on ARCH_MXC && ARM64
-+	depends on ARCH_MXC && ARM64 && IMX_SCU
- 	select PINCTRL_IMX_SCU
- 	help
- 	  Say Y here to enable the imx8qm pinctrl driver
- 
- config PINCTRL_IMX8QXP
- 	bool "IMX8QXP pinctrl driver"
--	depends on ARCH_MXC && ARM64
-+	depends on ARCH_MXC && ARM64 && IMX_SCU
- 	select PINCTRL_IMX_SCU
- 	help
- 	  Say Y here to enable the imx8qxp pinctrl driver
--- 
-2.20.0
+> Hello,
+>
+> I have a rpi-b-rev2 (two holes, 512M) and when I was trying to test vc4
+> driver, the HDMI wans't being detected.
+>
+> So I changed the hpd-gpios from ACTIVE_LOW to ACTIVE_HIGH and now it
+> works correctly. I can see that modeprint from libdrm detects correctly
+> when the display is plugged and when it is unpluggled.
+>
+> So I was wondering if this is just in my board or if there is an error
+> in the dts (which I think it's unlikely).
+>
+> In any case I am dropping this email here in case anyone else see this
+> problem, if you do, try appliying the patch below.
 
+We even have the GPIO labeled as "HDMI_HPD_P" above, and dt-blob.dts
+agrees.
+
+Reviewed-by: Eric Anholt <eric@anholt.net>
+
+Thanks!  If Stefan doesn't pick this up shortly, I can.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlx9ih8ACgkQtdYpNtH8
+nujmcQ/9FyjSFutNqSUwPu6FcG3JvOTwy5TN/k7iiobKCX+G8a3Hn8EHdu0gXLI2
+oYQE3W166zJmGtjultlooZpxSe6ggPmpqNaaY+xQ3QkCZCBackFJIqLUy+7wNBzW
+Mm1RhyO039pDhWJ25NLcq8aC9atryhjzzOpNMfKTSaTDCU85iq3Krm/5QimiOsKK
+goTctyMjhjjkLA8DUFB0CjWsPq15OV2cTCb0kRDIiLfR1TZWKeAyATzHiqSofMc2
+H5yUO6CsXLIgYGcwhhp+BnveCm2h9JFs6plwsEQ/fB3eHy/g/R+4B7oa415AwT50
+Zqbv02fxBhZWsNhLzbLj684Ry45jHkJzlSQy0a1oxca9ZJowNAMhmAtQ2a0V2AcP
+X2TJHgIWv+rnmBD5BYpYOZxIVY0D+WPtjaqfZmnjz7okoqeuIzeoL2u5AENQ05Uy
+PPeVYGxTDUERPZbX81QNArt9P0dThKfNf568yi2q+TIpOy4yLgW9kTXwViWgt033
+pGTtNtcO9uGKUZ8FZEblu0HxfLp6Cos0m3AmQho266y0UPgTK24ytSwAaQ5DzOUN
+OWOTqdz/cu9KbP1rwRwu9zewL862TNPyOsVXhgugEKQ8knBTNE267QmaEK3OuXzu
+rwO1edLLxfHQacNg2rc6qNPURt/emIybA67DLlZbIfp9POKxN5E=
+=T86b
+-----END PGP SIGNATURE-----
+--=-=-=--
