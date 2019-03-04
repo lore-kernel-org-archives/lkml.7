@@ -2,108 +2,94 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AD8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A717C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F525206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F321C206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oTjBkYIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfCDSGl (ORCPT
+        id S1727058AbfCDSKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:06:41 -0500
-Received: from mga14.intel.com ([192.55.52.115]:32514 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbfCDSGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:06:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 10:06:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,440,1544515200"; 
-   d="scan'208";a="325318178"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Mar 2019 10:06:39 -0800
-Message-ID: <9099672e17ea9fc7711b34e92ce5a016afb43a0c.camel@linux.intel.com>
-Subject: Re: [RFT][PATCH 0/2] cpufreq: intel_pstate: Handle _PPC updates on
- global turbo disable/enable
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        Mon, 4 Mar 2019 13:10:17 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33052 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfCDSKQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 13:10:16 -0500
+Received: by mail-pg1-f193.google.com with SMTP id h11so3645123pgl.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 10:10:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lkoxNTZDcsFMaDTSvIUmNcE2tFbmczPzpSYXcIp7qV0=;
+        b=oTjBkYIpmbfkPGeQ57WHi7qZ3ZYDjqP3ktujllxjIR4Bdo31IpHkyID0BnACkxPDkF
+         SCYJgaCQbJLGafqe3jix+KWEXspDIg2KLH60oas3p+atMqdRQRs2o0JVosEDoB16zLXj
+         UgVnHa2kjCacB74Ik5HqW13NLLlU3Urc3fKaLWqT9eqREg3Bv7HDfORcSEDDVk2UAaEj
+         35euhzHpXdUla7b8kurkS46ZYFYysieVTp/9wVIIm827gM3tu0FWgA9vF2PYxOhkKfyy
+         LIkYf/PbkShHb712bhUkQ5kd4mS4PL1pPcTK9pz46gu2f4lJnTxt8ptt9J2UZWqSREoQ
+         DPIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lkoxNTZDcsFMaDTSvIUmNcE2tFbmczPzpSYXcIp7qV0=;
+        b=bp6Xe34rwl6tKBKbuEWhPHn3oGJUTgD1+2UHULXA1aLqY6K2iKlE38pgUIDLN0bvMX
+         exCe2ED+6TTMa9H3t03LC3Hqu6oXVA2zkcKfnC8YLlBtuXnIH6nYNxKq0YtBj1NpNR3o
+         2/nJ9w+/sdpDaEfbMjHba9iURqAt4E1Mzqyimt2u5EATsrhoJdZjwujpZALs+98THGJ2
+         NRJwRSm10pBKT5jAxEWZfom3dTcIB6oR2jHTs0ELwmnw2RqEP1rfQDEDovPXe6yxmzV8
+         ULa+Vq00BDmWNAbkv0saKsCCZZSGESYAib0vgXVnKuOXT5tZAOAVmdCqoBCVTHPjc/n0
+         gC2g==
+X-Gm-Message-State: APjAAAVStbttgVn2LoeOxlI7tuXyzUlUNJhmgGbbojXpRKVmgANK0DBJ
+        VE75wSNTE41mfJo4YEMWY6QvlemEdvAfIXfdZQ5FtQ==
+X-Google-Smtp-Source: APXvYqxzPOQ5O4Q3ezxcwewK1BUDn52WZHpw+GRIko8JkIHV+4W+cCH488IIy5ZcSrcGk41j0FkeT1FkHTJncysk8ac=
+X-Received: by 2002:a63:5506:: with SMTP id j6mr19674498pgb.202.1551723015909;
+ Mon, 04 Mar 2019 10:10:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20190302184929.28971-1-louis@kragniz.eu>
+In-Reply-To: <20190302184929.28971-1-louis@kragniz.eu>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 4 Mar 2019 10:10:04 -0800
+Message-ID: <CAKwvOdnwX=bDivzO6bsj8jtqB39VVvUAPc4cofmVJOQ_OE8=9g@mail.gmail.com>
+Subject: Re: [PATCH] x86/KASLR: always return a value from process_mem_region
+To:     Louis Taylor <louis@kragniz.eu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, x86@kernel.org, fanc.fnst@cn.fujitsu.com,
+        bhe@redhat.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Date:   Mon, 04 Mar 2019 10:06:39 -0800
-In-Reply-To: <CAJZ5v0iCVhj-HmToGnSBuYE99LMn0BZpB-Ax48Aqh9hVc1+qwQ@mail.gmail.com>
-References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
-         <fa5e3e09eb32f5197bef2a50ced952850bf70748.camel@linux.intel.com>
-         <CAJZ5v0ik6oHCXD23tURsRXRj1-C-Z=S6y+KEiRxe0zJpGrKa+Q@mail.gmail.com>
-         <f214b0d82fce14c374aa6b548742c999513d9046.camel@linux.intel.com>
-         <CAJZ5v0huRALvfFBeo067dNMyUJn+Oyp8eFR3JRR+C9g7QhaekA@mail.gmail.com>
-         <47ce61b9df7701e047ef6f59afd54c854db8a538.camel@linux.intel.com>
-         <CAJZ5v0iCVhj-HmToGnSBuYE99LMn0BZpB-Ax48Aqh9hVc1+qwQ@mail.gmail.com>
+        clang-built-linux@googlegroups.com,
+        Jon Flatley <jflat@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
-> > There are other methods like PL1 budget limit for such cases. FW
-> > can
-> > just change the config TDP level.
-> 
-> OK, but that would be done without notification I suppose?
-There is a notification via processor PCI device (B0D4). This is passed
-to user space to change the power limits. The new element is called
-PPCC and it is exposed via sysfs.
-Disabling turbo is not very interesting as there can be more turbo than
-non turbo. So you loose lots of performance. So instead you can control
-power in turbo region to give you more control. _PPC is even less
-interesting as you can't control uncore power.
+On Sat, Mar 2, 2019 at 10:53 AM Louis Taylor <louis@kragniz.eu> wrote:
+>
+> When compiling with -Wreturn-type, clang warns:
+>
+> arch/x86/boot/compressed/kaslr.c:704:1: warning: control may reach end of
+>       non-void function [-Wreturn-type]
+>
+> This function's return statement should probably have been placed
+> outside the #endif, so move it there
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/360
+> Signed-off-by: Louis Taylor <louis@kragniz.eu>
 
-> 
-> > > That's fair enough, but the point is that the driver doesn'dev_t
-> > > do
-> > > the right thing even if the platform does send a _PPC
-> > > notification.
-> > 
-> > _PPC notification is to indicate levels in _PSS not to
-> > disable/enable
-> > turbo via IA32_MISC_*.
-> 
-> I was not talking about notifications, but about what the driver does
-> when MSR_IA32_MISC_ENABLE_TURBO_DISABLE is set or unset by FW on the
-> fly: this only really works if the change is from unset to set,
-> because the range of frequencies to use is restricted then, even
-> though user-visible policy limits are not updated.  However, if the
-> change is from set to unset, the update of policy limits is actually
-> necessary for the change to really take effect (otherwise the user
-> policy max prevents turbo frequencies from being requested).  HWP
-> seems to be affected too, for that matter, because the upper limit in
-> the MSR is not updated too then AFAICS.
-> 
-> > The platform could have just set _PPC to 1 or to TAR-1. Here _PPC
-> > is sent for somthing more than just changing _PSS max
-> > level. Do we have bug in if _PPC just changes performance level?
-> 
-> I think that we just need to live with the fact that _PPC may be
-> triggered for something more than changing _PSS max.
-I understand the reason why you are doing the change. I investigated
-this bugzilla before. I was thinking can udev rules should be enough to
-address this issue. But it was not a requirement.
+Thanks for the patch!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-The change itself is fine. Except may be hide the policy->rwsem in some
-header file instead of directly exposing to clients to use.
-
+-- 
 Thanks,
-Srinivas
-
+~Nick Desaulniers
