@@ -2,148 +2,141 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA81C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A40AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9C620675
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:41:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bT87HitP"
+	by mail.kernel.org (Postfix) with ESMTP id D3762206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551721394;
+	bh=ozRreU3RmIrmPBt2VbxbTZQcQKmj4OKXbuQN0ktJiHg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Cirylejb6v8zyFO+j8MQc+H8zoOnP3p3BoAT1642rd6R9RHBrtYZaaVQ8eGeMQodR
+	 Nkgr6VyvUpnixzwGUQMtCN/I8/bYYp++8HMypoWoDZ+/P+K01qpwCLtvXFSJziFygb
+	 eZfinsoab6c+hW6sPk2SLH6vQuTff3JGgiBk+/Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfCDRlL (ORCPT
+        id S1727441AbfCDRnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:41:11 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39894 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbfCDRlK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:41:10 -0500
-Received: by mail-lj1-f194.google.com with SMTP id g80so5067413ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 09:41:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S6awRhQ5D2b8C+QX/fFUFZuvqk6WDzLKAcqRIT41rUs=;
-        b=bT87HitPxDBdLAXvuIqFsNUqqjfxdI/TVOQco68zvJTHMrZHY+Xsd+w6nnhewwPA75
-         DIw7h3HoeK4M+hyuBz4Q8SgwfZbTBASvn+V5vFaMeRSQPE40HGg2icpNKmS36Eb99IrY
-         aKPuEceBA3E45MoQfdzr0icCM5I4TZ24uTUm0t7Co2QeCabpp7pJv+VPodfi0e4tp7kE
-         2XaFDPAEoY3ymzSK/q0ZFQlT48FsYi40X0vUIR1tjfcPBZTLha27mAt6cUPHDxsayG2z
-         9+MKIIyVOwYVS0p4TjavZJNc/w9wtvhWqEUcQjKPYMwgbMe37xpUkXObKrWj+xH+YuMg
-         oHAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S6awRhQ5D2b8C+QX/fFUFZuvqk6WDzLKAcqRIT41rUs=;
-        b=OJZ34OD3WhVi8K9HT9Rmn4v02nSRoB2SkhOJVS8Vmb73zwS7XxkAJg+rILt0fbWgge
-         8Dua5Q5xUwzdPVAjn49OFbCWrBHPo5ig5W95uhK7nR7bSujrL2v41OB8qd8Z/c/Pk0RW
-         qCATleS7LqLJ7Gt7IkzrRh+MAeZA3Gk18waMLR9gmq/JyX3q3Cwvp7/u17lb3GMBy3oG
-         nvYSGo3MMdFPeVfQUi6+vOlcEie/JeVsKUj/9NVZ7ofX6SWYb1bEB8oFs4U1RE7nH1sc
-         nqAXmV3L9oRGNc1sxUEzDJYzKRsqS8ZgGpMGdoLxbuLrqjMMI8CDhUqd6fkqG6sUImZy
-         G6qA==
-X-Gm-Message-State: APjAAAXVKB7cI3CEPjlrWSdQkNhRXg8yFzOR2k3Z05yPbLdHNq7PUu1N
-        8KBqprcn5GfQUeegNLN2HJXg15k9E2nD3FssgD/g1w==
-X-Google-Smtp-Source: APXvYqwNQv6ihtTbyyn9B33hq5ED0RkdfGZmltSodXDybRm9XbVyyl87LiUwe3jH5H9B0Sxa4aVaIBIKxsIg/C0E1yk=
-X-Received: by 2002:a2e:80cd:: with SMTP id r13mr11081006ljg.34.1551721267690;
- Mon, 04 Mar 2019 09:41:07 -0800 (PST)
+        Mon, 4 Mar 2019 12:43:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727268AbfCDRnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:43:12 -0500
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14E1520823;
+        Mon,  4 Mar 2019 17:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551721391;
+        bh=ozRreU3RmIrmPBt2VbxbTZQcQKmj4OKXbuQN0ktJiHg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GMOnVWgAvagoRM2SpqMMHVdtABAlrvIJdPnolQey3SwQZ8y0cJDsgjI5DDWb8eYtB
+         smyS9ckPZxLc78cCJll9EBq9KZEPTiQgxyNDySvY3Eq8uFKXK8hFEBq/+iPq4xnvMW
+         ccr7IYcV7v4p2iuhnViCjw9635ZP5jECPKXUMFtI=
+Received: by mail-qt1-f171.google.com with SMTP id s1so6031236qte.5;
+        Mon, 04 Mar 2019 09:43:11 -0800 (PST)
+X-Gm-Message-State: APjAAAVmo0cA1MmYVfGgniuMniwfsuou6eTu7vxMHdoqM4rEsJHIyZWo
+        KweNOJo0TiEDeqrhd0g7eVGns6A01pCxDDvfdg==
+X-Google-Smtp-Source: APXvYqyEPlo0AQygH5BSbkv/lOmajyJh/zF7vfHmYltzEGg5k86upZNLjDJVK8+51GzTwm/8d3lNQBk1ZpDVZxltIkY=
+X-Received: by 2002:a0c:91bb:: with SMTP id n56mr15662943qvn.77.1551721390309;
+ Mon, 04 Mar 2019 09:43:10 -0800 (PST)
 MIME-Version: 1.0
-References: <1550831866-32749-1-git-send-email-chunyan.zhang@unisoc.com>
- <20190222105957.wxhlcmoag5f3i4fi@queper01-lin> <9099990618e242e1bab77ce3f9d9b1e3@BJMBX02.spreadtrum.com>
- <20190304135810.rq2ojnbn5vezrab3@queper01-lin> <20190304152616.GM32494@hirez.programming.kicks-ass.net>
- <20190304164816.4fnxxesjwzdoqria@queper01-lin>
-In-Reply-To: <20190304164816.4fnxxesjwzdoqria@queper01-lin>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 4 Mar 2019 18:40:56 +0100
-Message-ID: <CAKfTPtBn0LyW-ar=E5xLMJ+vT5U6KWJivT8HvF0=U2dVK32nAQ@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=E7=AD=94=E5=A4=8D=3A_=5BPATCH_V4=5D_sched=2Fcpufreq=3A_initialize_iow?=
-        =?UTF-8?Q?ait=5Fboost=5Fmax_and_iowait=5Fboost_with_cpu_capacity?=
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        =?UTF-8?B?V2FuZywgVmluY2VudCAo546L5LqJKQ==?= 
-        <Vincent.Wang@unisoc.com>,
-        =?UTF-8?B?WmhhbmcsIENodW55YW4gKOW8oOaYpeiJsyk=?= 
-        <Chunyan.Zhang@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
+References: <1550561795-31132-1-git-send-email-min.guo@mediatek.com>
+ <1550561795-31132-2-git-send-email-min.guo@mediatek.com> <20190222164923.GA26413@bogus>
+ <1551058604.12020.34.camel@mhfsdcap03>
+In-Reply-To: <1551058604.12020.34.camel@mhfsdcap03>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 4 Mar 2019 11:42:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKb_afdZFaOoB5yvs2hX-T9HPVy_d30zu7f7yiqaRPaLg@mail.gmail.com>
+Message-ID: <CAL_JsqKb_afdZFaOoB5yvs2hX-T9HPVy_d30zu7f7yiqaRPaLg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: usb: musb: Add support for MediaTek
+ musb controller
+To:     Min Guo <min.guo@mediatek.com>
+Cc:     Bin Liu <b-liu@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Hans de Goede <hdegoede@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Mar 2019 at 17:48, Quentin Perret <quentin.perret@arm.com> wrote:
+On Sun, Feb 24, 2019 at 7:36 PM Min Guo <min.guo@mediatek.com> wrote:
 >
-> On Monday 04 Mar 2019 at 16:26:16 (+0100), Peter Zijlstra wrote:
-> > On Mon, Mar 04, 2019 at 01:58:12PM +0000, Quentin Perret wrote:
-> > > You could also update the values in sugov_get_util() at the cost of a
-> > > small overhead to compute 'min'. I'm not sure what's preferable since
-> > > we wanted to avoid that kind of overhead in the first place ...
+> Hi Rob,
+> On Fri, 2019-02-22 at 10:49 -0600, Rob Herring wrote:
+> > On Tue, Feb 19, 2019 at 03:36:30PM +0800, min.guo@mediatek.com wrote:
+> > > From: Min Guo <min.guo@mediatek.com>
+> > >
+> > > This adds support for MediaTek musb controller in
+> > > host, peripheral and otg mode.
+> > >
+> > > Signed-off-by: Min Guo <min.guo@mediatek.com>
+> > > ---
+> > > changes in v5:
+> > > suggested by Rob:
+> > > 1. Modify compatible as
+> > > - compatible : should be one of:
+> > >                "mediatek,mt-2701"
+> > >                ...
+> > >                followed by "mediatek,mtk-musb"
+> > > 2. Add usb connector child node
+> > >
+> > > changes in v4:
+> > > suggested by Sergei:
+> > > 1. String alignment
+> > >
+> > > changes in v3:
+> > > 1. no changes
+> > >
+> > > changes in v2:
+> > > suggested by Bin:
+> > > 1. Modify DRC to DRD
+> > > suggested by Rob:
+> > > 2. Drop the "<soc-model>-musb" in compatible
+> > > 3. Remove phy-names
+> > > 4. Add space after comma in clock-names
+> > > ---
+> > >  .../devicetree/bindings/usb/mediatek,musb.txt      | 54 ++++++++++++++++++++++
+> > >  1 file changed, 54 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > > new file mode 100644
+> > > index 0000000..0632e6e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
+> > > @@ -0,0 +1,54 @@
+> > > +MediaTek musb DRD/OTG controller
+> > > +-------------------------------------------
+> > > +
+> > > +Required properties:
+> > > + - compatible      : should be one of:
+> > > +                     "mediatek,mt-2701"
 > >
-> > Or,... we could actually make things simpler.
-> >
-> > How's the below? I have a feq questions wrt min, mostly:
-> >
-> >  - what's the difference between policy->min and
-> >    policy->cpuinfo.min_freq; it used to be the former, the below uses
-> >    the latter.
->
-> As mentioned on IRC, IIRC policy->min is something that can be written
-> from userspace (for example) to cap the min freq. OTOH, cpuinfo.min_freq
-> is read-only and just reports the lowest OPP.
->
-> Rafael is this correct ?
->
-> >  - should we have a min_freq based value, instead of a constant; the
-> >    difference being that with this the actual boost speed depends in the
-> >    gap between min/max.
->
-> If the above is correct, then I agree. Looking at min_freq simplifies
-> things quite a bit since it doesn't need to be updated all the time,
-> and the whole policy->min stuff is dealt with at the CPUFreq core level
-> so it's not obvious sugov should care.
->
-> > Anyway; the below converts iowait_boost to capacity scale (from kHz), it
-> > side-steps the whole issue you guys are bickering about by limiting it
-> > to SCHED_CAPACITY_SCALE (aka. 1024) on the boost path, and then limiting
-> > it to @max by the time we figured out we ought to use it.
-> >
-> > And since that means we never change @max anymore; we can simplify whole
-> > return value thing.
->
-> [...]
->
-> > @@ -837,7 +818,9 @@ static int sugov_start(struct cpufreq_policy *policy)
-> >               memset(sg_cpu, 0, sizeof(*sg_cpu));
-> >               sg_cpu->cpu                     = cpu;
-> >               sg_cpu->sg_policy               = sg_policy;
-> > -             sg_cpu->iowait_boost_max        = policy->cpuinfo.max_freq;
-> > +             sg_cpu->min                     =
-> > +                     (SCHED_CAPACITY_SCALE * policy->cpuinfo.min_freq) /
-> > +                     policy->cpuinfo.max_freq;
->
-> The 'funny' thing is that on big little this 'min' can end up being
-> larger than 'max' ...
+> > That looks like a top-level SoC compatible and doesn't match the
+> > example.
+> "mediatek,mt-2701" is an example, just to describe a specific SOC.
+> May I modify compatibel like:
+> compatible : should be "mediatek,mtk-musb"
 
-yes arch_scale_cpu_capacity() should be used instead of
-SCHED_CAPACITY_SCALE to be compared with sg_cpu->max and sg_cpu->util
+No, you should fix the example adding "mediatek,mtk-musb".
 
->
-> On juno r0 for example, min_freq and max_freq for little CPUs are
-> respectively 450MHz and 850MHz. So you get sg_cpu->min=542, but
-> sg_cpu->max=446 ... So you'll max out after the first IO wakeup.
-> And since iowait_boost is reset whenever it is smaller than sg_cpu->min,
-> you end up with something that can either force max freq or apply no
-> boost at all ...
->
-> Perhaps you could keep the 'util' and 'max' pointers in
-> sugov_iowait_apply() and overwrite them like before, but in the
-> SCHED_CAPACITY_SCALE scale as you suggest ?
->
-> Thanks,
-> Quentin
+Rob
