@@ -2,141 +2,114 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EBEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5204BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D8620684
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C40A20684
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:00:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sz+We9mQ"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="TTaSgRIE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfCDW71 (ORCPT
+        id S1726625AbfCDXAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 17:59:27 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43738 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCDW71 (ORCPT
+        Mon, 4 Mar 2019 18:00:14 -0500
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:34832 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCDXAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 17:59:27 -0500
-Received: by mail-qt1-f196.google.com with SMTP id y4so7025692qtc.10;
-        Mon, 04 Mar 2019 14:59:26 -0800 (PST)
+        Mon, 4 Mar 2019 18:00:14 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 78DB2BCE
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 23:00:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zHNLhQnt2IWJ for <linux-kernel@vger.kernel.org>;
+        Mon,  4 Mar 2019 17:00:12 -0600 (CST)
+Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 4A45CB53
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 17:00:12 -0600 (CST)
+Received: by mail-it1-f200.google.com with SMTP id 142so757480itx.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 15:00:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NeVtyt6+gK4gj0AOHwzuOV7rIp87XdBaYOsjxe42f7w=;
-        b=sz+We9mQuRu2WZSVKWAibeYRfR8rWlGv566a3Z5rtjObVDpDCP8/zu68vPKUH9IS2M
-         FCML+KBr75fqxSxuUcnPLIeTmgmbYs4UfIyzyXW9n91UQ6lT7s44y82PWluzyuOMWWH9
-         j9wReu7Z2BxZ7/xdrS/FLgYyR6KcQhH5oYOlqkngRDhRECQ9IgRk8Zi9DNpj5Mv0k7dr
-         P9OGl5jD122xEeVRFDHhyBlmIPt3V4272nWmLYfIUJ3WunCEp76qYJ/QO1lIvF1bcRW0
-         7enBb9JqwLUN2lmvZAH5y3vpwWeUcjDSJBat26a6mOBtPnUHs15mhLUTsIfjTsbZq1gA
-         GiXQ==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=rHaxqA0PsTZQam8an0UheOFnnZTIfjCzh05Nat7Rxng=;
+        b=TTaSgRIEeaUx5f3YarletbKzXiyK6L1x3QIvgj2yLr1SSSDreSaGhBBv7KWv6LwjPl
+         27c4IF9jOdihAAKeBNRoLsRB+v5hW0f21NmooM0X9vePXBuNXWskwVbhOU9vSXfLTAEx
+         jOIsCdb+mP2Of9tVbvYTCWPXwe+Fn/7uTb7SeHI2h1mi1Pg9gcMwJ0tQUpm2sVtGouAz
+         29pAu/5290O48IFHe6+GjbjqDKB/JuQAcaJg85/uvs80AP6odEjCJiv/04vWt0rrmwh8
+         1XjQbFxkwLgYl6jmIs2/eDzhFzaOWc2amCr6ksgREiowizp7CcOLk/UPF35NjEaGvHAd
+         npZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NeVtyt6+gK4gj0AOHwzuOV7rIp87XdBaYOsjxe42f7w=;
-        b=lxFy1qXU/ECUGUcAISwhn9/jHbMMXXQqpU8ZX4wwe7EryxOOyMhrcHoPxbG8WWROLZ
-         VICt60AQROIGG9IuK7/KCKeusoFi+N83VXKujvVJyTNnhkKQh2Lk8F28G/GvXnHtktqg
-         hLFlgp1JmGhHJayMtgucdcFGEBQ44ShraiLmKD19mA1ZfPBibX7Wzv+/HIdo/Bg/VjN/
-         NmiNGPcGNhXfRalyPdaGze8gkTY/tq2pS6cMdNeHMtBScWRRRsmtt5DiqvxxxdDTQc6/
-         0q9jzAt+atQzYEQOniOzZIRqQxNXeQNHvrl4oOI6fB195EgNr7v8hrDbOJwWbBKeLuWP
-         xQrA==
-X-Gm-Message-State: APjAAAU3H9MbaCCTlDeff9O85VvT0KAmUdY6eITzBIyX6vCZOaVyRor0
-        2gnhjfKbt2cB+Glc5ghcEfehdhUikHrY1yLg4P9UKQ==
-X-Google-Smtp-Source: APXvYqygD5FSB8EOcNpTxxw6+tMTViQhN0+GodrkOvTNI1ZAcwoRnszEl/u8FPJirtXh09/URM3oj3wkRIvRU0Ja5Tk=
-X-Received: by 2002:aed:3904:: with SMTP id l4mr16071088qte.194.1551740365875;
- Mon, 04 Mar 2019 14:59:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20190304205019.15071-1-adrian.ratiu@collabora.com>
-In-Reply-To: <20190304205019.15071-1-adrian.ratiu@collabora.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Mon, 4 Mar 2019 14:59:14 -0800
-Message-ID: <CAPhsuW4kbZhE=1v4t6v803zA6PnRjzGA5UaAu5Nrbo7mrYyw5Q@mail.gmail.com>
-Subject: Re: [PATCH] selftests/bpf: Add arm target register definitions
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     bpf <bpf@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rHaxqA0PsTZQam8an0UheOFnnZTIfjCzh05Nat7Rxng=;
+        b=WjsgVZL46Foimuxm6gQtyRVl9QGzPwN2N/YXS2MFZWsvjvjhlAc3gl/V2geZ55n2hV
+         6wBT44WPh91bj85beiA6AYJlQi3qFQB0Mz3nT/xqheyOezga8eKHl/8S3KlDozvgkkr5
+         JH9U5Kp0bbG/GGAeTUXw1p9ZB7xE+tKuQukZDcIm/Zc54DtrQrOhIPaWo+06XtCLal7B
+         En6oEySb3AcMEn/ky8Eral9rs151cCNfh+cXrJMYas0YA1qOiNO9OY5oDp2huQZe37+t
+         Hp5XxER6GfvsTZNSPThWDvQfzO8kFKxaJNAxfssUs80QKi44b9ahBB514qVC46ix5+P5
+         Sjbw==
+X-Gm-Message-State: APjAAAXbSOJ96Bgwia9LjG6snxGePb0aiskPouSroadNml452pdqmGD+
+        MzNo5eNcU2zq5nC2WueZMoWmJENCdldvQIuII0XeA/oWlVkR7BvBtLbCGyi/dpvb93FO44ik68j
+        3U0SNtdvcy/MkCjNBA1VTusDxKmkS
+X-Received: by 2002:a24:7294:: with SMTP id x142mr973827itc.26.1551740411931;
+        Mon, 04 Mar 2019 15:00:11 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyEopQVltDSlgio0wxfM2ay0fNZn3/C9jgabRPjmuEfdGsc4kD1p7cpB8rKLKefCh4DKwIKFQ==
+X-Received: by 2002:a24:7294:: with SMTP id x142mr973822itc.26.1551740411743;
+        Mon, 04 Mar 2019 15:00:11 -0800 (PST)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id z11sm2821966iog.29.2019.03.04.15.00.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 15:00:11 -0800 (PST)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH]  ALSA: usx2y: Fix potential NULL pointer dereference
+Date:   Mon,  4 Mar 2019 17:00:02 -0600
+Message-Id: <20190304230003.13050-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 12:50 PM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
->
-> eBPF "restricted C" code can be compiled with LLVM/clang using target
-> triplets like armv7l-unknown-linux-gnueabihf and loaded/run with small
-> cross-compiled gobpf/elf [1] programs without requiring a full BCC
-> port which is also undesirable on small embedded systems due to its
-> size footprint. The only missing pieces are these helper macros which
-> otherwise have to be redefined by each eBPF arm program.
->
-> [1] https://github.com/iovisor/gobpf/tree/master/elf
->
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+ usb_alloc_urb can fail due to kmalloc failure and push the error
+ upstream. Further this can cause a NULL pointer dereference in
+ init_pipe_urbs. This patch avoids such a scenario.
 
-I think this is for bpf-next tree, which is closed during the merge window.
-Please resubmit when the bpf-next trees is opened (usually in 2 weeks).
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+---
+ sound/usb/usx2y/usb_stream.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thanks,
-Song
+diff --git a/sound/usb/usx2y/usb_stream.c b/sound/usb/usx2y/usb_stream.c
+index b0f8979ff2d2..221adf68bd0c 100644
+--- a/sound/usb/usx2y/usb_stream.c
++++ b/sound/usb/usx2y/usb_stream.c
+@@ -104,7 +104,12 @@ static int init_urbs(struct usb_stream_kernel *sk, unsigned use_packsize,
+ 
+ 	for (u = 0; u < USB_STREAM_NURBS; ++u) {
+ 		sk->inurb[u] = usb_alloc_urb(sk->n_o_ps, GFP_KERNEL);
++		if (!sk->inurb[u])
++			return -ENOMEM;
++
+ 		sk->outurb[u] = usb_alloc_urb(sk->n_o_ps, GFP_KERNEL);
++		if (!sk->outurb[u])
++			return -ENOMEM;
+ 	}
+ 
+ 	if (init_pipe_urbs(sk, use_packsize, sk->inurb, indata, dev, in_pipe) ||
+-- 
+2.17.1
 
-> ---
->  tools/testing/selftests/bpf/bpf_helpers.h | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/tools/testing/selftests/bpf/bpf_helpers.h b/tools/testing/selftests/bpf/bpf_helpers.h
-> index 6c77cf7bedce..f7883576f445 100644
-> --- a/tools/testing/selftests/bpf/bpf_helpers.h
-> +++ b/tools/testing/selftests/bpf/bpf_helpers.h
-> @@ -232,6 +232,9 @@ static int (*bpf_skb_pull_data)(void *, int len) =
->  #elif defined(__TARGET_ARCH_s930x)
->         #define bpf_target_s930x
->         #define bpf_target_defined
-> +#elif defined(__TARGET_ARCH_arm)
-> +       #define bpf_target_arm
-> +       #define bpf_target_defined
->  #elif defined(__TARGET_ARCH_arm64)
->         #define bpf_target_arm64
->         #define bpf_target_defined
-> @@ -254,6 +257,8 @@ static int (*bpf_skb_pull_data)(void *, int len) =
->         #define bpf_target_x86
->  #elif defined(__s390x__)
->         #define bpf_target_s930x
-> +#elif defined(__arm__)
-> +       #define bpf_target_arm
->  #elif defined(__aarch64__)
->         #define bpf_target_arm64
->  #elif defined(__mips__)
-> @@ -291,6 +296,19 @@ static int (*bpf_skb_pull_data)(void *, int len) =
->  #define PT_REGS_SP(x) ((x)->gprs[15])
->  #define PT_REGS_IP(x) ((x)->psw.addr)
->
-> +#elif defined(bpf_target_arm)
-> +
-> +#define PT_REGS_PARM1(x) ((x)->uregs[0])
-> +#define PT_REGS_PARM2(x) ((x)->uregs[1])
-> +#define PT_REGS_PARM3(x) ((x)->uregs[2])
-> +#define PT_REGS_PARM4(x) ((x)->uregs[3])
-> +#define PT_REGS_PARM5(x) ((x)->uregs[4])
-> +#define PT_REGS_RET(x) ((x)->uregs[14])
-> +#define PT_REGS_FP(x) ((x)->uregs[11]) /* Works only with CONFIG_FRAME_POINTER */
-> +#define PT_REGS_RC(x) ((x)->uregs[0])
-> +#define PT_REGS_SP(x) ((x)->uregs[13])
-> +#define PT_REGS_IP(x) ((x)->uregs[12])
-> +
->  #elif defined(bpf_target_arm64)
->
->  #define PT_REGS_PARM1(x) ((x)->regs[0])
-> --
-> 2.20.1
->
