@@ -2,104 +2,81 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E1FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5E3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7B72075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40D22075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="toZAEs7b"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qIv8qN6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfCDNmW (ORCPT
+        id S1726843AbfCDNpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:42:22 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37745 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfCDNmV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:42:21 -0500
-Received: by mail-pg1-f193.google.com with SMTP id q206so3139389pgq.4;
-        Mon, 04 Mar 2019 05:42:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Y9/FuZn/xSNSu2RD4k/9tZpluYFjb3nzrKMrqPIU0GI=;
-        b=toZAEs7b2doiOqLEI1nInZyHrQLniEprTPHJYy5lLKqI5ZLgIMbqrQO0YrK4pu61WG
-         SFY/3NUnZwl3C+iB8PmH0YhI9P6UYLsin6oS75GuC5vntvQBtxwMBlqLtE5wqd2f9gVg
-         PY+mNDqALPO81DLTKRIrGXwXhk5u8Yp4mYP1k6VCY5x6ybV3MRIVc95mNk4k1Ir9VfFr
-         B3HPWieITS0fnnvM12/ODJ38/ww6jKHXp9EaX5PnB3FPJ9UG7SEy1zkcPet9CxUmCpA0
-         +DBXPxSQt6rXza9vWj3ggtT+pGzOpT5Y7EvOfwYBAVsH+HjGLfjwxaVlsCfEPSe8tNhA
-         knIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Y9/FuZn/xSNSu2RD4k/9tZpluYFjb3nzrKMrqPIU0GI=;
-        b=BJFNdoSoBwsmJP2ZPcK7iON0RZsDFQdUX2YnfGS5CgknsSalgVam4HUWU0vZ/GeVwl
-         EfLEH3jIjzgd7FC/HNeQCL5WgqiGDItQNnO5jDHp8hJ0w8uqtDIROSjqv6/LWkVx/Kw2
-         1FeOU4QsG6HR6QZFOZFBsNvzMeAZ33tTUd/m68/RYg73l4ywD6jI0ZBmB7ZGi2tIFug4
-         /SYZ3icuzoMvO6ULcH7hFw+mSb7MV8m1iwTLLFagF1yhr5wbIL455+5WLGmzkk3e3cAp
-         JuVsEw2rlG+isTcVIpnP8ZgVu332A+qYZbGC0zn8jx+0JP8Imyx05WPHOK3cp8iKjiNv
-         MINA==
-X-Gm-Message-State: APjAAAWKdXO3eK59xsCtay3kl7sfQFZ+9fXbndJBr+0wOSVDzRHDZiLi
-        l7JrZhB7rZoPzQ6UuBEFSRMy6au1
-X-Google-Smtp-Source: APXvYqzri0fMXZETVX4MZf8VQ43dJQD9PZAr5sHaAgkMwABho8/F2bnLxH0W29XY/8N8hNrECQJ/xg==
-X-Received: by 2002:a63:80c7:: with SMTP id j190mr17840476pgd.357.1551706940653;
-        Mon, 04 Mar 2019 05:42:20 -0800 (PST)
-Received: from [192.168.2.145] (ppp91-79-175-49.pppoe.mtu-net.ru. [91.79.175.49])
-        by smtp.googlemail.com with ESMTPSA id a184sm8900798pge.68.2019.03.04.05.42.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 05:42:19 -0800 (PST)
-Subject: Re: [PATCH RE-SEND] clk: tegra: Don't enable already enabled PLLs
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190224153222.8142-1-digetx@gmail.com>
- <b64760b5-0d37-ae05-9c8e-9e6d47293c92@gmail.com>
- <20190304081857.GE21084@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9171e4f6-1ede-ab3a-caa6-83a2d9033650@gmail.com>
-Date:   Mon, 4 Mar 2019 16:42:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 4 Mar 2019 08:45:40 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:45735 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfCDNpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 08:45:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ZkJsQMa37i0+gZtz4rq4RCQr08pWxEa3n1iwoFozQEI=; b=qIv8qN6UmrwHs2+bFkLZTf9lda
+        rj8hJvwq68HsRg8Qf/qimrbUdyCStxZG4ARIfV/fEu2pkqS9ZUgbt1MCDL7Jw4mYC+QWDNsu+oqbR
+        UHCCsXaUM8ZuHwuGPXZVFHOn5nLRZKTYeEnvmoTcGHDyybPxitrGMqN8JbbqDkFkM0g0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1h0nuH-0003co-Bw; Mon, 04 Mar 2019 14:45:25 +0100
+Date:   Mon, 4 Mar 2019 14:45:25 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        Per Noergaard Christensen <pnc@deif.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] net: dsa: mv88e6xxx: support single chip sw_addr
+ offset
+Message-ID: <20190304134525.GC26378@lunn.ch>
+References: <20190304125933.5653-1-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
-In-Reply-To: <20190304081857.GE21084@pdeschrijver-desktop.Nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304125933.5653-1-rasmus.villemoes@prevas.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.03.2019 11:18, Peter De Schrijver пишет:
-> On Wed, Feb 27, 2019 at 06:15:04PM +0300, Dmitry Osipenko wrote:
->> 24.02.2019 18:32, Dmitry Osipenko пишет:
->>> Initially Common Clock Framework isn't aware of the clock-enable status,
->>> this results in enabling of clocks that were enabled by bootloader. This
->>> is not a big deal for a regular clock-gates, but for PLL's it may have
->>> some unpleasant consequences. Thus re-enabling PLLX (the main CPU parent
->>> clock) may result in extra long period of PLL re-locking.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>
->> Peter (and everyone else), yours r-b and ACK will be appreciated since you kinda already took a look at this patch in the past and were okay with it (IIRC, we had some brief discussion on the #tegra IRC a few months ago), thanks. 
->>
+On Mon, Mar 04, 2019 at 12:59:42PM +0000, Rasmus Villemoes wrote:
+> From: Per Noergaard Christensen <pnc@deif.com>
 > 
-> Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+> The 88e6250 does not support multi-chip addressing. However, one can
+> still have two of them on the same mdio bus, since the device only
+> uses 16 of the 32 possible addresses, either addresses 0x00-0x0F or
+> 0x10-0x1F depending on the ADDR4 pin at reset [since ADDR4 is
+> internally pulled high, the latter is the default].
 > 
+> In order to prepare for supporting the 88e6250, change
+> mv88e6xxx_smi_init and the single_chip_{read,write} functions to allow
+> and honour a non-zero sw_addr in single chip mode. Since this only
+> changes the behaviour in the sw_addr!=0 && !chip->info->multi_chip
+> case from returning -EINVAL, it should not break existing setups.
 
-Awesome, thanks again!
+Hi Rasmus
+
+We have the nice abstraction of mv88e6xxx_smi_multi_chip_ops and
+mv88e6xxx_smi_single_chip_ops. I think we should extend this
+abstraction and implement mv88e6xxx_smi_dual_chip_ops. Also, add a
+chip->info->dual_chip flag, so we know when it can be used.
+
+	Andrew
