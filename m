@@ -2,113 +2,111 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ADEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD580C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7B22070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EA1420823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:32:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bUnYOXoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfCDRb7 (ORCPT
+        id S1727338AbfCDRc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:31:59 -0500
-Received: from mailproxy04.manitu.net ([217.11.48.68]:44794 "EHLO
-        mailproxy04.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfCDRb6 (ORCPT
+        Mon, 4 Mar 2019 12:32:57 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:33280 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfCDRc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:31:58 -0500
-Received: from [10.0.30.7] (dslb-178-010-196-220.178.010.pools.vodafone-ip.de [178.10.196.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: wg@grandegger.com)
-        by mailproxy04.manitu.net (Postfix) with ESMTPSA id 2D1508048C;
-        Mon,  4 Mar 2019 18:32:23 +0100 (CET)
-From:   Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v6 2/4] can: m_can: Rename m_can_priv to m_can_classdev
-To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
-        davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190301185043.9037-1-dmurphy@ti.com>
- <20190301185043.9037-2-dmurphy@ti.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
- mQINBFtEb5MBEAC5aRjs5jLwjbOaEE6rczZSqck7B3iGK8ldrV8HGSjxb1MAf4VbvDWrzXfA
- phEgX3e54AnYhnKcf6BA3J9TlSDdUAW7r/ijOFl+TehMz7holgjhlDK41acJ/klwXJotIqby
- bWqFgFw6o7b8hfbVzPi8Pz/+WOIKaDOb1Keb989mn253RF1yFakgvoQfCyAeVcnO5kcByW17
- zbTEHsSduYi0Zir26Oedb2Vtas4SovrEXVh4e2dRdbEbHlI8po3Ih117CuGIPAe2RSfZKY88
- 8c9m+WsJKtrIDIMY+f5kcHG5mib++u1oTg7wjfFgTr925g2WjzT63YRibW8Vazot9yXquMo2
- HYQStmnN9MuAkL/jslnxhGKNwTzpXv6FD2g/9hcLfSjaaCwGzj2j2ucJglJnO1n+ibVB14l2
- JLVe+IKJaE1gvm2v9HPsE+o1P4O8I9iCiAbQ6BGUszHADOg7r8CeTQ+AOCypfEZ5l1Hwa3gw
- V+TtqyCU70U9LA0AKaDZ02vf0hFRWeXV/ErFq878GOXbbVMZu8G5aO0EcCBC75/KQnyi0WEl
- KVIcyTyxKel/Ext7vUFIkiA16JNWRpS85YDfe9CoEZcZK+nUU268j6Bp5a7MYaF/dZaLT+Du
- hLA82ry8IkPQvyV5yV+B0PwDM/w7de8zIzMy9YBXU8KGGDmgYQARAQABtCdXb2xmZ2FuZyBH
- cmFuZGVnZ2VyIDx3Z0BncmFuZGVnZ2VyLmNvbT6JAj8EEwECACkFAltEb5MCGyMFCQlmAYAH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRDwuz7LbZzIUhvED/4vTUqS0c/V5a4hc5Md
- u/8qkF7qg011tM0lXrZZxMQ8NrjdFuDhUefZ1q59QbLFU9da9D/CRVJUSx6BnY9jkR6lIm9l
- OGqS9ZlzubGXJCZhv1ONWPwY/i1RXTtauhRy+nkcyJk2Bzs5PWq1i4hWXpX//GfGUbCt+2bX
- 2+9bmHSPFtZ/MpIigS1E8RehIzlzqC/NCJspY8H0HKtLR6kpanRBYCuYSlBom/1LEP2MmXhh
- 9LgjQINp+jZJwnBj5L5JaUn/sg2WO+IiN6IphzyS2TvrlRhkhPJv5EOf0QmYzDgz5eU/h35x
- aCclLSJ0Go83GO0bXFGCzN86VreRgLRGTa7/x9VW05LiBdlsuLpG23IHM5f6p0WpYgE+jdri
- TrMued/DquQEcw/xNXpa3n9zTghLcWgcqGIdK3AE3yPjQBR3N6WoT4VOXnZjg6pyNHQ3W4qj
- LQgzJ3Tq2gPMhRLFcLXyk6V3rQ0ffn4LCXkFYVIBGAN8hHMOFeV6NESkUcEil6V4oOsLLGuJ
- XreFjAl1Cz3vIaVgzZEfub1z60DDM71lIr+UvWXLeMyKiSMWiJBPL3LUoUWmzpafaTJakDWm
- CEXa871Jlw7sy99MGVhiVG74JHjtPE6ontM1dKCP1+yT53TeGp1o/3Hj3sUielfDr5nV/kT6
- p5zmgQN/1bJgV/3sKrkCDQRbRG+TARAA37mw9iosCWO5OtCrbvgJJwzOR3XrijVKi9KTNzDO
- NT2iy7teKP4+C+9why6iZhoJbBrTo56mbmI2nvfyOthxCa8nT14js8q0EgSMiyxXVeRvzEIQ
- sYcG4zgbGjwJ94Vrr5tMCFn5B6cYKJffTGmfY0D3b2V4GqaCGxVs3lWcQJeKl/raL8lp4YWz
- AI0jVx104W7rUbCTDvcSVfPqwM+9A6xaP4b1jwyYwGHgOTq6SeimRrGgM+UNtWqMU3+vUelG
- 8gKDyfIIo4IrceeHss5OuRREQZq5vNuzkeIY6faYWv65KT+IQ6EyC9UEGkMdcStfEsZO53Qq
- buA7Kha6lVViDM3vjGS+fnNq/od53dosWeWQ4O8M7Z6nxgp+EOPuJf041eKmIrcaRiXb+027
- x4D0Kwv/xVsFa6cC2lkITWahENFIXwKOZ3imr2ZCtVF61qnm/GQ5P27JQKXMbPOM6wm0EjJ1
- 9t2EkSpgVHI0Cd0ldxD4eaGNwpeHJ5WGGzZrOE7PCcRziJX0qO/FpLjTQ6scf+bPACgduY71
- AwXyA24mg7F2vK+Vth+Yp7MlgwYBMUy6D140jrkWrcRxKYfW1BgcKpbG/dh5DhUAvoOzFD7i
- zHrGK5FhzqJDBwKk7n9jGohf/MJWs2UKai/u4ogZBhhD5JPR8GG6VzO4snWisFLFuAEAEQEA
- AYkCJQQYAQIADwUCW0RvkwIbDAUJCWYBgAAKCRDwuz7LbZzIUkA3D/wJOvcQ7rTeoRiamOIB
- kD4n2Jsv8Vti/XfM0DTmhfnWL4y96VzSzNfl+EHAwXE4161qnXxTHnFK1hq7QklNdDiGW3iH
- nKZUyHUTnlUlCocv8jWtlqrpH0XVtF12JET65mE14Hga6BQ4ECXwU2GcP3202A55EzMj31b/
- 59GD3CDIJy7bjQi+pIRuA9ZQRsFas7Od7AWO/nFns2wJ6AJkjXdCUCZ4iOuf82gLK9olDSmd
- H73Epc6l3jca62L2Lzei405LQSsfOZ06uH2aGPUJX4odUlEF6arm2j+9Q8Vyi4CJ316f2kAa
- sl7LhAwZtaj8hjl/PUWfd5w47dUBDUZjIRYcdM2TTU3Spgvg3zqXUzur5+r0jkUl2naeiSB1
- vwjfIwnPqZOVr9FAXuLbAdUyCCC0ohGLrq5Nsc1A02rxpQHRxTSm2FOdn2jYvuD7JUgkhmUh
- /TXb8aL6A4hfX7oV4tGq7nSmDOCmgWRmAHAGp85fVq2iylCxZ1kKi8EYCSa28eQzetukFbAx
- JwmcrUSaCOK+jpHlNY0PkghSIzAE/7Se+c37unJ39xJLkrgehLYmUF7cBeNWhfchu4fAJosM
- 5mXohGkBKcd5YYmF13imYtAG5/VSmBm/0CFNGFO49MVTNGXGBznrPrWwtPZNwjJdi7JrvEbm
- 8QEfHnPzgykCs2DOOQ==
-Message-ID: <093eb838-ab28-0bc0-8855-a8b22f3392b4@grandegger.com>
-Date:   Mon, 4 Mar 2019 18:31:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 4 Mar 2019 12:32:56 -0500
+Received: by mail-ua1-f67.google.com with SMTP id q17so5145941uam.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 09:32:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rkY60ZGZ5GzXTCVZGdJfnj3QrSrvwyXRT+DLIil7TAk=;
+        b=bUnYOXoX7yvX06rwCT958g5coU4Gk/jNsnhGFwysxWJBmuZb0WHLukHskO+5D+KeaS
+         rOKnMZ8bIfbA6U7sJemi2xb3lh+108PIyZVtD2uvJU/0qp6vEnGPIabEVNakbqLkltW1
+         DFLclqm5WP2Aj5s7nmyDU1uGmTVPD3FbRL5Wc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rkY60ZGZ5GzXTCVZGdJfnj3QrSrvwyXRT+DLIil7TAk=;
+        b=K7NHVl2+zy89Y+kHpLfd6V034fBsygXi2dgJ4InwMGq9jeJ9ml4O5bPL8zhBnddKUu
+         4NETgBix5raKkdUkplFh2RC9+OiR3TlK+W6zKSWjaF3e2qqAGtqO1rtGKJC4+F/pk+a7
+         GPBZLT1Krtjr4q6N1XQXUvL3VZITrDEcT5208l7H//hD8evdwfDwz8BrMfB/LfWKX24q
+         Rb/emRxK+pzGrdVnzsQ5UlWExGjEWvr4tU6+AiarmHIaJx81TMQldfbC1SseRO+ZdSTV
+         5WD8bTmMnM3t9Juc86MSV+s4jVxsObpuae8swmqXVPsAQdwGrC/Qa8c5JLeUeLDkpMEp
+         6PPw==
+X-Gm-Message-State: APjAAAVttxWWDUp9qLpTx2nzrjcCx1BWZWhCI4Yra4RtCgB6U/ZAnn4e
+        IfM9CLZS7Y+PflMNLAQYedAIlEGb9TU=
+X-Google-Smtp-Source: APXvYqzE0tdZEzEopRlVz5Tkh7UpGtwOKWOe1b7H2JKHVKWu/d3YscDSUMHvj6QNDDbIOUlzNmS3uQ==
+X-Received: by 2002:a67:ef83:: with SMTP id r3mr10046157vsp.101.1551720774872;
+        Mon, 04 Mar 2019 09:32:54 -0800 (PST)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id j131sm2064737vkf.20.2019.03.04.09.32.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 09:32:53 -0800 (PST)
+Received: by mail-ua1-f47.google.com with SMTP id a42so5137515uad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 09:32:53 -0800 (PST)
+X-Received: by 2002:a67:89c9:: with SMTP id l192mr9968756vsd.188.1551720773428;
+ Mon, 04 Mar 2019 09:32:53 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190301185043.9037-2-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190212180441.15340-1-keescook@chromium.org> <20190212180441.15340-2-keescook@chromium.org>
+ <CAK8P3a2xC3OVckPnweSjor3AH5LpSzichKxAjkAcgXDtCf0QmQ@mail.gmail.com>
+ <CAKv+Gu_+GZ8Ut0nN+za+V48Eo6O27P_go3Dk1rDe1Wederad1Q@mail.gmail.com>
+ <CAGXu5jLwEh-_v_aVm35hSqbX3QzdFOy_AwEa4mmKM8JmWtiKGA@mail.gmail.com> <CAK8P3a3r-VV=xwuUgC5kMoNsOymjzSoZ4h-ks_p7AzNDfPa4oA@mail.gmail.com>
+In-Reply-To: <CAK8P3a3r-VV=xwuUgC5kMoNsOymjzSoZ4h-ks_p7AzNDfPa4oA@mail.gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Mon, 4 Mar 2019 09:32:41 -0800
+X-Gmail-Original-Message-ID: <CAGXu5j+zZdgeBg6kkh-oC4qfJAgaOm04Lpni4HkkGKNRZ6BU9A@mail.gmail.com>
+Message-ID: <CAGXu5j+zZdgeBg6kkh-oC4qfJAgaOm04Lpni4HkkGKNRZ6BU9A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gcc-plugins: structleak: Generalize to all variable types
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Emese Revfy <re.emese@gmail.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, Mar 2, 2019 at 2:16 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Sat, Mar 2, 2019 at 4:43 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Sat, Mar 2, 2019 at 1:05 AM Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> > >
+> > > On Thu, 28 Feb 2019 at 21:27, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > I get similar results with asan-stack=1 but without your plugin, only
+> > > > the combination of the two has the explosive stack size growth.
+> >
+> > I can look more closely, but I'm not sure it's entirely worth it:
+> > these two may not make sense to build at the same time. (e.g. the
+> > use-after-scope config was disallowed to work with this plugin.)
+>
+> Well, I still want to make sure all 'randconfig' builds complete without
+> warnings, and without having to turn off the otherwise useful
+> stack overflow warnings.
+>
+> One thing I noticed is that your patch removes the 'depends on
+> !COMPILE_TEST' check for GCC_PLUGIN_STRUCTLEAK_BYREF_ALL,
+> so if we add that back in, it would at least take care of the
+> allmodconfig and randconfig cases.
 
-there are still "LTL" after renaming m_can_priv to m_can_classdev.
+Okay, I'll add this back in the next few days.
 
-Am 01.03.19 um 19:50 schrieb Dan Murphy:
-> Rename the common m_can_priv class structure to
-> m_can_classdev as this is more descriptive.
-
-If you change the struct name, I think you should also change the
-variable name to something more meaning full e.g.:
-
-  struct m_can_classdev *cdev
-
-instead of
-
-  struct m_can_classdev *priv
-
-
-... snip ...
-
-Wolfgang.
+-- 
+Kees Cook
