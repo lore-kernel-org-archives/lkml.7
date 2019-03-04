@@ -2,52 +2,52 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D1BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ECFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F94208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51E820836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688156;
-	bh=t3RocPeqG0hItxg2AS11CR1o7xL6T6FgOYlkUfdvCCk=;
+	s=default; t=1551688163;
+	bh=bEFp7G5ee5yXFJQMrmFPXY4YJEHznxy5UBc9ttfLwKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rMe91TZuXke5lOiQdmIUo1JSbRqJTKdCiC96CrR6a0L/IrtKzznUuI9eTgiWDomY7
-	 LalCqidnVbqxiQWFCo1p57Wj9O/iCf0A4pO9B01cKQly07QyC7CEmtM9rHc3RZEIVa
-	 kjHiZQypkKJYSTytx1n3npZ5pXrUEn9vd/ESqAZM=
+	b=vKr3zEpXNpc3RnLZjgbFR4/hd97USqBwsMZjBX/P0GjJAHm9fe9nP1c1AIZ2S21qD
+	 G4dt6eIMAWfhEC1L4EdSmdHsDPW6VaNqFG0+2lI/CHapyqYXtasPfCaDgGcBj5i2LR
+	 GOOK4qchl7KApCTtyGbfT0CON3WLZOWN7mwp/eqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfCDI3P (ORCPT
+        id S1727541AbfCDI3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:29:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55202 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:29:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726724AbfCDI3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:29:08 -0500
+        id S1727524AbfCDI3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:29:19 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C0920823;
-        Mon,  4 Mar 2019 08:29:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0660A20836;
+        Mon,  4 Mar 2019 08:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688147;
-        bh=t3RocPeqG0hItxg2AS11CR1o7xL6T6FgOYlkUfdvCCk=;
+        s=default; t=1551688158;
+        bh=bEFp7G5ee5yXFJQMrmFPXY4YJEHznxy5UBc9ttfLwKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XH+DhsqeRih+gNdMyfVynhFuZvVThBSKn44aDnOLrMFoNyKN1JgjUTqNj+KAq7vzS
-         n93vMLEVpYOtivkVlk7SVZ/w7a2qRdBY/Blo9f0gsoJj/ba2WW05CFXbb7WQujLB23
-         pP77lfEUbKn9gAEwKZlbzKjlQb/yn8l0SMxqkfg4=
+        b=q4+Hkg1iHxN93n/Ynj55geLWohXNd2EKKRRB5ev5n7RY2Sjvf3IzRpKMDHaJYMCJi
+         UslM9ttcFE8wNNLfG/1nHhPRfxrOxdKTD5ivM+TG6oldonuRt27nZ/1HMaKaoA0JIr
+         6L1vFSlum+IOv1XU7ORfbWdFwjDN32koeWB7bVbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaron Hill <aa1ronham@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/78] drivers: thermal: int340x_thermal: Fix sysfs race condition
-Date:   Mon,  4 Mar 2019 09:22:15 +0100
-Message-Id: <20190304081626.944115594@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 18/78] selftests: rtc: rtctest: add alarm test on minute boundary
+Date:   Mon,  4 Mar 2019 09:22:01 +0100
+Message-Id: <20190304081626.315972549@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -66,111 +66,131 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 129699bb8c7572106b5bbb2407c2daee4727ccad ]
+[ Upstream commit 7b3027728f4d4f6763f4d7e771acfc9424cdd0e6 ]
 
-Changes since V1:
-* Use dev_info instead of printk
-* Use dev_warn instead of BUG_ON
+Unfortunately, some RTC don't have a second resolution for alarm so also
+test for alarm on a minute boundary.
 
-Previously, sysfs_create_group was called before all initialization had
-fully run - specifically, before pci_set_drvdata was called. Since the
-sysctl group is visible to userspace as soon as sysfs_create_group
-returns, a small window of time existed during which a process could read
-from an uninitialized/partially-initialized device.
-
-This commit moves the creation of the sysctl group to after all
-initialized is completed. This ensures that it's impossible for
-userspace to read from a sysctl file before initialization has fully
-completed.
-
-To catch any future regressions, I've added a check to ensure
-that proc_thermal_emum_mode is never PROC_THERMAL_NONE when a process
-tries to read from a sysctl file. Previously, the aforementioned race
-condition could result in the 'else' branch
-running while PROC_THERMAL_NONE was set,
-leading to a null pointer deference.
-
-Signed-off-by: Aaron Hill <aa1ronham@gmail.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../processor_thermal_device.c                | 28 ++++++++++---------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ tools/testing/selftests/rtc/rtctest.c | 102 ++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-diff --git a/drivers/thermal/int340x_thermal/processor_thermal_device.c b/drivers/thermal/int340x_thermal/processor_thermal_device.c
-index 8e0f665cf06f8..8e1cf4d789be1 100644
---- a/drivers/thermal/int340x_thermal/processor_thermal_device.c
-+++ b/drivers/thermal/int340x_thermal/processor_thermal_device.c
-@@ -84,7 +84,12 @@ static ssize_t power_limit_##index##_##suffix##_show(struct device *dev, \
- 	struct pci_dev *pci_dev; \
- 	struct platform_device *pdev; \
- 	struct proc_thermal_device *proc_dev; \
--\
-+	\
-+	if (proc_thermal_emum_mode == PROC_THERMAL_NONE) { \
-+		dev_warn(dev, "Attempted to get power limit before device was initialized!\n"); \
-+		return 0; \
-+	} \
-+	\
- 	if (proc_thermal_emum_mode == PROC_THERMAL_PLATFORM_DEV) { \
- 		pdev = to_platform_device(dev); \
- 		proc_dev = platform_get_drvdata(pdev); \
-@@ -298,11 +303,6 @@ static int proc_thermal_add(struct device *dev,
- 	*priv = proc_priv;
- 
- 	ret = proc_thermal_read_ppcc(proc_priv);
--	if (!ret) {
--		ret = sysfs_create_group(&dev->kobj,
--					 &power_limit_attribute_group);
--
--	}
- 	if (ret)
- 		return ret;
- 
-@@ -316,8 +316,7 @@ static int proc_thermal_add(struct device *dev,
- 
- 	proc_priv->int340x_zone = int340x_thermal_zone_add(adev, ops);
- 	if (IS_ERR(proc_priv->int340x_zone)) {
--		ret = PTR_ERR(proc_priv->int340x_zone);
--		goto remove_group;
-+		return PTR_ERR(proc_priv->int340x_zone);
- 	} else
- 		ret = 0;
- 
-@@ -331,9 +330,6 @@ static int proc_thermal_add(struct device *dev,
- 
- remove_zone:
- 	int340x_thermal_zone_remove(proc_priv->int340x_zone);
--remove_group:
--	sysfs_remove_group(&proc_priv->dev->kobj,
--			   &power_limit_attribute_group);
- 
- 	return ret;
+diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
+index dea4e3d6d9e18..b2065536d4075 100644
+--- a/tools/testing/selftests/rtc/rtctest.c
++++ b/tools/testing/selftests/rtc/rtctest.c
+@@ -211,6 +211,108 @@ TEST_F(rtc, alarm_wkalm_set) {
+ 	ASSERT_EQ(new, secs);
  }
-@@ -364,7 +360,10 @@ static int int3401_add(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, proc_priv);
- 	proc_thermal_emum_mode = PROC_THERMAL_PLATFORM_DEV;
  
--	return 0;
-+	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PLATFORM_DEV\n");
++TEST_F(rtc, alarm_alm_set_minute) {
++	struct timeval tv = { .tv_sec = 62 };
++	unsigned long data;
++	struct rtc_time tm;
++	fd_set readfds;
++	time_t secs, new;
++	int rc;
 +
-+	return sysfs_create_group(&pdev->dev.kobj,
-+					 &power_limit_attribute_group);
- }
- 
- static int int3401_remove(struct platform_device *pdev)
-@@ -441,7 +440,10 @@ static int  proc_thermal_pci_probe(struct pci_dev *pdev,
- 			dev_err(&pdev->dev, "No auxiliary DTSs enabled\n");
- 	}
- 
--	return 0;
-+	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PCI\n");
++	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
++	ASSERT_NE(-1, rc);
 +
-+	return sysfs_create_group(&pdev->dev.kobj,
-+					 &power_limit_attribute_group);
- }
- 
- static void  proc_thermal_pci_remove(struct pci_dev *pdev)
++	secs = timegm((struct tm *)&tm) + 60 - tm.tm_sec;
++	gmtime_r(&secs, (struct tm *)&tm);
++
++	rc = ioctl(self->fd, RTC_ALM_SET, &tm);
++	if (rc == -1) {
++		ASSERT_EQ(EINVAL, errno);
++		TH_LOG("skip alarms are not supported.");
++		return;
++	}
++
++	rc = ioctl(self->fd, RTC_ALM_READ, &tm);
++	ASSERT_NE(-1, rc);
++
++	TH_LOG("Alarm time now set to %02d:%02d:%02d.",
++	       tm.tm_hour, tm.tm_min, tm.tm_sec);
++
++	/* Enable alarm interrupts */
++	rc = ioctl(self->fd, RTC_AIE_ON, 0);
++	ASSERT_NE(-1, rc);
++
++	FD_ZERO(&readfds);
++	FD_SET(self->fd, &readfds);
++
++	rc = select(self->fd + 1, &readfds, NULL, NULL, &tv);
++	ASSERT_NE(-1, rc);
++	ASSERT_NE(0, rc);
++
++	/* Disable alarm interrupts */
++	rc = ioctl(self->fd, RTC_AIE_OFF, 0);
++	ASSERT_NE(-1, rc);
++
++	rc = read(self->fd, &data, sizeof(unsigned long));
++	ASSERT_NE(-1, rc);
++	TH_LOG("data: %lx", data);
++
++	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
++	ASSERT_NE(-1, rc);
++
++	new = timegm((struct tm *)&tm);
++	ASSERT_EQ(new, secs);
++}
++
++TEST_F(rtc, alarm_wkalm_set_minute) {
++	struct timeval tv = { .tv_sec = 62 };
++	struct rtc_wkalrm alarm = { 0 };
++	struct rtc_time tm;
++	unsigned long data;
++	fd_set readfds;
++	time_t secs, new;
++	int rc;
++
++	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
++	ASSERT_NE(-1, rc);
++
++	secs = timegm((struct tm *)&alarm.time) + 60 - alarm.time.tm_sec;
++	gmtime_r(&secs, (struct tm *)&alarm.time);
++
++	alarm.enabled = 1;
++
++	rc = ioctl(self->fd, RTC_WKALM_SET, &alarm);
++	if (rc == -1) {
++		ASSERT_EQ(EINVAL, errno);
++		TH_LOG("skip alarms are not supported.");
++		return;
++	}
++
++	rc = ioctl(self->fd, RTC_WKALM_RD, &alarm);
++	ASSERT_NE(-1, rc);
++
++	TH_LOG("Alarm time now set to %02d/%02d/%02d %02d:%02d:%02d.",
++	       alarm.time.tm_mday, alarm.time.tm_mon + 1,
++	       alarm.time.tm_year + 1900, alarm.time.tm_hour,
++	       alarm.time.tm_min, alarm.time.tm_sec);
++
++	FD_ZERO(&readfds);
++	FD_SET(self->fd, &readfds);
++
++	rc = select(self->fd + 1, &readfds, NULL, NULL, &tv);
++	ASSERT_NE(-1, rc);
++	ASSERT_NE(0, rc);
++
++	rc = read(self->fd, &data, sizeof(unsigned long));
++	ASSERT_NE(-1, rc);
++
++	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
++	ASSERT_NE(-1, rc);
++
++	new = timegm((struct tm *)&tm);
++	ASSERT_EQ(new, secs);
++}
++
+ static void __attribute__((constructor))
+ __constructor_order_last(void)
+ {
 -- 
 2.19.1
 
