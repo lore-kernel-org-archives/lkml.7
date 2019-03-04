@@ -5,138 +5,110 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9636AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36ADEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4142070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7B22070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfCDR30 (ORCPT
+        id S1727297AbfCDRb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:29:26 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:36430 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfCDR30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:29:26 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CFA6A78;
-        Mon,  4 Mar 2019 09:29:25 -0800 (PST)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 988703F703;
-        Mon,  4 Mar 2019 09:29:23 -0800 (PST)
-Subject: Re: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
-To:     mathieu.poirier@linaro.org, leo.yan@linaro.org
-Cc:     shiwanglai@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        john.stultz@linaro.org, xuwei5@huawei.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        suzhuangluan@hisilicon.com
-References: <6496F4728C09F6479CFF21A8E67D33D568F32660@dggema525-mbx.china.huawei.com>
- <20190302125955.GA11385@leoy-ThinkPad-X240s>
- <CANLsYkzakXjuMR+=ncVpcohE8n-uF60Qa6EAN+Xh=FKBoJtrgg@mail.gmail.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <9109e498-0cd9-0b81-15a0-2208d4282359@arm.com>
-Date:   Mon, 4 Mar 2019 17:29:22 +0000
+        Mon, 4 Mar 2019 12:31:59 -0500
+Received: from mailproxy04.manitu.net ([217.11.48.68]:44794 "EHLO
+        mailproxy04.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfCDRb6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:31:58 -0500
+Received: from [10.0.30.7] (dslb-178-010-196-220.178.010.pools.vodafone-ip.de [178.10.196.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: wg@grandegger.com)
+        by mailproxy04.manitu.net (Postfix) with ESMTPSA id 2D1508048C;
+        Mon,  4 Mar 2019 18:32:23 +0100 (CET)
+From:   Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH v6 2/4] can: m_can: Rename m_can_priv to m_can_classdev
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
+        davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190301185043.9037-1-dmurphy@ti.com>
+ <20190301185043.9037-2-dmurphy@ti.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8QEfHnPzgykCs2DOOQ==
+Message-ID: <093eb838-ab28-0bc0-8855-a8b22f3392b4@grandegger.com>
+Date:   Mon, 4 Mar 2019 18:31:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <CANLsYkzakXjuMR+=ncVpcohE8n-uF60Qa6EAN+Xh=FKBoJtrgg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190301185043.9037-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
 
-On 04/03/2019 17:18, Mathieu Poirier wrote:
-> On Sat, 2 Mar 2019 at 06:00, Leo Yan <leo.yan@linaro.org> wrote:
->>
->> On Sat, Mar 02, 2019 at 09:45:22AM +0000, Shiwanglai wrote:
->>
->> [...]
->>
->>>> +           /* Top internals */
->>>> +           funnel@ec031000 {
->>>> +                   compatible = "arm,coresight-funnel", "arm,primecell";
->>>> +                   reg = <0 0xec031000 0 0x1000>;
->>>> +                   clocks = <&crg_ctrl HI3660_PCLK>;
->>>> +                   clock-names = "apb_pclk";
->>>> +
->>>> +                   out-ports {
->>>> +                           port {
->>>> +                                   top_funnel_out: endpoint {
->>>> +                                           remote-endpoint =
->>>> +                                                   <&top_etf_in>;
->>>> +                                   };
->>>> +                           };
->>>> +                   };
->>>> +
->>>> +                   in-ports {
->>>> +                           #address-cells = <1>;
->>>> +                           #size-cells = <0>;
->>>> +
->>>> +                           port@0 {
->>>> +                                   reg = <0>;
->>>> +                                   top_funnel_in0: endpoint {
->>>> +                                           remote-endpoint =
->>>> +                                                   <&cluster0_etf_out>;
->>>> +                                   };
->>>> +                           };
->>>> +
->>>> +                           port@1 {
->>>> +                                   reg = <0>;
->>>
->>> Here should s/<0>/<1>; otherwise DTC will complain warning for mismatching between 'port@1' and 'reg = <0>'.
->>
->>> -- if reg set to 1, then there's no data output from cluster 1 to top.
->>
->> Thanks for the info, Wanglai.  Now I see why write as it is.
->>
->> I can confirm if directly use your patch with perf with mainline
->> kernel I can capture CoreSight trace data successfully on Hikey960
->> board.
->>
->> But since this DT binding will introduce DTC warning, I personally
->> think we can improve for this with below method:
->>
->> We can create a funnel node named "funnel_combo", and we don't need to
->> specify register address range for it; and cluster 0 and cluster 1 will
->> output to "funnel_combo" and "funnel_combo" will output to the top
->> funnel.  Thus the DT binding will write as below.
->>
->> To support for a funnel without any register address range (we have
->> support replicator like this mode), we also need to extend the driver
->> drivers/hwtracing/coresight/coresight-funnel.c.
->>
->> Mathieu, Mike, Suzuki, could you help confirm this is the right
->> direction we should move forward to?
-> 
-> Leo, thanks for testing this out.  Shiwanglai, please add Suzuki and
-> myself to future revision of this set - this will help you getting a
-> timely response for your work.
-> 
-> As Leo pointed out we already have support for replicators that don't
-> have a register map and the same thing should be done in this case.
-> But contrary to what was done for replicators, I think we should keep
-> the drivers in the same file as Russell did here[1].  That way we can
-> keep all things funnel at the same place and reduce the amount of
-> kernel configuration options.
+there are still "LTL" after renaming m_can_priv to m_can_classdev.
 
-I back that. I have already merged the static and programmable replicators
-into one and this should be out here soon. So, I back the single driver
-approach for funnels.
+Am 01.03.19 um 19:50 schrieb Dan Murphy:
+> Rename the common m_can_priv class structure to
+> m_can_classdev as this is more descriptive.
 
-Cheers
-Suzuki
+If you change the struct name, I think you should also change the
+variable name to something more meaning full e.g.:
+
+  struct m_can_classdev *cdev
+
+instead of
+
+  struct m_can_classdev *priv
 
 
-> 
-> Regards,
-> Mathieu
-> 
-> [1]. https://elixir.bootlin.com/linux/latest/source/drivers/tty/serial/amba-pl011.c#L2819
-> 
->>
+... snip ...
+
+Wolfgang.
