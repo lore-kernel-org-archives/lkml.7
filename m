@@ -2,162 +2,110 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C925C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F4EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6794820823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A51620835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfCDDIc (ORCPT
+        id S1726080AbfCDDS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 22:08:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41782 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725938AbfCDDIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 22:08:31 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 622F1AEDF;
-        Mon,  4 Mar 2019 03:08:30 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>
-Date:   Mon, 04 Mar 2019 14:08:22 +1100
-Subject: [PATCH] nfsd: fix memory corruption caused by readdir
-cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <87lg1vs5eh.fsf@notabene.neil.brown.name>
+        Sun, 3 Mar 2019 22:18:27 -0500
+Received: from mga09.intel.com ([134.134.136.24]:10356 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbfCDDS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 22:18:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 19:18:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,438,1544515200"; 
+   d="scan'208";a="279475356"
+Received: from hu.sh.intel.com ([10.239.158.51])
+  by orsmga004.jf.intel.com with ESMTP; 03 Mar 2019 19:18:23 -0800
+From:   "Chen, Hu" <hu1.chen@intel.com>
+Cc:     hu1.chen@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI / PM: Propagate KEY_POWER wakeup events to user space
+Date:   Mon,  4 Mar 2019 11:00:21 +0800
+Message-Id: <20190304030022.22492-1-hu1.chen@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+When the system is woken from S3 by the ACPI fixed power button, send
+KEY_POWER to user space.
 
+I run Android on x86 PC (it's a NUC). Everytime I press the power button
+to wake the system, it suspends right away. After some debug, I find
+that Android wants to see KEY_POWER at resume. Otherwise, its
+opportunistic suspend will kick in shortly.
 
-If the result of an NFSv3 readdir{,plus} request results in the
-"offset" on one entry having to be split across 2 pages, and is sized
-so that the next directory entry doesn't fix in the requested size,
-then memory corruption can happen.
+Signed-off-by: Chen, Hu <hu1.chen@intel.com>
+---
+ drivers/acpi/button.c | 4 +++-
+ drivers/acpi/sleep.c  | 8 ++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-When encode_entry() is called after encoding the last entry that fits,
-it notices that ->offset and ->offset1 are set, and so stores the
-offset value in the two pages as required.  It clears ->offset1 but
-*does not* clear ->offset.
-
-Normally this omission doesn't matter as encode_entry_baggage() will
-be called, and will set ->offset to a suitable value (not on a page
-boundary).
-But in the case where cd->buflen < elen and nfserr_toosmall is
-returned, ->offset is not reset.
-
-This means that nfsd3proc_readdirplus will see ->offset with a value 4
-bytes before the end of a page, and ->offset1 set to NULL.
-It will try to write 8bytes to ->offset.
-If we are lucky, the next page will be read-only, and the system will
-  BUG: unable to handle kernel paging request at...
-
-If we are unlucky, some innocent page will have the first 4 bytes
-corrupted.
-
-nfsd3proc_readdir() doesn't even check for ->offset1, it just blindly
-writes 8 bytes to the offset wherever it is.
-
-Fix this by clearing ->offset after it is used, and copying the
-=2D>offset handling code from nfsd3_proc_readdirplus into
-nfsd3_proc_readdir.
-
-(Note that the commit hash in the Fixes tag is from the 'history'
- tree - this bug predates git).
-Fixes: eb229d253e6c ("[PATCH] kNFSd: fix two xdr-encode bugs for readdirplu=
-s reply")
-Cc: stable@vger.kernel.org (v2.6.12+)
-Signed-off-by: NeilBrown <neilb@suse.com>
-=2D--
-
-Can I still get extra credit for fixing a bug that is 14.5 years old, if
-I'm the one who introduced it?
-
- fs/nfsd/nfs3proc.c | 16 ++++++++++++++--
- fs/nfsd/nfs3xdr.c  |  1 +
- 2 files changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 9eb8086ea841..c9cf46e0c040 100644
-=2D-- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -463,8 +463,19 @@ nfsd3_proc_readdir(struct svc_rqst *rqstp)
- 					&resp->common, nfs3svc_encode_entry);
- 	memcpy(resp->verf, argp->verf, 8);
- 	resp->count =3D resp->buffer - argp->buffer;
-=2D	if (resp->offset)
-=2D		xdr_encode_hyper(resp->offset, argp->cookie);
-+	if (resp->offset) {
-+		loff_t offset =3D argp->cookie;
-+
-+		if (unlikely(resp->offset1)) {
-+			/* we ended up with offset on a page boundary */
-+			*resp->offset =3D htonl(offset >> 32);
-+			*resp->offset1 =3D htonl(offset & 0xffffffff);
-+			resp->offset1 =3D NULL;
-+		} else {
-+			xdr_encode_hyper(resp->offset, offset);
-+		}
-+		resp->offset =3D NULL;
-+	}
-=20
- 	RETURN_STATUS(nfserr);
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index a19ff3977ac4..117718057938 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -33,6 +33,7 @@
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
+ #include <acpi/button.h>
++#include <linux/suspend.h>
+ 
+ #define PREFIX "ACPI: "
+ 
+@@ -417,7 +418,8 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
+ 			int keycode;
+ 
+ 			acpi_pm_wakeup_event(&device->dev);
+-			if (button->suspended)
++			if (button->suspended &&
++			    mem_sleep_current == PM_SUSPEND_TO_IDLE)
+ 				break;
+ 
+ 			keycode = test_bit(KEY_SLEEP, input->keybit) ?
+diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+index 403c4ff15349..c5dcee9f5872 100644
+--- a/drivers/acpi/sleep.c
++++ b/drivers/acpi/sleep.c
+@@ -462,6 +462,13 @@ static int find_powerf_dev(struct device *dev, void *data)
+ 	return !strcmp(hid, ACPI_BUTTON_HID_POWERF);
  }
-@@ -533,6 +544,7 @@ nfsd3_proc_readdirplus(struct svc_rqst *rqstp)
- 		} else {
- 			xdr_encode_hyper(resp->offset, offset);
- 		}
-+		resp->offset =3D NULL;
+ 
++static void pwr_btn_notify(struct device *dev)
++{
++	struct acpi_device *device = to_acpi_device(dev);
++
++	device->driver->ops.notify(device, ACPI_FIXED_HARDWARE_EVENT);
++}
++
+ /**
+  *	acpi_pm_finish - Instruct the platform to leave a sleep state.
+  *
+@@ -505,6 +512,7 @@ static void acpi_pm_finish(void)
+ 				      find_powerf_dev);
+ 	if (pwr_btn_dev) {
+ 		pm_wakeup_event(pwr_btn_dev, 0);
++		pwr_btn_notify(pwr_btn_dev);
+ 		put_device(pwr_btn_dev);
  	}
-=20
- 	RETURN_STATUS(nfserr);
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 9b973f4f7d01..83919116d5cb 100644
-=2D-- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -921,6 +921,7 @@ encode_entry(struct readdir_cd *ccd, const char *name, =
-int namlen,
- 		} else {
- 			xdr_encode_hyper(cd->offset, offset64);
- 		}
-+		cd->offset =3D NULL;
- 	}
-=20
- 	/*
-=2D-=20
-2.14.0.rc0.dirty
+ }
+-- 
+2.20.1
 
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlx8lqcACgkQOeye3VZi
-gbmMZQ//X3PHTu3swQ0759WwQhkkdqXWlyt2uv8yzx3rcYeeP45AIzq2NS7tDsbJ
-JwD2qWS+QciC0VhizPVQ+pgPRJvGMrGOwTZGGiDxKIDVauCKTPLMLzSh2do8zO0o
-z9dyltflNwixZoeDp4l8mByQhx3Qh2yXkY6iHoNGmQVsnHltnC/t2akQDz2XlXJF
-/eoamBN6vmrjnniXTR5TivgygOC0LCBKnawbJNbWUPA7UhG+sP8mWiHTqz8jquym
-qOQRJnA7aOzxebA6RBTJScmcnT86S8bOFvY4lBbsxO6vVK9fsY0pQG2GALnT+S4R
-8NMfGbO3dmcIn5ayCAEOYUp195O98PclJLeTqGyF9Pro25JCBI/9BUF2jQTSUhrh
-W8fNnGtGiEgMU25sX779q44jE4W20q/RENkyMH0u6bJUoaCc4mUVg0OTNRcO94NU
-1ysnu3f6Pl90kwaWtS8xR0dZFOsiCTyZH2dKZQSOgfocM+pUk8wk4cCvkN2dcu6c
-H3oSPYP+lAIeFAuFWWljkHyIhheL6xAsP79548ixGiZDdebyMwt1b9zFDcF95aqV
-EsYaEmZaVmjDupPq/c9Kwhn8NUogK8E62wK6O0+D7wpntXB0y/TX5+3/j1e75qDD
-0v3IguvlL30o62trjuLV/3vdPEiaeNPgML2QH9WyrtDBUKkVPXI=
-=D6y8
------END PGP SIGNATURE-----
---=-=-=--
