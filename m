@@ -2,144 +2,78 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA74C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38264C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DC920449
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C4D20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfCDMyK (ORCPT
+        id S1726619AbfCDMyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 07:54:10 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:47132 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbfCDMyK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 07:54:10 -0500
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 0n6ZhHDWRI8AW0n6dh0dA9; Mon, 04 Mar 2019 13:54:07 +0100
-Subject: Re: [PATCH] media: uvcvideo: Read support
-To:     Hugues Fruchet <hugues.fruchet@st.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1551702925-7739-1-git-send-email-hugues.fruchet@st.com>
- <1551702925-7739-2-git-send-email-hugues.fruchet@st.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <6e1739dd-861f-98a6-9e31-5b1cc1c91493@xs4all.nl>
-Date:   Mon, 4 Mar 2019 13:54:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 4 Mar 2019 07:54:39 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50552 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726101AbfCDMyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 07:54:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 20F45AD47;
+        Mon,  4 Mar 2019 12:54:38 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 13:54:37 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] printk: Remove no longer used LOG_PREFIX.
+Message-ID: <20190304125437.67mnu6yzjhwkqweg@pathway.suse.cz>
+References: <1550829580-9189-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20190304022229.GC23578@jagdpanzerIV>
 MIME-Version: 1.0
-In-Reply-To: <1551702925-7739-2-git-send-email-hugues.fruchet@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJyzuvc0is7L1BUldMbTjMxBoH98AX4iuf+2bklV+kE69HG85TnyF1M0e3azUf2cZpO7t4LUYXv2bStjjswaOTaS99EfUA5W+boNgmGglRsaoBUZxLql
- semCG0VMeNCUVnpuxCAr9ieL5iTujkHLT4oav5sI31Bgt1cy/mRtZ+vGZTN1RU46PlKMZJo1w7XGdZH+YJeYKXil/vOA+uNA+FPJMuKIkbPKUU6Oify7GG/u
- zFusRr0UpTb4/uZ5bLPToIpQQmZxEKi/zrBTzGvSBhsO+NwCypl/TTKO6vtn7mn/mKe/R0hqngUnHC5Y6xcVbV+5EgYNuNpurrruVle1iPk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304022229.GC23578@jagdpanzerIV>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 1:35 PM, Hugues Fruchet wrote:
-> Add support of read() call from userspace by implementing
-> uvc_v4l2_read() with vb2_read() helper.
+On Mon 2019-03-04 11:22:29, Sergey Senozhatsky wrote:
+> On (02/22/19 18:59), Tetsuo Handa wrote:
+> > When commit 5becfb1df5ac8e49 ("kmsg: merge continuation records while
+> > printing") introduced LOG_PREFIX, we used KERN_DEFAULT etc. as a flag
+> > for setting LOG_PREFIX in order to tell whether to call cont_add()
+> > (i.e. whether to append the message to "struct cont").
+> > 
+> > But since commit 4bcc595ccd80decb ("printk: reinstate KERN_CONT for
+> > printing continuation lines") inverted the behavior (i.e. don't append
+> > the message to "struct cont" unless KERN_CONT is specified) and commit
+> > 5aa068ea4082b39e ("printk: remove games with previous record flags")
+> > removed the last LOG_PREFIX check, setting LOG_PREFIX via KERN_DEFAULT
+> > etc. is no longer meaningful.
+> > 
+> > Therefore, we can remove LOG_PREFIX and make KERN_DEFAULT empty string.
+> > 
+> > Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 > 
-> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-> ---
->  drivers/media/usb/uvc/uvc_queue.c | 15 ++++++++++++++-
->  drivers/media/usb/uvc/uvc_v4l2.c  | 11 ++++++++---
->  drivers/media/usb/uvc/uvcvideo.h  |  2 ++
->  3 files changed, 24 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-> index 682698e..0c8a0a8 100644
-> --- a/drivers/media/usb/uvc/uvc_queue.c
-> +++ b/drivers/media/usb/uvc/uvc_queue.c
-> @@ -227,7 +227,7 @@ int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type,
->  	int ret;
->  
->  	queue->queue.type = type;
-> -	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR;
-> +	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR | VB2_READ;
->  	queue->queue.drv_priv = queue;
->  	queue->queue.buf_struct_size = sizeof(struct uvc_buffer);
->  	queue->queue.mem_ops = &vb2_vmalloc_memops;
-> @@ -361,6 +361,19 @@ int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type)
->  	return ret;
->  }
->  
-> +ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
-> +		       char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	ssize_t ret;
-> +
-> +	mutex_lock(&queue->mutex);
-> +	ret = vb2_read(&queue->queue, buf, count, ppos,
-> +		       file->f_flags & O_NONBLOCK);
-> +	mutex_unlock(&queue->mutex);
-> +
-> +	return ret;
-> +}
-> +
->  int uvc_queue_mmap(struct uvc_video_queue *queue, struct vm_area_struct *vma)
->  {
->  	return vb2_mmap(&queue->queue, vma);
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 84be596..3866832 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -594,7 +594,8 @@ static int uvc_ioctl_querycap(struct file *file, void *fh,
->  	strscpy(cap->driver, "uvcvideo", sizeof(cap->driver));
->  	strscpy(cap->card, vdev->name, sizeof(cap->card));
->  	usb_make_path(stream->dev->udev, cap->bus_info, sizeof(cap->bus_info));
-> -	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING
-> +	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING |
-> +			    V4L2_CAP_READWRITE
->  			  | chain->caps;
+> Looks good to me. Well, at least I don't see any problems with the patch.
+> We can do a tree-wide KERN_DEFAULT removal later.
 
-device_caps for VIDEO_CAPTURE should also get V4L2_CAP_READWRITE. See uvc_register_video_device().
+Yup.
 
-Regards,
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-	Hans
+With a fresh head after the weekend, the patch looks fine and
+pretty safe to me.
 
->  
->  	return 0;
-> @@ -1434,8 +1435,12 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
->  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
->  		    size_t count, loff_t *ppos)
->  {
-> -	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read: not implemented.\n");
-> -	return -EINVAL;
-> +	struct uvc_fh *handle = file->private_data;
-> +	struct uvc_streaming *stream = handle->stream;
-> +
-> +	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read\n");
-> +
-> +	return uvc_queue_read(&stream->queue, file, data, count, ppos);
->  }
->  
->  static int uvc_v4l2_mmap(struct file *file, struct vm_area_struct *vma)
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index c7c1baa..5d0515c 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -766,6 +766,8 @@ struct uvc_buffer *uvc_queue_next_buffer(struct uvc_video_queue *queue,
->  					 struct uvc_buffer *buf);
->  struct uvc_buffer *uvc_queue_get_current_buffer(struct uvc_video_queue *queue);
->  void uvc_queue_buffer_release(struct uvc_buffer *buf);
-> +ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
-> +		       char __user *buf, size_t count, loff_t *ppos);
->  int uvc_queue_mmap(struct uvc_video_queue *queue,
->  		   struct vm_area_struct *vma);
->  __poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
-> 
+I have pushed it into for-5.1 branch.
 
+Best Regards,
+Petr
