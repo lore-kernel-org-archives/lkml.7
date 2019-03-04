@@ -2,508 +2,143 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B50C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919BFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C2E2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1KlfT9in"
+	by mail.kernel.org (Postfix) with ESMTP id 6B2B220830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfCDNLm (ORCPT
+        id S1726690AbfCDNNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:11:42 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43964 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfCDNLh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:11:37 -0500
-Received: by mail-wr1-f67.google.com with SMTP id d17so5475226wre.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 05:11:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ii8eJGdsN8bfQAaCMmEW83TuFvrl71fjU1+jEsXisP4=;
-        b=1KlfT9innVh5mZ8sXhma++gzXCQUEzuyzpgMy3dB0/RWYk3gAHNqqoPsyEhAiyH+0u
-         gKpX9cPQJu2MaMpAFhpHZn/6Cn6+aRCPPqUrmPEcIh45ljbzJuitOtyAgNLXhMDq+tnS
-         0miiC6u9jXR4xLLlzP+O5HJyFKA2nlPuv0KMH/cjF4fjREHgpRm1iAVdIIqQ7O1elvdK
-         nFvjtjZR3ol/6ZJPvUhipp1JNYSjf/22yvWWYSH0ZlfXwrWcGv55+y6l9sMmcMVuEYab
-         PLtzufwGZG/YYFf5B1gJPnPaXJS5A8mToEZ8cK4cjoFZo0ZPMtvbrTIetppo+H9zL+O8
-         BZpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ii8eJGdsN8bfQAaCMmEW83TuFvrl71fjU1+jEsXisP4=;
-        b=VgEFvYAK+vJxxKnNKSTJrKGLekUBW/E1y5XsG6bFTHUSNfDJeu8PFCpd0stu5AdbiW
-         1IjbE25FLZYfgqFK4rEypOF/ak+U8VXidBU/jbnEYrRODDRvCTtMrFK9+Apu340XAK8A
-         Epdp7dzfJX5Oocaj8UoH1S4ZIUKxBEo5o/S6W4xa4a6U7jflvjWH2CPGrkyLqMBOrds5
-         Xz7a/Fs5WMVX+pVDyTnLT3zLY5SNHq1ijqD2L6ZyaavSb1Tm1+FjpvPweLnXJPL6Ymav
-         T0UKQkty6mw3nPDlQ64yDjHD2d8XvZqxLJHpOGDzaVxF0+Sg+7z42hb2OLHJbvtJRTPR
-         TbHw==
-X-Gm-Message-State: APjAAAVrJ9GFmnO+tbhavUZ5sZpo/JIfClWG7k9Ml1TIJ4hs37r0d76X
-        PXItl53BOhF4fEPxYXrkMwXpxw==
-X-Google-Smtp-Source: APXvYqxMTVf5FE8CzmjRp+IamQeUY0+29Bwtp7KgilF+O05dDXhV/uncjNVx2gS/YvNFXsNJRQZZzQ==
-X-Received: by 2002:a5d:4887:: with SMTP id g7mr12684452wrq.51.1551705094675;
-        Mon, 04 Mar 2019 05:11:34 -0800 (PST)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a8sm11695624wmh.26.2019.03.04.05.11.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 04 Mar 2019 05:11:33 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     jbrunet@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] clk: meson: g12a: add cpu clocks
-Date:   Mon,  4 Mar 2019 14:11:29 +0100
-Message-Id: <20190304131129.7762-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190304131129.7762-1-narmstrong@baylibre.com>
-References: <20190304131129.7762-1-narmstrong@baylibre.com>
+        Mon, 4 Mar 2019 08:13:24 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:48562 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726186AbfCDNNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 08:13:24 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C1C3B308424E;
+        Mon,  4 Mar 2019 13:13:23 +0000 (UTC)
+Received: from [10.36.112.48] (ovpn-112-48.ams2.redhat.com [10.36.112.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0EDC210018F8;
+        Mon,  4 Mar 2019 13:13:19 +0000 (UTC)
+Subject: Re: [PATCH v4 01/17] x86/common: Align cpu_caps_cleared and
+ cpu_caps_set to unsigned long
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
+ <1551494711-213533-2-git-send-email-fenghua.yu@intel.com>
+ <461f162c-694f-2bb7-f9cb-55fa915434bc@redhat.com>
+ <20190304101736.GC32477@hirez.programming.kicks-ass.net>
+ <d1f6f2f1-60c9-9dc8-0ad5-14cf94e83487@redhat.com>
+ <20190304124433.GE32477@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <e20895f0-09d9-5909-f3ce-8b93695c9676@redhat.com>
+Date:   Mon, 4 Mar 2019 14:13:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190304124433.GE32477@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 04 Mar 2019 13:13:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Amlogic G12A Family CPU Clock tree in read/only for now.
+On 04/03/19 13:44, Peter Zijlstra wrote:
+> On Mon, Mar 04, 2019 at 11:48:18AM +0100, Paolo Bonzini wrote:
+>> True that.  On the other hand btsl/btrl is also one byte smaller if no 
+>> operand is %r8-%r15.
+> 
+> Because then we loose the REX prefix, right. Now _that_ might actually
+> be a reason to do that :-)
 
-The CPU clock can either use the SYS_PLL for > 1GHz frequencies or
-use a couple of div+mux from 1GHz/667MHz/24MHz source with 2 non-glitch
-muxes.
+I knew that would be the right way to put it for you. :)
 
-Proper DVFS support will come in a second time.
+>> In any case, /me wonders if we should have a macro like
+>>
+>> #define DECLARE_LE_BITMAP(name,bits) \
+>>         u32 name[DIV_ROUND_UP(bits, 32)] __aligned(sizeof(unsigned long))
+> 
+>  s/u32/__le32/
+> 
+> To go in bitops/le.h, sure, if there's enough users.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/clk/meson/g12a.c | 350 +++++++++++++++++++++++++++++++++++++++
- drivers/clk/meson/g12a.h |  22 ++-
- 2 files changed, 371 insertions(+), 1 deletion(-)
+Hmm... actually that should be "BITS_TO_LONGS(bits) * sizeof(unsigned
+long) / 4" because bitmap functions may access (or even clear) the last
+word as 64 bits.
 
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index 0e1ce8c03259..80a7172df2a6 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -150,6 +150,318 @@ static struct clk_regmap g12a_sys_pll = {
- 	},
- };
- 
-+static struct clk_regmap g12a_sys_pll_div16_en = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.bit_idx = 24,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "sys_pll_div16_en",
-+		.ops = &clk_regmap_gate_ro_ops,
-+		.parent_names = (const char *[]){ "sys_pll" },
-+		.num_parents = 1,
-+		/*
-+		 * This clock is used to debug the sys_pll range
-+		 * Linux should not change it at runtime
-+		 */
-+	},
-+};
-+
-+static struct clk_fixed_factor g12a_sys_pll_div16 = {
-+	.mult = 1,
-+	.div = 16,
-+	.hw.init = &(struct clk_init_data){
-+		.name = "sys_pll_div16",
-+		.ops = &clk_fixed_factor_ops,
-+		.parent_names = (const char *[]){ "sys_pll_div16_en" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+/* Datasheet names this field as "premux0" */
-+static struct clk_regmap g12a_cpu_clk_dyn0_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL0,
-+		.mask = 0x3,
-+		.shift = 0,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_dyn0_sel",
-+		.ops = &clk_regmap_mux_ro_ops,
-+		.parent_names = (const char *[]){ IN_PREFIX "xtal",
-+						  "fclk_div2",
-+						  "fclk_div3" },
-+		.num_parents = 3,
-+	},
-+};
-+
-+/* Datasheet names this field as "mux0_divn_tcnt" */
-+static struct clk_regmap g12a_cpu_clk_dyn0_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL0,
-+		.shift = 4,
-+		.width = 6,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_dyn0_div",
-+		.ops = &clk_regmap_divider_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_dyn0_sel" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+/* Datasheet names this field as "postmux0" */
-+static struct clk_regmap g12a_cpu_clk_dyn0 = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL0,
-+		.mask = 0x1,
-+		.shift = 2,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_dyn0",
-+		.ops = &clk_regmap_mux_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_dyn0_sel",
-+						  "cpu_clk_dyn0_div" },
-+		.num_parents = 2,
-+	},
-+};
-+
-+/* Datasheet names this field as "premux1" */
-+static struct clk_regmap g12a_cpu_clk_dyn1_sel = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL0,
-+		.mask = 0x3,
-+		.shift = 16,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_dyn1_sel",
-+		.ops = &clk_regmap_mux_ro_ops,
-+		.parent_names = (const char *[]){ IN_PREFIX "xtal",
-+						  "fclk_div2",
-+						  "fclk_div3" },
-+		.num_parents = 3,
-+	},
-+};
-+
-+/* Datasheet names this field as "Mux1_divn_tcnt" */
-+static struct clk_regmap g12a_cpu_clk_dyn1_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL0,
-+		.shift = 20,
-+		.width = 6,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_dyn1_div",
-+		.ops = &clk_regmap_divider_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_dyn1_sel" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+/* Datasheet names this field as "postmux1" */
-+static struct clk_regmap g12a_cpu_clk_dyn1 = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL0,
-+		.mask = 0x1,
-+		.shift = 18,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_dyn1",
-+		.ops = &clk_regmap_mux_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_dyn1_sel",
-+						  "cpu_clk_dyn1_div" },
-+		.num_parents = 2,
-+	},
-+};
-+
-+/* Datasheet names this field as "Final_dyn_mux_sel" */
-+static struct clk_regmap g12a_cpu_clk_dyn = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL0,
-+		.mask = 0x1,
-+		.shift = 10,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_dyn",
-+		.ops = &clk_regmap_mux_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_dyn0",
-+						  "cpu_clk_dyn1" },
-+		.num_parents = 2,
-+	},
-+};
-+
-+/* Datasheet names this field as "Final_mux_sel" */
-+static struct clk_regmap g12a_cpu_clk = {
-+	.data = &(struct clk_regmap_mux_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL0,
-+		.mask = 0x1,
-+		.shift = 11,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk",
-+		.ops = &clk_regmap_mux_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_dyn",
-+						  "sys_pll" },
-+		.num_parents = 2,
-+	},
-+};
-+
-+static struct clk_regmap g12a_cpu_clk_div16_en = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.bit_idx = 1,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_clk_div16_en",
-+		.ops = &clk_regmap_gate_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk" },
-+		.num_parents = 1,
-+		/*
-+		 * This clock is used to debug the cpu_clk range
-+		 * Linux should not change it at runtime
-+		 */
-+	},
-+};
-+
-+static struct clk_fixed_factor g12a_cpu_clk_div16 = {
-+	.mult = 1,
-+	.div = 16,
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_div16",
-+		.ops = &clk_fixed_factor_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_div16_en" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap g12a_cpu_clk_apb_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.shift = 3,
-+		.width = 3,
-+		.flags = CLK_DIVIDER_POWER_OF_TWO,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_apb_div",
-+		.ops = &clk_regmap_divider_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap g12a_cpu_clk_apb = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.bit_idx = 1,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_clk_apb",
-+		.ops = &clk_regmap_gate_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_apb_div" },
-+		.num_parents = 1,
-+		/*
-+		 * This clock is set by the ROM monitor code,
-+		 * Linux should not change it at runtime
-+		 */
-+	},
-+};
-+
-+static struct clk_regmap g12a_cpu_clk_atb_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.shift = 6,
-+		.width = 3,
-+		.flags = CLK_DIVIDER_POWER_OF_TWO,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_atb_div",
-+		.ops = &clk_regmap_divider_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap g12a_cpu_clk_atb = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.bit_idx = 17,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_clk_atb",
-+		.ops = &clk_regmap_gate_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_atb_div" },
-+		.num_parents = 1,
-+		/*
-+		 * This clock is set by the ROM monitor code,
-+		 * Linux should not change it at runtime
-+		 */
-+	},
-+};
-+
-+static struct clk_regmap g12a_cpu_clk_axi_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.shift = 9,
-+		.width = 3,
-+		.flags = CLK_DIVIDER_POWER_OF_TWO,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_axi_div",
-+		.ops = &clk_regmap_divider_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap g12a_cpu_clk_axi = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.bit_idx = 18,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_clk_axi",
-+		.ops = &clk_regmap_gate_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_axi_div" },
-+		.num_parents = 1,
-+		/*
-+		 * This clock is set by the ROM monitor code,
-+		 * Linux should not change it at runtime
-+		 */
-+	},
-+};
-+
-+static struct clk_regmap g12a_cpu_clk_trace_div = {
-+	.data = &(struct clk_regmap_div_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.shift = 20,
-+		.width = 3,
-+		.flags = CLK_DIVIDER_POWER_OF_TWO,
-+	},
-+	.hw.init = &(struct clk_init_data){
-+		.name = "cpu_clk_trace_div",
-+		.ops = &clk_regmap_divider_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk" },
-+		.num_parents = 1,
-+	},
-+};
-+
-+static struct clk_regmap g12a_cpu_clk_trace = {
-+	.data = &(struct clk_regmap_gate_data){
-+		.offset = HHI_SYS_CPU_CLK_CNTL1,
-+		.bit_idx = 23,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_clk_trace",
-+		.ops = &clk_regmap_gate_ro_ops,
-+		.parent_names = (const char *[]){ "cpu_clk_trace_div" },
-+		.num_parents = 1,
-+		/*
-+		 * This clock is set by the ROM monitor code,
-+		 * Linux should not change it at runtime
-+		 */
-+	},
-+};
-+
- static const struct pll_mult_range g12a_gp0_pll_mult_range = {
- 	.min = 55,
- 	.max = 255,
-@@ -2167,6 +2479,26 @@ static struct clk_hw_onecell_data g12a_hw_onecell_data = {
- 		[CLKID_MALI]			= &g12a_mali.hw,
- 		[CLKID_MPLL_5OM_DIV]		= &g12a_mpll_50m_div.hw,
- 		[CLKID_MPLL_5OM]		= &g12a_mpll_50m.hw,
-+		[CLKID_SYS_PLL_DIV16_EN]	= &g12a_sys_pll_div16_en.hw,
-+		[CLKID_SYS_PLL_DIV16]		= &g12a_sys_pll_div16.hw,
-+		[CLKID_CPU_CLK_DYN0_SEL]	= &g12a_cpu_clk_dyn0_sel.hw,
-+		[CLKID_CPU_CLK_DYN0_DIV]	= &g12a_cpu_clk_dyn0_div.hw,
-+		[CLKID_CPU_CLK_DYN0]		= &g12a_cpu_clk_dyn0.hw,
-+		[CLKID_CPU_CLK_DYN1_SEL]	= &g12a_cpu_clk_dyn1_sel.hw,
-+		[CLKID_CPU_CLK_DYN1_DIV]	= &g12a_cpu_clk_dyn1_div.hw,
-+		[CLKID_CPU_CLK_DYN1]		= &g12a_cpu_clk_dyn1.hw,
-+		[CLKID_CPU_CLK_DYN]		= &g12a_cpu_clk_dyn.hw,
-+		[CLKID_CPU_CLK]			= &g12a_cpu_clk.hw,
-+		[CLKID_CPU_CLK_DIV16_EN]	= &g12a_cpu_clk_div16_en.hw,
-+		[CLKID_CPU_CLK_DIV16]		= &g12a_cpu_clk_div16.hw,
-+		[CLKID_CPU_CLK_APB_DIV]		= &g12a_cpu_clk_apb_div.hw,
-+		[CLKID_CPU_CLK_APB]		= &g12a_cpu_clk_apb.hw,
-+		[CLKID_CPU_CLK_ATB_DIV]		= &g12a_cpu_clk_atb_div.hw,
-+		[CLKID_CPU_CLK_ATB]		= &g12a_cpu_clk_atb.hw,
-+		[CLKID_CPU_CLK_AXI_DIV]		= &g12a_cpu_clk_axi_div.hw,
-+		[CLKID_CPU_CLK_AXI]		= &g12a_cpu_clk_axi.hw,
-+		[CLKID_CPU_CLK_TRACE_DIV]	= &g12a_cpu_clk_trace_div.hw,
-+		[CLKID_CPU_CLK_TRACE]		= &g12a_cpu_clk_trace.hw,
- 		[NR_CLKS]			= NULL,
- 	},
- 	.num = NR_CLKS,
-@@ -2335,6 +2667,24 @@ static struct clk_regmap *const g12a_clk_regmaps[] = {
- 	&g12a_mali_1,
- 	&g12a_mali,
- 	&g12a_mpll_50m,
-+	&g12a_sys_pll_div16_en,
-+	&g12a_cpu_clk_dyn0_sel,
-+	&g12a_cpu_clk_dyn0_div,
-+	&g12a_cpu_clk_dyn0,
-+	&g12a_cpu_clk_dyn1_sel,
-+	&g12a_cpu_clk_dyn1_div,
-+	&g12a_cpu_clk_dyn1,
-+	&g12a_cpu_clk_dyn,
-+	&g12a_cpu_clk,
-+	&g12a_cpu_clk_div16_en,
-+	&g12a_cpu_clk_apb_div,
-+	&g12a_cpu_clk_apb,
-+	&g12a_cpu_clk_atb_div,
-+	&g12a_cpu_clk_atb,
-+	&g12a_cpu_clk_axi_div,
-+	&g12a_cpu_clk_axi,
-+	&g12a_cpu_clk_trace_div,
-+	&g12a_cpu_clk_trace,
- };
- 
- static const struct meson_eeclkc_data g12a_clkc_data = {
-diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
-index f399dfe1401c..70aa469ca1cf 100644
---- a/drivers/clk/meson/g12a.h
-+++ b/drivers/clk/meson/g12a.h
-@@ -50,6 +50,7 @@
- #define HHI_GCLK_MPEG2			0x148
- #define HHI_GCLK_OTHER			0x150
- #define HHI_GCLK_OTHER2			0x154
-+#define HHI_SYS_CPU_CLK_CNTL1		0x15c
- #define HHI_VID_CLK_DIV			0x164
- #define HHI_MPEG_CLK_CNTL		0x174
- #define HHI_AUD_CLK_CNTL		0x178
-@@ -166,8 +167,27 @@
- #define CLKID_MALI_0_DIV			170
- #define CLKID_MALI_1_DIV			173
- #define CLKID_MPLL_5OM_DIV			176
-+#define CLKID_SYS_PLL_DIV16_EN			178
-+#define CLKID_SYS_PLL_DIV16			179
-+#define CLKID_CPU_CLK_DYN0_SEL			180
-+#define CLKID_CPU_CLK_DYN0_DIV			181
-+#define CLKID_CPU_CLK_DYN0			182
-+#define CLKID_CPU_CLK_DYN1_SEL			183
-+#define CLKID_CPU_CLK_DYN1_DIV			184
-+#define CLKID_CPU_CLK_DYN1			185
-+#define CLKID_CPU_CLK_DYN			186
-+#define CLKID_CPU_CLK_DIV16_EN			188
-+#define CLKID_CPU_CLK_DIV16			189
-+#define CLKID_CPU_CLK_APB_DIV			190
-+#define CLKID_CPU_CLK_APB			191
-+#define CLKID_CPU_CLK_ATB_DIV			192
-+#define CLKID_CPU_CLK_ATB			193
-+#define CLKID_CPU_CLK_AXI_DIV			194
-+#define CLKID_CPU_CLK_AXI			195
-+#define CLKID_CPU_CLK_TRACE_DIV			196
-+#define CLKID_CPU_CLK_TRACE			197
- 
--#define NR_CLKS					178
-+#define NR_CLKS					198
- 
- /* include the CLKIDs that have been made part of the DT binding */
- #include <dt-bindings/clock/g12a-clkc.h>
--- 
-2.20.1
-
+Paolo
