@@ -2,179 +2,138 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FBBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 01:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C8AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 01:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA53E20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 01:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HBHs1ZR1"
+	by mail.kernel.org (Postfix) with ESMTP id 6F4D520842
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 01:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551662082;
+	bh=WmG2vDs4W7ldGTeO49usENFjA0p/aA1IquPcsQmap5Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=B/ndnH0z6d5PexzV7WE4c+vGgdgx5HRTeQYNJlZppVMJdKQ4zfrjLGDX1STGql46H
+	 dh+9qEb8gpX3ZY2oyR8UGHO2Y3h7o3okGZ4m79MnjgIXKsihyQUm6Jw6rVYv3DJzAE
+	 LhrQXrLcxQm+rfXsFn/NKM4pRJ10+736VV0++/rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbfCDBCz (ORCPT
+        id S1726128AbfCDBOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 20:02:55 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43593 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfCDBCz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 20:02:55 -0500
-Received: by mail-qk1-f196.google.com with SMTP id f196so1951130qke.10
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 17:02:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nZ8L3AK9nFah5RoucXb6574z84G9P6bkJYPZQpK8AT8=;
-        b=HBHs1ZR1YNljbbrzpAgI/qvoSerqyAXQ8MHxX7H/APi3g4RWDGSt2pMGaaPMtApOkF
-         HrfiNqiaDUOp08rpbo8Wb5k3qFzq8x+/5Z5oOaMUi+kPnkRvKWL+DEeUY3ILKIU0Gjlq
-         jH44jctnJ85yfPrX/UkYZ8BEobUHjU1C10wBE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nZ8L3AK9nFah5RoucXb6574z84G9P6bkJYPZQpK8AT8=;
-        b=JCf26KqzlLhUvA2RypEs+HRNZ8YnIiigFlHfbm5kcgTKy1XDc1sUkrbjUPgbAtJTHg
-         yUh5iuLjAjbw9Sy/czOBjNorCVncMa5tYaONbLkHoDgRqq3Clsipi10vacKtm6hM1hyb
-         TeN7CQYp5IUHJbPBLvOTT0vkgaxTIq9sLhGe4s5Tutm8RiSA6aAzPrKAawLJpEphENS7
-         xE5kQLbhKLBC/9W/8526xyRD39Mn4TWjjLO9M8SCdis76QwcUf0ESf6ufkzy6lH4t5Mj
-         GmGV3ljsQLXhOezjm3twp3Kw8kx6LsI8UtD/Fbrnh9dXHiFsNGLooLhwFmFwG+AEP3Im
-         qiWw==
-X-Gm-Message-State: APjAAAU7QwSnoWyX+ko46Or9sl9/o9laIwjhIwH69KNAEHbPqH7HvQWo
-        Iv+Yex/AQyhPvDJK5nQEOFx/KBx8CEWypKuCYByV8A==
-X-Google-Smtp-Source: APXvYqzK96pGBbOLVgfBAvhC4OKzTq5rxyEe77jdyCkQW+RWrJ0EqabPEFMppPTHj+HgM5vTnoSiSC1VJvY5mRdLNrs=
-X-Received: by 2002:a37:4f44:: with SMTP id d65mr11441082qkb.287.1551661373752;
- Sun, 03 Mar 2019 17:02:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20190301192156.253010-1-ravisadineni@chromium.org> <CABXOdTdXcCeqkqcH69dG62mLmurbDOcrhhVGm6BgnBzR-1KETg@mail.gmail.com>
-In-Reply-To: <CABXOdTdXcCeqkqcH69dG62mLmurbDOcrhhVGm6BgnBzR-1KETg@mail.gmail.com>
-From:   Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Date:   Sun, 3 Mar 2019 17:02:42 -0800
-Message-ID: <CAEZbON7ugRGpFuj6mwHoSqdyYNFyNKEsGkhFjV7XuwsW28JXcQ@mail.gmail.com>
-Subject: Re: [PATCH] cros_ec: Expose sysfile to force battery cut-off on shutdown.
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Todd Broch <tbroch@google.com>,
-        Daisuke Nojiri <dnojiri@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 3 Mar 2019 20:14:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbfCDBOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 20:14:39 -0500
+Received: from devbox (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 499E320818;
+        Mon,  4 Mar 2019 01:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551662078;
+        bh=WmG2vDs4W7ldGTeO49usENFjA0p/aA1IquPcsQmap5Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VrbxoqnlBLBMILFERyb78JaG5RdzhBdqwwglycB7YKFnQKLhNLUqwnpyrVF/WpFWX
+         yXCodO9fHwo1g6eWvlWg/ryW6SFIfHqPNzmPPLX80VW23si4214QEdS2DE/AOYpwz7
+         yLNyVJVcVNYr6cZUFobtIwXrkhKDv2IeGLT7RhJ0=
+Date:   Mon, 4 Mar 2019 10:14:34 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com, lkp@01.org
+Subject: Re: [uaccess] 780464aed0:
+ WARNING:at_arch/x86/include/asm/uaccess.h:#strnlen_user/0x
+Message-Id: <20190304101434.8429ffffb17813c0e7930130@kernel.org>
+In-Reply-To: <CAHk-=wij8VLupHh1U-fFhFBjin9Fch3mG2_2=aL9h1L+WBvm2g@mail.gmail.com>
+References: <155136980507.2968.15165201054223875356.stgit@devbox>
+        <20190303173954.kliegojbuigqi5tn@inn2.lkp.intel.com>
+        <CAHk-=wij8VLupHh1U-fFhFBjin9Fch3mG2_2=aL9h1L+WBvm2g@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
+On Sun, 3 Mar 2019 11:53:58 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On Fri, Mar 1, 2019 at 1:00 PM Guenter Roeck <groeck@google.com> wrote:
->
-> On Fri, Mar 1, 2019 at 11:22 AM RaviChandra Sadineni <ravisadineni@chromium.org> wrote:
->>
->> On chromebooks, power_manager daemon normally shutsdown(S5) the device
->> when the battery charge falls below 4% threshold. ChromeOS EC then
->> normally spends an hour in S5 before hibernating. If the battery charge
->> falls below critical threshold in the mean time, EC does a battery cutoff
->> instead of hibernating. On some chromebooks, S5 is optimal enough
->> resulting in EC hibernating without battery cut-off. This results in
->> battery deep-discharging. This is a bad user experience as battery
->> has to trickle charge before booting when the A.C is plugged in the next
->> time.
->>
->> This patch exposes a sysfs file for an userland daemon to suggest EC if it
->> has to do a battery cut-off instead of hibernating when the system enters
->> S5 next time.
->>
->> Signed-off-by: RaviChandra Sadineni <ravisadineni@chromium.org>
->> ---
->>  drivers/platform/chrome/cros_ec_sysfs.c | 34 +++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>
->> diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
->> index f34a50121064..151c7c143941 100644
->> --- a/drivers/platform/chrome/cros_ec_sysfs.c
->> +++ b/drivers/platform/chrome/cros_ec_sysfs.c
->> @@ -322,14 +322,48 @@ static ssize_t kb_wake_angle_store(struct device *dev,
->>         return count;
->>  }
->>
->> +/* Battery cut-off control */
->> +static ssize_t cutoff_battery_at_shutdown_store(struct device *dev,
->> +                                  struct device_attribute *attr,
->> +                                  const char *buf, size_t count)
->> +{
->> +       struct ec_params_battery_cutoff *param;
->> +       struct cros_ec_command *msg;
->> +       int ret;
->> +       struct cros_ec_dev *ec = container_of(
->> +                       dev, struct cros_ec_dev, class_dev);
->> +       uint8_t cutoff_battery;
->> +
->> +       if (kstrtou8(buf, 10, &cutoff_battery) || (cutoff_battery != 1))
->
->
-> Excessive ( ). Also, why not kstrtobool() ?
-Done.
->
->>
->> +               return -EINVAL;
->> +
->>
->> +       msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
->> +       if (!msg)
->> +               return -ENOMEM;
->> +
->> +       param = (struct ec_params_battery_cutoff *)msg->data;
->> +       msg->command = EC_CMD_BATTERY_CUT_OFF + ec->cmd_offset;
->> +       msg->version = 1;
->> +       param->flags = EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN;
->
->
-> For some reason I fail to see where cutoff_battery is used to determine what to send to the EC. Am I missing something ?
-Currently there is no way to reset the flag. i.e EC does not expose a
-console command to reset the flag once set. So I intend to accept only
-true bool flag. Is there a better way to do this ?
->
->>
->> +       msg->outsize = sizeof(*param);
->> +       msg->insize = 0;
->> +       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
->> +       kfree(msg);
->> +       if (ret < 0)
->> +               return ret;
->> +       return count;
->> +}
->> +
->>  /* Module initialization */
->>
->>  static DEVICE_ATTR_RW(reboot);
->>  static DEVICE_ATTR_RO(version);
->>  static DEVICE_ATTR_RO(flashinfo);
->>  static DEVICE_ATTR_RW(kb_wake_angle);
->> +static DEVICE_ATTR_WO(cutoff_battery_at_shutdown);
->>
->
-> I personally dislike excessively long sysfs attribute names. I would prefer to see a shorter name and have it documented in Documentation/ABI/testing/sysfs-class-chromeos.
->
-> Is WO really desirable and warranted here ?
-Currently EC does not expose a host command to read the status.
-Maintaining the state in the kernel might not work as the state can go
-out of sync. For example, when AC is plugged in, EC resets the flag
-and the kernel will not be aware of it.
->
->>
->>  static struct attribute *__ec_attrs[] = {
->> +       &dev_attr_cutoff_battery_at_shutdown.attr,
->>         &dev_attr_kb_wake_angle.attr,
->>         &dev_attr_reboot.attr,
->>         &dev_attr_version.attr,
->> --
->> 2.20.1
->>
+> On Sun, Mar 3, 2019 at 9:40 AM kernel test robot <lkp@intel.com> wrote:
+> >
+> > commit: 780464aed08ad00aa6d5f81ac8bef2e714dc8b06 ("[PATCH v5 2/6] uaccess: Use user_access_ok() in user_access_begin()")
+> 
+> Hmm. Not an upstream commit ID, so this is presumably a backport.
+> 
+> Ok, let's see what it is using the web link:
+> 
+> > url: https://github.com/0day-ci/linux/commits/Masami-Hiramatsu/tracing-probes-uaccess-Add-support-user-space-access/20190303-203749
+> 
+> Yeah, that just gives a github 404 error.
+> 
+> I'm _assuming_ it's the WARN_ON_IN_IRQ() in the access_ok().
 
-Thanks,
-Ravi
+I think it comes from WARN_ON_ONCE(!segment_eq(get_fs(), USER_DS)) in 
+user_access_ok(). The call trace shows that strndup_user might be called
+from kernel daemon context.
+
+[    4.003505] Call Trace:
+[    4.003505]  strndup_user+0x14/0x60
+[    4.003505]  ksys_mount+0x30/0xd0
+[    4.003505]  ? handle_create+0x1f0/0x1f0
+[    4.003505]  devtmpfsd+0x9c/0x190
+
+I guess devtmpfsd has not set USER_DS. Hmm, in that case, how ksys_*()
+parameters should be treated? Those APIs will take __user pointers, but
+actually, in-kernel callers call ksys_*() with non __user variables.
+
+For example,
+
+static int devtmpfsd(void *p)
+{
+        char options[] = "mode=0755";
+        int *err = p;
+        *err = ksys_unshare(CLONE_NEWNS);
+        if (*err)
+                goto out;
+        *err = ksys_mount("devtmpfs", "/", "devtmpfs", MS_SILENT, options);
+        if (*err)
+...
+
+__force __user casting doesn't help, because these parameters are in kernel
+memory, not in user memory. I think if we forcibly set USER_DS, it should
+fail on some arch.
+
+Peter, I think we can remove that WARN_ON_ONCE() from user_access_ok(),
+since user_access_begin() is not only actually start accessing user, but it
+also accessing kernel memory.
+
+> Which doesn't much make sense either (why wouldn't it happen in
+> mainline)? But without a useful web link to see what is actually being
+> tested, I guess it's not something I can even look at...
+
+
+Yeah, we need working web link on the report...
+
+Thank you,
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
