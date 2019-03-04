@@ -2,240 +2,117 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8B8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF44C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5721520663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E14206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:57:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="YqpQ+fke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfCDUyJ (ORCPT
+        id S1726425AbfCDU5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:54:09 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:59253 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbfCDUyI (ORCPT
+        Mon, 4 Mar 2019 15:57:19 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38262 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfCDU5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:54:08 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MZCSt-1gVvSC0xV3-00V9kK; Mon, 04 Mar 2019 21:53:05 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jan Beulich <JBeulich@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jan Beulich <jbeulich@suse.com>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [RESEND] [v3] xen: remove pre-xen3 fallback handlers
-Date:   Mon,  4 Mar 2019 21:52:39 +0100
-Message-Id: <20190304205300.2582076-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 4 Mar 2019 15:57:19 -0500
+Received: by mail-ed1-f68.google.com with SMTP id h58so5396684edb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 12:57:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Lfs+edcsPqw9VdJpJJBfthDSqQJQ/Sz5ubtx/mb4vh0=;
+        b=YqpQ+fkeYZyVDLUcP9Ep9pLbZ8qQy74vGru3GEz7x+EITVVUdssO7jIDOH/zHy7n7Y
+         6wrhYx/c7Neo0odFfr2hFEKokugCzaXJZbdU1EdaooE+mAg7RIqQKOC7a7/cUA26i5uV
+         MXDr0Bxx2rYW8RYGbzOvCxbqVzm9O5BRIZ9jv0Xi3J2ZLteKK6zSz2mLcs4SIrlSlQPT
+         cGX+1NWUHpYgU52cYTZ1RBM/kUReljre6WchYXdaYzPmUj7RQILGRmrVzpWdqQfWC/pg
+         B3gZoIt2Xb8cRjmYtKJMkneWyY4F7tr+RlpgVmLYmqBZE+5dF2H7lFSleSkarykaaIad
+         dUAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lfs+edcsPqw9VdJpJJBfthDSqQJQ/Sz5ubtx/mb4vh0=;
+        b=KnKTwUaKe3iVpkolxdH6eRq+eIGhGWsqZitV0Q+SDIS88AYfb4WsepV5krnZggn7aS
+         Fr3teIio0nvGfpZVdYvDA/7N5ot2jeRKY5yL0BK7PaIz0unIw6yoMDl7h5IMfvGe7fn5
+         s2zQWcdtqxrbrhPuAuGOn2x24yU+ReEF9cu0Cyu0UbBVtYtEVxNE+dPFDFBtv69Aq9ov
+         aJMimVV36q13C1LLo2+pETkJBGOCdLLLpV14vRljbEQ8yxMCKbFbZqy3lTU8JZ5EIVeo
+         uX3mjh/6apGoe3fokcc+AU10uOirC19z2S4fcHrHu9EUsKpT6V/HmXwauwMKN7peTBMg
+         +nJA==
+X-Gm-Message-State: APjAAAWjPUdiazJWbeBweqeTRikirjXFnSVrnGgpyeZaYPlIUpsGUeHc
+        D0nDngYpD0cslZTN3rvlCgLHkw==
+X-Google-Smtp-Source: APXvYqxQfjzZvjgGr3Hbfl+w+e/Q1cgH44X+UrKJ/OKFJBx1Z/Or0s+H5GzLlu7uAMOVXQRdVCY29Q==
+X-Received: by 2002:a17:906:860e:: with SMTP id o14mr9242259ejx.202.1551733037325;
+        Mon, 04 Mar 2019 12:57:17 -0800 (PST)
+Received: from brauner.io ([2a02:8109:b6c0:76e:3ddf:44fc:d22b:95ce])
+        by smtp.gmail.com with ESMTPSA id w31sm2397479edc.46.2019.03.04.12.57.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 04 Mar 2019 12:57:16 -0800 (PST)
+Date:   Mon, 4 Mar 2019 21:57:15 +0100
+From:   Christian Brauner <christian@brauner.io>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] bpf: fix sysctl.c warning
+Message-ID: <20190304205714.rhpgpp26rbaghs2i@brauner.io>
+References: <20190304203443.1992942-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:QcaSXjLOGR8UcGaIFZsBU5NxjYWgj7CWpwkReQnMNxEjXwyvvqg
- 12vMoqsMa/xyg2IOoMC1VMD2YkxqxP2XEF4OaJVJgBd5K2/ASEesnS7CAvHag7Md7kF3RZc
- Nd8DYLsEmHY+62jmnqUfhLKDcsEOaslMhHNwWzDmWYlW+A6/zyLQkGPaN759zVu4qw8CcQO
- lBNBLNHHbHVxVSrDEXFtA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:w1Cd9zXSfT8=:v0zgZOs/IsnhQwY4CFsOWy
- aJPl9OOuVe8EuTH0sUWD2r/xURAv5Dh7djGQ+7deC3a1ZRpZY5Msy00SNrVwQ7y0XEbsX4RfH
- Tle707rI3DyzgF0FVakX+AyjAPZ7f8Sk3mUHY3w+y/mEWTlVU29BqwvrcRnJCvSqG09FeA+ji
- Z7T2B0k448VeUGjWdnj33BOcU7oJRHQTNSqvA9V07oYrNzSWHDMf2wcZlY2MQ9xhjjFW6Ro6c
- iu67ro8K9zxJ+eoEooZRnYRs1x103d2AyLV4sfA4+CFatWLeqH0ovIZgksp6zgs/zt/wu+Yjz
- EwU1+CMApVwnt+IC8BjPKdh1eBVd/ypoQ15n/5fBvMZlk/frC+k496WlRw9UGXKxUwgHodVae
- YNON/4NfqZlgVAokL0eA4jt7Kr0ixpRxGtCXwkCBJYEQU7RN+vfKCYowxEI2XwhE2B9WWlUj0
- dJcckcxUGAtscQqdj3xdMKwBWuUK3LfUh27+cR3P+hhVzpXVYAGTQA9rD/srn8f4txsfSoBPt
- ydo+MRAtoV9llhbWymibvtSKAWtj6vWmey4aTZGHSfiKeqW4UrwN+aZAgznvAKcSAljOjni5w
- 6pZM9Qv12hR6LJd8VVkCZAngWZI5RoyzffqBf1+xRDeYRh9C/Ja4ar/KvxL8t2c64p1sU1c5z
- Xyqbpw5ESJQ7hcpb9wPSwYnhQXZqI42CjuRfxoMJQtvryGYyKZpnRUQIED7xpxHC4H9Wmerk9
- nDyWLWR5dnwYmInMz+JZMkjnXFIgmAXhiaNEAw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190304203443.1992942-1-arnd@arndb.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The legacy hypercall handlers were originally added with
-a comment explaining that "copying the argument structures in
-HYPERVISOR_event_channel_op() and HYPERVISOR_physdev_op() into the local
-variable is sufficiently safe" and only made sure to not write
-past the end of the argument structure, the checks in linux/string.h
-disagree with that, when link-time optimizations are used:
+On Mon, Mar 04, 2019 at 09:34:12PM +0100, Arnd Bergmann wrote:
+> When CONFIG_BPF_SYSCALL or CONFIG_SYSCTL is disabled, we get
+> a warning about an unused function:
+> 
+> kernel/sysctl.c:3331:12: error: 'proc_dointvec_minmax_bpf_stats' defined but not used [-Werror=unused-function]
+>  static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
+> 
+> The CONFIG_BPF_SYSCALL check was already handled, but the SYSCTL check
+> is needed on top.
+> 
+> Fixes: 492ecee892c2 ("bpf: enable program stats")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-In function 'memcpy',
-    inlined from 'pirq_query_unmask' at drivers/xen/fallback.c:53:2,
-    inlined from '__startup_pirq' at drivers/xen/events/events_base.c:529:2,
-    inlined from 'restore_pirqs' at drivers/xen/events/events_base.c:1439:3,
-    inlined from 'xen_irq_resume' at drivers/xen/events/events_base.c:1581:2:
-include/linux/string.h:350:3: error: call to '__read_overflow2' declared with attribute error: detected read beyond size of object passed as 2nd parameter
-   __read_overflow2();
-   ^
+Reviewed-by: Christian Brauner <christian@brauner.io>
 
-Further research turned out that only Xen 3.0.2 or earlier required the
-fallback at all, while all versions in use today don't need it.
-As far as I can tell, it is not even possible to run a mainline kernel
-on those old Xen releases, at the time when they were in use, only
-a patched kernel was supported anyway.
-
-Fixes: cf47a83fb06e ("xen/hypercall: fix hypercall fallback code for very old hypervisors")
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Jan Beulich <JBeulich@suse.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-[v2] use a table lookup instead of a switch/case statement, after
-multiple suggestions.
-[v3] remove that file completely
-[resend] I just stumbled over this again, the last submission was a year
-         ago, and it seems it never got merged
----
- arch/x86/include/asm/xen/hypercall.h | 13 +----
- drivers/xen/Makefile                 |  1 -
- drivers/xen/fallback.c               | 81 ----------------------------
- 3 files changed, 2 insertions(+), 93 deletions(-)
- delete mode 100644 drivers/xen/fallback.c
-
-diff --git a/arch/x86/include/asm/xen/hypercall.h b/arch/x86/include/asm/xen/hypercall.h
-index ef05bea7010d..de6f0d59a24f 100644
---- a/arch/x86/include/asm/xen/hypercall.h
-+++ b/arch/x86/include/asm/xen/hypercall.h
-@@ -332,15 +332,11 @@ HYPERVISOR_update_va_mapping(unsigned long va, pte_t new_val,
- 		return _hypercall4(int, update_va_mapping, va,
- 				   new_val.pte, new_val.pte >> 32, flags);
- }
--extern int __must_check xen_event_channel_op_compat(int, void *);
- 
- static inline int
- HYPERVISOR_event_channel_op(int cmd, void *arg)
- {
--	int rc = _hypercall2(int, event_channel_op, cmd, arg);
--	if (unlikely(rc == -ENOSYS))
--		rc = xen_event_channel_op_compat(cmd, arg);
--	return rc;
-+	return _hypercall2(int, event_channel_op, cmd, arg);
- }
- 
- static inline int
-@@ -355,15 +351,10 @@ HYPERVISOR_console_io(int cmd, int count, char *str)
- 	return _hypercall3(int, console_io, cmd, count, str);
- }
- 
--extern int __must_check xen_physdev_op_compat(int, void *);
--
- static inline int
- HYPERVISOR_physdev_op(int cmd, void *arg)
- {
--	int rc = _hypercall2(int, physdev_op, cmd, arg);
--	if (unlikely(rc == -ENOSYS))
--		rc = xen_physdev_op_compat(cmd, arg);
--	return rc;
-+	return _hypercall2(int, physdev_op, cmd, arg);
- }
- 
- static inline int
-diff --git a/drivers/xen/Makefile b/drivers/xen/Makefile
-index 5df6d21142f2..7124f9e749b4 100644
---- a/drivers/xen/Makefile
-+++ b/drivers/xen/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_HOTPLUG_CPU)		+= cpu_hotplug.o
--obj-$(CONFIG_X86)			+= fallback.o
- obj-y	+= grant-table.o features.o balloon.o manage.o preempt.o time.o
- obj-y	+= mem-reservation.o
- obj-y	+= events/
-diff --git a/drivers/xen/fallback.c b/drivers/xen/fallback.c
-deleted file mode 100644
-index b04fb64c5a91..000000000000
---- a/drivers/xen/fallback.c
-+++ /dev/null
-@@ -1,81 +0,0 @@
--#include <linux/kernel.h>
--#include <linux/string.h>
--#include <linux/bug.h>
--#include <linux/export.h>
--#include <asm/hypervisor.h>
--#include <asm/xen/hypercall.h>
--
--int xen_event_channel_op_compat(int cmd, void *arg)
--{
--	struct evtchn_op op;
--	int rc;
--
--	op.cmd = cmd;
--	memcpy(&op.u, arg, sizeof(op.u));
--	rc = _hypercall1(int, event_channel_op_compat, &op);
--
--	switch (cmd) {
--	case EVTCHNOP_close:
--	case EVTCHNOP_send:
--	case EVTCHNOP_bind_vcpu:
--	case EVTCHNOP_unmask:
--		/* no output */
--		break;
--
--#define COPY_BACK(eop) \
--	case EVTCHNOP_##eop: \
--		memcpy(arg, &op.u.eop, sizeof(op.u.eop)); \
--		break
--
--	COPY_BACK(bind_interdomain);
--	COPY_BACK(bind_virq);
--	COPY_BACK(bind_pirq);
--	COPY_BACK(status);
--	COPY_BACK(alloc_unbound);
--	COPY_BACK(bind_ipi);
--#undef COPY_BACK
--
--	default:
--		WARN_ON(rc != -ENOSYS);
--		break;
--	}
--
--	return rc;
--}
--EXPORT_SYMBOL_GPL(xen_event_channel_op_compat);
--
--int xen_physdev_op_compat(int cmd, void *arg)
--{
--	struct physdev_op op;
--	int rc;
--
--	op.cmd = cmd;
--	memcpy(&op.u, arg, sizeof(op.u));
--	rc = _hypercall1(int, physdev_op_compat, &op);
--
--	switch (cmd) {
--	case PHYSDEVOP_IRQ_UNMASK_NOTIFY:
--	case PHYSDEVOP_set_iopl:
--	case PHYSDEVOP_set_iobitmap:
--	case PHYSDEVOP_apic_write:
--		/* no output */
--		break;
--
--#define COPY_BACK(pop, fld) \
--	case PHYSDEVOP_##pop: \
--		memcpy(arg, &op.u.fld, sizeof(op.u.fld)); \
--		break
--
--	COPY_BACK(irq_status_query, irq_status_query);
--	COPY_BACK(apic_read, apic_op);
--	COPY_BACK(ASSIGN_VECTOR, irq_op);
--#undef COPY_BACK
--
--	default:
--		WARN_ON(rc != -ENOSYS);
--		break;
--	}
--
--	return rc;
--}
--EXPORT_SYMBOL_GPL(xen_physdev_op_compat);
--- 
-2.20.0
-
+> ---
+>  kernel/sysctl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 46a0d0a14a66..b3df3ab7ac28 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -3330,7 +3330,7 @@ int proc_doulongvec_ms_jiffies_minmax(struct ctl_table *table, int write,
+>  
+>  #endif /* CONFIG_PROC_SYSCTL */
+>  
+> -#ifdef CONFIG_BPF_SYSCALL
+> +#if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_SYSCTL)
+>  static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
+>  					  void __user *buffer, size_t *lenp,
+>  					  loff_t *ppos)
+> -- 
+> 2.20.0
+> 
