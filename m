@@ -2,108 +2,80 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4AFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E79C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABAC32070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D622070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="p6msLUXe"
+	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="jIPUjsk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfCDWtI (ORCPT
+        id S1726752AbfCDWtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 17:49:08 -0500
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:55056 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfCDWtF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 17:49:05 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id DB0F5836
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 22:49:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id L6Lr45pVUapl for <linux-kernel@vger.kernel.org>;
-        Mon,  4 Mar 2019 16:49:04 -0600 (CST)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id B39C6B23
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 16:49:04 -0600 (CST)
-Received: by mail-io1-f69.google.com with SMTP id d7so5378548ios.17
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 14:49:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pM/smRIiwNLORcNubGeBTq6tnPXwa13vYAEleLn2xTE=;
-        b=p6msLUXeCA/PNVmc46QhsbmXGUDJmcuGNgiaEA+fb9FIiMrdWOV4twoidqKjbvq8Ho
-         noNg50KbP/KbDJ147wvzT3q/z75OkRKbWPInC2QeV+kCUelkAmDi+/7M3qV6Swhq68W7
-         DrZoYAvyFTznAOR2+4f4y6bdM2+HmoZ7RMiRYQmcUJt2fTJZdUH5uor9bWCp92a8TCtk
-         w9qewyjMBvWpptcnkvd2NSzOvLBeY60iy6TdMFYJS19nYppOlaziwxM3has+EeZENSzv
-         mGFmx0J2Si/8j3lHjQaV8vFGVQJXxxNatcNoI3YpjFVBaLnHIR8OOr9u2eWTr0KJjBsJ
-         gQuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pM/smRIiwNLORcNubGeBTq6tnPXwa13vYAEleLn2xTE=;
-        b=Kbna4zpNmkJluA8+bKbQKYGY7AhG/QhE83w+vHHoueC3qbAGcikFNFU90RVNfVrgx1
-         nH47Igg44GAVx4nlFdSUIb/TvcxibFLtUql0BPF4cL34EEibZ9lyZuspIEOyOBEY8Ava
-         IMQpmkIyiopGYcMdHlVfcawOFJRWF06+d5iC9jKR8vtaBbjmIY3OlQUy5rAVjMmwK1vs
-         dqQjp+ISoVXh2vcpi2oJDrfEDzQPrvrEVdyGiZqIQF7sxKjBuqwP3t8bVcl0UCjbBWIV
-         bnDIEiPX4R/7uI6gQeHGZpoOoVEupGRhtcJ42Z8oYRD0Gl5mFx8hVYJ6zwORsg0o40u0
-         pEHg==
-X-Gm-Message-State: APjAAAV/jmg9O4dMkezA3tOHMfZSNxbL15DEGxcG99gm3hCdx4aGomfQ
-        zOXJs88Bnt+ARaha/qiZvBLp3vtfdxkfrVE+a6E5tOkYy5O9sB4ZWwArvK7Dn9Sb77kAZXsKefu
-        u+hIIxE/XPwRJewfW27/XnWXPlbD3
-X-Received: by 2002:a24:e50b:: with SMTP id g11mr1039404iti.14.1551739744182;
-        Mon, 04 Mar 2019 14:49:04 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyNHsVprFSf+sh+GVQwEIwdc3b4aBwdKI6O/ZlwaP1wphWUmH0ba6eqjLBxCc3u3FzfuwzknQ==
-X-Received: by 2002:a24:e50b:: with SMTP id g11mr1039395iti.14.1551739743972;
-        Mon, 04 Mar 2019 14:49:03 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id t68sm3837790ita.4.2019.03.04.14.49.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 14:49:03 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Shaohua Li <shli@kernel.org>,
-        linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] md: Fix failed allocation of md_register_thread
-Date:   Mon,  4 Mar 2019 16:48:54 -0600
-Message-Id: <20190304224854.12494-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Mon, 4 Mar 2019 17:49:42 -0500
+Received: from tomli.me ([153.92.126.73]:44216 "EHLO tomli.me"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfCDWtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 17:49:41 -0500
+Received: from tomli.me (localhost [127.0.0.1])
+        by tomli.me (OpenSMTPD) with ESMTP id e8e005d4;
+        Mon, 4 Mar 2019 22:49:39 +0000 (UTC)
+X-HELO: localhost.localdomain
+Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
+Received: from Unknown (HELO localhost.localdomain) (2402:f000:1:1501:200:5efe:72f4:b31)
+ by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Mon, 04 Mar 2019 22:49:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=date:from:to:cc:subject:message-id:mime-version:content-type; s=1490979754; bh=GSa3KMva/o8J+I3L/EUsctik2qztdvPyjYisCxkTpxM=; b=jIPUjsk9CN21Sn3zARzKZ0QHnC+ksIbhohIwbjXh5yLPzecdOWqkX/1mQbxj0tawiCqKUQstp74UE3slNqiCqj/fW3al10UV+LYDsOP8jGHmc6VSD4fgOX6HaRHVYU9bDMWT3FJM5JLoPl2M3dTdYZ9pOM2fMudEIZunyhLvkYOM7hDcYXp/jfk/zYh0kaNq7sxw2uRd8v3adVg0OoIUYdkfgcdXvWKzKJrPGpzZ6LVKWUUC3xD91SHDfmOkG8+eSBqshP4H3YBrBCe9fw78Ez33tPrMuzJlcAl8/SSWJcbpMywQptNDLbr9uGQaIYISqxzppeE0E4+mywzxJF4Jaw==
+Date:   Tue, 5 Mar 2019 06:49:32 +0800
+From:   Tom Li <tomli@tomli.me>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Paul Burton <paul.burton@mips.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: MFD/Platform drivers for Yeeloong laptop submitted, please review
+Message-ID: <20190304224931.GA25280@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mddev->sync_thread can be set to NULL on kzalloc failure downstream.
-The patch checks for such a scenario and frees allocated resources.
+Hello, Paul & Jones.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/md/raid10.c | 2 ++
- 1 file changed, 2 insertions(+)
+I've submitted the first series of patches [0] for the platform
+drivers on Lemote Yeeloong MIPS laptop to the mailing list, this
+series is required before the following mainlining can be proceed.
 
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index abb5d382f64d..f52b4d9bcd24 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -3939,6 +3939,8 @@ static int raid10_run(struct mddev *mddev)
- 		set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
- 		mddev->sync_thread = md_register_thread(md_do_sync, mddev,
- 							"reshape");
-+		if (!mddev->sync_thread)
-+			goto out_free_conf;
- 	}
- 
- 	return 0;
--- 
-2.17.1
+The first patch of this series is a MFD driver, which is needed to
+be reviewed by Jones.
 
+The rest of the patches is the required changes to the board files
+in arch/mips/loongson64/, which is needed to be reviewed for inclusion
+into Linux/MIPS. In addition, there is also a trivial bugfix for
+suspend/resume, which is needed to be queued into mips-fixes.
+
+I understand I shouldn't have sent this mail because it only adds noise
+to the mailing list, but in this case, unfortunately, it seems Jones
+never received the original patch, perhaps my mail was classified as
+spam or rejected by his mail server, and in fact he didn't even realized
+the existence of it... [2]
+
+Jones: I sincerely hope you've receive this mail. Also, is there a
+mailing list which can be used to submit MFD drivers rather than
+CCing you personally? (in case the mail has been dropped again)
+
+Thanks for your time.
+
+Thanks,
+Tom Li
+
+[0] https://lore.kernel.org/linux-mips/20190304222848.25037-1-tomli@tomli.me/T/#t
+
+[1] https://lore.kernel.org/linux-mips/20190304220022.20682-1-tomli@tomli.me/T/#u
+
+[2] https://lore.kernel.org/linux-mips/20190302175334.5103-1-tomli@tomli.me/T/#maabd498c419c13a5435231303ef803a71451af8b
