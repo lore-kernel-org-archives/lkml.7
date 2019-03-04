@@ -2,136 +2,229 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909FBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6C5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFC720830
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="u/15sAWE"
+	by mail.kernel.org (Postfix) with ESMTP id 32017206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfCDRBL (ORCPT
+        id S1727156AbfCDRCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:01:11 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41030 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbfCDRBK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:01:10 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k11so2517226pgb.8
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 09:01:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=NgpxjmBV3GaSEJloWQ0qOTaQZvSmlTVRb07fqyDgFDg=;
-        b=u/15sAWENuu3jsxE18EsKKD04gJljPSbXj6TAuU6UWlud40NuuA8HJic+zpb/V583N
-         B6pP+5pL9tDXFpL7yrsalbV9n22kAMgRMMnmgkyRS3i6EffVYh3W+9CbkSKwdbPF20om
-         /rr/GrVKYND6o7fNjUqnBbn9pKF96Hn41Hrki5wza48TbHLKnriw9zJrjs7TuCHUXXGK
-         yrMXzb+UdHxElAUL7d3+OsZpaFEWVlY9ESBe48BKuQV4O5CiXR8Cpbmzyjqc8jNjmIKE
-         JY/jE2YIFLrZ7cCnJlVDlqxmyuWpVoKKGaK/TP9NsFldpd56E+04/8xRhc/piAZmBFMF
-         RoWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=NgpxjmBV3GaSEJloWQ0qOTaQZvSmlTVRb07fqyDgFDg=;
-        b=NKkS8v7549+L9eYWyMUJBZC8YhosSra73p6d3b8VizbiJKflXw+DUNEkZlQnnYcQdO
-         /2y9NgY7RX1SC47UMXFkRAujDveixc/ZW+ajYWOtsNZhIUESKZDtgD1ckIttSnnay53C
-         ELrxk5N12xZoG01J+rtKPc3yXyj8uPOth28AwKiK4L9UDhUR+3gNtYhIP3sWwgreNt4k
-         juk1pMXp91L9CYosIOrW75jWvqZVcw8z9mwu5pTVcCPzx3LvzMg6rmGGKWVT4BBwCNtN
-         XkcRQcTQ98O2ncs9pFcsf9KAUlI0wRPMye3qazoiFa6hVuCPRlkpO+3ulSVTXPBDqiVI
-         9nHA==
-X-Gm-Message-State: APjAAAU0CATwR3U5USOEOE7XEIs4J5qlqcxiT5QXrmSLQdvIH2BeWPMT
-        qKN56uS8lFtnWmnnkXLJ/kn9nA==
-X-Google-Smtp-Source: APXvYqyXZzpKsXq1tjtTCWFq8nMRh0LcXq79aU2sm+JeaHi/ApTEtt7p+RAKvgQMr9gzIZKYdPg+Sw==
-X-Received: by 2002:a63:5362:: with SMTP id t34mr18972139pgl.81.1551718869633;
-        Mon, 04 Mar 2019 09:01:09 -0800 (PST)
-Received: from nebulus.mtv.corp.google.com ([2620:0:1000:1612:b4fb:6752:f21f:3502])
-        by smtp.googlemail.com with ESMTPSA id o7sm16694043pfi.105.2019.03.04.09.01.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 09:01:09 -0800 (PST)
-Subject: Re: overlayfs access checks on underlying layers
-To:     Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, selinux@vger.kernel.org,
-        Daniel J Walsh <dwalsh@redhat.com>
-References: <CAJfpegs9JjkXguemL4qSiBvRP6Dnut-D+nJo-oLFXkfCL1Egvw@mail.gmail.com>
- <CAJfpegvfqx+0D32n1h2X7oj5d1mZWiLTcSSGpBnD+ba7AKzPyA@mail.gmail.com>
- <20181127210542.GA2599@redhat.com>
- <CAJfpegtQGM2z9TOt3DWwd39fC60cQknsC4vNnj7YimVEubRzUg@mail.gmail.com>
- <20181128170302.GA12405@redhat.com>
- <377b7d4f-eb1d-c281-5c67-8ab6de77c881@tycho.nsa.gov>
- <CAJfpegtNhcWD0VWy6LPtoDtQBfPu4x5iFsB053UMCidj6oMsuw@mail.gmail.com>
- <26bce3be-49c2-cdd8-af03-1a78d0f268ae@tycho.nsa.gov>
- <CAJfpeguL9xOh9Eq8LOP=ddJ4YD6nbp2UY6e2AYDVoHeCLuVhZA@mail.gmail.com>
- <20181129134943.GA16762@redhat.com>
-From:   Mark Salyzyn <salyzyn@android.com>
-Message-ID: <fe78aaed-5fb1-3c51-1330-39de46ae39c5@android.com>
-Date:   Mon, 4 Mar 2019 09:01:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 4 Mar 2019 12:02:41 -0500
+Received: from relay.sw.ru ([185.231.240.75]:43810 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726098AbfCDRCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:02:40 -0500
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1h0qyg-0000MJ-7U; Mon, 04 Mar 2019 20:02:10 +0300
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: Re: [PATCH RFC] mm/vmscan: try to protect active working set of
+ cgroup from reclaim.
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Rik van Riel <riel@surriel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>
+References: <20190222175825.18657-1-aryabinin@virtuozzo.com>
+ <20190222191552.GA15922@cmpxchg.org>
+ <f752c208-599c-9b5a-bc42-e4282df43616@virtuozzo.com>
+ <7c915942-6f52-e7a4-b879-e4c99dd65968@virtuozzo.com>
+ <20190301174907.GA2375@cmpxchg.org>
+ <51ac7aaa-6890-c674-854d-1e2d132b83f9@virtuozzo.com>
+ <20190301222010.GA9215@cmpxchg.org>
+Message-ID: <a0709797-e73d-9209-cb0c-5fd490738afd@virtuozzo.com>
+Date:   Mon, 4 Mar 2019 20:02:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-In-Reply-To: <20181129134943.GA16762@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190301222010.GA9215@cmpxchg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/29/2018 05:49 AM, Vivek Goyal wrote:
-> So will override_creds=off solve the NFS issue also where all access will
-> happen with the creds of task now? Though it will stil require more
-> priviliges in task for other operations in overlay to succeed.
 
-NFS problems seems to have ended the discussion, too many stakeholders? 
-too many outstanding questions?
 
-Do we accept the limitations of the override_creds patch as is, and then 
-have the folks more familiar with the NFS scenario(s) build on it?
+On 3/2/19 1:20 AM, Johannes Weiner wrote:
+> On Fri, Mar 01, 2019 at 10:46:34PM +0300, Andrey Ryabinin wrote:
+>> On 3/1/19 8:49 PM, Johannes Weiner wrote:
+>>> On Fri, Mar 01, 2019 at 01:38:26PM +0300, Andrey Ryabinin wrote:
+>>>> On 2/26/19 3:50 PM, Andrey Ryabinin wrote:
+>>>>> On 2/22/19 10:15 PM, Johannes Weiner wrote:
+>>>>>> On Fri, Feb 22, 2019 at 08:58:25PM +0300, Andrey Ryabinin wrote:
+>>>>>>> In a presence of more than 1 memory cgroup in the system our reclaim
+>>>>>>> logic is just suck. When we hit memory limit (global or a limit on
+>>>>>>> cgroup with subgroups) we reclaim some memory from all cgroups.
+>>>>>>> This is sucks because, the cgroup that allocates more often always wins.
+>>>>>>> E.g. job that allocates a lot of clean rarely used page cache will push
+>>>>>>> out of memory other jobs with active relatively small all in memory
+>>>>>>> working set.
+>>>>>>>
+>>>>>>> To prevent such situations we have memcg controls like low/max, etc which
+>>>>>>> are supposed to protect jobs or limit them so they to not hurt others.
+>>>>>>> But memory cgroups are very hard to configure right because it requires
+>>>>>>> precise knowledge of the workload which may vary during the execution.
+>>>>>>> E.g. setting memory limit means that job won't be able to use all memory
+>>>>>>> in the system for page cache even if the rest the system is idle.
+>>>>>>> Basically our current scheme requires to configure every single cgroup
+>>>>>>> in the system.
+>>>>>>>
+>>>>>>> I think we can do better. The idea proposed by this patch is to reclaim
+>>>>>>> only inactive pages and only from cgroups that have big
+>>>>>>> (!inactive_is_low()) inactive list. And go back to shrinking active lists
+>>>>>>> only if all inactive lists are low.
+>>>>>>
+>>>>>> Yes, you are absolutely right.
+>>>>>>
+>>>>>> We shouldn't go after active pages as long as there are plenty of
+>>>>>> inactive pages around. That's the global reclaim policy, and we
+>>>>>> currently fail to translate that well to cgrouped systems.
+>>>>>>
+>>>>>> Setting group protections or limits would work around this problem,
+>>>>>> but they're kind of a red herring. We shouldn't ever allow use-once
+>>>>>> streams to push out hot workingsets, that's a bug.
+>>>>>>
+>>>>>>> @@ -2489,6 +2491,10 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
+>>>>>>>  
+>>>>>>>  		scan >>= sc->priority;
+>>>>>>>  
+>>>>>>> +		if (!sc->may_shrink_active && inactive_list_is_low(lruvec,
+>>>>>>> +						file, memcg, sc, false))
+>>>>>>> +			scan = 0;
+>>>>>>> +
+>>>>>>>  		/*
+>>>>>>>  		 * If the cgroup's already been deleted, make sure to
+>>>>>>>  		 * scrape out the remaining cache.
+>>>>>>> @@ -2733,6 +2739,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>>>>>>>  	struct reclaim_state *reclaim_state = current->reclaim_state;
+>>>>>>>  	unsigned long nr_reclaimed, nr_scanned;
+>>>>>>>  	bool reclaimable = false;
+>>>>>>> +	bool retry;
+>>>>>>>  
+>>>>>>>  	do {
+>>>>>>>  		struct mem_cgroup *root = sc->target_mem_cgroup;
+>>>>>>> @@ -2742,6 +2749,8 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>>>>>>>  		};
+>>>>>>>  		struct mem_cgroup *memcg;
+>>>>>>>  
+>>>>>>> +		retry = false;
+>>>>>>> +
+>>>>>>>  		memset(&sc->nr, 0, sizeof(sc->nr));
+>>>>>>>  
+>>>>>>>  		nr_reclaimed = sc->nr_reclaimed;
+>>>>>>> @@ -2813,6 +2822,13 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>>>>>>>  			}
+>>>>>>>  		} while ((memcg = mem_cgroup_iter(root, memcg, &reclaim)));
+>>>>>>>  
+>>>>>>> +		if ((sc->nr_scanned - nr_scanned) == 0 &&
+>>>>>>> +		     !sc->may_shrink_active) {
+>>>>>>> +			sc->may_shrink_active = 1;
+>>>>>>> +			retry = true;
+>>>>>>> +			continue;
+>>>>>>> +		}
+>>>>>>
+>>>>>> Using !scanned as the gate could be a problem. There might be a cgroup
+>>>>>> that has inactive pages on the local level, but when viewed from the
+>>>>>> system level the total inactive pages in the system might still be low
+>>>>>> compared to active ones. In that case we should go after active pages.
+>>>>>>
+>>>>>> Basically, during global reclaim, the answer for whether active pages
+>>>>>> should be scanned or not should be the same regardless of whether the
+>>>>>> memory is all global or whether it's spread out between cgroups.
+>>>>>>
+>>>>>> The reason this isn't the case is because we're checking the ratio at
+>>>>>> the lruvec level - which is the highest level (and identical to the
+>>>>>> node counters) when memory is global, but it's at the lowest level
+>>>>>> when memory is cgrouped.
+>>>>>>
+>>>>>> So IMO what we should do is:
+>>>>>>
+>>>>>> - At the beginning of global reclaim, use node_page_state() to compare
+>>>>>>   the INACTIVE_FILE:ACTIVE_FILE ratio and then decide whether reclaim
+>>>>>>   can go after active pages or not. Regardless of what the ratio is in
+>>>>>>   individual lruvecs.
+>>>>>>
+>>>>>> - And likewise at the beginning of cgroup limit reclaim, walk the
+>>>>>>   subtree starting at sc->target_mem_cgroup, sum up the INACTIVE_FILE
+>>>>>>   and ACTIVE_FILE counters, and make inactive_is_low() decision on
+>>>>>>   those sums.
+>>>>>>
+>>>>>
+>>>>> Sounds reasonable.
+>>>>>
+>>>>
+>>>> On the second thought it seems to be better to keep the decision on lru level.
+>>>> There are couple reasons for this:
+>>>>
+>>>> 1) Using bare node_page_state() (or sc->targe_mem_cgroup's total_[in]active counters) would be wrong.
+>>>>  Because some cgroups might have protection set (memory.low) and we must take it into account. Also different
+>>>> cgroups have different available swap space/memory.swappiness and it must be taken into account as well to.
+>>>>
+>>>> So it has to be yet another full memcg-tree iteration.
+>>>
+>>> It should be possible to take that into account on the first iteration
+>>> and adjust the inactive/active counters in proportion to how much of
+>>> the cgroup's total memory is exempt by memory.low or min, right?
+>>>
+>>
+>> Should be possible, more complexity though to this subtle code.
+>>
+>>
+>>>> 2) Let's consider simple case. Two cgroups, one with big 'active' set of pages the other allocates one-time used pages.
+>>>> So the total inactive is low, thus checking inactive ratio on higher level will result in reclaiming pages.
+>>>> While with check on lru-level only inactive will be reclaimed.
+>>>
+>>> It's the other way around. Let's say you have two cgroups, A and B:
+>>>
+>>>         A:  500M inactive   10G active -> inactive is low
+>>>         B:   10G inactive  500M active -> inactive is NOT low
+>>>    ----------------------------------------------------------
+>>>    global: 10.5G inactive 10.5G active -> inactive is NOT low
+>>>
+>>> Checking locally will scan active pages from A.
+>>
+>> No, checking locally will not scan active from A. Initial state of
+>> sc->may_shrink_active = 0, so A group will be skipped completely,
+>> and will reclaim from B. Since overall reclaim was successful,
+>> sc->may_shrink_active remain 0 and A will be protected as long as B
+>> supply enough inactive pages.
+> 
+> Oh, this was a misunderstanding. When you wrote "on second thought it
+> seems to be better to keep the decision at the lru level", I assumed
+> you were arguing for keeping the current code as-is and abandoning
+> your patch.
+> 
+> But that leaves my questions from above unanswered. Consider the
+> following situation:
+> 
+>   A: 50M inactive   0 active
+>   B:   0 inactive 20G active
+> 
+> If the processes in A and B were not cgrouped, these pages would be on
+> a single LRU and we'd go after B's active pages.
+> 
+> But with your patches, we'd reclaim only A's inactive pages.
+> 
 
-[TL;DR]
+I assume that not cgrouped case we would reclaim mostly from A anyway because going after B's active pages
+only means that we move them to inactive list where we still have A's pages for reclaim. And B has a chance
+to reactivate deactivated pages.
+In cgrouped case going after B's active pages implies immediate reclaim of them.
 
-After looking at all this discussion, it feels like a larger audited 
-rewrite of the security model is in order and override_creds=off may be 
-a disservice (although expediently deals with Android's needs) to a 
-correct general solution. I admit I have little idea where to go from 
-here for a general solution.
 
-As far as I see it, the model of creator && caller credentials is a 
-problem for any non-overlapping (MAC) privilege models. This patch 
-allows one to drop any creator privilege escalation, re-introducing the 
-"caller" to the lower layers.
-
-As such I would expect a better model is to _always_ check the caller 
-credentials again in the lower layers, and only check the creator 
-credentials, some without caller credentials, for some special cases? 
-Change an && to an || for some of the checks? What are those special 
-cases? I must admit _none_ of those special cases need attention in the 
-Android usage models though making it difficult for me to do the fight 
-thing for the associated stakeholders.
-
-The lower privileged application access to the directory cache inherited 
-by other callers troubles me (not for Android, but in general) and feels 
-troublesome (flush out the directory cache? how to tag the privileges 
-associated with the current instance of the directory cache?). Some 
-operations (eg: delete a file for incoming, create mknod in upperdir) 
-are special cases requiring the checking of caller credentaisl to 
-function (not a problem for Android as the caller that deletes a file 
-just so happens to have the necessary privileges).
-
-Also, mount namespaces (in upper, lower, etc), how will they affect this 
-all, is there a need for more attention to this as well?
-
--- Mark
+> What's the justification for that unfairness?
+> 
+If it's A creates pressure by allocating a lot of one-time used pages,
+than global inactive ratio check allows A to grow up to !inactive_is_low() point
+by pushing out B's active pages.
