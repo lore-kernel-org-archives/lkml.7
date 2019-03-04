@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94EBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1151C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A451208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882FA20836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688106;
-	bh=9zyKAxeigHwumAxttBRM4JGuddNcttnoVF7+5CAx8Zk=;
+	s=default; t=1551688110;
+	bh=CgQm7E23rdCywyfzJWKYhFe8aw+qfMaNCOHDqaFjDjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+ARB4EACDz2uUnXCV8CPuaY5s0jsA/wX1taR/nDHXoqkDiALstCQipEUMgl32i9V
-	 YKw5i9JQudp5uiFGX5s7HWRWW4HZeRa8flAeJ0Ik6B1eYAgMADxBK93IaCDNHuifiX
-	 +lB9+auBrGDGBnz7rPGP9Z8MjS2K3SVmH/zCAS7s=
+	b=KNO81oUSqzVXnaNiO9EZknrPML+F2OU/4pH1afSXRNeKOnbI0o/y6Cz6EWrD5832Z
+	 sZO5RZ579pMLLSqRRtcc80YZ1jdZAJS9D1LZsNao2sW549xWM9c8A/BNUfr+RGpaN2
+	 bUcKPq9lEYw+1MSBpllUkRotPRmJtJrizo1PrsZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfCDI2Z (ORCPT
+        id S1727420AbfCDI2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:28:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:28:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727410AbfCDI2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:28:22 -0500
+        id S1726210AbfCDI2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:28:21 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81A4F20836;
-        Mon,  4 Mar 2019 08:28:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF15820823;
+        Mon,  4 Mar 2019 08:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688102;
-        bh=9zyKAxeigHwumAxttBRM4JGuddNcttnoVF7+5CAx8Zk=;
+        s=default; t=1551688099;
+        bh=CgQm7E23rdCywyfzJWKYhFe8aw+qfMaNCOHDqaFjDjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lt9JlDvcj13fiG5BkJK2NGYCYaBrMP/gxtY+v+Jlfo+dFXgLmu9ImOVebwYb9eeVj
-         9BirrBgX6lClmKhTvLhPYMsYBJmR+RhzpFOQ4DUIH8WsdFmHB03qGoyuisiLD5eQez
-         lP2d0+9mn1iEhdYlUAQnJZj/LwRzMNGZLuHtoTCM=
+        b=csxUi2/H6TSP2feVBg2QUeXl/R4AWIR4nbi8eLhgms8+RtKSw10/xS3xaRoUyLl6p
+         HnuMOfsdYzJA3G62jqLQr61G8IlUKWuWvDjPikF1E1stYxDN0+V/u8yjn4d2/vcJU9
+         vzYjlBoSXRrYsYzxFZU0WYpA6J++GVVmpNFHInDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 04/78] mac80211: Change default tx_sk_pacing_shift to 7
-Date:   Mon,  4 Mar 2019 09:21:47 +0100
-Message-Id: <20190304081625.700212482@linuxfoundation.org>
+        stable@vger.kernel.org, Long Li <longli@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 03/78] genirq/matrix: Improve target CPU selection for managed interrupts.
+Date:   Mon,  4 Mar 2019 09:21:46 +0100
+Message-Id: <20190304081625.660675405@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -65,45 +67,212 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+[ Upstream commit e8da8794a7fd9eef1ec9a07f0d4897c68581c72b ]
 
-commit 5c14a4d05f68415af9e41a4e667d1748d41d1baf upstream.
+On large systems with multiple devices of the same class (e.g. NVMe disks,
+using managed interrupts), the kernel can affinitize these interrupts to a
+small subset of CPUs instead of spreading them out evenly.
 
-When we did the original tests for the optimal value of sk_pacing_shift, we
-came up with 6 ms of buffering as the default. Sadly, 6 is not a power of
-two, so when picking the shift value I erred on the size of less buffering
-and picked 4 ms instead of 8. This was probably wrong; those 2 ms of extra
-buffering makes a larger difference than I thought.
+irq_matrix_alloc_managed() tries to select the CPU in the supplied cpumask
+of possible target CPUs which has the lowest number of interrupt vectors
+allocated.
 
-So, change the default pacing shift to 7, which corresponds to 8 ms of
-buffering. The point of diminishing returns really kicks in after 8 ms, and
-so having this as a default should cut down on the need for extensive
-per-device testing and overrides needed in the drivers.
+This is done by searching the CPU with the highest number of available
+vectors. While this is correct for non-managed CPUs it can select the wrong
+CPU for managed interrupts. Under certain constellations this results in
+affinitizing the managed interrupts of several devices to a single CPU in
+a set.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+The book keeping of available vectors works the following way:
+
+ 1) Non-managed interrupts:
+
+    available is decremented when the interrupt is actually requested by
+    the device driver and a vector is assigned. It's incremented when the
+    interrupt and the vector are freed.
+
+ 2) Managed interrupts:
+
+    Managed interrupts guarantee vector reservation when the MSI/MSI-X
+    functionality of a device is enabled, which is achieved by reserving
+    vectors in the bitmaps of the possible target CPUs. This reservation
+    decrements the available count on each possible target CPU.
+
+    When the interrupt is requested by the device driver then a vector is
+    allocated from the reserved region. The operation is reversed when the
+    interrupt is freed by the device driver. Neither of these operations
+    affect the available count.
+
+    The reservation persist up to the point where the MSI/MSI-X
+    functionality is disabled and only this operation increments the
+    available count again.
+
+For non-managed interrupts the available count is the correct selection
+criterion because the guaranteed reservations need to be taken into
+account. Using the allocated counter could lead to a failing allocation in
+the following situation (total vector space of 10 assumed):
+
+		 CPU0	CPU1
+ available:	    2	   0
+ allocated:	    5	   3   <--- CPU1 is selected, but available space = 0
+ managed reserved:  3	   7
+
+ while available yields the correct result.
+
+For managed interrupts the available count is not the appropriate
+selection criterion because as explained above the available count is not
+affected by the actual vector allocation.
+
+The following example illustrates that. Total vector space of 10
+assumed. The starting point is:
+
+		 CPU0	CPU1
+ available:	    5	   4
+ allocated:	    2	   3
+ managed reserved:  3	   3
+
+ Allocating vectors for three non-managed interrupts will result in
+ affinitizing the first two to CPU0 and the third one to CPU1 because the
+ available count is adjusted with each allocation:
+
+		  CPU0	CPU1
+ available:	     5	   4	<- Select CPU0 for 1st allocation
+ --> allocated:	     3	   3
+
+ available:	     4	   4	<- Select CPU0 for 2nd allocation
+ --> allocated:	     4	   3
+
+ available:	     3	   4	<- Select CPU1 for 3rd allocation
+ --> allocated:	     4	   4
+
+ But the allocation of three managed interrupts starting from the same
+ point will affinitize all of them to CPU0 because the available count is
+ not affected by the allocation (see above). So the end result is:
+
+		  CPU0	CPU1
+ available:	     5	   4
+ allocated:	     5	   3
+
+Introduce a "managed_allocated" field in struct cpumap to track the vector
+allocation for managed interrupts separately. Use this information to
+select the target CPU when a vector is allocated for a managed interrupt,
+which results in more evenly distributed vector assignments. The above
+example results in the following allocations:
+
+		 CPU0	CPU1
+ managed_allocated: 0	   0	<- Select CPU0 for 1st allocation
+ --> allocated:	    3	   3
+
+ managed_allocated: 1	   0	<- Select CPU1 for 2nd allocation
+ --> allocated:	    3	   4
+
+ managed_allocated: 1	   1	<- Select CPU0 for 3rd allocation
+ --> allocated:	    4	   4
+
+The allocation of non-managed interrupts is not affected by this change and
+is still evaluating the available count.
+
+The overall distribution of interrupt vectors for both types of interrupts
+might still not be perfectly even depending on the number of non-managed
+and managed interrupts in a system, but due to the reservation guarantee
+for managed interrupts this cannot be avoided.
+
+Expose the new field in debugfs as well.
+
+[ tglx: Clarified the background of the problem in the changelog and
+  	described it independent of NVME ]
+
+Signed-off-by: Long Li <longli@microsoft.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Link: https://lkml.kernel.org/r/20181106040000.27316-1-longli@linuxonhyperv.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
 ---
- net/mac80211/tx.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/irq/matrix.c |   34 ++++++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -3614,10 +3614,10 @@ void __ieee80211_subif_start_xmit(struct
- 		/* We need a bit of data queued to build aggregates properly, so
- 		 * instruct the TCP stack to allow more than a single ms of data
- 		 * to be queued in the stack. The value is a bit-shift of 1
--		 * second, so 8 is ~4ms of queued data. Only affects local TCP
-+		 * second, so 7 is ~8ms of queued data. Only affects local TCP
- 		 * sockets.
- 		 */
--		sk_pacing_shift_update(skb->sk, 8);
-+		sk_pacing_shift_update(skb->sk, 7);
+--- a/kernel/irq/matrix.c
++++ b/kernel/irq/matrix.c
+@@ -14,6 +14,7 @@ struct cpumap {
+ 	unsigned int		available;
+ 	unsigned int		allocated;
+ 	unsigned int		managed;
++	unsigned int		managed_allocated;
+ 	bool			initialized;
+ 	bool			online;
+ 	unsigned long		alloc_map[IRQ_MATRIX_SIZE];
+@@ -145,6 +146,27 @@ static unsigned int matrix_find_best_cpu
+ 	return best_cpu;
+ }
  
- 		fast_tx = rcu_dereference(sta->fast_tx);
++/* Find the best CPU which has the lowest number of managed IRQs allocated */
++static unsigned int matrix_find_best_cpu_managed(struct irq_matrix *m,
++						const struct cpumask *msk)
++{
++	unsigned int cpu, best_cpu, allocated = UINT_MAX;
++	struct cpumap *cm;
++
++	best_cpu = UINT_MAX;
++
++	for_each_cpu(cpu, msk) {
++		cm = per_cpu_ptr(m->maps, cpu);
++
++		if (!cm->online || cm->managed_allocated > allocated)
++			continue;
++
++		best_cpu = cpu;
++		allocated = cm->managed_allocated;
++	}
++	return best_cpu;
++}
++
+ /**
+  * irq_matrix_assign_system - Assign system wide entry in the matrix
+  * @m:		Matrix pointer
+@@ -269,7 +291,7 @@ int irq_matrix_alloc_managed(struct irq_
+ 	if (cpumask_empty(msk))
+ 		return -EINVAL;
  
+-	cpu = matrix_find_best_cpu(m, msk);
++	cpu = matrix_find_best_cpu_managed(m, msk);
+ 	if (cpu == UINT_MAX)
+ 		return -ENOSPC;
+ 
+@@ -282,6 +304,7 @@ int irq_matrix_alloc_managed(struct irq_
+ 		return -ENOSPC;
+ 	set_bit(bit, cm->alloc_map);
+ 	cm->allocated++;
++	cm->managed_allocated++;
+ 	m->total_allocated++;
+ 	*mapped_cpu = cpu;
+ 	trace_irq_matrix_alloc_managed(bit, cpu, m, cm);
+@@ -395,6 +418,8 @@ void irq_matrix_free(struct irq_matrix *
+ 
+ 	clear_bit(bit, cm->alloc_map);
+ 	cm->allocated--;
++	if(managed)
++		cm->managed_allocated--;
+ 
+ 	if (cm->online)
+ 		m->total_allocated--;
+@@ -464,13 +489,14 @@ void irq_matrix_debug_show(struct seq_fi
+ 	seq_printf(sf, "Total allocated:  %6u\n", m->total_allocated);
+ 	seq_printf(sf, "System: %u: %*pbl\n", nsys, m->matrix_bits,
+ 		   m->system_map);
+-	seq_printf(sf, "%*s| CPU | avl | man | act | vectors\n", ind, " ");
++	seq_printf(sf, "%*s| CPU | avl | man | mac | act | vectors\n", ind, " ");
+ 	cpus_read_lock();
+ 	for_each_online_cpu(cpu) {
+ 		struct cpumap *cm = per_cpu_ptr(m->maps, cpu);
+ 
+-		seq_printf(sf, "%*s %4d  %4u  %4u  %4u  %*pbl\n", ind, " ",
+-			   cpu, cm->available, cm->managed, cm->allocated,
++		seq_printf(sf, "%*s %4d  %4u  %4u  %4u %4u  %*pbl\n", ind, " ",
++			   cpu, cm->available, cm->managed,
++			   cm->managed_allocated, cm->allocated,
+ 			   m->matrix_bits, cm->alloc_map);
+ 	}
+ 	cpus_read_unlock();
 
 
