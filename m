@@ -2,136 +2,127 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7CBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE255C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D1E20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA51420835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:47:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QX+XERJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfCDUpk (ORCPT
+        id S1726227AbfCDUrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:45:40 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:39135 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfCDUpk (ORCPT
+        Mon, 4 Mar 2019 15:47:45 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:44814 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfCDUro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:45:40 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MTznQ-1gbA6M1Szq-00QywR; Mon, 04 Mar 2019 21:45:28 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Max Kellermann <max.kellermann@gmail.com>,
-        Wolfgang Rohdewald <wolfgang@rohdewald.de>,
-        stable@vger.kernel.org, Akihiro Tsukada <tskd08@gmail.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [RESEND] media: don't drop front-end reference count for ->detach
-Date:   Mon,  4 Mar 2019 21:45:07 +0100
-Message-Id: <20190304204525.2283399-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 4 Mar 2019 15:47:44 -0500
+Received: by mail-ua1-f67.google.com with SMTP id r21so5654657uan.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 12:47:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+8mwHyTQD3viibZhlwqMBx4el6lQf1vUm4nyYwj8u4Q=;
+        b=QX+XERJpa12NN7BG83hwaLrRmRKeSTj/iLPZ5Rvc3NZtHb0XWTH2x5Z0t2+rsxKlU9
+         iNMVpLkRMTYeiVTK0Tu8anwvPVL97EYa/4fvIQA9lX5LAcva8M4D8i4m63Nv0fE6Dl0B
+         YEsd+8SbGlgiC+DdawHMX8+0BWFfldL2AYZbY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+8mwHyTQD3viibZhlwqMBx4el6lQf1vUm4nyYwj8u4Q=;
+        b=BDtlSKOXQMX4DnOvc3gOWEamDcrkeVyJjgoT3sdawy8LnkrCrjHw7MDZLPB/wVMB0o
+         zYW/YRwNHiOgQOWRjTbi1RMJkdgsRs+EVTrRBH/HdpStWxPyQugsoRtu+IQz9e5ceIxW
+         KdpR3RRpsPKi30sChdTRxIcLKF9YQz+DP8FsRD/mOYJmgpT8q3DnBTIJA5pxKLLjqU8F
+         oeTVch+PmBrfgUl53yCMZe2GfF9O6FEPEkbEbdzpFe3ixhFNS+9EhW7a2c4SSFoc/tHv
+         iATux43vRrw3fICHRXbBStErVDuvOyMH54fXPIZcU6k6CBBQvTIHPgDYXZAmoAHBGvX6
+         Tn9A==
+X-Gm-Message-State: APjAAAXTM5Avz1PwUNG5pVrsXsRYEUST0PYQ5VoYW6NHLnZ7+MAfI2np
+        SGSvlXHghxOfme45nBJovIMEBiKjUU4=
+X-Google-Smtp-Source: APXvYqxxjwD1adYZwpXD0Ay31JlKrNvG3Hil6w824DXbhlg6qHjwtCqhjikE5Ic2Rx2hRCJvPnbFMw==
+X-Received: by 2002:a67:d403:: with SMTP id c3mr10473658vsj.67.1551732463362;
+        Mon, 04 Mar 2019 12:47:43 -0800 (PST)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
+        by smtp.gmail.com with ESMTPSA id y125sm1554407vsy.0.2019.03.04.12.47.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 12:47:43 -0800 (PST)
+Received: by mail-ua1-f53.google.com with SMTP id u1so5661514uae.12
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 12:47:42 -0800 (PST)
+X-Received: by 2002:a05:6102:d2:: with SMTP id u18mr10635494vsp.172.1551732462335;
+ Mon, 04 Mar 2019 12:47:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:iI74MnyTBaXWF8tbrf+pNC1Oojm3y2POdwWl4TEPZLyoh5CmnTP
- Nruwx81FdKEr7tPiQUdTLiorqdtpDshY82RJko3tC6QX1RrPkxgON9SSySfZx0g+bGk6v2W
- EaZzbVxlolwwhoQgU1dShBaNO+vdFEKUGUMaseLEVs24TtCcicAw+AjU3nAgNfkub4N6CI2
- YrFcGI4Na/RqzEZBHjGfA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZtKn1Z0UpbU=:He3v2Sb2TeeN/7q4AkRnn1
- HHBPkv00h9vt/m7fbMgZH5yoirS6b1+CLRioRn89JApFOIl+yzUSrKLTdHU8oRBjAQU7YXCGe
- w/nQdVZjd3nywv+hbfdWVMbBGhGYkmi8L9MSbDiB/0PwTW4XV3n1pIoj7fcdmaWdkmpxh5ehy
- AwERIwynB1nVSvp+sbSu9KCEpj2keVN37PtjmaEmkgQVZYu47Nf1Lr2nD4rnjPIms4jpo66XK
- pXF0x8tMb4qw692PH90jXLrFwYwoZTaFNH0290WafyQ2fuBk2IaHCZM8jIYKTCilDKEwfjhD7
- MGnfkbbV9MRTUCwhA/SjBOIVbEYcJDGxnUEkrWu1kmwZK4mNCvi7HzQWXA2gksvMxIwMSF4Em
- ijERTOgZuexGltM+nIIprSJJ7Lwh+0P0k4rkTsGokb2NXdrs00K1es9QlhyzMShg0DxEJztwo
- WMm+yA/Aa1CSUHhuRozpZIuaRBbSRKufYsHhCaEFg05Aleq1IhOqKMQb8pnBmhwLhtRISu9Mb
- c1E1eYS+geT9p7NhJyzrB0PY+tPxOw9TKKaNB0tuLOaUvFtGP02tolTDdacnhRbi3SD1hYlUt
- KqRlYgJyro4jho4P26b6EhGge299eIw5eldXCFRx5QKpDbVGg3aFxMyKkVlV+ko2AiomiuJTk
- YyEgte0B8K1Kw7gzqyjZ6MQwvK2aA/3ofrPSiDgK8jLG8wiYpihd/ICEhkQ54QSTPUNBVHgUb
- 5gZWT0xPRNvFYPOLnUYstXxs2EsfDUrvnFolfw==
+References: <20190304203443.1992942-1-arnd@arndb.de>
+In-Reply-To: <20190304203443.1992942-1-arnd@arndb.de>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Mon, 4 Mar 2019 12:47:31 -0800
+X-Gmail-Original-Message-ID: <CAGXu5jLfAqwFBGH6VPLKrGXOdeEX4ngKdvsG729MbMOuBU7AcA@mail.gmail.com>
+Message-ID: <CAGXu5jLfAqwFBGH6VPLKrGXOdeEX4ngKdvsG729MbMOuBU7AcA@mail.gmail.com>
+Subject: Re: [PATCH] bpf: fix sysctl.c warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A bugfix introduce a link failure in configurations without CONFIG_MODULES:
+On Mon, Mar 4, 2019 at 12:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> When CONFIG_BPF_SYSCALL or CONFIG_SYSCTL is disabled, we get
+> a warning about an unused function:
+>
+> kernel/sysctl.c:3331:12: error: 'proc_dointvec_minmax_bpf_stats' defined but not used [-Werror=unused-function]
+>  static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
+>
+> The CONFIG_BPF_SYSCALL check was already handled, but the SYSCTL check
+> is needed on top.
+>
+> Fixes: 492ecee892c2 ("bpf: enable program stats")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-In file included from drivers/media/usb/dvb-usb/pctv452e.c:20:0:
-drivers/media/usb/dvb-usb/pctv452e.c: In function 'pctv452e_frontend_attach':
-drivers/media/dvb-frontends/stb0899_drv.h:151:36: error: weak declaration of 'stb0899_attach' being applied to a already existing, static definition
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-The problem is that the !IS_REACHABLE() declaration of stb0899_attach()
-is a 'static inline' definition that clashes with the weak definition.
+-Kees
 
-I further observed that the bugfix was only done for one of the five users
-of stb0899_attach(), the other four still have the problem.  This reverts
-the bugfix and instead addresses the problem by not dropping the reference
-count when calling '->detach()', instead we call this function directly
-in dvb_frontend_put() before dropping the kref on the front-end.
+> ---
+>  kernel/sysctl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 46a0d0a14a66..b3df3ab7ac28 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -3330,7 +3330,7 @@ int proc_doulongvec_ms_jiffies_minmax(struct ctl_table *table, int write,
+>
+>  #endif /* CONFIG_PROC_SYSCTL */
+>
+> -#ifdef CONFIG_BPF_SYSCALL
+> +#if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_SYSCTL)
+>  static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
+>                                           void __user *buffer, size_t *lenp,
+>                                           loff_t *ppos)
+> --
+> 2.20.0
+>
 
-I first submitted this in early 2018, and after some discussion it
-was apparently discarded.  While there is a long-term plan in place,
-that plan is obviously not nearing completion yet, and the current
-kernel is still broken unless this patch is applied.
 
-Cc: Max Kellermann <max.kellermann@gmail.com>
-Cc: Wolfgang Rohdewald <wolfgang@rohdewald.de>
-Cc: stable@vger.kernel.org
-Fixes: f686c14364ad ("[media] stb0899: move code to "detach" callback")
-Fixes: 6cdeaed3b142 ("media: dvb_usb_pctv452e: module refcount changes were unbalanced")
-Link: https://patchwork.kernel.org/patch/10140175/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/media/dvb-core/dvb_frontend.c | 4 +++-
- drivers/media/usb/dvb-usb/pctv452e.c  | 8 --------
- 2 files changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index fbdb4ecc7c50..eb5da50ff95e 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -164,6 +164,9 @@ static void dvb_frontend_free(struct kref *ref)
- 
- static void dvb_frontend_put(struct dvb_frontend *fe)
- {
-+	/* call detach before dropping the reference count */
-+	if (fe->ops.detach)
-+		fe->ops.detach(fe);
- 	/*
- 	 * Check if the frontend was registered, as otherwise
- 	 * kref was not initialized yet.
-@@ -3038,7 +3041,6 @@ void dvb_frontend_detach(struct dvb_frontend *fe)
- 	dvb_frontend_invoke_release(fe, fe->ops.release_sec);
- 	dvb_frontend_invoke_release(fe, fe->ops.tuner_ops.release);
- 	dvb_frontend_invoke_release(fe, fe->ops.analog_ops.release);
--	dvb_frontend_invoke_release(fe, fe->ops.detach);
- 	dvb_frontend_put(fe);
- }
- EXPORT_SYMBOL(dvb_frontend_detach);
-diff --git a/drivers/media/usb/dvb-usb/pctv452e.c b/drivers/media/usb/dvb-usb/pctv452e.c
-index 150081128196..5c653b660272 100644
---- a/drivers/media/usb/dvb-usb/pctv452e.c
-+++ b/drivers/media/usb/dvb-usb/pctv452e.c
-@@ -913,14 +913,6 @@ static int pctv452e_frontend_attach(struct dvb_usb_adapter *a)
- 						&a->dev->i2c_adap);
- 	if (!a->fe_adap[0].fe)
- 		return -ENODEV;
--
--	/*
--	 * dvb_frontend will call dvb_detach for both stb0899_detach
--	 * and stb0899_release but we only do dvb_attach(stb0899_attach).
--	 * Increment the module refcount instead.
--	 */
--	symbol_get(stb0899_attach);
--
- 	if ((dvb_attach(lnbp22_attach, a->fe_adap[0].fe,
- 					&a->dev->i2c_adap)) == NULL)
- 		err("Cannot attach lnbp22\n");
 -- 
-2.20.0
-
+Kees Cook
