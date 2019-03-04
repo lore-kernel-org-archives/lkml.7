@@ -2,108 +2,141 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4B9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EBEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B8E2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D8620684
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqV/ELyc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sz+We9mQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfCDWyY (ORCPT
+        id S1726559AbfCDW71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 17:54:24 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35414 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfCDWyY (ORCPT
+        Mon, 4 Mar 2019 17:59:27 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43738 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCDW71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 17:54:24 -0500
-Received: by mail-ed1-f66.google.com with SMTP id g19so5624562edp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 14:54:23 -0800 (PST)
+        Mon, 4 Mar 2019 17:59:27 -0500
+Received: by mail-qt1-f196.google.com with SMTP id y4so7025692qtc.10;
+        Mon, 04 Mar 2019 14:59:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pa5agJuMNZ6TOStPvOjFrUx0wrZJLT/PiWkjO94VFik=;
-        b=cqV/ELyc6/9jzxfL+N8fAds2AVwV9RG8mP9GQ8K6vbXDDScX2aeiBKuyNgokPBlgN1
-         mXNXW2EInssBnL9JFRMnvLEVI4FhNvTHkUSQge67v6jublvdCBtGGkt3Z7gtVCoVbhzc
-         SN0tLJ/sG2mceEWEOh0parc7aMIM0t9AZNG4by3p7nfc/8ywGwmzO8Q5sh5foVOjbWA9
-         s54mfloJGsH3np275MaarDSEcrOEUkwCBgoNwPNflYJmMijtEE1Gk73ckIRX9tHVfrbb
-         TDi++vyxiEPoHD8E+d2bg4OPuCVHvNYckWhxyfbf1xpMZyttY+VeTycujSnq0p9FzKTQ
-         o7dg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NeVtyt6+gK4gj0AOHwzuOV7rIp87XdBaYOsjxe42f7w=;
+        b=sz+We9mQuRu2WZSVKWAibeYRfR8rWlGv566a3Z5rtjObVDpDCP8/zu68vPKUH9IS2M
+         FCML+KBr75fqxSxuUcnPLIeTmgmbYs4UfIyzyXW9n91UQ6lT7s44y82PWluzyuOMWWH9
+         j9wReu7Z2BxZ7/xdrS/FLgYyR6KcQhH5oYOlqkngRDhRECQ9IgRk8Zi9DNpj5Mv0k7dr
+         P9OGl5jD122xEeVRFDHhyBlmIPt3V4272nWmLYfIUJ3WunCEp76qYJ/QO1lIvF1bcRW0
+         7enBb9JqwLUN2lmvZAH5y3vpwWeUcjDSJBat26a6mOBtPnUHs15mhLUTsIfjTsbZq1gA
+         GiXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pa5agJuMNZ6TOStPvOjFrUx0wrZJLT/PiWkjO94VFik=;
-        b=YfzlglpNkTrLy2rWnQMKgW4jH5GhbLzWADZvR5sGYeENp0CdTEPfxWbR6Nk20N7IGO
-         CmXrx/82S/R69REydgr5GaIN3hkGJqaNkg7HggA9C0epUuVRcbCk1YYUi/361GbVnKmL
-         NCreUd13j3u+t74rMNj4Ud7VQAQdabohEXh8sgG7FhzG8UKcXco1BTZHV/NcVLQc6kU0
-         n3V30HC0DlzEZCEb50lR3XkrbPaRVBKb1A3o0lF5+87Ea6IL5mB7QP1jKCTZBEME3+Tv
-         pNM2IytadOU/1SfGCz7P+Rjb/sd6EQSt2ZM34xKfZKsD+ltIUrlInRz3Bdw3vYmzxSk5
-         DWsw==
-X-Gm-Message-State: APjAAAV07hcsWTl1bGT6UdeaONaCls9x2UHAF3rX39y+WRvmTgEtKXbA
-        k5O+KCoovMkbWgMtuEb2FTU=
-X-Google-Smtp-Source: APXvYqxvjffOQdzdqu4SWl8CR5ZmXna+bAHqGQX3t25/H3XxWpVPkCkR9ZzBb/eTaCG4ATHEEsroGg==
-X-Received: by 2002:a17:906:24ca:: with SMTP id f10mr14376929ejb.240.1551740062636;
-        Mon, 04 Mar 2019 14:54:22 -0800 (PST)
-Received: from ltop.local ([2a02:a03f:4034:3c00:d42a:f12f:aba6:97a4])
-        by smtp.gmail.com with ESMTPSA id z23sm2481994edz.50.2019.03.04.14.54.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 14:54:21 -0800 (PST)
-Date:   Mon, 4 Mar 2019 23:54:20 +0100
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     amd-gfx@lists.freedesktop.org
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Rex Zhu <Rex.Zhu@amd.com>,
-        Monk Liu <Monk.Liu@amd.com>, Emily Deng <Emily.Deng@amd.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/amdgpu: fix typing in amdgpu_virt_ops::trans_msg
-Message-ID: <20190304225419.7j5iiqrqm7msyvd7@ltop.local>
-References: <20190304131000.17994-1-luc.vanoostenryck@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NeVtyt6+gK4gj0AOHwzuOV7rIp87XdBaYOsjxe42f7w=;
+        b=lxFy1qXU/ECUGUcAISwhn9/jHbMMXXQqpU8ZX4wwe7EryxOOyMhrcHoPxbG8WWROLZ
+         VICt60AQROIGG9IuK7/KCKeusoFi+N83VXKujvVJyTNnhkKQh2Lk8F28G/GvXnHtktqg
+         hLFlgp1JmGhHJayMtgucdcFGEBQ44ShraiLmKD19mA1ZfPBibX7Wzv+/HIdo/Bg/VjN/
+         NmiNGPcGNhXfRalyPdaGze8gkTY/tq2pS6cMdNeHMtBScWRRRsmtt5DiqvxxxdDTQc6/
+         0q9jzAt+atQzYEQOniOzZIRqQxNXeQNHvrl4oOI6fB195EgNr7v8hrDbOJwWbBKeLuWP
+         xQrA==
+X-Gm-Message-State: APjAAAU3H9MbaCCTlDeff9O85VvT0KAmUdY6eITzBIyX6vCZOaVyRor0
+        2gnhjfKbt2cB+Glc5ghcEfehdhUikHrY1yLg4P9UKQ==
+X-Google-Smtp-Source: APXvYqygD5FSB8EOcNpTxxw6+tMTViQhN0+GodrkOvTNI1ZAcwoRnszEl/u8FPJirtXh09/URM3oj3wkRIvRU0Ja5Tk=
+X-Received: by 2002:aed:3904:: with SMTP id l4mr16071088qte.194.1551740365875;
+ Mon, 04 Mar 2019 14:59:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304131000.17994-1-luc.vanoostenryck@gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190304205019.15071-1-adrian.ratiu@collabora.com>
+In-Reply-To: <20190304205019.15071-1-adrian.ratiu@collabora.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Mon, 4 Mar 2019 14:59:14 -0800
+Message-ID: <CAPhsuW4kbZhE=1v4t6v803zA6PnRjzGA5UaAu5Nrbo7mrYyw5Q@mail.gmail.com>
+Subject: Re: [PATCH] selftests/bpf: Add arm target register definitions
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     bpf <bpf@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 02:10:00PM +0100, Luc Van Oostenryck wrote:
-> The method in struct amdgpu_virt_ops::trans_msg() is defined as
-> using an 'u32' for its 2nd argument (the request) but the actual
-> implementation()s and calls use an 'enum idh_request' for it.
-> 
-> Fix this by using 'enum idh_request' for the method declaration too.
-> 
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+On Mon, Mar 4, 2019 at 12:50 PM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
+>
+> eBPF "restricted C" code can be compiled with LLVM/clang using target
+> triplets like armv7l-unknown-linux-gnueabihf and loaded/run with small
+> cross-compiled gobpf/elf [1] programs without requiring a full BCC
+> port which is also undesirable on small embedded systems due to its
+> size footprint. The only missing pieces are these helper macros which
+> otherwise have to be redefined by each eBPF arm program.
+>
+> [1] https://github.com/iovisor/gobpf/tree/master/elf
+>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+
+I think this is for bpf-next tree, which is closed during the merge window.
+Please resubmit when the bpf-next trees is opened (usually in 2 weeks).
+
+Thanks,
+Song
+
 > ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h
-> index 722deefc0a7e..3e9aec6f2795 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h
-> @@ -56,7 +56,7 @@ struct amdgpu_virt_ops {
->  	int (*rel_full_gpu)(struct amdgpu_device *adev, bool init);
->  	int (*reset_gpu)(struct amdgpu_device *adev);
->  	int (*wait_reset)(struct amdgpu_device *adev);
-> -	void (*trans_msg)(struct amdgpu_device *adev, u32 req, u32 data1, u32 data2, u32 data3);
-> +	void (*trans_msg)(struct amdgpu_device *adev, enum idh_request req, u32 data1, u32 data2, u32 data3);
->  };
-
-
-Sorry, this is patch is incorrect. Please ignore it.
-
--- Luc
+>  tools/testing/selftests/bpf/bpf_helpers.h | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/tools/testing/selftests/bpf/bpf_helpers.h b/tools/testing/selftests/bpf/bpf_helpers.h
+> index 6c77cf7bedce..f7883576f445 100644
+> --- a/tools/testing/selftests/bpf/bpf_helpers.h
+> +++ b/tools/testing/selftests/bpf/bpf_helpers.h
+> @@ -232,6 +232,9 @@ static int (*bpf_skb_pull_data)(void *, int len) =
+>  #elif defined(__TARGET_ARCH_s930x)
+>         #define bpf_target_s930x
+>         #define bpf_target_defined
+> +#elif defined(__TARGET_ARCH_arm)
+> +       #define bpf_target_arm
+> +       #define bpf_target_defined
+>  #elif defined(__TARGET_ARCH_arm64)
+>         #define bpf_target_arm64
+>         #define bpf_target_defined
+> @@ -254,6 +257,8 @@ static int (*bpf_skb_pull_data)(void *, int len) =
+>         #define bpf_target_x86
+>  #elif defined(__s390x__)
+>         #define bpf_target_s930x
+> +#elif defined(__arm__)
+> +       #define bpf_target_arm
+>  #elif defined(__aarch64__)
+>         #define bpf_target_arm64
+>  #elif defined(__mips__)
+> @@ -291,6 +296,19 @@ static int (*bpf_skb_pull_data)(void *, int len) =
+>  #define PT_REGS_SP(x) ((x)->gprs[15])
+>  #define PT_REGS_IP(x) ((x)->psw.addr)
+>
+> +#elif defined(bpf_target_arm)
+> +
+> +#define PT_REGS_PARM1(x) ((x)->uregs[0])
+> +#define PT_REGS_PARM2(x) ((x)->uregs[1])
+> +#define PT_REGS_PARM3(x) ((x)->uregs[2])
+> +#define PT_REGS_PARM4(x) ((x)->uregs[3])
+> +#define PT_REGS_PARM5(x) ((x)->uregs[4])
+> +#define PT_REGS_RET(x) ((x)->uregs[14])
+> +#define PT_REGS_FP(x) ((x)->uregs[11]) /* Works only with CONFIG_FRAME_POINTER */
+> +#define PT_REGS_RC(x) ((x)->uregs[0])
+> +#define PT_REGS_SP(x) ((x)->uregs[13])
+> +#define PT_REGS_IP(x) ((x)->uregs[12])
+> +
+>  #elif defined(bpf_target_arm64)
+>
+>  #define PT_REGS_PARM1(x) ((x)->regs[0])
+> --
+> 2.20.1
+>
