@@ -4,120 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A32C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104FAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961862075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25172075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="N8cidJa+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XfO/TAm7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfCDNLT (ORCPT
+        id S1726813AbfCDNLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:11:19 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43582 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfCDNLS (ORCPT
+        Mon, 4 Mar 2019 08:11:34 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51345 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfCDNLd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:11:18 -0500
-Received: by mail-pg1-f193.google.com with SMTP id l11so3082911pgq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 05:11:18 -0800 (PST)
+        Mon, 4 Mar 2019 08:11:33 -0500
+Received: by mail-wm1-f67.google.com with SMTP id n19so4537578wmi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 05:11:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0mz8hR/PW+TukAB77KzXlPfAhIvUFB5c4A/6VIejvxk=;
-        b=N8cidJa+RBPGSL+FpF/dmOQUuLI1A9v0JjWx4C3aX+xibANTueBDzft2D+a3cvEHdu
-         ZBbZPzSMgIcHuBY8biFXoXeJo85Qodj1KzLd5RsEJda/rl8QB/jcFckZllQYBND4I9db
-         IFXv1KogTJk3/eGYvqccL6WziE2Oz9xj/ktRqxWvtARahwOh22wYKWaseQ5OqyzEDi3q
-         z/To1xy/WMuTBcGyGNxUp5sWGAJS7/dBCr2ouCq0CXGRFzkC5eySyZKUYSVGNxzhnE6O
-         jV25/GxjZcafM4uCvTHkUX1FvmvZ8UHrqXoAdE6HGE/cfws19vborK26vWJlV9v2XcpR
-         OguQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/ByMeJQ3l9j8hP/2REzdKcxDU8ddE1rkkcDZy1jUeYQ=;
+        b=XfO/TAm7cR+p96HOzcB/8OAud/WqzOqUOkRmr+XcZcnpdwwN1gt93roK1BneKFiTQJ
+         VHeDqpWSzdjIofblxw20+cqYUYaSreiTElpHGEXinGJGZmdAaBfbmTejdnii8Fr0MJKI
+         WP8SEBXWzffSYbmWFRi30jznZ1wntrXDV4jZF0yuSpEHYB00T/zV6rzNcgAcg6d9Q5uM
+         jXjoNRcOH2TcvMd/A93z4RQN9MgoDWETcgIYU0klZK1l4yHXQdFqUi6fhyrfHQWWqTFM
+         DQBkLAAoioiX2I6wPgRt8vXA2m/XtEjSLQO2NMbaebxQPqsBbyN0Z3R/Jw2cBP+Fr9GV
+         GMRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0mz8hR/PW+TukAB77KzXlPfAhIvUFB5c4A/6VIejvxk=;
-        b=iNYxsLFAiP0oUhpqe2vGgGWqWHKhqS4vaVQIi6BgzyyjUplnmGoUvslf+A1aGndT0U
-         jWCGolN74qhE381nswpH9nTNkEDVNMnTMFXSAG5bX6AyoYElBPXvJslk2w0S8FYvO53X
-         doXnQ5F9LOA0pKEI2v8swnygjwsFzWDFGg2CQ91LE7u94yLsp195sMZo7mvM9M+l/HCz
-         Q4kpVfFJ6hYw5uLkAHI2rriZFq1YGroE0XvH4IIjWY2XjNJwTELbyXO1Q43Z6oQDj4z/
-         2pPdoWNM6IFCTE4+RdDkG9qTgjXcPrLO1WDLmUw82ZwsyuRFoBwe2OjSh1ailDA9FLgO
-         tHRQ==
-X-Gm-Message-State: APjAAAU8+EMxBg8c1INr8O160jaPFH5Q1jwGTw+/M+w4iBndkknE1lYP
-        rg3/hgbPWaxLqMnAwuFIOKKzJw==
-X-Google-Smtp-Source: APXvYqzAWJ2k3k7IQ3uno9qOI/nhQp7EloMYKyZOcYGMZpgzNkdiqKlyXi09LWDL4bNZVmSSr/me3Q==
-X-Received: by 2002:a65:620f:: with SMTP id d15mr18557884pgv.112.1551705077993;
-        Mon, 04 Mar 2019 05:11:17 -0800 (PST)
-Received: from kshutemo-mobl1.localdomain ([192.55.54.40])
-        by smtp.gmail.com with ESMTPSA id v6sm8704444pgb.2.2019.03.04.05.11.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 05:11:17 -0800 (PST)
-Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
-        id 0B911300429; Mon,  4 Mar 2019 16:11:14 +0300 (+03)
-Date:   Mon, 4 Mar 2019 16:11:14 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>, linux-mm@kvack.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        linux-c6x-dev@linux-c6x.org, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Salter <msalter@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 05/34] c6x: mm: Add p?d_large() definitions
-Message-ID: <20190304131113.qlf4bs7to77wm3ui@kshutemo-mobl1>
-References: <20190227170608.27963-1-steven.price@arm.com>
- <20190227170608.27963-6-steven.price@arm.com>
- <20190301214851.ucems2icwt64iabx@kshutemo-mobl1>
- <f840db0e-bbb3-db7e-d883-79b5a630767c@arm.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/ByMeJQ3l9j8hP/2REzdKcxDU8ddE1rkkcDZy1jUeYQ=;
+        b=Ssuyziy8RvrKK1MEW9CzBSH2sgOSGm1ZQ7sb7IpQsFlxTCsKGUn7lRCtE2scn4kiFL
+         DM8Dd8Be0jdqpWL97mO+npW/nNAtxX2R9bAe33rgvKtCxfVl8Itr2OWS0iOVICqPi1MA
+         b6miJE9ktwg/ReDVied0kJeYQqDzCeUnRFtnJb93H9gIaFa9wm5kfFseP0Vdw/xexY+R
+         kFdNF3R+uLdbECjHneSaWRsr8Vd9OcTE2LleFxNzV+DmU82eMZl2x0FN+3HrNYaq5oXt
+         rnp+L8stIqFxBYQpZY9yTQj3RJPhTi3962IEG08q491ST0mnF+4Q5hk2Od7YMEkLHjLN
+         RnKA==
+X-Gm-Message-State: AHQUAubaV0Jz0bRe1CEBl+cQ1Rag6eQV9yjsA2pzXepLHsNRjVYfcq8q
+        dArxddZ5ii+BHBd+PDC93R86WQ==
+X-Google-Smtp-Source: APXvYqzzFavd/62ZTJ/V7mMSg8QxpPP0ckAYCGyy3yx9qza4Eb05t7uGWI+n3CF0mZ8dnt2hLrGzhQ==
+X-Received: by 2002:a1c:700a:: with SMTP id l10mr12225623wmc.13.1551705092066;
+        Mon, 04 Mar 2019 05:11:32 -0800 (PST)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id a8sm11695624wmh.26.2019.03.04.05.11.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 04 Mar 2019 05:11:31 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     jbrunet@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] clk: meson: g12a: Add CPU Clock support
+Date:   Mon,  4 Mar 2019 14:11:27 +0100
+Message-Id: <20190304131129.7762-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f840db0e-bbb3-db7e-d883-79b5a630767c@arm.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 12:01:37PM +0000, Steven Price wrote:
-> On 01/03/2019 21:48, Kirill A. Shutemov wrote:
-> > On Wed, Feb 27, 2019 at 05:05:39PM +0000, Steven Price wrote:
-> >> walk_page_range() is going to be allowed to walk page tables other than
-> >> those of user space. For this it needs to know when it has reached a
-> >> 'leaf' entry in the page tables. This information is provided by the
-> >> p?d_large() functions/macros.
-> >>
-> >> For c6x there's no MMU so there's never a large page, so just add stubs.
-> > 
-> > Other option would be to provide the stubs via generic headers form !MMU.
-> > 
-> 
-> I agree that could be done, but equally the definitions of
-> p?d_present/p?d_none/p?d_bad etc could be provided by a generic header
-> for !MMU but currently are not. It makes sense to keep the p?d_large
-> definitions next to the others.
-> 
-> I'd prefer to stick with a (relatively) small change here - it's already
-> quite a long series! But this is certainly something that could be
-> tidied up for !MMU archs.
+This patchset adds support for the clock tree feeding the 4xCortex A53
+cpu cluster.
 
-Agreed.
+This patchet does not handle clock changing, this will be added in a
+secondary patchset.
+
+The CPU clock can either use the SYS_PLL for > 1GHz frequencies or
+use a couple of div+mux from 1GHz/667MHz/24MHz source with 2 non-glitch
+muxes.
+
+The CPU clock must be switched to a safe clock while changing the clocks
+before the non-glitch muxes. Proper support will be added later.
+
+In this patchset, clocks are set read-only.
+
+Changes since v1:
+- moved to clk_regmap_gate_ro_ops for R/O gates
+- added comments with datasheet field names
+- moved pribate bindings changes to driver patch
+- removed invalid PCIE IDs
+
+Neil Armstrong (2):
+  clk: meson-g12a: add cpu clock bindings
+  clk: meson: g12a: add cpu clocks
+
+ drivers/clk/meson/g12a.c              | 350 ++++++++++++++++++++++++++
+ drivers/clk/meson/g12a.h              |  22 +-
+ include/dt-bindings/clock/g12a-clkc.h |   1 +
+ 3 files changed, 372 insertions(+), 1 deletion(-)
 
 -- 
- Kirill A. Shutemov
+2.20.1
+
