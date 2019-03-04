@@ -2,116 +2,105 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C18C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD0BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7009D20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551729237;
-	bh=giA6uiGuJHeAeWZdu7sapZruLOXqUI5GTktC7GOoboA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d4k+LFLZEEeYzmrqV5g7UuK71CvMqe8slO18fQV0afKMSihEtD0WZHhvi1qOwA59J
-	 6kPAKTc7B8AUBhgxMkrJX7xjnYidVkFGu4Sxj+2dPBVRx3h9LUY03ZzPRbN5sMONxI
-	 kketURq0zvvRLWhfANMe4GpilnIIXyJ7kkw2wklQ=
+	by mail.kernel.org (Postfix) with ESMTP id 35D5E20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:54:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="T/lY1fHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfCDTxz (ORCPT
+        id S1726387AbfCDTyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:53:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbfCDTxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:53:55 -0500
-Received: from localhost (unknown [77.138.135.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7FF520657;
-        Mon,  4 Mar 2019 19:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551729234;
-        bh=giA6uiGuJHeAeWZdu7sapZruLOXqUI5GTktC7GOoboA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ikd1IfSntVPb0jCcMvR23FsW66mmRPg+Ya5PloGrKhnh5ubKMv9akgFuOcgUavQ5A
-         Gj1XK1+esNYB1ShEAhwM6zDPbgXRkAJ7E30YYkZPtpmh8Cy7xneTjGUuwbKJs0g1w+
-         NkIHa2hCd4BOJKrnwF8Xivzt/ziElTavVoXspJxY=
-Date:   Mon, 4 Mar 2019 21:53:51 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     john.hubbard@gmail.com
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v3] RDMA/umem: minor bug fix in error handling path
-Message-ID: <20190304195351.GK15253@mtr-leonro.mtl.com>
-References: <20190304194645.10422-1-jhubbard@nvidia.com>
- <20190304194645.10422-2-jhubbard@nvidia.com>
+        Mon, 4 Mar 2019 14:54:49 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45889 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfCDTys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:54:48 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so6458735qtg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 11:54:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X6Y8iExaiXetD91Man6/qdqhOVahCq446nFmMUqaAmw=;
+        b=T/lY1fHWqGFk23ncovG8fBFPFUFvXBV7k1ukT452qi6Uszy+/i12mnUb4JxJ0PIR43
+         DTnPRByoWwj6jr/rFQoEajHdmIXkVVJN59TTzHezJjO1J8cCr9se/MVlUvNXyIWYBApO
+         wjrXWNoRxcW9G7BEATLMejlFDYSdNKRfCTs2OTP+Qzae9x3NxBZmNscZfhxHuIKhe2ku
+         fHB5bbFBzzdYaAFlDY2OF71SyK4DnPnmxvAuKMzq7qOv4+vYeCixyjJmXgsbuUUtZbA5
+         EqBAyAIfCckbnqVMszxX9hclSzqLyoqWDAd2S7Wwkbfqvzvraia49xQR4+0rR+J+yHy+
+         CpBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X6Y8iExaiXetD91Man6/qdqhOVahCq446nFmMUqaAmw=;
+        b=GTLB+2aitA8V7O8ylCfecppoujn3Vc1AyklT2roK1HeVSzwP4SAYjsF6KEpOolsfpo
+         PkbArwsXBzR/2X6mpyA7Ez5GVXBzw6bLIFcU8DunDxbqEGkyWyH3chqbfl7bnZgUppFU
+         xYZaxvWByIAMReYbhkW2Ji5ljQ89taiJbc0ud3/pgJTY5AOMzhOXlepCJaGj/ysQjq2Y
+         PW4ORrYWwWsMEyc6PipgiuSfn6E//uyjvRT+3bu9YItL3em5V0beddghoM1tmSeV2+mM
+         2+YIgeSOsTR9z0Oq4oLsPbweku0YBxDAZhM08xs1QgYAg36bLjXry30fkQ4CLAmbpmpT
+         a5Bw==
+X-Gm-Message-State: APjAAAXIbPykm1sDWQeV/NOENE7M590vmbjG+no6fLSaTkJgcZhkLqvI
+        WO0Oal8fBBHkKtL7nOH6mmaBrA==
+X-Google-Smtp-Source: APXvYqxQbn/6sOfi37x7xxkhdoKWr2Z1bzq5FX52garMKz/2r6HYVwOPksen/jVI2SB0SPfWI/yqOQ==
+X-Received: by 2002:ac8:2d7a:: with SMTP id o55mr16444056qta.158.1551729287773;
+        Mon, 04 Mar 2019 11:54:47 -0800 (PST)
+Received: from ziepe.ca ([24.137.65.181])
+        by smtp.gmail.com with ESMTPSA id o29sm4666041qtk.56.2019.03.04.11.54.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 Mar 2019 11:54:47 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1h0tfi-00021s-6u; Mon, 04 Mar 2019 15:54:46 -0400
+Date:   Mon, 4 Mar 2019 15:54:46 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Shaobo He <shaobo@cs.utah.edu>
+Cc:     linux-rdma@vger.kernel.org, Steve Wise <swise@chelsio.com>,
+        Doug Ledford <dledford@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxgb4: fix undefined behavior in mem.c
+Message-ID: <20190304195446.GA7751@ziepe.ca>
+References: <1551393519-96595-1-git-send-email-shaobo@cs.utah.edu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="SzQ167Kp6Zo0TWVn"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190304194645.10422-2-jhubbard@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1551393519-96595-1-git-send-email-shaobo@cs.utah.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---SzQ167Kp6Zo0TWVn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Mar 04, 2019 at 11:46:45AM -0800, john.hubbard@gmail.com wrote:
-> From: John Hubbard <jhubbard@nvidia.com>
->
-> 1. Bug fix: fix an off by one error in the code that
-> cleans up if it fails to dma-map a page, after having
-> done a get_user_pages_remote() on a range of pages.
->
-> 2. Refinement: for that same cleanup code, release_pages()
-> is better than put_page() in a loop.
->
-> Cc: Leon Romanovsky <leon@kernel.org>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Doug Ledford <dledford@redhat.com>
-> Cc: linux-rdma@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+On Thu, Feb 28, 2019 at 03:38:38PM -0700, Shaobo He wrote:
+> In function `c4iw_dealloc_mw`, variable mhp's value is printed after
+> freed, which triggers undefined behavior according to this post:
+> https://trust-in-soft.com/dangling-pointer-indeterminate/.
+> 
+> This commit fixes it by swapping the order of `kfree` and `pr_debug`.
+> 
+> Signed-off-by: Shaobo He <shaobo@cs.utah.edu>
 > ---
->  drivers/infiniband/core/umem_odp.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
+>  drivers/infiniband/hw/cxgb4/mem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Acked-by: Leon Romanovsky <leonro@mellanox.com>
+Discussion aside, this is a worthwile fix. I rewrote the commit
+message to avoid referencing 'undefined behavior' though, this is just
+a straight up bug in the logging. Another thread could get the same
+pointer value for the mhp before the print creating a confusing log.
 
---SzQ167Kp6Zo0TWVn
-Content-Type: application/pgp-signature; name="signature.asc"
+    cxgb4: kfree mhp after the debug print
+    
+    In function `c4iw_dealloc_mw`, variable mhp's value is printed after
+    freed, it is clearer to have the print before the kfree.
+    
+    Otherwise racing threads could allocate another mhp with the same pointer
+    value and create confusing tracing.
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJcfYJPAAoJEORje4g2clinTO4P/0fRa+62AVNr9diB7JwN2q00
-R/xwy4BeamgibjxK4ajFxNiuOe8kWL4M0xidWvIUIjhsljdVwNtyKUfH6SYi3YdM
-chSj9iQeluos07CWbM9VPyGGBHZfQ13aTCy9P4tx/3JD+D03lZDBoP3tm93Mms4L
-mxQwjxdBnBaquIpD98cIPZm31XXFUcRR/K7kMnPOBcXp+f2yx6DfJprm3tffb2Ke
-9NgfVcIV03ZlfeC/NI2bj/MC17PZgZZBK2XqVTi7Wu0iYcy9J8nRlD2kVjNq/0rG
-kxPMZ/O2K65gwnNSWtWPxsL074ekD4P5Mcn9D6Qa0MeFGotoGdDrEH9gJ4hmGFxG
-1vgWYZRJ26JCoGASInbPKmPQBjC1bfHyUG83E8qfHHyTDzHj8ytcXXFtW2JMCSOi
-nbqqX7ww8sXyAbCW2546yxCQ3AIL93g42gkwgGoxtQioovSkQ0eJoYSOT4cDxYEY
-nsECMJGMhey3kqDDQGGvzZ31RZ7byaMQY/p6mc5hewRf8HOKHJEslsA1uTh5DkHq
-j4duANKV3tZyw3sWQ+bf4s2NE0/EzH4wqIQWN2x7J6u+GDGM+JM9uLalXA+2tN+e
-ks9z1cS4AXflaeIpV4q7p/bdqJf3JfrSsNY9WLFiryjF5q9c/4ejwYIRcsN1wq7D
-v4WszJR2m5vaYxbOgMxo
-=wIFY
------END PGP SIGNATURE-----
-
---SzQ167Kp6Zo0TWVn--
+Jason
