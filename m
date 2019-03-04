@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7576AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88C4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44AA420823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96822208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688477;
-	bh=9lzJTIzRu4rT9E1tfaXLMIK9xqFApuQHQwQRhmt4uEo=;
+	s=default; t=1551688481;
+	bh=lLgJwMJJvX2wkT15C7ehCXQBUsHIOatGx8Czd1KJk0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y7IxR7z35iplfZlRBaDLrkRPDn0+//9g4mUfX8vvEx07IZxSouTm1CgFFbUhMON7A
-	 oHPgfZBtMDHmAa+WDei7IgEOY+5CP+fUWQX3T4kZ51R1Vd3ax/nUtGM78pJOwItduy
-	 0shtRvjqytAxivb96TEa6mawRQxxHI3eVdv/XRZw=
+	b=j8DoAbV2o5p7P1Z9lqceLk5tsRXtUdcF3VOaZJ8RN+VZPxuHbeguqILzQAB0fOOVT
+	 kAor457itqUBJW+jIsR6lHsiSa7v8YwA1ZpVMdDvJk132Fg0go3Ga0CChk4n9dkEMo
+	 DP8nrlkQKUXLYStK2BmpXZ61gKYAtvmXsG9lieB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfCDIef (ORCPT
+        id S1728321AbfCDIek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:34:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40886 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:34:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727931AbfCDIec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:34:32 -0500
+        id S1728283AbfCDIef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:34:35 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92FDD208E4;
-        Mon,  4 Mar 2019 08:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56C9320836;
+        Mon,  4 Mar 2019 08:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688472;
-        bh=9lzJTIzRu4rT9E1tfaXLMIK9xqFApuQHQwQRhmt4uEo=;
+        s=default; t=1551688474;
+        bh=lLgJwMJJvX2wkT15C7ehCXQBUsHIOatGx8Czd1KJk0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ckWPTtm+cCjuqQAOwTIQptDlhWTQHTU+HLYggW/Q1x273HuhUMa2xcdOZXLvjhPxS
-         sY3TnQqsdnu71KyOwBFPliSHAHCcICcCHPK3Ycxnc+R04ZsA41gTd4Y1RbYSLOmib2
-         yfDGghVV7OdCutHTR9eHZIYx0L+WF8u+g8dusF2o=
+        b=bF1XJjt7cqTxkNXZ3qRMttKG3LaMPBxpI3ZZDaDeVCuwK4UIZS4j/H5yhjdI2zGh2
+         QjFwQw+uk0sK20iAZRHHKlFg4jYOSbGV/tN28ThDCge9Y9GvzJcXjl04xoLo74jDrV
+         SncKi1lUnVwpn4I0b7HTJY5sx7qk2XO8uE8b97Bw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Alexey Firago <alexey_firago@mentor.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 10/88] clk: vc5: Abort clock configuration without upstream clock
-Date:   Mon,  4 Mar 2019 09:21:53 +0100
-Message-Id: <20190304081630.970544833@linuxfoundation.org>
+        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 49/88] net: altera_tse: fix connect_local_phy error path
+Date:   Mon,  4 Mar 2019 09:22:32 +0100
+Message-Id: <20190304081632.494930321@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -69,47 +67,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2137a109a5e39c2bdccfffe65230ed3fadbaac0e ]
+[ Upstream commit 17b42a20d7ca59377788c6a2409e77569570cc10 ]
 
-In case the upstream clock are not set, which can happen in case the
-VC5 has no valid upstream clock, the $src variable is used uninited
-by regmap_update_bits(). Check for this condition and return -EINVAL
-in such case.
+The connect_local_phy should return NULL (not negative errno) on
+error, since its caller expects it.
 
-Note that in case the VC5 has no valid upstream clock, the VC5 can
-not operate correctly. That is a hardware property of the VC5. The
-internal oscilator present in some VC5 models is also considered
-upstream clock.
-
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Alexey Firago <alexey_firago@mentor.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org
-[sboyd@kernel.org: Added comment about probe preventing this from
-happening in the first place]
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-versaclock5.c | 4 +++-
+ drivers/net/ethernet/altera/altera_tse_main.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
-index decffb3826ece..a738af893532f 100644
---- a/drivers/clk/clk-versaclock5.c
-+++ b/drivers/clk/clk-versaclock5.c
-@@ -262,8 +262,10 @@ static int vc5_mux_set_parent(struct clk_hw *hw, u8 index)
+diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+index 02921d877c08a..aa1d1f5339d2a 100644
+--- a/drivers/net/ethernet/altera/altera_tse_main.c
++++ b/drivers/net/ethernet/altera/altera_tse_main.c
+@@ -714,8 +714,10 @@ static struct phy_device *connect_local_phy(struct net_device *dev)
  
- 		if (vc5->clk_mux_ins == VC5_MUX_IN_XIN)
- 			src = VC5_PRIM_SRC_SHDN_EN_XTAL;
--		if (vc5->clk_mux_ins == VC5_MUX_IN_CLKIN)
-+		else if (vc5->clk_mux_ins == VC5_MUX_IN_CLKIN)
- 			src = VC5_PRIM_SRC_SHDN_EN_CLKIN;
-+		else /* Invalid; should have been caught by vc5_probe() */
-+			return -EINVAL;
- 	}
+ 		phydev = phy_connect(dev, phy_id_fmt, &altera_tse_adjust_link,
+ 				     priv->phy_iface);
+-		if (IS_ERR(phydev))
++		if (IS_ERR(phydev)) {
+ 			netdev_err(dev, "Could not attach to PHY\n");
++			phydev = NULL;
++		}
  
- 	return regmap_update_bits(vc5->regmap, VC5_PRIM_SRC_SHDN, mask, src);
+ 	} else {
+ 		int ret;
 -- 
 2.19.1
 
