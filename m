@@ -2,141 +2,83 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A40AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB761C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3762206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551721394;
-	bh=ozRreU3RmIrmPBt2VbxbTZQcQKmj4OKXbuQN0ktJiHg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Cirylejb6v8zyFO+j8MQc+H8zoOnP3p3BoAT1642rd6R9RHBrtYZaaVQ8eGeMQodR
-	 Nkgr6VyvUpnixzwGUQMtCN/I8/bYYp++8HMypoWoDZ+/P+K01qpwCLtvXFSJziFygb
-	 eZfinsoab6c+hW6sPk2SLH6vQuTff3JGgiBk+/Ns=
+	by mail.kernel.org (Postfix) with ESMTP id 756BD206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:45:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f1cTu+zO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfCDRnN (ORCPT
+        id S1727457AbfCDRo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:43:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727268AbfCDRnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:43:12 -0500
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14E1520823;
-        Mon,  4 Mar 2019 17:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551721391;
-        bh=ozRreU3RmIrmPBt2VbxbTZQcQKmj4OKXbuQN0ktJiHg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GMOnVWgAvagoRM2SpqMMHVdtABAlrvIJdPnolQey3SwQZ8y0cJDsgjI5DDWb8eYtB
-         smyS9ckPZxLc78cCJll9EBq9KZEPTiQgxyNDySvY3Eq8uFKXK8hFEBq/+iPq4xnvMW
-         ccr7IYcV7v4p2iuhnViCjw9635ZP5jECPKXUMFtI=
-Received: by mail-qt1-f171.google.com with SMTP id s1so6031236qte.5;
-        Mon, 04 Mar 2019 09:43:11 -0800 (PST)
-X-Gm-Message-State: APjAAAVmo0cA1MmYVfGgniuMniwfsuou6eTu7vxMHdoqM4rEsJHIyZWo
-        KweNOJo0TiEDeqrhd0g7eVGns6A01pCxDDvfdg==
-X-Google-Smtp-Source: APXvYqyEPlo0AQygH5BSbkv/lOmajyJh/zF7vfHmYltzEGg5k86upZNLjDJVK8+51GzTwm/8d3lNQBk1ZpDVZxltIkY=
-X-Received: by 2002:a0c:91bb:: with SMTP id n56mr15662943qvn.77.1551721390309;
- Mon, 04 Mar 2019 09:43:10 -0800 (PST)
-MIME-Version: 1.0
-References: <1550561795-31132-1-git-send-email-min.guo@mediatek.com>
- <1550561795-31132-2-git-send-email-min.guo@mediatek.com> <20190222164923.GA26413@bogus>
- <1551058604.12020.34.camel@mhfsdcap03>
-In-Reply-To: <1551058604.12020.34.camel@mhfsdcap03>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 4 Mar 2019 11:42:58 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKb_afdZFaOoB5yvs2hX-T9HPVy_d30zu7f7yiqaRPaLg@mail.gmail.com>
-Message-ID: <CAL_JsqKb_afdZFaOoB5yvs2hX-T9HPVy_d30zu7f7yiqaRPaLg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-To:     Min Guo <min.guo@mediatek.com>
-Cc:     Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        devicetree@vger.kernel.org,
+        Mon, 4 Mar 2019 12:44:59 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51668 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfCDRo6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:44:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WjkeZwxCup1+yg1lF/mNax5f4q18OsjiaJGhTkD9zyo=; b=f1cTu+zOlCXhs7ahpbfdooggW
+        nbqdidWC2PUzz+3DIUv0LErO7+IRpWNrMYRNhcFQNsjNzOdjFOSzp+0Qvy3kzgzWi/M4hL+zypNa4
+        h/VkeDl32nPKSX6FNXvuq6RsKgXN3prCy1udp85zJYpkj/RywNIQ4UCuUu5cn/lDeLKa2TA1DFN1K
+        XR11SYmq27qeOLttBYrLkiXRAjTIBlar1R9lGY7RUBi7WILFGC5DdWcWjRrN8goPbQEN8S3EIhlqJ
+        7mDUaW06B5yvRit0kP/fIaasxz6gD5P3Y2xaTpp7snBhhXPK6+5NAqz76sggBdGbdz756QpzMYsAu
+        7VsEfw09g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h0re3-0004SO-3p; Mon, 04 Mar 2019 17:44:55 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7A53620288BA6; Mon,  4 Mar 2019 18:44:53 +0100 (CET)
+Date:   Mon, 4 Mar 2019 18:44:53 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     =?utf-8?B?V2FuZywgVmluY2VudCAo546L5LqJKQ==?= 
+        <Vincent.Wang@unisoc.com>,
+        =?utf-8?B?WmhhbmcsIENodW55YW4gKOW8oOaYpeiJsyk=?= 
+        <Chunyan.Zhang@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0ggVjRdIHNj?=
+ =?utf-8?Q?hed=2Fcpufreq=3A_initializ?= =?utf-8?Q?e?= iowait_boost_max and
+ iowait_boost with cpu capacity
+Message-ID: <20190304174453.GV32534@hirez.programming.kicks-ass.net>
+References: <1550831866-32749-1-git-send-email-chunyan.zhang@unisoc.com>
+ <20190222105957.wxhlcmoag5f3i4fi@queper01-lin>
+ <9099990618e242e1bab77ce3f9d9b1e3@BJMBX02.spreadtrum.com>
+ <20190304135810.rq2ojnbn5vezrab3@queper01-lin>
+ <20190304152616.GM32494@hirez.programming.kicks-ass.net>
+ <20190304164816.4fnxxesjwzdoqria@queper01-lin>
+ <20190304174028.GO32494@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304174028.GO32494@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 24, 2019 at 7:36 PM Min Guo <min.guo@mediatek.com> wrote:
->
-> Hi Rob,
-> On Fri, 2019-02-22 at 10:49 -0600, Rob Herring wrote:
-> > On Tue, Feb 19, 2019 at 03:36:30PM +0800, min.guo@mediatek.com wrote:
-> > > From: Min Guo <min.guo@mediatek.com>
-> > >
-> > > This adds support for MediaTek musb controller in
-> > > host, peripheral and otg mode.
-> > >
-> > > Signed-off-by: Min Guo <min.guo@mediatek.com>
-> > > ---
-> > > changes in v5:
-> > > suggested by Rob:
-> > > 1. Modify compatible as
-> > > - compatible : should be one of:
-> > >                "mediatek,mt-2701"
-> > >                ...
-> > >                followed by "mediatek,mtk-musb"
-> > > 2. Add usb connector child node
-> > >
-> > > changes in v4:
-> > > suggested by Sergei:
-> > > 1. String alignment
-> > >
-> > > changes in v3:
-> > > 1. no changes
-> > >
-> > > changes in v2:
-> > > suggested by Bin:
-> > > 1. Modify DRC to DRD
-> > > suggested by Rob:
-> > > 2. Drop the "<soc-model>-musb" in compatible
-> > > 3. Remove phy-names
-> > > 4. Add space after comma in clock-names
-> > > ---
-> > >  .../devicetree/bindings/usb/mediatek,musb.txt      | 54 ++++++++++++++++++++++
-> > >  1 file changed, 54 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > > new file mode 100644
-> > > index 0000000..0632e6e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > > @@ -0,0 +1,54 @@
-> > > +MediaTek musb DRD/OTG controller
-> > > +-------------------------------------------
-> > > +
-> > > +Required properties:
-> > > + - compatible      : should be one of:
-> > > +                     "mediatek,mt-2701"
-> >
-> > That looks like a top-level SoC compatible and doesn't match the
-> > example.
-> "mediatek,mt-2701" is an example, just to describe a specific SOC.
-> May I modify compatibel like:
-> compatible : should be "mediatek,mtk-musb"
+On Mon, Mar 04, 2019 at 06:40:28PM +0100, Peter Zijlstra wrote:
 
-No, you should fix the example adding "mediatek,mtk-musb".
+> 	/*
+> 	 * @util is already in capacity scale, convert iowait_boost
+> 	 * into the same scale so we can compare.
+> 	 */
+> 	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
+> 	util = max(boost, util);
+> 	return min(util, max);
 
-Rob
+Ah, I don't think we need that last min in this case; both terms should
+already be <= SCHED_CAPACITY_SCALE.
