@@ -2,119 +2,242 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45A8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E917AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8266E20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8GEBE5B"
+	by mail.kernel.org (Postfix) with ESMTP id B658920823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfCDKml (ORCPT
+        id S1726260AbfCDKq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 05:42:41 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33916 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbfCDKml (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 05:42:41 -0500
-Received: by mail-wr1-f65.google.com with SMTP id f14so4965647wrg.1;
-        Mon, 04 Mar 2019 02:42:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6l3fENbuaQQuHhXWPlZNSkO8uTEpItPPWp54fhsPW4c=;
-        b=H8GEBE5BGyyMgDyomdcZkVuR66YhwDwqrVjhZI9CAgBXZ5cPY6xew3LtSD6EW37Hdm
-         WRiizr61QBIcTX6n+al799sDHEhgRJXFeQzqHrPHcCgkRLc9I6fMQ737uPQUfbjp0Koe
-         g32ULIgFCEN4RcunHLPUp/RIM5F2os0kwuzPKs/2vz+5w5Agw05f/Ek3vjgPI/uJa5K+
-         VjJZG7v04JVw/WEDTlD7ugy026UoumPQ03ZOcfCUl5qFZAIQHVLKvLKV/VPeVZAWJ5it
-         8ZsZd+TnqOmsXQAn+cmOiiy0yBgMtPzEKOVfAaEmTNLuOSnEUEqCx+V5vGRA7hSTe4r6
-         5cfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6l3fENbuaQQuHhXWPlZNSkO8uTEpItPPWp54fhsPW4c=;
-        b=Shz7Mgn1R2SHXpFOw77YFsNE8+VC1lRCuQZA3+EXHxBXu0CO8ajBkRlFqujZTiK7cn
-         UuEWOXSmMbz05cC5MNuH0nKzZoT+K4OaQYZfb+yMFxvKw7y/tKQz3gIzSEVNgRd/mkLk
-         pggBN+bgQ7ok0/YI8uPWtTQip8tUVWg28F+aF7D74EEb9kz8wUzrNJeSEWIL3bMiY9wi
-         ng6WU0q4bNzLX3++Lj1qZe0fNMDl1WfMVCKcxcyyRww9CVzhdxmjR0k9YJ6M5Z0USdHq
-         kE/iPB3gYsdISHGfj6RZUgJCgu0PAwkm60jPLdA2TFp/X3Hkc+ZeeiMAtqIQJyVhIc3N
-         N1fA==
-X-Gm-Message-State: APjAAAXZom3jPMrMO2x2vbkiIaKe/Vuk6zk3w7ADNNfeLPRS7V6EnNIX
-        5k5ul/IWxoH9RsHjWnTEFZU=
-X-Google-Smtp-Source: APXvYqxvvtEaoURVXdELA0byFOfOQWIgLpfIQLocBusxJo9kE8QKvexX7GHejQUr/P1FVnfte6XteA==
-X-Received: by 2002:a5d:6983:: with SMTP id g3mr12585950wru.286.1551696158790;
-        Mon, 04 Mar 2019 02:42:38 -0800 (PST)
-Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
-        by smtp.gmail.com with ESMTPSA id j5sm6275993wrw.59.2019.03.04.02.42.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Mar 2019 02:42:37 -0800 (PST)
-Date:   Mon, 4 Mar 2019 11:42:34 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Mathieu Othacehe <m.othacehe@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] pwm: hibvt: Use individual struct per of-data.
-Message-ID: <20190304104234.GA13010@ulmo>
-References: <20190219095808.12059-1-m.othacehe@gmail.com>
+        Mon, 4 Mar 2019 05:46:59 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:35330 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbfCDKq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 05:46:59 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7B4D9D6561;
+        Mon,  4 Mar 2019 10:46:58 +0000 (UTC)
+Received: from [10.36.112.48] (ovpn-112-48.ams2.redhat.com [10.36.112.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B276F5D71E;
+        Mon,  4 Mar 2019 10:46:54 +0000 (UTC)
+Subject: Re: [PATCH v4 03/17] wlcore: Align reg_ch_conf_pending and
+ tmp_ch_bitmap to unsigned long for better performance
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
+ <1551494711-213533-4-git-send-email-fenghua.yu@intel.com>
+ <20190304101141.GB32477@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <44bb6771-7aea-c44d-6605-45e7a1499d1b@redhat.com>
+Date:   Mon, 4 Mar 2019 11:46:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
-Content-Disposition: inline
-In-Reply-To: <20190219095808.12059-1-m.othacehe@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190304101141.GB32477@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 04 Mar 2019 10:46:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/03/19 11:11, Peter Zijlstra wrote:
+> On Fri, Mar 01, 2019 at 06:44:57PM -0800, Fenghua Yu wrote:
+>> A bit in reg_ch_conf_pending in wl271 and tmp_ch_bitmap is set 
+>> atomically by set_bit(). set_bit() sets the bit in a single 
+>> unsigned long location. If the variables are not aligned to 
+>> unsigned long, set_bit() accesses two cache lines and thus causes 
+>> slower performance. On x86, this scenario is called split lock and 
+>> can cause overall performance degradation due to locked BTSL 
+>> instruction in set_bit() locks bus.
+>> 
+>> To avoid performance degradation, the two variables are aligned to
+>>  unsigned long.
+>> 
+>> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com> --- 
+>> drivers/net/wireless/ti/wlcore/cmd.c    | 3 ++- 
+>> drivers/net/wireless/ti/wlcore/wlcore.h | 6 ++++-- 2 files
+>> changed, 6 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/net/wireless/ti/wlcore/cmd.c 
+>> b/drivers/net/wireless/ti/wlcore/cmd.c index 
+>> 903968735a74..8d15a6307d44 100644 --- 
+>> a/drivers/net/wireless/ti/wlcore/cmd.c +++ 
+>> b/drivers/net/wireless/ti/wlcore/cmd.c @@ -1707,7 +1707,8 @@ int 
+>> wlcore_cmd_regdomain_config_locked(struct wl1271 *wl) { struct 
+>> wl12xx_cmd_regdomain_dfs_config *cmd = NULL; int ret = 0, i, b, 
+>> ch_bit_idx; -	u32 tmp_ch_bitmap[2]; +	/* Align to unsigned long
+>> for better performance in set_bit() */ +	u32 tmp_ch_bitmap[2] 
+>> __aligned(sizeof(unsigned long));
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is the only place where an array of u32 is needed, because of
 
-On Tue, Feb 19, 2019 at 10:58:06AM +0100, Mathieu Othacehe wrote:
-> Split pwm-soc array in one struct per soc and point to the
-> corresponding on in of-data.
->=20
-> Signed-off-by: Mathieu Othacehe <m.othacehe@gmail.com>
-> ---
->  drivers/pwm/pwm-hibvt.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
+        cmd->ch_bit_map1 = cpu_to_le32(tmp_ch_bitmap[0]);
+        cmd->ch_bit_map2 = cpu_to_le32(tmp_ch_bitmap[1]);
 
-Applied all three patches and, while applying, fixed up the commit
-message and comment for patch 3/3 as pointed out by Uwe.
+All the others should use DECLARE_BITMAP, including reg_ch_conf_last 
+which was already using __aligned.  As Peter mentioned they should
+also use set_bit_le.  Actually they do not need locked access at all
+because the only code paths to the set_bit take a mutex.
 
-Thanks,
-Thierry
+There is one other place that is accessing the items of the array, but
+it is fixed easily.  The following patch should do everything:
 
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
+------------------- 8< --------------------------
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH] wlcore: simplify/fix/optimize reg_ch_conf_pending operations
 
------BEGIN PGP SIGNATURE-----
+Bitmaps are defined on unsigned longs, so the usage of u32[2] in the
+wlcore driver is incorrect.  As noted by Peter Zijlstra, casting arrays
+to a bitmap is incorrect for big-endian architectures.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlx9AQYACgkQ3SOs138+
-s6FXTw//XF51RJpnxjSFdJWD79GQqIIDaW0P0HjH0beD50Iy8BJjRwSN3jkV3bRU
-knxzHzyiZwxHzqwUcbCZ942hsFOFbt1q88Ho4PA2X0tHhrCjsQtT5RV+wEC1vfl4
-lvB7/cuu8b5zd1HleUaymdDd8CNih0AezUPzyucqybW23AlfXwJWt13BJLz4Jhxo
-kEze3yV6bAohB+hGWHVabuLjdOD1B/FTnzRl8iQRPejJoMWxjomPoB4k/+9zEqYk
-LIFyzO4hPBOEsFd6dbnQ9Ckif1GIz2O657HDpUC+vqcUT3XXfA1C/ieldLRcIonE
-SmpMfM5d3/9Jn1uKi1P8gwyJevRqXkSIuFtSsDGGqmCrWUMjCQsf9gGLykAYi3sn
-8sO3apKA8xyGoaQPwXXJwPCuewehvEhZWq94DjNd+5Szyc2n7a8Rv06z/IvW+7ol
-br7DQoXqAA0klVXBJmWqN5baD/ZWM9fHPqIM7poPnbpqWnrPwyAbkQC+QlVbTbDC
-L4yrj7gWQBJPswqPPzXVP5IagKpp+HtZglukz0p5dnIjqOYQvIRE8kDQRtkYVFoi
-FrfR/L/BYLZv741OH8ZJDAkA/sQtF3TNC4F3Rubq3nxsIh4JRdl1G6qvGYzXQT4P
-fNlCbyZX8olS4A7k6nQWtquHd6O6ov9gpxq/cQ06ZURCXPGD0rw=
-=mMfv
------END PGP SIGNATURE-----
+When looking at it I observed that:
 
---Q68bSM7Ycu6FN28Q--
+- operations on reg_ch_conf_pending is always under the wl_lock mutex,
+so set_bit is overkill
+
+- the only case where reg_ch_conf_pending is accessed a u32 at a time is
+unnecessary too.
+
+This patch cleans up everything in this area, and changes tmp_ch_bitmap
+to have the proper alignment.
+
+Reported-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+
+diff --git a/drivers/net/wireless/ti/wlcore/cmd.c b/drivers/net/wireless/ti/wlcore/cmd.c
+index 903968735a74..3e093f3a7ec8 100644
+--- a/drivers/net/wireless/ti/wlcore/cmd.c
++++ b/drivers/net/wireless/ti/wlcore/cmd.c
+@@ -1700,14 +1700,14 @@ void wlcore_set_pending_regdomain_ch(struct wl1271 *wl, u16 channel,
+ 	ch_bit_idx = wlcore_get_reg_conf_ch_idx(band, channel);
+ 
+ 	if (ch_bit_idx >= 0 && ch_bit_idx <= WL1271_MAX_CHANNELS)
+-		set_bit(ch_bit_idx, (long *)wl->reg_ch_conf_pending);
++		__set_bit_le(ch_bit_idx, (long *)wl->reg_ch_conf_pending);
+ }
+ 
+ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
+ {
+ 	struct wl12xx_cmd_regdomain_dfs_config *cmd = NULL;
+ 	int ret = 0, i, b, ch_bit_idx;
+-	u32 tmp_ch_bitmap[2];
++	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
+ 	struct wiphy *wiphy = wl->hw->wiphy;
+ 	struct ieee80211_supported_band *band;
+ 	bool timeout = false;
+@@ -1717,7 +1717,7 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
+ 
+ 	wl1271_debug(DEBUG_CMD, "cmd reg domain config");
+ 
+-	memset(tmp_ch_bitmap, 0, sizeof(tmp_ch_bitmap));
++	memcpy(tmp_ch_bitmap, wl->reg_ch_conf_pending, sizeof(tmp_ch_bitmap));
+ 
+ 	for (b = NL80211_BAND_2GHZ; b <= NL80211_BAND_5GHZ; b++) {
+ 		band = wiphy->bands[b];
+@@ -1738,13 +1738,10 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
+ 			if (ch_bit_idx < 0)
+ 				continue;
+ 
+-			set_bit(ch_bit_idx, (long *)tmp_ch_bitmap);
++			__set_bit_le(ch_bit_idx, (long *)tmp_ch_bitmap);
+ 		}
+ 	}
+ 
+-	tmp_ch_bitmap[0] |= wl->reg_ch_conf_pending[0];
+-	tmp_ch_bitmap[1] |= wl->reg_ch_conf_pending[1];
+-
+ 	if (!memcmp(tmp_ch_bitmap, wl->reg_ch_conf_last, sizeof(tmp_ch_bitmap)))
+ 		goto out;
+ 
+diff --git a/drivers/net/wireless/ti/wlcore/wlcore.h b/drivers/net/wireless/ti/wlcore/wlcore.h
+index dd14850b0603..870eea3e7a27 100644
+--- a/drivers/net/wireless/ti/wlcore/wlcore.h
++++ b/drivers/net/wireless/ti/wlcore/wlcore.h
+@@ -320,9 +320,9 @@ struct wl1271 {
+ 	bool watchdog_recovery;
+ 
+ 	/* Reg domain last configuration */
+-	u32 reg_ch_conf_last[2]  __aligned(8);
++	DECLARE_BITMAP(reg_ch_conf_last, 64);
+ 	/* Reg domain pending configuration */
+-	u32 reg_ch_conf_pending[2];
++	DECLARE_BITMAP(reg_ch_conf_pending, 64);
+ 
+ 	/* Pointer that holds DMA-friendly block for the mailbox */
+ 	void *mbox;
