@@ -6,93 +6,89 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874A8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3F5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE3C20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32803206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfCDTjg (ORCPT
+        id S1726318AbfCDTjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:39:36 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:60275 "EHLO
+        Mon, 4 Mar 2019 14:39:39 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:45461 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbfCDTjg (ORCPT
+        with ESMTP id S1726249AbfCDTji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:39:36 -0500
+        Mon, 4 Mar 2019 14:39:38 -0500
 Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MmlfS-1hQpyw2Gta-00jpZd; Mon, 04 Mar 2019 20:39:20 +0100
+ 1MI5YN-1gmoP211Xz-00FBn2; Mon, 04 Mar 2019 20:39:27 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     James Smart <james.smart@broadcom.com>,
         Dick Kennedy <dick.kennedy@broadcom.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.de>,
+        Colin Ian King <colin.king@canonical.com>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] scsi: lpfc: fix unused variable warning
-Date:   Mon,  4 Mar 2019 20:39:08 +0100
-Message-Id: <20190304193917.702601-1-arnd@arndb.de>
+Subject: [PATCH 2/4] scsi: lpfc: fix 32-bit format string warning
+Date:   Mon,  4 Mar 2019 20:39:09 +0100
+Message-Id: <20190304193917.702601-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190304193917.702601-1-arnd@arndb.de>
+References: <20190304193917.702601-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:3lcS5bnwBIBaf3xIyea8qigY2ujMKZ20fLudKb61gEv7aOxvrZm
- C6m6nFc82uZDEfN1Xdk1lKh8ZMwWkW9vB9GUv7cs2z1qQnRGWpZTN286tagmA+TSFXhMUo7
- XkWE/uznmgaY6av5XYrlrzNyRTP13x++yyJg7iQtGwoB53FhyAM3QBsYRIPWUX5mQu/ApJx
- fmpty0vrZiI481WgHWrbQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/B0WMM4Rr1k=:TqhyD+ZpXGpSJ9dzO/e9h9
- srhrIjMrVwptC8hKdSsyZVAN6zLPgMLTA7BhslS293HmfFu31Jirq0qSbHyxL5+7sSqPHV5jG
- Za/wJmxg+7F/tr07ABVitwTpy4xKLTIXzqYHMoYZEEBxANm2bGuO7U3U+auWvqNBmq0SIUXtr
- u2lLRtv5LX8aupMcV5ZRIL6jzT3vA+zTdaovU+SKTsuteF5+ZzaUqjfJ/IJePau9w/xySD7cX
- kG44vzwG7ZdgeaR/Og58RTKuKn1ILVVgPkReot9XgS63XSZGUuI4ovs76c2/7ne5TKy3DpJEu
- nxZNTCPwh8lRB8f0AbE8oydhvNAzUncDiSKEviawfLe+wSL1UyK/P5G2RlUvleEDsTXw2cC+G
- OGErLrh2nGfgJNflhRZzNehSPRiCr+SWNkUfKhzcxGsHM2fWeXISMJv6K0gppok3yKRtu4L6p
- wZtAvv/KKxZjxS1nkMXVB5kS+ecb+u2P+82kxNUc68C9AelkJy6CgW8greYezYGxQiP5bj1Op
- 6sbjJQa0ORFxxyM0rFrD94TwvbX5U5VxnxZeHSg/wvJXX55Rpsid/2YQU7IxAF4v5mB2Q2Ee6
- IYC+ZGvwUiARODxYdaAbbhyX+adejjXzzGHiM9q/kOhjAJ+WvPuLqLW0xCoKKI6GktyVdMtyQ
- kki47v8a45cPJUuraIR/rycClQXLfxJKPEF3/RzAn0JySFt5L+udKmUsMLdolVy7szS7gCV9q
- RSVBCgMXytBtoHzaMo/x9fri3mLtXOHJ5D5ITA==
+X-Provags-ID: V03:K1:+fIGMcSmqHKn1OJVorNl9fjA9KSVkCozrlL8TIyirlZAvTTYnSj
+ cfEhuN3COW99I6N5vqKXi5KIfpO2EQA69ich3mmlE10eK35IiKrXLRH1rKhUj/lWELLbTYR
+ QusSilWesSP3fD4Mx17r71YWl8EUoqNqffqTze8Sa4dY4HwDjdRD9nb03zEtH+sGeQTd+Sd
+ xkTwx6wwSvVz1+OxM3ahg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:edIvNvmKp6E=:htxy/QU3Lu5H+T3ONDZ9HK
+ q+TbU7E9zmz0/ltpDOf36LqeWjJmM0THO6N9Wxf2CHTyqCnNk229s5plNlhyHnrJCJXueC44D
+ zb09c+wU/zZvNIHaTVMEbGM1swr/UgjJ4XM/7ZsJcIszl3KxarV02lwwKCC1v4KZxz04/QJpR
+ MpyU9xMPJy0TX9eec3BFAFb3emk0pddcWw+SZvUbjxcY0GVtwascEtwN9TTGa6Q6+fb+4bscY
+ BlgEz+NjJstt+7qZQ4qhXIDrr3iIL9y3BBL1g969nFZIAtPUoQw/dlJb/WJN3LDVFPHLwumFh
+ meIKKxd90l112sVk4e+5l7pDHDLvE3vq1CWlBE1ZaoC0zcqdlZBm1FLHue4tTvZHV/2d0CjZa
+ DKY8DIog1ox4wHHg4qtShueu4QTD6sW/H+WHsucokM1SKPcMJ277Fkhx6B1L8e7/cgJMXoK49
+ Wz3EMt8dPacZdTEKj8UuHW9OHt3lKNhdoOPkoDDXM0NNmm9xY9dhcFmRkzBUKDNEj6ZT1rgs1
+ iKSLG968fOqHqZ+oSk9ttAjy0N5op8YHSq6KtILAT/wInP4eS7PTg789LY+r2QXARtv9/VMm5
+ VqD+ve9tmEtx92vFmTGh/RAzeTYwwkG8q6dWZRj49WH0LbXHz+R1L9xSjJWLD0s1lwRa2gBIZ
+ 8wa9943LxehbeC9Cl4E3q/aVJn9pREl+M2m0hVCD7boybp41PJ5XpU6a5aZTsXS+HeF6BN36o
+ q43QO6B+SGKpjoUZyKTRkZAS1F9SCiC2QdQ++A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The newly introduced 'cpu' variable is only used inside of an optional
-block, so we get a warning without CONFIG_SCSI_LPFC_DEBUG_FS:
+On 32-bit architectures, we see a warning when %ld is used to
+print a size_t:
 
-drivers/scsi/lpfc/lpfc_nvme.c: In function 'lpfc_nvme_io_cmd_wqe_cmpl':
-drivers/scsi/lpfc/lpfc_nvme.c:968:30: error: unused variable 'cpu' [-Werror=unused-variable]
-  uint32_t code, status, idx, cpu;
+In file included from drivers/scsi/lpfc/lpfc_init.c:62:
+drivers/scsi/lpfc/lpfc_init.c: In function 'lpfc_new_io_buf':
+drivers/scsi/lpfc/lpfc_logmsg.h:62:45: error: format '%ld' expects argument of type 'long int', but argument 5 has type 'unsigned int' [-Werror=format=]
 
-Move the declaration into the same block to avoid the warning.
+This is harmless, but portable code should just use %zd to
+avoid the warning.
 
-Fixes: 63df6d637e33 ("scsi: lpfc: Adapt cpucheck debugfs logic to Hardware Queues")
+Fixes: 0794d601d174 ("scsi: lpfc: Implement common IO buffers between NVME and SCSI")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index 72cb8ad9027b..d16ca413110d 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -965,7 +965,7 @@ lpfc_nvme_io_cmd_wqe_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pwqeIn,
- 	struct lpfc_nodelist *ndlp;
- 	struct lpfc_nvme_fcpreq_priv *freqpriv;
- 	struct lpfc_nvme_lport *lport;
--	uint32_t code, status, idx, cpu;
-+	uint32_t code, status, idx;
- 	uint16_t cid, sqhd, data;
- 	uint32_t *ptr;
- 
-@@ -1139,6 +1139,7 @@ lpfc_nvme_io_cmd_wqe_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pwqeIn,
- 		lpfc_nvme_ktime(phba, lpfc_ncmd);
- 	}
- 	if (phba->cpucheck_on & LPFC_CHECK_NVME_IO) {
-+		uint32_t cpu;
- 		idx = lpfc_ncmd->cur_iocbq.hba_wqidx;
- 		cpu = smp_processor_id();
- 		if (cpu < LPFC_CHECK_CPU_CNT) {
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 3b5873f6751e..6e6bd1b3237d 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -4090,7 +4090,7 @@ lpfc_new_io_buf(struct lpfc_hba *phba, int num_to_alloc)
+ 	/* Sanity check to ensure our sizing is right for both SCSI and NVME */
+ 	if (sizeof(struct lpfc_io_buf) > LPFC_COMMON_IO_BUF_SZ) {
+ 		lpfc_printf_log(phba, KERN_ERR, LOG_FCP,
+-				"6426 Common buffer size %ld exceeds %d\n",
++				"6426 Common buffer size %zd exceeds %d\n",
+ 				sizeof(struct lpfc_io_buf),
+ 				LPFC_COMMON_IO_BUF_SZ);
+ 		return 0;
 -- 
 2.20.0
 
