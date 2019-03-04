@@ -2,82 +2,101 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082EDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF09CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF55206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GphhOYxi"
+	by mail.kernel.org (Postfix) with ESMTP id B35D4206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfCDSx6 (ORCPT
+        id S1726266AbfCDSyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:53:58 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33008 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbfCDSx4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:53:56 -0500
-Received: by mail-lj1-f194.google.com with SMTP id z7so5283112lji.0;
-        Mon, 04 Mar 2019 10:53:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2z4d/eiW5JXfpBSb1QEI8N347NMx4ogGjDq+OJ4hdzA=;
-        b=GphhOYxiwYCaOLQy6NCy9Y4zb5B4H+WMlRkJVu9dEw1n3NyyP3d3EtcB8TiLKuLTGv
-         GJxv+1V4z00z52V7wgOCgj+SRzt/Mb3ZVecfaBVnwBEiHTbbHmFdmMwKtfknwyhd0mDt
-         arBd64pcJ+bEebeQFz08FyNqavSHJmhPTg81ynxTqPa2SrCsbe4uFgYdh0hUCiL8gyNs
-         gglpp10VKrcQXAXyVfx4tLuonfE6p5FGV8JEQG7ylMNoB1U/QrBCb5e7qyYRoXATusjH
-         QVJs6N4VzhEGkgSi+t3s1ShMbPFyrt24LNVOjjkBMCvk2f4JM9oyvwZa0mHWswAAoRad
-         kVPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2z4d/eiW5JXfpBSb1QEI8N347NMx4ogGjDq+OJ4hdzA=;
-        b=LV2/654PK9rJeU6XsI8kZKcRDCKhfo4Q0+IOsPnIeBG/g10wkYrBU79kATRMQU3mcm
-         eiaR0W0lpCCT0DKonW7mSMsTWZkJ6s+UAetSgCi/dOFDna5ZB84nFF03ktgWjqwSd1F2
-         TwMM8JQuFxKJ3aHXSOTqSI77O7Ff5aJ1btJEJyCHGhQtfrtU0SA34jq4byeHRE0tZl9y
-         O6sa5SLmmsdtbVmPpvvpqBbA3L1XiIiy/pnuAm4TY+te5XGzFXkn1KBXAfx2YCOeQCgX
-         OtuVqb/o4CiKl2W3IFPpwqjoe+OFbtIw1htJGv7ij8wibyOWxvcTQieCd5anA6Fg1JFo
-         MWTA==
-X-Gm-Message-State: APjAAAWzfJz3emzow/6N/bKexjuUhjn++agyUFu9REn/cZ+g8wzarUpy
-        oWgLZQexdCTYKDc6aEAeVE3QO5MHvbqCoTGVBC0=
-X-Google-Smtp-Source: APXvYqytWhvBEm5rkf/v25A7IThk5Nirx9dFEAtCbdvCaXeQ7R71+cYqvygD1mDclKCNM5wT+EhhN35wsYMABI8r9iE=
-X-Received: by 2002:a2e:3807:: with SMTP id f7mr11436729lja.9.1551725634364;
- Mon, 04 Mar 2019 10:53:54 -0800 (PST)
+        Mon, 4 Mar 2019 13:54:32 -0500
+Received: from mga05.intel.com ([192.55.52.43]:64202 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbfCDSyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 13:54:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 10:54:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,440,1544515200"; 
+   d="scan'208";a="128937291"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Mar 2019 10:54:29 -0800
+Date:   Mon, 4 Mar 2019 10:54:29 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: Re: [PATCH v3 3/8] KVM:CPUID: Add CPUID support for Guest CET
+Message-ID: <20190304185429.GF17120@linux.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-4-weijiang.yang@intel.com>
+ <20190304184753.GD17120@linux.intel.com>
 MIME-Version: 1.0
-References: <20190304183827.GA6809@jordon-HP-15-Notebook-PC> <20190304184958.GR32494@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190304184958.GR32494@hirez.programming.kicks-ass.net>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 5 Mar 2019 00:23:42 +0530
-Message-ID: <CAFqt6zarwg3NnkbNYKEO-jrdHUw8GwMqUrLDTqgQV3D1dux-qQ@mail.gmail.com>
-Subject: Re: [PATCH] selftest/rseq: Remove duplicate header
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Paul McKenney <paulmck@linux.ibm.com>, boqun.feng@gmail.com,
-        shuah@kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304184753.GD17120@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 12:20 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Mar 05, 2019 at 12:08:27AM +0530, Souptick Joarder wrote:
-> > Remove duplicate header which is included twice
-> >
-> > Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
->
-> That SoB chain is invalid.
+On Mon, Mar 04, 2019 at 10:47:53AM -0800, Sean Christopherson wrote:
+> On Mon, Feb 25, 2019 at 09:27:11PM +0800, Yang Weijiang wrote:
+> > Guest CET SHSTK and IBT capability are reported via
+> > CPUID.(EAX=7, ECX=0):ECX[bit 7] and EDX[bit 20] respectively.
+> > Guest user mode and supervisor mode xsaves component size
+> > is reported via CPUID.(EAX=0xD, ECX=1):ECX[bit 11] and ECX[bit 12]
+> > respectively.
+> > 
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> >  arch/x86/kvm/cpuid.c | 60 +++++++++++++++++++++++++++++++++-----------
+> >  arch/x86/kvm/x86.h   |  4 +++
+> >  2 files changed, 50 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index cb1aece25b17..5e05756cc6db 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
+> >  	return xcr0;
+> >  }
+> >  
+> > +u64 kvm_supported_xss(void)
+> > +{
+> > +	u64 xss;
+> > +
+> > +	rdmsrl(MSR_IA32_XSS, xss);
+> 
+> Honest question as I haven't thought through the flows: do we actually
+> need to restrict XSS based on what's enabled in the host?  This
+> conflicts with your other statements that CET features can be enabled
+> independent of host support.
 
-I didn't get why it is invalid ?
+Never mind, just saw Paolo's comment in a previous version about XSAVE
+being dependent on host XSS.  The below comment about caching still
+applies though.
+
+> And if we do incorporate the host status, the value should be read once
+> and cached unless we're expecting the host value to change dynamically,
+> e.g. see host_efer.
+> 
+> > +	xss &= KVM_SUPPORTED_XSS;
+> > +	return xss;
+> > +}
+> > +EXPORT_SYMBOL(kvm_supported_xss);
+> > +
+> >  #define F(x) bit(X86_FEATURE_##x)
+> >  
+> >  /* For scattered features from cpufeatures.h; we currently expose none */
