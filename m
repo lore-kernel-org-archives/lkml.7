@@ -2,93 +2,66 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375B4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EEEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC1E206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C74206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:50:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NhbMmZzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfCDSt0 (ORCPT
+        id S1727202AbfCDSuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:49:26 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50176 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfCDSt0 (ORCPT
+        Mon, 4 Mar 2019 13:50:15 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:46850 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfCDSuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:49:26 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 106F2275683
-Message-ID: <4aac6476ffe6a6be021c69a708f19d5da30a79e4.camel@collabora.com>
-Subject: Re: [PATCH v4 1/2] media: uapi: Add H264 low-level decoder API
- compound controls.
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>, hans.verkuil@cisco.com,
-        acourbot@chromium.org, sakari.ailus@linux.intel.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     tfiga@chromium.org, posciak@chromium.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
-        jernej.skrabec@gmail.com, jonas@kwiboo.se,
-        linux-sunxi@googlegroups.com,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Guenter Roeck <groeck@chromium.org>
-Date:   Mon, 04 Mar 2019 15:49:11 -0300
-In-Reply-To: <9817c9875638ed2484d61e6e128e2551cf3bda4c.1550672228.git-series.maxime.ripard@bootlin.com>
-References: <cover.1862a43851950ddee041d53669f8979aba863c38.1550672228.git-series.maxime.ripard@bootlin.com>
-         <9817c9875638ed2484d61e6e128e2551cf3bda4c.1550672228.git-series.maxime.ripard@bootlin.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1 
+        Mon, 4 Mar 2019 13:50:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PKC+zoEru7DDViAvU8FoXjcH/vIeePfpxdAwIyY4xL4=; b=NhbMmZzqA/jknNNdiHLVUHGWM
+        NZUJU1oPZ9ZZ+couBarfpv32vtuyyIRy881HjrRZgD4PufYH4l979xx8Ka+yQR+waO+rKawjBIRHx
+        PgNyoyEdEyQ+Uzpvh56u38w2+e0Yvt/Kpv6fBmrCWDnIFlIhA7oMN1ZKspJOytUTdMM/Dooz8ARPR
+        cSOyHD337qXmvh6Kg9zf+wriECAOJEWzS8TDmCh0g5+vQWk7kS8nsUYttyHnjUGoUsNMJdyM48viz
+        eNRaQVBhMk8k1e1APo6MliCl71FTgbuWoNX9E0w0g9E6j733K7OWdAFC4R5TVdhHQdxI4ljBoD2Kh
+        k6844x8yA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h0sf1-0007xK-U4; Mon, 04 Mar 2019 18:50:00 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B2FE620288BA3; Mon,  4 Mar 2019 19:49:58 +0100 (CET)
+Date:   Mon, 4 Mar 2019 19:49:58 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     mathieu.desnoyers@efficios.com, paulmck@linux.ibm.com,
+        boqun.feng@gmail.com, shuah@kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftest/rseq: Remove duplicate header
+Message-ID: <20190304184958.GR32494@hirez.programming.kicks-ass.net>
+References: <20190304183827.GA6809@jordon-HP-15-Notebook-PC>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304183827.GA6809@jordon-HP-15-Notebook-PC>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-02-20 at 15:17 +0100, Maxime Ripard wrote:
-> From: Pawel Osciak <posciak@chromium.org>
+On Tue, Mar 05, 2019 at 12:08:27AM +0530, Souptick Joarder wrote:
+> Remove duplicate header which is included twice
 > 
-> Stateless video codecs will require both the H264 metadata and slices in
-> order to be able to decode frames.
-> 
-> This introduces the definitions for a new pixel format for H264 slices that
-> have been parsed, as well as the structures used to pass the metadata from
-> the userspace to the kernel.
-> 
-> Co-Developped-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> Signed-off-by: Pawel Osciak <posciak@chromium.org>
-> Signed-off-by: Guenter Roeck <groeck@chromium.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  Documentation/media/uapi/v4l/biblio.rst            |   9 +-
->  Documentation/media/uapi/v4l/extended-controls.rst | 547 ++++++++++++++-
+> Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 
-It seems Hans splitted the documentation and so this should now
-go to Documentation/media/uapi/v4l/ext-ctrls-codec.rst.
-
-[..]
-> 
-> +#define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H264 parsed slices */
->  #define V4L2_PIX_FMT_H263     v4l2_fourcc('H', '2', '6', '3') /* H263          */
->  #define V4L2_PIX_FMT_MPEG1    v4l2_fourcc('M', 'P', 'G', '1') /* MPEG-1 ES     */
->  #define V4L2_PIX_FMT_MPEG2    v4l2_fourcc('M', 'P', 'G', '2') /* MPEG-2 ES     */
-
-I haven't seen any objections to renaming this to V4L2_PIX_FMT_H264_SLICE_RAW,
-so if you could be so kind to push v5 with this rename (or similar), and also
-rebasing to the master branch, I could then submit the H264 decoder support for
-the Rockchip VPU.
-
-There is still the question brought up by Tomasz, about moving this pixel format
-to a non-public header. Perhaps someone has some ideas on this?
-
-Thanks a lot!
-Ezequiel
-
+That SoB chain is invalid.
