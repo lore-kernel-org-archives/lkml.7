@@ -2,102 +2,113 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D172C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC0AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DEE2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE6920645
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 11:59:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hkERcFjv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hkERcFjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfCDL4T (ORCPT
+        id S1726234AbfCDL7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 06:56:19 -0500
-Received: from foss.arm.com ([217.140.101.70]:60698 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfCDL4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 06:56:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE573A78;
-        Mon,  4 Mar 2019 03:56:18 -0800 (PST)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9426E3F703;
-        Mon,  4 Mar 2019 03:56:15 -0800 (PST)
-Subject: Re: [PATCH v3 03/34] arm: mm: Add p?d_large() definitions
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-mm@kvack.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190227170608.27963-1-steven.price@arm.com>
- <20190227170608.27963-4-steven.price@arm.com>
- <20190301214715.hyzy5tevvwgki4w5@kshutemo-mobl1>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <974310a0-0114-9a0c-9041-4e0394c4b9aa@arm.com>
-Date:   Mon, 4 Mar 2019 11:56:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 4 Mar 2019 06:59:10 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:50296 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfCDL7K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 06:59:10 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A52FD6072E; Mon,  4 Mar 2019 11:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551700748;
+        bh=R1Xr0H/NKVgnNbfohNKDzq8vY4aVBUMDERVoqOIH5cs=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=hkERcFjvE88zwyedXMzT39oSoNEPbrHoRlqTLBe66i2R38G0hOVYgDgp4jGAlflnf
+         PywcwZbWt6op/nZAu7l5VfjgfAilMmyJrjE8AbtGl+9UGtGQPRWCj8P2z7AEk2ZVLD
+         pvbBH8TjodSnWhS6nEd74BJMJvq8cb65FtArlhz8=
+Received: from x230.qca.qualcomm.com (85-76-165-27-nat.elisa-mobile.fi [85.76.165.27])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BAE5F6063A;
+        Mon,  4 Mar 2019 11:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1551700748;
+        bh=R1Xr0H/NKVgnNbfohNKDzq8vY4aVBUMDERVoqOIH5cs=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=hkERcFjvE88zwyedXMzT39oSoNEPbrHoRlqTLBe66i2R38G0hOVYgDgp4jGAlflnf
+         PywcwZbWt6op/nZAu7l5VfjgfAilMmyJrjE8AbtGl+9UGtGQPRWCj8P2z7AEk2ZVLD
+         pvbBH8TjodSnWhS6nEd74BJMJvq8cb65FtArlhz8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BAE5F6063A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Gabriel C <nix.or.die@gmail.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>, ath10k@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Warning at drivers/net/wireless/ath/ath10k/mac.c:5625 ath10k_bss_info_changed
+References: <362a9b5f-8908-17f5-3594-6c3c68789dea@molgen.mpg.de>
+        <CAEJqkggKGTn0ojWzuYGfoYehDnOf=je5L-7-M1kWogutPGMg3g@mail.gmail.com>
+Date:   Mon, 04 Mar 2019 13:59:03 +0200
+In-Reply-To: <CAEJqkggKGTn0ojWzuYGfoYehDnOf=je5L-7-M1kWogutPGMg3g@mail.gmail.com>
+        (Gabriel C.'s message of "Mon, 4 Mar 2019 12:47:40 +0100")
+Message-ID: <874l8ic0l4.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190301214715.hyzy5tevvwgki4w5@kshutemo-mobl1>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/03/2019 21:47, Kirill A. Shutemov wrote:
-> On Wed, Feb 27, 2019 at 05:05:37PM +0000, Steven Price wrote:
->> walk_page_range() is going to be allowed to walk page tables other than
->> those of user space. For this it needs to know when it has reached a
->> 'leaf' entry in the page tables. This information will be provided by the
->> p?d_large() functions/macros.
+Gabriel C <nix.or.die@gmail.com> writes:
+
+> Am Mo., 4. M=C3=A4rz 2019 um 12:28 Uhr schrieb Paul Menzel <pmenzel@molge=
+n.mpg.de>:
+>
+>> Resuming from ACPI S3 on the Dell XPS 13 9370 with Debian Sid/unstable,
+>> Linux 4.19.20 showed the warning below. It=E2=80=99s not reproducible.
+
+[...]
+
+>> [ 3018.992916] Call Trace:
+>> [ 3018.992921]  ? ath10k_conf_tx+0x7a/0x4b0 [ath10k_core]
+>> [ 3018.992937]  ieee80211_bss_info_change_notify+0xab/0x1a0 [mac80211]
+>> [ 3018.992946]  ieee80211_reconfig+0x661/0x12a0 [mac80211]
+>> [ 3018.992962]  wiphy_resume+0x7f/0x120 [cfg80211]
+>> [ 3018.992969]  ? wiphy_suspend+0x270/0x270 [cfg80211]
+>> [ 3018.992971]  dpm_run_callback+0x59/0x150
+>> [ 3018.992972]  device_resume+0x97/0x190
+>> [ 3018.992973]  async_resume+0x19/0x30
+>> [ 3018.992974]  async_run_entry_fn+0x39/0x160
+>> [ 3018.992976]  process_one_work+0x1a7/0x3a0
+>> [ 3018.992978]  worker_thread+0x30/0x390
+>> [ 3018.992979]  ? pwq_unbound_release_workfn+0xd0/0xd0
+>> [ 3018.992980]  kthread+0x112/0x130
+>> [ 3018.992981]  ? kthread_bind+0x30/0x30
+>> [ 3018.992983]  ret_from_fork+0x35/0x40
+>> [ 3018.992984] ---[ end trace 3af618ca97bd4a0a ]---
+>> ```
 >>
->> For arm, we already provide most p?d_large() macros. Add a stub for PUD
->> as we don't have huge pages at that level.
-> 
-> We do not have PUD for 2- and 3-level paging. Macros from generic header
-> should cover it, shouldn't it?
-> 
+>> Please find all Linux messages attached.
+>
+> I reported that twice and no one seems to care about.
+>
+> http://lists.infradead.org/pipermail/ath10k/2018-November/012398.html
+> http://lists.infradead.org/pipermail/ath10k/2018-December/012658.html
 
-I'm not sure of the reasoning behind this, but levels are folded in a
-slightly strange way. arm/include/asm/pgtable.h defines
-__ARCH_USE_5LEVEL_HACK which means:
+Does this patch help:
 
-PGD has 2048 (2-level) or 4 (3-level) entries which are always
-considered 'present' (pgd_present() returns 1 defined in
-asm-generic/pgtables-nop4d-hack.h).
+ath10k: Drop WARN_ON()s that always trigger during system resume
 
-P4D has 1 entry which is always present (see asm-generic/5level-fixup.h)
+https://patchwork.kernel.org/patch/10837139/
 
-PUD has 1 entry (see asm-generic/pgtable-nop4d-hack.h). This is always
-present for 2-level, and present only if the first level of real page
-table is present with a 3-level.
-
-PMD/PTE are as you might expect.
-
-So in terms of tables which are more than one entry you have PGD,
-(optionally) PMD, PTE. But the levels which actually read the table
-entries are PUD, PMD, PTE.
-
-This means that the corresponding p?d_large() macros are needed for
-PUD/PMD as that is where the actual entries are read. The asm-generic
-files provide the definitions for PGD/P4D.
-
-Steve
+--=20
+Kalle Valo
