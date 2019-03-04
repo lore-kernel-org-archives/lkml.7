@@ -2,130 +2,100 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE87C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF0DC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B41EF206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFE9206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:21:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="jY5Cy7+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfCDOQd (ORCPT
+        id S1726747AbfCDOVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:16:33 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54886 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726063AbfCDOQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:16:33 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 23F4B18B1E2CD08BB121;
-        Mon,  4 Mar 2019 22:16:10 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Mon, 4 Mar 2019
- 22:16:09 +0800
-Subject: Re: [PATCH -next] net: dsa: mv88e6xxx: Fix build warning when
- CONFIG_NET_DSA_LEGACY is n
-To:     Andrew Lunn <andrew@lunn.ch>
-References: <1551703381-52115-1-git-send-email-zhangshaokun@hisilicon.com>
- <20190304132617.GB26378@lunn.ch>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-From:   Zhangshaokun <zhangshaokun@hisilicon.com>
-Message-ID: <bc528808-2ad5-90ae-4bc0-afa47a7c4f42@hisilicon.com>
-Date:   Mon, 4 Mar 2019 22:16:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
-MIME-Version: 1.0
-In-Reply-To: <20190304132617.GB26378@lunn.ch>
+        Mon, 4 Mar 2019 09:21:04 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56211 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfCDOVD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 09:21:03 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q187so4794782wme.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 06:21:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=6xQ3CIDNuGozn7mgedY6P/lhTBCwZ8di7eLnv9IvQDc=;
+        b=jY5Cy7+pSTo3SWw9UwWf4DeMkqmSC6U7iH/PtqFXa6dXHeACk7J4YKV/leyOfsq1oj
+         FFOEwN9X99bgAyr6+6mATq/49AouI+47dRHvWjqFXhZkru9Wqqbw/kz847toRldSNoJ0
+         jv0Mi9Kyc4Gqya52uZBcn/3SkhBvPCAPFKXIMTccDR3/9Rdis/XUOJ6E69Gh+Yo+ysRz
+         UO/gG0Yoj4Vye+BSahJhJDBvY0XBMbxj/1jJMbmYTqm9IDoJe6nZr84Nn9UGwj8OqJRj
+         pVejMoR4oWJCIZsNNO0M4madF2KxWQEaM29ZNcfstqRDz/SFg6dryBIXqDWwA3VLmiY7
+         xTiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=6xQ3CIDNuGozn7mgedY6P/lhTBCwZ8di7eLnv9IvQDc=;
+        b=mZasRw+60fOoVBxxE5CurwEvPIN++9oT6V1qcgpgqPhss9qZFXT4GQPprdH8bsb1Gh
+         ri3dTnd40RHbXROckgMu7vKWxvJHSv72h2eYkRvlfsILstHtA19SayIWCZP82aT4/on8
+         UssoJyU2OuLM9ZTrRzBZfpDxDp0GEf0Jdr215QEXbPJ5zkTbVmNuy4D5GbWESPQorso0
+         IE3ZwnyW0UGD2c+l8NEQASjl+mNa0rq/RzmujJRlPqWDgOTL1+q7eUyYcnteKdcOUlvx
+         pSQWMIRR/sFBAOIB9E3/3g4W+AHWROAxmlAi8qDplGLdX2CLoC/64dw88iKS9VaV0S8z
+         IWqQ==
+X-Gm-Message-State: APjAAAU8OPX8kcu8N2S4hiGC/xt13TKSwuWDeOjs+U9vy94znxyK3bac
+        vbtScW4CTBKqVXGPUv2qIfIpwQ==
+X-Google-Smtp-Source: APXvYqze8QenxJSJZ1xxJ/YhJpCBh4U0tAesGLmBbZxb2aDcGuwNmCtf1nXB1UZ6NCfhIeUUXC0sVA==
+X-Received: by 2002:a1c:5f89:: with SMTP id t131mr9257255wmb.46.1551709261988;
+        Mon, 04 Mar 2019 06:21:01 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id d21sm22646998wrc.44.2019.03.04.06.21.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 06:21:01 -0800 (PST)
+Message-ID: <5c7d344d.1c69fb81.21f06.c909@mx.google.com>
+Date:   Mon, 04 Mar 2019 06:21:01 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.9.161-33-g95ebbd164ce2
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.9.y
+In-Reply-To: <20190304081602.307094059@linuxfoundation.org>
+References: <20190304081602.307094059@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/32] 4.9.162-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+stable-rc/linux-4.9.y boot: 91 boots: 0 failed, 90 passed with 1 untried/un=
+known (v4.9.161-33-g95ebbd164ce2)
 
-On 2019/3/4 21:26, Andrew Lunn wrote:
-> On Mon, Mar 04, 2019 at 08:43:01PM +0800, Shaokun Zhang wrote:
->> When CONFIG_NET_DSA_LEGACY is n, there is a GCC bulid warning:
->> drivers/net/dsa/mv88e6xxx/chip.c:4623:13: warning: ‘mv88e6xxx_ports_cmode_init’ defined but not used [-Wunused-function]
->> static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
->> Let's fix it.
-> 
-> Hi Shaokun, Heiner
-> 
-> Although this fixes the warning, i suspect there i something wrong
-> with the original patch adding mv88e6390x_port_set_cmode(). It should
-> also be used without CONFIG_NET_DSA_LEGACY.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.161-33-g95ebbd164ce2/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.161-33-g95ebbd164ce2/
 
-I checked the commit-id 2a93c1a3651f ("net: dsa: Allow compiling out legacy support") by Florian.
-Do you mean that CONFIG_NET_DSA_LEGACY shall be removed completely? :-)
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.161-33-g95ebbd164ce2
+Git Commit: 95ebbd164ce260ac8147ec92861b752e1416026c
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 45 unique boards, 21 SoC families, 13 builds out of 193
 
-Thanks,
-Shaokun
-
-> 
->      Andrew
-> 
-> 
->>
->> Fixes: ed8fe20205ac ("net: dsa: mv88e6xxx: prevent interrupt storm caused by mv88e6390x_port_set_cmode")
->> Cc: Heiner Kallweit <hkallweit1@gmail.com>
->> Cc: Andrew Lunn <andrew@lunn.ch>
->> Cc: Vivien Didelot <vivien.didelot@gmail.com> 
->> Cc: Florian Fainelli <f.fainelli@gmail.com> 
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
->> ---
->>  drivers/net/dsa/mv88e6xxx/chip.c | 16 ++++++++--------
->>  1 file changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
->> index e4ad16b2dc38..168d4898c36f 100644
->> --- a/drivers/net/dsa/mv88e6xxx/chip.c
->> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
->> @@ -4620,14 +4620,6 @@ static int mv88e6xxx_smi_init(struct mv88e6xxx_chip *chip,
->>  	return 0;
->>  }
->>  
->> -static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
->> -{
->> -	int i;
->> -
->> -	for (i = 0; i < mv88e6xxx_num_ports(chip); i++)
->> -		chip->ports[i].cmode = MV88E6XXX_PORT_STS_CMODE_INVALID;
->> -}
->> -
->>  static enum dsa_tag_protocol mv88e6xxx_get_tag_protocol(struct dsa_switch *ds,
->>  							int port)
->>  {
->> @@ -4637,6 +4629,14 @@ static enum dsa_tag_protocol mv88e6xxx_get_tag_protocol(struct dsa_switch *ds,
->>  }
->>  
->>  #if IS_ENABLED(CONFIG_NET_DSA_LEGACY)
->> +static void mv88e6xxx_ports_cmode_init(struct mv88e6xxx_chip *chip)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < mv88e6xxx_num_ports(chip); i++)
->> +		chip->ports[i].cmode = MV88E6XXX_PORT_STS_CMODE_INVALID;
->> +}
->> +
->>  static const char *mv88e6xxx_drv_probe(struct device *dsa_dev,
->>  				       struct device *host_dev, int sw_addr,
->>  				       void **priv)
->> -- 
->> 2.7.4
->>
-> 
-> .
-> 
-
+---
+For more info write to <info@kernelci.org>
