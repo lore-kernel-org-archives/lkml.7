@@ -2,92 +2,83 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46459C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54349C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB8B206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:25:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Qd94B83a"
+	by mail.kernel.org (Postfix) with ESMTP id 2A23320835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfCDUZ0 (ORCPT
+        id S1726526AbfCDU0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:25:26 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34396 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbfCDUZZ (ORCPT
+        Mon, 4 Mar 2019 15:26:20 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:59695 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfCDU0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:25:25 -0500
-Received: by mail-qt1-f195.google.com with SMTP id w4so6591813qtc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 12:25:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KY7KU5D7s/4N07qle8i0t2b+HVxiLNLS/j6v5x5g/4Y=;
-        b=Qd94B83aqaZfQG6Niso73OopWk9TAvbzENO9ti66h+g3hYhmxK1CCBVNvVGjZfKeiY
-         UDGoLO/BMHOvZi1JbjCOrljrAJQkQIapO/vDGxFIZtou+b8eMtw5JAQXjjneM+Ytsi+H
-         TG/k6gxEhq802aINwe/mR+qMJo8v38lfgKowm9nUG+6Fnp1N1RCEU94zlRM7M4q1OhOp
-         e0SzSWwR3zLWAKftGJfLv1pi8BMpF3MOEkprsP+n7mUABWR9ffnEVZG7jEKcFhjC0Dy1
-         LGyXjNqOiLoVGBmVTQ/hHc89HnNbquCClCB5ulKtVNoblUGcr2NVuArOASPjNX1Tgbhw
-         iw2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KY7KU5D7s/4N07qle8i0t2b+HVxiLNLS/j6v5x5g/4Y=;
-        b=aGzVFt/opRrciXLjQ+MuUd9KZizEiiCSuqyjGRDzivvyKXeKorzLC149mUkKqTdUGA
-         Ls0McbS8ucmUCwFkdng1p4JzUaZFIib+YxT0KPUUncs2dQx0QwseW6wl95G1sAaY+zXt
-         HA6FBI4WCsgXgunwf73+2MCBqUOthVbAZvT6ty9PlZRN1f2BhRZBIuN4Kf97RNZQ9/kg
-         F8OIqpTAsobfCPPHNXTQbCKpRx2LThsggaL/WV3qiKVNokI1G78DS96RIajXQltpqGVD
-         vI+cRa+49O6JivfpxPp0TGxHrOlFuxKY0xZWIdyRyuJ4aR1OJt2MHBQP85mtBL76rA66
-         rkGA==
-X-Gm-Message-State: APjAAAUhAoRuT5qHN3pK0wvS/aGWExOSD+fYQ4uXJBD/QrFDfAOAvFwT
-        HVRAkJ1IMZC35uSLyGfg3bqxhNeNWiE=
-X-Google-Smtp-Source: APXvYqzKGcAZ472ztXbWbDy58gt0vT7hlb0O+9sxeFB1MgfOWCVAN/hZV0M5VhIclu0HNdKSTkzipg==
-X-Received: by 2002:ac8:2e19:: with SMTP id r25mr16068257qta.0.1551731124692;
-        Mon, 04 Mar 2019 12:25:24 -0800 (PST)
-Received: from ziepe.ca ([24.137.65.181])
-        by smtp.gmail.com with ESMTPSA id d51sm4651207qta.31.2019.03.04.12.25.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Mar 2019 12:25:24 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1h0u9K-0003h3-Vl; Mon, 04 Mar 2019 16:25:22 -0400
-Date:   Mon, 4 Mar 2019 16:25:22 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     oulijun@huawei.com, xavier.huwei@huawei.com, dledford@redhat.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH -next] RDMA/hns: Use GFP_ATOMIC in hns_roce_v2_modify_qp
-Message-ID: <20190304202522.GA14163@ziepe.ca>
-References: <20190304025620.27224-1-yuehaibing@huawei.com>
+        Mon, 4 Mar 2019 15:26:20 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MJEAV-1ghRTL1Q3n-00KhNF; Mon, 04 Mar 2019 21:26:12 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH] mailbox: tegra-hsp: mark suspend function as __maybe_unused
+Date:   Mon,  4 Mar 2019 21:26:05 +0100
+Message-Id: <20190304202610.1759671-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304025620.27224-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:RvWNmDXWOSkxMV+U8nZn/XR9PieO0qCcM8OS+2wjV87Py96sfCy
+ SGPKmoIq2uiOnhDV2qFg4XBteygDm7zUsmE7n5IzRrt+nRMgX1StGpap1cR0AvHN4n6lzCo
+ BrZtT3rGElxMsyYhOVW0sk80lN0cIbbJG0KlfIMh4k0CINB9WPP6rmF7xJHQ6wCKomP3AZY
+ NLFlt/NvOjpYBsA+EJMgA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MwQJbPgGxkk=:hoHinUKBp+fWWVvpB+c/q7
+ PS0u7e/ByQOoyH/knJDVBDQkC9v8suNi2myoQWrtucEiYxEyJwPL5fmZM2W8O5FYza7VZMnaT
+ Q9/O/E45yggCtP7eNh2ojVCh87IHTuaeLdCAWXAHoyglI4BfFLe2KBWMFHdGTbuoC161HSHNX
+ ode93YyRn2cIhkerO2LmJlS7+VbUAXR/pEcdDtekq8bnmghPoe74ihwSTXFZi/vdHM6h/1kBD
+ AdnRWcoVyJWtlhghXUN211fqfs8r422NMUvcUxbI7khFp6TuQQ1nZtU7IJk/F0clgDzTAxgj4
+ PmzQuAyIcYSiD33ciQVbyXlNsJsrXvS9yT7D/0Gj6hKMjNV1P275A/xucWYocUjN5EvwKtjpK
+ jZDz1PmREhN1RrYlcZ9bnmLhX+WzC9dKWdYBjMvetJhakX7ddp46RapzpvigWwmggO7V40oob
+ rshJHlNkiEO3xqt5Arm/B28HLxuGJvArslGpd6MP1xTaVApYi1Gh90NVcss9CITbe4lFc8TaQ
+ MYQwCgskPWi8nigJXyw8D7Q9ODPVolnisk14QkAyt+bInidt4UvGIuMsP36rZh415xXb+A7S/
+ S2JGgc/OVShvamttGv9KpgPx+6445PIR8uuAdpmSji+W4icV+Ukd6j9HjTysJE11a2aqDcMm/
+ Eip7sK5Vk3TyTmWxSMi35egFyH7oGNTUdlPA8H7cxtZe7uqiUmGUKBLkrx/tTXsuKSaMAeWts
+ McalO4te8Y8V869ixxpjhAZyzvvt5L/O8gyD2g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 10:56:20AM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> In commit 0425e3e6e0c7, hns_roce_v2_modify_qp called inside
-> spinlock which using GFP_KERNEL, it may sleep with holding
-> the spinlock, so we should use GFP_ATOMIC instead.
-> 
-> Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->  drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+We get a warning about this being unused when CONFIG_PM is disabled:
 
-Applied to for-next, thanks
+drivers/mailbox/tegra-hsp.c:782:12: error: 'tegra_hsp_resume' defined but not used [-Werror=unused-function]
 
-Jason
+Fixes: 9a63f0f40599 ("mailbox: tegra-hsp: Add suspend/resume support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/mailbox/tegra-hsp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
+index e443f6a2ec4b..11fc9fd6a94a 100644
+--- a/drivers/mailbox/tegra-hsp.c
++++ b/drivers/mailbox/tegra-hsp.c
+@@ -779,7 +779,7 @@ static int tegra_hsp_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int tegra_hsp_resume(struct device *dev)
++static int __maybe_unused tegra_hsp_resume(struct device *dev)
+ {
+ 	struct tegra_hsp *hsp = dev_get_drvdata(dev);
+ 	unsigned int i;
+-- 
+2.20.0
+
