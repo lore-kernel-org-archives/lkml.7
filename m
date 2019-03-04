@@ -2,119 +2,233 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB98CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CE8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949B820663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170032070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:12:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JdC/wqP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfCDTLJ (ORCPT
+        id S1727004AbfCDTMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:11:09 -0500
-Received: from foss.arm.com ([217.140.101.70]:38754 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726180AbfCDTLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:11:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF77CA78;
-        Mon,  4 Mar 2019 11:11:07 -0800 (PST)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 980233F703;
-        Mon,  4 Mar 2019 11:11:06 -0800 (PST)
-Date:   Mon, 4 Mar 2019 19:11:01 +0000
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     =?utf-8?B?V2FuZywgVmluY2VudCAo546L5LqJKQ==?= 
-        <Vincent.Wang@unisoc.com>,
-        =?utf-8?B?WmhhbmcsIENodW55YW4gKOW8oOaYpeiJsyk=?= 
-        <Chunyan.Zhang@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0ggVjRdIHNj?=
- =?utf-8?Q?hed=2Fcpufreq=3A_initializ?= =?utf-8?Q?e?= iowait_boost_max and
- iowait_boost with cpu capacity
-Message-ID: <20190304191059.mzwid3udqwtzejww@queper01-lin>
-References: <1550831866-32749-1-git-send-email-chunyan.zhang@unisoc.com>
- <20190222105957.wxhlcmoag5f3i4fi@queper01-lin>
- <9099990618e242e1bab77ce3f9d9b1e3@BJMBX02.spreadtrum.com>
- <20190304135810.rq2ojnbn5vezrab3@queper01-lin>
- <20190304152616.GM32494@hirez.programming.kicks-ass.net>
- <20190304164816.4fnxxesjwzdoqria@queper01-lin>
- <20190304174028.GO32494@hirez.programming.kicks-ass.net>
- <20190304175030.4slf247y2eftkmu4@queper01-lin>
- <20190304184708.GQ32494@hirez.programming.kicks-ass.net>
+        Mon, 4 Mar 2019 14:12:50 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54454 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfCDTMs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:12:48 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x24JCh6f091953;
+        Mon, 4 Mar 2019 13:12:43 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1551726763;
+        bh=tnzJ5+2wjPcdVBoXDlvuLvsY0D+m3CLeO7LorOB7Wp8=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=JdC/wqP6oxAOsM3xTpfYgGnpKow8vefO1Q4cPBfZCzK+B2fjmM6cfmgG4nRmc+R/0
+         Blh1uyRBMW6qZ8ntHfxL4q2F+DnNO8jPAcOeoLEg0ZaG3NC3XxPms0JTAL7VqN5Ilh
+         F5xzcn5O8gS+yEBLlMqzbExvTdaLc+pr8+7xOz50=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x24JChtF034475
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 Mar 2019 13:12:43 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 4
+ Mar 2019 13:12:42 -0600
+Received: from dflp32.itg.ti.com (10.64.6.15) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Mon, 4 Mar 2019 13:12:42 -0600
+Received: from [172.22.87.21] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x24JCgxg030442;
+        Mon, 4 Mar 2019 13:12:42 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v6 1/4] can: m_can: Create a m_can platform framework
+To:     Wolfgang Grandegger <wg@grandegger.com>, <mkl@pengutronix.de>,
+        <davem@davemloft.net>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190301185043.9037-1-dmurphy@ti.com>
+ <7ffc0639-de4a-87da-68e0-2d170c241824@grandegger.com>
+ <5b0959b9-58b7-cc3c-7014-b7cdb883a7cf@ti.com>
+ <2863c42d-065d-39e8-ed20-8279f76f00ae@grandegger.com>
+Message-ID: <cc3d0c0c-f56f-0bb5-e90b-a09cdf761f3c@ti.com>
+Date:   Mon, 4 Mar 2019 13:12:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304184708.GQ32494@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <2863c42d-065d-39e8-ed20-8279f76f00ae@grandegger.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 04 Mar 2019 at 19:47:08 (+0100), Peter Zijlstra wrote:
-> On Mon, Mar 04, 2019 at 05:50:32PM +0000, Quentin Perret wrote:
-> > On Monday 04 Mar 2019 at 18:40:28 (+0100), Peter Zijlstra wrote:
-> > > > Perhaps you could keep the 'util' and 'max' pointers in
-> > > > sugov_iowait_apply() and overwrite them like before, but in the
-> > > > SCHED_CAPACITY_SCALE scale as you suggest ?
-> > > 
-> > > Urgh; but then we're back to having that boostrap problem.
-> > 
-> > Hmm, I don't understand :/
-> 
-> Yeah, I seen to have reading comprehension issues today. Ignore that.
-> 
-> > > Now; at this time; @max is in fact scale_cpu_capacity, so can't we
-> > > change this:
-> > > 
-> > > -       /*
-> > > -        * Apply the current boost value: a CPU is boosted only if its current
-> > > -        * utilization is smaller then the current IO boost level.
-> > > -        */
-> > > -       boost_util = sg_cpu->iowait_boost;
-> > > -       boost_max = sg_cpu->iowait_boost_max;
-> > 
-> > I was basically suggesting to do 'boost_max = 1024;' here and you
-> > should be good with you way of computing 'min' no ?
-> 
-> Right, but then we keep having to retain those two mults.
-> 
-> > > -       if (*util * boost_max < *max * boost_util) {
-> > > -               *util = boost_util;
-> > > -               *max = boost_max;
-> > > -       }
-> > > +       sg_cpu->iowait_boost_pending = false;
-> > > +
-> > > +       return min(max(util, sg_cpu->iowait_boost), max);
-> > > }
-> > > 
-> > > to something like:
-> > > 
-> > > 	/*
-> > > 	 * @util is already in capacity scale, convert iowait_boost
-> > > 	 * into the same scale so we can compare.
-> > > 	 */
-> > > 	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
-> > > 	util = max(boost, util);
-> > > 	return min(util, max);
-> > > 
-> > 
-> > But this should work too, I think.
-> 
-> While that is only a single mult.
+Wolfgang
 
-Yes, and that's also easier to understand (IMO) because all the
-requests going to get_next_freq() are in the scale_cpu_capacity range,
-which keeps things consistent regardless of the iowait stuff.
+On 3/4/19 12:13 PM, Wolfgang Grandegger wrote:
+> 
+> 
+> Am 04.03.19 um 18:22 schrieb Dan Murphy:
+>> Wolfgang
+>>
+>> On 3/4/19 10:56 AM, Wolfgang Grandegger wrote:
+>>> Hello Dan,
+>>>
+>>> the series already looks quite good. I still realized a few (minor)
+>>> issues while browsing the patch/code...
+>>>
+>>
+>> Thanks for the review.  It is getting there.
+>>
+>>> Am 01.03.19 um 19:50 schrieb Dan Murphy:
+>>>> Create a m_can platform framework that peripherial
+>>>> devices can register to and use common code and register sets.
+>>>> The peripherial devices may provide read/write and configuration
+>>>> support of the IP.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> ---
+>>>>
+>>>> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
+>>>> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
+>>>> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
+>>>> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
+>>>> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
+>>>>
+>>>>  drivers/net/can/m_can/Kconfig          |  13 +-
+>>>>  drivers/net/can/m_can/Makefile         |   1 +
+>>>>  drivers/net/can/m_can/m_can.c          | 702 +++++++++++++------------
+>>>>  drivers/net/can/m_can/m_can.h          | 110 ++++
+>>>>  drivers/net/can/m_can/m_can_platform.c | 198 +++++++
+>>>>  5 files changed, 681 insertions(+), 343 deletions(-)
+>>>>  create mode 100644 drivers/net/can/m_can/m_can.h
+>>>>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
+>>>>
+>>>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
+>>>> index 04f20dd39007..f7119fd72df4 100644
+>>>> --- a/drivers/net/can/m_can/Kconfig
+>>>> +++ b/drivers/net/can/m_can/Kconfig
+>>>> @@ -1,5 +1,14 @@
+>>>>  config CAN_M_CAN
+>>>> +	tristate "Bosch M_CAN support"
+>>>> +	---help---
+>>>> +	  Say Y here if you want support for Bosch M_CAN controller framework.
+>>>> +	  This is common support for devices that embed the Bosch M_CAN IP.
+>>>> +
+>>>> +config CAN_M_CAN_PLATFORM
+>>>> +	tristate "Bosch M_CAN support for io-mapped devices"
+>>>>  	depends on HAS_IOMEM
+>>>> -	tristate "Bosch M_CAN devices"
+>>>> +	depends on CAN_M_CAN
+>>>>  	---help---
+>>>> -	  Say Y here if you want to support for Bosch M_CAN controller.
+>>>> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
+>>>> +	  This support is for devices that have the Bosch M_CAN controller
+>>>> +	  IP embedded into the device and the IP is IO Mapped to the processor.
+>>>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
+>>>> index 8bbd7f24f5be..057bbcdb3c74 100644
+>>>> --- a/drivers/net/can/m_can/Makefile
+>>>> +++ b/drivers/net/can/m_can/Makefile
+>>>> @@ -3,3 +3,4 @@
+>>>>  #
+>>>>  
+>>>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
+>>>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
+>>>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+>>>> index 9b449400376b..b37d0886f9cb 100644
+>>>> --- a/drivers/net/can/m_can/m_can.c
+>>>> +++ b/drivers/net/can/m_can/m_can.c
+> 
+> ...snip...
+> 
+>>>> @@ -1451,7 +1459,7 @@ static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
+>>>>  			netif_stop_queue(dev);
+>>>>  			netdev_warn(dev,
+>>>>  				    "TX queue active although FIFO is full.");
+>>>> -			return NETDEV_TX_BUSY;
+>>>> +			return;
+>>>
+>>> m_can_start_xmit() doesn't return NETDEV_TX_BUSY but NETDEV_TX_OK and
+>>> the queue is stopped! Also the skb is not freed! The code states 
+>>> "/* This shouldn't happen */" but then it just prints a warning. Did
+>>> you see that message?
+>>>
+>>
+>> No I have not seen this warning but I will re-check to be sure.
+> 
+> If we don't return NETDEV_TX_BUSY but NETDEV_TX_OK, we must handle it
+> differently.
+> 
 
-So yeah, that works for me.
+OK.  I see the diff between the perp and io mapped.  I will update the code
+appropriately.
 
-Thanks,
-Quentin
+
+> ...snip...
+> 
+>>>> +struct m_can_priv;
+>>>> +struct m_can_ops {
+>>>> +	/* Device specific call backs */
+>>>> +	int (*clr_dev_interrupts)(struct m_can_priv *m_can_class);
+>>>
+>>> Why not just "clear_interrupt"... to be consistant with the names below.
+>>
+>> I wanted to be clear in the M_CAN code that these are device interrupts and not M_CAN interrupts.
+>>
+>> I can change it to clear_interrupt if you think it makes more sense.
+> 
+> Well, like for "read_reg" etc, I think it's clear that it's a
+> device-specific function/ops:
+> 
+> 	cdev->read_reg
+> 	cdev->clear_interrupt
+> 
+
+OK
+
+>>>> +	u32 (*read_reg)(struct m_can_priv *m_can_class, int reg);
+>>>> +	int (*write_reg)(struct m_can_priv *m_can_class, int reg, int val);
+>>>> +	u32 (*read_fifo)(struct m_can_priv *m_can_class, int addr_offset);
+>>>> +	int (*write_fifo)(struct m_can_priv *m_can_class, int addr_offset,
+>>>> +			  int val);
+>>>> +	int (*device_init)(struct m_can_priv *m_can_class);
+> 
+> And the same here:
+> 
+> 	cdev->init
+> 
+
+OK
+
+>>>> +	int pm_clock_support;
+>>>
+>>> A "bool" would be more appropriate, I think.
+>>
+>>
+>> I was abiding by this checkpatch warning I got on the is_peripherial.
+>>
+>> CHECK: Avoid using bool structure members because of possible alignment issues - see: https://lkml.org/lkml/2017/11/21/384
+>> #94: FILE: drivers/net/can/m_can/m_can.h:94:
+>> +	bool is_peripherial;
+>>
+> 
+> Ah, right! I was also surprised to get that warning. The kernel is full
+> of bool's, but well, we should make "checkpatch" happy (and Linus).
+> 
+> Wolfgang
+> 
+
+
+-- 
+------------------
+Dan Murphy
