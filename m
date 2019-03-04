@@ -2,534 +2,183 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F975C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAA1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C04E620663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD2720835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o7wiUbFH"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Oykq1I3l";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Ujk8RoTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfCDTn0 (ORCPT
+        id S1726361AbfCDToV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:43:26 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:59838 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfCDTnW (ORCPT
+        Mon, 4 Mar 2019 14:44:21 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:45904 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726076AbfCDToV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:43:22 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x24JhF2G107368;
-        Mon, 4 Mar 2019 13:43:15 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1551728595;
-        bh=xqG3iNVRo2mAHIdO6bOuF8r4r6LOxvJ6iwSz2+/odSk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=o7wiUbFH2zNOa8L+S/AH42Cs6r9Rgb3mifRRaZxOKojLU3g7R+v1Ges447iIpAIoT
-         hETnO2p4wMlY6G/++Yl+BY5RmViuZGsxusMXv0VgsxPMu1O5B6bStOq/MUAPHd+Vhk
-         cEjPqIXMQakPAATyMFde3Mium01TXSXs/fTvZUdU=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x24JhEKu071555
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Mar 2019 13:43:14 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 4
- Mar 2019 13:43:14 -0600
-Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Mon, 4 Mar 2019 13:43:14 -0600
-Received: from [172.22.87.21] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x24JhELh016921;
-        Mon, 4 Mar 2019 13:43:14 -0600
-Subject: Re: [PATCH v6 1/4] can: m_can: Create a m_can platform framework
-To:     Wolfgang Grandegger <wg@grandegger.com>, <mkl@pengutronix.de>,
-        <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190301185043.9037-1-dmurphy@ti.com>
- <7ffc0639-de4a-87da-68e0-2d170c241824@grandegger.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <5657b161-5660-1ae5-a9b1-62d7d6651493@ti.com>
-Date:   Mon, 4 Mar 2019 13:43:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
-MIME-Version: 1.0
-In-Reply-To: <7ffc0639-de4a-87da-68e0-2d170c241824@grandegger.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 4 Mar 2019 14:44:21 -0500
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x24JXZMm001924;
+        Mon, 4 Mar 2019 11:43:54 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=SN174mvKRVuXMpzN8dQfgm762CZKH7O/bq286HbMJ34=;
+ b=Oykq1I3lDeNjfxGj6XOaihjo3h9cglF+rYjvGj6VDFxTlXeslPP576zJfkpj2JGRXVGE
+ AHqnhTcUKppp7dERKwlva1DzJYsv+APQ47zYnUGwBjdwG/zkohkozKVE5olMB/Y0CrPA
+ 3fmi4RC53sLA9GoB1H6SqZINMafIJy+HujA= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by m0089730.ppops.net with ESMTP id 2r19w0r4hd-14
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 04 Mar 2019 11:43:54 -0800
+Received: from prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 4 Mar 2019 11:43:53 -0800
+Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
+ prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 4 Mar 2019 11:43:53 -0800
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Mon, 4 Mar 2019 11:43:52 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SN174mvKRVuXMpzN8dQfgm762CZKH7O/bq286HbMJ34=;
+ b=Ujk8RoTFg3oHeFJKLdT1omPtp6EgPCdFnW43MH9TpoaPrS/MvqfPsRt6Z1oBy8CS96X/Lg7humehJ9ZBaaMAE5XnY156vv7WhI70JLelnmGatKwGemJ6Vxt23MyS7Zd7rkNVeHykJ4Jf3Wl4AbonhX/yZSR+wpfPVDy7cIkjEqU=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1390.namprd15.prod.outlook.com (10.173.234.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.19; Mon, 4 Mar 2019 19:43:50 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f190:6de5:7e3:e065]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f190:6de5:7e3:e065%6]) with mapi id 15.20.1665.020; Mon, 4 Mar 2019
+ 19:43:50 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     Networking <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "acme@redhat.com" <acme@redhat.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: Re: [PATCH v5 perf,bpf 08/15] perf, bpf: save btf in a rbtree in
+ perf_env
+Thread-Topic: [PATCH v5 perf,bpf 08/15] perf, bpf: save btf in a rbtree in
+ perf_env
+Thread-Index: AQHUzyObmBfnDZryjE6Y25DRRwK/I6X7hL6AgABiJ4A=
+Date:   Mon, 4 Mar 2019 19:43:50 +0000
+Message-ID: <8D38E918-5FF5-4404-8201-58A8FEFA086A@fb.com>
+References: <20190228050643.958685-1-songliubraving@fb.com>
+ <20190228050643.958685-9-songliubraving@fb.com>
+ <20190304135231.GE19809@krava>
+In-Reply-To: <20190304135231.GE19809@krava>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.102.3)
+x-originating-ip: [2620:10d:c090:200::3:1d00]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bb5b5961-d4a8-4aef-e70d-08d6a0d9b9b1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1390;
+x-ms-traffictypediagnostic: MWHPR15MB1390:
+x-microsoft-exchange-diagnostics: 1;MWHPR15MB1390;20:kBZG4uKbP1MmGH+Bgck57eH0algCYCGnEPFd06299wGrZ0mOdE9jbihFFGcgtsrYVgjQDLbdlbNMYRndKXOdYEgXIk9Gu3nQQdtmFlhmfZyXUPnl+xij3H7tbrKOimmkfTt68SQR+M9O4+4/ScEuJJ5TguMLjW0b7GzqidfYtlY=
+x-microsoft-antispam-prvs: <MWHPR15MB139091E8B09224D492BA5CEFB3710@MWHPR15MB1390.namprd15.prod.outlook.com>
+x-forefront-prvs: 09669DB681
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(39860400002)(396003)(136003)(199004)(189003)(57306001)(82746002)(36756003)(6246003)(71200400001)(71190400001)(256004)(83716004)(6436002)(6512007)(186003)(2906002)(478600001)(14454004)(229853002)(5660300002)(4326008)(46003)(2616005)(316002)(33656002)(53546011)(8936002)(446003)(11346002)(97736004)(305945005)(476003)(486006)(86362001)(6116002)(81156014)(106356001)(102836004)(54906003)(76176011)(6486002)(7736002)(53936002)(8676002)(50226002)(25786009)(99286004)(81166006)(105586002)(68736007)(6916009)(6506007)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1390;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Gb23zXc5rCo0tk4gRzl3ASKxTSxhtwTI/7zkQQoYRfqRFPqpuE+o4u0HtVTA+u/Re2TZWLKhA9Y+5ng8keVvGfFbPLUfKY6445PmZ8sG63z/by9TXiL6T4HlM6gxR4Kz2jwmgbdclXwpgLvUHsELhxVqE4DY6QrlsY1JmjvZcPmh4M8/U59u9WZO2r5AOx/BP0H0NeTFj/e/BFBPMN8uJf00JJlJmm3S7nugIr6X/orMgux91S1mNepaOD30yE5gczTLt983sZ7Mgi/aSotIwEhokZW6UGikgyJQ+B5CPHQGSnnt5mUmdGSMEkzohasFNMr2ocmr0QlfbPln+57LTyjJ4zQREfGG8cLJRTP0WX7aI9c+bTiCh2Rp6gNYAlz6i56dAvaF2pEvizAn+3Yr8tC63ZR1fTU6vjqGgPAZxXY=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <49E188CAD166074BA0CA033EED079547@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb5b5961-d4a8-4aef-e70d-08d6a0d9b9b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2019 19:43:50.1593
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1390
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-04_09:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 10:56 AM, Wolfgang Grandegger wrote:
-> Hello Dan,
-> 
-> the series already looks quite good. I still realized a few (minor)
-> issues while browsing the patch/code...
-> 
-> Am 01.03.19 um 19:50 schrieb Dan Murphy:
->> Create a m_can platform framework that peripherial
->> devices can register to and use common code and register sets.
->> The peripherial devices may provide read/write and configuration
->> support of the IP.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+
+
+> On Mar 4, 2019, at 5:52 AM, Jiri Olsa <jolsa@redhat.com> wrote:
+>=20
+> On Wed, Feb 27, 2019 at 09:06:36PM -0800, Song Liu wrote:
+>> btf contains information necessary to annotate bpf programs. This patch
+>> saves btf for bpf programs loaded in the system.
+>>=20
+>> Signed-off-by: Song Liu <songliubraving@fb.com>
 >> ---
->>
->> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
->> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
->> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
->> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
->> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
->>
->>  drivers/net/can/m_can/Kconfig          |  13 +-
->>  drivers/net/can/m_can/Makefile         |   1 +
->>  drivers/net/can/m_can/m_can.c          | 702 +++++++++++++------------
->>  drivers/net/can/m_can/m_can.h          | 110 ++++
->>  drivers/net/can/m_can/m_can_platform.c | 198 +++++++
->>  5 files changed, 681 insertions(+), 343 deletions(-)
->>  create mode 100644 drivers/net/can/m_can/m_can.h
->>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
->>
->> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
->> index 04f20dd39007..f7119fd72df4 100644
->> --- a/drivers/net/can/m_can/Kconfig
->> +++ b/drivers/net/can/m_can/Kconfig
->> @@ -1,5 +1,14 @@
->>  config CAN_M_CAN
->> +	tristate "Bosch M_CAN support"
->> +	---help---
->> +	  Say Y here if you want support for Bosch M_CAN controller framework.
->> +	  This is common support for devices that embed the Bosch M_CAN IP.
->> +
->> +config CAN_M_CAN_PLATFORM
->> +	tristate "Bosch M_CAN support for io-mapped devices"
->>  	depends on HAS_IOMEM
->> -	tristate "Bosch M_CAN devices"
->> +	depends on CAN_M_CAN
->>  	---help---
->> -	  Say Y here if you want to support for Bosch M_CAN controller.
->> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
->> +	  This support is for devices that have the Bosch M_CAN controller
->> +	  IP embedded into the device and the IP is IO Mapped to the processor.
->> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
->> index 8bbd7f24f5be..057bbcdb3c74 100644
->> --- a/drivers/net/can/m_can/Makefile
->> +++ b/drivers/net/can/m_can/Makefile
->> @@ -3,3 +3,4 @@
->>  #
->>  
->>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
->> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
->> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
->> index 9b449400376b..b37d0886f9cb 100644
->> --- a/drivers/net/can/m_can/m_can.c
->> +++ b/drivers/net/can/m_can/m_can.c
->> @@ -1,20 +1,14 @@
->> -/*
->> - * CAN bus driver for Bosch M_CAN controller
->> - *
->> - * Copyright (C) 2014 Freescale Semiconductor, Inc.
->> - *	Dong Aisheng <b29396@freescale.com>
->> - *
->> - * Bosch M_CAN user manual can be obtained from:
->> +// SPDX-License-Identifier: GPL-2.0
->> +// CAN bus driver for Bosch M_CAN controller
->> +// Copyright (C) 2014 Freescale Semiconductor, Inc.
->> +//      Dong Aisheng <b29396@freescale.com>
->> +// Copyright (C) 2018-19 Texas Instruments Incorporated - http://www.ti.com/
->> +
->> +/* Bosch M_CAN user manual can be obtained from:
->>   * http://www.bosch-semiconductors.de/media/pdf_1/ipmodules_1/m_can/
->>   * mcan_users_manual_v302.pdf
->> - *
->> - * This file is licensed under the terms of the GNU General Public
->> - * License version 2. This program is licensed "as is" without any
->> - * warranty of any kind, whether express or implied.
->>   */
->>  
->> -#include <linux/clk.h>
->> -#include <linux/delay.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/io.h>
->>  #include <linux/kernel.h>
->> @@ -28,11 +22,7 @@
->>  #include <linux/can/dev.h>
->>  #include <linux/pinctrl/consumer.h>
->>  
->> -/* napi related */
->> -#define M_CAN_NAPI_WEIGHT	64
->> -
->> -/* message ram configuration data length */
->> -#define MRAM_CFG_LEN	8
->> +#include "m_can.h"
->>  
->>  /* registers definition */
->>  enum m_can_reg {
->> @@ -86,28 +76,11 @@ enum m_can_reg {
->>  	M_CAN_TXEFA	= 0xf8,
->>  };
->>  
->> -/* m_can lec values */
->> -enum m_can_lec_type {
->> -	LEC_NO_ERROR = 0,
->> -	LEC_STUFF_ERROR,
->> -	LEC_FORM_ERROR,
->> -	LEC_ACK_ERROR,
->> -	LEC_BIT1_ERROR,
->> -	LEC_BIT0_ERROR,
->> -	LEC_CRC_ERROR,
->> -	LEC_UNUSED,
->> -};
->> +/* napi related */
->> +#define M_CAN_NAPI_WEIGHT	64
->>  
->> -enum m_can_mram_cfg {
->> -	MRAM_SIDF = 0,
->> -	MRAM_XIDF,
->> -	MRAM_RXF0,
->> -	MRAM_RXF1,
->> -	MRAM_RXB,
->> -	MRAM_TXE,
->> -	MRAM_TXB,
->> -	MRAM_CFG_NUM,
->> -};
->> +/* message ram configuration data length */
->> +#define MRAM_CFG_LEN	8
->>  
->>  /* Core Release Register (CREL) */
->>  #define CREL_REL_SHIFT		28
->> @@ -343,77 +316,83 @@ enum m_can_mram_cfg {
->>  #define TX_BUF_MM_MASK		(0xff << TX_BUF_MM_SHIFT)
->>  
->>  /* Tx event FIFO Element */
->> -/* E1 */
-> 
-> I also don't understand what "E1" means... we should keep taht line anyway!
-> 
->>  #define TX_EVENT_MM_SHIFT	TX_BUF_MM_SHIFT
->>  #define TX_EVENT_MM_MASK	(0xff << TX_EVENT_MM_SHIFT)
->>  
->> -/* address offset and element number for each FIFO/Buffer in the Message RAM */
->> -struct mram_cfg {
->> -	u16 off;
->> -	u8  num;
->> -};
->> -
->> -/* m_can private data structure */
->> -struct m_can_priv {
->> -	struct can_priv can;	/* must be the first member */
->> -	struct napi_struct napi;
->> -	struct net_device *dev;
->> -	struct device *device;
->> -	struct clk *hclk;
->> -	struct clk *cclk;
->> -	void __iomem *base;
->> -	u32 irqstatus;
->> -	int version;
->> -
->> -	/* message ram configuration */
->> -	void __iomem *mram_base;
->> -	struct mram_cfg mcfg[MRAM_CFG_NUM];
->> -};
->> +static u32 m_can_read(struct m_can_priv *priv, enum m_can_reg reg)
+>> tools/perf/util/bpf-event.c | 24 ++++++++++++++
+>> tools/perf/util/bpf-event.h |  7 ++++
+>> tools/perf/util/env.c       | 65 +++++++++++++++++++++++++++++++++++++
+>> tools/perf/util/env.h       |  4 +++
+>> 4 files changed, 100 insertions(+)
+>>=20
+>> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+>> index ce81b2c43a51..370b830f2433 100644
+>> --- a/tools/perf/util/bpf-event.c
+>> +++ b/tools/perf/util/bpf-event.c
+>> @@ -34,6 +34,29 @@ int machine__process_bpf_event(struct machine *machin=
+e __maybe_unused,
+>> 	return 0;
+>> }
+>>=20
+>> +static int perf_env__fetch_btf(struct perf_env *env,
+>> +			       u32 btf_id,
+>> +			       struct btf *btf)
 >> +{
->> +	if (priv->ops->read_reg)
->> +		return priv->ops->read_reg(priv, reg);
->> +	else
->> +		return -EINVAL;
->> +}
->>  
->> -static inline u32 m_can_read(const struct m_can_priv *priv, enum m_can_reg reg)
->> +static int m_can_write(struct m_can_priv *priv, enum m_can_reg reg, u32 val)
->>  {
->> -	return readl(priv->base + reg);
->> +	if (priv->ops->write_reg)
->> +		return priv->ops->write_reg(priv, reg, val);
->> +	else
->> +		return -EINVAL;
->>  }
->>  
->> -static inline void m_can_write(const struct m_can_priv *priv,
->> -			       enum m_can_reg reg, u32 val)
->> +static u32 m_can_fifo_read(struct m_can_priv *priv,
->> +			   u32 fgi, unsigned int offset)
->>  {
->> -	writel(val, priv->base + reg);
->> +	u32 addr_offset = priv->mcfg[MRAM_RXF0].off + fgi * RXF0_ELEMENT_SIZE +
->> +			  offset;
+>> +	struct btf_node *node;
+>> +	u32 data_size;
+>> +	const void *data;
 >> +
->> +	if (priv->ops->read_fifo)
->> +		return priv->ops->read_fifo(priv, addr_offset);
->> +	else
->> +		return -EINVAL;
->>  }
->>  
->> -static inline u32 m_can_fifo_read(const struct m_can_priv *priv,
->> -				  u32 fgi, unsigned int offset)
->> +static u32 m_can_fifo_write(struct m_can_priv *priv,
->> +			    u32 fpi, unsigned int offset, u32 val)
->>  {
->> -	return readl(priv->mram_base + priv->mcfg[MRAM_RXF0].off +
->> -		     fgi * RXF0_ELEMENT_SIZE + offset);
->> +	u32 addr_offset = priv->mcfg[MRAM_TXB].off + fpi * TXB_ELEMENT_SIZE +
->> +			  offset;
+>> +	data =3D btf__get_raw_data(btf, &data_size);
 >> +
->> +	if (priv->ops->write_fifo)
->> +		return priv->ops->write_fifo(priv, addr_offset, val);
->> +	else
->> +		return -EINVAL;
->>  }
->>  
->> -static inline void m_can_fifo_write(const struct m_can_priv *priv,
->> -				    u32 fpi, unsigned int offset, u32 val)
->> +static u32 m_can_fifo_write_no_off(struct m_can_priv *priv,
->> +				   u32 fpi, u32 val)
->>  {
->> -	writel(val, priv->mram_base + priv->mcfg[MRAM_TXB].off +
->> -	       fpi * TXB_ELEMENT_SIZE + offset);
->> +	if (priv->ops->write_fifo)
->> +		return priv->ops->write_fifo(priv, fpi, val);
->> +	else
->> +		return 0;
->>  }
->>  
->> -static inline u32 m_can_txe_fifo_read(const struct m_can_priv *priv,
->> -				      u32 fgi,
->> -				      u32 offset) {
->> -	return readl(priv->mram_base + priv->mcfg[MRAM_TXE].off +
->> -			fgi * TXE_ELEMENT_SIZE + offset);
->> +static u32 m_can_txe_fifo_read(struct m_can_priv *priv, u32 fgi, u32 offset)
->> +{
->> +	u32 addr_offset = priv->mcfg[MRAM_TXE].off + fgi * TXE_ELEMENT_SIZE +
->> +			  offset;
+>> +	node =3D malloc(data_size + sizeof(struct btf_node));
 >> +
->> +	if (priv->ops->read_fifo)
->> +		return priv->ops->read_fifo(priv, addr_offset);
->> +	else
->> +		return -EINVAL;
->>  }
->>  
->> -static inline bool m_can_tx_fifo_full(const struct m_can_priv *priv)
->> +static inline bool m_can_tx_fifo_full(struct m_can_priv *priv)
->>  {
->>  		return !!(m_can_read(priv, M_CAN_TXFQS) & TXFQS_TFQF);
->>  }
->>  
->> -static inline void m_can_config_endisable(const struct m_can_priv *priv,
->> -					  bool enable)
->> +void m_can_config_endisable(struct m_can_priv *priv, bool enable)
->>  {
->>  	u32 cccr = m_can_read(priv, M_CAN_CCCR);
->>  	u32 timeout = 10;
->>  	u32 val = 0;
->>  
->> +	if (cccr & CCCR_CSR)
->> +		cccr &= ~CCCR_CSR;
+>> +	if (!node)
+>> +		return -1;
 >> +
-> 
-> Is that a bug fix? Or why do we need it?
-> 
->>  	if (enable) {
->>  		/* enable m_can configuration */
->>  		m_can_write(priv, M_CAN_CCCR, cccr | CCCR_INIT);
->> @@ -430,7 +409,7 @@ static inline void m_can_config_endisable(const struct m_can_priv *priv,
->>  
->>  	while ((m_can_read(priv, M_CAN_CCCR) & (CCCR_INIT | CCCR_CCE)) != val) {
->>  		if (timeout == 0) {
->> -			netdev_warn(priv->dev, "Failed to init module\n");
->> +			netdev_warn(priv->net, "Failed to init module\n");
->>  			return;
->>  		}
->>  		timeout--;
->> @@ -438,13 +417,13 @@ static inline void m_can_config_endisable(const struct m_can_priv *priv,
->>  	}
->>  }
->>  
->> -static inline void m_can_enable_all_interrupts(const struct m_can_priv *priv)
->> +static inline void m_can_enable_all_interrupts(struct m_can_priv *priv)
->>  {
->>  	/* Only interrupt line 0 is used in this driver */
->>  	m_can_write(priv, M_CAN_ILE, ILE_EINT0);
->>  }
->>  
->> -static inline void m_can_disable_all_interrupts(const struct m_can_priv *priv)
->> +static inline void m_can_disable_all_interrupts(struct m_can_priv *priv)
->>  {
->>  	m_can_write(priv, M_CAN_ILE, 0x0);
->>  }
->> @@ -633,9 +612,12 @@ static int m_can_clk_start(struct m_can_priv *priv)
->>  {
->>  	int err;
->>  
->> -	err = pm_runtime_get_sync(priv->device);
->> +	if (priv->pm_clock_support == 0)
->> +		return 0;
->> +
->> +	err = pm_runtime_get_sync(priv->dev);
->>  	if (err < 0) {
->> -		pm_runtime_put_noidle(priv->device);
->> +		pm_runtime_put_noidle(priv->dev);
->>  		return err;
->>  	}
->>  
->> @@ -644,7 +626,8 @@ static int m_can_clk_start(struct m_can_priv *priv)
->>  
->>  static void m_can_clk_stop(struct m_can_priv *priv)
->>  {
->> -	pm_runtime_put_sync(priv->device);
->> +	if (priv->pm_clock_support)
->> +		pm_runtime_put_sync(priv->dev);
->>  }
->>  
->>  static int m_can_get_berr_counter(const struct net_device *dev,
->> @@ -811,9 +794,8 @@ static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus,
->>  	return work_done;
->>  }
->>  
->> -static int m_can_poll(struct napi_struct *napi, int quota)
->> +static int m_can_rx_handler(struct net_device *dev, int quota)
->>  {
->> -	struct net_device *dev = napi->dev;
->>  	struct m_can_priv *priv = netdev_priv(dev);
->>  	int work_done = 0;
->>  	u32 irqstatus, psr;
->> @@ -831,13 +813,33 @@ static int m_can_poll(struct napi_struct *napi, int quota)
->>  
->>  	if (irqstatus & IR_RF0N)
->>  		work_done += m_can_do_rx_poll(dev, (quota - work_done));
->> +end:
->> +	return work_done;
->> +}
->> +
->> +static int m_can_rx_peripherial(struct net_device *dev)
->> +{
->> +	struct m_can_priv *priv = netdev_priv(dev);
->> +
->> +	m_can_rx_handler(dev, 1);
->> +
->> +	m_can_enable_all_interrupts(priv);
->> +
->> +	return 0;
->> +}
->> +
->> +static int m_can_poll(struct napi_struct *napi, int quota)
->> +{
->> +	struct net_device *dev = napi->dev;
->> +	struct m_can_priv *priv = netdev_priv(dev);
->> +	int work_done;
->>  
->> +	work_done = m_can_rx_handler(dev, quota);
->>  	if (work_done < quota) {
->>  		napi_complete_done(napi, work_done);
->>  		m_can_enable_all_interrupts(priv);
->>  	}
->>  
->> -end:
->>  	return work_done;
->>  }
->>  
->> @@ -894,6 +896,9 @@ static irqreturn_t m_can_isr(int irq, void *dev_id)
->>  	if (ir & IR_ALL_INT)
->>  		m_can_write(priv, M_CAN_IR, ir);
->>  
->> +	if (priv->ops->clr_dev_interrupts)
->> +		priv->ops->clr_dev_interrupts(priv);
->> +
->>  	/* schedule NAPI in case of
->>  	 * - rx IRQ
->>  	 * - state change IRQ
->> @@ -902,7 +907,10 @@ static irqreturn_t m_can_isr(int irq, void *dev_id)
->>  	if ((ir & IR_RF0N) || (ir & IR_ERR_ALL_30X)) {
->>  		priv->irqstatus = ir;
->>  		m_can_disable_all_interrupts(priv);
->> -		napi_schedule(&priv->napi);
->> +		if (!priv->is_peripherial)
->> +			napi_schedule(&priv->napi);
->> +		else
->> +			m_can_rx_peripherial(dev);
->>  	}
->>  
->>  	if (priv->version == 30) {
->> @@ -1155,6 +1163,9 @@ static void m_can_chip_config(struct net_device *dev)
->>  	m_can_set_bittiming(dev);
->>  
->>  	m_can_config_endisable(priv, false);
->> +
->> +	if (priv->ops->device_init)
->> +		priv->ops->device_init(priv);
->>  }
->>  
->>  static void m_can_start(struct net_device *dev)
->> @@ -1188,20 +1199,17 @@ static int m_can_set_mode(struct net_device *dev, enum can_mode mode)
->>   * else it returns the release and step coded as:
->>   * return value = 10 * <release> + 1 * <step>
->>   */
->> -static int m_can_check_core_release(void __iomem *m_can_base)
->> +static int m_can_check_core_release(struct m_can_priv *priv)
->>  {
->>  	u32 crel_reg;
->>  	u8 rel;
->>  	u8 step;
->>  	int res;
->> -	struct m_can_priv temp_priv = {
->> -		.base = m_can_base
->> -	};
->>  
->>  	/* Read Core Release Version and split into version number
->>  	 * Example: Version 3.2.1 => rel = 3; step = 2; substep = 1;
->>  	 */
->> -	crel_reg = m_can_read(&temp_priv, M_CAN_CREL);
->> +	crel_reg = m_can_read(priv, M_CAN_CREL);
->>  	rel = (u8)((crel_reg & CREL_REL_MASK) >> CREL_REL_SHIFT);
->>  	step = (u8)((crel_reg & CREL_STEP_MASK) >> CREL_STEP_SHIFT);
->>  
->> @@ -1219,18 +1227,26 @@ static int m_can_check_core_release(void __iomem *m_can_base)
->>  /* Selectable Non ISO support only in version 3.2.x
->>   * This function checks if the bit is writable.
->>   */
->> -static bool m_can_niso_supported(const struct m_can_priv *priv)
->> +static bool m_can_niso_supported(struct m_can_priv *priv)
->>  {
->> -	u32 cccr_reg, cccr_poll;
->> -	int niso_timeout;
->> +	u32 cccr_reg, cccr_poll = 0;
->> +	int niso_timeout = -ETIMEDOUT;
->> +	int i;
->>  
->>  	m_can_config_endisable(priv, true);
->>  	cccr_reg = m_can_read(priv, M_CAN_CCCR);
->>  	cccr_reg |= CCCR_NISO;
->>  	m_can_write(priv, M_CAN_CCCR, cccr_reg);
->>  
->> -	niso_timeout = readl_poll_timeout((priv->base + M_CAN_CCCR), cccr_poll,
->> -					  (cccr_poll == cccr_reg), 0, 10);
->> +	for (i = 0; i <= 10; i++) {
->> +		cccr_poll = m_can_read(priv, M_CAN_CCCR);
->> +		if (cccr_poll == cccr_reg) {
->> +			niso_timeout = 0;
->> +			break;
->> +		}
->> +
->> +		usleep_range(1, 5);
->> +	}
+>> +	node->id =3D btf_id;
+>> +	node->data_size =3D data_size;
+>> +	memcpy(node->data, data, data_size);
+>=20
+> why don't we store just struct btf itself?
+>=20
+> thanks,
+> jirka
 
-I wanted to point out to you that I did not add back the readl_timeout but I did add a break
-and a timer to try to mimic the original code.
+In current libbpf design, definition of "struct btf" is private=20
+to tools/lib/bpf/btf.c. So we cannot copy the struct itself.=20
 
-Dan
+Thanks,
+Song
 
-<snip>
--- 
-------------------
-Dan Murphy
+
+
+
