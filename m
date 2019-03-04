@@ -2,113 +2,157 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E7BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1BAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF1BE206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F5D20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="B19AmqvE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M4EdluFM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbfCDXJJ (ORCPT
+        id S1726478AbfCDXLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 18:09:09 -0500
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:46582 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbfCDXJI (ORCPT
+        Mon, 4 Mar 2019 18:11:07 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:5876 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCDXLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 18:09:08 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 32205BE7
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 23:09:07 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id l-GpNOqPvUxp for <linux-kernel@vger.kernel.org>;
-        Mon,  4 Mar 2019 17:09:07 -0600 (CST)
-Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 03A69647
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 17:09:07 -0600 (CST)
-Received: by mail-it1-f198.google.com with SMTP id 127so765863itk.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 15:09:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=QgiRH+bwasnq8S89y1TnNvLzWpqAnH8hIj1GFot68GA=;
-        b=B19AmqvERObGICHkqcXoJNFqtZDaWerRF/ff6l+kUidDrgSANqvDmZTZ37/wUH2uTZ
-         wmrybH5wR6cFlodfxmtN/6FwKyDbBtQ9P37h7E3bAFOLjbhpM/IE36CZJ+5nIP7Z4Ll2
-         x8RsUUSsYxf3jGgSPzIEzliQzS+M4nHNR18WcbAEPlPT8uFMHZ5GgKVn85YMUlr1NJvf
-         WrxL1K0olTalrMCMRnzFp8j63KPpZ+XKvuD+aOCkHuhxy2pzrfYv3VaTcLU1xN+tk9hS
-         cSSGP5Ba0rJmaNXZPqwUm+ChA6ygL7JFsbhDwArjVg1h7LEP4Gjfd5cr+Z/YpEGTPuSd
-         a6sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QgiRH+bwasnq8S89y1TnNvLzWpqAnH8hIj1GFot68GA=;
-        b=SMDGg7dWMkrHiB+xKZFFhJhgOg+UO25UFaG8rJ/SWmeNDVg+Whu34xAcdGB1veOXvD
-         U6gJH0wMlBDnZBOUXGKAu7GFOmgD3rt5Ktf1lIMYI2O/3vv8AMLgZSWMpTzp7Nj7oUI5
-         /2l5RiiVZx9aYyxpK4loe8xcfIg+/FMTrbkEwawD9OMZ72YYX8Y49Uox05N+oGGBeZC5
-         s+fcOpnHTfUsO+cGEeiNs+nasa66o4Gx/kEfMdG1CfIn7f2R80g5NMow8HQU54PJXbW0
-         jttFFIK/A7aBQ333j21tyeMVU4gZ2YDGQUs5EgGUuwfWSz5wbP243TjP3X9lSkB59hHs
-         UpQg==
-X-Gm-Message-State: APjAAAV3xcHOP6u+NwVG2iyJeUTl2MwwUoD83kivYrj3vaMsyuZ1j7U8
-        2B+X6BuunvTKEztQHtjFK90yU93vrj+lrbigmM4yTtYyRsNgR2/qTzOpi/jTkZITV6GRI062Deo
-        UBBjYG/+nXkLrVOTSGGBPF9THeQyh
-X-Received: by 2002:a5d:8190:: with SMTP id u16mr12093669ion.238.1551740946659;
-        Mon, 04 Mar 2019 15:09:06 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxPbTYwnnguoudGC59w/SL74xoKOGa4a8O54OPKUNCcM+S29iKRcabax6lUsGDOyVz5N7Gwng==
-X-Received: by 2002:a5d:8190:: with SMTP id u16mr12093658ion.238.1551740946467;
-        Mon, 04 Mar 2019 15:09:06 -0800 (PST)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id c97sm3417477itd.3.2019.03.04.15.09.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 15:09:05 -0800 (PST)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Jens Axboe <axboe@kernel.dk>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ata: dwc_460ex: Avoid potential NULL pointer dereference
-Date:   Mon,  4 Mar 2019 17:08:57 -0600
-Message-Id: <20190304230858.13387-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Mon, 4 Mar 2019 18:11:06 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c7db0890001>; Mon, 04 Mar 2019 15:11:05 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 Mar 2019 15:11:06 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 Mar 2019 15:11:06 -0800
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Mar
+ 2019 23:11:05 +0000
+Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error handling
+ paths
+To:     Ira Weiny <ira.weiny@intel.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>
+CC:     "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+References: <20190302032726.11769-2-jhubbard@nvidia.com>
+ <20190302202435.31889-1-jhubbard@nvidia.com>
+ <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
+ <2404c962-8f6d-1f6d-0055-eb82864ca7fc@mellanox.com>
+ <20190303165550.GB27123@iweiny-DESK2.sc.intel.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
+Date:   Mon, 4 Mar 2019 15:11:05 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190303165550.GB27123@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1551741065; bh=AcOE5zfOZlN0A/nrsbhxxR+K8ncz9Jke8a4dU/jfTkI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=M4EdluFMzpFbdlvmJgg9sDSyl9ybTTuXn2Ye4Uo4+uio+hXE1LugAMTN9FJeMixOh
+         xM4ZkJG6F+lws7n4aKQ87vfBeTbGrR4P5kVTqpVw3SeOIiHyPis4GpqaPWq9vI9C5F
+         WX6vr4ecIWxnmRYksYumBMASeqgSajxi1jb6NIos2qZL0mp73McyUDW80MWsV9e6HQ
+         ZL+/ub+nAfcqO4AwPcC60pc4dJI4wAHUkfa6tO6io8hqvFYy21TMt+FrgL7TKcHsua
+         eT57n4DnctCLzUBjgeNA5sZY02hizFRl7N+JXl7F8DkHU224BBfpm40nuO22362lD/
+         2XtwsbR7rlqbQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_async_tx_descriptor can contain a NULL variable and using
-it in dmaengine_submit without checking can crash the process.
-This patch avoids such a scenario.
+On 3/3/19 8:55 AM, Ira Weiny wrote:
+> On Sun, Mar 03, 2019 at 11:52:41AM +0200, Artemy Kovalyov wrote:
+>>
+>>
+>> On 02/03/2019 21:44, Ira Weiny wrote:
+>>>
+>>> On Sat, Mar 02, 2019 at 12:24:35PM -0800, john.hubbard@gmail.com wrote:
+>>>> From: John Hubbard <jhubbard@nvidia.com>
+>>>>
+>>>> ...
+>>>> 3. Dead code removal: the check for (user_virt & ~page_mask)
+>>>> is checking for a condition that can never happen,
+>>>> because earlier:
+>>>>
+>>>>      user_virt = user_virt & page_mask;
+>>>>
+>>>> ...so, remove that entire phrase.
+>>>>
+>>>>   		bcnt -= min_t(size_t, npages << PAGE_SHIFT, bcnt);
+>>>>   		mutex_lock(&umem_odp->umem_mutex);
+>>>>   		for (j = 0; j < npages; j++, user_virt += PAGE_SIZE) {
+>>>> -			if (user_virt & ~page_mask) {
+>>>> -				p += PAGE_SIZE;
+>>>> -				if (page_to_phys(local_page_list[j]) != p) {
+>>>> -					ret = -EFAULT;
+>>>> -					break;
+>>>> -				}
+>>>> -				put_page(local_page_list[j]);
+>>>> -				continue;
+>>>> -			}
+>>>> -
+>>>
+>>> I think this is trying to account for compound pages. (ie page_mask could
+>>> represent more than PAGE_SIZE which is what user_virt is being incrimented by.)
+>>> But putting the page in that case seems to be the wrong thing to do?
+>>>
+>>> Yes this was added by Artemy[1] now cc'ed.
+>>
+>> Right, this is for huge pages, please keep it.
+>> put_page() needed to decrement refcount of the head page.
+> 
+> You mean decrement the refcount of the _non_-head pages?
+> 
+> Ira
+> 
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/ata/sata_dwc_460ex.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Actually, I'm sure Artemy means head page, because put_page() always
+operates on the head page. 
 
-diff --git a/drivers/ata/sata_dwc_460ex.c b/drivers/ata/sata_dwc_460ex.c
-index 6f142aa54f5f..44a0d7a1ef54 100644
---- a/drivers/ata/sata_dwc_460ex.c
-+++ b/drivers/ata/sata_dwc_460ex.c
-@@ -1052,8 +1052,10 @@ static void sata_dwc_bmdma_start_by_tag(struct ata_queued_cmd *qc, u8 tag)
- 					SATA_DWC_DMACR_RXCHEN);
- 
- 		/* Enable AHB DMA transfer on the specified channel */
--		dmaengine_submit(desc);
--		dma_async_issue_pending(hsdevp->chan);
-+		if (desc) {
-+			dmaengine_submit(desc);
-+			dma_async_issue_pending(hsdevp->chan);
-+		}
- 	}
- }
- 
+And this reminds me that I have a problem to solve nearby: get_user_pages
+on huge pages increments the page->_refcount *for each tail page* as well.
+That's a minor problem for my put_user_page() 
+patchset, because my approach so far assumed that I could just change us
+over to:
+
+get_user_page(): increments page->_refcount by a large amount (1024)
+
+put_user_page(): decrements page->_refcount by a large amount (1024)
+
+...and just stop doing the odd (to me) technique of incrementing once for
+each tail page. I cannot see any reason why that's actually required, as
+opposed to just "raise the page->_refcount enough to avoid losing the head
+page too soon".
+
+However, it may be tricky to do this in one pass. Probably at first, I'll have
+to do this horrible thing approach:
+
+get_user_page(): increments page->_refcount by a large amount (1024)
+
+put_user_page(): decrements page->_refcount by a large amount (1024) MULTIPLIED
+                 by the number of tail pages. argghhh that's ugly.
+
+thanks,
 -- 
-2.17.1
+John Hubbard
+NVIDIA
 
