@@ -2,53 +2,53 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77189C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF35C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF5220823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF0520823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688646;
-	bh=TRt1CZic8GZiVyirG6/3cdlB66cN0akg98UsL4hDq0I=;
+	s=default; t=1551688650;
+	bh=VdsFLmcJdkaqDAs6fki7j0qN0zxzxekm/gkxJWg4IJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zN94TpeOPsdhdCmtQtgv2xkhIug+Nj3NxXDMU6ywuchsVZxTrMHQe6GRYkdsWdHsb
-	 lgbrr1vH0xFmo2sYaTQBKEl3D+7XSS+N4H8mGjgD9w0o6vIvnOfyq96+Ox8CRNIJJ7
-	 cU3N5hx3565tYFcrfUuHffhUOgJigPluh3o4NA2U=
+	b=Sm1NuazONgZG12k3P1etWdycik0cL65PvY4fb20LEZXV5WcGIS6Jh5rMzz9KK3UcS
+	 U7VIHpPfTpLBvZakvLBjNUpvieOwkFrzh17Ht6zkvZGkUmNE8P4xqWHlM9631ITPbL
+	 x1H4M3uB5qX0hFSRVoh5DIZp3wl9hIiGHGtAtNPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfCDIhY (ORCPT
+        id S1728688AbfCDIgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:37:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45428 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:36:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728362AbfCDIgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:36:22 -0500
+        id S1728573AbfCDIgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:36:12 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFB3820836;
-        Mon,  4 Mar 2019 08:36:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA2A721019;
+        Mon,  4 Mar 2019 08:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688581;
-        bh=TRt1CZic8GZiVyirG6/3cdlB66cN0akg98UsL4hDq0I=;
+        s=default; t=1551688571;
+        bh=VdsFLmcJdkaqDAs6fki7j0qN0zxzxekm/gkxJWg4IJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKV75WYbk7/5a9Y81fvMmNC/yadM9nYSHHE2q2cE7bGSD5jr3BDdAdkVFIi+8J21U
-         vhRitVLXKuUZQrTkm0FPSVrKri6RNLj6YhEFPqOE8urL8uHFetWW3ckKzWnhkOa19/
-         kqTQNd6mZXMaUiCv5PorOBImDxVHAO+6Lw3kY5Mg=
+        b=gNXtx2PQFDKb0sSrIc3Tv2/vvwA5/a1XSmZX/Dk1A2CZVaP+fe+xfqf3W/WlhbqQk
+         dHb7X679Q5Op2dedVxYHGG3GbE/4omCJe+WhrjXIVssqin/OUSDCFV1hEgiPFDuLfN
+         IW9bsAZTCMEoLpU1Q11afix58V4QUU/qqKTE/u90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 54/88] nvme-multipath: drop optimization for static ANA group IDs
-Date:   Mon,  4 Mar 2019 09:22:37 +0100
-Message-Id: <20190304081632.678161515@linuxfoundation.org>
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.20 85/88] scsi: aic94xx: fix calls to dma_set_mask_and_coherent()
+Date:   Mon,  4 Mar 2019 09:23:08 +0100
+Message-Id: <20190304081634.063440631@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -67,43 +67,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 78a61cd42a64f3587862b372a79e1d6aaf131fd7 ]
+From: Hannes Reinecke <hare@suse.de>
 
-Bit 6 in the ANACAP field is used to indicate that the ANA group ID
-doesn't change while the namespace is attached to the controller.
-There is an optimisation in the code to only allocate space
-for the ANA group header, as the namespace list won't change and
-hence would not need to be refreshed.
-However, this optimisation was never carried over to the actual
-workflow, which always assumes that the buffer is large enough
-to hold the ANA header _and_ the namespace list.
-So drop this optimisation and always allocate enough space.
+commit c326de562f1fc149da4855a1b9d0433300c2a85d upstream.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+The change to use dma_set_mask_and_coherent() incorrectly made a second
+call with the 32 bit DMA mask value when the call with the 64 bit DMA mask
+value succeeded.
+
+[mkp: fixed subject]
+
+Fixes: 3a21986f1a59 ("scsi: aic94xx: fully convert to the generic DMA API")
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvme/host/multipath.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/aic94xx/aic94xx_init.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 2b1d1f066efaf..6ea7c266a9cad 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -561,8 +561,7 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 	timer_setup(&ctrl->anatt_timer, nvme_anatt_timeout, 0);
- 	ctrl->ana_log_size = sizeof(struct nvme_ana_rsp_hdr) +
- 		ctrl->nanagrpid * sizeof(struct nvme_ana_group_desc);
--	if (!(ctrl->anacap & (1 << 6)))
--		ctrl->ana_log_size += ctrl->max_namespaces * sizeof(__le32);
-+	ctrl->ana_log_size += ctrl->max_namespaces * sizeof(__le32);
+--- a/drivers/scsi/aic94xx/aic94xx_init.c
++++ b/drivers/scsi/aic94xx/aic94xx_init.c
+@@ -770,9 +770,11 @@ static int asd_pci_probe(struct pci_dev
+ 	if (err)
+ 		goto Err_remove;
  
- 	if (ctrl->ana_log_size > ctrl->max_hw_sectors << SECTOR_SHIFT) {
- 		dev_err(ctrl->device,
--- 
-2.19.1
-
+-	err = -ENODEV;
+-	if (dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(64)) ||
+-	    dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32))) {
++	err = dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(64));
++	if (err)
++		err = dma_set_mask_and_coherent(&dev->dev, DMA_BIT_MASK(32));
++	if (err) {
++		err = -ENODEV;
+ 		asd_printk("no suitable DMA mask for %s\n", pci_name(dev));
+ 		goto Err_remove;
+ 	}
 
 
