@@ -2,69 +2,99 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE0DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FCEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57E820823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B2B20835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfCDT4D (ORCPT
+        id S1726186AbfCDT5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:56:03 -0500
-Received: from ms.lwn.net ([45.79.88.28]:34474 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfCDT4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:56:01 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8AEEF2D9;
-        Mon,  4 Mar 2019 19:56:00 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 12:55:59 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation/locking/lockdep: Drop last two chars
- of sample states
-Message-ID: <20190304125559.1dd63e4a@lwn.net>
-In-Reply-To: <20190301094052.11288-1-geert+renesas@glider.be>
-References: <20190301094052.11288-1-geert+renesas@glider.be>
-Organization: LWN.net
+        Mon, 4 Mar 2019 14:57:37 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:54375 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfCDT5h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:57:37 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mgvan-1hS0ri03hd-00hLZ9; Mon, 04 Mar 2019 20:57:35 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Brian Masney <masneyb@onstation.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: msm-vibrator: use correct gpio header
+Date:   Mon,  4 Mar 2019 20:56:59 +0100
+Message-Id: <20190304195734.1070109-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:/8+crg0rtE8F/KHpVaFS5EkmK0g90AuK4P88cv1P7RU8bbKBaQ9
+ y5teQZA0/mjvKjFDhlyuhCdBAIvk9trLWev7F2QkBvtuGP709ujItMCFIZuem343y0Js0DW
+ DHGOifme8zeTq63KqLs4mrbqYNcLo2GmLx4lG1k7EwslSBIrCeV3VoY4jtVdcwzesBuYzpj
+ lcGScS36Qnaf3xqy2rOnA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:O/pUvkxvbgQ=:ebr51muBYH3Z4vWd8/Xzp5
+ T50cfHcamWkBBSN2TgPrFq8sEgBEK+BTu1KkiyeS1EwuFCaWqElib0Hi0EQtXBYtJkTYvaF90
+ 6uvI9Q6Z8l0hePKPK0MGyV12zEM+ILpsog+RDgu7DcnZHvF58mXwm0+JCF+FrpAEr53ze0Fd7
+ /zgepJ+t5jm+MdNNTUpdFXTovYWCSQJCwN4fMrp4tbJAidG5jutYTGTCq70f31RVnA6OHzjRW
+ 9mEi1vIVnQHwn7hwEtu1suHnHrkWxR4IEhF/8FIuIIHbqRU3fJ9Cl8A0WgvQcRNC8KaYNI8Z0
+ X2KcOTctCUrwOuF8CoZWhT5knRKtTvNo4qjlop072nbDtOG2JAPcSdxLDz5eU4WZRBQptzn87
+ NnQAuxM0sJKSZWXanYsL14BhUIMFx+vKm3a0nk9YhBa3UpoFex2pJRwv60LGS0ZXLYKT0Ucw1
+ 2U6xkIP8H8PoCXZZzs468AN7cl4XzXl5ivcnedIHDdZDrCeXRCOON0kyab1oAfLv9N6nEmNgQ
+ 5ZLH84JHRpc5Rh9EDsU3R2W8S4jlTTKlOPGKCYjJwxozh/UL1VC+KXYJxecOCCj3A/fdRVMHM
+ uQ938p/dei70Ux7ZSTk5GXFyEkGvoZ/3Dju59KW+molHbbfi2WNBT8+4HIrxdruJ3rMSdrs7y
+ Mm49f7HQjBpwusuM5BRgBz1hG1BGFHRkVjZb9IoVtQFpvpJIkZqqEWWGD8kI5JkX19Gd7UQ7Z
+ uKPQ//7mf1V8znGK3N5W6mb/jiNKBqDBOSj8mQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 Mar 2019 10:40:52 +0100
-Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+When CONFIG_GPIOLIB is not set, we get a couple of build
+errors during test building:
 
-> Since the removal of FS_RECLAIM annotations, lockdep states contain four
-> characters, not six.
-> 
-> Fixes: e5684bbfc3f03480 ("Documentation/locking/lockdep: Update info about states")
-> Fixes: d92a8cfcb37ecd13 ("locking/lockdep: Rework FS_RECLAIM annotation")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - Fix silly before/after inversion in patch description.
+drivers/input/misc/msm-vibrator.c: In function 'msm_vibrator_start':
+drivers/input/misc/msm-vibrator.c:79:3: error: implicit declaration of function 'gpiod_set_value_cansleep'; did you mean 'gpio_set_value_cansleep'? [-Werror=implicit-function-declaration]
+   gpiod_set_value_cansleep(vibrator->enable_gpio, 1);
+   ^~~~~~~~~~~~~~~~~~~~~~~~
+   gpio_set_value_cansleep
+drivers/input/misc/msm-vibrator.c: In function 'msm_vibrator_probe':
+drivers/input/misc/msm-vibrator.c:176:26: error: implicit declaration of function 'devm_gpiod_get'; did you mean 'devm_gpio_free'? [-Werror=implicit-function-declaration]
+  vibrator->enable_gpio = devm_gpiod_get(&pdev->dev, "enable",
+                          ^~~~~~~~~~~~~~
+                          devm_gpio_free
+drivers/input/misc/msm-vibrator.c:177:13: error: 'GPIOD_OUT_LOW' undeclared (first use in this function); did you mean 'GPIOF_INIT_LOW'?
+             GPIOD_OUT_LOW);
+             ^~~~~~~~~~~~~
+             GPIOF_INIT_LOW
+drivers/input/misc/msm-vibrator.c:177:13: note: each undeclared identifier is reported only once for each function it appears in
 
-Applied, thanks.
+This is easy to avoid when we use gpio/consumer.h as the documented interface.
 
-jon
+Fixes: 0f681d09e66e ("Input: add new vibrator driver for various MSM SOCs")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/input/misc/msm-vibrator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/input/misc/msm-vibrator.c b/drivers/input/misc/msm-vibrator.c
+index 69f2579c4ec2..b60f1aaee705 100644
+--- a/drivers/input/misc/msm-vibrator.c
++++ b/drivers/input/misc/msm-vibrator.c
+@@ -13,7 +13,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/err.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/input.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+-- 
+2.20.0
+
