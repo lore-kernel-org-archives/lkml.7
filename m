@@ -2,52 +2,55 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8340CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7576AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508EF20836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AA420823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688471;
-	bh=8YLhb09kI0x01+/fwzWpOjFZ5rkVsWZfkM7mzVfex1o=;
+	s=default; t=1551688477;
+	bh=9lzJTIzRu4rT9E1tfaXLMIK9xqFApuQHQwQRhmt4uEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYQ245op4vfRIG6DXblKFDPwtRLgcDzZTlr0GwFhgIn+9lPAl88mLSaro4UNDPeNa
-	 uF423Oh0lQ7aUO1liG0PNU0IDTDyCGWo217heBRufdxrc77DwqupMNUy8nPcjN7/R1
-	 2nZELhGM8SrhyXfc8qmVyVneIXmBIC0qElTQW6b4=
+	b=Y7IxR7z35iplfZlRBaDLrkRPDn0+//9g4mUfX8vvEx07IZxSouTm1CgFFbUhMON7A
+	 oHPgfZBtMDHmAa+WDei7IgEOY+5CP+fUWQX3T4kZ51R1Vd3ax/nUtGM78pJOwItduy
+	 0shtRvjqytAxivb96TEa6mawRQxxHI3eVdv/XRZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfCDIea (ORCPT
+        id S1726619AbfCDIef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:34:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40520 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:34:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbfCDIe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:34:26 -0500
+        id S1727931AbfCDIec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:34:32 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F846214AE;
-        Mon,  4 Mar 2019 08:34:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92FDD208E4;
+        Mon,  4 Mar 2019 08:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688465;
-        bh=8YLhb09kI0x01+/fwzWpOjFZ5rkVsWZfkM7mzVfex1o=;
+        s=default; t=1551688472;
+        bh=9lzJTIzRu4rT9E1tfaXLMIK9xqFApuQHQwQRhmt4uEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uO4i36i+8Gw/QIW4YRuAEfCrASN0RtkeQBzRkI1PJ2HF3cyjQg42CGPauppol3oYU
-         2KnBsdpXVi+B/n8Sr3R1c7X1znL7wZ0xqWcmNTxMrsbU9X72E3TYh8HgN2b7fETKxn
-         ZvF/E2rO3KF+0WoIqJ5R8P4YIqxqZhq/IhI0poY0=
+        b=ckWPTtm+cCjuqQAOwTIQptDlhWTQHTU+HLYggW/Q1x273HuhUMa2xcdOZXLvjhPxS
+         sY3TnQqsdnu71KyOwBFPliSHAHCcICcCHPK3Ycxnc+R04ZsA41gTd4Y1RbYSLOmib2
+         yfDGghVV7OdCutHTR9eHZIYx0L+WF8u+g8dusF2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 18/88] selftests: rtc: rtctest: add alarm test on minute boundary
-Date:   Mon,  4 Mar 2019 09:22:01 +0100
-Message-Id: <20190304081631.305008675@linuxfoundation.org>
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Alexey Firago <alexey_firago@mentor.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 10/88] clk: vc5: Abort clock configuration without upstream clock
+Date:   Mon,  4 Mar 2019 09:21:53 +0100
+Message-Id: <20190304081630.970544833@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,131 +69,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7b3027728f4d4f6763f4d7e771acfc9424cdd0e6 ]
+[ Upstream commit 2137a109a5e39c2bdccfffe65230ed3fadbaac0e ]
 
-Unfortunately, some RTC don't have a second resolution for alarm so also
-test for alarm on a minute boundary.
+In case the upstream clock are not set, which can happen in case the
+VC5 has no valid upstream clock, the $src variable is used uninited
+by regmap_update_bits(). Check for this condition and return -EINVAL
+in such case.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Shuah Khan <shuah@kernel.org>
+Note that in case the VC5 has no valid upstream clock, the VC5 can
+not operate correctly. That is a hardware property of the VC5. The
+internal oscilator present in some VC5 models is also considered
+upstream clock.
+
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc: Alexey Firago <alexey_firago@mentor.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org
+[sboyd@kernel.org: Added comment about probe preventing this from
+happening in the first place]
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/rtc/rtctest.c | 102 ++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+ drivers/clk/clk-versaclock5.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
-index dea4e3d6d9e18..b2065536d4075 100644
---- a/tools/testing/selftests/rtc/rtctest.c
-+++ b/tools/testing/selftests/rtc/rtctest.c
-@@ -211,6 +211,108 @@ TEST_F(rtc, alarm_wkalm_set) {
- 	ASSERT_EQ(new, secs);
- }
+diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
+index decffb3826ece..a738af893532f 100644
+--- a/drivers/clk/clk-versaclock5.c
++++ b/drivers/clk/clk-versaclock5.c
+@@ -262,8 +262,10 @@ static int vc5_mux_set_parent(struct clk_hw *hw, u8 index)
  
-+TEST_F(rtc, alarm_alm_set_minute) {
-+	struct timeval tv = { .tv_sec = 62 };
-+	unsigned long data;
-+	struct rtc_time tm;
-+	fd_set readfds;
-+	time_t secs, new;
-+	int rc;
-+
-+	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
-+	ASSERT_NE(-1, rc);
-+
-+	secs = timegm((struct tm *)&tm) + 60 - tm.tm_sec;
-+	gmtime_r(&secs, (struct tm *)&tm);
-+
-+	rc = ioctl(self->fd, RTC_ALM_SET, &tm);
-+	if (rc == -1) {
-+		ASSERT_EQ(EINVAL, errno);
-+		TH_LOG("skip alarms are not supported.");
-+		return;
-+	}
-+
-+	rc = ioctl(self->fd, RTC_ALM_READ, &tm);
-+	ASSERT_NE(-1, rc);
-+
-+	TH_LOG("Alarm time now set to %02d:%02d:%02d.",
-+	       tm.tm_hour, tm.tm_min, tm.tm_sec);
-+
-+	/* Enable alarm interrupts */
-+	rc = ioctl(self->fd, RTC_AIE_ON, 0);
-+	ASSERT_NE(-1, rc);
-+
-+	FD_ZERO(&readfds);
-+	FD_SET(self->fd, &readfds);
-+
-+	rc = select(self->fd + 1, &readfds, NULL, NULL, &tv);
-+	ASSERT_NE(-1, rc);
-+	ASSERT_NE(0, rc);
-+
-+	/* Disable alarm interrupts */
-+	rc = ioctl(self->fd, RTC_AIE_OFF, 0);
-+	ASSERT_NE(-1, rc);
-+
-+	rc = read(self->fd, &data, sizeof(unsigned long));
-+	ASSERT_NE(-1, rc);
-+	TH_LOG("data: %lx", data);
-+
-+	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
-+	ASSERT_NE(-1, rc);
-+
-+	new = timegm((struct tm *)&tm);
-+	ASSERT_EQ(new, secs);
-+}
-+
-+TEST_F(rtc, alarm_wkalm_set_minute) {
-+	struct timeval tv = { .tv_sec = 62 };
-+	struct rtc_wkalrm alarm = { 0 };
-+	struct rtc_time tm;
-+	unsigned long data;
-+	fd_set readfds;
-+	time_t secs, new;
-+	int rc;
-+
-+	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
-+	ASSERT_NE(-1, rc);
-+
-+	secs = timegm((struct tm *)&alarm.time) + 60 - alarm.time.tm_sec;
-+	gmtime_r(&secs, (struct tm *)&alarm.time);
-+
-+	alarm.enabled = 1;
-+
-+	rc = ioctl(self->fd, RTC_WKALM_SET, &alarm);
-+	if (rc == -1) {
-+		ASSERT_EQ(EINVAL, errno);
-+		TH_LOG("skip alarms are not supported.");
-+		return;
-+	}
-+
-+	rc = ioctl(self->fd, RTC_WKALM_RD, &alarm);
-+	ASSERT_NE(-1, rc);
-+
-+	TH_LOG("Alarm time now set to %02d/%02d/%02d %02d:%02d:%02d.",
-+	       alarm.time.tm_mday, alarm.time.tm_mon + 1,
-+	       alarm.time.tm_year + 1900, alarm.time.tm_hour,
-+	       alarm.time.tm_min, alarm.time.tm_sec);
-+
-+	FD_ZERO(&readfds);
-+	FD_SET(self->fd, &readfds);
-+
-+	rc = select(self->fd + 1, &readfds, NULL, NULL, &tv);
-+	ASSERT_NE(-1, rc);
-+	ASSERT_NE(0, rc);
-+
-+	rc = read(self->fd, &data, sizeof(unsigned long));
-+	ASSERT_NE(-1, rc);
-+
-+	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
-+	ASSERT_NE(-1, rc);
-+
-+	new = timegm((struct tm *)&tm);
-+	ASSERT_EQ(new, secs);
-+}
-+
- static void __attribute__((constructor))
- __constructor_order_last(void)
- {
+ 		if (vc5->clk_mux_ins == VC5_MUX_IN_XIN)
+ 			src = VC5_PRIM_SRC_SHDN_EN_XTAL;
+-		if (vc5->clk_mux_ins == VC5_MUX_IN_CLKIN)
++		else if (vc5->clk_mux_ins == VC5_MUX_IN_CLKIN)
+ 			src = VC5_PRIM_SRC_SHDN_EN_CLKIN;
++		else /* Invalid; should have been caught by vc5_probe() */
++			return -EINVAL;
+ 	}
+ 
+ 	return regmap_update_bits(vc5->regmap, VC5_PRIM_SRC_SHDN, mask, src);
 -- 
 2.19.1
 
