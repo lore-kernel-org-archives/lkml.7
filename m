@@ -2,53 +2,53 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E219EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3ECC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8AC20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503FA20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688113;
-	bh=8SYuHEd0mr6SAQvqOVjRNAsdyhE5N+nWSHO9XgKI+eM=;
+	s=default; t=1551688118;
+	bh=XQzsohkfQBi2T1IWU+uZATnJdir/K9QtlLkxu7R7Huw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B3s4QqV4foEzDSnwyZHsz2H5B6i/zrl1fh+ZOirs7J09szeOuxjUSfoFXLnblXa79
-	 xfc0NVxvdhKrh55AFdvRQnsYdm9+R+/cdc6EuaR9mO7y7JN1frMVCwtbJWiQ7WQ84h
-	 YLkG8zhKu2ve4AGdqqeD2z4MIoAAaCvSrZtGKa9A=
+	b=gv/5NmxhT2mjGPnIbPb1ViHPEHC+gfumaYIkXKgTcFvXCb4is5KdaH7TU7fiekNJ9
+	 c/i31PlNCidd1z5gixB7KwEv372LegErnXoPxJp4RfYha06OXj6IxvWiF39xCsBj8K
+	 NwRjkl22KCevEPo2VQDjJuO59ZDIRzjfmVS0flaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfCDI2c (ORCPT
+        id S1727444AbfCDI2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:28:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53558 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:28:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727085AbfCDI20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:28:26 -0500
+        id S1727085AbfCDI2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:28:33 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DBC920836;
-        Mon,  4 Mar 2019 08:28:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DE3920823;
+        Mon,  4 Mar 2019 08:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688105;
-        bh=8SYuHEd0mr6SAQvqOVjRNAsdyhE5N+nWSHO9XgKI+eM=;
+        s=default; t=1551688112;
+        bh=XQzsohkfQBi2T1IWU+uZATnJdir/K9QtlLkxu7R7Huw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uhHYEvs1F4oysnGv65V3DAxm4jUSMxNeXpDMQZgXtIUJkrpZS8lUFU2EyneSd1cIu
-         F2IHQCV7mzAOVt7TBuKWCWSb7AwoAJojSSJNuFWjZKfIjtI+s5AccHPn3VJ2qV3QEM
-         JFZMNxzLcmsju0mFo/tuYR1BR5/JL5vnzH/wo3u0=
+        b=Pef+UGGfqH05Qis/OXDZ5nZ/l/HqqrkbgQOy0O49X1kLrJlMrHu9CX18Jqt9F7Bb4
+         48OL+joO55ifW7fhwQ2KMwQl/IgWmF/ZH2VQt+e9eXgvC2vGjzAYSWzYcHqXzsy2AH
+         W7n2jG7lvakJsKNpIGEK63vXQ+aWlJRw5O5nknk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, dann frazier <dann.frazier@canonical.com>,
-        John Garry <john.garry@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 05/78] scsi: libsas: Fix rphy phy_identifier for PHYs with end devices attached
-Date:   Mon,  4 Mar 2019 09:21:48 +0100
-Message-Id: <20190304081625.743680259@linuxfoundation.org>
+        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 07/78] ASoC: Intel: Haswell/Broadwell: fix setting for .dynamic field
+Date:   Mon,  4 Mar 2019 09:21:50 +0100
+Message-Id: <20190304081625.831525854@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -67,85 +67,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: John Garry <john.garry@huawei.com>
+[ Upstream commit 906a9abc5de73c383af518f5a806f4be2993a0c7 ]
 
-commit ffeafdd2bf0b280d67ec1a47ea6287910d271f3f upstream.
+For some reason this field was set to zero when all other drivers use
+.dynamic = 1 for front-ends. This change was tested on Dell XPS13 and
+has no impact with the existing legacy driver. The SOF driver also works
+with this change which enables it to override the fixed topology.
 
-The sysfs phy_identifier attribute for a sas_end_device comes from the rphy
-phy_identifier value.
-
-Currently this is not being set for rphys with an end device attached, so
-we see incorrect symlinks from systemd disk/by-path:
-
-root@localhost:~# ls -l /dev/disk/by-path/
-total 0
-lrwxrwxrwx 1 root root  9 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0 -> ../../sdb
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part1 -> ../../sdb1
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part2 -> ../../sdb2
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part3 -> ../../sdc3
-
-Indeed, each sas_end_device phy_identifier value is 0:
-
-root@localhost:/# more sys/class/sas_device/end_device-0\:0\:2/phy_identifier
-0
-root@localhost:/# more sys/class/sas_device/end_device-0\:0\:10/phy_identifier
-0
-
-This patch fixes the discovery code to set the phy_identifier.  With this,
-we now get proper symlinks:
-
-root@localhost:~# ls -l /dev/disk/by-path/
-total 0
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy10-lun-0 -> ../../sdg
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy11-lun-0 -> ../../sdh
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0 -> ../../sda
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0-part1 -> ../../sda1
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0 -> ../../sdb
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part1 -> ../../sdb1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part2 -> ../../sdb2
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0 -> ../../sdc
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part1 -> ../../sdc1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part2 -> ../../sdc2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part3 -> ../../sdc3
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy5-lun-0 -> ../../sdd
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0 -> ../../sde
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part1 -> ../../sde1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part2 -> ../../sde2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part3 -> ../../sde3
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0 -> ../../sdf
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part1 -> ../../sdf1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part2 -> ../../sdf2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part3 -> ../../sdf3
-
-Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
-Reported-by: dann frazier <dann.frazier@canonical.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Jason Yan <yanaijie@huawei.com>
-Tested-by: dann frazier <dann.frazier@canonical.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/intel/boards/broadwell.c | 2 +-
+ sound/soc/intel/boards/haswell.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -829,6 +829,7 @@ static struct domain_device *sas_ex_disc
- 		rphy = sas_end_device_alloc(phy->port);
- 		if (!rphy)
- 			goto out_free;
-+		rphy->identify.phy_identifier = phy_id;
- 
- 		child->rphy = rphy;
- 		get_device(&rphy->dev);
-@@ -856,6 +857,7 @@ static struct domain_device *sas_ex_disc
- 
- 		child->rphy = rphy;
- 		get_device(&rphy->dev);
-+		rphy->identify.phy_identifier = phy_id;
- 		sas_fill_in_rphy(child, rphy);
- 
- 		list_add_tail(&child->disco_list_node, &parent->port->disco_list);
+diff --git a/sound/soc/intel/boards/broadwell.c b/sound/soc/intel/boards/broadwell.c
+index 7b0ee67b4fc8b..78ec97b53f50e 100644
+--- a/sound/soc/intel/boards/broadwell.c
++++ b/sound/soc/intel/boards/broadwell.c
+@@ -192,7 +192,7 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] = {
+ 		.stream_name = "Loopback",
+ 		.cpu_dai_name = "Loopback Pin",
+ 		.platform_name = "haswell-pcm-audio",
+-		.dynamic = 0,
++		.dynamic = 1,
+ 		.codec_name = "snd-soc-dummy",
+ 		.codec_dai_name = "snd-soc-dummy-dai",
+ 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
+diff --git a/sound/soc/intel/boards/haswell.c b/sound/soc/intel/boards/haswell.c
+index eab1f439dd3f1..a4022983a7ce0 100644
+--- a/sound/soc/intel/boards/haswell.c
++++ b/sound/soc/intel/boards/haswell.c
+@@ -146,7 +146,7 @@ static struct snd_soc_dai_link haswell_rt5640_dais[] = {
+ 		.stream_name = "Loopback",
+ 		.cpu_dai_name = "Loopback Pin",
+ 		.platform_name = "haswell-pcm-audio",
+-		.dynamic = 0,
++		.dynamic = 1,
+ 		.codec_name = "snd-soc-dummy",
+ 		.codec_dai_name = "snd-soc-dummy-dai",
+ 		.trigger = {SND_SOC_DPCM_TRIGGER_POST, SND_SOC_DPCM_TRIGGER_POST},
+-- 
+2.19.1
+
 
 
