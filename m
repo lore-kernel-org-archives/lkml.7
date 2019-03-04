@@ -2,54 +2,52 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1250C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56579C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD8120823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1315220823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551689145;
-	bh=F2U/OcCtAzPTwXcZFO4GBLjKermEkDNLZeXrVqKQu5o=;
+	s=default; t=1551689157;
+	bh=txqcuwmtT5F9dt+WPMDsEGvpf1APfWIw552UwJQQoJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X+v+qMiV1nQfMdEiXKCsEXMSj+lF40G9GLEExtNa0fvMOFo62Ra8q0639AvuIFojb
-	 cyiOslxQfUuZS+Pvpy8M/IJwtjE0nA4LuAzjLOnlM3qFVgZRu6sOPI2vqKE2RhluxL
-	 aVytC7ZSR0fw13XZI4/LJcHHN+951tr8hQxMRXoI=
+	b=oJqWTwlUUiBJOg3TFJZpObIlNPY7PnUTaprdmICmZI2QofHaI8B25kKLp9lQeeQjt
+	 K5SbzbwCUHFk/f5HlsCMkErnJz73kyL8FmFJK289Zfo+Wc9auajmhnTcAAR9GhaQtd
+	 kZuNBsB+G0AHxbtykWHK+HnT5GAdZEavFTkIxhrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfCDIpo (ORCPT
+        id S1727211AbfCDIpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:45:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51080 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:45:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfCDI13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:27:29 -0500
+        id S1727224AbfCDI1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:27:18 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5F7D20823;
-        Mon,  4 Mar 2019 08:27:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E7D20836;
+        Mon,  4 Mar 2019 08:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688048;
-        bh=F2U/OcCtAzPTwXcZFO4GBLjKermEkDNLZeXrVqKQu5o=;
+        s=default; t=1551688038;
+        bh=txqcuwmtT5F9dt+WPMDsEGvpf1APfWIw552UwJQQoJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ErYapC++x4rzgY93ZjvrtwpzmF1vQ18HslcG2oe2WRHGefoUwRhgkXihcuJVWCtxz
-         mrO4yIzT4byvDTm902qVKXnzIwGixNb80cmQfZvGdXGSnNkWFaVtcRE/XIJ7En2Jnm
-         APfiNsy6NNBmZC/DdwcqOni4L4SlhdnGYk5cOIm0=
+        b=KYT4mrNJohihu2JnMAiod9FVcoL478XLNs5h0yfTWd68Sgpo/R4r6wJ4MLK8jsST4
+         utPQ4aEJjk6TwzBdsQK07ibA4d/LY7qZfgYW20GdMkT14ih08WO7mC+UjdUDVKPjBq
+         BsMeWpq98GV1C1ZW7djHHYHUMgKTDKDgbKXjZ9+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 46/52] mmc: tmio_mmc_core: dont claim spurious interrupts
-Date:   Mon,  4 Mar 2019 09:22:44 +0100
-Message-Id: <20190304081619.749399174@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 15/52] usb: gadget: Potential NULL dereference on allocation error
+Date:   Mon,  4 Mar 2019 09:22:13 +0100
+Message-Id: <20190304081617.982472968@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -68,73 +66,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+[ Upstream commit df28169e1538e4a8bcd8b779b043e5aa6524545c ]
 
-commit 5c27ff5db1491a947264d6d4e4cbe43ae6535bae upstream.
+The source_sink_alloc_func() function is supposed to return error
+pointers on error.  The function is called from usb_get_function() which
+doesn't check for NULL returns so it would result in an Oops.
 
-I have encountered an interrupt storm during the eMMC chip probing (and
-the chip finally didn't get detected).  It turned out that U-Boot left
-the DMAC interrupts enabled while the Linux driver  didn't use those.
-The SDHI driver's interrupt handler somehow assumes that, even if an
-SDIO interrupt didn't happen, it should return IRQ_HANDLED.  I think
-that if none of the enabled interrupts happened and got handled, we
-should return IRQ_NONE -- that way the kernel IRQ code recoginizes
-a spurious interrupt and masks it off pretty quickly...
+Of course, in the current kernel, small allocations always succeed so
+this doesn't affect runtime.
 
-Fixes: 7729c7a232a9 ("mmc: tmio: Provide separate interrupt handlers")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/tmio_mmc_core.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/usb/gadget/function/f_sourcesink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mmc/host/tmio_mmc_core.c
-+++ b/drivers/mmc/host/tmio_mmc_core.c
-@@ -688,7 +688,7 @@ static bool __tmio_mmc_sdcard_irq(struct
- 	return false;
- }
+diff --git a/drivers/usb/gadget/function/f_sourcesink.c b/drivers/usb/gadget/function/f_sourcesink.c
+index 8784fa12ea2c6..6e9d958004a0d 100644
+--- a/drivers/usb/gadget/function/f_sourcesink.c
++++ b/drivers/usb/gadget/function/f_sourcesink.c
+@@ -842,7 +842,7 @@ static struct usb_function *source_sink_alloc_func(
  
--static void __tmio_mmc_sdio_irq(struct tmio_mmc_host *host)
-+static bool __tmio_mmc_sdio_irq(struct tmio_mmc_host *host)
- {
- 	struct mmc_host *mmc = host->mmc;
- 	struct tmio_mmc_data *pdata = host->pdata;
-@@ -696,7 +696,7 @@ static void __tmio_mmc_sdio_irq(struct t
- 	unsigned int sdio_status;
+ 	ss = kzalloc(sizeof(*ss), GFP_KERNEL);
+ 	if (!ss)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
  
- 	if (!(pdata->flags & TMIO_MMC_SDIO_IRQ))
--		return;
-+		return false;
+ 	ss_opts =  container_of(fi, struct f_ss_opts, func_inst);
  
- 	status = sd_ctrl_read16(host, CTL_SDIO_STATUS);
- 	ireg = status & TMIO_SDIO_MASK_ALL & ~host->sdio_irq_mask;
-@@ -709,6 +709,8 @@ static void __tmio_mmc_sdio_irq(struct t
- 
- 	if (mmc->caps & MMC_CAP_SDIO_IRQ && ireg & TMIO_SDIO_STAT_IOIRQ)
- 		mmc_signal_sdio_irq(mmc);
-+
-+	return ireg;
- }
- 
- irqreturn_t tmio_mmc_irq(int irq, void *devid)
-@@ -727,9 +729,10 @@ irqreturn_t tmio_mmc_irq(int irq, void *
- 	if (__tmio_mmc_sdcard_irq(host, ireg, status))
- 		return IRQ_HANDLED;
- 
--	__tmio_mmc_sdio_irq(host);
-+	if (__tmio_mmc_sdio_irq(host))
-+		return IRQ_HANDLED;
- 
--	return IRQ_HANDLED;
-+	return IRQ_NONE;
- }
- EXPORT_SYMBOL_GPL(tmio_mmc_irq);
- 
+-- 
+2.19.1
+
 
 
