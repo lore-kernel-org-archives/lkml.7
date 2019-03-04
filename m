@@ -2,52 +2,53 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13ECC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AF4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887C020836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6000220836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688515;
-	bh=NFYK4QflxG6hUn/W+pV0q6EzVFrcpnYki1aNStLrfF8=;
+	s=default; t=1551688520;
+	bh=yL2Q3l60xl5BmYnVHu0yFtTvrT0nM5oidQ0ewOEKIgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9Q1AEfvJzpw1yX1WeZuQMnaHdtQo5L2nijawqECK6il8uyLEy3aOzD12og1X5UWo
-	 zHCAstXXTwHf996eFovCJEWQsSNRkOBBTNMwOn4uAriT/LCWmYkci2vhJfPPxxWfhK
-	 vB5f4vvepd66fQLx1a82vCW14KAVzlFSvDVWiO4E=
+	b=SPdWtUZC1KI5qoOuWXbLbRuu4QWbAQxHRhSl20n1XFZoORUUIVJhWUwh4c4xvL3eu
+	 /iY6REU93SDwQPcCeR4jgWLEPXr0bRM4DdXrXXwrW1hJZ6DC6YzofFUZdi32Ekd7GB
+	 VdssIfqLiVjFpOYacTNaR8g7fV/VgrHOlRBamRRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfCDIfO (ORCPT
+        id S1728101AbfCDIfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:35:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42732 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:35:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728408AbfCDIfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:35:08 -0500
+        id S1728420AbfCDIfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:35:14 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134D920836;
-        Mon,  4 Mar 2019 08:35:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 313A820823;
+        Mon,  4 Mar 2019 08:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688507;
-        bh=NFYK4QflxG6hUn/W+pV0q6EzVFrcpnYki1aNStLrfF8=;
+        s=default; t=1551688513;
+        bh=yL2Q3l60xl5BmYnVHu0yFtTvrT0nM5oidQ0ewOEKIgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GunDyYsqNgrlbDs/NEHYf/p3PSBF9LAg2u2aJouK6bs3Ev0K9pkLdZjIwBJTXU5BJ
-         6s8mtU1ck2H2fdjWYk2k1OHpqAjr7u7Q7OH8H9OLrjTNexTRonArRp515hvc1rlfyT
-         4ZNMC7qlIrjQd0tTfqLLAWax/ggeCo1tWM+TCURw=
+        b=QmhG10sX31I4c7/e1bGuwSEarWnlLGIDH7x0qeF+oosgTZ7PwcI6OVLVFeyMjZZKU
+         u4zujAvtnCcxjdkQh1IhpRtg5TXIoxN6RyiFDdW58/8byVAmFoMyuEeVUFCuZQjzya
+         VtjNBLynZawQmtftz4z7lIkNjuEMjWfdt77T7Ujs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 67/88] KVM: selftests: check returned evmcs version range
-Date:   Mon,  4 Mar 2019 09:22:50 +0100
-Message-Id: <20190304081633.235146201@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.20 68/88] mmc: spi: Fix card detection during probe
+Date:   Mon,  4 Mar 2019 09:22:51 +0100
+Message-Id: <20190304081633.282031167@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,36 +67,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 35b531a1e7fc30ac8c62e5ac1794eb1460da614e ]
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-Check that KVM_CAP_HYPERV_ENLIGHTENED_VMCS returns correct version range.
+commit c9bd505dbd9d3dc80c496f88eafe70affdcf1ba6 upstream.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+When using the mmc_spi driver with a card-detect pin, I noticed that the
+card was not detected immediately after probe, but only after it was
+unplugged and plugged back in (and the CD IRQ fired).
+
+The call tree looks something like this:
+
+mmc_spi_probe
+  mmc_add_host
+    mmc_start_host
+      _mmc_detect_change
+        mmc_schedule_delayed_work(&host->detect, 0)
+          mmc_rescan
+            host->bus_ops->detect(host)
+              mmc_detect
+                _mmc_detect_card_removed
+                  host->ops->get_cd(host)
+                    mmc_gpio_get_cd -> -ENOSYS (ctx->cd_gpio not set)
+  mmc_gpiod_request_cd
+    ctx->cd_gpio = desc
+
+To fix this issue, call mmc_detect_change after the card-detect GPIO/IRQ
+is registered.
+
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/testing/selftests/kvm/x86_64/evmcs_test.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/mmc/host/mmc_spi.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-index ea3c73e8f4f6e..c49c2a28b0eb2 100644
---- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
-@@ -103,6 +103,12 @@ int main(int argc, char *argv[])
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1447,6 +1447,7 @@ static int mmc_spi_probe(struct spi_devi
+ 		mmc->caps &= ~MMC_CAP_NEEDS_POLL;
+ 		mmc_gpiod_request_cd_irq(mmc);
+ 	}
++	mmc_detect_change(mmc, 0);
  
- 	vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
- 
-+	/* KVM should return supported EVMCS version range */
-+	TEST_ASSERT(((evmcs_ver >> 8) >= (evmcs_ver & 0xff)) &&
-+		    (evmcs_ver & 0xff) > 0,
-+		    "Incorrect EVMCS version range: %x:%x\n",
-+		    evmcs_ver & 0xff, evmcs_ver >> 8);
-+
- 	run = vcpu_state(vm, VCPU_ID);
- 
- 	vcpu_regs_get(vm, VCPU_ID, &regs1);
--- 
-2.19.1
-
+ 	if (host->pdata && host->pdata->flags & MMC_SPI_USE_RO_GPIO) {
+ 		has_ro = true;
 
 
