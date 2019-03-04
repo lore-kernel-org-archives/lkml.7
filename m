@@ -2,93 +2,135 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6901C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B438BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D5F20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CEA520663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfCDTFz convert rfc822-to-8bit (ORCPT
+        id S1727307AbfCDTGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:05:55 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:52345 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfCDTFz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:05:55 -0500
-Received: from xps13 (76.15.136.77.rev.sfr.net [77.136.15.76])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 77901200006;
-        Mon,  4 Mar 2019 19:05:48 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 20:04:25 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/9] mtd: rawnand: ingenic: Separate top-level and
- SoC specific code
-Message-ID: <20190304200129.4eefabba@xps13>
-In-Reply-To: <1551723968.4932.4@crapouillou.net>
-References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190209192305.4434-6-paul@crapouillou.net>
-        <20190304112058.67cd5194@xps13>
-        <1551723968.4932.4@crapouillou.net>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 4 Mar 2019 14:06:17 -0500
+Received: from mga14.intel.com ([192.55.52.115]:37323 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727146AbfCDTGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:06:17 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 11:06:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,441,1544515200"; 
+   d="scan'208";a="304310397"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga005.jf.intel.com with ESMTP; 04 Mar 2019 11:06:16 -0800
+Date:   Mon, 4 Mar 2019 10:59:22 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 07/17] x86/split_lock: Enumerate #AC for split lock by
+ MSR IA32_CORE_CAPABILITY
+Message-ID: <20190304185922.GA231946@romley-ivt3.sc.intel.com>
+References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
+ <1551494711-213533-8-git-send-email-fenghua.yu@intel.com>
+ <8b810f50-e4ed-7020-c0df-203cf98c3ce8@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b810f50-e4ed-7020-c0df-203cf98c3ce8@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
 
-Paul Cercueil <paul@crapouillou.net> wrote on Mon, 04 Mar 2019 19:26:08
-+0100:
+On Mon, Mar 04, 2019 at 10:58:01AM -0800, Dave Hansen wrote:
+> >  	 * Clear/Set all flags overridden by options, after probe.
+> > diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+> > index 2c0bd38a44ab..5ba11ce99f92 100644
+> > --- a/arch/x86/kernel/cpu/cpuid-deps.c
+> > +++ b/arch/x86/kernel/cpu/cpuid-deps.c
+> > @@ -59,6 +59,7 @@ static const struct cpuid_dep cpuid_deps[] = {
+> >  	{ X86_FEATURE_AVX512_4VNNIW,	X86_FEATURE_AVX512F   },
+> >  	{ X86_FEATURE_AVX512_4FMAPS,	X86_FEATURE_AVX512F   },
+> >  	{ X86_FEATURE_AVX512_VPOPCNTDQ, X86_FEATURE_AVX512F   },
+> > +	{ X86_FEATURE_SPLIT_LOCK_DETECT, X86_FEATURE_CORE_CAPABILITY},
+> >  	{}
+> >  };
+> 
+> Please reindent the rest of the structure whenever you break the record
+> for name length.
 
-> On Mon, Mar 4, 2019 at 11:20 AM, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > Hi Paul,
-> > 
-> > Paul Cercueil <paul@crapouillou.net <mailto:paul@crapouillou.net>> > wrote on Sat,  9 Feb 2019 16:23:02
-> > -0300:
-> >   
-> >>  The ingenic-nand driver uses an API provided by the jz4780-bch >> driver.
-> >>  This makes it difficult to support other SoCs in the jz4780-bch >> driver.
-> >>  To work around this, we separate the API functions from the >> SoC-specific
-> >>  code, so that these API functions are SoC-agnostic.  
-> >> >   
-> > I like the idea, actually I am working on this separation (see
-> > [1]) and I would really appreciate that you try to implement the
-> > interface when it will be available (v2 is coming this week, I think > v3
-> > will be the one to test when raw NAND devices will be properly
-> > supported). I will add you in Cc: if you want to follow/review.
-> > 
-> > [1] > <http://lists.infradead.org/pipermail/linux-mtd/2019-February/087815.html
+Ok. Will do it.
+
+> 
+> > diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> > index fc3c07fe7df5..0c44c49f6005 100644
+> > --- a/arch/x86/kernel/cpu/intel.c
+> > +++ b/arch/x86/kernel/cpu/intel.c
+> > @@ -1029,3 +1029,24 @@ static const struct cpu_dev intel_cpu_dev = {
 > >  
+> >  cpu_dev_register(intel_cpu_dev);
+> >  
+> > +/**
+> > + * init_core_capability - enumerate features supported in IA32_CORE_CAPABILITY
+> > + * @c: pointer to cpuinfo_x86
+> > + *
+> > + * Return: void
+> > + */
+> > +void init_core_capability(struct cpuinfo_x86 *c)
+> > +{
+> > +	/*
+> > +	 * If MSR_IA32_CORE_CAPABILITY exists, enumerate features that are
+> > +	 * reported in the MSR.
+> > +	 */
+> > +	if (c == &boot_cpu_data && cpu_has(c, X86_FEATURE_CORE_CAPABILITY)) {
 > 
-> Do you think this will be ready for 5.2?
+> First of all, please endeavor to leave the main flow of the function at
+> the first indent.
+> 
+> *If* you were to do this, it would look like:
+> 
+> 
+> 	if (c != &boot_cpu_data)
+> 		return;
+> 	if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITY))
+> 		return;
+> 
+> 	rdmsrl(...);
 
-Maybe, but I can't tell for sure. It will depend on how invasive the
-raw NAND conversion is. I don't want to delay your work but maybe once
-the interface will be ready to be implemented it would be a great
-opportunity to do it with the Ingenic driver.
+Ok. Will do it.
 
 > 
-> You can add me in Cc:.
+> But, it goes unmentioned why you do the boot-cpu-only restriction here.
+>  It doesn't match the behavior of the two functions called before
+> init_core_capability():
+> 
+>         init_scattered_cpuid_features(c);
+>         init_speculation_control(c);
+> 
+> So why is this new function special?
 
-Thanks!
-Miquèl
+The function sets the split_lock_detect feature which needs to be
+applied before BSP calls apply_enforced_caps() in get_cpu_cap(). And I
+want to enable split lock detection in earlier phase to detect split
+lock earlier.
+
+Thanks.
+
+-Fenghua
