@@ -2,54 +2,56 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850EDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B81AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5697C20823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1019208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688398;
-	bh=fiDpOJp1WUJ/jaKonkzsN/lNGvUa3i0YVdblfXjejrk=;
+	s=default; t=1551688402;
+	bh=G7OLDbRbN2Dgbc6y9SsgXqXL0PgvgidTjN/TGYJD5ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ycKYWc8B4Ykud6zBeIOkcnkMb55cK+V/oB9H3fYjt5hTyHBldpypcidWId39OUB7
-	 JMMtZ4Y2CMy/g/e54/JOKmfUjkGe7NqsnkvgtcXCi/Hiawm7vjZgXKmEG9UOpG0V0l
-	 7rTFKhcoafI/fdYUPgYllYBa5jJoMGS72+9OJDAk=
+	b=UFWBUe1T14rcjFPcOQEkCli625rytw0FMLvbawkLWqAo9idntfy1Ybph7x3QWupJG
+	 AQwp8pDOZJi/sxfol84VOHlc/50F25XogaPZLCgRdave/j5/pGJ6DvlSBLOCr6bxpc
+	 oM4wz+R3XHbtcg2Vh1mMkrT1Pby88VVjcKmy/uEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfCDIdQ (ORCPT
+        id S1727840AbfCDIdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:33:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60564 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:33:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbfCDIbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:31:07 -0500
+        id S1727105AbfCDIdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:33:17 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67E5120823;
-        Mon,  4 Mar 2019 08:31:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C59B20823;
+        Mon,  4 Mar 2019 08:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688266;
-        bh=fiDpOJp1WUJ/jaKonkzsN/lNGvUa3i0YVdblfXjejrk=;
+        s=default; t=1551688395;
+        bh=G7OLDbRbN2Dgbc6y9SsgXqXL0PgvgidTjN/TGYJD5ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ySHP0FvRX4k7K1fBVG4xMGiXt+6B1w1Hju3Ei34qG2yqd2wp0x4iL7cUJyU5rTnML
-         0nY9fLjxIxeV5aUSCB5m60pCpCvlhkh9Qv5F0efCq+hX05Z03+O+jtSlQegwDYliQ+
-         H4lJAeE/ALyaKcw8Du5GtzBj4o41zPNwnmnHPMXo=
+        b=XOy9FUvS89wORN12qqgPu9VZ7hoUuzlCGuPKQbxFpu6Z8tFDgSrof3V+gP/84aCjH
+         nORaSd7CoQbO8gja8nTvS3DjyhVbH8wJn2iPkKN3vX8cNfFSWS+yhqB/0lejSH1YsF
+         XHFSM3lY8TT9+5qj60K3Po1silLAeI1apAgX8bB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alamy Liu <alamy.liu@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 70/78] mmc: cqhci: Fix a tiny potential memory leak on error condition
-Date:   Mon,  4 Mar 2019 09:22:53 +0100
-Message-Id: <20190304081628.721507854@linuxfoundation.org>
+        stable@vger.kernel.org,
+        William Kucharski <william.kucharski@oracle.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 31/88] ARC: show_regs: lockdep: avoid page allocator...
+Date:   Mon,  4 Mar 2019 09:22:14 +0100
+Message-Id: <20190304081631.830535059@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
-References: <20190304081625.508788074@linuxfoundation.org>
+In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
+References: <20190304081630.610632175@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,56 +63,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Alamy Liu <alamy.liu@gmail.com>
+[ Upstream commit ab6c03676cb190156603cf4c5ecf97aa406c9c53 ]
 
-commit d07e9fadf3a6b466ca3ae90fa4859089ff20530f upstream.
+and use smaller/on-stack buffer instead
 
-Free up the allocated memory in the case of error return
+The motivation for this change was lockdep splat like below.
 
-The value of mmc_host->cqe_enabled stays 'false'. Thus, cqhci_disable
-(mmc_cqe_ops->cqe_disable) won't be called to free the memory.  Also,
-cqhci_disable() seems to be designed to disable and free all resources, not
-suitable to handle this corner case.
+| potentially unexpected fatal signal 11.
+| BUG: sleeping function called from invalid context at ../mm/page_alloc.c:4317
+| in_atomic(): 1, irqs_disabled(): 0, pid: 57, name: segv
+| no locks held by segv/57.
+| Preemption disabled at:
+| [<8182f17e>] get_signal+0x4a6/0x7c4
+| CPU: 0 PID: 57 Comm: segv Not tainted 4.17.0+ #23
+|
+| Stack Trace:
+|  arc_unwind_core.constprop.1+0xd0/0xf4
+|  __might_sleep+0x1f6/0x234
+|  __get_free_pages+0x174/0xca0
+|  show_regs+0x22/0x330
+|  get_signal+0x4ac/0x7c4     # print_fatal_signals() -> preempt_disable()
+|  do_signal+0x30/0x224
+|  resume_user_mode_begin+0x90/0xd8
 
-Fixes: a4080225f51d ("mmc: cqhci: support for command queue enabled host")
-Signed-off-by: Alamy Liu <alamy.liu@gmail.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So signal handling core calls show_regs() with preemption disabled but
+an ensuing GFP_KERNEL page allocator call is flagged by lockdep.
 
+We could have switched to GFP_NOWAIT, but turns out that is not enough
+anways and eliding page allocator call leads to less code and
+instruction traces to sift thru when debugging pesky crashes.
+
+FWIW, this patch doesn't cure the lockdep splat (which next patch does).
+
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/cqhci.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/arc/kernel/troubleshoot.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
---- a/drivers/mmc/host/cqhci.c
-+++ b/drivers/mmc/host/cqhci.c
-@@ -217,12 +217,21 @@ static int cqhci_host_alloc_tdl(struct c
- 						 cq_host->desc_size,
- 						 &cq_host->desc_dma_base,
- 						 GFP_KERNEL);
-+	if (!cq_host->desc_base)
-+		return -ENOMEM;
-+
- 	cq_host->trans_desc_base = dmam_alloc_coherent(mmc_dev(cq_host->mmc),
- 					      cq_host->data_size,
- 					      &cq_host->trans_desc_dma_base,
- 					      GFP_KERNEL);
--	if (!cq_host->desc_base || !cq_host->trans_desc_base)
-+	if (!cq_host->trans_desc_base) {
-+		dmam_free_coherent(mmc_dev(cq_host->mmc), cq_host->desc_size,
-+				   cq_host->desc_base,
-+				   cq_host->desc_dma_base);
-+		cq_host->desc_base = NULL;
-+		cq_host->desc_dma_base = 0;
- 		return -ENOMEM;
-+	}
+diff --git a/arch/arc/kernel/troubleshoot.c b/arch/arc/kernel/troubleshoot.c
+index e8d9fb4523462..5c6663321e873 100644
+--- a/arch/arc/kernel/troubleshoot.c
++++ b/arch/arc/kernel/troubleshoot.c
+@@ -18,6 +18,8 @@
+ #include <asm/arcregs.h>
+ #include <asm/irqflags.h>
  
- 	pr_debug("%s: cqhci: desc-base: 0x%p trans-base: 0x%p\n desc_dma 0x%llx trans_dma: 0x%llx\n",
- 		 mmc_hostname(cq_host->mmc), cq_host->desc_base, cq_host->trans_desc_base,
++#define ARC_PATH_MAX	256
++
+ /*
+  * Common routine to print scratch regs (r0-r12) or callee regs (r13-r25)
+  *   -Prints 3 regs per line and a CR.
+@@ -58,11 +60,12 @@ static void show_callee_regs(struct callee_regs *cregs)
+ 	print_reg_file(&(cregs->r13), 13);
+ }
+ 
+-static void print_task_path_n_nm(struct task_struct *tsk, char *buf)
++static void print_task_path_n_nm(struct task_struct *tsk)
+ {
+ 	char *path_nm = NULL;
+ 	struct mm_struct *mm;
+ 	struct file *exe_file;
++	char buf[ARC_PATH_MAX];
+ 
+ 	mm = get_task_mm(tsk);
+ 	if (!mm)
+@@ -72,7 +75,7 @@ static void print_task_path_n_nm(struct task_struct *tsk, char *buf)
+ 	mmput(mm);
+ 
+ 	if (exe_file) {
+-		path_nm = file_path(exe_file, buf, 255);
++		path_nm = file_path(exe_file, buf, ARC_PATH_MAX-1);
+ 		fput(exe_file);
+ 	}
+ 
+@@ -80,10 +83,9 @@ static void print_task_path_n_nm(struct task_struct *tsk, char *buf)
+ 	pr_info("Path: %s\n", !IS_ERR(path_nm) ? path_nm : "?");
+ }
+ 
+-static void show_faulting_vma(unsigned long address, char *buf)
++static void show_faulting_vma(unsigned long address)
+ {
+ 	struct vm_area_struct *vma;
+-	char *nm = buf;
+ 	struct mm_struct *active_mm = current->active_mm;
+ 
+ 	/* can't use print_vma_addr() yet as it doesn't check for
+@@ -96,8 +98,11 @@ static void show_faulting_vma(unsigned long address, char *buf)
+ 	 * if the container VMA is not found
+ 	 */
+ 	if (vma && (vma->vm_start <= address)) {
++		char buf[ARC_PATH_MAX];
++		char *nm = "?";
++
+ 		if (vma->vm_file) {
+-			nm = file_path(vma->vm_file, buf, PAGE_SIZE - 1);
++			nm = file_path(vma->vm_file, buf, ARC_PATH_MAX-1);
+ 			if (IS_ERR(nm))
+ 				nm = "?";
+ 		}
+@@ -173,13 +178,8 @@ void show_regs(struct pt_regs *regs)
+ {
+ 	struct task_struct *tsk = current;
+ 	struct callee_regs *cregs;
+-	char *buf;
+ 
+-	buf = (char *)__get_free_page(GFP_KERNEL);
+-	if (!buf)
+-		return;
+-
+-	print_task_path_n_nm(tsk, buf);
++	print_task_path_n_nm(tsk);
+ 	show_regs_print_info(KERN_INFO);
+ 
+ 	show_ecr_verbose(regs);
+@@ -189,7 +189,7 @@ void show_regs(struct pt_regs *regs)
+ 		(void *)regs->blink, (void *)regs->ret);
+ 
+ 	if (user_mode(regs))
+-		show_faulting_vma(regs->ret, buf); /* faulting code, not data */
++		show_faulting_vma(regs->ret); /* faulting code, not data */
+ 
+ 	pr_info("[STAT32]: 0x%08lx", regs->status32);
+ 
+@@ -221,8 +221,6 @@ void show_regs(struct pt_regs *regs)
+ 	cregs = (struct callee_regs *)current->thread.callee_reg;
+ 	if (cregs)
+ 		show_callee_regs(cregs);
+-
+-	free_page((unsigned long)buf);
+ }
+ 
+ void show_kernel_fault_diag(const char *str, struct pt_regs *regs,
+-- 
+2.19.1
+
 
 
