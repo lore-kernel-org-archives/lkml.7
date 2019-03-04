@@ -2,142 +2,112 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB9FC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D0FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4F4206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E354206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfCDUX3 (ORCPT
+        id S1726527AbfCDUYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:23:29 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:40600 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726076AbfCDUX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:23:28 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 72ABA882F5;
-        Mon,  4 Mar 2019 20:23:27 +0000 (UTC)
-Received: from krava (ovpn-204-135.brq.redhat.com [10.40.204.135])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 45E315D9CC;
-        Mon,  4 Mar 2019 20:23:24 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 21:23:23 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Networking <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "acme@redhat.com" <acme@redhat.com>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>
-Subject: Re: [PATCH v5 perf,bpf 07/15] perf, bpf: save bpf_prog_info
- information as headers to perf.data
-Message-ID: <20190304202323.GA2563@krava>
-References: <20190228050643.958685-1-songliubraving@fb.com>
- <20190228050643.958685-8-songliubraving@fb.com>
- <20190304135210.GB19809@krava>
- <CE031049-FB10-4BB5-BCA1-EA48C5BF882B@fb.com>
+        Mon, 4 Mar 2019 15:24:11 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:58823 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfCDUYL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 15:24:11 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Ml76o-1hNtbX3KMW-00lZFu; Mon, 04 Mar 2019 21:24:07 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] phy: allwinner: allow compile testing
+Date:   Mon,  4 Mar 2019 21:23:56 +0100
+Message-Id: <20190304202406.1716350-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CE031049-FB10-4BB5-BCA1-EA48C5BF882B@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 04 Mar 2019 20:23:27 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:otm8/2cZ6fCmXwrkax243T6EKj6TDGcTFhnKQ3Js+OCwc8sROTN
+ PUZYs1b0SXIGNaFqfiF3fDD/+eXKdYyZsQ4H3DADLSEDUzYGTkfTs0uAzkTrZWVxQ8UKr6/
+ 7duNzr2JJM2UIHTMvI18nqGVICrjcc8oDEwmsI8skrl6t6//RwjXj3q+jykEbbTKstWXYkV
+ BLHbfybP5KfUVOqk7SxxQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ixsoeeLvbuA=:TsYI6q74dui33r9hVIm9Jj
+ 1BJNxRDcF9j+nFLwT10o/fT2O6JsY3I6Gx6OwTqDkzVbpZNqZBhXWOKvuYr6d/S/LJi8xqr4g
+ 6rjV1vc3KYjDF3iJWqLp7PppRgSHNoiNFj52MVdEL9VqkyflYDvJ831bSuhADcziuNfmjOrXQ
+ 5aBRdmXJIfNa9/5G2vXg8PjwiRjF1rUdPwjNu94E/dIFAK/rvcJI8wnI2YWaWsFaVubIuLnDK
+ j5qGIR9OHI8lJaWBeW/K0Lyd1sMpsZDr0XVh8yFEEyC8Veo4HZciG0ooBTlHjuSw/v7wzRJCG
+ TnMFNVVNoZeW1dFqkCdYyzU5DqR010sCfhBcwZkccrt0WC82/tnuLsinpenHI0Py05f52V+fm
+ N0kR8KndKvuzCFbC01g4zGp0SjwWLgnB5SvxRZd+vCRvb8EOKt03XkZIsr4cUWlXsoVWCdFI8
+ Ay2z8pyOa6nmJ3yuzfKOfoqIFuf2A8SZHJRvOVVVH+OjvuttHnRd/KT2G3BI/UapFSMHPTudw
+ v75bK3luCP3IOz8728Iz/a2Wuwei5d/Wu86QulVCW65123+3TiutfHWN8NVlweywXIYBtggqz
+ PaXgYCKM1dT1hHIKh9vymB3m5Q8FVe5Tk7Ml9Yve4E7z3xtOKA+GgZ99sOIIwb2z0y3B2z05K
+ XYAEY3eTA3Tq+rbGLsS34zWGsTZAMPpkUKIbpKmczAqFdouR4zheXA4ehvoN03ZaqUCVnE1xF
+ 8Tn65PT6kVw2dnpZEk5ka6920Kr0rDViIEZOmQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 07:36:14PM +0000, Song Liu wrote:
-> 
-> 
-> > On Mar 4, 2019, at 5:52 AM, Jiri Olsa <jolsa@redhat.com> wrote:
-> > 
-> > On Wed, Feb 27, 2019 at 09:06:35PM -0800, Song Liu wrote:
-> > 
-> > SNIP
-> > 
-> >> +static int process_bpf_prog_info(struct feat_fd *ff,
-> >> +				 void *data __maybe_unused)
-> >> +{
-> >> +	struct bpf_prog_info_linear *info_linear;
-> >> +	struct bpf_prog_info_node *info_node;
-> >> +	struct perf_env *env = &ff->ph->env;
-> >> +	u32 count, i;
-> >> +	int err = -1;
-> >> +
-> >> +	if (do_read_u32(ff, &count))
-> >> +		return -1;
-> >> +
-> >> +	down_write(&env->bpf_progs.lock);
-> >> +
-> >> +	for (i = 0; i < count; ++i) {
-> >> +		u32 info_len, data_len;
-> >> +
-> >> +		info_linear = NULL;
-> >> +		info_node = NULL;
-> >> +		if (do_read_u32(ff, &info_len))
-> >> +			goto out;
-> >> +		if (do_read_u32(ff, &data_len))
-> >> +			goto out;
-> >> +
-> >> +		if (info_len > sizeof(struct bpf_prog_info)) {
-> >> +			pr_warning("detected invalid bpf_prog_info\n");
-> >> +			goto out;
-> >> +		}
-> >> +
-> >> +		info_linear = malloc(sizeof(struct bpf_prog_info_linear) +
-> >> +				     data_len);
-> >> +		if (!info_linear)
-> >> +			goto out;
-> >> +		info_linear->info_len = sizeof(struct bpf_prog_info);
-> >> +		info_linear->data_len = data_len;
-> >> +		if (do_read_u64(ff, (u64 *)(&info_linear->arrays)))
-> >> +			goto out;
-> >> +		if (__do_read(ff, &info_linear->info, info_len))
-> >> +			goto out;
-> >> +		if (info_len < sizeof(struct bpf_prog_info))
-> >> +			memset(((void *)(&info_linear->info)) + info_len, 0,
-> >> +			       sizeof(struct bpf_prog_info) - info_len);
-> >> +
-> >> +		if (__do_read(ff, info_linear->data, data_len))
-> >> +			goto out;
-> >> +
-> >> +		/* endian mismatch, drop the info, continue */
-> >> +		if (ff->ph->needs_swap) {
-> >> +			free(info_linear);
-> >> +			continue;
-> >> +		}
-> > 
-> > so in this case we can check for needs_swap in the begining
-> > of the function and bail out without reading all the data
-> 
-> If we bail out, perf-record will fail. If we read all the data 
-> but ignore them, perf-record will continue without bpf annotation 
-> support. I think the latter is a better experience with little 
-> effort here. 
+Some allwinner specific drivers can be built for testing purposes
+on non-sunxi configurations, which then results in a harmless
+warning:
 
-i did not mean bail out with error, just return 0, warn and go on
+WARNING: unmet direct dependencies detected for PHY_SUN6I_MIPI_DPHY
+  Depends on [n]: ARCH_SUNXI [=n] && HAS_IOMEM [=y] && OF [=y] && RESET_CONTROLLER [=y]
+  Selected by [y]:
+  - DRM_SUN6I_DSI [=y] && HAS_IOMEM [=y] && DRM_SUN4I [=y]
 
-jirka
+Allow compile-test here as well to avoid the warning, and improve
+overall build coverage.
 
-> 
-> > 
-> > also please display soem error message saying we don't support
-> > ebpf progs data report over the different endianity
-> 
-> I will add a warning in the next version. 
-> 
-> Thanks,
-> Song
-> 
+Fixes: 5d134abf9530 ("phy: Move Allwinner A31 D-PHY driver to drivers/phy/")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/phy/allwinner/Kconfig | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/phy/allwinner/Kconfig b/drivers/phy/allwinner/Kconfig
+index fb1204bcc454..53772d35b36e 100644
+--- a/drivers/phy/allwinner/Kconfig
++++ b/drivers/phy/allwinner/Kconfig
+@@ -3,7 +3,8 @@
+ #
+ config PHY_SUN4I_USB
+ 	tristate "Allwinner sunxi SoC USB PHY driver"
+-	depends on ARCH_SUNXI && HAS_IOMEM && OF
++	depends on ARCH_SUNXI || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	depends on RESET_CONTROLLER
+ 	depends on EXTCON
+ 	depends on POWER_SUPPLY
+@@ -19,7 +20,8 @@ config PHY_SUN4I_USB
+ 
+ config PHY_SUN6I_MIPI_DPHY
+ 	tristate "Allwinner A31 MIPI D-PHY Support"
+-	depends on ARCH_SUNXI && HAS_IOMEM && OF
++	depends on ARCH_SUNXI || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	depends on RESET_CONTROLLER
+ 	select GENERIC_PHY
+ 	select GENERIC_PHY_MIPI_DPHY
+@@ -31,7 +33,8 @@ config PHY_SUN6I_MIPI_DPHY
+ 
+ config PHY_SUN9I_USB
+ 	tristate "Allwinner sun9i SoC USB PHY driver"
+-	depends on ARCH_SUNXI && HAS_IOMEM && OF
++	depends on ARCH_SUNXI || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	depends on RESET_CONTROLLER
+ 	depends on USB_SUPPORT
+ 	select USB_COMMON
+-- 
+2.20.0
+
