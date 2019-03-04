@@ -2,103 +2,93 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999F0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA38FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FA320663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9867420815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfCDOtJ (ORCPT
+        id S1726729AbfCDOtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:49:09 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:60008 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfCDOtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:49:06 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 4 Mar 2019 09:49:24 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49284 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbfCDOtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 09:49:24 -0500
+Received: from localhost.localdomain (unknown [IPv6:2804:431:9718:a1b1:9d17:4c45:79a4:9c61])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8181A30EBE76;
-        Mon,  4 Mar 2019 14:49:06 +0000 (UTC)
-Received: from krava (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2B0875D96F;
-        Mon,  4 Mar 2019 14:49:05 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 15:49:04 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     acme@kernel.org, jolsa@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v3 04/11] perf tools report: Parse time quantum
-Message-ID: <20190304144904.GM30476@krava>
-References: <20190228183550.14126-1-andi@firstfloor.org>
- <20190228183550.14126-5-andi@firstfloor.org>
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 86EEA2822B8;
+        Mon,  4 Mar 2019 14:49:18 +0000 (GMT)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com
+Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        boris.brezillon@collabora.com, David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@google.com>
+Subject: [PATCH 0/5] drm: Fix fb changes for async updates
+Date:   Mon,  4 Mar 2019 11:49:04 -0300
+Message-Id: <20190304144909.6267-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190228183550.14126-5-andi@firstfloor.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 04 Mar 2019 14:49:06 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 10:35:43AM -0800, Andi Kleen wrote:
+Hello,
 
-SNIP
+This series is a first attempt to fix the slow down in performance introduced by
+"[PATCH v2] drm: Block fb changes for async plane updates" where async update
+falls back to a sync update, causing igt failures of type:
 
-> +static int
-> +parse_time_quantum(const struct option *opt, const char *arg,
-> +		   int unset __maybe_unused)
-> +{
-> +	unsigned long *time_q = opt->value;
-> +	char *end;
-> +
-> +	*time_q = strtoul(arg, &end, 0);
-> +	if (end == arg)
-> +		goto parse_err;
-> +	if (*time_q == 0) {
-> +		pr_err("time quantum cannot be 0");
-> +		return -1;
-> +	}
-> +	while (isspace(*end))
-> +		end++;
-> +	if (*end == 0)
-> +		return 0;
-> +	if (!strcmp(end, "s")) {
-> +		*time_q *= 1000000000;
-> +		return 0;
-> +	}
-> +	if (!strcmp(end, "ms")) {
-> +		*time_q *= 1000000;
-> +		return 0;
-> +	}
-> +	if (!strcmp(end, "us")) {
-> +		*time_q *= 1000;
-> +		return 0;
-> +	}
-> +	if (!strcmp(end, "ns"))
-> +		return 0;
-> +parse_err:
-> +	pr_err("Cannot parse time quantum `%s'\n", arg);
-> +	return -1;
-> +}
-> +
->  int
->  report_parse_ignore_callees_opt(const struct option *opt __maybe_unused,
->  				const char *arg, int unset __maybe_unused)
-> @@ -1148,6 +1186,9 @@ int cmd_report(int argc, const char **argv)
->  		     "Set percent type local/global-period/hits",
->  		     annotate_parse_percent_type),
->  	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs, "Show times in nanosecs"),
-> +	OPT_CALLBACK(0, "time-quantum", &symbol_conf.time_quantum, "time (ms|us|ns)",
+    "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+    expect to complete approximately 15360 updates, with the threshold set
+    at 7680"
 
-missing 's' unit in ()
+Please read the commit message of the first patch to understand how it works.
 
-jirka
+I tested on the rockchip and on i915 (with a patch I am still working on for
+replacing cursors by async update), with igt plane_cursor_legacy and
+kms_cursor_legacy and I didn't see any regressions.
+I couldn't test on MSM and AMD because I don't have the hardware and my vc4
+raspberry pi is not recognizing my display for some reason, I would appreciate
+if anyone could help me testing those.
+I also separated the patches per platform to be easier to get the tested-by tags,
+please let me know if it should be a single patch.
+
+Also, I added CC stable (as the "drm: Block fb changes for async plane updates"
+was also CCed to stable).
+I am not used to CC stable, please let me know if anything is off.
+
+Thanks!
+Helen
+
+
+Helen Koike (5):
+  drm: don't block fb changes for async plane updates
+  drm/rockchip: fix fb references in async update
+  drm/amd: fix fb references in async update
+  drm/msm: fix fb references in async update
+  drm/vc4: fix fb references in async update
+
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  3 +-
+ drivers/gpu/drm/drm_atomic_helper.c           | 20 ++++-----
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c    |  4 ++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 42 +++++++++++--------
+ drivers/gpu/drm/vc4/vc4_plane.c               |  2 +-
+ 5 files changed, 40 insertions(+), 31 deletions(-)
+
+-- 
+2.20.1
+
