@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1022CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9E7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F4A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A45920836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688206;
-	bh=IRwAwgEpnsWAQCgLS+77Oeeq32G7btJoGwee21FyYzc=;
+	s=default; t=1551688210;
+	bh=vES2JpL9+n3cdTc3aLjIJMgt7Ru9xUrimGD2/EKC1C4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VNPEj3DlZp2qsF0GZzrpxbCPnPlJGk7DNDTTxu7PJHE/lKlA53RfwUzoqDBgU6X/b
-	 ke5gudUeIfEvZNHxKmkwfn+co1aiyEQdYCTQ35LewJkiMHaK2LqHyVmEnlDPjsIkRn
-	 yVrGvVpohv7/WhI3UrnU9vQvbj+QHNibaUwQQBlk=
+	b=GtLTmtqNnJDNXpc2T+5Cbm4cCW/5xVuZ/jenvNK6HaXoNSfYCS2PkLw68RYVSym2T
+	 f1lzdPej6s7uyQ7rdpk+OeAiXzpA5ZYW6a9dtAxKDQUNymcuN0IvLKIqkh6MTsCk74
+	 PImG0zihegdR7PRgLwd3XoE5KBsTtaNquC5GMoAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfCDIaF (ORCPT
+        id S1727385AbfCDIaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:30:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57476 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:30:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbfCDIaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:30:00 -0500
+        id S1727657AbfCDIaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:30:06 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0E0E20836;
-        Mon,  4 Mar 2019 08:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AFC2208E4;
+        Mon,  4 Mar 2019 08:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688199;
-        bh=IRwAwgEpnsWAQCgLS+77Oeeq32G7btJoGwee21FyYzc=;
+        s=default; t=1551688205;
+        bh=vES2JpL9+n3cdTc3aLjIJMgt7Ru9xUrimGD2/EKC1C4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1e44uoGlJI8UPPs6+/3A3CeY9UWJs65oHhY1qmgUfnyKwUATmYDABL+pQJmqWucl9
-         HtdEjtbyubctjR9od1x1dxD6lauEe97oOozDkv7dVL9xUPepmjMtU5//xCcsaZA7/L
-         c1y7nD3R20SEFhlriLVnF5LsY9uaQZF9faZFWtmk=
+        b=UKTUt05eSx0rjG+sisDOZ5pAXIBA0N1Av7ORnQ5qiGIwt85QuPTQ4dVAoxvidRR44
+         +5adXiSyEQyGuFuPMRfYUFTIBkpODd07dtFvqYlVDLAuq4zNRxqX1ImBbDHVpBAg6e
+         o1IvndlzBt8aGL/2nWukjxluFOYHyDeQef/T1AEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 47/78] scsi: lpfc: nvmet: avoid hang / use-after-free when destroying targetport
-Date:   Mon,  4 Mar 2019 09:22:30 +0100
-Message-Id: <20190304081627.590197894@linuxfoundation.org>
+Subject: [PATCH 4.19 49/78] net: altera_tse: fix connect_local_phy error path
+Date:   Mon,  4 Mar 2019 09:22:32 +0100
+Message-Id: <20190304081627.684010564@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081625.508788074@linuxfoundation.org>
 References: <20190304081625.508788074@linuxfoundation.org>
@@ -67,71 +67,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c41f59884be5cca293ed61f3d64637dbba3a6381 ]
+[ Upstream commit 17b42a20d7ca59377788c6a2409e77569570cc10 ]
 
-We cannot wait on a completion object in the lpfc_nvme_targetport structure
-in the _destroy_targetport() code path because the NVMe/fc transport will
-free that structure immediately after the .targetport_delete() callback.
-This results in a use-after-free, and a hang if slub_debug=FZPU is enabled.
+The connect_local_phy should return NULL (not negative errno) on
+error, since its caller expects it.
 
-Fix this by putting the completion on the stack.
-
-Signed-off-by: Ewan D. Milne <emilne@redhat.com>
-Acked-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvmet.c | 8 +++++---
- drivers/scsi/lpfc/lpfc_nvmet.h | 2 +-
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/altera/altera_tse_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
-index b766afe10d3d7..e2575c8ec93e8 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.c
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.c
-@@ -1003,7 +1003,8 @@ lpfc_nvmet_targetport_delete(struct nvmet_fc_target_port *targetport)
- 	struct lpfc_nvmet_tgtport *tport = targetport->private;
+diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+index baca8f704a459..c3c1195021a2b 100644
+--- a/drivers/net/ethernet/altera/altera_tse_main.c
++++ b/drivers/net/ethernet/altera/altera_tse_main.c
+@@ -714,8 +714,10 @@ static struct phy_device *connect_local_phy(struct net_device *dev)
  
- 	/* release any threads waiting for the unreg to complete */
--	complete(&tport->tport_unreg_done);
-+	if (tport->phba->targetport)
-+		complete(tport->tport_unreg_cmp);
- }
+ 		phydev = phy_connect(dev, phy_id_fmt, &altera_tse_adjust_link,
+ 				     priv->phy_iface);
+-		if (IS_ERR(phydev))
++		if (IS_ERR(phydev)) {
+ 			netdev_err(dev, "Could not attach to PHY\n");
++			phydev = NULL;
++		}
  
- static void
-@@ -1700,6 +1701,7 @@ lpfc_nvmet_destroy_targetport(struct lpfc_hba *phba)
- 	struct lpfc_nvmet_tgtport *tgtp;
- 	struct lpfc_queue *wq;
- 	uint32_t qidx;
-+	DECLARE_COMPLETION_ONSTACK(tport_unreg_cmp);
- 
- 	if (phba->nvmet_support == 0)
- 		return;
-@@ -1709,9 +1711,9 @@ lpfc_nvmet_destroy_targetport(struct lpfc_hba *phba)
- 			wq = phba->sli4_hba.nvme_wq[qidx];
- 			lpfc_nvmet_wqfull_flush(phba, wq, NULL);
- 		}
--		init_completion(&tgtp->tport_unreg_done);
-+		tgtp->tport_unreg_cmp = &tport_unreg_cmp;
- 		nvmet_fc_unregister_targetport(phba->targetport);
--		wait_for_completion_timeout(&tgtp->tport_unreg_done, 5);
-+		wait_for_completion_timeout(&tport_unreg_cmp, 5);
- 		lpfc_nvmet_cleanup_io_context(phba);
- 	}
- 	phba->targetport = NULL;
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.h b/drivers/scsi/lpfc/lpfc_nvmet.h
-index 1aaff63f1f419..0ec1082ce7ef6 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.h
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.h
-@@ -34,7 +34,7 @@
- /* Used for NVME Target */
- struct lpfc_nvmet_tgtport {
- 	struct lpfc_hba *phba;
--	struct completion tport_unreg_done;
-+	struct completion *tport_unreg_cmp;
- 
- 	/* Stats counters - lpfc_nvmet_unsol_ls_buffer */
- 	atomic_t rcv_ls_req_in;
+ 	} else {
+ 		int ret;
 -- 
 2.19.1
 
