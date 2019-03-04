@@ -4,133 +4,205 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_12_24,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA758C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 03:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4A1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 03:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F56206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 03:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121CA206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 03:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfCEDCO (ORCPT
+        id S1726955AbfCEDH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 22:02:14 -0500
-Received: from mga01.intel.com ([192.55.52.88]:20809 "EHLO mga01.intel.com"
+        Mon, 4 Mar 2019 22:07:26 -0500
+Received: from mga17.intel.com ([192.55.52.151]:23220 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbfCEDCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 22:02:14 -0500
+        id S1726522AbfCEDH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 22:07:26 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 19:02:13 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 19:07:25 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,442,1544515200"; 
-   d="scan'208";a="121008068"
+   d="scan'208";a="325445028"
 Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by orsmga006.jf.intel.com with ESMTP; 04 Mar 2019 19:02:09 -0800
-Date:   Mon, 4 Mar 2019 17:56:40 +0800
+  by fmsmga005.fm.intel.com with ESMTP; 04 Mar 2019 19:07:23 -0800
+Date:   Mon, 4 Mar 2019 18:01:54 +0800
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     Sean Christopherson <sean.j.christopherson@intel.com>
 Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>,
-        wei.w.wang@intel.com, weijiang.yang@inte.com
-Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
- enabled in Guest
-Message-ID: <20190304095640.GA3576@local-michael-cet-test.sh.intel.com>
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: Re: [PATCH v3 3/8] KVM:CPUID: Add CPUID support for Guest CET
+Message-ID: <20190304100154.GA3617@local-michael-cet-test.sh.intel.com>
 References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-7-weijiang.yang@intel.com>
- <20190228161715.GF6166@linux.intel.com>
- <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
- <20190301145819.GC22584@linux.intel.com>
- <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
- <20190304184307.GC17120@linux.intel.com>
+ <20190225132716.6982-4-weijiang.yang@intel.com>
+ <20190304184753.GD17120@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190304184307.GC17120@linux.intel.com>
+In-Reply-To: <20190304184753.GD17120@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 10:43:07AM -0800, Sean Christopherson wrote:
-> On Sun, Mar 03, 2019 at 08:26:08PM +0800, Yang Weijiang wrote:
-> > On Fri, Mar 01, 2019 at 06:58:19AM -0800, Sean Christopherson wrote:
-> > > On Thu, Feb 28, 2019 at 04:38:44PM +0800, Yang Weijiang wrote:
-> > > > On Thu, Feb 28, 2019 at 08:17:15AM -0800, Sean Christopherson wrote:
-> > > > > On Mon, Feb 25, 2019 at 09:27:14PM +0800, Yang Weijiang wrote:
-> > > > > > "Load Guest CET state" bit controls whether guest CET states
-> > > > > > will be loaded at Guest entry. Before doing that, KVM needs
-> > > > > > to check if CPU CET feature is available.
-> > > > > > 
-> > > > > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > > > > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > > > > > ---
-> > > > > >  arch/x86/kvm/vmx.c | 32 ++++++++++++++++++++++++++++++++
-> > > > > >  1 file changed, 32 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> > > > > > index 89ee086e1729..d32cee9ee079 100644
-> > > > > > --- a/arch/x86/kvm/vmx.c
-> > > > > > +++ b/arch/x86/kvm/vmx.c
-> > > > > > @@ -55,6 +55,7 @@
-> > > > > >  #include <asm/mmu_context.h>
-> > > > > >  #include <asm/spec-ctrl.h>
-> > > > > >  #include <asm/mshyperv.h>
-> > > > > > +#include <asm/cet.h>
-> > > > > >  
-> > > > > >  #include "trace.h"
-> > > > > >  #include "pmu.h"
-> > > > > > @@ -4065,6 +4066,20 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
-> > > > > >  	return !(val & ~valid_bits);
-> > > > > >  }
-> > > > > >  
-> > > > > > +static int vmx_guest_cet_cap(struct kvm_vcpu *vcpu)
-> > > > > > +{
-> > > > > > +	u32 eax, ebx, ecx, edx;
-> > > > > > +
-> > > > > > +	/*
-> > > > > > +	 * Guest CET can work as long as HW supports the feature, independent
-> > > > > > +	 * to Host SW enabling status.
-> > > > > > +	 */
-> > > > > > +	cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
-> > > > > > +
-> > > > > > +	return ((ecx & bit(X86_FEATURE_SHSTK)) |
-> > > > > > +		(edx & bit(X86_FEATURE_IBT))) ? 1 : 0;
-> > > > > 
-> > > > > Given the holes in the (current) architecture/spec, I think KVM has to
-> > > > > require both features to be supported in the guest to allow CR4.CET to
-> > > > > be enabled.
-> > > > The reason why I use a "OR" here is to keep CET enabling control the
-> > > > same as that on host, right now on host, users can select to enable  SHSTK or IBT
-> > > > feature by disabling the unexpected one. It's free to select SHSTK & IBT
-> > > > or SHSTK | IBT.
-> > > 
-> > > Which is not the same as SHSTK != IBT in *hardware*, which is effectively
-> > > what this is allowing for the guest.  The problem is that the architecture
-> > > doesn't cleanly separate the two features, i.e. we'd have a virtualization
-> > > hole where the guest could touch state for a disabled feature.
-> > > 
-> > > Regardless, the guest would still be able to selectively enable each CET
-> > > feature, it would just never see a model where SHSTK != IBT.
-> > Hi, Sean,
-> > I'd like to understand your concerns. From my point of view, e.g., 
-> > when only IBT is enabled, PL3_SSP MSR would be unnecessrily exposed,
-> > this is the design "limitation", but PL3_SSP keeps 0 if SHSTK is not
-> > configured. Could you detail your concerns?
+On Mon, Mar 04, 2019 at 10:47:53AM -0800, Sean Christopherson wrote:
+> On Mon, Feb 25, 2019 at 09:27:11PM +0800, Yang Weijiang wrote:
+> > Guest CET SHSTK and IBT capability are reported via
+> > CPUID.(EAX=7, ECX=0):ECX[bit 7] and EDX[bit 20] respectively.
+> > Guest user mode and supervisor mode xsaves component size
+> > is reported via CPUID.(EAX=0xD, ECX=1):ECX[bit 11] and ECX[bit 12]
+> > respectively.
+> > 
+> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> >  arch/x86/kvm/cpuid.c | 60 +++++++++++++++++++++++++++++++++-----------
+> >  arch/x86/kvm/x86.h   |  4 +++
+> >  2 files changed, 50 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index cb1aece25b17..5e05756cc6db 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
+> >  	return xcr0;
+> >  }
+> >  
+> > +u64 kvm_supported_xss(void)
+> > +{
+> > +	u64 xss;
+> > +
+> > +	rdmsrl(MSR_IA32_XSS, xss);
 > 
-> In your approach, IA32_{S,U}_CET can be written if SHSTK or IBT is exposed
-> to the guest.  If only SHSTK is exposed, a devious guest can still use IBT
-> because it can set CR4.CET as well as the enable bits in IA32_{S,U}_CET.
-> Preventing the guest from using IBT in this scenario is infeasible as it
-> would require trapping and emulating the XSAVE as well as the relevent CET
-> MSRs.
-Cannot agree with you more!
-This is some design limitation, but from my point of view, once vmm
-exposes CET capability to guest via CPUID, it grants the guest kernel freedom to choose
-which features to be enabled, we don't need to add extra constraints on
-the usage.
-
+> Honest question as I haven't thought through the flows: do we actually
+> need to restrict XSS based on what's enabled in the host?  This
+> conflicts with your other statements that CET features can be enabled
+> independent of host support.
+> 
+> And if we do incorporate the host status, the value should be read once
+> and cached unless we're expecting the host value to change dynamically,
+> e.g. see host_efer.
+> 
+> > +	xss &= KVM_SUPPORTED_XSS;
+> > +	return xss;
+> > +}
+> > +EXPORT_SYMBOL(kvm_supported_xss);
+> > +
+> >  #define F(x) bit(X86_FEATURE_##x)
+> >  
+> >  /* For scattered features from cpufeatures.h; we currently expose none */
+> > @@ -323,6 +333,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  				 u32 index, int *nent, int maxnent)
+> >  {
+> >  	int r;
+> > +	u32 eax, ebx, ecx, edx;
+> >  	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+> >  #ifdef CONFIG_X86_64
+> >  	unsigned f_gbpages = (kvm_x86_ops->get_lpage_level() == PT_PDPE_LEVEL)
+> > @@ -503,6 +514,20 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  			 * if the host doesn't support it.
+> >  			 */
+> >  			entry->edx |= F(ARCH_CAPABILITIES);
+> > +
+> > +			/*
+> > +			 * Guest OS CET enabling is designed independent to
+> > +			 * host enabling, it only has dependency on Host HW
+> > +			 * capability, if it has, report CET support to
+> > +			 * Guest.
+> > +			 */
+> > +			cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+> > +			if (ecx & F(SHSTK))
+> > +				entry->ecx |= F(SHSTK);
+> > +
+> > +			if (edx & F(IBT))
+> > +				entry->edx |= F(IBT);
+> > +
+> >  		} else {
+> >  			entry->ebx = 0;
+> >  			entry->ecx = 0;
+> > @@ -564,14 +589,17 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  	}
+> >  	case 0xd: {
+> >  		int idx, i;
+> > -		u64 supported = kvm_supported_xcr0();
+> > +		u64 u_supported = kvm_supported_xcr0();
+> > +		u64 s_supported = kvm_supported_xss();
+> > +		u64 supported;
+> > +		int compacted;
+> >  
+> > -		entry->eax &= supported;
+> > -		entry->ebx = xstate_required_size(supported, false);
+> > +		entry->eax &= u_supported;
+> > +		entry->ebx = xstate_required_size(u_supported, false);
+> >  		entry->ecx = entry->ebx;
+> > -		entry->edx &= supported >> 32;
+> > +		entry->edx &= u_supported >> 32;
+> >  		entry->flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> > -		if (!supported)
+> > +		if (!u_supported && !s_supported)
+> >  			break;
+> >  
+> >  		for (idx = 1, i = 1; idx < 64; ++idx) {
+> > @@ -583,19 +611,23 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> >  			if (idx == 1) {
+> >  				entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
+> >  				cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
+> > -				entry[i].ebx = 0;
+> > -				if (entry[i].eax & (F(XSAVES)|F(XSAVEC)))
+> > -					entry[i].ebx =
+> > -						xstate_required_size(supported,
+> > -								     true);
+> > +				supported = u_supported | s_supported;
+> > +				compacted = entry[i].eax &
+> > +					(F(XSAVES) | F(XSAVEC));
+> > +				entry[i].ebx = xstate_required_size(supported,
+> > +								    compacted);
+> > +				entry[i].ecx &= s_supported;
+> > +				entry[i].edx = 0;
+> >  			} else {
+> > +				supported = (entry[i].ecx & 1) ? s_supported :
+> > +								 u_supported;
+> >  				if (entry[i].eax == 0 || !(supported & mask))
+> >  					continue;
+> > -				if (WARN_ON_ONCE(entry[i].ecx & 1))
+> > -					continue;
+> > +				entry[i].ecx &= 1;
+> > +				entry[i].edx = 0;
+> > +				if (entry[i].ecx)
+> > +					entry[i].ebx = 0;
+> >  			}
+> > -			entry[i].ecx = 0;
+> > -			entry[i].edx = 0;
+> >  			entry[i].flags |=
+> >  			       KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> >  			++*nent;
+> > diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> > index 224cd0a47568..c61da41c3c5c 100644
+> > --- a/arch/x86/kvm/x86.h
+> > +++ b/arch/x86/kvm/x86.h
+> > @@ -283,6 +283,10 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
+> >  				| XFEATURE_MASK_YMM | XFEATURE_MASK_BNDREGS \
+> >  				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
+> >  				| XFEATURE_MASK_PKRU)
+> > +
+> > +#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_SHSTK_USER \
+> > +				| XFEATURE_MASK_SHSTK_KERNEL)
+> 
+> I don't think these definitions are correct, the spec I have lists them
+> as CET_U and CET_S, i.e. they aren't specific to SHSTK.  Did these names
+> get inherited from the kernel enabling patches?
+>
+Yes, exactly, I'll notify kernel developer of the issue.
+> > +
+> >  extern u64 host_xcr0;
+> >  
+> >  extern u64 kvm_supported_xcr0(void);
+> > -- 
+> > 2.17.1
+> > 
