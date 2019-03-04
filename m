@@ -2,75 +2,95 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9E1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A75C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E39206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2C5206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:26:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfCDU0o (ORCPT
+        id S1726599AbfCDU0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:26:44 -0500
-Received: from mga18.intel.com ([134.134.136.126]:40746 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbfCDU0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:26:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 12:26:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,441,1544515200"; 
-   d="scan'208";a="138012247"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Mar 2019 12:26:42 -0800
-Subject: [PATCH] libnvdimm/namespace: Clean up holder_class_store()
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     vishal.l.verma@intel.com, linux-kernel@vger.kernel.org
-Date:   Mon, 04 Mar 2019 12:14:04 -0800
-Message-ID: <155173044436.4154095.17954771880753980013.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Mon, 4 Mar 2019 15:26:52 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:37765 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfCDU0v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 15:26:51 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M42fG-1h0uAd0iga-0004G4; Mon, 04 Mar 2019 21:26:43 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Bai Ping <ping.bai@nxp.com>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: freescale: fix link errors
+Date:   Mon,  4 Mar 2019 21:26:25 +0100
+Message-Id: <20190304202640.1765847-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:zyMEgrcou+Iot8SUeeR8TBkWtFOqcT6qNhUlnnP4FxD5o7vf/ja
+ r565rI16bNQiu3SPRRhL8UYsobsECcVPeUEjNNe4r/CpW31bqWKpAZzw5aqusuFrEqRoyN5
+ ij+mdgRGWT1Uwv/VK06Covlc4DuZn+JepTNw51MgSO1O+UuDY3EtrYdUL2ZBI4dAFINuQTc
+ h40b0e5v0QWKUmzZKzr6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZN/xFHvcVGc=:EcRh16FvLgBh1sZvl8C7XE
+ NAupQFIHbBc4/4cKs+m8YxYNb1krhqYq83/xsWphI2aTB/JdW+Q1C+lca5ChGBzlfLW+fnMxo
+ QTZ+IHP2FNCJUwMVZbZEVmXolHrRzCU84xN4Sa5nlZyJrZBkNczDScCpzsbqZ9jkvNRs3tlGD
+ C4FwSfYZURhcU3N/7am5eRDiHhudnCIK/saUp2dTsGKUP4dJrJo/jVGZyPWMgTyS/GrrE1uLO
+ fIHjMaZf3YEfGjq0h9FrAGzd8ZJYxeQGzlXH73dNmswxJ4+BRkVMzWKztLleko3OORU8iwCB1
+ I4kbQHimrHckMevgreWO2XGS55eG/t4T9HulZBUuzba1TsgYSzDrne6OKFBdaL6icrjohVCj1
+ T1qqeUPOnQvAYfHQlYK+pOpdmLz5LUAcHOxFL/Mjps4n7f82nN9v3F5dO7hsDSr8ELYJB6OGM
+ TN68I8xfmhbyL4+Kse7qVW5XY6KmINF0Xea79Zaig+PVGDOjz0hyQgpa4xeykQzSb7XUwFwBh
+ KZkU8nAHTcspXZrgrNRI01XTEGF52puRncQHvT7JXde//0jkcIRjjQztwyX8iltakbXxB8l7N
+ GY7wqmRnucuTjXDR1+UwSZidaUPWelVehek6DN4v+00Jwm6jGhTLFdZL5Ey9e2AkqvyKToMuH
+ UasZ4naDWNWzTe272ppw7l3rNOhvofkapPkkuNPrUnIWv91la8ufmynXQKgB7gzuT5V8lH6nw
+ u0uSOV2YBSwrP+rduMlDozvGATj3mMKWi+6Mng==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use sysfs_streq() in place of open-coded strcmp()'s that check for an
-optional "\n" at the end of the input.
+Submitted by Anders Roxell already
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/nvdimm/namespace_devs.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pinctrl/freescale/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index 3677b0c4a33d..17fb7f931f0c 100644
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -1506,13 +1506,13 @@ static ssize_t __holder_class_store(struct device *dev, const char *buf)
- 	if (dev->driver || ndns->claim)
- 		return -EBUSY;
+diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
+index e6dff3167a67..e447b996e79f 100644
+--- a/drivers/pinctrl/freescale/Kconfig
++++ b/drivers/pinctrl/freescale/Kconfig
+@@ -138,14 +138,14 @@ config PINCTRL_IMX8MQ
  
--	if (strcmp(buf, "btt") == 0 || strcmp(buf, "btt\n") == 0)
-+	if (sysfs_streq(buf, "btt"))
- 		ndns->claim_class = btt_claim_class(dev);
--	else if (strcmp(buf, "pfn") == 0 || strcmp(buf, "pfn\n") == 0)
-+	else if (sysfs_streq(buf, "pfn"))
- 		ndns->claim_class = NVDIMM_CCLASS_PFN;
--	else if (strcmp(buf, "dax") == 0 || strcmp(buf, "dax\n") == 0)
-+	else if (sysfs_streq(buf, "dax"))
- 		ndns->claim_class = NVDIMM_CCLASS_DAX;
--	else if (strcmp(buf, "") == 0 || strcmp(buf, "\n") == 0)
-+	else if (sysfs_streq(buf, ""))
- 		ndns->claim_class = NVDIMM_CCLASS_NONE;
- 	else
- 		return -EINVAL;
+ config PINCTRL_IMX8QM
+ 	bool "IMX8QM pinctrl driver"
+-	depends on ARCH_MXC && ARM64
++	depends on ARCH_MXC && ARM64 && IMX_SCU
+ 	select PINCTRL_IMX_SCU
+ 	help
+ 	  Say Y here to enable the imx8qm pinctrl driver
+ 
+ config PINCTRL_IMX8QXP
+ 	bool "IMX8QXP pinctrl driver"
+-	depends on ARCH_MXC && ARM64
++	depends on ARCH_MXC && ARM64 && IMX_SCU
+ 	select PINCTRL_IMX_SCU
+ 	help
+ 	  Say Y here to enable the imx8qxp pinctrl driver
+-- 
+2.20.0
 
