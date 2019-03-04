@@ -2,187 +2,164 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FD6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C40D0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E8020823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=verge.net.au header.i=@verge.net.au header.b="X5x+M1yx"
+	by mail.kernel.org (Postfix) with ESMTP id 9257C20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551692497;
+	bh=4P8RoLiYD0ZUyjPuCiGHblcYRulJJlpt54LavqE0KZg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xbJTegYd3j++WwU6fewJeq33I0wcDPyWY6LgtyTKiIyFWs0OcvXMDGpvM9VGITZCd
+	 x+g8Xuna9eHtSeQrAuRw7lC9hwgHSa2i8FDan3IXK+YSR0qnEoE7WN66wQVezI33nc
+	 Blk8OhkpSX92uU9IirBHSi4AUFo3GN60/bxiAg/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbfCDJlB (ORCPT
+        id S1726413AbfCDJlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 04:41:01 -0500
-Received: from kirsty.vergenet.net ([202.4.237.240]:38554 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfCDJlB (ORCPT
+        Mon, 4 Mar 2019 04:41:36 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44989 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfCDJlf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 04:41:01 -0500
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id A364525BE43;
-        Mon,  4 Mar 2019 20:40:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=verge.net.au; s=mail;
-        t=1551692455; bh=TdGoX41akHOpCM9eMpDPEDl0eg/oyg57a+AgVWGGb0k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X5x+M1yxVQiWjzmOE1cFD/vsE1/mM6RupH2RqtPg/P/n8pjRNlsIJeeif4w/T/nkH
-         vKc79Dh9KtMm9XQHHWlxA+YrkDBInGg6bjKhHHvwPYSjtXu7KRcgB+sDt2mQXls9Jl
-         DA2PuNQBRPfA8iqk9DtDLaU1nX02Hl3WfBDfY5A8=
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id D6BBD94030D; Mon,  4 Mar 2019 10:40:52 +0100 (CET)
-Date:   Mon, 4 Mar 2019 10:40:52 +0100
-From:   Simon Horman <horms@verge.net.au>
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <treding@nvidia.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Johan Hovold <johan@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Ben Whitten <ben.whitten@gmail.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ebiharaml@si-linux.co.jp" <ebiharaml@si-linux.co.jp>,
-        Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
-Message-ID: <20190304094052.huutusp3erakcfea@verge.net.au>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <TY1PR01MB1770A46D7FA45A8AFA923DADC0670@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190215075226.413d55dc@jawa>
- <c2eb829b-96a7-20cb-913f-ce4214f2156c@suse.de>
- <TYXPR01MB1775ECF6D79FCA2C0040DA06C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+        Mon, 4 Mar 2019 04:41:35 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a81so3327146oii.11;
+        Mon, 04 Mar 2019 01:41:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IxZOjL8rfcQsaR3p+fMtLJ2bMc9ap3yM1eKP4htytYk=;
+        b=mApk3H3FDmOhLSxqCY2GAnkxHO5FG9GbaD2TygagxL/ESzCkPC/YyAPlTJypjij5d3
+         AUbnr/FnhDKxFWh11nbWdoBCng4bnK3qA/GOwFWvzF2eBby4e8BauGoL7mkxVMy9XTU4
+         zp/PgZKUlyB52M+l7V8FDW069koMuThNpp26K5hIP+37/A/tw3tJtntZdRryije98C1Z
+         jLHfBCEzcJzx8XU+Yh08MQK1pl0rTHuUl2QW1p/ESj9Q2OJGK4K63pl6dxRw9NXDfKMq
+         biukHM335AuMCoe+OrmK0Xj8HsZ5bDFGaigwknifUhEAF9ZuXsJ1fc/Q4yl35m5Q1lve
+         Qi4Q==
+X-Gm-Message-State: AHQUAuYQCJ2KuCLxzkNYMZvTrvoPvwEr1J/JHBAuUD2GjjfQtSKhzMDd
+        Gexv8uP2P5KxHmYUc9sIsFj6ViX2U/TBuuMK7yY=
+X-Google-Smtp-Source: AHgI3IaifYeuDFK/1uNtGzeSZfaNBZU5RElHsOZPEtvGZc3d3u/ZJv9RvsUt76N0wq65PVOW4v6B7EF62a5PaqRf6H0=
+X-Received: by 2002:aca:355:: with SMTP id 82mr11997841oid.30.1551692494720;
+ Mon, 04 Mar 2019 01:41:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <TYXPR01MB1775ECF6D79FCA2C0040DA06C0760@TYXPR01MB1775.jpnprd01.prod.outlook.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <9956076.F4luUDm1Dq@aspire.rjw.lan> <fa5e3e09eb32f5197bef2a50ced952850bf70748.camel@linux.intel.com>
+ <CAJZ5v0ik6oHCXD23tURsRXRj1-C-Z=S6y+KEiRxe0zJpGrKa+Q@mail.gmail.com>
+ <f214b0d82fce14c374aa6b548742c999513d9046.camel@linux.intel.com>
+ <CAJZ5v0huRALvfFBeo067dNMyUJn+Oyp8eFR3JRR+C9g7QhaekA@mail.gmail.com> <47ce61b9df7701e047ef6f59afd54c854db8a538.camel@linux.intel.com>
+In-Reply-To: <47ce61b9df7701e047ef6f59afd54c854db8a538.camel@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 4 Mar 2019 10:41:22 +0100
+Message-ID: <CAJZ5v0iCVhj-HmToGnSBuYE99LMn0BZpB-Ax48Aqh9hVc1+qwQ@mail.gmail.com>
+Subject: Re: [RFT][PATCH 0/2] cpufreq: intel_pstate: Handle _PPC updates on
+ global turbo disable/enable
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Gabriele Mazzotta <gabriele.mzt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 12:03:06PM +0000, Fabrizio Castro wrote:
-> Thank you Andreas.
-> 
-> > From: Andreas Färber <afaerber@suse.de>
-> > Sent: 15 February 2019 09:10
-> > Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
-> > 
-> > Hi Lukasz and Fabrizio,
-> > 
-> > Am 15.02.19 um 07:52 schrieb Lukasz Majewski:
-> > > The best approach is to run:
+On Mon, Mar 4, 2019 at 5:06 AM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> On Sun, 2019-03-03 at 22:51 +0100, Rafael J. Wysocki wrote:
+> > On Sun, Mar 3, 2019 at 10:20 PM Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com> wrote:
 > > >
-> > > git format patch -1 <your patch sha>
+> > > On Sun, 2019-03-03 at 18:03 +0100, Rafael J. Wysocki wrote:
+> > > > On Fri, Mar 1, 2019 at 6:39 PM Srinivas Pandruvada
+> > > > <srinivas.pandruvada@linux.intel.com> wrote:
+> > > > >
+> > > > > On Fri, 2019-03-01 at 13:43 +0100, Rafael J. Wysocki wrote:
+> > > > > > Hi All,
+> > > > > >
+> > > > > > This is how I would fix the issue reported in BZ 200759 (see
+> > > > > > thisdev
+> > > > > > patch series
+> > > > > > from Yu too:
+> > > > > > https://marc.info/?l=linux-pm&m=155137672924029&w=2)
+> > > > > > .
+> > > > > >
+> > > > > > Patch [1/2] causes intel_pstate to update all policies if it
+> > > > > > gets
+> > > > > > a
+> > > > > > _PPC change
+> > > > > > notification and sees a global turbo disable/enable change.
+> > > > > >
+> > > > > > Patch [2/2] makes it update cpuinfo.max_freq for all policies
+> > > > > > in
+> > > > > > those cases.
+> > > > > >
+> > > > > > The patches here have not been tested yet, so testing would
+> > > > > > be
+> > > > > > much
+> > > > > > appreciated.
+> > > > > >
+> > > > > > Of course, comments are welcome too!
+> > > > >
+> > > > > This is the only platform, someone reported such issue.
+> > > >
+> > > > I don't think this matters.
+> > > >
+> > > > First, it doesn't mean that no other problems have this problem.
+> > > >
+> > > > Second, the current handling of
+> > > > MSR_IA32_MISC_ENABLE_TURBO_DISABLE
+> > > > changes in intel_pstate is not sufficient if the changes is from
+> > > > set
+> > > > to unset anyway.
 > > >
-> > > And then
-> > >
-> > > scripts/get_maintainer.pl 0001-xxxxxxx
-> > >
-> > > You shall see the the list of people to send the patch.
-> > 
-> > No, that does not answer his question. And please don't top-post.
-> > 
-> > >> Who is the best person for taking this patch?
-> > 
-> > The answer is: whomever is taking dt-bindings patches in the following
-> > 10 patches that make use of this prefix, once you have a Reviewed-by
-> > from Rob. So, most likely the Renesas kernel maintainer(s), i.e. Simon,
-> > which differs from get_maintainers.pl of vendor-prefixes.txt.
-> 
-> Simon, do you think you can take this patch?
+> > > Any platform with HWP, you can't even notify of this change. So any
+> > > platform beyond SKL is not useful.
+> >
+> > Do you mean that HWP platforms don't supply _PPS (as a rule) and so
+> > they don't send _PPC notifications?  Is there anything they do
+> > instead
+> > of it?
+>
+> There are other methods like PL1 budget limit for such cases. FW can
+> just change the config TDP level.
 
-Sure, I have queued it up for v5.2.
+OK, but that would be done without notification I suppose?
 
-> 
-> Thanks,
-> Fab
-> 
-> > 
-> > Regards,
-> > Andreas
-> > 
-> > >>> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >>> Sent: 16 January 2019 18:38
-> > >>> Subject: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon
-> > >>> Linux.
-> > >>>
-> > >>> From: Biju Das <biju.das@bp.renesas.com>
-> > >>>
-> > >>> Add Silicon Linux to the list of devicetree vendor prefixes.
-> > >>>
-> > >>> Website: http://www.si-linux.co.jp
-> > >>>
-> > >>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > >>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >>> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> > >>> ---
-> > >>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> > >>>  1 file changed, 1 insertion(+)
-> > >>>
-> > >>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > >>> b/Documentation/devicetree/bindings/vendor-prefixes.txt index
-> > >>> 4b1a2a8..02a7037 100644 ---
-> > >>> a/Documentation/devicetree/bindings/vendor-prefixes.txt +++
-> > >>> b/Documentation/devicetree/bindings/vendor-prefixes.txt @@ -344,6
-> > >>> +344,7 @@ sgxSGX Sensortech sharpSharp Corporation
-> > >>>  shimafujiShimafuji Electric, Inc.
-> > >>>  si-enSi-En Technology Ltd.
-> > >>> +si-linuxSilicon Linux Corporation
-> > >>>  sifiveSiFive, Inc.
-> > >>>  sigmaSigma Designs, Inc.
-> > >>>  siiSeiko Instruments, Inc.
-> > >>> --
-> > >>> 2.7.4
-> > >>
-> > >>
-> > >>
-> > >> Renesas Electronics Europe GmbH,Geschaeftsfuehrer/President : Michael
-> > >> Hannawald, Sitz der Gesellschaft/Registered office: Duesseldorf,
-> > >> Arcadiastrasse 10, 40472 Duesseldorf,
-> > >> Germany,Handelsregister/Commercial Register: Duesseldorf, HRB 3708
-> > >> USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WEEE
-> > >> reg. no.: DE 14978647
-> > >
-> > >
-> > >
-> > >
-> > > Best regards,
-> > >
-> > > Lukasz Majewski
-> > >
-> > > --
-> > >
-> > > DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-> > > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-> > > Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-> > >
-> > 
-> > 
-> > --
-> > SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-> > GF: Felix Imendörffer, Jane Smithard, Graham Norton
-> > HRB 21284 (AG Nürnberg)
-> 
+> > That's fair enough, but the point is that the driver doesn'dev_t do
+> > the right thing even if the platform does send a _PPC notification.
+>
+> _PPC notification is to indicate levels in _PSS not to disable/enable
+> turbo via IA32_MISC_*.
+
+I was not talking about notifications, but about what the driver does
+when MSR_IA32_MISC_ENABLE_TURBO_DISABLE is set or unset by FW on the
+fly: this only really works if the change is from unset to set,
+because the range of frequencies to use is restricted then, even
+though user-visible policy limits are not updated.  However, if the
+change is from set to unset, the update of policy limits is actually
+necessary for the change to really take effect (otherwise the user
+policy max prevents turbo frequencies from being requested).  HWP
+seems to be affected too, for that matter, because the upper limit in
+the MSR is not updated too then AFAICS.
+
+> The platform could have just set _PPC to 1 or to TAR-1. Here _PPC is sent for somthing more than just changing _PSS max
+> level. Do we have bug in if _PPC just changes performance level?
+
+I think that we just need to live with the fact that _PPC may be
+triggered for something more than changing _PSS max.
+
+Note that the driver could trigger policy updates on
+MSR_IA32_MISC_ENABLE_TURBO_DISABLE changes even without _PPC
+notifications, but that would require more intrusive changes, because
+work items cannot be queued up from scheduler context.  It would need
+to use irq_work for that and with some extra synchronization etc, and
+for the time being it looks like we can piggy back on the _PPC change
+notification mechanism.
