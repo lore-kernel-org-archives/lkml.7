@@ -2,271 +2,263 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 639C0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7AEC10F03
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306812070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997C12070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfCDTTs (ORCPT
+        id S1726196AbfCDTVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:19:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57048 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726038AbfCDTTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:19:48 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E0317AE8D;
-        Mon,  4 Mar 2019 19:19:45 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id C825CDA7F5; Mon,  4 Mar 2019 20:21:04 +0100 (CET)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, clm@fb.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs updates for 5.1, part 1
-Date:   Mon,  4 Mar 2019 20:20:53 +0100
-Message-Id: <cover.1551726327.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 4 Mar 2019 14:21:12 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:48960 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726143AbfCDTVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:21:11 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1h0t9B-0002yA-OK; Mon, 04 Mar 2019 12:21:10 -0700
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
+References: <20190214170028.27862-1-logang@deltatee.com>
+ <20190304002351.GA26569@google.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <3e45b4ab-e848-cf3b-624f-121ad58b0250@deltatee.com>
+Date:   Mon, 4 Mar 2019 12:21:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190304002351.GA26569@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: yinghai@kernel.org, kchow@gigaio.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH 1/2] PCI: Prevent 64-bit resources from being counted in
+ 32-bit bridge region
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-the branch contains usual mix of new features, core changes and fixes;
-full list below. I'm planning 2nd pull request, with a few more fixes
-that arrived recently but too close to merge window, will send it next
-week.
-
-Please pull, thanks.
 
 
-New features:
+On 2019-03-03 5:23 p.m., Bjorn Helgaas wrote:
+> Sorry for the delay.  This code gives a headache.  I still remember
+> my headache from the last time we touched it.  Help me understand
+> what's going on here.
 
-- support zstd compression levels
+Yes, this code gave me a headache debugging it too. And it's not the
+first time I've tried to figure out what's going on with it because it
+often just prints noisy messages that look like errors. I think I
+understand it better now but it's something that's a bit fleeting and
+easy to forget the details of. There may also be other solutions to this
+problem.
 
-- new ioctl to unregister a device from the module (ie. reverse of device
-  scan)
+> On Thu, Feb 14, 2019 at 10:00:27AM -0700, Logan Gunthorpe wrote:
+>> The possible situations where this can happen will be quite varied and
+>> depend highly on the exact hierarchy and how the realloc code ends up
+>> trying to assign the regions. It's known to at least require a
+>> large 64-bit BAR (>1GB) below a PCI bridge.
+> 
+> I guess the bug is that some BAR or window is unset when we actually
+> have space for it?  We need to make this more concrete, e.g., with a
+> minimal example of a failure case, and then connect this code change
+> specifically with that.
 
-- scrub prints a message to log when it's about to start or finish
+The system we hit this bug on is quite large and complex with multiple
+layers of switches though I suspect I might have seen it on a completely
+different system but never had time to dig into it. I guess I could try
+to find a case in which qemu can hit it.
+
+> "Ignored BARs" doesn't seem like the best terminology here.  Can we
+> just say they're "unset" as you do for windows?  Even that's a little
+> squishy because there's really no such thing as a clearly "unset" or
+> invalid value for a BAR.  All we can say is that Linux *thinks* it's
+> unset because it happens to be zero (technically still a valid BAR
+> value) or it conflicts with another device.
+
+Yes. I used the "ignored" term because that's the terminology lspci uses
+when it sees a resource like this. I'm not sure I like the "unset" term
+because, in fact, the BAR registers in the configuration space are
+typically still set to whatever the bios set them to[*1]. It's just that
+the kernel doesn't create a struct resource for them and thus you wont
+see a corresponding entry in /sys/bus/pci/.../resources or
+/proc/bus/pci/devices. For example, here's the lspci and hex dump of the
+config space for an example case; as you can see Region 0, is "ignored",
+but the BAR register is still set to 0xf7100000.
+
+05:00.0 PCI bridge: PLX Technology, Inc. Device 8733 (rev ca) (prog-if
+00 [Normal decode])
+         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop-
+ParErr- Stepping- SERR+ FastB2B- DisINTx-
+         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+         Latency: 0, Cache Line Size: 32 bytes
+         Interrupt: pin A routed to IRQ 24
+         NUMA node: 0
+         Region 0: Memory at <ignored> (32-bit, non-prefetchable)
+[size=256K]
+         Bus: primary=05, secondary=06, subordinate=0a, sec-latency=0
+
+05:00.0 PCI bridge: PLX Technology, Inc. Device 8733 (rev ca)
+00: b5 10 33 87 07 01 10 00 ca 00 04 06 08 00 81 00
+10: 00 00 10 f7 00 00 00 00 05 06 0a 00 11 21 00 00		f7100000
+20: f0 ff 00 00 01 00 f1 ff 20 02 00 00 7f 02 00 00
 
 
-Core changes:
+> Strictly speaking, the result is that we can't enable decoding for
+> that BAR type.  Often that does mean the device is unusable, but in
+> some cases, e.g., an I/O BAR being unset and a driver using
+> pci_enable_device_mem(), the device *is* usable.
 
-- qgroups can now skip part of a tree that does not get updated during
-  relocation, because this does not affect the quota accounting, estimated
-  speedup in run time is about 20%
+Yes, though I think this bug will always apply to non-prefetchable
+32-bit MEM BARs and not I/O BARs. So if the driver needs such a BAR
+(which I expect is common) it will not function.
 
-- the compression workspace management had to be enhanced due to zstd
-  requirements
+> Surely realloc can fail even without a large 64-bit BAR?  I don't
+> think there's a magic threshold at 1GB.  Maybe an example would
+> illustrate the problem better.
 
-- various enospc fixes, when there's high fragmentation the
-  over-reservation can cause ENOSPC that might not happen after a flush,
-  in such cases try to wait if the situation improves
+No, to hit this bug, we do require a large 64-bit BAR. Though the
+threshold isn't necessarily 1GB, its more complicated (see below).
+
+This is just really hard to explain because the code is so tricky. I'll
+try to clarify it more below. Once we can clear it up so you understand
+it I'll try to update my commit message to be clearer.
+
+> There are actually three calls to pbus_size_mem():
+> 
+>   1) If bridge has a 64-bit prefetchable window, find the size of all
+>      64-bit prefetchable resources below the bridge
+> 
+>   2) If bridge has no 64-bit prefetchable window, find the size of all
+>      prefetchable resources below the bridge
+> 
+>   3) Find the size of everything else (non-prefetchable resources plus
+>      any prefetchable ones that couldn't be accommodated above)
+
+Yes, this is technically correct. I was just over-simplifying because,
+to hit this bug, there must be a 64-bit prefetchable window and there
+are no prefetchable 32-bit resources so (2) is irrelevant.
+
+>> There are only two reasons for pbus_size_mem() to fail: if there is no
+>> 64-bit/prefetchable bridge window, or if that window is already
+>> assigned (in other words, its resource already has a parent set). We know
+>> the former case can't be true because, in __pci_bus_size_bridges(), it's
+>> existence is checked before making the call. So if the pbus_size_mem()
+>> call in question fails, the window must already be assigned, and in this
+>> case, we still do not want 64-bit resources trying to be sized into the
+>> 32-bit catch-all resource.
+> 
+> I guess this question of putting a 64-bit resource in the 32-bit
+> non-prefetchable window (legal but undesirable) is a secondary thing,
+> not the chief complaint you're fixing?
+
+Uh, yeah no. The 64-bit resource(s) are typically correctly assigned to
+the 64-bit window. However the bug causes victim 32-bit Non-prefetchable
+resources to not be assigned because when we calculate the size the code
+to inadvertently thinks the 64-bit resource must fit into the 32-bit
+non-prefetchable window.
+
+--
+
+Ok, so let me try to walk through this a bit more step by step. Lets
+make the following assumptions:
+
+1) Let's say we have a bridge that has a 64-bit prefetchable window,
+such that (b_res[2].flags & IORESOURCE_MEM_64) is true. So the bridge
+has three windows: the I/O window, the non-preftechable 32-bit window
+and the prefetchable 64-bit window.
+
+2) Let's also say that, under the bridge, we have a resource that's
+larger than we'd expect to fit into the 32-bit window. (So, the actual
+limit depends on the maximum size of that window, which is hardware
+dependant, and the size of everything else that goes in it, but for
+simplicity I estimated this to be at least 1GB). For the purposes of
+this example, lets say it's very large: 64GB.
+
+3) Now, the tricky thing is that this code tries to do things in
+multiple passes, unassigning resources that didn't seem to fit and
+recalculating window sizes on multiple passes. So lets say we are on the
+second pass where, previously, the 64-bit prefetchable window on this
+bridge was successfully assigned but, for whatever reason, this bridge
+failed and the resources were released (see
+pci_bus_release_bridge_resources()). In this case (bres[2].parent !=
+NULL) and the large 64-bit resource now has (res->parent == NULL).
+
+Walking through __pci_bus_size_bridges():
+
+i) Per (1), we do have a prefetchable window, so the first call to
+pbus_size_mem() happens. However, the first thing that function does is
+call find_free_bus_resource() which should find bres[2], but does not
+because, per (3) its parent is not NULL (see the comment above
+find_free_bus_resource() which makes it seem important that parent not
+be set). Thus this call to pbus_size_mem() fails with -ENOSPC, and
+'type2' and 'type3' remain unset.
+
+ii) Seeing type2 is unset, we go to the second call to pbus_size_mem().
+This call fails because per (1), there is no 32-bit prefetchable
+resource to find. So find_free_bus_resource() fails, as it should.
+'type2' and 'type3' are now set to IORESOURCE_MEM.
+
+iii) Next we do the third call to pbus_size_mem() for the
+non-prefetchable window, however, because the first two calls failed, it
+will calculate the size for the 32-bit window to be greater than 64GB.
+
+As the code recurses up into the rest of the PCI tree, nothing will fit
+into the 32-bit window seeing it's calculated to be much larger than it
+needs to be so none of the 32-bit prefetchable BARs will be assigned and
+thus will not have struct resources and they will be reported as ignored
+by lspci. Drivers that try to use these resources will also fail and
+there will be addresses in the IOVA space that may get routed to the
+wrong PCI address.
+
+My solution to this bug was to notice that pbus_size_mem() can only fail
+for one of two reasons: either the resource doesn't exist at all or it
+is already assigned (ie. the resource's parent is still set). However,
+for the first call in (i), we know the resource does exist because we
+check for it (ie. the condition in (1)). Therefore we can say that if
+pbus_size_mem() fails in (i) there is a 64-bit window and we should not
+try to size the 32-bit window to fit 64-bit resources. We do this simply
+by setting 'mask', 'type2' and 'type3' even when pbus_size_mem() fails.
+
+Another potential solution would be to always unassign the windows for
+the failing bridges by setting it's resources parents to NULL. But this
+makes me much more nervous because I don't understand what all the
+implications would be and the comment above find_free_bus_resource()
+makes me think this is important.
+
+Let me know if this makes more sense or you have further questions.
+
+Also, the second patch in this series is a similar bug with *very*
+similar symptoms but I think it's easier to understand. It's a
+completely different cause and only happens on one particular piece of
+hardware that I'm aware of; and the driver for that hardware doesn't use
+the BAR at all right now so the only real negative effect is on the IOVA
+address space.
+
+Thanks,
+
+Logan
+
+[*1] This is probably another big bug due to its affect on the IOVA
+address space, but I'm not sure what to do about it and with these
+patches we don't have any further issues. However, maybe we should be
+scanning the tree after everything is said and done and unset any BARs
+that do not have corresponding resources. That way, if there are other
+bugs that can cause ignored regions, or if our algorithm does something
+that doesn't match the bios there aren't random failures when using the
+IOMMU.
 
 
-Fixes:
 
-- various ioctls could overwrite previous return value if copy_to_user
-  fails, fix this so the original error is reported
-
-- more reclaim vs GFP_KERNEL fixes
-
-- other cleanups and refactoring
-
-- fix a (valid) lockdep warning in a test when device replace is
-  destroying worker threads
-
-- make qgroup async transaction commit more aggressive, this avoids some
-  'quota limit reached' errors if there are not enough data to trigger
-  transaction in order to flush
-
-- fix deadlock between snapshot deletion and quotas when backref walking
-  is called from context that already holds the same locks
-
-- fsync fixes:
-  - fix fsync after succession of renames of different files
-  - fix fsync after succession of renames and unlink/rmdir
-
-----------------------------------------------------------------
-The following changes since commit 5908e6b738e3357af42c10e1183753c70a0117a9:
-
-  Linux 5.0-rc8 (2019-02-24 16:46:45 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.1-part1-tag
-
-for you to fetch changes up to f65e25e343cfc0e6f4db9a687c4085fad268325d:
-
-  btrfs: Remove unnecessary casts in btrfs_read_root_item (2019-02-25 14:19:23 +0100)
-
-----------------------------------------------------------------
-Anand Jain (11):
-      btrfs: merge btrfs_find_device_missing_or_by_path() into parent
-      btrfs: cleanup btrfs_find_device_by_devspec()
-      btrfs: refactor btrfs_find_device() take fs_devices as argument
-      btrfs: refactor btrfs_free_stale_devices() to get return value
-      btrfs: merge btrfs_find_device and find_device
-      btrfs: scrub: print messages when started or finished
-      btrfs: introduce new ioctl to unregister a btrfs device
-      btrfs: fix comment its device list mutex not volume lock
-      btrfs: scrub: fix circular locking dependency warning
-      btrfs: scrub: add scrub_lock lockdep check in scrub_workers_get
-      btrfs: scrub: convert scrub_workers_refcnt to refcount_t
-
-Anders Roxell (1):
-      btrfs: let the assertion expression compile in all configs
-
-Dan Carpenter (1):
-      btrfs: drop the lock on error in btrfs_dev_replace_cancel
-
-Dan Robertson (1):
-      btrfs: init csum_list before possible free
-
-David Sterba (9):
-      btrfs: simplify workqueue name when allocating
-      btrfs: split btrfs_set_lock_blocking_rw to read and write helpers
-      btrfs: split btrfs_clear_lock_blocking_rw to read and write helpers
-      btrfs: replace btrfs_set_lock_blocking_rw with appropriate helpers
-      btrfs: open code now trivial btrfs_set_lock_blocking
-      btrfs: simplify waiting loop in btrfs_tree_lock
-      btrfs: merge btrfs_set_lock_blocking_rw with it's caller
-      btrfs: scrub: add assertions for worker pointers
-      btrfs: scrub: remove unused nocow worker pointer
-
-Dennis Zhou (12):
-      btrfs: add helpers for compression type and level
-      btrfs: rename workspaces_list to workspace_manager
-      btrfs: manage heuristic workspace as index 0
-      btrfs: unify compression ops with workspace_manager
-      btrfs: add helper methods for workspace manager init and cleanup
-      btrfs: add compression interface in (get/put)_workspace
-      btrfs: move to function pointers for get/put workspaces
-      btrfs: plumb level through the compression interface
-      btrfs: change set_level() to bound the level passed in
-      btrfs: zstd use the passed through level instead of default
-      btrfs: make zstd memory requirements monotonic
-      btrfs: add zstd compression level support
-
-Filipe Manana (14):
-      Btrfs: do not overwrite scrub error with fault error in scrub ioctl
-      Btrfs: do not overwrite error return value in scrub progress ioctl
-      Btrfs: do not overwrite error return value in the get device stats ioctl
-      Btrfs: setup a nofs context for memory allocation at btrfs_create_tree()
-      Btrfs: setup a nofs context for memory allocation at __btrfs_set_acl
-      Btrfs: remove redundant check for swapfiles when reflinking
-      Btrfs: do not overwrite error return value in the device replace ioctl
-      Btrfs: do not overwrite error return value in the balance ioctl
-      Btrfs: move duplicated nodatasum check into common reflink/dedupe helper
-      Btrfs: fix fsync after succession of renames of different files
-      Btrfs: fix fsync after succession of renames and unlink/rmdir
-      Btrfs: remove no longer needed range length checks for deduplication
-      Btrfs: add missing error handling after doing leaf/node binary search
-      Btrfs: remove assertion when searching for a key in a node/leaf
-
-Johannes Thumshirn (1):
-      btrfs: ensure that a DUP or RAID1 block group has exactly two stripes
-
-Josef Bacik (12):
-      btrfs: make btrfs_destroy_delayed_refs use btrfs_delayed_ref_lock
-      btrfs: make btrfs_destroy_delayed_refs use btrfs_delete_ref_head
-      btrfs: call btrfs_create_pending_block_groups unconditionally
-      btrfs: replace cleaner_delayed_iput_mutex with a waitqueue
-      btrfs: check if there are free block groups for commit
-      btrfs: dump block_rsv details when dumping space info
-      btrfs: don't use global reserve for chunk allocation
-      btrfs: don't enospc all tickets on flush failure
-      btrfs: loop in inode_rsv_refill
-      btrfs: be more explicit about allowed flush states
-      btrfs: reserve extra space during evict
-      btrfs: honor path->skip_locking in backref code
-
-Julia Lawall (1):
-      Btrfs: drop useless LIST_HEAD in merge_reloc_root
-
-Nikolay Borisov (17):
-      btrfs: Make first argument of btrfs_run_delalloc_range directly an inode
-      btrfs: Remove unused arguments from btrfs_get_extent_fiemap
-      btrfs: Refactor btrfs_get_extent_fiemap
-      btrfs: Remove redundant assignment in btrfs_get_extent_fiemap
-      btrfs: Remove inode argument from async_cow_submit
-      btrfs: Remove isize local variable in compress_file_range
-      btrfs: Use ihold instead of igrab in cow_file_range_async
-      btrfs: Remove WARN_ON in btrfs_alloc_delalloc_work
-      btrfs: Document logic regarding inode in async_cow_submit
-      btrfs: Refactor shrink_delalloc
-      btrfs: Remove impossible condition from mergable_maps
-      btrfs: Rename found_type to extent_type in btrfs_get_extent
-      btrfs: Consolidate retval checking of core btree functions
-      btrfs: Remove not_found_em label from btrfs_get_extent
-      btrfs: use WARN_ON in a canonical form btrfs_remove_block_group
-      btrfs: Remove EXTENT_FIRST_DELALLOC bit
-      btrfs: Fix grossly misleading argument names in extent io search
-
-Qu Wenruo (10):
-      btrfs: relocation: Delay reloc tree deletion after merge_reloc_roots
-      btrfs: qgroup: Refactor btrfs_qgroup_trace_subtree_swap
-      btrfs: qgroup: Introduce per-root swapped blocks infrastructure
-      btrfs: qgroup: Use delayed subtree rescan for balance
-      btrfs: qgroup: Cleanup old subtree swap code
-      btrfs: qgroup: Remove duplicated trace points for qgroup_rsv_add/release
-      btrfs: Output ENOSPC debug info in inc_block_group_ro
-      btrfs: extent_io: Kill the forward declaration of flush_write_bio
-      btrfs: qgroup: Move reserved data accounting from btrfs_delayed_ref_head to btrfs_qgroup_extent_record
-      btrfs: qgroup: Make qgroup async transaction commit more aggressive
-
-YueHaibing (2):
-      btrfs: remove set but not used variable 'num_pages'
-      btrfs: Remove unnecessary casts in btrfs_read_root_item
-
- fs/btrfs/acl.c               |   9 ++
- fs/btrfs/async-thread.c      |  10 +-
- fs/btrfs/backref.c           |  22 ++-
- fs/btrfs/compression.c       | 253 ++++++++++++++---------------
- fs/btrfs/compression.h       |  52 +++++-
- fs/btrfs/ctree.c             |  74 ++++-----
- fs/btrfs/ctree.h             |  61 +++++--
- fs/btrfs/delayed-ref.c       |  15 +-
- fs/btrfs/delayed-ref.h       |  11 --
- fs/btrfs/dev-replace.c       |   9 +-
- fs/btrfs/disk-io.c           |  39 +++--
- fs/btrfs/extent-tree.c       | 292 +++++++++++++++++++++------------
- fs/btrfs/extent_io.c         |  87 +++++-----
- fs/btrfs/extent_io.h         |  15 +-
- fs/btrfs/extent_map.c        |   5 +-
- fs/btrfs/extent_map.h        |   1 +
- fs/btrfs/file.c              |   3 +-
- fs/btrfs/inode.c             | 207 +++++++++++++++---------
- fs/btrfs/ioctl.c             |  60 ++-----
- fs/btrfs/locking.c           | 108 ++++++-------
- fs/btrfs/locking.h           |  15 +-
- fs/btrfs/lzo.c               |  31 +++-
- fs/btrfs/qgroup.c            | 372 ++++++++++++++++++++++++++++++++-----------
- fs/btrfs/qgroup.h            | 120 ++++++++++++--
- fs/btrfs/ref-verify.c        |   4 +-
- fs/btrfs/relocation.c        | 119 ++++++++++----
- fs/btrfs/root-tree.c         |   4 +-
- fs/btrfs/scrub.c             |  49 ++++--
- fs/btrfs/super.c             |  13 +-
- fs/btrfs/transaction.c       |   9 +-
- fs/btrfs/tree-defrag.c       |   2 +-
- fs/btrfs/tree-log.c          | 282 ++++++++++++++++++++++++++------
- fs/btrfs/volumes.c           | 202 ++++++++++++-----------
- fs/btrfs/volumes.h           |   5 +-
- fs/btrfs/zlib.c              |  45 +++++-
- fs/btrfs/zstd.c              | 316 ++++++++++++++++++++++++++++++++++--
- include/trace/events/btrfs.h |  30 +---
- include/uapi/linux/btrfs.h   |   2 +
- 38 files changed, 1993 insertions(+), 960 deletions(-)
