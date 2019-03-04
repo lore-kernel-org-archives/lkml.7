@@ -2,30 +2,30 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA38FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8896EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9867420815
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5870120815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfCDOtY (ORCPT
+        id S1727102AbfCDOt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:49:24 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49284 "EHLO
+        Mon, 4 Mar 2019 09:49:29 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49286 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726161AbfCDOtY (ORCPT
+        with ESMTP id S1726161AbfCDOt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:49:24 -0500
+        Mon, 4 Mar 2019 09:49:28 -0500
 Received: from localhost.localdomain (unknown [IPv6:2804:431:9718:a1b1:9d17:4c45:79a4:9c61])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 86EEA2822B8;
-        Mon,  4 Mar 2019 14:49:18 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 58BB1261176;
+        Mon,  4 Mar 2019 14:49:23 +0000 (GMT)
 From:   Helen Koike <helen.koike@collabora.com>
 To:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com
 Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
@@ -34,10 +34,12 @@ Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
         Sean Paul <seanpaul@google.com>, kernel@collabora.com,
         harry.wentland@amd.com,
         =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@google.com>
-Subject: [PATCH 0/5] drm: Fix fb changes for async updates
-Date:   Mon,  4 Mar 2019 11:49:04 -0300
-Message-Id: <20190304144909.6267-1-helen.koike@collabora.com>
+Subject: [PATCH 1/5] drm: don't block fb changes for async plane updates
+Date:   Mon,  4 Mar 2019 11:49:05 -0300
+Message-Id: <20190304144909.6267-2-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190304144909.6267-1-helen.koike@collabora.com>
+References: <20190304144909.6267-1-helen.koike@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -46,49 +48,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In the case of a normal sync update, the preparation of framebuffers (be
+it calling drm_atomic_helper_prepare_planes() or doing setups with
+drm_framebuffer_get()) are performed in the new_state and the respective
+cleanups are performed in the old_state.
+
+In the case of async updates, the preparation is also done in the
+new_state but the cleanups are done in the new_state (because updates
+are performed in place, i.e. in the current state).
+
+The current code blocks async udpates when the fb is changed, turning
+async updates into sync updates, slowing down cursor updates and
+introducing regressions in igt tests with errors of type:
+
+"CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+expect to complete approximately 15360 updates, with the threshold set
+at 7680"
+
+Fb changes in async updates were prevented to avoid the following scenario:
+
+- Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
+- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
+- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
+Where we have a single call to prepare fb2 but double cleanup call to fb2.
+
+To solve the above problems, instead of blocking async fb changes, we
+place the old framebuffer in the new_state object, so when the code
+performs cleanups in the new_state it will cleanup the old_fb and we
+will have the following scenario instead:
+
+- Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
+- Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
+- Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
+
+Where calls to prepare/cleanup are ballanced.
+
+Cc: <stable@vger.kernel.org> # v4.14+: 25dc194b34dd: drm: Block fb changes for async plane updates
+Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
+Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+
+---
 Hello,
 
-This series is a first attempt to fix the slow down in performance introduced by
-"[PATCH v2] drm: Block fb changes for async plane updates" where async update
-falls back to a sync update, causing igt failures of type:
-
-    "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
-    expect to complete approximately 15360 updates, with the threshold set
-    at 7680"
-
-Please read the commit message of the first patch to understand how it works.
-
+As mentioned in the cover letter,
 I tested on the rockchip and on i915 (with a patch I am still working on for
 replacing cursors by async update), with igt plane_cursor_legacy and
 kms_cursor_legacy and I didn't see any regressions.
-I couldn't test on MSM and AMD because I don't have the hardware and my vc4
-raspberry pi is not recognizing my display for some reason, I would appreciate
-if anyone could help me testing those.
-I also separated the patches per platform to be easier to get the tested-by tags,
-please let me know if it should be a single patch.
+I couldn't test on MSM and AMD because I don't have the hardware (and I am
+having some issues testing on vc4) and I would appreciate if anyone could help
+me testing those.
 
-Also, I added CC stable (as the "drm: Block fb changes for async plane updates"
-was also CCed to stable).
-I am not used to CC stable, please let me know if anything is off.
+I also think it would be a better solution if, instead of having async
+to do in-place updates in the current state, the async path should be
+equivalent to a syncronous update, i.e., modifying new_state and
+performing a flip
+IMHO, the only difference between sync and async should be that async update
+doesn't wait for vblank and applies the changes immeditally to the hw,
+but the code path could be almost the same.
+But for now I think this solution is ok (swaping new_fb/old_fb), and
+then we can adjust things little by little, what do you think?
 
 Thanks!
 Helen
 
+ drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-Helen Koike (5):
-  drm: don't block fb changes for async plane updates
-  drm/rockchip: fix fb references in async update
-  drm/amd: fix fb references in async update
-  drm/msm: fix fb references in async update
-  drm/vc4: fix fb references in async update
-
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  3 +-
- drivers/gpu/drm/drm_atomic_helper.c           | 20 ++++-----
- drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c    |  4 ++
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 42 +++++++++++--------
- drivers/gpu/drm/vc4/vc4_plane.c               |  2 +-
- 5 files changed, 40 insertions(+), 31 deletions(-)
-
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 540a77a2ade9..e7eb96f1efc2 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
+ 	    old_plane_state->crtc != new_plane_state->crtc)
+ 		return -EINVAL;
+ 
+-	/*
+-	 * FIXME: Since prepare_fb and cleanup_fb are always called on
+-	 * the new_plane_state for async updates we need to block framebuffer
+-	 * changes. This prevents use of a fb that's been cleaned up and
+-	 * double cleanups from occuring.
+-	 */
+-	if (old_plane_state->fb != new_plane_state->fb)
+-		return -EINVAL;
+-
+ 	funcs = plane->helper_private;
+ 	if (!funcs->atomic_async_update)
+ 		return -EINVAL;
+@@ -1657,6 +1648,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+ 	int i;
+ 
+ 	for_each_new_plane_in_state(state, plane, plane_state, i) {
++		struct drm_framebuffer *new_fb = plane_state->fb;
++		struct drm_framebuffer *old_fb = plane->state->fb;
++
+ 		funcs = plane->helper_private;
+ 		funcs->atomic_async_update(plane, plane_state);
+ 
+@@ -1665,11 +1659,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+ 		 * plane->state in-place, make sure at least common
+ 		 * properties have been properly updated.
+ 		 */
+-		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
++		WARN_ON_ONCE(plane->state->fb != new_fb);
+ 		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
+ 		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
+ 		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
+ 		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
++
++		/*
++		 * Make sure the FBs have been swapped so that cleanups in the
++		 * new_state performs a cleanup in the old FB.
++		 */
++		WARN_ON_ONCE(plane_state->fb != old_fb);
+ 	}
+ }
+ EXPORT_SYMBOL(drm_atomic_helper_async_commit);
 -- 
 2.20.1
 
