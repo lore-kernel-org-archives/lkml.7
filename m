@@ -2,231 +2,218 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69E8C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEA3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8726F20657
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3FD20657
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:36:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Av0lHtKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfCDPc3 (ORCPT
+        id S1727076AbfCDPgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 10:32:29 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50860 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726095AbfCDPc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 10:32:28 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 811FF416B9CF8CAC933F;
-        Mon,  4 Mar 2019 23:32:21 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.408.0; Mon, 4 Mar 2019
- 23:32:18 +0800
-Message-ID: <5C7D4500.3070607@huawei.com>
-Date:   Mon, 4 Mar 2019 23:32:16 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Mon, 4 Mar 2019 10:36:40 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39028 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbfCDPgj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 10:36:39 -0500
+Received: from [192.168.0.21] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6829E2F2;
+        Mon,  4 Mar 2019 16:36:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1551713795;
+        bh=xUWbT4Qmu0Dz6YrBofQiqIpXMu5xOmyGpupeEb2OTME=;
+        h=Subject:To:Cc:References:From:Reply-To:Date:In-Reply-To:From;
+        b=Av0lHtKMCLIelqeUymIAjIBK074etxSZD06n50fwoze3rH22xBW+2luhSoYA6qbxe
+         PXWe+qL7Kg1Q7tiugoJ6QIvs5Xv3/dGxw+kPAD4BkSoS3EdIk/gR3vuU9lQwc6whbL
+         gitk6vZAISw4B5RWCOzMAqERtVxPOnXpwy6rvFWg=
+Subject: Re: [PATCH] media: uvcvideo: Read support
+To:     Hugues Fruchet <hugues.fruchet@st.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1551702925-7739-1-git-send-email-hugues.fruchet@st.com>
+ <1551702925-7739-2-git-send-email-hugues.fruchet@st.com>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Reply-To: kieran.bingham@ideasonboard.com
+Openpgp: preference=signencrypt
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ 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
+ sbsRB8KNNvVXBOVNwko86rQqF9drZuw=
+Organization: Ideas on Board
+Message-ID: <8ec96fe6-96af-c101-ff20-ab59d953ad6a@ideasonboard.com>
+Date:   Mon, 4 Mar 2019 15:36:32 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
-        "Michal Hocko" <mhocko@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        <cgroups@vger.kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Vlastimil Babka" <vbabka@suse.cz>
-Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
-References: <00000000000006457e057c341ff8@google.com> <5C7BFE94.6070500@huawei.com> <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com> <5C7D2F82.40907@huawei.com> <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com>
-In-Reply-To: <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1551702925-7739-2-git-send-email-hugues.fruchet@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/4 22:11, Dmitry Vyukov wrote:
-> On Mon, Mar 4, 2019 at 3:00 PM zhong jiang <zhongjiang@huawei.com> wrote:
->> On 2019/3/4 15:40, Dmitry Vyukov wrote:
->>> On Sun, Mar 3, 2019 at 5:19 PM zhong jiang <zhongjiang@huawei.com> wrote:
->>>> Hi, guys
->>>>
->>>> I also hit the following issue. but it fails to reproduce the issue by the log.
->>>>
->>>> it seems to the case that we access the mm->owner and deference it will result in the UAF.
->>>> But it should not be possible that we specify the incomplete process to be the mm->owner.
->>>>
->>>> Any thoughts?
->>> FWIW syzbot was able to reproduce this with this reproducer.
->>> This looks like a very subtle race (threaded reproducer that runs
->>> repeatedly in multiple processes), so most likely we are looking for
->>> something like few instructions inconsistency window.
->>>
->> I has a little doubtful about the instrustions inconsistency window.
->>
->> I guess that you mean some smb barriers should be taken into account.:-)
->>
->> Because IMO, It should not be the lock case to result in the issue.
->
-> Since the crash was triggered on x86 _most likley_ this is not a
-> missed barrier. What I meant is that one thread needs to executed some
-> code, while another thread is stopped within few instructions.
->
->
-It is weird and I can not find any relationship you had said with the issue.:-(
+Hi Hughes,
 
-Because It is the cause that mm->owner has been freed, whereas we still deference it.
+On 04/03/2019 12:35, Hugues Fruchet wrote:
+> Add support of read() call from userspace by implementing
+> uvc_v4l2_read() with vb2_read() helper.
 
-From the lastest freed task call trace, It fails to create process.
+Just thinking out loud,
 
-Am I miss something or I misunderstand your meaning. Please correct me.
+This opens up UVC devices to read raw full frame images through this
+interface as well.
 
-Thanks,
-zhong jiang
->> Thanks,
->> zhong jinag
->>>> Thanks,
->>>> zhong jiang
->>>>
->>>> On 2018/12/4 23:43, syzbot wrote:
->>>>> syzbot has found a reproducer for the following crash on:
->>>>>
->>>>> HEAD commit:    0072a0c14d5b Merge tag 'media/v4.20-4' of git://git.kernel..
->>>>> git tree:       upstream
->>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=11c885a3400000
->>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=b9cc5a440391cbfd
->>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=cbb52e396df3e565ab02
->>>>> compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
->>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12835e25400000
->>>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172fa5a3400000
->>>>>
->>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->>>>> Reported-by: syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com
->>>>>
->>>>> cgroup: fork rejected by pids controller in /syz2
->>>>> ==================================================================
->>>>> BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:182 [inline]
->>>>> BUG: KASAN: use-after-free in task_css include/linux/cgroup.h:477 [inline]
->>>>> BUG: KASAN: use-after-free in mem_cgroup_from_task mm/memcontrol.c:815 [inline]
->>>>> BUG: KASAN: use-after-free in get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
->>>>> Read of size 8 at addr ffff8881b72af310 by task syz-executor198/9332
->>>>>
->>>>> CPU: 0 PID: 9332 Comm: syz-executor198 Not tainted 4.20.0-rc5+ #142
->>>>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->>>>> Call Trace:
->>>>>  __dump_stack lib/dump_stack.c:77 [inline]
->>>>>  dump_stack+0x244/0x39d lib/dump_stack.c:113
->>>>>  print_address_description.cold.7+0x9/0x1ff mm/kasan/report.c:256
->>>>>  kasan_report_error mm/kasan/report.c:354 [inline]
->>>>>  kasan_report.cold.8+0x242/0x309 mm/kasan/report.c:412
->>>>>  __asan_report_load8_noabort+0x14/0x20 mm/kasan/report.c:433
->>>>>  __read_once_size include/linux/compiler.h:182 [inline]
->>>>>  task_css include/linux/cgroup.h:477 [inline]
->>>>>  mem_cgroup_from_task mm/memcontrol.c:815 [inline]
->>>>>  get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
->>>>>  get_mem_cgroup_from_mm mm/memcontrol.c:834 [inline]
->>>>>  mem_cgroup_try_charge+0x608/0xe20 mm/memcontrol.c:5888
->>>>>  mcopy_atomic_pte mm/userfaultfd.c:71 [inline]
->>>>>  mfill_atomic_pte mm/userfaultfd.c:418 [inline]
->>>>>  __mcopy_atomic mm/userfaultfd.c:559 [inline]
->>>>>  mcopy_atomic+0xb08/0x2c70 mm/userfaultfd.c:609
->>>>>  userfaultfd_copy fs/userfaultfd.c:1705 [inline]
->>>>>  userfaultfd_ioctl+0x29fb/0x5610 fs/userfaultfd.c:1851
->>>>>  vfs_ioctl fs/ioctl.c:46 [inline]
->>>>>  file_ioctl fs/ioctl.c:509 [inline]
->>>>>  do_vfs_ioctl+0x1de/0x1790 fs/ioctl.c:696
->>>>>  ksys_ioctl+0xa9/0xd0 fs/ioctl.c:713
->>>>>  __do_sys_ioctl fs/ioctl.c:720 [inline]
->>>>>  __se_sys_ioctl fs/ioctl.c:718 [inline]
->>>>>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
->>>>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
->>>>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>>> RIP: 0033:0x44c7e9
->>>>> Code: 5d c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
->>>>> RSP: 002b:00007f906b69fdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->>>>> RAX: ffffffffffffffda RBX: 00000000006e4a08 RCX: 000000000044c7e9
->>>>> RDX: 0000000020000100 RSI: 00000000c028aa03 RDI: 0000000000000004
->>>>> RBP: 00000000006e4a00 R08: 0000000000000000 R09: 0000000000000000
->>>>> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e4a0c
->>>>> R13: 00007ffdfd47813f R14: 00007f906b6a09c0 R15: 000000000000002d
->>>>>
->>>>> Allocated by task 9325:
->>>>>  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
->>>>>  set_track mm/kasan/kasan.c:460 [inline]
->>>>>  kasan_kmalloc+0xc7/0xe0 mm/kasan/kasan.c:553
->>>>>  kasan_slab_alloc+0x12/0x20 mm/kasan/kasan.c:490
->>>>>  kmem_cache_alloc_node+0x144/0x730 mm/slab.c:3644
->>>>>  alloc_task_struct_node kernel/fork.c:158 [inline]
->>>>>  dup_task_struct kernel/fork.c:843 [inline]
->>>>>  copy_process+0x2026/0x87a0 kernel/fork.c:1751
->>>>>  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
->>>>>  __do_sys_clone kernel/fork.c:2323 [inline]
->>>>>  __se_sys_clone kernel/fork.c:2317 [inline]
->>>>>  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
->>>>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
->>>>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>>>
->>>>> Freed by task 9325:
->>>>>  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
->>>>>  set_track mm/kasan/kasan.c:460 [inline]
->>>>>  __kasan_slab_free+0x102/0x150 mm/kasan/kasan.c:521
->>>>>  kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
->>>>>  __cache_free mm/slab.c:3498 [inline]
->>>>>  kmem_cache_free+0x83/0x290 mm/slab.c:3760
->>>>>  free_task_struct kernel/fork.c:163 [inline]
->>>>>  free_task+0x16e/0x1f0 kernel/fork.c:457
->>>>>  copy_process+0x1dcc/0x87a0 kernel/fork.c:2148
->>>>>  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
->>>>>  __do_sys_clone kernel/fork.c:2323 [inline]
->>>>>  __se_sys_clone kernel/fork.c:2317 [inline]
->>>>>  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
->>>>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
->>>>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>>>
->>>>> The buggy address belongs to the object at ffff8881b72ae240
->>>>>  which belongs to the cache task_struct(81:syz2) of size 6080
->>>>> The buggy address is located 4304 bytes inside of
->>>>>  6080-byte region [ffff8881b72ae240, ffff8881b72afa00)
->>>>> The buggy address belongs to the page:
->>>>> page:ffffea0006dcab80 count:1 mapcount:0 mapping:ffff8881d2dce0c0 index:0x0 compound_mapcount: 0
->>>>> flags: 0x2fffc0000010200(slab|head)
->>>>> raw: 02fffc0000010200 ffffea00074a1f88 ffffea0006ebbb88 ffff8881d2dce0c0
->>>>> raw: 0000000000000000 ffff8881b72ae240 0000000100000001 ffff8881d87fe580
->>>>> page dumped because: kasan: bad access detected
->>>>> page->mem_cgroup:ffff8881d87fe580
->>>>>
->>>>> Memory state around the buggy address:
->>>>>  ffff8881b72af200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>>>  ffff8881b72af280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>>>> ffff8881b72af300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>>>                          ^
->>>>>  ffff8881b72af380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>>>  ffff8881b72af400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->>>>> ==================================================================
->>>>>
->>>>>
->>>>> .
->>>>>
->>>> --
->>>> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
->>>> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
->>>> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/5C7BFE94.6070500%40huawei.com.
->>>> For more options, visit https://groups.google.com/d/optout.
->>> .
->>>
->>
-> .
->
+Due to the UVC protocol, there is /already/ a full memcpy to get these
+images out of the URB packets, so using a read() interface would be
+another full frame copy.
+
+I can perhaps see the usecase for reading compressed data through this
+interface - but full frames don't seem appropriate. (not impossible of
+course, just is it reasonable?)
+
+If this is to be enabled, should it be enabled for compressed formats
+only? or would that complicate matters?
+
+--
+Regards
+
+Kieran
 
 
+> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+> ---
+>  drivers/media/usb/uvc/uvc_queue.c | 15 ++++++++++++++-
+>  drivers/media/usb/uvc/uvc_v4l2.c  | 11 ++++++++---
+>  drivers/media/usb/uvc/uvcvideo.h  |  2 ++
+>  3 files changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
+> index 682698e..0c8a0a8 100644
+> --- a/drivers/media/usb/uvc/uvc_queue.c
+> +++ b/drivers/media/usb/uvc/uvc_queue.c
+> @@ -227,7 +227,7 @@ int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type,
+>  	int ret;
+>  
+>  	queue->queue.type = type;
+> -	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR;
+> +	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR | VB2_READ;
+>  	queue->queue.drv_priv = queue;
+>  	queue->queue.buf_struct_size = sizeof(struct uvc_buffer);
+>  	queue->queue.mem_ops = &vb2_vmalloc_memops;
+> @@ -361,6 +361,19 @@ int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type)
+>  	return ret;
+>  }
+>  
+> +ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
+> +		       char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	ssize_t ret;
+> +
+> +	mutex_lock(&queue->mutex);
+> +	ret = vb2_read(&queue->queue, buf, count, ppos,
+> +		       file->f_flags & O_NONBLOCK);
+> +	mutex_unlock(&queue->mutex);
+> +
+> +	return ret;
+> +}
+> +
+>  int uvc_queue_mmap(struct uvc_video_queue *queue, struct vm_area_struct *vma)
+>  {
+>  	return vb2_mmap(&queue->queue, vma);
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 84be596..3866832 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -594,7 +594,8 @@ static int uvc_ioctl_querycap(struct file *file, void *fh,
+>  	strscpy(cap->driver, "uvcvideo", sizeof(cap->driver));
+>  	strscpy(cap->card, vdev->name, sizeof(cap->card));
+>  	usb_make_path(stream->dev->udev, cap->bus_info, sizeof(cap->bus_info));
+> -	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING
+> +	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING |
+> +			    V4L2_CAP_READWRITE
+>  			  | chain->caps;
+>  
+>  	return 0;
+> @@ -1434,8 +1435,12 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+>  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
+>  		    size_t count, loff_t *ppos)
+>  {
+> -	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read: not implemented.\n");
+> -	return -EINVAL;
+> +	struct uvc_fh *handle = file->private_data;
+> +	struct uvc_streaming *stream = handle->stream;
+> +
+> +	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read\n");
+> +
+> +	return uvc_queue_read(&stream->queue, file, data, count, ppos);
+>  }
+>  
+>  static int uvc_v4l2_mmap(struct file *file, struct vm_area_struct *vma)
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index c7c1baa..5d0515c 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -766,6 +766,8 @@ struct uvc_buffer *uvc_queue_next_buffer(struct uvc_video_queue *queue,
+>  					 struct uvc_buffer *buf);
+>  struct uvc_buffer *uvc_queue_get_current_buffer(struct uvc_video_queue *queue);
+>  void uvc_queue_buffer_release(struct uvc_buffer *buf);
+> +ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
+> +		       char __user *buf, size_t count, loff_t *ppos);
+>  int uvc_queue_mmap(struct uvc_video_queue *queue,
+>  		   struct vm_area_struct *vma);
+>  __poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
+> 
+
+
+-- 
+Regards
+--
+Kieran
