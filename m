@@ -2,184 +2,169 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E277C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1681EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D8320663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:26:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QLrIUJGK"
+	by mail.kernel.org (Postfix) with ESMTP id DCAAC206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 18:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfCDS0S (ORCPT
+        id S1727204AbfCDS2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 13:26:18 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:47208 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfCDS0R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 13:26:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1551723975; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AKYMXddv8sOWyO8ziFgxyWSaKQEpPo4k2jXSN/BG3dI=;
-        b=QLrIUJGKb06+ImxXzPaCvyfurdt1Z8g8RlCF//svkOvMC8Iotgil588hyyllTRftiIQ8dA
-        0xcat6W6R+x4m/2S4wIdSyTf2W5ndlkJIZoO2kCN6ebUnVD7V2d8lkxuv7A5wAGKXZtISC
-        d4h4r20n5fcS1cUxjwilckQqUtn48Gs=
-Date:   Mon, 04 Mar 2019 19:26:08 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v4 6/9] mtd: rawnand: ingenic: Separate top-level and SoC
- specific code
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <1551723968.4932.4@crapouillou.net>
-In-Reply-To: <20190304112058.67cd5194@xps13>
-References: <20190209192305.4434-1-paul@crapouillou.net>
-        <20190209192305.4434-6-paul@crapouillou.net> <20190304112058.67cd5194@xps13>
+        Mon, 4 Mar 2019 13:28:39 -0500
+Received: from mga09.intel.com ([134.134.136.24]:3509 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbfCDS2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 13:28:39 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 10:28:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,440,1544515200"; 
+   d="scan'208";a="325323690"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga005.fm.intel.com with ESMTP; 04 Mar 2019 10:28:36 -0800
+Date:   Mon, 4 Mar 2019 10:28:36 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
+        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: Re: [PATCH v3 3/8] KVM:CPUID: Add CPUID support for Guest CET
+Message-ID: <20190304182836.GB17120@linux.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-4-weijiang.yang@intel.com>
+ <20190228155939.GD6166@linux.intel.com>
+ <20190228082831.GB12006@local-michael-cet-test.sh.intel.com>
+ <20190301145323.GB22584@linux.intel.com>
+ <20190303093645.GB31538@local-michael-cet-test.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190303093645.GB31538@local-michael-cet-test.sh.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 03, 2019 at 05:36:45PM +0800, Yang Weijiang wrote:
+> On Fri, Mar 01, 2019 at 06:53:23AM -0800, Sean Christopherson wrote:
+> > On Thu, Feb 28, 2019 at 04:28:32PM +0800, Yang Weijiang wrote:
+> > > On Thu, Feb 28, 2019 at 07:59:40AM -0800, Sean Christopherson wrote:
+> > > > On Mon, Feb 25, 2019 at 09:27:11PM +0800, Yang Weijiang wrote:
+> > > > > Guest CET SHSTK and IBT capability are reported via
+> > > > > CPUID.(EAX=7, ECX=0):ECX[bit 7] and EDX[bit 20] respectively.
+> > > > > Guest user mode and supervisor mode xsaves component size
+> > > > > is reported via CPUID.(EAX=0xD, ECX=1):ECX[bit 11] and ECX[bit 12]
+> > > > > respectively.
+> > > > > 
+> > > > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+> > > > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > > > > ---
+> > > > >  arch/x86/kvm/cpuid.c | 60 +++++++++++++++++++++++++++++++++-----------
+> > > > >  arch/x86/kvm/x86.h   |  4 +++
+> > > > >  2 files changed, 50 insertions(+), 14 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > > > > index cb1aece25b17..5e05756cc6db 100644
+> > > > > --- a/arch/x86/kvm/cpuid.c
+> > > > > +++ b/arch/x86/kvm/cpuid.c
+> > > > > @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
+> > > > >  	return xcr0;
+> > > > >  }
+> > > > >  
+> > > > > +u64 kvm_supported_xss(void)
+> > > > > +{
+> > > > > +	u64 xss;
+> > > > > +
+> > > > > +	rdmsrl(MSR_IA32_XSS, xss);
+> > > > > +	xss &= KVM_SUPPORTED_XSS;
+> > > > > +	return xss;
+> > > > > +}
+> > > > > +EXPORT_SYMBOL(kvm_supported_xss);
+> > > > > +
+> > > > >  #define F(x) bit(X86_FEATURE_##x)
+> > > > >  
+> > > > >  /* For scattered features from cpufeatures.h; we currently expose none */
+> > > > > @@ -323,6 +333,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> > > > >  				 u32 index, int *nent, int maxnent)
+> > > > >  {
+> > > > >  	int r;
+> > > > > +	u32 eax, ebx, ecx, edx;
+> > > > >  	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
+> > > > >  #ifdef CONFIG_X86_64
+> > > > >  	unsigned f_gbpages = (kvm_x86_ops->get_lpage_level() == PT_PDPE_LEVEL)
+> > > > > @@ -503,6 +514,20 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+> > > > >  			 * if the host doesn't support it.
+> > > > >  			 */
+> > > > >  			entry->edx |= F(ARCH_CAPABILITIES);
+> > > > > +
+> > > > > +			/*
+> > > > > +			 * Guest OS CET enabling is designed independent to
+> > > > > +			 * host enabling, it only has dependency on Host HW
+> > > > > +			 * capability, if it has, report CET support to
+> > > > > +			 * Guest.
+> > > > > +			 */
+> > > > > +			cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
+> > > > > +			if (ecx & F(SHSTK))
+> > > > > +				entry->ecx |= F(SHSTK);
+> > > > > +
+> > > > > +			if (edx & F(IBT))
+> > > > > +				entry->edx |= F(IBT);
+> > > > 
+> > > > There's no need to manually add these flags.  They will be automatically
+> > > > kept if supported in hardware because your previous patch, 02/08, added
+> > > > them to the mask of features that can be exposed to the guest,
+> > > > i.e. set them in kvm_cpuid_7_0_e{c,d}x_x86_features.
+> > > > 
+> > > I shared the same thought as you before, but after I took a closer look at the
+> > > kernel code, actually, when host CET feature is disabled by user via
+> > > cmdline options(no_cet_shstk and no_cet_ibt), it'll mask out CET feature bits in
+> > > boot_cpu_data.x86_capbility[] array, and cpuid_mask() will make the bits
+> > > in previous definition lost, so these lines actually add them back when
+> > > host CET is disabled.
+> > 
+> > 'entry' is filled by do_cpuid_1_ent(), which does cpuid_count(), same as
+> > your code, i.e. it's not affected by whether or not the host kernel is
+> > using each feature.
+> >
+> I checked CET kernel patch:
+> #ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
+> static __init int setup_disable_shstk(char *s) {
+> 	/* require an exact match without trailing characters */
+> 	if (s[0] != '\0')
+> 		return 0;
+> 
+> 	if (!boot_cpu_has(X86_FEATURE_SHSTK))
+> 		return 1;
+> 
+> 	setup_clear_cpu_cap(X86_FEATURE_SHSTK);
+> 	pr_info("x86: 'no_cet_shstk' specified, disabling Shadow Stack\n");
+> 	return 1;
+> }
+> __setup("no_cet_shstk", setup_disable_shstk); #endif
+> 
+> setup_disable_shstk()->setup_clear_cpu_cap(X86_FEATURE_SHSTK)->do_clear_cpu_cap(NULL,
+> feature)->clear_feature(c, feature)->clear_cpu_cap(&boot_cpu_data, feature);
+> 
+> this path will clear boot_cpu_data.x86_capability[X86_FEATURE_SHSTK] if "no_cet_shstk" is set.
+> but in cpuid_mask(), it will "AND" the bit with SHSTK bit set 
+> in kvm_cpuid_7_0_ecx_x86_features, so the bit in ecx is cleared, 
+> need to add the bit back according to host cpuid_count(). 
+> the CET kernel patch can be seen in below patch link.
 
-On Mon, Mar 4, 2019 at 11:20 AM, Miquel Raynal=20
-<miquel.raynal@bootlin.com> wrote:
-> Hi Paul,
->=20
-> Paul Cercueil <paul@crapouillou.net <mailto:paul@crapouillou.net>>=20
-> wrote on Sat,  9 Feb 2019 16:23:02
-> -0300:
->=20
->>  The ingenic-nand driver uses an API provided by the jz4780-bch=20
->> driver.
->>  This makes it difficult to support other SoCs in the jz4780-bch=20
->> driver.
->>  To work around this, we separate the API functions from the=20
->> SoC-specific
->>  code, so that these API functions are SoC-agnostic.
->>=20
->=20
-> I like the idea, actually I am working on this separation (see
-> [1]) and I would really appreciate that you try to implement the
-> interface when it will be available (v2 is coming this week, I think=20
-> v3
-> will be the one to test when raw NAND devices will be properly
-> supported). I will add you in Cc: if you want to follow/review.
->=20
-> [1]=20
-> <http://lists.infradead.org/pipermail/linux-mtd/2019-February/087815.html=
->
+Ah, I see.  In this case we need to honor boot_cpu_data.  The idea is
+that a feature should not be exposed to the guest, i.e. actually used,
+if it has been explicitly disabled by the user, e.g. to workaround a
+hardware or firmware issue.  The cases where a feature is exposed to
+the guest even when disabled in host is when said feature is emulated
+by KVM in software.
 
-Do you think this will be ready for 5.2?
-
-You can add me in Cc:.
-
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net=20
->> <mailto:paul@crapouillou.net>>
->>  ---
->>=20
->>  v2: Add an optional .probe() callback. It is used for instance to=20
->> set
->>      the clock rate in the JZ4780 backend.
->>=20
->>  v3: The common code is now inside the ingenic-ecc module. Each
->>      SoC-specific ECC code is now in its own module, which leaves to=20
->> the
->>      user the choice of which (if any) ECC code should be supported.
->>=20
->>  v4: No change
->>=20
->>   drivers/mtd/nand/raw/ingenic/Kconfig        |  17 +++
->>   drivers/mtd/nand/raw/ingenic/Makefile       |   5 +-
->>   drivers/mtd/nand/raw/ingenic/ingenic_ecc.c  | 157=20
->> +++++++++++++++++++++++++
->>   drivers/mtd/nand/raw/ingenic/ingenic_ecc.h  |  84 ++++++++++++++
->>   drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  38 +++----
->>   drivers/mtd/nand/raw/ingenic/jz4780_bch.c   | 170=20
->> +++++-----------------------
->>   drivers/mtd/nand/raw/ingenic/jz4780_bch.h   |  40 -------
->>   7 files changed, 308 insertions(+), 203 deletions(-)
->>   create mode 100644 drivers/mtd/nand/raw/ingenic/ingenic_ecc.c
->>   create mode 100644 drivers/mtd/nand/raw/ingenic/ingenic_ecc.h
->>   delete mode 100644 drivers/mtd/nand/raw/ingenic/jz4780_bch.h
->>=20
->=20
-> [...]
->=20
->>  diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c=20
->> b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
->>  index 8c73f7c5be9a..0f51fd15fe79 100644
->>  --- a/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
->>  +++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand.c
->>  @@ -22,7 +22,7 @@
->>=20
->>   #include <linux/jz4780-nemc.h>
->>=20
->>  -#include "jz4780_bch.h"
->>  +#include "ingenic_ecc.h"
->>=20
->>   #define DRV_NAME	"ingenic-nand"
->>=20
->>  @@ -40,7 +40,7 @@ struct ingenic_nand_cs {
->>=20
->>   struct ingenic_nfc {
->>   	struct device *dev;
->>  -	struct jz4780_bch *bch;
->>  +	struct ingenic_ecc *ecc;
->>   	struct nand_controller controller;
->>   	unsigned int num_banks;
->>   	struct list_head chips;
->>  @@ -124,10 +124,10 @@ static int ingenic_nand_ecc_calculate(struct=20
->> nand_chip *chip, const u8 *dat,
->>   {
->>   	struct ingenic_nand *nand =3D to_ingenic_nand(nand_to_mtd(chip));
->>   	struct ingenic_nfc *nfc =3D to_ingenic_nfc(nand->chip.controller);
->>  -	struct jz4780_bch_params params;
->>  +	struct ingenic_ecc_params params;
->>=20
->>   	/*
->>  -	 * Don't need to generate the ECC when reading, BCH does it for=20
->> us as
->>  +	 * Don't need to generate the ECC when reading, ECC does it for=20
->> us as
->=20
-> "the ECC engine does it for us" would be more meaningful.
-
-OK.
-
->>   	 * part of decoding/correction.
->>   	 */
->>   	if (nand->reading)
->>  @@ -137,7 +137,7 @@ static int ingenic_nand_ecc_calculate(struct=20
->> nand_chip *chip, const u8 *dat,
->>   	params.bytes =3D nand->chip.ecc.bytes;
->>   	params.strength =3D nand->chip.ecc.strength;
->>=20
->>  -	return jz4780_bch_calculate(nfc->bch, &params, dat, ecc_code);
->>  +	return ingenic_ecc_calculate(nfc->ecc, &params, dat, ecc_code);
->>   }
->>=20
->=20
-> Thanks,
-> Miqu=E8l
-
-=
-
+> 
+> > > please check CET kernel patch here:
+> > > https://lkml.org/lkml/2018/11/20/204
