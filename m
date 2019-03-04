@@ -2,130 +2,117 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45307C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BE5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE3E206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B6C206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 16:11:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FJE07Xb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfCDQJw (ORCPT
+        id S1727428AbfCDQLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 11:09:52 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50252 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726430AbfCDQJv (ORCPT
+        Mon, 4 Mar 2019 11:11:01 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:57202 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbfCDQLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 11:09:51 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x24G4eJw105445
-        for <linux-kernel@vger.kernel.org>; Mon, 4 Mar 2019 11:09:50 -0500
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r1716rwme-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 11:09:50 -0500
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 4 Mar 2019 16:09:49 -0000
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 4 Mar 2019 16:09:44 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x24G9hve17957014
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 Mar 2019 16:09:43 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18B2FB2067;
-        Mon,  4 Mar 2019 16:09:43 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EBA26B205F;
-        Mon,  4 Mar 2019 16:09:42 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  4 Mar 2019 16:09:42 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 48FBD16C32DC; Mon,  4 Mar 2019 08:09:47 -0800 (PST)
-Date:   Mon, 4 Mar 2019 08:09:47 -0800
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>
-Subject: Re: [RFC PATCH] tools/memory-model: Remove (dep ; rfi) from ppo
-Reply-To: paulmck@linux.ibm.com
-References: <20190222130014.GY32494@hirez.programming.kicks-ass.net>
- <20190225175517.GK4072@linux.ibm.com>
- <20190226093009.GS32477@hirez.programming.kicks-ass.net>
- <20190226104551.GF32534@hirez.programming.kicks-ass.net>
- <20190226112133.GG32534@hirez.programming.kicks-ass.net>
- <20190226112521.GH32534@hirez.programming.kicks-ass.net>
- <20190226113008.GI32534@hirez.programming.kicks-ass.net>
- <20190226113813.GA14753@zn.tnic>
- <20190226134906.GG32494@hirez.programming.kicks-ass.net>
- <8fbdcdc0-1f4e-e268-c183-0d65be3d39c9@gmail.com>
+        Mon, 4 Mar 2019 11:11:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YBz9BBEyPO1LAZDBwd4j3W6qsa5YVzMKOfTE6iUK1Y0=; b=FJE07Xb0SFDYP211a2nyIWh5D
+        sp98X+7FDiiWH+OB7zI+ht5TcHA13iYACu82h6Z5GFx8bvPGx9UjSRtZvU7nks6ghZHXz1Kx+IT9P
+        t3k1hxG708SbvBUPEjcmtQVs6vH0kgE+a9s3nAetszDv7d8Ye2GKjrkDcIhuWR1PjQnFZj+S3l0re
+        PNrK/X/36/KcCj37tVnmV97DLj/bdBMtzXrlVWFN2miudUJ2N1IVSVhJHi1eH0XjTuVXf+QgPS3dO
+        FMCxLN3l8NCWiPVX7C/7MDEE/B9PXWWzun9B8tGdlCel6DWsd3n8mmPavIc0qLFDHtkV5aU6vQ3np
+        bPCXf0c9Q==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:54926)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1h0qB3-0003sb-6I; Mon, 04 Mar 2019 16:10:53 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1h0qAx-0002Rz-EC; Mon, 04 Mar 2019 16:10:47 +0000
+Date:   Mon, 4 Mar 2019 16:10:47 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        maxime.chevallier@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
+        mw@semihalf.com
+Subject: Re: [PATCH net-next v2 3/3] net: phy: marvell10g: set the PHY in low
+ power by default
+Message-ID: <20190304161047.umxg53ax45rxjuqg@shell.armlinux.org.uk>
+References: <20190301110047.20257-1-antoine.tenart@bootlin.com>
+ <20190301110047.20257-4-antoine.tenart@bootlin.com>
+ <20190301141953.GF19813@lunn.ch>
+ <20190301150706.GD3554@kwain>
+ <d17bdf0c-f1b8-99e3-b199-a99a7f7347d3@gmail.com>
+ <20190304104700.GB3709@kwain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8fbdcdc0-1f4e-e268-c183-0d65be3d39c9@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19030416-2213-0000-0000-0000035DADD8
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010704; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01169549; UDB=6.00611167; IPR=6.00950177;
- MB=3.00025830; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-04 16:09:48
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030416-2214-0000-0000-00005D8ECFD4
-Message-Id: <20190304160947.GB13351@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-04_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903040117
+In-Reply-To: <20190304104700.GB3709@kwain>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 03, 2019 at 12:27:12AM +0900, Akira Yokosawa wrote:
-> Hello Peter,
+On Mon, Mar 04, 2019 at 11:47:00AM +0100, Antoine Tenart wrote:
+> Hi Florian,
 > 
-> On Tue, 26 Feb 2019 14:49:06 +0100, Peter Zijlstra wrote:
-> > On Tue, Feb 26, 2019 at 12:38:13PM +0100, Borislav Petkov wrote:
-> >> On Tue, Feb 26, 2019 at 12:30:08PM +0100, Peter Zijlstra wrote:
-> >>> When I used the argc variant, gcc-8 'works', but with s/argc/1/ it is
-> >>> still broken.
-> >>
-> >> As requested on IRC:
-> > 
-> > What I asked was if you could get your GCC developer friends to have a
-> > look at this :-)
-> 
-> JFYI, there is a bugzilla ticket regarding this behavior of GCC
-> at https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61502,
-> which started on 13 June 2014 and the latest entry was on
-> 02 Feb 2019.
+> I agree having a per-driver behaviour is not something we want. As I
+> understand it, there is no behaviour enforced currently regarding this
+> matter. I agree both cases have their pros and cons:
+> - It's weird to have an interface reporting being UP when it's not
+>   really.
 
-And that bug was submitted by none other than Peter Sewell, thank you!
+What about when an interface is listening for wake-on-lan packets?
 
-This bug references https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88775,
-where someone appears to -want- this sort of optimization.  :-/
+Let's say board 1 is powered down and has WoL enabled.  Board 2 is
+as per your configuration.  Board 2's interface reports that the
+link is up.  Most of the packets that would be sent out the
+interface end up disappearing into a black hole in the same way
+as your original scenario.
 
-							Thanx, Paul
+How is this "weird" ?
 
+There are many cases where exactly this happens - you are trying to
+make one particular scenario behave "better" without considering
+whether it's possible with all or even the majority of scenarios.
+
+The only case where what you're suggesting makes sense is a point-to-
+point link between two systems, which is not the norm.
+
+More than that, when board 1 boots, initially the link will be up
+from reset.  When the kernel eventually boots with your patch, the
+link will then go down until board 1 configures the interface.  So,
+board 2 sees that the interface comes up, and could assume that
+board 1 is alive and well - but it isn't because (eg) it's in the
+boot loader.
+
+Basically, what I'm pointing out is that even in your minority
+scenario, reasoning that board 2 should not see "link up" status
+until board 1's interface is configured is not reasonable.
+
+The link status is about the physical connectivity on the local
+interface, it is not about the link between the interfaces on the
+two machines.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
