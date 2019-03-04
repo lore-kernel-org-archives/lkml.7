@@ -2,80 +2,106 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E79C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03A8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D622070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6D220835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 22:51:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="jIPUjsk9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GlaGPnq+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfCDWtm (ORCPT
+        id S1726388AbfCDWvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 17:49:42 -0500
-Received: from tomli.me ([153.92.126.73]:44216 "EHLO tomli.me"
+        Mon, 4 Mar 2019 17:51:17 -0500
+Received: from ozlabs.org ([203.11.71.1]:50537 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbfCDWtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 17:49:41 -0500
-Received: from tomli.me (localhost [127.0.0.1])
-        by tomli.me (OpenSMTPD) with ESMTP id e8e005d4;
-        Mon, 4 Mar 2019 22:49:39 +0000 (UTC)
-X-HELO: localhost.localdomain
-Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
-Received: from Unknown (HELO localhost.localdomain) (2402:f000:1:1501:200:5efe:72f4:b31)
- by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Mon, 04 Mar 2019 22:49:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=date:from:to:cc:subject:message-id:mime-version:content-type; s=1490979754; bh=GSa3KMva/o8J+I3L/EUsctik2qztdvPyjYisCxkTpxM=; b=jIPUjsk9CN21Sn3zARzKZ0QHnC+ksIbhohIwbjXh5yLPzecdOWqkX/1mQbxj0tawiCqKUQstp74UE3slNqiCqj/fW3al10UV+LYDsOP8jGHmc6VSD4fgOX6HaRHVYU9bDMWT3FJM5JLoPl2M3dTdYZ9pOM2fMudEIZunyhLvkYOM7hDcYXp/jfk/zYh0kaNq7sxw2uRd8v3adVg0OoIUYdkfgcdXvWKzKJrPGpzZ6LVKWUUC3xD91SHDfmOkG8+eSBqshP4H3YBrBCe9fw78Ez33tPrMuzJlcAl8/SSWJcbpMywQptNDLbr9uGQaIYISqxzppeE0E4+mywzxJF4Jaw==
-Date:   Tue, 5 Mar 2019 06:49:32 +0800
-From:   Tom Li <tomli@tomli.me>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Paul Burton <paul.burton@mips.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: MFD/Platform drivers for Yeeloong laptop submitted, please review
-Message-ID: <20190304224931.GA25280@localhost.localdomain>
+        id S1726066AbfCDWvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 17:51:17 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44CwHQ03Fyz9s00;
+        Tue,  5 Mar 2019 09:51:13 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1551739874;
+        bh=v+2/2BRZP0k7+KJ3/wqGl1EdA/GmC8m940jnYJquNWk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GlaGPnq+IeG6I15ClfKomIFx+BVx5+b2m6EiocYFBH1rAhftweRJsFoXcEfqT7WnN
+         GPaGW/+exXPX2r0PmvKmefCdv2QfKQQ2BTpDwSBT54JPgpQ8nySOljj3GwY9IKBgbw
+         iNDYS7GM5XYJJXGZw/z2ECVx6lL2Ldcoi9RHFmVAvTTosTEoeveOL59b8lEftybzwE
+         vHw9PVy7AX66Mv8Qmo65k8hoTJXc2XwdWI0Tmr9AI9L+BkPFzUxgGwQqczyoHI/gXB
+         w2v/u4quBdqQf9vtLkTKebw34nRXuAyA4cLJhYFoXHIKg7wwGuWdd/U8Zkge8PfPgo
+         29s8xecREaPwQ==
+Date:   Tue, 5 Mar 2019 09:51:00 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     bp@alien8.de, natechancellor@gmail.com, niravd@google.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/boot: clean up headers
+Message-ID: <20190305095100.243a40e3@canb.auug.org.au>
+In-Reply-To: <20190304175016.40538-1-ndesaulniers@google.com>
+References: <20190302132750.0916adc4@canb.auug.org.au>
+        <20190304175016.40538-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/s2NMWtIWecU_eQD7L1+SzGt"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Paul & Jones.
+--Sig_/s2NMWtIWecU_eQD7L1+SzGt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I've submitted the first series of patches [0] for the platform
-drivers on Lemote Yeeloong MIPS laptop to the mailing list, this
-series is required before the following mainlining can be proceed.
+Hi Nick,
 
-The first patch of this series is a MFD driver, which is needed to
-be reviewed by Jones.
+On Mon,  4 Mar 2019 09:50:16 -0800 Nick Desaulniers <ndesaulniers@google.co=
+m> wrote:
+>
+> Changes V1 -> V2:
+> * Add Reviewed, Tested, Suggested tags.
+> * Drop linux/types.h; it's included in linux/limits.h.
+>=20
+> My original intention was to unsort the headers (sorted in V1), but if
+> we drop the out of place linux/types.h, then we can insert the two more
+> specific headers in alphabetic order.
 
-The rest of the patches is the required changes to the board files
-in arch/mips/loongson64/, which is needed to be reviewed for inclusion
-into Linux/MIPS. In addition, there is also a trivial bugfix for
-suspend/resume, which is needed to be queued into mips-fixes.
+I don't understand why you care about the include file ordering.
 
-I understand I shouldn't have sent this mail because it only adds noise
-to the mailing list, but in this case, unfortunately, it seems Jones
-never received the original patch, perhaps my mail was classified as
-spam or rejected by his mail server, and in fact he didn't even realized
-the existence of it... [2]
+Also, since this file uses things from linux/types.h, I would argue
+that we need the explicit include of linux/types.h.  Just imagine if
+someone at a later date reomves the linux/types.h include from
+linux/limits.h (however unlikely that is).
 
-Jones: I sincerely hope you've receive this mail. Also, is there a
-mailing list which can be used to submit MFD drivers rather than
-CCing you personally? (in case the mail has been dropped again)
+Just do your bug fix.
 
-Thanks for your time.
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks,
-Tom Li
+--Sig_/s2NMWtIWecU_eQD7L1+SzGt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-[0] https://lore.kernel.org/linux-mips/20190304222848.25037-1-tomli@tomli.me/T/#t
+-----BEGIN PGP SIGNATURE-----
 
-[1] https://lore.kernel.org/linux-mips/20190304220022.20682-1-tomli@tomli.me/T/#u
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx9q9QACgkQAVBC80lX
+0GwMUAgAnewz0+cEI6RdEIPRq6K1Sly8eoK1ndXeAGPjK4Pnx5V6+ptD/rgLJe5R
+rZ/03boLh8V1dcjBRCPeLTCNuT7WILxiHi1dzNfR3mSfNmH+3QkDTq9LnLq1FARe
+8pcU3Ps0vX82hq5wtE2opnzU6Ju0TQAjEZdi3fRcu7/86BqS1vYJ+RruPLI+ReM6
+ZYGtuHMnyVbhSxyNssd074lUgqmhFj3lMKYjerYVW6DjltLdOnWEfDStCueGp9n5
+sOpUVSREbcvi+6sV9qlMw2EfpinvWbCCq6oh1C/A+1zV1eH5i/TSJKFNU3pgrKMO
+YGmo8KERHWWHzqeEcc1JASSQ+/9evg==
+=brI9
+-----END PGP SIGNATURE-----
 
-[2] https://lore.kernel.org/linux-mips/20190302175334.5103-1-tomli@tomli.me/T/#maabd498c419c13a5435231303ef803a71451af8b
+--Sig_/s2NMWtIWecU_eQD7L1+SzGt--
