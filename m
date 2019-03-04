@@ -2,245 +2,206 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA90C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B7CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89FD20815
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097B020823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l1xFb9c2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FNtYlS9q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfCDOL0 (ORCPT
+        id S1726717AbfCDOLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:11:26 -0500
-Received: from mail-it1-f196.google.com ([209.85.166.196]:34814 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfCDOL0 (ORCPT
+        Mon, 4 Mar 2019 09:11:35 -0500
+Received: from mail-yw1-f43.google.com ([209.85.161.43]:38382 "EHLO
+        mail-yw1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfCDOLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:11:26 -0500
-Received: by mail-it1-f196.google.com with SMTP id d125so5091000ith.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 06:11:25 -0800 (PST)
+        Mon, 4 Mar 2019 09:11:35 -0500
+Received: by mail-yw1-f43.google.com with SMTP id o184so4138014ywo.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 06:11:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TqxJghP918UPMYvFNBhGMvF0VxjxcsMTEAmWEQ5o17E=;
-        b=l1xFb9c2QlxGXGkf9K60t3GcMhuKxCPgZHcvgYn9Y8q6Av/jL+4ez91RQ+CCRCD457
-         K6G3x+kYiL3TanU8A2R51RIZjVB5Qgaawv9skR2tuIWWvMcH9nOfmgWEeHf4pGQWd1kR
-         4dqd1XUf4lxJBfXtT+CBltGtw9lFHevF1Eu0dzjOuZH6/c/6CsooOuQkN7Q9XZ5FPIbk
-         93qZJVMs8pV9/QeNUZgK2nbGKynBNkPiPxy+WABbzWF9OieUu6dtYQYx2RHlAk4JiOJu
-         dX4W1Dw4iDsgocLShOweRDEg8GEcLbOYX6sMWwUlGGv9ZSHNq1m5gdh5JbmYwnrg9GUB
-         M3Iw==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=/5CvE72hge+1VZASH6mM9+nM6QDF20zdbHqpANVln1w=;
+        b=FNtYlS9q+PG8a3MWRt5JGODd3FexrWXdManez1BmUC5OF6rqhE6NeSVL60Kq0uRgFh
+         SZW5LNbvL0mAu58XkKkOkVikACKTpOX8MHHihFeI+wStg7WpSWh7+g7JbUC5foHUcmCG
+         d9ANA1SGu/WmyYOgx2nKQPhXveyMbZdiE6uUbK2DHilY7mBGY6f+17x6mfeQImungVBj
+         1MDD/HeF4aNhVIbMNzoNeuoHjuhzL4GABlVfzrfLm4Lj0dW9orkx/lJEyOxjo1Qy8E/x
+         HH8a/tELD45uMb6YtpGPRWEGLAzPFgbDwKw6DH7+FgUdtIFuktMiy3OdZ7J7F08DCAO1
+         G3Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TqxJghP918UPMYvFNBhGMvF0VxjxcsMTEAmWEQ5o17E=;
-        b=VAMx2XTl5KtfH7Newgz6tG6eL9jus7PR5gEFpA8ocL4+WmI2e0BdQKnudH6dWaJdMA
-         Zu/5JD0qsT1MY840w+O95IDtfcyeewEAQOJem3ZA7lJDBOZMcM5f57yNtUWGt5AvcAiC
-         RzDWCyyhPK6IRovBW4IB47cwJKBBK8LOYZk6dBVac/D/fzOzLabeocAg6hXzdWvL4Cl7
-         VjhwQxqXcaVECZm0OApqx50YIsZfR7weyPRmwIG55IHZ6S9TEaKKyMvP/sEi2I+icssp
-         XmY/xIoCSJG71YDkK/E/vi2a71ZINZCMxTWLue2EZgRnho/SFLjhkXV0NF6JmW8PvtwI
-         sR+w==
-X-Gm-Message-State: APjAAAVEIwMltNv7qUxwRE5hWG0DiFE/V6rVbHEpl5Z5lloiKPpPWczd
-        Ie+tuQBpAbFxLLukLtUg2nrM0StiMMIDteLzts8p5w==
-X-Google-Smtp-Source: APXvYqzuKHuJW9dtDdbL/dxxwYqtmYbB5cBT1K0LcE7XYQvn0lRGlG0zxLGs1yeXpXHvvqjAMljo5Lo43BGaDh8OxdE=
-X-Received: by 2002:a02:a58a:: with SMTP id b10mr10018406jam.82.1551708684762;
- Mon, 04 Mar 2019 06:11:24 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=/5CvE72hge+1VZASH6mM9+nM6QDF20zdbHqpANVln1w=;
+        b=QbETyQMZQiCdvGgcWGPxS20a9IBq6/NU3LKeuIUx8gokyQvstu1OZNBK6HE5keswRr
+         pnPlcQRaCt7EtdNuwrqeRJ7RbkNzawUCO9C2kBTDqNyXg3XmIjElho9hYuiCtt0lqLqM
+         YBxUyocINSX/YzseQUxTSRn9ylj0guUNS0B/n5xjg+lB2+3ubfdRf3JYE9Ia/LDWKCRQ
+         M63lNsyJAYAYDIr5fFmYXkTt1+nCo9tC8W25OpnJT/W6PRXTKYVgzU4O3EpGFBbzJTC6
+         xBrTxgHp4+ItCpwEVlBlw1+rLKAPTj+yT2Hiq8JnKgQ5sLRC5DQa6wQp/yL3CypNM91W
+         p47Q==
+X-Gm-Message-State: APjAAAXEiXJV+/wNjTB0oT7Q0j+DJYk/wfcZTY2Yf2uVI6cqoEjIpQIB
+        F4dauJjMcO7PGcA34SvI6QCevVIH1kOzTDe8rbQO5t2wBfA=
+X-Google-Smtp-Source: APXvYqwShN3FtNu7j+OLHpZWT762H9dPY2PX/+qpIFRuRUy+MRa8XkPWUwo4+IEqqi1lk2LKubuxiASxBtdGS9B5PPs=
+X-Received: by 2002:a25:35d5:: with SMTP id c204mr15509993yba.325.1551708693704;
+ Mon, 04 Mar 2019 06:11:33 -0800 (PST)
 MIME-Version: 1.0
-References: <00000000000006457e057c341ff8@google.com> <5C7BFE94.6070500@huawei.com>
- <CACT4Y+Z+CH0UTdSz-w_woMPrBwg-GuobV1Su4qd9ReffTkyfVg@mail.gmail.com> <5C7D2F82.40907@huawei.com>
-In-Reply-To: <5C7D2F82.40907@huawei.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 4 Mar 2019 15:11:13 +0100
-Message-ID: <CACT4Y+agwaszODNGJHCqn4fSk4Le9exn3Cau0nornJ0RaTpDJw@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in get_mem_cgroup_from_mm
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     syzbot <syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Mon, 4 Mar 2019 15:11:22 +0100
+Message-ID: <CADYN=9KkjPSP4KJ+AzG=Njq49zJ5fbWNZ4V_jOvHkq_kt0biyA@mail.gmail.com>
+Subject: BUG: KASAN: i2c dev use after free
+To:     erico.nunes@datacom.ind.br, wsa@the-dreams.de,
+        dan.carpenter@oracle.com
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 3:00 PM zhong jiang <zhongjiang@huawei.com> wrote:
->
-> On 2019/3/4 15:40, Dmitry Vyukov wrote:
-> > On Sun, Mar 3, 2019 at 5:19 PM zhong jiang <zhongjiang@huawei.com> wrote:
-> >> Hi, guys
-> >>
-> >> I also hit the following issue. but it fails to reproduce the issue by the log.
-> >>
-> >> it seems to the case that we access the mm->owner and deference it will result in the UAF.
-> >> But it should not be possible that we specify the incomplete process to be the mm->owner.
-> >>
-> >> Any thoughts?
-> > FWIW syzbot was able to reproduce this with this reproducer.
-> > This looks like a very subtle race (threaded reproducer that runs
-> > repeatedly in multiple processes), so most likely we are looking for
-> > something like few instructions inconsistency window.
-> >
->
-> I has a little doubtful about the instrustions inconsistency window.
->
-> I guess that you mean some smb barriers should be taken into account.:-)
->
-> Because IMO, It should not be the lock case to result in the issue.
+Hi,
 
+When running a kernel (from todays next-20190304) that has
+CONFIG_KASAN and CONFIG_DEBUG_KOBJECT_RELEASE enabled I run into this
+call trace:
 
-Since the crash was triggered on x86 _most likley_ this is not a
-missed barrier. What I meant is that one thread needs to executed some
-code, while another thread is stopped within few instructions.
+[  494.752992][    C0]
+==================================================================
+[  494.755726][    C0] BUG: KASAN: use-after-free in
+collect_expired_timers+0x174/0x1d8
+[  494.758452][    C0] Write of size 8 at addr ffff800068868538 by
+task swapper/0/0
+[  494.761000][    C0]
+[  494.761914][    C0] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
+5.0.0-rc8-next-20190301-00013-g4c430594824f #1
+[  494.765290][    C0] Hardware name: linux,dummy-virt (DT)
+[  494.767168][    C0] Call trace:
+[  494.768358][    C0]  dump_backtrace+0x0/0x280
+[  494.769970][    C0]  show_stack+0x28/0x38
+[  494.771446][    C0]  dump_stack+0x110/0x190
+[  494.772992][    C0]  print_address_description+0x2cc/0x308
+[  494.774994][    C0]  kasan_report+0x164/0x1b0
+[  494.776596][    C0]  __asan_store8+0x94/0xa0
+[  494.778179][    C0]  collect_expired_timers+0x174/0x1d8
+[  494.780059][    C0]  run_timer_softirq+0x184/0x3f8
+[  494.781820][    C0]  __do_softirq+0x54c/0xa58
+[  494.783408][    C0]  irq_exit+0x150/0x1d0
+[  494.784892][    C0]  __handle_domain_irq+0x114/0x158
+[  494.786709][    C0]  gic_handle_irq+0x90/0xf8
+[  494.788293][    C0]  el1_irq+0x100/0x200
+[  494.789768][    C0]  arch_cpu_idle+0x270/0x4f0
+[  494.791398][    C0]  default_idle_call+0x48/0x58
+[  494.793105][    C0]  do_idle+0x264/0x3e0
+[  494.794568][    C0]  cpu_startup_entry+0x2c/0x30
+[  494.796253][    C0]  rest_init+0x458/0x46c
+[  494.797801][    C0]  arch_call_rest_init+0x18/0x20
+[  494.799548][    C0]  start_kernel+0x6f4/0x734
+[  494.801130][    C0]
+[  494.801989][    C0] Allocated by task 1:
+[  494.803453][    C0]  __kasan_kmalloc.isra.0+0xbc/0x178
+[  494.805334][    C0]  kasan_kmalloc+0xc/0x18
+[  494.806870][    C0]  kmem_cache_alloc_trace+0x56c/0x5c8
+[  494.808752][    C0]  i2cdev_attach_adapter+0xc0/0x2c8
+[  494.810612][    C0]  i2cdev_notifier_call+0x5c/0x90
+[  494.812382][    C0]  notifier_call_chain+0x108/0x1b0
+[  494.814214][    C0]  __blocking_notifier_call_chain+0x7c/0xb0
+[  494.816271][    C0]  blocking_notifier_call_chain+0x40/0x50
+[  494.818274][    C0]  device_add+0x884/0xc00
+[  494.819820][    C0]  device_register+0x2c/0x38
+[  494.821477][    C0]  i2c_register_adapter+0x27c/0x6f0
+[  494.823295][    C0]  i2c_add_adapter+0x110/0x130
+[  494.824980][    C0]  i2c_add_numbered_adapter+0x48/0x78
+[  494.826899][    C0]  unittest_i2c_bus_probe+0x1a8/0x1f4
+[  494.828778][    C0]  platform_drv_probe+0xd8/0x1a8
+[  494.830741][    C0]  really_probe+0x424/0x840
+[  494.832366][    C0]  driver_probe_device+0x16c/0x238
+[  494.834216][    C0]  device_driver_attach+0x90/0xc0
+[  494.835979][    C0]  __driver_attach+0x1e8/0x200
+[  494.837697][    C0]  bus_for_each_dev+0xf8/0x190
+[  494.839400][    C0]  driver_attach+0x3c/0x48
+[  494.840986][    C0]  bus_add_driver+0x20c/0x3d0
+[  494.842658][    C0]  driver_register+0x168/0x200
+[  494.844369][    C0]  __platform_driver_register+0x84/0x90
+[  494.846344][    C0]  of_unittest_overlay+0x1444/0x14e8
+[  494.848200][    C0]  of_unittest+0x2034/0x28a4
+[  494.849842][    C0]  do_one_initcall+0x490/0x9bc
+[  494.851546][    C0]  kernel_init_freeable+0xb94/0xcc0
+[  494.853398][    C0]  kernel_init+0x1c/0x204
+[  494.854945][    C0]  ret_from_fork+0x10/0x18
+[  494.856487][    C0]
+[  494.857356][    C0] Freed by task 1:
+[  494.858762][    C0]  __kasan_slab_free+0x140/0x200
+[  494.860495][    C0]  kasan_slab_free+0x10/0x18
+[  494.862116][    C0]  kfree+0x3f4/0x608
+[  494.863457][    C0]  put_i2c_dev+0xc8/0xd8
+[  494.864915][    C0]  i2cdev_detach_adapter+0x70/0xd8
+[  494.866775][    C0]  i2cdev_notifier_call+0x74/0x90
+[  494.868527][    C0]  notifier_call_chain+0x108/0x1b0
+[  494.870292][    C0]  __blocking_notifier_call_chain+0x7c/0xb0
+[  494.872204][    C0]  blocking_notifier_call_chain+0x40/0x50
+[  494.874059][    C0]  device_del+0x108/0x5b0
+[  494.875578][    C0]  device_unregister+0x78/0x98
+[  494.877268][    C0]  i2c_del_adapter+0x36c/0x3c8
+[  494.878820][    C0]  unittest_i2c_bus_remove+0x88/0xa0
+[  494.880531][    C0]  platform_drv_remove+0x44/0x70
+[  494.882211][    C0]  really_probe+0x488/0x840
+[  494.883710][    C0]  driver_probe_device+0x16c/0x238
+[  494.885514][    C0]  device_driver_attach+0x90/0xc0
+[  494.887283][    C0]  __driver_attach+0x1e8/0x200
+[  494.888910][    C0]  bus_for_each_dev+0xf8/0x190
+[  494.890617][    C0]  driver_attach+0x3c/0x48
+[  494.892179][    C0]  bus_add_driver+0x20c/0x3d0
+[  494.893847][    C0]  driver_register+0x168/0x200
+[  494.895489][    C0]  __platform_driver_register+0x84/0x90
+[  494.897367][    C0]  of_unittest_overlay+0x1444/0x14e8
+[  494.899235][    C0]  of_unittest+0x2034/0x28a4
+[  494.900861][    C0]  do_one_initcall+0x490/0x9bc
+[  494.902588][    C0]  kernel_init_freeable+0xb94/0xcc0
+[  494.904429][    C0]  kernel_init+0x1c/0x204
+[  494.905941][    C0]  ret_from_fork+0x10/0x18
+[  494.907389][    C0]
+[  494.908198][    C0] The buggy address belongs to the object at
+ffff800068868480
+[  494.908198][    C0]  which belongs to the cache kmalloc-512 of size 512
+[  494.912942][    C0] The buggy address is located 184 bytes inside of
+[  494.912942][    C0]  512-byte region [ffff800068868480, ffff800068868680)
+[  494.917228][    C0] The buggy address belongs to the page:
+[  494.919084][    C0] page:ffff7e0001a21a00 count:1 mapcount:0
+mapping:ffff80003fc0c980 index:0x0 compound_mapcount: 0
+[  494.922710][    C0] flags: 0xffff00000010200(slab|head)
+[  494.924623][    C0] raw: 0ffff00000010200 ffff7e0001a21608
+ffff7e0001a22588 ffff80003fc0c980
+[  494.927501][    C0] raw: 0000000000000000 0000000000080008
+00000001ffffffff 0000000000000000
+[  494.930369][    C0] page dumped because: kasan: bad access detected
+[  494.932528][    C0]
+[  494.933358][    C0] Memory state around the buggy address:
+[  494.935202][    C0]  ffff800068868400: fc fc fc fc fc fc fc fc fc
+fc fc fc fc fc fc fc
+[  494.937786][    C0]  ffff800068868480: fb fb fb fb fb fb fb fb fb
+fb fb fb fb fb fb fb
+[  494.940516][    C0] >ffff800068868500: fb fb fb fb fb fb fb fb fb
+fb fb fb fb fb fb fb
+[  494.943241][    C0]                                         ^
+[  494.945291][    C0]  ffff800068868580: fb fb fb fb fb fb fb fb fb
+fb fb fb fb fb fb fb
+[  494.948078][    C0]  ffff800068868600: fb fb fb fb fb fb fb fb fb
+fb fb fb fb fb fb fb
+[  494.950803][    C0]
+==================================================================
 
+I think patch introduced this issue d6760b14d4a1 ("i2c: dev: switch
+from register_chrdev to cdev API")
+and patch e6be18f6d62c ("i2c: dev: use after free in detach") tried to solve it.
+However, when CONFIG_DEBUG_KOBJECT_RELEASE is enabled it delays
+the ->release callback to make sure that anything that is done in release can
+be done later than it happens in normal execution.
+The cdev structure is supposed to be freed in the remove callback or after it,
+but here it has already been freed by the put_i2c_dev().
 
-
-> Thanks,
-> zhong jinag
-> >> Thanks,
-> >> zhong jiang
-> >>
-> >> On 2018/12/4 23:43, syzbot wrote:
-> >>> syzbot has found a reproducer for the following crash on:
-> >>>
-> >>> HEAD commit:    0072a0c14d5b Merge tag 'media/v4.20-4' of git://git.kernel..
-> >>> git tree:       upstream
-> >>> console output: https://syzkaller.appspot.com/x/log.txt?x=11c885a3400000
-> >>> kernel config:  https://syzkaller.appspot.com/x/.config?x=b9cc5a440391cbfd
-> >>> dashboard link: https://syzkaller.appspot.com/bug?extid=cbb52e396df3e565ab02
-> >>> compiler:       gcc (GCC) 8.0.1 20180413 (experimental)
-> >>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12835e25400000
-> >>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172fa5a3400000
-> >>>
-> >>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >>> Reported-by: syzbot+cbb52e396df3e565ab02@syzkaller.appspotmail.com
-> >>>
-> >>> cgroup: fork rejected by pids controller in /syz2
-> >>> ==================================================================
-> >>> BUG: KASAN: use-after-free in __read_once_size include/linux/compiler.h:182 [inline]
-> >>> BUG: KASAN: use-after-free in task_css include/linux/cgroup.h:477 [inline]
-> >>> BUG: KASAN: use-after-free in mem_cgroup_from_task mm/memcontrol.c:815 [inline]
-> >>> BUG: KASAN: use-after-free in get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
-> >>> Read of size 8 at addr ffff8881b72af310 by task syz-executor198/9332
-> >>>
-> >>> CPU: 0 PID: 9332 Comm: syz-executor198 Not tainted 4.20.0-rc5+ #142
-> >>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> >>> Call Trace:
-> >>>  __dump_stack lib/dump_stack.c:77 [inline]
-> >>>  dump_stack+0x244/0x39d lib/dump_stack.c:113
-> >>>  print_address_description.cold.7+0x9/0x1ff mm/kasan/report.c:256
-> >>>  kasan_report_error mm/kasan/report.c:354 [inline]
-> >>>  kasan_report.cold.8+0x242/0x309 mm/kasan/report.c:412
-> >>>  __asan_report_load8_noabort+0x14/0x20 mm/kasan/report.c:433
-> >>>  __read_once_size include/linux/compiler.h:182 [inline]
-> >>>  task_css include/linux/cgroup.h:477 [inline]
-> >>>  mem_cgroup_from_task mm/memcontrol.c:815 [inline]
-> >>>  get_mem_cgroup_from_mm.part.62+0x6d7/0x880 mm/memcontrol.c:844
-> >>>  get_mem_cgroup_from_mm mm/memcontrol.c:834 [inline]
-> >>>  mem_cgroup_try_charge+0x608/0xe20 mm/memcontrol.c:5888
-> >>>  mcopy_atomic_pte mm/userfaultfd.c:71 [inline]
-> >>>  mfill_atomic_pte mm/userfaultfd.c:418 [inline]
-> >>>  __mcopy_atomic mm/userfaultfd.c:559 [inline]
-> >>>  mcopy_atomic+0xb08/0x2c70 mm/userfaultfd.c:609
-> >>>  userfaultfd_copy fs/userfaultfd.c:1705 [inline]
-> >>>  userfaultfd_ioctl+0x29fb/0x5610 fs/userfaultfd.c:1851
-> >>>  vfs_ioctl fs/ioctl.c:46 [inline]
-> >>>  file_ioctl fs/ioctl.c:509 [inline]
-> >>>  do_vfs_ioctl+0x1de/0x1790 fs/ioctl.c:696
-> >>>  ksys_ioctl+0xa9/0xd0 fs/ioctl.c:713
-> >>>  __do_sys_ioctl fs/ioctl.c:720 [inline]
-> >>>  __se_sys_ioctl fs/ioctl.c:718 [inline]
-> >>>  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-> >>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-> >>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>> RIP: 0033:0x44c7e9
-> >>> Code: 5d c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b c5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> >>> RSP: 002b:00007f906b69fdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> >>> RAX: ffffffffffffffda RBX: 00000000006e4a08 RCX: 000000000044c7e9
-> >>> RDX: 0000000020000100 RSI: 00000000c028aa03 RDI: 0000000000000004
-> >>> RBP: 00000000006e4a00 R08: 0000000000000000 R09: 0000000000000000
-> >>> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e4a0c
-> >>> R13: 00007ffdfd47813f R14: 00007f906b6a09c0 R15: 000000000000002d
-> >>>
-> >>> Allocated by task 9325:
-> >>>  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-> >>>  set_track mm/kasan/kasan.c:460 [inline]
-> >>>  kasan_kmalloc+0xc7/0xe0 mm/kasan/kasan.c:553
-> >>>  kasan_slab_alloc+0x12/0x20 mm/kasan/kasan.c:490
-> >>>  kmem_cache_alloc_node+0x144/0x730 mm/slab.c:3644
-> >>>  alloc_task_struct_node kernel/fork.c:158 [inline]
-> >>>  dup_task_struct kernel/fork.c:843 [inline]
-> >>>  copy_process+0x2026/0x87a0 kernel/fork.c:1751
-> >>>  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
-> >>>  __do_sys_clone kernel/fork.c:2323 [inline]
-> >>>  __se_sys_clone kernel/fork.c:2317 [inline]
-> >>>  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
-> >>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-> >>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>>
-> >>> Freed by task 9325:
-> >>>  save_stack+0x43/0xd0 mm/kasan/kasan.c:448
-> >>>  set_track mm/kasan/kasan.c:460 [inline]
-> >>>  __kasan_slab_free+0x102/0x150 mm/kasan/kasan.c:521
-> >>>  kasan_slab_free+0xe/0x10 mm/kasan/kasan.c:528
-> >>>  __cache_free mm/slab.c:3498 [inline]
-> >>>  kmem_cache_free+0x83/0x290 mm/slab.c:3760
-> >>>  free_task_struct kernel/fork.c:163 [inline]
-> >>>  free_task+0x16e/0x1f0 kernel/fork.c:457
-> >>>  copy_process+0x1dcc/0x87a0 kernel/fork.c:2148
-> >>>  _do_fork+0x1cb/0x11d0 kernel/fork.c:2216
-> >>>  __do_sys_clone kernel/fork.c:2323 [inline]
-> >>>  __se_sys_clone kernel/fork.c:2317 [inline]
-> >>>  __x64_sys_clone+0xbf/0x150 kernel/fork.c:2317
-> >>>  do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
-> >>>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>>
-> >>> The buggy address belongs to the object at ffff8881b72ae240
-> >>>  which belongs to the cache task_struct(81:syz2) of size 6080
-> >>> The buggy address is located 4304 bytes inside of
-> >>>  6080-byte region [ffff8881b72ae240, ffff8881b72afa00)
-> >>> The buggy address belongs to the page:
-> >>> page:ffffea0006dcab80 count:1 mapcount:0 mapping:ffff8881d2dce0c0 index:0x0 compound_mapcount: 0
-> >>> flags: 0x2fffc0000010200(slab|head)
-> >>> raw: 02fffc0000010200 ffffea00074a1f88 ffffea0006ebbb88 ffff8881d2dce0c0
-> >>> raw: 0000000000000000 ffff8881b72ae240 0000000100000001 ffff8881d87fe580
-> >>> page dumped because: kasan: bad access detected
-> >>> page->mem_cgroup:ffff8881d87fe580
-> >>>
-> >>> Memory state around the buggy address:
-> >>>  ffff8881b72af200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >>>  ffff8881b72af280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >>>> ffff8881b72af300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >>>                          ^
-> >>>  ffff8881b72af380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >>>  ffff8881b72af400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >>> ==================================================================
-> >>>
-> >>>
-> >>> .
-> >>>
-> >>
-> >> --
-> >> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> >> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> >> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/5C7BFE94.6070500%40huawei.com.
-> >> For more options, visit https://groups.google.com/d/optout.
-> > .
-> >
->
->
+Cheers,
+Anders
