@@ -2,118 +2,93 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3083DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8154C10F09
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F228020835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:35:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CF4eeDQZ"
+	by mail.kernel.org (Postfix) with ESMTP id A4B0D20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfCDUfL (ORCPT
+        id S1726707AbfCDUfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:35:11 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36050 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfCDUfK (ORCPT
+        Mon, 4 Mar 2019 15:35:14 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:38375 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfCDUfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:35:10 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n22so3849206pfa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 12:35:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xNmRIXO0MDorylQ6to2ktdfK3KWc9juEpeOkY/XwoJA=;
-        b=CF4eeDQZAKbaUGzJA9fQrzNzkO+NVHMbfRrNep/Zh7xnCdV2i2ErmB04CC6jBQqoqk
-         hCfP4Dn9cDxs3zfMNFBlmeR7wANSPtqE4t6cu7eeKbr0YwyFvysVuUibBE9E7eAJ41tL
-         GqWbKYsVAmzlSdSWYZMozNM/IyRS5pZiqMJ/orvBDADJAw59YjXJH/1MwGFNaLaubEMQ
-         TZ4vC7oPA258zLV2nXE3/rplpdeR+ObDgk7ZXMiSm1XnCwHa5tOuu+qqtEGgp77hCQIR
-         nkGnJjQ5KOtV6v4FEVwVjzBX962VYSQBtbyINOxVkyNAfPT132cTXxOpIJljqe0XDgy8
-         lp/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=xNmRIXO0MDorylQ6to2ktdfK3KWc9juEpeOkY/XwoJA=;
-        b=JyvH6NGWsd5P7v8R18xDyGvoJiVYc4zb1TMWlgTkrY8w1+7s5hsDawJlU4kxlcF9NU
-         FRI4geza5HgaL2GfPfpVnRW7nR5t/o1ZOnTthfv9AhbEdT5/pTsTal6yPm1lCZb2iH5W
-         a99PoGbdYYvJCiLTV97csW9B69rROiEkXVtjHA1y/b/BXf0w4n8qTWmvOc6r72d2Dczb
-         ahBMFHUTB6Bbr1mnEpbHQOedDa71YOVeDEVfgYa0OEp3EXSotI9pXM3RRJaK7QW96krS
-         ZsDT0tmw1XmEUcZY67VXFwM/2rwKoalaR6ixZ51fTFPPjRVht6POpmKBYnOmGk7yhqW9
-         tKPw==
-X-Gm-Message-State: APjAAAXgF2iFi4TMRoAhcl4esc8HjimlpRq0KKdeT6wpR2rdasazRRaR
-        NoHE5nE+1DTUkRXDIj00Vjtssw==
-X-Google-Smtp-Source: APXvYqxja//u6kgFzU5DvfMkiEewZ3u55h1AEIkISeL6/xSWE/saZvaIZksEJL1uE6MRINFUnKohqQ==
-X-Received: by 2002:a17:902:728f:: with SMTP id d15mr22290851pll.156.1551731709722;
-        Mon, 04 Mar 2019 12:35:09 -0800 (PST)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id k74sm13911823pfb.172.2019.03.04.12.35.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 12:35:08 -0800 (PST)
-Date:   Mon, 04 Mar 2019 12:35:08 -0800 (PST)
-X-Google-Original-Date: Mon, 04 Mar 2019 12:34:41 PST (-0800)
-Subject:     Re: [PATCH 0/3] riscv: Fix debug instruction check and support trap-based WARN()
-In-Reply-To: <1551349891-22683-1-git-send-email-vincentc@andestech.com>
-CC:     aou@eecs.berkeley.edu, ebiederm@xmission.com,
-        Jim Wilson <jimw@sifive.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        deanbo422@gmail.com, vincentc@andestech.com
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     vincentc@andestech.com
-Message-ID: <mhng-76c68381-da6b-4b8c-97c9-e38d503b93bc@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 4 Mar 2019 15:35:12 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MyK9U-1hAkY524SK-00yii8; Mon, 04 Mar 2019 21:34:45 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH] bpf: fix sysctl.c warning
+Date:   Mon,  4 Mar 2019 21:34:12 +0100
+Message-Id: <20190304203443.1992942-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:lhdSW1MClS1OpT/SWuhIIv9Ek1tpe8udolndjPd+QDzE4nvOEE4
+ VI7bNGQYGB7yiZvLnjw7IcBi0aAAGjcRT2euQFwRQ0yrJRhghqUUJnHCmBwsHseRgYOtjdq
+ hEhhnNvgb759fnPkBNdCEc+b6u434vmPbw9O2Gi/x63fpZhbWBu4KhgpT1/gMX4IqX9UF6o
+ rv12ftNNH/Ko1YjohTTcg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HshwpxYVGpA=:WWCNSSTL2KpTZHzuwghHl7
+ MnaEnbAiqK6dVJwcWhA/IjbiUF4KcQHwGS3VlBUH1fjshRRqE3aWfsn2d+5wvHK46s9mNZY+8
+ 45z/0WyENHrsG0ZL+/zeJ3YuReB8ucI2vZu+47eWYeYiJukSiEZmr8NxKCMFbZ+NrcYZUvJOJ
+ +O1FAnsSpSFiZRhrSVLaYvwvwSLIb3HbsI/8OXCHJtHwE3Tcx/c2FBHIVxgmwu3GJYkX1X/DT
+ 3rDBbH8tpubU6L6YtYe95lRauw7tFde2TxbsZTSSEI4ySdWgS8c0ixpW/rB130BRFXmrsO2uv
+ yCqZSgj1tilLNu7SNmOiTYAo9ZxSVW0gtnMv8s7fIP+n0/zg4umJdgr6eJess18i0+wgdwIZS
+ bcf4R4pGkb32ODlZ/VfY/TblDRXAJnNvwLyCkjQNfv6kejAZur4RdREVDFNPLermLxX9iAXup
+ mqRFjgYYxxkeJD5ptuW99iORYrswc8TpFEEwJyheTH9MG+PkTG/Sh9sb+n+kL22Im5yZVhYZy
+ ZzyNEZl9nC8z+py8TJnXrQRXbIhC1vrz40aVC+4Bb8/GyY/DAJI6mf9VlBX/WDTBKuUrdnJhq
+ pCIUHx8wYWYl6Pr7gtl79xdJXzBHGuhEihiBH49wzJ0OspvOmcZG8J5uRgocZTyfVPhD6yp6l
+ DXRHbFsOagKedTB//mdOGStu0ZlYHSOqPbBAJDGRnwa+6z9OrVMn9Obww0wz2A0iwgXuZp7Df
+ h/j98kKOAYv8o4LyomCigazFf3gY+VVBsHNMIA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 Feb 2019 02:31:28 PST (-0800), vincentc@andestech.com wrote:
-> The handler for the debug exception will call is_valid_bugaddr(bugaddr) to
-> check if the instruction in bugaddr is a real debug instruction. However,
-> the expected instruction, ebreak, is possibly translated to c.ebreak by
-> assmebler when C extension is supported. This patchset will add c.ebreak
-> into the check mechanism. In addition, BUG() is currently unable to work in
-> the kernel module due to an inappropriated condition in is_valid_bugaddr().
-> This issue will be fixed in this patchset. Finally, this patchset enables
-> WARN() related functions to trap the code to help developers debug it.
->
->
->
->
->
-> Vincent Chen (3):
->   riscv: Add the support for c.ebreak check in is_valid_bugaddr()
->   riscv: Support BUG() in kernel module
->   riscv: Make WARN() related functions able to trigger a trap exception
+When CONFIG_BPF_SYSCALL or CONFIG_SYSCTL is disabled, we get
+a warning about an unused function:
 
-I'm finding this patch set a bit hard to follow, and I think it has more diff 
-than is necessary.  For example, the first patch introduces a new die() only to 
-have it removed by the third patch.  There's also some unnecessary 
-non-functional diff, like
+kernel/sysctl.c:3331:12: error: 'proc_dointvec_minmax_bpf_stats' defined but not used [-Werror=unused-function]
+ static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
 
-    @@ -149,12 +161,13 @@ int is_valid_bugaddr(unsigned long pc)
-            if (probe_kernel_address((bug_insn_t *)pc, insn))
-                    return 0;
-            if ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32)
-    -               return insn == __BUG_INSN_32;
-    +               return (insn == __BUG_INSN_32);
-            else
-    -               return (insn & __COMPRESSED_INSN_MASK) == __BUG_INSN_16;
-    +               return ((insn & __COMPRESSED_INSN_MASK) == __BUG_INSN_16);
-     }
-     #endif /* CONFIG_GENERIC_BUG */
-    
-    +
-     void __init trap_init(void)
-     {
-            /*
+The CONFIG_BPF_SYSCALL check was already handled, but the SYSCTL check
+is needed on top.
 
-I like the idea of the patch set, though.  Do you have time to clean it up and 
-submit a v2?
+Fixes: 492ecee892c2 ("bpf: enable program stats")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 46a0d0a14a66..b3df3ab7ac28 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -3330,7 +3330,7 @@ int proc_doulongvec_ms_jiffies_minmax(struct ctl_table *table, int write,
+ 
+ #endif /* CONFIG_PROC_SYSCTL */
+ 
+-#ifdef CONFIG_BPF_SYSCALL
++#if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_SYSCTL)
+ static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
+ 					  void __user *buffer, size_t *lenp,
+ 					  loff_t *ppos)
+-- 
+2.20.0
+
