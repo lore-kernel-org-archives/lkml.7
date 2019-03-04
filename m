@@ -2,90 +2,114 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5396EC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79889C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156B120836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551692660;
-	bh=zAZlAHRkJ7NKE4d+noU5LnAjtjHzfEn9tW99OJWjxw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2XTYBdtI4e04hBm+gU9fF4oocqIRkLQLxYx0febNLBQZUSNZQ3x0MX6RPxTLoAA8V
-	 tdSKHMo9yBAeaSItdIeHF73QcW/IoU8rZVKcKt6R8bj7vfQG3C4PoJYikYkkjE78D7
-	 LsdLq0zUCEA6vLWIMNZ9gwvM3LW76rqeACEtf7j4=
+	by mail.kernel.org (Postfix) with ESMTP id 547FD20836
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbfCDJoS (ORCPT
+        id S1726414AbfCDJqA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 04:44:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbfCDJoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 04:44:18 -0500
-Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1847F20836;
-        Mon,  4 Mar 2019 09:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551692657;
-        bh=zAZlAHRkJ7NKE4d+noU5LnAjtjHzfEn9tW99OJWjxw0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eEl0S2YFmBDXnjfk7nTVsg22nZ1p9+FZZg25MzyCyCnCIqcP6hRxQ3NeFJrOe6T2u
-         b1jVLn1nbxrgp0jTb78w8HeLj3eM26F1nTUnFYWb0ywmDolrFp+2pzIdmSPQXXKgzQ
-         QEJEpa1Ph0yp3v3vJVH/DYvGnWaufsZgfi4ZtVJ4=
-Date:   Mon, 4 Mar 2019 10:44:14 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     "He, Bo" <bo.he@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Wang, Yu Y" <yu.y.wang@intel.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.20 12/88] usb: dwc3: gadget: synchronize_irq dwc irq in
- suspend
-Message-ID: <20190304094414.GA12587@kroah.com>
-References: <20190304081630.610632175@linuxfoundation.org>
- <20190304081631.046461963@linuxfoundation.org>
- <CD6925E8781EFD4D8E11882D20FC406D52A5C632@SHSMSX104.ccr.corp.intel.com>
- <CGME20190304085654epcas2p1284f13532438678e8ba53d232ca02a34@epcas2p1.samsung.com>
- <20190304085350.GA18354@kroah.com>
- <a3d017c7-d671-3ba9-15d6-0028595d5d59@samsung.com>
+        Mon, 4 Mar 2019 04:46:00 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:57781 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfCDJp7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 04:45:59 -0500
+Received: from xps13 (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 87BD424000B;
+        Mon,  4 Mar 2019 09:45:55 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 10:45:54 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/9] dt-bindings: mtd: ingenic: Add compatible
+ strings for JZ4740 and JZ4725B
+Message-ID: <20190304104554.09be4cd4@xps13>
+In-Reply-To: <20190209192305.4434-1-paul@crapouillou.net>
+References: <20190209192305.4434-1-paul@crapouillou.net>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3d017c7-d671-3ba9-15d6-0028595d5d59@samsung.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 10:03:27AM +0100, Marek Szyprowski wrote:
-> Hi Greg,
+Hi Paul,
+
+Paul Cercueil <paul@crapouillou.net> wrote on Sat,  9 Feb 2019 16:22:57
+-0300:
+
+> Add compatible strings to probe the jz4780-nand and jz4780-bch drivers
+> from devicetree on the JZ4725B and JZ4740 SoCs from Ingenic.
 > 
-> On 2019-03-04 09:53, Greg Kroah-Hartman wrote:
-> > On Mon, Mar 04, 2019 at 08:46:30AM +0000, He, Bo wrote:
-> >> Hi, Greg:
-> >> 	Marek Szyprowski report the patch has issue that calling synchronize_irq() under dwc->lock spinlock, he has upload the below patch for the issue:
-> >>
-> >> dwc3_gadget_suspend() is called under dwc->lock spinlock. In such context calling synchronize_irq() is not allowed. Move the problematic call out of the protected block to fix the following kernel BUG during system
-> > <snip>
-> >
-> > Is this patch in Linus's tree yet?  If so, what is the git commit id?
-> >
-> > If not, is this also an issue in 5.0?
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
 > 
-> The fix has not been merged yet. The issue is also present in v5.0.
+> Changes:
+> 
+> v2: - Change 'ingenic,jz4725b-nand' compatible string to
+>       'ingenic,jz4740-nand' to reflect driver change
+>     - Add 'ingenic,jz4740-bch' compatible string
+>     - Document 'ingenic,oob-layout' property
+> 
+> v3: - Removed 'ingenic,oob-layout' property
+>     - Update compatible strings to what the driver supports
+> 
+> v4: No change
+> 
+>  Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> index 29ea5853ca91..a5b940f18bf6 100644
+> --- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
+> @@ -6,7 +6,10 @@ memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
+>  be children of the NEMC node.
+>  
+>  Required NAND controller device properties:
+> -- compatible: Should be set to "ingenic,jz4780-nand".
+> +- compatible: Should be one of:
+> +  * ingenic,jz4740-nand
+> +  * ingenic,jz4725b-nand
+> +  * ingenic,jz4780-nand
 
-Ok, please make sure it is properly tagged for the stable releases and
-we will be fine.
+Wouldn't "-nand-controller" suffix be better? Of course in the driver
+you should still check for jz4780-nand.
 
-thanks,
+>  - reg: For each bank with a NAND chip attached, should specify a bank number,
+>    an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+>  
+> @@ -72,7 +75,10 @@ NAND devices. The following is a description of the device properties for a
+>  BCH controller.
+>  
+>  Required BCH properties:
+> -- compatible: Should be set to "ingenic,jz4780-bch".
+> +- compatible: Should be one of:
+> +  * ingenic,jz4740-ecc
+> +  * ingenic,jz4725b-bch
+> +  * ingenic,jz4780-bch
+>  - reg: Should specify the BCH controller registers location and length.
+>  - clocks: Clock for the BCH controller.
+>  
 
-greg k-h
+Thanks,
+Miquèl
