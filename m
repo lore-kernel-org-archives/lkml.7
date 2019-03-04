@@ -2,198 +2,71 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80027C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D273C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B55B206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:52:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551721930;
-	bh=XN98+D5gbw1pc30bDaFbg45JEEaPqeNXKhfBuMF63Zg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ANFknR6AlbxmYF1jgmLbg/F4KJ0aXsEjC32mdYu28g2PbGrYrRuWKDAV1sZa18ji+
-	 XyRXM417HGHYb/hQhDusDi207PSAY8SOk68Ewl3vr5CfLVmXIXUtXNodCVg4Gs26GQ
-	 9JfNbIEKV3sL5hiWUm4DriZgw4FCItEge2nsZKDs=
+	by mail.kernel.org (Postfix) with ESMTP id D1580206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfCDRwJ (ORCPT
+        id S1727511AbfCDRxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:52:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51508 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 12:53:17 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:60065 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfCDRwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:52:08 -0500
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2198B2146E;
-        Mon,  4 Mar 2019 17:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551721927;
-        bh=XN98+D5gbw1pc30bDaFbg45JEEaPqeNXKhfBuMF63Zg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SmTfKeT2l2FNJbzv18gg4wy7J0RpsC9WES4Z3gLF2p86cx4GhRfiT5L+YYIdiTdiM
-         CmxSMgAQSgrgT6y0Zkuuh6cUiLmUOa7qWNiXbu01aTb1palNJvnsMOlSk+pZGtwU3A
-         USXlHvrMfmk5WJFunEfVCQNLfp1J8CjQXo18uYHQ=
-Received: by mail-qt1-f178.google.com with SMTP id y4so6055566qtc.10;
-        Mon, 04 Mar 2019 09:52:07 -0800 (PST)
-X-Gm-Message-State: APjAAAUevnpOLbo8jfXjZDPBmY2jfv4xHs+zmMsdW1vOlL5nJmSqqQVo
-        cUHE2z7pRLid9kHOUMMUzWWMqLosMfu7IqjY+g==
-X-Google-Smtp-Source: APXvYqzkpBfsfpjMj6yuvUtfeTDH9r0unzVPvf8mimwSTIYtBGwaXXtx6UGIICLfiHuD1BnGGoS7qddEhTP8hgrMERI=
-X-Received: by 2002:ac8:25d1:: with SMTP id f17mr14929040qtf.38.1551721926271;
- Mon, 04 Mar 2019 09:52:06 -0800 (PST)
+        id S1727436AbfCDRxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:53:17 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 31784FB02;
+        Mon,  4 Mar 2019 18:53:15 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9xwzVk1SX0xm; Mon,  4 Mar 2019 18:53:12 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id AC1EA414C8; Mon,  4 Mar 2019 18:53:11 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v3 1/3] dt-bindings: Add vendor prefix for ROCKTECH DISPLAYS LIMITED
+Date:   Mon,  4 Mar 2019 18:53:09 +0100
+Message-Id: <600deb9483d6233c2066f721f270f4763e23021a.1551710977.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1551710977.git.agx@sigxcpu.org>
+References: <cover.1551710977.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-References: <20190221084729.101784-1-pihsun@chromium.org> <20190221084729.101784-2-pihsun@chromium.org>
- <20190222144316.GA19284@bogus> <CANdKZ0d+2CqbVEwruW+pbqUeRMBwzXV7tFC7Cp7i+98CWiB_4w@mail.gmail.com>
-In-Reply-To: <CANdKZ0d+2CqbVEwruW+pbqUeRMBwzXV7tFC7Cp7i+98CWiB_4w@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 4 Mar 2019 11:51:55 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+rqeJX9LHOvVi7rPUzCeWhM2QjicJXyJyn23-gBo=Qcg@mail.gmail.com>
-Message-ID: <CAL_Jsq+rqeJX9LHOvVi7rPUzCeWhM2QjicJXyJyn23-gBo=Qcg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: Add a binding for Mediatek SCP
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 25, 2019 at 12:15 AM Pi-Hsun Shih <pihsun@chromium.org> wrote:
->
-> On Fri, Feb 22, 2019 at 10:43 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Feb 21, 2019 at 04:47:24PM +0800, Pi-Hsun Shih wrote:
-> > > From: Erin Lo <erin.lo@mediatek.com>
-> > >
-> > > Add a DT binding documentation of SCP for the
-> > > MT8183 SoC from Mediatek.
-> > >
-> > > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > > ---
-> > > Changes from v4:
-> > >  - Add detail of more properties.
-> > >  - Document the usage of mtk,rpmsg-name in subnode from the new design.
-> > >
-> > > Changes from v3:
-> > >  - No change.
-> > >
-> > > Changes from v2:
-> > >  - No change. I realized that for this patch series, there's no need to
-> > >    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
-> > >    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
-> > >    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
-> > >    created by SCP name service.
-> > >
-> > > Changes from v1:
-> > >  - No change.
-> > > ---
-> > >  .../bindings/remoteproc/mtk,scp.txt           | 37 +++++++++++++++++++
-> > >  1 file changed, 37 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > > new file mode 100644
-> > > index 00000000000000..8cf8b0e0d98a4c
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > > @@ -0,0 +1,37 @@
-> > > +Mediatek SCP Bindings
-> > > +----------------------------------------
-> > > +
-> > > +This binding provides support for ARM Cortex M4 Co-processor found on some
-> > > +Mediatek SoCs.
-> > > +
-> > > +Required properties:
-> > > +- compatible         Should be "mediatek,mt8183-scp"
-> > > +- reg                        Should contain the address ranges for the two memory
-> > > +                     regions, SRAM and CFG.
-> > > +- reg-names          Contains the corresponding names for the two memory
-> > > +                     regions. These should be named "sram" & "cfg".
-> > > +- clocks             Clock for co-processor (See: ../clock/clock-bindings.txt)
-> > > +- clock-names                Contains the corresponding name for the clock. This
-> > > +                     should be named "main".
-> > > +
-> > > +Subnodes
-> > > +--------
-> > > +
-> > > +When CONFIG_RPMSG_MTK_SCP is enabled, subnodes of the SCP represent rpmsg
-> >
-> > Bindings can't depend on kernel config options.
-> >
->
-> What's the recommendation here if the subnode only has effect when the
-> config is enabled? Should I just skip the sentence "When ... is
-> enabled"?
+Add ROCKTECH DISPLAYS LIMITED (https://rocktech.com.hk) LCD panel
+supplier.
 
-Sure.
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> > > +devices. The names of the devices are not important. The properties of these
-> > > +nodes are defined by the individual bindings for the rpmsg devices - but must
-> > > +contain the following property:
-> > > +
-> > > +- mtk,rpmsg-name     Contains the name for the rpmsg device. Used to match
-> > > +                     the subnode to rpmsg device announced by SCP.
-> >
-> > I don't think this belongs in DT, but without some examples I'm not
-> > really sure.
-> >
->
-> This is similar to the qcom,smd-channels property in
-> Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt, a example DT
-> for this:
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 413c6f30ce88..cc24619a4249 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -338,6 +338,7 @@ ricoh	Ricoh Co. Ltd.
+ rikomagic	Rikomagic Tech Corp. Ltd
+ riscv	RISC-V Foundation
+ rockchip	Fuzhou Rockchip Electronics Co., Ltd
++rocktech	ROCKTECH DISPLAYS LIMITED
+ rohm	ROHM Semiconductor Co., Ltd
+ roofull	Shenzhen Roofull Technology Co, Ltd
+ samsung	Samsung Semiconductor
+-- 
+2.20.1
 
-QCom has lots of strange buses and communication channels. Probably
-not the best place for inspiration.
-
-> scp {
->         compatible = "mediatek,mt8183-scp";
->         ...
->         cros_ec {
->                 compatible = "google,cros-ec-rpmsg";
->                 mtk,rpmsg-name = "cros-ec-rpmsg";
-
-Why do we need the same string twice? It's just the compatible string
-minus the vendor prefix.
-
->
->                 cros_ec_codec {
->                         compatible = "google,cros-ec-codec";
->                         ...
-
-What's this? I can't review bindings piece by piece.
-
->                 };
->         };
-> };
->
-> > > +
-> > > +Example:
-> > > +
-> > > +     scp: scp@10500000 {
-> > > +             compatible = "mediatek,mt8183-scp";
-> > > +             reg = <0 0x10500000 0 0x80000>,
-> > > +                   <0 0x105c0000 0 0x5000>;
-> > > +             reg-names = "sram", "cfg";
-> > > +             clocks = <&infracfg CLK_INFRA_SCPSYS>;
-> > > +             clock-names = "main";
-> > > +     };
-> > > --
-> > > 2.21.0.rc0.258.g878e2cd30e-goog
-> > >
