@@ -2,118 +2,93 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_12_24,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABE8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DBBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F071720815
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E995B20815
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbfCDFbj (ORCPT
+        id S1726094AbfCDFdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 00:31:39 -0500
-Received: from mga17.intel.com ([192.55.52.151]:33849 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbfCDFbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 00:31:39 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 21:31:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,438,1544515200"; 
-   d="scan'208";a="131357404"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Mar 2019 21:31:36 -0800
-Date:   Sun, 3 Mar 2019 20:26:08 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org, mst@redhat.com,
-        yu-cheng.yu@intel.com, Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Subject: Re: [PATCH v3 6/8] KVM:VMX: Load Guest CET via VMCS when CET is
- enabled in Guest
-Message-ID: <20190303122608.GA32013@local-michael-cet-test.sh.intel.com>
-References: <20190225132716.6982-1-weijiang.yang@intel.com>
- <20190225132716.6982-7-weijiang.yang@intel.com>
- <20190228161715.GF6166@linux.intel.com>
- <20190228083844.GC12006@local-michael-cet-test.sh.intel.com>
- <20190301145819.GC22584@linux.intel.com>
+        Mon, 4 Mar 2019 00:33:05 -0500
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:37067 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725975AbfCDFdF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 00:33:05 -0500
+X-IronPort-AV: E=Sophos;i="5.58,438,1544457600"; 
+   d="scan'208";a="55844667"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 04 Mar 2019 13:33:03 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id 8A88C4C53471;
+        Mon,  4 Mar 2019 13:32:49 +0800 (CST)
+Received: from localhost.localdomain (10.167.225.56) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 4 Mar 2019 13:33:10 +0800
+Date:   Mon, 4 Mar 2019 13:32:55 +0800
+From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
+To:     Baoquan He <bhe@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <bp@alien8.de>
+Subject: Re: [PATCH] x86/boot: Fix incorrect ifdeffery scope
+Message-ID: <20190304053255.GC28322@localhost.localdomain>
+References: <20190304041820.14409-1-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190301145819.GC22584@linux.intel.com>
+In-Reply-To: <20190304041820.14409-1-bhe@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [10.167.225.56]
+X-yoursite-MailScanner-ID: 8A88C4C53471.AA798
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 06:58:19AM -0800, Sean Christopherson wrote:
-> On Thu, Feb 28, 2019 at 04:38:44PM +0800, Yang Weijiang wrote:
-> > On Thu, Feb 28, 2019 at 08:17:15AM -0800, Sean Christopherson wrote:
-> > > On Mon, Feb 25, 2019 at 09:27:14PM +0800, Yang Weijiang wrote:
-> > > > "Load Guest CET state" bit controls whether guest CET states
-> > > > will be loaded at Guest entry. Before doing that, KVM needs
-> > > > to check if CPU CET feature is available.
-> > > > 
-> > > > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > > > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > > > ---
-> > > >  arch/x86/kvm/vmx.c | 32 ++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 32 insertions(+)
-> > > > 
-> > > > diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-> > > > index 89ee086e1729..d32cee9ee079 100644
-> > > > --- a/arch/x86/kvm/vmx.c
-> > > > +++ b/arch/x86/kvm/vmx.c
-> > > > @@ -55,6 +55,7 @@
-> > > >  #include <asm/mmu_context.h>
-> > > >  #include <asm/spec-ctrl.h>
-> > > >  #include <asm/mshyperv.h>
-> > > > +#include <asm/cet.h>
-> > > >  
-> > > >  #include "trace.h"
-> > > >  #include "pmu.h"
-> > > > @@ -4065,6 +4066,20 @@ static inline bool vmx_feature_control_msr_valid(struct kvm_vcpu *vcpu,
-> > > >  	return !(val & ~valid_bits);
-> > > >  }
-> > > >  
-> > > > +static int vmx_guest_cet_cap(struct kvm_vcpu *vcpu)
-> > > > +{
-> > > > +	u32 eax, ebx, ecx, edx;
-> > > > +
-> > > > +	/*
-> > > > +	 * Guest CET can work as long as HW supports the feature, independent
-> > > > +	 * to Host SW enabling status.
-> > > > +	 */
-> > > > +	cpuid_count(7, 0, &eax, &ebx, &ecx, &edx);
-> > > > +
-> > > > +	return ((ecx & bit(X86_FEATURE_SHSTK)) |
-> > > > +		(edx & bit(X86_FEATURE_IBT))) ? 1 : 0;
-> > > 
-> > > Given the holes in the (current) architecture/spec, I think KVM has to
-> > > require both features to be supported in the guest to allow CR4.CET to
-> > > be enabled.
-> > The reason why I use a "OR" here is to keep CET enabling control the
-> > same as that on host, right now on host, users can select to enable  SHSTK or IBT
-> > feature by disabling the unexpected one. It's free to select SHSTK & IBT
-> > or SHSTK | IBT.
+On Mon, Mar 04, 2019 at 12:18:20PM +0800, Baoquan He wrote:
+>The declarations related to immovable memory handling are put out of
+>
+>Signed-off-by: Baoquan He <bhe@redhat.com>
+
+Are there some problems in your mail tool?
+I can only see one line in the PATCH log and seems a half sentence.
+
+Thanks,
+Chao Fan
+
+>---
+> arch/x86/boot/compressed/misc.h | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+>index fd13655e0f9b..8bbaf362855c 100644
+>--- a/arch/x86/boot/compressed/misc.h
+>+++ b/arch/x86/boot/compressed/misc.h
+>@@ -120,8 +120,6 @@ static inline void console_init(void)
 > 
-> Which is not the same as SHSTK != IBT in *hardware*, which is effectively
-> what this is allowing for the guest.  The problem is that the architecture
-> doesn't cleanly separate the two features, i.e. we'd have a virtualization
-> hole where the guest could touch state for a disabled feature.
+> void set_sev_encryption_mask(void);
 > 
-> Regardless, the guest would still be able to selectively enable each CET
-> feature, it would just never see a model where SHSTK != IBT.
-Hi, Sean,
-I'd like to understand your concerns. From my point of view, e.g., 
-when only IBT is enabled, PL3_SSP MSR would be unnecessrily exposed,
-this is the design "limitation", but PL3_SSP keeps 0 if SHSTK is not
-configured. Could you detail your concerns?
+>-#endif
+>-
+> /* acpi.c */
+> #ifdef CONFIG_ACPI
+> acpi_physical_address get_rsdp_addr(void);
+>@@ -135,3 +133,5 @@ int count_immovable_mem_regions(void);
+> #else
+> static inline int count_immovable_mem_regions(void) { return 0; }
+> #endif
+>+
+>+#endif
+>-- 
+>2.17.2
+>
+>
+>
+
 
