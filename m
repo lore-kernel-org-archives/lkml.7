@@ -2,95 +2,128 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DD7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A28C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3472082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35152082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:37:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQn4ZJHj"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="j821gtN1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfCDDdF (ORCPT
+        id S1726090AbfCDDhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 22:33:05 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45779 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfCDDdE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 22:33:04 -0500
-Received: by mail-pf1-f193.google.com with SMTP id v21so1941973pfm.12
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 19:33:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2AUQjPpWxOgRO7RmQXXoDOzSBJpoF2ynwOJOEsUPztw=;
-        b=cQn4ZJHjMA9aWtsSPy1bNqD31C1MkK8dLuxoKOxhs+hrqzuigVBTwpP0IcdKAI8/lW
-         uI8IqtfIlJRaABMcnThvWtKRqpKgFj77219MuDy6+z+aylq1pUUqG8Nymoi8lOgD1URW
-         vPFIAxH0iZyWTzdasWJPn3DEEAms7NlHJu+r29SMhk9seS8QOzP2mW+kR6Zkkb/jcomp
-         FECcvBPqYxbkmELMspgBh2iXvIJD3did4RmUmUU61G+Tnnki/xNswUlNmW5NAXn/2dbq
-         NT9Y46zKDJXb7tH6a1JG2vYDI0M9W8WaBKrRLPKuJ7lgVm0Wpa6H2ZF7rDjZzyWNW/PF
-         YCqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2AUQjPpWxOgRO7RmQXXoDOzSBJpoF2ynwOJOEsUPztw=;
-        b=CqsbgjblW1ioOB5tB8VdlKZJB6DzOrKPMDgmHFdWymrMLbHsd69S0wgWtB4jZgKkm6
-         MMNSSUP8t83YkCkLYuMf6sxm3Cy9eUykD+/1E729VYSAjOFkC9c1lxgb/Bk5/u2s5+aA
-         WARQgh4lH0mZGpu8OpxRb4QA/KNmBO14cvsU9U5BcW+BuLMrNkzT3/q39sTcliBEh0mI
-         ukIBykHRsSFHHc7SiFrBYdBtola9De5KrFDajY+/A5ynjxHKXaPkawztNsdddqdSRY5u
-         PKSynZCpMaO771GlEQeLq/lE36Hg+WwMNwSTC64QlMF9Wtlhj4EX4f8KTnIWezIodNdb
-         ObLA==
-X-Gm-Message-State: AHQUAuaUJvKFZPa6KM2PrSMnOhlNIw9MnrglYPBz60S2rk9TRXd4aYM7
-        BfDrSiYyuI8aumoAe3pelKU=
-X-Google-Smtp-Source: APXvYqyJs0zS8oXhNVmbomzQzdAqdzScarGwNN6V0p9zn2kAziCTQVXDSLTZOZpaja25N8oUJTDTlw==
-X-Received: by 2002:a62:ea10:: with SMTP id t16mr17651941pfh.3.1551670384214;
-        Sun, 03 Mar 2019 19:33:04 -0800 (PST)
-Received: from localhost ([175.223.38.45])
-        by smtp.gmail.com with ESMTPSA id p2sm8367480pfi.95.2019.03.03.19.33.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 Mar 2019 19:33:03 -0800 (PST)
-Date:   Mon, 4 Mar 2019 12:33:00 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] printk/console: Do not suppress information about
- dropped messages
-Message-ID: <20190304033300.GA26291@jagdpanzerIV>
-References: <20190226124945.7078-1-pmladek@suse.com>
- <87k1hmzfam.fsf@linutronix.de>
- <20190227083043.j6nw7t6nqulim6t7@pathway.suse.cz>
+        Sun, 3 Mar 2019 22:37:40 -0500
+Received: from ozlabs.org ([203.11.71.1]:52759 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfCDDhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 22:37:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44CQhJ2vRmz9s5R;
+        Mon,  4 Mar 2019 14:37:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1551670657;
+        bh=PgAJDeIIdJ9STuA1hEym8xMcCYqavJgKJli6LKStZnQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=j821gtN12IQJG+AR6+106UvCsGC/Y3kauL0gypV1IR05OIzYXm87vFiUmwPCTuiO2
+         dTxoDp3rdQ2L7o7w0v1M5X7OBuN3rUNqKhCLUT3zpU6n0UPIEEGHHvUjYHw9Kz837t
+         +Xp/rz+tf01T6VPksRpRkAM2LltfvQ1YfusmY5BEyiayFM+fPKycuKpnjeUsxdZUcK
+         XKrSpmcknG6kgnL7XQwSq7A9VBbX+tSvuzKdXoZUoEQVRwMOvToOiPGwI/0LnOZfyB
+         5lBiwZmiZPMuoSj9Xc7Oj4/9aXjZvv+eNIVxpq1dCYlPV97juJQ0WqVzbAS/TGSdaQ
+         0CR8J6T1sROQg==
+Date:   Mon, 4 Mar 2019 14:37:35 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Wim Van Sebroeck <wim@iguana.be>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Shych <michaelsh@mellanox.com>,
+        Vadim Pasternak <vadimp@mellanox.com>
+Subject: linux-next: manual merge of the drivers-x86 tree with the watchdog
+ tree
+Message-ID: <20190304143735.308edd1e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190227083043.j6nw7t6nqulim6t7@pathway.suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/22xVno_WMun1/gOIgWBEiZn"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (02/27/19 09:30), Petr Mladek wrote:
-> Good point! There is a simple fix for this. We could print the warning
-> also when all messages are proceed and we are about to leave
-> the for-cycle.
+--Sig_/22xVno_WMun1/gOIgWBEiZn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'd prefer to have lost-messages reporting be less of a summary
-and more of an "error". I think the sooner we report it the better.
-I don't think that the time we need to print lost-messages on the
-consoles is significant enough to worry about it; if call_console_drivers()
-becomes such a problem that any extra char we print causes message-drop then
-we can disable printk_time or/and printk caller_id prefix printout (can
-save us more CPU cycles).
+Hi all,
 
-	-ss
+Today's linux-next merge of the drivers-x86 tree got a conflict in:
+
+  include/linux/platform_data/mlxreg.h
+
+between commit:
+
+  9f03161a1bd8 ("platform_data/mlxreg: additions for Mellanox watchdog driv=
+er.")
+
+from the watchdog tree and commit:
+
+  9b28aa1d0eae ("platform_data/mlxreg: Document fixes for core platform dat=
+a")
+
+from the drivers-x86 tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/platform_data/mlxreg.h
+index 31f7c25a44da,1b2f86f96743..000000000000
+--- a/include/linux/platform_data/mlxreg.h
++++ b/include/linux/platform_data/mlxreg.h
+@@@ -120,12 -109,9 +122,12 @@@ struct mlxreg_core_item=20
+  /**
+   * struct mlxreg_core_platform_data - platform data:
+   *
+-  * @led_data: led private data;
++  * @data: instance private data;
+   * @regmap: register map of parent device;
+-  * @counter: number of led instances;
++  * @counter: number of instances;
+ + * @features: supported features of device;
+ + * @version: implementation version;
+ + * @identity: device identity name;
+   */
+  struct mlxreg_core_platform_data {
+  	struct mlxreg_core_data *data;
+
+--Sig_/22xVno_WMun1/gOIgWBEiZn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlx8nX8ACgkQAVBC80lX
+0Gxv8wf/eZZGiNqsMFy4QgB0xzyZ0zDoLXsi7rJHrpTTJwTn94QopWOaWWUxvXel
+/8IJhwyMrX3fs2561HhzAbhuFw/fdnz02zFsN4TATz23tKZeIMLqWLArEMWyxe3B
+KPS0VPdy2NDB8sWtf0hfhROWCXYcrbj/7bMXZlMNl/uB/AOYWFTCTqGDjfCngj4Y
+2EKO4gAeeR9BSQHKV6/2GchRf/LmB+KpGEZqO1d2dxeQVIRT/pN3Tmd2OBiEHMwg
+OQKtVsIPUnPLIQCA3SyzA2msa5UFOksFK498+eytcN/8Kju7DHoeGJPnhV6jh/74
+BytgW6gYJbcpPBVXgfUgAb+weW8ALg==
+=C2Cp
+-----END PGP SIGNATURE-----
+
+--Sig_/22xVno_WMun1/gOIgWBEiZn--
