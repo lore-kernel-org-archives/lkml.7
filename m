@@ -2,53 +2,53 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF9EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EE8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B075920863
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E7520863
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687827;
-	bh=H8bOrNfum0H3mYQ8p0HPrv5bd9MOcBxap+anR7JfMTM=;
+	s=default; t=1551687831;
+	bh=MFVVPvVG7h2zTx8iRiqHLxh4/GpZ9ZihKPBiUGXJOK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kb2Y0UmkzjEhHJHyx1kRr/oImM/bI7uCxiuO8rp1v4YNZSgs8p3w+bMlxhH1KRSt1
-	 7UEK02je3dcYDyebD1gcaGz5aIFOu9nP9KmSFkGLGHjd2vvMXsJI5noJvisEiAvmLQ
-	 BW3hTLS/rXurUeR3ns8op31zIjotW4ST9wzSwDus=
+	b=jh+KqlgILnN4KinlOt8dtDlD9SPzAq39PU7CAsvAT3n/TZsN2mUBpNRzybXTyz/3U
+	 hAfIhByaEvUiIQjCY2k1M3HZMjAzyzeBAWXFL3JuiLnI2pMqoNUgUvVU2EgZ6H/zKG
+	 QJEoXwCy82aNphBIRRO2qLbGTmuPFoqLdEFDivfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfCDIXq (ORCPT
+        id S1726697AbfCDIXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:23:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40394 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:23:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfCDIXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:23:45 -0500
+        id S1726047AbfCDIXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:23:47 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F07B20863;
-        Mon,  4 Mar 2019 08:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DE6920823;
+        Mon,  4 Mar 2019 08:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687823;
-        bh=H8bOrNfum0H3mYQ8p0HPrv5bd9MOcBxap+anR7JfMTM=;
+        s=default; t=1551687826;
+        bh=MFVVPvVG7h2zTx8iRiqHLxh4/GpZ9ZihKPBiUGXJOK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jczGGuG39fH8zJGXMJMr+LyYMN8Oifmx5W92/DdqCqXmgqG/JK5gzSdBZsKwBs7An
-         lOwn2Akdj9atLZyJu+eHzZ92I/IZBiSr1CIufvQuy+OMyh8Ywn4wFYHyYc1bAIxrpz
-         4Z5UdRixNX9HJjKb/b1DWu04vJt9j3WKqaoZ4tqQ=
+        b=GElQUHqNXDrmWD/wZt7I+G6xrYOMhn0QtmTTBBFV0/C+HfjM6RXEh+7ZkziDK8gkb
+         diWPbbsQM6v6wSB3oMVUdL6qhxwpIfkKCLmHOhglgralX453IkkRiyDHHlWtIvKeZT
+         c6G4rIU1xMtGL9JXM17i9Z0jwJS9K6z8RLB1fnfs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, dann frazier <dann.frazier@canonical.com>,
-        John Garry <john.garry@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 04/32] scsi: libsas: Fix rphy phy_identifier for PHYs with end devices attached
-Date:   Mon,  4 Mar 2019 09:21:52 +0100
-Message-Id: <20190304081602.605584887@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 05/32] drm/msm: Unblock writer if reader closes file
+Date:   Mon,  4 Mar 2019 09:21:53 +0100
+Message-Id: <20190304081602.682608347@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081602.307094059@linuxfoundation.org>
 References: <20190304081602.307094059@linuxfoundation.org>
@@ -67,85 +67,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: John Garry <john.garry@huawei.com>
+[ Upstream commit 99c66bc051e7407fe0bf0607b142ec0be1a1d1dd ]
 
-commit ffeafdd2bf0b280d67ec1a47ea6287910d271f3f upstream.
+Prevents deadlock when fifo is full and reader closes file.
 
-The sysfs phy_identifier attribute for a sas_end_device comes from the rphy
-phy_identifier value.
-
-Currently this is not being set for rphys with an end device attached, so
-we see incorrect symlinks from systemd disk/by-path:
-
-root@localhost:~# ls -l /dev/disk/by-path/
-total 0
-lrwxrwxrwx 1 root root  9 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0 -> ../../sdb
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part1 -> ../../sdb1
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part2 -> ../../sdb2
-lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part3 -> ../../sdc3
-
-Indeed, each sas_end_device phy_identifier value is 0:
-
-root@localhost:/# more sys/class/sas_device/end_device-0\:0\:2/phy_identifier
-0
-root@localhost:/# more sys/class/sas_device/end_device-0\:0\:10/phy_identifier
-0
-
-This patch fixes the discovery code to set the phy_identifier.  With this,
-we now get proper symlinks:
-
-root@localhost:~# ls -l /dev/disk/by-path/
-total 0
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy10-lun-0 -> ../../sdg
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy11-lun-0 -> ../../sdh
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0 -> ../../sda
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0-part1 -> ../../sda1
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0 -> ../../sdb
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part1 -> ../../sdb1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part2 -> ../../sdb2
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0 -> ../../sdc
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part1 -> ../../sdc1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part2 -> ../../sdc2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part3 -> ../../sdc3
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy5-lun-0 -> ../../sdd
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0 -> ../../sde
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part1 -> ../../sde1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part2 -> ../../sde2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part3 -> ../../sde3
-lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0 -> ../../sdf
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part1 -> ../../sdf1
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part2 -> ../../sdf2
-lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part3 -> ../../sdf3
-
-Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
-Reported-by: dann frazier <dann.frazier@canonical.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Jason Yan <yanaijie@huawei.com>
-Tested-by: dann frazier <dann.frazier@canonical.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Kristian H. Kristensen <hoegsberg@chromium.org>
+Signed-off-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/msm/msm_rd.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -818,6 +818,7 @@ static struct domain_device *sas_ex_disc
- 		rphy = sas_end_device_alloc(phy->port);
- 		if (!rphy)
- 			goto out_free;
-+		rphy->identify.phy_identifier = phy_id;
+diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
+index 8487f461f05f3..4823019eb422b 100644
+--- a/drivers/gpu/drm/msm/msm_rd.c
++++ b/drivers/gpu/drm/msm/msm_rd.c
+@@ -112,7 +112,9 @@ static void rd_write(struct msm_rd_state *rd, const void *buf, int sz)
+ 		char *fptr = &fifo->buf[fifo->head];
+ 		int n;
  
- 		child->rphy = rphy;
- 		get_device(&rphy->dev);
-@@ -845,6 +846,7 @@ static struct domain_device *sas_ex_disc
+-		wait_event(rd->fifo_event, circ_space(&rd->fifo) > 0);
++		wait_event(rd->fifo_event, circ_space(&rd->fifo) > 0 || !rd->open);
++		if (!rd->open)
++			return;
  
- 		child->rphy = rphy;
- 		get_device(&rphy->dev);
-+		rphy->identify.phy_identifier = phy_id;
- 		sas_fill_in_rphy(child, rphy);
+ 		n = min(sz, circ_space_to_end(&rd->fifo));
+ 		memcpy(fptr, ptr, n);
+@@ -202,7 +204,10 @@ static int rd_open(struct inode *inode, struct file *file)
+ static int rd_release(struct inode *inode, struct file *file)
+ {
+ 	struct msm_rd_state *rd = inode->i_private;
++
+ 	rd->open = false;
++	wake_up_all(&rd->fifo_event);
++
+ 	return 0;
+ }
  
- 		list_add_tail(&child->disco_list_node, &parent->port->disco_list);
+-- 
+2.19.1
+
 
 
