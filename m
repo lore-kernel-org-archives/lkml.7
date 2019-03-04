@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B88C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0294CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C475420823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B0220863
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687921;
-	bh=Fy7wUY+bfd5LbzTZ7X1wkeMlPrvmdQmw5b8q8ZHTnP4=;
+	s=default; t=1551687925;
+	bh=z7/oIA+oc85H9Un7Ux87YGdoK15qKCpNzAtu4ycSFCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=smimvEhW3cWPPThhHNxbzQYf9tCfOssZTmiuSo1ilY2cyKyTJxSGS6EhwIvoy7BEB
-	 x08083Zb+mI6Z3ICihILIrnHv98b6RkA9Gigm2x+KFnmrBsfYvc6dK9Lq4FFjJko8W
-	 ZQGfENyQmNKBzneZX28Y2o79L3wvZ8C1ZvIRBj6s=
+	b=RUeygQNYQWz6xKL0mHheszSECUjzjtKCC1YI3Asiar/MCG7MN5jiTGeDJ0rs0DCWO
+	 7UdIruE1tG+JrnrCt9DpoH5tJDKJjf31bt6qml7MBMiCikKpqOQsHzvjAhdlyrQLtc
+	 Yg3ATPAkmL+isrpfLTN8RUrt2qrqLFL4TocQZVRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfCDIZU (ORCPT
+        id S1726624AbfCDIZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:25:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44704 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:25:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbfCDIZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:25:16 -0500
+        id S1726998AbfCDIZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:25:20 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F195C20863;
-        Mon,  4 Mar 2019 08:25:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 991DD20863;
+        Mon,  4 Mar 2019 08:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687916;
-        bh=Fy7wUY+bfd5LbzTZ7X1wkeMlPrvmdQmw5b8q8ZHTnP4=;
+        s=default; t=1551687919;
+        bh=z7/oIA+oc85H9Un7Ux87YGdoK15qKCpNzAtu4ycSFCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKgT5/QjutDHU7dBLCqTwSqs8Xerw82yMbh5tlwl1HcgVtaWvjx2EmCdOXt3TnF/V
-         Fuzs38LSVXK/+Ng97hDFggV/G9eXwRZnGYsD8WtOhHDhCaKQNi0Paf3HaxfwZK6X6Q
-         x5I3fRamsSjisC1AwLEfFRF9PjDkHxWtro+d36o4=
+        b=Ezp0aRBBp4dBA2ig5dwbhVc2WHBYOu5S2U2ksgjYx1tFcfIHlx0ninC+sMpWciASN
+         VdSnxI6VbaM3TUI8oRyKGuV5Oh0CWHC3dzF7xf9O8XJTbp7PmrQa6deT25A7U50o8Q
+         UKkKvKf66squ0FVE6ulB4GVnht7G6qnvJRmFk8cU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kenneth Feng <kenneth.feng@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Tomonori Sakita <tomonori.sakita@sord.co.jp>,
+        Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 28/52] drm/amd/powerplay: OD setting fix on Vega10
-Date:   Mon,  4 Mar 2019 09:22:26 +0100
-Message-Id: <20190304081618.811153763@linuxfoundation.org>
+Subject: [PATCH 4.14 29/52] serial: fsl_lpuart: fix maximum acceptable baud rate with over-sampling
+Date:   Mon,  4 Mar 2019 09:22:27 +0100
+Message-Id: <20190304081618.862295986@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -67,59 +67,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6d87dc97eb3341de3f7b1efa3156cb0e014f4a96 ]
+[ Upstream commit 815d835b7ba46685c316b000013367dacb2b461b ]
 
-gfxclk for OD setting is limited to 1980M for non-acg
-ASICs of Vega10
+Using over-sampling ratio, lpuart can accept baud rate upto uartclk / 4.
 
-Signed-off-by: Kenneth Feng <kenneth.feng@amd.com>
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Tomonori Sakita <tomonori.sakita@sord.co.jp>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../powerplay/hwmgr/vega10_processpptables.c  | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/tty/serial/fsl_lpuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
-index e343df1903754..05bb87a54e909 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_processpptables.c
-@@ -32,6 +32,7 @@
- #include "vega10_pptable.h"
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 716c33b2a11cb..32a473f9d1d38 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1701,7 +1701,7 @@ lpuart32_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	}
  
- #define NUM_DSPCLK_LEVELS 8
-+#define VEGA10_ENGINECLOCK_HARDMAX 198000
+ 	/* ask the core to calculate the divisor */
+-	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 16);
++	baud = uart_get_baud_rate(port, termios, old, 50, port->uartclk / 4);
  
- static void set_hw_cap(struct pp_hwmgr *hwmgr, bool enable,
- 		enum phm_platform_caps cap)
-@@ -258,7 +259,26 @@ static int init_over_drive_limits(
- 		struct pp_hwmgr *hwmgr,
- 		const ATOM_Vega10_POWERPLAYTABLE *powerplay_table)
- {
--	hwmgr->platform_descriptor.overdriveLimit.engineClock =
-+	const ATOM_Vega10_GFXCLK_Dependency_Table *gfxclk_dep_table =
-+			(const ATOM_Vega10_GFXCLK_Dependency_Table *)
-+			(((unsigned long) powerplay_table) +
-+			le16_to_cpu(powerplay_table->usGfxclkDependencyTableOffset));
-+	bool is_acg_enabled = false;
-+	ATOM_Vega10_GFXCLK_Dependency_Record_V2 *patom_record_v2;
-+
-+	if (gfxclk_dep_table->ucRevId == 1) {
-+		patom_record_v2 =
-+			(ATOM_Vega10_GFXCLK_Dependency_Record_V2 *)gfxclk_dep_table->entries;
-+		is_acg_enabled =
-+			(bool)patom_record_v2[gfxclk_dep_table->ucNumEntries-1].ucACGEnable;
-+	}
-+
-+	if (powerplay_table->ulMaxODEngineClock > VEGA10_ENGINECLOCK_HARDMAX &&
-+		!is_acg_enabled)
-+		hwmgr->platform_descriptor.overdriveLimit.engineClock =
-+			VEGA10_ENGINECLOCK_HARDMAX;
-+	else
-+		hwmgr->platform_descriptor.overdriveLimit.engineClock =
- 			le32_to_cpu(powerplay_table->ulMaxODEngineClock);
- 	hwmgr->platform_descriptor.overdriveLimit.memoryClock =
- 			le32_to_cpu(powerplay_table->ulMaxODMemoryClock);
+ 	spin_lock_irqsave(&sport->port.lock, flags);
+ 
 -- 
 2.19.1
 
