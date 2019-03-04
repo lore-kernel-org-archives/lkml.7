@@ -2,134 +2,173 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E1AC10F03
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AAAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCC121019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529D420863
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 09:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfCDJSr (ORCPT
+        id S1726276AbfCDJTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 04:18:47 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:57834 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfCDJSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 04:18:47 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 183982D805;
-        Mon,  4 Mar 2019 09:17:29 +0000 (UTC)
-Received: from [10.36.117.58] (ovpn-117-58.ams2.redhat.com [10.36.117.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B76C85C73E;
-        Mon,  4 Mar 2019 09:17:27 +0000 (UTC)
-Subject: Re: [PATCH 2/2] mm,memory_hotplug: Drop redundant
- hugepage_migration_supported check
-To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, mike.kravetz@oracle.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20190304085147.556-1-osalvador@suse.de>
- <20190304085147.556-3-osalvador@suse.de>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
- 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
- xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
- jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
- s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
- m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
- MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
- z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
- dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
- UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
- 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
- uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
- 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
- 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
- xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
- 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
- hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
- u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
- gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
- rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
- BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
- KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
- NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
- YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
- lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
- qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
- C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
- W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
- TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
- +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <1b56e6d3-9309-69f3-0ece-228705094975@redhat.com>
-Date:   Mon, 4 Mar 2019 10:17:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 4 Mar 2019 04:19:31 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33744 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfCDJTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 04:19:31 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E46C2A635400EC66A409;
+        Mon,  4 Mar 2019 17:19:28 +0800 (CST)
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 4 Mar 2019 17:19:19 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2] f2fs: fix to do sanity check with inode.i_inline_xattr_size
+Date:   Mon, 4 Mar 2019 17:19:04 +0800
+Message-ID: <20190304091904.121276-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20190304085147.556-3-osalvador@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 04 Mar 2019 09:17:29 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.03.19 09:51, Oscar Salvador wrote:
-> has_unmovable_pages() does alreay check whether the hugetlb page supports
-> migration, so all non-migrateable hugetlb pages should have been caught there.
-> Let us drop the check from scan_movable_pages() as is redundant.
-> 
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/memory_hotplug.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 0f479c710615..2dfd9a0b0832 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1346,8 +1346,7 @@ static unsigned long scan_movable_pages(unsigned long start, unsigned long end)
->  		if (!PageHuge(page))
->  			continue;
->  		head = compound_head(page);
-> -		if (hugepage_migration_supported(page_hstate(head)) &&
-> -		    page_huge_active(head))
-> +		if (page_huge_active(head))
->  			return pfn;
->  		skip = (1 << compound_order(head)) - (page - head);
->  		pfn += skip - 1;
-> 
+As Paul Bandha reported in bugzilla:
 
-Yes, it would actually be a BUG once we reach that point and we suddenly
-have !hugepage_migration_supported() in my opinion.
+https://bugzilla.kernel.org/show_bug.cgi?id=202709
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+When I run the poc on the mounted f2fs img I get a buffer overflow in
+read_inline_xattr due to there being no sanity check on the value of
+i_inline_xattr_size.
 
+I created the img by just modifying the value of i_inline_xattr_size
+in the inode:
+
+i_name                        		[test1.txt]
+i_ext: fofs:0 blkaddr:0 len:0
+i_extra_isize                 		[0x      18 : 24]
+i_inline_xattr_size           		[0x    ffff : 65535]
+i_addr[ofs]                   		[0x       0 : 0]
+
+mkdir /mnt/f2fs
+mount ./f2fs1.img /mnt/f2fs
+gcc poc.c -o poc
+./poc
+
+int main() {
+	int y = syscall(SYS_listxattr, "/mnt/f2fs/test1.txt", NULL, 0);
+	printf("ret %d", y);
+	printf("errno: %d\n", errno);
+
+}
+
+ BUG: KASAN: slab-out-of-bounds in read_inline_xattr+0x18f/0x260
+ Read of size 262140 at addr ffff88011035efd8 by task f2fs1poc/3263
+
+ CPU: 0 PID: 3263 Comm: f2fs1poc Not tainted 4.18.0-custom #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.1-0-g0551a4be2c-prebuilt.qemu-project.org 04/01/2014
+ Call Trace:
+  dump_stack+0x71/0xab
+  print_address_description+0x83/0x250
+  kasan_report+0x213/0x350
+  memcpy+0x1f/0x50
+  read_inline_xattr+0x18f/0x260
+  read_all_xattrs+0xba/0x190
+  f2fs_listxattr+0x9d/0x3f0
+  listxattr+0xb2/0xd0
+  path_listxattr+0x93/0xe0
+  do_syscall_64+0x9d/0x220
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Let's add sanity check for inode.i_inline_xattr_size during f2fs_iget()
+to avoid this issue.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v2:
+- fix incorrect definition of MAX_INLINE_XATTR_SIZE
+- fix wrong condition of sanity check
+ fs/f2fs/inode.c | 15 +++++++++++++++
+ fs/f2fs/super.c |  5 +----
+ fs/f2fs/xattr.h |  6 ++++++
+ 3 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index bec52961630b..d44e6de70cb3 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -14,6 +14,7 @@
+ #include "f2fs.h"
+ #include "node.h"
+ #include "segment.h"
++#include "xattr.h"
+ 
+ #include <trace/events/f2fs.h>
+ 
+@@ -248,6 +249,20 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
+ 		return false;
+ 	}
+ 
++	if (f2fs_has_extra_attr(inode) &&
++		f2fs_sb_has_flexible_inline_xattr(sbi) &&
++		f2fs_has_inline_xattr(inode) &&
++		(!fi->i_inline_xattr_size ||
++		fi->i_inline_xattr_size > MAX_INLINE_XATTR_SIZE)) {
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		f2fs_msg(sbi->sb, KERN_WARNING,
++			"%s: inode (ino=%lx) has corrupted "
++			"i_inline_xattr_size: %d, max: %zu",
++			__func__, inode->i_ino, fi->i_inline_xattr_size,
++			MAX_INLINE_XATTR_SIZE);
++		return false;
++	}
++
+ 	if (F2FS_I(inode)->extent_tree) {
+ 		struct extent_info *ei = &F2FS_I(inode)->extent_tree->largest;
+ 
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 42eb5c86330a..a5f9d146b64e 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -837,10 +837,7 @@ static int parse_options(struct super_block *sb, char *options)
+ 		if (F2FS_OPTION(sbi).inline_xattr_size <
+ 			sizeof(struct f2fs_xattr_header) / sizeof(__le32) ||
+ 			F2FS_OPTION(sbi).inline_xattr_size >
+-			DEF_ADDRS_PER_INODE -
+-			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -
+-			DEF_INLINE_RESERVED_SIZE -
+-			MIN_INLINE_DENTRY_SIZE / sizeof(__le32)) {
++			MAX_INLINE_XATTR_SIZE) {
+ 			f2fs_msg(sb, KERN_ERR,
+ 					"inline xattr size is out of range");
+ 			return -EINVAL;
+diff --git a/fs/f2fs/xattr.h b/fs/f2fs/xattr.h
+index 67db134da0f5..9172ee082ca8 100644
+--- a/fs/f2fs/xattr.h
++++ b/fs/f2fs/xattr.h
+@@ -78,6 +78,12 @@ struct f2fs_xattr_entry {
+ 				sizeof(struct f2fs_xattr_header) -	\
+ 				sizeof(struct f2fs_xattr_entry))
+ 
++#define MAX_INLINE_XATTR_SIZE						\
++			(DEF_ADDRS_PER_INODE -				\
++			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -	\
++			DEF_INLINE_RESERVED_SIZE -			\
++			MIN_INLINE_DENTRY_SIZE / sizeof(__le32))
++
+ /*
+  * On-disk structure of f2fs_xattr
+  * We use inline xattrs space + 1 block for xattr.
 -- 
+2.18.0.rc1
 
-Thanks,
-
-David / dhildenb
