@@ -2,73 +2,125 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AC9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 04:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1550C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85BC2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 04:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 981DA2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfCDE6s (ORCPT
+        id S1726076AbfCDFBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 23:58:48 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:56862 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfCDE6r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 23:58:47 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 17CA7145F297F;
-        Sun,  3 Mar 2019 20:58:47 -0800 (PST)
-Date:   Sun, 03 Mar 2019 20:58:46 -0800 (PST)
-Message-Id: <20190303.205846.1228922880232983914.davem@davemloft.net>
-To:     ben.dooks@codethink.co.uk
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel@lists.codethink.co.uk
-Subject: Re: [PATCH] net: fixup address-space warnings in
- compat_mc_{get,set}sockopt()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190301183944.6260-1-ben.dooks@codethink.co.uk>
-References: <20190301183944.6260-1-ben.dooks@codethink.co.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 03 Mar 2019 20:58:47 -0800 (PST)
+        Mon, 4 Mar 2019 00:01:55 -0500
+Received: from mga14.intel.com ([192.55.52.115]:45419 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725550AbfCDFBy (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 00:01:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2019 21:01:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,438,1544515200"; 
+   d="scan'208";a="138837926"
+Received: from skl.sh.intel.com ([10.239.159.132])
+  by orsmga002.jf.intel.com with ESMTP; 03 Mar 2019 21:01:51 -0800
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v3 0/3] perf diff: Add new filter options
+Date:   Mon,  4 Mar 2019 20:52:37 +0800
+Message-Id: <1551703960-28957-1-git-send-email-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Date: Fri,  1 Mar 2019 18:39:44 +0000
+This patch series creates following new filter options for perf diff.
 
-> Add __user attributes in some of the casts in this function to avoid
-> the following sparse warnings:
-> 
-> net/compat.c:592:57: warning: cast removes address space of expression
-> net/compat.c:592:57: warning: incorrect type in initializer (different address spaces)
-> net/compat.c:592:57:    expected struct compat_group_req [noderef] <asn:1>*gr32
-> net/compat.c:592:57:    got void *<noident>
-> net/compat.c:613:65: warning: cast removes address space of expression
-> net/compat.c:613:65: warning: incorrect type in initializer (different address spaces)
-> net/compat.c:613:65:    expected struct compat_group_source_req [noderef] <asn:1>*gsr32
-> net/compat.c:613:65:    got void *<noident>
-> net/compat.c:634:60: warning: cast removes address space of expression
-> net/compat.c:634:60: warning: incorrect type in initializer (different address spaces)
-> net/compat.c:634:60:    expected struct compat_group_filter [noderef] <asn:1>*gf32
-> net/compat.c:634:60:    got void *<noident>
-> net/compat.c:672:52: warning: cast removes address space of expression
-> net/compat.c:672:52: warning: incorrect type in initializer (different address spaces)
-> net/compat.c:672:52:    expected struct compat_group_filter [noderef] <asn:1>*gf32
-> net/compat.c:672:52:    got void *<noident>
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+--time:
+    It supports time percent with multipe time ranges. Time string is
+    'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
 
-Applied to net-next, thanks.
+    For example:
+
+    Select the second 10% time slice to diff:
+    perf diff --time 10%/2
+
+    Select from 0% to 10% time slice to diff:
+    perf diff --time 0%-10%
+
+    Select the first and the second 10% time slices to diff:
+    perf diff --time 10%/1,10%/2
+
+    Select from 0% to 10% and 30% to 40% slices to diff:
+    perf diff --time 0%-10%,30%-40%
+
+    It also supports to analyze samples within given time window as:
+    <start>,<stop>. Times have the format seconds.microseconds. If start
+    is not given (i.e., time string is ',x.y') then analysis starts at
+    the beginning of the file. If stop time is not given (i.e, time
+    string is 'x.y,') then analysis goes to end of file. Time string is
+    'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for different
+    perf.data files.
+
+    For example, we get the timestamp information from perf script.
+
+    perf script -i perf.data.old
+      mgen 13940 [000]  3946.361400: ...
+
+    perf script -i perf.data
+      mgen 13940 [000]  3971.150589 ...
+
+    perf diff --time 3946.361400,:3971.150589,
+
+    It analyzes the perf.data.old from the timestamp 3946.361400 to
+    the end of perf.data.old and analyzes the perf.data from the
+    timestamp 3971.150589 to the end of perf.data.
+
+--cpu:
+    Only diff samples for the list of CPUs provided. Multiple CPUs can
+    be provided as a comma-separated list with no space: 0,1. Ranges of
+    CPUs are specified with -: 0-2. Default is to report samples on all
+    CPUs.
+
+    For example:
+    perf diff --cpu 0,1
+
+    It only diff the samples for CPU0 and CPU1.
+
+--pid:
+    Only diff samples for given process ID (comma separated list).
+
+--tid:
+    Only diff samples for given thread ID (comma separated list).
+
+    For example,
+    perf diff --tid 13965
+
+    It only diff the samples for thread 13965.
+
+ v3:
+ ---
+ Update patch "perf diff: Support --time filter option" according to
+ Jiri's comments. Others are no logical changes.
+
+Jin Yao (3):
+  perf diff: Support --time filter option
+  perf diff: Support --cpu filter option
+  perf diff: Support --pid/--tid filter options
+
+ tools/perf/Documentation/perf-diff.txt |  52 +++++++++++
+ tools/perf/builtin-diff.c              | 156 ++++++++++++++++++++++++++++++---
+ 2 files changed, 195 insertions(+), 13 deletions(-)
+
+-- 
+2.7.4
+
