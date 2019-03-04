@@ -2,492 +2,80 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4528BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EA3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD4E2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:26:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="Sub/QE35"
+	by mail.kernel.org (Postfix) with ESMTP id 9573D21019
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 05:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551677196;
+	bh=i1mdTNwlT+9/KI72W9F3JVKrnoPS7734UOheh/YqMtQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o9YjOfx3mh7EVlrmj/gFguKrgdowdGOJMiG1DRIcOdkNj+AbNb7E3Utor6MFI8diV
+	 BE0+vX5ttV0QPDgRki45qUygL9CfgHKgFnxJeHRhBdEFCs6hUV9ePyzYnjcu2dBKyO
+	 EBPfkS5hFz3wKXIvrLbWamj/rp+1+O4qhKSDrlJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfCDF01 (ORCPT
+        id S1726090AbfCDF0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 00:26:27 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40103 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725550AbfCDF00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 00:26:26 -0500
-Received: by mail-pf1-f193.google.com with SMTP id h1so2131199pfo.7
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 21:26:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=aC2HvedaaToK8WRf4rbjRXl4nQTUyYOLv21b3btJFzI=;
-        b=Sub/QE356BRTkF7kfnrnFntu9oEN0+Otzhk0hCIGH45EbuM33Ntc1qGfvXNOC6iWVX
-         CusPRSbJ3Jqf9o/OadX3H7T70jyopgTNZstOCx6CNMRP1kicLBwCtdX86UDarfHZX0lc
-         ciuzRspqQIl3HkS7R/1Z+b7ess7DHnqs6tJY4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=aC2HvedaaToK8WRf4rbjRXl4nQTUyYOLv21b3btJFzI=;
-        b=pVpqzNCZK+GIjsm1wfevohWlu5+JCz72lJa3lainj+UYIa8hyrPnOVxA+/12I69htF
-         UyIW909UBzEJwYecHLSk/1dya05yW6nxew/8lctUZSu62wCQ7VFV4pCO1rrpjBvUecQn
-         qACGUrfJenzMqPAdOcLPsohoBvGhy3QfzO0bGvvRx/mRdFcF2GZvqj6Jwp9AgE6F6ENZ
-         NlizV/WxpBzEDQzQS3AXhx2Yru0UzL9fi/sCjzlNBzfkrAnL5XQq44ZJi2mIV35ln3LU
-         WNWEEajfZZeJbYlCdmdG8cAgATCyF5cW2vbe24+xD/RZ4EWsrsz9+XHatHJX054JAqn9
-         HJFQ==
-X-Gm-Message-State: APjAAAWnt5PkTcSF8DjvQ9wg7go8JZdnLtx/Gr5fC47fT8lVePqPDtoe
-        N3D7tjYWOcrUqMeCz277WFwe1Q==
-X-Google-Smtp-Source: AHgI3IYBTUfI3T7O24BjJtXm7BnZ847rcvHnh5o9LMPNE9CQnfxZDU4wwfvctczWYBko2Tl54TfnCw==
-X-Received: by 2002:aa7:9143:: with SMTP id 3mr18347632pfi.238.1551677185269;
-        Sun, 03 Mar 2019 21:26:25 -0800 (PST)
-Received: from localhost ([203.59.139.100])
-        by smtp.gmail.com with ESMTPSA id 23sm7341976pfn.2.2019.03.03.21.26.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 Mar 2019 21:26:21 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org
-Subject: Re: [PATCH v9 02/11] powerpc: prepare string/mem functions for KASAN
-In-Reply-To: <45fb252fc1b27f2804109fa35ba2882ae29e6035.1551443453.git.christophe.leroy@c-s.fr>
-References: <cover.1551443452.git.christophe.leroy@c-s.fr> <45fb252fc1b27f2804109fa35ba2882ae29e6035.1551443453.git.christophe.leroy@c-s.fr>
-Date:   Mon, 04 Mar 2019 16:26:18 +1100
-Message-ID: <87sgw31a85.fsf@dja-thinkpad.axtens.net>
+        Mon, 4 Mar 2019 00:26:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725550AbfCDF0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 00:26:35 -0500
+Received: from dragon (61-216-91-114.HINET-IP.hinet.net [61.216.91.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBD112082F;
+        Mon,  4 Mar 2019 05:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551677194;
+        bh=i1mdTNwlT+9/KI72W9F3JVKrnoPS7734UOheh/YqMtQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HD5lPhYN5Zuz62AYozgTry2GabnsPVnA0wtrNtrIq8RXftKzgVeb4nC3/4Xo+/paq
+         wVI6e6yBEGfvx+F4WyBCXXv0pjZa5KUwu3A13Bm4NOWA2ms/SFx2r+B0XBSfZhRg3B
+         UygDQO+XDJkq+PischFOfLtJ9RojGScjVZ6Sxl+A=
+Date:   Mon, 4 Mar 2019 13:25:30 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Angus Ainslie <angus.ainslie@puri.sm>,
+        Anson Huang <anson.huang@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 0/3] arm: dts: imx8mq: Add cpufreq support
+Message-ID: <20190304052528.GW26041@dragon>
+References: <1551390149-15443-1-git-send-email-abel.vesa@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551390149-15443-1-git-send-email-abel.vesa@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
-> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-> new file mode 100644
-> index 000000000000..c3161b8fc017
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/kasan.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ASM_KASAN_H
-> +#define __ASM_KASAN_H
-> +
-> +#ifdef CONFIG_KASAN
-> +#define _GLOBAL_KASAN(fn)	.weak fn ; _GLOBAL(__##fn) ; _GLOBAL(fn)
-> +#define _GLOBAL_TOC_KASAN(fn)	.weak fn ; _GLOBAL_TOC(__##fn) ; _GLOBAL_TOC(fn)
-> +#define EXPORT_SYMBOL_KASAN(fn)	EXPORT_SYMBOL(__##fn) ; EXPORT_SYMBOL(fn)
+On Thu, Feb 28, 2019 at 09:42:43PM +0000, Abel Vesa wrote:
+> Changes since v2:
+>  * renamed the regulator
+>  * removed the useless enable-active-high from the regulator 
+>  * renamed a53_0_opp_table to a53_opp_table
+> 
+> Abel Vesa (3):
+>   arm64: dts: imx8mq: Add the clocks and the latencies for the A53 cores
+>   arm64: dts: imx8mq: Add the buck vdd_arm regulator
+>   arm64: dts: imx8mq: Add the opp table and cores opp properties
 
-I'm having some trouble with this. I get warnings like this:
-
-WARNING: EXPORT symbol "__memcpy" [vmlinux] version generation failed, symbol will not be versioned.
-
-It seems to be related to the export line, as if I swap the exports to
-do fn before __##fn I get:
-
-WARNING: EXPORT symbol "memset" [vmlinux] version generation failed, symbol will not be versioned.
-
-I have narrowed this down to combining 2 EXPORT_SYMBOL()s on one line.
-This works - no warning:
-
-EXPORT_SYMBOL(memset)
-EXPORT_SYMBOL(__memset)
-
-This throws a warning:
-
-EXPORT_SYMBOL(memset) ; EXPORT_SYMBOL(__memset)
-
-I notice in looking at the diff of preprocessed source we end up
-invoking an asm macro that doesn't seem to have a full final argument, I
-wonder if that's relevant...
-
--___EXPORT_SYMBOL __memset, __memset, ; ___EXPORT_SYMBOL memset, memset,
-+___EXPORT_SYMBOL __memset, __memset,
-+___EXPORT_SYMBOL memset, memset,
-
-I also notice that nowhere else in the source do people have multiple
-EXPORT_SYMBOLs on the same line, and other arches seem to just
-unconditionally export both symbols on multiple lines.
-
-I have no idea how this works for you - maybe it's affected by something 32bit.
-
-How would you feel about this approach instead? I'm not tied to any of
-the names or anything.
-
-diff --git a/arch/powerpc/include/asm/ppc_asm.h b/arch/powerpc/include/asm/ppc_asm.h
-index e0637730a8e7..7b6a91b448dd 100644
---- a/arch/powerpc/include/asm/ppc_asm.h
-+++ b/arch/powerpc/include/asm/ppc_asm.h
-@@ -214,6 +214,9 @@ name: \
- 
- #define DOTSYM(a)      a
- 
-+#define PROVIDE_WEAK_ALIAS(strongname, weakname) \
-+       .weak weakname ; .set weakname, strongname ;
-+
- #else
- 
- #define XGLUE(a,b) a##b
-@@ -236,6 +239,10 @@ GLUE(.,name):
- 
- #define DOTSYM(a)      GLUE(.,a)
- 
-+#define PROVIDE_WEAK_ALIAS(strongname, weakname) \
-+       .weak weakname ; .set weakname, strongname ; \
-+       .weak DOTSYM(weakname) ; .set DOTSYM(weakname), DOTSYM(strongname) ;
-+
- #endif
- 
- #else /* 32-bit */
-@@ -251,6 +258,9 @@ GLUE(.,name):
- 
- #define _GLOBAL_TOC(name) _GLOBAL(name)
- 
-+#define PROVIDE_WEAK_ALIAS(strongname, weakname) \
-+       .weak weakname ; .set weakname, strongname ;
-+
- #endif
- 
- /*
---- a/arch/powerpc/lib/mem_64.S
-+++ b/arch/powerpc/lib/mem_64.S
-@@ -33,7 +33,8 @@ EXPORT_SYMBOL(__memset32)
- EXPORT_SYMBOL(__memset64)
- #endif
- 
--_GLOBAL_KASAN(memset)
-+PROVIDE_WEAK_ALIAS(__memset,memset)
-+_GLOBAL(__memset)
-        neg     r0,r3
-        rlwimi  r4,r4,8,16,23
-        andi.   r0,r0,7                 /* # bytes to be 8-byte aligned */
-@@ -98,9 +99,11 @@ _GLOBAL_KASAN(memset)
- 10:    bflr    31
-        stb     r4,0(r6)
-        blr
--EXPORT_SYMBOL_KASAN(memset)
-+EXPORT_SYMBOL(memset)
-+EXPORT_SYMBOL(__memset)
- 
--_GLOBAL_TOC_KASAN(memmove)
-+PROVIDE_WEAK_ALIAS(__memmove,memove)
-+_GLOBAL_TOC(__memmove)
-        cmplw   0,r3,r4
-        bgt     backwards_memcpy
-        b       memcpy
-@@ -141,4 +144,5 @@ _GLOBAL(backwards_memcpy)
-        beq     2b
-        mtctr   r7
-        b       1b
--EXPORT_SYMBOL_KASAN(memmove)
-+EXPORT_SYMBOL(memmove)
-+EXPORT_SYMBOL(__memmove)
-diff --git a/arch/powerpc/lib/memcpy_64.S b/arch/powerpc/lib/memcpy_64.S
-index 862b515b8868..7c1b09556cad 100644
---- a/arch/powerpc/lib/memcpy_64.S
-+++ b/arch/powerpc/lib/memcpy_64.S
-@@ -19,7 +19,8 @@
- #endif
- 
-        .align  7
--_GLOBAL_TOC_KASAN(memcpy)
-+PROVIDE_WEAK_ALIAS(__memcpy,memcpy)
-+_GLOBAL_TOC(__memcpy)
- BEGIN_FTR_SECTION
- #ifdef __LITTLE_ENDIAN__
-        cmpdi   cr7,r5,0
-@@ -230,4 +231,5 @@ END_FTR_SECTION_IFCLR(CPU_FTR_UNALIGNED_LD_STD)
- 4:     ld      r3,-STACKFRAMESIZE+STK_REG(R31)(r1)     /* return dest pointer */
-        blr
- #endif
--EXPORT_SYMBOL_KASAN(memcpy)
-+EXPORT_SYMBOL(__memcpy)
-+EXPORT_SYMBOL(memcpy)
-
-
-Regards,
-Daniel
-
-
-> +#else
-> +#define _GLOBAL_KASAN(fn)	_GLOBAL(fn)
-> +#define _GLOBAL_TOC_KASAN(fn)	_GLOBAL_TOC(fn)
-> +#define EXPORT_SYMBOL_KASAN(fn)	EXPORT_SYMBOL(fn)
-> +#endif
-> +
-> +#endif
-> diff --git a/arch/powerpc/include/asm/string.h b/arch/powerpc/include/asm/string.h
-> index 1647de15a31e..9bf6dffb4090 100644
-> --- a/arch/powerpc/include/asm/string.h
-> +++ b/arch/powerpc/include/asm/string.h
-> @@ -4,14 +4,17 @@
->  
->  #ifdef __KERNEL__
->  
-> +#ifndef CONFIG_KASAN
->  #define __HAVE_ARCH_STRNCPY
->  #define __HAVE_ARCH_STRNCMP
-> +#define __HAVE_ARCH_MEMCHR
-> +#define __HAVE_ARCH_MEMCMP
-> +#define __HAVE_ARCH_MEMSET16
-> +#endif
-> +
->  #define __HAVE_ARCH_MEMSET
->  #define __HAVE_ARCH_MEMCPY
->  #define __HAVE_ARCH_MEMMOVE
-> -#define __HAVE_ARCH_MEMCMP
-> -#define __HAVE_ARCH_MEMCHR
-> -#define __HAVE_ARCH_MEMSET16
->  #define __HAVE_ARCH_MEMCPY_FLUSHCACHE
->  
->  extern char * strcpy(char *,const char *);
-> @@ -27,7 +30,27 @@ extern int memcmp(const void *,const void *,__kernel_size_t);
->  extern void * memchr(const void *,int,__kernel_size_t);
->  extern void * memcpy_flushcache(void *,const void *,__kernel_size_t);
->  
-> +void *__memset(void *s, int c, __kernel_size_t count);
-> +void *__memcpy(void *to, const void *from, __kernel_size_t n);
-> +void *__memmove(void *to, const void *from, __kernel_size_t n);
-> +
-> +#if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
-> +/*
-> + * For files that are not instrumented (e.g. mm/slub.c) we
-> + * should use not instrumented version of mem* functions.
-> + */
-> +#define memcpy(dst, src, len) __memcpy(dst, src, len)
-> +#define memmove(dst, src, len) __memmove(dst, src, len)
-> +#define memset(s, c, n) __memset(s, c, n)
-> +
-> +#ifndef __NO_FORTIFY
-> +#define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
-> +#endif
-> +
-> +#endif
-> +
->  #ifdef CONFIG_PPC64
-> +#ifndef CONFIG_KASAN
->  #define __HAVE_ARCH_MEMSET32
->  #define __HAVE_ARCH_MEMSET64
->  
-> @@ -49,8 +72,11 @@ static inline void *memset64(uint64_t *p, uint64_t v, __kernel_size_t n)
->  {
->  	return __memset64(p, v, n * 8);
->  }
-> +#endif
->  #else
-> +#ifndef CONFIG_KASAN
->  #define __HAVE_ARCH_STRLEN
-> +#endif
->  
->  extern void *memset16(uint16_t *, uint16_t, __kernel_size_t);
->  #endif
-> diff --git a/arch/powerpc/kernel/prom_init_check.sh b/arch/powerpc/kernel/prom_init_check.sh
-> index 667df97d2595..181fd10008ef 100644
-> --- a/arch/powerpc/kernel/prom_init_check.sh
-> +++ b/arch/powerpc/kernel/prom_init_check.sh
-> @@ -16,8 +16,16 @@
->  # If you really need to reference something from prom_init.o add
->  # it to the list below:
->  
-> +grep "^CONFIG_KASAN=y$" .config >/dev/null
-> +if [ $? -eq 0 ]
-> +then
-> +	MEM_FUNCS="__memcpy __memset"
-> +else
-> +	MEM_FUNCS="memcpy memset"
-> +fi
-> +
->  WHITELIST="add_reloc_offset __bss_start __bss_stop copy_and_flush
-> -_end enter_prom memcpy memset reloc_offset __secondary_hold
-> +_end enter_prom $MEM_FUNCS reloc_offset __secondary_hold
->  __secondary_hold_acknowledge __secondary_hold_spinloop __start
->  strcmp strcpy strlcpy strlen strncmp strstr kstrtobool logo_linux_clut224
->  reloc_got2 kernstart_addr memstart_addr linux_banner _stext
-> diff --git a/arch/powerpc/lib/Makefile b/arch/powerpc/lib/Makefile
-> index 79396e184bca..47a4de434c22 100644
-> --- a/arch/powerpc/lib/Makefile
-> +++ b/arch/powerpc/lib/Makefile
-> @@ -8,9 +8,14 @@ ccflags-$(CONFIG_PPC64)	:= $(NO_MINIMAL_TOC)
->  CFLAGS_REMOVE_code-patching.o = $(CC_FLAGS_FTRACE)
->  CFLAGS_REMOVE_feature-fixups.o = $(CC_FLAGS_FTRACE)
->  
-> -obj-y += string.o alloc.o code-patching.o feature-fixups.o
-> +obj-y += alloc.o code-patching.o feature-fixups.o
->  
-> -obj-$(CONFIG_PPC32)	+= div64.o copy_32.o crtsavres.o strlen_32.o
-> +ifndef CONFIG_KASAN
-> +obj-y	+=	string.o memcmp_$(BITS).o
-> +obj-$(CONFIG_PPC32)	+= strlen_32.o
-> +endif
-> +
-> +obj-$(CONFIG_PPC32)	+= div64.o copy_32.o crtsavres.o
->  
->  obj-$(CONFIG_FUNCTION_ERROR_INJECTION)	+= error-inject.o
->  
-> @@ -34,7 +39,7 @@ obj64-$(CONFIG_KPROBES_SANITY_TEST)	+= test_emulate_step.o \
->  					   test_emulate_step_exec_instr.o
->  
->  obj-y			+= checksum_$(BITS).o checksum_wrappers.o \
-> -			   string_$(BITS).o memcmp_$(BITS).o
-> +			   string_$(BITS).o
->  
->  obj-y			+= sstep.o ldstfp.o quad.o
->  obj64-y			+= quad.o
-> diff --git a/arch/powerpc/lib/copy_32.S b/arch/powerpc/lib/copy_32.S
-> index ba66846fe973..fc4fa7246200 100644
-> --- a/arch/powerpc/lib/copy_32.S
-> +++ b/arch/powerpc/lib/copy_32.S
-> @@ -14,6 +14,7 @@
->  #include <asm/ppc_asm.h>
->  #include <asm/export.h>
->  #include <asm/code-patching-asm.h>
-> +#include <asm/kasan.h>
->  
->  #define COPY_16_BYTES		\
->  	lwz	r7,4(r4);	\
-> @@ -68,6 +69,7 @@ CACHELINE_BYTES = L1_CACHE_BYTES
->  LG_CACHELINE_BYTES = L1_CACHE_SHIFT
->  CACHELINE_MASK = (L1_CACHE_BYTES-1)
->  
-> +#ifndef CONFIG_KASAN
->  _GLOBAL(memset16)
->  	rlwinm.	r0 ,r5, 31, 1, 31
->  	addi	r6, r3, -4
-> @@ -81,6 +83,7 @@ _GLOBAL(memset16)
->  	sth	r4, 4(r6)
->  	blr
->  EXPORT_SYMBOL(memset16)
-> +#endif
->  
->  /*
->   * Use dcbz on the complete cache lines in the destination
-> @@ -91,7 +94,7 @@ EXPORT_SYMBOL(memset16)
->   * We therefore skip the optimised bloc that uses dcbz. This jump is
->   * replaced by a nop once cache is active. This is done in machine_init()
->   */
-> -_GLOBAL(memset)
-> +_GLOBAL_KASAN(memset)
->  	cmplwi	0,r5,4
->  	blt	7f
->  
-> @@ -150,7 +153,7 @@ _GLOBAL(memset)
->  9:	stbu	r4,1(r6)
->  	bdnz	9b
->  	blr
-> -EXPORT_SYMBOL(memset)
-> +EXPORT_SYMBOL_KASAN(memset)
->  
->  /*
->   * This version uses dcbz on the complete cache lines in the
-> @@ -163,12 +166,12 @@ EXPORT_SYMBOL(memset)
->   * We therefore jump to generic_memcpy which doesn't use dcbz. This jump is
->   * replaced by a nop once cache is active. This is done in machine_init()
->   */
-> -_GLOBAL(memmove)
-> +_GLOBAL_KASAN(memmove)
->  	cmplw	0,r3,r4
->  	bgt	backwards_memcpy
->  	/* fall through */
->  
-> -_GLOBAL(memcpy)
-> +_GLOBAL_KASAN(memcpy)
->  1:	b	generic_memcpy
->  	patch_site	1b, patch__memcpy_nocache
->  
-> @@ -242,8 +245,8 @@ _GLOBAL(memcpy)
->  	stbu	r0,1(r6)
->  	bdnz	40b
->  65:	blr
-> -EXPORT_SYMBOL(memcpy)
-> -EXPORT_SYMBOL(memmove)
-> +EXPORT_SYMBOL_KASAN(memcpy)
-> +EXPORT_SYMBOL_KASAN(memmove)
->  
->  generic_memcpy:
->  	srwi.	r7,r5,3
-> diff --git a/arch/powerpc/lib/mem_64.S b/arch/powerpc/lib/mem_64.S
-> index 3c3be02f33b7..7cd6cf6822a2 100644
-> --- a/arch/powerpc/lib/mem_64.S
-> +++ b/arch/powerpc/lib/mem_64.S
-> @@ -12,7 +12,9 @@
->  #include <asm/errno.h>
->  #include <asm/ppc_asm.h>
->  #include <asm/export.h>
-> +#include <asm/kasan.h>
->  
-> +#ifndef CONFIG_KASAN
->  _GLOBAL(__memset16)
->  	rlwimi	r4,r4,16,0,15
->  	/* fall through */
-> @@ -29,8 +31,9 @@ _GLOBAL(__memset64)
->  EXPORT_SYMBOL(__memset16)
->  EXPORT_SYMBOL(__memset32)
->  EXPORT_SYMBOL(__memset64)
-> +#endif
->  
-> -_GLOBAL(memset)
-> +_GLOBAL_KASAN(memset)
->  	neg	r0,r3
->  	rlwimi	r4,r4,8,16,23
->  	andi.	r0,r0,7			/* # bytes to be 8-byte aligned */
-> @@ -95,9 +98,9 @@ _GLOBAL(memset)
->  10:	bflr	31
->  	stb	r4,0(r6)
->  	blr
-> -EXPORT_SYMBOL(memset)
-> +EXPORT_SYMBOL_KASAN(memset)
->  
-> -_GLOBAL_TOC(memmove)
-> +_GLOBAL_TOC_KASAN(memmove)
->  	cmplw	0,r3,r4
->  	bgt	backwards_memcpy
->  	b	memcpy
-> @@ -138,4 +141,4 @@ _GLOBAL(backwards_memcpy)
->  	beq	2b
->  	mtctr	r7
->  	b	1b
-> -EXPORT_SYMBOL(memmove)
-> +EXPORT_SYMBOL_KASAN(memmove)
-> diff --git a/arch/powerpc/lib/memcpy_64.S b/arch/powerpc/lib/memcpy_64.S
-> index 273ea67e60a1..862b515b8868 100644
-> --- a/arch/powerpc/lib/memcpy_64.S
-> +++ b/arch/powerpc/lib/memcpy_64.S
-> @@ -11,6 +11,7 @@
->  #include <asm/export.h>
->  #include <asm/asm-compat.h>
->  #include <asm/feature-fixups.h>
-> +#include <asm/kasan.h>
->  
->  #ifndef SELFTEST_CASE
->  /* For big-endian, 0 == most CPUs, 1 == POWER6, 2 == Cell */
-> @@ -18,7 +19,7 @@
->  #endif
->  
->  	.align	7
-> -_GLOBAL_TOC(memcpy)
-> +_GLOBAL_TOC_KASAN(memcpy)
->  BEGIN_FTR_SECTION
->  #ifdef __LITTLE_ENDIAN__
->  	cmpdi	cr7,r5,0
-> @@ -229,4 +230,4 @@ END_FTR_SECTION_IFCLR(CPU_FTR_UNALIGNED_LD_STD)
->  4:	ld	r3,-STACKFRAMESIZE+STK_REG(R31)(r1)	/* return dest pointer */
->  	blr
->  #endif
-> -EXPORT_SYMBOL(memcpy)
-> +EXPORT_SYMBOL_KASAN(memcpy)
-> -- 
-> 2.13.3
+Applied all, thanks.
