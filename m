@@ -2,100 +2,121 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF0DC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD74C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFE9206BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:21:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="jY5Cy7+p"
+	by mail.kernel.org (Postfix) with ESMTP id 3ABA7206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfCDOVE (ORCPT
+        id S1726722AbfCDOXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:21:04 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56211 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbfCDOVD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:21:03 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q187so4794782wme.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 06:21:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=6xQ3CIDNuGozn7mgedY6P/lhTBCwZ8di7eLnv9IvQDc=;
-        b=jY5Cy7+pSTo3SWw9UwWf4DeMkqmSC6U7iH/PtqFXa6dXHeACk7J4YKV/leyOfsq1oj
-         FFOEwN9X99bgAyr6+6mATq/49AouI+47dRHvWjqFXhZkru9Wqqbw/kz847toRldSNoJ0
-         jv0Mi9Kyc4Gqya52uZBcn/3SkhBvPCAPFKXIMTccDR3/9Rdis/XUOJ6E69Gh+Yo+ysRz
-         UO/gG0Yoj4Vye+BSahJhJDBvY0XBMbxj/1jJMbmYTqm9IDoJe6nZr84Nn9UGwj8OqJRj
-         pVejMoR4oWJCIZsNNO0M4madF2KxWQEaM29ZNcfstqRDz/SFg6dryBIXqDWwA3VLmiY7
-         xTiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=6xQ3CIDNuGozn7mgedY6P/lhTBCwZ8di7eLnv9IvQDc=;
-        b=mZasRw+60fOoVBxxE5CurwEvPIN++9oT6V1qcgpgqPhss9qZFXT4GQPprdH8bsb1Gh
-         ri3dTnd40RHbXROckgMu7vKWxvJHSv72h2eYkRvlfsILstHtA19SayIWCZP82aT4/on8
-         UssoJyU2OuLM9ZTrRzBZfpDxDp0GEf0Jdr215QEXbPJ5zkTbVmNuy4D5GbWESPQorso0
-         IE3ZwnyW0UGD2c+l8NEQASjl+mNa0rq/RzmujJRlPqWDgOTL1+q7eUyYcnteKdcOUlvx
-         pSQWMIRR/sFBAOIB9E3/3g4W+AHWROAxmlAi8qDplGLdX2CLoC/64dw88iKS9VaV0S8z
-         IWqQ==
-X-Gm-Message-State: APjAAAU8OPX8kcu8N2S4hiGC/xt13TKSwuWDeOjs+U9vy94znxyK3bac
-        vbtScW4CTBKqVXGPUv2qIfIpwQ==
-X-Google-Smtp-Source: APXvYqze8QenxJSJZ1xxJ/YhJpCBh4U0tAesGLmBbZxb2aDcGuwNmCtf1nXB1UZ6NCfhIeUUXC0sVA==
-X-Received: by 2002:a1c:5f89:: with SMTP id t131mr9257255wmb.46.1551709261988;
-        Mon, 04 Mar 2019 06:21:01 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id d21sm22646998wrc.44.2019.03.04.06.21.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Mar 2019 06:21:01 -0800 (PST)
-Message-ID: <5c7d344d.1c69fb81.21f06.c909@mx.google.com>
-Date:   Mon, 04 Mar 2019 06:21:01 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.9.161-33-g95ebbd164ce2
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.9.y
-In-Reply-To: <20190304081602.307094059@linuxfoundation.org>
-References: <20190304081602.307094059@linuxfoundation.org>
-Subject: Re: [PATCH 4.9 00/32] 4.9.162-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mon, 4 Mar 2019 09:23:43 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38922 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726095AbfCDOXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 09:23:43 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 16F54ABE1;
+        Mon,  4 Mar 2019 14:23:41 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 15:23:39 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Subject: Re: [RFC PATCH] printk: Introduce "store now but print later" prefix.
+Message-ID: <20190304142339.mfno5mmjxxsrf47q@pathway.suse.cz>
+References: <1550896930-12324-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20190304032202.GD23578@jagdpanzerIV>
+ <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6b97b4bb-a9b9-75b3-17a2-bff99ae7c526@i-love.sakura.ne.jp>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.9.y boot: 91 boots: 0 failed, 90 passed with 1 untried/un=
-known (v4.9.161-33-g95ebbd164ce2)
+On Mon 2019-03-04 20:40:37, Tetsuo Handa wrote:
+> On 2019/03/04 12:22, Sergey Senozhatsky wrote:
+> > On (02/23/19 13:42), Tetsuo Handa wrote:
+> > [..]
+> >> This patch tries to address "don't lockup the system" with minimal risk of
+> >> failing to "print out printk() messages", by allowing printk() callers to
+> >> tell printk() "store $body_text_lines lines into logbuf but start actual
+> >> printing after $trailer_text_line line is stored into logbuf". This patch
+> >> is different from existing printk_deferred(), for printk_deferred() is
+> >> intended for scheduler/timekeeping use only. Moreover, what this patch
+> >> wants to do is "do not try to print out printk() messages as soon as
+> >> possible", for accumulated stalling period cannot be decreased if
+> >> printk_deferred() from e.g. dump_tasks() from out_of_memory() immediately
+> >> prints out the messages. The point of this patch is to defer the stalling
+> >> duration to after leaving the critical section.
+> > 
+> > We can export printk deferred, I guess; but I'm not sure if it's going
+> > to be easy to switch OOM to printk_deferred - there are lots of direct
+> > printk callers: warn-s, dump_stacks, etc; it might even be simpler to
+> > start re-directing OOM printouts to printk_safe buffer.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.9.y/kernel/v4.9.161-33-g95ebbd164ce2/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
-/kernel/v4.9.161-33-g95ebbd164ce2/
+Exactly. OOM calls many functions that are called also in other situations.
+The async messages are not pushed to the console unless someone calls
+a non-async printk.
 
-Tree: stable-rc
-Branch: linux-4.9.y
-Git Describe: v4.9.161-33-g95ebbd164ce2
-Git Commit: 95ebbd164ce260ac8147ec92861b752e1416026c
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 45 unique boards, 21 SoC families, 13 builds out of 193
+How do you want to guarantee that the non-async printk will get called
+in all situations? The async printk() API is too error-prone.
 
----
-For more info write to <info@kernelci.org>
+
+> I confirmed that printk_deferred() is not suitable for this purpose, for
+> it suddenly stalls for seconds at random locations flushing pending output
+> accumulated by printk_deferred(). Stalling inside critical section (e.g.
+> RCU read lock held) is what I don't like.
+
+I still do not see why your async printk should be significantly
+better than printk_deferred(). There is still a random victim
+that would be responsible to flush the messages.
+
+It might increase the chance that it will get printed from
+normal context. But it also adds the risk that consoles
+will not get handled at all.
+
+BTW: The comment above printk_deferred() is there for a reason.
+     It is a hack that should not be used widely.
+
+     If you convert half printk() calls into a deferred/async
+     module, you will just get into another problems. For example,
+     not seeing the messages at all, more lost messages, random
+     victims would spend even more time with flushing to the console.
+
+     And not. Handling all messages only from normal context
+     or from a dedicated kthread is not acceptable.
+
+
+> > This is a bit of a strange issue, to be honest. If OOM prints too
+> > many messages then we might want to do some work on the OOM side.
+
+To be honest, I am still not sure what messages we are talking about.
+Are the messages printed() from OOM killer code? Or are most of
+the messages about allocation failures?
+
+Well, both sources of messages would deserve a revision/regulation
+if they cause such a big problem.
+
+For example, I would stop printing allocation failures until
+the currently running OOM killer succeeds in freeing some memory.
+It might print a message about that all further allocation
+failures will not get reported and then another message
+about the success...
+
+Best Regards,
+Petr
