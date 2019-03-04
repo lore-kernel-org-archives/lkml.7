@@ -2,136 +2,169 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851CDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD8EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF3D2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:51:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="twi6ur6x"
+	by mail.kernel.org (Postfix) with ESMTP id 48E40206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 15:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfCDPvs (ORCPT
+        id S1727330AbfCDPwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 10:51:48 -0500
-Received: from mail-eopbgr780059.outbound.protection.outlook.com ([40.107.78.59]:8997
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727007AbfCDPvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 10:51:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qaRTqDfuFtKZ5eGz8W87EzKW2UV/8+1rlo1n6d1C3lQ=;
- b=twi6ur6xzWmSE1RS59MA/hZdLMAYZSqrl7DdqTu6DcX76vvzig41QMHKWtCm6EeqjGqk2iX/SwnH4aTKS05eQ/V3aQkVxcL3OjURKCbxxD9URfI/3Ty7V5BhSij7iAmJvsW/Yd404Io5jZloCxMshi8ipEPeTgb2NcFgiFO2dUQ=
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com (20.178.197.10) by
- BYAPR12MB3205.namprd12.prod.outlook.com (20.179.92.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.15; Mon, 4 Mar 2019 15:51:44 +0000
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::a92d:c93:ed77:b0a9]) by BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::a92d:c93:ed77:b0a9%4]) with mapi id 15.20.1643.022; Mon, 4 Mar 2019
- 15:51:44 +0000
-From:   "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>
-To:     Helen Koike <helen.koike@collabora.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     =?utf-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <marcheu@google.com>,
-        Sean Paul <seanpaul@google.com>,
-        David Airlie <airlied@linux.ie>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        "boris.brezillon@collabora.com" <boris.brezillon@collabora.com>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Subject: Re: [PATCH 3/5] drm/amd: fix fb references in async update
-Thread-Topic: [PATCH 3/5] drm/amd: fix fb references in async update
-Thread-Index: AQHU0pmADEoe1dDs6Uubz0u/ZEP0bKX7nx6A
-Date:   Mon, 4 Mar 2019 15:51:44 +0000
-Message-ID: <e421e3c9-abb0-5763-1aa0-1e21e0abd09f@amd.com>
-References: <20190304144909.6267-1-helen.koike@collabora.com>
- <20190304144909.6267-4-helen.koike@collabora.com>
-In-Reply-To: <20190304144909.6267-4-helen.koike@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: QB1PR01CA0033.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:2d::46) To BYAPR12MB3560.namprd12.prod.outlook.com
- (2603:10b6:a03:ae::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Nicholas.Kazlauskas@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.55.250]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b06ea09c-c6e6-4aaf-fd36-08d6a0b94d3e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:BYAPR12MB3205;
-x-ms-traffictypediagnostic: BYAPR12MB3205:
-x-microsoft-exchange-diagnostics: 1;BYAPR12MB3205;20:U9+83sfaGbckTGaEoNvWWUYhd0fG3qby4V6sU8wHlv9sqKqR/H8O2fWUnpVI6rFIZTJZlW8wktVDMrt3WGll0JI4TH30ON8ItuiwsciUKh0UMtESSD/a0+L8B+d0woaKrFO8fNmAqIhcZ9nVvlEASv1KkXl4hVzAMgkdxv2KJKrWyYlfr55uTlxRlK7WhCpwi6rFLsgEdC1cqOyDJ0n1OMIO6vwCPVyz10VK41ey35eHAx3D7IcMWd4OYPpHhV29
-x-microsoft-antispam-prvs: <BYAPR12MB3205422CA505B7CDC853741FEC710@BYAPR12MB3205.namprd12.prod.outlook.com>
-x-forefront-prvs: 09669DB681
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(396003)(136003)(39860400002)(189003)(199004)(3846002)(97736004)(54906003)(105586002)(478600001)(66066001)(386003)(106356001)(15650500001)(76176011)(72206003)(52116002)(6116002)(36756003)(316002)(6436002)(31686004)(68736007)(2906002)(81166006)(8936002)(110136005)(8676002)(53936002)(81156014)(6506007)(99286004)(14454004)(6486002)(6512007)(486006)(31696002)(476003)(6246003)(446003)(11346002)(14444005)(256004)(86362001)(71200400001)(71190400001)(4326008)(2616005)(5660300002)(7736002)(7416002)(25786009)(26005)(2501003)(229853002)(186003)(305945005)(53546011)(102836004);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB3205;H:BYAPR12MB3560.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ox9tdtF0UXrEkBMZOrQHQapcXR/sTo5nR7AIsOsRnmxZOryXeS5rVbF24o0nK4nuttB8KpkX4V7PZ2fnCHJOXuHESLUy6PUVwuFWvhCdrLVimyE3aKXKtdRz97gdRdJF+ABZnDdtvfjRc6PzdR9V/j46GvwPmQbRBMcEZ9l5V02d0qEaoBCtmd55Z5VyoHmjI0ktmmi+6z0AYNKaW5ao1NB9fpwi2gQbykK89Hpk+M/YcZHyj9HuWP7eYOEv3FXhq4GXdkF67YgaX1xemLf9wfCCHNVbGDVlSL2d9TErc12/iUrEmOWolMXk1C0h81OUn8KD0UOYpA//SJUR9u3wXirPx0ffb/HN4V6Lat3FzeqZENNXHD14YVY1bdqAn0xXg1BgC/JMZcYSbcEPupCFZ0+ha3G5C0eHlCDuYFVhrP8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B932A95D0EACEC4B8B799D6037EF32F6@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 4 Mar 2019 10:52:41 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35472 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726552AbfCDPwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 10:52:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6667EBD;
+        Mon,  4 Mar 2019 07:52:39 -0800 (PST)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22F2F3F706;
+        Mon,  4 Mar 2019 07:52:37 -0800 (PST)
+Subject: Re: [PATCH RFC 1/1] iommu: set the default iommu-dma mode as
+ non-strict
+To:     "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>
+References: <20190131135211.6732-1-thunder.leizhen@huawei.com>
+ <94b9b0c9-1a24-63ba-5abe-5f6d79fed415@arm.com>
+ <dc06dfd0-0ab6-6f0b-64c6-2587a2a55798@huawei.com>
+ <5C78B89C.7040100@huawei.com> <e567cf93-4e34-e15e-9d98-5834bc63e234@arm.com>
+ <5C7A1EE1.6020200@huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7ed7da40-adbe-09b2-5124-baf62558987d@arm.com>
+Date:   Mon, 4 Mar 2019 15:52:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b06ea09c-c6e6-4aaf-fd36-08d6a0b94d3e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2019 15:51:43.3993
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3205
+In-Reply-To: <5C7A1EE1.6020200@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMy80LzE5IDk6NDkgQU0sIEhlbGVuIEtvaWtlIHdyb3RlOg0KPiBBc3luYyB1cGRhdGUgY2Fs
-bGJhY2tzIGFyZSBleHBlY3RlZCB0byBzZXQgdGhlIG9sZF9mYiBpbiB0aGUgbmV3X3N0YXRlDQo+
-IHNvIHByZXBhcmUvY2xlYW51cCBmcmFtZWJ1ZmZlcnMgYXJlIGJhbGFuY2VkLg0KPiANCj4gQ2Fs
-bGluZyBkcm1fYXRvbWljX3NldF9mYl9mb3JfcGxhbmUoKSAod2hpY2ggZ2V0cyBhIHJlZmVyZW5j
-ZSBvZiB0aGUgbmV3DQo+IGZiIGFuZCBwdXQgdGhlIG9sZCBmYikgaXMgbm90IHJlcXVpcmVkLCBh
-cyBpdCdzIHRha2VuIGNhcmUgYnkNCj4gZHJtX21vZGVfY3Vyc29yX3VuaXZlcnNhbCgpIHdoZW4g
-Y2FsbGluZyBkcm1fYXRvbWljX2hlbHBlcl91cGRhdGVfcGxhbmUoKS4NCj4gDQo+IFN1Z2dlc3Rl
-ZC1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AY29sbGFib3JhLmNvbT4NCj4g
-U2lnbmVkLW9mZi1ieTogSGVsZW4gS29pa2UgPGhlbGVuLmtvaWtlQGNvbGxhYm9yYS5jb20+DQoN
-ClJldmlld2VkLWJ5OiBOaWNob2xhcyBLYXpsYXVza2FzIDxuaWNob2xhcy5rYXpsYXVza2FzQGFt
-ZC5jb20+DQoNCkkgZ3Vlc3MgdGhlIHN3YXAgaXRzZWxmIHNob3VsZCBiZSBlbm91Z2ggaGVyZSBh
-cyBwZXIgdGhlIGNvbW1pdCBkZXNjcmlwdGlvbi4NCg0KSXQgd291bGQgaGF2ZSBiZWVuIG5pY2Ug
-aWYgdGhpcyBwYXRjaCBkcm9wcGVkIHRoZSBvbGRfcGxhbmVfc3RhdGUtPmZiICE9IA0KbmV3X3Bs
-YW5lX3N0YXRlLT5mYiBjaGVjayB0b28gYXQgdGhlIHNhbWUgdGltZSwgYnV0IEkgc3VwcG9zZSBJ
-IGNhbiBkcm9wIA0KdGhhdCBsYXRlci4gSXQnbGwgaGVscCB1cyBwYXNzIHRob3NlIGZhaWxpbmcg
-SUdUIHRlc3RzIGFzIHdlbGwuDQoNCk5pY2hvbGFzIEthemxhdXNrYXMNCg0KDQo+IA0KPiAtLS0N
-Cj4gSGVsbG8sDQo+IA0KPiBBcyBtZW50aW9uZWQgaW4gdGhlIGNvdmVyIGxldHRlciwNCj4gSSB0
-ZXN0ZWQgb24gdGhlIHJvY2tjaGlwIGFuZCBvbiBpOTE1IHVzaW5nIGlndCBwbGFuZV9jdXJzb3Jf
-bGVnYWN5IGFuZA0KPiBrbXNfY3Vyc29yX2xlZ2FjeSBhbmQgSSBkaWRuJ3Qgc2VlIGFueSByZWdy
-ZXNzaW9ucy4NCj4gQnV0IEkgY291bGRuJ3QgdGVzdCBvbiBBTUQgYmVjYXVzZSBJIGRvbid0IGhh
-dmUgdGhlIGhhcmR3YXJlIGFuZCBJIHdvdWxkDQo+IGFwcHJlY2lhdGUgaWYgYW55b25lIGNvdWxk
-IHRlc3QgaXQuDQo+IA0KPiBBbHNvLCBJIGRpZG4ndCBDQyB0byBzdGFibGUgaGVyZSBhcyBJIHNh
-dyB0aGUgYXN5bmNfdXBkYXRlIGZ1bmN0aW9uIHdhcyBvbmx5DQo+IGFkZGVkIG9uIHY0LjIwLCBw
-bGVhc2UgbGV0IG1lIGtub3cgaWYgSSBzaG91bGQgQ0MgdG8gc3RhYmxlLg0KPiANCj4gVGhhbmtz
-IQ0KPiBIZWxlbg0KPiANCj4gICBkcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2Rt
-L2FtZGdwdV9kbS5jIHwgMyArLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
-IDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9k
-aXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG0uYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxh
-eS9hbWRncHVfZG0vYW1kZ3B1X2RtLmMNCj4gaW5kZXggM2E2ZjU5NWYyOTVlLi5iYzAyODAwMjU0
-YmYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0v
-YW1kZ3B1X2RtLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9k
-bS9hbWRncHVfZG0uYw0KPiBAQCAtMzc2MCw4ICszNzYwLDcgQEAgc3RhdGljIHZvaWQgZG1fcGxh
-bmVfYXRvbWljX2FzeW5jX3VwZGF0ZShzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSwNCj4gICAJc3Ry
-dWN0IGRybV9wbGFuZV9zdGF0ZSAqb2xkX3N0YXRlID0NCj4gICAJCWRybV9hdG9taWNfZ2V0X29s
-ZF9wbGFuZV9zdGF0ZShuZXdfc3RhdGUtPnN0YXRlLCBwbGFuZSk7DQo+ICAgDQo+IC0JaWYgKHBs
-YW5lLT5zdGF0ZS0+ZmIgIT0gbmV3X3N0YXRlLT5mYikNCj4gLQkJZHJtX2F0b21pY19zZXRfZmJf
-Zm9yX3BsYW5lKHBsYW5lLT5zdGF0ZSwgbmV3X3N0YXRlLT5mYik7DQo+ICsJc3dhcChwbGFuZS0+
-c3RhdGUtPmZiLCBuZXdfc3RhdGUtPmZiKTsNCj4gICANCj4gICAJcGxhbmUtPnN0YXRlLT5zcmNf
-eCA9IG5ld19zdGF0ZS0+c3JjX3g7DQo+ICAgCXBsYW5lLT5zdGF0ZS0+c3JjX3kgPSBuZXdfc3Rh
-dGUtPnNyY195Ow0KPiANCg0K
+On 02/03/2019 06:12, Leizhen (ThunderTown) wrote:
+> 
+> 
+> On 2019/3/1 19:07, Jean-Philippe Brucker wrote:
+>> Hi Leizhen,
+>>
+>> On 01/03/2019 04:44, Leizhen (ThunderTown) wrote:
+>>>
+>>>
+>>> On 2019/2/26 20:36, Hanjun Guo wrote:
+>>>> Hi Jean,
+>>>>
+>>>> On 2019/1/31 22:55, Jean-Philippe Brucker wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 31/01/2019 13:52, Zhen Lei wrote:
+>>>>>> Currently, many peripherals are faster than before. For example, the top
+>>>>>> speed of the older netcard is 10Gb/s, and now it's more than 25Gb/s. But
+>>>>>> when iommu page-table mapping enabled, it's hard to reach the top speed
+>>>>>> in strict mode, because of frequently map and unmap operations. In order
+>>>>>> to keep abreast of the times, I think it's better to set non-strict as
+>>>>>> default.
+>>>>>
+>>>>> Most users won't be aware of this relaxation and will have their system
+>>>>> vulnerable to e.g. thunderbolt hotplug. See for example 4.3 Deferred
+>>>>> Invalidation in
+>>>>> http://www.cs.technion.ac.il/users/wwwb/cgi-bin/tr-get.cgi/2018/MSC/MSC-2018-21.pdf
+>>> Hi Jean,
+>>>
+>>>     In fact, we have discussed the vulnerable of deferred invalidation before upstream
+>>> the non-strict patches. The attacks maybe possible because of an untrusted device or
+>>> the mistake of the device driver. And we limited the VFIO to still use strict mode.
+>>>     As mentioned in the pdf, limit the freed memory with deferred invalidation only to
+>>> be reused by the device, can mitigate the vulnerability. But it's too hard to implement
+>>> it now.
+>>>     A compromise maybe we only apply non-strict to (1) dma_free_coherent, because the
+>>> memory is controlled by DMA common module, so we can make the memory to be freed after
+>>> the global invalidation in the timer handler. (2) And provide some new APIs related to
+>>> iommu_unmap_page/sg, these new APIs deferred invalidation. And the candiate device
+>>> drivers update the APIs if they want to improve performance. (3) Make sure that only
+>>> the trusted devices and trusted drivers can apply (1) and (2). For example, the driver
+>>> must be built into kernel Image.
+>>
+>> Do we have a notion of untrusted kernel drivers? A userspace driver
+> It seems impossible to have such driver. The modules insmod by root users should be
+> guaranteed by themselves.
+> 
+>> (VFIO) is untrusted, ok. But a malicious driver loaded into the kernel
+>> address space would have much easier ways to corrupt the system than to
+>> exploit lazy mode...
+> Yes, so that we have no need to consider untrusted drivers.
+> 
+>>
+>> For (3), I agree that we should at least disallow lazy mode if
+>> pci_dev->untrusted is set. At the moment it means that we require the
+>> strictest IOMMU configuration for external-facing PCI ports, but it can
+>> be extended to blacklist other vulnerable devices or locations.
+> I plan to add an attribute file for each device, espcially for hotplug devices. And
+> let the root users to decide which mode should be used, strict or non-strict. Becasue
+> they should known whether the hot-plug divice is trusted or not.
+
+Aside from the problem that without massive implementation changes 
+strict/non-strict is at best a per-domain property, not a per-device 
+one, I can't see this being particularly practical - surely the whole 
+point of a malicious endpoint is that it's going to pretend to be some 
+common device for which a 'trusted' kernel driver already exists? If 
+you've chosen to trust *any* external device, I think you may as well 
+have just set non-strict globally anyway. The effort involved in trying 
+to implement super-fine-grained control seems hard to justify.
+
+Robin.
+
+>>
+>> If you do (3) then maybe we don't need (1) and (2), which require a
+>> tonne of work in the DMA and IOMMU layers (but would certainly be nice
+>> to see, since it would also help handle ATS invalidation timeouts)
+>>
+>> Thanks,
+>> Jean
+>>
+>>>     So that some high-end trusted devices use non-strict mode, and keep others still using
+>>> strict mode. The drivers who want to use non-strict mode, should change to use new APIs
+>>> by themselves.
+>>>
+>>>
+>>>>>
+>>>>> Why not keep the policy to secure by default, as we do for
+>>>>> iommu.passthrough? And maybe add something similar to
+>>>>> CONFIG_IOMMU_DEFAULT_PASSTRHOUGH? It's easy enough for experts to pass a
+>>>>> command-line argument or change the default config.
+>>>>
+>>>> Sorry for the late reply, it was Chinese new year, and we had a long discussion
+>>>> internally, we are fine to add a Kconfig but not sure OS vendors will set it
+>>>> to default y.
+>>>>
+>>>> OS vendors seems not happy to pass a command-line argument, to be honest,
+>>>> this is our motivation to enable non-strict as default. Hope OS vendors
+>>>> can see this email thread, and give some input here.
+>>>>
+>>>> Thanks
+>>>> Hanjun
+>>>>
+>>>>
+>>>> .
+>>>>
+>>>
+>>
+>>
+>> .
+>>
+> 
