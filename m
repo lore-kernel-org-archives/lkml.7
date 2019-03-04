@@ -2,197 +2,99 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17B3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA2AC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863122070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:36:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Z0y/wa5j";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="K1qOc3TG"
+	by mail.kernel.org (Postfix) with ESMTP id 2A0C82070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbfCDTgx (ORCPT
+        id S1726243AbfCDThh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:36:53 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:56928 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726054AbfCDTgw (ORCPT
+        Mon, 4 Mar 2019 14:37:37 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:41843 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfCDThg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:36:52 -0500
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x24JSm8t028340;
-        Mon, 4 Mar 2019 11:36:20 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=1LJtSo+twMQID73y5JN4w1TRtK7H7IggHRkeS3CYweo=;
- b=Z0y/wa5jR8hreAbSfSFxeUqH3cZTEmJdVm1XRzmu00WWn31hHAwGf5hqIIvaXgPEHP18
- EgI3PNXMdfy9fQh2h/n77SyogqhQVTSmV7YisXrD0Vawswx/opy8dniNbZ4Vl8Amug24
- d9CV/qTDRG9xmUcjgSW/JvxNNh4Qzwl7FQo= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r19ad88fr-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 04 Mar 2019 11:36:20 -0800
-Received: from frc-hub01.TheFacebook.com (2620:10d:c021:18::171) by
- frc-hub05.TheFacebook.com (2620:10d:c021:18::175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 4 Mar 2019 11:36:17 -0800
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 4 Mar 2019 11:36:17 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1LJtSo+twMQID73y5JN4w1TRtK7H7IggHRkeS3CYweo=;
- b=K1qOc3TG/VqkrAW7MTgAZ9+yV/3HgYhHLR9TSXC7Ef2nt2hL+OqtcwFf9K+QGJ0nMEr3Ee3VS+f3yGJeDk6LVpv1AfSC+93irgIzFtQxDFJklRAMACQ0qa2Gur4kXnX+awBvzHcks/WYHKtT29r8ESSQJJ4D8E5ve5V+GSC6oEg=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
- MWHPR15MB1197.namprd15.prod.outlook.com (10.175.2.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.15; Mon, 4 Mar 2019 19:36:15 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f190:6de5:7e3:e065]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f190:6de5:7e3:e065%6]) with mapi id 15.20.1665.020; Mon, 4 Mar 2019
- 19:36:14 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     Networking <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "acme@redhat.com" <acme@redhat.com>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>
-Subject: Re: [PATCH v5 perf,bpf 07/15] perf, bpf: save bpf_prog_info
- information as headers to perf.data
-Thread-Topic: [PATCH v5 perf,bpf 07/15] perf, bpf: save bpf_prog_info
- information as headers to perf.data
-Thread-Index: AQHUzyOP1AVZWxR1lEa6YX4LDOvnT6X7hKUAgABgIYA=
-Date:   Mon, 4 Mar 2019 19:36:14 +0000
-Message-ID: <CE031049-FB10-4BB5-BCA1-EA48C5BF882B@fb.com>
-References: <20190228050643.958685-1-songliubraving@fb.com>
- <20190228050643.958685-8-songliubraving@fb.com>
- <20190304135210.GB19809@krava>
-In-Reply-To: <20190304135210.GB19809@krava>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.102.3)
-x-originating-ip: [2620:10d:c090:200::3:1d00]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 11e00f3f-1e50-44db-fd95-08d6a0d8aa44
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1197;
-x-ms-traffictypediagnostic: MWHPR15MB1197:
-x-microsoft-exchange-diagnostics: 1;MWHPR15MB1197;20:PYhHqqa3aqVPwFzMQJXLM/KbjEZkJpUPnM62kWnZuJvxSiTEHy3WTtMmzKdWDJQZJ4XFQK+LTv+Xwf7EORk9lz1KwIearPHPSUb7Afg/zi/sElyWX8t4PHsK00G/KCyhKzt3wkKeNfIwUaqUNu2uFvK1UMGez9bkyG80Em2MGOg=
-x-microsoft-antispam-prvs: <MWHPR15MB11979704E89302B970BB68B8B3710@MWHPR15MB1197.namprd15.prod.outlook.com>
-x-forefront-prvs: 09669DB681
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(396003)(346002)(39860400002)(136003)(199004)(189003)(2906002)(478600001)(476003)(50226002)(256004)(14444005)(53936002)(8936002)(6916009)(486006)(106356001)(8676002)(105586002)(81166006)(7736002)(316002)(81156014)(99286004)(25786009)(97736004)(2616005)(14454004)(6486002)(6512007)(102836004)(186003)(82746002)(446003)(11346002)(36756003)(33656002)(53546011)(4326008)(305945005)(6246003)(54906003)(57306001)(5660300002)(46003)(6436002)(83716004)(76176011)(71200400001)(6116002)(68736007)(86362001)(71190400001)(229853002)(6506007)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1197;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VZGF7gI30RaEJ/+tdJwfhsEybehsvqYgILCOCmo/vi09eqsWaQxfw25/mP0X/0AHfUSuqC65eqEkF9ZGQCPQ6IPuG2cXr7rqL+/Bts0xpYRdlA66enSDgUe4H3IH1GI8ZgiK1HIXgE291/9zspkOGS5dBPB5p4Ct+kG6rN73JnfpnjPWgeSrvPHlQlXL8TB2nxaGTVje7x5VT4XFQtact2U++Gmf0gKmLtreyiqpKKNXTC4nany+QHKpgXCRT5hhgFizqHpZqWBNVL2XRpoWWH5OuQxvk/Md7zl05qOXhaT5JcFpendgW5FF6DQ+/rDlzK5HLch5cyVufBxF/G3BgztCc5J8R1Tt2Ng79hcX242EorNwxava07bWfB8Oy3jQo/DrtegClVPipI390ic0jUWa8wagqPardyiwiyihWCY=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <17EB9EB6B1CF244793546F0C6BF86115@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 4 Mar 2019 14:37:36 -0500
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MJVY8-1gh14P47YG-00JvBc; Mon, 04 Mar 2019 20:37:26 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] xfs: mark xfs_dir2_sf_entry_t as __packed again
+Date:   Mon,  4 Mar 2019 20:36:47 +0100
+Message-Id: <20190304193723.657089-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11e00f3f-1e50-44db-fd95-08d6a0d8aa44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2019 19:36:14.6879
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1197
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-04_09:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:wXjoFVzi3CaIX/kd0PSUSW/UMteqMiuiM0hOYrJAchPiuY8ucN2
+ szrEsz+19lnKPNjoEl9LQgTRfObe0rGn1aFFWfSRR8mbvdZitzBOrcL9+GVS2mRNAIKbHh0
+ oOH3xgrcveCiwx/TKDOhhqdd2dJa5YhL5859Hs7UxyrkYQFMV8IXNE+vecaYUqEOKANZBcM
+ Qe0WFJix/pAqM3o4ncuug==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6x01TYg4aRM=:STmeLI/8ogrJQE2/kLUYp+
+ 1JeloQY3OSBYYrSeAKDpOwicDLnQO0PVirGa8XKz8oOFpj5VCNuVeOhoYkGWV01uYdHtJaIgL
+ aJ3+DebPhMlQlinKQxs1qmc5AYjCjZFmMCM/KZIdKwSIc6JOyPjkkJWW3Ih5LFLPuea/WAkLt
+ n5iofEPRkvwvi7f7WFcW3/UeB0sniRCook2AEDPpzzdWfx9sqXAmeQvpjSQ0T3wHVuy5WFdVN
+ sPEw4rh6YVBuhnNyz/7Vjs8YZRt37IPG6yDLERxpNG6BjzUWJ2U0M58tTt1mgVA73VrScrfjZ
+ jKxyHkkPd1eIJ9v4TvAyApyMEWwvHSIUg6ZSd4p9Enrc9ngvLI7PINw+9/xoIUsYibWI92RsY
+ 4n9Wd5Ncl4wMG9OAmIjB/3QDJZzr875CEygyIUzQ2wkyav9aaSr0+djLc72qQHoy5H4qf1bEw
+ 10TpsGRcrLwoNHeAMdWdAaHul6rxoam8KfOgXZ3GI9CWf9GgQE+1j0XSokkKPOUKgP/QDTLXq
+ 2kPTk1UkrSLMdzxKDKfOdAKFSasGJuxEfdUc6FCMkddDY8Xd2ArN+QgRZuF68dCTFNP/H7dlR
+ 8PF+afh0p+/S7ZQ2l0CPYO/jARMh17a1G2J2NPg+p2vVgfjgOoYQkaOQ+WPAk7su9iOuwq4PZ
+ hR701LC4Mf17Ht8P63DMnDqFYrFZmN8Mfgt8ghn2RuJQzbTztEcfmkDDuPaG4D+KYpalu3EAn
+ K9Fgtzm/PW4jfLZm844DyaCwjEIEA7U3K+DKLA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For ARM OABI builds, we run into a compile time assertion:
 
+inlined from 'init_xfs_fs' at /git/arm-soc/fs/xfs/xfs_super.c:1991:2:
+fs/xfs/xfs_ondisk.h:119:208: error: call to '__compiletime_assert_119' declared with attribute error: XFS: sizeof(xfs_dir2_sf_entry_t) is wrong, expected 3
 
-> On Mar 4, 2019, at 5:52 AM, Jiri Olsa <jolsa@redhat.com> wrote:
->=20
-> On Wed, Feb 27, 2019 at 09:06:35PM -0800, Song Liu wrote:
->=20
-> SNIP
->=20
->> +static int process_bpf_prog_info(struct feat_fd *ff,
->> +				 void *data __maybe_unused)
->> +{
->> +	struct bpf_prog_info_linear *info_linear;
->> +	struct bpf_prog_info_node *info_node;
->> +	struct perf_env *env =3D &ff->ph->env;
->> +	u32 count, i;
->> +	int err =3D -1;
->> +
->> +	if (do_read_u32(ff, &count))
->> +		return -1;
->> +
->> +	down_write(&env->bpf_progs.lock);
->> +
->> +	for (i =3D 0; i < count; ++i) {
->> +		u32 info_len, data_len;
->> +
->> +		info_linear =3D NULL;
->> +		info_node =3D NULL;
->> +		if (do_read_u32(ff, &info_len))
->> +			goto out;
->> +		if (do_read_u32(ff, &data_len))
->> +			goto out;
->> +
->> +		if (info_len > sizeof(struct bpf_prog_info)) {
->> +			pr_warning("detected invalid bpf_prog_info\n");
->> +			goto out;
->> +		}
->> +
->> +		info_linear =3D malloc(sizeof(struct bpf_prog_info_linear) +
->> +				     data_len);
->> +		if (!info_linear)
->> +			goto out;
->> +		info_linear->info_len =3D sizeof(struct bpf_prog_info);
->> +		info_linear->data_len =3D data_len;
->> +		if (do_read_u64(ff, (u64 *)(&info_linear->arrays)))
->> +			goto out;
->> +		if (__do_read(ff, &info_linear->info, info_len))
->> +			goto out;
->> +		if (info_len < sizeof(struct bpf_prog_info))
->> +			memset(((void *)(&info_linear->info)) + info_len, 0,
->> +			       sizeof(struct bpf_prog_info) - info_len);
->> +
->> +		if (__do_read(ff, info_linear->data, data_len))
->> +			goto out;
->> +
->> +		/* endian mismatch, drop the info, continue */
->> +		if (ff->ph->needs_swap) {
->> +			free(info_linear);
->> +			continue;
->> +		}
->=20
-> so in this case we can check for needs_swap in the begining
-> of the function and bail out without reading all the data
+While ARM OABI is pretty much dead and fails to build for typical
+configurations on modern architectures (ARMv6 or higher), and has
+been declared deprecated in user space since gcc-4.6, the kernel
+still allows it to used for building the kernel.
 
-If we bail out, perf-record will fail. If we read all the data=20
-but ignore them, perf-record will continue without bpf annotation=20
-support. I think the latter is a better experience with little=20
-effort here.=20
+In commit 8353a649f577 ("xfs: kill xfs_dir2_sf_off_t"), Christoph
+removed the old __arch_pack annotation that made it possible to
+build xfs with oddball ABIs. However, OABI not only requrires
+padding around short structure but still adds padding after this
+change. There is no harm to unconditionally mark the structure as
+__packed now, and that will do the right thing here.
 
->=20
-> also please display soem error message saying we don't support
-> ebpf progs data report over the different endianity
+As of commit aa2dd0ad4d6d ("xfs: remove __arch_pack"), we need to
+use __packed here as well, instead of the old __arch_pack.
 
-I will add a warning in the next version.=20
+Fixes: 8353a649f577 ("xfs: kill xfs_dir2_sf_off_t")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/xfs/libxfs/xfs_da_format.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Song
+diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
+index ae654e06b2fb..fa8f07451d39 100644
+--- a/fs/xfs/libxfs/xfs_da_format.h
++++ b/fs/xfs/libxfs/xfs_da_format.h
+@@ -230,7 +230,7 @@ typedef struct xfs_dir2_sf_entry {
+ 	 * A 64-bit or 32-bit inode number follows here, at a variable offset
+ 	 * after the name.
+ 	 */
+-} xfs_dir2_sf_entry_t;
++} __packed xfs_dir2_sf_entry_t;
+ 
+ static inline int xfs_dir2_sf_hdr_size(int i8count)
+ {
+-- 
+2.20.0
 
