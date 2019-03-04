@@ -2,223 +2,337 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4526BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A911C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C8620863
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="WZjtw8Ir"
+	by mail.kernel.org (Postfix) with ESMTP id 2BDF921019
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfCDG1e (ORCPT
+        id S1726172AbfCDG1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 01:27:34 -0500
-Received: from mail-eopbgr40056.outbound.protection.outlook.com ([40.107.4.56]:40078
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        Mon, 4 Mar 2019 01:27:39 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4205 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725550AbfCDG1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 01:27:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nzd+WP9QwjGYldelJPREV9VguArk6HTZmxt4yrGFb/8=;
- b=WZjtw8IrIX/7eYg8zkzrPMfJ0B8nTDXN/l/GvceCIDg8GX8QHcTktpFsGXYaQo1bmdhF5eBMniEMucUmbyVqU3J58OJ+YxVn78IstuFPTgB6/U1iDIEhxbIL7ZpSOl04FOr92fvuBtiKdTlBoXZ97tkeCWuqr3wJANgE+aFEyc0=
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.135.8) by
- VI1PR0501MB2206.eurprd05.prod.outlook.com (10.169.134.141) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.18; Mon, 4 Mar 2019 06:27:26 +0000
-Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::a0b8:7ed8:d657:2f59]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
- ([fe80::a0b8:7ed8:d657:2f59%6]) with mapi id 15.20.1665.019; Mon, 4 Mar 2019
- 06:27:26 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>
-CC:     Steve Wise <swise@opengridcomputing.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?utf-8?B?SMOla29uIEJ1Z2dl?= <haakon.bugge@oracle.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] RDMA/cma: Make CM response timeout and # CM retries
- configurable
-Thread-Topic: [PATCH] RDMA/cma: Make CM response timeout and # CM retries
- configurable
-Thread-Index: AQHUxuOLFTmJ2VByLkCUdOgKpY7Z6aXsC8eAgAAKpwCAAApjgIAA+sgAgA3x7NA=
-Date:   Mon, 4 Mar 2019 06:27:26 +0000
-Message-ID: <VI1PR0501MB2271E8A704DD21EF81C7DC24D1710@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-References: <20190217170909.1178575-1-haakon.bugge@oracle.com>
- <20190222163637.GA9819@ziepe.ca>
- <afadc799-b547-5c20-64d2-75fa0f64cd9e@opengridcomputing.com>
- <C7922E85-CA43-479A-8021-DADD59FF5BE7@redhat.com>
- <20190223084930.GJ23561@mtr-leonro.mtl.com>
-In-Reply-To: <20190223084930.GJ23561@mtr-leonro.mtl.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [68.203.16.89]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9b3822a0-87b2-4989-261a-08d6a06a7862
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:VI1PR0501MB2206;
-x-ms-traffictypediagnostic: VI1PR0501MB2206:
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtWSTFQUjA1MDFNQjIyMDY7MjM6ZDZUMDZyZkluOHdIdy9sRTA4OVp0b0Js?=
- =?utf-8?B?UGowdDloeXd5N2tmZ1R0Q3puMjJOQUxlV3QyWjQ4M3NkbFNIb2MzT1drT1J4?=
- =?utf-8?B?TE8wVmlBOXd1aVVoSEQrbFZibjVNaXZBaEJxN2hhUTMyaVZMODF0ekdYbytP?=
- =?utf-8?B?YjAwY0U1M3dSaHhKbUZyRHlpSCthenpLRjF6WEFvYmt1NHA2bTkzY2xxcGhM?=
- =?utf-8?B?UTVBb2lybkdKazh6M051Vy9uT1l5WXl3Y090YlVla0JQdUU5RCtZZjFCYjI5?=
- =?utf-8?B?YzNjdVQxZ0xoUktyVnZvcEhJV1FQSUQ4aWlLU0pUbHFvQ3MycURVMVZkdFZx?=
- =?utf-8?B?dmplMmRkdStxV3NrOHZVZGduV1VESW5PVFRNZVdoU09wYndpTGNScU9QWVJE?=
- =?utf-8?B?dFdwZEoxd1BKWi9ydktaVG95ajB0WldVR3pEUkhzTWM4Qk1oL1BnUmpZMTBw?=
- =?utf-8?B?QnQzTHNlRm84d3hvc0dEZE85c1MwMDZ5VUx0c25sWS9GUEJsamxORDJjUW1x?=
- =?utf-8?B?am8yRWpEdm5mZVg4R2N4MkxHMHpodGF0YW9yVWN1YVpseGFOb3B4ZFFUaFp0?=
- =?utf-8?B?dEZPZnY1aEsvWG5qWnFuMjdOS0ZXRTdRTjdlR3Q3enlGQlN5MXh6QnJtUmZn?=
- =?utf-8?B?YWhFWFRZZ3lrRDBnd01KWkNpMWgvVjlLQllFL3ZvRERjRkp4TUM1UFIrWkRC?=
- =?utf-8?B?UEtrdEtLVzFHQWJObzRWRHl2aXVNaS8wRlpEdFJvWXQyb1BUQWNIVng1bHFu?=
- =?utf-8?B?aFV0dlZDWjB3TUVkMjR6MFRDRHZzbUhxbHJlTjJvU09ta2l2d0NWSkx0bHc3?=
- =?utf-8?B?ekJ5WGsvOFAwNUM0NlJmSXhBN0dEeExhNURnMnpDSmdac1RGUnJaR3lTRkxC?=
- =?utf-8?B?Qm5YbjBpUDAraFRVbDRKcTR6cTdoYjNtdm5RNmVUOEx4RXBsbVNhY3A1UDlu?=
- =?utf-8?B?QTNsTGJYcTc2V2JVYlVzZzFzSEJ3QWxmekVzWEZweXU5M01jN1d3L21RODYv?=
- =?utf-8?B?S3F6R1NOQ0xmOE5qdnZReXpqb0VYZW5Pc3lVVmdLN2pJZTZkVGt3UW9lRDhw?=
- =?utf-8?B?Z2djbkhJRmhWdFl3dkhFeUk1MGR3V3g2cy91M1UxR3RkREM1Smgvc21lWnpx?=
- =?utf-8?B?OVRNNGpGVXlYME1xYVRxT2VVV0lXeCtndmF4azhSUWFaNS9VWmF5M2t2Zmlp?=
- =?utf-8?B?UTdheWd3ZGJIRTFMYzhuME9XOXR6eGl1NHEwVVU2S3RMUlJsRGxKK1pMS0VT?=
- =?utf-8?B?V3cyU0NHRVFHUGM3bGZuZ01TV084RklQN0NTcU1IV0JZek1LajdDYm9xSnNp?=
- =?utf-8?B?RzJkb1JBS0Zra0pvSFllc2MyTUpraHRtMkpRc3FpYnBDUU0wemZsT240RmFI?=
- =?utf-8?B?MWIzbXJvQ3FwcGVBMVBMVFArUjltUjYxdUp4Sis0ZEN3eFZqVTBud2dSdTV6?=
- =?utf-8?B?VnBXOTlFZWh3R3l5SGFBcVZHdlV5SG1Sa2lrRktVUDFZMC9YU2ErT2VFaEl3?=
- =?utf-8?B?MFpYVnFObXpJcnQvQWtwbUxtbTlxaHRyb2tSd3ovZTlOamtmMmZHU0pDVXVV?=
- =?utf-8?B?QldORm5PMFQ3eWgwOE9QTzdtV2JGVFZtRWlYaG9UN1c3QythcUtwMkcrM0Er?=
- =?utf-8?B?L2s0cFdiVTRpNzlhZnczUElYZGNZWVE5bEJaa2lPREp0TFByN0RxS0V2YTlW?=
- =?utf-8?Q?0VTuExI5+ClgxHCvcAPwrqAsFI7CHi2SpnOSGiogJ?=
-x-microsoft-antispam-prvs: <VI1PR0501MB220628F99D74E22032F1CAD9D1710@VI1PR0501MB2206.eurprd05.prod.outlook.com>
-x-forefront-prvs: 09669DB681
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(39860400002)(366004)(13464003)(189003)(199004)(97736004)(71200400001)(71190400001)(3846002)(256004)(4326008)(81166006)(305945005)(6246003)(6116002)(8936002)(25786009)(52536013)(81156014)(8676002)(76176011)(478600001)(53546011)(102836004)(6506007)(14454004)(5660300002)(66066001)(86362001)(7736002)(99286004)(74316002)(7696005)(229853002)(33656002)(93886005)(53936002)(55016002)(6436002)(186003)(446003)(2906002)(9686003)(110136005)(105586002)(26005)(106356001)(11346002)(486006)(68736007)(54906003)(476003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2206;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: nyqXjj84Z5BpozcG7X+kTc0JFH4fgCmUsobRK/bqsfS+i51aN3fOJtiYU0V0g5ZKhIiVXmC0M7hc6xDf59NlXmTGNHFLQ7tt2tSYZcXN2nYdzQ6zOROX2hAkPxrS1W6BPQoaEK2sWk5Fj60w3O780EjYV4ZNb9jCIW2S69RX3HfbAu02LsaHQNLLACHcHnGnhjvdjJOSymF+87E9l8aBCYvbMQJ8KG6qR+rHkkrKrqmVMFIB1UDkeWkx0aH2sLgfFl9rWKzbTaeHcLVBoEuVU6CRx/low6wEiuO9P50hjGcav0wGPF6rdYWM4iMHBskFo3WPdGzmX9XYVFYrCLWJLxoDCuS2OGQ8phB5RShhcaI6OX8A8AbqH4CxpOT0iaOgNncCCmfq7eMFXBCJGLDQ4h8f5q/l1/PcNiZHNt473a4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725550AbfCDG1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 01:27:38 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1B32DB25AF1F972FC4F6;
+        Mon,  4 Mar 2019 14:27:37 +0800 (CST)
+Received: from [127.0.0.1] (10.134.22.195) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Mon, 4 Mar 2019
+ 14:27:34 +0800
+Subject: Re: [PATCH v4] f2fs: add bio cache for IPU
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20190219081529.5106-1-yuchao0@huawei.com>
+ <51637fbc-2b55-8215-952e-b155487cc63d@huawei.com>
+ <20190301175510.GB8246@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <a1f900d2-bd1f-149e-43d9-a49ee2cb064a@huawei.com>
+Date:   Mon, 4 Mar 2019 14:27:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b3822a0-87b2-4989-261a-08d6a06a7862
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2019 06:27:26.4147
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2206
+In-Reply-To: <20190301175510.GB8246@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVvbiBSb21hbm92c2t5
-IDxsZW9uQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IFNhdHVyZGF5LCBGZWJydWFyeSAyMywgMjAxOSAy
-OjUwIEFNDQo+IFRvOiBEb3VnIExlZGZvcmQgPGRsZWRmb3JkQHJlZGhhdC5jb20+DQo+IENjOiBT
-dGV2ZSBXaXNlIDxzd2lzZUBvcGVuZ3JpZGNvbXB1dGluZy5jb20+OyBKYXNvbiBHdW50aG9ycGUN
-Cj4gPGpnZ0B6aWVwZS5jYT47IEjDpWtvbiBCdWdnZSA8aGFha29uLmJ1Z2dlQG9yYWNsZS5jb20+
-OyBQYXJhdiBQYW5kaXQNCj4gPHBhcmF2QG1lbGxhbm94LmNvbT47IGxpbnV4LXJkbWFAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBS
-ZTogW1BBVENIXSBSRE1BL2NtYTogTWFrZSBDTSByZXNwb25zZSB0aW1lb3V0IGFuZCAjIENNDQo+
-IHJldHJpZXMgY29uZmlndXJhYmxlDQo+IA0KPiBPbiBGcmksIEZlYiAyMiwgMjAxOSBhdCAxMjo1
-MTo1NVBNIC0wNTAwLCBEb3VnIExlZGZvcmQgd3JvdGU6DQo+ID4NCj4gPg0KPiA+ID4gT24gRmVi
-IDIyLCAyMDE5LCBhdCAxMjoxNCBQTSwgU3RldmUgV2lzZQ0KPiA8c3dpc2VAb3BlbmdyaWRjb21w
-dXRpbmcuY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPg0KPiA+ID4gT24gMi8yMi8yMDE5IDEwOjM2
-IEFNLCBKYXNvbiBHdW50aG9ycGUgd3JvdGU6DQo+ID4gPj4gT24gU3VuLCBGZWIgMTcsIDIwMTkg
-YXQgMDY6MDk6MDlQTSArMDEwMCwgSMOla29uIEJ1Z2dlIHdyb3RlOg0KPiA+ID4+PiBEdXJpbmcg
-Y2VydGFpbiB3b3JrbG9hZHMsIHRoZSBkZWZhdWx0IENNIHJlc3BvbnNlIHRpbWVvdXQgaXMgdG9v
-DQo+ID4gPj4+IHNob3J0LCBsZWFkaW5nIHRvIGV4Y2Vzc2l2ZSByZXRyaWVzLiBIZW5jZSwgbWFr
-ZSBpdCBjb25maWd1cmFibGUNCj4gPiA+Pj4gdGhyb3VnaCBzeXNjdGwuIFdoaWxlIGF0IGl0LCBh
-bHNvIG1ha2UgbnVtYmVyIG9mIENNIHJldHJpZXMNCj4gPiA+Pj4gY29uZmlndXJhYmxlLg0KPiA+
-ID4+Pg0KPiA+ID4+PiBUaGUgZGVmYXVsdHMgYXJlIG5vdCBjaGFuZ2VkLg0KPiA+ID4+Pg0KPiA+
-ID4+PiBTaWduZWQtb2ZmLWJ5OiBIw6Vrb24gQnVnZ2UgPGhhYWtvbi5idWdnZUBvcmFjbGUuY29t
-Pg0KPiA+ID4+PiBkcml2ZXJzL2luZmluaWJhbmQvY29yZS9jbWEuYyB8IDUxDQo+ID4gPj4+ICsr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tDQo+ID4gPj4+IDEgZmlsZSBjaGFuZ2Vk
-LCA0NCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiA+ID4+Pg0KPiA+ID4+PiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9pbmZpbmliYW5kL2NvcmUvY21hLmMNCj4gPiA+Pj4gYi9kcml2ZXJz
-L2luZmluaWJhbmQvY29yZS9jbWEuYyBpbmRleCBjNDM1MTI3NTJiOGEuLmNlOTllMWNkMTAyOQ0K
-PiA+ID4+PiAxMDA2NDQNCj4gPiA+Pj4gKysrIGIvZHJpdmVycy9pbmZpbmliYW5kL2NvcmUvY21h
-LmMNCj4gPiA+Pj4gQEAgLTQzLDYgKzQzLDcgQEANCj4gPiA+Pj4gI2luY2x1ZGUgPGxpbnV4L2lu
-ZXRkZXZpY2UuaD4NCj4gPiA+Pj4gI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPiA+Pj4gI2lu
-Y2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ID4+PiArI2luY2x1ZGUgPGxpbnV4L3N5c2N0bC5o
-Pg0KPiA+ID4+PiAjaW5jbHVkZSA8bmV0L3JvdXRlLmg+DQo+ID4gPj4+DQo+ID4gPj4+ICNpbmNs
-dWRlIDxuZXQvbmV0X25hbWVzcGFjZS5oPg0KPiA+ID4+PiBAQCAtNjgsMTMgKzY5LDQ2IEBAIE1P
-RFVMRV9BVVRIT1IoIlNlYW4gSGVmdHkiKTsNCj4gPiA+Pj4gTU9EVUxFX0RFU0NSSVBUSU9OKCJH
-ZW5lcmljIFJETUEgQ00gQWdlbnQiKTsNCj4gTU9EVUxFX0xJQ0VOU0UoIkR1YWwNCj4gPiA+Pj4g
-QlNEL0dQTCIpOw0KPiA+ID4+Pg0KPiA+ID4+PiAtI2RlZmluZSBDTUFfQ01fUkVTUE9OU0VfVElN
-RU9VVCAyMCAjZGVmaW5lDQo+ID4gPj4+IENNQV9RVUVSWV9DTEFTU1BPUlRfSU5GT19USU1FT1VU
-IDMwMDAgLSNkZWZpbmUNCj4gQ01BX01BWF9DTV9SRVRSSUVTDQo+ID4gPj4+IDE1ICNkZWZpbmUg
-Q01BX0NNX01SQV9TRVRUSU5HIChJQl9DTV9NUkFfRkxBR19ERUxBWSB8IDI0KQ0KPiAjZGVmaW5l
-DQo+ID4gPj4+IENNQV9JQk9FX1BBQ0tFVF9MSUZFVElNRSAxOCAjZGVmaW5lDQo+IENNQV9QUkVG
-RVJSRURfUk9DRV9HSURfVFlQRQ0KPiA+ID4+PiBJQl9HSURfVFlQRV9ST0NFX1VEUF9FTkNBUA0K
-PiA+ID4+Pg0KPiA+ID4+PiArI2RlZmluZSBDTUFfREZMVF9DTV9SRVNQT05TRV9USU1FT1VUIDIw
-IHN0YXRpYyBpbnQNCj4gPiA+Pj4gK2NtYV9jbV9yZXNwb25zZV90aW1lb3V0ID0gQ01BX0RGTFRf
-Q01fUkVTUE9OU0VfVElNRU9VVDsNCj4gc3RhdGljDQo+ID4gPj4+ICtpbnQgY21hX2NtX3Jlc3Bv
-bnNlX3RpbWVvdXRfbWluID0gODsgc3RhdGljIGludA0KPiA+ID4+PiArY21hX2NtX3Jlc3BvbnNl
-X3RpbWVvdXRfbWF4ID0gMzE7ICN1bmRlZg0KPiA+ID4+PiArQ01BX0RGTFRfQ01fUkVTUE9OU0Vf
-VElNRU9VVA0KPiA+ID4+PiArDQo+ID4gPj4+ICsjZGVmaW5lIENNQV9ERkxUX01BWF9DTV9SRVRS
-SUVTIDE1IHN0YXRpYyBpbnQNCj4gY21hX21heF9jbV9yZXRyaWVzDQo+ID4gPj4+ICs9IENNQV9E
-RkxUX01BWF9DTV9SRVRSSUVTOyBzdGF0aWMgaW50IGNtYV9tYXhfY21fcmV0cmllc19taW4NCj4g
-PSAxOw0KPiA+ID4+PiArc3RhdGljIGludCBjbWFfbWF4X2NtX3JldHJpZXNfbWF4ID0gMTAwOyAj
-dW5kZWYNCj4gPiA+Pj4gK0NNQV9ERkxUX01BWF9DTV9SRVRSSUVTDQo+ID4gPj4+ICsNCj4gPiA+
-Pj4gK3N0YXRpYyBzdHJ1Y3QgY3RsX3RhYmxlX2hlYWRlciAqY21hX2N0bF90YWJsZV9oZHI7IHN0
-YXRpYyBzdHJ1Y3QNCj4gPiA+Pj4gK2N0bF90YWJsZSBjbWFfY3RsX3RhYmxlW10gPSB7DQo+ID4g
-Pj4+ICsJew0KPiA+ID4+PiArCQkucHJvY25hbWUJPSAiY21hX2NtX3Jlc3BvbnNlX3RpbWVvdXQi
-LA0KPiA+ID4+PiArCQkuZGF0YQkJPSAmY21hX2NtX3Jlc3BvbnNlX3RpbWVvdXQsDQo+ID4gPj4+
-ICsJCS5tYXhsZW4JCT0gc2l6ZW9mKGNtYV9jbV9yZXNwb25zZV90aW1lb3V0KSwNCj4gPiA+Pj4g
-KwkJLm1vZGUJCT0gMDY0NCwNCj4gPiA+Pj4gKwkJLnByb2NfaGFuZGxlcgk9IHByb2NfZG9pbnR2
-ZWNfbWlubWF4LA0KPiA+ID4+PiArCQkuZXh0cmExCQk9ICZjbWFfY21fcmVzcG9uc2VfdGltZW91
-dF9taW4sDQo+ID4gPj4+ICsJCS5leHRyYTIJCT0gJmNtYV9jbV9yZXNwb25zZV90aW1lb3V0X21h
-eCwNCj4gPiA+Pj4gKwl9LA0KPiA+ID4+PiArCXsNCj4gPiA+Pj4gKwkJLnByb2NuYW1lCT0gImNt
-YV9tYXhfY21fcmV0cmllcyIsDQo+ID4gPj4+ICsJCS5kYXRhCQk9ICZjbWFfbWF4X2NtX3JldHJp
-ZXMsDQo+ID4gPj4+ICsJCS5tYXhsZW4JCT0gc2l6ZW9mKGNtYV9tYXhfY21fcmV0cmllcyksDQo+
-ID4gPj4+ICsJCS5tb2RlCQk9IDA2NDQsDQo+ID4gPj4+ICsJCS5wcm9jX2hhbmRsZXIJPSBwcm9j
-X2RvaW50dmVjX21pbm1heCwNCj4gPiA+Pj4gKwkJLmV4dHJhMQkJPSAmY21hX21heF9jbV9yZXRy
-aWVzX21pbiwNCj4gPiA+Pj4gKwkJLmV4dHJhMgkJPSAmY21hX21heF9jbV9yZXRyaWVzX21heCwN
-Cj4gPiA+Pj4gKwl9LA0KPiA+ID4+PiArCXsgfQ0KPiA+ID4+PiArfTsNCj4gPiA+PiBJcyBzeXNj
-dGwgdGhlIHJpZ2h0IGFwcHJvYWNoIGhlcmU/IFNob3VsZCBpdCBiZSByZG1hIHRvb2wgaW5zdGVh
-ZD8NCj4gPiA+Pg0KPiA+ID4+IEphc29uDQo+ID4gPg0KPiA+ID4gVGhlcmUgYXJlIG90aGVyIHJk
-bWEgc3lzY3RscyBjdXJyZW50bHk6ICBuZXQucmRtYV91Y20ubWF4X2JhY2tsb2cNCj4gPiA+IGFu
-ZCBuZXQuaXdfY20uZGVmYXVsdF9iYWNrbG9nLiAgVGhlIGNvcmUgbmV0d29yayBzdGFjayBzZWVt
-cyB0byB1c2UNCj4gPiA+IHN5c2N0bCBhbmQgbm90IGlwIHRvb2wgdG8gc2V0IGJhc2ljYWxseSBn
-bG9iYWxzLg0KPiA+ID4NCj4gPiA+IFRvIHVzZSByZG1hIHRvb2wsIHdlJ2QgaGF2ZSB0byBoYXZl
-IHNvbWUgY29uY2VwdCBvZiBhICJtb2R1bGUiDQo+ID4gPiBvYmplY3QsIEkgZ3Vlc3MuICBJRSB0
-aGVyZSdzIGRldiwgbGluaywgYW5kIHJlc291cmNlIHJkbWEgdG9vbCBvYmplY3RzDQo+IGN1cnJl
-bnRseS4NCj4gPiA+IEJ1dCB0aGVzZSBjbWEgdGltZW91dCBzZXR0aW5ncyBhcmUgcmVhbGx5IG5v
-dCBwZXIgZGV2LCBsaW5rLCBub3IgYQ0KPiA+ID4gcmVzb3VyY2UuICAgTWF5YmUgd2UgaGF2ZSBq
-dXN0IGEgImNvcmUiIG9iamVjdDogIHJkbWEgY29yZSBzZXQNCj4gPiA+IGNtYV9tYXhfY21fcmV0
-cmllcyBtaW4gOCBtYXggMzAuDQo+ID4NCj4gPiBJIGRvbuKAmXQga25vdywgSSB0aGluayB5b3Ug
-bWFrZSBhIGZhaXJseSBnb29kIGFyZ3VtZW50IGZvciBsZWF2aW5nIGl0IGFzIGENCj4gc3lzY3Rs
-LiAgV2UgaGF2ZSBpbmZyYXN0cnVjdHVyZSBpbiBwbGFjZSBmb3IgYWRtaW5zIHRvIHNldCBwZXJz
-aXN0ZW50IHN5c2N0bA0KPiBzZXR0aW5ncy4gIFRoZSBwZXIgZGV2aWNlL2xpbmsgc2V0dGluZ3Mg
-bmVlZCBzb21ldGhpbmcgZGlmZmVyZW50IGJlY2F1c2UgbGluaw0KPiBuYW1lcyBhbmQgc3VjaCBj
-YW4gY2hhbmdlLiAgU2luY2UgdGhlc2UgYXJlIGdsb2JhbHMsIEnigJlkIGxlYXZlIHRoZW0gd2hl
-cmUNCj4gdGhleSBhcmUuDQo+ID4NCj4gDQo+IEkgaGF2ZSBwYXRjaGVzIGZyb20gUGFyYXYgd2hp
-Y2ggZXh0ZW5kIHJkbWF0b29sIHRvIHNldCBnbG9iYWwgdG8gd2hvbGUNCj4gc3RhY2sgcGFyYW1l
-dGVycywgc29tZXRoaW5nIGxpa2UgInJkbWEgc3lzdGVtIC4uLiIsIHNvIHRoZSBvcHRpb24gdG8g
-c2V0DQo+IHRocm91Z2ggcmRtYXRvb2wgZ2xvYmFsIHBhcmFtZXRlcnMgZm9yIG1vZHVsZXMgZS5n
-LiAicmRtYSBzeXN0ZW0gY21hIHNldA0KPiAuLi4iDQo+IGV4aXN0cy4gQnV0IEknbSBub3Qgc3Vy
-ZSBpZiBpdCBpcyByaWdodCB0aGluZyB0byBkby4NCj4NCg0KSSB0aGluayB3ZSBzaG91bGQgdXNl
-IHJkbWFfbmxfcmVnaXN0ZXIoUkRNQV9OTF9SRE1BX0NNLCBjbWFfY2JfdGFibGUpIHdoaWNoIHdh
-cyByZW1vdmVkIGFzIHBhcnQgb2YgSUQgc3RhdHMgcmVtb3ZhbC4NCkJlY2F1c2Ugb2YgYmVsb3cg
-cmVhc29ucy4NCjEuIHJkbWEgbmV0bGluayBjb21tYW5kIGF1dG8gbG9hZHMgdGhlIG1vZHVsZQ0K
-Mi4gd2UgZG9uJ3QgbmVlZCB0byB3cml0ZSBhbnkgZXh0cmEgY29kZSB0byBkbyByZWdpc3Rlcl9u
-ZXRfc3lzY3RsICgpIGluIGVhY2ggbmV0bnMuDQpDYWxsZXIncyBza2IncyBuZXRucyB3aWxsIHJl
-YWQvd3JpdGUgdmFsdWUgb2YgcmVzcG9uc2VfdGltZW91dCBpbiAnc3RydWN0IGNtYV9wZXJuZXQn
-Lg0KMy4gbGFzdCB0aW1lIHN5c2N0bCBhZGRlZCBpbiBpcHY2IHdhcyBpbiAyMDE3IGluIG5ldC9p
-cHY2L2FkZHJjb25mLmMsIGhvd2V2ZXIgaXB2NCB3YXMgZG9uZSBpbiAyMDE4Lg0KDQpDdXJyZW50
-bHkgcmRtYV9jbS9yZG1hX3VjbWEgaGFzIGNvbmZpZ2ZzLCBzeXNjdGwuDQpXZSBhcmUgYWRkaW5n
-IG5ldGxpbmsgc3lzIHBhcmFtcyB0byBpYl9jb3JlLg0KDQpXZSBhbHJlYWR5IGhhdmUgMyBjbGll
-bnRzIGFuZCBpbmZyYSBidWlsdCB1c2luZyByZG1hX25sX3JlZ2lzdGVyKCkgbmV0bGluayAsIHNv
-IGhvb2tpbmcgdXAgdG8gbmV0bGluayB3aWxsIHByb3ZpZGUgdW5pZmllZCB3YXkgdG8gc2V0IHJk
-bWEgcGFyYW1zLg0KTGV0J3MganVzdCB1c2UgbmV0bGluayBmb3IgYW55IG5ldyBwYXJhbXMgdW5s
-ZXNzIGl0IGlzIG5vdCBkb2FibGUuDQoNCg==
+On 2019/3/2 1:55, Jaegeuk Kim wrote:
+> On 02/28, Chao Yu wrote:
+>> Ping,
+> 
+> Ditto.
+
+Copied.
+
+Thanks,
+
+> 
+>>
+>> On 2019/2/19 16:15, Chao Yu wrote:
+>>> SQLite in Wal mode may trigger sequential IPU write in db-wal file, after
+>>> commit d1b3e72d5490 ("f2fs: submit bio of in-place-update pages"), we
+>>> lost the chance of merging page in inner managed bio cache, result in
+>>> submitting more small-sized IO.
+>>>
+>>> So let's add temporary bio in writepages() to cache mergeable write IO as
+>>> much as possible.
+>>>
+>>> Test case:
+>>> 1. xfs_io -f /mnt/f2fs/file -c "pwrite 0 65536" -c "fsync"
+>>> 2. xfs_io -f /mnt/f2fs/file -c "pwrite 0 65536" -c "fsync"
+>>>
+>>> Before:
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65544, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65552, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65560, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65568, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65576, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65584, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65592, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65600, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65608, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65616, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65624, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65632, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65640, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65648, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65656, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65664, size = 4096
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), NODE, sector = 57352, size = 4096
+>>>
+>>> After:
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65544, size = 65536
+>>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), NODE, sector = 57368, size = 4096
+>>>
+>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>> ---
+>>> v4:
+>>> - fix to set *bio to NULL in f2fs_submit_ipu_bio()
+>>> - spread f2fs_submit_ipu_bio()
+>>> - fix to count dirty encrypted page correctly in f2fs_merge_page_bio()
+>>> - remove redundant assignment of fio->last_block
+>>>  fs/f2fs/data.c    | 88 ++++++++++++++++++++++++++++++++++++++++++-----
+>>>  fs/f2fs/f2fs.h    |  3 ++
+>>>  fs/f2fs/segment.c |  5 ++-
+>>>  3 files changed, 86 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>> index 35910ff23582..e4c183e85de8 100644
+>>> --- a/fs/f2fs/data.c
+>>> +++ b/fs/f2fs/data.c
+>>> @@ -296,20 +296,20 @@ static void __submit_merged_bio(struct f2fs_bio_info *io)
+>>>  	io->bio = NULL;
+>>>  }
+>>>  
+>>> -static bool __has_merged_page(struct f2fs_bio_info *io, struct inode *inode,
+>>> +static bool __has_merged_page(struct bio *bio, struct inode *inode,
+>>>  						struct page *page, nid_t ino)
+>>>  {
+>>>  	struct bio_vec *bvec;
+>>>  	struct page *target;
+>>>  	int i;
+>>>  
+>>> -	if (!io->bio)
+>>> +	if (!bio)
+>>>  		return false;
+>>>  
+>>>  	if (!inode && !page && !ino)
+>>>  		return true;
+>>>  
+>>> -	bio_for_each_segment_all(bvec, io->bio, i) {
+>>> +	bio_for_each_segment_all(bvec, bio, i) {
+>>>  
+>>>  		if (bvec->bv_page->mapping)
+>>>  			target = bvec->bv_page;
+>>> @@ -360,7 +360,7 @@ static void __submit_merged_write_cond(struct f2fs_sb_info *sbi,
+>>>  			struct f2fs_bio_info *io = sbi->write_io[btype] + temp;
+>>>  
+>>>  			down_read(&io->io_rwsem);
+>>> -			ret = __has_merged_page(io, inode, page, ino);
+>>> +			ret = __has_merged_page(io->bio, inode, page, ino);
+>>>  			up_read(&io->io_rwsem);
+>>>  		}
+>>>  		if (ret)
+>>> @@ -429,6 +429,61 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +int f2fs_merge_page_bio(struct f2fs_io_info *fio)
+>>> +{
+>>> +	struct bio *bio = *fio->bio;
+>>> +	struct page *page = fio->encrypted_page ?
+>>> +			fio->encrypted_page : fio->page;
+>>> +
+>>> +	if (!f2fs_is_valid_blkaddr(fio->sbi, fio->new_blkaddr,
+>>> +			__is_meta_io(fio) ? META_GENERIC : DATA_GENERIC))
+>>> +		return -EFAULT;
+>>> +
+>>> +	trace_f2fs_submit_page_bio(page, fio);
+>>> +	f2fs_trace_ios(fio, 0);
+>>> +
+>>> +	if (bio && (*fio->last_block + 1 != fio->new_blkaddr ||
+>>> +			!__same_bdev(fio->sbi, fio->new_blkaddr, bio))) {
+>>> +		__submit_bio(fio->sbi, bio, fio->type);
+>>> +		bio = NULL;
+>>> +	}
+>>> +alloc_new:
+>>> +	if (!bio) {
+>>> +		bio = __bio_alloc(fio->sbi, fio->new_blkaddr, fio->io_wbc,
+>>> +				BIO_MAX_PAGES, false, fio->type, fio->temp);
+>>> +		bio_set_op_attrs(bio, fio->op, fio->op_flags);
+>>> +	}
+>>> +
+>>> +	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
+>>> +		__submit_bio(fio->sbi, bio, fio->type);
+>>> +		bio = NULL;
+>>> +		goto alloc_new;
+>>> +	}
+>>> +
+>>> +	if (fio->io_wbc)
+>>> +		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
+>>> +
+>>> +	inc_page_count(fio->sbi, WB_DATA_TYPE(page));
+>>> +
+>>> +	*fio->last_block = fio->new_blkaddr;
+>>> +	*fio->bio = bio;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +void f2fs_submit_ipu_bio(struct f2fs_sb_info *sbi, struct bio **bio,
+>>> +							struct page *page)
+>>> +{
+>>> +	if (!bio)
+>>> +		return;
+>>> +
+>>> +	if (!__has_merged_page(*bio, NULL, page, 0))
+>>> +		return;
+>>> +
+>>> +	__submit_bio(sbi, *bio, DATA);
+>>> +	*bio = NULL;
+>>> +}
+>>> +
+>>>  void f2fs_submit_page_write(struct f2fs_io_info *fio)
+>>>  {
+>>>  	struct f2fs_sb_info *sbi = fio->sbi;
+>>> @@ -1854,6 +1909,8 @@ int f2fs_do_write_data_page(struct f2fs_io_info *fio)
+>>>  }
+>>>  
+>>>  static int __write_data_page(struct page *page, bool *submitted,
+>>> +				struct bio **bio,
+>>> +				sector_t *last_block,
+>>>  				struct writeback_control *wbc,
+>>>  				enum iostat_type io_type)
+>>>  {
+>>> @@ -1879,6 +1936,8 @@ static int __write_data_page(struct page *page, bool *submitted,
+>>>  		.need_lock = LOCK_RETRY,
+>>>  		.io_type = io_type,
+>>>  		.io_wbc = wbc,
+>>> +		.bio = bio,
+>>> +		.last_block = last_block,
+>>>  	};
+>>>  
+>>>  	trace_f2fs_writepage(page, DATA);
+>>> @@ -1976,10 +2035,13 @@ static int __write_data_page(struct page *page, bool *submitted,
+>>>  	}
+>>>  
+>>>  	unlock_page(page);
+>>> -	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode))
+>>> +	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode)) {
+>>> +		f2fs_submit_ipu_bio(sbi, bio, page);
+>>>  		f2fs_balance_fs(sbi, need_balance_fs);
+>>> +	}
+>>>  
+>>>  	if (unlikely(f2fs_cp_error(sbi))) {
+>>> +		f2fs_submit_ipu_bio(sbi, bio, page);
+>>>  		f2fs_submit_merged_write(sbi, DATA);
+>>>  		submitted = NULL;
+>>>  	}
+>>> @@ -2006,7 +2068,7 @@ static int __write_data_page(struct page *page, bool *submitted,
+>>>  static int f2fs_write_data_page(struct page *page,
+>>>  					struct writeback_control *wbc)
+>>>  {
+>>> -	return __write_data_page(page, NULL, wbc, FS_DATA_IO);
+>>> +	return __write_data_page(page, NULL, NULL, NULL, wbc, FS_DATA_IO);
+>>>  }
+>>>  
+>>>  /*
+>>> @@ -2022,6 +2084,8 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>>>  	int done = 0;
+>>>  	struct pagevec pvec;
+>>>  	struct f2fs_sb_info *sbi = F2FS_M_SB(mapping);
+>>> +	struct bio *bio = NULL;
+>>> +	sector_t last_block;
+>>>  	int nr_pages;
+>>>  	pgoff_t uninitialized_var(writeback_index);
+>>>  	pgoff_t index;
+>>> @@ -2098,17 +2162,20 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>>>  			}
+>>>  
+>>>  			if (PageWriteback(page)) {
+>>> -				if (wbc->sync_mode != WB_SYNC_NONE)
+>>> +				if (wbc->sync_mode != WB_SYNC_NONE) {
+>>>  					f2fs_wait_on_page_writeback(page,
+>>>  							DATA, true, true);
+>>> -				else
+>>> +					f2fs_submit_ipu_bio(sbi, &bio, page);
+>>> +				} else {
+>>>  					goto continue_unlock;
+>>> +				}
+>>>  			}
+>>>  
+>>>  			if (!clear_page_dirty_for_io(page))
+>>>  				goto continue_unlock;
+>>>  
+>>> -			ret = __write_data_page(page, &submitted, wbc, io_type);
+>>> +			ret = __write_data_page(page, &submitted, &bio,
+>>> +					&last_block, wbc, io_type);
+>>>  			if (unlikely(ret)) {
+>>>  				/*
+>>>  				 * keep nr_to_write, since vfs uses this to
+>>> @@ -2157,6 +2224,9 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>>>  	if (nwritten)
+>>>  		f2fs_submit_merged_write_cond(F2FS_M_SB(mapping), mapping->host,
+>>>  								NULL, 0, DATA);
+>>> +	/* submit cached bio of IPU write */
+>>> +	if (bio)
+>>> +		__submit_bio(sbi, bio, DATA);
+>>>  
+>>>  	return ret;
+>>>  }
+>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>> index 46db3ed87c84..7c4355927d28 100644
+>>> --- a/fs/f2fs/f2fs.h
+>>> +++ b/fs/f2fs/f2fs.h
+>>> @@ -1048,6 +1048,8 @@ struct f2fs_io_info {
+>>>  	bool retry;		/* need to reallocate block address */
+>>>  	enum iostat_type io_type;	/* io type */
+>>>  	struct writeback_control *io_wbc; /* writeback control */
+>>> +	struct bio **bio;		/* bio for ipu */
+>>> +	sector_t *last_block;		/* last block number in bio */
+>>>  	unsigned char version;		/* version of the node */
+>>>  };
+>>>  
+>>> @@ -3105,6 +3107,7 @@ void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
+>>>  				nid_t ino, enum page_type type);
+>>>  void f2fs_flush_merged_writes(struct f2fs_sb_info *sbi);
+>>>  int f2fs_submit_page_bio(struct f2fs_io_info *fio);
+>>> +int f2fs_merge_page_bio(struct f2fs_io_info *fio);
+>>>  void f2fs_submit_page_write(struct f2fs_io_info *fio);
+>>>  struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
+>>>  			block_t blk_addr, struct bio *bio);
+>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>> index b2167d53fb9d..66838ab2f21e 100644
+>>> --- a/fs/f2fs/segment.c
+>>> +++ b/fs/f2fs/segment.c
+>>> @@ -3196,7 +3196,10 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+>>>  
+>>>  	stat_inc_inplace_blocks(fio->sbi);
+>>>  
+>>> -	err = f2fs_submit_page_bio(fio);
+>>> +	if (fio->bio)
+>>> +		err = f2fs_merge_page_bio(fio);
+>>> +	else
+>>> +		err = f2fs_submit_page_bio(fio);
+>>>  	if (!err)
+>>>  		update_device_state(fio);
+>>>  
+>>>
+> 
+> .
+> 
+
