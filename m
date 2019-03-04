@@ -2,337 +2,159 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A911C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7CAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDF921019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0C520863
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="OJlZWhTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726172AbfCDG1j (ORCPT
+        id S1726034AbfCDGcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 01:27:39 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4205 "EHLO huawei.com"
+        Mon, 4 Mar 2019 01:32:02 -0500
+Received: from mail-eopbgr790083.outbound.protection.outlook.com ([40.107.79.83]:31136
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725550AbfCDG1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 01:27:38 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1B32DB25AF1F972FC4F6;
-        Mon,  4 Mar 2019 14:27:37 +0800 (CST)
-Received: from [127.0.0.1] (10.134.22.195) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Mon, 4 Mar 2019
- 14:27:34 +0800
-Subject: Re: [PATCH v4] f2fs: add bio cache for IPU
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20190219081529.5106-1-yuchao0@huawei.com>
- <51637fbc-2b55-8215-952e-b155487cc63d@huawei.com>
- <20190301175510.GB8246@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <a1f900d2-bd1f-149e-43d9-a49ee2cb064a@huawei.com>
-Date:   Mon, 4 Mar 2019 14:27:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725550AbfCDGcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 01:32:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YrQxZtPjhPkowum4D/KJgCY5/CNuNBsQW1RMcegMjDQ=;
+ b=OJlZWhTMLQc9+yiNtlj4+h8PULPW9LcTU0NAVeJTfNhIfbg1dCcbGlF7QE1wS1ouwTlnIJO3ovk4BrQVMS9fmqKuJD56Iy9XX/ge+nep7MVYLoAWIy+gf1SQ6dAOMSTrXiheFnzi6Bebd96uIFWjYbDbIog5I9Zvx6CHqg/KdPI=
+Received: from BN4PR12CA0003.namprd12.prod.outlook.com (2603:10b6:403:2::13)
+ by BYAPR12MB2965.namprd12.prod.outlook.com (2603:10b6:a03:d5::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1665.15; Mon, 4 Mar
+ 2019 06:31:57 +0000
+Received: from CO1NAM03FT009.eop-NAM03.prod.protection.outlook.com
+ (2a01:111:f400:7e48::204) by BN4PR12CA0003.outlook.office365.com
+ (2603:10b6:403:2::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1665.15 via Frontend
+ Transport; Mon, 4 Mar 2019 06:31:56 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; lists.freedesktop.org; dkim=none (message not signed)
+ header.d=none;lists.freedesktop.org; dmarc=permerror action=none
+ header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXCHOV01.amd.com (165.204.84.17) by
+ CO1NAM03FT009.mail.protection.outlook.com (10.152.80.67) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1643.13 via Frontend Transport; Mon, 4 Mar 2019 06:31:55 +0000
+Received: from hr-amur2 (10.34.1.3) by SATLEXCHOV01.amd.com (10.181.40.71)
+ with Microsoft SMTP Server (TLS) id 14.3.389.1; Mon, 4 Mar 2019 00:31:53
+ -0600
+Date:   Mon, 4 Mar 2019 14:32:57 +0800
+From:   Huang Rui <ray.huang@amd.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+CC:     Rex Zhu <rex.zhu@amd.com>, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S++/vW5pZw==?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kees Cook <keescook@chromium.org>,
+        <dri-devel@lists.freedesktop.org>, <amd-gfx@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amdgpu/powerplay: Fix missing break in switch
+ statement
+Message-ID: <20190304063256.GC10714@hr-amur2>
+References: <20190301212943.GA21585@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20190301175510.GB8246@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190301212943.GA21585@embeddedor>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(396003)(39860400002)(2980300002)(428003)(189003)(199004)(6916009)(58126008)(54906003)(47776003)(105586002)(86362001)(33716001)(55016002)(1076003)(104016004)(5660300002)(2906002)(46406003)(68736007)(50466002)(356004)(9686003)(6306002)(76176011)(229853002)(16586007)(316002)(106466001)(23726003)(6246003)(426003)(97756001)(8936002)(4326008)(476003)(53936002)(126002)(478600001)(446003)(8676002)(81156014)(81166006)(14444005)(11346002)(26005)(77096007)(33656002)(305945005)(97736004)(486006)(186003)(336012)(966005)(72206003)(107986001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2965;H:SATLEXCHOV01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c410957f-6d0b-400e-1a0b-08d6a06b18c4
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060);SRVR:BYAPR12MB2965;
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2965:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Exchange-Diagnostics: 1;BYAPR12MB2965;20:vlXrRnfMY1lRLm/O3Kaf3UPZx+GcaUW9TyqBsSbsKJx2IQ3s1AMTD80He4ZC4A098XoU2og2HhwOBA+hbTv7HS+KUhkY+WZEkGbEo5qkc4BI2b1LDrFe1aV/NRGgFvFud7IKtK9T+BFaMRS/hM8cER6k9CQwocGik696fkw2jUFLNvfCWaJZlcnJDm3ZUypkP5c7qdsDkfRxB9tuLMVqsZecmW9mMTWZPvULkedmrJqHAGoGBcFeq0HlQO3RUsO7ykC2VZCAQP/nRMEYrB/N2yAaDiEu2N79/fFBNeBvUo0GXoHpW6OzPlEtzASpE6muSwcsyCAgiJOeuQttwJZbKJSudD/9p5IvTPtOOEm/ZXKc6pn3EtMBRUMtPTQwGq1aWz6AoYGDrYnd1yb26PS2nvdlZH7M1Na/1X8wPHV5xs5qtGE95DlMEXuzC954IE8s5PUqNtWacziqDYTQq2XEqe4DDOlGizK1DOiWbIi7Z6wJn52evZOdU4hA7i+te7tB
+X-Microsoft-Antispam-PRVS: <BYAPR12MB2965D4A79A7D370FF01363D2EC710@BYAPR12MB2965.namprd12.prod.outlook.com>
+X-Forefront-PRVS: 09669DB681
+X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1;BYAPR12MB2965;23:vlE4Bbt4ZD1UWSx0J6uS5nNplWsGJ/OY5ljoW5Nzg?=
+ =?us-ascii?Q?SXxtDeLWvX3+uIjxAbW/Fu0DTZDNX8Mp3rLOA110T6lU0GHO0kYiQh1/RkMZ?=
+ =?us-ascii?Q?ofJJCvO5C+CuGHtmaJGhYZmHOz/HQ1EQPgBbkSp0raQ9kqImBNy3aMm5CtNg?=
+ =?us-ascii?Q?z7XWxFpSKqQ9IMW1NeAZmZ/amV0mJ+FoMoFKVai+GqLgB8V7vY7vvm1xbv7L?=
+ =?us-ascii?Q?hUsFdt2btYRHg5MRFVGeM41iEIxSQVfUEZcMKj5KnL7UNGMa9cVCYhg3WJdX?=
+ =?us-ascii?Q?HCSZjKSL8rW+iZTDPOGQtAS3xB8ooDpHag0tZ1QjU83HHnNWCg3kPTI9KqOj?=
+ =?us-ascii?Q?NR/V7XJZluFGbLXF+4ZWC3DSIU4tp3enoUIvXLSsDLxzT58N8iq98SzWXnaF?=
+ =?us-ascii?Q?CMlSFDlESw+WSYE/UhOqxv9xpT6SKRoCHDcoj50m4hADMn5kyplzusNwUCMZ?=
+ =?us-ascii?Q?/RLHwrRtWzyQ14NjT5+gU/VATVcmndJGSSLQzCroE7rEf9Bjky64NkhfXLzR?=
+ =?us-ascii?Q?oRBr5PlAymq35rtClY+R1hjnrnPb85MNRjt7h/tMWCWIon22iJj43K8v8ULW?=
+ =?us-ascii?Q?G6f4fvnDrXVz25FvY1xWHzwNX51ZbXMchqyXWNTMZkiuj030vQbV7mgTfkeA?=
+ =?us-ascii?Q?QlOHKqysdMTimfiJi2ZNCA8/ajaU486Gz9oljjDrMpdU9B9EVwxWCPariPSN?=
+ =?us-ascii?Q?/YPi4QHTqCsQxZ7qE4U4rQdKfoGcxAcI7U/6N1dhcjLsEn2vvFbR+TN5e6Ct?=
+ =?us-ascii?Q?7uia/zi6Ue+oRG1MCQQWuv9dm3QXlcZq+WP7RY42ZmG5Ow/F24RAfmAzOr9n?=
+ =?us-ascii?Q?XjfBG0YI7UZ2H6QAtAJ4aw5jajxPhtqqWNOtlDGV7ZpCgQj4NcbtEcJUxGLl?=
+ =?us-ascii?Q?Frp3a6oi+NSRLu6Oqnne6QhiQIc4r47zzkmmEIVB17zhUgoMU38i42gjvZGe?=
+ =?us-ascii?Q?SuTUOF1FfujRVIxOflFGteDY0Rh8GslJQYZuOYfgGTBaMpmhAFUfUf9gJMcl?=
+ =?us-ascii?Q?Y63FOKLCNc/YE9QiGUxw3eZtJ//GXpteoBq1N8UVQQ0WNNRYsy+C702TSxWC?=
+ =?us-ascii?Q?BROg/iUxL8ffbb9iRh+KqmbVQt1yEixGigmeaayMIZ5WQkLSoa3I8Yc6YHp3?=
+ =?us-ascii?Q?p7vhS8K+btTaYvVj13oXLcm835QkzJfDfLsA1YafV1ziq8ClfquyYo6nBVPS?=
+ =?us-ascii?Q?bWByr6i88vKOezE3WcOuTgEbz6zEfM9kVvqA2W4Kn0e1xH3ETv6p4szODnub?=
+ =?us-ascii?Q?JK+Hl9dFdB2mrka3ThX4WgkggIWI6nfCJo0W0mi+8XUzanOhVjz61MNBZ4hK?=
+ =?us-ascii?B?QT09?=
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: /v13Dz4AjU1kt+0AJlC2LdrwZJ6SGJTGTRVRGyWZ7HBkcmfmVq8mNBtgR9/fWlgFNAdeDYzdto3/cP/QYOrb1qsueQuzNYtciplK/2RqjuVL0w4T/U49MINgSJKjrMn0Qh4nuK98m0h1C9YnNta2LPfRxkUzLgJ1DIOzt9aRT07ik4bD+nFORa0bZqRdqe1ah5qVRuYLM6O6LHEV+r5iMkFsDdrKyzDfx3WYwQxWFGY2A1g/b+y9HK5repSNB9mZ8JDCJsou90+XgwDtgg9BD9QxqDKFB+vEnXEaEZHW1BzBH4dHQp73goqBQBJt7KMb2k3IGJM0w1PsEZR0tFU03Rx1egf7dLZetMf3bt3c+XaVnVaI1xBFvjvUkIMehgiQEjeXGapp8k28fVAwq4qFSaQtnMP5qz0JtuUZlzXAxj8=
+X-Microsoft-Exchange-Diagnostics: 1;BYAPR12MB2965;20:QPapkufpmjJmGrzEITwtmNCIGw5IEghON21EEmuBy1Z6pzXEu7kdbr3BRC+q99hv3FgNp7uXHDLEyhqc7P76+Z5BKDll6ZIGLSJqVAg2asqw/dEizp98PQ6wPKhpbq+hQxpJ90wQC7EnPBHRr1EAb4g0KdzQZq1xFQN2jPbrvyYsZDxtH5rDDSTyAM5VK6UV4h8WQzpd42ceRYvf416s4aK30J4mDYWsupL+xLcmFxAcx1yOSyOlBu/0DWiAYwjr
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2019 06:31:55.4062
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c410957f-6d0b-400e-1a0b-08d6a06b18c4
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXCHOV01.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2965
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/3/2 1:55, Jaegeuk Kim wrote:
-> On 02/28, Chao Yu wrote:
->> Ping,
+On Fri, Mar 01, 2019 at 03:29:43PM -0600, Gustavo A. R. Silva wrote:
+> Add missing break statement in order to prevent the code from falling
+> through to case SMU_Discrete_DpmTable.
 > 
-> Ditto.
-
-Copied.
-
-Thanks,
-
+> This bug was found thanks to the ongoing efforts to enable
+> -Wimplicit-fallthrough.
 > 
->>
->> On 2019/2/19 16:15, Chao Yu wrote:
->>> SQLite in Wal mode may trigger sequential IPU write in db-wal file, after
->>> commit d1b3e72d5490 ("f2fs: submit bio of in-place-update pages"), we
->>> lost the chance of merging page in inner managed bio cache, result in
->>> submitting more small-sized IO.
->>>
->>> So let's add temporary bio in writepages() to cache mergeable write IO as
->>> much as possible.
->>>
->>> Test case:
->>> 1. xfs_io -f /mnt/f2fs/file -c "pwrite 0 65536" -c "fsync"
->>> 2. xfs_io -f /mnt/f2fs/file -c "pwrite 0 65536" -c "fsync"
->>>
->>> Before:
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65544, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65552, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65560, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65568, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65576, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65584, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65592, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65600, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65608, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65616, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65624, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65632, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65640, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65648, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65656, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65664, size = 4096
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), NODE, sector = 57352, size = 4096
->>>
->>> After:
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), DATA, sector = 65544, size = 65536
->>> f2fs_submit_write_bio: dev = (251,0)/(251,0), rw = WRITE(S), NODE, sector = 57368, size = 4096
->>>
->>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>> ---
->>> v4:
->>> - fix to set *bio to NULL in f2fs_submit_ipu_bio()
->>> - spread f2fs_submit_ipu_bio()
->>> - fix to count dirty encrypted page correctly in f2fs_merge_page_bio()
->>> - remove redundant assignment of fio->last_block
->>>  fs/f2fs/data.c    | 88 ++++++++++++++++++++++++++++++++++++++++++-----
->>>  fs/f2fs/f2fs.h    |  3 ++
->>>  fs/f2fs/segment.c |  5 ++-
->>>  3 files changed, 86 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>> index 35910ff23582..e4c183e85de8 100644
->>> --- a/fs/f2fs/data.c
->>> +++ b/fs/f2fs/data.c
->>> @@ -296,20 +296,20 @@ static void __submit_merged_bio(struct f2fs_bio_info *io)
->>>  	io->bio = NULL;
->>>  }
->>>  
->>> -static bool __has_merged_page(struct f2fs_bio_info *io, struct inode *inode,
->>> +static bool __has_merged_page(struct bio *bio, struct inode *inode,
->>>  						struct page *page, nid_t ino)
->>>  {
->>>  	struct bio_vec *bvec;
->>>  	struct page *target;
->>>  	int i;
->>>  
->>> -	if (!io->bio)
->>> +	if (!bio)
->>>  		return false;
->>>  
->>>  	if (!inode && !page && !ino)
->>>  		return true;
->>>  
->>> -	bio_for_each_segment_all(bvec, io->bio, i) {
->>> +	bio_for_each_segment_all(bvec, bio, i) {
->>>  
->>>  		if (bvec->bv_page->mapping)
->>>  			target = bvec->bv_page;
->>> @@ -360,7 +360,7 @@ static void __submit_merged_write_cond(struct f2fs_sb_info *sbi,
->>>  			struct f2fs_bio_info *io = sbi->write_io[btype] + temp;
->>>  
->>>  			down_read(&io->io_rwsem);
->>> -			ret = __has_merged_page(io, inode, page, ino);
->>> +			ret = __has_merged_page(io->bio, inode, page, ino);
->>>  			up_read(&io->io_rwsem);
->>>  		}
->>>  		if (ret)
->>> @@ -429,6 +429,61 @@ int f2fs_submit_page_bio(struct f2fs_io_info *fio)
->>>  	return 0;
->>>  }
->>>  
->>> +int f2fs_merge_page_bio(struct f2fs_io_info *fio)
->>> +{
->>> +	struct bio *bio = *fio->bio;
->>> +	struct page *page = fio->encrypted_page ?
->>> +			fio->encrypted_page : fio->page;
->>> +
->>> +	if (!f2fs_is_valid_blkaddr(fio->sbi, fio->new_blkaddr,
->>> +			__is_meta_io(fio) ? META_GENERIC : DATA_GENERIC))
->>> +		return -EFAULT;
->>> +
->>> +	trace_f2fs_submit_page_bio(page, fio);
->>> +	f2fs_trace_ios(fio, 0);
->>> +
->>> +	if (bio && (*fio->last_block + 1 != fio->new_blkaddr ||
->>> +			!__same_bdev(fio->sbi, fio->new_blkaddr, bio))) {
->>> +		__submit_bio(fio->sbi, bio, fio->type);
->>> +		bio = NULL;
->>> +	}
->>> +alloc_new:
->>> +	if (!bio) {
->>> +		bio = __bio_alloc(fio->sbi, fio->new_blkaddr, fio->io_wbc,
->>> +				BIO_MAX_PAGES, false, fio->type, fio->temp);
->>> +		bio_set_op_attrs(bio, fio->op, fio->op_flags);
->>> +	}
->>> +
->>> +	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
->>> +		__submit_bio(fio->sbi, bio, fio->type);
->>> +		bio = NULL;
->>> +		goto alloc_new;
->>> +	}
->>> +
->>> +	if (fio->io_wbc)
->>> +		wbc_account_io(fio->io_wbc, page, PAGE_SIZE);
->>> +
->>> +	inc_page_count(fio->sbi, WB_DATA_TYPE(page));
->>> +
->>> +	*fio->last_block = fio->new_blkaddr;
->>> +	*fio->bio = bio;
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +void f2fs_submit_ipu_bio(struct f2fs_sb_info *sbi, struct bio **bio,
->>> +							struct page *page)
->>> +{
->>> +	if (!bio)
->>> +		return;
->>> +
->>> +	if (!__has_merged_page(*bio, NULL, page, 0))
->>> +		return;
->>> +
->>> +	__submit_bio(sbi, *bio, DATA);
->>> +	*bio = NULL;
->>> +}
->>> +
->>>  void f2fs_submit_page_write(struct f2fs_io_info *fio)
->>>  {
->>>  	struct f2fs_sb_info *sbi = fio->sbi;
->>> @@ -1854,6 +1909,8 @@ int f2fs_do_write_data_page(struct f2fs_io_info *fio)
->>>  }
->>>  
->>>  static int __write_data_page(struct page *page, bool *submitted,
->>> +				struct bio **bio,
->>> +				sector_t *last_block,
->>>  				struct writeback_control *wbc,
->>>  				enum iostat_type io_type)
->>>  {
->>> @@ -1879,6 +1936,8 @@ static int __write_data_page(struct page *page, bool *submitted,
->>>  		.need_lock = LOCK_RETRY,
->>>  		.io_type = io_type,
->>>  		.io_wbc = wbc,
->>> +		.bio = bio,
->>> +		.last_block = last_block,
->>>  	};
->>>  
->>>  	trace_f2fs_writepage(page, DATA);
->>> @@ -1976,10 +2035,13 @@ static int __write_data_page(struct page *page, bool *submitted,
->>>  	}
->>>  
->>>  	unlock_page(page);
->>> -	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode))
->>> +	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode)) {
->>> +		f2fs_submit_ipu_bio(sbi, bio, page);
->>>  		f2fs_balance_fs(sbi, need_balance_fs);
->>> +	}
->>>  
->>>  	if (unlikely(f2fs_cp_error(sbi))) {
->>> +		f2fs_submit_ipu_bio(sbi, bio, page);
->>>  		f2fs_submit_merged_write(sbi, DATA);
->>>  		submitted = NULL;
->>>  	}
->>> @@ -2006,7 +2068,7 @@ static int __write_data_page(struct page *page, bool *submitted,
->>>  static int f2fs_write_data_page(struct page *page,
->>>  					struct writeback_control *wbc)
->>>  {
->>> -	return __write_data_page(page, NULL, wbc, FS_DATA_IO);
->>> +	return __write_data_page(page, NULL, NULL, NULL, wbc, FS_DATA_IO);
->>>  }
->>>  
->>>  /*
->>> @@ -2022,6 +2084,8 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
->>>  	int done = 0;
->>>  	struct pagevec pvec;
->>>  	struct f2fs_sb_info *sbi = F2FS_M_SB(mapping);
->>> +	struct bio *bio = NULL;
->>> +	sector_t last_block;
->>>  	int nr_pages;
->>>  	pgoff_t uninitialized_var(writeback_index);
->>>  	pgoff_t index;
->>> @@ -2098,17 +2162,20 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
->>>  			}
->>>  
->>>  			if (PageWriteback(page)) {
->>> -				if (wbc->sync_mode != WB_SYNC_NONE)
->>> +				if (wbc->sync_mode != WB_SYNC_NONE) {
->>>  					f2fs_wait_on_page_writeback(page,
->>>  							DATA, true, true);
->>> -				else
->>> +					f2fs_submit_ipu_bio(sbi, &bio, page);
->>> +				} else {
->>>  					goto continue_unlock;
->>> +				}
->>>  			}
->>>  
->>>  			if (!clear_page_dirty_for_io(page))
->>>  				goto continue_unlock;
->>>  
->>> -			ret = __write_data_page(page, &submitted, wbc, io_type);
->>> +			ret = __write_data_page(page, &submitted, &bio,
->>> +					&last_block, wbc, io_type);
->>>  			if (unlikely(ret)) {
->>>  				/*
->>>  				 * keep nr_to_write, since vfs uses this to
->>> @@ -2157,6 +2224,9 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
->>>  	if (nwritten)
->>>  		f2fs_submit_merged_write_cond(F2FS_M_SB(mapping), mapping->host,
->>>  								NULL, 0, DATA);
->>> +	/* submit cached bio of IPU write */
->>> +	if (bio)
->>> +		__submit_bio(sbi, bio, DATA);
->>>  
->>>  	return ret;
->>>  }
->>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>> index 46db3ed87c84..7c4355927d28 100644
->>> --- a/fs/f2fs/f2fs.h
->>> +++ b/fs/f2fs/f2fs.h
->>> @@ -1048,6 +1048,8 @@ struct f2fs_io_info {
->>>  	bool retry;		/* need to reallocate block address */
->>>  	enum iostat_type io_type;	/* io type */
->>>  	struct writeback_control *io_wbc; /* writeback control */
->>> +	struct bio **bio;		/* bio for ipu */
->>> +	sector_t *last_block;		/* last block number in bio */
->>>  	unsigned char version;		/* version of the node */
->>>  };
->>>  
->>> @@ -3105,6 +3107,7 @@ void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
->>>  				nid_t ino, enum page_type type);
->>>  void f2fs_flush_merged_writes(struct f2fs_sb_info *sbi);
->>>  int f2fs_submit_page_bio(struct f2fs_io_info *fio);
->>> +int f2fs_merge_page_bio(struct f2fs_io_info *fio);
->>>  void f2fs_submit_page_write(struct f2fs_io_info *fio);
->>>  struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
->>>  			block_t blk_addr, struct bio *bio);
->>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->>> index b2167d53fb9d..66838ab2f21e 100644
->>> --- a/fs/f2fs/segment.c
->>> +++ b/fs/f2fs/segment.c
->>> @@ -3196,7 +3196,10 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
->>>  
->>>  	stat_inc_inplace_blocks(fio->sbi);
->>>  
->>> -	err = f2fs_submit_page_bio(fio);
->>> +	if (fio->bio)
->>> +		err = f2fs_merge_page_bio(fio);
->>> +	else
->>> +		err = f2fs_submit_page_bio(fio);
->>>  	if (!err)
->>>  		update_device_state(fio);
->>>  
->>>
-> 
-> .
-> 
+> Fixes: 34a564eaf528 ("drm/amd/powerplay: implement fw image related smum interface for Polaris.")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
+Reviewed-by: Huang Rui <ray.huang@amd.com>
+
+> ---
+>  drivers/gpu/drm/amd/powerplay/smumgr/polaris10_smumgr.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/polaris10_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/polaris10_smumgr.c
+> index 52abca065764..222fb79d319e 100644
+> --- a/drivers/gpu/drm/amd/powerplay/smumgr/polaris10_smumgr.c
+> +++ b/drivers/gpu/drm/amd/powerplay/smumgr/polaris10_smumgr.c
+> @@ -2330,6 +2330,7 @@ static uint32_t polaris10_get_offsetof(uint32_t type, uint32_t member)
+>  		case DRAM_LOG_BUFF_SIZE:
+>  			return offsetof(SMU74_SoftRegisters, DRAM_LOG_BUFF_SIZE);
+>  		}
+> +		break;
+>  	case SMU_Discrete_DpmTable:
+>  		switch (member) {
+>  		case UvdBootLevel:
+> -- 
+> 2.21.0
+> 
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
