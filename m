@@ -2,127 +2,261 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4E0C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA2DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3EAF205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FF7205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfCDNzZ (ORCPT
+        id S1726516AbfCDN4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:55:25 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4210 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726032AbfCDNzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:55:25 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 275739E8D1F927BB9521;
-        Mon,  4 Mar 2019 21:55:21 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Mon, 4 Mar 2019
- 21:55:14 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <mcgrof@kernel.org>, <keescook@chromium.org>,
-        <adobriyan@gmail.com>, <ast@kernel.org>, <daniel@iogearbox.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <bpf@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] proc/sysctl: Fix NULL pointer dereference in put_links
-Date:   Mon, 4 Mar 2019 21:54:38 +0800
-Message-ID: <20190304135438.29792-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 4 Mar 2019 08:56:50 -0500
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:46222 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbfCDN4t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 08:56:49 -0500
+Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x24DulSY038113;
+        Mon, 4 Mar 2019 22:56:47 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp);
+ Mon, 04 Mar 2019 22:56:47 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp)
+Received: from [192.168.1.2] (119.104.232.153.ap.dti.ne.jp [153.232.104.119])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x24Duktq038107
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Mon, 4 Mar 2019 22:56:47 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH] arm64: dts: rockchip: decrease rising edge time of UART2
+To:     Tony McKahan <tonymckahan@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Akash Gajjar <Akash_Gajjar@mentor.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Levin Du <djw@t-chip.com.cn>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Shohei Maruyama <cheat.sc.linux@outlook.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>
+References: <20190303122705.27094-1-katsuhiro@katsuster.net>
+ <1623469.Hy6pdcMFRX@phil>
+ <e722acb4-167f-8333-5c8a-b693815273f4@katsuster.net>
+ <CAERgoknAV1sACSPjM_u4WyWzLvmUntXMoEx=ccpFsqYZVeu__Q@mail.gmail.com>
+ <26c3aea3-959f-bfb3-177f-3e5314494361@katsuster.net>
+ <CAERgoknMO6xMzuhCn2kSHZm8Pt+6YH3jDvJckJq28u9OW08u2Q@mail.gmail.com>
+ <CAERgok=cxtLqRmYXdrCaUF8mK2pPfGAPc6w3hdLaPgPmqKmkcw@mail.gmail.com>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <19be5c97-cdfa-d3e5-efcb-f2c4e7351d9f@katsuster.net>
+Date:   Mon, 4 Mar 2019 22:56:46 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAERgok=cxtLqRmYXdrCaUF8mK2pPfGAPc6w3hdLaPgPmqKmkcw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
 
-Syzkaller report this:
+No problem! Thank you for discussion :)
 
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 1 PID: 5373 Comm: syz-executor.0 Not tainted 5.0.0-rc8+ #3
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:put_links+0x101/0x440 fs/proc/proc_sysctl.c:1599
-Code: 00 0f 85 3a 03 00 00 48 8b 43 38 48 89 44 24 20 48 83 c0 38 48 89 c2 48 89 44 24 28 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 fe 02 00 00 48 8b 74 24 20 48 c7 c7 60 2a 9d 91
-RSP: 0018:ffff8881d828f238 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8881e01b1140 RCX: ffffffff8ee98267
-RDX: 0000000000000007 RSI: ffffc90001479000 RDI: ffff8881e01b1178
-RBP: dffffc0000000000 R08: ffffed103ee27259 R09: ffffed103ee27259
-R10: 0000000000000001 R11: ffffed103ee27258 R12: fffffffffffffff4
-R13: 0000000000000006 R14: ffff8881f59838c0 R15: dffffc0000000000
-FS:  00007f072254f700(0000) GS:ffff8881f7100000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fff8b286668 CR3: 00000001f0542002 CR4: 00000000007606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- drop_sysctl_table+0x152/0x9f0 fs/proc/proc_sysctl.c:1629
- get_subdir fs/proc/proc_sysctl.c:1022 [inline]
- __register_sysctl_table+0xd65/0x1090 fs/proc/proc_sysctl.c:1335
- ? 0xffffffffc1a18000
- br_netfilter_init+0xbc/0x1000 [br_netfilter]
- ? 0xffffffffc1a18000
- ? 0xffffffffc1a18000
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f072254ec58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
-RBP: 00007f072254ec70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f072254f6bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-Modules linked in: br_netfilter(+) dvb_usb_dibusb_mc_common dib3000mc dibx000_common dvb_usb_dibusb_common dvb_usb_dw2102 dvb_usb classmate_laptop palmas_regulator cn videobuf2_v4l2 v4l2_common snd_soc_bd28623 mptbase snd_usb_usx2y snd_usbmidi_lib snd_rawmidi wmi libnvdimm lockd sunrpc grace rc_kworld_pc150u rc_core rtc_da9063 sha1_ssse3 i2c_cros_ec_tunnel adxl34x_spi adxl34x nfnetlink lib80211 i5500_temp dvb_as102 dvb_core videobuf2_common videodev media videobuf2_vmalloc videobuf2_memops udc_core lnbp22 leds_lp3952 hid_roccat_ryos s1d13xxxfb mtd vport_geneve openvswitch nf_conncount nf_nat_ipv6 nsh geneve udp_tunnel ip6_udp_tunnel snd_soc_mt6351 sis_agp phylink snd_soc_adau1761_spi snd_soc_adau1761 snd_soc_adau17x1 snd_soc_core snd_pcm_dmaengine ac97_bus snd_compress snd_soc_adau_utils snd_soc_sigmadsp_regmap snd_soc_sigmadsp raid_class hid_roccat_konepure hid_roccat_common hid_roccat c2port_duramar2150 core mdio_bcm_unimac iptable_security iptable_raw iptable_mangle
- iptable_nat nf_nat_ipv4 nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_filter bpfilter ip6_vti ip_vti ip_gre ipip sit tunnel4 ip_tunnel hsr veth netdevsim devlink vxcan batman_adv cfg80211 rfkill chnl_net caif nlmon dummy team bonding vcan bridge stp llc ip6_gre gre ip6_tunnel tunnel6 tun crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel joydev mousedev ide_pci_generic piix aesni_intel aes_x86_64 ide_core crypto_simd atkbd cryptd glue_helper serio_raw ata_generic pata_acpi i2c_piix4 floppy sch_fq_codel ip_tables x_tables ipv6 [last unloaded: lm73]
-Dumping ftrace buffer:
-   (ftrace buffer empty)
----[ end trace 770020de38961fd0 ]---
-
-A new dir entry can be created in get_subdir and its header->parent is set
-to NULL. Only after insert_header success, it will be set to 'dir'.
-However in err handling path of get_subdir, drop_sysctl_table maybe called
-on 'new->header' regardless value of header->parent. Then put_links
-be called, which triggers NULL-ptr deref when access the member of
-header->parent in xlate_dir.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 0e47c99d7fe25 ("sysctl: Replace root_list with links between sysctl_table_sets")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/proc/proc_sysctl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 4d598a3..4c2a05a 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -1626,7 +1626,8 @@ static void drop_sysctl_table(struct ctl_table_header *header)
- 	if (--header->nreg)
- 		return;
- 
--	put_links(header);
-+	if (parent)
-+		put_links(header);
- 	start_unregistering(header);
- 	if (!--header->count)
- 		kfree_rcu(header, rcu);
--- 
-2.7.0
-
+On 2019/03/04 4:12, Tony McKahan wrote:
+> On Sun, Mar 3, 2019 at 1:45 PM Tony McKahan <tonymckahan@gmail.com> wrote:
+>>
+>> Hello Katsushiro,
+> 
+> And apologies for the extra "s", typing too quickly I'm afraid.
+>>
+>> On Sun, Mar 3, 2019 at 12:31 PM Katsuhiro Suzuki
+>> <katsuhiro@katsuster.net> wrote:
+>>>
+>>> Hello Tony,
+>>>
+>>> On 2019/03/04 0:13, Tony McKahan wrote:
+>>>> On Sun, Mar 3, 2019 at 9:04 AM Katsuhiro Suzuki <katsuhiro@katsuster.net> wrote:
+>>>>>
+>>>>> Hello Heiko,
+>>>>>
+>>>>> Thank you for comments.
+>>>>>
+>>>>> On 2019/03/03 22:19, Heiko Stuebner wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> Am Sonntag, 3. März 2019, 13:27:05 CET schrieb Katsuhiro Suzuki:
+>>>>>>> This patch increases drive strength of UART2 from 3mA to 12mA for
+>>>>>>> getting more faster rising edge.
+>>>>>>>
+>>>>>>> RockPro64 is using a very high speed rate (1.5Mbps) for UART2. In
+>>>>>>> this setting, a bit width of UART is about 667ns.
+>>>>>>>
+>>>>>>> In my environment (RockPro64 UART2 with FTDI FT232RL UART-USB
+>>>>>>> converter), falling time of RockPro64 UART2 is 40ns, but riging time
+>>>>>>> is over 650ns. So UART receiver will get wrong data, because receiver
+>>>>>>> read intermediate data of rising edge.
+>>>>>>>
+>>>>>>> Rising time becomes 300ns from 650ns if apply this patch. This is not
+>>>>>>> perfect solution but better than now.
+>>>>>>>
+>>>>>>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>>>>>>> ---
+>>>>>>>     arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 +++++++--
+>>>>>>>     1 file changed, 7 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> your changing a core rk3399 property here, so I'd really like to get
+>>>>>> input from other board stakeholders on this before applying a core
+>>>>>> change.
+>>>>>>
+>>>>>> Could you either include the submitters of other rk3399-boards in the
+>>>>>> recipient list so that they're aware or limit the change to rockpro64 for
+>>>>>> the time being (aka overriding the property in the board-dts) please?
+>>>>>>
+>>>>>
+>>>>> OK, I'm adding other boards members.
+>>>>> by ./scripts/get_maintainer.pl arch/arm64/boot/dts/rockchip/rk3399-*.dts
+>>>>>
+>>>>>
+>>>>> RockPro64 directly connect UART2 pins of RK3399 to external connector.
+>>>>> I think maybe other RK3399 boards are facing same problem, but I cannot
+>>>>> check it because I have RockPro64 only...
+>>>>>
+>>>>> I'm happy if someone tell me other boards situation.
+>>>>
+>>>> I'm pulling out other rockchip boards momentarily to see what kind of
+>>>> population we have.
+>>>>
+>>>> Note these are not all running 5.x kernels, however none of them have
+>>>> the UART2 drive levels modified to my knowledge, and regardless, none
+>>>> show over 100 ns.
+>>>>
+>>>> board:    rise/fall
+>>>>
+>>>> rk3399-roc-pc: 90ns/90ns
+>>>> rk3399-rockpro64 V2.0:  90ns/45ns
+>>>> rk3399-rockpro64 V2.1:  40ns/41ns
+>>>>
+>>>> Please make sure there's not a large amount of flux or something
+>>>> around the terminals on your board, that seems excessively high.
+>>>>
+>>>
+>>> Thank you for valuable information. For more deeply discussion,
+>>> I tried other conditions and watch the rise/fall times.
+>>>
+>>> 1) Not connect
+>>> The rise/fall times are 40ns/5ns when nothing connect (impedance is
+>>> very high) to external pin of RockPro64.
+>>>
+>>> What UART device are you using with RockPro64? If you use some device
+>>> with RockPro64 and board shows rise/fall times = 90ns/45ns, my device
+>>> is not suitable for RockPro64 by some reason. So it's better to drop
+>>> my patch.
+>>
+>> The adapter is an FTDI FT232RL breakout board, attached with some
+>> generic Dupont connector jumpers.
+>> Interesting your RockPro is showing this symptom, perhaps there is a
+>> cold solder joint somewhere introducing resistance?
+>>
+>>>
+>>> 2) Other SoC
+>>> I have other SoC board rk3328-rock64, Rock64 shows rise/fall times =
+>>> 90ns/80ns when same UART-USB device is connected to UART pin.
+>>
+>> I measured similar on my Rock64 as well.
+>>
+>>>
+>>> I think it shows rk3399's (or RockPro64's?) drive strength is a little
+>>> weak. So it's better to increase the drive strength of UART of rk3399.
+>>
+>> I do not think this is a bad idea generally, it simply allows for more
+>> available current from the interface.  I'll let others be the judge of
+>> that, however.
+>>
+>>>
+>>> Best Regards,
+>>> Katsuhiro Suzuki
+>>>
+>>>>>
+>>>>> Best Regards,
+>>>>> Katsuhiro Suzuki
+>>>>>
+>>>>>
+>>>>>> Thanks
+>>>>>> Heiko
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>>>>>>> index beaa92744a64..e3c8f91ead50 100644
+>>>>>>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>>>>>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>>>>>>> @@ -2000,6 +2000,11 @@
+>>>>>>>                        drive-strength = <8>;
+>>>>>>>                };
+>>>>>>>
+>>>>>>> +            pcfg_pull_up_12ma: pcfg-pull-up-12ma {
+>>>>>>> +                    bias-pull-up;
+>>>>>>> +                    drive-strength = <12>;
+>>>>>>> +            };
+>>>>>>> +
+>>>>>>>                pcfg_pull_up_18ma: pcfg-pull-up-18ma {
+>>>>>>>                        bias-pull-up;
+>>>>>>>                        drive-strength = <18>;
+>>>>>>> @@ -2521,8 +2526,8 @@
+>>>>>>>                uart2c {
+>>>>>>>                        uart2c_xfer: uart2c-xfer {
+>>>>>>>                                rockchip,pins =
+>>>>>>> -                                    <4 RK_PC3 RK_FUNC_1 &pcfg_pull_up>,
+>>>>>>> -                                    <4 RK_PC4 RK_FUNC_1 &pcfg_pull_none>;
+>>>>>>> +                                    <4 RK_PC3 RK_FUNC_1 &pcfg_pull_up_12ma>,
+>>>>>>> +                                    <4 RK_PC4 RK_FUNC_1 &pcfg_pull_none_12ma>;
+>>>>>>>                        };
+>>>>>>>                };
+>>>>>>>
+>>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>
+>>>>>
+>>>>> _______________________________________________
+>>>>> Linux-rockchip mailing list
+>>>>> Linux-rockchip@lists.infradead.org
+>>>>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>>>>
+>>>>
+>>>
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
+> 
 
