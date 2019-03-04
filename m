@@ -2,151 +2,196 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64267C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF177C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3128220835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932F720842
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:23:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551659038;
+	bh=+P220HBzLg2VmLITxx6aa7YVkX8tNAEPFdERNuID3/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rtdXyc6CyXgRMb/artjY4063com2EQUFI4oLiuZcutsgZzSfRNYhfuhT5mdyT792k
+	 ugHa8quJx5Pzp5cFKaTTN3cezNDxFzedR086UHhTxNrAjwiD7kjuYue7ZNhoZcXGOy
+	 0iYyw9pHpoAFjPR004MJaYHoAq1MapLovqc7dFPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726001AbfCDANi (ORCPT
+        id S1726025AbfCDAX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 19:13:38 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:42738 "EHLO mx1.redhat.com"
+        Sun, 3 Mar 2019 19:23:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfCDANh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 19:13:37 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725938AbfCDAX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 19:23:56 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4CBCF3084215;
-        Mon,  4 Mar 2019 00:13:36 +0000 (UTC)
-Received: from x230.aquini.net (ovpn-116-145.phx2.redhat.com [10.3.116.145])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B15A75D6A6;
-        Mon,  4 Mar 2019 00:13:30 +0000 (UTC)
-Date:   Sun, 3 Mar 2019 21:13:28 -0300
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Jan Stancek <jstancek@redhat.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
-        peterz@infradead.org, riel@surriel.com, mhocko@suse.com,
-        ying.huang@intel.com, jrdr.linux@gmail.com, jglisse@redhat.com,
-        aneesh.kumar@linux.ibm.com, david@redhat.com, aarcange@redhat.com,
-        raquini@redhat.com, rientjes@google.com, kirill@shutemov.name,
-        mgorman@techsingularity.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm/memory.c: do_fault: avoid usage of stale
- vm_area_struct
-Message-ID: <20190304001328.GA27580@x230.aquini.net>
-References: <20190302185144.GD31083@redhat.com>
- <5b3fdf19e2a5be460a384b936f5b56e13733f1b8.1551595137.git.jstancek@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3966A20835;
+        Mon,  4 Mar 2019 00:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551659035;
+        bh=+P220HBzLg2VmLITxx6aa7YVkX8tNAEPFdERNuID3/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uIaNgTVDOMpNMXSMgCv+CIggOBFcNxL1trQc0dbihN2P3iu9UoeoK4+i/En8KbTIB
+         qSBIIqkgYRbWE9K7+xI++l7UuRLRY6sdFHpOrynPQUYv5xYGRpv9+zKilaDIJaveYK
+         s+nmiii9DqqFoXCfLAxcEb1hbkk3YKTS6WPKYViE=
+Date:   Sun, 3 Mar 2019 18:23:51 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
+Subject: Re: [PATCH 1/2] PCI: Prevent 64-bit resources from being counted in
+ 32-bit bridge region
+Message-ID: <20190304002351.GA26569@google.com>
+References: <20190214170028.27862-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5b3fdf19e2a5be460a384b936f5b56e13733f1b8.1551595137.git.jstancek@redhat.com>
+In-Reply-To: <20190214170028.27862-1-logang@deltatee.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 04 Mar 2019 00:13:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 03, 2019 at 08:28:04AM +0100, Jan Stancek wrote:
-> LTP testcase mtest06 [1] can trigger a crash on s390x running 5.0.0-rc8.
-> This is a stress test, where one thread mmaps/writes/munmaps memory area
-> and other thread is trying to read from it:
+Hi Logan,
+
+Sorry for the delay.  This code gives a headache.  I still remember
+my headache from the last time we touched it.  Help me understand
+what's going on here.
+
+On Thu, Feb 14, 2019 at 10:00:27AM -0700, Logan Gunthorpe wrote:
+> When using the pci=realloc command line argument, with hpmemsize not
+> equal to zero, some hierarchies of 32-bit resources can fail to be
+> assigned in some situations. When this happens, the user will see
+> some PCI BAR resources being ignored and some PCI Bridge windows
+> being left unset. In lspci this may look like:
 > 
->   CPU: 0 PID: 2611 Comm: mmap1 Not tainted 5.0.0-rc8+ #51
->   Hardware name: IBM 2964 N63 400 (z/VM 6.4.0)
->   Krnl PSW : 0404e00180000000 00000000001ac8d8 (__lock_acquire+0x7/0x7a8)
->   Call Trace:
->   ([<0000000000000000>]           (null))
->    [<00000000001adae4>] lock_acquire+0xec/0x258
->    [<000000000080d1ac>] _raw_spin_lock_bh+0x5c/0x98
->    [<000000000012a780>] page_table_free+0x48/0x1a8
->    [<00000000002f6e54>] do_fault+0xdc/0x670
->    [<00000000002fadae>] __handle_mm_fault+0x416/0x5f0
->    [<00000000002fb138>] handle_mm_fault+0x1b0/0x320
->    [<00000000001248cc>] do_dat_exception+0x19c/0x2c8
->    [<000000000080e5ee>] pgm_check_handler+0x19e/0x200
+>   Memory behind bridge: fff00000-000fffff
 > 
-> page_table_free() is called with NULL mm parameter, but because
-> "0" is a valid address on s390 (see S390_lowcore), it keeps
-> going until it eventually crashes in lockdep's lock_acquire.
-> This crash is reproducible at least since 4.14.
+> or
 > 
-> Problem is that "vmf->vma" used in do_fault() can become stale.
-> Because mmap_sem may be released, other threads can come in,
-> call munmap() and cause "vma" be returned to kmem cache, and
-> get zeroed/re-initialized and re-used:
+>   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
 > 
-> handle_mm_fault                           |
->   __handle_mm_fault                       |
->     do_fault                              |
->       vma = vmf->vma                      |
->       do_read_fault                       |
->         __do_fault                        |
->           vma->vm_ops->fault(vmf);        |
->             mmap_sem is released          |
->                                           |
->                                           | do_munmap()
->                                           |   remove_vma_list()
->                                           |     remove_vma()
->                                           |       vm_area_free()
->                                           |         # vma is released
->                                           | ...
->                                           | # same vma is allocated
->                                           | # from kmem cache
->                                           | do_mmap()
->                                           |   vm_area_alloc()
->                                           |     memset(vma, 0, ...)
->                                           |
->       pte_free(vma->vm_mm, ...);          |
->         page_table_free                   |
->           spin_lock_bh(&mm->context.lock);|
->             <crash>                       |
+> Ignored BARs mean the underlying device will not be usable.
 > 
-> Cache mm_struct to avoid using potentially stale "vma".
+> The possible situations where this can happen will be quite varied and
+> depend highly on the exact hierarchy and how the realloc code ends up
+> trying to assign the regions. It's known to at least require a
+> large 64-bit BAR (>1GB) below a PCI bridge.
+
+I guess the bug is that some BAR or window is unset when we actually
+have space for it?  We need to make this more concrete, e.g., with a
+minimal example of a failure case, and then connect this code change
+specifically with that.
+
+"Ignored BARs" doesn't seem like the best terminology here.  Can we
+just say they're "unset" as you do for windows?  Even that's a little
+squishy because there's really no such thing as a clearly "unset" or
+invalid value for a BAR.  All we can say is that Linux *thinks* it's
+unset because it happens to be zero (technically still a valid BAR
+value) or it conflicts with another device.
+
+Strictly speaking, the result is that we can't enable decoding for
+that BAR type.  Often that does mean the device is unusable, but in
+some cases, e.g., an I/O BAR being unset and a driver using
+pci_enable_device_mem(), the device *is* usable.
+
+Surely realloc can fail even without a large 64-bit BAR?  I don't
+think there's a magic threshold at 1GB.  Maybe an example would
+illustrate the problem better.
+
+> The cause of this bug is in __pci_bus_size_bridges() which tries to
+> calculate the total resource space required for each of the bridge windows
+> (typically IO, 64-bit, and 32-bit / non-prefetchable). The code, as
+> written, tries to allocate all the 64-bit prefetchable resources
+> followed by all the remaining resources. It uses two calls to
+> pbus_size_mem() for this. If the first call to pbus_size_mem() fails
+> it tries to fit all resources into the 32-bit bridge window and it
+> expects the size of the 32-bit bridge window to be multiple GBs which
+> will never be assignable under the 4GB limit imposed on it.
+
+There are actually three calls to pbus_size_mem():
+
+  1) If bridge has a 64-bit prefetchable window, find the size of all
+     64-bit prefetchable resources below the bridge
+
+  2) If bridge has no 64-bit prefetchable window, find the size of all
+     prefetchable resources below the bridge
+
+  3) Find the size of everything else (non-prefetchable resources plus
+     any prefetchable ones that couldn't be accommodated above)
+
+Sorry again for being so literal and unimaginative, but I don't
+understand how the code "expects the size of the ... window to be
+multiple GBs which will never be assignable ...".  Whether things are
+assignable just depends on what resources are available.  It's not a
+matter of "expecting" the window to be big enough; it just is big
+enough or it isn't.
+
+> There are only two reasons for pbus_size_mem() to fail: if there is no
+> 64-bit/prefetchable bridge window, or if that window is already
+> assigned (in other words, its resource already has a parent set). We know
+> the former case can't be true because, in __pci_bus_size_bridges(), it's
+> existence is checked before making the call. So if the pbus_size_mem()
+> call in question fails, the window must already be assigned, and in this
+> case, we still do not want 64-bit resources trying to be sized into the
+> 32-bit catch-all resource.
+
+I guess this question of putting a 64-bit resource in the 32-bit
+non-prefetchable window (legal but undesirable) is a secondary thing,
+not the chief complaint you're fixing?
+
+> So to fix the bug, we must always set mask, type2 and type3 in cases
+> where a 64-bit resource exists even if pbus_size_mem() fails.
 > 
-> [1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/mtest06/mmap1.c
-> 
-> Signed-off-by: Jan Stancek <jstancek@redhat.com>
-> Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
+> Reported-by: Kit Chow <kchow@gigaio.com>
+> Fixes: 5b28541552ef ("PCI: Restrict 64-bit prefetchable bridge windows to 64-bit resources")
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Yinghai Lu <yinghai@kernel.org>
 > ---
->  mm/memory.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  drivers/pci/setup-bus.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
 > 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index e11ca9dd823f..e8d69ade5acc 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -3517,10 +3517,13 @@ static vm_fault_t do_shared_fault(struct vm_fault *vmf)
->   * but allow concurrent faults).
->   * The mmap_sem may have been released depending on flags and our
->   * return value.  See filemap_fault() and __lock_page_or_retry().
-> + * If mmap_sem is released, vma may become invalid (for example
-> + * by other thread calling munmap()).
->   */
->  static vm_fault_t do_fault(struct vm_fault *vmf)
->  {
->  	struct vm_area_struct *vma = vmf->vma;
-> +	struct mm_struct *vm_mm = vma->vm_mm;
->  	vm_fault_t ret;
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index ed960436df5e..56b7077f37ff 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1265,21 +1265,20 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
+>  		prefmask = IORESOURCE_MEM | IORESOURCE_PREFETCH;
+>  		if (b_res[2].flags & IORESOURCE_MEM_64) {
+>  			prefmask |= IORESOURCE_MEM_64;
+> -			ret = pbus_size_mem(bus, prefmask, prefmask,
+> +			pbus_size_mem(bus, prefmask, prefmask,
+>  				  prefmask, prefmask,
+>  				  realloc_head ? 0 : additional_mem_size,
+>  				  additional_mem_size, realloc_head);
 >  
->  	/*
-> @@ -3561,7 +3564,7 @@ static vm_fault_t do_fault(struct vm_fault *vmf)
+>  			/*
+> -			 * If successful, all non-prefetchable resources
+> -			 * and any 32-bit prefetchable resources will go in
+> -			 * the non-prefetchable window.
+> +			 * Given the existence of a 64-bit resource for this
+> +			 * bus, all non-prefetchable resources and any 32-bit
+> +			 * prefetchable resources will go in the
+> +			 * non-prefetchable window.
+>  			 */
+> -			if (ret == 0) {
+> -				mask = prefmask;
+> -				type2 = prefmask & ~IORESOURCE_MEM_64;
+> -				type3 = prefmask & ~IORESOURCE_PREFETCH;
+> -			}
+> +			mask = prefmask;
+> +			type2 = prefmask & ~IORESOURCE_MEM_64;
+> +			type3 = prefmask & ~IORESOURCE_PREFETCH;
+>  		}
 >  
->  	/* preallocated pagetable is unused: free it */
->  	if (vmf->prealloc_pte) {
-> -		pte_free(vma->vm_mm, vmf->prealloc_pte);
-> +		pte_free(vm_mm, vmf->prealloc_pte);
->  		vmf->prealloc_pte = NULL;
->  	}
->  	return ret;
+>  		/*
 > -- 
-> 1.8.3.1
+> 2.19.0
 > 
-Acked-by: Rafael Aquini <aquini@redhat.com>
