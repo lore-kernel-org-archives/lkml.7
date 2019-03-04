@@ -2,180 +2,83 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9C2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9050C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3F42070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZbLZHzKY"
+	by mail.kernel.org (Postfix) with ESMTP id B3F5A2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbfCDTVh (ORCPT
+        id S1726317AbfCDTWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:21:37 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:36207 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfCDTVh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:21:37 -0500
-Received: by mail-yw1-f67.google.com with SMTP id 189so4973349ywi.3;
-        Mon, 04 Mar 2019 11:21:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=extC+jTr5pWK30PAUD6QYJw7226CRGsx/QKZa5MaJeM=;
-        b=ZbLZHzKYX45wtzGXIGNwVS39YLY+czb5wG7npSP47iuXpBZrbjR+/NmDLdTmip20vk
-         vpdOzxmvKgG3zzDVd/qyL+t1PAH+K9NuV3Gz3f/AgrRpW2WNSGE+IShwZFH5yIms2n5w
-         8F7pmXs6CHOLmMOc1d6TO/o2rAC1XEe/+V2pdRqCP4xBcoBGtvoKUIbTBU1+fXv5kymm
-         qDMpxGhsOzP6Jhnsbul1ihGspghltC2ugzrAyijTGYdvIxYspe9iw+arFuKByrTgOYYP
-         X/FgsJzDnSHgygkGuz1EnVXEyug3dWbpQxT0Q1i6ZG2SecaEPwSDmpNAmiz/k7ckA8s4
-         i64w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=extC+jTr5pWK30PAUD6QYJw7226CRGsx/QKZa5MaJeM=;
-        b=PymrH/+e86DAUuW6cImxQ3FVB/7aaUNx6xJBY+7FXiUoHWDt7nteTGG7tc1iA0X/E7
-         +3ZUjWE8T4eFR80bCQ5zvk2QquySGcp8ONfovOidiP4o022gOw5L+o2DWotR1dO0mO9o
-         Y3A7+EIS/e+lwwBZYmNe33LumXimAvxukVFmXBObwA2v0WvTC5erLnk1LkDudsFYXXoo
-         oJKgX0y/Ktzx9BBVSl04lEIg9vTh9tB5UOdybDYGVhyaUwwfr0X9vPnXum9DEkFv7z28
-         lPMhNtyJ5+y6DBbW4EpH+d+IVmjOeC4QNZL/9+8+1Fvag4JNpxDxDd2roeaNub7sFTBH
-         2iWw==
-X-Gm-Message-State: APjAAAVWou0wMnHLNY1gYszddq+IajSiDum1CSXXZczC4IEj/GNaIEpH
-        m5RPlcpuFvSB3s1vVor3uGZ2XsB+LhlT4v3qN/Or/R+7
-X-Google-Smtp-Source: APXvYqxKb6Tlif6noVtQofVZhNymQQDgv3+IWkSwyZg/qcSo3mjxa+Od1FbteUKDC/HxNvLmuRzUMHF50aX7yVM6Vt8=
-X-Received: by 2002:a81:1b4b:: with SMTP id b72mr15066728ywb.211.1551727295288;
- Mon, 04 Mar 2019 11:21:35 -0800 (PST)
-MIME-Version: 1.0
-References: <CAJfpegs9JjkXguemL4qSiBvRP6Dnut-D+nJo-oLFXkfCL1Egvw@mail.gmail.com>
- <CAJfpegvfqx+0D32n1h2X7oj5d1mZWiLTcSSGpBnD+ba7AKzPyA@mail.gmail.com>
- <20181127210542.GA2599@redhat.com> <CAJfpegtQGM2z9TOt3DWwd39fC60cQknsC4vNnj7YimVEubRzUg@mail.gmail.com>
- <20181128170302.GA12405@redhat.com> <377b7d4f-eb1d-c281-5c67-8ab6de77c881@tycho.nsa.gov>
- <CAJfpegtNhcWD0VWy6LPtoDtQBfPu4x5iFsB053UMCidj6oMsuw@mail.gmail.com>
- <26bce3be-49c2-cdd8-af03-1a78d0f268ae@tycho.nsa.gov> <CAJfpeguL9xOh9Eq8LOP=ddJ4YD6nbp2UY6e2AYDVoHeCLuVhZA@mail.gmail.com>
- <20181129134943.GA16762@redhat.com> <fe78aaed-5fb1-3c51-1330-39de46ae39c5@android.com>
- <ae2682f2-4a15-39e6-eb49-b9c0e72f10e4@tycho.nsa.gov>
-In-Reply-To: <ae2682f2-4a15-39e6-eb49-b9c0e72f10e4@tycho.nsa.gov>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Mon, 4 Mar 2019 21:21:23 +0200
-Message-ID: <CAOQ4uxg34ZjHxXSfCgLmbcUh_JZptYyY9j74ZFX3esRn7OSLVw@mail.gmail.com>
-Subject: Re: overlayfs access checks on underlying layers
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Paul Moore <paul@paul-moore.com>,
+        Mon, 4 Mar 2019 14:22:07 -0500
+Received: from mga06.intel.com ([134.134.136.31]:9917 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfCDTWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:22:07 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 11:22:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,441,1544515200"; 
+   d="scan'208";a="148511849"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2019 11:22:05 -0800
+Date:   Mon, 4 Mar 2019 11:15:12 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        selinux@vger.kernel.org, Daniel J Walsh <dwalsh@redhat.com>,
-        LSM <linux-security-module@vger.kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>
-Content-Type: text/plain; charset="UTF-8"
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 04/17] x86/split_lock: Align x86_capability to
+ unsigned long to avoid split locked access
+Message-ID: <20190304191512.GB231946@romley-ivt3.sc.intel.com>
+References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
+ <1551494711-213533-5-git-send-email-fenghua.yu@intel.com>
+ <b9a7e3a6-d89c-9ce7-8909-e09122c93f96@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b9a7e3a6-d89c-9ce7-8909-e09122c93f96@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 8:53 PM Stephen Smalley <sds@tycho.nsa.gov> wrote:
->
-> On 3/4/19 12:01 PM, Mark Salyzyn wrote:
-> > On 11/29/2018 05:49 AM, Vivek Goyal wrote:
-> >> So will override_creds=off solve the NFS issue also where all access will
-> >> happen with the creds of task now? Though it will stil require more
-> >> priviliges in task for other operations in overlay to succeed.
-> >
-> > NFS problems seems to have ended the discussion, too many stakeholders?
-> > too many outstanding questions?
-> >
-> > Do we accept the limitations of the override_creds patch as is, and then
-> > have the folks more familiar with the NFS scenario(s) build on it?
-> >
-> > [TL;DR]
-> >
-> > After looking at all this discussion, it feels like a larger audited
-> > rewrite of the security model is in order and override_creds=off may be
-> > a disservice (although expediently deals with Android's needs) to a
-> > correct general solution. I admit I have little idea where to go from
-> > here for a general solution.
-> >
-> > As far as I see it, the model of creator && caller credentials is a
-> > problem for any non-overlapping (MAC) privilege models. This patch
-> > allows one to drop any creator privilege escalation, re-introducing the
-> > "caller" to the lower layers.
-> >
-> > As such I would expect a better model is to _always_ check the caller
-> > credentials again in the lower layers, and only check the creator
-> > credentials, some without caller credentials, for some special cases?
-> > Change an && to an || for some of the checks? What are those special
-> > cases? I must admit _none_ of those special cases need attention in the
-> > Android usage models though making it difficult for me to do the fight
-> > thing for the associated stakeholders.
->
-> As I recall, there were multiple problems with using current process'
-> creds for the operations on the lower/upper/work directories:
->
-> - Some overlayfs operations on the lower/upper/work directories required
-> privilege (capabilities) that the current process might lack, e.g. to
-> set ownership and the like on upper or work files, to set special xattrs
-> used internally by overlayfs for whiteouts or similar purposes, to act
-> on files within the work dir which was inaccessible to the current
-> process to prevent accessing files in an incomplete state, etc.
-> Originally that was handled by temporarily elevating the effective
-> capabilities around the privileged operation in the overlayfs code but
-> that didn't help with the SELinux or other LSM capability checking that
-> was triggered upon the capable calls.  Without some change there you'd
-> have to allow all client process domains all of the relevant
-> capabilities in policy, greatly increasing their privileges.
->
-> - The original logic was checking access to the lower dir/files in the
-> context of the current process when performing some operation that
-> modifies the file content or metadata, thereby triggering a SELinux/LSM
-> write or similar check, even though the actual data or metadata
-> modification occurs to the copied-up file instead and does not affect
-> the lower dir/files.  That was preventing making the lower dir/file
-> labels read-only to the client processes in the policy, which was
-> desired for the container use case.
->
-> You'd need to solve those problems in some way.
->
+On Mon, Mar 04, 2019 at 10:52:19AM -0800, Dave Hansen wrote:
+> On 3/1/19 6:44 PM, Fenghua Yu wrote:
+> > diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> > index 33051436c864..eb8ae701ef65 100644
+> > --- a/arch/x86/include/asm/processor.h
+> > +++ b/arch/x86/include/asm/processor.h
+> > @@ -93,7 +93,9 @@ struct cpuinfo_x86 {
+> >  	__u32			extended_cpuid_level;
+> >  	/* Maximum supported CPUID level, -1=no CPUID: */
+> >  	int			cpuid_level;
+> > -	__u32			x86_capability[NCAPINTS + NBUGINTS];
+> > +	/* Unsigned long alignment to avoid split lock in atomic bitmap ops */
+> > +	__u32			x86_capability[NCAPINTS + NBUGINTS]
+> > +				__aligned(sizeof(unsigned long));
+> 
+> I think this also warrants a comment in the changelog about the
+> alignment of 'struct cpuinfo_x86'.
 
-This is entire discussion in avoiding the elephant in the room -
-Tampering with underlying layers.
-We only talk about functionality and enforcement of legit overlayfs
-operation, but what about an adversary that writes/changes files on
-underlying layers? For example, permission to write new files can
-be elevated to effectively modifying or deleting files.
+How about add "Depending on the starting address where GCC generates
+for data of struct cpuinfo_x86, x86_capability[] may or may not align to
+unsigned long...."?
 
-To me the logic in "mounter credentials" is not only functional.
-Whoever has access to underlying layer can really cause a lot of
-damage to users accessing the overlay mount, so in a way, this
-power needs to be translated to some sort of elevated credentials.
+Thanks.
 
-The the current model seems solid in that respect - access to
-underlying layer can be restricted to the "mounter" who effectively
-crafts an entirely new set of files.
-
-Another way to think about this - consider a user space overlayfs
-implementation, for example:
-https://github.com/containers/fuse-overlayfs
-
-In what way should the requirements to overlayfs security model
-differ from the model already imposed on a user space implementation?
-
-I do understand the Android use case for override_creds=off, but
-to me, this is a functional configuration that says "turn off overlay
-specific security considerations... I know what I am doing".
-I am not saying that the Android adb debug use case is insecure.
-I am just not seeing how a && or || model for mounter and caller
-credential add up to a coherent story (yet...).
-
-Thanks,
-Amir.
+-Fenghua
