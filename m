@@ -2,52 +2,53 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30FFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF9EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACC220863
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B075920863
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687822;
-	bh=65c27tibzNIDbtERYjy8MwgRS76XbpiTKqn4ZKx1DSY=;
+	s=default; t=1551687827;
+	bh=H8bOrNfum0H3mYQ8p0HPrv5bd9MOcBxap+anR7JfMTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DjGPaSY2pulAUZk7yMZ0IPHJ6KF2tVl6LFVAJ+zrxKr0d+xckqskncu8QIr00JhWY
-	 ulgQoKehosnyW3x7XpU0lXeUppjV7GSvnNkuKk6sdK9I8FyeLOSKWZclNVHTy5vfcx
-	 +OPW7rs9E94nH5Al4m/lYKnmm/E2qTZFdO+e09jo=
+	b=kb2Y0UmkzjEhHJHyx1kRr/oImM/bI7uCxiuO8rp1v4YNZSgs8p3w+bMlxhH1KRSt1
+	 7UEK02je3dcYDyebD1gcaGz5aIFOu9nP9KmSFkGLGHjd2vvMXsJI5noJvisEiAvmLQ
+	 BW3hTLS/rXurUeR3ns8op31zIjotW4ST9wzSwDus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfCDIXl (ORCPT
+        id S1726680AbfCDIXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:23:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39840 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:23:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbfCDIXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:23:34 -0500
+        id S1726047AbfCDIXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:23:45 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5176620863;
-        Mon,  4 Mar 2019 08:23:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F07B20863;
+        Mon,  4 Mar 2019 08:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687813;
-        bh=65c27tibzNIDbtERYjy8MwgRS76XbpiTKqn4ZKx1DSY=;
+        s=default; t=1551687823;
+        bh=H8bOrNfum0H3mYQ8p0HPrv5bd9MOcBxap+anR7JfMTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0G52PXmDtl+QXSivT95JadYk666nbltU3UZbZr9VwIGLR3NoBPwMh1nV2HPhG2Bx5
-         sUNE7Y1GaKeVsHfPvVjlGJG7VIxxc8R1vXZdmo5VVZXK9SMjQxS2bBSX9pDKVD8Oqw
-         72Xlt3aTCG6GuPtYWoWWmoNT3xaENeJGOwYE/C8M=
+        b=jczGGuG39fH8zJGXMJMr+LyYMN8Oifmx5W92/DdqCqXmgqG/JK5gzSdBZsKwBs7An
+         lOwn2Akdj9atLZyJu+eHzZ92I/IZBiSr1CIufvQuy+OMyh8Ywn4wFYHyYc1bAIxrpz
+         4Z5UdRixNX9HJjKb/b1DWu04vJt9j3WKqaoZ4tqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 28/32] KVM: nSVM: clear events pending from svm_complete_interrupts() when exiting to L1
-Date:   Mon,  4 Mar 2019 09:22:16 +0100
-Message-Id: <20190304081604.373320084@linuxfoundation.org>
+        stable@vger.kernel.org, dann frazier <dann.frazier@canonical.com>,
+        John Garry <john.garry@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 04/32] scsi: libsas: Fix rphy phy_identifier for PHYs with end devices attached
+Date:   Mon,  4 Mar 2019 09:21:52 +0100
+Message-Id: <20190304081602.605584887@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081602.307094059@linuxfoundation.org>
 References: <20190304081602.307094059@linuxfoundation.org>
@@ -66,46 +67,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 619ad846fc3452adaf71ca246c5aa711e2055398 ]
+From: John Garry <john.garry@huawei.com>
 
-kvm-unit-tests' eventinj "NMI failing on IDT" test results in NMI being
-delivered to the host (L1) when it's running nested. The problem seems to
-be: svm_complete_interrupts() raises 'nmi_injected' flag but later we
-decide to reflect EXIT_NPF to L1. The flag remains pending and we do NMI
-injection upon entry so it got delivered to L1 instead of L2.
+commit ffeafdd2bf0b280d67ec1a47ea6287910d271f3f upstream.
 
-It seems that VMX code solves the same issue in prepare_vmcs12(), this was
-introduced with code refactoring in commit 5f3d5799974b ("KVM: nVMX: Rework
-event injection and recovery").
+The sysfs phy_identifier attribute for a sas_end_device comes from the rphy
+phy_identifier value.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Currently this is not being set for rphys with an end device attached, so
+we see incorrect symlinks from systemd disk/by-path:
+
+root@localhost:~# ls -l /dev/disk/by-path/
+total 0
+lrwxrwxrwx 1 root root  9 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0 -> ../../sdb
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part3 -> ../../sdc3
+
+Indeed, each sas_end_device phy_identifier value is 0:
+
+root@localhost:/# more sys/class/sas_device/end_device-0\:0\:2/phy_identifier
+0
+root@localhost:/# more sys/class/sas_device/end_device-0\:0\:10/phy_identifier
+0
+
+This patch fixes the discovery code to set the phy_identifier.  With this,
+we now get proper symlinks:
+
+root@localhost:~# ls -l /dev/disk/by-path/
+total 0
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy10-lun-0 -> ../../sdg
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy11-lun-0 -> ../../sdh
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0 -> ../../sda
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0-part1 -> ../../sda1
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0 -> ../../sdb
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0 -> ../../sdc
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part1 -> ../../sdc1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part2 -> ../../sdc2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part3 -> ../../sdc3
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy5-lun-0 -> ../../sdd
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0 -> ../../sde
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part1 -> ../../sde1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part2 -> ../../sde2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part3 -> ../../sde3
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0 -> ../../sdf
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part1 -> ../../sdf1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part2 -> ../../sdf2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part3 -> ../../sdf3
+
+Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
+Reported-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Jason Yan <yanaijie@huawei.com>
+Tested-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/svm.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/scsi/libsas/sas_expander.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index afc2bd03b4d9e..01eb0451b96d3 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -2862,6 +2862,14 @@ static int nested_svm_vmexit(struct vcpu_svm *svm)
- 	kvm_mmu_reset_context(&svm->vcpu);
- 	kvm_mmu_load(&svm->vcpu);
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -818,6 +818,7 @@ static struct domain_device *sas_ex_disc
+ 		rphy = sas_end_device_alloc(phy->port);
+ 		if (!rphy)
+ 			goto out_free;
++		rphy->identify.phy_identifier = phy_id;
  
-+	/*
-+	 * Drop what we picked up for L2 via svm_complete_interrupts() so it
-+	 * doesn't end up in L1.
-+	 */
-+	svm->vcpu.arch.nmi_injected = false;
-+	kvm_clear_exception_queue(&svm->vcpu);
-+	kvm_clear_interrupt_queue(&svm->vcpu);
-+
- 	return 0;
- }
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
+@@ -845,6 +846,7 @@ static struct domain_device *sas_ex_disc
  
--- 
-2.19.1
-
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
++		rphy->identify.phy_identifier = phy_id;
+ 		sas_fill_in_rphy(child, rphy);
+ 
+ 		list_add_tail(&child->disco_list_node, &parent->port->disco_list);
 
 
