@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DF9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E633C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2458220835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CEA20835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfCDD6X (ORCPT
+        id S1726508AbfCDD7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 22:58:23 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:47424 "EHLO
+        Sun, 3 Mar 2019 22:59:02 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:48247 "EHLO
         out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726106AbfCDD6P (ORCPT
+        by vger.kernel.org with ESMTP id S1726237AbfCDD6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 22:58:15 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TLtwN3T_1551671891;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TLtwN3T_1551671891)
+        Sun, 3 Mar 2019 22:58:22 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TLtrd6F_1551671899;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TLtrd6F_1551671899)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 04 Mar 2019 11:58:12 +0800
+          Mon, 04 Mar 2019 11:58:19 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     linux-kernel@zh-kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, harryxiyou@gmail.com, corbet@lwn.net
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Li Yang <leoli@freescale.com>, Li Zefan <lizefan@huawei.com>,
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>, Li Yang <leo@zh-kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
         Shawn Guo <shawn.guo@linaro.org>,
         Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
-Subject: [PATCH 05/20] docs/zh_CN: rename HOWTO into process directory
-Date:   Mon,  4 Mar 2019 11:57:28 +0800
-Message-Id: <20190304035744.155203-6-alex.shi@linux.alibaba.com>
+Subject: [PATCH 15/20] docs/zh_CN: rename SubmittingDrivers
+Date:   Mon,  4 Mar 2019 11:57:38 +0800
+Message-Id: <20190304035744.155203-16-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
 References: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
@@ -44,25 +44,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make it available in htmldocs
+Rename the file to make it available in html etc docs making.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Li Yang <leoli@freescale.com>
+Cc: Li Yang <leo@zh-kernel.org>
 Cc: Li Zefan <lizefan@huawei.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: Coly Li <colyli@suse.de>
 ---
- Documentation/translations/zh_CN/process/{HOWTO => howto.rst} | 0
+ .../zh_CN/process/{SubmittingDrivers => submitting-drivers.rst}   | 0
  1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/translations/zh_CN/process/{HOWTO => howto.rst} (100%)
+ rename Documentation/translations/zh_CN/process/{SubmittingDrivers => submitting-drivers.rst} (100%)
 
-diff --git a/Documentation/translations/zh_CN/process/HOWTO b/Documentation/translations/zh_CN/process/howto.rst
+diff --git a/Documentation/translations/zh_CN/process/SubmittingDrivers b/Documentation/translations/zh_CN/process/submitting-drivers.rst
 similarity index 100%
-rename from Documentation/translations/zh_CN/process/HOWTO
-rename to Documentation/translations/zh_CN/process/howto.rst
+rename from Documentation/translations/zh_CN/process/SubmittingDrivers
+rename to Documentation/translations/zh_CN/process/submitting-drivers.rst
 -- 
 2.19.1.856.g8858448bb
 
