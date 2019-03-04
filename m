@@ -2,117 +2,111 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D696EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E31AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A96F4206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA46206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:40:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="REJ0zfzP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfCDTjz (ORCPT
+        id S1726269AbfCDTku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:39:55 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:36607 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfCDTjy (ORCPT
+        Mon, 4 Mar 2019 14:40:50 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39428 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfCDTku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:39:54 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MrQN5-1hM99S1SQ3-00oWXc; Mon, 04 Mar 2019 20:39:37 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     qla2xxx-upstream@qlogic.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Quinn Tran <qtran@marvell.com>, linux-scsi@vger.kernel.org,
+        Mon, 4 Mar 2019 14:40:50 -0500
+Received: by mail-lj1-f193.google.com with SMTP id g80so5379885ljg.6
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 11:40:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JPOg+GSue9wrYWiMWrHItE1Mfe23cyDlrdIzF+BE7t4=;
+        b=REJ0zfzPFDjYqAWlMSnOUdPeacdxkIhjygwqAQZe0f79UBXtMVvwqkOFrGL/ZjWRff
+         n5tapeXNdcz3i6fFt6aP31hlP26nN0bH4co696abyYK9piIO2aoNfGBxi6esuLVDKeEk
+         dt7tzqB3wnHXmaCNxG7LegFgl+qoPXuOh2v6QT1VX68aB16VqG+r+TO6WeddhdNDKd20
+         uxjmIsECJ5qPoqs3J92shEVYbcnKgo9K5V+mPoVIjiEQQmMGAWIdEpiVrVQmX9qGU7HV
+         Rlg15na0EsmNOS95qXLa41yjjiis/lk3mZofmq0yJ0GXZysa0d3UjlcNt5TERUJ4Jl1r
+         +N4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JPOg+GSue9wrYWiMWrHItE1Mfe23cyDlrdIzF+BE7t4=;
+        b=rdm1AZ9pZ8WEhipqVTdHEkfqJhL18LcRI+DhzJc6wDzP9Sxq7/9OwmEgLj4cJRW4F6
+         rAmru0Z2goIt3spWXlpe50b7kMwGPE8fOYprHSTJJqTY1r3OPqbwNYN4bZoc1QyEphpK
+         aBUeNuI/JHNABwo8/nU6ugo0MZj1XtB+MijbPRdPehOjsWeSfufzNfZWQOZw0HdAiG41
+         Y+JclNSLzBdwUBPT+kKqgEq5R0v6AxHSg+sUYKFRYeNcDfGApodJDls4gV1xD58m7yHE
+         WHnKn0ioQJ99RttlYFwzMRagvgNpfQiY1IO3DNY2FeVlUCm/Kmb+soHyd5jIXTHy24IZ
+         9DRA==
+X-Gm-Message-State: APjAAAVUxYynqvbCv6ivTDHRNCTIMVmcuNktgPyhtcp4KUytceBlA5bw
+        fCJK5p4F0Yl2NHtzRxtB1ucr5w==
+X-Google-Smtp-Source: APXvYqx6APH2ZJPnfptAh+ZW4pmzAvrWkVXzCReedH5z7OJuSoz0pvCJPGv7PfXM1vXTEt6u+zpQaQ==
+X-Received: by 2002:a2e:5cc1:: with SMTP id q184mr11385180ljb.123.1551728447699;
+        Mon, 04 Mar 2019 11:40:47 -0800 (PST)
+Received: from centauri.lan (h-229-118.A785.priv.bahnhof.se. [5.150.229.118])
+        by smtp.gmail.com with ESMTPSA id w17sm1745527lfk.18.2019.03.04.11.40.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 04 Mar 2019 11:40:47 -0800 (PST)
+Date:   Mon, 4 Mar 2019 20:40:45 +0100
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] scsi: qla2xxx: avoid printf format warning
-Date:   Mon,  4 Mar 2019 20:39:10 +0100
-Message-Id: <20190304193917.702601-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190304193917.702601-1-arnd@arndb.de>
-References: <20190304193917.702601-1-arnd@arndb.de>
+Subject: Re: [PATCH v2] arm64: dts: qcs404: evb: Fix voltage for l3
+Message-ID: <20190304194045.GA14044@centauri.lan>
+References: <20190219063222.15656-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:lCcda1YpPw9M+ZtzSbGvp7ECbDox9Y2czsNlWu8nPeD1QnKypkn
- 3RCtpNbxrvn/CRomx0tdkFzOCd6j0rBeGqgzlISGvYplxOECqu/jeFo/EhBtEqvyMTsWfF+
- G0OECMhPbnHGqZ3qQ9cffrFZcsU3iqbsQYO2qQgTXB0fZkDWarVMJLVUkyGxsMV8dWc2BTD
- uTsOH5LrhJcDaeu5qBlNw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qV24WC/GyAE=:fa5fNZ/WYTRMsV3nDc72BR
- oI3/uB0ISYdDKUwzki/EiHmxi9d32AZ9fxOWsK3VHmH8sl7AF0c34eEknDWWfzNt3Z4vg4nkC
- QVzXZmDD1FI2S49mgtyQxtfsgUpFoGlqVDbt3jwaTAf0YdYEjSBGaOrM1n1Mhsr7ffMVgFBHf
- OIr81U4zq3jfyJCjcDMRrep6vxUflMiAKvG5VixCWSQ4puXPURxGDt853YiV+d3wqJtMrkuHg
- x4cEqXMAGKOminLVsYrHSH7QHH5WWNEXBEJ8TE01O5r0GtgAGz2Xmp6nVEOn1oogyMqmhN1za
- aWmCaX0bXjrgi2CHY+BDJ13VdQ5Wl4MkYg9o+DbyhQqNDY+4SLdhc20uZMz0ySziKIYYgHORt
- xVEoV5yBWoMOUP6DiKPppcG6/vYPDLrNhu25C9Fs6OMmy4uO630at5eU5gJT8GFGHE3T8Pk2D
- xpPzhO8AZ8fY2WK/1UZ0h48pPN8vaL6axHFBaT77VnHHJzyL34K/CUfRkxXSybk941KX/gXH/
- TGZjGz5gaTYWdcj1V+mPeZ4UWsmSGvEdKClyhb7QSVxcqizoVSY4CCmKSh5etZKSkC/HhtR7a
- SijgBEv0muTE7/QioemOxg//yLCf6lGtoRYTQH/gjnk0FsEJ3XScevfqvl3NNAJJHrKgoO2i4
- P7YOLcPNa2cW+TVQRYocztT6y5gHKWg0ztD3TSXR5Hm+GVlGK16WZen/qS3c1FBOJNHSMGgj3
- wGYFinwrQ5jOAsANzTskJ7YaqUtRacsPiVO5gQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190219063222.15656-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on the target architecture and configuration, both phys_addr_t
-and dma_addr_t may be smaller than 'long long', so we get a warning when
-printing either of them using the %llx format string:
+On Mon, Feb 18, 2019 at 10:32:22PM -0800, Bjorn Andersson wrote:
+> PMS405 L3 is outside the acceptable range, causing PCIe to fail. Fix
+> this.
+> 
+> Fixes: 0b363f5b871c ("arm64: dts: qcom: qcs404: Add PMS405 RPM regulators")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v1:
+> - Rebased upon https://lore.kernel.org/lkml/20181213183200.3204-1-bjorn.andersson@linaro.org/
+> 
+>  arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> index 3a7f0d42e35a..6146f3577961 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+> @@ -87,7 +87,7 @@
+>  		};
+>  
+>  		vreg_l3_1p05: l3 {
+> -			regulator-min-microvolt = <976000>;
+> +			regulator-min-microvolt = <1048000>;
+>  			regulator-max-microvolt = <1160000>;
+>  		};
+>  
+> -- 
+> 2.18.0
+> 
 
-drivers/scsi/qla2xxx/qla_iocb.c: In function 'qla24xx_walk_and_build_prot_sglist':
-drivers/scsi/qla2xxx/qla_iocb.c:1140:46: error: format '%llx' expects argument of type 'long long unsigned int', but argument 6 has type 'dma_addr_t' {aka 'unsigned int'} [-Werror=format=]
-         "%s: page boundary crossing (phys=%llx len=%x)\n",
-                                           ~~~^
-                                           %x
-         __func__, sle_phys, sg->length);
-                   ~~~~~~~~
-drivers/scsi/qla2xxx/qla_iocb.c:1180:29: error: format '%llx' expects argument of type 'long long unsigned int', but argument 7 has type 'dma_addr_t' {aka 'unsigned int'} [-Werror=format=]
-        "%s: sg[%x] (phys=%llx sglen=%x) ldma_sg_len: %x dif_bundl_len: %x ldma_needed: %x\n",
-                          ~~~^
-
-There are special %pad and %pap format strings in Linux that we could use here,
-but since the driver already does 64-bit arithmetic on the values, using a
-plain 'u64' seems more consistent here.
-
-Note: A possible related issue may be that the driver possibly checks the
-wrong kind of overflow: when an IOMMU is in use, buffers that cross a 32-bit
-boundary in physical addresses would still be mapped into dma addresses
-within the low 4GB space, so I suspect that we actually want to check
-sg_dma_address() instead of sg_phys() here.
-
-Fixes: 50b812755e97 ("scsi: qla2xxx: Fix DMA error when the DIF sg buffer crosses 4GB boundary")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/scsi/qla2xxx/qla_iocb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/scsi/qla2xxx/qla_iocb.c b/drivers/scsi/qla2xxx/qla_iocb.c
-index 63f8e3c19841..456a41d2e2c6 100644
---- a/drivers/scsi/qla2xxx/qla_iocb.c
-+++ b/drivers/scsi/qla2xxx/qla_iocb.c
-@@ -1132,7 +1132,7 @@ qla24xx_walk_and_build_prot_sglist(struct qla_hw_data *ha, srb_t *sp,
- 	/* if initiator doing write or target doing read */
- 	if (direction_to_device) {
- 		for_each_sg(sgl, sg, tot_dsds, i) {
--			dma_addr_t sle_phys = sg_phys(sg);
-+			u64 sle_phys = sg_phys(sg);
- 
- 			/* If SGE addr + len flips bits in upper 32-bits */
- 			if (MSD(sle_phys + sg->length) ^ MSD(sle_phys)) {
-@@ -1178,7 +1178,7 @@ qla24xx_walk_and_build_prot_sglist(struct qla_hw_data *ha, srb_t *sp,
- 
- 			ql_dbg(ql_dbg_tgt + ql_dbg_verbose, vha, 0xe023,
- 			    "%s: sg[%x] (phys=%llx sglen=%x) ldma_sg_len: %x dif_bundl_len: %x ldma_needed: %x\n",
--			    __func__, i, sg_phys(sg), sglen, ldma_sg_len,
-+			    __func__, i, (u64)sg_phys(sg), sglen, ldma_sg_len,
- 			    difctx->dif_bundl_len, ldma_needed);
- 
- 			while (sglen) {
--- 
-2.20.0
-
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
