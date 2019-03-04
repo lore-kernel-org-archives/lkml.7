@@ -1,183 +1,112 @@
-Return-Path: <SRS0=GAfv=RG=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A1BC43381
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 23:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED653C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFB320835
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 Mar 2019 23:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B323920830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 00:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551657880;
+	bh=JcLkQWoBso0TJZmGeaqKOGeMRO4DB4Casp5mSyw9L2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SoW7egIMBDy6xPKmQSRdkNGJdW2FTCeMeodlnDn7GVAsG9OthPPAUzciG55Yikhlg
+	 NQY5+eMZd4uEorDJi2X1lbt8KAVlu1c/5dqrq9s3E3MmWpttGitSYjE5sYNVRL/d37
+	 CzXTd6dYMG3Ih9Wdv185SLr/Phz8waV39IBGt1Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbfCCXe3 (ORCPT
+        id S1726005AbfCDAEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 18:34:29 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44888 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfCCXe2 (ORCPT
+        Sun, 3 Mar 2019 19:04:38 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50470 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfCDAEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 18:34:28 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 60E932802CD
-Message-ID: <1f7ab3d0a759c583fc33a83ee24ed780e40ce7a1.camel@collabora.com>
-Subject: Re: [PATCH] Remove deductively redundant NULL pointer checks
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Shaobo He <shaobo@cs.utah.edu>, linux-media@vger.kernel.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rick Chang <rick.chang@mediatek.com>,
-        Bin Liu <bin.liu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>,
-        Jacob chen <jacob2.chen@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Andrzej Pietrasiewicz <andrzej.p@samsung.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Benoit Parrot <bparrot@ti.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Leontiev <scileont@gmail.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FDP1" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>
-Date:   Sun, 03 Mar 2019 20:34:09 -0300
-In-Reply-To: <1551228250-36426-1-git-send-email-shaobo@cs.utah.edu>
-References: <1551228250-36426-1-git-send-email-shaobo@cs.utah.edu>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1 
+        Sun, 3 Mar 2019 19:04:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=N8h9uN8GqN8kZF3iUlSc6mwssE5lPOsXCv5oRSma56A=; b=hSN/Wc5hcr++oSyB9dVdv3N3T
+        bPGGLZMWse2szXVKJHo8E0nOe8khpvNNkcX6FYnheijfzDgCbBlcpUKkQ6s9tHN4BjIC20yh4YKyF
+        z57afdD6pbFWQnU8GPAGULlpBc0vsbZ6yuMsV8FN2UAGwyoAiIiJcCMexPainrn7m28PM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h0b5v-0007N7-EB; Mon, 04 Mar 2019 00:04:35 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 1CF97440082; Mon,  4 Mar 2019 00:04:34 +0000 (GMT)
+Date:   Mon, 4 Mar 2019 00:04:33 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] spi: dw: Add support for an optional interface clock
+Message-ID: <20190304000433.GO23441@sirena.org.uk>
+References: <1551360342-23981-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1551360342-23981-3-git-send-email-gareth.williams.jx@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9DptZICXTlJ7FQ09"
+Content-Disposition: inline
+In-Reply-To: <1551360342-23981-3-git-send-email-gareth.williams.jx@renesas.com>
+X-Cookie: Murphy was an optimist.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-02-26 at 17:43 -0700, Shaobo He wrote:
-> The fixes included in this commit essentially removes NULL pointer
-> checks on the return values of function `get_queue_ctx` as well as
-> `v4l2_m2m_get_vq` defined in file v4l2-mem2mem.c.
-> 
-> Function `get_queue_ctx` is very unlikely to return a NULL pointer
-> because its return value is an address composed of the base address
-> pointed by `m2m_ctx` and an offset of field `out_q_ctx` or `cap_q_ctx`.
-> Since the offset of either field is not 0, for the return value to be
-> NULL, pointer `m2m_ctx` must be a very large unsigned value such that
-> its addition to the offset overflows to NULL which may be undefined
-> according to this post:
-> https://wdtz.org/catching-pointer-overflow-bugs.html. Moreover, even if
-> `m2m_ctx` is NULL, the return value cannot be NULL, either. Therefore, I
-> think it is reasonable to conclude that the return value of function
-> `get_queue_ctx` cannot be NULL.
-> 
-> Given the return values of `get_queue_ctx` not being NULL, we can follow
-> a similar reasoning to conclude that the return value of
-> `v4l2_mem_get_vq` cannot be NULL since its return value is the same
-> address as the return value of `get_queue_ctx`. Therefore, this patch
-> also removes NULL pointer checks on the return values of
-> `v4l2_mem_get_vq`.
-> 
-> Signed-off-by: Shaobo He <shaobo@cs.utah.edu>
 
-Hi Shaobo,
+--9DptZICXTlJ7FQ09
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It seems this is v2 of 1551128631-19713-1-git-send-email-shaobo@cs.utah.edu,
-and it should be marked as such.
+On Thu, Feb 28, 2019 at 01:25:42PM +0000, Gareth Williams wrote:
+> From: Phil Edworthy <phil.edworthy@renesas.com>
+>=20
+> The Synopsys SSI Controller has an interface clock, but most SoCs hide=20
+> this away. However, on some SoCs you need to explicity enable the=20
+> interface clock in order to access the registers. Therefore, add=20
+> support for an optional interface clock.
 
-Do you think you can read Documentation/process/submitting-patches.rst,
-for your future patches?
+This doesn't build for me:
 
-Also, two comments...
+  CC      drivers/spi/spi-dw-mmio.o
+drivers/spi/spi-dw-mmio.c: In function =E2=80=98dw_spi_mmio_probe=E2=80=99:
+drivers/spi/spi-dw-mmio.c:177:18: error: implicit declaration of function =
+=E2=80=98devm_clk_get_optional=E2=80=99; did you mean =E2=80=98devm_gpiod_g=
+et_optional=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+  dwsmmio->pclk =3D devm_clk_get_optional(&pdev->dev, "pclk");
+                  ^~~~~~~~~~~~~~~~~~~~~
+                  devm_gpiod_get_optional
+drivers/spi/spi-dw-mmio.c:177:16: warning: assignment to =E2=80=98struct cl=
+k *=E2=80=99 from =E2=80=98int=E2=80=99 makes pointer from integer without =
+a cast [-Wint-conversion]
+  dwsmmio->pclk =3D devm_clk_get_optional(&pdev->dev, "pclk");
+                ^
 
->  drivers/media/platform/coda/coda-common.c          |  4 ----
->  drivers/media/platform/imx-pxp.c                   |  7 -------
->  drivers/media/platform/m2m-deinterlace.c           |  7 -------
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    |  7 -------
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c |  7 -------
->  drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 13 -------------
->  drivers/media/platform/mx2_emmaprp.c               |  7 -------
->  drivers/media/platform/rcar_fdp1.c                 |  3 ---
->  drivers/media/platform/rcar_jpu.c                  |  8 --------
->  drivers/media/platform/rockchip/rga/rga.c          |  4 ----
->  drivers/media/platform/s5p-g2d/g2d.c               |  4 ----
->  drivers/media/platform/s5p-jpeg/jpeg-core.c        |  7 -------
->  drivers/media/platform/sh_veu.c                    |  2 --
->  drivers/media/platform/ti-vpe/vpe.c                |  7 -------
->  drivers/media/platform/vicodec/vicodec-core.c      |  5 -----
->  drivers/media/platform/vim2m.c                     |  7 -------
->  drivers/media/v4l2-core/v4l2-mem2mem.c             |  4 ----
->  17 files changed, 103 deletions(-)
-> 
-> diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
-> index 7518f01..ee1e05b 100644
-> --- a/drivers/media/platform/coda/coda-common.c
-> +++ b/drivers/media/platform/coda/coda-common.c
-> @@ -696,8 +696,6 @@ static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f,
->  	struct vb2_queue *vq;
->  
->  	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> -	if (!vq)
-> -		return -EINVAL;
->  
->  	q_data = get_q_data(ctx, f->type);
->  	if (!q_data)
-> @@ -817,8 +815,6 @@ static int coda_s_fmt_vid_out(struct file *file, void *priv,
->  	ctx->quantization = f->fmt.pix.quantization;
->  
->  	dst_vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
-> -	if (!dst_vq)
-> -		return -EINVAL;
->  
->  	/*
->  	 * Setting the capture queue format is not possible while the capture
-> diff --git a/drivers/media/platform/imx-pxp.c b/drivers/media/platform/imx-pxp.c
-> index c1c2554..d079b3c 100644
-> --- a/drivers/media/platform/imx-pxp.c
-> +++ b/drivers/media/platform/imx-pxp.c
-> @@ -1071,13 +1071,8 @@ static int pxp_enum_fmt_vid_out(struct file *file, void *priv,
->  
->  static int pxp_g_fmt(struct pxp_ctx *ctx, struct v4l2_format *f)
->  {
-> -	struct vb2_queue *vq;
->  	struct pxp_q_data *q_data;
->  
-> -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> -	if (!vq)
-> -		return -EINVAL;
-> -
+--9DptZICXTlJ7FQ09
+Content-Type: application/pgp-signature; name="signature.asc"
 
-It seems your patch also removes unused code, but this is not really explained in the
-commit log.
+-----BEGIN PGP SIGNATURE-----
 
-Perhaps it is better to split all these changes on their own patch:
-one patch to remove dead code, and then another patch to remove unneeded null checks.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlx8a5EACgkQJNaLcl1U
+h9AIWAf9HDmrXbTnxVnkqRuJ/D4ahaWL1j36TX2EFtbe2UpYA6akgolCZN+NhyaA
+Txy2CXOSJge+9lX+Fv5ocJ13dAQmsE9QONkEZTWNLeLywRfyksIs5oy4ZFxnlMrL
+RWyQWY8XJN2x3JhI0cVkI8FLTGaenAy53DV0ORU9Lr/yfkt3092135Wf5ZCCUWdK
+J3lViFs8ipokb8YrGaJnXA3A8hCcIujOOFGmGgVxiG8N0r3VQ3xDh9VwJBTDeqN6
+gg5RBhH5Mq9YxD+8/wZhGNXB/2LALr9VpchpiUzqwjyLci23o+0lXd/2UhuPg6Sf
+gSmZIBPduryrQNxDAK0H3kvQle8rYA==
+=emC2
+-----END PGP SIGNATURE-----
 
-And also, I think you should add some comments, either in v4l2_m2m_get_vq's declaration
-or definition, explaining that the return value cannot be NULL.
-
-I have to say: I'm not a fan of "improvement" patches in code paths that
-are anything but hot... but knock yourself out!
-
-Thanks,
-Eze
-
+--9DptZICXTlJ7FQ09--
