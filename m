@@ -2,91 +2,116 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC950C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B989C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 07:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3D120823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 06:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB15F21019
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 07:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726158AbfCDG6L (ORCPT
+        id S1726186AbfCDHAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 01:58:11 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:30822 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725981AbfCDG6L (ORCPT
+        Mon, 4 Mar 2019 02:00:17 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:34279 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfCDHAQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 01:58:11 -0500
-X-UUID: 873b889c21174a91b57c226523e36ca3-20190304
-X-UUID: 873b889c21174a91b57c226523e36ca3-20190304
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1125917710; Mon, 04 Mar 2019 14:58:07 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 4 Mar
- 2019 14:58:05 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 4 Mar 2019 14:58:04 +0800
-Message-ID: <1551682684.2210.67.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 10/12] hikey960: Support usb functionality of Hikey960
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Yu Chen <chenyu56@huawei.com>, USB <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Suzhuangluan <suzhuangluan@hisilicon.com>,
-        Kongfei <kongfei@hisilicon.com>, <liuyu712@hisilicon.com>,
-        <wanghu17@hisilicon.com>, <butao@hisilicon.com>,
-        "Yao Chen" <chenyao11@huawei.com>, <fangshengzhou@hisilicon.com>,
-        <lipengcheng8@huawei.com>, songxiaowei <songxiaowei@hisilicon.com>,
-        xu yiping <xuyiping@hisilicon.com>, <xuyoujun4@huawei.com>,
-        <yudongbin@hisilicon.com>, <zangleigang@hisilicon.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Date:   Mon, 4 Mar 2019 14:58:04 +0800
-In-Reply-To: <CAHp75Vdkp40e5-Bv+LnLBxgPkTDJ0FA1ooq+C4-do=4k5prTiQ@mail.gmail.com>
-References: <20190302090505.65542-1-chenyu56@huawei.com>
-         <20190302090505.65542-11-chenyu56@huawei.com>
-         <1551664069.2210.64.camel@mhfsdcap03>
-         <CAHp75Vdkp40e5-Bv+LnLBxgPkTDJ0FA1ooq+C4-do=4k5prTiQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
-MIME-Version: 1.0
-X-MTK:  N
+        Mon, 4 Mar 2019 02:00:16 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1h0ha6-0006LC-PX; Mon, 04 Mar 2019 07:00:11 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     mlindner@marvell.com, stephen@networkplumber.org,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] sky2: Disable MSI on Dell Inspiron 1545 and Gateway P-79
+Date:   Mon,  4 Mar 2019 15:00:03 +0800
+Message-Id: <20190304070003.30140-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi,
+Some sky2 chips fire IRQ after S3, before the driver is fully resumed:
+[ 686.804877] do_IRQ: 1.37 No irq handler for vector
 
-On Mon, 2019-03-04 at 08:50 +0200, Andy Shevchenko wrote:
-> On Mon, Mar 4, 2019 at 3:47 AM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
-> > On Sat, 2019-03-02 at 17:05 +0800, Yu Chen wrote:
-> 
-> > > +     hisi_hikey_usb->role_sw = usb_role_switch_get(dev);
-> > > +     if (!hisi_hikey_usb->role_sw)
-> > > +             return -EPROBE_DEFER;
-> > Here return EPROBE_DEFFER means the related device_connection is
-> > registered after this probe is called, right?
-> > if not, use IS_ERR_OR_NULL then return PTR_ERR is enough
-> 
-> How enough? If return value is NULL it would be transformered to 0,
-> which is success return code from the ->probe() which means we will
-> have ->probed() and not functional device.
-> 
-You are right:)
+This is likely a platform bug that device isn't fully quiesced during
+S3. Use MSI-X, maskable MSI or INTx can prevent this issue from
+happening.
 
-> Am I missing something?
-> 
+Since MSI-X and maskable MSI are not supported by this device, fallback
+to use INTx on affected platforms.
 
+BugLink: https://bugs.launchpad.net/bugs/1807259
+BugLink: https://bugs.launchpad.net/bugs/1809843
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/net/ethernet/marvell/sky2.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index 57727fe1501e..8b3495ee2b6e 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -46,6 +46,7 @@
+ #include <linux/mii.h>
+ #include <linux/of_device.h>
+ #include <linux/of_net.h>
++#include <linux/dmi.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -93,7 +94,7 @@ static int copybreak __read_mostly = 128;
+ module_param(copybreak, int, 0);
+ MODULE_PARM_DESC(copybreak, "Receive copy threshold");
+ 
+-static int disable_msi = 0;
++static int disable_msi = -1;
+ module_param(disable_msi, int, 0);
+ MODULE_PARM_DESC(disable_msi, "Disable Message Signaled Interrupt (MSI)");
+ 
+@@ -4917,6 +4918,24 @@ static const char *sky2_name(u8 chipid, char *buf, int sz)
+ 	return buf;
+ }
+ 
++static const struct dmi_system_id msi_blacklist[] = {
++	{
++		.ident = "Dell Inspiron 1545",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1545"),
++		},
++	},
++	{
++		.ident = "Gateway P-79",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Gateway"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "P-79"),
++		},
++	},
++	{}
++};
++
+ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	struct net_device *dev, *dev1;
+@@ -5028,6 +5047,9 @@ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto err_out_free_pci;
+ 	}
+ 
++	if (disable_msi == -1)
++		disable_msi = !!dmi_check_system(msi_blacklist);
++
+ 	if (!disable_msi && pci_enable_msi(pdev) == 0) {
+ 		err = sky2_test_msi(hw);
+ 		if (err) {
+-- 
+2.17.1
 
