@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E323BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C67DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B478920836
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF76E2184C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688026;
-	bh=PkFEmR2ikAlK0rBBWvecUrrzwdBJSQL/zvHGz5T19tE=;
+	s=default; t=1551688031;
+	bh=b0WFPjyC8WBRnDjCS43IGPSB7Uv8ShFDJ2IkNZGc7l4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yij/wMK+DZVMV/Y+3+n7OyiNhmKYTCH1V+U0eHNA6PJaV07VS0EwWHIy472Su7r0L
-	 4AeeyzbxSwCbwpzt0jbi933u7MMrXilDnk7slJvIyHvt+A+aGAySOowkpjXWXnyr7M
-	 XKFDTbTsDtCrb2EUljvsaK9tg7h/JAHKxIp0iSpY=
+	b=0iCTe0JCnZwn67aUXO3QS0HCfNz5pY6MbopicGpYqkOB/HMLbQVbRQA9QNnGNt+dJ
+	 8YrAuvIZnOMj8+kbdWnXiHXVToT/3FLjj5k1jfb/ydOqKahGddM7DTMfYJLhWfGE5q
+	 VPpgmWVDqfVbrxYZlkUTQPpkYSSy+j3yTmObgh0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfCDI1F (ORCPT
+        id S1727207AbfCDI1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:27:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49698 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:27:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbfCDI1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:27:03 -0500
+        id S1726957AbfCDI1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:27:06 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 350BE20823;
-        Mon,  4 Mar 2019 08:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1D8A20823;
+        Mon,  4 Mar 2019 08:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688022;
-        bh=PkFEmR2ikAlK0rBBWvecUrrzwdBJSQL/zvHGz5T19tE=;
+        s=default; t=1551688025;
+        bh=b0WFPjyC8WBRnDjCS43IGPSB7Uv8ShFDJ2IkNZGc7l4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xb3dyO22rw3bCGerozyn3ijHGuEPBwzaId/tfgiNZZJR2UAfoXn3JBUgH5xGQvqym
-         Pbk2MjTNEM0YOmASOjGhOQXtOq0y9AwmYZiPoR4NHvPoZik1hy3eh12lVShby+p0p5
-         TfKF+JCcyz9zfsvnogha2jC6S0VsznIkqqq4+gaw=
+        b=MBJ1qOapgbpuqywrNSmEu8DQMgHIuKor4lh3TZopqGMZ/6/aX0LdoDY9/Dm6pUTxp
+         RGHkfY5hlsmGWAy1Cv6jGQuWrvMTt8eOym6oPfkAu82sZjZnldY6CK5gSirf7lFfvw
+         rrRee4nEKcvsinTGzeZ8DJKIic+IESfBYlCFyco4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yizhuo <yzhai003@ucr.edu>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/52] ASoC: Variable "val" in function rt274_i2c_probe() could be uninitialized
-Date:   Mon,  4 Mar 2019 09:22:08 +0100
-Message-Id: <20190304081617.723780708@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Alexey Firago <alexey_firago@mentor.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 11/52] clk: vc5: Abort clock configuration without upstream clock
+Date:   Mon,  4 Mar 2019 09:22:09 +0100
+Message-Id: <20190304081617.773994763@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -66,36 +69,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8c3590de0a378c2449fc1aec127cc693632458e4 ]
+[ Upstream commit 2137a109a5e39c2bdccfffe65230ed3fadbaac0e ]
 
-Inside function rt274_i2c_probe(), if regmap_read() function
-returns -EINVAL, then local variable "val" leaves uninitialized
-but used in if statement. This is potentially unsafe.
+In case the upstream clock are not set, which can happen in case the
+VC5 has no valid upstream clock, the $src variable is used uninited
+by regmap_update_bits(). Check for this condition and return -EINVAL
+in such case.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Note that in case the VC5 has no valid upstream clock, the VC5 can
+not operate correctly. That is a hardware property of the VC5. The
+internal oscilator present in some VC5 models is also considered
+upstream clock.
+
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc: Alexey Firago <alexey_firago@mentor.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org
+[sboyd@kernel.org: Added comment about probe preventing this from
+happening in the first place]
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt274.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/clk/clk-versaclock5.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt274.c b/sound/soc/codecs/rt274.c
-index 8f92e5c4dd9d7..cd048df762327 100644
---- a/sound/soc/codecs/rt274.c
-+++ b/sound/soc/codecs/rt274.c
-@@ -1128,8 +1128,11 @@ static int rt274_i2c_probe(struct i2c_client *i2c,
- 		return ret;
+diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
+index decffb3826ece..a738af893532f 100644
+--- a/drivers/clk/clk-versaclock5.c
++++ b/drivers/clk/clk-versaclock5.c
+@@ -262,8 +262,10 @@ static int vc5_mux_set_parent(struct clk_hw *hw, u8 index)
+ 
+ 		if (vc5->clk_mux_ins == VC5_MUX_IN_XIN)
+ 			src = VC5_PRIM_SRC_SHDN_EN_XTAL;
+-		if (vc5->clk_mux_ins == VC5_MUX_IN_CLKIN)
++		else if (vc5->clk_mux_ins == VC5_MUX_IN_CLKIN)
+ 			src = VC5_PRIM_SRC_SHDN_EN_CLKIN;
++		else /* Invalid; should have been caught by vc5_probe() */
++			return -EINVAL;
  	}
  
--	regmap_read(rt274->regmap,
-+	ret = regmap_read(rt274->regmap,
- 		RT274_GET_PARAM(AC_NODE_ROOT, AC_PAR_VENDOR_ID), &val);
-+	if (ret)
-+		return ret;
-+
- 	if (val != RT274_VENDOR_ID) {
- 		dev_err(&i2c->dev,
- 			"Device with ID register %#x is not rt274\n", val);
+ 	return regmap_update_bits(vc5->regmap, VC5_PRIM_SRC_SHDN, mask, src);
 -- 
 2.19.1
 
