@@ -2,149 +2,117 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2038C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD29C10F03
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D88F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F31EF2070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:36:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=essensium-com.20150623.gappssmtp.com header.i=@essensium-com.20150623.gappssmtp.com header.b="smRGyYhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfCDMgA (ORCPT
+        id S1726542AbfCDMgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 07:36:00 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:33948 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726095AbfCDMf5 (ORCPT
+        Mon, 4 Mar 2019 07:36:48 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34615 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfCDMgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 07:35:57 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x24CQgsd020023;
-        Mon, 4 Mar 2019 13:35:51 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2r0ju8m17a-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 04 Mar 2019 13:35:51 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B30E031;
-        Mon,  4 Mar 2019 12:35:50 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 91B822A3C;
-        Mon,  4 Mar 2019 12:35:50 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 4 Mar 2019
- 13:35:50 +0100
-Received: from localhost (10.201.23.19) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 4 Mar 2019 13:35:49
- +0100
-From:   Hugues Fruchet <hugues.fruchet@st.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Hugues Fruchet" <hugues.fruchet@st.com>
-Subject: [PATCH] media: uvcvideo: Read support
-Date:   Mon, 4 Mar 2019 13:35:25 +0100
-Message-ID: <1551702925-7739-2-git-send-email-hugues.fruchet@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1551702925-7739-1-git-send-email-hugues.fruchet@st.com>
-References: <1551702925-7739-1-git-send-email-hugues.fruchet@st.com>
+        Mon, 4 Mar 2019 07:36:47 -0500
+Received: by mail-yw1-f65.google.com with SMTP id u205so3940187ywe.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 04:36:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=essensium-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ob8hWZ0HmNwlTXJo/mYlu29SYMoP0D3tHnTBPnurEpc=;
+        b=smRGyYheoWgrKBxK4FySqe7WvjpakYuVvISB7ltoRJLyCeitME4JA6Qumxa88B+pn3
+         3nMM8Q3/KPrMQYpvcRbdPs2YqnadxOaHZYg2T/22WWiYGqVVsTN3pU76f0jDMIryPuHB
+         I0gK0YdNvRO5lIhsF/5go4P5ER6AYkEFyz4b4ULzr8JnJ9TAkmjy/J8lzVBsWlvvXjKh
+         HKGUt8hpBqB6Rldtz37WT9w2332qf7UlJjhqOQECmuRdq3b/F9cJ9nJ53MpMtnABxLTq
+         INCm+C+cD6ogS8xeEsPy11CGnWCU0qXNSzCuMQTsGu2SFwRPlmKOu/KKzgnjt0id3KNF
+         i/2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ob8hWZ0HmNwlTXJo/mYlu29SYMoP0D3tHnTBPnurEpc=;
+        b=JeNrzZ04/oSWgWpLJAxFR7ygCnoa2/ekkqCvbDC+Im7yq+20j15ZEVXIlxkuuYCIwt
+         lbywL4jkYmlua5HR2XWgrcWsXW2DzYGAXR0gAj9idZM/eJDZ/Fv2q1bXyoR1/DtTgVPG
+         iYxLt0Ika/MunR1urMNGD3PI5Zdxlqxr+HkC1strDg5bBsNgSDxM2pJomVYZpFhW3y5Z
+         RQT5cjuG5DhQzyH16VxoMmDXWii04i2PykzBWhwE8/ketK9nmNDaqrYkuT7M2Y0L7jgl
+         Z9k+KQeC6GcHXmFmQhyBZOfkmsa54tTVM1s8Q8ku5enoNZ6wRTxI5Dy1yxtG3OArjY7G
+         gcJw==
+X-Gm-Message-State: APjAAAV6DUJAl0Yx7NRVc/lK9WraqxC4/DkQ8MnVmCxaBgfrINR5E2vB
+        ozMcwYPjZfQBuct+wElJ8r9jP4Hh49IpZeKnMmYsKg==
+X-Google-Smtp-Source: APXvYqxVfOPCjAyP0ik8yPHGWa5ghB1GFgpMDODBfMk1sD3Il17SauW+sZt6b1W6aoYo9GOT9T45U+89TthTCstmbq8=
+X-Received: by 2002:a5b:b4d:: with SMTP id b13mr15071149ybr.318.1551703006622;
+ Mon, 04 Mar 2019 04:36:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.19]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-04_05:,,
- signatures=0
+References: <20190218140321.19166-1-patrick.havelange@essensium.com>
+ <20190218140321.19166-5-patrick.havelange@essensium.com> <20190220164154.00547a77@archlinux>
+In-Reply-To: <20190220164154.00547a77@archlinux>
+From:   Patrick Havelange <patrick.havelange@essensium.com>
+Date:   Mon, 4 Mar 2019 13:36:34 +0100
+Message-ID: <CAKKE0ZFs_N+StJ4MQ0peaTy=ADufSVW_tp5zSHsyua2myvMiHQ@mail.gmail.com>
+Subject: Re: [PATCH 5/8] iio/counter: add FlexTimer Module Quadrature decoder
+ counter driver
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Esben Haabendal <esben@haabendal.dk>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support of read() call from userspace by implementing
-uvc_v4l2_read() with vb2_read() helper.
+On Wed, Feb 20, 2019 at 5:42 PM Jonathan Cameron <jic23@kernel.org> wrote:
+[skipped]
+> > +
+> > +struct ftm_quaddec {
+> > +     struct platform_device *pdev;
+> > +     void __iomem *ftm_base;
+> > +     bool big_endian;
+>
+> I'm curious. What is the benefit of running in big endian mode?
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- drivers/media/usb/uvc/uvc_queue.c | 15 ++++++++++++++-
- drivers/media/usb/uvc/uvc_v4l2.c  | 11 ++++++++---
- drivers/media/usb/uvc/uvcvideo.h  |  2 ++
- 3 files changed, 24 insertions(+), 4 deletions(-)
+It is based on the same behaviour as in drivers/clocksource/timer-fsl-ftm.c
+The FlexTimer itself on the board I'm testing it with is working in
+big endian mode, so this mode is required.
 
-diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-index 682698e..0c8a0a8 100644
---- a/drivers/media/usb/uvc/uvc_queue.c
-+++ b/drivers/media/usb/uvc/uvc_queue.c
-@@ -227,7 +227,7 @@ int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type,
- 	int ret;
- 
- 	queue->queue.type = type;
--	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR;
-+	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR | VB2_READ;
- 	queue->queue.drv_priv = queue;
- 	queue->queue.buf_struct_size = sizeof(struct uvc_buffer);
- 	queue->queue.mem_ops = &vb2_vmalloc_memops;
-@@ -361,6 +361,19 @@ int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type)
- 	return ret;
- }
- 
-+ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
-+		       char __user *buf, size_t count, loff_t *ppos)
-+{
-+	ssize_t ret;
-+
-+	mutex_lock(&queue->mutex);
-+	ret = vb2_read(&queue->queue, buf, count, ppos,
-+		       file->f_flags & O_NONBLOCK);
-+	mutex_unlock(&queue->mutex);
-+
-+	return ret;
-+}
-+
- int uvc_queue_mmap(struct uvc_video_queue *queue, struct vm_area_struct *vma)
- {
- 	return vb2_mmap(&queue->queue, vma);
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index 84be596..3866832 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -594,7 +594,8 @@ static int uvc_ioctl_querycap(struct file *file, void *fh,
- 	strscpy(cap->driver, "uvcvideo", sizeof(cap->driver));
- 	strscpy(cap->card, vdev->name, sizeof(cap->card));
- 	usb_make_path(stream->dev->udev, cap->bus_info, sizeof(cap->bus_info));
--	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING
-+	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING |
-+			    V4L2_CAP_READWRITE
- 			  | chain->caps;
- 
- 	return 0;
-@@ -1434,8 +1435,12 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
- static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
- 		    size_t count, loff_t *ppos)
- {
--	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read: not implemented.\n");
--	return -EINVAL;
-+	struct uvc_fh *handle = file->private_data;
-+	struct uvc_streaming *stream = handle->stream;
-+
-+	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read\n");
-+
-+	return uvc_queue_read(&stream->queue, file, data, count, ppos);
- }
- 
- static int uvc_v4l2_mmap(struct file *file, struct vm_area_struct *vma)
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index c7c1baa..5d0515c 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -766,6 +766,8 @@ struct uvc_buffer *uvc_queue_next_buffer(struct uvc_video_queue *queue,
- 					 struct uvc_buffer *buf);
- struct uvc_buffer *uvc_queue_get_current_buffer(struct uvc_video_queue *queue);
- void uvc_queue_buffer_release(struct uvc_buffer *buf);
-+ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
-+		       char __user *buf, size_t count, loff_t *ppos);
- int uvc_queue_mmap(struct uvc_video_queue *queue,
- 		   struct vm_area_struct *vma);
- __poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
--- 
-2.7.4
+> > +static ssize_t ftm_write_reset(struct iio_dev *indio_dev,
+> > +                             uintptr_t private,
+> > +                             struct iio_chan_spec const *chan,
+> > +                             const char *buf, size_t len)
+> > +{
+> > +     struct ftm_quaddec *ftm = iio_priv(indio_dev);
+> > +
+> > +     /* Only "counter reset" is supported for now */
+> > +     if (!sysfs_streq(buf, "0")) {
+> > +             dev_warn(&ftm->pdev->dev, "Reset only accepts '0'\n");
+> > +             return -EINVAL;
+>
+> Why not just make the channel attribute itself writeable given we are
+> setting it to 0?
 
+Good idea, I'll see if this can be applied in the new subsystem.
+
+[skipped]
+
+All other comments are Acked.
