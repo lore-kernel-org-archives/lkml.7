@@ -2,95 +2,95 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BF5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8FCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78EAC20835
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D15208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:08:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fIny3qO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfCDUHa (ORCPT
+        id S1726313AbfCDUIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:07:30 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:50277 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfCDUH3 (ORCPT
+        Mon, 4 Mar 2019 15:08:18 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:45270 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfCDUIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:07:29 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M4384-1h0trt2NiC-0007i2; Mon, 04 Mar 2019 21:07:21 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Duncan Laurie <dlaurie@google.com>,
-        Nick Crews <ncrews@chromium.org>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/chrome: fix wilco-ec dependencies
-Date:   Mon,  4 Mar 2019 21:06:51 +0100
-Message-Id: <20190304200719.1382717-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 4 Mar 2019 15:08:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=skgQMhcYtq632wwU3Gs0kqhjc28WEnQw9ZSN5F7zXHo=; b=fIny3qO1zNTPfe2d/J3vthD8S
+        yAuzivRXQzemj6RVrgmFEHZIE/GDEDpoMAYjj6vSEUmpLcXMymHj/BahIcCnDS5Ai/YAFT8PWkbmF
+        UGB45scmTKx17dxr/kRIpQtDyDnFNbuiFv9m7kdHe0Idm8OhDJYXHgXMx07TbPIa8hjmR4AclE8BJ
+        n7DSQwLSPqAiK9lL/W8ekuu/EHq4eywFhx6f6c9iu6TSo0L61WAg5B6KJweKJllngnJ0iXRQE/FKz
+        2vOl5UKkwJR+B1pTPROAS/hDeujI6F46A8hWAU89JiJN6vN6SCno+9c6fno/ppCAB6KqSv0grmX9C
+        yCURh2dMg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h0tsh-0003Ca-HR; Mon, 04 Mar 2019 20:08:11 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A09DE201383D7; Mon,  4 Mar 2019 21:08:09 +0100 (CET)
+Date:   Mon, 4 Mar 2019 21:08:09 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 04/17] x86/split_lock: Align x86_capability to
+ unsigned long to avoid split locked access
+Message-ID: <20190304200809.GS32494@hirez.programming.kicks-ass.net>
+References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
+ <1551494711-213533-5-git-send-email-fenghua.yu@intel.com>
+ <b9a7e3a6-d89c-9ce7-8909-e09122c93f96@intel.com>
+ <20190304191512.GB231946@romley-ivt3.sc.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/v3yO6TDk5tSSmrr8Ji4PHRmHqwKTNQ/vI50XsyjOHrBvdh6gIr
- 9+e+YQf3vylviPbDCfq0RyXNlgESMuVKYzb+r6s3Pp6dYg/dIqAN/QO4l6419+OCMtoX3Gx
- 2hrIm00ncWASPYMZJgqpHzkKqZlw9KBgoK1eydhaz3HwxgxZUaCKbAECFo6pEGzgUhh5cFz
- Woq0rXDUiWYPsu9+vc36g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KBqFG4Xa3S4=:ZKL2GIl6XwJMIHaPRqv4Dc
- g1Rhkbu6a2Y2V9N7qHAfxu+UCzn97MEBQPZb8JyFRl6NojM1LEi9Vvdv+5Oo1OvV3LJP7+jlI
- N1WlJXbGzaQjcC1VYxqeHsbrEX8UgUrnYKXd0Cof806m6O80H37tk/0k2OyjPefuQn1kyrTit
- py5xIhsvwzWlefvL56ZxyRvEOAKzOpWCxHjUD4YlcM5W/t9F61l7Fd7u+JPkpVlqPuTldnjML
- w2AmLqKeNr0xbiyQHeVGtOal2QI2nyV0AQhYzPFnu+QhuofQweMYk4cLPEGi4gBjrxV9DD8y4
- EXEITP5Sz1lDwo5JUt7T5POAI6yXxP9OOjWm1Xpa80luQuvo+eHrWcUodDVUNdvM2dDDabM3q
- IkrSnNpwC/B/U0BmplxNxfH+YOK0+YXMLtyIZCDO6PwkHu5b4JjZAlu+qU/bWz7OFBoA1bNDW
- PIBKxLHOKds6iLnuynsKUQfwt/rYzGiLPw/W4XjgZbPTQ0gJNTFteteUIUY/ZBRgOq+Nd5/xI
- srVDcd1cvrCJwfA0fK2mWTa+R39ZoFpw7wyNW3AT1hJtowJkbGk05V7BKCM3uXZwp34YpPpDJ
- zzSlEv6LKrechgmVYnEAK+meODBA0aC/7dpPZePvCRrzOLlxowDfj8tXyyytEsLd7fV8PsUtE
- ynI+NeApVQJ6Aya8VM1Et3U05UboyJ6e5puOAdjz2kV28b/HVdEt3ys4jP3GolBXAmIWtHDhV
- TqjoMVyM58SV5AfN9wnSxUJcMykcwGrZ855/eA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304191512.GB231946@romley-ivt3.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CROS_EC_LPC is set to =m, we get a link failure for a
-builtin wilco-ec module:
+On Mon, Mar 04, 2019 at 11:15:12AM -0800, Fenghua Yu wrote:
+> On Mon, Mar 04, 2019 at 10:52:19AM -0800, Dave Hansen wrote:
+> > On 3/1/19 6:44 PM, Fenghua Yu wrote:
+> > > diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> > > index 33051436c864..eb8ae701ef65 100644
+> > > --- a/arch/x86/include/asm/processor.h
+> > > +++ b/arch/x86/include/asm/processor.h
+> > > @@ -93,7 +93,9 @@ struct cpuinfo_x86 {
+> > >  	__u32			extended_cpuid_level;
+> > >  	/* Maximum supported CPUID level, -1=no CPUID: */
+> > >  	int			cpuid_level;
+> > > -	__u32			x86_capability[NCAPINTS + NBUGINTS];
+> > > +	/* Unsigned long alignment to avoid split lock in atomic bitmap ops */
+> > > +	__u32			x86_capability[NCAPINTS + NBUGINTS]
+> > > +				__aligned(sizeof(unsigned long));
+> > 
+> > I think this also warrants a comment in the changelog about the
+> > alignment of 'struct cpuinfo_x86'.
+> 
+> How about add "Depending on the starting address where GCC generates
+> for data of struct cpuinfo_x86, x86_capability[] may or may not align to
+> unsigned long...."?
 
-drivers/platform/chrome/wilco_ec/core.o: In function `wilco_ec_remove':
-core.c:(.text+0x26): undefined reference to `cros_ec_lpc_mec_destroy'
-drivers/platform/chrome/wilco_ec/core.o: In function `wilco_ec_probe':
-core.c:(.text+0x18c): undefined reference to `cros_ec_lpc_mec_init'
-core.c:(.text+0x224): undefined reference to `cros_ec_lpc_mec_destroy'
-drivers/platform/chrome/wilco_ec/mailbox.o: In function `wilco_ec_mailbox':
-mailbox.c:(.text+0x104): undefined reference to `cros_ec_lpc_io_bytes_mec'
-
-The problem with the existing CROS_EC_LPC_MEC dependency is that this
-is only for a 'bool' symbol, so the information about the exported
-functions being in a module is lost on the way, and we actually have
-to depend on both CROS_EC_LPC and CROS_EC_LPC_MEC.
-
-Fixes: 7b3d4f44abf0 ("platform/chrome: Add new driver for Wilco EC")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/platform/chrome/wilco_ec/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
-index 4a119ced4d0c..e09e4cebe9b4 100644
---- a/drivers/platform/chrome/wilco_ec/Kconfig
-+++ b/drivers/platform/chrome/wilco_ec/Kconfig
-@@ -1,6 +1,6 @@
- config WILCO_EC
- 	tristate "ChromeOS Wilco Embedded Controller"
--	depends on ACPI && X86 && CROS_EC_LPC_MEC
-+	depends on ACPI && X86 && CROS_EC_LPC && CROS_EC_LPC_MEC
- 	help
- 	  If you say Y here, you get support for talking to the ChromeOS
- 	  Wilco EC over an eSPI bus. This uses a simple byte-level protocol
--- 
-2.20.0
-
+Composite types inherit the strictest alignment of their members.
+Without that alignment hints would be utterly useless.
