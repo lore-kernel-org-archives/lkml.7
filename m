@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B81AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78448C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1019208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44518208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688402;
-	bh=G7OLDbRbN2Dgbc6y9SsgXqXL0PgvgidTjN/TGYJD5ik=;
+	s=default; t=1551688408;
+	bh=HnowgTxvf6LwJixNEYHbOuccYswNsOaex2mZ+HxcaP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UFWBUe1T14rcjFPcOQEkCli625rytw0FMLvbawkLWqAo9idntfy1Ybph7x3QWupJG
-	 AQwp8pDOZJi/sxfol84VOHlc/50F25XogaPZLCgRdave/j5/pGJ6DvlSBLOCr6bxpc
-	 oM4wz+R3XHbtcg2Vh1mMkrT1Pby88VVjcKmy/uEE=
+	b=buMuwxm37m08m/cWozqjUXg4L4oIeGi9SLdrOnaJYwvRRUnjDJFwJ+J/ACtN2vdLS
+	 99N5UcVbvlp7yNWOdpPpacrTwEkaCLqyDJat4UKLwH14+2v0AOPsgOQpDZlbjP1IXm
+	 BuXvTQlALJJBVLraFdZIvCXuhNIB+ffxjnaGUuKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfCDIdV (ORCPT
+        id S1727326AbfCDId0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:33:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37694 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:33:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbfCDIdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:33:17 -0500
+        id S1727158AbfCDIdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:33:19 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C59B20823;
-        Mon,  4 Mar 2019 08:33:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C61B920836;
+        Mon,  4 Mar 2019 08:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688395;
-        bh=G7OLDbRbN2Dgbc6y9SsgXqXL0PgvgidTjN/TGYJD5ik=;
+        s=default; t=1551688398;
+        bh=HnowgTxvf6LwJixNEYHbOuccYswNsOaex2mZ+HxcaP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XOy9FUvS89wORN12qqgPu9VZ7hoUuzlCGuPKQbxFpu6Z8tFDgSrof3V+gP/84aCjH
-         nORaSd7CoQbO8gja8nTvS3DjyhVbH8wJn2iPkKN3vX8cNfFSWS+yhqB/0lejSH1YsF
-         XHFSM3lY8TT9+5qj60K3Po1silLAeI1apAgX8bB4=
+        b=B4WXknp18rWDR9S9qjyMfJVJZAL35iKyhxlmKKkPEfZdV8fzQpMZktYmBcUo05hoa
+         9MABTWQZ2ZAG3UBhtA+V/gFjIezRQVX6nAuIIsGTjmOZNp6ggO62eaRM0Y7PDfJsTh
+         rnsAz0buQYxsD+hZPmzxyWF7jSQjjvwss0ZlmnAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        William Kucharski <william.kucharski@oracle.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, Aaron Hill <aa1ronham@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 31/88] ARC: show_regs: lockdep: avoid page allocator...
-Date:   Mon,  4 Mar 2019 09:22:14 +0100
-Message-Id: <20190304081631.830535059@linuxfoundation.org>
+Subject: [PATCH 4.20 32/88] drivers: thermal: int340x_thermal: Fix sysfs race condition
+Date:   Mon,  4 Mar 2019 09:22:15 +0100
+Message-Id: <20190304081631.867882705@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -67,139 +66,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ab6c03676cb190156603cf4c5ecf97aa406c9c53 ]
+[ Upstream commit 129699bb8c7572106b5bbb2407c2daee4727ccad ]
 
-and use smaller/on-stack buffer instead
+Changes since V1:
+* Use dev_info instead of printk
+* Use dev_warn instead of BUG_ON
 
-The motivation for this change was lockdep splat like below.
+Previously, sysfs_create_group was called before all initialization had
+fully run - specifically, before pci_set_drvdata was called. Since the
+sysctl group is visible to userspace as soon as sysfs_create_group
+returns, a small window of time existed during which a process could read
+from an uninitialized/partially-initialized device.
 
-| potentially unexpected fatal signal 11.
-| BUG: sleeping function called from invalid context at ../mm/page_alloc.c:4317
-| in_atomic(): 1, irqs_disabled(): 0, pid: 57, name: segv
-| no locks held by segv/57.
-| Preemption disabled at:
-| [<8182f17e>] get_signal+0x4a6/0x7c4
-| CPU: 0 PID: 57 Comm: segv Not tainted 4.17.0+ #23
-|
-| Stack Trace:
-|  arc_unwind_core.constprop.1+0xd0/0xf4
-|  __might_sleep+0x1f6/0x234
-|  __get_free_pages+0x174/0xca0
-|  show_regs+0x22/0x330
-|  get_signal+0x4ac/0x7c4     # print_fatal_signals() -> preempt_disable()
-|  do_signal+0x30/0x224
-|  resume_user_mode_begin+0x90/0xd8
+This commit moves the creation of the sysctl group to after all
+initialized is completed. This ensures that it's impossible for
+userspace to read from a sysctl file before initialization has fully
+completed.
 
-So signal handling core calls show_regs() with preemption disabled but
-an ensuing GFP_KERNEL page allocator call is flagged by lockdep.
+To catch any future regressions, I've added a check to ensure
+that proc_thermal_emum_mode is never PROC_THERMAL_NONE when a process
+tries to read from a sysctl file. Previously, the aforementioned race
+condition could result in the 'else' branch
+running while PROC_THERMAL_NONE was set,
+leading to a null pointer deference.
 
-We could have switched to GFP_NOWAIT, but turns out that is not enough
-anways and eliding page allocator call leads to less code and
-instruction traces to sift thru when debugging pesky crashes.
-
-FWIW, this patch doesn't cure the lockdep splat (which next patch does).
-
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Aaron Hill <aa1ronham@gmail.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/troubleshoot.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ .../processor_thermal_device.c                | 28 ++++++++++---------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arc/kernel/troubleshoot.c b/arch/arc/kernel/troubleshoot.c
-index e8d9fb4523462..5c6663321e873 100644
---- a/arch/arc/kernel/troubleshoot.c
-+++ b/arch/arc/kernel/troubleshoot.c
-@@ -18,6 +18,8 @@
- #include <asm/arcregs.h>
- #include <asm/irqflags.h>
+diff --git a/drivers/thermal/int340x_thermal/processor_thermal_device.c b/drivers/thermal/int340x_thermal/processor_thermal_device.c
+index 8e0f665cf06f8..8e1cf4d789be1 100644
+--- a/drivers/thermal/int340x_thermal/processor_thermal_device.c
++++ b/drivers/thermal/int340x_thermal/processor_thermal_device.c
+@@ -84,7 +84,12 @@ static ssize_t power_limit_##index##_##suffix##_show(struct device *dev, \
+ 	struct pci_dev *pci_dev; \
+ 	struct platform_device *pdev; \
+ 	struct proc_thermal_device *proc_dev; \
+-\
++	\
++	if (proc_thermal_emum_mode == PROC_THERMAL_NONE) { \
++		dev_warn(dev, "Attempted to get power limit before device was initialized!\n"); \
++		return 0; \
++	} \
++	\
+ 	if (proc_thermal_emum_mode == PROC_THERMAL_PLATFORM_DEV) { \
+ 		pdev = to_platform_device(dev); \
+ 		proc_dev = platform_get_drvdata(pdev); \
+@@ -298,11 +303,6 @@ static int proc_thermal_add(struct device *dev,
+ 	*priv = proc_priv;
  
-+#define ARC_PATH_MAX	256
+ 	ret = proc_thermal_read_ppcc(proc_priv);
+-	if (!ret) {
+-		ret = sysfs_create_group(&dev->kobj,
+-					 &power_limit_attribute_group);
+-
+-	}
+ 	if (ret)
+ 		return ret;
+ 
+@@ -316,8 +316,7 @@ static int proc_thermal_add(struct device *dev,
+ 
+ 	proc_priv->int340x_zone = int340x_thermal_zone_add(adev, ops);
+ 	if (IS_ERR(proc_priv->int340x_zone)) {
+-		ret = PTR_ERR(proc_priv->int340x_zone);
+-		goto remove_group;
++		return PTR_ERR(proc_priv->int340x_zone);
+ 	} else
+ 		ret = 0;
+ 
+@@ -331,9 +330,6 @@ static int proc_thermal_add(struct device *dev,
+ 
+ remove_zone:
+ 	int340x_thermal_zone_remove(proc_priv->int340x_zone);
+-remove_group:
+-	sysfs_remove_group(&proc_priv->dev->kobj,
+-			   &power_limit_attribute_group);
+ 
+ 	return ret;
+ }
+@@ -364,7 +360,10 @@ static int int3401_add(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, proc_priv);
+ 	proc_thermal_emum_mode = PROC_THERMAL_PLATFORM_DEV;
+ 
+-	return 0;
++	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PLATFORM_DEV\n");
 +
- /*
-  * Common routine to print scratch regs (r0-r12) or callee regs (r13-r25)
-  *   -Prints 3 regs per line and a CR.
-@@ -58,11 +60,12 @@ static void show_callee_regs(struct callee_regs *cregs)
- 	print_reg_file(&(cregs->r13), 13);
++	return sysfs_create_group(&pdev->dev.kobj,
++					 &power_limit_attribute_group);
  }
  
--static void print_task_path_n_nm(struct task_struct *tsk, char *buf)
-+static void print_task_path_n_nm(struct task_struct *tsk)
- {
- 	char *path_nm = NULL;
- 	struct mm_struct *mm;
- 	struct file *exe_file;
-+	char buf[ARC_PATH_MAX];
- 
- 	mm = get_task_mm(tsk);
- 	if (!mm)
-@@ -72,7 +75,7 @@ static void print_task_path_n_nm(struct task_struct *tsk, char *buf)
- 	mmput(mm);
- 
- 	if (exe_file) {
--		path_nm = file_path(exe_file, buf, 255);
-+		path_nm = file_path(exe_file, buf, ARC_PATH_MAX-1);
- 		fput(exe_file);
+ static int int3401_remove(struct platform_device *pdev)
+@@ -441,7 +440,10 @@ static int  proc_thermal_pci_probe(struct pci_dev *pdev,
+ 			dev_err(&pdev->dev, "No auxiliary DTSs enabled\n");
  	}
  
-@@ -80,10 +83,9 @@ static void print_task_path_n_nm(struct task_struct *tsk, char *buf)
- 	pr_info("Path: %s\n", !IS_ERR(path_nm) ? path_nm : "?");
- }
- 
--static void show_faulting_vma(unsigned long address, char *buf)
-+static void show_faulting_vma(unsigned long address)
- {
- 	struct vm_area_struct *vma;
--	char *nm = buf;
- 	struct mm_struct *active_mm = current->active_mm;
- 
- 	/* can't use print_vma_addr() yet as it doesn't check for
-@@ -96,8 +98,11 @@ static void show_faulting_vma(unsigned long address, char *buf)
- 	 * if the container VMA is not found
- 	 */
- 	if (vma && (vma->vm_start <= address)) {
-+		char buf[ARC_PATH_MAX];
-+		char *nm = "?";
+-	return 0;
++	dev_info(&pdev->dev, "Creating sysfs group for PROC_THERMAL_PCI\n");
 +
- 		if (vma->vm_file) {
--			nm = file_path(vma->vm_file, buf, PAGE_SIZE - 1);
-+			nm = file_path(vma->vm_file, buf, ARC_PATH_MAX-1);
- 			if (IS_ERR(nm))
- 				nm = "?";
- 		}
-@@ -173,13 +178,8 @@ void show_regs(struct pt_regs *regs)
- {
- 	struct task_struct *tsk = current;
- 	struct callee_regs *cregs;
--	char *buf;
- 
--	buf = (char *)__get_free_page(GFP_KERNEL);
--	if (!buf)
--		return;
--
--	print_task_path_n_nm(tsk, buf);
-+	print_task_path_n_nm(tsk);
- 	show_regs_print_info(KERN_INFO);
- 
- 	show_ecr_verbose(regs);
-@@ -189,7 +189,7 @@ void show_regs(struct pt_regs *regs)
- 		(void *)regs->blink, (void *)regs->ret);
- 
- 	if (user_mode(regs))
--		show_faulting_vma(regs->ret, buf); /* faulting code, not data */
-+		show_faulting_vma(regs->ret); /* faulting code, not data */
- 
- 	pr_info("[STAT32]: 0x%08lx", regs->status32);
- 
-@@ -221,8 +221,6 @@ void show_regs(struct pt_regs *regs)
- 	cregs = (struct callee_regs *)current->thread.callee_reg;
- 	if (cregs)
- 		show_callee_regs(cregs);
--
--	free_page((unsigned long)buf);
++	return sysfs_create_group(&pdev->dev.kobj,
++					 &power_limit_attribute_group);
  }
  
- void show_kernel_fault_diag(const char *str, struct pt_regs *regs,
+ static void  proc_thermal_pci_remove(struct pci_dev *pdev)
 -- 
 2.19.1
 
