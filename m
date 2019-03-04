@@ -2,202 +2,93 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534B1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6901C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220B220823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D5F20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfCDTFO (ORCPT
+        id S1727025AbfCDTFz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:05:14 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:48872 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbfCDTFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:05:14 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9BAE5307D8F4;
-        Mon,  4 Mar 2019 19:05:13 +0000 (UTC)
-Received: from lorien.usersys.redhat.com (ovpn-116-218.phx2.redhat.com [10.3.116.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 07BC560261;
-        Mon,  4 Mar 2019 19:05:12 +0000 (UTC)
-Date:   Mon, 4 Mar 2019 14:05:11 -0500
-From:   Phil Auld <pauld@redhat.com>
-To:     bsegall@google.com
-Cc:     mingo@redhat.com, peterz@infradead.org,
+        Mon, 4 Mar 2019 14:05:55 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:52345 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfCDTFz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 14:05:55 -0500
+Received: from xps13 (76.15.136.77.rev.sfr.net [77.136.15.76])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 77901200006;
+        Mon,  4 Mar 2019 19:05:48 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 20:04:25 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC]  sched/fair: hard lockup in sched_cfs_period_timer
-Message-ID: <20190304190510.GB5366@lorien.usersys.redhat.com>
-References: <20190301145209.GA9304@pauld.bos.csb>
- <xm26ef7mzew2.fsf@bsegall-linux.svl.corp.google.com>
+Subject: Re: [PATCH v4 6/9] mtd: rawnand: ingenic: Separate top-level and
+ SoC specific code
+Message-ID: <20190304200129.4eefabba@xps13>
+In-Reply-To: <1551723968.4932.4@crapouillou.net>
+References: <20190209192305.4434-1-paul@crapouillou.net>
+        <20190209192305.4434-6-paul@crapouillou.net>
+        <20190304112058.67cd5194@xps13>
+        <1551723968.4932.4@crapouillou.net>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xm26ef7mzew2.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 04 Mar 2019 19:05:13 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 04, 2019 at 10:13:49AM -0800 bsegall@google.com wrote:
-> Phil Auld <pauld@redhat.com> writes:
-> 
-> > Hi,
-> >
-> > I have a reproducible case of this: 
-> >
-> > [  217.264946] NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
-> > [  217.264948] Modules linked in: sunrpc iTCO_wdt gpio_ich iTCO_vendor_support intel_powerclamp coretemp kvm_intel kvm ipmi_ssif irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel ipmi_si intel_cstate joydev ipmi_devintf pcspkr hpilo intel_uncore sg hpwdt ipmi_msghandler acpi_power_meter i7core_edac lpc_ich acpi_cpufreq ip_tables xfs libcrc32c sr_mod sd_mod cdrom ata_generic radeon i2c_algo_bit drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm ata_piix drm serio_raw crc32c_intel hpsa myri10ge libata dca scsi_transport_sas netxen_nic dm_mirror dm_region_hash dm_log dm_mod
-> > [  217.264964] CPU: 24 PID: 46684 Comm: myapp Not tainted 5.0.0-rc7+ #25
-> > [  217.264965] Hardware name: HP ProLiant DL580 G7, BIOS P65 08/16/2015
-> > [  217.264965] RIP: 0010:tg_nop+0x0/0x10
-> > [  217.264966] Code: 83 c9 08 f0 48 0f b1 0f 48 39 c2 74 0e 48 89 c2 f7 c2 00 00 20 00 75 dc 31 c0 c3 b8 01 00 00 00 c3 66 0f 1f 84 00 00 00 00 00 <66> 66 66 66 90 31 c0 c3 0f 1f 84 00 00 00 00 00 66 66 66 66 90 8b
-> > [  217.264967] RSP: 0000:ffff976a7f703e48 EFLAGS: 00000087
-> > [  217.264967] RAX: ffff976a7c7c8f00 RBX: ffff976a6f4fad00 RCX: ffff976a7c7c90f0
-> > [  217.264968] RDX: ffff976a6f4faee0 RSI: ffff976a7f961f00 RDI: ffff976a6f4fad00
-> > [  217.264968] RBP: ffff976a7f961f00 R08: 0000000000000002 R09: ffffffad2c9b3331
-> > [  217.264969] R10: 0000000000000000 R11: 0000000000000000 R12: ffff976a7c7c8f00
-> > [  217.264969] R13: ffffffffb2305c00 R14: 0000000000000000 R15: ffffffffb22f8510
-> > [  217.264970] FS:  00007f6240678740(0000) GS:ffff976a7f700000(0000) knlGS:0000000000000000
-> > [  217.264970] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  217.264971] CR2: 00000000006dee20 CR3: 000000bf2bffc005 CR4: 00000000000206e0
-> > [  217.264971] Call Trace:
-> > [  217.264971]  <IRQ>
-> > [  217.264972]  walk_tg_tree_from+0x29/0xb0
-> > [  217.264972]  unthrottle_cfs_rq+0xe0/0x1a0
-> > [  217.264972]  distribute_cfs_runtime+0xd3/0xf0
-> > [  217.264973]  sched_cfs_period_timer+0xcb/0x160
-> > [  217.264973]  ? sched_cfs_slack_timer+0xd0/0xd0
-> > [  217.264973]  __hrtimer_run_queues+0xfb/0x270
-> > [  217.264974]  hrtimer_interrupt+0x122/0x270
-> > [  217.264974]  smp_apic_timer_interrupt+0x6a/0x140
-> > [  217.264975]  apic_timer_interrupt+0xf/0x20
-> > [  217.264975]  </IRQ>
-> > [  217.264975] RIP: 0033:0x7f6240125fe5
-> > [  217.264976] Code: 44 17 d0 f3 44 0f 7f 47 30 f3 44 0f 7f 44 17 c0 48 01 fa 48 83 e2 c0 48 39 d1 74 a3 66 0f 1f 84 00 00 00 00 00 66 44 0f 7f 01 <66> 44 0f 7f 41 10 66 44 0f 7f 41 20 66 44 0f 7f 41 30 48 83 c1 40
-> > ...
-> >
-> > There's more but this is the juicy part. 
-> >
-> > The reproducer involves a large number of cgroups in a hierarchy and a very low cfs_period_us 
-> > setting. 
-> >
-> > The guts of sched_cfs_period_timer is this forever loop:
-> >
-> > 	raw_spin_lock(&cfs_b->lock);
-> > 	for (;;) {
-> > 		overrun = hrtimer_forward_now(timer, cfs_b->period);
-> > 		if (!overrun)
-> > 			break;
-> >
-> > 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
-> > 	}
-> > 	if (idle)
-> > 		cfs_b->period_active = 0;
-> > 	raw_spin_unlock(&cfs_b->lock);
-> >
-> >
-> > There's no guarantee that hrtimer_forward_now() will ever return 0 and also 
-> > do_sched_cfs_period_timer() will drop and re-acquire the cfs_b->lock to call 
-> > distribute_cfs_runtime. 
-> >
-> > I considered code to tune the period and quota up (proportionally so they have the same 
-> > relative effect) but I did not like that because of the above statement and the fact that 
-> > it would be changing the valid values the user configured. I have two versions that do that 
-> > differently but they both still call out for protection from the forever loop. I think they 
-> > add complexity for no real gain.
-> >
-> > For my current testing I'm using a more direct but less elegant approach of simply limiting 
-> > the number of times the loop can execute. This has the potential to skip handling a period 
-> > I think but will prevent the problem reliably. I'm not sure how many iterations this loop 
-> > was expected to take. I'm seeing numbers in the low thousands at times.
-> 
-> I mean the answer should be "do_sched_cfs_period_timer runs once" the
-> vast majority of the time; if it's not then your machine/setup can't
-> handle whatever super low period you've set, or there's some bad
-> behavior somewhere in the period timer handling.
-> CFS_PERIOD_TIMER_EXIT_COUNT could reasonably be like 2 or 3 - this would
-> mean that you've already spent an entire period inside the handler.
->
+Hi Paul,
 
-Thanks for looking at this.
+Paul Cercueil <paul@crapouillou.net> wrote on Mon, 04 Mar 2019 19:26:08
++0100:
 
-That's sort of what I though, too. Would it not make more sense to get rid
-of the loop? I find forever loops inherently suspect.
-
-I think the fact that we drop the lock to do the distribue is the real cuplrit.
-It's not do_sched_cfs_period_timer()'s code itself that takes the time,
-I think, it's the re-acquire of the cfs_b->lock and the contention on it due
-to all the cgroups. Lock_stat smaples during that run show pretty high contention
-on that lock and some really long wait times.
-
-My reproducer is artificial, but is designed to trigger the issue as has
-been hit in various customer workloads. So yes, it's exaggerated, but only
-so I don't have to wait weeks between hits :)
-
-
-Thanks,
-Phil
-
-> >
-> > A more complete fix to make sure do_sched_cfs_period_timer never takes longer than period 
-> > would be good but I'm not sure what that would be and we still have this potential forever
-> > loop. 
-> >
-> > Below is the bandaid version. 
+> On Mon, Mar 4, 2019 at 11:20 AM, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > Hi Paul,
+> > 
+> > Paul Cercueil <paul@crapouillou.net <mailto:paul@crapouillou.net>> > wrote on Sat,  9 Feb 2019 16:23:02
+> > -0300:
 > >   
-> > Thoughts? 
-> >
-> >
-> > Cheers,
-> > Phil
-> >
-> > ---
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 310d0637fe4b..33e55620f891 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -4859,12 +4859,16 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
-> >         return HRTIMER_NORESTART;
-> >  }
+> >>  The ingenic-nand driver uses an API provided by the jz4780-bch >> driver.
+> >>  This makes it difficult to support other SoCs in the jz4780-bch >> driver.
+> >>  To work around this, we separate the API functions from the >> SoC-specific
+> >>  code, so that these API functions are SoC-agnostic.  
+> >> >   
+> > I like the idea, actually I am working on this separation (see
+> > [1]) and I would really appreciate that you try to implement the
+> > interface when it will be available (v2 is coming this week, I think > v3
+> > will be the one to test when raw NAND devices will be properly
+> > supported). I will add you in Cc: if you want to follow/review.
+> > 
+> > [1] > <http://lists.infradead.org/pipermail/linux-mtd/2019-February/087815.html
 > >  
-> > +/* This is pretty arbitrary just to escape the "forever" loop before the watchdog
-> > + * kills us as there is no guarantee hrtimer_forward_now ever returns 0. */
-> > +#define CFS_PERIOD_TIMER_EXIT_COUNT 100
-> >  static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
-> >  {
-> >         struct cfs_bandwidth *cfs_b =
-> >                 container_of(timer, struct cfs_bandwidth, period_timer);
-> >         int overrun;
-> >         int idle = 0;
-> > +       int count = 0;
-> >  
-> >         raw_spin_lock(&cfs_b->lock);
-> >         for (;;) {
-> > @@ -4872,6 +4876,14 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
-> >                 if (!overrun)
-> >                         break;
-> >  
-> > +               if (++count > CFS_PERIOD_TIMER_EXIT_COUNT) {
-> > +                       pr_warn_ratelimited("cfs_period_timer(%d): too many overruns. Consider raising cfs_period_us (%lld)\n",
-> > +                               smp_processor_id(), cfs_b->period/NSEC_PER_USEC);
-> > +                       // Make sure we restart the timer.
-> > +                       idle = 0;
-> > +                       break;
-> > +               }
-> > +
-> >                 idle = do_sched_cfs_period_timer(cfs_b, overrun);
-> >         }
-> >         if (idle)
+> 
+> Do you think this will be ready for 5.2?
 
--- 
+Maybe, but I can't tell for sure. It will depend on how invasive the
+raw NAND conversion is. I don't want to delay your work but maybe once
+the interface will be ready to be implemented it would be a great
+opportunity to do it with the Ingenic driver.
+
+> 
+> You can add me in Cc:.
+
+Thanks!
+Miquèl
