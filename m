@@ -2,204 +2,121 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027F5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 02:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1751C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 02:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B1820818
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 02:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1F120830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 02:13:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="SmEqBimn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726041AbfCDCJs (ORCPT
+        id S1726081AbfCDCNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 21:09:48 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725971AbfCDCJr (ORCPT
+        Sun, 3 Mar 2019 21:13:31 -0500
+Received: from chill.innovation.ch ([216.218.245.220]:52358 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfCDCNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 21:09:47 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2429e5b006544
-        for <linux-kernel@vger.kernel.org>; Sun, 3 Mar 2019 21:09:46 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r0qdaxhge-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 21:09:46 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Mon, 4 Mar 2019 02:09:43 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 4 Mar 2019 02:09:40 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2429dbQ46137468
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 Mar 2019 02:09:39 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D74AA405C;
-        Mon,  4 Mar 2019 02:09:39 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E1EAA405B;
-        Mon,  4 Mar 2019 02:09:38 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.148.129])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  4 Mar 2019 02:09:38 +0000 (GMT)
-Date:   Mon, 4 Mar 2019 03:09:35 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v4 3/7] s390: ap: associate a ap_vfio_queue and a matrix
- mdev
-In-Reply-To: <1550849400-27152-4-git-send-email-pmorel@linux.ibm.com>
-References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
-        <1550849400-27152-4-git-send-email-pmorel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Sun, 3 Mar 2019 21:13:31 -0500
+Date:   Sun, 3 Mar 2019 18:13:25 -0800
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 557D4640126
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1551665605;
+        bh=JB4ZjTxoH+1bdFsZFMpyaLJ1r498asmhYn0lwzhSQbM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SmEqBimnq8EBs5pJHxn8VVsweXB5swBYNMo9hc1J5M1/lFVIED0lIv2dBMqs5tnNJ
+         iZSNVHRz2+J+XSa6kvXPnDRp280+PjYl0HmLAzm87OmBTWAC/gZxU6NBe4GAfN1tn1
+         RzbAbazu9/DfReAUIOd+PkfyXPJJcl3q8Bl3WOL3ibiVC01gA3eNy/blyg2siCZayJ
+         z8VnNnRmqnnQJDR3SYLldFokLjGWWxldeFOQigYzaRJHLde0g4+jNpMfQD9TPhkEdZ
+         Kx+VEW5T8n2Idm7IIOaJPhwwtG8N+QJeNDQguXxZORaxScztJg03jSuEdhX7YyNsZx
+         qf5sUu5x1cUyQ==
+From:   "Life is hard, and then you die" <ronald@innovation.ch>
+To:     Andrzej Hajda <a.hajda@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, dri-devel@lists.freedesktop.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm/bridge: sil_sii8620: make remote control optional.
+Message-ID: <20190304021325.GA30785@innovation.ch>
+Mail-Followup-To: Andrzej Hajda <a.hajda@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>, dri-devel@lists.freedesktop.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190124072125.GA28127@innovation.ch>
+ <20190125013355.GA6722@innovation.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030402-0012-0000-0000-000002FE1151
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030402-0013-0000-0000-000021351185
-Message-Id: <20190304030935.525f4223@oc2783563651>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-04_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903040014
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190125013355.GA6722@innovation.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 Feb 2019 16:29:56 +0100
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Thu, Jan 24, 2019 at 05:33:55PM -0800, Ronald Tschalär wrote:
+> commit d6abe6df706c (drm/bridge: sil_sii8620: do not have a dependency
+> of RC_CORE) changed the driver to select both RC_CORE and INPUT.
+> However, this causes problems with other drivers, in particular an input
+> driver that depends on MFD_INTEL_LPSS_PCI (to be added in a separate
+> commit):
+> 
+>   drivers/clk/Kconfig:9:error: recursive dependency detected!
+>   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
+>   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
+>   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
+>   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
+>   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
+>   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
+>   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
+>   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
+> 
+> According to the docs and general consensus, select should only be used
+> for non user-visible symbols, but both RC_CORE and INPUT are
+> user-visible. Furthermore almost all other references to INPUT
+> throughout the kernel config are depends, not selects. For this reason
+> the first part of this change reverts commit d6abe6df706c.
+> 
+> In order to address the original reason for commit d6abe6df706c, namely
+> that not all boards use the remote controller functionality and hence
+> should not need have to deal with RC_CORE, the second part of this
+> change now makes the remote control support in the driver optional and
+> contingent on RC_CORE being defined. And with this the hard dependency
+> on INPUT also goes away as that is only needed if RC_CORE is defined
+> (which in turn already depends on INPUT).
+> 
+> CC: Inki Dae <inki.dae@samsung.com>
+> CC: Andrzej Hajda <a.hajda@samsung.com>
+> CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
+> ---
+> Resending this, as I somehow managed to forget to cc dri-devel.
+> Apologies for the duplication.
+> 
+> Changes in v2:
+>  - completely remove dependencies on both RC_CORE and INPUT in Kconfig,
+>  - make remote control functionality in driver contingent on RC_CORE
+>    being defined
+> 
+>  drivers/gpu/drm/bridge/Kconfig       |  2 --
+>  drivers/gpu/drm/bridge/sil-sii8620.c | 17 +++++++++++++++++
+>  2 files changed, 17 insertions(+), 2 deletions(-)
+[snip]
 
-> We need to associate the ap_vfio_queue, which will hold the
-> per queue information for interrupt with a matrix mediated device
-> which hold the configuration and the way to the CRYCB.
-[..]
-> +static int vfio_ap_get_all_domains(struct ap_matrix_mdev *matrix_mdev, int apid)
-> +{
-> +	int apqi, apqn;
-> +	int ret = 0;
-> +	struct vfio_ap_queue *q;
-> +	struct list_head q_list;
-> +
-> +	INIT_LIST_HEAD(&q_list);
-> +
-> +	for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm, AP_DOMAINS) {
-> +		apqn = AP_MKQID(apid, apqi);
-> +		q = vfio_ap_get_queue(apqn, &matrix_dev->free_list);
-> +		if (!q) {
-> +			ret = -EADDRNOTAVAIL;
-> +			goto rewind;
-> +		}
-> +		if (q->matrix_mdev) {
-> +			ret = -EADDRINUSE;
+Is there anything I can do to help get this reviewed and moved forward?
 
-You tried to get the q from matrix_dev->free_list thus modulo races
-q->matrix_mdev should be 0. This change breaks the error codes in a
-sense that it becomes impossible to provoke EADDRINUSE (the proper
-error code for taken by another matrix_mdev). 
 
-> +			goto rewind;
-> +		}
-> +		list_move(&q->list, &q_list);
-> +	}
-> +	move_and_set(&q_list, &matrix_mdev->qlist, matrix_mdev);
->  	return 0;
-> +rewind:
-> +	move_and_set(&q_list, &matrix_dev->free_list, NULL);
-> +	return ret;
->  }
-> -
->  /**
-> - * vfio_ap_mdev_verify_no_sharing
-> + * vfio_ap_get_all_cards:
->   *
-> - * Verifies that the APQNs derived from the cross product of the AP adapter IDs
-> - * and AP queue indexes comprising the AP matrix are not configured for another
-> - * mediated device. AP queue sharing is not allowed.
-> + * @matrix_mdev: the matrix mediated device for which we want to associate
-> + *		 all available queues with a given apqi.
-> + * @apqi:	 The apqi which associated with all defined APID of the
-> + *		 mediated device will define a AP queue.
->   *
-> - * @matrix_mdev: the mediated matrix device
-> + * We define a local list to put all queues we find on the matrix device
-> + * free list when associating the apqi with all already defined apid for
-> + * this matrix mediated device.
->   *
-> - * Returns 0 if the APQNs are not shared, otherwise; returns -EADDRINUSE.
-> + * If we can get all the devices we roll them to the mediated device list
-> + * If we get errors we unroll them to the free list.
->   */
-> -static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
-> +static int vfio_ap_get_all_cards(struct ap_matrix_mdev *matrix_mdev, int apqi)
->  {
-> -	struct ap_matrix_mdev *lstdev;
-> -	DECLARE_BITMAP(apm, AP_DEVICES);
-> -	DECLARE_BITMAP(aqm, AP_DOMAINS);
-> -
-> -	list_for_each_entry(lstdev, &matrix_dev->mdev_list, node) {
-> -		if (matrix_mdev == lstdev)
-> -			continue;
-> -
-> -		memset(apm, 0, sizeof(apm));
-> -		memset(aqm, 0, sizeof(aqm));
-> -
-> -		/*
-> -		 * We work on full longs, as we can only exclude the leftover
-> -		 * bits in non-inverse order. The leftover is all zeros.
-> -		 */
-> -		if (!bitmap_and(apm, matrix_mdev->matrix.apm,
-> -				lstdev->matrix.apm, AP_DEVICES))
-> -			continue;
-> -
-> -		if (!bitmap_and(aqm, matrix_mdev->matrix.aqm,
-> -				lstdev->matrix.aqm, AP_DOMAINS))
-> -			continue;
-> -
-> -		return -EADDRINUSE;
-> +	int apid, apqn;
-> +	int ret = 0;
-> +	struct vfio_ap_queue *q;
-> +	struct list_head q_list;
-> +	struct ap_matrix_mdev *tmp = NULL;
-> +
-> +	INIT_LIST_HEAD(&q_list);
-> +
-> +	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm, AP_DEVICES) {
-> +		apqn = AP_MKQID(apid, apqi);
-> +		q = vfio_ap_get_queue(apqn, &matrix_dev->free_list);
-> +		if (!q) {
-> +			ret = -EADDRNOTAVAIL;
-> +			goto rewind;
-> +		}
-> +		if (q->matrix_mdev) {
-> +			ret = -EADDRINUSE;
+  Cheers,
 
-Same here!
-
-Regards,
-Halil
-
-> +			goto rewind;
-> +		}
-> +		list_move(&q->list, &q_list);
->  	}
-
-[..]
+  Ronald
 
