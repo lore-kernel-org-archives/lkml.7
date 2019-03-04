@@ -2,242 +2,133 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E917AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C5DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B658920823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009B8217D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfCDKq7 (ORCPT
+        id S1726299AbfCDKrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 05:46:59 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:35330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbfCDKq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 05:46:59 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7B4D9D6561;
-        Mon,  4 Mar 2019 10:46:58 +0000 (UTC)
-Received: from [10.36.112.48] (ovpn-112-48.ams2.redhat.com [10.36.112.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B276F5D71E;
-        Mon,  4 Mar 2019 10:46:54 +0000 (UTC)
-Subject: Re: [PATCH v4 03/17] wlcore: Align reg_ch_conf_pending and
- tmp_ch_bitmap to unsigned long for better performance
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
- <1551494711-213533-4-git-send-email-fenghua.yu@intel.com>
- <20190304101141.GB32477@hirez.programming.kicks-ass.net>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <44bb6771-7aea-c44d-6605-45e7a1499d1b@redhat.com>
-Date:   Mon, 4 Mar 2019 11:46:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 4 Mar 2019 05:47:08 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35065 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfCDKrF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 05:47:05 -0500
+Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A920220000D;
+        Mon,  4 Mar 2019 10:47:00 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 11:47:00 +0100
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net,
+        linux@armlinux.org.uk, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, maxime.chevallier@bootlin.com,
+        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
+        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com
+Subject: Re: [PATCH net-next v2 3/3] net: phy: marvell10g: set the PHY in low
+ power by default
+Message-ID: <20190304104700.GB3709@kwain>
+References: <20190301110047.20257-1-antoine.tenart@bootlin.com>
+ <20190301110047.20257-4-antoine.tenart@bootlin.com>
+ <20190301141953.GF19813@lunn.ch>
+ <20190301150706.GD3554@kwain>
+ <d17bdf0c-f1b8-99e3-b199-a99a7f7347d3@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190304101141.GB32477@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 04 Mar 2019 10:46:58 +0000 (UTC)
+In-Reply-To: <d17bdf0c-f1b8-99e3-b199-a99a7f7347d3@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/19 11:11, Peter Zijlstra wrote:
-> On Fri, Mar 01, 2019 at 06:44:57PM -0800, Fenghua Yu wrote:
->> A bit in reg_ch_conf_pending in wl271 and tmp_ch_bitmap is set 
->> atomically by set_bit(). set_bit() sets the bit in a single 
->> unsigned long location. If the variables are not aligned to 
->> unsigned long, set_bit() accesses two cache lines and thus causes 
->> slower performance. On x86, this scenario is called split lock and 
->> can cause overall performance degradation due to locked BTSL 
->> instruction in set_bit() locks bus.
->> 
->> To avoid performance degradation, the two variables are aligned to
->>  unsigned long.
->> 
->> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com> --- 
->> drivers/net/wireless/ti/wlcore/cmd.c    | 3 ++- 
->> drivers/net/wireless/ti/wlcore/wlcore.h | 6 ++++-- 2 files
->> changed, 6 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/net/wireless/ti/wlcore/cmd.c 
->> b/drivers/net/wireless/ti/wlcore/cmd.c index 
->> 903968735a74..8d15a6307d44 100644 --- 
->> a/drivers/net/wireless/ti/wlcore/cmd.c +++ 
->> b/drivers/net/wireless/ti/wlcore/cmd.c @@ -1707,7 +1707,8 @@ int 
->> wlcore_cmd_regdomain_config_locked(struct wl1271 *wl) { struct 
->> wl12xx_cmd_regdomain_dfs_config *cmd = NULL; int ret = 0, i, b, 
->> ch_bit_idx; -	u32 tmp_ch_bitmap[2]; +	/* Align to unsigned long
->> for better performance in set_bit() */ +	u32 tmp_ch_bitmap[2] 
->> __aligned(sizeof(unsigned long));
+Hi Florian,
 
-This is the only place where an array of u32 is needed, because of
+On Fri, Mar 01, 2019 at 07:08:56PM -0800, Florian Fainelli wrote:
+> On 3/1/2019 7:07 AM, Antoine Tenart wrote:
+> > On Fri, Mar 01, 2019 at 03:19:53PM +0100, Andrew Lunn wrote:
+> >> On Fri, Mar 01, 2019 at 12:00:47PM +0100, Antoine Tenart wrote:
+> >>> When the Marvell 10G PHYs are set out of reset, the LPOWER bit is set
+> >>> depending on an hardware configuration choice. We also do not know what
+> >>> is the PHY state at boot time. Hence, set the PHY in low power by
+> >>> default when this driver probes.
+> >>
+> >> Florian did some work for c22 PHYs so that the existing link state
+> >> could be used at boot. So for example, the bootloader configured the
+> >> PHY up and it got link, there is no need to down/up the PHY when linux
+> >> takes control. The networking comes up faster that way.
+> >>
+> >> Can this work for this PHY?
+> > 
+> > This use case (the bootloader configures the PHY, Linux boots and sets
+> > an interface using this PHY up) would work, and is what's happening in
+> > some situations right now (the 3310 reset is never asserted prior to
+> > this series).
+> > 
+> > But consider this case (let's say we use a 10G link):
+> > 
+> >   ----------------               ----------------
+> >   |    Board 1   |               |    Board 2   |
+> >   | MAC — 3310 — | — SFP cable — | — 3310 — MAC |
+> >   ----------------               ----------------
+> > 
+> > Board 1: The userspace do not set the interface up. The MAC is in reset
+> >          (default state during the MAC driver probe), the PHY was
+> > 	 configured by the bootloader.
+> > Board 2: The userspace set the interface up. The MAC is configured, the
+> >          PHY is configured as well.
+> > 
+> > The two PHY's PCS will establish a link and report it as being up. In
+> > this case, phylink's AN mode is MLO_AN_PHY and thus will report the
+> > overall link as being the PHY's link status: up.
+> > 
+> > My understanding is that the issue arises because the PHYs were never
+> > set in reset, or low power, and thus act as if the user wanted the port
+> > to be up. As the default behaviour for networking ports is to be down at
+> > boot, I thought to set the PHY as well in a default low power state.
+> 
+> The policy you are creating here for the marvell10g driver is entirely
+> applicable to any PHY <=> PHY configuration where either of the two
+> software agents on Board 1 or Board 2 has not had a chance to bring-up
+> its bootloader/OS/applications to control the PHY.
 
-        cmd->ch_bit_map1 = cpu_to_le32(tmp_ch_bitmap[0]);
-        cmd->ch_bit_map2 = cpu_to_le32(tmp_ch_bitmap[1]);
+Right.
 
-All the others should use DECLARE_BITMAP, including reg_ch_conf_last 
-which was already using __aligned.  As Peter mentioned they should
-also use set_bit_le.  Actually they do not need locked access at all
-because the only code paths to the set_bit take a mutex.
+> A number of PHYs come up fully on (or in isolate or super isolate mode)
+> and will AN with their link partner if connected. For some people it's a
+> feature, for some it is a waste of power. I don't necessarily have an
+> issue with your patch per-se, but it does create an one off behavior
+> that other PHY drivers may not follow.
 
-There is one other place that is accessing the items of the array, but
-it is fixed easily.  The following patch should do everything:
+I agree having a per-driver behaviour is not something we want. As I
+understand it, there is no behaviour enforced currently regarding this
+matter. I agree both cases have their pros and cons:
+- It's weird to have an interface reporting being UP when it's not
+  really.
+- Having the link come up faster can be a feature.
 
-------------------- 8< --------------------------
-From: Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH] wlcore: simplify/fix/optimize reg_ch_conf_pending operations
+I have some questions then:
+- Do you think calling suspend() in the core when probing a PHY driver
+  would work for all PHYs?
+- Would a new Kconfig option selecting the default behaviour at boot
+  time be a solution?
+- Or this is a WONTFIX kind of (small) issues? :)
 
-Bitmaps are defined on unsigned longs, so the usage of u32[2] in the
-wlcore driver is incorrect.  As noted by Peter Zijlstra, casting arrays
-to a bitmap is incorrect for big-endian architectures.
+Thanks!
+Antoine
 
-When looking at it I observed that:
-
-- operations on reg_ch_conf_pending is always under the wl_lock mutex,
-so set_bit is overkill
-
-- the only case where reg_ch_conf_pending is accessed a u32 at a time is
-unnecessary too.
-
-This patch cleans up everything in this area, and changes tmp_ch_bitmap
-to have the proper alignment.
-
-Reported-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-
-diff --git a/drivers/net/wireless/ti/wlcore/cmd.c b/drivers/net/wireless/ti/wlcore/cmd.c
-index 903968735a74..3e093f3a7ec8 100644
---- a/drivers/net/wireless/ti/wlcore/cmd.c
-+++ b/drivers/net/wireless/ti/wlcore/cmd.c
-@@ -1700,14 +1700,14 @@ void wlcore_set_pending_regdomain_ch(struct wl1271 *wl, u16 channel,
- 	ch_bit_idx = wlcore_get_reg_conf_ch_idx(band, channel);
- 
- 	if (ch_bit_idx >= 0 && ch_bit_idx <= WL1271_MAX_CHANNELS)
--		set_bit(ch_bit_idx, (long *)wl->reg_ch_conf_pending);
-+		__set_bit_le(ch_bit_idx, (long *)wl->reg_ch_conf_pending);
- }
- 
- int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
- {
- 	struct wl12xx_cmd_regdomain_dfs_config *cmd = NULL;
- 	int ret = 0, i, b, ch_bit_idx;
--	u32 tmp_ch_bitmap[2];
-+	u32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
- 	struct wiphy *wiphy = wl->hw->wiphy;
- 	struct ieee80211_supported_band *band;
- 	bool timeout = false;
-@@ -1717,7 +1717,7 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
- 
- 	wl1271_debug(DEBUG_CMD, "cmd reg domain config");
- 
--	memset(tmp_ch_bitmap, 0, sizeof(tmp_ch_bitmap));
-+	memcpy(tmp_ch_bitmap, wl->reg_ch_conf_pending, sizeof(tmp_ch_bitmap));
- 
- 	for (b = NL80211_BAND_2GHZ; b <= NL80211_BAND_5GHZ; b++) {
- 		band = wiphy->bands[b];
-@@ -1738,13 +1738,10 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
- 			if (ch_bit_idx < 0)
- 				continue;
- 
--			set_bit(ch_bit_idx, (long *)tmp_ch_bitmap);
-+			__set_bit_le(ch_bit_idx, (long *)tmp_ch_bitmap);
- 		}
- 	}
- 
--	tmp_ch_bitmap[0] |= wl->reg_ch_conf_pending[0];
--	tmp_ch_bitmap[1] |= wl->reg_ch_conf_pending[1];
--
- 	if (!memcmp(tmp_ch_bitmap, wl->reg_ch_conf_last, sizeof(tmp_ch_bitmap)))
- 		goto out;
- 
-diff --git a/drivers/net/wireless/ti/wlcore/wlcore.h b/drivers/net/wireless/ti/wlcore/wlcore.h
-index dd14850b0603..870eea3e7a27 100644
---- a/drivers/net/wireless/ti/wlcore/wlcore.h
-+++ b/drivers/net/wireless/ti/wlcore/wlcore.h
-@@ -320,9 +320,9 @@ struct wl1271 {
- 	bool watchdog_recovery;
- 
- 	/* Reg domain last configuration */
--	u32 reg_ch_conf_last[2]  __aligned(8);
-+	DECLARE_BITMAP(reg_ch_conf_last, 64);
- 	/* Reg domain pending configuration */
--	u32 reg_ch_conf_pending[2];
-+	DECLARE_BITMAP(reg_ch_conf_pending, 64);
- 
- 	/* Pointer that holds DMA-friendly block for the mailbox */
- 	void *mbox;
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
