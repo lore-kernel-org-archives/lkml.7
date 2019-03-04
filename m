@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BB6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7613CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACF021019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4935021019
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551687979;
-	bh=HDhcxhXNknPHihsIQT8hw1gJMc1Et8FSxWyaqAWlWck=;
+	s=default; t=1551687983;
+	bh=LMMpJpWcE9qViKk66G9NwzU7AgfnlWfxSnvtSxJqrcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AZqLBjC8s7/ZdaHI2hXY2AYh5tkT4fn0IhLd4/Rw2o6B/lFKk7r9zOXsOLzsIfpvT
-	 1nTL1fd/sw1rGsydiyhaiouQ6IWVbWDcRjCEIbaYC6krUEqxLpaBS5l6qQIswokNrK
-	 MEDw44lsZB7kz83Gj4PKZEJklgWWfY8NKmRrJu0Y=
+	b=tMSQOmhngiY3plzBU3+eUMiKqk6G1tyZ/sBYLkCRoPr2lGJwbXoF/LONGlSRqTF1L
+	 sZWu8o3tIe0ivQqxY3F7rQbfCCTZAl/lkym+5H6fsElKKQhTDAyFGl3cIfmKt6fejf
+	 wNxuT5/kdEA03O49AtIkgzbTOqZHR3gjm6Bf8BEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfCDI0R (ORCPT
+        id S1727103AbfCDI0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:26:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:26:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725982AbfCDI0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:26:16 -0500
+        id S1725982AbfCDI0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:26:18 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76D1F20863;
-        Mon,  4 Mar 2019 08:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ACE7208E4;
+        Mon,  4 Mar 2019 08:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551687975;
-        bh=HDhcxhXNknPHihsIQT8hw1gJMc1Et8FSxWyaqAWlWck=;
+        s=default; t=1551687977;
+        bh=LMMpJpWcE9qViKk66G9NwzU7AgfnlWfxSnvtSxJqrcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=of1D3VLoX7Xb5ZvS2ETsFSNXvo8mS03AhclUN3b9k/Li+6gdpvMzMyPJ1e4iEpFWS
-         FXxba4g2tpPmK1++iI12lxP/d7QbdPw119xjESZC8VQKGeVstY2lmfoaTunjxleD/1
-         DXof6Q45Tz26+tjBl7XpaNMNwWlrCzAzgZ/BexqI=
+        b=EwLEYSv7IYbWnFB0f1Wa9JlKS5gQ917dqroxWEH6YNnqaAtRNUe20HUdo8E90Huae
+         MDgXCtpMG20HKCJ/S4GAhAmbbGQH9B4XFwEy5g2dNpvGyAg8+bhwnp2S+xWaN/VS4A
+         yGKiRv+q4bxYcdqMs4u/E8p5zYa+a5ALzH3SmuKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Hu <weh@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 35/52] hv_netvsc: Fix ethtool change hash key error
-Date:   Mon,  4 Mar 2019 09:22:33 +0100
-Message-Id: <20190304081619.153940486@linuxfoundation.org>
+Subject: [PATCH 4.14 09/52] ALSA: compress: prevent potential divide by zero bugs
+Date:   Mon,  4 Mar 2019 09:22:07 +0100
+Message-Id: <20190304081617.671615552@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081617.159014799@linuxfoundation.org>
 References: <20190304081617.159014799@linuxfoundation.org>
@@ -67,79 +66,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit b4a10c750424e01b5e37372fef0a574ebf7b56c3 ]
+[ Upstream commit 678e2b44c8e3fec3afc7202f1996a4500a50be93 ]
 
-Hyper-V hosts require us to disable RSS before changing RSS key,
-otherwise the changing request will fail. This patch fixes the
-coding error.
+The problem is seen in the q6asm_dai_compr_set_params() function:
 
-Fixes: ff4a44199012 ("netvsc: allow get/set of RSS indirection table")
-Reported-by: Wei Hu <weh@microsoft.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-[sl: fix up subject line]
+	ret = q6asm_map_memory_regions(dir, prtd->audio_client, prtd->phys,
+				       (prtd->pcm_size / prtd->periods),
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+				       prtd->periods);
+
+In this code prtd->pcm_size is the buffer_size and prtd->periods comes
+from params->buffer.fragments.  If we allow the number of fragments to
+be zero then it results in a divide by zero bug.  One possible fix would
+be to use prtd->pcm_count directly instead of using the division to
+re-calculate it.  But I decided that it doesn't really make sense to
+allow zero fragments.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/rndis_filter.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ sound/core/compress_offload.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index 17025d46bdac8..fc1d5e14d83e9 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -711,8 +711,8 @@ rndis_filter_set_offload_params(struct net_device *ndev,
- 	return ret;
- }
- 
--int rndis_filter_set_rss_param(struct rndis_device *rdev,
--			       const u8 *rss_key)
-+static int rndis_set_rss_param_msg(struct rndis_device *rdev,
-+				   const u8 *rss_key, u16 flag)
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 4490a699030b1..555df64d46ffc 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -529,7 +529,8 @@ static int snd_compress_check_input(struct snd_compr_params *params)
  {
- 	struct net_device *ndev = rdev->ndev;
- 	struct rndis_request *request;
-@@ -741,7 +741,7 @@ int rndis_filter_set_rss_param(struct rndis_device *rdev,
- 	rssp->hdr.type = NDIS_OBJECT_TYPE_RSS_PARAMETERS;
- 	rssp->hdr.rev = NDIS_RECEIVE_SCALE_PARAMETERS_REVISION_2;
- 	rssp->hdr.size = sizeof(struct ndis_recv_scale_param);
--	rssp->flag = 0;
-+	rssp->flag = flag;
- 	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
- 			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
- 			 NDIS_HASH_TCP_IPV6;
-@@ -766,9 +766,12 @@ int rndis_filter_set_rss_param(struct rndis_device *rdev,
+ 	/* first let's check the buffer parameter's */
+ 	if (params->buffer.fragment_size == 0 ||
+-	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size)
++	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size ||
++	    params->buffer.fragments == 0)
+ 		return -EINVAL;
  
- 	wait_for_completion(&request->wait_event);
- 	set_complete = &request->response_msg.msg.set_complete;
--	if (set_complete->status == RNDIS_STATUS_SUCCESS)
--		memcpy(rdev->rss_key, rss_key, NETVSC_HASH_KEYLEN);
--	else {
-+	if (set_complete->status == RNDIS_STATUS_SUCCESS) {
-+		if (!(flag & NDIS_RSS_PARAM_FLAG_DISABLE_RSS) &&
-+		    !(flag & NDIS_RSS_PARAM_FLAG_HASH_KEY_UNCHANGED))
-+			memcpy(rdev->rss_key, rss_key, NETVSC_HASH_KEYLEN);
-+
-+	} else {
- 		netdev_err(ndev, "Fail to set RSS parameters:0x%x\n",
- 			   set_complete->status);
- 		ret = -EINVAL;
-@@ -779,6 +782,16 @@ int rndis_filter_set_rss_param(struct rndis_device *rdev,
- 	return ret;
- }
- 
-+int rndis_filter_set_rss_param(struct rndis_device *rdev,
-+			       const u8 *rss_key)
-+{
-+	/* Disable RSS before change */
-+	rndis_set_rss_param_msg(rdev, rss_key,
-+				NDIS_RSS_PARAM_FLAG_DISABLE_RSS);
-+
-+	return rndis_set_rss_param_msg(rdev, rss_key, 0);
-+}
-+
- static int rndis_filter_query_device_link_status(struct rndis_device *dev,
- 						 struct netvsc_device *net_device)
- {
+ 	/* now codec parameters */
 -- 
 2.19.1
 
