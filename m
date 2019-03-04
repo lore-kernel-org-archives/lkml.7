@@ -2,90 +2,94 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D3AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8939CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CEE22070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE332070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 12:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfCDMfY (ORCPT
+        id S1726579AbfCDMf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 07:35:24 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:43615 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfCDMfX (ORCPT
+        Mon, 4 Mar 2019 07:35:57 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21090 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726041AbfCDMf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 07:35:23 -0500
-Received: by mail-ua1-f68.google.com with SMTP id g1so4208547uae.10;
-        Mon, 04 Mar 2019 04:35:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w1B3TxawuZfoWnukQ4aoJb63D7QoG/Hwq34wP9Ec4OI=;
-        b=rr/6NLDdthOpsLXk5/DEzmP1a1wh0+9CkOkcyAfoOJHDf011EVNFhpsz35DP1Zw26h
-         PVOlIAhisxJOkgcFE0S19S3ViTee3eiHg/PcfzXE+TQGwNvEYHiJ9BXXuXBvstKEl0wB
-         /uJ3/WGyJaeo2uDOMblDaujOBrZA2eAHi0X80CR4j+D7sNX+ptyQeDZpE6osr1uFQqXN
-         ybDfjuPw9aYqk3XBxOJnZlrgcwz0UpUn7RnyQ4HD7sKHqIKlNPySYXejzRAWr0tAyXqy
-         UpAMltAEY5vjx1wNbQXnLUhYg9Fy5kQbuHOuWrs7wYcct0FgzjVIqBJbXNGhDbjX6DYI
-         d9mg==
-X-Gm-Message-State: APjAAAX6S/r72U8zDckuO001cEVitX6qP85LZGMkOkYT0g9hwW9P76v1
-        6psKxhf9J5qCrnQ11CRl+Fn/eNCZjtE+G8tVfwA=
-X-Google-Smtp-Source: APXvYqx15knVAJlVLnsNJ7lOTEOyK4t5K1D8vGqLHSbnE6QPK9fpmDKdGe7rmE1nuayLqkO6dqYtiKQq7JhGzqsuzEs=
-X-Received: by 2002:a67:7dd1:: with SMTP id y200mr8481973vsc.96.1551702922539;
- Mon, 04 Mar 2019 04:35:22 -0800 (PST)
+        Mon, 4 Mar 2019 07:35:56 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x24CVhYw002801;
+        Mon, 4 Mar 2019 13:35:50 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2qyhgakd3m-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 04 Mar 2019 13:35:50 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 78EC538;
+        Mon,  4 Mar 2019 12:35:49 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 528682A3C;
+        Mon,  4 Mar 2019 12:35:49 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 4 Mar 2019
+ 13:35:49 +0100
+Received: from localhost (10.201.23.19) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Mon, 4 Mar 2019 13:35:48
+ +0100
+From:   Hugues Fruchet <hugues.fruchet@st.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Hugues Fruchet" <hugues.fruchet@st.com>
+Subject: [PATCH] Support of /dev/video read with USB camera devices
+Date:   Mon, 4 Mar 2019 13:35:24 +0100
+Message-ID: <1551702925-7739-1-git-send-email-hugues.fruchet@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190302134735.4393-1-wsa+renesas@sang-engineering.com> <20190302134735.4393-3-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20190302134735.4393-3-wsa+renesas@sang-engineering.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 Mar 2019 13:35:10 +0100
-Message-ID: <CAMuHMdXPbsoWD3kJKK25=KL1kXsA23o7-7LsayMSoB=so4-zxw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/7] i2c: core: use I2C locking behaviour also for SMBUS
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Keerthy <j-keerthy@ti.com>, Peter Rosin <peda@axentia.se>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Phil Reid <preid@electromag.com.au>,
-        Tero Kristo <t-kristo@ti.com>,
-        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
-        <linux-omap@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.19]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-04_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 2, 2019 at 2:49 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> If I2C transfers are executed in atomic contexts, trylock is used
-> instead of lock. This behaviour was missing for SMBUS, although a lot of
-> transfers are of SMBUS type, either emulated or direct. So, factor out
-> the locking routine into a helper and use it for I2C and SMBUS.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Acked-by: Peter Rosin <peda@axentia.se>
-> Acked-by: Tony Lindgren <tony@atomide.com>
+Currently, read() call from /dev/video entry of an USB camera is
+returning invalid argument error.
+This is quite common for userspace application to read compressed data such as
+JPEG from /dev/video then redirect those data to a multimedia player or any
+other compressed format consumer, see [1].
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+There was a tentative of implementation in the past [2] but it was prior to
+switch on vb2 helpers usage inside uvc.
+Now that vb2 is in place, we can implement read support using vb2_read()
+helper.
 
-Gr{oetje,eeting}s,
+Tested with Logitech HD Webcam C525 using v4l2-ctl to configure camera
+then GStreamer player to play stream:
+$> v4l2-ctl -d /dev/video0 --set-fmt-video=width=640,height=480,pixelformat=MJPG
+$> gst-play-1.0 /dev/video0
 
-                        Geert
+[1]
+  http://credentiality2.blogspot.com/2010/04/v4l2-example.html?_sm_au_=ikcQHNZZFn2Rqft5
+  https://stackoverrun.com/fr/q/4215615
+  https://stackoverflow.com/questions/36297390/read-function-for-webcam-device-in-v4l2-fails-with-invalid-argument
+  https://stackoverflow.com/questions/31058571/reading-camera-input-from-dev-video0-in-python-or-c
+
+[2] https://www.mail-archive.com/linux-uvc-devel@lists.berlios.de/msg01258.html
+
+Hugues Fruchet (1):
+  media: uvcvideo: Read support
+
+ drivers/media/usb/uvc/uvc_queue.c | 15 ++++++++++++++-
+ drivers/media/usb/uvc/uvc_v4l2.c  | 11 ++++++++---
+ drivers/media/usb/uvc/uvcvideo.h  |  2 ++
+ 3 files changed, 24 insertions(+), 4 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
