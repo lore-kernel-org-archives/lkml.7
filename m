@@ -2,103 +2,198 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 848C7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80027C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF81206DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B55B206DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551721930;
+	bh=XN98+D5gbw1pc30bDaFbg45JEEaPqeNXKhfBuMF63Zg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ANFknR6AlbxmYF1jgmLbg/F4KJ0aXsEjC32mdYu28g2PbGrYrRuWKDAV1sZa18ji+
+	 XyRXM417HGHYb/hQhDusDi207PSAY8SOk68Ewl3vr5CfLVmXIXUtXNodCVg4Gs26GQ
+	 9JfNbIEKV3sL5hiWUm4DriZgw4FCItEge2nsZKDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbfCDRuj (ORCPT
+        id S1727505AbfCDRwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:50:39 -0500
-Received: from foss.arm.com ([217.140.101.70]:36794 "EHLO foss.arm.com"
+        Mon, 4 Mar 2019 12:52:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfCDRuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:50:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DB37A78;
-        Mon,  4 Mar 2019 09:50:38 -0800 (PST)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45CD43F703;
-        Mon,  4 Mar 2019 09:50:37 -0800 (PST)
-Date:   Mon, 4 Mar 2019 17:50:32 +0000
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     =?utf-8?B?V2FuZywgVmluY2VudCAo546L5LqJKQ==?= 
-        <Vincent.Wang@unisoc.com>,
-        =?utf-8?B?WmhhbmcsIENodW55YW4gKOW8oOaYpeiJsyk=?= 
-        <Chunyan.Zhang@unisoc.com>, Ingo Molnar <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0ggVjRdIHNj?=
- =?utf-8?Q?hed=2Fcpufreq=3A_initializ?= =?utf-8?Q?e?= iowait_boost_max and
- iowait_boost with cpu capacity
-Message-ID: <20190304175030.4slf247y2eftkmu4@queper01-lin>
-References: <1550831866-32749-1-git-send-email-chunyan.zhang@unisoc.com>
- <20190222105957.wxhlcmoag5f3i4fi@queper01-lin>
- <9099990618e242e1bab77ce3f9d9b1e3@BJMBX02.spreadtrum.com>
- <20190304135810.rq2ojnbn5vezrab3@queper01-lin>
- <20190304152616.GM32494@hirez.programming.kicks-ass.net>
- <20190304164816.4fnxxesjwzdoqria@queper01-lin>
- <20190304174028.GO32494@hirez.programming.kicks-ass.net>
+        id S1726181AbfCDRwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:52:08 -0500
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2198B2146E;
+        Mon,  4 Mar 2019 17:52:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1551721927;
+        bh=XN98+D5gbw1pc30bDaFbg45JEEaPqeNXKhfBuMF63Zg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SmTfKeT2l2FNJbzv18gg4wy7J0RpsC9WES4Z3gLF2p86cx4GhRfiT5L+YYIdiTdiM
+         CmxSMgAQSgrgT6y0Zkuuh6cUiLmUOa7qWNiXbu01aTb1palNJvnsMOlSk+pZGtwU3A
+         USXlHvrMfmk5WJFunEfVCQNLfp1J8CjQXo18uYHQ=
+Received: by mail-qt1-f178.google.com with SMTP id y4so6055566qtc.10;
+        Mon, 04 Mar 2019 09:52:07 -0800 (PST)
+X-Gm-Message-State: APjAAAUevnpOLbo8jfXjZDPBmY2jfv4xHs+zmMsdW1vOlL5nJmSqqQVo
+        cUHE2z7pRLid9kHOUMMUzWWMqLosMfu7IqjY+g==
+X-Google-Smtp-Source: APXvYqzkpBfsfpjMj6yuvUtfeTDH9r0unzVPvf8mimwSTIYtBGwaXXtx6UGIICLfiHuD1BnGGoS7qddEhTP8hgrMERI=
+X-Received: by 2002:ac8:25d1:: with SMTP id f17mr14929040qtf.38.1551721926271;
+ Mon, 04 Mar 2019 09:52:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304174028.GO32494@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+References: <20190221084729.101784-1-pihsun@chromium.org> <20190221084729.101784-2-pihsun@chromium.org>
+ <20190222144316.GA19284@bogus> <CANdKZ0d+2CqbVEwruW+pbqUeRMBwzXV7tFC7Cp7i+98CWiB_4w@mail.gmail.com>
+In-Reply-To: <CANdKZ0d+2CqbVEwruW+pbqUeRMBwzXV7tFC7Cp7i+98CWiB_4w@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 4 Mar 2019 11:51:55 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+rqeJX9LHOvVi7rPUzCeWhM2QjicJXyJyn23-gBo=Qcg@mail.gmail.com>
+Message-ID: <CAL_Jsq+rqeJX9LHOvVi7rPUzCeWhM2QjicJXyJyn23-gBo=Qcg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: Add a binding for Mediatek SCP
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 04 Mar 2019 at 18:40:28 (+0100), Peter Zijlstra wrote:
-> > Perhaps you could keep the 'util' and 'max' pointers in
-> > sugov_iowait_apply() and overwrite them like before, but in the
-> > SCHED_CAPACITY_SCALE scale as you suggest ?
-> 
-> Urgh; but then we're back to having that boostrap problem.
+On Mon, Feb 25, 2019 at 12:15 AM Pi-Hsun Shih <pihsun@chromium.org> wrote:
+>
+> On Fri, Feb 22, 2019 at 10:43 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Thu, Feb 21, 2019 at 04:47:24PM +0800, Pi-Hsun Shih wrote:
+> > > From: Erin Lo <erin.lo@mediatek.com>
+> > >
+> > > Add a DT binding documentation of SCP for the
+> > > MT8183 SoC from Mediatek.
+> > >
+> > > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > > ---
+> > > Changes from v4:
+> > >  - Add detail of more properties.
+> > >  - Document the usage of mtk,rpmsg-name in subnode from the new design.
+> > >
+> > > Changes from v3:
+> > >  - No change.
+> > >
+> > > Changes from v2:
+> > >  - No change. I realized that for this patch series, there's no need to
+> > >    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
+> > >    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
+> > >    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
+> > >    created by SCP name service.
+> > >
+> > > Changes from v1:
+> > >  - No change.
+> > > ---
+> > >  .../bindings/remoteproc/mtk,scp.txt           | 37 +++++++++++++++++++
+> > >  1 file changed, 37 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> > > new file mode 100644
+> > > index 00000000000000..8cf8b0e0d98a4c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> > > @@ -0,0 +1,37 @@
+> > > +Mediatek SCP Bindings
+> > > +----------------------------------------
+> > > +
+> > > +This binding provides support for ARM Cortex M4 Co-processor found on some
+> > > +Mediatek SoCs.
+> > > +
+> > > +Required properties:
+> > > +- compatible         Should be "mediatek,mt8183-scp"
+> > > +- reg                        Should contain the address ranges for the two memory
+> > > +                     regions, SRAM and CFG.
+> > > +- reg-names          Contains the corresponding names for the two memory
+> > > +                     regions. These should be named "sram" & "cfg".
+> > > +- clocks             Clock for co-processor (See: ../clock/clock-bindings.txt)
+> > > +- clock-names                Contains the corresponding name for the clock. This
+> > > +                     should be named "main".
+> > > +
+> > > +Subnodes
+> > > +--------
+> > > +
+> > > +When CONFIG_RPMSG_MTK_SCP is enabled, subnodes of the SCP represent rpmsg
+> >
+> > Bindings can't depend on kernel config options.
+> >
+>
+> What's the recommendation here if the subnode only has effect when the
+> config is enabled? Should I just skip the sentence "When ... is
+> enabled"?
 
-Hmm, I don't understand :/
+Sure.
 
-> Now; at this time; @max is in fact scale_cpu_capacity, so can't we
-> change this:
-> 
-> -       /*
-> -        * Apply the current boost value: a CPU is boosted only if its current
-> -        * utilization is smaller then the current IO boost level.
-> -        */
-> -       boost_util = sg_cpu->iowait_boost;
-> -       boost_max = sg_cpu->iowait_boost_max;
+>
+> > > +devices. The names of the devices are not important. The properties of these
+> > > +nodes are defined by the individual bindings for the rpmsg devices - but must
+> > > +contain the following property:
+> > > +
+> > > +- mtk,rpmsg-name     Contains the name for the rpmsg device. Used to match
+> > > +                     the subnode to rpmsg device announced by SCP.
+> >
+> > I don't think this belongs in DT, but without some examples I'm not
+> > really sure.
+> >
+>
+> This is similar to the qcom,smd-channels property in
+> Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt, a example DT
+> for this:
 
-I was basically suggesting to do 'boost_max = 1024;' here and you
-should be good with you way of computing 'min' no ?
+QCom has lots of strange buses and communication channels. Probably
+not the best place for inspiration.
 
-> -       if (*util * boost_max < *max * boost_util) {
-> -               *util = boost_util;
-> -               *max = boost_max;
-> -       }
-> +       sg_cpu->iowait_boost_pending = false;
-> +
-> +       return min(max(util, sg_cpu->iowait_boost), max);
-> }
-> 
-> to something like:
-> 
-> 	/*
-> 	 * @util is already in capacity scale, convert iowait_boost
-> 	 * into the same scale so we can compare.
-> 	 */
-> 	boost = (sg_cpu->iowait_boost * max) >> SCHED_CAPACITY_SHIFT;
-> 	util = max(boost, util);
-> 	return min(util, max);
-> 
+> scp {
+>         compatible = "mediatek,mt8183-scp";
+>         ...
+>         cros_ec {
+>                 compatible = "google,cros-ec-rpmsg";
+>                 mtk,rpmsg-name = "cros-ec-rpmsg";
 
-But this should work too, I think.
+Why do we need the same string twice? It's just the compatible string
+minus the vendor prefix.
 
-Thanks,
-Quentin
+>
+>                 cros_ec_codec {
+>                         compatible = "google,cros-ec-codec";
+>                         ...
+
+What's this? I can't review bindings piece by piece.
+
+>                 };
+>         };
+> };
+>
+> > > +
+> > > +Example:
+> > > +
+> > > +     scp: scp@10500000 {
+> > > +             compatible = "mediatek,mt8183-scp";
+> > > +             reg = <0 0x10500000 0 0x80000>,
+> > > +                   <0 0x105c0000 0 0x5000>;
+> > > +             reg-names = "sram", "cfg";
+> > > +             clocks = <&infracfg CLK_INFRA_SCPSYS>;
+> > > +             clock-names = "main";
+> > > +     };
+> > > --
+> > > 2.21.0.rc0.258.g878e2cd30e-goog
+> > >
