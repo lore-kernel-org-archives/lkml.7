@@ -2,114 +2,176 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B7BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FE0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF61520823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:54:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BRmVM0pg"
+	by mail.kernel.org (Postfix) with ESMTP id 45C4E20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 10:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfCDKyC (ORCPT
+        id S1726190AbfCDK4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 05:54:02 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37555 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfCDKyC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 05:54:02 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w6so4995865wrs.4
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 02:54:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YBMGzFIEHIQ7zv+jwc9v87XTUsS+NaVoQ1+r7qeHMU0=;
-        b=BRmVM0pgR+XnUsEccy9kGG+98Q+d2CQSVst+lIhoYlMhfD3GzbvaoNWx+iMbKhSf2K
-         hid5q9nAyKvYGfgkoWwke8UXwXwwbBWGh9JW/bWtMXpng+GEIQRMjDlEIaBgT8hl+26/
-         rJpU46HGsfcpqg7ltr23k7L3DW5AQNkOSISM7xzids0CM2Ts89YHMUisRAKsrByCkzH5
-         xQYTf55l+ltnxizDZONfLT370yQF2CH/HUFt15LVqISjT+MFcOBAuxSPBom9ulK6QT2Q
-         nY8ScJEpT4T+OyfmD0bJUBShNKMvmsG/bDJL2on75EXeknLzXqcHdMTsnyObh8zSPjt2
-         eI8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YBMGzFIEHIQ7zv+jwc9v87XTUsS+NaVoQ1+r7qeHMU0=;
-        b=c75bZtDN8EWhxTXtjDRSOzNSRz8OwClmZFLlC3YF0TL6Eja5GdmlJteshfjrfBaurw
-         FZixLANIhYXht/1FJ/lAsw6QDn69NlwQmoVddjhR3NuUtvQGA9j5fJNjWTXNXgOQAhkg
-         WpsdRTELtULUKv3EB8ZUvgyTK1xy8nv2kRtyssUM5wbZz4/rZrIio/wEcMapceufSz8c
-         6HGsHtC5eqroBcgW+UWtx0giLSlH1EWKgGtsx8emZAP3h5UjDqxcUU4EKoEwyH2KW7/c
-         +hBwQevb8JRzy+2DpluiwyzQIru57QxAkQibEfuW5QUrX1SpQvyySncVvO3Zb8EVjaWp
-         nFLg==
-X-Gm-Message-State: APjAAAVAiwvLmWRk9A7W5oo2dQMA+QcqE3WHkiBvIo65n/xTrjZRnp5M
-        yiBmAd7LLxNJtMdaT1QqQjoosw==
-X-Google-Smtp-Source: APXvYqwzyvJ/CENiAa1enYYEUkpI981sn+aj1XtJn7/p5P9NvQVymeZQ1Mv9eb4/SSoNO84bqu4fwA==
-X-Received: by 2002:adf:d4c6:: with SMTP id w6mr12033156wrk.65.1551696840245;
-        Mon, 04 Mar 2019 02:54:00 -0800 (PST)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id n2sm5915996wrq.58.2019.03.04.02.53.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 04 Mar 2019 02:53:59 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     jbrunet@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH] clk: g12a-aoclk: re-export CLKID_AO_SAR_ADC_SEL clock id
-Date:   Mon,  4 Mar 2019 11:53:58 +0100
-Message-Id: <20190304105358.4987-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 4 Mar 2019 05:56:42 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60168 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726079AbfCDK4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 05:56:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DAA4EBD;
+        Mon,  4 Mar 2019 02:56:41 -0800 (PST)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 185783F703;
+        Mon,  4 Mar 2019 02:56:36 -0800 (PST)
+Subject: Re: [PATCH v6 4/6] arm64/kvm: add a userspace option to enable
+ pointer authentication
+To:     James Morse <james.morse@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>
+References: <1550568271-5319-1-git-send-email-amit.kachhap@arm.com>
+ <1550568271-5319-5-git-send-email-amit.kachhap@arm.com>
+ <f7e4156e-c9aa-0356-d9a4-6b01ff23c5c0@arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <4e485492-50ef-3162-af3c-7af80b4a17cc@arm.com>
+Date:   Mon, 4 Mar 2019 16:26:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f7e4156e-c9aa-0356-d9a4-6b01ff23c5c0@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When submitted v2 of the G12A AO-CLK IDs, the SAR_ADC_SEL ID was moved
-to the internal non-exported bindings, but this clock is necessary and
-mandatory for the SAR ADC bindings.
+Hi James,
 
-Export it back to the public bindings.
+On 2/27/19 12:03 AM, James Morse wrote:
+> Hi Amit,
+> 
+> On 19/02/2019 09:24, Amit Daniel Kachhap wrote:
+>> This feature will allow the KVM guest to allow the handling of
+>> pointer authentication instructions or to treat them as undefined
+>> if not set. It uses the existing vcpu API KVM_ARM_VCPU_INIT to
+>> supply this parameter instead of creating a new API.
+>>
+>> A new register is not created to pass this parameter via
+>> SET/GET_ONE_REG interface as just a flag (KVM_ARM_VCPU_PTRAUTH)
+>> supplied is enough to enable this feature.
+> 
+> and an attempt to restore the id register with the other version would fail.
+> 
+> 
+>> diff --git a/Documentation/arm64/pointer-authentication.txt b/Documentation/arm64/pointer-authentication.txt
+>> index a25cd21..0529a7d 100644
+>> --- a/Documentation/arm64/pointer-authentication.txt
+>> +++ b/Documentation/arm64/pointer-authentication.txt
+>> @@ -82,7 +82,8 @@ pointers).
+>>   Virtualization
+>>   --------------
+>>   
+>> -Pointer authentication is not currently supported in KVM guests. KVM
+>> -will mask the feature bits from ID_AA64ISAR1_EL1, and attempted use of
+>> -the feature will result in an UNDEFINED exception being injected into
+>> -the guest.
+> 
+>> +Pointer authentication is enabled in KVM guest when virtual machine is
+>> +created by passing a flag (KVM_ARM_VCPU_PTRAUTH)
+> 
+> (This is still mixing VM and VCPU)
+> 
+> 
+>> + requesting this feature to be enabled.
+> 
+> .. on each vcpu?
+> 
+> 
+>> +Without this flag, pointer authentication is not enabled
+>> +in KVM guests and attempted use of the feature will result in an UNDEFINED
+>> +exception being injected into the guest.
+> 
+> 'guests' here suggests its a VM property. If you set it on some VCPU but not others KVM
+> will generate undefs instead of enabling the feature. (which is the right thing to do)
+> 
+> I think it needs to be clear this is a per-vcpu property.
+ok.
+> 
+> 
+>> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+>> index 97c3478..5f82ca1 100644
+>> --- a/arch/arm64/include/uapi/asm/kvm.h
+>> +++ b/arch/arm64/include/uapi/asm/kvm.h
+>> @@ -102,6 +102,7 @@ struct kvm_regs {
+>>   #define KVM_ARM_VCPU_EL1_32BIT		1 /* CPU running a 32bit VM */
+>>   #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
+>>   #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
+> 
+>> +#define KVM_ARM_VCPU_PTRAUTH		4 /* VCPU uses address authentication */
+> 
+> Just address authentication? I agree with Mark we should have two bits to match what gets
+> exposed to EL0. One would then be address, the other generic.
+ok.
+> 
+> 
+>> diff --git a/arch/arm64/kvm/hyp/ptrauth-sr.c b/arch/arm64/kvm/hyp/ptrauth-sr.c
+>> index 528ee6e..6846a23 100644
+>> --- a/arch/arm64/kvm/hyp/ptrauth-sr.c
+>> +++ b/arch/arm64/kvm/hyp/ptrauth-sr.c
+>> @@ -93,9 +93,23 @@ void kvm_arm_vcpu_ptrauth_reset(struct kvm_vcpu *vcpu)
+> 
+>> +/**
+>> + * kvm_arm_vcpu_ptrauth_allowed - checks if ptrauth feature is allowed by user
+>> + *
+>> + * @vcpu: The VCPU pointer
+>> + *
+>> + * This function will be used to check userspace option to have ptrauth or not
+>> + * in the guest kernel.
+>> + */
+>> +bool kvm_arm_vcpu_ptrauth_allowed(const struct kvm_vcpu *vcpu)
+>> +{
+>> +	return kvm_supports_ptrauth() &&
+>> +		test_bit(KVM_ARM_VCPU_PTRAUTH, vcpu->arch.features);
+>> +}
+> 
+> This isn't used from world-switch, could it be moved to guest.c?
+yes sure.
+> 
+> 
+>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>> index 12529df..f7bcc60 100644
+>> --- a/arch/arm64/kvm/sys_regs.c
+>> +++ b/arch/arm64/kvm/sys_regs.c
+>> @@ -1055,7 +1055,7 @@ static bool access_cntp_cval(struct kvm_vcpu *vcpu,
+>>   }
+>>   
+>>   /* Read a sanitised cpufeature ID register by sys_reg_desc */
+>> -static u64 read_id_reg(struct sys_reg_desc const *r, bool raz)
+>> +static u64 read_id_reg(struct kvm_vcpu *vcpu, struct sys_reg_desc const *r, bool raz)
+> 
+> (It might be easier on the reviewer to move these mechanical changes to an earlier patch)
+Yes with including some of Dave SVE patches this wont be required.
 
-Fixes: be3d960b0aeb ("dt-bindings: clk: add G12A AO Clock and Reset Bindings")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/clk/meson/g12a-aoclk.h          | 1 -
- include/dt-bindings/clock/g12a-aoclkc.h | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/meson/g12a-aoclk.h b/drivers/clk/meson/g12a-aoclk.h
-index 04b0d5506641..666b4493822c 100644
---- a/drivers/clk/meson/g12a-aoclk.h
-+++ b/drivers/clk/meson/g12a-aoclk.h
-@@ -16,7 +16,6 @@
-  * to expose, such as the internal muxes and dividers of composite clocks,
-  * will remain defined here.
-  */
--#define CLKID_AO_SAR_ADC_SEL	16
- #define CLKID_AO_SAR_ADC_DIV	17
- #define CLKID_AO_CTS_OSCIN	19
- #define CLKID_AO_32K_PRE	20
-diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-bindings/clock/g12a-aoclkc.h
-index 8db01ffbeb06..5ac66a2eee0f 100644
---- a/include/dt-bindings/clock/g12a-aoclkc.h
-+++ b/include/dt-bindings/clock/g12a-aoclkc.h
-@@ -26,6 +26,7 @@
- #define CLKID_AO_M4_FCLK	13
- #define CLKID_AO_M4_HCLK	14
- #define CLKID_AO_CLK81		15
-+#define CLKID_AO_SAR_ADC_SEL	16
- #define CLKID_AO_SAR_ADC_CLK	18
- #define CLKID_AO_32K		23
- #define CLKID_AO_CEC		27
--- 
-2.20.1
-
+Thanks,
+Amit D
+> 
+> 
+> Looks good,
+> 
+> Thanks,
+> 
+> James
+> 
