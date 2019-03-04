@@ -2,646 +2,165 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563D5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DB4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD6820663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551742642;
-	bh=zWbE2FbZnyJjSltSHPwFOvpm8dwJvqxkQDEGoLJYS+4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=ycScR1YgYM5h4NRwqhm98mKdpMlmEpPemWgLggt44l8vJLtV6XGjcThNy5i6chPIT
-	 wbLsfsFMGrZL0WMEDXzftyVOgimzA+GDPjqj+Gq04P5ALrvVpyHj4x+ro+ZDkqvr9V
-	 dZTeSEDkdXvYbrTt2ClCBIKmBuaovGUW+D0subGQ=
+	by mail.kernel.org (Postfix) with ESMTP id B862220663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 23:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WE4B39+7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfCDXhU (ORCPT
+        id S1726585AbfCDXlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 18:37:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbfCDXhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 18:37:02 -0500
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15EB320830;
-        Mon,  4 Mar 2019 23:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551742621;
-        bh=zWbE2FbZnyJjSltSHPwFOvpm8dwJvqxkQDEGoLJYS+4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=0ABHk9rv33uffhN+ttkUj/i1nXtqyuvH0QszIvAliYFIrPtGdruxomDNZMVNbNRyu
-         GJw1Q85vpDx18IsjLFLQHpSH69cg/GS7RrcxfffWJufOtwUhGMBhw6QRVoLbrVVjuz
-         UF9h9pxQ9mnku5kpANUU2gCetbKRhEp7wzMArnqI=
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     rostedt@goodmis.org
-Cc:     tglx@linutronix.de, mhiramat@kernel.org, namhyung@kernel.org,
-        bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [RFC PATCH v3 3/5] tracing: Use tracing error_log with hist triggers
-Date:   Mon,  4 Mar 2019 17:36:46 -0600
-Message-Id: <7cc4a06837b8cbabec0e2b14d96da6396f081dca.1551741458.git.tom.zanussi@linux.intel.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1551741458.git.tom.zanussi@linux.intel.com>
-References: <cover.1551741458.git.tom.zanussi@linux.intel.com>
-In-Reply-To: <cover.1551741458.git.tom.zanussi@linux.intel.com>
-References: <cover.1551741458.git.tom.zanussi@linux.intel.com>
+        Mon, 4 Mar 2019 18:41:01 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41786 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbfCDXlA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 18:41:00 -0500
+Received: by mail-pf1-f194.google.com with SMTP id d25so4149190pfn.8;
+        Mon, 04 Mar 2019 15:41:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YXDlqKQIxrXk3L24f/z0QXlej6ez0Civ7kwQKCWG4XQ=;
+        b=WE4B39+7VhHUt8aUm7Aw06iQzxJpBly6m4YQutebyIIu0mPwg7NSFgqUS9e1a/IQrX
+         ya1u2aD15qHsPDVV0w7ygKYKnlc8IzyRoJnYV0d6RiwohiIICCp/KuFcIflLwl5T/pY3
+         IldPW4C1Jz30WNgk8/7thP0VZgky8DANzMu447rXgBHqn/5G9lyQ3QfdySXlgvsKinWp
+         0AW7ANA6KJPLwdRu7+acyr3lcCq7f0Zv001FeSzG+os9k3N7oAO/oCg8JcU0k3ogayah
+         O2KFi8ASK7MghQJ65QYr8h4SaaBzqsNSercTms/Qt2A10LJTrOwIplRzmr5ruWvmVvUO
+         hvqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=YXDlqKQIxrXk3L24f/z0QXlej6ez0Civ7kwQKCWG4XQ=;
+        b=T+JngEWzrLRmW7yM0dyWjpRtCeh9hVaeFmgd1zM1DUN9KGhFvNz2IDx76JmaeXp5Ni
+         A8FNhI3faS8WCuT8pB67kp6q6a8aEx1G5Ffn+Ot7QpXJafAXA5Ep61WCM+suj7oXHGQC
+         cvi6oIsnQi8GhRF9N3oJyFnLMnlLPMXfJxggVCfz4ZMkn7ljrtbEv7mZbdG0D2qnqah1
+         Ij3TkW5NN5Vyz7xZCc4joGjPfFn4QrlhHGIKY53qWXd0gL5BWGcEloljkimSZkNMfcUN
+         nhkbCO0hEzVBkHemW2d93XfXN8/rbIROUOlp5H760GI5eYyojAMe6gJK9E+3ZoZC8Wwg
+         Y+3w==
+X-Gm-Message-State: APjAAAUOjjoD9vtWFOye3vz2c8olHTifkgkBHuW7ScXwg+q/qElOvRCY
+        T3qQe7faRQSudrc3zy3szmzNBtED
+X-Google-Smtp-Source: APXvYqxuR3nRmFYQMesZ8/KSgsSCKjH2IiFSkOUHLw/h3LXEcmdxRvLdmPde5h9BXzYw7BWfo5TNHA==
+X-Received: by 2002:a17:902:1aa:: with SMTP id b39mr23050706plb.317.1551742859045;
+        Mon, 04 Mar 2019 15:40:59 -0800 (PST)
+Received: from [10.67.50.0] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id k65sm9395362pge.74.2019.03.04.15.40.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 15:40:58 -0800 (PST)
+Subject: Re: [PATCH] net: ethernet: Fix phy_set_max_speed by checking for NULL
+To:     Aditya Pakki <pakki001@umn.edu>
+Cc:     kjlu@umn.edu, Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190304233622.13981-1-pakki001@umn.edu>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <cdf1690e-c1a3-3b36-7a41-566b2f646f85@gmail.com>
+Date:   Mon, 4 Mar 2019 15:40:52 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190304233622.13981-1-pakki001@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <tom.zanussi@linux.intel.com>
+On 3/4/19 3:36 PM, Aditya Pakki wrote:
+> phy_device can be a NULL pointer which is further dereferenced
+> downstream in phy_set_max_speed. This patch avoids such a scenario.
+> 
+> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> ---
+>  drivers/net/ethernet/broadcom/genet/bcmmii.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+> index aceb9b7b55bd..7eaaecb53aa2 100644
+> --- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
+> +++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+> @@ -213,6 +213,8 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+>  		break;
+>  
+>  	case PHY_INTERFACE_MODE_MII:
+> +		if (!phydev)
+> +			return -ENODEV;
 
-Replace hist_err() and hist_err_event() with tracing_log_err() from
-the new tracing error_log mechanism.
+This is not where the error checking should go, it would be better to
+move this in the caller of bcmgenet_mii_config(), that is
+bcmgenet_mii_probe(), but there we already check that dev->phydev is non
+NULL. The other code path where bcmgenet_mii_config() can be called is
+from bcmgenet_resume(), which means the interface was sucessfully
+registered and operation to begin with.
 
-Also add a couple related helper functions and remove most of the old
-hist_err()-related code.
-
-With this change, users no longer read the hist files for hist trigger
-error information, but instead look at tracing/error_log for the same
-information.
-
-Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
----
- kernel/trace/trace_events_hist.c | 206 ++++++++++++++++++++-------------------
- 1 file changed, 104 insertions(+), 102 deletions(-)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 231f9e4379d2..562306265c9d 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -22,6 +22,57 @@
- 
- #define STR_VAR_LEN_MAX		32 /* must be multiple of sizeof(u64) */
- 
-+#define ERRORS								\
-+	C(NONE,			"No error"),				\
-+	C(DUPLICATE_VAR,	"Variable already defined"),		\
-+	C(VAR_NOT_UNIQUE,	"Variable name not unique, need to use fully qualified name (subsys.event.var) for variable"), \
-+	C(TOO_MANY_VARS,	"Too many variables defined"),		\
-+	C(MALFORMED_ASSIGNMENT,	"Malformed assignment"),		\
-+	C(NAMED_MISMATCH,	"Named hist trigger doesn't match existing named trigger (includes variables)"), \
-+	C(TRIGGER_EEXIST,	"Hist trigger already exists"),		\
-+	C(TRIGGER_ENOENT_CLEAR,	"Can't clear or continue a nonexistent hist trigger"), \
-+	C(SET_CLOCK_FAIL,	"Couldn't set trace_clock"),		\
-+	C(BAD_FIELD_MODIFIER,	"Invalid field modifier"),		\
-+	C(TOO_MANY_SUBEXPR,	"Too many subexpressions (3 max)"),	\
-+	C(TIMESTAMP_MISMATCH,	"Timestamp units in expression don't match"), \
-+	C(TOO_MANY_FIELD_VARS,	"Too many field variables defined"),	\
-+	C(EVENT_FILE_NOT_FOUND,	"Event file not found"),		\
-+	C(HIST_NOT_FOUND,	"Matching event histogram not found"),	\
-+	C(HIST_CREATE_FAIL,	"Couldn't create histogram for field"),	\
-+	C(SYNTH_VAR_NOT_FOUND,	"Couldn't find synthetic variable"),	\
-+	C(SYNTH_EVENT_NOT_FOUND,"Couldn't find synthetic event"),	\
-+	C(SYNTH_TYPE_MISMATCH,	"Param type doesn't match synthetic event field type"), \
-+	C(SYNTH_COUNT_MISMATCH,	"Param count doesn't match synthetic event field count"), \
-+	C(FIELD_VAR_PARSE_FAIL,	"Couldn't parse field variable"),	\
-+	C(VAR_CREATE_FIND_FAIL,	"Couldn't create or find variable"),	\
-+	C(ONX_NOT_VAR,		"For onmax(x) or onchange(x), x must be a variable"), \
-+	C(ONX_VAR_NOT_FOUND,	"Couldn't find onmax or onchange variable"), \
-+	C(ONX_VAR_CREATE_FAIL,	"Couldn't create onmax or onchange variable"), \
-+	C(FIELD_VAR_CREATE_FAIL,"Couldn't create field variable"),	\
-+	C(TOO_MANY_PARAMS,	"Too many action params"),		\
-+	C(PARAM_NOT_FOUND,	"Couldn't find param"),			\
-+	C(INVALID_PARAM,	"Invalid action param"),		\
-+	C(ACTION_NOT_FOUND,	"No action found"),			\
-+	C(NO_SAVE_PARAMS,	"No params found for save()"),		\
-+	C(TOO_MANY_SAVE_ACTIONS,"Can't have more than one save() action per hist"), \
-+	C(ACTION_MISMATCH,	"Handler doesn't support action"),	\
-+	C(NO_CLOSING_PAREN,	"No closing paren found"),		\
-+	C(SUBSYS_NOT_FOUND,	"Missing subsystem"),			\
-+	C(INVALID_SUBSYS_EVENT,	"Invalid subsystem or event name"),	\
-+	C(INVALID_REF_KEY,	"Using variable references as keys not supported"), \
-+	C(VAR_NOT_FOUND,	"Couldn't find variable"),		\
-+	C(FIELD_NOT_FOUND,	"Couldn't find field"),
-+
-+#undef C
-+#define C(a, b)		HIST_ERR_##a
-+
-+enum { ERRORS };
-+
-+#undef C
-+#define C(a, b)		b
-+
-+static const char *err_text[] = { ERRORS };
-+
- struct hist_field;
- 
- typedef u64 (*hist_field_fn_t) (struct hist_field *field,
-@@ -538,7 +589,10 @@ static struct track_data *track_data_alloc(unsigned int key_len,
- static char last_cmd[MAX_FILTER_STR_VAL];
- static char last_cmd_loc[MAX_FILTER_STR_VAL];
- 
--static char hist_err_str[MAX_FILTER_STR_VAL];
-+static int errpos(char *str)
-+{
-+	return err_pos(last_cmd, str);
-+}
- 
- static void last_cmd_set(struct trace_event_file *file, char *str)
- {
-@@ -565,55 +619,17 @@ static void last_cmd_set(struct trace_event_file *file, char *str)
- 		snprintf(last_cmd_loc, MAX_FILTER_STR_VAL, "hist:%s:%s", system, name);
- }
- 
--static void hist_err(char *str, char *var)
-+static void hist_err(u8 err_type, u8 err_pos)
- {
--	int maxlen = MAX_FILTER_STR_VAL - 1;
--
--	if (!str)
--		return;
--
--	if (strlen(hist_err_str))
--		return;
--
--	if (!var)
--		var = "";
--
--	if (strlen(hist_err_str) + strlen(str) + strlen(var) > maxlen)
--		return;
--
--	strcat(hist_err_str, str);
--	strcat(hist_err_str, var);
--}
--
--static void hist_err_event(char *str, char *system, char *event, char *var)
--{
--	char err[MAX_FILTER_STR_VAL];
--
--	if (system && var)
--		snprintf(err, MAX_FILTER_STR_VAL, "%s.%s.%s", system, event, var);
--	else if (system)
--		snprintf(err, MAX_FILTER_STR_VAL, "%s.%s", system, event);
--	else
--		strscpy(err, var, MAX_FILTER_STR_VAL);
--
--	hist_err(str, err);
-+	tracing_log_err(last_cmd_loc, last_cmd, err_text, err_type, err_pos);
- }
- 
- static void hist_err_clear(void)
- {
--	hist_err_str[0] = '\0';
- 	last_cmd[0] = '\0';
- 	last_cmd_loc[0] = '\0';
- }
- 
--static bool have_hist_err(void)
--{
--	if (strlen(hist_err_str))
--		return true;
--
--	return false;
--}
--
- struct synth_trace_event {
- 	struct trace_entry	ent;
- 	u64			fields[];
-@@ -1740,7 +1756,7 @@ static struct trace_event_file *find_var_file(struct trace_array *tr,
- 
- 		if (find_var_field(var_hist_data, var_name)) {
- 			if (found) {
--				hist_err_event("Variable name not unique, need to use fully qualified name (subsys.event.var) for variable: ", system, event_name, var_name);
-+				hist_err(HIST_ERR_VAR_NOT_UNIQUE, errpos(var_name));
- 				return NULL;
- 			}
- 
-@@ -1791,7 +1807,7 @@ find_match_var(struct hist_trigger_data *hist_data, char *var_name)
- 			hist_field = find_file_var(file, var_name);
- 			if (hist_field) {
- 				if (found) {
--					hist_err_event("Variable name not unique, need to use fully qualified name (subsys.event.var) for variable: ", system, event_name, var_name);
-+					hist_err(HIST_ERR_VAR_NOT_UNIQUE, errpos(var_name));
- 					return ERR_PTR(-EINVAL);
- 				}
- 
-@@ -2023,7 +2039,6 @@ static int parse_action(char *str, struct hist_trigger_attrs *attrs)
- 		attrs->n_actions++;
- 		ret = 0;
- 	}
--
- 	return ret;
- }
- 
-@@ -2083,7 +2098,7 @@ static int parse_assignment(char *str, struct hist_trigger_attrs *attrs)
- 		char *assignment;
- 
- 		if (attrs->n_assignments == TRACING_MAP_VARS_MAX) {
--			hist_err("Too many variables defined: ", str);
-+			hist_err(HIST_ERR_TOO_MANY_VARS, errpos(str));
- 			ret = -EINVAL;
- 			goto out;
- 		}
-@@ -2681,8 +2696,7 @@ static struct hist_field *parse_var_ref(struct hist_trigger_data *hist_data,
- 					   system, event_name);
- 
- 	if (!ref_field)
--		hist_err_event("Couldn't find variable: $",
--			       system, event_name, var_name);
-+		hist_err(HIST_ERR_VAR_NOT_FOUND, errpos(var_name));
- 
- 	return ref_field;
- }
-@@ -2716,7 +2730,7 @@ parse_field(struct hist_trigger_data *hist_data, struct trace_event_file *file,
- 		else if (strcmp(modifier, "usecs") == 0)
- 			*flags |= HIST_FIELD_FL_TIMESTAMP_USECS;
- 		else {
--			hist_err("Invalid field modifier: ", modifier);
-+			hist_err(HIST_ERR_BAD_FIELD_MODIFIER, errpos(modifier));
- 			field = ERR_PTR(-EINVAL);
- 			goto out;
- 		}
-@@ -2732,7 +2746,7 @@ parse_field(struct hist_trigger_data *hist_data, struct trace_event_file *file,
- 	else {
- 		field = trace_find_event_field(file->event_call, field_name);
- 		if (!field || !field->size) {
--			hist_err("Couldn't find field: ", field_name);
-+			hist_err(HIST_ERR_FIELD_NOT_FOUND, errpos(field_name));
- 			field = ERR_PTR(-EINVAL);
- 			goto out;
- 		}
-@@ -2843,7 +2857,7 @@ static struct hist_field *parse_unary(struct hist_trigger_data *hist_data,
- 	/* we support only -(xxx) i.e. explicit parens required */
- 
- 	if (level > 3) {
--		hist_err("Too many subexpressions (3 max): ", str);
-+		hist_err(HIST_ERR_TOO_MANY_SUBEXPR, errpos(str));
- 		ret = -EINVAL;
- 		goto free;
- 	}
-@@ -2926,7 +2940,7 @@ static int check_expr_operands(struct hist_field *operand1,
- 
- 	if ((operand1_flags & HIST_FIELD_FL_TIMESTAMP_USECS) !=
- 	    (operand2_flags & HIST_FIELD_FL_TIMESTAMP_USECS)) {
--		hist_err("Timestamp units in expression don't match", NULL);
-+		hist_err(HIST_ERR_TIMESTAMP_MISMATCH, 0);
- 		return -EINVAL;
- 	}
- 
-@@ -2944,7 +2958,7 @@ static struct hist_field *parse_expr(struct hist_trigger_data *hist_data,
- 	char *sep, *operand1_str;
- 
- 	if (level > 3) {
--		hist_err("Too many subexpressions (3 max): ", str);
-+		hist_err(HIST_ERR_TOO_MANY_SUBEXPR, errpos(str));
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-@@ -3182,16 +3196,14 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
- 	int ret;
- 
- 	if (target_hist_data->n_field_var_hists >= SYNTH_FIELDS_MAX) {
--		hist_err_event("trace action: Too many field variables defined: ",
--			       subsys_name, event_name, field_name);
-+		hist_err(HIST_ERR_TOO_MANY_FIELD_VARS, errpos(field_name));
- 		return ERR_PTR(-EINVAL);
- 	}
- 
- 	file = event_file(tr, subsys_name, event_name);
- 
- 	if (IS_ERR(file)) {
--		hist_err_event("trace action: Event file not found: ",
--			       subsys_name, event_name, field_name);
-+		hist_err(HIST_ERR_EVENT_FILE_NOT_FOUND, errpos(field_name));
- 		ret = PTR_ERR(file);
- 		return ERR_PTR(ret);
- 	}
-@@ -3204,8 +3216,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
- 	 */
- 	hist_data = find_compatible_hist(target_hist_data, file);
- 	if (!hist_data) {
--		hist_err_event("trace action: Matching event histogram not found: ",
--			       subsys_name, event_name, field_name);
-+		hist_err(HIST_ERR_HIST_NOT_FOUND, errpos(field_name));
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-@@ -3266,8 +3277,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
- 		kfree(cmd);
- 		kfree(var_hist->cmd);
- 		kfree(var_hist);
--		hist_err_event("trace action: Couldn't create histogram for field: ",
--			       subsys_name, event_name, field_name);
-+		hist_err(HIST_ERR_HIST_CREATE_FAIL, errpos(field_name));
- 		return ERR_PTR(ret);
- 	}
- 
-@@ -3279,8 +3289,7 @@ create_field_var_hist(struct hist_trigger_data *target_hist_data,
- 	if (IS_ERR_OR_NULL(event_var)) {
- 		kfree(var_hist->cmd);
- 		kfree(var_hist);
--		hist_err_event("trace action: Couldn't find synthetic variable: ",
--			       subsys_name, event_name, field_name);
-+		hist_err(HIST_ERR_SYNTH_VAR_NOT_FOUND, errpos(field_name));
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-@@ -3417,21 +3426,21 @@ static struct field_var *create_field_var(struct hist_trigger_data *hist_data,
- 	int ret = 0;
- 
- 	if (hist_data->n_field_vars >= SYNTH_FIELDS_MAX) {
--		hist_err("Too many field variables defined: ", field_name);
-+		hist_err(HIST_ERR_TOO_MANY_FIELD_VARS, errpos(field_name));
- 		ret = -EINVAL;
- 		goto err;
- 	}
- 
- 	val = parse_atom(hist_data, file, field_name, &flags, NULL);
- 	if (IS_ERR(val)) {
--		hist_err("Couldn't parse field variable: ", field_name);
-+		hist_err(HIST_ERR_FIELD_VAR_PARSE_FAIL, errpos(field_name));
- 		ret = PTR_ERR(val);
- 		goto err;
- 	}
- 
- 	var = create_var(hist_data, file, field_name, val->size, val->type);
- 	if (IS_ERR(var)) {
--		hist_err("Couldn't create or find variable: ", field_name);
-+		hist_err(HIST_ERR_VAR_CREATE_FIND_FAIL, errpos(field_name));
- 		kfree(val);
- 		ret = PTR_ERR(var);
- 		goto err;
-@@ -3764,14 +3773,14 @@ static int track_data_create(struct hist_trigger_data *hist_data,
- 
- 	track_data_var_str = data->track_data.var_str;
- 	if (track_data_var_str[0] != '$') {
--		hist_err("For onmax(x) or onchange(x), x must be a variable: ", track_data_var_str);
-+		hist_err(HIST_ERR_ONX_NOT_VAR, errpos(track_data_var_str));
- 		return -EINVAL;
- 	}
- 	track_data_var_str++;
- 
- 	var_field = find_target_event_var(hist_data, NULL, NULL, track_data_var_str);
- 	if (!var_field) {
--		hist_err("Couldn't find onmax or onchange variable: ", track_data_var_str);
-+		hist_err(HIST_ERR_ONX_VAR_NOT_FOUND, errpos(track_data_var_str));
- 		return -EINVAL;
- 	}
- 
-@@ -3784,7 +3793,7 @@ static int track_data_create(struct hist_trigger_data *hist_data,
- 	if (data->handler == HANDLER_ONMAX)
- 		track_var = create_var(hist_data, file, "__max", sizeof(u64), "u64");
- 	if (IS_ERR(track_var)) {
--		hist_err("Couldn't create onmax variable: ", "__max");
-+		hist_err(HIST_ERR_ONX_VAR_CREATE_FAIL, 0);
- 		ret = PTR_ERR(track_var);
- 		goto out;
- 	}
-@@ -3792,7 +3801,7 @@ static int track_data_create(struct hist_trigger_data *hist_data,
- 	if (data->handler == HANDLER_ONCHANGE)
- 		track_var = create_var(hist_data, file, "__change", sizeof(u64), "u64");
- 	if (IS_ERR(track_var)) {
--		hist_err("Couldn't create onchange variable: ", "__change");
-+		hist_err(HIST_ERR_ONX_VAR_CREATE_FAIL, 0);
- 		ret = PTR_ERR(track_var);
- 		goto out;
- 	}
-@@ -3811,20 +3820,20 @@ static int parse_action_params(char *params, struct action_data *data)
- 
- 	while (params) {
- 		if (data->n_params >= SYNTH_FIELDS_MAX) {
--			hist_err("Too many action params", "");
-+			hist_err(HIST_ERR_TOO_MANY_PARAMS, 0);
- 			goto out;
- 		}
- 
- 		param = strsep(&params, ",");
- 		if (!param) {
--			hist_err("No action param found", "");
-+			hist_err(HIST_ERR_PARAM_NOT_FOUND, 0);
- 			ret = -EINVAL;
- 			goto out;
- 		}
- 
- 		param = strstrip(param);
- 		if (strlen(param) < 2) {
--			hist_err("Invalid action param: ", param);
-+			hist_err(HIST_ERR_INVALID_PARAM, errpos(param));
- 			ret = -EINVAL;
- 			goto out;
- 		}
-@@ -3856,14 +3865,14 @@ static int action_parse(char *str, struct action_data *data,
- 
- 	strsep(&str, ".");
- 	if (!str) {
--		hist_err("action parsing: No action found", "");
-+		hist_err(HIST_ERR_ACTION_NOT_FOUND, 0);
- 		ret = -EINVAL;
- 		goto out;
- 	}
- 
- 	action_name = strsep(&str, "(");
- 	if (!action_name || !str) {
--		hist_err("action parsing: No action found", "");
-+		hist_err(HIST_ERR_ACTION_NOT_FOUND, 0);
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -3872,7 +3881,7 @@ static int action_parse(char *str, struct action_data *data,
- 		char *params = strsep(&str, ")");
- 
- 		if (!params) {
--			hist_err("action parsing: No params found for %s", "save");
-+			hist_err(HIST_ERR_NO_SAVE_PARAMS, 0);
- 			ret = -EINVAL;
- 			goto out;
- 		}
-@@ -3886,7 +3895,7 @@ static int action_parse(char *str, struct action_data *data,
- 		else if (handler == HANDLER_ONCHANGE)
- 			data->track_data.check_val = check_track_val_changed;
- 		else {
--			hist_err("action parsing: Handler doesn't support action: ", action_name);
-+			hist_err(HIST_ERR_ACTION_MISMATCH, errpos(action_name));
- 			ret = -EINVAL;
- 			goto out;
- 		}
-@@ -3898,7 +3907,7 @@ static int action_parse(char *str, struct action_data *data,
- 		char *params = strsep(&str, ")");
- 
- 		if (!str) {
--			hist_err("action parsing: No closing paren found: %s", params);
-+			hist_err(HIST_ERR_NO_CLOSING_PAREN, errpos(params));
- 			ret = -EINVAL;
- 			goto out;
- 		}
-@@ -3908,7 +3917,7 @@ static int action_parse(char *str, struct action_data *data,
- 		else if (handler == HANDLER_ONCHANGE)
- 			data->track_data.check_val = check_track_val_changed;
- 		else {
--			hist_err("action parsing: Handler doesn't support action: ", action_name);
-+			hist_err(HIST_ERR_ACTION_MISMATCH, errpos(action_name));
- 			ret = -EINVAL;
- 			goto out;
- 		}
-@@ -4061,7 +4070,7 @@ trace_action_find_var(struct hist_trigger_data *hist_data,
- 	}
- 
- 	if (!hist_field)
--		hist_err_event("trace action: Couldn't find param: $", system, event, var);
-+		hist_err(HIST_ERR_PARAM_NOT_FOUND, errpos(var));
- 
- 	return hist_field;
- }
-@@ -4136,7 +4145,7 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
- 
- 	event = find_synth_event(synth_event_name);
- 	if (!event) {
--		hist_err("trace action: Couldn't find synthetic event: ", synth_event_name);
-+		hist_err(HIST_ERR_SYNTH_EVENT_NOT_FOUND, errpos(synth_event_name));
- 		return -EINVAL;
- 	}
- 
-@@ -4197,15 +4206,14 @@ static int trace_action_create(struct hist_trigger_data *hist_data,
- 			continue;
- 		}
- 
--		hist_err_event("trace action: Param type doesn't match synthetic event field type: ",
--			       system, event_name, param);
-+		hist_err(HIST_ERR_SYNTH_TYPE_MISMATCH, errpos(param));
- 		kfree(p);
- 		ret = -EINVAL;
- 		goto err;
- 	}
- 
- 	if (field_pos != event->n_fields) {
--		hist_err("trace action: Param count doesn't match synthetic event field count: ", event->name);
-+		hist_err(HIST_ERR_SYNTH_COUNT_MISMATCH, errpos(event->name));
- 		ret = -EINVAL;
- 		goto err;
- 	}
-@@ -4251,7 +4259,7 @@ static int action_create(struct hist_trigger_data *hist_data,
- 	if (data->action == ACTION_SAVE) {
- 		if (hist_data->n_save_vars) {
- 			ret = -EEXIST;
--			hist_err("save action: Can't have more than one save() action per hist", "");
-+			hist_err(HIST_ERR_TOO_MANY_SAVE_ACTIONS, 0);
- 			goto out;
- 		}
- 
-@@ -4264,7 +4272,7 @@ static int action_create(struct hist_trigger_data *hist_data,
- 
- 			field_var = create_target_field_var(hist_data, NULL, NULL, param);
- 			if (IS_ERR(field_var)) {
--				hist_err("save action: Couldn't create field variable: ", param);
-+				hist_err(HIST_ERR_FIELD_VAR_CREATE_FAIL, errpos(param));
- 				ret = PTR_ERR(field_var);
- 				kfree(param);
- 				goto out;
-@@ -4298,19 +4306,18 @@ static struct action_data *onmatch_parse(struct trace_array *tr, char *str)
- 
- 	match_event = strsep(&str, ")");
- 	if (!match_event || !str) {
--		hist_err("onmatch: Missing closing paren: ", match_event);
-+		hist_err(HIST_ERR_NO_CLOSING_PAREN, errpos(match_event));
- 		goto free;
- 	}
- 
- 	match_event_system = strsep(&match_event, ".");
- 	if (!match_event) {
--		hist_err("onmatch: Missing subsystem for match event: ", match_event_system);
-+		hist_err(HIST_ERR_SUBSYS_NOT_FOUND, errpos(match_event_system));
- 		goto free;
- 	}
- 
- 	if (IS_ERR(event_file(tr, match_event_system, match_event))) {
--		hist_err_event("onmatch: Invalid subsystem or event name: ",
--			       match_event_system, match_event, NULL);
-+		hist_err(HIST_ERR_INVALID_SUBSYS_EVENT, errpos(match_event));
- 		goto free;
- 	}
- 
-@@ -4401,7 +4408,7 @@ static int create_var_field(struct hist_trigger_data *hist_data,
- 		return -EINVAL;
- 
- 	if (find_var(hist_data, file, var_name) && !hist_data->remove) {
--		hist_err("Variable already defined: ", var_name);
-+		hist_err(HIST_ERR_DUPLICATE_VAR, errpos(var_name));
- 		return -EINVAL;
- 	}
- 
-@@ -4482,7 +4489,7 @@ static int create_key_field(struct hist_trigger_data *hist_data,
- 		}
- 
- 		if (hist_field->flags & HIST_FIELD_FL_VAR_REF) {
--			hist_err("Using variable references as keys not supported: ", field_str);
-+			hist_err(HIST_ERR_INVALID_REF_KEY, errpos(field_str));
- 			destroy_hist_field(hist_field, 0);
- 			ret = -EINVAL;
- 			goto out;
-@@ -4596,13 +4603,13 @@ static int parse_var_defs(struct hist_trigger_data *hist_data)
- 
- 			var_name = strsep(&field_str, "=");
- 			if (!var_name || !field_str) {
--				hist_err("Malformed assignment: ", var_name);
-+				hist_err(HIST_ERR_MALFORMED_ASSIGNMENT, errpos(var_name));
- 				ret = -EINVAL;
- 				goto free;
- 			}
- 
- 			if (n_vars == TRACING_MAP_VARS_MAX) {
--				hist_err("Too many variables defined: ", var_name);
-+				hist_err(HIST_ERR_TOO_MANY_VARS, errpos(var_name));
- 				ret = -EINVAL;
- 				goto free;
- 			}
-@@ -5458,11 +5465,6 @@ static int hist_show(struct seq_file *m, void *v)
- 			hist_trigger_show(m, data, n++);
- 	}
- 
--	if (have_hist_err()) {
--		seq_printf(m, "\n%s: error: \n", hist_err_str);
--		seq_printf(m, "  Last command: %s\n", last_cmd);
--	}
--
-  out_unlock:
- 	mutex_unlock(&event_mutex);
- 
-@@ -5834,7 +5836,7 @@ static int hist_register_trigger(char *glob, struct event_trigger_ops *ops,
- 		if (named_data) {
- 			if (!hist_trigger_match(data, named_data, named_data,
- 						true)) {
--				hist_err("Named hist trigger doesn't match existing named trigger (includes variables): ", hist_data->attrs->name);
-+				hist_err(HIST_ERR_NAMED_MISMATCH, errpos(hist_data->attrs->name));
- 				ret = -EINVAL;
- 				goto out;
- 			}
-@@ -5855,7 +5857,7 @@ static int hist_register_trigger(char *glob, struct event_trigger_ops *ops,
- 			else if (hist_data->attrs->clear)
- 				hist_clear(test);
- 			else {
--				hist_err("Hist trigger already exists", NULL);
-+				hist_err(HIST_ERR_TRIGGER_EEXIST, 0);
- 				ret = -EEXIST;
- 			}
- 			goto out;
-@@ -5863,7 +5865,7 @@ static int hist_register_trigger(char *glob, struct event_trigger_ops *ops,
- 	}
-  new:
- 	if (hist_data->attrs->cont || hist_data->attrs->clear) {
--		hist_err("Can't clear or continue a nonexistent hist trigger", NULL);
-+		hist_err(HIST_ERR_TRIGGER_ENOENT_CLEAR, 0);
- 		ret = -ENOENT;
- 		goto out;
- 	}
-@@ -5888,7 +5890,7 @@ static int hist_register_trigger(char *glob, struct event_trigger_ops *ops,
- 
- 		ret = tracing_set_clock(file->tr, hist_data->attrs->clock);
- 		if (ret) {
--			hist_err("Couldn't set trace_clock: ", clock);
-+			hist_err(HIST_ERR_SET_CLOCK_FAIL, errpos(clock));
- 			goto out;
- 		}
- 
+Was that flagged by some static analysis tool or human inspection?
 -- 
-2.14.1
-
+Florian
