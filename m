@@ -2,135 +2,95 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C302BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DD7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9451020818
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3472082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 03:33:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQn4ZJHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfCDD1r (ORCPT
+        id S1726106AbfCDDdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Mar 2019 22:27:47 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:51544 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfCDD1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Mar 2019 22:27:47 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3D60D1A01DD;
-        Mon,  4 Mar 2019 04:27:45 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B84391A0014;
-        Mon,  4 Mar 2019 04:27:39 +0100 (CET)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id ADB77402DE;
-        Mon,  4 Mar 2019 11:27:32 +0800 (SGT)
-From:   Yuantian Tang <andy.tang@nxp.com>
-To:     shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        daniel.lezcano@linaro.org, rui.zhang@intel.com,
-        edubezval@gmail.com, Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH v2] arm64: dts: ls1088a: add one more thermal zone node
-Date:   Mon,  4 Mar 2019 11:21:11 +0800
-Message-Id: <20190304032111.21770-1-andy.tang@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 3 Mar 2019 22:33:05 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45779 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfCDDdE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Mar 2019 22:33:04 -0500
+Received: by mail-pf1-f193.google.com with SMTP id v21so1941973pfm.12
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Mar 2019 19:33:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2AUQjPpWxOgRO7RmQXXoDOzSBJpoF2ynwOJOEsUPztw=;
+        b=cQn4ZJHjMA9aWtsSPy1bNqD31C1MkK8dLuxoKOxhs+hrqzuigVBTwpP0IcdKAI8/lW
+         uI8IqtfIlJRaABMcnThvWtKRqpKgFj77219MuDy6+z+aylq1pUUqG8Nymoi8lOgD1URW
+         vPFIAxH0iZyWTzdasWJPn3DEEAms7NlHJu+r29SMhk9seS8QOzP2mW+kR6Zkkb/jcomp
+         FECcvBPqYxbkmELMspgBh2iXvIJD3did4RmUmUU61G+Tnnki/xNswUlNmW5NAXn/2dbq
+         NT9Y46zKDJXb7tH6a1JG2vYDI0M9W8WaBKrRLPKuJ7lgVm0Wpa6H2ZF7rDjZzyWNW/PF
+         YCqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2AUQjPpWxOgRO7RmQXXoDOzSBJpoF2ynwOJOEsUPztw=;
+        b=CqsbgjblW1ioOB5tB8VdlKZJB6DzOrKPMDgmHFdWymrMLbHsd69S0wgWtB4jZgKkm6
+         MMNSSUP8t83YkCkLYuMf6sxm3Cy9eUykD+/1E729VYSAjOFkC9c1lxgb/Bk5/u2s5+aA
+         WARQgh4lH0mZGpu8OpxRb4QA/KNmBO14cvsU9U5BcW+BuLMrNkzT3/q39sTcliBEh0mI
+         ukIBykHRsSFHHc7SiFrBYdBtola9De5KrFDajY+/A5ynjxHKXaPkawztNsdddqdSRY5u
+         PKSynZCpMaO771GlEQeLq/lE36Hg+WwMNwSTC64QlMF9Wtlhj4EX4f8KTnIWezIodNdb
+         ObLA==
+X-Gm-Message-State: AHQUAuaUJvKFZPa6KM2PrSMnOhlNIw9MnrglYPBz60S2rk9TRXd4aYM7
+        BfDrSiYyuI8aumoAe3pelKU=
+X-Google-Smtp-Source: APXvYqyJs0zS8oXhNVmbomzQzdAqdzScarGwNN6V0p9zn2kAziCTQVXDSLTZOZpaja25N8oUJTDTlw==
+X-Received: by 2002:a62:ea10:: with SMTP id t16mr17651941pfh.3.1551670384214;
+        Sun, 03 Mar 2019 19:33:04 -0800 (PST)
+Received: from localhost ([175.223.38.45])
+        by smtp.gmail.com with ESMTPSA id p2sm8367480pfi.95.2019.03.03.19.33.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 Mar 2019 19:33:03 -0800 (PST)
+Date:   Mon, 4 Mar 2019 12:33:00 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] printk/console: Do not suppress information about
+ dropped messages
+Message-ID: <20190304033300.GA26291@jagdpanzerIV>
+References: <20190226124945.7078-1-pmladek@suse.com>
+ <87k1hmzfam.fsf@linutronix.de>
+ <20190227083043.j6nw7t6nqulim6t7@pathway.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190227083043.j6nw7t6nqulim6t7@pathway.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core cluster
-sensor is used to monitor the temperature of core and SoC platform is for
-platform. The current dts only support the first sensor.
-This patch adds the second sensor node to dts to enable it.
+On (02/27/19 09:30), Petr Mladek wrote:
+> Good point! There is a simple fix for this. We could print the warning
+> also when all messages are proceed and we are about to leave
+> the for-cycle.
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
----
-v2:
-	- Add more information about sensors to description
-PS: In order to keep consistency to the first thermal-zone node, there will
-be "WARNING: line over 80 characters" warnings.
+I'd prefer to have lost-messages reporting be less of a summary
+and more of an "error". I think the sooner we report it the better.
+I don't think that the time we need to print lost-messages on the
+consoles is significant enough to worry about it; if call_console_drivers()
+becomes such a problem that any extra char we print causes message-drop then
+we can disable printk_time or/and printk caller_id prefix printout (can
+save us more CPU cycles).
 
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   43 +++++++++++++++++++++--
- 1 files changed, 39 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 661137f..9f52bc9 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -129,19 +129,19 @@
- 	};
- 
- 	thermal-zones {
--		cpu_thermal: cpu-thermal {
-+		ccu {
- 			polling-delay-passive = <1000>;
- 			polling-delay = <5000>;
- 			thermal-sensors = <&tmu 0>;
- 
- 			trips {
--				cpu_alert: cpu-alert {
-+				ccu_alert: ccu-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit: cpu-crit {
-+				ccu_crit: ccu-crit {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -150,7 +150,42 @@
- 
- 			cooling-maps {
- 				map0 {
--					trip = <&cpu_alert>;
-+					trip = <&ccu_alert>;
-+					cooling-device =
-+						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						<&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		plt {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 1>;
-+
-+			trips {
-+				plt_alert: plt-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				plt_crit: plt-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&plt_alert>;
- 					cooling-device =
- 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
- 						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
--- 
-1.7.1
-
+	-ss
