@@ -2,110 +2,141 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FFFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9636AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7911120643
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fTXRWN1N"
+	by mail.kernel.org (Postfix) with ESMTP id 6B4142070B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 17:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfCDR1y (ORCPT
+        id S1727266AbfCDR30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 12:27:54 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33586 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfCDR1y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 12:27:54 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i19so3501557pfd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 09:27:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=g/OF5maSA7Ijo+jA+fmh7mzobo83Ai+aqF4UR671AgQ=;
-        b=fTXRWN1NYo+rX0TaZYV8VvBxRLQuk5qA3EMTrM6Piu5+OcuQpOwgATKV9AX2p4CgaR
-         x8dMUM5YXLNgDGvP3TV59g1NYe/ZSfZLb85C1o0hbXl0lOjzOrj0SSqGagH4KnlaPthS
-         Pn9Q9np2e68p+xuNrZz03dn4hGO88QVqr9J0U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=g/OF5maSA7Ijo+jA+fmh7mzobo83Ai+aqF4UR671AgQ=;
-        b=XogzAxJeCdnx3Gj/S8sxiGlUFR5FqeBecpYJTSZWSEUmyhRccKUytHJSkWGxDNaLA3
-         4VlWzohcWmhkFLx8DFYA6prPVTpRIugu9HsBAQwbT1jqTqRctVk1F0ItjtZsxxX1hQly
-         oGucUO/fmlrHLVA0RwdJQ3DxTy9FqfxVItmta7B4glQjk5mj/zEvLzdtyBe8bhTBniTJ
-         PNQiuyqV4lfRofAKEgGlkOjnVvl22g/6TFKB1/EgEdExcda29mbF1fsHwSWioIH3pIYi
-         jeewitqHOS7TChAJ3rTq8UIl7P0MFaK1Ok80uvDeIqZJEyK88Pj4+Hfoz/RXcKgOCdk8
-         IXUw==
-X-Gm-Message-State: APjAAAWKljQ/vU35vKJmWSkZDbdLUBbrnoERiuahv3BYZn5kGvQJCkcB
-        jmLlAIFsaqZV+Bi6xPSUWVnx/lKLx6g=
-X-Google-Smtp-Source: APXvYqz8XiQ7HiBHQ+VfxAs+JMiz9iEXqwvrWTSubHvJt5Rvs7EmAmxk0P/VVCG0zMyuYF4FEwa5aQ==
-X-Received: by 2002:a17:902:284b:: with SMTP id e69mr20802659plb.11.1551720473790;
-        Mon, 04 Mar 2019 09:27:53 -0800 (PST)
-Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id q7sm14555060pfa.119.2019.03.04.09.27.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Mar 2019 09:27:52 -0800 (PST)
-Date:   Mon, 4 Mar 2019 09:27:51 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Yue Hu <huyue2@yulong.com>
-Subject: [GIT PULL] pstore updates for v5.1-rc1
-Message-ID: <20190304172751.GA5887@beast>
+        Mon, 4 Mar 2019 12:29:26 -0500
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:36430 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfCDR30 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 12:29:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CFA6A78;
+        Mon,  4 Mar 2019 09:29:25 -0800 (PST)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 988703F703;
+        Mon,  4 Mar 2019 09:29:23 -0800 (PST)
+Subject: Re: [PATCH v2] dts: arm64: add CoreSight trace support for hi3660
+To:     mathieu.poirier@linaro.org, leo.yan@linaro.org
+Cc:     shiwanglai@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        john.stultz@linaro.org, xuwei5@huawei.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        suzhuangluan@hisilicon.com
+References: <6496F4728C09F6479CFF21A8E67D33D568F32660@dggema525-mbx.china.huawei.com>
+ <20190302125955.GA11385@leoy-ThinkPad-X240s>
+ <CANLsYkzakXjuMR+=ncVpcohE8n-uF60Qa6EAN+Xh=FKBoJtrgg@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <9109e498-0cd9-0b81-15a0-2208d4282359@arm.com>
+Date:   Mon, 4 Mar 2019 17:29:22 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <CANLsYkzakXjuMR+=ncVpcohE8n-uF60Qa6EAN+Xh=FKBoJtrgg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi,
 
-Please pull these pstore changes for v5.1-rc1. These are some small
-cleanups mostly in the ramoops backend.
+On 04/03/2019 17:18, Mathieu Poirier wrote:
+> On Sat, 2 Mar 2019 at 06:00, Leo Yan <leo.yan@linaro.org> wrote:
+>>
+>> On Sat, Mar 02, 2019 at 09:45:22AM +0000, Shiwanglai wrote:
+>>
+>> [...]
+>>
+>>>> +           /* Top internals */
+>>>> +           funnel@ec031000 {
+>>>> +                   compatible = "arm,coresight-funnel", "arm,primecell";
+>>>> +                   reg = <0 0xec031000 0 0x1000>;
+>>>> +                   clocks = <&crg_ctrl HI3660_PCLK>;
+>>>> +                   clock-names = "apb_pclk";
+>>>> +
+>>>> +                   out-ports {
+>>>> +                           port {
+>>>> +                                   top_funnel_out: endpoint {
+>>>> +                                           remote-endpoint =
+>>>> +                                                   <&top_etf_in>;
+>>>> +                                   };
+>>>> +                           };
+>>>> +                   };
+>>>> +
+>>>> +                   in-ports {
+>>>> +                           #address-cells = <1>;
+>>>> +                           #size-cells = <0>;
+>>>> +
+>>>> +                           port@0 {
+>>>> +                                   reg = <0>;
+>>>> +                                   top_funnel_in0: endpoint {
+>>>> +                                           remote-endpoint =
+>>>> +                                                   <&cluster0_etf_out>;
+>>>> +                                   };
+>>>> +                           };
+>>>> +
+>>>> +                           port@1 {
+>>>> +                                   reg = <0>;
+>>>
+>>> Here should s/<0>/<1>; otherwise DTC will complain warning for mismatching between 'port@1' and 'reg = <0>'.
+>>
+>>> -- if reg set to 1, then there's no data output from cluster 1 to top.
+>>
+>> Thanks for the info, Wanglai.  Now I see why write as it is.
+>>
+>> I can confirm if directly use your patch with perf with mainline
+>> kernel I can capture CoreSight trace data successfully on Hikey960
+>> board.
+>>
+>> But since this DT binding will introduce DTC warning, I personally
+>> think we can improve for this with below method:
+>>
+>> We can create a funnel node named "funnel_combo", and we don't need to
+>> specify register address range for it; and cluster 0 and cluster 1 will
+>> output to "funnel_combo" and "funnel_combo" will output to the top
+>> funnel.  Thus the DT binding will write as below.
+>>
+>> To support for a funnel without any register address range (we have
+>> support replicator like this mode), we also need to extend the driver
+>> drivers/hwtracing/coresight/coresight-funnel.c.
+>>
+>> Mathieu, Mike, Suzuki, could you help confirm this is the right
+>> direction we should move forward to?
+> 
+> Leo, thanks for testing this out.  Shiwanglai, please add Suzuki and
+> myself to future revision of this set - this will help you getting a
+> timely response for your work.
+> 
+> As Leo pointed out we already have support for replicators that don't
+> have a register map and the same thing should be done in this case.
+> But contrary to what was done for replicators, I think we should keep
+> the drivers in the same file as Russell did here[1].  That way we can
+> keep all things funnel at the same place and reduce the amount of
+> kernel configuration options.
 
-Thanks!
+I back that. I have already merged the static and programmable replicators
+into one and this should be out here soon. So, I back the single driver
+approach for funnels.
 
--Kees
+Cheers
+Suzuki
 
-The following changes since commit 49a57857aeea06ca831043acbb0fa5e0f50602fd:
 
-  Linux 5.0-rc3 (2019-01-21 13:14:44 +1300)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v5.1-rc1
-
-for you to fetch changes up to 93ee4b7d9f0632690713aee604c49e298e634094:
-
-  pstore/ram: Avoid needless alloc during header write (2019-02-12 13:45:53 -0800)
-
-----------------------------------------------------------------
-pstore cleanups
-
-- Remove some needless memory allocations (Yue Hu, Kees Cook)
-- Add zero-length checks to avoid no-op calls (Yue Hu)
-
-----------------------------------------------------------------
-Kees Cook (1):
-      pstore/ram: Avoid needless alloc during header write
-
-Yue Hu (4):
-      pstore/ram: Replace dummy_data heap memory with stack memory
-      pstore: Avoid writing records with zero size
-      pstore/ram: Move initialization earlier
-      pstore/ram: Add kmsg hlen zero check to ramoops_pstore_write()
-
- fs/pstore/platform.c |  3 +++
- fs/pstore/ram.c      | 64 ++++++++++++++++++++++++----------------------------
- 2 files changed, 32 insertions(+), 35 deletions(-)
-
--- 
-Kees Cook
+> 
+> Regards,
+> Mathieu
+> 
+> [1]. https://elixir.bootlin.com/linux/latest/source/drivers/tty/serial/amba-pl011.c#L2819
+> 
+>>
