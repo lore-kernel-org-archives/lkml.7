@@ -2,73 +2,77 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72410C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1491C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344D020815
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB7520675
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 14:09:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="C6KVoUvN"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="iwOmvDFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfCDOGE (ORCPT
+        id S1726379AbfCDOJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 09:06:04 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:39182 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726111AbfCDOGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 09:06:03 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44ChdJ4fXSz9v6wx;
-        Mon,  4 Mar 2019 15:05:56 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=C6KVoUvN; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id OIukQzGi5Mhn; Mon,  4 Mar 2019 15:05:56 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44ChdJ3Whfz9v6wc;
-        Mon,  4 Mar 2019 15:05:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1551708356; bh=Lou+LJudD27zNqGZxAvu/t8Cohg/CUFnGxJFrL8eCdM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=C6KVoUvN6Biazcs+pZ4lDVvlOfouSmVlkQdfVrZ81Z+WpOfF/32afBfqn9k5pB53s
-         ZH7yNiwtRUvxJG6caaqSdpsRL2zaHaZPgLu3cDxsm5sN+EID1YZBX3mWhWMz7hKXgN
-         B3yLu1vs62fEC1kC75AQWKf5i6CRr8BKfwB1PpHQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 34AE38B82A;
-        Mon,  4 Mar 2019 15:05:59 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id iYHro5p-Jckz; Mon,  4 Mar 2019 15:05:58 +0100 (CET)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B02718B84F;
-        Mon,  4 Mar 2019 15:05:52 +0100 (CET)
-Subject: Re: [PATCH 1/3] add generic builtin command line
-To:     Daniel Walker <danielwa@cisco.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Maksym Kokhan <maksym.kokhan@globallogic.com>,
-        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        xe-linux-external@cisco.com, Daniel Walker <dwalker@fifo99.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <1551469472-53043-2-git-send-email-danielwa@cisco.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <701a46a6-57e6-f8c7-1fee-18c50e72c38c@c-s.fr>
-Date:   Mon, 4 Mar 2019 15:05:47 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 4 Mar 2019 09:09:16 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45543 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfCDOJP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 09:09:15 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d18so5209802qtg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 06:09:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XeUZ0bSuaagpODDaNgkebhSpO4mdjSfmcYJ84JIvp08=;
+        b=iwOmvDFJyslQ30B84EdbQ9EcU0e9z0nlF7veasjUif1D/2vlMYSgIj9v/R4afuGm66
+         wCCf6sJ25kH2fJMu3lsfy6eAZm1KlksFQih5qpltw+Qr8dshZKnHMCFEs/Esu3jMh+sH
+         nGUFsAVx5cBV11ddc0bK/Q99QD0unMqIVe0ZaxbglNDwwjg9YOW/YBCRD76CseCKJhkN
+         FvmVTKEPJF5GRRemIlvy8WaDd61LFbb3WBUm1yc6hXH+Wsa8u4iMROz9FF+p3J39PPMT
+         dnPjt4HVnZGB90xEwwgOM/6+M+5ckD7AKD2KV1U1Lt7nVlbuMLMJGMjpyGF0n1VWGGAz
+         58bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XeUZ0bSuaagpODDaNgkebhSpO4mdjSfmcYJ84JIvp08=;
+        b=hpbFOeSzhLA3/iclEciHIuMxOLUpHaBrTBfPVKuwv+RYbGS90A8zEQaFm5Qsp3S3xi
+         V0CUkaaCF97xixhlqe0EJGy6faJsvrVKE/3pTN3ZHFUTMZJ3+vdXUdCy0gzJM901rtnu
+         LllLhSchFMESZAvW8oupfH2r70G2VCZIVfimSbpsZ+VyALIid2IqMpVUvhK8kceICNHH
+         Ly0cncWEpCUHTMoIZl/y6tEC2TOmiNzaxmLchSv6DUuZKyYfa+RKcVnOiDUM4CD5K+T7
+         uY+vLn2OFXYKoUScaiTCycmLf/PVDlJAn/dxzD1oheNu5pkKc1Le/ULDa+W5l3xABqhu
+         bKdQ==
+X-Gm-Message-State: APjAAAW8JRNADRMfLB/EJD4jFcM9nA4gVmCFjQkWoqLP0bScFtmqlD8P
+        f0QEosvl0ljfMur51cTNSoeBVLwihE4=
+X-Google-Smtp-Source: APXvYqxebk4cygCw66b8m5/eWF71BIN2+jlrN1rpbLDw4AjriPIoka3S/L5IeqOWgi//Y9xk4xIwzw==
+X-Received: by 2002:ac8:67ca:: with SMTP id r10mr14668266qtp.134.1551708554226;
+        Mon, 04 Mar 2019 06:09:14 -0800 (PST)
+Received: from ovpn-120-151.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x25sm4186313qtx.71.2019.03.04.06.09.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Mar 2019 06:09:13 -0800 (PST)
+Subject: Re: [PATCH v2] mm/hugepages: fix "orig_pud" set but not used
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
+References: <20190301221956.97493-1-cai@lca.pw>
+ <CAFqt6zZr8ZCM6_7QDzDEf=5gH=+EkaumXk86X35dGTdn_SLvvA@mail.gmail.com>
+From:   Qian Cai <cai@lca.pw>
+Message-ID: <935fc484-70e3-ed7a-ed82-329529e0e280@lca.pw>
+Date:   Mon, 4 Mar 2019 09:09:12 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.3.3
 MIME-Version: 1.0
-In-Reply-To: <1551469472-53043-2-git-send-email-danielwa@cisco.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFqt6zZr8ZCM6_7QDzDEf=5gH=+EkaumXk86X35dGTdn_SLvvA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,215 +80,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 01/03/2019 à 20:44, Daniel Walker a écrit :
-> This code allows architectures to use a generic builtin command line.
-> The state of the builtin command line options across architecture is
-> diverse. On x86 and mips they have pretty much the same code and the
-> code prepends the builtin command line onto the boot loader provided
-> one. On powerpc there is only a builtin override and nothing else.
+On 3/4/19 7:02 AM, Souptick Joarder wrote:
+> On Sat, Mar 2, 2019 at 3:50 AM Qian Cai <cai@lca.pw> wrote:
+>>
+>> The commit a00cc7d9dd93 ("mm, x86: add support for PUD-sized transparent
+>> hugepages") introduced pudp_huge_get_and_clear_full() but no one uses
+>> its return code. In order to not diverge from
+>> pmdp_huge_get_and_clear_full(), just change zap_huge_pud() to not assign
+>> the return value from pudp_huge_get_and_clear_full().
+>>
+>> mm/huge_memory.c: In function 'zap_huge_pud':
+>> mm/huge_memory.c:1982:8: warning: variable 'orig_pud' set but not used
+>> [-Wunused-but-set-variable]
+>>   pud_t orig_pud;
+>>         ^~~~~~~~
+>>
 > 
-> The code in this commit unifies the mips and x86 code into a generic
-> header file under the CONFIG_GENERIC_CMDLINE option. When this
-> option is enabled the architecture can call the cmdline_add_builtin()
-> to add the builtin command line.
+> 4th argument passed to pudp_huge_get_and_clear_full() is not used.
+> Is it fine to remove *int full * in  pudp_huge_get_and_clear_full() if
+> there is no plan to use it in future ?
 > 
-> [maksym.kokhan@globallogic.com: fix cmdline_add_builtin() macro]
-> Cc: Daniel Walker <dwalker@fifo99.com>
-> Cc: Daniel Walker <danielwa@cisco.com>
-> Cc: xe-linux-external@cisco.com
-> Signed-off-by: Daniel Walker <danielwa@cisco.com>
-> Signed-off-by: Maksym Kokhan <maksym.kokhan@globallogic.com>
-> ---
->   include/linux/cmdline.h | 72 +++++++++++++++++++++++++++++++++++++++++++++++++
->   init/Kconfig            | 69 +++++++++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 141 insertions(+)
->   create mode 100644 include/linux/cmdline.h
-> 
-> diff --git a/include/linux/cmdline.h b/include/linux/cmdline.h
-> new file mode 100644
-> index 000000000000..126fa52f55d2
-> --- /dev/null
-> +++ b/include/linux/cmdline.h
-> @@ -0,0 +1,72 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_CMDLINE_H
-> +#define _LINUX_CMDLINE_H
-> +
-> +/*
-> + *
-> + * Copyright (C) 2015. Cisco Systems, Inc.
-> + *
-> + * Generic Append/Prepend cmdline support.
-> + */
-> +
-> +#if defined(CONFIG_GENERIC_CMDLINE) && defined(CONFIG_CMDLINE_BOOL)
-> +
-> +#ifndef CONFIG_CMDLINE_OVERRIDE
-> +/*
-> + * This function will append or prepend a builtin command line to the command
-> + * line provided by the bootloader. Kconfig options can be used to alter
-> + * the behavior of this builtin command line.
-> + * @dest: The destination of the final appended/prepended string
-> + * @src: The starting string or NULL if there isn't one.
-> + * @tmp: temporary space used for prepending
-> + * @length: the maximum length of the strings above.
-> + */
-> +static inline void
-> +_cmdline_add_builtin(char *dest, char *src, char *tmp, unsigned long length)
-> +{
-> +	if (src != dest && src != NULL) {
-> +		strlcpy(dest, " ", length);
+> This is applicable to below functions as well -
+> pmdp_huge_get_and_clear_full()
+> ptep_get_and_clear_full()
+> pte_clear_not_present_full()
 
-Why prepend a space here ?
-
-> +		strlcat(dest, src, length);
-> +	}
-> +
-> +	strlcat(dest, " ", length);
-
-Why a space here ? When there is nothing to append, there is no need of 
-a space here. The space could simply be concatenated below in from of 
-CONFIG_CMDLINE_APPEND
-
-> +
-> +	if (sizeof(CONFIG_CMDLINE_APPEND) > 1)
-> +		strlcat(dest, CONFIG_CMDLINE_APPEND, length);
-> +
-> +	if (sizeof(CONFIG_CMDLINE_PREPEND) > 1) {
-> +		strlcpy(tmp, CONFIG_CMDLINE_PREPEND, length);
-> +		strlcat(tmp, " ", length);
-
-Why not concatenate the space to above, ie:
-strlcpy(tmp, CONFIG_CMDLINE_PREPEND " ", length);
-
-> +		strlcat(tmp, dest, length);
-> +		strlcpy(dest, tmp, length);
-> +	}
-> +}
-> +
-> +#define cmdline_add_builtin_section(dest, src, length, section) 	    \
-> +{									    \
-> +	if (sizeof(CONFIG_CMDLINE_PREPEND) > 1) {			    \
-> +		static char cmdline_tmp_space[length] section;	            \
-> +		_cmdline_add_builtin(dest, src, cmdline_tmp_space, length); \
-> +	} else {							    \
-> +		_cmdline_add_builtin(dest, src, NULL, length);		    \
-> +	}								    \
-> +}
-> +#else
-> +#define cmdline_add_builtin_section(dest, src, length, section) 	   \
-> +{									   \
-> +	strlcpy(dest, CONFIG_CMDLINE_PREPEND " " CONFIG_CMDLINE_APPEND,    \
-> +		length);						   \
-> +}
-> +#endif /* !CONFIG_CMDLINE_OVERRIDE */
-> +
-> +#else
-> +#define cmdline_add_builtin_section(dest, src, length, section) {          \
-> +	if (src != NULL)						   \
-> +		strlcpy(dest, src, length);				   \
-> +}
-> +#endif /* CONFIG_GENERIC_CMDLINE */
-> +
-> +#define cmdline_add_builtin(dest, src, length) \
-> +	cmdline_add_builtin_section(dest, src, length, __initdata)
-
-All those ifdefs are uggly, I don't think it is worth making something 
-so complex just for the fun of getting something generic. See my 
-comments to following patch.
-
-> +
-> +#endif /* _LINUX_CMDLINE_H */
-> diff --git a/init/Kconfig b/init/Kconfig
-> index a4112e95724a..b59e856511e1 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1775,6 +1775,75 @@ config PROFILING
->   config TRACEPOINTS
->   	bool
->   
-> +config GENERIC_CMDLINE
-> +	bool
-> +
-> +if GENERIC_CMDLINE
-> +
-> +config CMDLINE_BOOL
-> +	bool "Built-in kernel command line"
-> +	help
-> +	  Allow for specifying boot arguments to the kernel at
-> +	  build time.  On some systems (e.g. embedded ones), it is
-> +	  necessary or convenient to provide some or all of the
-> +	  kernel boot arguments with the kernel itself (that is,
-> +	  to not rely on the boot loader to provide them.)
-> +
-> +	  To compile command line arguments into the kernel,
-> +	  set this option to 'Y', then fill in the
-> +	  the boot arguments in CONFIG_CMDLINE.
-> +
-> +	  Systems with fully functional boot loaders (i.e. non-embedded)
-> +	  should leave this option set to 'N'.
-> +
-> +config CMDLINE_APPEND
-> +	string "Built-in kernel command string append"
-> +	depends on CMDLINE_BOOL
-
-Would be better to remove this 'depends' and put the condition on the 
-previous line. That way we would always have CONFIG_CMDLINE_APPEND and 
-we could do something more simple in the code.
-
-> +	default ""
-> +	help
-> +	  Enter arguments here that should be compiled into the kernel
-> +	  image and used at boot time.  If the boot loader provides a
-> +	  command line at boot time, this string is appended to it to
-> +	  form the full kernel command line, when the system boots.
-> +
-> +	  However, you can use the CONFIG_CMDLINE_OVERRIDE option to
-> +	  change this behavior.
-> +
-> +	  In most cases, the command line (whether built-in or provided
-> +	  by the boot loader) should specify the device for the root
-> +	  file system.
-> +
-> +config CMDLINE_PREPEND
-> +	string "Built-in kernel command string prepend"
-> +	depends on CMDLINE_BOOL
-
-Would be better to remove this 'depends' and put the condition on the 
-previous line. That way we would always have CONFIG_CMDLINE_APPEND and 
-we could do something more simple in the code.
-
-> +	default ""
-> +	help
-> +	  Enter arguments here that should be compiled into the kernel
-> +	  image and used at boot time.  If the boot loader provides a
-> +	  command line at boot time, this string is prepended to it to
-> +	  form the full kernel command line, when the system boots.
-> +
-> +	  However, you can use the CONFIG_CMDLINE_OVERRIDE option to
-> +	  change this behavior.
-> +
-> +	  In most cases, the command line (whether built-in or provided
-> +	  by the boot loader) should specify the device for the root
-> +	  file system.
-> +
-> +config CMDLINE_OVERRIDE
-> +	bool "Built-in command line overrides boot loader arguments"
-> +	depends on CMDLINE_BOOL
-> +	help
-> +	  Set this option to 'Y' to have the kernel ignore the boot loader
-> +	  command line, and use ONLY the built-in command line. In this case
-> +	  append and prepend strings are concatenated to form the full
-> +	  command line.
-> +
-> +	  This is used to work around broken boot loaders.  This should
-> +	  be set to 'N' under normal conditions.
-> +
-> +endif
-> +
->   endmenu		# General setup
->   
->   source "arch/Kconfig"
-> 
-
-Christophe
+I suppose arches may override those that could make use of "int full".
