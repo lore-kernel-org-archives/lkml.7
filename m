@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F32CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C13C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4AC21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A843E208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688590;
-	bh=99OIZQ3kwV3zFR+oEN9J9Zg7EOLDZCfMK5zt7su1B5o=;
+	s=default; t=1551688593;
+	bh=HptPSwDUNWSjIPkdnFjlSzqHwtQ3/yXZmPuLzSEpXrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p4cn/OTVihDMh+2fB+BE6O1tLwNysuMechuR8CPzaNQZEkicL41N1I0MdflBLWIvr
-	 zLK8qrpINeQBupVJf7CvqTlFRDKPgzSDalbnd9GHeHA0w0aBdHKAPqsNXPjnz5b5d7
-	 tcwAzLF7IRc3G1bjUTS+nHPmn73j8isWXbNvbuds=
+	b=0cmMxXeAYmCIPMsCaqtkmYJENEj6JUulmwgl4808V79sbdlAU0kJhcBKFEEURFeDP
+	 JI5JIUTUBIjtD/acJ1QFnAHgRkYIEIB7a0GMVM0xF5j8ca/WaITWXsE17xHvi4qFRH
+	 eF+pHQIM4Qg59km+ThTixdrtvaA5BvyffMOmfpOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbfCDIg2 (ORCPT
+        id S1728645AbfCDIgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:36:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45598 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:36:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728609AbfCDIgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:36:25 -0500
+        id S1728613AbfCDIg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:36:28 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90A21208E4;
-        Mon,  4 Mar 2019 08:36:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEE6B208E4;
+        Mon,  4 Mar 2019 08:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688585;
-        bh=99OIZQ3kwV3zFR+oEN9J9Zg7EOLDZCfMK5zt7su1B5o=;
+        s=default; t=1551688588;
+        bh=HptPSwDUNWSjIPkdnFjlSzqHwtQ3/yXZmPuLzSEpXrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ivfsa/ApW+pzp3ZIJ0UtMApHFNC+1XMof0/kr9JKa6q5LT28SPSSjYYiKwkLpzFCR
-         0zl4R3bZ9RZxJTvh7xRsn+0ZXIjdIJ3jNYLZy9C2nSsbESuI7WLO548ePiKAPH/W4m
-         ImUO3keDqueqmnOcIvbsS6VHixOUZSra1iy4SlzI=
+        b=g//PSXai80BUx+u1TlBgXnSoWc5UTDJDhQLPNK/6loROrXMbfqHylvnuimhUnz+DV
+         54Ef+UJgggJW0cjdWF/x5YqBTvPkhFh1raYCY6h7IghSkVnp2koks0Zo4+MW0PjEev
+         3gYsYgkubetX9UDyCSgh1J5AMCaoAQCf0YG09d3s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Steve French <stfrench@microsoft.com>,
-        Dan Carpener <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 55/88] cifs: fix memory leak of an allocated cifs_ntsd structure
-Date:   Mon,  4 Mar 2019 09:22:38 +0100
-Message-Id: <20190304081632.715059365@linuxfoundation.org>
+Subject: [PATCH 4.20 56/88] drm/msm: Fix A6XX support for opp-level
+Date:   Mon,  4 Mar 2019 09:22:39 +0100
+Message-Id: <20190304081632.752040361@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -67,64 +67,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 73aaf920cc72024c4a4460cfa46d56e5014172f3 ]
+[ Upstream commit a3c5e2cd79753121f49a8662c1e0a60ddb5486ca ]
 
-The call to SMB2_queary_acl can allocate memory to pntsd and also
-return a failure via a call to SMB2_query_acl (and then query_info).
-This occurs when query_info allocates the structure and then in
-query_info the call to smb2_validate_and_copy_iov fails. Currently the
-failure just returns without kfree'ing pntsd hence causing a memory
-leak.
+The bindings for Qualcomm opp levels changed after being Acked but
+before landing.  Thus the code in the GPU driver that was relying on
+the old bindings is now broken.
 
-Currently, *data is allocated if it's not already pointing to a buffer,
-so it needs to be kfree'd only if was allocated in query_info, so the
-fix adds an allocated flag to track this.  Also set *dlen to zero on
-an error just to be safe since *data is kfree'd.
+Let's change the code to match the new bindings by adjusting the old
+string 'qcom,level' to the new string 'opp-level'.  See the patch
+("dt-bindings: opp: Introduce opp-level bindings").
 
-Also set errno to -ENOMEM if the allocation of *data fails.
+NOTE: we will do additional cleanup to totally remove the string from
+the code and use the new dev_pm_opp_get_level() but we'll do it in a
+future patch.  This will facilitate getting the important code fix in
+sooner without having to deal with cross-maintainer dependencies.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Dan Carpener <dan.carpenter@oracle.com>
+This patch needs to land before the patch ("arm64: dts: sdm845: Add
+gpu and gmu device nodes") since if a tree contains the device tree
+patch but not this one you'll get a crash at bootup.
+
+Fixes: 4b565ca5a2cb ("drm/msm: Add A6XX device support")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2pdu.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-index 28712080add97..3c44c51310c4b 100644
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -2714,6 +2714,7 @@ query_info(const unsigned int xid, struct cifs_tcon *tcon,
- 	int resp_buftype = CIFS_NO_BUFFER;
- 	struct cifs_ses *ses = tcon->ses;
- 	int flags = 0;
-+	bool allocated = false;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index d4e98e5876bc4..00b2e6e94689f 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -939,7 +939,7 @@ static u32 a6xx_gmu_get_arc_level(struct device *dev, unsigned long freq)
+ 	np = dev_pm_opp_get_of_node(opp);
  
- 	cifs_dbg(FYI, "Query Info\n");
- 
-@@ -2753,14 +2754,21 @@ query_info(const unsigned int xid, struct cifs_tcon *tcon,
- 					"Error %d allocating memory for acl\n",
- 					rc);
- 				*dlen = 0;
-+				rc = -ENOMEM;
- 				goto qinf_exit;
- 			}
-+			allocated = true;
- 		}
+ 	if (np) {
+-		of_property_read_u32(np, "qcom,level", &val);
++		of_property_read_u32(np, "opp-level", &val);
+ 		of_node_put(np);
  	}
  
- 	rc = smb2_validate_and_copy_iov(le16_to_cpu(rsp->OutputBufferOffset),
- 					le32_to_cpu(rsp->OutputBufferLength),
- 					&rsp_iov, min_len, *data);
-+	if (rc && allocated) {
-+		kfree(*data);
-+		*data = NULL;
-+		*dlen = 0;
-+	}
- 
- qinf_exit:
- 	SMB2_query_info_free(&rqst);
 -- 
 2.19.1
 
