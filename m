@@ -2,65 +2,70 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EE6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FBAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1641420830
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC94920830
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:45:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="l4pMxqfw";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="YRQqyn9J"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Zd/RieQt";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="GwROwBWZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfCDUoC (ORCPT
+        id S1726719AbfCDUpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:44:02 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34588 "EHLO
+        Mon, 4 Mar 2019 15:45:02 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36634 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726101AbfCDUoB (ORCPT
+        by vger.kernel.org with ESMTP id S1726355AbfCDUpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:44:01 -0500
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x24KbUqV013165;
-        Mon, 4 Mar 2019 12:43:30 -0800
+        Mon, 4 Mar 2019 15:45:01 -0500
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x24KcItC023473;
+        Mon, 4 Mar 2019 12:44:34 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : references : in-reply-to : content-type : content-id
  : content-transfer-encoding : mime-version; s=facebook;
- bh=+T/CytUylXn8J95BhkDnqBVHXsS7djgNhdyFlQLEl1M=;
- b=l4pMxqfwDhzG1rN+fX0thOVIfAMyBcb+pgQ2Jbq8jkvL+x8ajnoFCmiGxP5YY92BKuJU
- okB1GdISJQRhjfNaowK/uaHzi3p0H09TgM02COpvTJr7iOxc2/nomGeboQ27tbGV8WQi
- mqzCFmGOe8wNJJm6AcpkbQxl5dDMZgZBaN0= 
+ bh=jbW/i57cVnS6nGt/mk9YVuNeKGArxql2O1S8ODOBdTI=;
+ b=Zd/RieQtPY22mWxUzvvtAe1p0+UkbG/rJSZp0xeH0/vOyxD7jkAkqdYQ5ttK7wSSkQca
+ 3Jh5XU1MEuSqSOqfoXfbPjbeJdFVdzOEwYI3YJeb+M9zNWsgwbP4UnsPlWABuVNzjIgC
+ nWf0XgmGG2VGTJ+1Dxc0NzNuQ7jLiT5ar60= 
 Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r19xkgadd-15
+        by mx0a-00082601.pphosted.com with ESMTP id 2r19wg89wt-5
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 04 Mar 2019 12:43:30 -0800
-Received: from frc-hub05.TheFacebook.com (2620:10d:c021:18::175) by
- frc-hub05.TheFacebook.com (2620:10d:c021:18::175) with Microsoft SMTP Server
+        Mon, 04 Mar 2019 12:44:34 -0800
+Received: from frc-mbx03.TheFacebook.com (2620:10d:c0a1:f82::27) by
+ frc-hub04.TheFacebook.com (2620:10d:c021:18::174) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 4 Mar 2019 12:43:28 -0800
+ 15.1.1713.5; Mon, 4 Mar 2019 12:44:28 -0800
+Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
+ frc-mbx03.TheFacebook.com (2620:10d:c0a1:f82::27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 4 Mar 2019 12:44:28 -0800
 Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.75) with Microsoft SMTP Server
+ by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 4 Mar 2019 12:43:28 -0800
+ via Frontend Transport; Mon, 4 Mar 2019 12:44:28 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
  s=selector1-fb-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+T/CytUylXn8J95BhkDnqBVHXsS7djgNhdyFlQLEl1M=;
- b=YRQqyn9Jk10ZAJLaajQAskxF+bzk687/eBEDPjherXn9u4Zoh6AtOwsYOkqss4KwKOGpxPlJKfEZPmTebHkZnqwLafh5Mmq6zCPIOl/tG0KEC60F/3ZQtXmTx+8ytpCsODvmX74gP1o5Fu9Lq2VFj3/2+5lM5jkhJwx8fIJ6Zi0=
+ bh=jbW/i57cVnS6nGt/mk9YVuNeKGArxql2O1S8ODOBdTI=;
+ b=GwROwBWZIcKDataYFdyWSYkh4mlCCc/KcxVvlEFyWramC/8tQNWRzx9sKKizUwa3eVfvTzCSkqdc5+4Z56RQUD08IYfNWOlalxl5MwUpDV+4MBIx9PTiMFUrrGWxdIaqmqWlArheOlGd3Bjpqr6nlmHJvIxd68i9trl/IezseIk=
 Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
  MWHPR15MB1824.namprd15.prod.outlook.com (10.174.255.140) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.16; Mon, 4 Mar 2019 20:43:25 +0000
+ 15.20.1665.16; Mon, 4 Mar 2019 20:44:25 +0000
 Received: from MWHPR15MB1165.namprd15.prod.outlook.com
  ([fe80::f190:6de5:7e3:e065]) by MWHPR15MB1165.namprd15.prod.outlook.com
  ([fe80::f190:6de5:7e3:e065%6]) with mapi id 15.20.1665.020; Mon, 4 Mar 2019
- 20:43:25 +0000
+ 20:44:25 +0000
 From:   Song Liu <songliubraving@fb.com>
 To:     Jiri Olsa <jolsa@redhat.com>
-CC:     Networking <netdev@vger.kernel.org>,
+CC:     Netdev <netdev@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         "ast@kernel.org" <ast@kernel.org>,
         "daniel@iogearbox.net" <daniel@iogearbox.net>,
@@ -69,18 +74,17 @@ CC:     Networking <netdev@vger.kernel.org>,
         "acme@redhat.com" <acme@redhat.com>,
         "jolsa@kernel.org" <jolsa@kernel.org>,
         "namhyung@kernel.org" <namhyung@kernel.org>
-Subject: Re: [PATCH v5 perf,bpf 12/15] perf, bpf: enable annotation of bpf
- program
-Thread-Topic: [PATCH v5 perf,bpf 12/15] perf, bpf: enable annotation of bpf
- program
-Thread-Index: AQHUzyOUOP/+neUx80uWHKj8wE0j5aX7hR6AgABiG4CAAA6YgIAAAboA
-Date:   Mon, 4 Mar 2019 20:43:25 +0000
-Message-ID: <F363AFC6-A048-44C7-80DE-22C20ADE7CD8@fb.com>
-References: <20190228050643.958685-1-songliubraving@fb.com>
- <20190228050643.958685-13-songliubraving@fb.com>
- <20190304135351.GL19809@krava> <01714139-9FE5-4DFF-A299-D758D1871BA0@fb.com>
- <20190304203713.GC2563@krava>
-In-Reply-To: <20190304203713.GC2563@krava>
+Subject: Re: [PATCH v4 perf,bpf 14/15] perf: introduce side band thread
+Thread-Topic: [PATCH v4 perf,bpf 14/15] perf: introduce side band thread
+Thread-Index: AQHUzWlKCfZJunEblEKUEZkb6eySeqXzo8KAgABL74CAB5h6AIAAY6eAgAAOggCAAADzAA==
+Date:   Mon, 4 Mar 2019 20:44:25 +0000
+Message-ID: <DB8CAEB3-B02B-41DE-9BBE-55B3C899C806@fb.com>
+References: <20190226002019.3748539-1-songliubraving@fb.com>
+ <20190226002019.3748539-15-songliubraving@fb.com>
+ <20190227132105.GC18893@krava> <2506D6CF-F0E3-4640-B385-DD0843AD2928@fb.com>
+ <20190304135224.GD19809@krava> <3B7ECDFA-E6F7-4136-A2E4-6115C5A4791B@fb.com>
+ <20190304204100.GE2563@krava>
+In-Reply-To: <20190304204100.GE2563@krava>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -88,23 +92,23 @@ X-MS-TNEF-Correlator:
 x-mailer: Apple Mail (2.3445.102.3)
 x-originating-ip: [2620:10d:c090:200::3:1d00]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c71566a5-0a16-4b6d-6503-08d6a0e20c7f
+x-ms-office365-filtering-correlation-id: beaa2763-5077-4b44-82e1-08d6a0e23094
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1824;
 x-ms-traffictypediagnostic: MWHPR15MB1824:
-x-microsoft-exchange-diagnostics: 1;MWHPR15MB1824;20:ZQOpY7F4b1OIrKNZpfvRmswyFEle1CP4iUfJF8xVRTn7mf2uYx8lwpM3vadqoC0ROxBKaviNcjwjKyIPo5sdXc+opsVZLSNT7G5/HYve78UWZ900kh1OtxKrYhMw8akeJnThkk1wg9pHulGXBZq+h5CzWBQXo8A03URaRU6xkKs=
-x-microsoft-antispam-prvs: <MWHPR15MB182493B133EE3EEA24A295C5B3710@MWHPR15MB1824.namprd15.prod.outlook.com>
+x-microsoft-exchange-diagnostics: 1;MWHPR15MB1824;20:4V5XqsyM+nxrR87iebew0y6jkgK133PLDWm8qOq+lre5WzQ6cpdJdgzM0uRYcUWiy7DMBNospq6ICuwOy4toKk5PSCaE4lRxMCxbTIPRTs9vEOiNkhQfzFpTqGZaEFDqKW9yrh9dZ0qrYtEYujZOM7q2qjYday+47vE7CKxP6Do=
+x-microsoft-antispam-prvs: <MWHPR15MB1824D2B84446C3B29DF8BC35B3710@MWHPR15MB1824.namprd15.prod.outlook.com>
 x-forefront-prvs: 09669DB681
 x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(39860400002)(136003)(396003)(376002)(189003)(199004)(54906003)(6486002)(71190400001)(6512007)(53936002)(7736002)(6116002)(229853002)(71200400001)(478600001)(93886005)(86362001)(256004)(33656002)(316002)(36756003)(83716004)(4326008)(14454004)(5660300002)(76176011)(81166006)(82746002)(81156014)(99286004)(25786009)(6506007)(53546011)(2906002)(8676002)(57306001)(102836004)(6246003)(106356001)(105586002)(97736004)(6436002)(305945005)(486006)(68736007)(186003)(6916009)(50226002)(8936002)(446003)(11346002)(476003)(46003)(2616005)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1824;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: fb.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: u/zHJsGWyMv75kDatoJU3sxmV6Z/gJXTe/4VwxINcRibWZkUotFf6NYonDQIiOwtFsrMRorG6L7P93hUh3yZude9kFrrrxRzqJXbAKv/3aOdvKR4xm8bC9eyMQbMGV1m887DrXYVt7EKY+cQqHX/QZVmgwGSQmLzt2AU5m8Ka7k3010k5Wmh0pXZNRjAZ0vai1TmaDnYPx2+/21QUXBHtmZwE648kViopGLv/p+VYxjNr3wd7HrGCwssSJ2zaw8tFoiLA0I/7kvenokZanrW9mcpgAc/ZxpiocXptjGu31Mdph+ZScwCjXMU8W1CR6wfSQCyAJY3up9PQz+j8yxpqaKnCIW5E1bUnpVyC4zpRwr/sqd+tWznFAY1JLkLNvGVR3d0o4OgnrI6/FCdFvEIV5sAUinaIOcWsFhIIZjOMAo=
+x-microsoft-antispam-message-info: jL7/9N34Msl0OdvrJPfw/emT1EhPCGp6rZEx4O1Xk5S4jlQpceVRuu0NZBnFZpVLNUxptHwvwD2KA9I5gFRcv41TRqrNjD4fB+Kkpxj4E/QiM7YoguQvuP+b8VgBCrkHerz7zbZcz3CgLTknkDPoAzKaiq/Uath+BOk6t28McfTGQRX0JZSPm0UIAZipQ18kxpCiW4ncc6HqcxCV7VU5IulEAcMs0l1ztH/puZ2a42sqGaYw0qYvjrdLU2HM5qTAjYNeTHZdzYZxOd7Xd+7oW/1tInVC2bVFwgdMXi1X9oEH2arHBydoT+oVlDRISiYJ61iOeZI5uzp2WkaIVE2gT+eBHDnz3mEtWV3XVBenFs1Jev+uSDKOBh5EwzUU52IQpJaImoPjQhq9xNPCUbMyF4Apcihpq2gZHqSweRlV5Uk=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8F371E6DBAF64C4F9C896E492A9C8172@namprd15.prod.outlook.com>
+Content-ID: <40EEC074A2ADA34ABD11DAC299B4B905@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c71566a5-0a16-4b6d-6503-08d6a0e20c7f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2019 20:43:25.0320
+X-MS-Exchange-CrossTenant-Network-Message-Id: beaa2763-5077-4b44-82e1-08d6a0e23094
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2019 20:44:25.5514
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
@@ -122,64 +126,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Mar 4, 2019, at 12:37 PM, Jiri Olsa <jolsa@redhat.com> wrote:
+> On Mar 4, 2019, at 12:41 PM, Jiri Olsa <jolsa@redhat.com> wrote:
 >=20
-> On Mon, Mar 04, 2019 at 07:45:00PM +0000, Song Liu wrote:
+> On Mon, Mar 04, 2019 at 07:49:06PM +0000, Song Liu wrote:
 >>=20
 >>=20
->>> On Mar 4, 2019, at 5:53 AM, Jiri Olsa <jolsa@redhat.com> wrote:
+>>> On Mar 4, 2019, at 5:52 AM, Jiri Olsa <jolsa@redhat.com> wrote:
 >>>=20
->>> On Wed, Feb 27, 2019 at 09:06:40PM -0800, Song Liu wrote:
+>>> On Wed, Feb 27, 2019 at 05:52:52PM +0000, Song Liu wrote:
+>>>>=20
+>>>>=20
+>>>>> On Feb 27, 2019, at 5:21 AM, Jiri Olsa <jolsa@redhat.com> wrote:
+>>>>>=20
+>>>>> On Mon, Feb 25, 2019 at 04:20:18PM -0800, Song Liu wrote:
+>>>>>=20
+>>>>> SNIP
+>>>>>=20
+>>>>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+>>>>>> index 8c902276d4b4..61b87c8111e6 100644
+>>>>>> --- a/tools/perf/util/evlist.c
+>>>>>> +++ b/tools/perf/util/evlist.c
+>>>>>> @@ -19,6 +19,7 @@
+>>>>>> #include "debug.h"
+>>>>>> #include "units.h"
+>>>>>> #include "asm/bug.h"
+>>>>>> +#include "bpf-event.h"
+>>>>>> #include <signal.h>
+>>>>>> #include <unistd.h>
+>>>>>>=20
+>>>>>> @@ -1841,3 +1842,102 @@ struct perf_evsel *perf_evlist__reset_weak_g=
+roup(struct perf_evlist *evsel_list,
+>>>>>> 	}
+>>>>>> 	return leader;
+>>>>>> }
+>>>>>> +
+>>>>>> +static struct perf_evlist *sb_evlist;
+>>>>>> +pthread_t poll_thread;
+>>>>>=20
+>>>>> so some of the things are static and some like poll_args
+>>>>> you alloced on the stack.. I dont like this interface,
+>>>>> could we come up with something generic? perhaps
+>>>>> encapsulated in perf_evlist, like:
+>>>>=20
+>>>> I picked global sb_evlist and poll_thread because there=20
+>>>> should be only one sb_evlist and one thread polling it.=20
+>>>> There might be multiple evsel on the sb_evlist.=20
+>>>>=20
+>>>> I am not sure I understand your suggestion..
+>>>>=20
+>>>>> struct perf_evlist {
+>>>>> 	...
+>>>>> 	struct {
+>>>>> 		pthread_t	th;
+>>>>> 		int		state;
+>>>>> 	} thread;
+>>>>=20
+>>>> This will not be used by the main perf_evlist, right?
 >>>=20
->>> SNIP
->>>=20
->>>> +	fflush(s);
->>>> +	do {
->>>> +		const struct bpf_line_info *linfo =3D NULL;
->>>> +		struct disasm_line *dl;
->>>> +		size_t prev_buf_size;
->>>> +		const char *srcline;
->>>> +		u64 addr;
->>>> +
->>>> +		addr =3D pc + ((u64 *)(info_linear->info.jited_ksyms))[sub_id];
->>>> +		count =3D disassemble(pc, &info);
->>>> +
->>>> +		if (prog_linfo)
->>>> +			linfo =3D bpf_prog_linfo__lfind_addr_func(prog_linfo,
->>>> +								addr, sub_id,
->>>> +								nr_skip);
->>>> +
->>>> +		if (linfo && btf) {
->>>> +			srcline =3D btf__name_by_offset(btf, linfo->line_off);
->>>> +			nr_skip++;
->>>> +		} else
->>>> +			srcline =3D NULL;
->>>> +
->>>> +		fprintf(s, "\n");
->>>> +		prev_buf_size =3D buf_size;
->>>> +		fflush(s);
->>>> +
->>>> +		if (!opts->hide_src_code && srcline) {
->>>> +			args->offset =3D -1;
->>>=20
->>> why's the offset not needed in here?
+>>> no, just by the thread interface
 >>=20
->> This is the source code line. Based on my understanding of annotation
->> code, we put -1 for source code line. Did I misunderstand something?
+>> What is "state" here?
 >=20
-> please double check, IIRC annotation_line__print will print
-> just more info if offset is present, together with the source,
-> but I haven't checked that code for some time, so I might be wrong
+> it's replacement for the 'done' pointer u had,
+> which I did not like.. leting each thread having
+> its own state is better IMO
 >=20
 > jirka
 
-In symbol__parse_objdump_line(), default offset is -1. And it is only=20
-updated if line_ip is not -1. And line_ip for src code line is -1, so=20
-offset for the source line is -1.=20
+I see. Let me try that.=20
 
-It works fine in the tests when I toggle source code on/off with key
-'s'.=20
-
-Thanks
 Song
 
