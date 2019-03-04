@@ -2,40 +2,39 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6D0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A887EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80017206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B45206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 21:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbfCDVxK (ORCPT
+        id S1726419AbfCDVyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 16:53:10 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50838 "EHLO
+        Mon, 4 Mar 2019 16:54:09 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50844 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfCDVxK (ORCPT
+        with ESMTP id S1726038AbfCDVyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 16:53:10 -0500
+        Mon, 4 Mar 2019 16:54:09 -0500
 Received: from [IPv6:2804:431:9718:a1b1:9d17:4c45:79a4:9c61] (unknown [IPv6:2804:431:9718:a1b1:9d17:4c45:79a4:9c61])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A505E263971;
-        Mon,  4 Mar 2019 21:53:05 +0000 (GMT)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3E2AA263971;
+        Mon,  4 Mar 2019 21:54:04 +0000 (GMT)
 Subject: Re: rpi-b-rev2 can't detect hdmi display due to wrong hpd gpio pull
  in dts
-To:     Stefan Wahren <stefan.wahren@i2se.com>
+To:     Eric Anholt <eric@anholt.net>
 Cc:     linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, lkundrak@v3.sk,
-        bcm-kernel-feedback-list@broadcom.com, eric@anholt.net,
-        devicetree@vger.kernel.org, kernel@collabora.com
+        stefan.wahren@i2se.com, linus.walleij@linaro.org, lkundrak@v3.sk,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        kernel@collabora.com
 References: <20190304185454.18043-1-helen.koike@collabora.com>
- <1194402400.301453.1551730542978@email.ionos.de>
+ <8736o2tmg0.fsf@anholt.net>
 From:   Helen Koike <helen.koike@collabora.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=helen.koike@collabora.com; keydata=
@@ -112,12 +111,12 @@ Autocrypt: addr=helen.koike@collabora.com; keydata=
  iR1nXfMxENVYnM5ag7mBZyD/kru5W1Uj34L6AFaDMXFPwedSCpzzqUiHb0f+nYkfOodf5xy0
  46+3THy/NUS/ZZp/rI4F7Y77+MQPVg7vARfHHX1AxYUKfRVW5j88QUB70txn8Vgi1tDrOr4J
  eD+xr0CvIGa5lKqgQacQtGkpOpJ8zY4ObSvpNubey/qYUE3DCXD0n2Xxk4muTvqlkFpOYA==
-Message-ID: <969f5b77-9b4f-f91d-40c0-07ca93d68cb9@collabora.com>
-Date:   Mon, 4 Mar 2019 18:52:52 -0300
+Message-ID: <b488f43d-2fe3-6e1d-bed0-94ed9d033129@collabora.com>
+Date:   Mon, 4 Mar 2019 18:54:00 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <1194402400.301453.1551730542978@email.ionos.de>
+In-Reply-To: <8736o2tmg0.fsf@anholt.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -128,12 +127,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/4/19 5:15 PM, Stefan Wahren wrote:
-> Hi Helen,
+On 3/4/19 5:27 PM, Eric Anholt wrote:
+> Helen Koike <helen.koike@collabora.com> writes:
 > 
->> Helen Koike <helen.koike@collabora.com> hat am 4. März 2019 um 19:54 geschrieben:
->>
->>
 >> Hello,
 >>
 >> I have a rpi-b-rev2 (two holes, 512M) and when I was trying to test vc4
@@ -149,43 +145,16 @@ On 3/4/19 5:15 PM, Stefan Wahren wrote:
 >> In any case I am dropping this email here in case anyone else see this
 >> problem, if you do, try appliying the patch below.
 > 
-> thanks for your report and the patch. I verified your change against dt-blob.dts / downstream file and it's correct.
-> 
-> I'm sorry but i cannot apply your patch because it doesn't have the proper format.
-> 
-> Should i take care of this?
-> Can i add your Signed-off-by including your mail address?
+> We even have the GPIO labeled as "HDMI_HPD_P" above, and dt-blob.dts
+> agrees.
 
-I just resent it in a proper format, please check.
+You are right, I didn't notice it.
 
-Thanks!
+> 
+> Reviewed-by: Eric Anholt <eric@anholt.net>
+> Thanks!  If Stefan doesn't pick this up shortly, I can.
+> 
+
+Thanks for reviewing!
 
 Helen
-
-> 
-> Stefan
-> 
->>
->> Regards,
->> Helen
->>
->> ---
->>  arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
->> index 5641d162dfdb..28e7513ce617 100644
->> --- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
->> +++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
->> @@ -93,7 +93,7 @@
->>  };
->>  
->>  &hdmi {
->> -	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
->> +	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
->>  };
->>  
->>  &pwm {
->> -- 
->> 2.20.1
->>
