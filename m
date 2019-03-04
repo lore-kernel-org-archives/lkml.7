@@ -2,145 +2,125 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA2BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D59C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC78D208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9250D2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 13:07:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r9Bq7XRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfCDNGs (ORCPT
+        id S1726617AbfCDNHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 08:06:48 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:37336 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726098AbfCDNGs (ORCPT
+        Mon, 4 Mar 2019 08:07:40 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9124 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbfCDNHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 08:06:48 -0500
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 0nIohHNuUI8AW0nIrh0iRm; Mon, 04 Mar 2019 14:06:45 +0100
-Subject: Re: [PATCH] media: uvcvideo: Read support
-To:     Hugues Fruchet <hugues.fruchet@st.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1551702925-7739-1-git-send-email-hugues.fruchet@st.com>
- <1551702925-7739-2-git-send-email-hugues.fruchet@st.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <fa37bb60-974c-3d96-c236-3366a08440b5@xs4all.nl>
-Date:   Mon, 4 Mar 2019 14:06:42 +0100
+        Mon, 4 Mar 2019 08:07:40 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c7d231a0000>; Mon, 04 Mar 2019 05:07:38 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 Mar 2019 05:07:39 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 Mar 2019 05:07:39 -0800
+Received: from [10.26.11.127] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Mar
+ 2019 13:07:37 +0000
+Subject: Re: Regression: ASoC: soc-core: clear platform pointers on error
+To:     Curtis Malainey <cujomalainey@google.com>
+CC:     Mark Brown <broonie@kernel.org>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+References: <bbc0d37a-5a08-9ce0-58b6-c89d28c558ce@nvidia.com>
+ <CAOReqxhYUASVFdrHzKEr8F_NA0CNnJ1Hx51L4ganvcrK=dSCCA@mail.gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <e4b5fe11-0351-ee0b-d093-2044c9b0475d@nvidia.com>
+Date:   Mon, 4 Mar 2019 13:07:34 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <1551702925-7739-2-git-send-email-hugues.fruchet@st.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAOReqxhYUASVFdrHzKEr8F_NA0CNnJ1Hx51L4ganvcrK=dSCCA@mail.gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfN/NYULSd8amEnnVxDR/XBrRqgUktUpL7X3jduWIcsgObdYGGTNYAODNkqMnd0nNeCMkgPZf1Ay0NznPV4dr0FO7CWqkYAsDyIbh1njtusB3H+onsotW
- 4TfpQisRYLFbBSVV2MzasG52w81jSB+qbFoa2l/zcdV8CiFs0+jY8TdW1pj7Wd5CDpubZC90E3Bf3tLKIDYR23Ogm+PgP5kapoTOTrQhiWgEuEdoi1B5uz8s
- b4+WIpdlUa/vlnSvRhkJ7I84K95tdj8VOwz1Qhm6pZgobd3psjHGkbP5wBhUm4Er1JTFklazTIdGGXyElNZr0i0ppi31jU2jVpUzKQHhfzk=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1551704858; bh=+l48uhph2Gs0SOvuWZTi7kJL2zT4n+ZpX+6rDd1IInM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=r9Bq7XRXkyYj02QjW0P4jBtQvhp72Gpr1l+B1cAwJAL+kYtPKSnEloex5/Tq1PP+w
+         yU4H6ycq/cfjHpCzNRCoZp4KTYES8IObgYLdW5QacaSrZIB9YrV3EFMfqVxLc5Pzgw
+         cIIUcYnCB1wFRVL6xOORX/O6v8wrfz/prM7uCpaDC/cPndhDU3VXatl/zvMCXLqXrQ
+         XYavqRjWKX4wMPxUQJQRBdcOIbHegFKSsYHKG2AKkh2dX+h9U/Rqw2+yG8uaMQ1Hb1
+         zDe0dL2u6L35Fmgwzkyp7PBIXQuE7bzRFU0HcIUW0aE/cKNYM1mVUrC8Ff2/LEshos
+         75tZ7rd6YFc8A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 1:35 PM, Hugues Fruchet wrote:
-> Add support of read() call from userspace by implementing
-> uvc_v4l2_read() with vb2_read() helper.
-> 
-> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-> ---
->  drivers/media/usb/uvc/uvc_queue.c | 15 ++++++++++++++-
->  drivers/media/usb/uvc/uvc_v4l2.c  | 11 ++++++++---
->  drivers/media/usb/uvc/uvcvideo.h  |  2 ++
->  3 files changed, 24 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-> index 682698e..0c8a0a8 100644
-> --- a/drivers/media/usb/uvc/uvc_queue.c
-> +++ b/drivers/media/usb/uvc/uvc_queue.c
-> @@ -227,7 +227,7 @@ int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type,
->  	int ret;
->  
->  	queue->queue.type = type;
-> -	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR;
-> +	queue->queue.io_modes = VB2_MMAP | VB2_USERPTR | VB2_READ;
->  	queue->queue.drv_priv = queue;
->  	queue->queue.buf_struct_size = sizeof(struct uvc_buffer);
->  	queue->queue.mem_ops = &vb2_vmalloc_memops;
-> @@ -361,6 +361,19 @@ int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type)
->  	return ret;
->  }
->  
-> +ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
-> +		       char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	ssize_t ret;
-> +
-> +	mutex_lock(&queue->mutex);
-> +	ret = vb2_read(&queue->queue, buf, count, ppos,
-> +		       file->f_flags & O_NONBLOCK);
-> +	mutex_unlock(&queue->mutex);
 
-This is now used for both video capture and metadata capture. I don't think it
-makes sense to support this for metadata capture, so you should test for that.
+On 01/03/2019 17:28, Curtis Malainey wrote:
+> On Fri, Mar 1, 2019 at 4:07 AM Jon Hunter <jonathanh@nvidia.com> wrote:
+>>
+>> Hi Mark, Curtis,
+>>
+>> I am seeing a regression on -next where the soundcard on one of our
+>> Tegra boards fails to initialise following a probe deferral. The bisect
+>> points to the commit 78a24e10cd94420f1b4e2dc5923ae7109e2aaba1 ('ASoC:
+>> soc-core: clear platform pointers on error') and reverting this on top
+>> of -next fixes the problem.
+>>
+>> Looking at the bootlog from the failure I see ...
+>>
+>>  tegra-snd-wm8903 sound: ASoC: failed to init link WM8903
+>>
+>>  tegra-snd-wm8903 sound: snd_soc_register_card failed (-517)
+>>
+>>  tegra30-i2s 70080400.i2s: DMA channels sourced from device 70080000.ahub
+>>
+>>  tegra-snd-wm8903 sound: ASoC: Both platform name/of_node are set for WM8903
+>>
+>>  tegra-snd-wm8903 sound: ASoC: failed to init link WM8903
+>>
+>>  tegra-snd-wm8903 sound: snd_soc_register_card failed (-22)
+>>
+>>  tegra-snd-wm8903: probe of sound failed with error -22
+>>
+>>
+>> With the above change I see soc_cleanup_platform() is ever being called
+>> when the probe is deferred and hence leads to the failure. Note that the
+>> initial failure, "ASoC: failed to init link WM8903" occurs very early
+>> in snd_soc_register_card() when initialising the prelinks.
+>>
+>> The following fixes it, but I have not scrutinised the code to see if
+>> there are other exit points that we need to handle.
+>>
+> You are indeed correct. That should be there. I think I got confused
+> when I was doing my initial debugging on our local 4.19 kernel as the
+> cleanup code had changed when I was testing on -next and forgot to add
+> this to my upstream patch and it wasn't caught in my testing. Thanks
+> for catching this. I went back and looked and it appears that is the
+> only call to soc_init_dai_link that is outside soc_instantiate_card
+> and therefore not caught by the original patch's cleanup routine. Do
+> you want to submit a patch and I'll add my signoff?
 
-Regards,
+Thanks. I will send out a patch shortly.
 
-	Hans
+Cheers
+Jon
 
-> +
-> +	return ret;
-> +}
-> +
->  int uvc_queue_mmap(struct uvc_video_queue *queue, struct vm_area_struct *vma)
->  {
->  	return vb2_mmap(&queue->queue, vma);
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 84be596..3866832 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -594,7 +594,8 @@ static int uvc_ioctl_querycap(struct file *file, void *fh,
->  	strscpy(cap->driver, "uvcvideo", sizeof(cap->driver));
->  	strscpy(cap->card, vdev->name, sizeof(cap->card));
->  	usb_make_path(stream->dev->udev, cap->bus_info, sizeof(cap->bus_info));
-> -	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING
-> +	cap->capabilities = V4L2_CAP_DEVICE_CAPS | V4L2_CAP_STREAMING |
-> +			    V4L2_CAP_READWRITE
->  			  | chain->caps;
->  
->  	return 0;
-> @@ -1434,8 +1435,12 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
->  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
->  		    size_t count, loff_t *ppos)
->  {
-> -	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read: not implemented.\n");
-> -	return -EINVAL;
-> +	struct uvc_fh *handle = file->private_data;
-> +	struct uvc_streaming *stream = handle->stream;
-> +
-> +	uvc_trace(UVC_TRACE_CALLS, "uvc_v4l2_read\n");
-> +
-> +	return uvc_queue_read(&stream->queue, file, data, count, ppos);
->  }
->  
->  static int uvc_v4l2_mmap(struct file *file, struct vm_area_struct *vma)
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index c7c1baa..5d0515c 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -766,6 +766,8 @@ struct uvc_buffer *uvc_queue_next_buffer(struct uvc_video_queue *queue,
->  					 struct uvc_buffer *buf);
->  struct uvc_buffer *uvc_queue_get_current_buffer(struct uvc_video_queue *queue);
->  void uvc_queue_buffer_release(struct uvc_buffer *buf);
-> +ssize_t uvc_queue_read(struct uvc_video_queue *queue, struct file *file,
-> +		       char __user *buf, size_t count, loff_t *ppos);
->  int uvc_queue_mmap(struct uvc_video_queue *queue,
->  		   struct vm_area_struct *vma);
->  __poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
-> 
-
+-- 
+nvpublic
