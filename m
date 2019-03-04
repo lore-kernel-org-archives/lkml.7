@@ -2,52 +2,53 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99B3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81100C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA8820823
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500AF20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688863;
-	bh=INbGSEsbioEevu/d2lkCG9hAwSOWrUzpMNkCVHwkRLY=;
+	s=default; t=1551688870;
+	bh=WGv6lpKF77IxFC2BzhaTS9ayRooSu2qjkSg6VFI0lTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJ/1oGVRDllMThpfrMyQaDGT2pcmuysqsW3OKl7KXdyhjMB8yHpLvH8J0siDBUIk9
-	 D8fc82IB/xX+rO5MZnlZCYErb4y8H59VSm+bxV5FdbU64cuzE4jh/TRiHte83vWjeW
-	 C+RjPMTU8oNgKWjgNxB+G4fuyhpRwN+g1nIjgIIQ=
+	b=Fhxnbyxj+dsx7XCoXnKcUPfpdAo4cM1Uj63e/MNlHITarkgSoLkA3OreIMhxA+c+G
+	 S0g3Ts3zqypB9d3cV02H/iEnFslMazZhCyyePowHy8peFPmg4XgtUgqgwSz8UnjNLn
+	 Yir888eHKuVLJeA21qtnRxUryTa6yUc9vqpOYysY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfCDIlC (ORCPT
+        id S1728044AbfCDIcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:41:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35514 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:32:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfCDIcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:32:15 -0500
+        id S1727322AbfCDIcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:32:06 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1300420836;
-        Mon,  4 Mar 2019 08:32:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7057D21019;
+        Mon,  4 Mar 2019 08:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688334;
-        bh=INbGSEsbioEevu/d2lkCG9hAwSOWrUzpMNkCVHwkRLY=;
+        s=default; t=1551688324;
+        bh=WGv6lpKF77IxFC2BzhaTS9ayRooSu2qjkSg6VFI0lTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VsD3wKgMfsywLgZnpc2gWl3DQ9MLd3eb5Wgt3knrVOtuTrtoHv+iCKg8ggf2U3ajY
-         g42z4UBikFdlodTrQl9pSmjjTnPHdF2YVKpHzWA/pJb1/gd2akz5jErHO2pFe/MIyC
-         VrQWFw6T5wGrl+IlXgxnCxyV/PXUXSkvmoKOV9DY=
+        b=fogiNuD4SKVhUJzpoHScFsxjzspEM71RhLaUYxvPWORaPqadHvIczjZ7LQzMnb+FL
+         p4mdbWW9qJewhGigumy6h7xyipomEHvsqgcmOo/GBG0xpT5yA1vAs+gHKk15e09zo9
+         djHz31IFZsiOCB/TTG+GMaVUOspICPKkyEY+5xiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 05/88] ALSA: compress: prevent potential divide by zero bugs
-Date:   Mon,  4 Mar 2019 09:21:48 +0100
-Message-Id: <20190304081630.801164551@linuxfoundation.org>
+        stable@vger.kernel.org, dann frazier <dann.frazier@canonical.com>,
+        John Garry <john.garry@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.20 02/88] scsi: libsas: Fix rphy phy_identifier for PHYs with end devices attached
+Date:   Mon,  4 Mar 2019 09:21:45 +0100
+Message-Id: <20190304081630.708297864@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,45 +67,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 678e2b44c8e3fec3afc7202f1996a4500a50be93 ]
+From: John Garry <john.garry@huawei.com>
 
-The problem is seen in the q6asm_dai_compr_set_params() function:
+commit ffeafdd2bf0b280d67ec1a47ea6287910d271f3f upstream.
 
-	ret = q6asm_map_memory_regions(dir, prtd->audio_client, prtd->phys,
-				       (prtd->pcm_size / prtd->periods),
-                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-				       prtd->periods);
+The sysfs phy_identifier attribute for a sas_end_device comes from the rphy
+phy_identifier value.
 
-In this code prtd->pcm_size is the buffer_size and prtd->periods comes
-from params->buffer.fragments.  If we allow the number of fragments to
-be zero then it results in a divide by zero bug.  One possible fix would
-be to use prtd->pcm_count directly instead of using the division to
-re-calculate it.  But I decided that it doesn't really make sense to
-allow zero fragments.
+Currently this is not being set for rphys with an end device attached, so
+we see incorrect symlinks from systemd disk/by-path:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+root@localhost:~# ls -l /dev/disk/by-path/
+total 0
+lrwxrwxrwx 1 root root  9 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0 -> ../../sdb
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part3 -> ../../sdc3
+
+Indeed, each sas_end_device phy_identifier value is 0:
+
+root@localhost:/# more sys/class/sas_device/end_device-0\:0\:2/phy_identifier
+0
+root@localhost:/# more sys/class/sas_device/end_device-0\:0\:10/phy_identifier
+0
+
+This patch fixes the discovery code to set the phy_identifier.  With this,
+we now get proper symlinks:
+
+root@localhost:~# ls -l /dev/disk/by-path/
+total 0
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy10-lun-0 -> ../../sdg
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy11-lun-0 -> ../../sdh
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0 -> ../../sda
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0-part1 -> ../../sda1
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0 -> ../../sdb
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0 -> ../../sdc
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part1 -> ../../sdc1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part2 -> ../../sdc2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part3 -> ../../sdc3
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy5-lun-0 -> ../../sdd
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0 -> ../../sde
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part1 -> ../../sde1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part2 -> ../../sde2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part3 -> ../../sde3
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0 -> ../../sdf
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part1 -> ../../sdf1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part2 -> ../../sdf2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part3 -> ../../sdf3
+
+Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
+Reported-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Jason Yan <yanaijie@huawei.com>
+Tested-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/core/compress_offload.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/libsas/sas_expander.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 26b5e245b0747..8b78ddffa509a 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -529,7 +529,8 @@ static int snd_compress_check_input(struct snd_compr_params *params)
- {
- 	/* first let's check the buffer parameter's */
- 	if (params->buffer.fragment_size == 0 ||
--	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size)
-+	    params->buffer.fragments > INT_MAX / params->buffer.fragment_size ||
-+	    params->buffer.fragments == 0)
- 		return -EINVAL;
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -828,6 +828,7 @@ static struct domain_device *sas_ex_disc
+ 		rphy = sas_end_device_alloc(phy->port);
+ 		if (!rphy)
+ 			goto out_free;
++		rphy->identify.phy_identifier = phy_id;
  
- 	/* now codec parameters */
--- 
-2.19.1
-
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
+@@ -855,6 +856,7 @@ static struct domain_device *sas_ex_disc
+ 
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
++		rphy->identify.phy_identifier = phy_id;
+ 		sas_fill_in_rphy(child, rphy);
+ 
+ 		list_add_tail(&child->disco_list_node, &parent->port->disco_list);
 
 
