@@ -6,93 +6,93 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260E3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874A8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED782070B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE3C20835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 19:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbfCDTiv (ORCPT
+        id S1726252AbfCDTjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 14:38:51 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:51421 "EHLO
+        Mon, 4 Mar 2019 14:39:36 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:60275 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfCDTiv (ORCPT
+        with ESMTP id S1726056AbfCDTjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 14:38:51 -0500
+        Mon, 4 Mar 2019 14:39:36 -0500
 Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MV6Bs-1gZpqD1spy-00SBO9; Mon, 04 Mar 2019 20:38:39 +0100
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MmlfS-1hQpyw2Gta-00jpZd; Mon, 04 Mar 2019 20:39:20 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Joseph Lo <josephl@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: add regulator_get_linear_step() stub helper
-Date:   Mon,  4 Mar 2019 20:38:29 +0100
-Message-Id: <20190304193836.687473-1-arnd@arndb.de>
+To:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] scsi: lpfc: fix unused variable warning
+Date:   Mon,  4 Mar 2019 20:39:08 +0100
+Message-Id: <20190304193917.702601-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:QF9xFjS61cs6qTXNG1v/VSVuwsR/exTDfz0RJyZ49wR4KnR39l0
- pVSKthku/csV7vWfOhXHgpR25lHjfQjtfovBkOK5a38IClzhBZ6tk6+HyITun3hqGSVDDCI
- d060X0OQj/PaUItaCKA4dUT68gv1+V3G+AP4s+8VvVl+uf8UKNm6YBvp7Bcczj2aDXm9oL8
- byKiPTkrHBNxhYkoPyJ/Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:n70Uf+NhApY=:l3EVPdQ7HcqN9r75rlyzO+
- i0BC0BjxqcFXDtXM7zQc2Do7KWgAHjVQy6yQHPrYfq82vxm8emmbmtmc/jsnqTZQYw8WKcc2v
- o6yQy8+8M2wp3GvSSfGjTCAu4pqdedJbrHwGcl4vUh2aIXzf/vFfKcPytIQi5/qxWnHcgUGU4
- Cq2WTyemPC7uBFYvo/tich960wTEAPJ5rjigZtU1SPOoCrN24zEg2soOW33kblt2VdI+5VU/M
- HOkOBdPTURj+Bb69S6Eb8sp1gyyUxkqgQ7EJJPezt8k2VVxYazKiIQAYRMAoo5WL+ADiuoJG5
- 054B7emkb9ZHyS84qWj9Q+tfSlYdiy0VoEjw7WyQg564plAtUdxxtRVzL3+yqsSlZjaLZMWRo
- vohlSOe3dB8NLhMFjy41ohuEZR7zPeJXHxW8gCsBHEQHcMJ4MtyjEH5AOAX6i2Daplx0gxD0O
- jaVkR6eg1V1xwIqGAaNRVpzjA7Jkz63Ko2W2XVx5G3XSBWVQvOGpTJuyo/sxDDwA2iHQSRgxF
- xnGw43GCAsRACmO+CoeqE7SM5XU06x3D2HqTYRIZP2QyngUbijH49xwxv1bgvrCH+L2epGGgu
- orHpCxzupG6nY+EirjwEaMgLlwSart9owTsjXdpZV2ipojsAEGPiudrYi8NBvMODinuBS2j82
- Q9VX7bcqG/0++HOi4dn9LS3VXlc6WlrCnVoY/2iq6czCZ+J4icaXo3COUHZH0HkhV0UQnAlRG
- EdtN6vg5hERKUfVFI/zw8RAZY1I8RPNisu8WjQ==
+X-Provags-ID: V03:K1:3lcS5bnwBIBaf3xIyea8qigY2ujMKZ20fLudKb61gEv7aOxvrZm
+ C6m6nFc82uZDEfN1Xdk1lKh8ZMwWkW9vB9GUv7cs2z1qQnRGWpZTN286tagmA+TSFXhMUo7
+ XkWE/uznmgaY6av5XYrlrzNyRTP13x++yyJg7iQtGwoB53FhyAM3QBsYRIPWUX5mQu/ApJx
+ fmpty0vrZiI481WgHWrbQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/B0WMM4Rr1k=:TqhyD+ZpXGpSJ9dzO/e9h9
+ srhrIjMrVwptC8hKdSsyZVAN6zLPgMLTA7BhslS293HmfFu31Jirq0qSbHyxL5+7sSqPHV5jG
+ Za/wJmxg+7F/tr07ABVitwTpy4xKLTIXzqYHMoYZEEBxANm2bGuO7U3U+auWvqNBmq0SIUXtr
+ u2lLRtv5LX8aupMcV5ZRIL6jzT3vA+zTdaovU+SKTsuteF5+ZzaUqjfJ/IJePau9w/xySD7cX
+ kG44vzwG7ZdgeaR/Og58RTKuKn1ILVVgPkReot9XgS63XSZGUuI4ovs76c2/7ne5TKy3DpJEu
+ nxZNTCPwh8lRB8f0AbE8oydhvNAzUncDiSKEviawfLe+wSL1UyK/P5G2RlUvleEDsTXw2cC+G
+ OGErLrh2nGfgJNflhRZzNehSPRiCr+SWNkUfKhzcxGsHM2fWeXISMJv6K0gppok3yKRtu4L6p
+ wZtAvv/KKxZjxS1nkMXVB5kS+ecb+u2P+82kxNUc68C9AelkJy6CgW8greYezYGxQiP5bj1Op
+ 6sbjJQa0ORFxxyM0rFrD94TwvbX5U5VxnxZeHSg/wvJXX55Rpsid/2YQU7IxAF4v5mB2Q2Ee6
+ IYC+ZGvwUiARODxYdaAbbhyX+adejjXzzGHiM9q/kOhjAJ+WvPuLqLW0xCoKKI6GktyVdMtyQ
+ kki47v8a45cPJUuraIR/rycClQXLfxJKPEF3/RzAn0JySFt5L+udKmUsMLdolVy7szS7gCV9q
+ RSVBCgMXytBtoHzaMo/x9fri3mLtXOHJ5D5ITA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The regulator header has empty inline functions for most interfaces,
-but not regulator_get_linear_step(), which has just grown a user
-that does not depend on regulators otherwise:
+The newly introduced 'cpu' variable is only used inside of an optional
+block, so we get a warning without CONFIG_SCSI_LPFC_DEBUG_FS:
 
-drivers/clk/tegra/clk-tegra124-dfll-fcpu.c: In function 'get_alignment_from_regulator':
-drivers/clk/tegra/clk-tegra124-dfll-fcpu.c:555:19: error: implicit declaration of function 'regulator_get_linear_step'; did you mean 'regulator_get_drvdata'? [-Werror=implicit-function-declaration]
-  align->step_uv = regulator_get_linear_step(reg);
-                   ^~~~~~~~~~~~~~~~~~~~~~~~~
-                   regulator_get_drvdata
-cc1: all warnings being treated as errors
-scripts/Makefile.build:278: recipe for target 'drivers/clk/tegra/clk-tegra124-dfll-fcpu.o' failed
+drivers/scsi/lpfc/lpfc_nvme.c: In function 'lpfc_nvme_io_cmd_wqe_cmpl':
+drivers/scsi/lpfc/lpfc_nvme.c:968:30: error: unused variable 'cpu' [-Werror=unused-variable]
+  uint32_t code, status, idx, cpu;
 
-Add the missing stub along the others.
+Move the declaration into the same block to avoid the warning.
 
-Fixes: b3cf8d069505 ("clk: tegra: dfll: CVB calculation alignment with the regulator")
+Fixes: 63df6d637e33 ("scsi: lpfc: Adapt cpucheck debugfs logic to Hardware Queues")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/linux/regulator/consumer.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/scsi/lpfc/lpfc_nvme.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-index f3f76051e8b0..aaf3cee70439 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -478,6 +478,11 @@ static inline int regulator_is_supported_voltage(struct regulator *regulator,
- 	return 0;
- }
+diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
+index 72cb8ad9027b..d16ca413110d 100644
+--- a/drivers/scsi/lpfc/lpfc_nvme.c
++++ b/drivers/scsi/lpfc/lpfc_nvme.c
+@@ -965,7 +965,7 @@ lpfc_nvme_io_cmd_wqe_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pwqeIn,
+ 	struct lpfc_nodelist *ndlp;
+ 	struct lpfc_nvme_fcpreq_priv *freqpriv;
+ 	struct lpfc_nvme_lport *lport;
+-	uint32_t code, status, idx, cpu;
++	uint32_t code, status, idx;
+ 	uint16_t cid, sqhd, data;
+ 	uint32_t *ptr;
  
-+static inline unsigned int regulator_get_linear_step(struct regulator *regulator)
-+{
-+	return 0;
-+}
-+
- static inline int regulator_set_current_limit(struct regulator *regulator,
- 					     int min_uA, int max_uA)
- {
+@@ -1139,6 +1139,7 @@ lpfc_nvme_io_cmd_wqe_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pwqeIn,
+ 		lpfc_nvme_ktime(phba, lpfc_ncmd);
+ 	}
+ 	if (phba->cpucheck_on & LPFC_CHECK_NVME_IO) {
++		uint32_t cpu;
+ 		idx = lpfc_ncmd->cur_iocbq.hba_wqidx;
+ 		cpu = smp_processor_id();
+ 		if (cpu < LPFC_CHECK_CPU_CNT) {
 -- 
 2.20.0
 
