@@ -6,108 +6,89 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D0FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F9AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E354206B6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28B9A206B6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:24:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfCDUYL (ORCPT
+        id S1726094AbfCDUYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:24:11 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:58823 "EHLO
+        Mon, 4 Mar 2019 15:24:33 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:34529 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfCDUYL (ORCPT
+        with ESMTP id S1726095AbfCDUYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:24:11 -0500
+        Mon, 4 Mar 2019 15:24:33 -0500
 Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Ml76o-1hNtbX3KMW-00lZFu; Mon, 04 Mar 2019 21:24:07 +0100
+ 1MHFwM-1gnkyI0qI4-00DIlm; Mon, 04 Mar 2019 21:24:26 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
+        Roger Quadros <rogerq@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] phy: allwinner: allow compile testing
-Date:   Mon,  4 Mar 2019 21:23:56 +0100
-Message-Id: <20190304202406.1716350-1-arnd@arndb.de>
+Subject: [PATCH 2/3] phy: ti: usb2: fix OMAP_CONTROL_PHY dependency
+Date:   Mon,  4 Mar 2019 21:23:57 +0100
+Message-Id: <20190304202406.1716350-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190304202406.1716350-1-arnd@arndb.de>
+References: <20190304202406.1716350-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:otm8/2cZ6fCmXwrkax243T6EKj6TDGcTFhnKQ3Js+OCwc8sROTN
- PUZYs1b0SXIGNaFqfiF3fDD/+eXKdYyZsQ4H3DADLSEDUzYGTkfTs0uAzkTrZWVxQ8UKr6/
- 7duNzr2JJM2UIHTMvI18nqGVICrjcc8oDEwmsI8skrl6t6//RwjXj3q+jykEbbTKstWXYkV
- BLHbfybP5KfUVOqk7SxxQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ixsoeeLvbuA=:TsYI6q74dui33r9hVIm9Jj
- 1BJNxRDcF9j+nFLwT10o/fT2O6JsY3I6Gx6OwTqDkzVbpZNqZBhXWOKvuYr6d/S/LJi8xqr4g
- 6rjV1vc3KYjDF3iJWqLp7PppRgSHNoiNFj52MVdEL9VqkyflYDvJ831bSuhADcziuNfmjOrXQ
- 5aBRdmXJIfNa9/5G2vXg8PjwiRjF1rUdPwjNu94E/dIFAK/rvcJI8wnI2YWaWsFaVubIuLnDK
- j5qGIR9OHI8lJaWBeW/K0Lyd1sMpsZDr0XVh8yFEEyC8Veo4HZciG0ooBTlHjuSw/v7wzRJCG
- TnMFNVVNoZeW1dFqkCdYyzU5DqR010sCfhBcwZkccrt0WC82/tnuLsinpenHI0Py05f52V+fm
- N0kR8KndKvuzCFbC01g4zGp0SjwWLgnB5SvxRZd+vCRvb8EOKt03XkZIsr4cUWlXsoVWCdFI8
- Ay2z8pyOa6nmJ3yuzfKOfoqIFuf2A8SZHJRvOVVVH+OjvuttHnRd/KT2G3BI/UapFSMHPTudw
- v75bK3luCP3IOz8728Iz/a2Wuwei5d/Wu86QulVCW65123+3TiutfHWN8NVlweywXIYBtggqz
- PaXgYCKM1dT1hHIKh9vymB3m5Q8FVe5Tk7Ml9Yve4E7z3xtOKA+GgZ99sOIIwb2z0y3B2z05K
- XYAEY3eTA3Tq+rbGLsS34zWGsTZAMPpkUKIbpKmczAqFdouR4zheXA4ehvoN03ZaqUCVnE1xF
- 8Tn65PT6kVw2dnpZEk5ka6920Kr0rDViIEZOmQ==
+X-Provags-ID: V03:K1:JQmSenYXKz0L0BH+G3P7TY1KisuMQn0QAx1QkrKe2qDgQGQMrTQ
+ ESSgdIMGeWW9yzezgH/Qx9E0QJBCyIppPHjLqXU1kAQEDVDDq1X7+3SklTrCn5133oVA7kd
+ HPcAvx7ub5KYYTcZYkPmJ383/IC69nkGTQKXLgdi+yHmtCqwufG5D8KJGMCk1TfYQEmvMc6
+ gS3hOTsbvjl1+PNeJQdYw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FRjI4uFPDe4=:N9u4e4zQicx39gEeMMAziA
+ XkdZIZ4KZEfeYXi1KcNK4e/QFcFkGfsAf8D1TP2Gjk1f9YLult+/0ryKjoj0cwblahtP6ojXT
+ o9K9YCxnNxp9E9/UAqEbFYeA08YKaqgBoU8wvyxyWkLWK3F55D0/YQa66hcLNkxqGb3GjpJ6Y
+ Q96QRd45lQsjjpFush718wbCv8a4KVwX0AhN2HN7n4cNvDKDfOTbTbIAaB/l1JO74ydoc6fdg
+ qh81ggJokvmxqFCJlUjylWfRu+8YiPYKqFS0JyEm1rr6csb/qiaxnz5iqB9ZDaZL683vcmMAc
+ vmHLrXA0WQg29l9Pr8Hu+96eQwINKgrd9qLHRRrUZVL6ukzIqz8wJ/PwZJFs/reA/BDGdPZ5z
+ /bGcELv8VdeqHabZu/uQw7k7X5BzkyQBOm/JK8WHiuRis82ORsYu0ue+7r3/PALHU1mABSeOH
+ lNlAFsn5KJ2ayNGZd7hvwRE1QVwiUta41exSOvpu2mZ//PsyrI99mp11Fr0OdaieFF0UeMvSk
+ Ce5UzGz12pD+/siGaZTaS7b5UyU6NRmzcDYYvKZhIIshVu+qrpXUv+y6sUFiCBdYC2uM4Y8YL
+ CfbMpiOQHfP9fJ0HsjGo8QhC6xkC1FVsDWDlsbjUsm5r7AqdM/vLrEngD712RQ6hjTCo1yJE/
+ 6JOpPIvINapgVpnd6LR0gROo5pIHQllOCzqdYrAOb0UUOFyYVZLFury55P1jOvxK+JstBia4E
+ Cg4P8gaOjH8yEDl2CJ+kZfgPEnT6NPvBEygAuA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some allwinner specific drivers can be built for testing purposes
-on non-sunxi configurations, which then results in a harmless
-warning:
+With randconfig build testing on arm64, we can run into a configuration
+that has CONFIG_OMAP_CONTROL_PHY=m and CONFIG_OMAP_USB2=y, which in turn
+causes a link failure:
 
-WARNING: unmet direct dependencies detected for PHY_SUN6I_MIPI_DPHY
-  Depends on [n]: ARCH_SUNXI [=n] && HAS_IOMEM [=y] && OF [=y] && RESET_CONTROLLER [=y]
-  Selected by [y]:
-  - DRM_SUN6I_DSI [=y] && HAS_IOMEM [=y] && DRM_SUN4I [=y]
+drivers/phy/ti/phy-omap-usb2.o: In function `omap_usb_phy_power':
+phy-omap-usb2.c:(.text+0x17c): undefined reference to `omap_control_phy_power'
 
-Allow compile-test here as well to avoid the warning, and improve
-overall build coverage.
+I could not come up with a good way to correctly describe the relation
+of the two symbols, but if we just select CONFIG_OMAP_CONTROL_PHY
+during compile testing, we can no longer run into the broken configuration.
 
-Fixes: 5d134abf9530 ("phy: Move Allwinner A31 D-PHY driver to drivers/phy/")
+Fixes: 6777cee3a872 ("phy: ti: usb2: Add support for AM654 USB2 PHY")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/phy/allwinner/Kconfig | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/phy/ti/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/allwinner/Kconfig b/drivers/phy/allwinner/Kconfig
-index fb1204bcc454..53772d35b36e 100644
---- a/drivers/phy/allwinner/Kconfig
-+++ b/drivers/phy/allwinner/Kconfig
-@@ -3,7 +3,8 @@
- #
- config PHY_SUN4I_USB
- 	tristate "Allwinner sunxi SoC USB PHY driver"
--	depends on ARCH_SUNXI && HAS_IOMEM && OF
-+	depends on ARCH_SUNXI || COMPILE_TEST
-+	depends on HAS_IOMEM
- 	depends on RESET_CONTROLLER
- 	depends on EXTCON
- 	depends on POWER_SUPPLY
-@@ -19,7 +20,8 @@ config PHY_SUN4I_USB
- 
- config PHY_SUN6I_MIPI_DPHY
- 	tristate "Allwinner A31 MIPI D-PHY Support"
--	depends on ARCH_SUNXI && HAS_IOMEM && OF
-+	depends on ARCH_SUNXI || COMPILE_TEST
-+	depends on HAS_IOMEM
- 	depends on RESET_CONTROLLER
- 	select GENERIC_PHY
- 	select GENERIC_PHY_MIPI_DPHY
-@@ -31,7 +33,8 @@ config PHY_SUN6I_MIPI_DPHY
- 
- config PHY_SUN9I_USB
- 	tristate "Allwinner sun9i SoC USB PHY driver"
--	depends on ARCH_SUNXI && HAS_IOMEM && OF
-+	depends on ARCH_SUNXI || COMPILE_TEST
-+	depends on HAS_IOMEM
- 	depends on RESET_CONTROLLER
+diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
+index 103efc456a12..022ac16f626c 100644
+--- a/drivers/phy/ti/Kconfig
++++ b/drivers/phy/ti/Kconfig
+@@ -37,7 +37,7 @@ config OMAP_USB2
  	depends on USB_SUPPORT
- 	select USB_COMMON
+ 	select GENERIC_PHY
+ 	select USB_PHY
+-	select OMAP_CONTROL_PHY if ARCH_OMAP2PLUS
++	select OMAP_CONTROL_PHY if ARCH_OMAP2PLUS || COMPILE_TEST
+ 	help
+ 	  Enable this to support the transceiver that is part of SOC. This
+ 	  driver takes care of all the PHY functionality apart from comparator.
 -- 
 2.20.0
 
