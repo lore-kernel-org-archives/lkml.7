@@ -2,91 +2,107 @@ Return-Path: <SRS0=91bA=RH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC52C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486B9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA67208E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1294C20823
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 20:29:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sLoCgsAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfCDU3f (ORCPT
+        id S1726655AbfCDU3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 15:29:35 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:33047 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726054AbfCDU3e (ORCPT
+        Mon, 4 Mar 2019 15:29:38 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40870 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726615AbfCDU3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 15:29:34 -0500
-Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MfL5v-1hTeGI1x75-00gsto; Mon, 04 Mar 2019 21:29:21 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Yong Zhi <yong.zhi@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Tian Shu Qiu <tian.shu.qiu@intel.com>,
-        Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: staging/intel-ipu3: mark PM function as __maybe_unused
-Date:   Mon,  4 Mar 2019 21:29:10 +0100
-Message-Id: <20190304202920.1845797-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 4 Mar 2019 15:29:36 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g20so429291wmh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 12:29:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ml2tdFA+5PlAJQBN6XbzQLx/7woCXwX7t6b6wUqam8o=;
+        b=sLoCgsARwe8UHmk7A0Yg69rz227Drq9/UsbCHKeeJbwlSibGInLFET2GkHejSd6AVj
+         LdW6RWKkUFODnjWMyk5aOS1fjdF274+/7H+FFDU/v91WispFNJO3Gg74i9oArAz0IwB+
+         2QPUqlRAzysjyO1Zr3DytCMUGiLkemShez9JESNoyd18j2cxfISi1ZONdB7ltcsUi0Yp
+         HVOtKNXTgKcdWwibCvdOPqcMFPkLpiDdkT5XUvKRwUMZEgaJQNwPZtcbDa9f7PbS5CUS
+         Jj5BDmTYUw4VoMGcSwCJsmG3xoevKY/b14Mz6A6DI2XZFfQjrIk1IyjnBEmVvC1APPBs
+         Mk/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ml2tdFA+5PlAJQBN6XbzQLx/7woCXwX7t6b6wUqam8o=;
+        b=M7ifLsgV1HDg9NYu9fMzdQIasJQox0WgguYdDy6zb8ECcMlWqE7QI0w6oBTe+DiBNA
+         w/htgIzQjPvCp9VBUkr7LwlPKX6XpAqcOqc0Ph8RRPIkIFAY/MLilyiOnfdDSvvOI3qn
+         NOfPcoLxyhLLALupHcr9R6eVpE2Ox7zfDEA3HlgUZ0MsOF5u3/UB9DtEfI7ym8IPz6ft
+         wJ7q5K8OA0XnOwbq8YgfbRT6Vgpqodf54o3Tq/rPBbYj44AsP69mpCJnAFcOBRXMckMp
+         lsIv2xwu1eq0FTrWWlDxEb7XC89hK5pYW4otH4XiyiQp+rUCNtiEYh6xKMBBSOqCjNLi
+         4zZA==
+X-Gm-Message-State: APjAAAVWd0PJ+PgomNJ7naMQOkFCgaXLkqvt1n32w4u99p10+FtZttAQ
+        Oz4D2Tu2ClrzCSGCepi9nNWry+5OkGeBzcy4PYGO
+X-Google-Smtp-Source: APXvYqxgO/jYYpeuzkpREkIfXLetZXue0MaaWz0cvXBcEHZV7bOZO+trWaAWV4WFnhfzZbaKjyhig/yX9n8odFvgcwo=
+X-Received: by 2002:a1c:6409:: with SMTP id y9mr583649wmb.68.1551731374113;
+ Mon, 04 Mar 2019 12:29:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Oduro/Z8h4f5zL2ki3+FwzaOFf6y8ct9rHJB4s1ikIYed/yz0Sx
- KyNx1kehdv+RMNHC2Chnl7puMV5q0Z325d9kP+itNV5O7uUYh/px+s6UBM1YpQL83cTNAbN
- MbcOM+uVYMwkgKveOfkeJ/CwBUY/rRM4BeXqVR3cEQGgCD6ZIW6UNcINFcUnVMnzme/LU0E
- WO3VPEO9iT4cv7ksFDNIg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:it6ue09fJrc=:xsYpVCAeJEPrGT9Ih0EeyT
- KGREskLgibWH0MrImXPTPEb8ayfoMN/Ekj5+mk54XxFXJoZUeseub/g3bMNjazi3Q407JqrSM
- RHfSlRCZby9Xni073jL4vWCQvMbbb51kso6Tp5VUfv3sjUlcc6UDQ2n6avNmzAvYA75eNoqnB
- Gq9hic5EpjPk7yMwH5GBYAhfvXsqWMcHCVQAT4xBTIZYnOULgyfThX66ETOyN39ZBnuFuTsdt
- h65vR+DD+DEXjMOy7P3XrGp7CVoQGtOWUoa9ezym+xZzebjstHkPpe7xxyVjO9WBckunq6w6B
- AQY3dzFRc8mN0KLhO+XAeMxvzIVyLluGXyODgmFqxWFLgPDMpvQljtD1caERTKkWlwE6vREMJ
- 5eZAfxeWeInEfbIfcS1Od/U00BZTTBHsUqUe8Z4R+KpHFMcn3tlKjpQYTXbzCbaKeUgiLIro7
- +SXTTHtzYCHNblZhwUtt9Yuri23kSMiBoB5bGuutlKeES/gfhj0yKIb8wfEwpsPUv2Q6tmGmk
- ZZ6d9hgkqD5BNq/QZwbuOOQtW2AQTcRbeM6xsthkLm4U3BMB3XEzRAqYs5ZA2hZRmKBG41D/s
- UQwN1K0C/qplcRVeRrFZ7x7vR2oFdNaMdq3T2MwkENOLANwfL5tS0vtFX+pjHH9sILz/vPYT5
- bUInKgmC1dA2r5mTIWZYM68JYPLoR12Zql6v40NQ0+mAsW5ppiOz3r6yWudQg5s4mNhxC89bc
- If3oaMpdEzL75UNQO76T1L6W63qP5OJHWvaDfA==
+References: <20190214170028.27862-1-logang@deltatee.com> <20190304002351.GA26569@google.com>
+ <3e45b4ab-e848-cf3b-624f-121ad58b0250@deltatee.com> <CAErSpo4U6Kys5OzPwfyFdbnJWfTZ-y0P830okf11BwfNv9Y82A@mail.gmail.com>
+ <ac64ba0e-e86a-f7ae-775b-753f933f178f@deltatee.com>
+In-Reply-To: <ac64ba0e-e86a-f7ae-775b-753f933f178f@deltatee.com>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Mon, 4 Mar 2019 14:29:22 -0600
+Message-ID: <CAErSpo5icDM2VgYoLdEp8C-CV5XEMThABMA8RBq64grhRSkRWA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: Prevent 64-bit resources from being counted in
+ 32-bit bridge region
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The imgu_rpm_dummy_cb() looks like an API misuse that is explained
-in the comment above it. Aside from that, it also causes a warning
-when power management support is disabled:
+On Mon, Mar 4, 2019 at 2:21 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+> On 2019-03-04 1:11 p.m., Bjorn Helgaas wrote:
+> > On Mon, Mar 4, 2019 at 1:21 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+> >> On 2019-03-03 5:23 p.m., Bjorn Helgaas wrote:
+> >>> Sorry for the delay.  This code gives a headache.  I still remember
+> >>> my headache from the last time we touched it.  Help me understand
+> >>> what's going on here.
+> >>
+> >> Yes, this code gave me a headache debugging it too. And it's not the
+> >> first time I've tried to figure out what's going on with it because it
+> >> often just prints noisy messages that look like errors. I think I
+> >> understand it better now but it's something that's a bit fleeting and
+> >> easy to forget the details of. There may also be other solutions to this
+> >> problem.
+> >
+> > Thanks for the explanation below.  I haven't worked through it yet, but I will.
+> >
+> > Obviously it would be far better than an explanation if we could
+> > simplify the code (and the noisy messages) such that it didn't
+> > *require* so much explanation.
+>
+> I agree, but reworking this code scares me and I suspect it was designed
+> this way for a reason. I'm guessing there are a lot of corner cases and
+> unusual bios issues this stuff works around. We might end up fixing a
+> some cases and breaking a bunch of other cases.
 
-drivers/staging/media/ipu3/ipu3.c:794:12: error: 'imgu_rpm_dummy_cb' defined but not used [-Werror=unused-function]
+Scares me too, which is one reason I haven't done anything about it.
 
-The warning is at least easy to fix by marking the function as
-__maybe_unused.
+I didn't mean to suggest that you should rework it for *this* issue.
+I just keep hoping that we can chip away at teensy pieces and in ten
+or twenty years maybe make some headway.
 
-Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci device driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/staging/media/ipu3/ipu3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/media/ipu3/ipu3.c b/drivers/staging/media/ipu3/ipu3.c
-index d575ac78c8f0..d00d26264c37 100644
---- a/drivers/staging/media/ipu3/ipu3.c
-+++ b/drivers/staging/media/ipu3/ipu3.c
-@@ -791,7 +791,7 @@ static int __maybe_unused imgu_resume(struct device *dev)
-  * PCI rpm framework checks the existence of driver rpm callbacks.
-  * Place a dummy callback here to avoid rpm going into error state.
-  */
--static int imgu_rpm_dummy_cb(struct device *dev)
-+static __maybe_unused int imgu_rpm_dummy_cb(struct device *dev)
- {
- 	return 0;
- }
--- 
-2.20.0
-
+Bjorn
