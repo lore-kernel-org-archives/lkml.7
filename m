@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F996C43381
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C93C43381
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664D12146E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D108B208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Mar 2019 08:32:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551688355;
-	bh=dd5Z2ZNq/DDq+GKImDvcaYjblrVbycI7iSuRzQ7S8zA=;
+	s=default; t=1551688358;
+	bh=PJNmOPDUAMmM5LRmoPcZqCyWpjiJpi71ZXFI7FOXZrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dmep9Vqy8tDUuhh9ufD8X9C+IsLIlU0UGbxac5KDxqKPpsy3AyB1elYERlLSx4CvK
-	 bnRQvua5AF1LO4F6aLkvgKRH8eItMvoESZE+XQoD9rZYxQvBFAHXz7M7lUnhSu1aFb
-	 /ExEjDlLxrvzgjv2w2xosO2SOmb4HG1nJsIitfkQ=
+	b=uG9dj9xpsYzwySjOITfp2qBuLSJK1HyVs6nxJFngRaNSpPAmUrReIET7Uh45VQTtk
+	 YurO0F8Xty0L0GUweZecUyDum96LROU9ngwtHW2nXyBXeLB7LJ0uF4m5IWzC5n6f/V
+	 vM4bpiF5UCoWUmPOfhl2ZMYpewtM/zhJyVZRja+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfCDIcd (ORCPT
+        id S1728099AbfCDIch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 03:32:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35884 "EHLO mail.kernel.org"
+        Mon, 4 Mar 2019 03:32:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727311AbfCDIc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 03:32:27 -0500
+        id S1728086AbfCDIce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 03:32:34 -0500
 Received: from localhost (5356596B.cm-6-7b.dynamic.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7C5620836;
-        Mon,  4 Mar 2019 08:32:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 152AD20836;
+        Mon,  4 Mar 2019 08:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551688347;
-        bh=dd5Z2ZNq/DDq+GKImDvcaYjblrVbycI7iSuRzQ7S8zA=;
+        s=default; t=1551688353;
+        bh=PJNmOPDUAMmM5LRmoPcZqCyWpjiJpi71ZXFI7FOXZrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oGefwLiTXBA8dVBx1yv1ePME2EYU9kkZZvovQqiqM+QbELAZcbMIcguD7OqWZsGQB
-         8fX1gZBYXjX4utPDs/+aXsvpB2mCzWq3GMtdZsZ80GexpRZmcg94iT3H1mXib70UeQ
-         ldRr1AgQ+wpo9leh5I3SkDg+wi6USub+EDk0MqmU=
+        b=n3MCUeq0i2YgzY+f3jYVpCRq+CguHu9lpIXNP4ggB1iAaGwfrUCbZFgYa4puyD8ad
+         cbKt0U9jKObj0YasJ84oXqKJHfmvmRzUQatDZAgLTM58LcWkqfFTdrEo83damVNW4i
+         hHGjoz93LdfGM78IoT1w16uCbLdTOCIVzwB0bw8I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Zhang Rui <rui.zhang@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 09/88] clk: sysfs: fix invalid JSON in clk_dump
-Date:   Mon,  4 Mar 2019 09:21:52 +0100
-Message-Id: <20190304081630.936249978@linuxfoundation.org>
+Subject: [PATCH 4.20 11/88] thermal: int340x_thermal: Fix a NULL vs IS_ERR() check
+Date:   Mon,  4 Mar 2019 09:21:54 +0100
+Message-Id: <20190304081631.011685616@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
 References: <20190304081630.610632175@linuxfoundation.org>
@@ -66,31 +66,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c6e909972ef87aa2a479269f46b84126f99ec6db ]
+[ Upstream commit 3fe931b31a4078395c1967f0495dcc9e5ec6b5e3 ]
 
-Add a missing comma so that the output is valid JSON format again.
+The intel_soc_dts_iosf_init() function doesn't return NULL, it returns
+error pointers.
 
-Fixes: 9fba738a53dd ("clk: add duty cycle support")
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 4d0dd6c1576b ("Thermal/int340x/processor_thermal: Enable auxiliary DTS for Braswell")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c | 2 +-
+ drivers/thermal/int340x_thermal/processor_thermal_device.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index af011974d4ecb..2bcd9cb26348c 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2782,7 +2782,7 @@ static void clk_dump_one(struct seq_file *s, struct clk_core *c, int level)
- 	seq_printf(s, "\"protect_count\": %d,", c->protect_count);
- 	seq_printf(s, "\"rate\": %lu,", clk_core_get_rate(c));
- 	seq_printf(s, "\"accuracy\": %lu,", clk_core_get_accuracy(c));
--	seq_printf(s, "\"phase\": %d", clk_core_get_phase(c));
-+	seq_printf(s, "\"phase\": %d,", clk_core_get_phase(c));
- 	seq_printf(s, "\"duty_cycle\": %u",
- 		   clk_core_get_scaled_duty_cycle(c, 100000));
- }
+diff --git a/drivers/thermal/int340x_thermal/processor_thermal_device.c b/drivers/thermal/int340x_thermal/processor_thermal_device.c
+index 284cf2c5a8fd9..8e0f665cf06f8 100644
+--- a/drivers/thermal/int340x_thermal/processor_thermal_device.c
++++ b/drivers/thermal/int340x_thermal/processor_thermal_device.c
+@@ -423,7 +423,7 @@ static int  proc_thermal_pci_probe(struct pci_dev *pdev,
+ 		proc_priv->soc_dts = intel_soc_dts_iosf_init(
+ 					INTEL_SOC_DTS_INTERRUPT_MSI, 2, 0);
+ 
+-		if (proc_priv->soc_dts && pdev->irq) {
++		if (!IS_ERR(proc_priv->soc_dts) && pdev->irq) {
+ 			ret = pci_enable_msi(pdev);
+ 			if (!ret) {
+ 				ret = request_threaded_irq(pdev->irq, NULL,
 -- 
 2.19.1
 
