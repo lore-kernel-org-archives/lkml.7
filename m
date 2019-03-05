@@ -2,244 +2,134 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF92DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9AAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC7A20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="OTZlIbAp"
+	by mail.kernel.org (Postfix) with ESMTP id 8C580205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfCEUTu (ORCPT
+        id S1726826AbfCEUco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 15:19:50 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:55876 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbfCEUTf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 15:19:35 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 5B3DB891AB;
-        Wed,  6 Mar 2019 09:19:33 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1551817173;
-        bh=0rWeG64ablQ4QcEeytKY5EW2azDS057EZOZDEMjLjMI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=OTZlIbAphES+CRqp2zeMn66Prvk85OM3q/xqgqoPYVk3ovmvjMuM64O23d4TgkfA6
-         3Q0WaCwyG1H9RhgMugdWgtAzV8d6TgFiazfTG5hR+ou+7nGArXVoGtRvS3MaJcknPU
-         WQsiG/zjsbEo65NuwNcgwhNC6ZIr9csz4KXc4AhqStZ16vNb6cfr9kSRccGVKfB5ZI
-         P4uMSUWLolrkMRHfMI8YOiy09WDyUP3E7SC8BVGzIYOz4sdp3aTnbc3c+hR95WsKnm
-         jczqydAwRLr+FddC4ghcy1bW0DQPsojtBoGrQUdUoT4SFn7Jm3jK9EkaX3CtOIoKxo
-         RAREuRSRs98IQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5c7ed9d50000>; Wed, 06 Mar 2019 09:19:33 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id F17DF13EF3B;
-        Wed,  6 Mar 2019 09:19:32 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id BC6B61E1D96; Wed,  6 Mar 2019 09:19:32 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
-        linux@roeck-us.net
-Cc:     linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH v2 3/3] watchdog: orion_wdt: use timer1 as a pretimeout
-Date:   Wed,  6 Mar 2019 09:19:24 +1300
-Message-Id: <20190305201924.14853-4-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190305201924.14853-1-chris.packham@alliedtelesis.co.nz>
-References: <20190305201924.14853-1-chris.packham@alliedtelesis.co.nz>
+        Tue, 5 Mar 2019 15:32:44 -0500
+Received: from mga04.intel.com ([192.55.52.120]:3415 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbfCEUcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 15:32:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 12:32:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,445,1544515200"; 
+   d="scan'208";a="119865651"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 05 Mar 2019 12:32:40 -0800
+Received: from [10.254.88.243] (kliang2-mobl1.ccr.corp.intel.com [10.254.88.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 19BC658046A;
+        Tue,  5 Mar 2019 12:32:39 -0800 (PST)
+Subject: Re: [PATCH 01/10] perf/x86/intel: Introduce a concept "domain" as the
+ scope of counters
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, acme@kernel.org, mingo@redhat.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org, len.brown@intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, eranian@google.com,
+        ak@linux.intel.com
+References: <1550606411-5313-1-git-send-email-kan.liang@linux.intel.com>
+ <1550606411-5313-2-git-send-email-kan.liang@linux.intel.com>
+ <20190220111226.GG32494@hirez.programming.kicks-ass.net>
+ <9631a92f-5b24-26a6-e160-4e4c0b4697c1@linux.intel.com>
+Message-ID: <a339c9b9-e704-318d-f53f-058a8b2d7898@linux.intel.com>
+Date:   Tue, 5 Mar 2019 15:32:37 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <9631a92f-5b24-26a6-e160-4e4c0b4697c1@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The orion watchdog can either reset the CPU or generate an interrupt.
-The interrupt would be useful for debugging as it provides panic()
-output about the watchdog expiry, however if the interrupt is used the
-watchdog can't reset the CPU in the event of being stuck in a loop with
-interrupts disabled or if the CPU is prevented from accessing memory
-(e.g. an unterminated DMA).
+Hi Peter,
 
-The Armada SoCs have spare timers that aren't currently used by the
-Linux kernel. We can use timer1 to provide a pre-timeout ahead of the
-watchdog timer and provide the possibility of gathering debug before the
-reset triggers.
+Is the idea (abstract common topology related codes for perf modules) 
+the right direction?
+I'm asking because I'm going to submit uncore codes for new platforms. 
+I'm not sure if the new code should base on this series.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Changes in v2:
-- apply changes to armada-38x only
-- use watchdog_notify_pretimeout() as suggested by Andrew and Guenter
+Could you please share your opinion?
 
- drivers/watchdog/orion_wdt.c | 59 ++++++++++++++++++++++++++++++------
- 1 file changed, 50 insertions(+), 9 deletions(-)
+If it's the right direction, could you please review the patch 1-4?
+They are for previous platforms and can be merged separately.
 
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 8b259c712c52..aa295f37e563 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -46,6 +46,11 @@
- #define WDT_AXP_FIXED_ENABLE_BIT BIT(10)
- #define WDT_A370_EXPIRED	BIT(31)
-=20
-+#define TIMER1_VAL_OFF		0x001c
-+#define TIMER1_ENABLE_BIT	BIT(2)
-+#define TIMER1_FIXED_ENABLE_BIT	BIT(12)
-+#define TIMER1_STATUS_BIT	BIT(8)
-+
- static bool nowayout =3D WATCHDOG_NOWAYOUT;
- static int heartbeat =3D -1;		/* module parameter (seconds) */
-=20
-@@ -158,6 +163,7 @@ static int armadaxp_wdt_clock_init(struct platform_de=
-vice *pdev,
- 				   struct orion_watchdog *dev)
- {
- 	int ret;
-+	u32 val;
-=20
- 	dev->clk =3D of_clk_get_by_name(pdev->dev.of_node, "fixed");
- 	if (IS_ERR(dev->clk))
-@@ -169,38 +175,48 @@ static int armadaxp_wdt_clock_init(struct platform_=
-device *pdev,
- 	}
-=20
- 	/* Enable the fixed watchdog clock input */
--	atomic_io_modify(dev->reg + TIMER_CTRL,
--			 WDT_AXP_FIXED_ENABLE_BIT,
--			 WDT_AXP_FIXED_ENABLE_BIT);
-+	val =3D WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-=20
- 	dev->clk_rate =3D clk_get_rate(dev->clk);
-+
- 	return 0;
- }
-=20
- static int orion_wdt_ping(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
-+
- 	/* Reload watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
- 	       dev->reg + dev->data->wdt_counter_offset);
-+	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-+		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-+		       dev->reg + TIMER1_VAL_OFF);
-+
- 	return 0;
- }
-=20
- static int armada375_start(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
--	u32 reg;
-+	u32 reg, val;
-=20
- 	/* Set watchdog duration */
- 	writel(dev->clk_rate * wdt_dev->timeout,
- 	       dev->reg + dev->data->wdt_counter_offset);
-+	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-+		writel(dev->clk_rate * (wdt_dev->timeout - wdt_dev->pretimeout),
-+		       dev->reg + TIMER1_VAL_OFF);
-=20
- 	/* Clear the watchdog expiration bit */
- 	atomic_io_modify(dev->reg + TIMER_A370_STATUS, WDT_A370_EXPIRED, 0);
-=20
- 	/* Enable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit,
--						dev->data->wdt_enable_bit);
-+	val =3D dev->data->wdt_enable_bit;
-+	if (dev->wdt.info->options & WDIOF_PRETIMEOUT)
-+		val |=3D TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-=20
- 	/* Enable reset on watchdog */
- 	reg =3D readl(dev->rstout);
-@@ -277,7 +293,7 @@ static int orion_stop(struct watchdog_device *wdt_dev=
-)
- static int armada375_stop(struct watchdog_device *wdt_dev)
- {
- 	struct orion_watchdog *dev =3D watchdog_get_drvdata(wdt_dev);
--	u32 reg;
-+	u32 reg, mask;
-=20
- 	/* Disable reset on watchdog */
- 	atomic_io_modify(dev->rstout_mask, dev->data->rstout_mask_bit,
-@@ -287,7 +303,10 @@ static int armada375_stop(struct watchdog_device *wd=
-t_dev)
- 	writel(reg, dev->rstout);
-=20
- 	/* Disable watchdog timer */
--	atomic_io_modify(dev->reg + TIMER_CTRL, dev->data->wdt_enable_bit, 0);
-+	mask =3D dev->data->wdt_enable_bit;
-+	if (wdt_dev->info->options & WDIOF_PRETIMEOUT)
-+		mask +=3D TIMER1_ENABLE_BIT;
-+	atomic_io_modify(dev->reg + TIMER_CTRL, mask, 0);
-=20
- 	return 0;
- }
-@@ -349,7 +368,7 @@ static unsigned int orion_wdt_get_timeleft(struct wat=
-chdog_device *wdt_dev)
- 	return readl(dev->reg + dev->data->wdt_counter_offset) / dev->clk_rate;
- }
-=20
--static const struct watchdog_info orion_wdt_info =3D {
-+static struct watchdog_info orion_wdt_info =3D {
- 	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
- 	.identity =3D "Orion Watchdog",
- };
-@@ -368,6 +387,16 @@ static irqreturn_t orion_wdt_irq(int irq, void *devi=
-d)
- 	return IRQ_HANDLED;
- }
-=20
-+static irqreturn_t orion_wdt_pre_irq(int irq, void *devid)
-+{
-+	struct orion_watchdog *dev =3D devid;
-+
-+	atomic_io_modify(dev->reg + TIMER_A370_STATUS,
-+			 TIMER1_STATUS_BIT, 0);
-+	watchdog_notify_pretimeout(&dev->wdt);
-+	return IRQ_HANDLED;
-+}
-+
- /*
-  * The original devicetree binding for this driver specified only
-  * one memory resource, so in order to keep DT backwards compatibility
-@@ -591,6 +620,18 @@ static int orion_wdt_probe(struct platform_device *p=
-dev)
- 		}
- 	}
-=20
-+	irq =3D platform_get_irq(pdev, 1);
-+	if (irq > 0) {
-+		orion_wdt_info.options |=3D WDIOF_PRETIMEOUT;
-+		ret =3D devm_request_irq(&pdev->dev, irq, orion_wdt_pre_irq,
-+				       0, pdev->name, dev);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to request IRQ\n");
-+			goto disable_clk;
-+		}
-+	}
-+
-+
- 	watchdog_set_nowayout(&dev->wdt, nowayout);
- 	ret =3D watchdog_register_device(&dev->wdt);
- 	if (ret)
---=20
-2.21.0
+If it's not the right time to do the abstraction, I will re-write the 
+patches to only specially handle CLX-AP for now. For example, per-die 
+counters can share the code with per-package counters by introducing a 
+new variable 'bool die_scope' and checking the variable before calling 
+any topology related functions.
+But that's only a temporary solution for CLX-AP. We still need to add 
+dedicated per-die PMU support later, if both per-die and per-package 
+counters are supported on the same platforms.
 
+Thanks,
+Kan
+
+On 2/20/2019 9:36 AM, Liang, Kan wrote:
+> 
+> 
+> On 2/20/2019 6:12 AM, Peter Zijlstra wrote:
+>> On Tue, Feb 19, 2019 at 12:00:02PM -0800, kan.liang@linux.intel.com 
+>> wrote:
+>>> It's very useful to abstract several common topology related codes for
+>>> these modules to reduce the code redundancy.
+>>
+>>>   3 files changed, 96 insertions(+), 1 deletion(-)
+>>
+>> So you add 100 lines, so we can remove lines when we start to use this.
+>>
+>> Except all 3 follow up patches that employ this, all add more lines
+>> still:
+> 
+> The previous implementation assumes that there is only one or two types 
+> of counters (per core or per package). The proposed solution breaks the 
+> assumption and can support more types of counters. The new 
+> infrastructure needs more lines. But with more and more types 
+> introduced, we can expect less lines in total with the proposed solution.
+> 
+>>   1 file changed, 184 insertions(+), 157 deletions(-)
+> 
+> This is cstate which supports two types of counters (per core and per 
+> package) now.
+> 
+>>   3 files changed, 164 insertions(+), 80 deletions(-)
+>>   1 file changed, 224 insertions(+), 82 deletions(-)
+>>
+> 
+> They are uncore and rapl which only supports one type of counters (per 
+> package) now.
+> 
+> When there is only one type, the proposed solution has more lines.
+> But when there are two types, the proposed solution has similar number 
+> of lines as previous implementation.
+> In this trend, I expect that the proposed solution has less lines when 
+> there are three or more types.
+> 
+> With die introduced, there are at least two types of counters for rapl 
+> and uncore, and three types for cstate. In total, we should see less lines.
+> 
+> There may be more types of counters added later. In 8.9.1 Hierarchical 
+> Mapping of Shared Resources of SDM vol3A, it document 7 APIC_ID fields 
+> (cluster, package, die, tile, module, core and SMT). There are only 4 
+> types of counters for now.
+> 
+> 
+> Thanks,
+> Kan
