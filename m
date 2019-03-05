@@ -2,111 +2,131 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD40C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB779C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7B520645
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:04:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551809052;
-	bh=/e1FWiCwVpNa00uGp3EbK+9wwgBnzB9f36LM/haavOc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NmQh5ocYP6pG2OaOVnXlN6dZchrnVVWh89eDc0fufm+7dt6hFvzUf2cR9O2xkFusl
-	 H6PVUrvKNKp2z7Yl5Mlu88RGlq7vW/tpGUYwNY2Ju1Cm5C2xf3UuuS7p6oKEetqAQQ
-	 we2TtpbTHwbIaFiW2WkoqcqcgJ3/TcEqPrvJ59o4=
+	by mail.kernel.org (Postfix) with ESMTP id 9E13020842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 18:07:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbfCESEL (ORCPT
+        id S1730837AbfCESHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 13:04:11 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45723 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfCESEK (ORCPT
+        Tue, 5 Mar 2019 13:07:54 -0500
+Received: from mx01.bbu.dsd.mx.bitdefender.com ([91.199.104.161]:38432 "EHLO
+        mx01.bbu.dsd.mx.bitdefender.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726118AbfCESHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 13:04:10 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d24so8400413ljc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 10:04:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lgVrRSJyivwjBkz7OzuCK9JYX2LpyV5wEUswZ9wQbf4=;
-        b=Spxd+IMH+o0dtSiNYLKNnd2MPe7tEJvbDpTvKk5jm4s39TZbfJ3mFG6tAOXAgUOfC1
-         qdLT7E8UKNADWl2e9+sp3NcJu0iyHiG4jR9KQtPIiVk7sU5m+W63HHZbsKway2VS53v1
-         wIwSlH4sPyFi8plJDGJ7yPgKnrmMtAbXcN6dI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lgVrRSJyivwjBkz7OzuCK9JYX2LpyV5wEUswZ9wQbf4=;
-        b=PsJFIa4jejr1Pjb26COjZ/snBEVZ0VAR1fmT6HgV7mfPrgMAGK2Xfp/IGza9YOoQ6O
-         HEWrmJ1CaXOWBWjRdyWI/1NKhzVXC4U0oyumrJHCvlEY7Nw+ajjRT+Hh6U9o3KfKLG03
-         cq0L61c6SJuwFjJYfb8Mgv/Wrz47rpq6dpXWanzGCOaeQAFPkH0QaJzg+Svxe9XMFZjJ
-         RB2uSGmMwfoHWkqD7Atr6DXO0dolWFDenBapSAu52H6lhGHPMI5UDuoFwafsK+YaDdEz
-         MDnrMs41Oee/2HYPNPAsjWhYDTHYBzfzLiFh+/r5iRy7fEhiDMHlEI6zKJScSiZDx74X
-         gIag==
-X-Gm-Message-State: APjAAAVKlUk0rbBOmwuTZv+VYE5lJbCpHaT3lSHV2n1Pg6+2/+XwNMgD
-        YeiTaXCZvgg2Q8ZoZHtZ8tQUaxe9Gn8=
-X-Google-Smtp-Source: APXvYqw4rGUqqEbX1lsP3AnP1X2rJqvACUv150mwRUB4ltRvwB/imZVsj41vRdbw6DxkAfvMMcSn/Q==
-X-Received: by 2002:a2e:964b:: with SMTP id z11mr13207585ljh.138.1551809048355;
-        Tue, 05 Mar 2019 10:04:08 -0800 (PST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id u18sm2236059lfd.15.2019.03.05.10.04.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Mar 2019 10:04:08 -0800 (PST)
-Received: by mail-lf1-f42.google.com with SMTP id z196so6853925lff.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 10:04:07 -0800 (PST)
-X-Received: by 2002:ac2:5088:: with SMTP id f8mr1455651lfm.11.1551808724311;
- Tue, 05 Mar 2019 09:58:44 -0800 (PST)
+        Tue, 5 Mar 2019 13:07:54 -0500
+X-Greylist: delayed 327 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Mar 2019 13:07:52 EST
+Received: from smtp.bitdefender.com (smtp02.buh.bitdefender.net [10.17.80.76])
+        by mx01.bbu.dsd.mx.bitdefender.com (Postfix) with ESMTPS id 2DBCD3016E60;
+        Tue,  5 Mar 2019 20:02:24 +0200 (EET)
+Received: from host.bbu.bitdefender.biz (unknown [10.10.193.111])
+        by smtp.bitdefender.com (Postfix) with ESMTPSA id CBBB53051E7A;
+        Tue,  5 Mar 2019 20:02:23 +0200 (EET)
+From:   =?UTF-8?q?Adalbert=20Laz=C4=83r?= <alazar@bitdefender.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Cc:     virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Adalbert=20Laz=C4=83r?= <alazar@bitdefender.com>
+Subject: [PATCH] vsock/virtio: fix kernel panic from virtio_transport_reset_no_sock
+Date:   Tue,  5 Mar 2019 20:01:45 +0200
+Message-Id: <20190305180145.27161-1-alazar@bitdefender.com>
 MIME-Version: 1.0
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
- <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
- <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
- <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com> <20190305173134.GE8256@zn.tnic>
-In-Reply-To: <20190305173134.GE8256@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 5 Mar 2019 09:58:28 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
-Message-ID: <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: Deprecate a.out support
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 9:31 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> So how do you wanna handle this?
->
-> I guess the easiest would be if you apply your patch directly now and
-> add the a.out phase-out strategy we're going for in its commit message
-> so that people are aware of what we're doing.
+Previous to commit 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unplug"),
+vsock_core_init() was called from virtio_vsock_probe(). Now,
+virtio_transport_reset_no_sock() can be called before vsock_core_init()
+has the chance to run.
 
-Yup, I'll just do that. I'll fix up my patch to be more complete (ie
-the a.out-core.h removal Jann pointed out).
+[Wed Feb 27 14:17:09 2019] BUG: unable to handle kernel NULL pointer dereference at 0000000000000110
+[Wed Feb 27 14:17:09 2019] #PF error: [normal kernel read fault]
+[Wed Feb 27 14:17:09 2019] PGD 0 P4D 0
+[Wed Feb 27 14:17:09 2019] Oops: 0000 [#1] SMP PTI
+[Wed Feb 27 14:17:09 2019] CPU: 3 PID: 59 Comm: kworker/3:1 Not tainted 5.0.0-rc7-390-generic-hvi #390
+[Wed Feb 27 14:17:09 2019] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+[Wed Feb 27 14:17:09 2019] Workqueue: virtio_vsock virtio_transport_rx_work [vmw_vsock_virtio_transport]
+[Wed Feb 27 14:17:09 2019] RIP: 0010:virtio_transport_reset_no_sock+0x8c/0xc0 [vmw_vsock_virtio_transport_common]
+[Wed Feb 27 14:17:09 2019] Code: 35 8b 4f 14 48 8b 57 08 31 f6 44 8b 4f 10 44 8b 07 48 8d 7d c8 e8 84 f8 ff ff 48 85 c0 48 89 c3 74 2a e8 f7 31 03 00 48 89 df <48> 8b 80 10 01 00 00 e8 68 fb 69 ed 48 8b 75 f0 65 48 33 34 25 28
+[Wed Feb 27 14:17:09 2019] RSP: 0018:ffffb42701ab7d40 EFLAGS: 00010282
+[Wed Feb 27 14:17:09 2019] RAX: 0000000000000000 RBX: ffff9d79637ee080 RCX: 0000000000000003
+[Wed Feb 27 14:17:09 2019] RDX: 0000000000000001 RSI: 0000000000000002 RDI: ffff9d79637ee080
+[Wed Feb 27 14:17:09 2019] RBP: ffffb42701ab7d78 R08: ffff9d796fae70e0 R09: ffff9d796f403500
+[Wed Feb 27 14:17:09 2019] R10: ffffb42701ab7d90 R11: 0000000000000000 R12: ffff9d7969d09240
+[Wed Feb 27 14:17:09 2019] R13: ffff9d79624e6840 R14: ffff9d7969d09318 R15: ffff9d796d48ff80
+[Wed Feb 27 14:17:09 2019] FS:  0000000000000000(0000) GS:ffff9d796fac0000(0000) knlGS:0000000000000000
+[Wed Feb 27 14:17:09 2019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[Wed Feb 27 14:17:09 2019] CR2: 0000000000000110 CR3: 0000000427f22000 CR4: 00000000000006e0
+[Wed Feb 27 14:17:09 2019] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[Wed Feb 27 14:17:09 2019] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[Wed Feb 27 14:17:09 2019] Call Trace:
+[Wed Feb 27 14:17:09 2019]  virtio_transport_recv_pkt+0x63/0x820 [vmw_vsock_virtio_transport_common]
+[Wed Feb 27 14:17:09 2019]  ? kfree+0x17e/0x190
+[Wed Feb 27 14:17:09 2019]  ? detach_buf_split+0x145/0x160
+[Wed Feb 27 14:17:09 2019]  ? __switch_to_asm+0x40/0x70
+[Wed Feb 27 14:17:09 2019]  virtio_transport_rx_work+0xa0/0x106 [vmw_vsock_virtio_transport]
+[Wed Feb 27 14:17:09 2019] NET: Registered protocol family 40
+[Wed Feb 27 14:17:09 2019]  process_one_work+0x167/0x410
+[Wed Feb 27 14:17:09 2019]  worker_thread+0x4d/0x460
+[Wed Feb 27 14:17:09 2019]  kthread+0x105/0x140
+[Wed Feb 27 14:17:09 2019]  ? rescuer_thread+0x360/0x360
+[Wed Feb 27 14:17:09 2019]  ? kthread_destroy_worker+0x50/0x50
+[Wed Feb 27 14:17:09 2019]  ret_from_fork+0x35/0x40
+[Wed Feb 27 14:17:09 2019] Modules linked in: vmw_vsock_virtio_transport vmw_vsock_virtio_transport_common input_leds vsock serio_raw i2c_piix4 mac_hid qemu_fw_cfg autofs4 cirrus ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops virtio_net psmouse drm net_failover pata_acpi virtio_blk failover floppy
+[Wed Feb 27 14:17:09 2019] CR2: 0000000000000110
+[Wed Feb 27 14:17:09 2019] ---[ end trace baa35abd2e040fe5 ]---
+[Wed Feb 27 14:17:09 2019] RIP: 0010:virtio_transport_reset_no_sock+0x8c/0xc0 [vmw_vsock_virtio_transport_common]
+[Wed Feb 27 14:17:09 2019] Code: 35 8b 4f 14 48 8b 57 08 31 f6 44 8b 4f 10 44 8b 07 48 8d 7d c8 e8 84 f8 ff ff 48 85 c0 48 89 c3 74 2a e8 f7 31 03 00 48 89 df <48> 8b 80 10 01 00 00 e8 68 fb 69 ed 48 8b 75 f0 65 48 33 34 25 28
+[Wed Feb 27 14:17:09 2019] RSP: 0018:ffffb42701ab7d40 EFLAGS: 00010282
+[Wed Feb 27 14:17:09 2019] RAX: 0000000000000000 RBX: ffff9d79637ee080 RCX: 0000000000000003
+[Wed Feb 27 14:17:09 2019] RDX: 0000000000000001 RSI: 0000000000000002 RDI: ffff9d79637ee080
+[Wed Feb 27 14:17:09 2019] RBP: ffffb42701ab7d78 R08: ffff9d796fae70e0 R09: ffff9d796f403500
+[Wed Feb 27 14:17:09 2019] R10: ffffb42701ab7d90 R11: 0000000000000000 R12: ffff9d7969d09240
+[Wed Feb 27 14:17:09 2019] R13: ffff9d79624e6840 R14: ffff9d7969d09318 R15: ffff9d796d48ff80
+[Wed Feb 27 14:17:09 2019] FS:  0000000000000000(0000) GS:ffff9d796fac0000(0000) knlGS:0000000000000000
+[Wed Feb 27 14:17:09 2019] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[Wed Feb 27 14:17:09 2019] CR2: 0000000000000110 CR3: 0000000427f22000 CR4: 00000000000006e0
+[Wed Feb 27 14:17:09 2019] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[Wed Feb 27 14:17:09 2019] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+---
+ net/vmw_vsock/virtio_transport_common.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-I'll talk about removing a.out support entirely in the commit message.
-I'd be ok for that to be a total removal, but maybe there are some
-architectures that still have that as a "main" format?
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index 3ae3a33da70b..502201aaff2a 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -662,6 +662,7 @@ static int virtio_transport_reset(struct vsock_sock *vsk,
+  */
+ static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
+ {
++	const struct virtio_transport *t;
+ 	struct virtio_vsock_pkt_info info = {
+ 		.op = VIRTIO_VSOCK_OP_RST,
+ 		.type = le16_to_cpu(pkt->hdr.type),
+@@ -680,7 +681,11 @@ static int virtio_transport_reset_no_sock(struct virtio_vsock_pkt *pkt)
+ 	if (!pkt)
+ 		return -ENOMEM;
+ 
+-	return virtio_transport_get_ops()->send_pkt(pkt);
++	t = virtio_transport_get_ops();
++	if (!t)
++		return -ENOTCONN;
++
++	return t->send_pkt(pkt);
+ }
+ 
+ static void virtio_transport_wait_close(struct sock *sk, long timeout)
+-- 
+2.21.0
 
-Or I could just apply your patch after removing the core-dumping. Comments?
-
-               Linus
