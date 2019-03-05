@@ -6,99 +6,104 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CE6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FBBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B2320842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE73220848
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfCELck (ORCPT
+        id S1727849AbfCELdB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:32:40 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4213 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727305AbfCELcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:32:39 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5BC7AFAAC87E93D5D0E5;
-        Tue,  5 Mar 2019 19:32:37 +0800 (CST)
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 5 Mar 2019 19:32:30 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix to adapt small inline xattr space in __find_inline_xattr()
-Date:   Tue, 5 Mar 2019 19:32:26 +0800
-Message-ID: <20190305113226.124873-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Tue, 5 Mar 2019 06:33:01 -0500
+Received: from out1.zte.com.cn ([202.103.147.172]:41362 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727100AbfCELdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 06:33:01 -0500
+Received: from mse01.zte.com.cn (unknown [10.30.3.20])
+        by Forcepoint Email with ESMTPS id F407D36CDA6B083DE78B;
+        Tue,  5 Mar 2019 19:32:59 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse01.zte.com.cn with ESMTP id x25BWpTd071851;
+        Tue, 5 Mar 2019 19:32:51 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019030519330741-3291465 ;
+          Tue, 5 Mar 2019 19:33:07 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 01/15] ARM: actions: fix a leaked reference by adding missing of_node_put
+Date:   Tue, 5 Mar 2019 19:33:52 +0800
+Message-Id: <1551785646-46173-1-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-03-05 19:33:07,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-03-05 19:32:47
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-MAIL: mse01.zte.com.cn x25BWpTd071851
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With below testcase, we will fail to find existed xattr entry:
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-1. mkfs.f2fs -O extra_attr -O flexible_inline_xattr /dev/zram0
-2. mount -t f2fs -o inline_xattr_size=1 /dev/zram0 /mnt/f2fs/
-3. touch /mnt/f2fs/file
-4. setfattr -n "user.name" -v 0 /mnt/f2fs/file
-5. getfattr -n "user.name" /mnt/f2fs/file
+Detected by coccinelle with the following warnings:
+./arch/arm/mach-actions/platsmp.c:112:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 103, but without a corresponding object release within this function.
+./arch/arm/mach-actions/platsmp.c:124:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 115, but without a corresponding object release within this function.
+./arch/arm/mach-actions/platsmp.c:137:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 128, but without a corresponding object release within this function.
 
-/mnt/f2fs/file: user.name: No such attribute
-
-The reason is for inode which has very small inline xattr size,
-__find_inline_xattr() will fail to traverse any entry due to first
-entry may not be loaded from xattr node yet, later, we may skip to
-check entire xattr datas in __find_xattr(), result in such wrong
-condition.
-
-This patch adds condition to check such case to avoid this issue.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "Andreas Färber" <afaerber@suse.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 ---
- fs/f2fs/xattr.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+v2->v1: add a missing space between "adding" and "missing"
 
-diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-index ca47224d78ab..848a785abe25 100644
---- a/fs/f2fs/xattr.c
-+++ b/fs/f2fs/xattr.c
-@@ -224,11 +224,11 @@ static struct f2fs_xattr_entry *__find_inline_xattr(struct inode *inode,
- {
- 	struct f2fs_xattr_entry *entry;
- 	unsigned int inline_size = inline_xattr_size(inode);
-+	void *max_addr = base_addr + inline_size;
- 
- 	list_for_each_xattr(entry, base_addr) {
--		if ((void *)entry + sizeof(__u32) > base_addr + inline_size ||
--			(void *)XATTR_NEXT_ENTRY(entry) + sizeof(__u32) >
--			base_addr + inline_size) {
-+		if ((void *)entry + sizeof(__u32) > max_addr ||
-+			(void *)XATTR_NEXT_ENTRY(entry) > max_addr) {
- 			*last_addr = entry;
- 			return NULL;
- 		}
-@@ -239,6 +239,13 @@ static struct f2fs_xattr_entry *__find_inline_xattr(struct inode *inode,
- 		if (!memcmp(entry->e_name, name, len))
- 			break;
+ arch/arm/mach-actions/platsmp.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm/mach-actions/platsmp.c b/arch/arm/mach-actions/platsmp.c
+index 4fd479c..1a8e078 100644
+--- a/arch/arm/mach-actions/platsmp.c
++++ b/arch/arm/mach-actions/platsmp.c
+@@ -107,6 +107,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
  	}
-+
-+	/* inline xattr header or entry across max inline xattr size */
-+	if (IS_XATTR_LAST_ENTRY(entry) &&
-+		(void *)entry + sizeof(__u32) > max_addr) {
-+		*last_addr = entry;
-+		return NULL;
-+	}
- 	return entry;
- }
  
+ 	timer_base_addr = of_iomap(node, 0);
++	of_node_put(node);
+ 	if (!timer_base_addr) {
+ 		pr_err("%s: could not map timer registers\n", __func__);
+ 		return;
+@@ -119,6 +120,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+ 	}
+ 
+ 	sps_base_addr = of_iomap(node, 0);
++	of_node_put(node);
+ 	if (!sps_base_addr) {
+ 		pr_err("%s: could not map sps registers\n", __func__);
+ 		return;
+@@ -132,6 +134,7 @@ static void __init s500_smp_prepare_cpus(unsigned int max_cpus)
+ 		}
+ 
+ 		scu_base_addr = of_iomap(node, 0);
++		of_node_put(node);
+ 		if (!scu_base_addr) {
+ 			pr_err("%s: could not map scu registers\n", __func__);
+ 			return;
 -- 
-2.18.0.rc1
+2.9.5
 
