@@ -7,91 +7,88 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F59C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35670C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C342206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046ED20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:21:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Im1lFVDG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hbKam+Yn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfCEAVe (ORCPT
+        id S1726827AbfCEAVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:21:34 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44794 "EHLO
+        Mon, 4 Mar 2019 19:21:51 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39890 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfCEAVd (ORCPT
+        with ESMTP id S1726066AbfCEAVv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:21:33 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j3so4254406pgm.11;
-        Mon, 04 Mar 2019 16:21:32 -0800 (PST)
+        Mon, 4 Mar 2019 19:21:51 -0500
+Received: by mail-pg1-f193.google.com with SMTP id h8so4262479pgp.6;
+        Mon, 04 Mar 2019 16:21:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:subject:to:cc:references:in-reply-to:mime-version
          :user-agent:message-id:content-transfer-encoding;
-        bh=zkRCa+NTqWpOIdq/jqfpsyHt0d28CmntbyTv6L+6Q4A=;
-        b=Im1lFVDGq6RNR7kRlOjQC6Fdrwgnc29ksRFRgsxG8IQAzRyyLq7Oz3Ubqtd9tqSsAq
-         KEWDiqkLaYpqCO4CBUiYg9n7BtWF7le0JWqzkLdJQ0Jyvu77vbKNTQl9aFcAhfufKghO
-         uANv9HxVAsCXnb8oz9Q5Dy1YbJDLsUWh7YeR2vbi53D3MaImJxANNc8dGOUV1oQPBukY
-         6qLWQAJoTFE95cDb5hiaDuo6iHL/kslrvSoW3v9YfdZ0wyGqwZvgGEwl2f8JgScmavIV
-         z3y6NaKMAG+KDLQ+TfobxTJf2aaY45ogkSMyEeUloRsJmJvZ6oH1Luox59yVd3jbC8qD
-         eH5w==
+        bh=0m3wMkpLhX+1cNPE2hALhrlfJTBLnSc319poZ7NZ9j4=;
+        b=hbKam+YnQAfju4duQn8j/ZHFZaYT2DbgP1cLt9Tj7LQiTdPsm9+hYCguBCS4drvXgi
+         95eC+BlNp5l8+lrGnsV4+siGp9f1dOaAV3xgneEgWgo3w1QVK6pkiGgzNj3+irTCnA1O
+         RQzyOMFmIKa/zrxSVe7BWD3TZAVKJkO7TF6Gws2wx85l0GBkF8keojXdGoFeXwmBVVxj
+         IvU1Lb9o5pe7eKEklQPtyjEA7hGADQoRpos3ndTOoro23q3F/Mw9BK6f3yHIGXMtHPiK
+         D8hn9OGHFW3XWzVQ4uNJFcDu/JNfYayq3FX6SExp53zc2f+CtBatCEUlJfkvekzolQnl
+         wZeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
          :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=zkRCa+NTqWpOIdq/jqfpsyHt0d28CmntbyTv6L+6Q4A=;
-        b=iWLQlSjUy3sfP0thnDCVkHmVMmIjfM90IWCqhfkTH+NkDHFsuMz1IMqXoPc9dM0nhg
-         jFF05cosMrHDA3cFjRclYeIJf9rCMLrCWTvrz4L9Q+1LIZfuRHxWPn8asd13HPmnxneZ
-         wILwdI4cJ0fH70QOOMM+lxP0Nqg0L3/WLQ3/wlmJzNdof6oI1gQMj0SmE4qb8TlGnbli
-         GVv1JyzoQmSaIltOzwV+8pGEMQYXI9S+IcI3t57E11WcmDPvELOue1t6dLg31j9J5V3y
-         bpvsJZOuZvqMacE+eBHmPdkQJMvKCZNZe2XDD1ppJ1YB4bX5VS3PhTNfeeFjX9JtM4r/
-         7pGQ==
-X-Gm-Message-State: AHQUAuaFWt4Ub3pJT4tu4FZ2DaBZ4RBKTf9RWgAW9pDreQxgufgubjl2
-        Df7n/EXXy+PNwq6n5A4q3sU=
-X-Google-Smtp-Source: AHgI3IbKOWqCJdeka1uh/TJOfxdZqZEMZkcE0NkENTndaU2a5Gael2aoz8aArBd6T+51GSPcCTkmaw==
-X-Received: by 2002:aa7:8c4d:: with SMTP id e13mr22784279pfd.53.1551745292271;
-        Mon, 04 Mar 2019 16:21:32 -0800 (PST)
-Received: from localhost ([1.128.139.57])
-        by smtp.gmail.com with ESMTPSA id b8sm9121530pgq.33.2019.03.04.16.21.30
+        bh=0m3wMkpLhX+1cNPE2hALhrlfJTBLnSc319poZ7NZ9j4=;
+        b=j0oqizRG+Bc/COECgRwodbd81ZdsogsDoCirS2+ysxeDXDV3kQFKJQsi/8L1+r2HLx
+         c6l4WwZz5hFWI6zM3Zx1yy1ltOXbpWuRABc9oF9nxDG5UzGxaxsn+d1/gljfnAVwWuep
+         f8iiKJenAhpx9/U+OPi65d6eqbzRC06p4wrjy+ElN3QuPQ7FSjkDkf67mMZjo6InEorD
+         hl8ycSvrc8yfB6REhtF0eCBC9iDkY9VIiK/0FFbmfiwrtcu1a43TgyClTfML3GH0YiTF
+         /+xahGnpcw4MVBuwYsyMxH+4KOn9Hc7akxiMTquTcFMYwmOCs5YEQ1kyS+fHpjaQGw2/
+         o76w==
+X-Gm-Message-State: APjAAAXQYroNm2u7nCoSIK4AYR+U8MBIjb4CUm0kUBDXS6LE9V85ckOb
+        tVNoL93lX1EKGgU/OdcdddUUUp/sz8psAw==
+X-Google-Smtp-Source: APXvYqw3WNBH9qdQJtme3AxsshdtYOxveHxK7bkUwgdVQzU9OUYSFBq1tF/1kJC3RD+XUV7wbhJLFQ==
+X-Received: by 2002:a63:1a62:: with SMTP id a34mr21227779pgm.60.1551745309805;
+        Mon, 04 Mar 2019 16:21:49 -0800 (PST)
+Received: from localhost ([1.128.139.55])
+        by smtp.gmail.com with ESMTPSA id b8sm9315241pfi.129.2019.03.04.16.21.48
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Mar 2019 16:21:31 -0800 (PST)
-Date:   Tue, 05 Mar 2019 10:21:24 +1000
+        Mon, 04 Mar 2019 16:21:49 -0800 (PST)
+Date:   Tue, 05 Mar 2019 10:21:42 +1000
 From:   Nicholas Piggin <npiggin@gmail.com>
 Subject: Re: [PATCH 01/20] asm-generic/mmiowb: Add generic implementation of
  mmiowb() tracking
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+To:     linux-arch@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will.deacon@arm.com>
 Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Rich Felker <dalias@libc.org>,
         David Howells <dhowells@redhat.com>,
         Daniel Lustig <dlustig@nvidia.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
         "Maciej W. Rozycki" <macro@linux-mips.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
         Palmer Dabbelt <palmer@sifive.com>,
         Paul Burton <paul.burton@mips.com>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Alan Stern <stern@rowland.harvard.edu>,
         Tony Luck <tony.luck@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Yoshinori Sato <ysato@users.sourceforge.jp>
 References: <20190301140348.25175-1-will.deacon@arm.com>
         <20190301140348.25175-2-will.deacon@arm.com>
         <1551575210.6lwpiqtg5k.astroid@bobo.none>
-        <CAHk-=whxaYGTmHyoWeegL=ihHMDW_FJehUJVN_nP++Su=foL+g@mail.gmail.com>
-        <1551583190.duzqnmfnvg.astroid@bobo.none>
-        <CAHk-=whVN58nWh29jvXx+X-Yx9dCC6BeAZOtKak+d01y_UVg=A@mail.gmail.com>
-        <1551606848.8cceyn7nhv.astroid@bobo.none>
-        <CAHk-=wi9ZnP_17qwPB_b3hJ+C7DP3oxcRAPuDBCoEbe2QrbQew@mail.gmail.com>
-In-Reply-To: <CAHk-=wi9ZnP_17qwPB_b3hJ+C7DP3oxcRAPuDBCoEbe2QrbQew@mail.gmail.com>
+        <87tvgkia0k.fsf@concordia.ellerman.id.au>
+        <1551607531.yk1v9azmym.astroid@bobo.none>
+        <87d0n7bgh7.fsf@concordia.ellerman.id.au>
+In-Reply-To: <87d0n7bgh7.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
 User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1551743521.hogpbicfcz.astroid@bobo.none>
+Message-Id: <1551744761.r3fh0fxees.astroid@bobo.none>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -99,91 +96,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds's on March 4, 2019 4:48 am:
-> On Sun, Mar 3, 2019 at 2:05 AM Nicholas Piggin <npiggin@gmail.com> wrote:
+Michael Ellerman's on March 4, 2019 11:01 am:
+> Nicholas Piggin <npiggin@gmail.com> writes:
+>> Michael Ellerman's on March 3, 2019 7:26 pm:
+>>> Nicholas Piggin <npiggin@gmail.com> writes:
+> ...
+>>>> what was broken about the powerpc one, which is basically:
+>>>>
+>>>> static inline void mmiowb_set_pending(void)
+>>>> {
+>>>> 	struct mmiowb_state *ms =3D __mmiowb_state();
+>>>> 	ms->mmiowb_pending =3D 1;
+>>>> }
+>>>>
+>>>> static inline void mmiowb_spin_lock(void)
+>>>> {
+>>>> }
+>>>=20
+>>> The current powerpc code clears io_sync in spin_lock().
+>>>=20
+>>> ie, it would be equivalent to:
+>>>=20
+>>> static inline void mmiowb_spin_lock(void)
+>>> {
+>>>  	ms->mmiowb_pending =3D 0;
+>>> }
 >>
->> Why even bother with it at all, "internal" or not?  Just get rid of
->> mmiowb, the concept is obsolete.
+>> Ah okay that's what I missed. How about we just not do that?
 >=20
-> It *is* gone, for chrissake!  Only the name remains as an internal
-> detail of "this is what we need to do".
+> Yeah I thought of that too but it's not great. We'd start semi-randomly
+> executing the sync in unlock depending on whether someone had done IO on
+> that CPU prior to the spinlock.
 >=20
->> Pretend ia64 doesn't exist for a minute. Now the regular mb/wmb barriers
->> orders IO across CPUs with respect to their cacheable accesses.
+> eg.
 >=20
-> Stop with the total red herring already.
+> 	writel(x, y);		// sets paca->io_sync
+> 	...=09
 >=20
-> THIS HAS NOTHING TO DO WITH mb()/wmb().
+> 	<schedule>
 >=20
-> As long as you keep bringing those up, you're only showing that you're
-> talking about the wrong thing.
+> 	spin_lock(a);
+>         ...
+>         // No IO in here
+>         ...
+>         spin_unlock(a);		// sync() here because other task did writel().
+>=20
+>=20
+> Which wouldn't be *incorrect*, but would be kind of weird.
 
-Why? I'm talking about them because they are not taken care of by this=20
-part of mmiowb removal. Talking about spin locks is the wrong thing
-because we're already past that and everybody agrees it's the right
-approach.
+schedule is probably okay, we could clear pending there. But you
+possibly could get interrupts, or some lock free mmios that set the
+flag. Does it matter that much? A random cache miss could have the
+same effect.
 
->> Regardless of whether that cacheable access is a spin lock, a bit lock,
->> an atomic, a mutex... This is how it was before mmiowb came along.
->=20
-> No.
->=20
-> Beflore mmiowb() came along, there was one rule: do what x86 does.
->=20
-> And x86 orders mmio inside spinlocks.
->=20
-> Seriously.
->
-> Notice how there's not a single "barrier" mentioned here anywhere in
-> the above. No "mb()", no "wmb()", no nothing. Only "spinlocks order
-> IO".
->=20
-> That's the fundamental rule (that we broke for ia64), and all that
-> matters for this patch series.
->=20
-> Stop talking about wmb(). It's irrelevant. A spinlock does not
-> *contain* a wmb().
+It may matter slightly less for powerpc because we don't inline
+spin locks, although I have been hoping to for a while, this might
+put the nail in that.
 
-Well you don't have to talk about it but why do you want me to stop?
-I don't understand. It's an open topic still after this series. I
-can post a new thread about it if that would upset you less, I just
-thought it would kind of fit here because we're talking about mmiowb,
-I'm not trying to derail this series.
-
-> Nobody even _cares_ about wmb(). They are entirely irrelevant wrt IO,
-> because IO is ordered on any particular CPU anyway (which is what
-> wmb() enforces).
->=20
-> Only when you do special things like __raw_writel() etc does wmb()
-> matter, but at that point this whole series is entirely irrelevant,
-> and once again, that's still about just ordering on a single CPU.
->=20
-> So as long as you talk about wmb(), all you show is that you're
-> talking about something entirely different FROM THIS WHOLE SERIES.
->=20
-> And like it or not, ia64 still exists. We support it. It doesn't
-> _matter_ and we don't much care any more, but it still exists. Which
-> is why we have that concept of mmiowb().
->=20
-> On other platforms, mmiowb() might be a wmb(). Or it might not. It
-> might be some other barrier, or it might be a no-op entirely without a
-> barrier at all. It doesn't matter. But mmiowb() exists, and is now
-> happily entirely hidden inside the rule of "spinlocks order MMIO
-> across CPU's".
-
-The driver writer still has to know exactly as much about mmiowb
-(the concept, if not the name) before this series as afterward. That
-is, sequences of mmio stores to a device from different CPUs can only
-be atomic if you (put mmiowb before spin unlock | protect them with
-spin locks).
-
-I just don't understand the reason to expose the driver writer to
-that additional detail. Intuitively, mb() should order stores to
-all kind of memory the same as smp_mb() orders stores to cacheable
-(without the detail of stores being reordered at the interconnect
-or controller -- driver writer doesn't care about store queues in
-the CPU or whatever details, they want the device to see IOs in
-some order).
+We can always tinker with it later though so I won't insist.
 
 Thanks,
 Nick
