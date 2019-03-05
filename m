@@ -2,133 +2,97 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DB5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CDBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3696A2075B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B84F20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 20:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lce5inAw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BZH30xY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfCEUKF (ORCPT
+        id S1728475AbfCEULg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 15:10:05 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1718 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfCEUKE (ORCPT
+        Tue, 5 Mar 2019 15:11:36 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48610 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbfCEULg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 15:10:04 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c7ed79b0001>; Tue, 05 Mar 2019 12:10:03 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 05 Mar 2019 12:10:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 05 Mar 2019 12:10:04 -0800
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Mar
- 2019 20:10:03 +0000
-Subject: Re: [PATCH v2] RDMA/umem: minor bug fix and cleanup in error handling
- paths
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Artemy Kovalyov <artemyko@mellanox.com>,
-        "john.hubbard@gmail.com" <john.hubbard@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 5 Mar 2019 15:11:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x9SGw30xc4tViDSHp9clTrj2CNLlRzCFkYvhGOCoSwo=; b=BZH30xY77voSA2DMnNBrdgaO5
+        XTV127Nqakg+r5MUxKy28mGRcTPkS6hH4ddVH4AGkb7Vlv/jpeszRAT3GWb5RGAmkI9eVMF3TjPU4
+        Fj10igEtO2uVs5vA29iLxZ82mjkRxxFF1QMmc+QBzCH8QMFYy3BQPOYt9KCcaXlMna/jFUotHGEkt
+        ra6EGEy6HkH6syktgdxZb7Pt1arCZ/RDwqYQQZUrym0otDd2dosURN2SVK3JXYkfO5ys39YETNlUd
+        d3EsovvQurAEeBxZS93jwQE1CkX/BuaE1UHdoeD4JL0tbHvxwhPc1/V1LPT8hinUFFUmJItb4viwn
+        67YwES6ng==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h1GPR-0003CE-Pf; Tue, 05 Mar 2019 20:11:29 +0000
+Date:   Tue, 5 Mar 2019 12:11:29 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Louis Taylor <louis@kragniz.eu>,
+        Jonathan Corbet <corbet@lwn.net>, pmladek@suse.com,
+        geert+renesas@glider.be, linux-doc@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-References: <20190302032726.11769-2-jhubbard@nvidia.com>
- <20190302202435.31889-1-jhubbard@nvidia.com>
- <20190302194402.GA24732@iweiny-DESK2.sc.intel.com>
- <2404c962-8f6d-1f6d-0055-eb82864ca7fc@mellanox.com>
- <20190303165550.GB27123@iweiny-DESK2.sc.intel.com>
- <bef8680b-acc5-9f13-f49e-8f36f1939387@nvidia.com>
- <20190304201338.GA28731@iweiny-DESK2.sc.intel.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <9502d777-73e1-f96f-120d-acc1f31045ae@nvidia.com>
-Date:   Tue, 5 Mar 2019 12:10:03 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        clang-built-linux@googlegroups.com,
+        Jon Flatley <jflat@chromium.org>
+Subject: Re: [PATCH] docs: add extra integer types to printk-formats
+Message-ID: <20190305201129.GH13380@bombadil.infradead.org>
+References: <20190303123647.22020-1-louis@kragniz.eu>
+ <20190303201016.GO9224@smile.fi.intel.com>
+ <CAKwvOdm4uCWCtSMVQDVTSKavpT0dCo+ayuwvoXtewmk+ksn5sA@mail.gmail.com>
+ <e244390e3d245c94d6d2fb036943e63111ada86d.camel@perches.com>
+ <20190305200725.GG13380@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20190304201338.GA28731@iweiny-DESK2.sc.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1551816603; bh=nFm92H0F0foev1f/IZP1befItBmU4OpaeUP7oINCO1c=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lce5inAwqd2AW64oEefNbUeVk4kKbL7wNLqPT2AyKiDspWK8bgalRoKahUSdq23ma
-         1lAf+Ll8ipe6pkApZLtol2TNcVoGkWVKX6c3KFar0vxUn2z1s7JlFtdH/aE5Vi80Kn
-         Z3UQnMOqPIkyFs6vR88OtS4FCnUzwQxhIRfiG2HZSSzJUq2n1WNjcsYWPHT+qlrdm0
-         yR5uao9zObAzIcVTBibXwodKbWFuvP9di72kverwQKzBoROP8u4YUuguQvzx26WYpn
-         2QsMMicMCoDJhiMIhl9BMsux3tIGPY0aMUHIGgfzrsNXxgeUGAz9M/pFXF/RyWXBer
-         Gst1xAnYdNfHw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190305200725.GG13380@bombadil.infradead.org>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 12:13 PM, Ira Weiny wrote:
-[snip]
->> And this reminds me that I have a problem to solve nearby: get_user_pages
->> on huge pages increments the page->_refcount *for each tail page* as well.
->> That's a minor problem for my put_user_page() 
->> patchset, because my approach so far assumed that I could just change us
->> over to:
->>
->> get_user_page(): increments page->_refcount by a large amount (1024)
->>
->> put_user_page(): decrements page->_refcount by a large amount (1024)
->>
->> ...and just stop doing the odd (to me) technique of incrementing once for
->> each tail page. I cannot see any reason why that's actually required, as
->> opposed to just "raise the page->_refcount enough to avoid losing the head
->> page too soon".
+On Tue, Mar 05, 2019 at 12:07:25PM -0800, Matthew Wilcox wrote:
+> On Tue, Mar 05, 2019 at 11:59:30AM -0800, Joe Perches wrote:
+> > Many of the -Wformat warnings are bogus too.
+> > 
+> > There's nothing wrong with using %x for a unsigned int
+> > of less than long size. (u8/u16)
 > 
-> What about splitting a huge page?
-> 
-> From Documention/vm/transhuge.rst
-> 
-> <quoute>
-> split_huge_page internally has to distribute the refcounts in the head
-> page to the tail pages before clearing all PG_head/tail bits from the page
-> structures. It can be done easily for refcounts taken by page table
-> entries. But we don't have enough information on how to distribute any
-> additional pins (i.e. from get_user_pages). split_huge_page() fails any
-> requests to split pinned huge page: it expects page count to be equal to
-> sum of mapcount of all sub-pages plus one (split_huge_page caller must
-> have reference for head page).
-> </quote>
-> 
+> I believe you to be incorrect.
 
-heh, so in the end, split_huge_page just needs enough information to say
-"no" for gup pages. So as long as page->_refcount avoids one particular
-value, the code keeps working. :)
+No, you're right, I got tangled up in the spec language and stopped
+reading too soon.
 
-
-> FWIW, I'm not sure why it needs to "store" the reference in the head page for
-> this.  I don't see any check to make sure the ref has been "stored" but I'm not
-> really familiar with the compound page code yet.
+> 6.5.2.2 Function calls
 > 
-> Ira
-> 
+> 7 If the expression that denotes the called function has a type that does
+>   include a prototype, the arguments are implicitly converted, as if by
+>   assignment, to the types of the corresponding parameters, taking the
+>   type of each parameter to be the unqualified version of its declared
+>   type. The ellipsis notation in a function prototype declarator causes
+>   argument type conversion to stop after the last declared parameter. The
+>   default argument promotions are performed on trailing arguments.
 
-Thanks for peeking at this, I'll look deeper too.
+... the default argument promotions performed on the trailing arguments
+promote short/char to int.  So you were right.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+> I could define a calling convention for my CPU which says to pack u8s
+> and u16s as tightly as possible in registers (or on the stack), rather
+> than the prevailing calling convention of having each argument take up
+> at least one register-sized slot.
+
+... and that is just wrong; it's not allowed.
+
