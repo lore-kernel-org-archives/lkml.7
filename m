@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E8AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44257C00319
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B3322082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F782082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfCEI36 (ORCPT
+        id S1727340AbfCEIaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:29:58 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:31858 "EHLO
+        Tue, 5 Mar 2019 03:30:01 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:31861 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726179AbfCEI34 (ORCPT
+        by vger.kernel.org with ESMTP id S1726085AbfCEI36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:29:56 -0500
+        Tue, 5 Mar 2019 03:29:58 -0500
 Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x258QPda005139;
-        Tue, 5 Mar 2019 09:29:39 +0100
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x258QPdb005139;
+        Tue, 5 Mar 2019 09:29:40 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2qygfxg2st-1
+        by mx07-00178001.pphosted.com with ESMTP id 2qygfxg2sy-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 05 Mar 2019 09:29:39 +0100
+        Tue, 05 Mar 2019 09:29:40 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A73CA34;
-        Tue,  5 Mar 2019 08:29:38 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8A2D71675;
-        Tue,  5 Mar 2019 08:29:38 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019
- 09:29:38 +0100
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DBBBA31;
+        Tue,  5 Mar 2019 08:29:39 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B88331674;
+        Tue,  5 Mar 2019 08:29:39 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019
+ 09:29:39 +0100
 Received: from localhost (10.201.23.166) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019 09:29:37
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019 09:29:39
  +0100
 From:   Christophe Roullier <christophe.roullier@st.com>
 To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
@@ -47,9 +47,9 @@ CC:     <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
         <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH V3 3/6] dt-bindings: net: stmmac: add phys config properties
-Date:   Tue, 5 Mar 2019 09:29:25 +0100
-Message-ID: <1551774568-11732-4-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH V3 4/6] net: ethernet: stmmac: add management of clk_csr property
+Date:   Tue, 5 Mar 2019 09:29:26 +0100
+Message-ID: <1551774568-11732-5-git-send-email-christophe.roullier@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
 References: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
@@ -63,32 +63,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add properties to support all Phy config
- PHY_MODE	(MII,GMII, RMII, RGMII) and in normal, PHY wo crystal (25Mhz),
- PHY wo crystal (50Mhz), No 125Mhz from PHY config.
+In Documentation stmmac.txt there is possibility to
+fixed CSR Clock range selection with property clk_csr.
+This patch add the management of this property
+For example to use it, add in your ethernet node DT:
+	clk_csr = <3>;
 
 Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
 ---
- Documentation/devicetree/bindings/net/stm32-dwmac.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-index 1341012..3524e80 100644
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-@@ -24,9 +24,9 @@ Required properties:
- 	       encompases the glue register, and the offset of the control register.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 2b800ce..3031f2b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -408,6 +408,9 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+ 	/* Default to phy auto-detection */
+ 	plat->phy_addr = -1;
  
- Optional properties:
--- clock-names:     For MPU family "mac-clk-ck" for PHY without quartz
--- st,int-phyclk (boolean) :  valid only where PHY do not have quartz and need to be clock
--	           by RCC
-+- clock-names:     For MPU family "eth-ck" for PHY without quartz
-+- st,eth-clk-sel (boolean) : set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-+- st,eth-ref-clk-sel (boolean) :  set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
- 
- Example:
- 
++	/* Get clk_csr from device tree */
++	of_property_read_u32(np, "clk_csr", &plat->clk_csr);
++
+ 	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
+ 	 * and warn of its use. Remove this when phy node support is added.
+ 	 */
 -- 
 2.7.4
 
