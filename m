@@ -2,123 +2,95 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19169C00319
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D2EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD4C320842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551774169;
-	bh=Xyq8EGBEULgsSRBn/tVhdClVUK+CL2ExTD94fLkdPak=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=i94mFmfU3POsWArDLUbEpevusOVfXcsggM/9+PKBWvi8UKzTIqP/1Sqgn3GVMAlDV
-	 wEY8lD8+RjubRkJ+PXvUrwNGUV9JGiQEA1HRwp07QjFKmYjVt0F7XqypOrF2ozrtIK
-	 Lsfax4omP7cyai3qH61Ix6yOscYE1dzV5Krkr5wY=
+	by mail.kernel.org (Postfix) with ESMTP id 89151206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfCEIWs (ORCPT
+        id S1727203AbfCEIXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:22:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726995AbfCEIWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:22:47 -0500
-Received: from devnote (p218086-mobac01.tokyo.ocn.ne.jp [153.233.209.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3BC9206DD;
-        Tue,  5 Mar 2019 08:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551774166;
-        bh=Xyq8EGBEULgsSRBn/tVhdClVUK+CL2ExTD94fLkdPak=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=n3J2auzM3LFuPtNXAm77yrAK/EbBlgYHNj6uZi0AOnpJBn9kGkPEG5LWkSzU9nqtM
-         7U8w+llYVrnH0HBq58dOK0AgaPMunB1dru06roHSNgpire1VmgsoNZJIFYJCb/wHiW
-         BJ51cFeLl6TNgEuSeVpUQErtunewzFKGiStNGw1s=
-Date:   Tue, 5 Mar 2019 17:22:41 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel test robot <lkp@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com, lkp@01.org
-Subject: Re: [uaccess] 780464aed0:
- WARNING:at_arch/x86/include/asm/uaccess.h:#strnlen_user/0x
-Message-Id: <20190305172241.2eef39c6ca74d09120bbbcad@kernel.org>
-In-Reply-To: <20190305113635.18f80ea3b1f4fca54b9d21e4@kernel.org>
-References: <155136980507.2968.15165201054223875356.stgit@devbox>
-        <20190303173954.kliegojbuigqi5tn@inn2.lkp.intel.com>
-        <CAHk-=wij8VLupHh1U-fFhFBjin9Fch3mG2_2=aL9h1L+WBvm2g@mail.gmail.com>
-        <20190304101434.8429ffffb17813c0e7930130@kernel.org>
-        <CAHk-=whYMvevgF4yh7uhQug=Wt1A1Eg7abyM=RCi=bQiqiMBvQ@mail.gmail.com>
-        <20190304180610.2d4f6f08d9ad89d6abae3597@kernel.org>
-        <CAHk-=wiQM84VsAiw92UWyQZTQxr+F032Gm5BiFBXk7tC+LQohQ@mail.gmail.com>
-        <20190305113635.18f80ea3b1f4fca54b9d21e4@kernel.org>
-X-Mailer: Sylpheed 3.5.0 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 5 Mar 2019 03:23:23 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32895 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfCEIXX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 03:23:23 -0500
+Received: by mail-qk1-f196.google.com with SMTP id x9so4363934qkf.0;
+        Tue, 05 Mar 2019 00:23:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xRV0wKjHYYuyn9Bi+YyAEETyDCNf4Wg8c+7jvNxLf/o=;
+        b=do6UucaYq98pVuLabZ6kN/lVFtJia5cRJVmKSO1fUj/hQWJlWblYOX50+Dalska5zS
+         fmN/7hT6Ln49yrhk7z9sZ/wT/0zDTJqVfx0aGWf0UzDhN1IkbNMJd73/cNPuab9mj+/E
+         GdbZqI/5PvwVAqLhQK+j9jRdHLmyCBYXU9K5WTUJwRxdSZ3LIGPJbwrlN60NeVHcECON
+         uILcUT8KfwOXvGVgC4ddW+9S4GsNOEf0VOPvPb3J/sudPhLdkm8mn5PH/cj2rTOCmz8Q
+         F7nPMmAEZGTMioXHZMBvNG70qKXJdSc7lyQtXdj5QQEiuihiyWSrVABjfyxxq6qSUSGt
+         CDGg==
+X-Gm-Message-State: APjAAAVNTiJZxK48zav0DunC7fxCXzSPjTwovqIBsUSNC57bGIBOgvKG
+        yxwJTOMaQzfrB2O/wxDJ3Nh9Rau+fT0Yvz5lX6M=
+X-Google-Smtp-Source: APXvYqwOB9MrRuqeDsBaZfwubYSiZMv7fb3Ix1YUIFKU+r53M1r29vxTjm/RknIfMWRkhohbplzAINUi5y36iEM+NxQ=
+X-Received: by 2002:a05:620a:1478:: with SMTP id j24mr794621qkl.343.1551774202397;
+ Tue, 05 Mar 2019 00:23:22 -0800 (PST)
+MIME-Version: 1.0
+References: <20190304201930.1622839-1-arnd@arndb.de> <20190304201930.1622839-2-arnd@arndb.de>
+ <a94c3c6a-481e-96a5-74e1-8c3299c74129@metux.net>
+In-Reply-To: <a94c3c6a-481e-96a5-74e1-8c3299c74129@metux.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 5 Mar 2019 09:23:06 +0100
+Message-ID: <CAK8P3a0vdhCTNTF-K0mXjRWkPvv0qr3nf_52=8n6zTa7p3ELLw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] x86: apuv2: fix input dependencies
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Linus Walleij <linusw@kernel.org>,
+        Enrico Weigelt <info@metux.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Mar 2019 11:36:35 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On Tue, Mar 5, 2019 at 1:18 AM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+>
+> On 04.03.19 21:19, Arnd Bergmann wrote:
+>
+> > This could be fixed using either a dependency or a 'select' statement.
+> > I'm chosen 'depends on' here since it is simpler has a lower risk of
+> > introducing circular dependencies.
+>
+> I'd rather prefer using 'select'.
+>
+> Otherwise the driver won't appear at all if INPUT or INPUT_KEYBOARD
+> aren't enabled (eg. when you start w/ minimal config - which I do
+> frequently), and people have a hard time actually finding/enabling it.
 
-> On Mon, 4 Mar 2019 10:59:22 -0800
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> I think the better way to do this is allowing strncpy_from_user()
-> if some conditions are match, like
-> 
->  - strncpy_from_user() will be able to copy user memory with set_fs(USER_DS)
->  - strncpy_from_user() can copy kernel memory with set_fs(KERNEL_DS)
->  - strncpy_from_user() can access unsafe memory in IRQ context if
->    pagefault is disabled.
-> 
-> This is almost done, except for CONFIG_DEBUG_ATOMIC_SLEEP=y on x86.
-> 
-> So, what about adding a condition to WARN_ON_IN_IRQ() like below
-> instead of introducing user_access_ok() ?
-> 
-> diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-> index 780f2b42c8ef..ec0f0b74c9ab 100644
-> --- a/arch/x86/include/asm/uaccess.h
-> +++ b/arch/x86/include/asm/uaccess.h
-> @@ -70,7 +70,7 @@ static inline bool __chk_range_not_ok(unsigned long addr, unsigned long size, un
->  })
->  
->  #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
-> -# define WARN_ON_IN_IRQ()      WARN_ON_ONCE(!in_task())
-> +# define WARN_ON_IN_IRQ()      WARN_ON_ONCE(pagefault_disabled() && !in_task())
+No, that wouldn't be good here. In effect that means that with INPUT disabled,
+most of the x86 platform drivers are disabled, until you enable the
+PCENGINES_APU2 symbol, which then ends up showing all the other
+symbols at once, and changing them to their default states.
 
-Oops, I meant !pagefault_disabled() && !in_task().
+Another problem is that you likely run into circular dependency chains
+after trying that. The best practice for select vs. depends are
 
->  #else
->  # define WARN_ON_IN_IRQ()
->  #endif
-> 
-> Of course we have to move pagefault_disabled() macro in somewhere better place.
+1. try to use 'depends on' if you can
+2. use 'select' on hidden symbols, but not user visible ones
+3. for each symbol, use either 'depends on'  or 'select' from all other
+    drivers that need it, and do it consistently
+4. never select entire subsystems, only helper code.
 
-And I think we don't need it. anyway the macro is referenced via linux/uaccess.h.
+Those are sometimes at odds. I used 'select' for the LEDS code
+because of 3. and 4, even though that goes against 2. For INPUT,
+there is no real debate though.
 
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+   Arnd
