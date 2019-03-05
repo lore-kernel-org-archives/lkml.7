@@ -2,194 +2,182 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07996C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E248DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA51520842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79102087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfCEOqk (ORCPT
+        id S1728182AbfCEOsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:46:40 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:42388 "EHLO mx1.redhat.com"
+        Tue, 5 Mar 2019 09:48:16 -0500
+Received: from mga07.intel.com ([134.134.136.100]:28781 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727935AbfCEOqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 09:46:40 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7CD19307D987;
-        Tue,  5 Mar 2019 14:46:38 +0000 (UTC)
-Received: from treble (ovpn-126-179.rdu2.redhat.com [10.10.126.179])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D94685C1A1;
-        Tue,  5 Mar 2019 14:46:28 +0000 (UTC)
-Date:   Tue, 5 Mar 2019 08:46:25 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Robin Meijboom <robin@meijboom.info>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sam Ravnborg <sam@ravnborg.org>, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH 3/3] objtool: move tools/objtool/ to scripts/objtool/
-Message-ID: <20190305144625.bjmkr6ebufbly5ba@treble>
-References: <1551764896-8453-1-git-send-email-yamada.masahiro@socionext.com>
- <1551764896-8453-3-git-send-email-yamada.masahiro@socionext.com>
+        id S1728074AbfCEOsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 09:48:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:48:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
+   d="scan'208";a="121150033"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga006.jf.intel.com with ESMTP; 05 Mar 2019 06:48:14 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 672EF301BCA; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     acme@kernel.org
+Cc:     jolsa@kernel.org, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v4 05/15] perf tools report: Parse time quantum
+Date:   Tue,  5 Mar 2019 06:47:48 -0800
+Message-Id: <20190305144758.12397-6-andi@firstfloor.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190305144758.12397-1-andi@firstfloor.org>
+References: <20190305144758.12397-1-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1551764896-8453-3-git-send-email-yamada.masahiro@socionext.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 05 Mar 2019 14:46:39 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 02:48:16PM +0900, Masahiro Yamada wrote:
-> Tools that are globally needed for building the kernel are supposed to
-> be put in the scripts/ directory, but objtool is the exceptional one.
-> 
-> People were confused by objtool's Makefile since most of tools run on
-> the target whereas objtool runs on the host machine. Some time ago,
-> Douglas Anderson suggested to move tools/objtool/ to scripts/tools/
-> (https://patchwork.kernel.org/patch/9983535/#20996057), but we did
-> not go as far as submitting a patch at that time.
-> 
-> Recently, Robin Meijboom reported that the generated files for objtool
-> were never cleaned up. (https://patchwork.kernel.org/patch/10813797/)
-> 
-> So, I looked into this to fix the distortion. Move tools/objtool/ to
-> scripts/objtool/, and rewrite Makefiles in the Kbuild-ish manner.
-> 
-> I also cleaned up the top-level Makefile by moving the libelf check
-> scripts/objtool/Makefile.
->
-> I see some benefits in this.
-> 
-> [1] generated files under scripts/ are cleaned up by 'make mrproper'
-> 
-> Currently, the generated files under tools/objtool/ are not cleaned up
-> since the build system under tools/ is a complete different world.
-> 
-> If we want to clean them up, it should be done by 'make mrproper'
-> instead of 'make clean' since objtool is needed for building external
-> modules.
-> 
-> This commit naturally solves the issue since Kbuild cleans under
-> scripts/ by 'make mrproper'.
+From: Andi Kleen <ak@linux.intel.com>
 
-Yes, but this can be solved instead with a one-line patch.
+Many workloads change over time. perf report currently aggregates
+the whole time range reported in perf.data.
 
-> [2] build log looks nicer
-> 
-> Currently, the build log under tools/objtool/ shows absolute paths, and
-> displays 'DESCEND  objtool' every time for incremental building.
-> 
-> Switching over to the standard Kbuild scheme will improve the log.
-> 
->   Before:
-> 
->   DESCEND  objtool
->   HOSTCC   /home/masahiro/workspace/linux/tools/objtool/fixdep.o
->   HOSTLD   /home/masahiro/workspace/linux/tools/objtool/fixdep-in.o
->   LINK     /home/masahiro/workspace/linux/tools/objtool/fixdep
->   CC       /home/masahiro/workspace/linux/tools/objtool/exec-cmd.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/help.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/pager.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/parse-options.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/run-command.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/sigchain.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/subcmd-config.o
->   LD       /home/masahiro/workspace/linux/tools/objtool/libsubcmd-in.o
->   AR       /home/masahiro/workspace/linux/tools/objtool/libsubcmd.a
->   GEN      /home/masahiro/workspace/linux/tools/objtool/arch/x86/lib/inat-tables.c
->   CC       /home/masahiro/workspace/linux/tools/objtool/arch/x86/decode.o
->   LD       /home/masahiro/workspace/linux/tools/objtool/arch/x86/objtool-in.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/builtin-check.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/builtin-orc.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/check.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/orc_gen.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/orc_dump.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/elf.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/special.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/objtool.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/libstring.o
->   CC       /home/masahiro/workspace/linux/tools/objtool/str_error_r.o
->   LD       /home/masahiro/workspace/linux/tools/objtool/objtool-in.o
->   LINK     /home/masahiro/workspace/linux/tools/objtool/objtool
-> 
->   After:
-> 
->   HOSTCC  scripts/objtool/builtin-check.o
->   HOSTCC  scripts/objtool/builtin-orc.o
->   HOSTCC  scripts/objtool/check.o
->   HOSTCC  scripts/objtool/orc_gen.o
->   HOSTCC  scripts/objtool/orc_dump.o
->   HOSTCC  scripts/objtool/elf.o
->   HOSTCC  scripts/objtool/special.o
->   HOSTCC  scripts/objtool/objtool.o
->   HOSTCC  scripts/objtool/libstring.o
->   HOSTCC  scripts/objtool/str_error_r.o
->   HOSTCC  scripts/objtool/exec-cmd.o
->   HOSTCC  scripts/objtool/pager.o
->   HOSTCC  scripts/objtool/parse-options.o
->   HOSTCC  scripts/objtool/run-command.o
->   HOSTCC  scripts/objtool/sigchain.o
->   HOSTCC  scripts/objtool/subcmd-config.o
->   AWK     scripts/objtool/arch/x86/lib/inat-tables.c
->   HOSTCC  scripts/objtool/arch/x86/decode.o
->   HOSTLD  scripts/objtool/objtool
+This patch adds an option for a time quantum to quantisize the
+perf.data over time.
 
-That does look better.
+This just adds the option, will be used in follow on patches
+for a time sort key.
 
-> [3] simplify distro package script
-> 
-> The special handling in scripts/package/buildeb is no longer needed
-> since all host programs are copied to linux-headers packages.
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
-I do see the benefits.  In many ways objtool is a more natural fit in
-the scripts dir.  But there are also some downsides to this change:
+---
+v2:
+Move time_quantum to symbol_conf. check for zero time quantum
+v3:
+Document s unit
+---
+ tools/perf/Documentation/perf-report.txt |  4 +++
+ tools/perf/builtin-report.c              | 41 ++++++++++++++++++++++++
+ tools/perf/util/symbol.c                 |  1 +
+ tools/perf/util/symbol_conf.h            |  1 +
+ 4 files changed, 47 insertions(+)
 
-- This will make it harder to package objtool as a standalone tool.  It
-  has a lot of functionality that could be useful to other non-kernel
-  projects.
-
-- It shares libsubcmd with perf.  Including the subcmd .c files from
-  tools is hacky.
-
-- It's disruptive: it will break all the out-of-tree distro kernel
-  packaging scripts which now look for objtool in tools.
-
-You're right that objtool isn't a natural fit in tools, because it's
-also used as part of the build.  But it's not a natural fit in scripts
-either.  I think we've resolved most of those issues and it seems to be
-working well these days.
-
-So instead of disrupting everything because "make mrproper" doesn't
-work, I think I'd rather just do the following:
-
-diff --git a/Makefile b/Makefile
-index ac5ac28a24e9..7e6696c9b862 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1364,7 +1364,7 @@ PHONY += $(mrproper-dirs) mrproper
- $(mrproper-dirs):
- 	$(Q)$(MAKE) $(clean)=$(patsubst _mrproper_%,%,$@)
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 51dbc519dbce..9ec1702bccdd 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -497,6 +497,10 @@ include::itrace.txt[]
+ 	The period/hits keywords set the base the percentage is computed
+ 	on - the samples period or the number of samples (hits).
  
--mrproper: clean $(mrproper-dirs)
-+mrproper: clean $(mrproper-dirs) tools/objtool_clean
- 	$(call cmd,rmdirs)
- 	$(call cmd,rmfiles)
++--time-quantum::
++	Configure time quantum for time sort key. Default 100ms.
++	Accepts s, us, ms, ns units.
++
+ include::callchain-overhead-calculation.txt[]
  
+ SEE ALSO
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 09180e559ad6..c19952072a3a 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -47,6 +47,7 @@
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <regex.h>
++#include "sane_ctype.h"
+ #include <signal.h>
+ #include <linux/bitmap.h>
+ #include <linux/stringify.h>
+@@ -926,6 +927,43 @@ report_parse_callchain_opt(const struct option *opt, const char *arg, int unset)
+ 	return parse_callchain_report_opt(arg);
+ }
+ 
++static int
++parse_time_quantum(const struct option *opt, const char *arg,
++		   int unset __maybe_unused)
++{
++	unsigned long *time_q = opt->value;
++	char *end;
++
++	*time_q = strtoul(arg, &end, 0);
++	if (end == arg)
++		goto parse_err;
++	if (*time_q == 0) {
++		pr_err("time quantum cannot be 0");
++		return -1;
++	}
++	while (isspace(*end))
++		end++;
++	if (*end == 0)
++		return 0;
++	if (!strcmp(end, "s")) {
++		*time_q *= 1000000000;
++		return 0;
++	}
++	if (!strcmp(end, "ms")) {
++		*time_q *= 1000000;
++		return 0;
++	}
++	if (!strcmp(end, "us")) {
++		*time_q *= 1000;
++		return 0;
++	}
++	if (!strcmp(end, "ns"))
++		return 0;
++parse_err:
++	pr_err("Cannot parse time quantum `%s'\n", arg);
++	return -1;
++}
++
+ int
+ report_parse_ignore_callees_opt(const struct option *opt __maybe_unused,
+ 				const char *arg, int unset __maybe_unused)
+@@ -1148,6 +1186,9 @@ int cmd_report(int argc, const char **argv)
+ 		     "Set percent type local/global-period/hits",
+ 		     annotate_parse_percent_type),
+ 	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs, "Show times in nanosecs"),
++	OPT_CALLBACK(0, "time-quantum", &symbol_conf.time_quantum, "time (ms|us|ns|s)",
++		     "Set time quantum for time sort key (default 100ms)",
++		     parse_time_quantum),
+ 	OPT_END()
+ 	};
+ 	struct perf_data data = {
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index eb873ea1c405..0f80743a1c25 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -45,6 +45,7 @@ struct symbol_conf symbol_conf = {
+ 	.demangle		= true,
+ 	.demangle_kernel	= false,
+ 	.cumulate_callchain	= true,
++	.time_quantum		= 100000000, /* 100ms */
+ 	.show_hist_headers	= true,
+ 	.symfs			= "",
+ 	.event_group		= true,
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 095a297c8b47..a5684a71b78e 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -56,6 +56,7 @@ struct symbol_conf {
+ 			*sym_list_str,
+ 			*col_width_list_str,
+ 			*bt_stop_list_str;
++	unsigned long	time_quantum;
+        struct strlist	*dso_list,
+ 			*comm_list,
+ 			*sym_list,
+-- 
+2.20.1
+
