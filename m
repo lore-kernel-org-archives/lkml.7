@@ -2,133 +2,152 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DD2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D289DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91D920684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A270D2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:04:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iiEkLBgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfCEPEG (ORCPT
+        id S1728488AbfCEPEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 10:04:06 -0500
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49494 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727653AbfCEPEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 10:04:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 117AB80D;
-        Tue,  5 Mar 2019 07:04:05 -0800 (PST)
-Received: from [10.1.197.2] (ostrya.cambridge.arm.com [10.1.197.2])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F2883F575;
-        Tue,  5 Mar 2019 07:04:02 -0800 (PST)
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v4 03/22] iommu: introduce device fault report API
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@linux.intel.com, will.deacon@arm.com, robin.murphy@arm.com
-Cc:     marc.zyngier@arm.com, peter.maydell@linaro.org,
-        kevin.tian@intel.com, ashok.raj@intel.com, christoffer.dall@arm.com
-References: <20190218135504.25048-1-eric.auger@redhat.com>
- <20190218135504.25048-4-eric.auger@redhat.com>
-Message-ID: <fb5f84e6-812f-978d-3be1-673b3e9717ad@arm.com>
-Date:   Tue, 5 Mar 2019 15:03:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 5 Mar 2019 10:04:31 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:42010 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728407AbfCEPEb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 10:04:31 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x25EwucM068210;
+        Tue, 5 Mar 2019 15:04:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=whALaH2FYSiHZMtoyrQE2aHUWCB9+DSN3UR8q9XLFW0=;
+ b=iiEkLBgAwmBmdeGX1HiIRD7U9YiwRSNZEiBwb7+XyGeEH5Fui14m2Vg34bw4SIMvKQNk
+ egDQuj/sr+1IocTidAvaFNviwwHXKvbvwgr4O8NNByK+t4+pmV4fP4T7Wnvbc+OSGyai
+ UxaWlp1HoyMtb3ybmpjmygB2fJxQCUn0gAmkVWXs/IYyZKEg3asRjPbaOzQIrEgwGb3X
+ +M+lMUZfc5H0gZNzOemrZxxXeD8CToF7XRNCVXHI4+Honp8CI/E07/rIgR3mX3nWm1SH
+ ZbzrqK3/sRXiGQH/pRDCjqWZVOK3LNwSYFim8BKnzxrwTVKRG2WKSKnJyUXBWR2NlaR5 jA== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2130.oracle.com with ESMTP id 2qyh8u5wvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 Mar 2019 15:04:18 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x25F4CMs002625
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 Mar 2019 15:04:13 GMT
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x25F4CcT010829;
+        Tue, 5 Mar 2019 15:04:12 GMT
+Received: from lap1 (/77.138.186.148)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 05 Mar 2019 07:04:11 -0800
+Date:   Tue, 5 Mar 2019 17:04:06 +0200
+From:   Yuval Shaia <yuval.shaia@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     john.hubbard@gmail.com, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v3] RDMA/umem: minor bug fix in error handling path
+Message-ID: <20190305150406.GA12098@lap1>
+References: <20190304194645.10422-1-jhubbard@nvidia.com>
+ <20190304194645.10422-2-jhubbard@nvidia.com>
+ <20190304115814.GE30058@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190218135504.25048-4-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190304115814.GE30058@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9185 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903050100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/02/2019 13:54, Eric Auger wrote:
-[...]> +/**
-> + * iommu_register_device_fault_handler() - Register a device fault handler
-> + * @dev: the device
-> + * @handler: the fault handler
-> + * @data: private data passed as argument to the handler
-> + *
-> + * When an IOMMU fault event is received, call this handler with the fault event
-> + * and data as argument. The handler should return 0 on success. If the fault is
-> + * recoverable (IOMMU_FAULT_PAGE_REQ), the handler can also complete
-> + * the fault by calling iommu_page_response() with one of the following
-> + * response code:
-> + * - IOMMU_PAGE_RESP_SUCCESS: retry the translation
-> + * - IOMMU_PAGE_RESP_INVALID: terminate the fault
-> + * - IOMMU_PAGE_RESP_FAILURE: terminate the fault and stop reporting
-> + *   page faults if possible.
+On Mon, Mar 04, 2019 at 03:58:15AM -0800, Ira Weiny wrote:
+> On Mon, Mar 04, 2019 at 11:46:45AM -0800, john.hubbard@gmail.com wrote:
+> > From: John Hubbard <jhubbard@nvidia.com>
+> >=20
+> > 1. Bug fix: fix an off by one error in the code that
+> > cleans up if it fails to dma-map a page, after having
+> > done a get_user_pages_remote() on a range of pages.
+> >=20
+> > 2. Refinement: for that same cleanup code, release_pages()
+> > is better than put_page() in a loop.
+> >=20
+> > Cc: Leon Romanovsky <leon@kernel.org>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Doug Ledford <dledford@redhat.com>
+> > Cc: linux-rdma@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>=20
+> I meant...
+>=20
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>=20
+> <sigh>  just a bit too quick on the keyboard before lunch...  ;-)
+>=20
+> Ira
 
-The comment refers to function and values that haven't been defined yet.
-Either the page_response() patch should come before, or we need to split
-this patch.
+I have this mapping in vimrc so i just have to do shift+!
 
-Something I missed before: if the handler fails (returns != 0) it should
-complete the fault by calling iommu_page_response(), if we're not doing
-it in iommu_report_device_fault(). It should be indicated in this
-comment. It's safe for the handler to call page_response() since we're
-not holding fault_param->lock when calling the handler.
+map ! o=0DReviewed-by: Yuval Shaia <yuval.shaia@oracle.com>=0D=1B
 
-> + *
-> + * Return 0 if the fault handler was installed successfully, or an error.
-> + */
-[...]
-> +/**
-> + * iommu_report_device_fault() - Report fault event to device
-> + * @dev: the device
-> + * @evt: fault event data
-> + *
-> + * Called by IOMMU model specific drivers when fault is detected, typically
-> + * in a threaded IRQ handler.
-> + *
-> + * Return 0 on success, or an error.
-> + */
-> +int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
-> +{
-> +	int ret = 0;
-> +	struct iommu_fault_event *evt_pending;
-> +	struct iommu_fault_param *fparam;
-> +
-> +	/* iommu_param is allocated when device is added to group */
-> +	if (!dev->iommu_param | !evt)
-
-Typo: ||
-
-Thanks,
-Jean
-
-> +		return -EINVAL;
-> +	/* we only report device fault if there is a handler registered */
-> +	mutex_lock(&dev->iommu_param->lock);
-> +	if (!dev->iommu_param->fault_param ||
-> +		!dev->iommu_param->fault_param->handler) {
-> +		ret = -EINVAL;
-> +		goto done_unlock;
-> +	}
-> +	fparam = dev->iommu_param->fault_param;
-> +	if (evt->fault.type == IOMMU_FAULT_PAGE_REQ &&
-> +	    evt->fault.prm.flags & IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE) {
-> +		evt_pending = kmemdup(evt, sizeof(struct iommu_fault_event),
-> +				GFP_KERNEL);
-> +		if (!evt_pending) {
-> +			ret = -ENOMEM;
-> +			goto done_unlock;
-> +		}
-> +		mutex_lock(&fparam->lock);
-> +		list_add_tail(&evt_pending->list, &fparam->faults);
-> +		mutex_unlock(&fparam->lock);
-> +	}
-> +	ret = fparam->handler(evt, fparam->data);
-> +done_unlock:
-> +	mutex_unlock(&dev->iommu_param->lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_report_device_fault);
-[...]
+>=20
+>=20
+> > ---
+> >  drivers/infiniband/core/umem_odp.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/co=
+re/umem_odp.c
+> > index acb882f279cb..d45735b02e07 100644
+> > --- a/drivers/infiniband/core/umem_odp.c
+> > +++ b/drivers/infiniband/core/umem_odp.c
+> > @@ -40,6 +40,7 @@
+> >  #include <linux/vmalloc.h>
+> >  #include <linux/hugetlb.h>
+> >  #include <linux/interval_tree_generic.h>
+> > +#include <linux/pagemap.h>
+> > =20
+> >  #include <rdma/ib_verbs.h>
+> >  #include <rdma/ib_umem.h>
+> > @@ -684,9 +685,11 @@ int ib_umem_odp_map_dma_pages(struct ib_umem_odp *=
+umem_odp, u64 user_virt,
+> >  		mutex_unlock(&umem_odp->umem_mutex);
+> > =20
+> >  		if (ret < 0) {
+> > -			/* Release left over pages when handling errors. */
+> > -			for (++j; j < npages; ++j)
+> > -				put_page(local_page_list[j]);
+> > +			/*
+> > +			 * Release pages, starting at the the first page
+> > +			 * that experienced an error.
+> > +			 */
+> > +			release_pages(&local_page_list[j], npages - j);
+> >  			break;
+> >  		}
+> >  	}
+> > --=20
+> > 2.21.0
+> >=20
