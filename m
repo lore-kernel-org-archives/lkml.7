@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D549CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19480C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3E72082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31452082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 06:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbfCEG6f (ORCPT
+        id S1727064AbfCEG6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 01:58:35 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:49635 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725818AbfCEG6f (ORCPT
+        Tue, 5 Mar 2019 01:58:40 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:47811 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725782AbfCEG6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 01:58:35 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TM.l8T0_1551769107;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TM.l8T0_1551769107)
+        Tue, 5 Mar 2019 01:58:39 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TM.btbz_1551769110;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TM.btbz_1551769110)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 05 Mar 2019 14:58:27 +0800
+          Tue, 05 Mar 2019 14:58:30 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         harryxiyou@gmail.com, corbet@lwn.net, leoyang.li@nxp.com
 Cc:     colyli@suse.de, fengguang.wu@intel.com, shawn.guo@linaro.org,
-        lizefan@huawei.com, Alex Shi <alex.shi@linux.alibaba.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>
-Subject: [PATCH v2 01/27] docs/zh_CN: add disclaimer file
-Date:   Tue,  5 Mar 2019 14:57:48 +0800
-Message-Id: <20190305065815.157964-2-alex.shi@linux.alibaba.com>
+        lizefan@huawei.com, Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v2 03/27] docs/zh_CN: change Chinese index to know process dir
+Date:   Tue,  5 Mar 2019 14:57:50 +0800
+Message-Id: <20190305065815.157964-4-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190305065815.157964-1-alex.shi@linux.alibaba.com>
 References: <20190305065815.157964-1-alex.shi@linux.alibaba.com>
@@ -44,12 +43,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This a disclaimer file which will be included in Chinese files
-as header. To reduce the same common contents copy.
-
-Part of contents quoted from Federico Vaga's file:
-    Documentation/translations/it_IT/disclaimer-ita.rst.
-Thanks a lot!
+And add some description translation in index file.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
@@ -58,27 +52,38 @@ Cc: Li Zefan <lizefan@huawei.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: Coly Li <colyli@suse.de>
-Cc: Federico Vaga <federico.vaga@vaga.pv.it>
 ---
- Documentation/translations/zh_CN/disclaimer-zh_CN.rst | 9 +++++++++
- 1 file changed, 9 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
+ Documentation/translations/zh_CN/index.rst | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/disclaimer-zh_CN.rst b/Documentation/translations/zh_CN/disclaimer-zh_CN.rst
-new file mode 100644
-index 000000000000..5934369b2606
---- /dev/null
-+++ b/Documentation/translations/zh_CN/disclaimer-zh_CN.rst
-@@ -0,0 +1,9 @@
-+:orphan:
+diff --git a/Documentation/translations/zh_CN/index.rst b/Documentation/translations/zh_CN/index.rst
+index 75956d669962..dbc77a646530 100644
+--- a/Documentation/translations/zh_CN/index.rst
++++ b/Documentation/translations/zh_CN/index.rst
+@@ -3,10 +3,19 @@
+ 	\renewcommand\thesection*
+ 	\renewcommand\thesubsection*
+ 
+-Chinese translations
+-====================
++中文翻译
++========
 +
-+.. warning::
-+     此文件的目的是为让中文读者更容易阅读和理解，而不是作为一个分支。 因此，如果
-+     您对此文件有任何意见或更新，请先尝试更新原始英文文件。
++这些手册包含有关如何开发内核的整体信息。内核社区非常庞大，一年下来有数千名开发
++人员做出贡献。 与任何大型社区一样，知道如何完成任务将使得更改合并的过程变得更
++加容易。
+ 
+ .. toctree::
+-   :maxdepth: 1
++   :maxdepth: 2
 +
-+.. note::
-+     如果您发现本文档与原始文件有任何不同或者有翻译问题，请联系该文件的维护者，
-+     或者请求时奎亮的帮助：<alex.shi@linux.alibaba.com>。
++   process/index
++
++目录和表格
++==========
+ 
+-   coding-style
++* :ref:`genindex`
 -- 
 2.19.1.856.g8858448bb
 
