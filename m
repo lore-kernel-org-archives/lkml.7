@@ -2,162 +2,142 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA13C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE85C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E305520842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLZD6FDK"
+	by mail.kernel.org (Postfix) with ESMTP id 9960020661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1551806858;
+	bh=6EehNyW1yG8bvJ/Ya1ADludhyDeXFdpRa6lUQxUcTxA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pxP3+G6RcZophhm4rWQDehJvXV6qm9jDQlbT0wPGKTgnI9ZCsCYuZAXe1nsaMT+vZ
+	 kDALCKyl2JtCEcEOXtdq5REYchGm00PM1cqSZH9qUzfq9/zAzEM0m+KetS6hmX917y
+	 6NP9oEU8hf+1siomPDVBoKQhN9iew70RMCeRa8nM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfCER1U (ORCPT
+        id S1728169AbfCER1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 12:27:20 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44622 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727334AbfCER1T (ORCPT
+        Tue, 5 Mar 2019 12:27:37 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:42397 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbfCER1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 12:27:19 -0500
-Received: by mail-pf1-f194.google.com with SMTP id a3so6200528pff.11;
-        Tue, 05 Mar 2019 09:27:18 -0800 (PST)
+        Tue, 5 Mar 2019 12:27:36 -0500
+Received: by mail-yw1-f67.google.com with SMTP id v201so7572661ywa.9;
+        Tue, 05 Mar 2019 09:27:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ok0zY5DUYYF0T+dRMWW1Nw0S/K2DqLUG9/hAWAE8dHM=;
-        b=lLZD6FDKa4+ZqX7gfXiCp3AFF/dt4L/yvUsoPjNltoa9c5T8uTRRL/OjtU2m09RTNw
-         dxexDYoAMZ5qlwoFCEavXIzJG6zElaH6juwb64+ytLQJmrza9T82DbI2WTFFujVSpfK1
-         5iPi9+r2G8nPgQkAd2GvhctrvFNkBQVPxTGfup/684X4E9Nx9BXpGaP20S3iUccm15tK
-         Li2FdLEvOrCiHr3ClkwPMTp1fIxsjmx1esqyg582XutkeceIgOuXjCu0HAWX3G8ovEs6
-         7e62tv7REF8jl3yRtBvkjwDtL+x/Tu35iEBil+xdAlelbxq1h7kKAlGn8jd0AWQROHcO
-         7pPQ==
+        bh=mNi2wcs42w6UeX4ek2kNcWvb2MWYPhhWXQr+BTcHWzA=;
+        b=WGvmDns+blbuyso53uWHKhRtDGSCgonJqeV/qv36MQf+5wzAILLS9xN/7V1A5oKJYC
+         5p2rYbnI4yHmrwWtXSCzWvVUjtSsgAk1eZUUcKbS3rJO0Bpeb22uLSBw3duLCHZTcc9d
+         VyIkNTGwR7bzeBkNy66nBFRpn2AQzDpNvkjKGdKTDBM9NAiA8b5sjPmjIFOdK370b7tB
+         O7OmjnWOa2zPniVkNA/bUUFr+WTIktjJiaO2YksyzzTjxaoutu1ToFUOngyifduCGHqi
+         umCHTuczoamZ7P4KTFESx8p6VeI3ZGh3TOAGrPl2SvLVfWxCaIhCm/85udUMsIcaYnKh
+         wV4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ok0zY5DUYYF0T+dRMWW1Nw0S/K2DqLUG9/hAWAE8dHM=;
-        b=hXm71z6cqml3iYHzn6UFcWC1eGjIU702mgD2ConHMjlxOHsEz8Hss19hIDhWqsyn6E
-         3Ndy1Eg3SFElxnirIBcwt4csbEYXo/srqgXLp1R457orpU0xCvjmU2yVZhRjw4zkGt1B
-         hPsy1esunu1OHY42+k6wVjR8V/jqV0ezYaShrTvcCKdWKsIpr+eF2KTimSf1dUyYj01D
-         2V6tfZbF1S7s2eHiJTXVdugnhd0VxAEtVKnYuRAfEqNbuzgpNveuZznoySFcdlXtdXaP
-         E5QntOKT1FfKtqYrFiudSi0+ELdEsB2LmahJTdtKlsGBMqHA0Byaboz3OtbdBUOmC9IE
-         AQ9w==
-X-Gm-Message-State: APjAAAXdxx+VQIawGdJv2STxLwqDSdM+hOGnZyWl51b5uX5rZz9LvYgV
-        QmZfvZgxb+6ocFfz1tnK6X8=
-X-Google-Smtp-Source: APXvYqz8v3MekaACTMmiZRps1by4sAhfub0Pgvg9GZl99/OOlxK1nOMb0kn0R18Ti2dE1mPsIyFffg==
-X-Received: by 2002:a63:d70a:: with SMTP id d10mr2348403pgg.286.1551806838386;
-        Tue, 05 Mar 2019 09:27:18 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k9sm14760175pfc.57.2019.03.05.09.27.17
+        bh=mNi2wcs42w6UeX4ek2kNcWvb2MWYPhhWXQr+BTcHWzA=;
+        b=KpbguuTnMZHNyEjymVpV0xs6CSHGNd+COM8Sj+1kFjm4XApVBrh6fYFEz86zSjR+sr
+         +BY+6uMtBL7jPBDNXKCMJnOH9Ar5+8QTQmDfAq2C4Fus8XVmCUD4XjwV9a31pN8aN4ZF
+         tWKJ6+tFlm2+FmqkyMQDyiqtTqKXgb631ZjXrobB1VWDlOp/Q5HOryG/yIeZBqJq9ZPU
+         KT/zaxdNQT086tFDpAfa9g0tY62JHYfUymxFVQj/upU24gcZdwvB2kJLwYelGLDcRzIu
+         rA+kwoaSnq1V9Y+uLyuJbqpvic6g15CZm+8BzUMcC/xclAPWwqaScW4fu4QD40w2A8rm
+         8jgw==
+X-Gm-Message-State: APjAAAWprz7hCLIxGEOK+FHevlPybUC45t1o/gCy2UYCP8RwjRYxskLX
+        r1IuTkrwi0oG1maxv4niHD4=
+X-Google-Smtp-Source: APXvYqyeKr78a4dEfjAAMr0jp5YtITHKYQ96ml729Nmp/eeJKDy+vpvLfcWUGNI/0Uwf6CNYOz9Teg==
+X-Received: by 2002:a0d:e105:: with SMTP id k5mr1883870ywe.196.1551806855057;
+        Tue, 05 Mar 2019 09:27:35 -0800 (PST)
+Received: from localhost ([2620:10d:c091:200::1676])
+        by smtp.gmail.com with ESMTPSA id w127sm1858621ywf.97.2019.03.05.09.27.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Mar 2019 09:27:17 -0800 (PST)
-Date:   Tue, 5 Mar 2019 09:27:17 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 2/2] watchdog: orion_wdt: use timer1 as a pretimeout
-Message-ID: <20190305172716.GB32623@roeck-us.net>
-References: <20190227230707.GA28635@roeck-us.net>
- <20190304225152.26831-1-chris.packham@alliedtelesis.co.nz>
- <20190304225152.26831-3-chris.packham@alliedtelesis.co.nz>
- <20190305005710.GL26378@lunn.ch>
- <5605e7b7a0f540a7908a1eb5191bbe5e@svr-chch-ex1.atlnz.lc>
+        Tue, 05 Mar 2019 09:27:34 -0800 (PST)
+Date:   Tue, 5 Mar 2019 09:27:32 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Roman Gushchin <guro@fb.com>, Roman Gushchin <guroan@gmail.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 0/7] freezer for cgroup v2
+Message-ID: <20190305172711.GE50184@devbig004.ftw2.facebook.com>
+References: <20190219220252.4906-1-guro@fb.com>
+ <20190220143748.GA9477@redhat.com>
+ <20190220220020.GA16335@castle.DHCP.thefacebook.com>
+ <20190221162923.GA26064@redhat.com>
+ <20190221173422.GY50184@devbig004.ftw2.facebook.com>
+ <20190222163441.GA5596@redhat.com>
+ <20190222181740.GZ50184@devbig004.ftw2.facebook.com>
+ <20190225155725.GA8096@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5605e7b7a0f540a7908a1eb5191bbe5e@svr-chch-ex1.atlnz.lc>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190225155725.GA8096@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 01:26:08AM +0000, Chris Packham wrote:
-> On 5/03/19 1:57 PM, Andrew Lunn wrote:
-> > On Tue, Mar 05, 2019 at 11:51:52AM +1300, Chris Packham wrote:
-> >> The orion watchdog can either reset the CPU or generate an interrupt.
-> >> The interrupt would be useful for debugging as it provides panic()
-> >> output about the watchdog expiry, however if the interrupt is used the
-> >> watchdog can't reset the CPU in the event of being stuck in a loop with
-> >> interrupts disabled or if the CPU is prevented from accessing memory
-> >> (e.g. an unterminated DMA).
-> >>
-> >> All of the orion based CPU cores (at least back as far as Kirkwood) have
-> >> spare timers that aren't currently used by the Linux kernel.
-> 
-> Actually this appears to be incorrect Kirkwood does configure timer1 as 
-> a clockevent timer. So I can't just grab timer1 for all platforms.
-> 
-If you can't use it unconditionally, can you specify it (and use it)
-as clock ?
+Hello, Oleg.
 
-> >> We can use
-> >> timer1 to provide a pre-timeout ahead of the watchdog timer and provide
-> >> the possibility of gathering debug before the reset triggers.
-> > 
-> > Hi Chris
-> > 
-> > I had a quick look at other drivers implementing pre-timeout. They
-> > seem to call watchdog_notify_pretimeout(). I don't see that here? What
-> > happens when timer1 fires?
-> > 
-> 
-> It invokes the regular orion_wdt_irq(). On Armada-385 prior to this 
-> change the irq was not specified because the reset always kicked in so 
-> there was no point.
-> 
+Sorry about the delay.
 
-I would suggest to update that function to actually call
-watchdog_notify_pretimeout() if a pretimeout is configured configured.
-After all, we do want to support the infrastructure, and that includes
-support for the various pretimeout governors (if enabled).
-
-> For correctness I could make the devicetree binding specify 2 
-> interrupts. One for the regular watchdog interrupt (which would never 
-> usually get hit because the reset would kick in) and one for the 
-> pretimeout/timer1.
+On Mon, Feb 25, 2019 at 04:57:25PM +0100, Oleg Nesterov wrote:
+> > As long as the task is
+> > guaranteed to be trapped by signal stop afterwards (and they are), we
+> > likely can use them the same way.  The only thing to be careful about
+> > would be ensuring that we don't end up flipping group level frozen
+> > state inbetween.  Would something like that work?
 > 
-Yes, if they are different interrupts and orion_wdt_irq() is only supposed
-to handle the real timeout.
+> I have no idea because I do not understand what exactly do you mean ;)
 
-Thanks,
-Guenter
+Heh, sorry about that.  What I meant was that we can consider a task
+which is blocked in vfork wait as already frozen and that if we do so
+we need to be careful so that frozen state doesn't do a flip between
+vfork wait ending and the task getting parked again in a jobctl stop.
 
-> >> @@ -169,38 +174,46 @@ static int armadaxp_wdt_clock_init(struct platform_device *pdev,
-> >>   	}
-> >>   
-> >>   	/* Enable the fixed watchdog clock input */
-> >> -	atomic_io_modify(dev->reg + TIMER_CTRL,
-> >> -			 WDT_AXP_FIXED_ENABLE_BIT,
-> >> -			 WDT_AXP_FIXED_ENABLE_BIT);
-> >> +	val = WDT_AXP_FIXED_ENABLE_BIT | TIMER1_FIXED_ENABLE_BIT;
-> >> +	atomic_io_modify(dev->reg + TIMER_CTRL, val, val);
-> >>   
-> >>   	dev->clk_rate = clk_get_rate(dev->clk);
-> >> +
-> >> +
-> > 
-> > One blank line is sufficient,
-> > 
-> > 
-> >>   	return 0;
-> >>   }
-> > 
-> >     Andrew
-> > 
+> However. Thinking more about this, I am not sure my concerns were valid.
+> Yes, cg freezer can "hang" if it races with vfork(). But probably we should
+> blame vfork(), not freezer.
+
+I think we'd need to cover that ground regardless of where blame lies.
+It's weird if freezing doesn't complete cuz one of the tasks messed up
+while vforking.
+
+> The problem is, even ^Z can "hang" if the foreground process does vfork()
+> and the new child stops before exit/exec. Now I recall that I even tried
+> to make a patch to fix this using ERESTART_RESTARTBLOCK, but had some nasty
+> problems with blocked signals...
+
+Ugh... yeah, these wait non-interruptible wait sites which can be
+exposed to userspace are nasty.  They end up adding a unique wait
+state visible to userspace which comes with a bunch of corner cases.
+
+> de_thread() should use freezable_schedule() in TASK_KILLABLE too. Currently
+> it doesn't, but only because we have other (much more serious) problems with
+> cred_guard_mutex/exec. However, this is is fine wrt cg freezer, other threads
+> can't be frozen exactly because it is killable.
 > 
+> Anything else does freezer_do_not_count() in TASK_KILLABLE and waits for
+> another freezable process?
+
+Can't find any.  Hopefully, that was it?
+
+> So it seems I have to take my words back, perhaps we can forget about
+> freezable_schedule/etc.
+
+I think it'd be great to be able to handle these if at all possible.
+
+Thanks.
+
+-- 
+tejun
