@@ -2,87 +2,108 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEA6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB3BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2FC206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AF8206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:44:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JsXOElIl"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FcAUd0LN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfCELoN (ORCPT
+        id S1727832AbfCELoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:44:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52710 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfCELoM (ORCPT
+        Tue, 5 Mar 2019 06:44:17 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:5340 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfCELoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:44:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4d3uPbgoW9Ou/9nQNRQtXaXcNQF6nLUyGCwHg1/4rbA=; b=JsXOElIlqmnYFV7/f8EQm/0lB
-        mcOr44rCm5GcYTWMkoOC7/i3AIIbYAGT7INJ/hZ+fWi1XgX/6AOcE43wx8SaRFyAnu/hXp6tUzAa1
-        MTx9qvH9wzpaDMTYq2I3BjBZSzTAqs2j8226yVi3xoNsqHR5VPPik0pzNfLywCWWGf94ztsb8NuUK
-        ioVu07TgUGOcToGvJ1bTiMyMCxzEv0hxXuXoEBMJMTzhpnmcfkILFADYHoA1JHqo81Sk4FJ8CnmU2
-        TmKn8mw9Cdd38vtv97nUGUBEbB+DBuJapQoQQGOtRUDLydetHx3O4S5Dt7x4OEIiYg9bWzMUFxLWI
-        ddIHCJdxw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h18US-0002av-MM; Tue, 05 Mar 2019 11:44:08 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7285B202883B6; Tue,  5 Mar 2019 12:44:06 +0100 (CET)
-Date:   Tue, 5 Mar 2019 12:44:06 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Quentin Perret <quentin.perret@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Gabriele Mazzotta <gabriele.mzt@gmail.com>
-Subject: Re: [RFT][Update][PATCH 2/2] cpufreq: intel_pstate: Update max CPU
- frequency on global turbo changes
-Message-ID: <20190305114406.GV32494@hirez.programming.kicks-ass.net>
-References: <9956076.F4luUDm1Dq@aspire.rjw.lan>
- <20190305104256.7kvedlttuovmptpc@queper01-lin>
- <2336151.IZk3Z8DVvP@aspire.rjw.lan>
- <6357319.Iupbu3ldGQ@aspire.rjw.lan>
+        Tue, 5 Mar 2019 06:44:15 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c7e610f0001>; Tue, 05 Mar 2019 03:44:15 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 05 Mar 2019 03:44:14 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 05 Mar 2019 03:44:14 -0800
+Received: from [10.21.26.179] (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Mar
+ 2019 11:44:12 +0000
+Subject: Re: [PATCH] gpu: host1x: avoid IOMMU_API build error
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190304195338.989221-1-arnd@arndb.de>
+From:   Mikko Perttunen <mperttunen@nvidia.com>
+Message-ID: <b966e099-d908-c5a6-6080-beced36a39d9@nvidia.com>
+Date:   Tue, 5 Mar 2019 13:44:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6357319.Iupbu3ldGQ@aspire.rjw.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190304195338.989221-1-arnd@arndb.de>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1551786255; bh=ufJ1OfEmAWiLDLY1sYbxqQ/CUmKibqR2ymASNMyZjXU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FcAUd0LNSfebuintIHHryj0t7+pbws+b+734Y6gFpgAAwtm5fAKIBczssMRCrQtE1
+         E0XUuyHEnSLb1UNioLhaSLFrCc1n7fcBgyU3w+R0xDwL6Cj5el7/ZiDIf/GvkmQaJo
+         51gdFf8Mxje6hU4LGIT+ukgGC76vSdztph3Om+lF7ZXEaN+QEoOcatYkhFxdDK1RF0
+         dCgkNkb8+nDy6PWT5sxGzUb3rUCX78+xdlOW2OtU0VYcpoHnYBMttBR9y+wkgnr3fb
+         Pe1xqFnYhZplC58nJDebdg0OpglKfB2xz75W2HZkS47oNY9QqWBNJFCZwqC9Vxj83A
+         wmGSi7PyHbqRw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 11:58:37AM +0100, Rafael J. Wysocki wrote:
-> So after the Peter's patch "sched/cpufreq: Fix 32bit math overflow"
-> I will need to recompute sg_cpu->min in sugov_limits().
+On 4.3.2019 21.53, Arnd Bergmann wrote:
+> drivers/gpu/host1x/hw/channel_hw.c: In function 'host1x_channel_set_streamid':
+> drivers/gpu/host1x/hw/channel_hw.c:118:30: error: implicit declaration of function 'dev_iommu_fwspec_get'; did you mean 'iommu_fwspec_free'? [-Werror=implicit-function-declaration]
+>    struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
+>                                ^~~~~~~~~~~~~~~~~~~~
+>                                iommu_fwspec_free
+> drivers/gpu/host1x/hw/channel_hw.c:118:30: error: initialization of 'struct iommu_fwspec *' from 'int' makes pointer from integer without a cast [-Werror=int-conversion]
+> drivers/gpu/host1x/hw/channel_hw.c:119:23: error: 'struct iommu_fwspec' has no member named 'ids'
+>    u32 sid = spec ? spec->ids[0] & 0xffff : 0x7f;
+>                         ^~
+> cc1: all warnings being treated as errors
+> 
+> Fixes: de5469c21ff9 ("gpu: host1x: Program the channel stream ID")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/gpu/host1x/hw/channel_hw.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/host1x/hw/channel_hw.c b/drivers/gpu/host1x/hw/channel_hw.c
+> index 27101c04a827..738dccf4ee3f 100644
+> --- a/drivers/gpu/host1x/hw/channel_hw.c
+> +++ b/drivers/gpu/host1x/hw/channel_hw.c
+> @@ -114,7 +114,7 @@ static inline void synchronize_syncpt_base(struct host1x_job *job)
+>   
+>   static void host1x_channel_set_streamid(struct host1x_channel *channel)
+>   {
+> -#if HOST1X_HW >= 6
+> +#if HOST1X_HW >= 6 && defined(CONFIG_IOMMU_API)
+>   	struct iommu_fwspec *spec = dev_iommu_fwspec_get(channel->dev->parent);
+>   	u32 sid = spec ? spec->ids[0] & 0xffff : 0x7f;
+>   
+> 
 
-So there's still an open question; do we want that ->min thing to depend
-on available frequencies _at_all_ ?
+We should always program the stream ID - if IOMMU API is not enabled 
+then 0x7f (SMMU bypass) should always be programmed.
 
-I'm thinking it might be a good thing to have the iowait boost curve be
-independent of all that.
-
-Like said; if we set it at 128 (static), it takes 9 consequtive wake-ups
-for it to reach 1024 (max). While now the curve depends on how wide the
-gap is between min_freq and max_freq. And it seems weird to have this
-behaviour depend on that. To me at least.
-
-Now, I don't know if 128/9 is the right curve, it is just a random
-number I pulled out of a hat. But it seems to make more sense than
-depending on frequencies.
-
-
+Mikko
