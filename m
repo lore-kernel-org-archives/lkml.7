@@ -2,201 +2,108 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0321EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F8EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB4820684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551798557;
-	bh=sRo7jyiAjflDbSlBGQRMU/ebEQYQihWhf6TpLfCNrU4=;
-	h=Date:From:To:cc:Subject:List-ID:From;
-	b=MfCNex31RZHm1Wj3JZAcAUiSPWdpp5cN2Bw0HnKL7BmLId9ryxS/mYeToeQzUeEeQ
-	 WFYtEsUPKh6RL69tyNglXtqOhae2a9jw1GUR9B1yvK4s1TVOkscCQEoxsId/W9Yww3
-	 CDkEfotM26urpQhVJgQuuY0R8mnluHuQYyDbSxKU=
+	by mail.kernel.org (Postfix) with ESMTP id 2E5B120684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 15:11:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYR0jpoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbfCEPJP (ORCPT
+        id S1728533AbfCEPLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 10:09:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727653AbfCEPJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 10:09:15 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1261420684;
-        Tue,  5 Mar 2019 15:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551798554;
-        bh=sRo7jyiAjflDbSlBGQRMU/ebEQYQihWhf6TpLfCNrU4=;
-        h=Date:From:To:cc:Subject:From;
-        b=bdJshlj22S6M5XzDK1q9R0R0kN9YWDwk2ZZOt7PZ/SujGbzVPNC0EZ0mTp86vpGNu
-         pWNmqA+ASGKrVNGNGarFAeFsL/LGoomHdd3L2M7WmlVwG0PP54UooTJ0L6QqnnStfX
-         dZZ9GUhVr3lE8RRO8maC+hJJvtcWBncpZMZsCruw=
-Date:   Tue, 5 Mar 2019 16:09:11 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] HID for 5.1
-Message-ID: <nycvar.YFH.7.76.1903051558000.19912@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 5 Mar 2019 10:11:47 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35672 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727653AbfCEPLr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 10:11:47 -0500
+Received: by mail-pg1-f193.google.com with SMTP id e17so5839568pgd.2;
+        Tue, 05 Mar 2019 07:11:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9iTifxXjGmAi8MDFxxgTGnJK9Mg5GDC/s7gXfuRQ2HY=;
+        b=SYR0jpoS0AahXnovteEllkGqx4Mn3i7fcd1A5SFuPU1JwnZtzQIZCD8vl35J+DXKtc
+         2f0k6JcvFvmpoI1j1fdo71l4hHrWfmfOSjJ1ZApY56zkHH+VgHG0J0KoHGP/fBqUNjcd
+         c0HF44VjlY8KBJmBdCwY2rckx3lRF9YXAjyyy7iOQX6EjALzUEeVKcfYD9c2Dh1PJfBH
+         fJYyCt/icX8wmeSXYgfekRAsodwDRWncs7O1raYo16WsPoglr+MpOB2OYcgsvYzOfLhQ
+         r3Tjkam/ZF30HnmqaLrKWYNq1lIxYoAc2R7nAV4CUZAw2OV+WxA42fPAwvKSQA1HYbEC
+         q4Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9iTifxXjGmAi8MDFxxgTGnJK9Mg5GDC/s7gXfuRQ2HY=;
+        b=p7qF7Oi1F/xuQOwF66RXuoCh0B1CiK3kpss4ykiEoaa6h2POzhW/WivnvQ59KARwGe
+         yyYWLEkNZtVX5mJTnuH1C50jXRHL9V3BuPNfk9B0aJw6TygBDT93igIuXdI/eQ1zk0tb
+         CeEEsqejCgMDIYnoWWK0GC8qDERaOyjNU/zyL9BZYsfBirzu8CFwUF5K9Hx4E0okEuO9
+         aLHYQWv2KUUdEOU0TQ0zMKibJKw83YAZt0xo+Py2cGSCdUf9gQLt+2FkD2MV+7UKg1Dj
+         BaAl5WaMFE6WFiwAUAmArzl1PoCO0Gu+Rqo2dYxUXknp/FZAhAVyDWsu3b+M/9kFZRe6
+         aFUA==
+X-Gm-Message-State: APjAAAVG4P4qq0br8AhHUC8THZNhkqbT2LYV4Uo7GHOqLb3kQnmhPrJj
+        xJDLCdsOd871duabchjaTYM=
+X-Google-Smtp-Source: APXvYqxt0b0tIOAOppdXosAH6vPJGDN/Ih/54jeLa5Y0SiwjE6/9vc5jnmjfLSKtnRgH45k8DG47Bg==
+X-Received: by 2002:a63:9dc3:: with SMTP id i186mr1763159pgd.305.1551798706365;
+        Tue, 05 Mar 2019 07:11:46 -0800 (PST)
+Received: from localhost.localdomain ([125.142.23.13])
+        by smtp.googlemail.com with ESMTPSA id k8sm11906707pgg.75.2019.03.05.07.11.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 Mar 2019 07:11:45 -0800 (PST)
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     shuah@kernel.org, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Suwan Kim <suwan.kim027@gmail.com>
+Subject: [PATCH] usbip: Remove unnecessary null check
+Date:   Wed,  6 Mar 2019 00:11:10 +0900
+Message-Id: <20190305151110.4366-1-suwan.kim027@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+"vdev" points to vhci_hcd->vdev[] array and vhci_hcd->vdev[] array
+is not a pointer array but a structure array and it is already used
+in vhci_urb_enqueue() and then passed to vhci_tx_urb() as an argument.
+vhci_tx_urb() is not called except vhci_urb_enqueue(). So, "vdev"
+can not be null pointer. This null check statement is meaningless.
 
-please pull from
+Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+---
+ drivers/usb/usbip/vhci_hcd.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
-
-to receive HID subsystem updates for 5.1 merge window:
-
-=====
-- support for Pro Pen slim, from Jason Gerecke
-- power management improvements to Intel-ISH driver, from Song Hongyan
-- UCLogic driver revamp in order to be able to support wider range of
-  Huion tablets, from Nikolai Kondrashov
-- Asus Transbook support, from NOGUCHI Hiroshi
-- other assorted small bugfixes / cleanups and device ID additions
-=====
-
-Thanks.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      HID: intel-ish-hid: Switch to use new generic UUID API
-
-Colin Ian King (1):
-      HID: elan: Make array buf static, shrinks object size
-
-Gustavo A. R. Silva (2):
-      HID: wacom: Mark expected switch fall-through
-      HID: roccat: Mark expected switch fall-through
-
-Hans de Goede (1):
-      HID: Add support for Toshiba WT10A tablet bluetooth keyboard
-
-Hong Liu (4):
-      HID: intel-ish-hid: avoid binding wrong ishtp_cl_device
-      HID: intel-ish-hid: Optimize writing ipc message from queue
-      HID: intel-ish-hid: move doorbell writing before flush
-      HID: intel-ish-hid: remove data[128] usage on stack when sending HBM request
-
-Hongye Yuan (2):
-      HID: sony: Transform one-time SHANWAN check into quirk
-      HID: sony: Fix SHANWAN PS3 GamePad rumble and led settings support
-
-Jarrad Whitaker (1):
-      HID: fix Logitech WingMan Formula GP joined axes
-
-Jason Gerecke (2):
-      HID: wacom: Move HID fix for AES serial number into wacom_hid_usage_quirk
-      HID: wacom: Add support for Pro Pen slim
-
-Kai-Heng Feng (1):
-      HID: i2c-hid: Ignore input report if there's no data present on Elan touchpanels
-
-Mikael Wikström (1):
-      HID: multitouch: Lenovo X1 Tablet Gen3 trackpoint and buttons
-
-NOGUCHI Hiroshi (3):
-      HID: hid-asus: Add Transbook T90CHI support
-      HID: Add ASUS T100CHI keyboard dock battery quirks
-      HID: hid-asus: Add BT keyboard dock battery monitoring support
-
-Nikolai Kondrashov (23):
-      HID: kye: Add support for EasyPen M406XE
-      HID: viewsonic: Support PD1011 signature pad
-      HID: Clarify vendor ID reuse by Ugee tablets
-      HID: uclogic: Extract report descriptors to a module
-      HID: uclogic: Extract tablet parameter discovery into a module
-      HID: uclogic: Re-initialize tablets on resume
-      HID: uclogic: Designate current protocol v1
-      HID: uclogic: Support in-range reporting emulation
-      HID: uclogic: Support fragmented high-res reports
-      HID: uclogic: Support v2 protocol
-      HID: uclogic: Add support for Ugee 2150
-      HID: uclogic: Add support for Ugee M540
-      HID: uclogic: Add support for Ugee EX07S frame controls
-      HID: uclogic: Add support for XP-Pen Star G540
-      HID: uclogic: Add support for XP-Pen Star G640
-      HID: uclogic: Add support for XP-Pen Deco 01
-      HID: uclogic: Support faking Wacom pad device ID
-      HID: uclogic: Support Gray-coded rotary encoders
-      HID: uclogic: Add support for Ugee G5
-      HID: uclogic: Do not initialize non-USB devices
-      HID: Remove hid-uclogic entries from hid_have_special_driver
-      HID: Remove KYE tablets from hid_have_special_driver
-      HID: Remove Waltop tablets from hid_have_special_driver
-
-Rodrigo Rivas Costa (1):
-      HID: steam: fix boot loop with bluetooth firmware
-
-Song Hongyan (1):
-      HID: intel-ish: ipc: handle PIMR before ish_wakeup also clear PISR busy_clear bit
-
-Srinivas Pandruvada (1):
-      HID: intel-ish-hid: Use VID/PID from ISH
-
-William Whistler (1):
-      Support for Maltron L90 keyboard media keys
-
- drivers/hid/Kconfig                                |   13 +
- drivers/hid/Makefile                               |    5 +
- drivers/hid/hid-asus.c                             |  247 ++++-
- drivers/hid/hid-elan.c                             |    2 +-
- drivers/hid/hid-ids.h                              |   20 +-
- drivers/hid/hid-input.c                            |    3 +
- drivers/hid/hid-kye.c                              |   83 ++
- drivers/hid/hid-lg.c                               |   60 ++
- drivers/hid/hid-lg4ff.c                            |    6 +
- drivers/hid/hid-maltron.c                          |  165 +++
- drivers/hid/hid-multitouch.c                       |    6 +
- drivers/hid/hid-quirks.c                           |   33 +-
- drivers/hid/hid-roccat-kone.c                      |    1 +
- drivers/hid/hid-sony.c                             |   31 +-
- drivers/hid/hid-steam.c                            |   34 +-
- drivers/hid/hid-topseed.c                          |    3 +
- drivers/hid/hid-uclogic-core.c                     |  418 ++++++++
- drivers/hid/hid-uclogic-params.c                   | 1122 ++++++++++++++++++++
- drivers/hid/hid-uclogic-params.h                   |  207 ++++
- drivers/hid/{hid-uclogic.c => hid-uclogic-rdesc.c} |  822 ++++++--------
- drivers/hid/hid-uclogic-rdesc.h                    |  155 +++
- drivers/hid/hid-viewsonic.c                        |  105 ++
- drivers/hid/i2c-hid/i2c-hid-core.c                 |    9 +
- drivers/hid/intel-ish-hid/ipc/ipc.c                |   32 +-
- drivers/hid/intel-ish-hid/ishtp-hid-client.c       |    4 +-
- drivers/hid/intel-ish-hid/ishtp-hid.c              |    4 +-
- drivers/hid/intel-ish-hid/ishtp-hid.h              |    6 +-
- drivers/hid/intel-ish-hid/ishtp/bus.c              |   27 +-
- drivers/hid/intel-ish-hid/ishtp/bus.h              |    6 +-
- drivers/hid/intel-ish-hid/ishtp/client.h           |    2 +-
- drivers/hid/intel-ish-hid/ishtp/hbm.c              |   97 +-
- drivers/hid/intel-ish-hid/ishtp/hbm.h              |    2 +-
- drivers/hid/intel-ish-hid/ishtp/ishtp-dev.h        |    2 -
- drivers/hid/wacom_sys.c                            |   32 +
- drivers/hid/wacom_wac.c                            |   24 +-
- 35 files changed, 3049 insertions(+), 739 deletions(-)
- create mode 100644 drivers/hid/hid-maltron.c
- create mode 100644 drivers/hid/hid-uclogic-core.c
- create mode 100644 drivers/hid/hid-uclogic-params.c
- create mode 100644 drivers/hid/hid-uclogic-params.h
- rename drivers/hid/{hid-uclogic.c => hid-uclogic-rdesc.c} (67%)
- create mode 100644 drivers/hid/hid-uclogic-rdesc.h
- create mode 100644 drivers/hid/hid-viewsonic.c
-
+diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+index f46ee1fefe02..667d9c0ec905 100644
+--- a/drivers/usb/usbip/vhci_hcd.c
++++ b/drivers/usb/usbip/vhci_hcd.c
+@@ -654,15 +654,9 @@ static int vhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ static void vhci_tx_urb(struct urb *urb, struct vhci_device *vdev)
+ {
+ 	struct vhci_priv *priv;
+-	struct vhci_hcd *vhci_hcd;
++	struct vhci_hcd *vhci_hcd = vdev_to_vhci_hcd(vdev);
+ 	unsigned long flags;
+ 
+-	if (!vdev) {
+-		pr_err("could not get virtual device");
+-		return;
+-	}
+-	vhci_hcd = vdev_to_vhci_hcd(vdev);
+-
+ 	priv = kzalloc(sizeof(struct vhci_priv), GFP_ATOMIC);
+ 	if (!priv) {
+ 		usbip_event_add(&vdev->ud, VDEV_EVENT_ERROR_MALLOC);
 -- 
-Jiri Kosina
-SUSE Labs
+2.20.1
 
