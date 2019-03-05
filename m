@@ -2,79 +2,192 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A586C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D82CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F6920842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:40:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551807607;
-	bh=e+z91fk2LWZBWFR5shJS26qkF3zRWV8rEgGmO5dvoBY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=pu0ijYOsLCkji1l5c78qARamBuJOug0F/n3jqnLztPuvlhvRMmGi6nPjpwHmOkyQF
-	 TwI7rEUnifssnYc0bv7LQ7CNMMgn1dyyJa0FcPFBGBz6+50TGVCtCl3iiidSSlqB5m
-	 Ej/H0fD7SKMUYkclqrcxYxKhA7W+NYlg5XCesUfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4860F20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 17:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfCERkF (ORCPT
+        id S1728548AbfCERkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 12:40:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfCERkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 12:40:04 -0500
-Subject: Re: [GIT] Crypto Update for 5.1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551807603;
-        bh=e+z91fk2LWZBWFR5shJS26qkF3zRWV8rEgGmO5dvoBY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=S1KdCMWxEEDvszBeJza3a9ReWF3tyCG/qNwHGce2m9xoyl60GZt5DyHejOveVjtTQ
-         G1jiWffvOSGK0zVeTVywqMwusQvRJhGup3yBZ4SsDXxD4cMjHb43sR7BFvG16fdKbg
-         Nm5epT8By1awXUwSUGURZ25SvlNTuHNbECCDgFQQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190305081155.7rpkydnc4ipm43o6@gondor.apana.org.au>
-References: <20180105073808.GA14405@gondor.apana.org.au>
- <20180212031702.GA26153@gondor.apana.org.au>
- <20180428080517.haxgpvqrwgotakyo@gondor.apana.org.au>
- <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
- <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
- <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
- <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
- <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
- <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
- <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
- <20190305081155.7rpkydnc4ipm43o6@gondor.apana.org.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190305081155.7rpkydnc4ipm43o6@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: 0918f18c7179e8cdf718d01531a81b28130b4217
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 63bdf4284c38a48af21745ceb148a087b190cd21
-Message-Id: <155180760360.1948.15848062740945412667.pr-tracker-bot@kernel.org>
-Date:   Tue, 05 Mar 2019 17:40:03 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        Tue, 5 Mar 2019 12:40:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45654 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726925AbfCERkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 12:40:39 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 08F08B8B5;
+        Tue,  5 Mar 2019 17:40:38 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     "Yan\, Zheng" <ukernel@gmail.com>
+Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Hendrik Peyerl <hpeyerl@plusline.net>
+Subject: Re: [RFC PATCH 2/2] ceph: quota: fix quota subdir mounts
+References: <20190301175752.17808-1-lhenriques@suse.com>
+        <20190301175752.17808-3-lhenriques@suse.com>
+        <CAAM7YAmPSoEaJ6tXUtp+f56SV-Tqr6VKP4RquV0FA+LYkR8Rxg@mail.gmail.com>
+Date:   Tue, 05 Mar 2019 17:40:35 +0000
+In-Reply-To: <CAAM7YAmPSoEaJ6tXUtp+f56SV-Tqr6VKP4RquV0FA+LYkR8Rxg@mail.gmail.com>
+        (Zheng Yan's message of "Mon, 4 Mar 2019 15:40:22 +0800")
+Message-ID: <87d0n5b4oc.fsf@suse.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 5 Mar 2019 16:11:55 +0800:
+"Yan, Zheng" <ukernel@gmail.com> writes:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+> On Sat, Mar 2, 2019 at 3:13 AM Luis Henriques <lhenriques@suse.com> wrote:
+>>
+>> The CephFS kernel client doesn't enforce quotas that are set in a
+>> directory that isn't visible in the mount point.  For example, given the
+>> path '/dir1/dir2', if quotas are set in 'dir1' and the mount is done in with
+>>
+>>   mount -t ceph <server>:<port>:/dir1/ /mnt
+>>
+>> then the client can't access the 'dir1' inode from the quota realm dir2
+>> belongs to.
+>>
+>> This patch fixes this by simply doing an MDS LOOKUPINO Op and grabbing a
+>> reference to it (so that it doesn't disappear again).  This also requires an
+>> extra field in ceph_snap_realm so that we know we have to release that
+>> reference when destroying the realm.
+>>
+>
+> This may cause circle reference if somehow an inode owned by snaprealm
+> get moved into mount subdir (other clients do rename).  how about
+> holding these inodes in mds_client?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/63bdf4284c38a48af21745ceb148a087b190cd21
+It seems to make sense.  But this means that this inode reference will
+live until the filesystem is umounted.  And what if another client
+deletes that inode?  Will we know about that?  /me needs to think about
+that a bit more.
 
-Thank you!
-
+Cheers,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Luis
+
+>
+>> Links: https://tracker.ceph.com/issues/3848
+>> Reported-by: Hendrik Peyerl <hpeyerl@plusline.net>
+>> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>> ---
+>>  fs/ceph/caps.c  |  2 +-
+>>  fs/ceph/quota.c | 30 +++++++++++++++++++++++++++---
+>>  fs/ceph/snap.c  |  3 +++
+>>  fs/ceph/super.h |  2 ++
+>>  4 files changed, 33 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+>> index bba28a5034ba..e79994ff53d6 100644
+>> --- a/fs/ceph/caps.c
+>> +++ b/fs/ceph/caps.c
+>> @@ -1035,7 +1035,7 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>>         list_del_init(&ci->i_snap_realm_item);
+>>         ci->i_snap_realm_counter++;
+>>         ci->i_snap_realm = NULL;
+>> -       if (realm->ino == ci->i_vino.ino)
+>> +       if ((realm->ino == ci->i_vino.ino) && !realm->own_inode)
+>>                 realm->inode = NULL;
+>>         spin_unlock(&realm->inodes_with_caps_lock);
+>>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
+>> diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
+>> index 9455d3aef0c3..f6b972d222e4 100644
+>> --- a/fs/ceph/quota.c
+>> +++ b/fs/ceph/quota.c
+>> @@ -22,7 +22,16 @@ void ceph_adjust_quota_realms_count(struct inode *inode, bool inc)
+>>  static inline bool ceph_has_realms_with_quotas(struct inode *inode)
+>>  {
+>>         struct ceph_mds_client *mdsc = ceph_inode_to_client(inode)->mdsc;
+>> -       return atomic64_read(&mdsc->quotarealms_count) > 0;
+>> +       struct super_block *sb = mdsc->fsc->sb;
+>> +
+>> +       if (atomic64_read(&mdsc->quotarealms_count) > 0)
+>> +               return true;
+>> +       /* if root is the real CephFS root, we don't have quota realms */
+>> +       if (sb->s_root->d_inode &&
+>> +           (sb->s_root->d_inode->i_ino == CEPH_INO_ROOT))
+>> +               return false;
+>> +       /* otherwise, we can't know for sure */
+>> +       return true;
+>>  }
+>>
+>>  void ceph_handle_quota(struct ceph_mds_client *mdsc,
+>> @@ -166,6 +175,7 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
+>>                 return false;
+>>
+>>         down_read(&mdsc->snap_rwsem);
+>> +restart:
+>>         realm = ceph_inode(inode)->i_snap_realm;
+>>         if (realm)
+>>                 ceph_get_snap_realm(mdsc, realm);
+>> @@ -176,8 +186,22 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
+>>                 spin_lock(&realm->inodes_with_caps_lock);
+>>                 in = realm->inode ? igrab(realm->inode) : NULL;
+>>                 spin_unlock(&realm->inodes_with_caps_lock);
+>> -               if (!in)
+>> -                       break;
+>> +               if (!in) {
+>> +                       up_read(&mdsc->snap_rwsem);
+>> +                       in = ceph_lookup_inode(inode->i_sb, realm->ino);
+>> +                       down_read(&mdsc->snap_rwsem);
+>> +                       if (IS_ERR(in)) {
+>> +                               pr_warn("Can't lookup inode %llx (err: %ld)\n",
+>> +                                       realm->ino, PTR_ERR(in));
+>> +                               break;
+>> +                       }
+>> +                       spin_lock(&realm->inodes_with_caps_lock);
+>> +                       realm->inode = in;
+>> +                       realm->own_inode = true;
+>> +                       spin_unlock(&realm->inodes_with_caps_lock);
+>> +                       ceph_put_snap_realm(mdsc, realm);
+>> +                       goto restart;
+>> +               }
+>>
+>>                 ci = ceph_inode(in);
+>>                 spin_lock(&ci->i_ceph_lock);
+>> diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
+>> index f74193da0e09..c84ed8e8526a 100644
+>> --- a/fs/ceph/snap.c
+>> +++ b/fs/ceph/snap.c
+>> @@ -117,6 +117,7 @@ static struct ceph_snap_realm *ceph_create_snap_realm(
+>>
+>>         atomic_set(&realm->nref, 1);    /* for caller */
+>>         realm->ino = ino;
+>> +       realm->own_inode = false;
+>>         INIT_LIST_HEAD(&realm->children);
+>>         INIT_LIST_HEAD(&realm->child_item);
+>>         INIT_LIST_HEAD(&realm->empty_item);
+>> @@ -184,6 +185,8 @@ static void __destroy_snap_realm(struct ceph_mds_client *mdsc,
+>>         kfree(realm->prior_parent_snaps);
+>>         kfree(realm->snaps);
+>>         ceph_put_snap_context(realm->cached_context);
+>> +       if (realm->own_inode && realm->inode)
+>> +               iput(realm->inode);
+>>         kfree(realm);
+>>  }
+>>
+>> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+>> index ce51e98b08ec..3f0d74d2150f 100644
+>> --- a/fs/ceph/super.h
+>> +++ b/fs/ceph/super.h
+>> @@ -764,6 +764,8 @@ struct ceph_snap_realm {
+>>         atomic_t nref;
+>>         struct rb_node node;
+>>
+>> +       bool own_inode;     /* true if we hold a ref to the inode */
+>> +
+>>         u64 created, seq;
+>>         u64 parent_ino;
+>>         u64 parent_since;   /* snapid when our current parent became so */
+>
