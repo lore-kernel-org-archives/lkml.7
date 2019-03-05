@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24748C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C135DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F039D2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A80A2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfCEOtB (ORCPT
+        id S1728672AbfCEOtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:49:01 -0500
-Received: from mga07.intel.com ([134.134.136.100]:28784 "EHLO mga07.intel.com"
+        Tue, 5 Mar 2019 09:49:13 -0500
+Received: from mga07.intel.com ([134.134.136.100]:28781 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbfCEOsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 09:48:17 -0500
+        id S1728184AbfCEOsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 09:48:16 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:48:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
-   d="scan'208";a="121150037"
+   d="scan'208";a="121150032"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
   by orsmga006.jf.intel.com with ESMTP; 05 Mar 2019 06:48:14 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 7E431301BCA; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
+        id 5F64F301BC9; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, namhyung@kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v4 08/15] perf tools report: Support running scripts for current time range
-Date:   Tue,  5 Mar 2019 06:47:51 -0800
-Message-Id: <20190305144758.12397-9-andi@firstfloor.org>
+Subject: [PATCH v4 04/15] perf tools report: Support nano seconds
+Date:   Tue,  5 Mar 2019 06:47:47 -0800
+Message-Id: <20190305144758.12397-5-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190305144758.12397-1-andi@firstfloor.org>
 References: <20190305144758.12397-1-andi@firstfloor.org>
@@ -50,153 +50,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-When using the time sort key, add new context menus to run
-scripts for only the currently selected time range. Compute
-the correct range for the selection add pass it as the --time option to
-perf script.
+Upcoming changes add timestamp output in perf report. Add a --ns
+argument similar to perf script to support nanoseconds resolution
+when needed.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 v2:
-Use symbol_conf.time_quantum
+Move flag into symbol_conf and change all users
 ---
- tools/perf/ui/browsers/hists.c | 82 +++++++++++++++++++++++++++++-----
- 1 file changed, 71 insertions(+), 11 deletions(-)
+ tools/perf/Documentation/perf-report.txt |  3 +++
+ tools/perf/builtin-report.c              |  1 +
+ tools/perf/builtin-script.c              | 11 +++++------
+ tools/perf/util/symbol.c                 |  1 +
+ tools/perf/util/symbol_conf.h            |  1 +
+ 5 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index aef800d97ea1..663970f766e1 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -30,6 +30,7 @@
- #include "srcline.h"
- #include "string2.h"
- #include "units.h"
-+#include "time-utils.h"
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 1a27bfe05039..51dbc519dbce 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -477,6 +477,9 @@ include::itrace.txt[]
+ 	Please note that not all mmaps are stored, options affecting which ones
+ 	are include 'perf record --data', for instance.
  
- #include "sane_ctype.h"
++--ns::
++	Show time stamps in nanoseconds.
++
+ --stats::
+ 	Display overall events statistics without any further processing.
+ 	(like the one at the end of the perf report -D command)
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 1532ebde6c4b..09180e559ad6 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1147,6 +1147,7 @@ int cmd_report(int argc, const char **argv)
+ 	OPT_CALLBACK(0, "percent-type", &report.annotation_opts, "local-period",
+ 		     "Set percent type local/global-period/hits",
+ 		     annotate_parse_percent_type),
++	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs, "Show times in nanosecs"),
+ 	OPT_END()
+ 	};
+ 	struct perf_data data = {
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 3813f60d1dc0..d5e819b68970 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -60,7 +60,6 @@ static bool			no_callchain;
+ static bool			latency_format;
+ static bool			system_wide;
+ static bool			print_flags;
+-static bool			nanosecs;
+ static const char		*cpu_list;
+ static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+ static struct perf_stat_config	stat_config;
+@@ -691,7 +690,7 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
+ 		secs = nsecs / NSEC_PER_SEC;
+ 		nsecs -= secs * NSEC_PER_SEC;
  
-@@ -2338,6 +2339,7 @@ static int switch_data_file(void)
- }
- 
- struct popup_action {
-+	unsigned long		time;
- 	struct thread 		*thread;
- 	struct map_symbol 	ms;
- 	int			socket;
-@@ -2527,36 +2529,64 @@ static int
- do_run_script(struct hist_browser *browser __maybe_unused,
- 	      struct popup_action *act)
+-		if (nanosecs)
++		if (symbol_conf.nanosecs)
+ 			printed += fprintf(fp, "%5lu.%09llu: ", secs, nsecs);
+ 		else {
+ 			char sample_time[32];
+@@ -3268,7 +3267,7 @@ static int parse_insn_trace(const struct option *opt __maybe_unused,
  {
--	char script_opt[64];
--	memset(script_opt, 0, sizeof(script_opt));
-+	char *script_opt;
-+	int len;
-+	int n = 0;
-+
-+	len = 100;
-+	if (act->thread)
-+		len += strlen(thread__comm_str(act->thread));
-+	else if (act->ms.sym)
-+		len += strlen(act->ms.sym->name);
-+	script_opt = malloc(len);
-+	if (!script_opt)
-+		return -1;
- 
-+	script_opt[0] = 0;
- 	if (act->thread) {
--		scnprintf(script_opt, sizeof(script_opt), " -c %s ",
-+		n = scnprintf(script_opt, len, " -c %s ",
- 			  thread__comm_str(act->thread));
- 	} else if (act->ms.sym) {
--		scnprintf(script_opt, sizeof(script_opt), " -S %s ",
-+		n = scnprintf(script_opt, len, " -S %s ",
- 			  act->ms.sym->name);
- 	}
- 
-+	if (act->time) {
-+		char start[64], end[64];
-+		unsigned long starttime = act->time;
-+		unsigned long endtime = act->time + symbol_conf.time_quantum;
-+
-+		if (starttime == endtime) { /* Display 1ms as fallback */
-+			starttime -= 1*1000000;
-+			endtime += 1*1000000;
-+		}
-+		timestamp__scnprintf_usec(starttime, start, sizeof start);
-+		timestamp__scnprintf_usec(endtime, end, sizeof end);
-+		n += snprintf(script_opt + n, len - n, " --time %s,%s", start, end);
-+	}
-+
- 	script_browse(script_opt);
-+	free(script_opt);
+ 	parse_output_fields(NULL, "+insn,-event,-period", 0);
+ 	itrace_parse_synth_opts(opt, "i0ns", 0);
+-	nanosecs = true;
++	symbol_conf.nanosecs = true;
  	return 0;
  }
  
- static int
--add_script_opt(struct hist_browser *browser __maybe_unused,
-+add_script_opt_2(struct hist_browser *browser __maybe_unused,
- 	       struct popup_action *act, char **optstr,
--	       struct thread *thread, struct symbol *sym)
-+	       struct thread *thread, struct symbol *sym,
-+	       const char *tstr)
+@@ -3286,7 +3285,7 @@ static int parse_call_trace(const struct option *opt __maybe_unused,
  {
-+
- 	if (thread) {
--		if (asprintf(optstr, "Run scripts for samples of thread [%s]",
--			     thread__comm_str(thread)) < 0)
-+		if (asprintf(optstr, "Run scripts for samples of thread [%s]%s",
-+			     thread__comm_str(thread), tstr) < 0)
- 			return 0;
- 	} else if (sym) {
--		if (asprintf(optstr, "Run scripts for samples of symbol [%s]",
--			     sym->name) < 0)
-+		if (asprintf(optstr, "Run scripts for samples of symbol [%s]%s",
-+			     sym->name, tstr) < 0)
- 			return 0;
- 	} else {
--		if (asprintf(optstr, "Run scripts for all samples") < 0)
-+		if (asprintf(optstr, "Run scripts for all samples%s", tstr) < 0)
- 			return 0;
- 	}
- 
-@@ -2566,6 +2596,36 @@ add_script_opt(struct hist_browser *browser __maybe_unused,
- 	return 1;
+ 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent", 0);
+ 	itrace_parse_synth_opts(opt, "cewp", 0);
+-	nanosecs = true;
++	symbol_conf.nanosecs = true;
+ 	return 0;
  }
  
-+static int
-+add_script_opt(struct hist_browser *browser,
-+	       struct popup_action *act, char **optstr,
-+	       struct thread *thread, struct symbol *sym)
-+{
-+	int n, j;
-+	struct hist_entry *he;
-+
-+	n = add_script_opt_2(browser, act, optstr, thread, sym, "");
-+
-+	he = hist_browser__selected_entry(browser);
-+	if (sort_order && strstr(sort_order, "time")) {
-+		char tstr[128];
-+
-+		optstr++;
-+		act++;
-+		j = sprintf(tstr, " in ");
-+		j += timestamp__scnprintf_usec(he->time, tstr + j,
-+					       sizeof tstr - j);
-+		j += sprintf(tstr + j, "-");
-+		timestamp__scnprintf_usec(he->time + symbol_conf.time_quantum,
-+				          tstr + j,
-+				          sizeof tstr - j);
-+		n += add_script_opt_2(browser, act, optstr, thread, sym,
-+					  tstr);
-+		act->time = he->time;
-+	}
-+	return n;
-+}
-+
- static int
- do_switch_data(struct hist_browser *browser __maybe_unused,
- 	       struct popup_action *act __maybe_unused)
+@@ -3296,7 +3295,7 @@ static int parse_callret_trace(const struct option *opt __maybe_unused,
+ {
+ 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent,+flags", 0);
+ 	itrace_parse_synth_opts(opt, "crewp", 0);
+-	nanosecs = true;
++	symbol_conf.nanosecs = true;
+ 	return 0;
+ }
+ 
+@@ -3432,7 +3431,7 @@ int cmd_script(int argc, const char **argv)
+ 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+ 	OPT_INTEGER(0, "max-blocks", &max_blocks,
+ 		    "Maximum number of code blocks to dump with brstackinsn"),
+-	OPT_BOOLEAN(0, "ns", &nanosecs,
++	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs,
+ 		    "Use 9 decimal places when displaying time"),
+ 	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
+ 			    "Instruction Tracing options\n" ITRACE_HELP,
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 758bf5f74e6e..eb873ea1c405 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -39,6 +39,7 @@ int vmlinux_path__nr_entries;
+ char **vmlinux_path;
+ 
+ struct symbol_conf symbol_conf = {
++	.nanosecs		= false,
+ 	.use_modules		= true,
+ 	.try_vmlinux_path	= true,
+ 	.demangle		= true,
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index fffea68c1203..095a297c8b47 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -8,6 +8,7 @@ struct strlist;
+ struct intlist;
+ 
+ struct symbol_conf {
++	bool		nanosecs;
+ 	unsigned short	priv_size;
+ 	bool		try_vmlinux_path,
+ 			init_annotation,
 -- 
 2.20.1
 
