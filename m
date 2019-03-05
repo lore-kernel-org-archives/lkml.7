@@ -2,164 +2,184 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A055C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D7AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFA920848
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837F020675
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 07:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JE7X3Xql"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iJq8lbC4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfCEHNj (ORCPT
+        id S1727185AbfCEHOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 02:13:39 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:42096 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfCEHNg (ORCPT
+        Tue, 5 Mar 2019 02:14:19 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:22472 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfCEHOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 02:13:36 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2574HGO052297;
-        Tue, 5 Mar 2019 07:13:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2018-07-02; bh=DwMrWW13R97QKkCvcoBfMSTbzIahT4nyU9ajZ4Nvks8=;
- b=JE7X3XqloNto1yYDy/ck/ZlXn6pbXpNq3DA8NefpnsPDyZlAJ+m5leiMowKkSsb2UAjU
- KORaqeNloxOLyJbvRyHqamgiSJEdo/AUkb3NfYD8Rx1FgzLRQPeC88XUwnJxy/GuofId
- r0pmNIdXAwwJmUsgFnVytUT6S7nguS0O9/qaFiLvPTWxACA6hbZRnJXPchJR4PE9iS29
- 01W7ZIcCb0h5KhvnodvUULk1lLBzI7QmW6PCRL+oy2/kscQE6dPnNOy1UiMiRvAMyREJ
- ltvr0asrBC+6uAkpoaMVAQZXx3dh/W99vqhuhERgPxNKp3UtX84cH78ZBGx6afEqHFFs xg== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by aserp2130.oracle.com with ESMTP id 2qyfbe3sbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Mar 2019 07:13:02 +0000
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x257D0XE003975
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Mar 2019 07:13:00 GMT
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x257CtJZ023915;
-        Tue, 5 Mar 2019 07:12:55 GMT
-Received: from kadam (/197.157.34.180)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Mar 2019 23:12:54 -0800
-Date:   Tue, 5 Mar 2019 10:12:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@01.org, liaoweixiong <liaoweixiong@allwinnertech.com>
-Cc:     kbuild-all@01.org, Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: Re: [PATCH v12 1/4] pstore/blk: new support logger for block devices
-Message-ID: <20190305071242.GF13452@kadam>
+        Tue, 5 Mar 2019 02:14:18 -0500
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x257DtSm018877
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Mar 2019 16:13:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x257DtSm018877
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1551770036;
+        bh=FF/HDKixPCW4Zs6T210fuE1DHadGU2VOVKQBgaV87zo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iJq8lbC4VaeEP4nzOunxNWeFv5UmhQr3SYGcEHc8QsHmCOESoBc6wJpSGeYQvfsIJ
+         XAROMr1ojeJhNvjPl0vcaWQlqxfaVbpd+b1oJXZrAi1QcmNCps5cwAXGpdRR9f0ykU
+         6eq52LnUaFMt70DonRdDMQJWUB5vsJkGcKD9tQNUCcSHeiikwXyC9+EOBM9vzw2HbS
+         E+LZSDATgnqSohfluu4U8YS0TUHQVTsosR4QQ56lnpCQS+sHkckAF8VwTRD6QACmw7
+         Et8R90Z45nzHJOUP22WA1rkOZivZXC7bd5TfDldrw66smmgS3ukP+UQbUCS0PWP8qS
+         ewYvxpSnsd1Ag==
+X-Nifty-SrcIP: [209.85.222.49]
+Received: by mail-ua1-f49.google.com with SMTP id e15so6851967uam.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Mar 2019 23:13:56 -0800 (PST)
+X-Gm-Message-State: APjAAAXIi8C5gd9sEzztFt/rF/ho3qZdl3NikUrmzT7s2bsQmStI/MzT
+        j8rz09SSHYTaJEOHusSKBCE4i0C0snqATjMRtv0=
+X-Google-Smtp-Source: APXvYqxwMqz2LuTBAW1L2AYPJzwpIICLhgE3zvhVvqcgyg3YskTSz/NTVMbz5wHjYa0aXns+i4CPM5y/mIHaCVNMp68=
+X-Received: by 2002:a67:f90e:: with SMTP id t14mr410032vsq.181.1551770035093;
+ Mon, 04 Mar 2019 23:13:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1551337948-16451-2-git-send-email-liaoweixiong@allwinnertech.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9185 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903050052
+References: <1549955582-30346-1-git-send-email-yamada.masahiro@socionext.com>
+ <1549955582-30346-5-git-send-email-yamada.masahiro@socionext.com> <20190304103052.0eba71a6@xps13>
+In-Reply-To: <20190304103052.0eba71a6@xps13>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 5 Mar 2019 16:13:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS_c0SsWwwkqc5_HBX560NPM5-QJSH9_JcTLULHvz3b1A@mail.gmail.com>
+Message-ID: <CAK7LNAS_c0SsWwwkqc5_HBX560NPM5-QJSH9_JcTLULHvz3b1A@mail.gmail.com>
+Subject: Re: [PATCH v2 04/10] mtd: rawnand: denali: switch over to ->exec_op()
+ from legacy hooks
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi liaoweixiong,
+Hi Miquel,
 
-url:    https://github.com/0day-ci/linux/commits/liaoweixiong/pstore-block-new-support-logger-for-block-devices/20190303-142003
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
 
-smatch warnings:
-fs/pstore/blkzone.c:180 blkz_zone_write() error: we previously assumed 'zone->buffer' could be null (see line 167)
+On Mon, Mar 4, 2019 at 6:31 PM Miquel Raynal <miquel.raynal@bootlin.com> wr=
+ote:
+>
+> Hi Masahiro,
+>
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 12 Feb
+> 2019 16:12:56 +0900:
+>
+> > Implement ->exec_op(), and remove the deprecated hooks.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+>
+> Thanks for working on this, I like it very much!
+>
+> >
+> > Changes in v2: None
+> >
+> >  drivers/mtd/nand/raw/denali.c | 234 +++++++++++++++++++++++-----------=
+--------
+> >  1 file changed, 126 insertions(+), 108 deletions(-)
+> >
+> > diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denal=
+i.c
+> > index a2fe2ff..bd7df25 100644
+> > --- a/drivers/mtd/nand/raw/denali.c
+> > +++ b/drivers/mtd/nand/raw/denali.c
+>
+> [...]
+>
+> > +
+> > +static int denali_exec_instr(struct nand_chip *chip,
+> > +                          const struct nand_op_instr *instr)
+> > +{
+> > +     struct denali_nand_info *denali =3D to_denali(chip);
+> > +     bool width16 =3D chip->options & NAND_BUSWIDTH_16;
+> > +
+> > +     switch (instr->type) {
+> > +     case NAND_OP_CMD_INSTR:
+> > +             denali_exec_out8(denali, DENALI_MAP11_CMD,
+> > +                              &instr->ctx.cmd.opcode, 1);
+> > +             return 0;
+> > +     case NAND_OP_ADDR_INSTR:
+> > +             denali_exec_out8(denali, DENALI_MAP11_ADDR,
+> > +                              instr->ctx.addr.addrs,
+> > +                              instr->ctx.addr.naddrs);
+> > +             return 0;
+> > +     case NAND_OP_DATA_IN_INSTR:
+> > +             (!instr->ctx.data.force_8bit && width16 ?
+> > +              denali_exec_in16 :
+> > +              denali_exec_in8)(denali, DENALI_MAP11_DATA,
+> > +                               instr->ctx.data.buf.in,
+> > +                               instr->ctx.data.len);
+>
+> I think this is abusing the ternary operator, can you please find
+> another way for writing this? Otherwise it is not easily readable... If
+> it is really too complicated within 80 chars, then never mind.
 
-# https://github.com/0day-ci/linux/commit/113727d0f1946ad094dbc6531d653a88c7a221bf
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 113727d0f1946ad094dbc6531d653a88c7a221bf
-vim +180 fs/pstore/blkzone.c
+Yes, I am abusing it,
+but the intention is quite clear.
 
-113727d0 liaoweixiong 2019-02-28  153  
-113727d0 liaoweixiong 2019-02-28  154  static int blkz_zone_write(struct blkz_zone *zone,
-113727d0 liaoweixiong 2019-02-28  155  		enum blkz_flush_mode flush_mode, const char *buf,
-113727d0 liaoweixiong 2019-02-28  156  		size_t len, unsigned long off)
-113727d0 liaoweixiong 2019-02-28  157  {
-113727d0 liaoweixiong 2019-02-28  158  	struct blkz_info *info = blkz_cxt.bzinfo;
-113727d0 liaoweixiong 2019-02-28  159  	ssize_t wcnt;
-113727d0 liaoweixiong 2019-02-28  160  	ssize_t (*writeop)(const char *buf, size_t bytes, loff_t pos);
-113727d0 liaoweixiong 2019-02-28  161  	size_t wlen;
-113727d0 liaoweixiong 2019-02-28  162  
-113727d0 liaoweixiong 2019-02-28  163  	if (off > zone->buffer_size)
-113727d0 liaoweixiong 2019-02-28  164  		return -EINVAL;
-113727d0 liaoweixiong 2019-02-28  165  	wlen = min_t(size_t, len, zone->buffer_size - off);
-113727d0 liaoweixiong 2019-02-28  166  	if (flush_mode != FLUSH_META && flush_mode != FLUSH_NONE) {
-113727d0 liaoweixiong 2019-02-28 @167  		if (buf && zone->buffer)
-                                                           ^^^^^^^^^^^^
-Check.
 
-113727d0 liaoweixiong 2019-02-28  168  			memcpy(zone->buffer->data + off, buf, wlen);
-113727d0 liaoweixiong 2019-02-28  169  		atomic_set(&zone->buffer->datalen, wlen + off);
-113727d0 liaoweixiong 2019-02-28  170  	}
-113727d0 liaoweixiong 2019-02-28  171  
-113727d0 liaoweixiong 2019-02-28  172  	writeop = is_on_panic() ? info->panic_write : info->write;
-113727d0 liaoweixiong 2019-02-28  173  	if (!writeop)
-113727d0 liaoweixiong 2019-02-28  174  		return -EINVAL;
-113727d0 liaoweixiong 2019-02-28  175  
-113727d0 liaoweixiong 2019-02-28  176  	switch (flush_mode) {
-113727d0 liaoweixiong 2019-02-28  177  	case FLUSH_NONE:
-113727d0 liaoweixiong 2019-02-28  178  		return 0;
-113727d0 liaoweixiong 2019-02-28  179  	case FLUSH_PART:
-113727d0 liaoweixiong 2019-02-28 @180  		wcnt = writeop((const char *)zone->buffer->data + off, wlen,
-                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Unchecked.
+I could stupidly repeat the same function arguments like follows,
+but I did not want to do it.
 
-113727d0 liaoweixiong 2019-02-28  181  				zone->off + sizeof(*zone->buffer) + off);
-                                                                                    ^^^^^^^^^^^^
-This is weird.  I can't fetch for-next/pstore so I don't know what
-type "buffer" is.  It's vague.  We also have ->buffer_size which seems
-like a more expected way to describe the size.
+case NAND_OP_DATA_IN_INSTR:
+        if (!instr->ctx.data.force_8bit && width16)
+                denali_exec_in16(denali, DENALI_MAP11_DATA,
+                                 instr->ctx.data.buf.in,
+                                 instr->ctx.data.len);
+        else
+                denali_exec_in8(denali, DENALI_MAP11_DATA,
+                                instr->ctx.data.buf.in,
+                                instr->ctx.data.len);
 
-113727d0 liaoweixiong 2019-02-28  182  		if (wcnt != wlen)
-113727d0 liaoweixiong 2019-02-28  183  			goto set_dirty;
-113727d0 liaoweixiong 2019-02-28  184  	case FLUSH_META:
-113727d0 liaoweixiong 2019-02-28  185  		wlen = sizeof(struct blkz_buffer);
-113727d0 liaoweixiong 2019-02-28  186  		wcnt = writeop((const char *)zone->buffer, wlen, zone->off);
-113727d0 liaoweixiong 2019-02-28  187  		if (wcnt != wlen)
-113727d0 liaoweixiong 2019-02-28  188  			goto set_dirty;
-113727d0 liaoweixiong 2019-02-28  189  		break;
-113727d0 liaoweixiong 2019-02-28  190  	case FLUSH_ALL:
-113727d0 liaoweixiong 2019-02-28  191  		wlen = buffer_datalen(zone) + sizeof(*zone->buffer);
-113727d0 liaoweixiong 2019-02-28  192  		wcnt = writeop((const char *)zone->buffer, wlen, zone->off);
-113727d0 liaoweixiong 2019-02-28  193  		if (wcnt != wlen)
-113727d0 liaoweixiong 2019-02-28  194  			goto set_dirty;
-113727d0 liaoweixiong 2019-02-28  195  		break;
-113727d0 liaoweixiong 2019-02-28  196  	}
-113727d0 liaoweixiong 2019-02-28  197  
-113727d0 liaoweixiong 2019-02-28  198  	return 0;
-113727d0 liaoweixiong 2019-02-28  199  set_dirty:
-113727d0 liaoweixiong 2019-02-28  200  	pr_err("write failed with %zd returned, set dirty\n", wcnt);
-113727d0 liaoweixiong 2019-02-28  201  	atomic_set(&zone->dirty, true);
-113727d0 liaoweixiong 2019-02-28  202  	return -EBUSY;
-113727d0 liaoweixiong 2019-02-28  203  }
-113727d0 liaoweixiong 2019-02-28  204  
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+
+
+> > +             return 0;
+> > +     case NAND_OP_DATA_OUT_INSTR:
+> > +             (!instr->ctx.data.force_8bit && width16 ?
+> > +              denali_exec_out16 :
+> > +              denali_exec_out8)(denali, DENALI_MAP11_DATA,
+> > +                                instr->ctx.data.buf.out,
+> > +                                instr->ctx.data.len);
+> > +             return 0;
+> > +     case NAND_OP_WAITRDY_INSTR:
+> > +             return denali_exec_waitrdy(denali);
+> > +     default:
+> > +             WARN_ONCE(1, "unsupported NAND instruction type: %d\n",
+> > +                       instr->type);
+> > +
+> > +             return -EINVAL;
+> > +     }
+> > +}
+> > +
+>
+>
+> Thanks,
+> Miqu=C3=A8l
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
