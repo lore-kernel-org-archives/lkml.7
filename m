@@ -2,175 +2,387 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD662C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1E2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8B120684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F6820684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfCEKMb (ORCPT
+        id S1727531AbfCEKRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 05:12:31 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37013 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbfCEKMb (ORCPT
+        Tue, 5 Mar 2019 05:17:39 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:59491 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfCEKRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 05:12:31 -0500
-Received: from mail-yw1-f72.google.com ([209.85.161.72])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <christian.ehrhardt@canonical.com>)
-        id 1h173k-0007ZI-Q5
-        for linux-kernel@vger.kernel.org; Tue, 05 Mar 2019 10:12:28 +0000
-Received: by mail-yw1-f72.google.com with SMTP id t9so12308162ywe.19
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 02:12:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pB4RkAugqZOA7wZDlhlEUYbhlVKZt+DNUdrm+u8dH7k=;
-        b=hM9/M0FxYGgKIWGV9nedRbqLzbJhe4UhHTCvUYlHvd17xrFXYJU7uXmfWz4T4x3QPs
-         ruGqq/2+b59Eyca0OSB4L3g3vFBVWSP0sHzszSLIIlnMXJTFDTh7zuJ6n+K6LWAl5R4H
-         mqF4AuORcm/fg5ooO3MDMb6EZOwcN5Fu7z+Th3ebVtSVxA621vYOUL93EbQRfUopt4P2
-         FZTMMgnP93KEDa17RZo5pdYwgwp9WYQnlhyFF0Z3wesnmjnttXqJlnm22FXcaef0sRvD
-         e9g4S0iu2UMU8O/zlBFqSs2Dslznakr1JVRvmz6XFjur2Ad5SFB6p4IQ6Z31MvKgIDoq
-         MV1w==
-X-Gm-Message-State: APjAAAWX0OpQRe3EFDTY+ccm87oUocMVGyeGq3tqetyML7JFvJofwu7O
-        /EMeI/QDenRVDrb0mNCjSmd0c+Qf8Ztv/io2gv5O0KpHZKoYN0K1xgvEK8Eehpikr9Agtv83ZjY
-        l5pESzPj8F2FqkDpknEoLYY5LFscx7WlzMJIgfMPNXt9SWtvnmRv8wog9ug==
-X-Received: by 2002:a25:6085:: with SMTP id u127mr1397361ybb.291.1551780747024;
-        Tue, 05 Mar 2019 02:12:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzX2t/meiZP71dXTw8sPBKenNOsWXjlq1ZvqIZlr51j3jBXnh3po3rikEjFfYUrCsK6a5CZR0voemq48A5OVwU=
-X-Received: by 2002:a25:6085:: with SMTP id u127mr1397345ybb.291.1551780746717;
- Tue, 05 Mar 2019 02:12:26 -0800 (PST)
+        Tue, 5 Mar 2019 05:17:39 -0500
+X-Originating-IP: 90.88.147.150
+Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 9E66B40003;
+        Tue,  5 Mar 2019 10:17:32 +0000 (UTC)
+Date:   Tue, 5 Mar 2019 11:17:32 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc:     hans.verkuil@cisco.com, acourbot@chromium.org,
+        sakari.ailus@linux.intel.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        tfiga@chromium.org, posciak@chromium.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
+        jonas@kwiboo.se, ezequiel@collabora.com,
+        linux-sunxi@googlegroups.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 2/2] media: cedrus: Add H264 decoding support
+Message-ID: <20190305101732.3eylxubiiboygjc5@flea>
+References: <cover.1862a43851950ddee041d53669f8979aba863c38.1550672228.git-series.maxime.ripard@bootlin.com>
+ <864825e62e758ea51b61228a7ff140050810b48d.1550672228.git-series.maxime.ripard@bootlin.com>
+ <1717029.ugS2kBEt89@jernej-laptop>
 MIME-Version: 1.0
-References: <20190305104010.6342e9b9@gollum>
-In-Reply-To: <20190305104010.6342e9b9@gollum>
-From:   Christian Ehrhardt <christian.ehrhardt@canonical.com>
-Date:   Tue, 5 Mar 2019 11:12:00 +0100
-Message-ID: <CAATJJ0KgvC-j2egtq6G5M0jK5O04-xATEu_yDLvr53tJdFEzrQ@mail.gmail.com>
-Subject: Re: [ovs-dev] openvswitch crash on i386
-To:     Juerg Haefliger <juerg.haefliger@canonical.com>,
-        James Page <james.page@canonical.com>
-Cc:     pshelar@ovn.org, davem@davemloft.net, netdev@vger.kernel.org,
-        "<dev@openvswitch.org>" <dev@openvswitch.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pw4bd57r6anjhsnu"
+Content-Disposition: inline
+In-Reply-To: <1717029.ugS2kBEt89@jernej-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 10:58 AM Juerg Haefliger
-<juerg.haefliger@canonical.com> wrote:
->
-> Hi,
->
-> Running the following commands in a loop will crash an i386 5.0 kernel
-> typically within a few iterations:
->
-> ovs-vsctl add-br test
-> ovs-vsctl del-br test
->
-> [  106.215748] BUG: unable to handle kernel paging request at e8a35f3b
-> [  106.216733] #PF error: [normal kernel read fault]
-> [  106.217464] *pdpt = 0000000019a76001 *pde = 0000000000000000
-> [  106.218346] Oops: 0000 [#1] SMP PTI
-> [  106.218911] CPU: 0 PID: 2050 Comm: systemd-udevd Tainted: G            E     5.0.0 #25
-> [  106.220103] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1ubuntu1 04/01/2014
-> [  106.221447] EIP: kmem_cache_alloc_trace+0x7a/0x1b0
-> [  106.222178] Code: 01 00 00 8b 07 64 8b 50 04 64 03 05 28 61 e8 d2 8b 08 89 4d ec 85 c9 0f 84 03 01 00 00 8b 45 ec 8b 5f 14 8d 4a 01 8b 37 01 c3 <33> 1b 33 9f b4 00 00 00 64 0f c7 0e 75 cb 8b 75 ec 8b 47 14 0f 18
-> [  106.224752] EAX: e8a35f3b EBX: e8a35f3b ECX: 0000869f EDX: 0000869e
-> [  106.225683] ESI: d2e96ef0 EDI: da401a00 EBP: d9b85dd0 ESP: d9b85db0
-> [  106.226662] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010282
-> [  106.227710] CR0: 80050033 CR2: e8a35f3b CR3: 185b8000 CR4: 000006f0
-> [  106.228703] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> [  106.229604] DR6: fffe0ff0 DR7: 00000400
-> [  106.230114] Call Trace:
-> [  106.230525]  ? kernfs_fop_open+0xb4/0x390
-> [  106.231176]  kernfs_fop_open+0xb4/0x390
-> [  106.231856]  ? security_file_open+0x7c/0xc0
-> [  106.232562]  do_dentry_open+0x131/0x370
-> [  106.233229]  ? kernfs_fop_write+0x180/0x180
-> [  106.233905]  vfs_open+0x25/0x30
-> [  106.234432]  path_openat+0x2fd/0x1450
-> [  106.235084]  ? cp_new_stat64+0x115/0x140
-> [  106.235754]  ? cp_new_stat64+0x115/0x140
-> [  106.236427]  do_filp_open+0x6a/0xd0
-> [  106.237026]  ? cp_new_stat64+0x115/0x140
-> [  106.237748]  ? strncpy_from_user+0x3d/0x180
-> [  106.238539]  ? __alloc_fd+0x36/0x120
-> [  106.239256]  do_sys_open+0x175/0x210
-> [  106.239955]  sys_openat+0x1b/0x20
-> [  106.240596]  do_fast_syscall_32+0x7f/0x1e0
-> [  106.241313]  entry_SYSENTER_32+0x6b/0xbe
-> [  106.242017] EIP: 0xb7fae871
-> [  106.242559] Code: 8b 98 58 cd ff ff 89 c8 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
-> [  106.245551] EAX: ffffffda EBX: ffffff9c ECX: bffdcb60 EDX: 00088000
-> [  106.246651] ESI: 00000000 EDI: b7f9e000 EBP: 00088000 ESP: bffdc970
-> [  106.247706] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-> [  106.248851] Modules linked in: openvswitch(E)
-> [  106.249621] CR2: 00000000e8a35f3b
-> [  106.250218] ---[ end trace 6a8d05679a59cda7 ]---
->
-> I've bisected this down to the following commit that seems to have introduced
-> the issue:
->
-> commit 120645513f55a4ac5543120d9e79925d30a0156f (refs/bisect/bad)
-> Author: Jarno Rajahalme <jarno@ovn.org>
-> Date:   Fri Apr 21 16:48:06 2017 -0700
->
->     openvswitch: Add eventmask support to CT action.
->
->     Add a new optional conntrack action attribute OVS_CT_ATTR_EVENTMASK,
->     which can be used in conjunction with the commit flag
->     (OVS_CT_ATTR_COMMIT) to set the mask of bits specifying which
->     conntrack events (IPCT_*) should be delivered via the Netfilter
->     netlink multicast groups.  Default behavior depends on the system
->     configuration, but typically a lot of events are delivered.  This can be
->     very chatty for the NFNLGRP_CONNTRACK_UPDATE group, even if only some
->     types of events are of interest.
->
->     Netfilter core init_conntrack() adds the event cache extension, so we
->     only need to set the ctmask value.  However, if the system is
->     configured without support for events, the setting will be skipped due
->     to extension not being found.
->
->     Signed-off-by: Jarno Rajahalme <jarno@ovn.org>
->     Reviewed-by: Greg Rose <gvrose8192@gmail.com>
->     Acked-by: Joe Stringer <joe@ovn.org>
->     Signed-off-by: David S. Miller <davem@davemloft.net>
 
-Hi Juerg,
-the symptom, the identified breaking commit and actually all of it
-seems to be [1] which James, Joseph and I worked on already.
-I wanted to make you aware of the past context that already exists.
+--pw4bd57r6anjhsnu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Back then we already reverted the change, found it to be working then.
-Afterwards Joseph brought it up with Jarno [2] and got some patch it
-seems, but that (whatever change it was - I have never seen it) wasn't
-enough and still crashing.
-Then we lost traction on the case and now you had to re-debug it I'm afraid :-/
+Hi Jernej,
 
-[1]: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1736390
-[2]: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1736390/comments/55
+On Wed, Feb 20, 2019 at 06:50:54PM +0100, Jernej =C5=A0krabec wrote:
+> I really wanted to do another review on previous series but got distracte=
+d by=20
+> analyzing one particulary troublesome H264 sample. It still doesn't work=
+=20
+> correctly, so I would ask you if you can test it with your stack (it migh=
+t be=20
+> userspace issue):
+>=20
+> http://jernej.libreelec.tv/videos/problematic/test.mkv
+>=20
+> Please take a look at my comments below.
 
-> Reverting that commit from 5.0 makes the problem go away. I'm not able to
-> reproduce the crash on x86_64.
->
-> ...Juerg
-> _______________________________________________
-> dev mailing list
-> dev@openvswitch.org
-> https://mail.openvswitch.org/mailman/listinfo/ovs-dev
+I'd really prefer to focus on getting this merged at this point, and
+then fixing odd videos and / or setups we can find later
+on. Especially when new stacks are going to be developped on top of
+this, I'm sure we're going to have plenty of bugs to address :)
 
+> Dne sreda, 20. februar 2019 ob 15:17:34 CET je Maxime Ripard napisal(a):
+> > Introduce some basic H264 decoding support in cedrus. So far, only the
+> > baseline profile videos have been tested, and some more advanced featur=
+es
+> > used in higher profiles are not even implemented.
+>=20
+> What is not yet implemented? Multi slice frame decoding, interlaced frame=
+s and=20
+> decoding frames with width > 2048. Anything else?
 
+Off the top of my head, nope.
 
--- 
-Christian Ehrhardt
-Software Engineer, Ubuntu Server
-Canonical Ltd
+> > +static void cedrus_h264_write_sram(struct cedrus_dev *dev,
+> > +				   enum cedrus_h264_sram_off off,
+> > +				   const void *data, size_t len)
+> > +{
+> > +	const u32 *buffer =3D data;
+> > +	size_t count =3D DIV_ROUND_UP(len, 4);
+> > +
+> > +	cedrus_write(dev, VE_AVC_SRAM_PORT_OFFSET, off << 2);
+> > +
+> > +	do {
+> > +		cedrus_write(dev, VE_AVC_SRAM_PORT_DATA, *buffer++);
+> > +	} while (--count);
+>=20
+> Above loop will still write one word for count =3D 0. I propose following:
+>=20
+> while (count--)
+> 	cedrus_write(dev, VE_AVC_SRAM_PORT_DATA, *buffer++);
+
+Good catch, thanks!
+
+> > +	position =3D find_next_zero_bit(&used_dpbs, CEDRUS_H264_FRAME_NUM,
+> > +				      output);
+> > +	if (position >=3D CEDRUS_H264_FRAME_NUM)
+> > +		position =3D find_first_zero_bit(&used_dpbs,=20
+> CEDRUS_H264_FRAME_NUM);
+>=20
+> I guess you didn't try any interlaced videos? Sometimes it happens that b=
+uffer=20
+> is reference and output at the same time. In such cases, above code would=
+ make=20
+> two entries, which doesn't work based on Kwiboo's and my experiments.
+>=20
+> I guess decoding interlaced videos is out of scope at this time?
+
+Yep, and that should be pretty easy to fix.
+
+> > +
+> > +	output_buf =3D vb2_to_cedrus_buffer(&run->dst->vb2_buf);
+> > +	output_buf->codec.h264.position =3D position;
+> > +
+> > +	if (slice->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC)
+> > +		output_buf->codec.h264.pic_type =3D=20
+> CEDRUS_H264_PIC_TYPE_FIELD;
+> > +	else if (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD)
+> > +		output_buf->codec.h264.pic_type =3D=20
+> CEDRUS_H264_PIC_TYPE_MBAFF;
+> > +	else
+> > +		output_buf->codec.h264.pic_type =3D=20
+> CEDRUS_H264_PIC_TYPE_FRAME;
+> > +
+> > +	cedrus_fill_ref_pic(ctx, output_buf,
+> > +			    dec_param->top_field_order_cnt,
+> > +			    dec_param->bottom_field_order_cnt,
+> > +			    &pic_list[position]);
+> > +
+> > +	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_FRAMEBUFFER_LIST,
+> > +			       pic_list, sizeof(pic_list));
+> > +
+> > +	cedrus_write(dev, VE_H264_OUTPUT_FRAME_IDX, position);
+> > +}
+> > +
+> > +#define CEDRUS_MAX_REF_IDX	32
+> > +
+> > +static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+> > +				   struct cedrus_run *run,
+> > +				   const u8 *ref_list, u8 num_ref,
+> > +				   enum cedrus_h264_sram_off sram)
+> > +{
+> > +	const struct v4l2_ctrl_h264_decode_param *decode =3D run-
+> >h264.decode_param;
+> > +	struct vb2_queue *cap_q =3D &ctx->fh.m2m_ctx->cap_q_ctx.q;
+> > +	const struct vb2_buffer *dst_buf =3D &run->dst->vb2_buf;
+> > +	struct cedrus_dev *dev =3D ctx->dev;
+> > +	u8 sram_array[CEDRUS_MAX_REF_IDX];
+> > +	unsigned int i;
+> > +	size_t size;
+> > +
+> > +	memset(sram_array, 0, sizeof(sram_array));
+> > +
+> > +	for (i =3D 0; i < num_ref; i++) {
+> > +		const struct v4l2_h264_dpb_entry *dpb;
+> > +		const struct cedrus_buffer *cedrus_buf;
+> > +		const struct vb2_v4l2_buffer *ref_buf;
+> > +		unsigned int position;
+> > +		int buf_idx;
+> > +		u8 dpb_idx;
+> > +
+> > +		dpb_idx =3D ref_list[i];
+> > +		dpb =3D &decode->dpb[dpb_idx];
+> > +
+> > +		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> > +			continue;
+> > +
+> > +		buf_idx =3D vb2_find_timestamp(cap_q, dpb->timestamp, 0);
+> > +		if (buf_idx < 0)
+> > +			continue;
+> > +
+> > +		ref_buf =3D to_vb2_v4l2_buffer(ctx->dst_bufs[buf_idx]);
+> > +		cedrus_buf =3D vb2_v4l2_to_cedrus_buffer(ref_buf);
+> > +		position =3D cedrus_buf->codec.h264.position;
+> > +
+> > +		sram_array[i] |=3D position << 1;
+> > +		if (ref_buf->field =3D=3D V4L2_FIELD_BOTTOM)
+>=20
+> I'm still not convinced that checking buffer field is appropriate solutio=
+n here.=20
+> IMO this bit defines top or bottom reference and same buffer could be use=
+d for=20
+> both.
+>=20
+> But I guess this belongs for follow up patch which will fix decoding inte=
+rlaced=20
+> videos.
+
+And we can always change the API later on if we find that not adequate
+
+> > +static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
+> > +				       struct cedrus_run *run)
+> > +{
+> > +	const struct v4l2_ctrl_h264_scaling_matrix *scaling =3D
+> > +		run->h264.scaling_matrix;
+> > +	struct cedrus_dev *dev =3D ctx->dev;
+> > +
+> > +	if (!scaling)
+> > +		return;
+> > +
+> > +	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_8x8_0,
+> > +			       scaling->scaling_list_8x8[0],
+> > +			       sizeof(scaling->scaling_list_8x8[0]));
+> > +
+> > +	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_8x8_1,
+> > +			       scaling->scaling_list_8x8[1],
+> > +			       sizeof(scaling->scaling_list_8x8[1]));
+>=20
+> Index above should be 3. IIRC 1 and 3 are used by 4:2:0 chroma subsamplin=
+g,=20
+> but currently I'm unable to find reference to that in standard.
+
+Yep, indeed, I'll fix that, thanks!
+
+> > +
+> > +	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_4x4,
+> > +			       scaling->scaling_list_4x4,
+> > +			       sizeof(scaling->scaling_list_4x4));
+> > +}
+> > +
+> > +static void cedrus_write_pred_weight_table(struct cedrus_ctx *ctx,
+> > +					   struct cedrus_run=20
+> *run)
+> > +{
+> > +	const struct v4l2_ctrl_h264_slice_param *slice =3D
+> > +		run->h264.slice_param;
+> > +	const struct v4l2_h264_pred_weight_table *pred_weight =3D
+> > +		&slice->pred_weight_table;
+> > +	struct cedrus_dev *dev =3D ctx->dev;
+> > +	int i, j, k;
+> > +
+> > +	cedrus_write(dev, VE_H264_SHS_WP,
+> > +		     ((pred_weight->chroma_log2_weight_denom & 0xf) <<=20
+> 4) |
+> > +		     ((pred_weight->luma_log2_weight_denom & 0xf) <<=20
+> 0));
+>=20
+> Denominators are only in range of 0-7, so mask should be 0x7. CedarX code=
+ also=20
+> specify those two fields 3 bits wide.
+
+Indeed, I'll fix it.
+
+> > +
+> > +	cedrus_write(dev, VE_AVC_SRAM_PORT_OFFSET,
+> > +		     CEDRUS_SRAM_H264_PRED_WEIGHT_TABLE << 2);
+> > +
+> > +	for (i =3D 0; i < ARRAY_SIZE(pred_weight->weight_factors); i++) {
+> > +		const struct v4l2_h264_weight_factors *factors =3D
+> > +			&pred_weight->weight_factors[i];
+> > +
+> > +		for (j =3D 0; j < ARRAY_SIZE(factors->luma_weight); j++) {
+> > +			u32 val;
+> > +
+> > +			val =3D ((factors->luma_offset[j] & 0x1ff) << 16)=20
+> |
+> > +				(factors->luma_weight[j] & 0x1ff);
+> > +			cedrus_write(dev, VE_AVC_SRAM_PORT_DATA,=20
+> val);
+>=20
+> You should cast offset varible to wider type. Currently some videos which=
+ use=20
+> prediction weight table don't work for me, unless offset is casted to u32=
+ first.=20
+> Shifting 8 bit variable for 16 places gives you 0 every time.
+
+I'll do it.
+
+> Luma offset and weight are defined as s8, so having wider mask doesn't re=
+ally=20
+> make sense. However, I think weight should be s16 anyway, because standar=
+d=20
+> says that it's value could be 2^denominator for default value or in range=
+=20
+> -128..127. Worst case would be 2^7 =3D 128 and -128. To cover both values=
+ you=20
+> need at least 9 bits.
+
+But if I understood the spec right, in that case you would just have
+the denominator set, and not the offset, while the offset is used if
+you don't use the default formula (and therefore remains in the -128
+127 range which is covered by the s8), right?
+
+> > +	reg =3D 0;
+> > +	if (!(scaling && (pps->flags &
+> > V4L2_H264_PPS_FLAG_PIC_SCALING_MATRIX_PRESENT))) +		reg |=3D
+> > VE_H264_SHS_QP_SCALING_MATRIX_DEFAULT;
+> > +	reg |=3D (pps->second_chroma_qp_index_offset & 0x3f) << 16;
+> > +	reg |=3D (pps->chroma_qp_index_offset & 0x3f) << 8;
+> > +	reg |=3D (pps->pic_init_qp_minus26 + 26 + slice->slice_qp_delta) &=20
+> 0x3f;
+> > +	cedrus_write(dev, VE_H264_SHS_QP, reg);
+> > +
+> > +	// clear status flags
+> > +	cedrus_write(dev, VE_H264_STATUS, cedrus_read(dev,=20
+> VE_H264_STATUS));
+>=20
+> I'm not sure clearing status here is needed. Do you have any case where i=
+t is=20
+> need? Maybe if some error happened before and cedrus_h264_irq_clear() was=
+n't=20
+> cleared. I'm fine either way.=20
+
+Yeah, it's just some extra precaution.
+
+> > +
+> > +	// enable int
+> > +	reg =3D cedrus_read(dev, VE_H264_CTRL);
+> > +	cedrus_write(dev, VE_H264_CTRL, reg |
+> > +		     VE_H264_CTRL_SLICE_DECODE_INT |
+> > +		     VE_H264_CTRL_DECODE_ERR_INT |
+> > +		     VE_H264_CTRL_VLD_DATA_REQ_INT);
+>=20
+> Since this is the only place where you set VE_H264_CTRL, I wouldn't prese=
+rve=20
+> previous content. This mode is also capable of decoding VP8 and AVS. So i=
+n=20
+> theory, if user would want to decode H264 and VP8 videos at the same time=
+,=20
+> preserving content will probably corrupt your output. I would just set al=
+l=20
+> other bits to 0. What do you think? I tested this without preservation an=
+d it=20
+> works fine.
+
+I'll change it.
+
+> > +	/*
+> > +	 * FIXME: This is actually conditional to
+> > +	 * V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY not being set, we might
+> > +	 * have to rework this if memory efficiency ever is something
+> > +	 * we need to work on.
+> > +	 */
+> > +	field_size =3D field_size * 2;
+> > +	ctx->codec.h264.mv_col_buf_field_size =3D field_size;
+>=20
+> CedarX code aligns this buffer to 1024. Should we do it too just to be on=
+ the=20
+> safe side? I don't think it cost us anything due to dma_alloc_coherent()=
+=20
+> alignments.
+
+dma_alloc_coherent will operate on pages, so it doesn't make any
+difference there.
+
+> Sorry again for a bit late in-depth review.
+
+Thanks a lot!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--pw4bd57r6anjhsnu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH5MvAAKCRDj7w1vZxhR
+xefqAQDiAcXfw66HqHpS3yW37QdnD3XBgheLiq30g3w+sEQhQgD8CfluL4q3Cm6b
+dTyXmGJMg72/klo2rR7oD9w5WlroLQI=
+=/tZl
+-----END PGP SIGNATURE-----
+
+--pw4bd57r6anjhsnu--
