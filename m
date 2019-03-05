@@ -2,113 +2,133 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4F3C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2CFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CED20675
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:09:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tDMvnmOq"
+	by mail.kernel.org (Postfix) with ESMTP id 4E5942070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 00:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfCEAJP (ORCPT
+        id S1726878AbfCEAJg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 19:09:15 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44448 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbfCEAJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 19:09:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eoj9pOY4iQ5+Pipyb8CxFtPlpusxpsKNR/L48Welrc4=; b=tDMvnmOq/jiq1cnbsHnWdvI9/
-        npqNcAGNu4Hcx3xPdCYc3ZcfL1PEOG30krsf9Ziz05+1f+G3GRXH9pQNoUE8RpKGFTxhURs6UpDRB
-        wZ2+HxuF0UgHfPgtmIXFtDZVzcTRoTipC7dNRp+p/zcbC9/3b1CesTxn+tYsEgMoquI2LtuB9LFoa
-        lGF6WO72Ky8Cp+SkSI/Alj7Y5ahLsR6eqEr2OvaI5WiNKyvLsPjFA8eBXbjOijoIh17r/RDvLupy6
-        kHQXftKSjpLw7Izqz0XQ0ihyfOn22SDAjaM1tubWAxBmExo7tB8qf8nhxrjxSChmwq1hKfaNZsLKK
-        o0VmKborw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h0xdv-0000Ef-Et; Tue, 05 Mar 2019 00:09:11 +0000
-Subject: Re: [PATCH 3/3] x86: apuv2: select LEDS_CLASS
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Linus Walleij <linusw@kernel.org>, Enrico Weigelt <info@metux.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190304201930.1622839-1-arnd@arndb.de>
- <20190304201930.1622839-3-arnd@arndb.de>
- <24c191e1-f607-1320-2474-3db92383e383@metux.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e5f1511e-c750-8fb2-0bfe-c73bc7905b22@infradead.org>
-Date:   Mon, 4 Mar 2019 16:09:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
-MIME-Version: 1.0
-In-Reply-To: <24c191e1-f607-1320-2474-3db92383e383@metux.net>
-Content-Type: text/plain; charset=utf-8
+        Mon, 4 Mar 2019 19:09:36 -0500
+Received: from mga03.intel.com ([134.134.136.65]:14865 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726683AbfCEAJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 19:09:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2019 16:09:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,441,1544515200"; 
+   d="scan'208";a="279738418"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga004.jf.intel.com with ESMTP; 04 Mar 2019 16:09:33 -0800
+Received: from fmsmsx116.amr.corp.intel.com (10.18.116.20) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 4 Mar 2019 16:09:32 -0800
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ fmsmsx116.amr.corp.intel.com (10.18.116.20) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 4 Mar 2019 16:09:32 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.74]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.26]) with mapi id 14.03.0415.000;
+ Tue, 5 Mar 2019 08:09:30 +0800
+From:   "Cao, Bingbu" <bingbu.cao@intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "Zhi, Yong" <yong.zhi@intel.com>, Tomasz Figa <tfiga@chromium.org>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] media: staging/intel-ipu3: mark PM function as
+ __maybe_unused
+Thread-Topic: [PATCH] media: staging/intel-ipu3: mark PM function as
+ __maybe_unused
+Thread-Index: AQHU0skBhQ6EBfjbEE2shBfE7uTelaX8KELA
+Date:   Tue, 5 Mar 2019 00:09:30 +0000
+Message-ID: <EE45BB6704246A4E914B70E8B61FB42A15C13194@SHSMSX104.ccr.corp.intel.com>
+References: <20190304202920.1845797-1-arnd@arndb.de>
+In-Reply-To: <20190304202920.1845797-1-arnd@arndb.de>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOWExOWY4ODEtZjk0MS00M2JhLTk0MWEtZWRjYzQ5MGI4NDk1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibVZmbFE0S2NGajlkQjVLVXJqWlZhZStBY0Z6ZGlyVGJvZnE4eTA0bVkwMmRPMGhUZWRVejhzQjN6dDhUaUJvWCJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 4:03 PM, Enrico Weigelt, metux IT consult wrote:
-> On 04.03.19 21:19, Arnd Bergmann wrote:
->> LEDS_GPIO can only be selected when LEDS_CLASS is already enabled:
->>
->> WARNING: unmet direct dependencies detected for LEDS_GPIO
->>   Depends on [m]: NEW_LEDS [=y] && LEDS_CLASS [=m] && (GPIOLIB [=y] || COMPILE_TEST [=y])
->>   Selected by [y]:
->>   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT_KEYBOARD [=y]
->>
->> Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>  drivers/platform/x86/Kconfig | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 4d65d37b0c86..d64529352a9c 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -1308,6 +1308,7 @@ config PCENGINES_APU2
->>  	depends on INPUT && INPUT_KEYBOARD
->>  	select GPIO_AMD_FCH
->>  	select KEYBOARD_GPIO_POLLED
->> +	select LEDS_CLASS
->>  	select LEDS_GPIO
->>  	help
->>  	  This driver provides support for the front button and LEDs on
->>
-> 
-> ACK. Just was about to post the same :)
-> 
-> Reviewed-by: Enrico Weigelt, metux It consult <info@metux.net>
-> 
+Hi, Bergmann,
 
-Enrico, you were also cc-ed on this patch on Feb.25, 2019:
+Thanks for your patch.
+Reviewed-by: Cao, Bingbu <bingbu.cao@intel.com>
 
-https://marc.info/?l=linux-kernel&m=155113875310485&w=2
+__________________________
+BRs,
+Cao, Bingbu
 
 
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Tuesday, March 5, 2019 4:29 AM
+> To: Sakari Ailus <sakari.ailus@linux.intel.com>; Mauro Carvalho Chehab
+> <mchehab@kernel.org>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>; Zhi, Yong <yong.zhi@intel.com>;
+> Tomasz Figa <tfiga@chromium.org>; Qiu, Tian Shu
+> <tian.shu.qiu@intel.com>; Cao, Bingbu <bingbu.cao@intel.com>; linux-
+> media@vger.kernel.org; devel@driverdev.osuosl.org; linux-
+> kernel@vger.kernel.org
+> Subject: [PATCH] media: staging/intel-ipu3: mark PM function as
+> __maybe_unused
 > 
-> thx.
+> The imgu_rpm_dummy_cb() looks like an API misuse that is explained in
+> the comment above it. Aside from that, it also causes a warning when
+> power management support is disabled:
 > 
-> --mtx
+> drivers/staging/media/ipu3/ipu3.c:794:12: error: 'imgu_rpm_dummy_cb'
+> defined but not used [-Werror=unused-function]
 > 
+> The warning is at least easy to fix by marking the function as
+> __maybe_unused.
+> 
+> Fixes: 7fc7af649ca7 ("media: staging/intel-ipu3: Add imgu top level pci
+> device driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/staging/media/ipu3/ipu3.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/ipu3/ipu3.c
+> b/drivers/staging/media/ipu3/ipu3.c
+> index d575ac78c8f0..d00d26264c37 100644
+> --- a/drivers/staging/media/ipu3/ipu3.c
+> +++ b/drivers/staging/media/ipu3/ipu3.c
+> @@ -791,7 +791,7 @@ static int __maybe_unused imgu_resume(struct device
+> *dev)
+>   * PCI rpm framework checks the existence of driver rpm callbacks.
+>   * Place a dummy callback here to avoid rpm going into error state.
+>   */
+> -static int imgu_rpm_dummy_cb(struct device *dev)
+> +static __maybe_unused int imgu_rpm_dummy_cb(struct device *dev)
+>  {
+>  	return 0;
+>  }
+> --
+> 2.20.0
 
-
--- 
-~Randy
