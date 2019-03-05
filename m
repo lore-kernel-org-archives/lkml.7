@@ -2,211 +2,372 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A29C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4675EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E21820663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:52:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qt7PIo7P"
+	by mail.kernel.org (Postfix) with ESMTP id ED29D20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 22:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbfCEWwd (ORCPT
+        id S1728686AbfCEWyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 17:52:33 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34781 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728551AbfCEWwd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 17:52:33 -0500
-Received: by mail-pg1-f195.google.com with SMTP id i130so6685687pgd.1;
-        Tue, 05 Mar 2019 14:52:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=3ZFhDdkXvEBDA501mHcdgdRllGMUc6/ZIZ6B0dhu9Zk=;
-        b=qt7PIo7Pada4mn+Vto1uBL9w7rq5ELGTavDYUbMkLTFbBiDrdkOkr/xbaO4cxQgK6u
-         AU0Awsk2xsEIO3AQAkh4XW5UhraTmUHbQQSNAJ/L9wtIc9PLmY36KngAnpgblkBX9y8s
-         X3a752pOm2Ed2k1S9c6vGtzI109ZXLh+SZRKU0s46A5f9cVJTOCXLl86IiSZJtbEN6S0
-         k+rhQTT+IHNtxMCJY+g+5CP29L6+U+ilj8sDiAv4fNS6QS5UFwyS13Ema36frOSJWZpj
-         JZovKjZVzDPnYi+HmIiq1fgu+PCl0XSQh/mvFWlNlx5cJZdIQHz6AiCEY5HWo3VOybYd
-         Zbsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=3ZFhDdkXvEBDA501mHcdgdRllGMUc6/ZIZ6B0dhu9Zk=;
-        b=rLEBMJS5WKbcv7kRkWqv8UdbxIAU0tH7xJuK0cTcptZXpZpFeyCrrad51ncVwzWca8
-         UWW984IC0fzewKrmlsJqCDo6KnfQzMs3CfqAA1Xa2XSAhOqqo9nM4u4QwH07HZtrc9Ou
-         8DKOEEWyiuq/ItsXH8AghiEYW1kdUogZzyO8kRNVcx3ZWi/GK8kAw7grWmVgI6EY+sKz
-         m6EvJLZejb9bMfqlHUfLJCMG3FuiNDJy735tqqy1fUi1hAuLnEi69HvQXeCDAnfNMp71
-         ThOELWcoovsuKhILYcDzt1tf348XvzcsdVGxAdyXXui+T/+7wyx92BP4dXflJFnVTJyf
-         rYJg==
-X-Gm-Message-State: APjAAAXJizynrz3o4iUrZqnkoBKtPXk+ChdO8AuM25BrhgEZ2csrvigf
-        7lvBETZu8see59NeI33NZ74=
-X-Google-Smtp-Source: APXvYqz+AsuY1RY+l6d2prl3sPCflCv0v39HFHps5Mp0nDua0y4fjPOC6Oj3J0Jr7ACfOCCIrFwvTg==
-X-Received: by 2002:a63:6b47:: with SMTP id g68mr3397089pgc.220.1551826351884;
-        Tue, 05 Mar 2019 14:52:31 -0800 (PST)
-Received: from [192.168.0.16] (97-115-123-245.ptld.qwest.net. [97.115.123.245])
-        by smtp.gmail.com with ESMTPSA id h184sm66207pfc.78.2019.03.05.14.52.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Mar 2019 14:52:31 -0800 (PST)
-Subject: Re: [ovs-dev] openvswitch crash on i386
-To:     Joe Stringer <joe@ovn.org>,
-        Christian Ehrhardt <christian.ehrhardt@canonical.com>
-Cc:     "<dev@openvswitch.org>" <dev@openvswitch.org>,
-        James Page <james.page@canonical.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        David Miller <davem@davemloft.net>
-References: <20190305104010.6342e9b9@gollum>
- <CAATJJ0KgvC-j2egtq6G5M0jK5O04-xATEu_yDLvr53tJdFEzrQ@mail.gmail.com>
- <CAOftzPjJnBdHWgArGRhkSnQrqmUKvhxkO_eLth61-HEfZiAHUw@mail.gmail.com>
-From:   Gregory Rose <gvrose8192@gmail.com>
-Message-ID: <06cf4f57-e7ca-5ead-ed37-fb88255df78b@gmail.com>
-Date:   Tue, 5 Mar 2019 14:52:29 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Tue, 5 Mar 2019 17:54:16 -0500
+Received: from sauhun.de ([88.99.104.3]:38416 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726453AbfCEWyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 17:54:16 -0500
+Received: from localhost (p54B3334F.dip0.t-ipconnect.de [84.179.51.79])
+        by pokefinder.org (Postfix) with ESMTPSA id 40B592E3551;
+        Tue,  5 Mar 2019 23:54:12 +0100 (CET)
+Date:   Tue, 5 Mar 2019 23:54:11 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.1
+Message-ID: <20190305225407.GA16211@kunai>
 MIME-Version: 1.0
-In-Reply-To: <CAOftzPjJnBdHWgArGRhkSnQrqmUKvhxkO_eLth61-HEfZiAHUw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 3/5/2019 11:58 AM, Joe Stringer wrote:
-> On Tue, Mar 5, 2019 at 2:12 AM Christian Ehrhardt
-> <christian.ehrhardt@canonical.com> wrote:
->> On Tue, Mar 5, 2019 at 10:58 AM Juerg Haefliger
->> <juerg.haefliger@canonical.com> wrote:
->>> Hi,
->>>
->>> Running the following commands in a loop will crash an i386 5.0 kernel
->>> typically within a few iterations:
->>>
->>> ovs-vsctl add-br test
->>> ovs-vsctl del-br test
+--YiEDa0DAkWCtVeE4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I have an i386 Ubuntu 18 VM to test this on.  I'll investigate and see 
-what I can find.
+Linus,
 
-- Greg
+The I2C pull request contains this time:
 
->>>
->>> [  106.215748] BUG: unable to handle kernel paging request at e8a35f3b
->>> [  106.216733] #PF error: [normal kernel read fault]
->>> [  106.217464] *pdpt = 0000000019a76001 *pde = 0000000000000000
->>> [  106.218346] Oops: 0000 [#1] SMP PTI
->>> [  106.218911] CPU: 0 PID: 2050 Comm: systemd-udevd Tainted: G            E     5.0.0 #25
->>> [  106.220103] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1ubuntu1 04/01/2014
->>> [  106.221447] EIP: kmem_cache_alloc_trace+0x7a/0x1b0
->>> [  106.222178] Code: 01 00 00 8b 07 64 8b 50 04 64 03 05 28 61 e8 d2 8b 08 89 4d ec 85 c9 0f 84 03 01 00 00 8b 45 ec 8b 5f 14 8d 4a 01 8b 37 01 c3 <33> 1b 33 9f b4 00 00 00 64 0f c7 0e 75 cb 8b 75 ec 8b 47 14 0f 18
->>> [  106.224752] EAX: e8a35f3b EBX: e8a35f3b ECX: 0000869f EDX: 0000869e
->>> [  106.225683] ESI: d2e96ef0 EDI: da401a00 EBP: d9b85dd0 ESP: d9b85db0
->>> [  106.226662] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010282
->>> [  106.227710] CR0: 80050033 CR2: e8a35f3b CR3: 185b8000 CR4: 000006f0
->>> [  106.228703] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
->>> [  106.229604] DR6: fffe0ff0 DR7: 00000400
->>> [  106.230114] Call Trace:
->>> [  106.230525]  ? kernfs_fop_open+0xb4/0x390
->>> [  106.231176]  kernfs_fop_open+0xb4/0x390
->>> [  106.231856]  ? security_file_open+0x7c/0xc0
->>> [  106.232562]  do_dentry_open+0x131/0x370
->>> [  106.233229]  ? kernfs_fop_write+0x180/0x180
->>> [  106.233905]  vfs_open+0x25/0x30
->>> [  106.234432]  path_openat+0x2fd/0x1450
->>> [  106.235084]  ? cp_new_stat64+0x115/0x140
->>> [  106.235754]  ? cp_new_stat64+0x115/0x140
->>> [  106.236427]  do_filp_open+0x6a/0xd0
->>> [  106.237026]  ? cp_new_stat64+0x115/0x140
->>> [  106.237748]  ? strncpy_from_user+0x3d/0x180
->>> [  106.238539]  ? __alloc_fd+0x36/0x120
->>> [  106.239256]  do_sys_open+0x175/0x210
->>> [  106.239955]  sys_openat+0x1b/0x20
->>> [  106.240596]  do_fast_syscall_32+0x7f/0x1e0
->>> [  106.241313]  entry_SYSENTER_32+0x6b/0xbe
->>> [  106.242017] EIP: 0xb7fae871
->>> [  106.242559] Code: 8b 98 58 cd ff ff 89 c8 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
->>> [  106.245551] EAX: ffffffda EBX: ffffff9c ECX: bffdcb60 EDX: 00088000
->>> [  106.246651] ESI: 00000000 EDI: b7f9e000 EBP: 00088000 ESP: bffdc970
->>> [  106.247706] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
->>> [  106.248851] Modules linked in: openvswitch(E)
->>> [  106.249621] CR2: 00000000e8a35f3b
->>> [  106.250218] ---[ end trace 6a8d05679a59cda7 ]---
->>>
->>> I've bisected this down to the following commit that seems to have introduced
->>> the issue:
->>>
->>> commit 120645513f55a4ac5543120d9e79925d30a0156f (refs/bisect/bad)
->>> Author: Jarno Rajahalme <jarno@ovn.org>
->>> Date:   Fri Apr 21 16:48:06 2017 -0700
->>>
->>>      openvswitch: Add eventmask support to CT action.
->>>
->>>      Add a new optional conntrack action attribute OVS_CT_ATTR_EVENTMASK,
->>>      which can be used in conjunction with the commit flag
->>>      (OVS_CT_ATTR_COMMIT) to set the mask of bits specifying which
->>>      conntrack events (IPCT_*) should be delivered via the Netfilter
->>>      netlink multicast groups.  Default behavior depends on the system
->>>      configuration, but typically a lot of events are delivered.  This can be
->>>      very chatty for the NFNLGRP_CONNTRACK_UPDATE group, even if only some
->>>      types of events are of interest.
->>>
->>>      Netfilter core init_conntrack() adds the event cache extension, so we
->>>      only need to set the ctmask value.  However, if the system is
->>>      configured without support for events, the setting will be skipped due
->>>      to extension not being found.
->>>
->>>      Signed-off-by: Jarno Rajahalme <jarno@ovn.org>
->>>      Reviewed-by: Greg Rose <gvrose8192@gmail.com>
->>>      Acked-by: Joe Stringer <joe@ovn.org>
->>>      Signed-off-by: David S. Miller <davem@davemloft.net>
->> Hi Juerg,
->> the symptom, the identified breaking commit and actually all of it
->> seems to be [1] which James, Joseph and I worked on already.
->> I wanted to make you aware of the past context that already exists.
->>
->> Back then we already reverted the change, found it to be working then.
->> Afterwards Joseph brought it up with Jarno [2] and got some patch it
->> seems, but that (whatever change it was - I have never seen it) wasn't
->> enough and still crashing.
->> Then we lost traction on the case and now you had to re-debug it I'm afraid :-/
->>
->> [1]: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1736390
->> [2]: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1736390/comments/55
->>
->>> Reverting that commit from 5.0 makes the problem go away. I'm not able to
->>> reproduce the crash on x86_64.
->>>
->>> ...Juerg
->>> _______________________________________________
->>> dev mailing list
->>> dev@openvswitch.org
->>> https://mail.openvswitch.org/mailman/listinfo/ovs-dev
->>
->>
->> --
->> Christian Ehrhardt
->> Software Engineer, Ubuntu Server
->> Canonical Ltd
-> Somehow the patch was shared on three different open source lists (the
-> bug, linux-kernel, and ovs-dev), yet only one of the three actually
-> retained the message:
->
-> https://mail.openvswitch.org/pipermail/ovs-dev/2018-September/352395.html
-> _______________________________________________
-> dev mailing list
-> dev@openvswitch.org
-> https://mail.openvswitch.org/mailman/listinfo/ovs-dev
+* the I2C core gained helpers to assist drivers in handling their
+  suspended state, and drivers were converted to use it
+* two new fault-injectors for stress-testing
+* bigger refactoring and feature improvements for the ocores, sh_mobile,
+  and tegra drivers
+* platform_data removal for the at24 EEPROM driver
+* and various improvements and bugfixes all over the subsystem
 
+Please pull.
+
+Thanks,
+
+   Wolfram
+
+
+The following changes since commit d13937116f1e82bf508a6325111b322c30c85eb9:
+
+  Linux 5.0-rc6 (2019-02-10 14:42:20 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-5.1
+
+for you to fetch changes up to 93b6604c5a669d84e45fe5129294875bf82eb1ff:
+
+  i2c: Allow recovery of the initial IRQ by an I2C client device. (2019-02-24 14:43:22 +0100)
+
+----------------------------------------------------------------
+Andrew Lunn (2):
+      i2c: ocores: Add support for IO mapper registers.
+      i2c: ocores: Add support for bus clock via platform data
+
+Andy Shevchenko (1):
+      i2c: acpi: Move I2C bits from acpi.h to i2c.h
+
+Bartosz Golaszewski (15):
+      ARM: davinci: da850-evm: remove dead MTD code
+      ARM: davinci: mityomapl138: don't read the MAC address from machine code
+      ARM: davinci: dm365-evm: use device properties for at24 eeprom
+      ARM: davinci: da830-evm: use device properties for at24 eeprom
+      ARM: davinci: dm644x-evm: use device properties for at24 eeprom
+      ARM: davinci: dm646x-evm: use device properties for at24 eeprom
+      ARM: davinci: sffsdr: fix the at24 eeprom device name
+      ARM: davinci: sffsdr: use device properties for at24 eeprom
+      ARM: davinci: remove dead code related to MAC address reading
+      ARM: davinci: mityomapl138: use nvmem notifiers
+      ARM: davinci: mityomapl138: use device properties for at24 eeprom
+      Merge branch 'v5.1/eeprom-for-bartosz' of git://git.kernel.org/.../nsekhar/linux-davinci into at24/for-next
+      eeprom: at24: remove at24_platform_data
+      dt-bindings: at24: add the 'num-addresses' property
+      eeprom: at24: implement support for 'num-addresses' property
+
+Chengguang Xu (1):
+      i2c: expand minor range when registering chrdev region
+
+Colin Ian King (1):
+      i2c: tegra: change phrasing, "fallbacking" to "falling back"
+
+Federico Vaga (5):
+      i2c: ocores: stop transfer on timeout
+      i2c: ocores: do not handle IRQ if IF is not set
+      i2c: ocores: add polling interface
+      i2c: ocores: add SPDX tag
+      i2c: ocores: checkpatch fixes
+
+Geert Uytterhoeven (1):
+      i2c: rcar: Fix clients using i2c from suspend callback
+
+Hans de Goede (1):
+      i2c: designware: Do not allow i2c_dw_xfer() calls while suspended
+
+Jae Hyun Yoo (2):
+      i2c: aspeed: Remove hard-coded bus timeout value setting
+      i2c: aspeed: Add multi-master use case support
+
+Jim Broadus (1):
+      i2c: Allow recovery of the initial IRQ by an I2C client device.
+
+John Sperbeck (1):
+      i2c: core-smbus: don't trace smbus_reply data on errors
+
+Jonathan Hunter (1):
+      i2c: tegra: Only display error messages if DMA setup fails
+
+Linus Walleij (3):
+      i2c: Add DT bindings for Xscale I2C masters
+      i2c: iop3xx: Add device tree probing
+      i2c: cbus-gpio: Switch to use GPIO descriptors
+
+Oleksij Rempel (2):
+      i2c: imx: notify about real errors on dma i2c_imx_dma_request
+      i2c: imx: improve the error handling in i2c_imx_dma_request()
+
+Sowjanya Komatineni (9):
+      i2c: tegra: sort all the include headers alphabetically
+      i2c: tegra: add bus clear Master Support
+      i2c: tegra: fix maximum transfer size
+      i2c: tegra: update maximum transfer size
+      i2c: tegra: Add DMA support
+      i2c: tegra: update transfer timeout
+      i2c: tegra: add i2c interface timing support
+      i2c: tegra: remove master fifo support on tegra186
+      i2c: tegra: remove multi-master support
+
+Thierry Reding (1):
+      i2c: of: Try to find an I2C adapter matching the parent
+
+Wolfram Sang (32):
+      i2c: add suspended flag and accessors for i2c adapters
+      i2c: synquacer: remove unused is_suspended flag
+      i2c: brcmstb: use core helper to mark adapter suspended
+      i2c: zx2967: use core helper to mark adapter suspended
+      i2c: sprd: don't use pdev as variable name for struct device *
+      i2c: sprd: use core helper to mark adapter suspended
+      i2c: exynos5: use core helper to mark adapter suspended
+      i2c: s3c2410: use core helper to mark adapter suspended
+      i2c: rcar: add suspend/resume support
+      i2c: sh_mobile: simplify sending address for RX
+      i2c: sh_mobile: remove get_data function
+      i2c: sh_mobile: drop 'data' argument from i2c_op function
+      i2c: sh_mobile: remove is_first_byte function
+      i2c: sh_mobile: replace break; with if-block
+      i2c: sh_mobile: refactor rx isr
+      i2c: sh_mobile: update copyright and comments
+      i2c: algo-bit: include main i2c header
+      i2c: algo-bit: convert to SPDX header
+      i2c: gpio: sort includes
+      i2c: gpio: fault-injector: sort debugfs files alphabetically
+      i2c: gpio: fault-injector: better SPHINX style in docs
+      i2c: rcar: comment maintenance
+      i2c: sh_mobile: sort compatible entries
+      i2c: sh_mobile: use new clock calculation formulas for Gen3
+      i2c: sh_mobile: use new clock calculation formulas for Gen2
+      i2c: gpio: merge two very similar comments
+      i2c: rcar: refactor TCYC handling
+      Merge branch 'i2c/for-current' into i2c/for-5.1
+      Merge tag 'at24-5.1-updates-for-wolfram' of git://git.kernel.org/.../brgl/linux into i2c/for-5.1
+      i2c: gpio: fault-injector: add 'lose_arbitration' injector
+      i2c: gpio: fault-injector: add 'inject_panic' injector
+      i2c: ocores: turn incomplete kdoc into a comment
+
+YueHaibing (1):
+      i2c: imx: Fix inconsistent IS_ERR and PTR_ERR in i2c_imx_dma_request()
+
+qii wang (3):
+      dt-bindings: i2c: Add Mediatek MT7629 i2c binding
+      i2c: mediatek: speeds is replaced by macros definitions
+      i2c: mediatek: remove completion_done()
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Aaro Koskinen (1):
+      (Test) i2c: cbus-gpio: Switch to use GPIO descriptors
+
+Andrew Lunn (6):
+      (Rev.) i2c: ocores: turn incomplete kdoc into a comment
+      (Rev.) i2c: ocores: checkpatch fixes
+      (Rev.) i2c: ocores: add SPDX tag
+      (Test) i2c: ocores: add polling interface
+      (Rev.) i2c: ocores: do not handle IRQ if IF is not set
+      (Rev.) i2c: ocores: stop transfer on timeout
+
+Andy Shevchenko (6):
+      (Rev.) i2c: designware: Do not allow i2c_dw_xfer() calls while suspended
+      (Rev.) ARM: davinci: sffsdr: use device properties for at24 eeprom
+      (Rev.) ARM: davinci: dm646x-evm: use device properties for at24 eeprom
+      (Rev.) ARM: davinci: dm644x-evm: use device properties for at24 eeprom
+      (Rev.) ARM: davinci: da830-evm: use device properties for at24 eeprom
+      (Rev.) ARM: davinci: dm365-evm: use device properties for at24 eeprom
+
+Baolin Wang (2):
+      (Rev.) i2c: sprd: use core helper to mark adapter suspended
+      (Rev.) i2c: sprd: don't use pdev as variable name for struct device *
+
+Benjamin Tissoires (1):
+      (Rev.) i2c: Allow recovery of the initial IRQ by an I2C client device.
+
+Brendan Higgins (2):
+      (Rev.) i2c: aspeed: Add multi-master use case support
+      (Rev.) i2c: aspeed: Remove hard-coded bus timeout value setting
+
+Charles Keepax (1):
+      (Rev.) i2c: Allow recovery of the initial IRQ by an I2C client device.
+
+Dmitry Osipenko (10):
+      (Rev.) i2c: tegra: Only display error messages if DMA setup fails
+      (Rev.) i2c: tegra: add i2c interface timing support
+      (Test) i2c: tegra: add i2c interface timing support
+      (Rev.) i2c: tegra: update transfer timeout
+      (Rev.) i2c: tegra: Add DMA support
+      (Test) i2c: tegra: Add DMA support
+      (Rev.) i2c: tegra: update maximum transfer size
+      (Rev.) i2c: tegra: fix maximum transfer size
+      (Rev.) i2c: tegra: add bus clear Master Support
+      (Rev.) i2c: tegra: sort all the include headers alphabetically
+
+Geert Uytterhoeven (10):
+      (Rev.) i2c: gpio: merge two very similar comments
+      (Rev.) i2c: sh_mobile: use new clock calculation formulas for Gen2
+      (Rev.) i2c: sh_mobile: use new clock calculation formulas for Gen3
+      (Rev.) i2c: sh_mobile: sort compatible entries
+      (Rev.) i2c: sh_mobile: refactor rx isr
+      (Rev.) i2c: sh_mobile: replace break; with if-block
+      (Rev.) i2c: sh_mobile: remove is_first_byte function
+      (Rev.) i2c: sh_mobile: drop 'data' argument from i2c_op function
+      (Rev.) i2c: sh_mobile: remove get_data function
+      (Rev.) i2c: sh_mobile: simplify sending address for RX
+
+Joel Stanley (1):
+      (Rev.) i2c: aspeed: Remove hard-coded bus timeout value setting
+
+Kamal Dasu (1):
+      (Rev.) i2c: brcmstb: use core helper to mark adapter suspended
+
+Marek Szyprowski (2):
+      (Test) i2c: s3c2410: use core helper to mark adapter suspended
+      (Test) i2c: exynos5: use core helper to mark adapter suspended
+
+Nicolas Boichat (1):
+      (Rev.) i2c: mediatek: speeds is replaced by macros definitions
+
+Oleksij Rempel (1):
+      (Rev.) i2c: imx: Fix inconsistent IS_ERR and PTR_ERR in i2c_imx_dma_request()
+
+Rob Herring (1):
+      (Rev.) dt-bindings: i2c: Add Mediatek MT7629 i2c binding
+
+Simon Horman (7):
+      (Rev.) i2c: rcar: refactor TCYC handling
+      (Rev.) i2c: sh_mobile: use new clock calculation formulas for Gen3
+      (Rev.) i2c: sh_mobile: sort compatible entries
+      (Rev.) i2c: rcar: comment maintenance
+      (Rev.) i2c: gpio: sort includes
+      (Rev.) i2c: algo-bit: convert to SPDX header
+      (Rev.) i2c: algo-bit: include main i2c header
+
+Steven Rostedt (VMware) (1):
+      (Rev.) i2c: core-smbus: don't trace smbus_reply data on errors
+
+Tristan Bastian (1):
+      (Test) i2c: of: Try to find an I2C adapter matching the parent
+
+Uwe Kleine-K??nig (1):
+      (Rev.) i2c: imx: Fix inconsistent IS_ERR and PTR_ERR in i2c_imx_dma_request()
+
+ Documentation/devicetree/bindings/eeprom/at24.txt  |   3 +
+ Documentation/devicetree/bindings/i2c/i2c-mtk.txt  |   1 +
+ .../devicetree/bindings/i2c/i2c-xscale.txt         |  20 +
+ Documentation/i2c/fault-codes                      |   4 +
+ Documentation/i2c/gpio-fault-injection             |  61 +-
+ MAINTAINERS                                        |   1 -
+ arch/arm/mach-davinci/board-da830-evm.c            |  13 +-
+ arch/arm/mach-davinci/board-da850-evm.c            |  28 -
+ arch/arm/mach-davinci/board-dm365-evm.c            |  13 +-
+ arch/arm/mach-davinci/board-dm644x-evm.c           |  13 +-
+ arch/arm/mach-davinci/board-dm646x-evm.c           |  13 +-
+ arch/arm/mach-davinci/board-mityomapl138.c         |  38 +-
+ arch/arm/mach-davinci/board-sffsdr.c               |  13 +-
+ arch/arm/mach-davinci/common.c                     |  15 -
+ arch/arm/mach-omap1/board-nokia770.c               |  18 +-
+ drivers/i2c/algos/i2c-algo-bit.c                   |  25 +-
+ drivers/i2c/busses/i2c-aspeed.c                    | 120 +++-
+ drivers/i2c/busses/i2c-brcmstb.c                   |  13 +-
+ drivers/i2c/busses/i2c-cbus-gpio.c                 |  80 +--
+ drivers/i2c/busses/i2c-designware-core.h           |   2 +
+ drivers/i2c/busses/i2c-designware-master.c         |   6 +
+ drivers/i2c/busses/i2c-designware-pcidrv.c         |   7 +-
+ drivers/i2c/busses/i2c-designware-platdrv.c        |   3 +
+ drivers/i2c/busses/i2c-exynos5.c                   |  11 +-
+ drivers/i2c/busses/i2c-gpio.c                      | 134 +++-
+ drivers/i2c/busses/i2c-imx.c                       |  37 +-
+ drivers/i2c/busses/i2c-iop3xx.c                    |   8 +
+ drivers/i2c/busses/i2c-mt65xx.c                    |   6 +-
+ drivers/i2c/busses/i2c-ocores.c                    | 308 +++++++--
+ drivers/i2c/busses/i2c-rcar.c                      |  49 +-
+ drivers/i2c/busses/i2c-s3c2410.c                   |   8 +-
+ drivers/i2c/busses/i2c-sh_mobile.c                 | 121 ++--
+ drivers/i2c/busses/i2c-sprd.c                      |  34 +-
+ drivers/i2c/busses/i2c-synquacer.c                 |   5 -
+ drivers/i2c/busses/i2c-tegra.c                     | 740 ++++++++++++++++++---
+ drivers/i2c/busses/i2c-zx2967.c                    |   8 +-
+ drivers/i2c/i2c-core-base.c                        |  12 +-
+ drivers/i2c/i2c-core-of.c                          |  14 +-
+ drivers/i2c/i2c-core-smbus.c                       |   2 +-
+ drivers/i2c/i2c-dev.c                              |   2 +-
+ drivers/misc/eeprom/at24.c                         | 169 +++--
+ include/linux/acpi.h                               |  11 -
+ include/linux/davinci_emac.h                       |   1 -
+ include/linux/i2c-algo-bit.h                       |  33 +-
+ include/linux/i2c.h                                |  45 ++
+ include/linux/platform_data/at24.h                 |  60 --
+ include/linux/platform_data/i2c-cbus-gpio.h        |  27 -
+ include/linux/platform_data/i2c-ocores.h           |   6 +-
+ include/trace/events/smbus.h                       |   6 +-
+ 49 files changed, 1607 insertions(+), 760 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-xscale.txt
+ delete mode 100644 include/linux/platform_data/at24.h
+ delete mode 100644 include/linux/platform_data/i2c-cbus-gpio.h
+
+--YiEDa0DAkWCtVeE4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlx+/goACgkQFA3kzBSg
+KbYqHQ/5AZPK8VoQi7QrKx0J2yqpShcBsfGc4UMHaiGMn5cib+3ko4QShQq4NWbW
+YdZNFPmwUVbpC1A4U8NV2ZoeQx+Sj6ops1gztQq9Li5nFDyKU3TOxTU6cDEKUX15
+Tm6mJ3AoqR7IBAkzhoHGc4OwtWLHs+/J07DCB3VGSYAtLmNjyut5G0py4v8MoFzC
+lEDtmC2ZNVr78S4DFqU9zPziby1T8LRyJtkuLI5x4cG3z1B5++t33oDP5mO0CIyp
+WlmnvxJQ6dum/07fn7PdLpPw4CdBTRVEermcYgaspwh3mQ/h+EPcqHFct627A9MS
+wmRozXPLyLdsdCOyqN1N8VC3+wEKxdd9m+ot3d2Kr8b1s+nWGXat+ceeOrd8ZGd8
+lrUTJ7s6wVWCwBb3L6yNUx0MQVN54TCuy9wmFlzCcHTSxvysKPHZb3JuUTuxv+Lr
+cpZ3o5Phjd/RFOfm3fSKVdUqJLjtDQ44miFjeUnrN8nmy1a4hvmxStEI7a1Maq+B
+lrSTeis2bOfG94D2ttXY0tt1yxcILL+aLT+AFGM2UCCY1lb69l3+IKHnkMJUCtD4
+pXCvb3GWd2PJ89rRBKQI6T0wlu2xO7We4O59mTC6q3qFJ3MnlfIOrE0uhXMHgirb
+/JcodHG33f5xHpCfEWa/jx0gmEnqfOZVhCvgvp7rm+/py2sHwdI=
+=YX6C
+-----END PGP SIGNATURE-----
+
+--YiEDa0DAkWCtVeE4--
