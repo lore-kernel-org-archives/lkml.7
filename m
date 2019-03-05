@@ -2,86 +2,78 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72420C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92320C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BE220661
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1551802817;
-	bh=TkOURrJHNAQ1oLYVoWS9vfl0agidyKeZHW6uJz0lzE4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=kQlF3KJyXL37l6Y77Cbt1pWbUjyEz1NRmtt7lKER4GYdkvKLE+Vush9I6Ti9Ne5M4
-	 nT2SMvj9d0C0puDraeC0hP5ee/X0X1wox0GCVs7UtJRqaIBSy8PjEVCjyF0Nc/j0jf
-	 lmsmdVzzGSUy1eUaTALhzaMfE9J8PMW3pWhhiK8I=
+	by mail.kernel.org (Postfix) with ESMTP id 5C5FA20661
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfCEQUQ (ORCPT
+        id S1726400AbfCEQWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 11:20:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46598 "EHLO mail.kernel.org"
+        Tue, 5 Mar 2019 11:22:01 -0500
+Received: from l2mail1.panix.com ([166.84.1.75]:55292 "EHLO l2mail1.panix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfCEQUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 11:20:15 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7EA620652;
-        Tue,  5 Mar 2019 16:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1551802815;
-        bh=TkOURrJHNAQ1oLYVoWS9vfl0agidyKeZHW6uJz0lzE4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KHZQYeEgvdSqjcWDyn7T6kjAtIn2EwJdWML/BV6tQAyp9pCqjVdazy0UQ9tL1PbfU
-         LZgG81Q5TIMFub8UMcRaF8ifjEBpxO6WTgvPkUGRS1VaZkU6dIYUuwnwpoH/6Re6Vz
-         Uo5ccg7nOq9GAri+Wwq/nBdkXb/vEkGBkvbF+278=
-Subject: Re: [PATCH 4.20 00/88] 4.20.14-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190304081630.610632175@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <439e2754-1a8b-5950-78a4-30a3b983d645@kernel.org>
-Date:   Tue, 5 Mar 2019 09:20:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1726069AbfCEQWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 11:22:01 -0500
+X-Greylist: delayed 954 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Mar 2019 11:21:59 EST
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+        by l2mail1.panix.com (Postfix) with ESMTPS id 44DMFV0DxSzDV3
+        for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2019 11:06:05 -0500 (EST)
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+        by mailbackend.panix.com (Postfix) with ESMTPSA id 44DMFT1fPWz1np6
+        for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2019 11:06:04 -0500 (EST)
+Received: by mail-oi1-f173.google.com with SMTP id s16so7215976oih.9
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 08:06:04 -0800 (PST)
+X-Gm-Message-State: APjAAAWbiPMo4W58POVN1lJzW8DUrcdoq80yGbyeAoVJKHBDvUQ2W1P3
+        v79M1V1OQhrpGe6KA4UHX3qV89zquyWItGMemHM=
+X-Google-Smtp-Source: APXvYqyignllGMBUjwDbGk0rsHmnwjsOFlqJkn3PaOGzu5p90Y/a+yVmTR+ICKYJ3MiUqZqj5mY8pVnc9nD2+oq4ZQ8=
+X-Received: by 2002:aca:4305:: with SMTP id q5mr14495990oia.121.1551801963809;
+ Tue, 05 Mar 2019 08:06:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20190304081630.610632175@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190305162351.5aadde66@jawa>
+In-Reply-To: <20190305162351.5aadde66@jawa>
+From:   Zack Weinberg <zackw@panix.com>
+Date:   Tue, 5 Mar 2019 11:05:52 -0500
+X-Gmail-Original-Message-ID: <CAKCAbMjiW8=X1u8nm6nEkAz+MyF=msN97Fr59=v01HbHb=U6UA@mail.gmail.com>
+Message-ID: <CAKCAbMjiW8=X1u8nm6nEkAz+MyF=msN97Fr59=v01HbHb=U6UA@mail.gmail.com>
+Subject: Re: [Y2038] Question regarding support of old time interfaces beyond y2038
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joseph Myers <joseph@codesourcery.com>,
+        GNU C Library <libc-alpha@sourceware.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/19 1:21 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.20.14 release.
-> There are 88 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed Mar  6 08:16:03 UTC 2019.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.20.14-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.20.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Tue, Mar 5, 2019 at 10:24 AM Lukasz Majewski <lukma@denx.de> wrote:
+> From other discussion [4] - regarding the following system calls:
+>  time, stime, gettimeofday, settimeofday, adjtimex, nanosleep, alarm,
+>  getitimer, setitimer, select, utime, utimes, futimesat, and
+>  {old,new}{l,f,}stat{,64}.
+>
+> "These all pass 32-bit time_t arguments on 32-bit
+>  architectures and are replaced by other interfaces (e.g. posix
+>  timers and clocks, statx). C libraries implementing 64-bit time_t in
+>  32-bit architectures have to implement the handles by wrapping
+>  around the newer interfaces."
 
-Compiled and booted on my test system. No dmesg regressions.
+1) We should be clear that most of these will continue to be supported
+as C library interfaces even if they are not system calls.  Some of
+them are obsolete enough and/or rarely used enough that we might not
+bother (the older ways to set the system clock, for instance).
 
-thanks,
--- Shuah
+2) I know of one case where the new interfaces don't cover all of the
+functionality of the old ones: timers started by setitimer continue to
+run after an execve, timers started by timer_create don't.  This means
+setitimer(ITIMER_VIRTUAL) can be used to impose a CPU time limit on a
+program you didn't write, and timer_create can't.  If new kernels are
+not going to have setitimer as a primitive, we need some other way of
+getting the same effect.
+
+zw
