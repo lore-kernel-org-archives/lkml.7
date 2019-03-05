@@ -2,113 +2,75 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6111C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFF1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E638206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296B4208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:17:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfCEOQv (ORCPT
+        id S1728274AbfCEORW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:16:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45530 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727498AbfCEOQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 09:16:50 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 86608AF1A;
-        Tue,  5 Mar 2019 14:16:49 +0000 (UTC)
-Date:   Tue, 5 Mar 2019 15:16:45 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     x86-ml <x86@kernel.org>, linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] RAS updates for 5.1
-Message-ID: <20190305141645.GF9073@zn.tnic>
+        Tue, 5 Mar 2019 09:17:22 -0500
+Received: from mga05.intel.com ([192.55.52.43]:2902 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727659AbfCEORW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 09:17:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:17:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
+   d="scan'208";a="131412466"
+Received: from schmiger-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.249.45.12])
+  by orsmga003.jf.intel.com with ESMTP; 05 Mar 2019 06:17:18 -0800
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id C12C621E54; Tue,  5 Mar 2019 16:17:15 +0200 (EET)
+Date:   Tue, 5 Mar 2019 16:17:15 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yong Zhi <yong.zhi@intel.com>,
+        Tian Shu Qiu <tian.shu.qiu@intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] media: staging/intel-ipu3: reduce kernel stack usage
+Message-ID: <20190305141714.u7tj46cvacnmmg4d@kekkonen.localdomain>
+References: <20190305132924.3889416-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190305132924.3889416-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, Mar 05, 2019 at 02:26:29PM +0100, Arnd Bergmann wrote:
+> The imgu_css_queue structure is too large to be put on the kernel
+> stack, as we can see in 32-bit builds:
+> 
+> drivers/staging/media/ipu3/ipu3-css.c: In function 'imgu_css_fmt_try':
+> drivers/staging/media/ipu3/ipu3-css.c:1863:1: error: the frame size of 1172 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+> 
+> By dynamically allocating this array, the stack usage goes down to an
+> acceptable 140 bytes for the same x86-32 configuration.
+> 
+> Fixes: f5f2e4273518 ("media: staging/intel-ipu3: Add css pipeline programming")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: restructure to use 'return -ENOMEM' instead of goto for failed
+>     allocation.
 
-please pull the latest ras-core-for-linus tree from:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
-
-This time around we have in store:
-
-* Disable MC4_MISC thresholding banks on all AMD family 0x15 models (Shirish S)
-
-* AMD MCE error descriptions update and error decode improvements (Yazen Ghannam)
-
-* The usual smaller conversions and fixes
-
-Thanks,
-Boris.
-
------------------->
-
-The following changes since commit 1c7fc5cbc33980acd13d668f1c8f0313d6ae9fd8:
-
-  Linux 5.0-rc2 (2019-01-14 10:41:12 +1200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
-
-for you to fetch changes up to 41f035a86b5b72a4f947c38e94239d20d595352a:
-
-  x86/mce: Improve error message when kernel cannot recover, p2 (2019-02-25 23:21:35 +0100)
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      x86/MCE: Switch to use the new generic UUID API
-      RAS: Use consistent types for UUIDs
-
-Borislav Petkov (1):
-      RAS: Add a MAINTAINERS entry
-
-Shirish S (2):
-      x86/MCE/AMD: Turn off MC4_MISC thresholding on all family 0x15 models
-      x86/MCE/AMD: Carve out the MC4_MISC thresholding quirk
-
-Tony Luck (1):
-      x86/mce: Improve error message when kernel cannot recover, p2
-
-Yazen Ghannam (7):
-      x86/MCE/AMD, EDAC/mce_amd: Add new MP5, NBIO, and PCIE SMCA bank types
-      x86/MCE/AMD, EDAC/mce_amd: Add new McaTypes for CS, PSP, and SMU units
-      x86/MCE/AMD, EDAC/mce_amd: Add new error descriptions for some SMCA bank types
-      EDAC, mce_amd: Match error descriptions to latest documentation
-      EDAC, mce_amd: Print ExtErrorCode and description on a single line
-      EDAC/mce_amd: Decode MCA_STATUS[Scrub] bit
-      EDAC/mce_amd: Decode MCA_STATUS in bit definition order
-
- MAINTAINERS                        |  10 ++
- arch/x86/include/asm/mce.h         |   7 +
- arch/x86/kernel/cpu/mce/amd.c      |  62 +++++++-
- arch/x86/kernel/cpu/mce/apei.c     |  10 +-
- arch/x86/kernel/cpu/mce/core.c     |  30 ----
- arch/x86/kernel/cpu/mce/severity.c |   5 +
- drivers/edac/mce_amd.c             | 291 ++++++++++++++++++++++++-------------
- drivers/ras/ras.c                  |   2 +-
- include/ras/ras_event.h            |   8 +-
- 9 files changed, 282 insertions(+), 143 deletions(-)
+Thanks, Arnd! All three applied.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-SUSE Linux GmbH, GF: Felix Imendörffer, Jane Smithard, Graham Norton, HRB 21284 (AG Nürnberg)
+Sakari Ailus
+sakari.ailus@linux.intel.com
