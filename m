@@ -2,61 +2,75 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=ADVANCE_FEE_5_NEW,
-	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DC6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D34C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F82F20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D3F206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:19:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FRIop9xV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfCEJKU convert rfc822-to-8bit (ORCPT
+        id S1727181AbfCEJTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 04:10:20 -0500
-Received: from mail.oxialfarm.com ([181.39.164.139]:34454 "EHLO
-        mail.oxialfarm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbfCEJKU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 04:10:20 -0500
-X-Greylist: delayed 11316 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Mar 2019 04:10:20 EST
-Received: from localhost (localhost [127.0.0.1])
-        by mail.oxialfarm.com (Postfix) with ESMTP id E63CE52B7FB
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 23:06:47 -0500 (ECT)
-Received: from mail.oxialfarm.com ([127.0.0.1])
-        by localhost (mail.oxialfarm.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 6AbzEVGV7P0p for <linux-kernel@vger.kernel.org>;
-        Mon,  4 Mar 2019 23:06:47 -0500 (ECT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.oxialfarm.com (Postfix) with ESMTP id D250C768E22
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 18:29:37 -0500 (ECT)
-X-Virus-Scanned: amavisd-new at oxialfarm.com
-Received: from mail.oxialfarm.com ([127.0.0.1])
-        by localhost (mail.oxialfarm.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yfgdace006mq for <linux-kernel@vger.kernel.org>;
-        Mon,  4 Mar 2019 18:29:37 -0500 (ECT)
-Received: from [10.8.0.2] (unknown [192.168.2.254])
-        by mail.oxialfarm.com (Postfix) with ESMTP id CE9E27A2ECE
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Mar 2019 12:23:14 -0500 (ECT)
-Content-Type: text/plain; charset="iso-8859-1"
+        Tue, 5 Mar 2019 04:19:04 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:38430 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfCEJTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 04:19:04 -0500
+Received: from zn.tnic (p200300EC2BCD6B00647FB0CB76B3F976.dip0.t-ipconnect.de [IPv6:2003:ec:2bcd:6b00:647f:b0cb:76b3:f976])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 94AC21EC05DE;
+        Tue,  5 Mar 2019 10:19:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1551777542;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=yrBNuRiFJ/dcOxYhLM9Q6U4D3zQpUu5gq8sNNzfnbac=;
+        b=FRIop9xVyWlnKoejKsnB2B8PlZZ6qC66VHgQyjOQPsWt2J3Eyl0AZrpmS7KWJi5nzFMKg4
+        1oh2niRuuAPuJT86i+lvbZ4eWcFZqKG7bTdPuxYejmDzHxYnGBp+rUvYJeeJaT5VDU0Czm
+        VObminnxRbdU+kPXLz4XE85HJr43pOM=
+Date:   Tue, 5 Mar 2019 10:19:04 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jann Horn <jannh@google.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: a.out coredumping: fix or delete?
+Message-ID: <20190305091904.GB8256@zn.tnic>
+References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Good Day, ..
-To:     linux-kernel@vger.kernel.org
-From:   "Elisa Adab" <cente5359@gmail.com>
-Date:   Mon, 04 Mar 2019 09:25:52 -0800
-Reply-To: adabelisa@yahoo.co.jp
-Message-Id: <20190304172314.CE9E27A2ECE@mail.oxialfarm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dear,
-My name is, Miss Adab Elisa Essame,
-I'm contacting because I want to be your friend and confide in you because I have in my possession now 178.73 Kilograms of Gold Bars, Quality: 22carat, that I inherited from my late mother which I want to ship to your country and sell for investment in your country because I want to leave Cote d'Ivoire and relocate to your country to continue my education in your country. I want you to stand by me as my tutor and ship this Gold Bars to your country and sell for investment in your country. Note that I am writing you this email purely on the ground of trust because I don't know you and we have not met before. I found you here and my mind convinced me that I can trust you.
-Waiting to hear from you.
-Miss Adab Elisa Essame.
+On Sat, Mar 02, 2019 at 12:57:30AM +0100, Jann Horn wrote:
+> In theory, Linux can dump cores for a.out binaries. In practice, that
+> code is pretty bitrotten and buggy. Does anyone want that code so much
+> that they'd like to fix it, or can we just delete it?
+
+I was asking myself the same question while doing
+
+  10970e1b4be9 ("x86/a.out: Clear the dump structure initially")
+
+especially since it is kinda hard to get the toolchain to even create an
+a.out executable - your script to create one case-in-point.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
