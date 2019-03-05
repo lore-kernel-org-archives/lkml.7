@@ -2,103 +2,93 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CA5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98D1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85573206DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7710206DD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 13:40:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PQpEhgso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbfCENkR (ORCPT
+        id S1728459AbfCENkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 08:40:17 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53182 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727644AbfCENkQ (ORCPT
+        Tue, 5 Mar 2019 08:40:39 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:33562 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727644AbfCENkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 08:40:16 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x25DTfZQ073750
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Mar 2019 08:40:15 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r1rntcqjn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 08:40:15 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <oberpar@linux.ibm.com>;
-        Tue, 5 Mar 2019 13:40:13 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 5 Mar 2019 13:40:10 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x25De9QC28049592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Mar 2019 13:40:09 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16975A4051;
-        Tue,  5 Mar 2019 13:40:09 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB71EA4055;
-        Tue,  5 Mar 2019 13:40:08 +0000 (GMT)
-Received: from [9.152.212.90] (unknown [9.152.212.90])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Mar 2019 13:40:08 +0000 (GMT)
-Subject: Re: [PATCH v3 1/3] gcov: Clang: move common GCC code into gcc_base.c
-To:     Tri Vo <trong@android.com>
-Cc:     ghackmann@android.com, ndesaulniers@google.com,
-        linux-kernel@vger.kernel.org, kernel-team@android.com,
-        yamada.masahiro@socionext.com, Trilok Soni <tsoni@quicinc.com>,
-        Prasad Sodagudi <psodagud@quicinc.com>
-References: <20190122233749.42220-1-trong@android.com>
- <20190122233749.42220-2-trong@android.com>
-From:   Peter Oberparleiter <oberpar@linux.ibm.com>
-Date:   Tue, 5 Mar 2019 14:40:09 +0100
+        Tue, 5 Mar 2019 08:40:39 -0500
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 074FB24A;
+        Tue,  5 Mar 2019 14:40:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1551793237;
+        bh=1/FCzakrrR2GjUUJvPnCv9Yff8xT/HsBZhsCMvBGp6s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PQpEhgso1OvGMBN6n0owLfpCNUDRUEmoNVKWe/pRrwmkp2ipwZ/uNrCK81wtxzJeh
+         25bGSOFCL58+l4B0x3N+IlPf1/PaYEk+l97tpktC7aiODSoE35KnAPTuYRjWPgMpPu
+         Dcq6sAy/SavzVZxc3fnYQ+6IOnSGPu49mC56lLvc=
+Date:   Tue, 5 Mar 2019 15:40:31 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: i2c: adv748x: select V4L2_FWNODE
+Message-ID: <20190305134031.GD4949@pendragon.ideasonboard.com>
+References: <20190305132332.3788205-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20190122233749.42220-2-trong@android.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19030513-4275-0000-0000-0000031723F8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19030513-4276-0000-0000-000038257729
-Message-Id: <531f999d-d283-3b46-dfb1-cb4b94436632@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-05_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=785 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903050092
+Content-Disposition: inline
+In-Reply-To: <20190305132332.3788205-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23.01.2019 00:37, Tri Vo wrote:
-> From: Greg Hackmann <ghackmann@android.com>
+Hi Arnd,
+
+Thank you for the patch.
+
+On Tue, Mar 05, 2019 at 02:23:13PM +0100, Arnd Bergmann wrote:
+> Building adv748x fails now unless V4L2_FWNODE is selected:
 > 
-> base.c contains a few callbacks specific to GCC's gcov implementation.
-> Move these into their own module in preparation for Clang support.
+> drivers/media/i2c/adv748x/adv748x-core.o: In function `adv748x_probe':
+> adv748x-core.c:(.text+0x1b2c): undefined reference to `v4l2_fwnode_endpoint_parse'
 > 
-> Signed-off-by: Greg Hackmann <ghackmann@android.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Tri Vo <trong@android.com>
-> Tested-by: Trilok Soni <tsoni@quicinc.com>
-> Tested-by: Prasad Sodagudi <psodagud@quicinc.com>
-> Tested-by: Tri Vo <trong@android.com>
+> Fixes: 6a18865da8e3 ("media: i2c: adv748x: store number of CSI-2 lanes described in device tree")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
-
-Looks good!
-
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+>  drivers/media/i2c/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 6d32f8dcf83b..3f5dd80e14f8 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -221,6 +221,7 @@ config VIDEO_ADV748X
+>  	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API
+>  	depends on OF
+>  	select REGMAP_I2C
+> +	select V4L2_FWNODE
+>  	---help---
+>  	  V4L2 subdevice driver for the Analog Devices
+>  	  ADV7481 and ADV7482 HDMI/Analog video decoders.
 
 -- 
-Peter Oberparleiter
-Linux on Z Development - IBM Germany
+Regards,
 
+Laurent Pinchart
