@@ -2,193 +2,115 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A95C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0207CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654D22082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="V9MAzuXK"
+	by mail.kernel.org (Postfix) with ESMTP id CBE9B20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 11:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfCEL04 (ORCPT
+        id S1727767AbfCEL2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 06:26:56 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:53245 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbfCEL0y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 06:26:54 -0500
-X-IronPort-AV: E=Sophos;i="5.58,443,1544511600"; 
-   d="scan'208";a="24834064"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 05 Mar 2019 04:26:44 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.38) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Tue, 5 Mar 2019 04:26:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=myVXLw/9ASojCdyCf1IEv/Hrqc/HX0WSddPg/0VW97M=;
- b=V9MAzuXKLfDFgniQY/5QxIj+1TGXCwvIAywqs1i3W3IL1ocZtsV6xmppkR2oMd0QElquEh0DuU0H/zTOwuTbGheQ95vQVgKJ0wOfTycNpmIlg1QMHSt9zuOl6RyQO9Se+0dYfWa47YxHiKInH8m5xwn1cc//xZKgZ71DVTVkPnM=
-Received: from CY4PR11MB1256.namprd11.prod.outlook.com (10.169.252.10) by
- CY4PR11MB1382.namprd11.prod.outlook.com (10.173.16.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1665.18; Tue, 5 Mar 2019 11:26:42 +0000
-Received: from CY4PR11MB1256.namprd11.prod.outlook.com
- ([fe80::d9cc:7741:4930:cda3]) by CY4PR11MB1256.namprd11.prod.outlook.com
- ([fe80::d9cc:7741:4930:cda3%8]) with mapi id 15.20.1665.019; Tue, 5 Mar 2019
- 11:26:42 +0000
-From:   <Codrin.Ciubotariu@microchip.com>
-To:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <Nicolas.Ferre@microchip.com>, <Ludovic.Desroches@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <Cristian.Birsan@microchip.com>,
-        <Codrin.Ciubotariu@microchip.com>
-Subject: [PATCH 1/2] ASoC: mchp-i2s-mcc: dt-bindings: add DT bindings for I2S
- Multi-Channel Controller
-Thread-Topic: [PATCH 1/2] ASoC: mchp-i2s-mcc: dt-bindings: add DT bindings for
- I2S Multi-Channel Controller
-Thread-Index: AQHU00ZO5cHGuq9xqkyVRhygPbt4Vw==
-Date:   Tue, 5 Mar 2019 11:26:42 +0000
-Message-ID: <20190305112610.9641-1-codrin.ciubotariu@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0801CA0072.eurprd08.prod.outlook.com
- (2603:10a6:800:7d::16) To CY4PR11MB1256.namprd11.prod.outlook.com
- (2603:10b6:903:25::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Codrin.Ciubotariu@microchip.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cb3ab6a8-160e-4ef0-bd96-08d6a15d7113
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:CY4PR11MB1382;
-x-ms-traffictypediagnostic: CY4PR11MB1382:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;CY4PR11MB1382;23:0wqXiwD354e2EqgqU9U7WFD0yCn1nv1g7tRsGXd?=
- =?iso-8859-1?Q?J+0Uqre1WHeo+oVrupBfIFMuENn1YuSQ6Ff6TwtIHJmgroYMNKF9mDe6jo?=
- =?iso-8859-1?Q?nUEXK/T8UpTueCewzrNzOmvCF0WjAvTjuUCwgFtFCHzJq6ZrSrOFjx8Ld0?=
- =?iso-8859-1?Q?j17s9vZ0iG3EaJ+a0ah+5IijGAT7jDSf9gNwGdmilfpzGNyaWEidhHTFFv?=
- =?iso-8859-1?Q?LTtoW3KdMy4TrZYt1V2kaYJy/j8zqA76Dr9VdWBBe2pDHepZGuSx8leOLY?=
- =?iso-8859-1?Q?jvtWHhKa/udvnBLmO9ICvaEIbW45ePzk3QuZ+NH4k2AINcqZz/TsZGqi9Y?=
- =?iso-8859-1?Q?hvQQAWq/X8rcpyE1F3zvSOJ+dKDECQEAc1JY54c5J06ixkJ7LQLGu5Ptxn?=
- =?iso-8859-1?Q?2YpbDrU1qbjxdnb21wzfTXNC9Xs4NwYF6HDvvArdaO9QCddf5nivJZscF4?=
- =?iso-8859-1?Q?yE/rg+4xmVd6e4+JBXpKS3plwLy3i00DjDIduDKg8qRn2FLRekvrvwmzjj?=
- =?iso-8859-1?Q?gNXi/1UtepBHi+qdnw14aSdc6umHmdFjfTNU1w8Ay8fbOjcjyF2SIhomWI?=
- =?iso-8859-1?Q?ymlxrBc2tgztkFosR5prtyPQpReV/Wj02BRGjKMFKWwb36pa5hcyRLTypC?=
- =?iso-8859-1?Q?oJ9z4DTUjhJBtbFnoRKLPqmQVwbSNyFhRLBjfLYcYBinOpvJ/DSgbh85si?=
- =?iso-8859-1?Q?2bBDf0Yc/U7+5vgC8SwUe+YnJ3reQsULn40MBW/DHIxAmoM3BV1P0Pz87T?=
- =?iso-8859-1?Q?7DGUhdlSFaPXuYDHHfKB81kaxVnhJQNCGQSVZJmP2a5UA6+xsdKeGQIMqd?=
- =?iso-8859-1?Q?bJS4i48zXYBRjbqCGcu9Qg2Mp0GRKGOk3RlK8Up8whYqXB11RTFdNBtNDl?=
- =?iso-8859-1?Q?ZXqP1HW8GOum4cHaahbDhPk7SPkkJSgrp1AUeq/5nALZFnOULLB39O2rAW?=
- =?iso-8859-1?Q?WSPLpCz0bcnBTzUl1p36TTa/lTZyEfjfPUGmxzhhvpcqOPTZYveGpggreC?=
- =?iso-8859-1?Q?O/bdVlbGaS38wauVgA+prD5JuaajktVEzOnEm+iZUpnmJ/hcmhlWtttWzS?=
- =?iso-8859-1?Q?v7qk4CDntjSxAOd2mCnrbroWA0tbcjzwsAhGoXU+K6S8t3uc+6KKt2GXL2?=
- =?iso-8859-1?Q?QBK7YENTlDAWzqpLnVetxfLAfUJnX5zVmZJ7Pl8yHwjdaz48/uPjcMozD6?=
- =?iso-8859-1?Q?WVT4rVEixG9jQ1SxihbJd4CeJVcfcvwKE0hyYvGkhNLtelrpaQ7zzjGPFn?=
- =?iso-8859-1?Q?BFUxS8xQq8QTn7QPO/ryZnMBLMjFum4q2nZmgTcAU3gcVzTzIR9AIhXXeE?=
- =?iso-8859-1?Q?Nc=3D?=
-x-microsoft-antispam-prvs: <CY4PR11MB13829F230B71D694BBEAB0BEE7720@CY4PR11MB1382.namprd11.prod.outlook.com>
-x-forefront-prvs: 0967749BC1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(376002)(396003)(346002)(366004)(189003)(199004)(2616005)(81156014)(5660300002)(6436002)(256004)(110136005)(86362001)(107886003)(386003)(486006)(186003)(50226002)(66066001)(25786009)(476003)(102836004)(6506007)(2201001)(68736007)(4326008)(54906003)(1076003)(99286004)(26005)(316002)(52116002)(14444005)(81166006)(72206003)(8676002)(6486002)(53936002)(6512007)(8936002)(97736004)(71190400001)(305945005)(7736002)(478600001)(2501003)(106356001)(105586002)(36756003)(6116002)(14454004)(3846002)(71200400001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR11MB1382;H:CY4PR11MB1256.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: S92wkejXv3SLp4E/nR3vW6SHSYh2reijL0r8jYkAm+bg6QpjAJMogEvbn61/+xtcWj+N7T5/9iaIkdvvcpJEV0DJxZ3qC+/ybFHfLwKVM/4eQgBJdi1IwtayOJrydTsb9/gxNPdW2z+AqmbB5lqCr/1Y2zC7FcRbywQ1zKLcZuJVabfqgeElZiIknFNANg/a6V0vBkseXDjh5DYUBiK/vhA9jiO8eJe4HXI5TfQIlYVWj9E0kiRQY8pdVUPjAV1bX44UEg/RN3Aa6E+VfQbukZM5U/4fz7ixX2ZWcHUjKW3d/S6NMB/qb3AJE80nYGs6mkrdr2Sg6+/eaqgiAMnnset6ihAsBA9MwsrwTpp3lqQCJaILoo4IKeRsHbtULUnGpQHLLrCBNeNudQsl5yh5/ljyIYNAYSxIqmmsFWLttJ4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 5 Mar 2019 06:28:05 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58656 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726965AbfCEL2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 06:28:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 85A13ABAC;
+        Tue,  5 Mar 2019 11:28:02 +0000 (UTC)
+Subject: Re: [PATCH] [RESEND] [v3] xen: remove pre-xen3 fallback handlers
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     Jan Beulich <JBeulich@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+References: <20190304205300.2582076-1-arnd@arndb.de>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <2df3454e-930c-13a6-547b-fd5728e16ac0@suse.com>
+Date:   Tue, 5 Mar 2019 12:28:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb3ab6a8-160e-4ef0-bd96-08d6a15d7113
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2019 11:26:42.4516
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1382
-X-OriginatorOrg: microchip.com
+In-Reply-To: <20190304205300.2582076-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+On 04/03/2019 21:52, Arnd Bergmann wrote:
+> The legacy hypercall handlers were originally added with
+> a comment explaining that "copying the argument structures in
+> HYPERVISOR_event_channel_op() and HYPERVISOR_physdev_op() into the local
+> variable is sufficiently safe" and only made sure to not write
+> past the end of the argument structure, the checks in linux/string.h
+> disagree with that, when link-time optimizations are used:
+> 
+> In function 'memcpy',
+>     inlined from 'pirq_query_unmask' at drivers/xen/fallback.c:53:2,
+>     inlined from '__startup_pirq' at drivers/xen/events/events_base.c:529:2,
+>     inlined from 'restore_pirqs' at drivers/xen/events/events_base.c:1439:3,
+>     inlined from 'xen_irq_resume' at drivers/xen/events/events_base.c:1581:2:
+> include/linux/string.h:350:3: error: call to '__read_overflow2' declared with attribute error: detected read beyond size of object passed as 2nd parameter
+>    __read_overflow2();
+>    ^
+> 
+> Further research turned out that only Xen 3.0.2 or earlier required the
+> fallback at all, while all versions in use today don't need it.
+> As far as I can tell, it is not even possible to run a mainline kernel
+> on those old Xen releases, at the time when they were in use, only
+> a patched kernel was supported anyway.
+> 
+> Fixes: cf47a83fb06e ("xen/hypercall: fix hypercall fallback code for very old hypervisors")
+> Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Jan Beulich <JBeulich@suse.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-This patch adds DT bindings for the new Microchip I2S Multi-Channel
-controller embedded inside sam9x60 SoCs.
+Pushed to xen/tip.git for-linus-5.1a
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- .../bindings/sound/mchp-i2s-mcc.txt           | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/mchp-i2s-mcc.tx=
-t
 
-diff --git a/Documentation/devicetree/bindings/sound/mchp-i2s-mcc.txt b/Doc=
-umentation/devicetree/bindings/sound/mchp-i2s-mcc.txt
-new file mode 100644
-index 000000000000..91ec83a6faed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/mchp-i2s-mcc.txt
-@@ -0,0 +1,43 @@
-+* Microchip I2S Multi-Channel Controller
-+
-+Required properties:
-+- compatible:     Should be "microchip,sam9x60-i2smcc".
-+- reg:            Should be the physical base address of the controller an=
-d the
-+                  length of memory mapped region.
-+- interrupts:     Should contain the interrupt for the controller.
-+- dmas:           Should be one per channel name listed in the dma-names p=
-roperty,
-+                  as described in atmel-dma.txt and dma.txt files.
-+- dma-names:      Identifier string for each DMA request line in the dmas =
-property.
-+		  Two dmas have to be defined, "tx" and "rx".
-+- clocks:         Must contain an entry for each entry in clock-names.
-+                  Please refer to clock-bindings.txt.
-+- clock-names:    Should be one of each entry matching the clocks phandles=
- list:
-+                  - "pclk" (peripheral clock) Required.
-+                  - "gclk" (generated clock) Optional (1).
-+
-+Optional properties:
-+- pinctrl-0:      Should specify pin control groups used for this controll=
-er.
-+- princtrl-names: Should contain only one value - "default".
-+
-+
-+(1) : Only the peripheral clock is required. The generated clock is option=
-al
-+      and should be set mostly when Master Mode is required.
-+
-+Example:
-+
-+	i2s@f001c000 {
-+		compatible =3D "microchip,sam9x60-i2smcc";
-+		reg =3D <0xf001c000 0x100>;
-+		interrupts =3D <34 IRQ_TYPE_LEVEL_HIGH 7>;
-+		dmas =3D <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
-+			 AT91_XDMAC_DT_PERID(36))>,
-+		       <&dma0
-+			(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
-+			 AT91_XDMAC_DT_PERID(37))>;
-+		dma-names =3D "tx", "rx";
-+		clocks =3D <&i2s_clk>, <&i2s_gclk>;
-+		clock-names =3D "pclk", "gclk";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&pinctrl_i2s_default>;
-+	};
---=20
-2.17.1
-
+Juergen
