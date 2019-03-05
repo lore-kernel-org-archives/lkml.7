@@ -2,42 +2,42 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE82C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59378C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5812082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2220E2082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 08:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfCEI35 (ORCPT
+        id S1727488AbfCEIal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 03:29:57 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:33169 "EHLO
+        Tue, 5 Mar 2019 03:30:41 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:33168 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725835AbfCEI34 (ORCPT
+        by vger.kernel.org with ESMTP id S1725818AbfCEI35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 03:29:56 -0500
+        Tue, 5 Mar 2019 03:29:57 -0500
 Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x258RWka002770;
-        Tue, 5 Mar 2019 09:29:37 +0100
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x258RWkb002770;
+        Tue, 5 Mar 2019 09:29:38 +0100
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2qyhkn06av-1
+        by mx08-00178001.pphosted.com with ESMTP id 2qyhkn06b1-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 05 Mar 2019 09:29:37 +0100
+        Tue, 05 Mar 2019 09:29:38 +0100
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1FAD634;
-        Tue,  5 Mar 2019 08:29:35 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DA109166E;
-        Tue,  5 Mar 2019 08:29:34 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019
- 09:29:34 +0100
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 70BA538;
+        Tue,  5 Mar 2019 08:29:37 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C973166E;
+        Tue,  5 Mar 2019 08:29:37 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019
+ 09:29:37 +0100
 Received: from localhost (10.201.23.166) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019 09:29:34
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 5 Mar 2019 09:29:36
  +0100
 From:   Christophe Roullier <christophe.roullier@st.com>
 To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
@@ -47,10 +47,12 @@ CC:     <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
         <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCH V3 0/6] stmmac: add some fixes for stm32
-Date:   Tue, 5 Mar 2019 09:29:22 +0100
-Message-ID: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
+Subject: [PATCH V3 2/6] net: ethernet: stmmac: update to support all PHY config for stm32mp157c.
+Date:   Tue, 5 Mar 2019 09:29:24 +0100
+Message-ID: <1551774568-11732-3-git-send-email-christophe.roullier@st.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
+References: <1551774568-11732-1-git-send-email-christophe.roullier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.201.23.166]
@@ -61,44 +63,229 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For common stmmac:
-	- Add support to set CSR Clock range selection in DT
-For stm32mpu:
-	- Glue codes to support magic packet
-	- Glue codes to support all PHY config :
-		PHY_MODE (MII,GMII, RMII, RGMII) and in normal,
-		PHY wo crystal (25Mhz),
-		PHY wo crystal (50Mhz), No 125Mhz from PHY config
-For stm32mcu:
-	- Add Ethernet support for stm32h7
+Update glue codes to support all PHY config on stm32mp157c
+ PHY_MODE	(MII,GMII, RMII, RGMII) and in normal, PHY wo crystal (25Mhz),
+PHY wo crystal (50Mhz), No 125Mhz from PHY config.
 
-Changes in V3:
-	- Reverse for syscfg management because it is manage by these patches
-	  https://lkml.org/lkml/2018/12/12/133
-	  https://lkml.org/lkml/2018/12/12/134
-	  https://lkml.org/lkml/2018/12/12/131
-	  https://lkml.org/lkml/2018/12/12/132
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 107 +++++++++++++++++-----
+ 1 file changed, 86 insertions(+), 21 deletions(-)
 
-
-Christophe Roullier (6):
-  net: ethernet: stmmac: manage Ethernet WoL for stm32mp157c.
-  net: ethernet: stmmac: update to support all PHY config for
-    stm32mp157c.
-  dt-bindings: net: stmmac: add phys config properties
-  net: ethernet: stmmac: add management of clk_csr property
-  dt-bindings: net: stmmac: remove syscfg clock property
-  ARM: dts: stm32: Add Ethernet support on stm32h7 SOC and activate it
-    for eval and disco boards
-
- .../devicetree/bindings/net/stm32-dwmac.txt        |   9 +-
- arch/arm/boot/dts/stm32h743-pinctrl.dtsi           |  15 +++
- arch/arm/boot/dts/stm32h743.dtsi                   |  13 ++
- arch/arm/boot/dts/stm32h743i-disco.dts             |  17 +++
- arch/arm/boot/dts/stm32h743i-eval.dts              |  17 +++
- drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c  | 135 +++++++++++++++++----
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   3 +
- 7 files changed, 183 insertions(+), 26 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index d1cf145..062a600f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -25,9 +25,24 @@
+ 
+ #define SYSCFG_MCU_ETH_MASK		BIT(23)
+ #define SYSCFG_MP1_ETH_MASK		GENMASK(23, 16)
++#define SYSCFG_PMCCLRR_OFFSET		0x40
+ 
+ #define SYSCFG_PMCR_ETH_CLK_SEL		BIT(16)
+ #define SYSCFG_PMCR_ETH_REF_CLK_SEL	BIT(17)
++
++/*  Ethernet PHY interface selection in register SYSCFG Configuration
++ *------------------------------------------
++ * src	 |BIT(23)| BIT(22)| BIT(21)|BIT(20)|
++ *------------------------------------------
++ * MII   |   0	 |   0	  |   0    |   1   |
++ *------------------------------------------
++ * GMII  |   0	 |   0	  |   0    |   0   |
++ *------------------------------------------
++ * RGMII |   0	 |   0	  |   1	   |  n/a  |
++ *------------------------------------------
++ * RMII  |   1	 |   0	  |   0	   |  n/a  |
++ *------------------------------------------
++ */
+ #define SYSCFG_PMCR_ETH_SEL_MII		BIT(20)
+ #define SYSCFG_PMCR_ETH_SEL_RGMII	BIT(21)
+ #define SYSCFG_PMCR_ETH_SEL_RMII	BIT(23)
+@@ -35,15 +50,54 @@
+ #define SYSCFG_MCU_ETH_SEL_MII		0
+ #define SYSCFG_MCU_ETH_SEL_RMII		1
+ 
++/* STM32MP1 register definitions
++ *
++ * Below table summarizes the clock requirement and clock sources for
++ * supported phy interface modes.
++ * __________________________________________________________________________
++ *|PHY_MODE | Normal | PHY wo crystal|   PHY wo crystal   |No 125Mhz from PHY|
++ *|         |        |      25MHz    |        50MHz       |                  |
++ * ---------------------------------------------------------------------------
++ *|  MII    |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
++ *|         |        |		     |                    |		     |
++ * ---------------------------------------------------------------------------
++ *|  GMII   |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
++ *|         |        |               |                    |		     |
++ * ---------------------------------------------------------------------------
++ *| RGMII   |	 -   |     eth-ck    |	      n/a	  |  eth-ck (no pin) |
++ *|         |        |               |                    |  st,eth-clk-sel  |
++ * ---------------------------------------------------------------------------
++ *| RMII    |	 -   |     eth-ck    |	    eth-ck        |	  n/a        |
++ *|         |        |		     | st,eth-ref-clk-sel |		     |
++ * ---------------------------------------------------------------------------
++ *
++ * BIT(17) : set this bit in RMII mode when you have PHY without crystal 50MHz
++ * BIT(16) : set this bit in GMII/RGMII PHY when you do not want use 125Mhz
++ * from PHY
++ *-----------------------------------------------------
++ * src	 |         BIT(17)       |       BIT(16)      |
++ *-----------------------------------------------------
++ * MII   |           n/a	 |         n/a        |
++ *-----------------------------------------------------
++ * GMII  |           n/a         |   st,eth-clk-sel   |
++ *-----------------------------------------------------
++ * RGMII |           n/a         |   st,eth-clk-sel   |
++ *-----------------------------------------------------
++ * RMII  |   st,eth-ref-clk-sel	 |         n/a        |
++ *-----------------------------------------------------
++ *
++ */
++
+ struct stm32_dwmac {
+ 	struct clk *clk_tx;
+ 	struct clk *clk_rx;
+ 	struct clk *clk_eth_ck;
+ 	struct clk *clk_ethstp;
+ 	struct clk *syscfg_clk;
+-	bool int_phyclk;	/* Clock from RCC to drive PHY */
++	int eth_clk_sel_reg;
++	int eth_ref_clk_sel_reg;
+ 	int irq_pwr_wakeup;
+-	u32 mode_reg;		/* MAC glue-logic mode register */
++	u32 mode_reg;		 /* MAC glue-logic mode register */
+ 	struct regmap *regmap;
+ 	u32 speed;
+ 	const struct stm32_ops *ops;
+@@ -103,7 +157,7 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
+ 		if (ret)
+ 			return ret;
+ 
+-		if (dwmac->int_phyclk) {
++		if (dwmac->clk_eth_ck) {
+ 			ret = clk_prepare_enable(dwmac->clk_eth_ck);
+ 			if (ret) {
+ 				clk_disable_unprepare(dwmac->syscfg_clk);
+@@ -112,7 +166,7 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
+ 		}
+ 	} else {
+ 		clk_disable_unprepare(dwmac->syscfg_clk);
+-		if (dwmac->int_phyclk)
++		if (dwmac->clk_eth_ck)
+ 			clk_disable_unprepare(dwmac->clk_eth_ck);
+ 	}
+ 	return ret;
+@@ -122,7 +176,7 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ {
+ 	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+ 	u32 reg = dwmac->mode_reg;
+-	int val;
++	int val, ret;
+ 
+ 	switch (plat_dat->interface) {
+ 	case PHY_INTERFACE_MODE_MII:
+@@ -131,19 +185,22 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 		break;
+ 	case PHY_INTERFACE_MODE_GMII:
+ 		val = SYSCFG_PMCR_ETH_SEL_GMII;
+-		if (dwmac->int_phyclk)
++		if (dwmac->eth_clk_sel_reg)
+ 			val |= SYSCFG_PMCR_ETH_CLK_SEL;
+ 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
+ 		break;
+ 	case PHY_INTERFACE_MODE_RMII:
+ 		val = SYSCFG_PMCR_ETH_SEL_RMII;
+-		if (dwmac->int_phyclk)
++		if (dwmac->eth_ref_clk_sel_reg)
+ 			val |= SYSCFG_PMCR_ETH_REF_CLK_SEL;
+ 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RMII\n");
+ 		break;
+ 	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		val = SYSCFG_PMCR_ETH_SEL_RGMII;
+-		if (dwmac->int_phyclk)
++		if (dwmac->eth_clk_sel_reg)
+ 			val |= SYSCFG_PMCR_ETH_CLK_SEL;
+ 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RGMII\n");
+ 		break;
+@@ -154,6 +211,11 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 		return -EINVAL;
+ 	}
+ 
++	/* Need to update PMCCLRR (clear register) */
++	ret = regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
++			   dwmac->ops->syscfg_eth_mask);
++
++	/* Update PMCSETR (set register) */
+ 	return regmap_update_bits(dwmac->regmap, reg,
+ 				 dwmac->ops->syscfg_eth_mask, val);
+ }
+@@ -181,7 +243,7 @@ static int stm32mcu_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 	}
+ 
+ 	return regmap_update_bits(dwmac->regmap, reg,
+-				 dwmac->ops->syscfg_eth_mask, val);
++				 dwmac->ops->syscfg_eth_mask, val << 23);
+ }
+ 
+ static void stm32_dwmac_clk_disable(struct stm32_dwmac *dwmac)
+@@ -237,22 +299,25 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+ 	struct device_node *np = dev->of_node;
+ 	int err = 0;
+ 
+-	dwmac->int_phyclk = of_property_read_bool(np, "st,int-phyclk");
++	/* Gigabit Ethernet 125MHz clock selection. */
++	dwmac->eth_clk_sel_reg = of_property_read_bool(np, "st,eth-clk-sel");
+ 
+-	/* Check if internal clk from RCC selected */
+-	if (dwmac->int_phyclk) {
+-		/*  Get ETH_CLK clocks */
+-		dwmac->clk_eth_ck = devm_clk_get(dev, "eth-ck");
+-		if (IS_ERR(dwmac->clk_eth_ck)) {
+-			dev_err(dev, "No ETH CK clock provided...\n");
+-			return PTR_ERR(dwmac->clk_eth_ck);
+-		}
++	/* Ethernet 50Mhz RMII clock selection */
++	dwmac->eth_ref_clk_sel_reg =
++		of_property_read_bool(np, "st,eth-ref-clk-sel");
++
++	/*  Get ETH_CLK clocks */
++	dwmac->clk_eth_ck = devm_clk_get(dev, "eth-ck");
++	if (IS_ERR(dwmac->clk_eth_ck)) {
++		dev_warn(dev, "No phy clock provided...\n");
++		dwmac->clk_eth_ck = NULL;
+ 	}
+ 
+ 	/*  Clock used for low power mode */
+ 	dwmac->clk_ethstp = devm_clk_get(dev, "ethstp");
+ 	if (IS_ERR(dwmac->clk_ethstp)) {
+-		dev_err(dev, "No ETH peripheral clock provided for CStop mode ...\n");
++		dev_err(dev,
++			"No ETH peripheral clock provided for CStop mode ...\n");
+ 		return PTR_ERR(dwmac->clk_ethstp);
+ 	}
+ 
+@@ -268,7 +333,7 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+ 	 */
+ 	dwmac->irq_pwr_wakeup = platform_get_irq_byname(pdev,
+ 							"stm32_pwr_wakeup");
+-	if (!dwmac->int_phyclk && dwmac->irq_pwr_wakeup >= 0) {
++	if (!dwmac->clk_eth_ck && dwmac->irq_pwr_wakeup >= 0) {
+ 		err = device_init_wakeup(&pdev->dev, true);
+ 		if (err) {
+ 			dev_err(&pdev->dev, "Failed to init wake up irq\n");
+@@ -370,7 +435,7 @@ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
+ 
+ 	clk_disable_unprepare(dwmac->clk_tx);
+ 	clk_disable_unprepare(dwmac->syscfg_clk);
+-	if (dwmac->int_phyclk)
++	if (dwmac->clk_eth_ck)
+ 		clk_disable_unprepare(dwmac->clk_eth_ck);
+ 
+ 	return ret;
 -- 
 2.7.4
 
