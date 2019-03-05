@@ -2,94 +2,78 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BB3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C6AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3907A2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DB32087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 14:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfCEOti (ORCPT
+        id S1727682AbfCEOxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 09:49:38 -0500
-Received: from mga07.intel.com ([134.134.136.100]:28781 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728054AbfCEOsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 09:48:15 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 06:48:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,444,1544515200"; 
-   d="scan'208";a="121150040"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga006.jf.intel.com with ESMTP; 05 Mar 2019 06:48:14 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 8E304301BC6; Tue,  5 Mar 2019 06:48:14 -0800 (PST)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     acme@kernel.org
-Cc:     jolsa@kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v4 10/15] perf tools: Add utility function to print ns time stamps
-Date:   Tue,  5 Mar 2019 06:47:53 -0800
-Message-Id: <20190305144758.12397-11-andi@firstfloor.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190305144758.12397-1-andi@firstfloor.org>
-References: <20190305144758.12397-1-andi@firstfloor.org>
+        Tue, 5 Mar 2019 09:53:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34276 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727093AbfCEOxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 09:53:12 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 97755B118;
+        Tue,  5 Mar 2019 14:53:10 +0000 (UTC)
+Subject: Re: [PATCH v2 0/7] perf script python: add Python3 support
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Tom Zanussi <tzanussi@gmail.com>,
+        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+References: <20190302011903.2416-1-tonyj@suse.de>
+ <ef75a243-cf15-b763-8aeb-387f105377c6@intel.com>
+From:   Tony Jones <tonyj@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tonyj@suse.de; prefer-encrypt=mutual; keydata=
+ mQGiBEkQmbwRBACDch7wo/RzlNt2HA8jLICsO2w8yOkJ7UTzHYNn3Q83Ro0qev2KokfE3EDw
+ il+vam9CDR7jIDmswHqaMe0/O+UnZtO5PlDgylZcrwNwbBzHfm/KGejbi1RBGAoETrvcfwGi
+ w83bR/aDnoRXY5Ho1uphQ05/065EMpbJOOBdn9qQ4wCgv2Q6C/QeYDGsxJPRO+20nLu5K00D
+ /Rde4OTZ5biM+vb6ObTmgPNeiMrTwGpMokN7audIl7njwvD+lYrlgQjmDzcaPFz29rYWwT7g
+ 6t6hcFgjpU1he/v3qxeQlTJoi2+u5Mqj42z//49h6DqNjT859Z/6h5IwKBo/EZC17iBIlS2G
+ VXAstNiZASGiaIlONozWJ/GSjUaRA/9wZTV1nXF/+xX+qmc7SvTg1w6jWyjxVumQLoq2SeA4
+ 1Sy5X2IATkAGCCjbeoQGnFdbOnHRSJdlTazObgwreqGPlPnIROpr9QESkfxsaCkDiZfpl0xk
+ 6X069QMZBEwGAWILHYXL9UqlOjniZaU2BkVA11JEdBhyQorC8T/ji1edc7QaVG9ueSBKb25l
+ cyA8dG9ueWpAc3VzZS5kZT6IYAQTEQIAIAUCSRCZvAIbAwYLCQgHAwIEFQIIAwQWAgMBAh4B
+ AheAAAoJELFYWyEf4koXGmYAoKCnbv9dhAB2vR6IvSJem1ws4HpfAJ9ZqTKiXcogBGfTPaJR
+ GI9QhVUieLkCDQRJEJm8EAgAzr9Zd3v7B10ODtVc7XxbMe3W6o1FdClL9ZIgLv61zhWctafK
+ DMu/MUSvxmYFq00pecD/SfX8oxArA02+sQ2E+/Zb4J7NAWIAxCfmy7VE0wDBrZH/hBapIx/L
+ gVqYfZ9Rw+a4FXrlk1y8oQCwhvj+kWrm7V7olR0aPOy1NFGNUyTFSMj+pbmxiNOXdCxVUQe3
+ UE1k9yA+mILjyaRanwkiCLCjNvRPL88Q017BdhVBWZmz8qhwXN/RrjCcDHsPX5O0ev68MLyu
+ sh5mfukuvCqzW1Y3Ql+iwfwEw5lNmQGdoV9csg7JP7saDicSFO2KcZvMbvDMqtPFipdF5UWo
+ fZKZ3wADBQf/b5cVNyb5i8QI0G7BPGBNn4VlQX5n66TsPBnrRNOi3MhTTVEBCp8s+jqUjJjX
+ EjjA+O4hIm7Qqdsozurw7GlcQ0A06dIzO/1RUglZZMoC0JL43ZQmJ+3+yFrLjWgGH6ev6AOb
+ YLH7ZujgAB5n0Hy2ZIChzsKLKbHptFtBvpDKB8updq+GunsY4oN3wGa67h9sHqDvjyp64Czg
+ n8G5uGLwx3f/edbECKz5kPUSzChEk3suK742SEP01v4ra5WX88Hn81NjGByQMz9acJLdC7Ff
+ LzXvbNa0KgvDaSllYfsJIoGCz3eKVOuTWXOiaEIKuy833+3mr2PulLCyLKysAEddKohJBBgR
+ AgAJBQJJEJm8AhsMAAoJELFYWyEf4koXhgQAn1EGATLZPS53At9t+p3S8BkNI9yRAJ9A0OmL
+ liv+rwEesYGlGeGNaKHTJw==
+Message-ID: <962077f0-71c6-e2e8-7274-875b55470a3e@suse.de>
+Date:   Tue, 5 Mar 2019 06:53:05 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ef75a243-cf15-b763-8aeb-387f105377c6@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+On 3/5/19 1:55 AM, Adrian Hunter wrote:
 
-Add a utility function to print nanosecond timestamps.
+> perf tools link against python2 so have the scripts been tested with python3?
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/util/time-utils.c | 8 ++++++++
- tools/perf/util/time-utils.h | 1 +
- 2 files changed, 9 insertions(+)
-
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 6193b46050a5..a63bdf4cfd1b 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -404,6 +404,14 @@ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz)
- 	return scnprintf(buf, sz, "%"PRIu64".%06"PRIu64, sec, usec);
- }
+Not if PYTHON=python3 is specified on the build line.   Yes, of course they were tested.
  
-+int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz)
-+{
-+	u64  sec = timestamp / NSEC_PER_SEC;
-+	u64 nsec = timestamp % NSEC_PER_SEC;
-+
-+	return scnprintf(buf, sz, "%"PRIu64".%09"PRIu64, sec, nsec);
-+}
-+
- int fetch_current_timestamp(char *buf, size_t sz)
- {
- 	struct timeval tv;
-diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
-index 70b177d2b98c..9266cf4a8e58 100644
---- a/tools/perf/util/time-utils.h
-+++ b/tools/perf/util/time-utils.h
-@@ -24,6 +24,7 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
- 				   int num, u64 timestamp);
- 
- int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz);
-+int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz);
- 
- int fetch_current_timestamp(char *buf, size_t sz);
- 
--- 
-2.20.1
-
