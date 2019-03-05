@@ -2,250 +2,460 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19379C00319
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE8CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA77620842
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D636F20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 09:28:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfCEJ2e (ORCPT
+        id S1727369AbfCEJ26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 04:28:34 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:38593 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfCEJ2d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 04:28:33 -0500
-X-Originating-IP: 90.88.147.150
-Received: from localhost (aaubervilliers-681-1-27-150.w90-88.abo.wanadoo.fr [90.88.147.150])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 8BE28E000C;
-        Tue,  5 Mar 2019 09:28:30 +0000 (UTC)
-Date:   Tue, 5 Mar 2019 10:28:30 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Gerhard Wiesinger <lists@wiesinger.com>
-Cc:     arm@lists.fedoraproject.org, Chen-Yu Tsai <wens@csie.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Florian Fainelli <f.fainelli@gmail.com>, filbar@centrum.cz
-Subject: Re: Banana Pi-R1 stabil
-Message-ID: <20190305092830.ef45kxzhdnxlh63g@flea>
-References: <7b20af72-76ea-a7b1-9939-ca378dc0ed83@wiesinger.com>
- <20190227092023.nvr34byfjranujfm@flea>
- <5f63a2c6-abcb-736f-d382-18e8cea31b65@wiesinger.com>
- <20190228093516.abual3564dkvx6un@flea>
- <91c22ba4-39eb-dd3d-29bd-1bfa7a45e9cd@wiesinger.com>
- <20190301093038.oz56z22ivpntdcfw@flea>
- <8ad8fbeb-fad8-d39a-9cc6-e7f1deab0b4f@wiesinger.com>
+        Tue, 5 Mar 2019 04:28:58 -0500
+Received: from mga05.intel.com ([192.55.52.43]:52518 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfCEJ25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 04:28:57 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 01:28:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,443,1544515200"; 
+   d="scan'208";a="129107906"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Mar 2019 01:28:49 -0800
+Received: from [10.125.252.140] (abudanko-mobl.ccr.corp.intel.com [10.125.252.140])
+        by linux.intel.com (Postfix) with ESMTP id 0998458079D;
+        Tue,  5 Mar 2019 01:28:46 -0800 (PST)
+Subject: [PATCH v6 07/10] perf record: implement -z,--compression_level=n
+ option and compression
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <8b8a4f51-9606-1940-7cc9-40c2c67bfc92@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <8bb41006-fa42-c2c9-8792-c17248384662@linux.intel.com>
+Date:   Tue, 5 Mar 2019 12:28:45 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cfsenmwwcmenvo3t"
-Content-Disposition: inline
-In-Reply-To: <8ad8fbeb-fad8-d39a-9cc6-e7f1deab0b4f@wiesinger.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <8b8a4f51-9606-1940-7cc9-40c2c67bfc92@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---cfsenmwwcmenvo3t
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Implemented -z,--compression_level=n option that enables compression
+of mmaped kernel data buffers content in runtime during perf record
+sampling collection.
 
-On Sat, Mar 02, 2019 at 09:42:08AM +0100, Gerhard Wiesinger wrote:
-> On 01.03.2019 10:30, Maxime Ripard wrote:
-> > On Thu, Feb 28, 2019 at 08:41:53PM +0100, Gerhard Wiesinger wrote:
-> > > On 28.02.2019 10:35, Maxime Ripard wrote:
-> > > > On Wed, Feb 27, 2019 at 07:58:14PM +0100, Gerhard Wiesinger wrote:
-> > > > > On 27.02.2019 10:20, Maxime Ripard wrote:
-> > > > > > On Sun, Feb 24, 2019 at 09:04:57AM +0100, Gerhard Wiesinger wro=
-te:
-> > > > > > > Hello,
-> > > > > > >=20
-> > > > > > > I've 3 Banana Pi R1, one running with self compiled kernel
-> > > > > > > 4.7.4-200.BPiR1.fc24.armv7hl and old Fedora 25 which is VERY =
-STABLE, the 2
-> > > > > > > others are running with Fedora 29 latest, kernel 4.20.10-200.=
-fc29.armv7hl. I
-> > > > > > > tried a lot of kernels between of around 4.11
-> > > > > > > (kernel-4.11.10-200.fc25.armv7hl) until 4.20.10 but all had c=
-rashes without
-> > > > > > > any output on the serial console or kernel panics after a sho=
-rt time of
-> > > > > > > period (minutes, hours, max. days)
-> > > > > > >=20
-> > > > > > > Latest known working and stable self compiled kernel: kernel
-> > > > > > > 4.7.4-200.BPiR1.fc24.armv7hl:
-> > > > > > >=20
-> > > > > > > https://www.wiesinger.com/opensource/fedora/kernel/BananaPi-R=
-1/
-> > > > > > >=20
-> > > > > > > With 4.8.x the DSA b53 switch infrastructure has been introdu=
-ced which
-> > > > > > > didn't work (until ca8931948344c485569b04821d1f6bcebccd376b a=
-nd kernel
-> > > > > > > 4.18.x):
-> > > > > > >=20
-> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.=
-git/tree/drivers/net/dsa/b53?h=3Dv4.20.12
-> > > > > > >=20
-> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.=
-git/log/drivers/net/dsa/b53?h=3Dv4.20.12
-> > > > > > >=20
-> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.=
-git/commit/drivers/net/dsa/b53?h=3Dv4.20.12&id=3Dca8931948344c485569b04821d=
-1f6bcebccd376b
-> > > > > > >=20
-> > > > > > > I has been fixed with kernel 4.18.x:
-> > > > > > >=20
-> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.=
-git/log/drivers/net/dsa/b53?h=3Dlinux-4.18.y
-> > > > > > >=20
-> > > > > > >=20
-> > > > > > > So current status is, that kernel crashes regularly, see some=
- samples below.
-> > > > > > > It is typically a "Unable to handle kernel paging request at =
-virtual addres"
-> > > > > > >=20
-> > > > > > > Another interesting thing: A Banana Pro works well (which has=
- also an
-> > > > > > > Allwinner A20 in the same revision) running same Fedora 29 an=
-d latest
-> > > > > > > kernels (e.g. kernel 4.20.10-200.fc29.armv7hl.).
-> > > > > > >=20
-> > > > > > > Since it happens on 2 different devices and with different po=
-wer supplies
-> > > > > > > (all with enough power) and also the same type which works we=
-ll on the
-> > > > > > > working old kernel) a hardware issue is very unlikely.
-> > > > > > >=20
-> > > > > > > I guess it has something to do with virtual memory.
-> > > > > > >=20
-> > > > > > > Any ideas?
-> > > > > > > [47322.960193] Unable to handle kernel paging request at virt=
-ual addres 5675d0
-> > > > > > That line is a bit suspicious
-> > > > > >=20
-> > > > > > Anyway, cpufreq is known to cause those kind of errors when the
-> > > > > > voltage / frequency association is not correct.
-> > > > > >=20
-> > > > > > Given the stack trace and that the BananaPro doesn't have cpufr=
-eq
-> > > > > > enabled, my first guess would be that it's what's happening. Co=
-uld you
-> > > > > > try using the performance governor and see if it's more stable?
-> > > > > >=20
-> > > > > > If it is, then using this:
-> > > > > > https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-str=
-ess-test
-> > > > > >=20
-> > > > > > will help you find the offending voltage-frequency couple.
-> > > > > For me it looks like they have all the same config regarding cpu =
-governor
-> > > > > (Banana Pro, old kernel stable one, new kernel unstable ones)
-> > > > The Banana Pro doesn't have a regulator set up, so it will only cha=
-nge
-> > > > the frequency, not the voltage.
-> > > >=20
-> > > > > They all have the ondemand governor set:
-> > > > >=20
-> > > > > I set on the 2 unstable "new kernel Banana Pi R1":
-> > > > >=20
-> > > > > # Set to max performance
-> > > > > echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling=
-_governor
-> > > > > echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling=
-_governor
-> > > > What are the results?
-> > > Stable since more than around 1,5 days. Normally they have been crash=
-ed for
-> > > such a long uptime. So it looks that the performance governor fixes i=
-t.
-> > >=20
-> > > I guess crashes occour because of changing CPU voltage and clock chan=
-ges and
-> > > invalid data (e.g. also invalid RAM contents might be read, register
-> > > problems, etc).
-> > >=20
-> > > Any ideas how to fix it for ondemand mode, too?
-> > Run https://github.com/ssvb/cpuburn-arm/blob/master/cpufreq-ljt-stress-=
-test
-> >=20
-> > > But it doesn't explaing that it works with kernel 4.7.4 without any
-> > > problems.
-> > My best guess would be that cpufreq wasn't enabled at that time, or
-> > without voltage scaling.
-> >=20
->=20
-> Where can I see the voltage scaling parameters?
->=20
-> on DTS I don't see any difference between kernel 4.7.4 and 4.20.10 regard=
-ing
-> voltage:
->=20
-> dtc -I dtb -O dts -o
-> /boot/dtb-4.20.10-200.fc29.armv7hl/sun7i-a20-lamobo-r1.dts
-> /boot/dtb-4.20.10-200.fc29.armv7hl/sun7i-a20-lamobo-r1.dtb
+Compression is implemented using the functions from zstd.c. As the
+memory to operate on the compression employs mmap->data buffer in case
+of serial trace writing and mmap AIO buffers in case of AIO trace
+writing. If Zstd streaming compression API fails for some reason the
+data to be compressed are just copied into the memory buffers using
+memcpy().
 
-This can be also due to configuration being changed, driver support, etc.
+Compressed trace frame consists of an array of PERF_RECORD_COMPRESSED
+records. Each element of the array is not longer that 64KiB because of
+u16 size limitation and comprised of perf_event_header followed by the
+compressed chunk that is decompressed on the loading stage. --mmap-flush
+option value can be used to avoid compression of every single byte of
+data and possibly increase compression ratio.
 
-> There is another strange thing (tested with
-> kernel-5.0.0-0.rc8.git1.1.fc31.armv7hl, kernel-4.19.8-300.fc29.armv7hl,
-> kernel-4.20.13-200.fc29.armv7hl, kernel-4.20.10-200.fc29.armv7hl):
->=20
-> There is ALWAYS high CPU of around 10% in kworker:
->=20
-> =A0 PID USER=A0=A0=A0=A0=A0 PR=A0 NI=A0=A0=A0 VIRT=A0=A0=A0 RES=A0=A0=A0 =
-SHR S=A0 %CPU=A0 %MEM TIME+ COMMAND
-> 18722 root=A0=A0=A0=A0=A0 20=A0=A0 0=A0=A0=A0=A0=A0=A0 0=A0=A0=A0=A0=A0 0=
-=A0=A0=A0=A0=A0 0 I=A0=A0 9.5=A0=A0 0.0 0:47.52
-> [kworker/1:3-events_freezable_power_]
->
-> =A0 PID USER=A0=A0=A0=A0=A0 PR=A0 NI=A0=A0=A0 VIRT=A0=A0=A0 RES=A0=A0=A0 =
-SHR S=A0 %CPU=A0 %MEM TIME+ COMMAND
-> =A0 776 root=A0=A0=A0=A0=A0 20=A0=A0 0=A0=A0=A0=A0=A0=A0 0=A0=A0=A0=A0=A0=
- 0=A0=A0=A0=A0=A0 0 I=A0=A0 8.6=A0=A0 0.0 0:02.77
-> [kworker/0:4-events]
+Compression overhead has been measured for serial and AIO trace writing
+when profiling matrix multiplication workload:
 
-The first one looks like it's part of the workqueue code.
+    -------------------------------------------------------------
+    | SERIAL			  | AIO-1                       |
+-----------------------------------------------------------------
+|-z | OVH(x) | ratio(x) size(MiB) | OVH(x) | ratio(x) size(MiB) |
+|----------------------------------------------------------------
+| 0 | 1,00   | 1,000    179,424   | 1,00   | 1,000    187,527   |
+| 1 | 1,04   | 8,427    181,148   | 1,01   | 8,474    188,562   |
+| 2 | 1,07   | 8,055    186,953   | 1,03   | 7,912    191,773   |
+| 3 | 1,04   | 8,283    181,908   | 1,03   | 8,220    191,078   |
+| 5 | 1,09   | 8,101    187,705   | 1,05   | 7,780    190,065   |
+| 8 | 1,05   | 9,217    179,191   | 1,12   | 6,111    193,024   |
+-----------------------------------------------------------------
 
-> Therefore CPU doesn't switch to low frequencies (see below).
+OVH = (Execution time with -z N) / (Execution time with -z 0)
 
-You said previously that those crashes were happening when the board
-was changing frequency, so I'm confused?
+ratio - compression ratio
+size  - number of bytes that was compressed
 
-> Any ideas?
+	size ~= trace size x ratio
 
-Run the cpustress program I told you to use already twice.
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+---
+ tools/perf/Documentation/perf-record.txt |  5 ++
+ tools/perf/builtin-record.c              | 85 ++++++++++++++++++++----
+ tools/perf/util/mmap.c                   | 31 ++++++---
+ tools/perf/util/mmap.h                   | 13 ++--
+ tools/perf/util/session.h                |  2 +
+ 5 files changed, 110 insertions(+), 26 deletions(-)
 
-> BTW: Still stable at aboout 2,5days on both devices. So solution IS the
-> performance governor.
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 5f9b557afb28..28f9208791bc 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -472,6 +472,11 @@ executing less trace write syscalls with bigger data size can take shorter than
+ executing more trace write syscalls with smaller data size thus lowering runtime
+ profiling overhead.
+ 
++-z::
++--compression-level=n::
++Produce compressed trace using specified level n (no compression: 0 - default,
++fastest compression: 1, smallest trace: 22)
++
+ --all-kernel::
+ Configure all used events to run in kernel space.
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 954141c491b0..26f07b880a0a 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -237,7 +237,7 @@ static int record__aio_sync(struct perf_mmap *md, bool sync_all)
+ 	} while (1);
+ }
+ 
+-static int record__aio_pushfn(void *to, struct aiocb *cblock, void *bf, size_t size, off_t off)
++static int record__aio_pushfn(void *to, void *bf, size_t size, off_t off, struct aiocb *cblock)
+ {
+ 	struct record *rec = to;
+ 	int ret, trace_fd = rec->session->data->file.fd;
+@@ -264,13 +264,15 @@ static void record__aio_set_pos(int trace_fd, off_t pos)
+ 	lseek(trace_fd, pos, SEEK_SET);
+ }
+ 
++static int record__aio_enabled(struct record *rec);
++
+ static void record__aio_mmap_read_sync(struct record *rec)
+ {
+ 	int i;
+ 	struct perf_evlist *evlist = rec->evlist;
+ 	struct perf_mmap *maps = evlist->mmap;
+ 
+-	if (!rec->opts.nr_cblocks)
++	if (!record__aio_enabled(rec))
+ 		return;
+ 
+ 	for (i = 0; i < evlist->nr_mmaps; i++) {
+@@ -292,13 +294,17 @@ static int record__aio_parse(const struct option *opt,
+ 
+ 	if (unset) {
+ 		opts->nr_cblocks = 0;
+-	} else {
+-		if (str)
+-			opts->nr_cblocks = strtol(str, NULL, 0);
+-		if (!opts->nr_cblocks)
+-			opts->nr_cblocks = nr_cblocks_default;
++		return 0;
+ 	}
+ 
++	if (str)
++		opts->nr_cblocks = strtol(str, NULL, 0);
++	if (!opts->nr_cblocks)
++		opts->nr_cblocks = nr_cblocks_default;
++
++	if (opts->nr_cblocks > nr_cblocks_max)
++		opts->nr_cblocks = nr_cblocks_max;
++
+ 	return 0;
+ }
+ #else /* HAVE_AIO_SUPPORT */
+@@ -309,8 +315,9 @@ static int record__aio_sync(struct perf_mmap *md __maybe_unused, bool sync_all _
+ 	return -1;
+ }
+ 
+-static int record__aio_pushfn(void *to __maybe_unused, struct aiocb *cblock __maybe_unused,
+-		void *bf __maybe_unused, size_t size __maybe_unused, off_t off __maybe_unused)
++static int record__aio_pushfn(void *to __maybe_unused, void *bf __maybe_unused,
++		size_t size __maybe_unused, off_t off __maybe_unused,
++		struct aiocb *cblock __maybe_unused)
+ {
+ 	return -1;
+ }
+@@ -761,6 +768,40 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
+ 	}
+ }
+ 
++static size_t record__process_comp_header(void *record, size_t increment)
++{
++	struct compressed_event *event = record;
++	size_t size = sizeof(struct compressed_event);
++
++	if (increment) {
++		event->header.size += increment;
++		return increment;
++	} else {
++		event->header.type = PERF_RECORD_COMPRESSED;
++		event->header.size = size;
++		return size;
++	}
++}
++
++static size_t record__zstd_compress(void *data, void *dst, size_t dst_size,
++		void *src, size_t src_size)
++{
++	size_t compressed;
++	struct perf_session *session = data;
++	/* maximum size of record data size (2^16 - 1 - header) */
++	const size_t max_record_size = (1 << 8 * sizeof(u16)) -
++					1 - sizeof(struct compressed_event);
++
++	compressed = zstd_compress_stream_to_records(&(session->zstd_data),
++				dst, dst_size, src, src_size, max_record_size,
++				record__process_comp_header);
++
++	session->bytes_transferred += src_size;
++	session->bytes_compressed  += compressed;
++
++	return compressed;
++}
++
+ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+ 				    bool overwrite, bool sync)
+ {
+@@ -770,6 +811,8 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	struct perf_mmap *maps;
+ 	int trace_fd = rec->data.file.fd;
+ 	off_t off;
++	struct perf_session *session = rec->session;
++	perf_mmap__compress_fn_t compress_fn;
+ 
+ 	if (!evlist)
+ 		return 0;
+@@ -781,6 +824,8 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 	if (overwrite && evlist->bkw_mmap_state != BKW_MMAP_DATA_PENDING)
+ 		return 0;
+ 
++	compress_fn = record__comp_enabled(rec) ? record__zstd_compress : NULL;
++
+ 	if (record__aio_enabled(rec))
+ 		off = record__aio_get_pos(trace_fd);
+ 
+@@ -795,7 +840,8 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				map->flush = MMAP_FLUSH_DEFAULT;
+ 			}
+ 			if (!record__aio_enabled(rec)) {
+-				if (perf_mmap__push(map, rec, record__pushfn) != 0) {
++				if (perf_mmap__push(map, rec, record__pushfn,
++						    compress_fn, session) != 0) {
+ 					if (sync)
+ 						map->flush = flush;
+ 					rc = -1;
+@@ -808,7 +854,8 @@ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evli
+ 				 * becomes available after previous aio write request.
+ 				 */
+ 				idx = record__aio_sync(map, false);
+-				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off) != 0) {
++				if (perf_mmap__aio_push(map, rec, idx, record__aio_pushfn, &off,
++							compress_fn, session) != 0) {
+ 					record__aio_set_pos(trace_fd, off);
+ 					if (sync)
+ 						map->flush = flush;
+@@ -1189,6 +1236,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	fd = perf_data__fd(data);
+ 	rec->session = session;
+ 
++	if (zstd_init(&(session->zstd_data), rec->opts.comp_level) < 0) {
++		pr_err("Compression initialization failed.\n");
++		return -1;
++	}
++
++	session->header.env.comp_type  = PERF_COMP_ZSTD;
++	session->header.env.comp_level = rec->opts.comp_level;
++
+ 	record__init_features(rec);
+ 
+ 	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
+@@ -1518,6 +1573,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	}
+ 
+ out_delete_session:
++	zstd_fini(&(session->zstd_data));
+ 	perf_session__delete(session);
+ 	return status;
+ }
+@@ -2038,6 +2094,10 @@ static struct option __record_options[] = {
+ 	OPT_CALLBACK(0, "affinity", &record.opts, "node|cpu",
+ 		     "Set affinity mask of trace reading thread to NUMA node cpu mask or cpu of processed mmap buffer",
+ 		     record__parse_affinity),
++#ifdef HAVE_ZSTD_SUPPORT
++	OPT_UINTEGER('z', "compression-level", &record.opts.comp_level,
++		     "Produce compressed trace (default: 0, fastest: 1, smallest: 22)"),
++#endif
+ 	OPT_END()
+ };
+ 
+@@ -2235,8 +2295,7 @@ int cmd_record(int argc, const char **argv)
+ 
+ 	if (rec->opts.nr_cblocks > nr_cblocks_max)
+ 		rec->opts.nr_cblocks = nr_cblocks_max;
+-	if (verbose > 0)
+-		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
++	pr_debug("nr_cblocks: %d\n", rec->opts.nr_cblocks);
+ 
+ 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
+ 	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index d85e73fc82e2..724237a253b4 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -291,14 +291,15 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map)
+ }
+ 
+ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off)
++			int push(void *to, void *buf, size_t size, off_t off, struct aiocb *cblock),
++			off_t *off, perf_mmap__compress_fn_t compress, void *comp_data)
+ {
+ 	u64 head = perf_mmap__read_head(md);
+ 	unsigned char *data = md->base + page_size;
+ 	unsigned long size, size0 = 0;
+ 	void *buf;
+ 	int rc = 0;
++	size_t mmap_len = perf_mmap__mmap_len(md);
+ 
+ 	rc = perf_mmap__read_init(md);
+ 	if (rc < 0)
+@@ -327,14 +328,20 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+ 		buf = &data[md->start & md->mask];
+ 		size = md->mask + 1 - (md->start & md->mask);
+ 		md->start += size;
+-		memcpy(md->aio.data[idx], buf, size);
+ 		size0 = size;
++		if (!compress)
++			memcpy(md->aio.data[idx], buf, size);
++		else
++			size0 = compress(comp_data, md->aio.data[idx], mmap_len, buf, size);
+ 	}
+ 
+ 	buf = &data[md->start & md->mask];
+ 	size = md->end - md->start;
+ 	md->start += size;
+-	memcpy(md->aio.data[idx] + size0, buf, size);
++	if (!compress)
++		memcpy(md->aio.data[idx] + size0, buf, size);
++	else
++		size = compress(comp_data, md->aio.data[idx] + size0, mmap_len - size0, buf, size);
+ 
+ 	/*
+ 	 * Increment md->refcount to guard md->data[idx] buffer
+@@ -350,7 +357,7 @@ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+ 	md->prev = head;
+ 	perf_mmap__consume(md);
+ 
+-	rc = push(to, &md->aio.cblocks[idx], md->aio.data[idx], size0 + size, *off);
++	rc = push(to, md->aio.data[idx], size0 + size, *off, &md->aio.cblocks[idx]);
+ 	if (!rc) {
+ 		*off += size0 + size;
+ 	} else {
+@@ -556,13 +563,15 @@ int perf_mmap__read_init(struct perf_mmap *map)
+ }
+ 
+ int perf_mmap__push(struct perf_mmap *md, void *to,
+-		    int push(struct perf_mmap *map, void *to, void *buf, size_t size))
++		    int push(struct perf_mmap *map, void *to, void *buf, size_t size),
++		    perf_mmap__compress_fn_t compress, void *comp_data)
+ {
+ 	u64 head = perf_mmap__read_head(md);
+ 	unsigned char *data = md->base + page_size;
+ 	unsigned long size;
+ 	void *buf;
+ 	int rc = 0;
++	size_t mmap_len = perf_mmap__mmap_len(md);
+ 
+ 	rc = perf_mmap__read_init(md);
+ 	if (rc < 0)
+@@ -574,7 +583,10 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 		buf = &data[md->start & md->mask];
+ 		size = md->mask + 1 - (md->start & md->mask);
+ 		md->start += size;
+-
++		if (compress) {
++			size = compress(comp_data, md->data, mmap_len, buf, size);
++			buf = md->data;
++		}
+ 		if (push(md, to, buf, size) < 0) {
+ 			rc = -1;
+ 			goto out;
+@@ -584,7 +596,10 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
+ 	buf = &data[md->start & md->mask];
+ 	size = md->end - md->start;
+ 	md->start += size;
+-
++	if (compress) {
++		size = compress(comp_data, md->data, mmap_len, buf, size);
++		buf = md->data;
++	}
+ 	if (push(md, to, buf, size) < 0) {
+ 		rc = -1;
+ 		goto out;
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index a02427d609c0..2df3882c4b83 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -99,16 +99,19 @@ union perf_event *perf_mmap__read_forward(struct perf_mmap *map);
+ 
+ union perf_event *perf_mmap__read_event(struct perf_mmap *map);
+ 
++typedef size_t (*perf_mmap__compress_fn_t)(void *data, void *dst, size_t dst_size,
++		void *src, size_t src_size);
+ int perf_mmap__push(struct perf_mmap *md, void *to,
+-		    int push(struct perf_mmap *map, void *to, void *buf, size_t size));
++		    int push(struct perf_mmap *map, void *to, void *buf, size_t size),
++		    perf_mmap__compress_fn_t compress, void *compress_data);
+ #ifdef HAVE_AIO_SUPPORT
+ int perf_mmap__aio_push(struct perf_mmap *md, void *to, int idx,
+-			int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off),
+-			off_t *off);
++			int push(void *to, void *buf, size_t size, off_t off, struct aiocb *cblock),
++			off_t *off, perf_mmap__compress_fn_t compress, void *compress_data);
+ #else
+ static inline int perf_mmap__aio_push(struct perf_mmap *md __maybe_unused, void *to __maybe_unused, int idx __maybe_unused,
+-	int push(void *to, struct aiocb *cblock, void *buf, size_t size, off_t off) __maybe_unused,
+-	off_t *off __maybe_unused)
++	int push(void *to, void *buf, size_t size, off_t off, struct aiocb *cblock) __maybe_unused,
++	off_t *off __maybe_unused, perf_mmap__compress_fn_t compress __maybe_unused, void *compress_data __maybe_unused)
+ {
+ 	return 0;
+ }
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 0e14884f28b2..6c984c895924 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -8,6 +8,7 @@
+ #include "machine.h"
+ #include "data.h"
+ #include "ordered-events.h"
++#include "util/compress.h"
+ #include <linux/kernel.h>
+ #include <linux/rbtree.h>
+ #include <linux/perf_event.h>
+@@ -37,6 +38,7 @@ struct perf_session {
+ 	struct perf_tool	*tool;
+ 	u64			bytes_transferred;
+ 	u64			bytes_compressed;
++	struct zstd_data	zstd_data;
+ };
+ 
+ struct perf_tool;
+-- 
+2.20.1
 
-No, the performance governor prevents any change in frequency. My
-guess is that a lower frequency operating point is not working and is
-crashing the CPU.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---cfsenmwwcmenvo3t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXH5BPgAKCRDj7w1vZxhR
-xS2wAQCrYmvmqeaxIJeP2CrIbiuDo+B1ZA2vOOrm7phibW0m2wEAkOlkFixpr4E3
-yqQL9k9rEMnmYePmRiu6hcFMf2pCOQ0=
-=fMmS
------END PGP SIGNATURE-----
-
---cfsenmwwcmenvo3t--
