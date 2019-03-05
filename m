@@ -2,89 +2,121 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07666C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 04:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34964C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 04:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22D820684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 04:07:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SpUF8Xfq"
+	by mail.kernel.org (Postfix) with ESMTP id 1054D20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 04:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfCEEHE (ORCPT
+        id S1727092AbfCEEHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Mar 2019 23:07:04 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33848 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfCEEHE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Mar 2019 23:07:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=xr1bc2DdygcwOkBklfprv3E+jDI8FdBTpji1CbQhPPc=; b=SpUF8XfqGtWJjCNAT0hZWUQP9
-        3sZnZsOJUJzM22HY4zMuGNO7KF6eBSs1mJevypJhnf7yLtgNipMvSzeqGBSaQgNmDYdrTE77o/U/Z
-        1d+0+s9AE/NLIR7x0U+1G2OcYicHjF6R4uVtPcvlNIlBEygWGzzBplVt7QU2V7ehr9ZpV3LIh6bTC
-        m4KZeloHTewDzRIDayhafcYt72lb5WuMYIt30j+jGF99Z73VFq5Cs8p9D2sVA3r1X4qdZSkMtQTCJ
-        VPZEBVdxtQlOYTBJpjKYonndHE+n/PX7I97cB0szujPy2T9OET61nrcKxpTfRoSQi5aAzgdrdXk4N
-        0yHue5UAA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h11Lo-00056k-NH; Tue, 05 Mar 2019 04:06:44 +0000
-Date:   Mon, 4 Mar 2019 20:06:44 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Li Yang <leoyang.li@nxp.com>, Coly Li <colyli@suse.de>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Li Zefan <lizefan@huawei.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "harryxiyou@gmail.com" <harryxiyou@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kernel@zh-kernel.org" <linux-kernel@zh-kernel.org>
-Subject: Re: [PATCH 01/20] docs/zh_CN: add disclaimer file
-Message-ID: <20190305040644.GB13380@bombadil.infradead.org>
-References: <20190304035744.155203-1-alex.shi@linux.alibaba.com>
- <20190304035744.155203-2-alex.shi@linux.alibaba.com>
- <b2cb92de-ef4a-d628-0dd3-76d8d1b953d0@linux.alibaba.com>
- <CADRPPNSjf4P14bwUMsa10XzBUVLszx4iMsL6gk-XQ0x3vTFr+g@mail.gmail.com>
- <e342a3fa-20f6-46cd-4240-8403fa1aa736@linux.alibaba.com>
- <AM6PR04MB586370DDB6E73A43673339568F710@AM6PR04MB5863.eurprd04.prod.outlook.com>
- <CADRPPNTxDDquY=OT4MV6cQ8OHhAdbazMjngDhtRBCE9_UESg_w@mail.gmail.com>
- <450bd6aa-ec98-b89e-51bc-bb4a22ce7d42@linux.alibaba.com>
+        Mon, 4 Mar 2019 23:07:17 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:45336 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726942AbfCEEHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Mar 2019 23:07:16 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 269F359449;
+        Tue,  5 Mar 2019 04:07:16 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E6A3060F8D;
+        Tue,  5 Mar 2019 04:07:15 +0000 (UTC)
+Date:   Mon, 4 Mar 2019 23:07:15 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        dm-devel@redhat.com
+Subject: Re: x86 VM Boot hang with latest linux-next
+Message-ID: <20190305040714.GB21739@redhat.com>
+References: <CAKgT0UeMqmojVrNV1i-DdY18EBwbJ_4zVTUggAWas5D5yeU1PQ@mail.gmail.com>
+ <20190303034847.GA8699@redhat.com>
+ <CAKgT0Ue9+wSL60Bj0drkgVQwem=mh_eTrFMda+inX4=qBgi3dA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <450bd6aa-ec98-b89e-51bc-bb4a22ce7d42@linux.alibaba.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKgT0Ue9+wSL60Bj0drkgVQwem=mh_eTrFMda+inX4=qBgi3dA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 05 Mar 2019 04:07:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 05, 2019 at 09:44:28AM +0800, Alex Shi wrote:
-> >> Hi Alex,
-> >>
-> >> I will try to get the new email addresses for others too.   Yes.  But probably I will use a private email for this instead of the company email.
-> > Here are the updated email address for me and others.
-> >
-> > TripleX Chung <xxx.phy@gmail.com>
-> > Li Yang <pku.leo@gmail.com>
-> > Zhang Wei <wezhang@outlook.com>
-> >
-> > Since you have created the patch to update my email address to my
-> > company email, it is ok to keep that.  Thanks a lot for the effort to
-> > address the issue.
-> >
-> I will update all others email address, and keep your company email address as its your last decision. :)
+On Sun, Mar 03 2019 at 12:06pm -0500,
+Alexander Duyck <alexander.duyck@gmail.com> wrote:
 
-Don't forget to update .mailmap with the new addresses so scripts which
-look for email addresses in commits will use the new addresses for old
-commits under the previous names.
+> On Sat, Mar 2, 2019 at 7:48 PM Mike Snitzer <snitzer@redhat.com> wrote:
+> >
+> > On Sat, Mar 02 2019 at  6:34pm -0500,
+> > Alexander Duyck <alexander.duyck@gmail.com> wrote:
+> >
+> > > So I have been seeing an issue with an intermittent boot hang on my
+> > > x86 KVM VM with the latest linux-next and have bisected it down to the
+> > > following commit:
+> > > 1efa3bb79d3de8ca1b7f6770313a1fc0bebe25c7 is the first bad commit
+> > > commit 1efa3bb79d3de8ca1b7f6770313a1fc0bebe25c7
+> > > Author: Mike Snitzer <snitzer@redhat.com>
+> > > Date:   Fri Feb 22 11:23:01 2019 -0500
+> > >
+> > >     dm: must allocate dm_noclone for stacked noclone devices
+> > >
+> > >     Otherwise various lvm2 testsuite tests fail because the lower layers of
+> > >     the stacked noclone device aren't updated to allocate a new 'struct
+> > >     dm_clone' that reflects the upper layer bio that was issued to it.
+> > >
+> > >     Fixes: 97a89458020b38 ("dm: improve noclone bio support")
+> > >     Reported-by: Mikulas Patocka <mpatocka@redhat.com>
+> > >     Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+> > >
+> > > What I am seeing is in about 3 out of 4 boots the startup just hangs
+> > > at the filesystem check stage with the following message:
+> > > [  OK  ] Reached target Local File Systems (Pre).
+> > >          Starting File System Check on /dev/…127-ad57-426f-bb45-363950544c0c...
+> > > [    **] (1 of 2) A start job is running for…n on device 252:2 (19s / no limit)
+> > >
+> > > I did some googling and it looks like a similar issue has been
+> > > reported for s390. Based on the request for data there I have the
+> > > following info:
+> > > [root@localhost ~]# dmsetup ls --tree
+> > > fedora-swap (253:1)
+> > >  └─ (252:2)
+> > > fedora-root (253:0)
+> > >  └─ (252:2)
+> > >
+> > > [root@localhost ~]# dmsetup table
+> > > fedora-swap: 0 4194304 linear 252:2 2048
+> > > fedora-root: 0 31457280 linear 252:2 4196352
+> >
+> > Thanks, which version of Fedora are you running?
+> 
+> The VM is running Fedora 27 with a kernel built off of latest
+> linux-next as of March 1st.
+> 
+> > Your case is more straightforward in that you're clearly using bio-based
+> > DM linear (which was updated to leverage "noclone" support); whereas the
+> > s390 case is using request-based DM which isn't impacted by the commit
+> > in question at all.
+> >
+> > I'll attempt to reproduce first thing Monday.
+> >
+> > Mike
+> 
+> Thanks. The behavior of it has me wondering if we are looking at
+> something like an uninitialized data issue or something like that
+> since as I mentioned I don't see this occur on every boot, just on
+> most of them. So every now and then I can boot up the VM without any
+> issues, but most of the time it will boot and then get stuck waiting
+> on jobs that take forever.
+
+I just copied you on another related thread, but for the benefit of
+anyone on LKML, please see the following for a fix that works for me:
+
+https://www.redhat.com/archives/dm-devel/2019-March/msg00027.html
