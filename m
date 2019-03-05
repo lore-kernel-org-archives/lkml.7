@@ -2,188 +2,179 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C79EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBE3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6677720684
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C2420684
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 10:19:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kip953tA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfCEKSX (ORCPT
+        id S1726069AbfCEKT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 05:18:23 -0500
-Received: from mga03.intel.com ([134.134.136.65]:50111 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727154AbfCEKSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 05:18:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2019 02:18:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,443,1544515200"; 
-   d="scan'208";a="138172263"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.56]) ([10.237.72.56])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Mar 2019 02:18:19 -0800
-Subject: Re: [PATCH v2 5/7] perf script python: add Python3 support to
- intel-pt-events.py
-To:     Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org
-Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
-        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-References: <20190302011903.2416-1-tonyj@suse.de>
- <20190302011903.2416-6-tonyj@suse.de>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <6fe06c75-5f98-4829-e139-af2bfcda24f3@intel.com>
-Date:   Tue, 5 Mar 2019 12:16:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <20190302011903.2416-6-tonyj@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 5 Mar 2019 05:19:28 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54923 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbfCEKT1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 05:19:27 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190305101925euoutp01d07282dfdd481c64cb3f781cee2a50ab~JCL_vXBrV0539305393euoutp01D
+        for <linux-kernel@vger.kernel.org>; Tue,  5 Mar 2019 10:19:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190305101925euoutp01d07282dfdd481c64cb3f781cee2a50ab~JCL_vXBrV0539305393euoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1551781166;
+        bh=A64lpTnXMDziX5A2MqXs12dEJqCDkwUHJprh5czbo/k=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=kip953tAENui1nBaok9f1iJFXk7IESoORuiSguT/igq46krEXrvsH6KM4tYAmQ/aN
+         J7EnVqVpfSpN2U+F6Yv2EeQ9qatYMSLgtzLjhIRkUjTl/C0fOwnmAXV3+w8NrT2QiS
+         I3xRxMlc0VS6CXKhL3tvaGezqZX6/MCr7GVulihU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190305101925eucas1p134ccc815a39c77c061d28358e65d4603~JCL_CTlvR0207202072eucas1p1g;
+        Tue,  5 Mar 2019 10:19:25 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id B8.9E.04294.C2D4E7C5; Tue,  5
+        Mar 2019 10:19:24 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190305101924eucas1p24a058fcc034cc95bc33888087412ab48~JCL9VWvK22250822508eucas1p2q;
+        Tue,  5 Mar 2019 10:19:24 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190305101924eusmtrp2f4ce84efbc18cc1630e39ef064a8803f~JCL9FamEH2082620826eusmtrp2N;
+        Tue,  5 Mar 2019 10:19:24 +0000 (GMT)
+X-AuditID: cbfec7f4-84fff700000010c6-86-5c7e4d2ccd68
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 60.46.04284.C2D4E7C5; Tue,  5
+        Mar 2019 10:19:24 +0000 (GMT)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190305101923eusmtip15206a9c550f30e3db47ce88ef49feea7~JCL8dtaPY3046130461eusmtip1o;
+        Tue,  5 Mar 2019 10:19:23 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v5 0/8] Exynos5 Dynamic Memory Controller driver
+Date:   Tue,  5 Mar 2019 11:19:03 +0100
+Message-Id: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZduzneV0d37oYg0czrS02zljPanH9y3NW
+        i/lHzrFa9D9+zWxx/vwGdouzTW/YLW41yFhc3jWHzeJz7xFGixnn9zFZrD1yl93iduMKNovD
+        b9pZHXg9Nq3qZPM4+G4Pk0ffllWMHp83yQWwRHHZpKTmZJalFunbJXBlzNn+hrngvETFpcX9
+        TA2Mr4S6GDk5JARMJE5//8LYxcjFISSwglHi3YR/bBDOF0aJnye2AWU4gJzPjBLXI2Aa/r9Z
+        xw5Rs5xRoq3pAQtcw7+Z19lAGtgE9CR2rCoEaRARqJa4c30/M0gNs8BbRomZN7+wgCSEBRwk
+        ur9uZwaxWQRUJX5uf84OYvMKeEpcPtPKCrFNTuLmuU5mCPs3m8SbhbUg8yUEXCTu7FWGCAtL
+        vDq+hR3ClpH4v3M+E4RdLHG2YxUbhF0j0X5yB1SNtcTh4xdZQcYwC2hKrN+lDxF2lDj8/Ror
+        xHQ+iRtvBUHCzEDmpG3TmSHCvBIdbdBg05DY0nMBapGYxPI106CGe0g8OPMc7HYhgViJF6tP
+        M01glJuFsGsBI+MqRvHU0uLc9NRio7zUcr3ixNzi0rx0veT83E2MwJRx+t/xLzsYd/1JOsQo
+        wMGoxMObYVYbI8SaWFZcmXuIUYKDWUmE9494XYwQb0piZVVqUX58UWlOavEhRmkOFiVx3mqG
+        B9FCAumJJanZqakFqUUwWSYOTqkGxrzIGjsmnYNXZ9V871i6NnH6i8ZjLyLqrXlSFi5vursk
+        7t71hUIvEmpSFpdwPNdjvOi/mHNWVMmxZdK5fReYjxoeqbQ+tCK74H7OBb+Tb7ry5jpHs8dL
+        8cf9UJ+ct/300qPPd6ZKfJ0T7BIgnhK8OeyYzKfrYlHi940mnUrcdMfYa++SwqJbH5VYijMS
+        DbWYi4oTATON6W8VAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLLMWRmVeSWpSXmKPExsVy+t/xu7o6vnUxBlf2sFlsnLGe1eL6l+es
+        FvOPnGO16H/8mtni/PkN7BZnm96wW9xqkLG4vGsOm8Xn3iOMFjPO72OyWHvkLrvF7cYVbBaH
+        37SzOvB6bFrVyeZx8N0eJo++LasYPT5vkgtgidKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx
+        1DM0No+1MjJV0rezSUnNySxLLdK3S9DLmLP9DXPBeYmKS4v7mRoYXwl1MXJySAiYSPx/s469
+        i5GLQ0hgKaPE4+u7GCESYhKT9m1nh7CFJf5c62KDKPrEKNH6dztLFyMHB5uAnsSOVYUgNSIC
+        9RL9by6B1TALfGeUOPRkAtggYQEHie6v25lBbBYBVYmf25+DDeUV8JS4fKaVFWKBnMTNc53M
+        Exh5FjAyrGIUSS0tzk3PLTbUK07MLS7NS9dLzs/dxAgM2m3Hfm7ewXhpY/AhRgEORiUe3gyz
+        2hgh1sSy4srcQ4wSHMxKIrx/xOtihHhTEiurUovy44tKc1KLDzGaAi2fyCwlmpwPjKi8knhD
+        U0NzC0tDc2NzYzMLJXHe8waVUUIC6YklqdmpqQWpRTB9TBycUg2MWW7Hr5QEr2NxrnjVvotB
+        7koe/2K9hTUmbI66d59FPtvOPs3Uskfg14L1L5b8Unv0Ti3DujHrxrY7dx76iKt9aBdlNHBv
+        0WyO02TOOr92+ppnBinSzE1rfSqZK97H3Ez3vfpPasetCc1fWU0eSjcV8uw9ftNe7PUsveKv
+        DKcEI7NDMiWLzLSVWIozEg21mIuKEwGTX+IecAIAAA==
+X-CMS-MailID: 20190305101924eucas1p24a058fcc034cc95bc33888087412ab48
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190305101924eucas1p24a058fcc034cc95bc33888087412ab48
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190305101924eucas1p24a058fcc034cc95bc33888087412ab48
+References: <CGME20190305101924eucas1p24a058fcc034cc95bc33888087412ab48@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/03/19 3:19 AM, Tony Jones wrote:
-> Support both Python2 and Python3 in the intel-pt-events.py script
-> 
-> There may be differences in the ordering of output lines due to
-> differences in dictionary ordering etc.  However the format within lines
-> should be unchanged.
-> 
-> The use of 'from __future__' implies the minimum supported Python2 version
-> is now v2.6
-> 
-> Signed-off-by: Tony Jones <tonyj@suse.de>
-> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
+Hi all,
 
-One change missed, see below, otherwise:
+This is v5 of the patch set which adds support of Dynamic Memory Controller
+for Exynos5422 SoC.
+The driver supports Dynamic Voltage and Frequency Scalling
+for the DMC and DRAM. It also provides needed timings for different
+speed operations of the DRAM memory.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+changes:
+v5:
+- removed unneeded wrapper functions i.e. for regulator_set_voltage
+- removed unused defines
+- removed direct access to clock register base and used CCF for
+  pause and timing set usage
+- switched to OPP coming from DT according to Chanowoo's comments
+- switched to timings coming from DT, added parsing function
+- extended dt-binding with description of OPPs and timings
+- according to Rob Herring comment, moved dt-binding file before driver code
+  in the patch set.
+- re-based on top of v5.0
+v4:
+- removed unneeded DPLL and G3D clocks IDs
+- changed names of parent clocks for mout_mx_mspll_ccore_phy_p
+  and added one more parent: mout_sclk_epll
+- removed 933Mhz and 138MHz from the BPLL ratio table
+v3:
+- in DTS align to proper indent the clocks and clock-names entries
+v2:
+- changed file name exynos5-dmc.c -> exynos5422-dmc.c
+  and related entries in other files
+- changed dt-binding file name
+- changed config entry to CONFIG_ARM_EXYNOS5422_DMC_DEVFREQ
+- removed sysfs and print info messages (print only one line)
+- removed function exynos5_read_chip_info and compact code
+- changed dt-binding patch and move it up in the patch set
+- new entries in MAINTAINERS are added with the driver c code
+- clean-up in DTS file: renamed nodes to 'ppmu' and 'memory-controller',
+  entries moved to suggested location (before nocp nodes or after),
+  moved according to alfabetical order, compacted clocks names with right indent.
 
-> ---
->  tools/perf/scripts/python/intel-pt-events.py | 30 +++++++++++++++++-----------
->  1 file changed, 18 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
-> index 2177722f509e..5c42c4c359dc 100644
-> --- a/tools/perf/scripts/python/intel-pt-events.py
-> +++ b/tools/perf/scripts/python/intel-pt-events.py
-> @@ -10,6 +10,8 @@
->  # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->  # more details.
->  
-> +from __future__ import print_function
-> +
->  import os
->  import sys
->  import struct
-> @@ -22,10 +24,10 @@ sys.path.append(os.environ['PERF_EXEC_PATH'] + \
->  #from Core import *
->  
->  def trace_begin():
-> -	print "Intel PT Power Events and PTWRITE"
-> +	print("Intel PT Power Events and PTWRITE")
->  
->  def trace_end():
-> -	print "End"
-> +	print("End")
->  
->  def trace_unhandled(event_name, context, event_fields_dict):
->  		print ' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())])
+Regards,
+Lukasz Luba
 
-Also above line
 
-> @@ -35,21 +37,21 @@ def print_ptwrite(raw_buf):
->  	flags = data[0]
->  	payload = data[1]
->  	exact_ip = flags & 1
-> -	print "IP: %u payload: %#x" % (exact_ip, payload),
-> +	print("IP: %u payload: %#x" % (exact_ip, payload), end=' ')
->  
->  def print_cbr(raw_buf):
->  	data = struct.unpack_from("<BBBBII", raw_buf)
->  	cbr = data[0]
->  	f = (data[4] + 500) / 1000
->  	p = ((cbr * 1000 / data[2]) + 5) / 10
-> -	print "%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p),
-> +	print("%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p), end=' ')
->  
->  def print_mwait(raw_buf):
->  	data = struct.unpack_from("<IQ", raw_buf)
->  	payload = data[1]
->  	hints = payload & 0xff
->  	extensions = (payload >> 32) & 0x3
-> -	print "hints: %#x extensions: %#x" % (hints, extensions),
-> +	print("hints: %#x extensions: %#x" % (hints, extensions), end=' ')
->  
->  def print_pwre(raw_buf):
->  	data = struct.unpack_from("<IQ", raw_buf)
-> @@ -57,13 +59,14 @@ def print_pwre(raw_buf):
->  	hw = (payload >> 7) & 1
->  	cstate = (payload >> 12) & 0xf
->  	subcstate = (payload >> 8) & 0xf
-> -	print "hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
-> +	print("hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
-> +		end=' ')
->  
->  def print_exstop(raw_buf):
->  	data = struct.unpack_from("<I", raw_buf)
->  	flags = data[0]
->  	exact_ip = flags & 1
-> -	print "IP: %u" % (exact_ip),
-> +	print("IP: %u" % (exact_ip), end=' ')
->  
->  def print_pwrx(raw_buf):
->  	data = struct.unpack_from("<IQ", raw_buf)
-> @@ -71,18 +74,21 @@ def print_pwrx(raw_buf):
->  	deepest_cstate = payload & 0xf
->  	last_cstate = (payload >> 4) & 0xf
->  	wake_reason = (payload >> 8) & 0xf
-> -	print "deepest cstate: %u last cstate: %u wake reason: %#x" % (deepest_cstate, last_cstate, wake_reason),
-> +	print("deepest cstate: %u last cstate: %u wake reason: %#x" %
-> +		(deepest_cstate, last_cstate, wake_reason), end=' ')
->  
->  def print_common_start(comm, sample, name):
->  	ts = sample["time"]
->  	cpu = sample["cpu"]
->  	pid = sample["pid"]
->  	tid = sample["tid"]
-> -	print "%16s %5u/%-5u [%03u] %9u.%09u %7s:" % (comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
-> +	print("%16s %5u/%-5u [%03u] %9u.%09u %7s:" %
-> +		(comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
-> +		end=' ')
->  
->  def print_common_ip(sample, symbol, dso):
->  	ip = sample["ip"]
-> -	print "%16x %s (%s)" % (ip, symbol, dso)
-> +	print("%16x %s (%s)" % (ip, symbol, dso))
->  
->  def process_event(param_dict):
->  	event_attr = param_dict["attr"]
-> @@ -92,12 +98,12 @@ def process_event(param_dict):
->  	name	   = param_dict["ev_name"]
->  
->  	# Symbol and dso info are not always resolved
-> -	if (param_dict.has_key("dso")):
-> +	if "dso" in param_dict:
->  		dso = param_dict["dso"]
->  	else:
->  		dso = "[unknown]"
->  
-> -	if (param_dict.has_key("symbol")):
-> +	if "symbol" in param_dict:
->  		symbol = param_dict["symbol"]
->  	else:
->  		symbol = "[unknown]"
-> 
+Lukasz Luba (8):
+  clk: samsung: add needed IDs for DMC clocks in Exynos5420
+  clk: samsung: add new clocks for DMC for Exynos5422 SoC
+  clk: samsung: add BPLL rate table for Exynos 5422 SoC
+  dt-bindings: devfreq: add Exynos5422 DMC device description
+  drivers: devfreq: add DMC driver for Exynos5422
+  DT: arm: exynos: add DMC device for exynos5422
+  drivers: devfreq: events: add Exynos PPMU new events
+  ARM: exynos_defconfig: enable DMC driver
+
+ .../devicetree/bindings/devfreq/exynos5422-dmc.txt |  177 +++
+ MAINTAINERS                                        |    8 +
+ arch/arm/boot/dts/exynos5420.dtsi                  |   83 ++
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi      |   87 ++
+ arch/arm/configs/exynos_defconfig                  |    1 +
+ drivers/clk/samsung/clk-exynos5420.c               |   67 +-
+ drivers/devfreq/Kconfig                            |   13 +
+ drivers/devfreq/Makefile                           |    1 +
+ drivers/devfreq/event/exynos-ppmu.c                |    6 +
+ drivers/devfreq/exynos5422-dmc.c                   | 1154 ++++++++++++++++++++
+ include/dt-bindings/clock/exynos5420.h             |   18 +-
+ 11 files changed, 1609 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/exynos5422-dmc.txt
+ create mode 100644 drivers/devfreq/exynos5422-dmc.c
+
+-- 
+2.7.4
 
