@@ -2,110 +2,156 @@ Return-Path: <SRS0=PjNn=RI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E289C43381
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2CAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7BA2082C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:30:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jvBnX9zv"
+	by mail.kernel.org (Postfix) with ESMTP id 53FB32082C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Mar 2019 16:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfCEQal (ORCPT
+        id S1726811AbfCEQgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Mar 2019 11:30:41 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42289 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfCEQal (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Mar 2019 11:30:41 -0500
-Received: by mail-ot1-f67.google.com with SMTP id i5so7928692oto.9
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Mar 2019 08:30:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EEQk04XL5PKf0YI4oJPFIaQIVja34n2keKTOPYEH3So=;
-        b=jvBnX9zvFRV4mMzcId2VgMamgPmCBS6nelLomGQEsMvUxLzQqKT9DGzz7pF0kwGMX6
-         iMxSZQVaQVn3TcsJonfMTvdhQu32v1B4qtzFXOqH6wLni94asXO48604fONvEWWr19fK
-         tv1c90jtiYzIauyUN6d7wvw07Bdl9N0P9Z66PY1QJPg8fm01YRMyl5SCfng9bxCS/c8M
-         sXvDHakEhHRKJ2xuE7MCW9CHtfn9RS4z5y/fUwftZ4cbI64um6NnmPZdWbVUx+AlmgMH
-         mqGyL3oMdfYEuJUu1bGvTdVc59wmPZNBuOIoSznsufHaoWv6CJVcPwE7E2eYpCjqka9u
-         rBWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EEQk04XL5PKf0YI4oJPFIaQIVja34n2keKTOPYEH3So=;
-        b=KcQBumSK55QuesPUtq9X+UirSN2VhDQn0xe/i97W8XzvZlISrfAQkEEerAU97RZnzS
-         nVKfocI7nCp/m5k7R9FA9WwO/DhPRcZVnmmcipqtAgIjoM1MGaBY6jetGUuTaGOUZkRI
-         9j+n6qUKmaCmwH2Zay0UvD6JmpkxD9Xwb5sl1/OGKDjSoN/5byrWXLT7dkkMHZo+WroT
-         WdXZEj3TdGGVWT5VCJoCl/KnrcvSKOiVPPVIdJvw3UYYroUqyECGK2uCnNk97+QkhGh1
-         Rola+Yt67vv/T3f6iKYQAoby8JSSTymfVbwGUA2pySbNVVrMYg2LhDigaKHR2T8bP+KN
-         vtuw==
-X-Gm-Message-State: APjAAAX7oOlYcR/56isY0jf1sKibHo1eYLQSy+ZXn+NBrg/l/0lwbt/o
-        ECB4ZYc/KuXHVrY/ssUF/5ABlYtOvpb39SOps230CyzEq3E=
-X-Google-Smtp-Source: APXvYqxzzk5tODtH0Qyb046uvT0nyP6wyWEAMGyfoyBG8YxIZSalA5Bj4fkjrltAp27DOHke6TAZPsdkR6aPMtiqJ8E=
-X-Received: by 2002:a9d:6c84:: with SMTP id c4mr1496349otr.242.1551803439888;
- Tue, 05 Mar 2019 08:30:39 -0800 (PST)
-MIME-Version: 1.0
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
- <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
- <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic> <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
-In-Reply-To: <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 5 Mar 2019 17:30:13 +0100
-Message-ID: <CAG48ez0=AWipDy+aDBtxwEs6h8AmiBnfoU7GMi=_yW3sS14MNQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: Deprecate a.out support
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Tue, 5 Mar 2019 11:36:15 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:39928 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726069AbfCEQgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Mar 2019 11:36:14 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 01D48C0495A1;
+        Tue,  5 Mar 2019 16:36:14 +0000 (UTC)
+Received: from treble (ovpn-126-179.rdu2.redhat.com [10.10.126.179])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A5452600D7;
+        Tue,  5 Mar 2019 16:36:11 +0000 (UTC)
+Date:   Tue, 5 Mar 2019 10:36:09 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Content-Type: text/plain; charset="UTF-8"
+        Douglas Anderson <dianders@chromium.org>,
+        Robin Meijboom <robin@meijboom.info>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH 3/3] objtool: move tools/objtool/ to scripts/objtool/
+Message-ID: <20190305163609.gz2cvpj7bxrnzdvm@treble>
+References: <1551764896-8453-1-git-send-email-yamada.masahiro@socionext.com>
+ <1551764896-8453-3-git-send-email-yamada.masahiro@socionext.com>
+ <20190305144625.bjmkr6ebufbly5ba@treble>
+ <CAK7LNAS=K2Hp+idOsHQBCYwk5YndzSdHL=GmJZRxsF6De3isNA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAS=K2Hp+idOsHQBCYwk5YndzSdHL=GmJZRxsF6De3isNA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 05 Mar 2019 16:36:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 5:22 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Tue, Mar 5, 2019 at 6:59 AM Borislav Petkov <bp@alien8.de> wrote:
-> > We can at least deprecate it on x86...
->
-> I'd prefer to try to deprecate a.out core dumping first.. That's the
-> part that is actually broken, no?
->
-> In fact, I'd be happy to deprecate a.out entirely, but if somebody
-> _does_ complain, I'd like to be able to bring it back without the core
-> dumping.
->
-> Because I think the likeliihood that anybody cares about a.out core
-> dumps is basically zero. While the likelihood that we have some odd
-> old binary that is still a.out is slightly above zero.
->
-> So I'd be much happier with this if it was a two-stage thing where we
-> just delete a.out core dumping entirely first, and then deprecate even
-> running a.out binaries separately.
->
-> Because I think all the known *bugs* we had were with the core dumping
-> code, weren't they?
->
-> Removing it looks trivial. Untested patch attached.
+On Wed, Mar 06, 2019 at 01:08:27AM +0900, Masahiro Yamada wrote:
+> > I do see the benefits.  In many ways objtool is a more natural fit in
+> > the scripts dir.  But there are also some downsides to this change:
+> >
+> > - This will make it harder to package objtool as a standalone tool.  It
+> >   has a lot of functionality that could be useful to other non-kernel
+> >   projects.
+> 
+> 
+> If it is really useful for other projects,
+> I'd like to see it as a real standalone tool,
+> i.e. split as a separate project.
 
-We might want to also delete the then-unused aout_dump_thread()
-implementations from the various arch trees. We probably want to
-delete arch/*/include/asm/a.out-core.h, since that seems to be the
-only thing these headers do, and the only thing that uses them is
-fs/binfmt_aout.c?
+Fine, but who's going to do it?  I don't have time for creating such a
+project anytime soon.  And anyway, moving the code to scripts in the
+meantime would just make that harder when we do it eventually.
+
+> > - It shares libsubcmd with perf.  Including the subcmd .c files from
+> >   tools is hacky.
+> 
+> Yes, hacky. We are shifting the ugliness between C and Build system.
+> 
+> But, this hack can be solved; if subcmd library is useful, you can copy
+> only necessary code into the objtool directory. You do not need all
+> helpers from libsubcmd.
+
+But then we are duplicating code...
+
+> > - It's disruptive: it will break all the out-of-tree distro kernel
+> >   packaging scripts which now look for objtool in tools.
+> 
+> All artifacts under scripts/ should be contained in the package.
+> So, it should work.
+
+It *will* break distro scripts which already expect objtool to be
+located at tools/objtool/objtool.
+
+> > You're right that objtool isn't a natural fit in tools, because it's
+> > also used as part of the build.  But it's not a natural fit in scripts
+> > either.  I think we've resolved most of those issues and it seems to be
+> > working well these days.
+> >
+> > So instead of disrupting everything because "make mrproper" doesn't
+> > work, I think I'd rather just do the following:
+> >
+> > diff --git a/Makefile b/Makefile
+> > index ac5ac28a24e9..7e6696c9b862 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1364,7 +1364,7 @@ PHONY += $(mrproper-dirs) mrproper
+> >  $(mrproper-dirs):
+> >         $(Q)$(MAKE) $(clean)=$(patsubst _mrproper_%,%,$@)
+> >
+> > -mrproper: clean $(mrproper-dirs)
+> > +mrproper: clean $(mrproper-dirs) tools/objtool_clean
+> >         $(call cmd,rmdirs)
+> >         $(call cmd,rmfiles)
+> >
+> 
+> Works, and the clean log is also brilliant.
+> 
+> I see the same log even when
+> there is nothing to clean.
+> 
+> 
+> masahiro@grover:~/ref/linux$ make mrproper
+>   CLEAN   .
+>   CLEAN   arch/x86/entry/vdso
+>   CLEAN   usr
+>   CLEAN   arch/x86/tools
+>   CLEAN   .tmp_versions
+>   CLEAN   scripts/basic
+>   CLEAN   scripts/kconfig
+>   CLEAN   scripts/mod
+>   CLEAN   scripts/selinux/genheaders
+>   CLEAN   scripts/selinux/mdp
+>   CLEAN   scripts
+>   DESCEND  objtool
+>   CLEAN    objtool
+>   CLEAN   include/config include/generated arch/x86/include/generated
+>   CLEAN   .config
+> masahiro@grover:~/ref/linux$ make mrproper
+>   DESCEND  objtool
+>   CLEAN    objtool
+> masahiro@grover:~/ref/linux$ make mrproper
+>   DESCEND  objtool
+>   CLEAN    objtool
+
+Ok, but I'm sure that could be fixed.  That's hardly a justification to
+move objtool.
+
+Anyway I would like to hear what Ingo and Peter think about moving it.
+
+-- 
+Josh
